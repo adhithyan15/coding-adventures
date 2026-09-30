@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-151-SHADE",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "before": [],
+  "inline": [
+    "TE-EXT-151-SHADE"
+  ],
+  "after": []
+}

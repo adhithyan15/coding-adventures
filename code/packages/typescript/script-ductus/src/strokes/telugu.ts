@@ -582,6 +582,101 @@ export const entries: DuctusEntry[] = [
     },
   ],
   [
+    "telugu:ఛ",
+    {
+      script: "telugu",
+      glyph: "ఛ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the upper bar from left to right",
+              path: [
+                { x: 50, y: 295 },
+                { x: 100, y: 295 },
+                { x: 150, y: 295 },
+                { x: 200, y: 295 },
+                { x: 250, y: 295 },
+              ],
+            },
+            {
+              label: "continue down and around the left bowl",
+              path: [
+                { x: 250, y: 295 },
+                { x: 220, y: 260 },
+                { x: 175, y: 235 },
+                { x: 130, y: 205 },
+                { x: 105, y: 165 },
+                { x: 105, y: 120 },
+                { x: 125, y: 80 },
+                { x: 165, y: 48 },
+                { x: 215, y: 30 },
+                { x: 265, y: 35 },
+                { x: 310, y: 62 },
+                { x: 345, y: 105 },
+                { x: 370, y: 155 },
+                { x: 385, y: 185 },
+              ],
+            },
+            {
+              label: "sweep right and up around the outer bowl",
+              path: [
+                { x: 385, y: 185 },
+                { x: 410, y: 135 },
+                { x: 450, y: 92 },
+                { x: 505, y: 62 },
+                { x: 565, y: 55 },
+                { x: 620, y: 78 },
+                { x: 660, y: 120 },
+                { x: 680, y: 180 },
+                { x: 675, y: 245 },
+                { x: 650, y: 305 },
+                { x: 610, y: 355 },
+                { x: 560, y: 392 },
+                { x: 505, y: 418 },
+                { x: 450, y: 432 },
+              ],
+            },
+            {
+              label: "continue through the upper flourish",
+              path: [
+                { x: 450, y: 432 },
+                { x: 410, y: 440 },
+                { x: 370, y: 460 },
+                { x: 335, y: 495 },
+                { x: 305, y: 535 },
+                { x: 288, y: 570 },
+                { x: 325, y: 585 },
+                { x: 375, y: 585 },
+                { x: 425, y: 570 },
+                { x: 470, y: 565 },
+                { x: 515, y: 590 },
+                { x: 560, y: 625 },
+                { x: 610, y: 655 },
+                { x: 660, y: 678 },
+                { x: 710, y: 686 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "restart and draw the separate downward stem",
+              path: [
+                { x: 385, y: 12 },
+                { x: 385, y: -35 },
+                { x: 385, y: -80 },
+                { x: 385, y: -120 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguLetterSource("ఛ"),
+    },
+  ],
+  [
     "telugu:ఘ",
     {
       script: "telugu",
