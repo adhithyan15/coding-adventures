@@ -1,0 +1,11 @@
+{
+  "id": "IT-C211-soffrire",
+  "pathSegment": "IT-PATH-211-VERBI211",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-211-VERBI211",
+      "order": 2
+    }
+  ]
+}

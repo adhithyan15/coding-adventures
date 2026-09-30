@@ -1,0 +1,19 @@
+{
+  "chapter": 212,
+  "title": "To hurry, To move away, To come near, To chat, To connect",
+  "label": "ch:it-to-hurry-to-move-away-to-come-near-to-chat-to-connect",
+  "canDo": "I can say to hurry, to move away, to come near, to chat and to connect.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-R212-second-pass-words-from-chapters-208-212",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 212: I can say to hurry, to move away, to come near, to chat and to connect.",
+    "assesses": [
+      "IT-LEX-C212-VERBI212-03",
+      "IT-LEX-C212-VERBI212-04",
+      "IT-LEX-C212-VERBI212-05"
+    ]
+  }
+}

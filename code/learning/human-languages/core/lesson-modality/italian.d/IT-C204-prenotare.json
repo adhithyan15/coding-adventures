@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C204-prenotare",
+    "language": "italian",
+    "chapter": 204,
+    "sequence": 11740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f951997a363b2030"
+  },
+  "findings": []
+}

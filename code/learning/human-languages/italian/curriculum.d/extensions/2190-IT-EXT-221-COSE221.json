@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-221-COSE221",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a bakery, a butcher's, a forest, a coast and a valley.",
+  "prerequisites": []
+}

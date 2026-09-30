@@ -1,0 +1,11 @@
+{
+  "id": "IT-C214-urlare",
+  "pathSegment": "IT-PATH-214-VERBI214",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-214-VERBI214",
+      "order": 3
+    }
+  ]
+}

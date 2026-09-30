@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C229-sasso",
+    "language": "italian",
+    "chapter": 229,
+    "sequence": 13530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c63d33cccf10bf53"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-R212-first-pass-words-from-chapters-204-207",
+    "language": "italian",
+    "chapter": 212,
+    "sequence": 12180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:02b37e0e66db1699"
+  },
+  "findings": []
+}

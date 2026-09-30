@@ -1,0 +1,11 @@
+{
+  "id": "IT-C223-fotografo",
+  "pathSegment": "IT-PATH-223-COSE223",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-223-COSE223",
+      "order": 4
+    }
+  ]
+}

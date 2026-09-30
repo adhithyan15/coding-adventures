@@ -1,0 +1,11 @@
+{
+  "id": "IT-C224-gemello",
+  "pathSegment": "IT-PATH-224-COSE224",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-224-COSE224",
+      "order": 3
+    }
+  ]
+}

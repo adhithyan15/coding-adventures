@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C204-costare",
+    "language": "italian",
+    "chapter": 204,
+    "sequence": 11770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:534f989358162083"
+  },
+  "findings": []
+}

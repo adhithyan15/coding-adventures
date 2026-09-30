@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C210-preparare",
+    "language": "italian",
+    "chapter": 210,
+    "sequence": 12030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:59d1c3cae8ef7e69"
+  },
+  "findings": []
+}

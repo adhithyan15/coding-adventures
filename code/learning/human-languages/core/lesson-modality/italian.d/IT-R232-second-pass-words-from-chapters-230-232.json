@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-R232-second-pass-words-from-chapters-230-232",
+    "language": "italian",
+    "chapter": 232,
+    "sequence": 13730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e856125eb4992d5"
+  },
+  "findings": []
+}

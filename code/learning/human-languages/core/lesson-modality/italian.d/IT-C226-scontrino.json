@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C226-scontrino",
+    "language": "italian",
+    "chapter": 226,
+    "sequence": 13210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:137878cb0d1396e3"
+  },
+  "findings": []
+}

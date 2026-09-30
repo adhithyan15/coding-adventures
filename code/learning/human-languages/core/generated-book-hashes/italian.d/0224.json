@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:627feeafc11085ce",
+  "lessonIds": [
+    "IT-C224-adulto",
+    "IT-C224-anziano",
+    "IT-C224-neonato",
+    "IT-C224-gemello",
+    "IT-C224-nipote"
+  ],
+  "tex": "italian/book/chapters/ch224-adult-elderly-person-newborn-twin-grandson.tex"
+}

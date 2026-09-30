@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-229-COSE229",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a plain, a pebble, mud, dust and smoke.",
+  "prerequisites": []
+}

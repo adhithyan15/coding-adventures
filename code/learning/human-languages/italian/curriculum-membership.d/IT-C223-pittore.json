@@ -1,0 +1,11 @@
+{
+  "id": "IT-C223-pittore",
+  "pathSegment": "IT-PATH-223-COSE223",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-223-COSE223",
+      "order": 3
+    }
+  ]
+}

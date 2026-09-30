@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-225-COSE225",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a decision, a possibility, an opportunity, a reason and a result.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C217-certo",
+  "pathSegment": "IT-PATH-217-PERCHE217",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-217-PERCHE217",
+      "order": 3
+    }
+  ]
+}

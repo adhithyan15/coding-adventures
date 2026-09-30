@@ -1,0 +1,19 @@
+{
+  "chapter": 206,
+  "title": "To cool down, To fill, To empty, To count, To measure",
+  "label": "ch:it-to-cool-down-to-fill-to-empty-to-count-to-measure",
+  "canDo": "I can say to cool down, to fill, to empty, to count and to measure.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C206-misurare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 206: I can say to cool down, to fill, to empty, to count and to measure.",
+    "assesses": [
+      "IT-LEX-C206-VERBI206-03",
+      "IT-LEX-C206-VERBI206-04",
+      "IT-LEX-C206-VERBI206-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C228-grattacielo",
+  "pathSegment": "IT-PATH-228-COSE228",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-228-COSE228",
+      "order": 0
+    }
+  ]
+}

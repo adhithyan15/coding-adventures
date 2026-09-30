@@ -1,0 +1,11 @@
+{
+  "id": "IT-C229-fango",
+  "pathSegment": "IT-PATH-229-COSE229",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-229-COSE229",
+      "order": 2
+    }
+  ]
+}

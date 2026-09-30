@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:f64bf2780180cde3",
+  "lessonIds": [
+    "IT-C218-geloso",
+    "IT-C218-orgoglioso",
+    "IT-C218-nervoso",
+    "IT-C218-calmo",
+    "IT-C218-silenzioso"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch218.txt",
+  "json": "italian/narration/ch218.json",
+  "textHash": "fnv1a64:270c368c69556cda",
+  "jsonHash": "fnv1a64:60fa32fdc662e7bc",
+  "findings": []
+}

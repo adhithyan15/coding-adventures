@@ -1,0 +1,11 @@
+{
+  "id": "IT-R221-first-pass-words-from-chapters-213-216",
+  "pathSegment": "IT-PATH-221-COSE221",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-221-COSE221",
+      "order": 5
+    }
+  ]
+}

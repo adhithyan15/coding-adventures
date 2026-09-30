@@ -1,0 +1,11 @@
+{
+  "id": "IT-C215-sciroppo",
+  "pathSegment": "IT-PATH-215-SAL215",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-215-SAL215",
+      "order": 3
+    }
+  ]
+}

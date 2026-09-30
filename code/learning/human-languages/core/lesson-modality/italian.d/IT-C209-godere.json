@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C209-godere",
+    "language": "italian",
+    "chapter": 209,
+    "sequence": 12010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ceef0795253b8133"
+  },
+  "findings": []
+}

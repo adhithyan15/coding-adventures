@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C230-cotone",
+    "language": "italian",
+    "chapter": 230,
+    "sequence": 13590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1f1998e3b4d93424"
+  },
+  "findings": []
+}

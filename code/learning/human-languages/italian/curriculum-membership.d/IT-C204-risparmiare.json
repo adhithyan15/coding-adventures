@@ -1,0 +1,11 @@
+{
+  "id": "IT-C204-risparmiare",
+  "pathSegment": "IT-PATH-204-VERBI204",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-204-VERBI204",
+      "order": 3
+    }
+  ]
+}

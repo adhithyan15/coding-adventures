@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C225-possibilita",
+    "language": "italian",
+    "chapter": 225,
+    "sequence": 13170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a2af03572bded5b"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C206-riempire",
+  "pathSegment": "IT-PATH-206-VERBI206",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-206-VERBI206",
+      "order": 1
+    }
+  ]
+}

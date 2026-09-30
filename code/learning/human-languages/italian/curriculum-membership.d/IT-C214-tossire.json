@@ -1,0 +1,11 @@
+{
+  "id": "IT-C214-tossire",
+  "pathSegment": "IT-PATH-214-VERBI214",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-214-VERBI214",
+      "order": 1
+    }
+  ]
+}

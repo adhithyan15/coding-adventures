@@ -1,0 +1,11 @@
+{
+  "id": "IT-R232-first-pass-words-from-chapters-228-229",
+  "pathSegment": "IT-PATH-232-LAV232",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-232-LAV232",
+      "order": 5
+    }
+  ]
+}

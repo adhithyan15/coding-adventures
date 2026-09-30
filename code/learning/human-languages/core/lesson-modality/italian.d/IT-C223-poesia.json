@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C223-poesia",
+    "language": "italian",
+    "chapter": 223,
+    "sequence": 13060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e79ee7a369477099"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 229,
+  "title": "Plain, Pebble, Mud, Dust, Smoke",
+  "label": "ch:it-plain-pebble-mud-dust-smoke",
+  "canDo": "I can say a plain, a pebble, mud, dust and smoke.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C229-fumo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 229: I can say a plain, a pebble, mud, dust and smoke.",
+    "assesses": [
+      "IT-LEX-C229-COSE229-03",
+      "IT-LEX-C229-COSE229-04",
+      "IT-LEX-C229-COSE229-05"
+    ]
+  }
+}

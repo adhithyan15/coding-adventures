@@ -1,0 +1,11 @@
+{
+  "id": "IT-C227-ingresso",
+  "pathSegment": "IT-PATH-227-COSE227",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-227-COSE227",
+      "order": 1
+    }
+  ]
+}

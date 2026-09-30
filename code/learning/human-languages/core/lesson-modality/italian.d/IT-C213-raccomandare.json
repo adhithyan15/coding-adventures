@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C213-raccomandare",
+    "language": "italian",
+    "chapter": 213,
+    "sequence": 12410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4bf89a2278f1139f"
+  },
+  "findings": []
+}

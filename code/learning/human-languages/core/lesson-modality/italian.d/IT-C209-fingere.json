@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C209-fingere",
+    "language": "italian",
+    "chapter": 209,
+    "sequence": 11980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4ccbd664e90bb12"
+  },
+  "findings": []
+}

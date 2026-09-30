@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:f114deb5d698dece",
+  "lessonIds": [
+    "IT-C204-parcheggiare",
+    "IT-C204-prenotare",
+    "IT-C204-spendere",
+    "IT-C204-risparmiare",
+    "IT-C204-costare"
+  ],
+  "tex": "italian/book/chapters/ch204-to-park-to-book-to-spend-to-save-to-cost.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C220-calze",
+  "pathSegment": "IT-PATH-220-COSE220",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-220-COSE220",
+      "order": 1
+    }
+  ]
+}

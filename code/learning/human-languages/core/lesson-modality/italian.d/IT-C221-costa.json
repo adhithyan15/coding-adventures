@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C221-costa",
+    "language": "italian",
+    "chapter": 221,
+    "sequence": 12800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e4de7bef92934217"
+  },
+  "findings": []
+}

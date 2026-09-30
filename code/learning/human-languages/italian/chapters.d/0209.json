@@ -1,0 +1,19 @@
+{
+  "chapter": 209,
+  "title": "To pretend, To throw, To turn, To enjoy, To imagine",
+  "label": "ch:it-to-pretend-to-throw-to-turn-to-enjoy-to-imagine",
+  "canDo": "I can say to pretend, to throw, to turn, to enjoy and to imagine.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C209-immaginare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 209: I can say to pretend, to throw, to turn, to enjoy and to imagine.",
+    "assesses": [
+      "IT-LEX-C209-VERBI209-03",
+      "IT-LEX-C209-VERBI209-04",
+      "IT-LEX-C209-VERBI209-05"
+    ]
+  }
+}

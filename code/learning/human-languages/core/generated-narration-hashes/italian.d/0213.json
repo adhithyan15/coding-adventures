@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:04ee56b94592528e",
+  "lessonIds": [
+    "IT-C213-mescolare",
+    "IT-C213-nascondersi",
+    "IT-C213-obbedire",
+    "IT-C213-ospitare",
+    "IT-C213-raccomandare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch213.txt",
+  "json": "italian/narration/ch213.json",
+  "textHash": "fnv1a64:442758492f0ffcb3",
+  "jsonHash": "fnv1a64:1267f0ec9451cbfc",
+  "findings": []
+}

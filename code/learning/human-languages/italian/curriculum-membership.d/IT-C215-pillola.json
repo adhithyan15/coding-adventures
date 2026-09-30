@@ -1,0 +1,11 @@
+{
+  "id": "IT-C215-pillola",
+  "pathSegment": "IT-PATH-215-SAL215",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-215-SAL215",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C215-pomata",
+    "language": "italian",
+    "chapter": 215,
+    "sequence": 12510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d005c1b4d4b1098c"
+  },
+  "findings": []
+}

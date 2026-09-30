@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:07f9cd4216b44f0c",
+  "lessonIds": [
+    "IT-C205-provare",
+    "IT-C205-finire",
+    "IT-C205-continuare",
+    "IT-C205-smettere",
+    "IT-C205-fermare"
+  ],
+  "tex": "italian/book/chapters/ch205-to-try-to-finish-to-continue-to-stop-to-halt.tex"
+}

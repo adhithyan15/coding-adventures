@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-222-COSE222",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a soldier, a flag, religion, culture and a tradition.",
+  "prerequisites": []
+}

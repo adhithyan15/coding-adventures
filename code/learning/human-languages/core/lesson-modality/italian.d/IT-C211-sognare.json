@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C211-sognare",
+    "language": "italian",
+    "chapter": 211,
+    "sequence": 12110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0f7b2dccb75e2ce"
+  },
+  "findings": []
+}

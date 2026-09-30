@@ -38,7 +38,9 @@ it("pins Italian lesson-content budgets", () =>
     // nine chapters. No idiom, sense or culture claim.
     // 860 -> 1018: the second tranche, chapters 174-203: 150 word lessons and
     // two reviews per run.
-    lessons: 1018,
+    // 1018 -> 1171: the third tranche, chapters 204-232: 145 word lessons and
+    // two reviews per run.
+    lessons: 1171,
     idioms: 4,
     senses: 9,
     cultureClaims: 11,

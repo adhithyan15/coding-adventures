@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:b96c69ab2f49ab8f",
+  "lessonIds": [
+    "IT-C231-vittoria",
+    "IT-C231-sconfitta",
+    "IT-C231-campionato",
+    "IT-C231-giocatore",
+    "IT-C231-allenatore"
+  ],
+  "tex": "italian/book/chapters/ch231-victory-defeat-championship-player-coach.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C205-smettere",
+    "language": "italian",
+    "chapter": 205,
+    "sequence": 11810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:916495ffbce3c137"
+  },
+  "findings": []
+}

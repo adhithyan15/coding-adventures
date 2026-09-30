@@ -1,0 +1,11 @@
+{
+  "id": "IT-C210-proporre",
+  "pathSegment": "IT-PATH-210-VERBI210",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-210-VERBI210",
+      "order": 3
+    }
+  ]
+}

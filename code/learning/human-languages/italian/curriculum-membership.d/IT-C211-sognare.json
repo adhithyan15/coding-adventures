@@ -1,0 +1,11 @@
+{
+  "id": "IT-C211-sognare",
+  "pathSegment": "IT-PATH-211-VERBI211",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-211-VERBI211",
+      "order": 3
+    }
+  ]
+}

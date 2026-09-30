@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:5a99de646d2b5cc7",
+  "lessonIds": [
+    "IT-C230-plastica",
+    "IT-C230-vetro",
+    "IT-C230-cotone",
+    "IT-C230-lana",
+    "IT-C230-seta"
+  ],
+  "tex": "italian/book/chapters/ch230-plastic-sheet-glass-cotton-wool-silk.tex"
+}

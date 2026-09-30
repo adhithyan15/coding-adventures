@@ -1,0 +1,19 @@
+{
+  "chapter": 231,
+  "title": "Victory, Defeat, Championship, Player, Coach",
+  "label": "ch:it-victory-defeat-championship-player-coach",
+  "canDo": "I can say a victory, a defeat, a championship, a player and a coach.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C231-allenatore",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 231: I can say a victory, a defeat, a championship, a player and a coach.",
+    "assesses": [
+      "IT-LEX-C231-COSE231-03",
+      "IT-LEX-C231-COSE231-04",
+      "IT-LEX-C231-COSE231-05"
+    ]
+  }
+}

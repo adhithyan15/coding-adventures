@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:f371fae2ddb3d1e0",
+  "lessonIds": [
+    "IT-C208-applaudire",
+    "IT-C208-approfittare",
+    "IT-C208-attraversare",
+    "IT-C208-aumentare",
+    "IT-C208-diminuire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch208.txt",
+  "json": "italian/narration/ch208.json",
+  "textHash": "fnv1a64:439861aeb46536e7",
+  "jsonHash": "fnv1a64:381546cb0e222200",
+  "findings": []
+}

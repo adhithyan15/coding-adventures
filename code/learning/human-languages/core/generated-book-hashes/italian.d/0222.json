@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:0e8e6b5e9d62ffbf",
+  "lessonIds": [
+    "IT-C222-soldato",
+    "IT-C222-bandiera",
+    "IT-C222-religione",
+    "IT-C222-cultura",
+    "IT-C222-tradizione"
+  ],
+  "tex": "italian/book/chapters/ch222-soldier-flag-religion-culture-tradition.tex"
+}

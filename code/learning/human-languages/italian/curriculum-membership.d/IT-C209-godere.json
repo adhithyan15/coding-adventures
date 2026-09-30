@@ -1,0 +1,11 @@
+{
+  "id": "IT-C209-godere",
+  "pathSegment": "IT-PATH-209-VERBI209",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-209-VERBI209",
+      "order": 3
+    }
+  ]
+}

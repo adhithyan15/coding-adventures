@@ -1,0 +1,11 @@
+{
+  "id": "IT-C216-vergogna",
+  "pathSegment": "IT-PATH-216-SAL216",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-216-SAL216",
+      "order": 2
+    }
+  ]
+}

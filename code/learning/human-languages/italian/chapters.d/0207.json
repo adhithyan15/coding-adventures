@@ -1,0 +1,19 @@
+{
+  "chapter": 207,
+  "title": "To grow, To grow old, To marry, To divorce, To move house",
+  "label": "ch:it-to-grow-to-grow-old-to-marry-to-divorce-to-move-house",
+  "canDo": "I can say to grow, to grow old, to marry, to divorce and to move house.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C207-traslocare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 207: I can say to grow, to grow old, to marry, to divorce and to move house.",
+    "assesses": [
+      "IT-LEX-C207-VERBI207-03",
+      "IT-LEX-C207-VERBI207-04",
+      "IT-LEX-C207-VERBI207-05"
+    ]
+  }
+}

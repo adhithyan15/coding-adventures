@@ -1,0 +1,11 @@
+{
+  "id": "IT-C213-obbedire",
+  "pathSegment": "IT-PATH-213-VERBI213",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-213-VERBI213",
+      "order": 2
+    }
+  ]
+}

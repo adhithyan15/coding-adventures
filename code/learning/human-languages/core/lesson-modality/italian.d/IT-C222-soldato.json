@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C222-soldato",
+    "language": "italian",
+    "chapter": 222,
+    "sequence": 13010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:789c3efaab4e6faf"
+  },
+  "findings": []
+}

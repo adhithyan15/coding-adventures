@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:5d5e65be16833079",
+  "lessonIds": [
+    "IT-C209-fingere",
+    "IT-C209-gettare",
+    "IT-C209-girare",
+    "IT-C209-godere",
+    "IT-C209-immaginare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch209.txt",
+  "json": "italian/narration/ch209.json",
+  "textHash": "fnv1a64:000746527bbd314a",
+  "jsonHash": "fnv1a64:b6688acaec15977e",
+  "findings": []
+}

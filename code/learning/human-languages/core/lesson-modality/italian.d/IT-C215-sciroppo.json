@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C215-sciroppo",
+    "language": "italian",
+    "chapter": 215,
+    "sequence": 12500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:318c5959d6318d68"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C208-attraversare",
+  "pathSegment": "IT-PATH-208-VERBI208",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-208-VERBI208",
+      "order": 2
+    }
+  ]
+}

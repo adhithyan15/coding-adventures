@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-R221-first-pass-words-from-chapters-213-216",
+    "language": "italian",
+    "chapter": 221,
+    "sequence": 12820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:88947525b41b96f8"
+  },
+  "findings": []
+}

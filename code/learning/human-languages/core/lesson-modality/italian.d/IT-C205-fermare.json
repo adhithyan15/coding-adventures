@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C205-fermare",
+    "language": "italian",
+    "chapter": 205,
+    "sequence": 11820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8f291b9e84c0d48"
+  },
+  "findings": []
+}

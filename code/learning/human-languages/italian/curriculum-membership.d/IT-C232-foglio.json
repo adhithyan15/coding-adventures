@@ -1,0 +1,11 @@
+{
+  "id": "IT-C232-foglio",
+  "pathSegment": "IT-PATH-232-LAV232",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-232-LAV232",
+      "order": 1
+    }
+  ]
+}

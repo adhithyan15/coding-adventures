@@ -1,0 +1,19 @@
+{
+  "chapter": 226,
+  "title": "Till receipt, Change, Coin, Banknote, Cash machine",
+  "label": "ch:it-till-receipt-change-coin-banknote-cash-machine",
+  "canDo": "I can say a till receipt, change, a coin, a banknote and a cash machine.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C226-bancomat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 226: I can say a till receipt, change, a coin, a banknote and a cash machine.",
+    "assesses": [
+      "IT-LEX-C226-COSE226-03",
+      "IT-LEX-C226-COSE226-04",
+      "IT-LEX-C226-COSE226-05"
+    ]
+  }
+}

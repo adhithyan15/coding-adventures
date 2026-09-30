@@ -1,0 +1,19 @@
+{
+  "chapter": 230,
+  "title": "Plastic, Sheet glass, Cotton, Wool, Silk",
+  "label": "ch:it-plastic-sheet-glass-cotton-wool-silk",
+  "canDo": "I can say plastic, sheet glass, cotton, wool and silk.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C230-seta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 230: I can say plastic, sheet glass, cotton, wool and silk.",
+    "assesses": [
+      "IT-LEX-C230-COSE230-03",
+      "IT-LEX-C230-COSE230-04",
+      "IT-LEX-C230-COSE230-05"
+    ]
+  }
+}

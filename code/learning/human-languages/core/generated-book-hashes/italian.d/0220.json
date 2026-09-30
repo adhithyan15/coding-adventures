@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:e0d0405547e27d48",
+  "lessonIds": [
+    "IT-C220-maglietta",
+    "IT-C220-calze",
+    "IT-C220-cintura",
+    "IT-C220-pigiama",
+    "IT-C220-tasca"
+  ],
+  "tex": "italian/book/chapters/ch220-t-shirt-stockings-belt-pyjamas-pocket.tex"
+}

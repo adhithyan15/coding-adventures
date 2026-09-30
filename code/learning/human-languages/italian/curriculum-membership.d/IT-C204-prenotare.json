@@ -1,0 +1,11 @@
+{
+  "id": "IT-C204-prenotare",
+  "pathSegment": "IT-PATH-204-VERBI204",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-204-VERBI204",
+      "order": 1
+    }
+  ]
+}

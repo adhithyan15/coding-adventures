@@ -1,0 +1,21 @@
+{
+  "language": "italian",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:85034c49325bf4ce",
+  "lessonIds": [
+    "IT-C221-panetteria",
+    "IT-C221-macelleria",
+    "IT-C221-foresta",
+    "IT-C221-costa",
+    "IT-C221-valle",
+    "IT-R221-first-pass-words-from-chapters-213-216",
+    "IT-R221-second-pass-words-from-chapters-217-221"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "italian/narration/ch221.txt",
+  "json": "italian/narration/ch221.json",
+  "textHash": "fnv1a64:8c22eb22fc268cf3",
+  "jsonHash": "fnv1a64:b6d898c7d3e422aa",
+  "findings": []
+}

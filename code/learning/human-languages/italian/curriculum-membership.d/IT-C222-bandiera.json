@@ -1,0 +1,11 @@
+{
+  "id": "IT-C222-bandiera",
+  "pathSegment": "IT-PATH-222-COSE222",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-222-COSE222",
+      "order": 1
+    }
+  ]
+}
