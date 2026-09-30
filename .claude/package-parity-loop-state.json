@@ -3131,8 +3131,7 @@
         "build-tool-csharp-fsharp-diff-selection-match-work-ceiling-adoption",
         "build-tool-csharp-fsharp-portable-dependency-hashing-conformance",
         "build-tool-csharp-isolated-artifact-fixture-root-resolution",
-        "build-tool-csharp-fsharp-ci-gate-selection-conformance",
-        "build-tool-csharp-fsharp-repository-boundary-diff-fixture-adoption"
+        "build-tool-csharp-fsharp-ci-gate-selection-conformance"
       ],
       "branch": null,
       "pr_number": null,
