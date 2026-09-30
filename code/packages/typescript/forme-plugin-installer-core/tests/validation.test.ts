@@ -209,17 +209,20 @@ describe("snapshot defensive validation", () => {
   it("selects binary platform entries with canonical OS and architecture names", () => {
     const binary = BASE.replace(
       'kind = "node"\nentry = "plugin.mjs"',
-      'kind = "binary"\nentry = "fallback"\n[runtime.platforms]\nwindows-x86_64 = "bin/win"\ndarwin-aarch64 = "bin/mac"\nlinux-riscv64 = "bin/linux"',
+      'kind = "binary"\nentry = "fallback"\n[runtime.platforms]\nwindows-x86_64 = "bin/win"\ndarwin-aarch64 = "bin/mac"\nlinux-x86_64 = "bin/linux-x64"\nlinux-riscv64 = "bin/linux"',
     );
     const files = [
       { path: "plugin.toml", bytes: new TextEncoder().encode(binary) },
       { path: "bin/win", bytes: ENTRY },
       { path: "bin/mac", bytes: ENTRY },
+      { path: "bin/linux-x64", bytes: ENTRY },
       { path: "bin/linux", bytes: ENTRY },
     ];
     expect(preparePluginInstallSnapshot({ ...opts(files), platform: { os: "win32", arch: "x64" } }).pluginName)
       .toBe("@example/validation");
     expect(preparePluginInstallSnapshot({ ...opts(files), platform: { os: "darwin", arch: "arm64" } }).pluginName)
+      .toBe("@example/validation");
+    expect(preparePluginInstallSnapshot({ ...opts(files), platform: { os: "linux", arch: "x64" } }).pluginName)
       .toBe("@example/validation");
     expect(preparePluginInstallSnapshot({ ...opts(files), platform: { os: "linux", arch: "riscv64" } }).pluginName)
       .toBe("@example/validation");
