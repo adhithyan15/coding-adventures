@@ -106,7 +106,11 @@ it("pins Sanskrit lesson-content budgets", () =>
     // independently recalls two already-known sentences after every script
     // component and the danda have landed. No vocabulary or content atom is
     // introduced, and the final prompt supplies meaning but no copyable form.
-    lessons: 764,
+    // 764 -> 776: chapters 139-140 realize Sanskrit's last two A2 spine nodes,
+    // the future and reading practical texts. Ten word lessons and two reviews;
+    // they declare no idioms, senses or culture claims, so the three content
+    // totals below stay where they were.
+    lessons: 776,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

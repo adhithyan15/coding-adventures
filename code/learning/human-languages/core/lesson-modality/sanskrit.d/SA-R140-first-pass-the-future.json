@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R140-first-pass-the-future",
+    "language": "sanskrit",
+    "chapter": 140,
+    "sequence": 6990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c8dfa35ec6f51c5"
+  },
+  "findings": []
+}

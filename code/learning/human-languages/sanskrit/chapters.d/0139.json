@@ -1,0 +1,19 @@
+{
+  "chapter": 139,
+  "title": "The Future, Tomorrow, Coming, Will Be, Will Go",
+  "label": "ch:sa-the-future-tomorrow-coming-will-be-will-go",
+  "canDo": "I can say what will happen, and when: tomorrow, next week, next year.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "SA-C139-gamisyati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 139: I can say what will happen, and when: tomorrow, next week, next year.",
+    "assesses": [
+      "SA-LEX-C139-FUT139-03",
+      "SA-LEX-C139-FUT139-04",
+      "SA-LEX-C139-FUT139-05"
+    ]
+  }
+}

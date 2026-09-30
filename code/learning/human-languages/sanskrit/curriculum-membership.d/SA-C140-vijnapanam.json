@@ -1,0 +1,11 @@
+{
+  "id": "SA-C140-vijnapanam",
+  "pathSegment": "SA-PATH-140-READ140",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-140-READ140",
+      "order": 2
+    }
+  ]
+}
