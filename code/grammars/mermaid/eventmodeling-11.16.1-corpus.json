@@ -2,7 +2,7 @@
   "schema_version": 1,
   "upstream": "mermaid@11.16.1",
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
-  "scope": "Native partial slice: timeline/reset frames, entity aliases, qualified names, standalone entity declarations, explicit sources, typed or untyped inline object and quoted data, reusable multiline data blocks, frame notes, Given/When/Then scenarios, layout and entity-color theme configuration, titles, and accessibility metadata.",
+  "scope": "Native partial slice: timeline/reset frames, entity aliases, qualified names, standalone entity declarations, explicit sources with upstream entity-type validation, typed or untyped inline object and quoted data, reusable multiline data blocks, frame notes, Given/When/Then scenarios, layout and entity-color theme configuration, titles, and accessibility metadata.",
   "fixtures": [
     {
       "id": "state-change",
@@ -19,6 +19,10 @@
     {
       "id": "multiple-sources",
       "source": "eventmodeling\nrf 02 evt CartCreated\nrf 03 evt ItemAdded\nrf 04 evt ItemRemoved\ntf 01 rmo CartUI ->> 02 ->> 03 ->> 04"
+    },
+    {
+      "id": "validated-source-types",
+      "source": "eventmodeling\nrf 01 evt InventoryChanged\ntf 02 rmo InventoryView ->> 01\ntf 03 pcr InventoryProcessor ->> 02\ntf 04 cmd RebuildInventory ->> 03\ntf 05 evt InventoryRebuilt ->> 04\ntf 06 readmodel RebuiltView ->> 05\ntf 07 ui InventoryUI ->> 06\ntf 08 command RefreshInventory ->> 07"
     },
     {
       "id": "inline-data",

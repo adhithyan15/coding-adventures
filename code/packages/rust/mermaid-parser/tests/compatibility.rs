@@ -255,6 +255,22 @@ fn pinned_event_modeling_subset_corpus_parses_to_semantic_ir() {
     assert!(parse_event_modeling(
         "eventmodeling\ntf 01 cmd AddItem\ngwt 02 given evt Started then evt Finished"
     ).is_err());
+    for invalid in [
+        "eventmodeling\nrf 01 rmo View\nrf 02 evt Changed ->> 01",
+        "eventmodeling\nrf 01 evt Changed\nrf 02 cmd Update ->> 01",
+        "eventmodeling\nrf 01 evt Changed\nrf 02 ui Screen ->> 01",
+        "eventmodeling\nrf 01 pcr Projector\nrf 02 rmo View ->> 01",
+        "eventmodeling\nrf 01 evt Changed\nrf 02 pcr Projector ->> 01",
+    ] {
+        assert!(parse_event_modeling(invalid).is_err(), "accepted invalid source types: {invalid}");
+    }
+    let error = parse_event_modeling(
+        "eventmodeling\nrf 01 evt Changed\nrf 02 cmd Update\nrf 03 pcr Projector ->> 01 ->> 02",
+    )
+    .expect_err("processor must reject every non-read-model source");
+    assert_eq!(error.message.lines().count(), 2);
+    assert!(error.message.contains("not from 'evt'"));
+    assert!(error.message.contains("not from 'cmd'"));
 }
 
 #[test]
