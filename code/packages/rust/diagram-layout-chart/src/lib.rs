@@ -12,12 +12,12 @@
 //!   * **Radar** — radial axes with polygonal series
 
 use diagram_ir::{
-    AxisKind, ChartDiagram, ChartKind, LayoutedChartDiagram, LayoutedChartItem, LegendEntry,
-    Orientation, Point, RadarGraticule, SeriesKind,
+    AxisKind, ChartDiagram, ChartKind, CubicCurveSegment, LayoutedChartDiagram,
+    LayoutedChartItem, LegendEntry, Orientation, Point, RadarGraticule, SeriesKind,
 };
 use std::collections::{HashMap, VecDeque};
 
-pub const VERSION: &str = "0.19.0";
+pub const VERSION: &str = "0.20.0";
 
 const MARGIN: f64 = 24.0;
 const TITLE_H: f64 = 32.0;
@@ -1383,6 +1383,29 @@ fn radar_point(cx: f64, cy: f64, radius: f64, index: usize, count: usize) -> Poi
     }
 }
 
+fn radar_cubic_segments(points: &[Point], tension: f64) -> Vec<CubicCurveSegment> {
+    let count = points.len();
+    (0..count)
+        .map(|index| {
+            let p0 = &points[(index + count - 1) % count];
+            let p1 = &points[index];
+            let p2 = &points[(index + 1) % count];
+            let p3 = &points[(index + 2) % count];
+            CubicCurveSegment {
+                control1: Point {
+                    x: p1.x + (p2.x - p0.x) * tension,
+                    y: p1.y + (p2.y - p0.y) * tension,
+                },
+                control2: Point {
+                    x: p2.x - (p3.x - p1.x) * tension,
+                    y: p2.y - (p3.y - p1.y) * tension,
+                },
+                end: p2.clone(),
+            }
+        })
+        .collect()
+}
+
 fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram {
     let margin_top = diagram.radar_config.margin_top.unwrap_or(0.0);
     let margin_bottom = diagram.radar_config.margin_bottom.unwrap_or(0.0);
@@ -1464,7 +1487,7 @@ fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagra
     let min = diagram.y_axis.as_ref().map_or(0.0, |axis| axis.min);
     let range = (max - min).max(f64::EPSILON);
     for (series_index, plot) in diagram.series.iter().enumerate() {
-        let mut points = plot
+        let points = plot
             .data
             .iter()
             .enumerate()
@@ -1478,13 +1501,23 @@ fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagra
                 )
             })
             .collect::<Vec<_>>();
-        if let Some(first) = points.first().cloned() {
-            points.push(first);
+        let color = SERIES_COLORS[series_index % SERIES_COLORS.len()].into();
+        if diagram.radar_config.graticule == RadarGraticule::Circle && points.len() >= 3 {
+            items.push(LayoutedChartItem::CubicPath {
+                start: points[0].clone(),
+                segments: radar_cubic_segments(
+                    &points,
+                    diagram.radar_config.curve_tension.unwrap_or(0.17),
+                ),
+                color,
+            });
+        } else {
+            let mut points = points;
+            if let Some(first) = points.first().cloned() {
+                points.push(first);
+            }
+            items.push(LayoutedChartItem::LinePath { points, color });
         }
-        items.push(LayoutedChartItem::LinePath {
-            points,
-            color: SERIES_COLORS[series_index % SERIES_COLORS.len()].into(),
-        });
     }
 
     if !diagram.series.is_empty() && diagram.radar_config.show_legend {
@@ -1595,7 +1628,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.19.0");
+        assert_eq!(crate::VERSION, "0.20.0");
     }
 
     #[test]
@@ -2287,6 +2320,7 @@ mod tests {
             margin_right: None,
             axis_scale_factor: None,
             axis_label_factor: None,
+            curve_tension: None,
         };
 
         let layout = layout_chart_diagram(&diagram, 500.0, 500.0);
@@ -2346,5 +2380,22 @@ mod tests {
         let (label_x, label_y) = first_label.expect("first radar axis label");
         assert!((label_x - 220.0).abs() < f64::EPSILON);
         assert!((label_y - 35.6).abs() < 1e-10);
+    }
+
+    #[test]
+    fn radar_curve_tension_builds_closed_cubic_segments() {
+        let points = vec![
+            Point { x: 0.0, y: 0.0 },
+            Point { x: 10.0, y: 0.0 },
+            Point { x: 10.0, y: 10.0 },
+            Point { x: 0.0, y: 10.0 },
+        ];
+        let segments = radar_cubic_segments(&points, 0.25);
+
+        assert_eq!(segments.len(), 4);
+        assert_eq!(segments[0].control1, Point { x: 2.5, y: -2.5 });
+        assert_eq!(segments[0].control2, Point { x: 7.5, y: -2.5 });
+        assert_eq!(segments[0].end, points[1]);
+        assert_eq!(segments[3].end, points[0]);
     }
 }

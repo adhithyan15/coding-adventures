@@ -1,6 +1,6 @@
 [package]
 name = "diagram-layout-chart"
-version = "0.26.0"
+version = "0.27.0"
 edition = "2021"
 description = "XY, pie, Sankey, quadrant, and radar layout engine for chart-family diagrams (DG04)"
 

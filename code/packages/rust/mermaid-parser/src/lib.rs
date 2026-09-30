@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.131.0";
+pub const VERSION: &str = "0.132.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{HashMap, HashSet};
@@ -5040,6 +5040,11 @@ fn parse_radar_config(source: &str) -> RadarConfig {
             .and_then(|value| value.parse::<f64>().ok())
             .filter(|value| value.is_finite() && *value >= 0.0)
     };
+    let finite = |key| {
+        value(key)
+            .and_then(|value| value.parse::<f64>().ok())
+            .filter(|value| value.is_finite())
+    };
     RadarConfig {
         width: positive("width"),
         height: positive("height"),
@@ -5049,6 +5054,7 @@ fn parse_radar_config(source: &str) -> RadarConfig {
         margin_right: non_negative("marginRight"),
         axis_scale_factor: positive("axisScaleFactor"),
         axis_label_factor: positive("axisLabelFactor"),
+        curve_tension: finite("curveTension"),
         ..RadarConfig::default()
     }
 }
@@ -13626,7 +13632,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.131.0");
+        assert_eq!(crate::VERSION, "0.132.0");
     }
 
     #[test]

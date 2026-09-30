@@ -472,9 +472,10 @@ polygon `graticule` choices in semantic chart IR. Layout applies the configured
 scale and graticule geometry before backend-neutral Paint lowering. Multiple
 curves on one statement and multiline curve bodies lower into ordered semantic
 series through the same grammar-backed path. Radar width, height, four margins,
-axis scale, and axis-label factors from init directives or YAML front matter
-survive typed semantic configuration and control deterministic native geometry.
-Curve tension, theme-exact styling, and filled or smoothed curve styling remain
+axis scale, axis-label factors, and curve tension from init directives or YAML
+front matter survive typed semantic configuration and control deterministic
+native geometry. Circular graticules lower Radar series through backend-neutral
+cubic Paint paths. Theme-exact styling and filled curve styling remain
 unsupported at the partial level.
 
 ### Event Modeling Native Slice
