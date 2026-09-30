@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C152-jhari",
+    "language": "telugu",
+    "chapter": 152,
+    "sequence": 6590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:13709fc8bd9e04dd"
+  },
+  "findings": []
+}

@@ -1,0 +1,17 @@
+{
+  "language": "telugu",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:79f33fa3e9d48c75",
+  "lessonIds": [
+    "TE-C152-jhari",
+    "TE-S173-letter-jha",
+    "TE-R152-jhari-recall"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 1,
+  "text": "telugu/narration/ch152.txt",
+  "json": "telugu/narration/ch152.json",
+  "textHash": "fnv1a64:6d8232922b767572",
+  "jsonHash": "fnv1a64:16cbc06c85e21026",
+  "findings": []
+}

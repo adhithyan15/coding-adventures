@@ -23,6 +23,7 @@ const TELUGU_NGA = DUCTUS[ductusKey("telugu", "ఙ")];
 const TELUGU_CA = DUCTUS[ductusKey("telugu", "చ")];
 const TELUGU_CHHA = DUCTUS[ductusKey("telugu", "ఛ")];
 const TELUGU_JA = DUCTUS[ductusKey("telugu", "జ")];
+const TELUGU_JHA = DUCTUS[ductusKey("telugu", "ఝ")];
 const TELUGU_NYA = DUCTUS[ductusKey("telugu", "ఞ")];
 const TELUGU_TTA = DUCTUS[ductusKey("telugu", "ట")];
 const TELUGU_TTHA = DUCTUS[ductusKey("telugu", "ఠ")];
@@ -42,7 +43,7 @@ const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
 );
 
 describe("handwriting ductus", () => {
-  // The sourced క, ఙ, ఛ, ఞ, ట and డ routes and five-run pedagogical ఐ route cross
+  // The sourced క, ఙ, ఛ, ఝ, ఞ, ట and డ routes and five-run pedagogical ఐ route cross
   // narrow printed counter transitions while still covering their complete
   // outlines. ట's six separately numbered source movements cut across the
   // broad printed bowl most strongly. డ's separately numbered arcs likewise
@@ -56,6 +57,7 @@ describe("handwriting ductus", () => {
     ట: 0.55,
     ఛ: 0.92,
     డ: 0.32,
+    ఝ: 0.75,
     ఐ: 0.59,
     ఒ: 0.84,
     ఋ: 0.84,
@@ -84,6 +86,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("జ", TELUGU_JA.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("ఝ", TELUGU_JHA.source.url)).toBe(
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("ఞ", TELUGU_NYA.source.url)).toBe(
@@ -259,6 +264,20 @@ describe("handwriting ductus", () => {
       "curve down and right around the lower-left bowl",
       "sweep right and up around the lower-right bowl",
       "restart and curl through the upper-right flourish",
+    ]);
+  });
+
+  it("Telugu ఝ preserves all five source-verified pen-down runs", () => {
+    expect(penLifts(TELUGU_JHA)).toBe(4);
+    expect(TELUGU_JHA.strokes).toHaveLength(5);
+    expect(
+      TELUGU_JHA.strokes.map((stroke) => stroke.segments[0]!.label),
+    ).toEqual([
+      "circle around the broad left bowl",
+      "restart and circle around the middle bowl",
+      "restart and circle around the right bowl",
+      "restart and sweep through the upper flourish",
+      "restart and draw the separate downward stem",
     ]);
   });
 

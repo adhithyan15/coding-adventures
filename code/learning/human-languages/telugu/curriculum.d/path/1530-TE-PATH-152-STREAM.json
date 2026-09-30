@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-152-STREAM",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "before": [],
+  "inline": [
+    "TE-EXT-152-STREAM"
+  ],
+  "after": []
+}

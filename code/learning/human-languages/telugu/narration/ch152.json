@@ -1,0 +1,461 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 152,
+  "title": "A Word for a Stream — Then Its First Letter",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:79f33fa3e9d48c75",
+  "lessons": [
+    {
+      "id": "TE-C152-jhari",
+      "sequence": 6590,
+      "title": "ఝరి (jhari) — a stream",
+      "headword": "ఝరి",
+      "romanization": "jhari",
+      "gloss": "a stream; mountain stream",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:13709fc8bd9e04dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Find the familiar రి at the end: ర carries the short ి sign. Now picture a narrow stream moving down a hillside. This lesson gives that stream a name before it asks you to study the uncommon first letter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఝరి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఝరి — jhari — \"a stream\" or \"mountain stream\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it in two gentle pieces: jha, ri. Read the word as ఝ-రి. The first sound is a breathy jh; the second piece is the familiar రి."
+            },
+            {
+              "kind": "speech",
+              "text": "ఝరి (jhari) is an authentic learned or literary word shared with Sanskrit. It is not an everyday word you must force into conversation. Keep its concrete image today: a stream running down a slope."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Meaning comes first. You can recognise and say the whole word before the next lesson asks your hand to take its first shape apart."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jha, ri, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jha · ri*, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhari, as one word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhari*, as one word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ఝరి (jhari) — a stream",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ఝరి** — a stream]"
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "the familiar రి at the end",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: the familiar **రి** at the end]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "TE-C152-jhari-meaning",
+              "prompt": "What Telugu word can mean a stream or mountain stream?",
+              "assesses": [
+                "TE-LEX-C152-STREAM-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ఝరి",
+                "jhari"
+              ],
+              "feedback": {
+                "correct": "ఝరి — a stream or mountain stream.",
+                "incorrect": "ఝరి — say it as jha, ri."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఝరి (jhari) mean? (\"A stream\" or \"mountain stream.\") Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-S173-letter-jha",
+      "sequence": 6600,
+      "title": "ఝ — the breathy first letter in ఝరి (jhari)",
+      "headword": "ఝ",
+      "romanization": "jha",
+      "gloss": "the letter ఝ — taken from ఝరి",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8178b492d1fc5ae2",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ఝ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ఝ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One gentle look back first: వాఙ్మయం means \"literature,\" and its uncommon letter is ఙ. Point to ఙ without copying it. Today you will keep that shape distinct from a different uncommon letter."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say ఝరి (jhari) once. What does it mean? (\"A stream\" or \"mountain stream.\")"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now slow the first piece: jha. That breathy jh base letter is today's whole task."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ఝ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఝ — jha."
+            },
+            {
+              "kind": "speech",
+              "text": "In ఝరి (jhari), the first base letter is ఝ. The rest, రి, is already familiar. Read the whole word in two pieces: ఝ-రి."
+            },
+            {
+              "kind": "speech",
+              "text": "This aspirated letter is uncommon in everyday Telugu vocabulary. That is why the book gave you the authentic word ఝరి (jhari) before asking you to practise the shape."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ఝ — five movements, five runs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Follow the filmstrip slowly. Movement 1 circles the broad left bowl. Lift. Movement 2 circles the middle bowl. Lift again. Movement 3 circles the right bowl. Movement 4 sweeps through the separate upper flourish. Movement 5 draws the separate stem downward below the middle."
+            },
+            {
+              "kind": "speech",
+              "text": "The numbered route is one attested school-style order; Telugu handwriting can vary. Keep all five pen-down runs distinct and let the three bowls stay round."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ఝ (jha) once, following the five numbered movements",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: **ఝ** once, following the five numbered movements]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COPY",
+              "instruction": "ఝ (jha) twice without tracing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COPY: **ఝ** twice without tracing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "ఝ + రి = ఝరి (jhari)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: **ఝ** + **రి** = **ఝరి**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ఝరి (jhari)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ఝరి**]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "TE-S173-letter-jha-find",
+              "prompt": "Which base letter begins ఝరి (jhari)?",
+              "assesses": [
+                "TE-SCRIPT-RECOG-173"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ఝ",
+                "jha"
+              ],
+              "feedback": {
+                "correct": "ఝ — the breathy jh letter.",
+                "incorrect": "ఝ — take the first base letter from ఝరి."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — ఝ? What word gave it to you? (ఝరి (jhari).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R152-jhari-recall",
+      "sequence": 6610,
+      "title": "ఝరి (jhari) — meaning and shape together",
+      "headword": "ఝరి",
+      "romanization": "jhari",
+      "gloss": "a short return to a stream and the letter ఝ",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:365eed0ab62b414a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Picture a stream running down a hillside. Say the Telugu word for it. (ఝరి (jhari).)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read ఝరి (jhari) once. Cover it, then write only its first base letter: ఝ."
+            },
+            {
+              "kind": "speech",
+              "text": "Now uncover the word and check the three rounded bowls, the upper flourish, and the separate downward stem. Keep the five pen-down runs distinct."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ఝ (jha) once from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ఝ** once from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "ఝ + రి = ఝరి (jhari)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: **ఝ** + **రి** = **ఝరి**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“a stream”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “a stream”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "TE-R152-jhari-recall-write",
+              "prompt": "Write the first base letter of ఝరి (jhari), then say what the whole word means.",
+              "assesses": [
+                "TE-LEX-C152-STREAM-01",
+                "TE-SCRIPT-RECOG-173"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "ఝ — a stream",
+                "ఝ, stream",
+                "jha, stream",
+                "ఝ, mountain stream"
+              ],
+              "feedback": {
+                "correct": "ఝ begins ఝరి — a stream.",
+                "incorrect": "Begin with ఝ; the whole word ఝరి means a stream."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఝరి (jhari) mean, and which base letter begins it? (\"A stream\"; ఝ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

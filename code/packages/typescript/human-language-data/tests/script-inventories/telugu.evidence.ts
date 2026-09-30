@@ -298,6 +298,32 @@ export const scriptInventoryEvidence = {
     );
     expect(missingByScript.get("telugu.json")?.has("ఛ") ?? false).toBe(false);
     expect(affected.get("ఛ") ?? 0).toBe(0);
+    const teluguJha = scripts.telugu!.letters.find(
+      (entry) => entry.glyph === "ఝ",
+    )!;
+    expect(teluguJha.sound).toBe("jha");
+    expect(teluguJha.penLifts).toBe(4);
+    expect(teluguJha.strokeOrder).toEqual([
+      "circle around the broad left bowl",
+      "restart and circle around the middle bowl",
+      "restart and circle around the right bowl",
+      "restart and sweep through the upper flourish",
+      "restart and draw the separate downward stem",
+    ]);
+    expect(teluguJha.strokeOrderNote).toMatch(
+      /five numbered movements.*five pen-down runs.*1.?3.*three rounded bowls.*movement 4.*upper flourish.*movement 5.*downward stem/i,
+    );
+    expect(teluguJha.strokeOrderSource?.url).toBe(
+      "https://play.google.com/store/apps/details?id=com.sathishshanmugam.writetelugualphabets",
+    );
+    expect(teluguJha.strokeOrderSource?.citation).toMatch(
+      /Sathish Shanmugam.*Write Telugu Alphabets.*ఝ.*dot_stroke_c_2_4_jha\.png.*movements 1.?5.*version 2\.6/i,
+    );
+    expect(teluguJha.strokeOrderSource?.variation).toMatch(
+      /three rounded bowls.*upper flourish.*downward stem.*five disconnected directional movements.*separate pen-down run.*Noto Sans Telugu.*not uniform/i,
+    );
+    expect(missingByScript.get("telugu.json")?.has("ఝ") ?? false).toBe(false);
+    expect(affected.get("ఝ") ?? 0).toBe(0);
     const teluguAa = scripts.telugu!.independentVowels!.find(
       (entry) => entry.glyph === "ఆ",
     )!;
