@@ -587,6 +587,11 @@ reacts (ENV-last).
   the runtime, so swapping roots loses nothing but composition-local state.
 - A package without variants gets byte-identical output. A sample-props shell
   with variants observes and selects too (it has no runtime to report to).
+- Two variants whose names differ only in letter case or in `-` / `_`
+  (`touch` / `Touch`, `task-list` / `task_list` / `tasklist`) are refused when
+  the variants are discovered, for every backend: they would name one
+  generated view twice, and a case-insensitive filesystem keeps only one of
+  their files.
 
 **Acceptance.** Emitter tests pin the variant composable (its name, the
 default's event and props types, no redeclaration); builder tests mirror

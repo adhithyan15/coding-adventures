@@ -7955,6 +7955,27 @@ fn discover_variants(src_dir: &Path, component: &str) -> Result<Vec<Option<Strin
     }
     named.sort();
     named.dedup();
+    // Two variants that differ only in letter case or in `-` / `_` name the
+    // same thing twice: SwiftUI and Compose build one type name from both
+    // (`touch` and `Touch` are both `GridTouch`, `task-list` and `task_list`
+    // both `GridTaskList`), and a case-insensitive filesystem holds only one
+    // of `Grid.touch.kt` and `Grid.Touch.kt`. Refuse the pair here, naming
+    // both files, rather than let a backend compiler report a redeclaration.
+    let fold = |variant: &str| -> String {
+        variant
+            .chars()
+            .filter(|c| *c != '-' && *c != '_')
+            .map(|c| c.to_ascii_lowercase())
+            .collect()
+    };
+    for (index, first) in named.iter().enumerate() {
+        if let Some(second) = named[index + 1..].iter().find(|other| fold(other) == fold(first)) {
+            return Err(BuildError::Io(format!(
+                "layout variants {component}.{first}.mll and {component}.{second}.mll differ only in \
+                 case or `-`/`_`, so they would name the same generated view; rename one"
+            )));
+        }
+    }
     for v in named {
         variants.push(Some(v));
     }
@@ -14695,6 +14716,27 @@ version = "1"
 
     /// Bare default + one named variant: returns `[None, Some("touch")]`
     /// in that order (default first per UI30 §5).
+    #[test]
+    fn discover_variants_refuses_names_that_collide_as_generated_views() {
+        for (first, second) in [("touch", "Touch"), ("task-list", "task_list"), ("task-list", "tasklist")] {
+            let tmp = TempDir::new().unwrap();
+            let src = tmp.path();
+            for name in ["Grid.mll".to_string(), format!("Grid.{first}.mll"), format!("Grid.{second}.mll")] {
+                fs::write(src.join(name), "layout Grid { Box [ root ] }\n").unwrap();
+            }
+            let error = discover_variants(src, "Grid").expect_err("colliding variants");
+            let message = error.to_string();
+            assert!(message.contains(&format!("Grid.{first}.mll")) || message.contains(&format!("Grid.{second}.mll")), "{message}");
+            assert!(message.contains("differ only in case"), "{message}");
+        }
+        // Distinct names still pass.
+        let tmp = TempDir::new().unwrap();
+        for name in ["Grid.mll", "Grid.touch.mll", "Grid.wide.mll"] {
+            fs::write(tmp.path().join(name), "layout Grid { Box [ root ] }\n").unwrap();
+        }
+        assert_eq!(discover_variants(tmp.path(), "Grid").unwrap().len(), 3);
+    }
+
     #[test]
     fn discover_variants_default_plus_named_returns_both_in_order() {
         let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
