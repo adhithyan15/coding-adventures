@@ -82,11 +82,8 @@ PENDING code/packages/rust/paint-vm-skia  # 2 dependents (barcode-1d, barcode-2d
 PENDING code/packages/elixir/activation_functions  # owned by elixir-activation-matrix-perceptron-build-front-coverage
 PENDING code/packages/elixir/matrix  # owned by elixir-activation-matrix-perceptron-build-front-coverage
 PENDING code/packages/elixir/perceptron  # owned by elixir-activation-matrix-perceptron-build-front-coverage
-PENDING code/packages/go/activation-functions  # owned by go-activation-matrix-perceptron-build-front-coverage
 PENDING code/packages/go/algol-lexer  # owned by go-algol-lexer-parser-build-front-coverage
 PENDING code/packages/go/algol-parser  # owned by go-algol-lexer-parser-build-front-coverage
-PENDING code/packages/go/matrix  # owned by go-activation-matrix-perceptron-build-front-coverage
-PENDING code/packages/go/perceptron  # owned by go-activation-matrix-perceptron-build-front-coverage
 PENDING code/packages/haskell/arc2d  # owned by haskell-arc2d-build-front-coverage
 PENDING code/packages/kotlin/micro-qr  # owned by kotlin-micro-qr-build-front-and-gradle-metadata-coverage
 PENDING code/packages/python/activation-functions  # owned by python-activation-matrix-loss-perceptron-build-front-coverage

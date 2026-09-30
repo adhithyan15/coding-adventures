@@ -11,22 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 16298,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16298",
-    "item_id": "build-tool-orphan-package-root-validation-corpus-and-go-adoption",
-    "branch": "codex/parity-orphan-package-root-20260930",
-    "head_revision": "839f4c3dc090024c2443f4f1c2e4d086be93a859",
-    "status": "pr-open"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-09-30T18:18:17Z",
+    "observed_at": "2026-09-30T19:39:08Z",
     "pr_number": 16298,
-    "status": "checks-pending",
-    "notes": "Ready-for-review PR #16298 is open and mergeable. Initial CI, CodeQL language detection, and human-language change detection are queued; auto-merge remains disabled until every required check is terminal and acceptable."
+    "status": "merged",
+    "notes": "All 51 final-head checks reached terminal acceptable conclusions: 44 successes and seven expected skips or neutral results. GitHub reported MERGEABLE and CLEAN; guarded squash auto-merge was enabled only then, and GitHub merged PR #16298 automatically as 25b464472ca66cc71d20911bff02115ffdcc7c87 without a plain manual merge command."
   },
   "last_inventory": {
-    "revision": "9fc12ead72cbd04c8689cfbae425fb20251c7209",
+    "revision": "3334094dd159cd4e37de9d4ce6246b52b3032781",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1472,
@@ -1703,20 +1696,59 @@
       "notes": "Discovered by the post-#13544 source-hashing audit. After TypeScript adopts the neutral generated-directory registry, add OCaml source recognition and normalized unambiguous path framing as a separate engine-scoped tranche."
     },
     {
-      "id": "build-tool-lua-hashing-cache-conformance",
-      "title": "Implement portable source hashing and cache behavior in the Lua build tool",
+      "id": "build-tool-lua-portable-source-hashing-conformance",
+      "title": "Implement portable source hashing in the Lua build tool",
       "status": "pending",
       "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-lua-dune-build-discovery-fixture-adoption", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-site-authored-resource-source-input-extension"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered by the post-#13544 source-hashing audit. Lua has no source-hasher/cache layer, so add the complete checked language source-input registry, portable package and named/raw dependency digest framing, raw combined-digest construction, dependency invalidation, and stable cache recovery only after its Dune discovery evidence and the shared corpus land. The new engine must prove exact registry projection rather than introduce another local map."
+      "notes": "Split from the older combined Lua hashing/cache owner after the native-authority audit. Implement only the process-free registry projection, deterministic source selection, normalized path framing, and package digest contract over caller-supplied inert snapshots. Do not claim native no-follow, retained-handle, stable-identity, filesystem, process, environment, or cache-persistence authority."
+    },
+    {
+      "id": "build-tool-lua-portable-dependency-hashing-conformance",
+      "title": "Implement portable dependency hashing in the Lua build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-lua-portable-source-hashing-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the neutral hashing-v1 dependency and combined-digest oracle after Lua package hashing lands. Keep the work process-free and limited to package-identity framing, decoded dependency digests, deterministic invalidation, and cache-result classification over inert inputs."
+    },
+    {
+      "id": "build-tool-lua-native-source-snapshot-stability-hardening",
+      "title": "Harden native Lua source snapshots before hashing",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["build-tool-lua-portable-source-hashing-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Native-authority owner for retained-handle or equivalent no-follow source reads, stable file identity, replacement detection, and bounded cross-platform failure semantics. Pure Lua 5.4 plus LuaFileSystem does not supply the required primitives, so keep autonomous selection blocked until a reviewed native adapter or narrow exception is approved."
+    },
+    {
+      "id": "build-tool-lua-native-cache-persistence-hardening",
+      "title": "Harden native Lua cache persistence",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["build-tool-lua-portable-dependency-hashing-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Native-authority owner for bounded cache reads, atomic replacement, durability, link and identity checks, corruption recovery, and cross-platform filesystem semantics. Do not infer these guarantees from the portable in-memory hashing oracle."
+    },
+    {
+      "id": "build-tool-lua-hashing-cache-conformance",
+      "title": "Complete Lua hashing and cache conformance",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["build-tool-lua-portable-source-hashing-conformance", "build-tool-lua-portable-dependency-hashing-conformance", "build-tool-lua-native-source-snapshot-stability-hardening", "build-tool-lua-native-cache-persistence-hardening"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Selection-blocked integration owner retained from the original combined Lua hashing/cache item. It owns no independent implementation: complete it only after the portable source and dependency engines pass the neutral corpus and the separately reviewed native snapshot and persistence authorities land or receive explicit narrow exceptions."
     },
     {
       "id": "build-tool-portable-source-hashing-remaining-engines",
       "title": "Complete portable source hashing across every remaining build-tool engine",
       "status": "pending",
       "selection_blocked": true,
-      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-python-portable-source-hashing-conformance", "build-tool-go-portable-source-hashing-conformance", "build-tool-elixir-native-source-snapshot-stability-hardening", "build-tool-perl-native-source-snapshot-stability-hardening", "build-tool-haskell-native-source-snapshot-stability-hardening", "build-tool-csharp-fsharp-portable-source-hashing-conformance", "build-tool-swift-portable-source-hashing-conformance", "build-tool-ruby-portable-source-hashing-conformance", "build-tool-rust-portable-source-hashing-conformance", "build-tool-typescript-portable-source-hashing-conformance", "build-tool-lua-hashing-cache-conformance", "build-tool-go-native-source-snapshot-stability-hardening", "build-tool-python-language-source-input-registry-adoption", "build-tool-ruby-language-source-input-registry-adoption", "build-tool-swift-git-index-snapshot-stability-repair", "build-tool-typescript-language-source-input-registry-adoption", "build-tool-go-repository-boundary-reverse-diff-digest-adoption", "build-tool-elixir-repository-boundary-reverse-diff-digest-adoption", "build-tool-haskell-repository-boundary-reverse-diff-digest-adoption", "build-tool-lua-repository-boundary-reverse-diff-digest-adoption", "build-tool-perl-repository-boundary-reverse-diff-digest-adoption", "build-tool-python-repository-boundary-reverse-diff-digest-adoption", "build-tool-ruby-repository-boundary-reverse-diff-digest-adoption", "build-tool-rust-repository-boundary-reverse-diff-digest-adoption", "build-tool-typescript-repository-boundary-reverse-diff-digest-adoption", "build-tool-csharp-fsharp-repository-boundary-diff-fixture-adoption", "build-tool-swift-repository-boundary-diff-digest-fixture-adoption", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance", "build-tool-site-authored-resource-source-input-extension"],
+      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-python-portable-source-hashing-conformance", "build-tool-go-portable-source-hashing-conformance", "build-tool-elixir-native-source-snapshot-stability-hardening", "build-tool-perl-native-source-snapshot-stability-hardening", "build-tool-haskell-native-source-snapshot-stability-hardening", "build-tool-csharp-fsharp-portable-source-hashing-conformance", "build-tool-swift-portable-source-hashing-conformance", "build-tool-ruby-portable-source-hashing-conformance", "build-tool-rust-portable-source-hashing-conformance", "build-tool-typescript-portable-source-hashing-conformance", "build-tool-lua-portable-source-hashing-conformance", "build-tool-go-native-source-snapshot-stability-hardening", "build-tool-python-language-source-input-registry-adoption", "build-tool-ruby-language-source-input-registry-adoption", "build-tool-swift-git-index-snapshot-stability-repair", "build-tool-typescript-language-source-input-registry-adoption", "build-tool-go-repository-boundary-reverse-diff-digest-adoption", "build-tool-elixir-repository-boundary-reverse-diff-digest-adoption", "build-tool-haskell-repository-boundary-reverse-diff-digest-adoption", "build-tool-lua-repository-boundary-reverse-diff-digest-adoption", "build-tool-perl-repository-boundary-reverse-diff-digest-adoption", "build-tool-python-repository-boundary-reverse-diff-digest-adoption", "build-tool-ruby-repository-boundary-reverse-diff-digest-adoption", "build-tool-rust-repository-boundary-reverse-diff-digest-adoption", "build-tool-typescript-repository-boundary-reverse-diff-digest-adoption", "build-tool-csharp-fsharp-diff-selection-match-work-ceiling-adoption", "build-tool-swift-repository-boundary-diff-digest-fixture-adoption", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance", "build-tool-site-authored-resource-source-input-extension"],
       "branch": null,
       "pr_number": null,
       "notes": "Selection-blocked aggregate for the complete hashing contract. It has no independent source behavior and advances only after every engine-scoped leaf proves exact component pruning, portable source recognition, normalized path framing, deterministic byte hashing, dependency invalidation, and stable cache recovery or records a reviewed exception."
@@ -1816,7 +1848,7 @@
       "title": "Complete portable dependency hashing across every build-tool engine",
       "status": "pending",
       "selection_blocked": true,
-      "depends_on": ["build-tool-python-portable-dependency-hashing-conformance", "build-tool-go-portable-dependency-hashing-conformance", "build-tool-elixir-portable-dependency-hashing-conformance", "build-tool-perl-portable-dependency-hashing-conformance", "build-tool-haskell-portable-dependency-hashing-conformance", "build-tool-csharp-fsharp-portable-dependency-hashing-conformance", "build-tool-swift-portable-dependency-hashing-conformance", "build-tool-ruby-portable-dependency-hashing-conformance", "build-tool-rust-portable-dependency-hashing-conformance", "build-tool-typescript-portable-dependency-hashing-conformance", "build-tool-lua-hashing-cache-conformance", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
+      "depends_on": ["build-tool-python-portable-dependency-hashing-conformance", "build-tool-go-portable-dependency-hashing-conformance", "build-tool-elixir-portable-dependency-hashing-conformance", "build-tool-perl-portable-dependency-hashing-conformance", "build-tool-haskell-portable-dependency-hashing-conformance", "build-tool-csharp-fsharp-portable-dependency-hashing-conformance", "build-tool-swift-portable-dependency-hashing-conformance", "build-tool-ruby-portable-dependency-hashing-conformance", "build-tool-rust-portable-dependency-hashing-conformance", "build-tool-typescript-portable-dependency-hashing-conformance", "build-tool-lua-portable-dependency-hashing-conformance", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Selection-blocked aggregate for hashing-v1 dependency and combined digests. It has no independent source behavior and advances only after every native build-tool engine frames sorted package identities with decoded 32-byte dependency digests, combines raw package and dependency digests, consumes the language-neutral oracle, or records a reviewed exception."
@@ -9586,7 +9618,7 @@
       "id": "build-tool-lua-repository-boundary-reverse-diff-digest-adoption",
       "title": "Adopt repository-boundary reverse diff and digest behavior in Lua",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-lua-hashing-cache-conformance", "build-tool-lua-diff-selection-match-work-ceiling-adoption"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-lua-native-source-snapshot-stability-hardening", "build-tool-lua-diff-selection-match-work-ceiling-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Lua build tool after its hashing and cache implementation lands."
@@ -9640,10 +9672,11 @@
       "id": "build-tool-csharp-fsharp-repository-boundary-diff-fixture-adoption",
       "title": "Consume repository-boundary reverse-diff fixtures through both .NET front doors",
       "status": "pending",
+      "selection_blocked": true,
       "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-csharp-fsharp-portable-source-hashing-conformance", "build-tool-csharp-fsharp-diff-selection-match-work-ceiling-adoption"],
       "branch": null,
       "pr_number": null,
-      "notes": "The shared C# engine and independent F# facade now execute every neutral local-plus-boundary package-digest case, but neither front door loads the new reverse-diff fixture. Add complete dynamic consumption through both native test suites without changing the already reviewed native Git or filesystem authority boundary."
+      "notes": "Superseded classification retained as selection-blocked history. The existing build-tool-csharp-fsharp-diff-selection-match-work-ceiling-adoption owner already consumes all eleven neutral diff cases through the shared C# engine and independent F# facade, including the repository-boundary reverse-diff case. Do not select or implement this duplicate; the source-hashing aggregate now depends on the authoritative graph/diff owner directly."
     },
     {
       "id": "build-tool-swift-repository-boundary-diff-digest-fixture-adoption",
@@ -9698,7 +9731,7 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Discovered by the post-PR #16088 OCaml readiness audit and reconfirmed after PR #16127. `code/specs/OCAML06-capability-analyzer.md` still says `Status: in progress`, and `code/packages/ocaml/README.md` retains stale lane-readiness wording even though the analyzer and its independent CI gate merged in PR #14519. Correct both directly coupled status surfaces before denominator promotion; do not treat this editorial defect as missing analyzer implementation or as a reason to select a second parity PR."
+      "notes": "Discovered by the post-PR #16088 OCaml readiness audit and reconfirmed after PR #16127. `code/specs/OCAML06-capability-analyzer.md` still says `Status: in progress`; the OCAML07 reporter and OCAML08 CI/toolchain status wording also needs reconciliation with merged implementation evidence; and `code/packages/ocaml/README.md` retains stale lane-readiness wording even though the analyzer and its independent CI gate merged in PR #14519. Correct only these directly coupled status surfaces before denominator promotion; do not treat the editorial defects as missing analyzer implementation or as a reason to select a second parity PR."
     },
     {
       "id": "ocaml-classical-cipher-denominator-consumers",
@@ -10279,17 +10312,35 @@
       "id": "barcode-symbologies-existing-lanes-v1-conformance",
       "title": "Reconcile existing barcode symbology lanes with the neutral v1 contract",
       "status": "pending",
-      "depends_on": ["itf-existing-lanes-v1-conformance", "code39-existing-lanes-v1-conformance", "codabar-existing-lanes-v1-conformance", "code128-existing-lanes-v1-conformance", "upc-a-existing-lanes-v1-conformance", "ean-13-existing-lanes-v1-conformance", "haskell-itf-stack-windows-build-front-coverage", "haskell-barcode-1d-symbology-windows-build-front-coverage"],
+      "depends_on": ["itf-existing-lanes-v1-conformance", "code39-existing-lanes-v1-conformance", "codabar-existing-lanes-v1-conformance", "code128-existing-lanes-v1-conformance", "upc-a-existing-lanes-v1-conformance", "ean-13-existing-lanes-v1-conformance", "barcode-layout-existing-lanes-v1-conformance", "haskell-itf-stack-windows-build-front-coverage", "haskell-barcode-1d-symbology-windows-build-front-coverage"],
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
       "notes": "Selection-blocked integration owner for the six collision-free existing-lane symbology children. After every child merges, validate the complete 72-root consumer registry, cross-symbology metadata and capability invariants, and downstream facade readiness without absorbing any child implementation. Clear selection_blocked only for that final bounded integration tranche; it must still follow pending -> in-progress -> pr-open -> merged."
     },
     {
+      "id": "barcode-layout-1d-language-neutral-conformance",
+      "title": "Define the neutral barcode-layout-1d geometry contract",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Freeze the portable integer geometry subset before adding Java, Kotlin, and Dart. Specify exact pattern expansion, quiet-zone and alternation rules, symbol inference, checked integer overflow and resource ceilings, string-only metadata projection, immutable copied outputs, and fail-closed text handling. Keep fractional/native paint, raster, font, shaping, device, filesystem, and process authority outside this contract."
+    },
+    {
+      "id": "barcode-layout-existing-lanes-v1-conformance",
+      "title": "Reconcile existing barcode-layout-1d lanes with the neutral contract",
+      "status": "pending",
+      "depends_on": ["barcode-layout-1d-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Dynamically execute the neutral layout corpus in every current lane and reconcile observed divergence in empty patterns, zero quiet zones, run alternation, integer versus fractional geometry, text behavior, metadata projection, error precedence, overflow, and output mutability before those implementations become the oracle for missing lanes."
+    },
+    {
       "id": "barcode-layout-1d-java-kotlin-dart-lane-parity",
       "title": "Complete barcode-layout-1d parity in Java, Kotlin, and Dart",
       "status": "pending",
-      "depends_on": [],
+      "depends_on": ["barcode-layout-1d-language-neutral-conformance", "barcode-layout-existing-lanes-v1-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Port the pure shared geometry layer into the three missing established lanes using their existing paint-instructions packages. Preserve exact pattern expansion, symbol inference, spans, finite checked geometry, authoritative metadata, immutable outputs, fail-closed text behavior, and empty capability profiles."
@@ -10352,7 +10403,7 @@
       "id": "barcode-1d-facade-language-neutral-conformance",
       "title": "Define the language-neutral barcode-1d facade contract",
       "status": "pending",
-      "depends_on": ["barcode-symbologies-language-neutral-conformance"],
+      "depends_on": ["barcode-symbologies-language-neutral-conformance", "barcode-layout-1d-language-neutral-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Freeze six-symbology routing aliases, defaults, typed errors, options, Codabar guards, exact scene metadata, and pure ASCII rendering. Exclude native raster, fonts, shaping, device, filesystem, and process backends."
@@ -10964,10 +11015,13 @@
     {
       "id": "go-activation-matrix-perceptron-build-front-coverage",
       "title": "Add tested BUILD fronts for Go activation-functions, matrix, and perceptron",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [],
-      "branch": null,
+      "branch": "codex/parity-go-neural-fronts-20260930",
       "pr_number": null,
+      "selected_at": "2026-09-30T19:49:16Z",
+      "selection_revision": "3334094dd159cd4e37de9d4ce6246b52b3032781",
+      "selection_notes": "Selected only after PR #16298 completed all 51 final-head checks acceptably and merged through guarded squash auto-merge as 25b464472ca66cc71d20911bff02115ffdcc7c87. Exact current main is 3334094dd159cd4e37de9d4ce6246b52b3032781; the regenerated schema-3 inventory remains collision-clean at 15 established lanes, 1,472 implementation identities, 4,739 implementation slots, 1,514 all-reported identities, completion bands 178/265, 123/934, 181/2,282, and 990/13,860, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. Before ranking, parallel audits split Lua portable hashing from unreviewed native snapshot/cache authority, recorded the barcode-layout neutral and existing-lane prerequisites, blocked the duplicate .NET repository-boundary diff owner, expanded the OCaml documentation repair, and registered the Forme plugin-runner portable boundary behind live PR #16296. This dependency-free three-module Go chain removes three reviewed orphan-ledger entries with existing package/downstream coverage and no new runtime authority. Twelve live open PRs have zero exact overlap with its state, roadmap, package, and documentation paths.",
       "notes": "Discovered by the post-PR #16133 structural package-root audit. The tracked Go modules `activation-functions`, `matrix`, and `perceptron` have no BUILD front, so repository discovery cannot schedule the neural-primitives chain. Add fail-closed cross-platform fronts, preserve the module dependency order, run the existing activation-functions and matrix suites, add direct perceptron package coverage and missing package documentation, and validate the affected downstream closure."
     },
     {
@@ -11110,7 +11164,7 @@
     {
       "id": "build-tool-orphan-package-root-validation-corpus-and-go-adoption",
       "title": "Generalize orphan package-root validation and adopt it in Go",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-orphan-crate-validation-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-perl-blib-generated-directory-registry-repair"],
       "branch": "codex/parity-orphan-package-root-20260930",
       "pr_number": 16298,
@@ -11122,7 +11176,11 @@
       "selection_notes": "Selected only after PR #16257 completed every final-head check acceptably and merged through guarded squash auto-merge. The regenerated exact-main schema-3 inventory remains collision-clean and identity-neutral at 15 established lanes, 1,471 implementation identities, 4,738 implementation slots, 1,513 all-reported identities, completion bands 178/265, 123/934, 181/2,282, and 989/13,846, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown language buckets. Parallel audits added the Haskell Cabal test-component and Perl source-metadata/native-stability owners before ranking. This owner remains the highest-leverage ready item because the production gate is structurally blind outside Cargo and it supplies bounded repository-wide enforcement for the 51 reviewed established-lane roots without absorbing implementation of their missing fronts. Twelve live open PRs have zero exact overlap after excluding the merged blib PR, and this tranche requires no CI workflow edit.",
       "rebase_notes": "Before implementation publication, origin/main first advanced through unrelated preprocessor, Mermaid, Forme, and Sanskrit merges, and the branch rebased cleanly onto 290170573666eafc1c3d30dfa34fd3c159ff617d. A final pre-push refresh then rebased onto exact current main 9fc12ead72cbd04c8689cfbae425fb20251c7209 after Mermaid, ALGOL, Telugu, Sanskrit, TaskApp, and the independent Forme boundary repair merged. The refreshed collision-clean inventory remains 15 established lanes, 1,472 implementation identities, 4,739 slots, 1,514 all-reported identities, completion bands 178/265, 123/934, 181/2,282, and 990/13,860, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. The TypeScript forme-plugin-installer-core singleton remains owned by its deterministic snapshot planner, while native installation authority remains excluded from autonomous selection. Upstream PR #16285 now owns the repository-source boundary registration, so this tranche preserves that exact digest without duplicating its projection changes.",
       "publication_notes": "Opened ready-for-review PR #16298 from validated clean head 839f4c3dc090024c2443f4f1c2e4d086be93a859. The neutral corpus validates 166 cases across 285 files, the Python suite passes 114 tests, Go test and vet passed on the final implementation, the production gate evaluated 45 BUILD files and 5,264 packages with all missing roots represented as owned pending debt, C# and Swift conformance passed, Ruff source lint, Bandit, diff hygiene, inventory collision checks, and the state DAG passed, and independent correctness and security reviews found no actionable issue. A final redundant focused Go validator relink was prevented by local disk exhaustion after the post-rebase full suite had already passed. Thirteen live open PRs had zero path overlap and no other parity PR was active immediately before publication. GitHub reports the PR non-draft and mergeable with initial checks queued; auto-merge remains disabled until every required check is terminal and acceptable.",
-      "notes": "Discovered when the post-PR #16133 audit found tracked established-lane package roots without BUILD fronts while the current gate scans only Cargo crates. Define a distinct orphan_package_root_snapshot contract with at most 8,192 roots, at most 16,384 aggregate BUILD fronts, at most 2,000,000 UTF-8 bytes, compact source evidence, and streaming Go discovery over the reviewed package-root and source-input registries. Validate every platform front, ancestor coverage, generated and virtual exclusions, exemptions, collisions, stale entries, and deterministic diagnostics without raising the legacy orphan-crate snapshot ceiling. This validator owns discovery enforcement, not implementation of missing fronts, and adds no filesystem authority beyond the existing caller-supplied repository snapshot boundary."
+      "notes": "Discovered when the post-PR #16133 audit found tracked established-lane package roots without BUILD fronts while the current gate scans only Cargo crates. Define a distinct orphan_package_root_snapshot contract with at most 8,192 roots, at most 16,384 aggregate BUILD fronts, at most 2,000,000 UTF-8 bytes, compact source evidence, and streaming Go discovery over the reviewed package-root and source-input registries. Validate every platform front, ancestor coverage, generated and virtual exclusions, exemptions, collisions, stale entries, and deterministic diagnostics without raising the legacy orphan-crate snapshot ceiling. This validator owns discovery enforcement, not implementation of missing fronts, and adds no filesystem authority beyond the existing caller-supplied repository snapshot boundary.",
+      "merged_head_revision": "a8f06ec8720be2282bb89a6e2d7a8f4a1386e2ea",
+      "merged_at": "2026-09-30T19:39:08Z",
+      "merge_revision": "25b464472ca66cc71d20911bff02115ffdcc7c87",
+      "merge_notes": "All 51 final-head checks reached terminal acceptable conclusions: 44 successes and seven expected skips or neutral results. GitHub reported the reviewed head MERGEABLE and CLEAN; guarded squash auto-merge was enabled only then, and GitHub merged PR #16298 automatically without a plain manual merge command."
     },
     {
       "id": "forme-plugin-installer-snapshot-portable-conformance",
@@ -11132,6 +11190,16 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the exact-main inventory after merged PR #16274 added the TypeScript-only forme-plugin-installer-core identity. Inventory forme-capability, forme-manifest, forme-plugin-host, and the installer core; freeze language-neutral fixtures for the deterministic preparePluginInstallSnapshot boundary, including FM02 section 4.2 limits, validation order, stable failures, reviewed-grant closure, canonical grants bytes, destination, and result, then derive applicable-lane children or narrow reviewed exceptions. Keep installPreparedPlugin, filesystem traversal and mutation, ownership and ACL identity, links, locks, staging, randomness, fsync and chmod, rename and rollback, cancellation, registry, network, prompt, CLI, and sandbox behavior outside autonomous parity delivery as native-host and security authority."
+    },
+    {
+      "id": "forme-plugin-runner-wire-lifecycle-portable-conformance",
+      "title": "Classify and fixture the portable Forme plugin-runner wire lifecycle",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["forme-portable-core-family-classification"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered from live non-parity PR #16296, which proposes the TypeScript-only forme-plugin-runner-ts identity. After that PR resolves and exact main is refreshed, inventory the runner with the existing Forme family and freeze only its process-free wire codec and framing, JSON-RPC identifier, bounded lifecycle/state-transition, stream-envelope, cancellation-projection, and pure SDK projection behavior. Keep stdin/stdout, argv, signals, timers, filesystem, network, storage, shell execution, native limits, sandbox, trust, and installation authority outside this owner. Selection remains blocked while #16296 is open and owns the proposed package paths."
     },
     {
       "id": "assembler-lua-arm-prerequisite-classification",
