@@ -65,12 +65,13 @@
 // subset `z80-backend` actually uses.
 
 pub use z80_simulator::encoding::{
-    assemble, encode_add_hl_rp, encode_alu_reg, encode_jr_c, encode_jr_nc, encode_jr_nz,
-    encode_jr_z, encode_ld_a_n, encode_ld_r_n, encode_ld_r_r, encode_ld_rp_nn,
+    assemble, encode_add_hl_rp, encode_alu_imm, encode_alu_reg, encode_jp, encode_jp_cond,
+    encode_jr_c, encode_jr_nc, encode_jr_nz, encode_jr_z, encode_ld_a_n, encode_ld_r_n,
+    encode_ld_r_r, encode_ld_rp_nn,
 };
 pub use z80_simulator::opcodes::{
-    ALU_ADC, ALU_ADD, ALU_AND, ALU_CP, ALU_OR, ALU_SBC, ALU_SUB, ALU_XOR, CPL, HALT, PAIR_DE,
-    PAIR_HL, REG_B, REG_C, REG_D, REG_E, REG_H, REG_L, RET,
+    ALU_ADC, ALU_ADD, ALU_AND, ALU_CP, ALU_OR, ALU_SBC, ALU_SUB, ALU_XOR, COND_NZ, COND_Z, CPL,
+    HALT, PAIR_DE, PAIR_HL, REG_B, REG_C, REG_D, REG_E, REG_H, REG_L, RET,
 };
 
 // ===========================================================================
@@ -126,6 +127,13 @@ mod tests {
         assert_eq!(encode_add_hl_rp(PAIR_DE), 0x19);
         assert_eq!(encode_alu_reg(ALU_SBC, REG_D), 0x9A);
         assert_eq!(encode_ld_r_r(REG_H, REG_B), 0x60);
+    }
+
+    #[test]
+    fn word03b_absolute_branch_encodings() {
+        assert_eq!(encode_jp(0x1234), vec![0xC3, 0x34, 0x12]);
+        assert_eq!(encode_jp_cond(COND_NZ, 0x1234), vec![0xC2, 0x34, 0x12]);
+        assert_eq!(encode_jp_cond(COND_Z, 0x1234), vec![0xCA, 0x34, 0x12]);
     }
 
     #[test]

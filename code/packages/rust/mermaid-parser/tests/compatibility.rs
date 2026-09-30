@@ -247,6 +247,8 @@ fn pinned_radar_subset_corpus_parses_to_chart_ir() {
             assert_eq!(chart.radar_config.axis_color.as_deref(), Some("#506070"));
             assert_eq!(chart.radar_config.curve_opacity, Some(0.35));
             assert_eq!(chart.radar_config.series_colors, vec!["#405060"]);
+        } else if id == "sparse-theme-palette" {
+            assert_eq!(chart.radar_config.series_colors, vec!["", "#708090"]);
         }
     }
 }

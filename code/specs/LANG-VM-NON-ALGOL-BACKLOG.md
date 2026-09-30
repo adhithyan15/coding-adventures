@@ -35,22 +35,21 @@ ETS key. Dartmouth BASIC emits `array_set` after subscript flattening for
 now specifies the shared-backend guard; direct-IIR real-Erlang tests cover
 both ets element types and the index in `x0`.
 
-WORD03 is next. The current two-slot backends lower typed constants,
-arithmetic, bitwise operations, unary complement, and return, but reject
-comparisons and control-flow instructions. Select WORD03a's normalized
-unsigned comparisons as a bounded first slice on both targets; WORD03b adds
-control-flow edges, liveness, and byte-address resolution after that proof.
+PR #16253 delivered WORD03a and merged as
+`9085b2dfa805c0e8d53138175cda7eb60481c72c`. Both two-slot backends now
+execute normalized unsigned comparisons at both widths; the Z80 proof includes
+high/low-byte ordering and the 8086 proof includes unsigned boundary cases.
+
+WORD03b is now selected. It adds control-flow edges, fixed-point liveness, and
+final byte-address resolution while retaining the bounded two-slot contract.
 
 The current queue is:
 
-1. **WORD03a / VM-072 (selected):** lower normalized unsigned `u8`/`u16`
-   comparisons to Boolean results on Z80 and 8086; execute both emitted byte
-   streams in their simulators.
-2. **WORD03b / VM-072:** add structured branches and loops with control-flow
+1. **WORD03b / VM-072 (selected):** add structured branches and loops with control-flow
    liveness and final byte-address resolution on both target backends.
-3. **VM-069 / PREP01:** continue expansion-definition provenance and
+2. **VM-069 / PREP01:** continue expansion-definition provenance and
    `defined()` operand expansion.
-4. **VM-075 / VM-076:** reconcile the 8086 and Z80 simulator documentation
+3. **VM-075 / VM-076:** reconcile the 8086 and Z80 simulator documentation
    claims recorded below.
 
 The following run records the first VM-067 selection.

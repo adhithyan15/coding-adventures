@@ -47,7 +47,7 @@
 
 pub use intel8086_simulator::encoding::{
     assemble, encode_add_ax_imm16, encode_alu_reg_reg, encode_dec_reg16, encode_hlt,
-    encode_inc_reg16, encode_jcc_short, encode_mov_reg_imm16, encode_mov_reg_imm8,
+    encode_inc_reg16, encode_jcc_short, encode_jmp_near, encode_mov_reg_imm16, encode_mov_reg_imm8,
     encode_mov_reg_reg16, encode_mov_reg_reg8, encode_nop, encode_sub_ax_imm16,
 };
 
@@ -110,6 +110,12 @@ mod tests {
             vec![0x33, 0xC3]
         );
         assert_eq!(encode_mov_reg_reg8(REG_CL, REG_AL), vec![0x8A, 0xC8]);
+    }
+
+    #[test]
+    fn word03b_near_jump_encoding() {
+        assert_eq!(encode_jmp_near(0x1234), vec![0xE9, 0x34, 0x12]);
+        assert_eq!(encode_jmp_near(-3), vec![0xE9, 0xFD, 0xFF]);
     }
 
     #[test]

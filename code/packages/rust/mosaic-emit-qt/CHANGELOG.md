@@ -62,6 +62,20 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed — state-layer sizing reaches Qt layout items and host controls (#15277)
+
+Size variants on `Stack` and other styled layout containers now drive
+conditional QML `implicitWidth`, `implicitHeight`, and matching
+`Layout.preferred*` bindings instead of freezing their base dimensions.
+State-layer `padding` and `font-size` likewise reach Qt host controls, with
+longhand padding retaining precedence over the shorthand on each edge.
+
+Focused emitter tests cover both paths. Fresh native-complete toolkit and
+Engram inverse-ratchet runs retire the Qt `width`, `height`, `padding`, and
+`font-size` allowances that this fix makes stale. TaskApp's broader measured Qt
+style-degradation baseline remains 193; this change does not claim the
+unrelated occurrences still reported elsewhere in that application.
+
 ### Fixed — Text parts own a native surface when they paint (#15276)
 
 A `Text [ part ]` that authors background, border, radius, or padding now keeps

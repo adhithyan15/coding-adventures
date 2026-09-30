@@ -3386,6 +3386,73 @@ jobs:
             exit 1
           fi
 
+      # UI89 step 5: the Android app carries its Rust runtime. The TaskApp
+      # engine is built for every Android ABI with cargo-ndk
+      # (build-mosaic-android-libs.sh), handed to the Compose build as
+      # --runtime-library, and installed into the Android project's jniLibs.
+      # Gate: the APK carries libmosaic_app.so for all four ABIs, and each one
+      # exports mosaic_app_create. The emulator launch follows.
+      - name: Build Trestle for Android with its Rust runtime (UI89 step 5)
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
+        shell: bash
+        timeout-minutes: 45
+        run: |
+          set -euo pipefail
+          ndk="${ANDROID_NDK_LATEST_HOME:-${ANDROID_NDK_HOME:-}}"
+          if [ -z "$ndk" ] || [ ! -d "$ndk" ]; then
+            echo "::error::this runner has no Android NDK (ANDROID_NDK_LATEST_HOME / ANDROID_NDK_HOME)"
+            exit 1
+          fi
+          export ANDROID_NDK_HOME="$ndk"
+          rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android
+          cargo install --locked cargo-ndk --version 4.1.2
+
+          jni_libs="$RUNNER_TEMP/mosaic-trestle-jnilibs"
+          bash code/scripts/build-mosaic-android-libs.sh task-mosaic-app "$jni_libs"
+
+          output="$RUNNER_TEMP/mosaic-compose-taskapp-android-runtime"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend compose --output "$output" --emit-project --profile native-complete --runtime-library "$jni_libs"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$output/compose/mosaic-degradations.json"
+          android_project="$output/compose/android"
+
+          # The wrapper, written outside the project as in the step above.
+          gradle_version="$(sed -n 's|^distributionUrl=.*/gradle-\(.*\)-bin\.zip$|\1|p' "$android_project/gradle/wrapper/gradle-wrapper.properties")"
+          test -n "$gradle_version"
+          wrapper_seed="$RUNNER_TEMP/mosaic-android-runtime-gradle-wrapper"
+          rm -rf "$wrapper_seed"
+          mkdir -p "$wrapper_seed"
+          touch "$wrapper_seed/settings.gradle.kts"
+          gradle --no-daemon -q -p "$wrapper_seed" wrapper --gradle-version "$gradle_version"
+          cp "$wrapper_seed/gradlew" "$android_project/gradlew"
+          cp "$wrapper_seed/gradle/wrapper/gradle-wrapper.jar" "$android_project/gradle/wrapper/gradle-wrapper.jar"
+          (
+            cd "$android_project"
+            ./gradlew --no-daemon --stacktrace assembleDebug
+          )
+
+          apk="$(find "$android_project/build/outputs/apk/debug" -name '*.apk' -print -quit)"
+          test -n "$apk"
+          unpacked="$RUNNER_TEMP/mosaic-trestle-android-runtime-apk"
+          rm -rf "$unpacked"
+          unzip -q -o "$apk" 'lib/*' -d "$unpacked"
+          llvm_nm="$ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-nm"
+          test -x "$llvm_nm"
+          for abi in arm64-v8a armeabi-v7a x86_64 x86; do
+            library="$unpacked/lib/$abi/libmosaic_app.so"
+            if ! test -f "$library"; then
+              echo "::error::the APK has no lib/$abi/libmosaic_app.so"
+              find "$unpacked/lib" -type f
+              exit 1
+            fi
+            symbols="$RUNNER_TEMP/mosaic-trestle-$abi-symbols.txt"
+            "$llvm_nm" -D --defined-only "$library" > "$symbols"
+            if ! grep -Eq ' T mosaic_app_create$' "$symbols"; then
+              echo "::error::lib/$abi/libmosaic_app.so does not export mosaic_app_create"
+              head -n 40 "$symbols"
+              exit 1
+            fi
+          done
+
       - name: Build concrete Mosaic TaskApp WinUI shell
         if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
         shell: pwsh

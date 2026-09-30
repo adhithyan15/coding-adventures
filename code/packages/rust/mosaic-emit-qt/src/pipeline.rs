@@ -1812,13 +1812,28 @@ fn part_style_props<'a>(node: &LayoutNode, ctx: &'a EmitCtx<'_>) -> Option<&'a [
     ctx.part_styles.get(part).map(|props| props.as_slice())
 }
 
-fn qml_layout_size_lines(props: &[StyleProp]) -> Vec<String> {
+fn qml_layout_size_lines_with_states(
+    props: &[StyleProp],
+    state_layers: &[StateLayer<'_>],
+) -> Vec<String> {
     let mut lines = Vec::new();
-    if let Some(width) = style_prop(props, "width").and_then(qml_px_or_none) {
+    let width = conditional_px_expr(
+        style_prop(props, "width").and_then(qml_px_or_none),
+        state_layers,
+        "width",
+        "0",
+    );
+    if let Some(width) = width {
         lines.push(format!("implicitWidth: {width}"));
         lines.push(format!("Layout.preferredWidth: {width}"));
     }
-    if let Some(height) = style_prop(props, "height").and_then(qml_px_or_none) {
+    let height = conditional_px_expr(
+        style_prop(props, "height").and_then(qml_px_or_none),
+        state_layers,
+        "height",
+        "0",
+    );
+    if let Some(height) = height {
         lines.push(format!("implicitHeight: {height}"));
         lines.push(format!("Layout.preferredHeight: {height}"));
     }
@@ -1837,12 +1852,23 @@ fn qml_layout_size_lines(props: &[StyleProp]) -> Vec<String> {
     lines
 }
 
-fn qml_layout_container_lines(props: &[StyleProp]) -> Vec<String> {
-    let mut lines = qml_layout_size_lines(props);
+fn qml_layout_size_lines(props: &[StyleProp]) -> Vec<String> {
+    qml_layout_size_lines_with_states(props, &[])
+}
+
+fn qml_layout_container_lines_with_states(
+    props: &[StyleProp],
+    state_layers: &[StateLayer<'_>],
+) -> Vec<String> {
+    let mut lines = qml_layout_size_lines_with_states(props, state_layers);
     if let Some(gap) = style_prop(props, "gap").and_then(qml_px_or_none) {
         lines.push(format!("spacing: {gap}"));
     }
     lines
+}
+
+fn qml_layout_container_lines(props: &[StyleProp]) -> Vec<String> {
+    qml_layout_container_lines_with_states(props, &[])
 }
 
 /// The two `elevation` tiers (UI41, issue #12028 item 1), mapped to a
@@ -2284,19 +2310,41 @@ fn qml_padding_px(value: &str) -> Option<String> {
 /// different edges -- `task-detail` is `15 / 16 / 16 / 47` and rendered 15 on
 /// every side (#15247).
 fn qml_padding_edges(props: &[StyleProp]) -> (String, String, String, String) {
-    let short = style_prop(props, "padding").and_then(qml_padding_px);
-    let edge = |name: &str| {
-        style_prop(props, name)
-            .and_then(qml_padding_px)
-            .or_else(|| short.clone())
-            .unwrap_or_else(|| "0".to_string())
-    };
+    let edge = |name: &str| qml_padding_edge(props, name).unwrap_or_else(|| "0".to_string());
     (
         edge("padding-left"),
         edge("padding-top"),
         edge("padding-right"),
         edge("padding-bottom"),
     )
+}
+
+fn qml_padding_edge(props: &[StyleProp], name: &str) -> Option<String> {
+    style_prop(props, name)
+        .and_then(qml_padding_px)
+        .or_else(|| style_prop(props, "padding").and_then(qml_padding_px))
+}
+
+fn conditional_padding_edge_expr(
+    base: &[StyleProp],
+    state_layers: &[StateLayer<'_>],
+    name: &str,
+) -> Option<String> {
+    let base_value = qml_padding_edge(base, name);
+    let overrides: Vec<(&str, String)> = state_layers
+        .iter()
+        .filter_map(|layer| {
+            qml_padding_edge(layer.props, name).map(|value| (layer.cond_expr.as_str(), value))
+        })
+        .collect();
+    if base_value.is_none() && overrides.is_empty() {
+        return None;
+    }
+    let mut expr = base_value.unwrap_or_else(|| "0".to_string());
+    for (condition, value) in overrides {
+        expr = format!("( {condition} ) ? {value} : {expr}");
+    }
+    Some(expr)
 }
 
 /// Does this part declare any padding at all, by shorthand or longhand?
@@ -2575,7 +2623,7 @@ fn emit_styled_layout_container_qml(
 
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
-    let layout_lines = qml_layout_container_lines(props);
+    let layout_lines = qml_layout_container_lines_with_states(props, &state_layers);
     let needs_wrapper = needs_container_wrapper(props)
         || state_layers
             .iter()
@@ -2631,7 +2679,7 @@ fn emit_styled_layout_container_qml(
     if let Some(id) = &elevation_id {
         writeln!(out, "{inner_pad}id: {id}").unwrap();
     }
-    for line in qml_layout_size_lines(props) {
+    for line in qml_layout_size_lines_with_states(props, &state_layers) {
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
     let (w_src, h_src) = match &content_id {
@@ -5054,12 +5102,15 @@ fn host_control_style_qml_lines(
     let mut lines = Vec::new();
     // #16223 -- Controls expose one property per edge. Reuse the container
     // resolver so longhands override the shorthand with the same CSS rules.
-    if has_any_padding(base) {
-        let (left, top, right, bottom) = qml_padding_edges(base);
-        lines.push(format!("leftPadding: {left}"));
-        lines.push(format!("rightPadding: {right}"));
-        lines.push(format!("topPadding: {top}"));
-        lines.push(format!("bottomPadding: {bottom}"));
+    for (edge, property) in [
+        ("padding-left", "leftPadding"),
+        ("padding-right", "rightPadding"),
+        ("padding-top", "topPadding"),
+        ("padding-bottom", "bottomPadding"),
+    ] {
+        if let Some(value) = conditional_padding_edge_expr(base, &state_layers, edge) {
+            lines.push(format!("{property}: {value}"));
+        }
     }
     if let Some(property) = caps.text_color {
         let foreground = style_prop(base, "color").and_then(qml_hex_color_or_none);
@@ -5070,6 +5121,16 @@ fn host_control_style_qml_lines(
         }
     }
     if caps.font {
+        let font_size = style_prop(base, "font-size").and_then(qml_font_pixel_size);
+        if let Some(font_size) = conditional_scalar_expr(
+            font_size,
+            &state_layers,
+            "font-size",
+            "Qt.application.font.pixelSize",
+            qml_font_pixel_size,
+        ) {
+            lines.push(format!("font.pixelSize: {font_size}"));
+        }
         if let Some(is_bold) = style_prop(base, "font-weight").and_then(qml_font_weight_is_bold) {
             lines.push(format!("font.bold: {is_bold}"));
         }
@@ -15959,6 +16020,105 @@ mod tests {
             ),
             "HostButton state precedence is wrong:\n{out}"
         );
+    }
+
+    #[test]
+    fn a_stack_size_variant_drives_its_qml_geometry() {
+        let model = component(
+            "Spinner",
+            vec![slot(
+                "size",
+                SlotType::OneOf(vec!["md".to_string(), "lg".to_string()]),
+                true,
+            )],
+            vec![],
+        );
+        let layout = LayoutDef {
+            component_name: "Spinner".to_string(),
+            root: LayoutNode {
+                tag: "Stack".to_string(),
+                part_name: Some("spinner".to_string()),
+                props: vec![],
+                children: vec![],
+            },
+        };
+        let style = StyleDef {
+            component_name: "Spinner".to_string(),
+            parts: vec![PartStyle {
+                name: "spinner".to_string(),
+                base: vec![sp("width", "24px"), sp("height", "24px")],
+                transitions: vec![],
+                states: vec![StateStyle {
+                    slot: Some("size".to_string()),
+                    slot_is_bool: false,
+                    state: "lg".to_string(),
+                    transitions: vec![],
+                    props: vec![sp("width", "32px"), sp("height", "32px")],
+                }],
+            }],
+        };
+
+        let out = from_pipeline(&model, &layout, &style).unwrap().output;
+        for expected in [
+            "implicitWidth: ( (size === \"lg\") ) ? 32 : 24",
+            "Layout.preferredWidth: ( (size === \"lg\") ) ? 32 : 24",
+            "implicitHeight: ( (size === \"lg\") ) ? 32 : 24",
+            "Layout.preferredHeight: ( (size === \"lg\") ) ? 32 : 24",
+        ] {
+            assert!(out.contains(expected), "missing {expected:?}:\n{out}");
+        }
+    }
+
+    #[test]
+    fn a_host_control_size_variant_drives_padding_and_font_size() {
+        let model = component(
+            "SizedButton",
+            vec![slot(
+                "size",
+                SlotType::OneOf(vec!["md".to_string(), "sm".to_string()]),
+                true,
+            )],
+            vec![],
+        );
+        let layout = LayoutDef {
+            component_name: "SizedButton".to_string(),
+            root: LayoutNode {
+                tag: "HostButton".to_string(),
+                part_name: Some("button".to_string()),
+                props: vec![lp("label", LayoutPropValue::String("Save".to_string()))],
+                children: vec![],
+            },
+        };
+        let style = StyleDef {
+            component_name: "SizedButton".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![sp("padding", "8px"), sp("font-size", "14px")],
+                transitions: vec![],
+                states: vec![StateStyle {
+                    slot: Some("size".to_string()),
+                    slot_is_bool: false,
+                    state: "sm".to_string(),
+                    transitions: vec![],
+                    props: vec![
+                        sp("padding", "4px"),
+                        sp("padding-left", "5px"),
+                        sp("font-size", "12px"),
+                    ],
+                }],
+            }],
+        };
+
+        let out = from_pipeline(&model, &layout, &style).unwrap().output;
+        for expected in [
+            "leftPadding: ( (size === \"sm\") ) ? 5 : 8",
+            "rightPadding: ( (size === \"sm\") ) ? 4 : 8",
+            "topPadding: ( (size === \"sm\") ) ? 4 : 8",
+            "bottomPadding: ( (size === \"sm\") ) ? 4 : 8",
+            "font.pixelSize: ( (size === \"sm\") ) ? 12 : 14",
+        ] {
+            assert!(out.contains(expected), "missing {expected:?}:\n{out}");
+        }
     }
 
     /// The `For` delegate `Item` sizes to its children so the styled cell

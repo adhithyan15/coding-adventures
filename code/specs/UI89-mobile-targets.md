@@ -236,6 +236,29 @@ What step 4 changed from §3.4, and why:
   a native-complete app shows its startup failure screen; the emulator run
   belongs to step 5.
 
+### 3.6 The Android runtime, as built (step 5, first half)
+
+- **Built per ABI.** `code/scripts/build-mosaic-android-libs.sh <cargo package>
+  <jniLibs dir> [--release]` runs `cargo ndk` for `arm64-v8a`, `armeabi-v7a`,
+  `x86_64` and `x86` at API level 26 (the project's minimum SDK) and writes
+  `<dir>/<abi>/libmosaic_app.so`: renamed, because the shared runtime host
+  loads `mosaic_app` by name through JNA on Android as on desktop. Debug by
+  default for CI; `--release` for a build to ship.
+- **Selected by the path's shape.** For the Compose backend a
+  `--runtime-library` that is a directory (and not an `.xcframework`) is that
+  set of libraries, as an `.xcframework` directory selects iOS for SwiftUI. It
+  is checked strictly, because it is copied into an APK that runs it: only the
+  four ABI directories, each a real directory holding exactly one regular
+  `libmosaic_app.so`, nothing followed through a link, at least one ABI. It is
+  installed into `android/src/main/jniLibs/<abi>/`, where Gradle packages it
+  and JNA finds it. The desktop project bundles nothing from it, and the
+  Android activity starts strictly (`MosaicStartup`), because a runtime was
+  selected.
+- **The gate.** CI builds TaskApp's engine for the four ABIs, packages it,
+  and requires the APK to hold `lib/<abi>/libmosaic_app.so` for each, each
+  exporting `mosaic_app_create` (`llvm-nm` from the NDK). The emulator launch
+  and restore test is the second half of step 5.
+
 ## 4. CI
 
 | lane | builds | drives |
@@ -258,7 +281,8 @@ lanes are green, as their own PRs.
    seam; Trestle builds an APK. *Done (§3.5): every Compose `--emit-project`
    build writes `android/`; there is no separate target flag.*
 5. **Android runtime:** `cargo-ndk` ABIs, JNA on Android, `filesDir`; the
-   emulator test.
+   emulator test. *First half done (§3.6): the engine is built per ABI and
+   packaged; the emulator launch follows.*
 6. **Mobile host effects** through UI87's shared libraries.
 7. **Every app:** Journal, Engram, Venture (after BR02's host work).
 8. **Flutter:** `flutter create --platforms=android,ios`, per-ABI native

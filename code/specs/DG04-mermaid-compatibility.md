@@ -479,8 +479,10 @@ cubic Paint paths. Core Radar theme variables control axis and graticule
 strokes, label and legend sizing, series palettes, translucent curve fills, and
 stroke widths through the same semantic layout and Paint pipeline. Axis labels
 carry angle-derived horizontal anchors and vertical baselines into backend-neutral
-text layout so text extends away from the chart center. Pixel-exact default-theme
-matching remains partial.
+text layout so text extends away from the chart center. The native layout also
+matches the upstream 600-pixel plot, 50-pixel margins, default series palette,
+top title, and vertical overlaid legend, including sparse authored `cScaleN`
+overrides. Backend font rasterization and SVG overflow behavior remain partial.
 
 ### Event Modeling Native Slice
 

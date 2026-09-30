@@ -1,5 +1,10 @@
 # Changelog — intel8086-simulator
 
+## Unreleased — WORD03b branch encoding
+
+- Add the canonical `JMP rel16` byte encoder used by the Word backend's
+  post-layout label fixups.
+
 ## Unreleased — WORD03a encoder helper
 
 - Add the pure short conditional-jump encoder used by both-width Word

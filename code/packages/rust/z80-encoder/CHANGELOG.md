@@ -1,5 +1,10 @@
 # Changelog — z80-encoder
 
+## Unreleased — WORD03b branch surface
+
+- Re-export canonical absolute `JP nn` and `JP NZ/Z,nn` encoders for final
+  backend label fixups.
+
 ## Unreleased — WORD03a
 
 - Re-export `CP` and short Z/C condition encoders for the Word comparison

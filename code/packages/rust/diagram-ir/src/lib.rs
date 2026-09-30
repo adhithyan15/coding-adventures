@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.73.0";
+pub const VERSION: &str = "0.74.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -1215,6 +1215,15 @@ pub enum LayoutedChartItem {
         entries: Vec<LegendEntry>,
         font_size: Option<f64>,
     },
+    VerticalLegend {
+        x: f64,
+        y: f64,
+        entries: Vec<LegendEntry>,
+        box_size: f64,
+        font_size: f64,
+        line_height: f64,
+        fill_opacity: f64,
+    },
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -2356,7 +2365,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.73.0");
+        assert_eq!(VERSION, "0.74.0");
     }
     #[test]
     fn default_direction_is_tb() {
