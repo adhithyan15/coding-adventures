@@ -189,6 +189,49 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
             'assign = text.index("_mosaicHost = widget.mosaicHost")', workflow
         )
 
+    def test_engram_layout_variant_is_compiled_beside_the_default(self) -> None:
+        """UI48 §7.9: the Flutter lane checks Engram's touch variant and its
+        selector are in lib/ before analyzing and building it."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index(
+            "# UI48 §7.9 (ENV2/ENV3): Engram is the one package with a layout"
+        )
+        block = workflow[start : workflow.index("\n\n", start)]
+        self.assertIn("^class EngramAppTouch extends StatelessWidget {$", block)
+        self.assertIn("then exit 1; fi", block)
+        self.assertIn("switch (mosaicLayoutVariant(environment))", block)
+        self.assertIn("return EngramAppTouch($", block)
+        # The checks run before the project is analyzed and built.
+        self.assertLess(
+            start, workflow.index("--project-name mosaic_engram_app .")
+        )
+        self.assertIn("rust/mosaic-package-manifest", MODULE.ACCEPTANCE_PACKAGES)
+
+    def test_layout_variants_fixture_is_resized_in_the_lane(self) -> None:
+        """UI48 §7 wants a gate that changes the environment: the lane runs
+        the layout-variants fixture's widget test, which resizes the window
+        across the compact threshold and asserts the root swaps."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("# UI48 §7.9 (ENV2/ENV3): the resize gate")
+        block = workflow[start : workflow.index("\n\n", start)]
+        self.assertIn("fixtures/layout-variants --backend flutter", block)
+        self.assertIn("fixtures/layout-variants-test/widget_test.dart", block)
+        self.assertIn("flutter analyze", block)
+        self.assertIn("flutter test test/widget_test.dart", block)
+        test = (
+            Path(__file__).resolve().parents[2]
+            / "packages"
+            / "rust"
+            / "mosaic-emit-flutter"
+            / "fixtures"
+            / "layout-variants-test"
+            / "widget_test.dart"
+        ).read_text(encoding="utf-8")
+        self.assertIn("tester.view.physicalSize = const Size(400, 800);", test)
+        self.assertIn("find.byType(LayoutProbeCompact), findsOneWidget", test)
+
     def test_workflow_runs_the_platform_library_harness(self) -> None:
         """UI87 §7.7: the lane checks TaskApp installs the platform library on
         its started host, then runs the headless harness against TaskApp's

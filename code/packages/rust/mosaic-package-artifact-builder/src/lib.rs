@@ -4456,9 +4456,13 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         }
         Backend::Flutter => {
             let bundle_runtime = runtime_library.is_some();
+            // UI48 §7.9 (ENV3): the root's layout variants the shell switches
+            // between, by the same rules as SwiftUI and Compose.
+            let layout_variants = flutter_layout_choices(src_dir, component, layouts)?;
             let fl_opts = mosaic_emit_flutter::pipeline::EmitOptions {
                 emit_project: true,
                 require_runtime: project_shell_requires_runtime(profile, runtime_library),
+                layout_variants,
                 ..Default::default()
             };
             let r = mosaic_emit_flutter::pipeline::from_pipeline_with_options(
@@ -4528,6 +4532,23 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     let component_copy = backend_dir.join(format!("lib/{exported_component}.dart"));
                     write_file(&component_copy, component_source.as_bytes())?;
                     written.push(component_copy);
+                    // Every layout variant too (UI48 §7.9): the root's are
+                    // imported by `main.dart` and selected at run time, and
+                    // `flutter analyze` type-checks all of `lib/`, so every
+                    // export's variants are checked beside their default --
+                    // whose file each variant imports for the interface.
+                    for variant in discover_variants(src_dir, exported_component)?
+                        .into_iter()
+                        .flatten()
+                    {
+                        let variant_file = format!("{exported_component}.{variant}.dart");
+                        let variant_source = backend_dir.join(&variant_file);
+                        if variant_source.is_file() {
+                            let variant_copy = backend_dir.join("lib").join(&variant_file);
+                            write_file(&variant_copy, read_to_string(&variant_source)?.as_bytes())?;
+                            written.push(variant_copy);
+                        }
+                    }
                 }
                 let host = backend_dir.join("lib/mosaic_host.dart");
                 if let Some(parent) = host.parent() {
@@ -5377,6 +5398,49 @@ fn compose_layout_choices(
                     .conditions
                     .into_iter()
                     .map(|(axis, value)| (axis.wire_name(), value))
+                    .collect(),
+                variant: rule.variant,
+            })
+        })
+        .collect()
+}
+
+/// The layout variants a Flutter shell switches between (UI48 §7.9): the
+/// same rules as SwiftUI's and Compose's (`[[app.layouts]]`, or the
+/// conventions), each keyed by the wire names the shell's
+/// `MosaicHost.environmentReport` answers. A rule for a variant with no
+/// `.mll`, or one whose name cannot become a Dart widget class, fails the
+/// build.
+fn flutter_layout_choices(
+    src_dir: &Path,
+    component: &str,
+    declared: &[mosaic_package_manifest::layouts::LayoutRule],
+) -> Result<Vec<mosaic_emit_flutter::pipeline::LayoutChoice>, BuildError> {
+    let variants: Vec<String> = discover_variants(src_dir, component)?
+        .into_iter()
+        .flatten()
+        .collect();
+    let rules = mosaic_package_manifest::layouts::effective_layout_rules(declared, &variants);
+    rules
+        .into_iter()
+        .map(|rule| {
+            if !variants.contains(&rule.variant) {
+                return Err(BuildError::Io(format!(
+                    "`[[app.layouts]]` selects variant `{}`, but {component} has no {component}.{}.mll",
+                    rule.variant, rule.variant
+                )));
+            }
+            if mosaic_emit_flutter::pipeline::variant_widget_name(component, &rule.variant).is_none() {
+                return Err(BuildError::Io(format!(
+                    "layout variant `{}` of {component} cannot name a Dart widget class",
+                    rule.variant
+                )));
+            }
+            Ok(mosaic_emit_flutter::pipeline::LayoutChoice {
+                conditions: rule
+                    .conditions
+                    .into_iter()
+                    .map(|(axis, value)| (axis.wire_name().to_string(), value))
                     .collect(),
                 variant: rule.variant,
             })
@@ -7698,11 +7762,22 @@ fn compile_one_component(
 
             result.xaml
         }
-        Backend::Flutter => mosaic_emit_flutter::pipeline::from_pipeline(
-            &mosmodel_out.component,
-            &layout_out.def,
-            &style_def,
-        )
+        // A named variant shares one app with the default (UI48 §7.9): it
+        // imports the default's event types rather than redeclaring them,
+        // and names its own widget class.
+        Backend::Flutter => match variant {
+            Some(variant) => mosaic_emit_flutter::pipeline::from_pipeline_variant(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_def,
+                variant,
+            ),
+            None => mosaic_emit_flutter::pipeline::from_pipeline(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_def,
+            ),
+        }
         .map(|r| r.output)
         .map_err(|e| pipeline_emit_err(component, e))?,
         // A named variant shares one app with the default (UI48 §7.5): it
@@ -12268,6 +12343,140 @@ layout NativeEvents {
         // A sample shell without variants does not observe at all.
         assert!(!shell.contains("BoxWithConstraints"), "{shell}");
         assert!(shell.contains("            Card(\n"), "{shell}");
+    }
+
+    // UI48 §7.9: the same on Flutter -- every variant in `lib/`, and a
+    // selector in `main.dart` generated from the same rules.
+
+    #[test]
+    fn a_flutter_app_carries_its_touch_variant_and_selects_it_by_convention() {
+        let pkg = card_package_with_touch_variant();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Flutter)).expect("Flutter shell");
+        let lib = out.path().join("flutter/lib");
+        let variant = fs::read_to_string(lib.join("Card.touch.dart")).unwrap();
+        assert!(variant.contains("\nclass CardTouch extends StatelessWidget {\n"), "{variant}");
+        // The interface is the default's, imported: no second event type.
+        assert!(variant.contains("\nimport 'Card.dart';\n"), "{variant}");
+        assert!(!variant.contains("sealed class CardEvent"), "{variant}");
+        assert!(variant.contains("final void Function(CardEvent) dispatch;"), "{variant}");
+        let default = fs::read_to_string(lib.join("Card.dart")).unwrap();
+        assert!(default.contains("sealed class CardEvent"), "{default}");
+        assert!(default.contains("\nclass Card extends StatelessWidget {\n"), "{default}");
+        // The flat package artifact is the same variant file.
+        assert_eq!(
+            fs::read_to_string(out.path().join("flutter/Card.touch.dart")).unwrap(),
+            variant
+        );
+        let main = fs::read_to_string(lib.join("main.dart")).unwrap();
+        assert!(main.contains("import 'Card.dart';\nimport 'Card.touch.dart';\n"), "{main}");
+        assert!(main.contains("child: Builder(builder: _mosaicLayoutRoot),"), "{main}");
+        assert!(main.contains("switch (mosaicLayoutVariant(environment)) {"), "{main}");
+        assert!(main.contains("      case 'touch':\n        return CardTouch(\n"), "{main}");
+        assert!(main.contains("      default:\n        return Card(\n"), "{main}");
+        // Keyed by the wire name the environment report uses.
+        assert!(
+            main.contains("  ('touch', <String, String>{'pointer': 'coarse'}),\n"),
+            "{main}"
+        );
+        // A sample shell reads the window, to choose, but reports to nobody.
+        assert!(main.contains("final environment = MosaicHost.environmentReport("), "{main}");
+        assert!(!main.contains("reportEnvironment("), "{main}");
+        assert!(!main.contains("_observeEnvironment"), "{main}");
+    }
+
+    #[test]
+    fn declared_layout_rules_reach_the_flutter_selector_under_wire_names() {
+        let pkg = card_package_with_touch_variant();
+        let manifest = pkg.path().join("mosaic-package.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str("\n[[app.layouts]]\nvariant = \"touch\"\nsize-class = \"compact\"\n");
+        fs::write(&manifest, text).unwrap();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Flutter)).expect("Flutter shell");
+        let main = fs::read_to_string(out.path().join("flutter/lib/main.dart")).unwrap();
+        // `size-class` in the manifest, `sizeClass` in the report.
+        assert!(
+            main.contains("  ('touch', <String, String>{'sizeClass': 'compact'}),\n"),
+            "{main}"
+        );
+        assert!(!main.contains("'pointer': 'coarse'"), "the declared rule replaces the convention");
+    }
+
+    #[test]
+    fn a_flutter_layout_rule_for_a_missing_variant_is_refused() {
+        let pkg = card_package();
+        let manifest = pkg.path().join("mosaic-package.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str("\n[[app.layouts]]\nvariant = \"compact\"\nsize-class = \"compact\"\n");
+        fs::write(&manifest, text).unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package(&swiftui_options(&pkg, &out, Backend::Flutter)).unwrap_err();
+        assert!(error.to_string().contains("Card.compact.mll"), "{error}");
+    }
+
+    #[test]
+    fn a_flutter_app_without_variants_has_no_selector() {
+        let pkg = card_package();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Flutter)).expect("Flutter shell");
+        let main = fs::read_to_string(out.path().join("flutter/lib/main.dart")).unwrap();
+        assert!(!main.contains("mosaicLayout"), "{main}");
+        // A sample shell without variants does not read the window at all.
+        assert!(!main.contains("MediaQuery"), "{main}");
+        assert!(main.contains("          child: Card(\n"), "{main}");
+        let lib: Vec<String> = fs::read_dir(out.path().join("flutter/lib"))
+            .unwrap()
+            .map(|entry| entry.unwrap().file_name().to_string_lossy().into_owned())
+            .collect();
+        assert!(!lib.iter().any(|name| name.starts_with("Card.") && name != "Card.dart"), "{lib:?}");
+    }
+
+    /// Every axis a rule can test is a key the Flutter binding's
+    /// `environmentReport` answers, under the same wire name. The manifest
+    /// crate pins `wire_name` to `mosaic-app-runtime`; this pins the Dart
+    /// report to `wire_name`, so a generated rule can never test a key the
+    /// report does not carry (and so never silently match nothing).
+    #[test]
+    fn the_flutter_environment_report_carries_every_rule_axis() {
+        let binding = mosaic_app_bindings::flutter_runtime_binding_for_application("card", false);
+        let report = &binding[binding
+            .find("static Map<String, String> environmentReport(")
+            .expect("the binding reduces a window")..];
+        let report = &report[..report.find("};").expect("one map literal")];
+        let initial = &binding[binding
+            .find("static Map<String, String> initialEnvironment()")
+            .expect("the binding knows the platform")..];
+        let initial = &initial[..initial.find("};").expect("one map literal")];
+        for axis in mosaic_package_manifest::layouts::EnvironmentAxis::ALL {
+            let key = format!("'{}':", axis.wire_name());
+            assert!(
+                report.contains(&key) || (report.contains("...initialEnvironment()") && initial.contains(&key)),
+                "{key} is not in the Flutter environment report"
+            );
+        }
+    }
+
+    /// The native-complete shell with a variant both reports (ENV4) and
+    /// selects (ENV3), from the same MediaQuery aspects.
+    #[test]
+    fn a_native_complete_flutter_app_observes_and_selects() {
+        let pkg = card_package_with_touch_variant();
+        let runtime = pkg.path().join("libcard_app.so");
+        fs::write(&runtime, b"runtime").unwrap();
+        let out = TempDir::new().unwrap();
+        build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &out, Backend::Flutter),
+            BuildProfile::NativeComplete,
+            Some(&runtime),
+        )
+        .expect("native-complete Flutter shell");
+        let main = fs::read_to_string(out.path().join("flutter/lib/main.dart")).unwrap();
+        assert!(main.contains("builder: _observeEnvironment,"), "{main}");
+        assert!(main.contains("                  ? Builder(builder: _mosaicLayoutRoot)\n"), "{main}");
+        assert!(main.contains("      case 'touch':\n        return CardTouch(\n"), "{main}");
+        assert!(main.contains("mosaicRequiredString(_hostProps, \"label\")"), "{main}");
+        assert!(out.path().join("flutter/lib/Card.touch.dart").is_file());
     }
 
     #[test]
