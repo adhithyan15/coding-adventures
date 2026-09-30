@@ -146,6 +146,10 @@ That is about 380 filmstrips that could print today.
   movements trace the inner shoulder, the rounded outer body in four sections,
   and the separate upper stem, using the same packaged tracing guide and Noto
   Sans Telugu fit.
+- **Telugu ఠ follows with an existing month-name owner.** `TE-S155` extracts
+  the aspirated retroflex from `జ్యేష్ఠం`, already taught in the previous
+  chapter. Its three movements draw the circular body, upper flourish and inner
+  dot from the packaged tracing guide, fitted to Noto Sans Telugu.
 
 ### The shape of the writing ramp (project owner, 2026-09-25)
 

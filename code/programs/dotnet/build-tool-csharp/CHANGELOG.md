@@ -6,10 +6,12 @@
   from 15 to 60 seconds, preventing valid large-checkout enumeration from
   failing on contended macOS CI runners.
 
-- Regenerated the source-input registry projection to pick up the
+- Regenerated the repository source-input boundary projection against the
+  neutral fixture: removed the ten Haskell roots that now carry their own
+  `cabal.project`, added the `lua/der_asn1` and `lua/x509_extension` lint
+  roots, and picked up the
   `forme-deploy-runner-fs-adapter`, `forme-deploy-runner-github-pages-adapter`,
-  and `forme-plugin-host` TypeScript roots plus the shared Lua lint consumers
-  added on main without a complete projection refresh. Digest updated to
+  and `forme-plugin-host` TypeScript roots. Digest updated to
   `7983f42a84dc9905f50729798a5d7d4000a4356016eb2b9cfd42217b15070b59`.
 
 - Extended the generated source-input projection and xUnit coverage with the

@@ -1050,7 +1050,8 @@ backend immediately) come before the enabler-dependent items.
   snapshots that evolve through another supported recurrence in the graph or
   recursively through their own supported recurrence, or through an exact
   mutually recursive selector cycle. A selector recurrence may itself contain
-  a conditional expression selected by an exact snapshot in that graph.
+  a conditional expression selected by an exact snapshot in that graph,
+  including a direct self-reference in one selected leaf.
   Those exact snapshots may also select conditional statement branches
   containing cycle writes, including selector-cycle assignments whose other
   dependencies are written elsewhere in the loop body. Statement selectors
