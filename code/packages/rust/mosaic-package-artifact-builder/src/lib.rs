@@ -14716,12 +14716,17 @@ version = "1"
 
     #[test]
     fn discover_variants_refuses_names_that_collide_as_generated_views() {
-        for (first, second) in [("touch", "Touch"), ("task-list", "task_list"), ("task-list", "tasklist")] {
+        // Every pair differs by more than letter case: on a case-insensitive
+        // filesystem (macOS's default) `Grid.Touch.mll` would overwrite
+        // `Grid.touch.mll` rather than sit beside it. `TouchFirst` still
+        // exercises the case fold, alongside the separators.
+        for (first, second) in [("touch-first", "TouchFirst"), ("task-list", "task_list"), ("task-list", "tasklist")] {
             let tmp = TempDir::new().unwrap();
             let src = tmp.path();
             for name in ["Grid.mll".to_string(), format!("Grid.{first}.mll"), format!("Grid.{second}.mll")] {
                 fs::write(src.join(name), "layout Grid { Box [ root ] }\n").unwrap();
             }
+            assert_eq!(fs::read_dir(src).unwrap().count(), 3, "all three files exist side by side");
             let error = discover_variants(src, "Grid").expect_err("colliding variants");
             let message = error.to_string();
             assert!(message.contains(&format!("Grid.{first}.mll")) || message.contains(&format!("Grid.{second}.mll")), "{message}");
