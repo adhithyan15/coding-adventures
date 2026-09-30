@@ -35,8 +35,8 @@ function makeContext(): StageContext {
       },
     },
     env: {
-      get(name) { return name === "ALLOWED" ? "value" : undefined; },
-      getOrThrow(name) { return name; },
+      async get(name) { return name === "ALLOWED" ? "value" : undefined; },
+      async getOrThrow(name) { return name; },
     },
     filesystem: {
       async readAbsolute(path) { return new TextEncoder().encode(path); },
@@ -44,8 +44,8 @@ function makeContext(): StageContext {
         return new TextEncoder().encode(path).subarray(0, maxBytes);
       },
       async writeAbsolute() {},
-      homeDir() { return "/home/test"; },
-      tempDir() { return "/tmp/test"; },
+      async homeDir() { return "/home/test"; },
+      async tempDir() { return "/tmp/test"; },
     },
     shell: { async run() { return { exitCode: 0, stdout: new Uint8Array(), stderr: new Uint8Array() }; } },
     events: inMemoryEventBus(),

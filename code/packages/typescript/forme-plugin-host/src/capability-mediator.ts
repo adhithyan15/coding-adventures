@@ -68,7 +68,7 @@ export async function mediateCapabilityRequest(
     case "ctx.env.get": {
       const name = stringParam(params.name, "name");
       authorize(grants, `env:${name}`);
-      return context.env.get(name) ?? null;
+      return (await context.env.get(name)) ?? null;
     }
     case "ctx.filesystem.readAbsolute": {
       authorize(grants, "filesystem:user");

@@ -183,7 +183,7 @@ const emitSiteFs = defineStage({
       manifest: {
         routes,
         assets,
-        buildTime: ctx.time.nowIso(),
+        buildTime: await ctx.time.nowIso(),
         buildId,
       },
     };

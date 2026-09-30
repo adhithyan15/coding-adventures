@@ -199,6 +199,9 @@ describe("persistent plugin authority codecs", () => {
       Object.create({ trustedKeys: [] }),
     ];
     for (const value of cases) expect(() => formatTrustStore(value as never)).toThrow();
+    expect(() => formatTrustStore({
+      trustedKeys: [{ ...valid, addedAt: "2000-02-29T23:59:59Z" }],
+    })).not.toThrow();
   });
 
   it("validates grants passed to the formatter", () => {
@@ -258,7 +261,7 @@ describe("persistent plugin authority files", () => {
     expect(await readFile(nested, "utf8")).toBe(first);
     expect(await readTrustStore(nested)).toEqual(store);
     if (process.platform !== "win32") expect((await lstat(nested)).mode & 0o777).toBe(0o600);
-    expect((await import("node:fs/promises")).readdir(join(root, "owned")))
+    await expect((await import("node:fs/promises")).readdir(join(root, "owned")))
       .resolves.toEqual(["trust.toml"]);
   });
 

@@ -30,8 +30,8 @@
 
 /** Clock contract, identical to FM01 §4.3. */
 export interface Clock {
-  nowMs(): number;
-  nowIso(): string;
+  nowMs(): Promise<number>;
+  nowIso(): Promise<string>;
   monotonicMs(): number;
 }
 
@@ -41,8 +41,8 @@ export interface Clock {
 export function systemClock(): Clock {
   const monotonic = monotonicSource();
   return {
-    nowMs:        () => Date.now(),
-    nowIso:       () => new Date().toISOString(),
+    nowMs:        async () => Date.now(),
+    nowIso:       async () => new Date().toISOString(),
     monotonicMs:  monotonic,
   };
 }
@@ -88,8 +88,8 @@ export function frozenClock(options: FrozenClockOptions): Clock {
   // is wasteful when the orchestrator scopes child loggers per input.
   const iso = new Date(ts).toISOString();
   return {
-    nowMs: () => ts,
-    nowIso: () => iso,
+    nowMs: async () => ts,
+    nowIso: async () => iso,
     monotonicMs: () => {
       const value = mono;
       mono += tick;

@@ -289,7 +289,7 @@ const emitFs = defineStage({
 
     // Build-time: ISO string from the clock facility (not new Date(),
     // so frozenClock-based reproducible builds stay deterministic).
-    const buildTime = ctx.time.nowIso();
+    const buildTime = await ctx.time.nowIso();
 
     // Build-id: blake2b over the route→sha256 map.  The canonical-
     // JSON serialiser sorts keys, so this is insensitive to

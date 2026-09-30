@@ -1,0 +1,21 @@
+manifestVersion = 1
+
+[plugin]
+name = "@example/sdk"
+version = "1.0.0"
+apiVersion = 1
+description = "FM-B050 TypeScript runner end-to-end fixture"
+
+[runtime]
+kind = "node"
+entry = "./plugin.mjs"
+
+[[capabilities.required]]
+realm = "storage"
+scope = "read"
+reason = "Exercise the TypeScript runner's wire-backed context"
+
+[[contributes.stages]]
+id = "echo"
+consumes = "ContentNode"
+produces = "ContentNode"

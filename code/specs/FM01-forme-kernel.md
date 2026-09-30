@@ -1064,9 +1064,9 @@ The logger is always available and never fails. Output routing
 ```typescript
 export interface Clock {
   /** Current UTC time in milliseconds since epoch. */
-  nowMs(): number;
+  nowMs(): Promise<number>;
   /** Current UTC time as RFC 3339. */
-  nowIso(): string;
+  nowIso(): Promise<string>;
   /** Monotonic timestamp in milliseconds. */
   monotonicMs(): number;
 }
@@ -1259,8 +1259,8 @@ reject unauthorised origins before the request is dispatched.
 
 ```typescript
 export interface EnvApi {
-  get(name: string): string | undefined;
-  getOrThrow(name: string): string;
+  get(name: string): Promise<string | undefined>;
+  getOrThrow(name: string): Promise<string>;
 }
 ```
 
@@ -1281,8 +1281,8 @@ export interface FilesystemApi {
   /** Same complete-or-reject, maxBytes+1 read bound as StorageApi.readBounded. */
   readAbsoluteBounded(path: string, maxBytes: number): Promise<Uint8Array>;
   writeAbsolute(path: string, bytes: Uint8Array): Promise<void>;
-  homeDir(): string;
-  tempDir(): string;
+  homeDir(): Promise<string>;
+  tempDir(): Promise<string>;
 }
 ```
 
