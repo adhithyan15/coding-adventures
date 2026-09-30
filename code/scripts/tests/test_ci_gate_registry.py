@@ -194,15 +194,17 @@ class CIGateRegistryTests(unittest.TestCase):
             with self.subTest(gate=gate_id):
                 self.assertIn(gate_id, body, f"ci-gate does not depend on {gate_id}")
 
-    def test_macrooct_job_runs_generator_and_checks_the_committed_artifact(self) -> None:
+    def test_rust_grammar_job_runs_generators_and_checks_committed_artifacts(self) -> None:
         # A wired gate that merely builds grammar-tools would still pass with
         # a stale _grammar.rs. Pin the actual source-to-artifact assertion.
-        body = self._job_body("macrooct-grammar-regen-check")
-        self.assertIn("generate-rust-compiled-grammars macrooct", body)
-        self.assertIn(
-            "git diff --quiet -- code/packages/rust/macrooct-lexer/src/_grammar.rs",
-            body,
-        )
+        body = self._job_body("rust-grammar-regen-check")
+        self.assertIn("for stem in macrooct nib", body)
+        for artifact in (
+            "code/packages/rust/macrooct-lexer/src/_grammar.rs",
+            "code/packages/rust/nib-lexer/src/_grammar.rs",
+            "code/packages/rust/nib-parser/src/_grammar.rs",
+        ):
+            self.assertIn(artifact, body)
         self.assertIn("exit 1", body)
 
     def _job_body(self, job_id: str) -> str:

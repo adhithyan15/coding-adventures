@@ -25,6 +25,10 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Changed
 
+- Split the FIFO-manifest regression from the portable B07 executor probes so
+  Windows can compile and run the package tests without the Unix-only
+  `syscall.Mkfifo` symbol. Unix hosts still execute the original security
+  regression.
 - CI-gate match-work preflight now deduplicates identical globs and applies a
   sound literal path-segment prefix/suffix filter before charging the full glob
   grid. Large path-sharded diffs under an unrelated subtree therefore keep

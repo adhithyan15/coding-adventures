@@ -1,12 +1,51 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-09-28
+Status date: 2026-09-30
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
 `LANG-FULL-IMPLEMENTATION.md`; when the two disagree about landed behavior,
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
+
+## Prioritization run — 2026-09-30
+
+PR #16208 delivered the first VM-067 guard and merged as
+`34a8061d145849dffdb6bb7cf90ce1b8fa638fa5` after required CI passed. The
+MacroOct lane now regenerates its committed Rust lexer table byte-for-byte in
+CI whenever its grammar, artifact, or generator changes.
+
+A fresh audit of issue #14202 found Nib is the next bounded reconciled lane.
+Its parser artifact already matches `nib.grammar` exactly. Its lexer artifact
+differs from `nib.tokens` output only because the committed file was formatted
+after generation; committing the generator's canonical bytes removes that
+format-only drift. The selected slice widens the existing job to MacroOct and
+Nib rather than adding another queued CI job.
+
+The first protected Windows run exposed the already documented B07 test-only
+compile limitation: `syscall.Mkfifo` is unavailable on Windows, so touching the
+Go build tool made the package uncompilable before the gate tests could run.
+Keep the portable B07 probes cross-platform and move only the FIFO security
+regression behind explicit Unix build tags; the original regression continues
+to execute on Unix hosts.
+
+The current queue is:
+
+1. **VM-067 Nib (selected):** reconcile Nib's generated lexer bytes, then
+   regenerate its lexer and parser artifacts in the shared Rust grammar gate.
+   Trigger the gate for both Nib sources, both packages, both artifacts, and
+   the generator. Prove every input fires the gate and unrelated grammars do
+   not.
+2. **VM-073:** audit ets-backed `array_set` extent checks and execute a
+   real-Erlang regression if an out-of-range insertion is reachable.
+3. **WORD03 / VM-072:** add normalized comparisons and structured control on
+   both target backends.
+4. **VM-069 / PREP01:** continue expansion-definition provenance and
+   `defined()` operand expansion.
+5. **VM-075 / VM-076:** reconcile the 8086 and Z80 simulator documentation
+   claims recorded below.
+
+The following run records the first VM-067 selection.
 
 ## Prioritization run — 2026-09-28
 
@@ -537,14 +576,19 @@ whose check looks present and is absent.** Worth noting the class explicitly,
 because it has now appeared in three unrelated mechanisms — target lists,
 name filters, and code generation.
 
-macrooct's own artifact was verified correct at slice 1 and again before the
+MacroOct's own artifact was verified correct at slice 1 and again before the
 VM-067 gate: regenerated with the Rust `grammar-tools` binary directly and
 diffed byte-identical against the committed file. Its lexer already tests the
 full compiled token definitions against the `.tokens` file; adding only a
-token-name test would duplicate weaker existing protection. The selected
-first slice is an explicit, byte-for-byte MacroOct CI regeneration job with
-source and generator triggers. Issue #14202 tracks reconciliation of the
-other Rust grammars before widening this gate.
+token-name test would duplicate weaker existing protection. PR #16208 landed
+the first explicit, byte-for-byte MacroOct CI regeneration job with source and
+generator triggers.
+
+The second slice audits Nib. Its parser artifact is generator-clean; its lexer
+has only a post-generation rustfmt difference. Reconcile that file to the raw
+generator output and widen the existing job to both Nib artifacts and sources.
+Issue #14202 continues to track the other Rust grammars before further widening
+the shared gate.
 
 *A trap for whoever picks this up:* the full `generate-compiled-grammars` run
 exits 1 early on a Windows dev box (dies at the css/python step with

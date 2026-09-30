@@ -779,10 +779,10 @@ func TestGrammarSourceChangeFiresRubyGrammarGate(t *testing.T) {
 	}
 }
 
-// MacroOct is the first Rust grammar reconciled for byte-for-byte regeneration.
-// The token source is outside a package, so the path clause is essential; the
-// two generator packages must also fire the gate when their output may change.
-func TestMacroOctGrammarGateCoversSourceArtifactAndGenerator(t *testing.T) {
+// MacroOct and Nib are the first Rust grammars reconciled for byte-for-byte
+// regeneration. Their sources are outside packages, so path clauses are
+// essential; the generator packages must also fire the shared gate.
+func TestRustGrammarGateCoversSourcesArtifactsAndGenerator(t *testing.T) {
 	reg := loadRealRegistry(t)
 	cases := []struct {
 		name     string
@@ -793,6 +793,12 @@ func TestMacroOctGrammarGateCoversSourceArtifactAndGenerator(t *testing.T) {
 		{"token source", map[string]bool{}, []string{"code/grammars/macrooct/macrooct.tokens"}, true},
 		{"compiled artifact", map[string]bool{}, []string{"code/packages/rust/macrooct-lexer/src/_grammar.rs"}, true},
 		{"lexer package", map[string]bool{"rust/macrooct-lexer": true}, nil, true},
+		{"Nib token source", map[string]bool{}, []string{"code/grammars/nib/nib.tokens"}, true},
+		{"Nib parser source", map[string]bool{}, []string{"code/grammars/nib/nib.grammar"}, true},
+		{"Nib lexer artifact", map[string]bool{}, []string{"code/packages/rust/nib-lexer/src/_grammar.rs"}, true},
+		{"Nib parser artifact", map[string]bool{}, []string{"code/packages/rust/nib-parser/src/_grammar.rs"}, true},
+		{"Nib lexer package", map[string]bool{"rust/nib-lexer": true}, nil, true},
+		{"Nib parser package", map[string]bool{"rust/nib-parser": true}, nil, true},
 		{"generator library", map[string]bool{"rust/grammar-tools": true}, nil, true},
 		{"generator CLI", map[string]bool{"rust/programs/grammar-tools": true}, nil, true},
 		{"unrelated grammar", map[string]bool{}, []string{"code/grammars/other/other.tokens"}, false},
@@ -800,8 +806,8 @@ func TestMacroOctGrammarGateCoversSourceArtifactAndGenerator(t *testing.T) {
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
 			got := mustEvaluate(t, reg, tc.affected, tc.changed, false)
-			if got["macrooct-grammar-regen-check"] != tc.want {
-				t.Errorf("MacroOct gate = %v, want %v", got["macrooct-grammar-regen-check"], tc.want)
+			if got["rust-grammar-regen-check"] != tc.want {
+				t.Errorf("Rust grammar gate = %v, want %v", got["rust-grammar-regen-check"], tc.want)
 			}
 		})
 	}
