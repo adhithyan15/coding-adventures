@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R149-first-pass-words-from-chapters-141-144",
+    "language": "sanskrit",
+    "chapter": 149,
+    "sequence": 7560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:882cc85bbb51b334"
+  },
+  "findings": []
+}

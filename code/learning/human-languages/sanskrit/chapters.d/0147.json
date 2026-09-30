@@ -1,0 +1,19 @@
+{
+  "chapter": 147,
+  "title": "Master, Servant, Queen, Minister, General",
+  "label": "ch:sa-master-servant-queen-minister-general",
+  "canDo": "I can say a master, a servant, a queen, a minister and a general.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "SA-C147-senapatih",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 147: I can say a master, a servant, a queen, a minister and a general.",
+    "assesses": [
+      "SA-LEX-C147-PPL147-03",
+      "SA-LEX-C147-PPL147-04",
+      "SA-LEX-C147-PPL147-05"
+    ]
+  }
+}

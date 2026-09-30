@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C165-dhulih",
+    "language": "sanskrit",
+    "chapter": 165,
+    "sequence": 8690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14eeb89c3ea712ad"
+  },
+  "findings": []
+}

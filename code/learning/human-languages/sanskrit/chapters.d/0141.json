@@ -1,0 +1,19 @@
+{
+  "chapter": 141,
+  "title": "Drinks, Dwells, Moves about, Touches, Leaves",
+  "label": "ch:sa-drinks-dwells-moves-about-touches-leaves",
+  "canDo": "I can say drinks, dwells, moves about, touches and leaves.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C141-tyajati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 141: I can say drinks, dwells, moves about, touches and leaves.",
+    "assesses": [
+      "SA-LEX-C141-ACT141-03",
+      "SA-LEX-C141-ACT141-04",
+      "SA-LEX-C141-ACT141-05"
+    ]
+  }
+}

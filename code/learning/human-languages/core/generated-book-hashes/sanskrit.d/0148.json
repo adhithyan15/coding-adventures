@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:dd843adbc5e637d3",
+  "lessonIds": [
+    "SA-C148-napitah",
+    "SA-C148-pacakah",
+    "SA-C148-malakarah",
+    "SA-C148-dhivarah",
+    "SA-C148-gopalah"
+  ],
+  "tex": "sanskrit/book/chapters/ch148-barber-cook-gardener-fisherman-cowherd.tex"
+}

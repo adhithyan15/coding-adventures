@@ -4,6 +4,12 @@ All notable changes to the Go build tool will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Regenerated the canonical source-input projection for the exact lowercase
+  `blib` exclusion and advanced its language-registry digest and dependent
+  repository-boundary digest pins.
+
 ### Added
 
 - Added a typed, process-free graph and diff-selection core that dynamically

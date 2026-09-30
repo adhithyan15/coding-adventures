@@ -1,0 +1,21 @@
+{
+  "language": "sanskrit",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:b458bb0f36a5897e",
+  "lessonIds": [
+    "SA-C172-yatri",
+    "SA-C172-yanapatram",
+    "SA-C172-bhramanam",
+    "SA-C172-paryatanam",
+    "SA-C172-paryatakah",
+    "SA-R172-first-pass-words-from-chapters-168-169",
+    "SA-R172-second-pass-words-from-chapters-170-172"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "sanskrit/narration/ch172.txt",
+  "json": "sanskrit/narration/ch172.json",
+  "textHash": "fnv1a64:c7a7cf593ab3c850",
+  "jsonHash": "fnv1a64:12f4f8aece7aab6a",
+  "findings": []
+}

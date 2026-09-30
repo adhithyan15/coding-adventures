@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C164-vimanapattanam",
+    "language": "sanskrit",
+    "chapter": 164,
+    "sequence": 8680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c91d469d5aa5ce8"
+  },
+  "findings": []
+}

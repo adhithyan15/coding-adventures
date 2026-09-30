@@ -1,0 +1,11 @@
+{
+  "id": "SA-C157-cakitah",
+  "pathSegment": "SA-PATH-157-QUAL157",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-157-QUAL157",
+      "order": 2
+    }
+  ]
+}

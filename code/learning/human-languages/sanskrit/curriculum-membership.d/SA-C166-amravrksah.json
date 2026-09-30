@@ -1,0 +1,11 @@
+{
+  "id": "SA-C166-amravrksah",
+  "pathSegment": "SA-PATH-166-THG166",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-166-THG166",
+      "order": 2
+    }
+  ]
+}

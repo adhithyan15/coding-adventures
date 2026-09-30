@@ -1,0 +1,19 @@
+{
+  "chapter": 159,
+  "title": "Cumin, Mustard, Asafoetida, Sesame, Chickpea",
+  "label": "ch:sa-cumin-mustard-asafoetida-sesame-chickpea",
+  "canDo": "I can say cumin, mustard, asafoetida, sesame and a chickpea.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C159-canakah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 159: I can say cumin, mustard, asafoetida, sesame and a chickpea.",
+    "assesses": [
+      "SA-LEX-C159-THG159-03",
+      "SA-LEX-C159-THG159-04",
+      "SA-LEX-C159-THG159-05"
+    ]
+  }
+}

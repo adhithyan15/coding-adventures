@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:c3aad8634b513b63",
+  "lessonIds": [
+    "SA-C159-jirakam",
+    "SA-C159-sarsapah",
+    "SA-C159-hingu",
+    "SA-C159-tilah",
+    "SA-C159-canakah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch159.txt",
+  "json": "sanskrit/narration/ch159.json",
+  "textHash": "fnv1a64:84d8b299b7a596a6",
+  "jsonHash": "fnv1a64:69f9962cee1e4dab",
+  "findings": []
+}

@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 169,
+  "output": "sanskrit/book/chapters/ch169-result-mark-row-dictionary-writing.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

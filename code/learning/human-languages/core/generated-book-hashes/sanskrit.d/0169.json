@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:2ed942fb9f070bf9",
+  "lessonIds": [
+    "SA-C169-parinamah",
+    "SA-C169-ankah",
+    "SA-C169-sreni",
+    "SA-C169-sabdakosah",
+    "SA-C169-lekhanam"
+  ],
+  "tex": "sanskrit/book/chapters/ch169-result-mark-row-dictionary-writing.tex"
+}

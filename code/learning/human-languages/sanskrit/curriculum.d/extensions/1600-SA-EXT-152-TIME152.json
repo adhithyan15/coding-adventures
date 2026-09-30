@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-152-TIME152",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a period, a turn, a lunar day, a calendar date and a century.",
+  "prerequisites": []
+}

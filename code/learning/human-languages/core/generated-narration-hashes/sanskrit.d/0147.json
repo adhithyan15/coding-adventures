@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 147,
+  "sourceHash": "fnv1a64:59fb62991f0baf53",
+  "lessonIds": [
+    "SA-C147-svami",
+    "SA-C147-sevakah",
+    "SA-C147-rajni",
+    "SA-C147-mantri",
+    "SA-C147-senapatih"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch147.txt",
+  "json": "sanskrit/narration/ch147.json",
+  "textHash": "fnv1a64:338afe2eb32733d2",
+  "jsonHash": "fnv1a64:c2e7f055e2301bfa",
+  "findings": []
+}

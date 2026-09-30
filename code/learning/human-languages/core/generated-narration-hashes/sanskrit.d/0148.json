@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:a64f19159eda7b65",
+  "lessonIds": [
+    "SA-C148-napitah",
+    "SA-C148-pacakah",
+    "SA-C148-malakarah",
+    "SA-C148-dhivarah",
+    "SA-C148-gopalah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch148.txt",
+  "json": "sanskrit/narration/ch148.json",
+  "textHash": "fnv1a64:ad6f2560402372fa",
+  "jsonHash": "fnv1a64:9b92ad0caad0c5d8",
+  "findings": []
+}

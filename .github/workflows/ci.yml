@@ -1943,6 +1943,17 @@ jobs:
           ghc-version: '9.4'
           cabal-version: '3.10'
 
+      # Cabal 3.10 can report a successful `cabal update` while deferring the
+      # package-index cache materialization until the first solver query.  On
+      # fresh hosted runners that made the first Haskell BUILD incorrectly
+      # resolve a test-disabled plan.  Force and verify that read here so a
+      # broken index is classified as bootstrap failure before package tests.
+      - name: Verify Haskell package index
+        if: needs.detect.outputs.needs_haskell == 'true'
+        shell: bash
+        run: |
+          cabal list --simple-output hspec | grep -Eq '^hspec [0-9]'
+
       - name: Set up reviewed OCaml compiler and repository
         id: setup-ocaml
         if: needs.detect.outputs.needs_ocaml == 'true' && (matrix.sharded != true || contains(matrix.languages, 'ocaml'))

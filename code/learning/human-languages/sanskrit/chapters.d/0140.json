@@ -1,0 +1,19 @@
+{
+  "chapter": 140,
+  "title": "A Notice, a Timetable, an Advert, a Bill, a Receipt",
+  "label": "ch:sa-a-notice-a-timetable-an-advert-a-bill-a-receipt",
+  "canDo": "I can read a notice, a timetable, an advert, a bill and a receipt, and act on what they say.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "SA-R140-second-pass-reading-notices",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 140: I can read a notice, a timetable, an advert, a bill and a receipt, and act on what they say.",
+    "assesses": [
+      "SA-LEX-C140-READ140-03",
+      "SA-LEX-C140-READ140-04",
+      "SA-LEX-C140-READ140-05"
+    ]
+  }
+}

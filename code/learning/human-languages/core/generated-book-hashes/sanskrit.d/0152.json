@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:9c455c38cbd94f00",
+  "lessonIds": [
+    "SA-C152-kalah",
+    "SA-C152-varah",
+    "SA-C152-tithih",
+    "SA-C152-dinankah",
+    "SA-C152-satabdi"
+  ],
+  "tex": "sanskrit/book/chapters/ch152-period-turn-lunar-day-calendar-date-century.tex"
+}

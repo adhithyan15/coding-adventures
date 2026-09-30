@@ -1,0 +1,19 @@
+{
+  "chapter": 146,
+  "title": "Grandson, Granddaughter, Paternal grandmother, Maternal grandfather, Father's brother",
+  "label": "ch:sa-grandson-granddaughter-paternal-grandmother-maternal-grandfather-father-s-brother",
+  "canDo": "I can say a grandson, a granddaughter, a paternal grandmother, a maternal grandfather and a father's brother.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "SA-C146-pitrvyah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 146: I can say a grandson, a granddaughter, a paternal grandmother, a maternal grandfather and a father's brother.",
+    "assesses": [
+      "SA-LEX-C146-PPL146-03",
+      "SA-LEX-C146-PPL146-04",
+      "SA-LEX-C146-PPL146-05"
+    ]
+  }
+}

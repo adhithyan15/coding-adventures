@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C166-talah",
+    "language": "sanskrit",
+    "chapter": 166,
+    "sequence": 8780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:552e9de1dc4d2c34"
+  },
+  "findings": []
+}

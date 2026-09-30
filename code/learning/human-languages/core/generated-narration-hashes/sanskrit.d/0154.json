@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:717075e1850f6d98",
+  "lessonIds": [
+    "SA-C154-yadi",
+    "SA-C154-cet",
+    "SA-C154-tathapi",
+    "SA-C154-yadyapi",
+    "SA-C154-athava"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch154.txt",
+  "json": "sanskrit/narration/ch154.json",
+  "textHash": "fnv1a64:4707ada793d7c244",
+  "jsonHash": "fnv1a64:f8956d388ad828f9",
+  "findings": []
+}

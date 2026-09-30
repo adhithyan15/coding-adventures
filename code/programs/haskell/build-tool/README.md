@@ -177,8 +177,9 @@ Package hashing uses a source-embedded projection of the complete checked v1
 language registry and verifies its domain-separated SHA-256 digest in tests.
 The shared production selector covers extension and declared-source modes,
 all seven selector roles, all 23 registered languages including OCaml, the
-five BUILD fronts, and exact case-sensitive pruning of all 26 generated
-components. It admits only the two registry-named TypeScript site roots and
+five BUILD fronts, and exact case-sensitive pruning of all 27 generated
+components. Exact lowercase `blib` is pruned while `Blib` and `blib-example`
+remain source. It admits only the two registry-named TypeScript site roots and
 their 13 exact authored resources beyond conventional package/program roots.
 Those sites retain their legacy `unknown/*` graph identities while live
 hashing derives the TypeScript selector only from an exact registered root

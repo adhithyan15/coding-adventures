@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:c70fc4f493cd12ae",
+  "lessonIds": [
+    "SA-C140-sucana",
+    "SA-C140-samayasarani",
+    "SA-C140-vijnapanam",
+    "SA-C140-deyakam",
+    "SA-C140-praptipatram",
+    "SA-R140-first-pass-the-future",
+    "SA-R140-second-pass-reading-notices"
+  ],
+  "tex": "sanskrit/book/chapters/ch140-a-notice-a-timetable-an-advert-a-bill-a-receipt.tex"
+}

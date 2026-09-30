@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:6469d791c9316478",
+  "lessonIds": [
+    "SA-C144-bhajati",
+    "SA-C144-tolayati",
+    "SA-C144-utpatati",
+    "SA-C144-niksipati",
+    "SA-C144-yojayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch144-shares-weighs-flies-up-puts-in-joins.tex"
+}

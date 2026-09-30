@@ -62,7 +62,8 @@ var ciWorkflowToolchainMarkers = map[string][]string{
 	},
 	"haskell": {
 		"needs_haskell", "haskell-actions/setup", "ghc-version", "cabal-version",
-		"ghc --version", "cabal --version", "set up haskell",
+		"ghc --version", "cabal --version", "cabal list", "set up haskell",
+		"verify haskell package index",
 	},
 	"ocaml": {
 		"needs_ocaml", "setup-ocaml", "ocaml-compiler", "ocaml-version",

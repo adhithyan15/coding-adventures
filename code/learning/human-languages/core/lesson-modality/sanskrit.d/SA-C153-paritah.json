@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C153-paritah",
+    "language": "sanskrit",
+    "chapter": 153,
+    "sequence": 7930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4f7c4116364e1d48"
+  },
+  "findings": []
+}

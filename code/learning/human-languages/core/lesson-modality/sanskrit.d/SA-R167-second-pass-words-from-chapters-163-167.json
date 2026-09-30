@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R167-second-pass-words-from-chapters-163-167",
+    "language": "sanskrit",
+    "chapter": 167,
+    "sequence": 8850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed8c1915ce877ef6"
+  },
+  "findings": []
+}

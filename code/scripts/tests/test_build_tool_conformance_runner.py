@@ -452,7 +452,7 @@ class CorpusTests(unittest.TestCase):
         )
         self.assertEqual(
             runner.repository_source_input_boundary_digest(boundary),
-            "7983f42a84dc9905f50729798a5d7d4000a4356016eb2b9cfd42217b15070b59",
+            "95a30543f60bebeda68e77813f37154cc4431f511a37da8de11d4266d378903c",
         )
         by_id = {entry["id"]: entry for entry in boundary["boundaries"]}
         self.assertEqual(
@@ -3005,6 +3005,7 @@ class PureDomainValidationTests(unittest.TestCase):
             "dist",
             "dist-newstyle",
             "_build",
+            "blib",
             "build",
             "target",
             ".claude",
@@ -3053,8 +3054,10 @@ class PureDomainValidationTests(unittest.TestCase):
                 {
                     "case/_Build/generated.ml",
                     "near/Build/generated.ml",
+                    "near/Blib/generated.ml",
                     "near/Dist-newstyle/generated.ml",
                     "near/_build-example/generated.ml",
+                    "near/blib-example/generated.ml",
                     "near/dist-newstyle-example/generated.ml",
                 }.issubset(included)
             )

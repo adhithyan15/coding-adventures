@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:8768e4a8f4dd1dd4",
+  "lessonIds": [
+    "SA-C142-tusyati",
+    "SA-C142-sramyati",
+    "SA-C142-racayati",
+    "SA-C142-darsayati",
+    "SA-C142-pujayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch142-is-pleased-gets-tired-composes-shows-worships.tex"
+}

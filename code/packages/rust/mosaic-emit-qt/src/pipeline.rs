@@ -2485,6 +2485,10 @@ fn qml_font_family(v: &str) -> Option<String> {
     }
 }
 
+fn qml_font_family_literal(v: &str) -> Option<String> {
+    qml_font_family(v).map(|family| format!("\"{family}\""))
+}
+
 fn qml_font_weight_is_bold(v: &str) -> Option<bool> {
     let weight = v.trim().trim_matches('"');
     match weight {
@@ -5121,6 +5125,16 @@ fn host_control_style_qml_lines(
         }
     }
     if caps.font {
+        let font_family = style_prop(base, "font-family").and_then(qml_font_family_literal);
+        if let Some(font_family) = conditional_scalar_expr(
+            font_family,
+            &state_layers,
+            "font-family",
+            "Qt.application.font.family",
+            qml_font_family_literal,
+        ) {
+            lines.push(format!("font.family: {font_family}"));
+        }
         let font_size = style_prop(base, "font-size").and_then(qml_font_pixel_size);
         if let Some(font_size) = conditional_scalar_expr(
             font_size,
@@ -16070,7 +16084,7 @@ mod tests {
     }
 
     #[test]
-    fn a_host_control_size_variant_drives_padding_and_font_size() {
+    fn a_host_control_size_variant_drives_padding_and_typography() {
         let model = component(
             "SizedButton",
             vec![slot(
@@ -16093,7 +16107,11 @@ mod tests {
             component_name: "SizedButton".to_string(),
             parts: vec![PartStyle {
                 name: "button".to_string(),
-                base: vec![sp("padding", "8px"), sp("font-size", "14px")],
+                base: vec![
+                    sp("padding", "8px"),
+                    sp("font-family", "Inter"),
+                    sp("font-size", "14px"),
+                ],
                 transitions: vec![],
                 states: vec![StateStyle {
                     slot: Some("size".to_string()),
@@ -16103,6 +16121,7 @@ mod tests {
                     props: vec![
                         sp("padding", "4px"),
                         sp("padding-left", "5px"),
+                        sp("font-family", "monospace"),
                         sp("font-size", "12px"),
                     ],
                 }],
@@ -16115,6 +16134,7 @@ mod tests {
             "rightPadding: ( (size === \"sm\") ) ? 4 : 8",
             "topPadding: ( (size === \"sm\") ) ? 4 : 8",
             "bottomPadding: ( (size === \"sm\") ) ? 4 : 8",
+            "font.family: ( (size === \"sm\") ) ? \"monospace\" : \"Inter\"",
             "font.pixelSize: ( (size === \"sm\") ) ? 12 : 14",
         ] {
             assert!(out.contains(expected), "missing {expected:?}:\n{out}");

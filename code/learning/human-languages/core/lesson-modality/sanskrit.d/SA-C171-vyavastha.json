@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C171-vyavastha",
+    "language": "sanskrit",
+    "chapter": 171,
+    "sequence": 9200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d5d8a0b4bd24848a"
+  },
+  "findings": []
+}

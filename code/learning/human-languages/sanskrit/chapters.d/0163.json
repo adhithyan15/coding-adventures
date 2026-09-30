@@ -1,0 +1,19 @@
+{
+  "chapter": 163,
+  "title": "Sport, Gambling, Festival, Wedding, Gift",
+  "label": "ch:sa-sport-gambling-festival-wedding-gift",
+  "canDo": "I can say sport, gambling, a festival, a wedding and a gift.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C163-upaharah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 163: I can say sport, gambling, a festival, a wedding and a gift.",
+    "assesses": [
+      "SA-LEX-C163-THG163-03",
+      "SA-LEX-C163-THG163-04",
+      "SA-LEX-C163-THG163-05"
+    ]
+  }
+}

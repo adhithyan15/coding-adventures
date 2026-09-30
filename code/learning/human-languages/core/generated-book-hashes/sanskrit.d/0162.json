@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:d39a9652ff43ae68",
+  "lessonIds": [
+    "SA-C162-vetanam",
+    "SA-C162-rnam",
+    "SA-C162-labhah",
+    "SA-C162-hanih",
+    "SA-C162-vyaparah"
+  ],
+  "tex": "sanskrit/book/chapters/ch162-wages-debt-profit-loss-trade.tex"
+}

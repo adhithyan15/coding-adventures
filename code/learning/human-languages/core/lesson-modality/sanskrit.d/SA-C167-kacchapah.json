@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C167-kacchapah",
+    "language": "sanskrit",
+    "chapter": 167,
+    "sequence": 8790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e552d73e7996e82"
+  },
+  "findings": []
+}

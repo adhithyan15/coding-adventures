@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:451fc8d56b57639a",
+  "lessonIds": [
+    "SA-C159-jirakam",
+    "SA-C159-sarsapah",
+    "SA-C159-hingu",
+    "SA-C159-tilah",
+    "SA-C159-canakah"
+  ],
+  "tex": "sanskrit/book/chapters/ch159-cumin-mustard-asafoetida-sesame-chickpea.tex"
+}

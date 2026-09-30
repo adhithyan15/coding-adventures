@@ -1,8 +1,9 @@
 # FM02 — Forme Plugin Host: Manifest, Sandboxing, Wire Protocol, Capability Mediation
 
 > **Status:** Host/wire boundary implemented in FM-B014; bounded authority
-> persistence implemented in FM-B048; installation, runtime adapters, and OS
-> sandboxes tracked in FM-B049–FM-B052 and the FM-B015 completion milestone.
+> persistence implemented in FM-B048; atomic installation active in FM-B049;
+> runtime adapters and OS sandboxes tracked in FM-B050–FM-B052 and the FM-B015
+> completion milestone.
 > Read alongside FM00 (vision), FM01 (kernel), and FM03 (orchestrator).
 > **Scope:** Everything required to load third-party Forme plugins
 > safely and run them under a strong isolation boundary. The packages
@@ -22,6 +23,7 @@
 | Plugin discovery and handshake | Implemented | FM-B014 ships deterministic discovery, manifest-authored proxies, negotiation, and typed streaming. |
 | Capability mediation and crash isolation | Implemented | FM-B014 proves denial, cancellation escalation, malformed-wire isolation, process failure, and cleanup boundaries. |
 | Trust and grant persistence | Implemented | FM-B048 provides bounded exact codecs, manifest-bound stale-grant denial, safe reads, and atomic restrictive writes. |
+| Atomic plugin installation | Active | FM-B049 consumes registry-independent immutable snapshots and publishes one complete host-owned plugin directory. |
 | TypeScript/Python/Rust runners | Active | FM-B050/FM-B051 follow the implemented host wire protocol. |
 | OS sandbox profiles | Blocked | FM-B052 follows atomic installation and runner conformance. |
 | Install/trust CLI | Blocked | FM-B049 owns the install core; FM07 exposes it after the FM-B015 milestone. |
@@ -400,6 +402,13 @@ capability is recorded:
 - `$cacheDir` — resolves to `settings.cacheDir`, if set.
 - `$pluginDir` — resolves to the plugin's installation directory.
 
+Path-valued substitutions use reversible URI-path encoding: `/` remains the
+hierarchy separator while `%`, `:`, backslashes, whitespace, controls, and
+non-ASCII bytes are percent-encoded. Thus `C:\\site\\content` resolves as
+`C%3A%5Csite%5Ccontent`, remains one third capability segment, and compares
+identically during installation and loading without aliasing distinct POSIX
+paths. Platform path normalization occurs before template resolution.
+
 Any unrecognised `$variable` causes a manifest validation error.
 Plain `$` characters that should not be templated must be escaped
 as `$$`.
@@ -466,7 +475,7 @@ signature that binds auxiliary files, a plugin with `[signature]` MUST NOT use
 an external `configSchema`; hosts reject that combination rather than imply the
 existing manifest-and-entry signature authenticates schema bytes.
 
-### 4.2 The `forme install` flow (informative)
+### 4.2 The `forme install` flow
 
 The CLI (FM07) provides `forme install <package>` which:
 
@@ -487,6 +496,67 @@ The CLI (FM07) provides `forme install <package>` which:
 8. Records the grants in `<project>/forme-plugins/<name>/grants.toml`.
    Subsequent runs read this file; no re-prompting unless the
    plugin's manifest changes.
+
+FM-B049 makes the registry-independent installation core normative. Registry
+and prompt adapters MUST hand `forme-plugin-installer-core` a complete immutable
+snapshot of regular-file entries plus the capabilities the user reviewed. The
+core does not fetch packages or display prompts. It MUST:
+
+1. accept at most 4,096 files, 4,096 distinct directories, 256 directory
+   levels, 16 MiB per file, 128 MiB total, and 4,096 reviewed grants;
+2. reject duplicate, absolute, empty, dot-segment, backslash, NUL, non-NFC,
+   non-portable, or case-fold-colliding relative paths before touching disk,
+   and reserve case-insensitive `grants.toml` plus every descendant path for
+   host-generated authority only;
+3. defensively copy every byte array, require exactly one root `plugin.toml`,
+   parse and validate it, and require every selected runtime entry and schema
+   path to name a supplied regular file;
+4. compute the existing manifest hash over the validated manifest and selected
+   runtime entry, verify any declared signature, and compare its raw Ed25519
+   key against the FM-B048 trust store;
+5. assign `verified-third-party` only when that trusted signature verifies and
+   the distribution contains exactly `plugin.toml` plus the selected entry.
+   Because the v1 signature does not bind auxiliary or alternate-platform
+   files, any larger snapshot is installed only as `unverified-third-party`;
+6. resolve declared capability templates against caller-supplied installation
+   roots, require every reviewed grant to be declared, require all resolved
+   required capabilities to be granted, and write the exact manifest-bound
+   grants file through the FM-B048 codec;
+7. derive the destination as `plugin-` plus Base64url of the UTF-8 plugin name,
+   under one existing canonical, real host-owned install root. Callers resolve
+   platform path aliases before capability review and do not choose a
+   destination basename. The encoded destination is at most 200 UTF-8 bytes,
+   keeping its lock, stage, and backup transaction names below the common
+   255-byte filesystem segment limit;
+8. acquire an exclusive same-parent per-plugin lock, materialize a private
+   sibling staging directory, write only exclusively-created regular files,
+   flush them, set files read-only and directories owner-private where POSIX
+   modes exist, and verify the staged complete set and byte identities under
+   the same independent file, directory, depth, and aggregate-entry ceilings;
+9. replace an existing singly-linked host-owned target through same-parent
+   rename with a retained backup, restore that backup after any pre-finalize
+   failure, and report an indeterminate error if rollback itself cannot be
+   proved; and
+10. recheck parent, lock, stage, target, and backup identities at each state
+    transition, remove only identities created by the current transaction, and
+    never expose a partial tree as a discovery candidate.
+
+Install results contain the plugin name/version, manifest hash, trust tier,
+canonical destination, granted capabilities, file count, and total bytes.
+Reinstalling an identical snapshot with identical grants is an exact no-op;
+changing the manifest identity or grants creates one atomic replacement.
+Cancellation is checked before staging, between file writes, and before the
+commit rename. The single-user threat model still excludes a privileged actor
+that can replace the install root itself.
+
+On POSIX, the installer rejects an install root or any accepted existing target
+directory/file writable by group or other users and verifies every transaction
+directory has the root's owner and device. On Windows, POSIX mode bits do not
+describe ACL authority, so callers MUST provide the install operation's
+`verifyWindowsAcl` callback; the core invokes it for both the canonical install
+root and the complete existing target tree, when present, and fails closed
+unless both exclude writers other than the current host user and trusted
+administrators.
 
 `forme install` is outside FM02's package surface (it lives in the
 CLI, FM07), but the trust-store and grants-file formats are FM02's

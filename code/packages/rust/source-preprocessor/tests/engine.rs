@@ -267,19 +267,15 @@ fn a_definition_inside_a_skipped_group_never_takes_effect() {
 }
 
 #[test]
-fn an_expanded_token_points_at_its_invocation_not_at_unrelated_text() {
+fn an_expanded_token_records_its_definition_and_invocation() {
     // A macro defined in an included file used to surface with the BODY's
     // line and the INCLUDING file's id — so a token from `defs.oct` was
     // reported at a position inside `main`'s `@include` line, pointing at text
     // that had nothing to do with it. Confidently wrong provenance is worse
     // than none: a reader follows it and lands somewhere unrelated.
     //
-    // The interim contract this pins: an expanded token carries the position
-    // of the INVOCATION, which is real text in the file that really produced
-    // it. Full fidelity ("in expansion of FOO, defined at defs.oct:1") needs
-    // the expansion arena wired through and is tracked as VM-069.
     let mut fs = MemoryFs::new();
-    fs.insert("defs.oct", "@define ANSWER 42");
+    let defs = fs.insert("defs.oct", "@define ANSWER 42");
     let main = fs.insert("<main>", "");
 
     let out = preprocess(
@@ -294,18 +290,52 @@ fn an_expanded_token_points_at_its_invocation_not_at_unrelated_text() {
     let values: Vec<&str> = out.tokens.iter().map(|t| t.value.as_str()).collect();
     assert_eq!(values, ["value", "=", "42", ";"]);
 
-    // The `42` came from defs.oct's body but is reported where it was USED.
+    // The token's physical position is the macro body in defs.oct.
     let expanded = out.map.locus(2).unwrap();
-    assert_eq!(expanded.position.file, main, "attributed to the file that used it");
-    assert_eq!(
-        expanded.position.line, 2,
-        "the invocation's line, not the macro body's line 1"
-    );
+    assert_eq!(expanded.position.file, defs);
+    assert_eq!(expanded.position.line, 1);
 
-    // And it agrees with its neighbours on that line, rather than pointing off
-    // into the `@include`.
+    // The interned expansion records both ends of the diagnostic story.
+    let expansion = expanded.expansion.expect("the substituted token names its expansion");
+    let (name, invoked_at) = out.map.expansion_site(expansion).unwrap();
+    assert_eq!(name, "ANSWER");
+    assert_eq!(invoked_at.file, main);
+    assert_eq!(invoked_at.line, 2);
+    assert_eq!(out.map.expansion_definition(expansion).unwrap().file, defs);
+    assert_eq!(out.map.expansion_definition(expansion).unwrap().line, 1);
+    assert_eq!(out.map.expansion_parent(expansion), None);
+
+    // Ordinary neighbours still point directly into main and have no chain.
     assert_eq!(out.map.locus(0).unwrap().position.line, 2);
+    assert_eq!(out.map.locus(0).unwrap().expansion, None);
     assert_eq!(out.map.locus(3).unwrap().position.line, 2);
+}
+
+#[test]
+fn nested_object_macros_form_an_innermost_to_outermost_chain() {
+    let mut fs = MemoryFs::new();
+    let main = fs.insert("<main>", "");
+    let out = preprocess(
+        program(&["@define INNER 42", "@define OUTER INNER", "OUTER"]),
+        main,
+        &TestDialect::default(),
+        &mut fs,
+        Bounds::default(),
+    )
+    .unwrap();
+
+    assert_eq!(out.tokens[0].value, "42");
+    assert_eq!(out.map.expansion_count(), 2, "one node per actual substitution");
+
+    let inner = out.map.locus(0).unwrap().expansion.unwrap();
+    let outer = out.map.expansion_parent(inner).expect("INNER was expanded inside OUTER");
+    assert_eq!(out.map.expansion_site(inner).unwrap().0, "INNER");
+    assert_eq!(out.map.expansion_site(inner).unwrap().1.line, 2);
+    assert_eq!(out.map.expansion_definition(inner).unwrap().line, 1);
+    assert_eq!(out.map.expansion_site(outer).unwrap().0, "OUTER");
+    assert_eq!(out.map.expansion_site(outer).unwrap().1.line, 3);
+    assert_eq!(out.map.expansion_definition(outer).unwrap().line, 2);
+    assert_eq!(out.map.expansion_parent(outer), None);
 }
 
 #[test]

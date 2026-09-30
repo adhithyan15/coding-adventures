@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C146-pitamahi",
+    "language": "sanskrit",
+    "chapter": 146,
+    "sequence": 7380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7351152c6cd11a27"
+  },
+  "findings": []
+}

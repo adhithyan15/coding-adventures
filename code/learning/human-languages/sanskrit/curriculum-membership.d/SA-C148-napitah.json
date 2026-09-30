@@ -1,0 +1,11 @@
+{
+  "id": "SA-C148-napitah",
+  "pathSegment": "SA-PATH-148-PPL148",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-148-PPL148",
+      "order": 0
+    }
+  ]
+}

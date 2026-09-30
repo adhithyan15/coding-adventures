@@ -1,0 +1,19 @@
+{
+  "chapter": 157,
+  "title": "Angry, Afraid, Startled, Tired, Hungry",
+  "label": "ch:sa-angry-afraid-startled-tired-hungry",
+  "canDo": "I can say angry, afraid, startled, tired and hungry.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "SA-C157-ksudhitah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 157: I can say angry, afraid, startled, tired and hungry.",
+    "assesses": [
+      "SA-LEX-C157-QUAL157-03",
+      "SA-LEX-C157-QUAL157-04",
+      "SA-LEX-C157-QUAL157-05"
+    ]
+  }
+}

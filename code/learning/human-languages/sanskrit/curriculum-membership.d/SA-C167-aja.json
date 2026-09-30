@@ -1,0 +1,11 @@
+{
+  "id": "SA-C167-aja",
+  "pathSegment": "SA-PATH-167-THG167",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-167-THG167",
+      "order": 3
+    }
+  ]
+}

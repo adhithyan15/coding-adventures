@@ -1,0 +1,11 @@
+{
+  "id": "SA-R172-first-pass-words-from-chapters-168-169",
+  "pathSegment": "SA-PATH-172-TRV172",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "SA-EXT-172-TRV172",
+      "order": 5
+    }
+  ]
+}

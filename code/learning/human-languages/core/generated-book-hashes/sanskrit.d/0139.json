@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:88c35bf46589760e",
+  "lessonIds": [
+    "SA-C139-bhavisyat",
+    "SA-C139-svah",
+    "SA-C139-agami",
+    "SA-C139-bhavisyati",
+    "SA-C139-gamisyati"
+  ],
+  "tex": "sanskrit/book/chapters/ch139-the-future-tomorrow-coming-will-be-will-go.tex"
+}

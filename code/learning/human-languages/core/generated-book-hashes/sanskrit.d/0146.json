@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:5e7b15a2a89ed52a",
+  "lessonIds": [
+    "SA-C146-pautrah",
+    "SA-C146-pautri",
+    "SA-C146-pitamahi",
+    "SA-C146-matamahah",
+    "SA-C146-pitrvyah"
+  ],
+  "tex": "sanskrit/book/chapters/ch146-grandson-granddaughter-paternal-grandmother-maternal-grandfather-father-s-brother.tex"
+}

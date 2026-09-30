@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:90d040e165f0c662",
+  "lessonIds": [
+    "SA-C150-bhesajam",
+    "SA-C150-vranah",
+    "SA-C150-sothah",
+    "SA-C150-vamanam",
+    "SA-C150-udarapida"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch150.txt",
+  "json": "sanskrit/narration/ch150.json",
+  "textHash": "fnv1a64:65268bd40b066a84",
+  "jsonHash": "fnv1a64:132514479a0a80af",
+  "findings": []
+}

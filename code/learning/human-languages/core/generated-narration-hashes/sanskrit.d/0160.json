@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:167a6098aa272f99",
+  "lessonIds": [
+    "SA-C160-bhojanam",
+    "SA-C160-vyanjanam",
+    "SA-C160-aharah",
+    "SA-C160-asanam",
+    "SA-C160-kalasi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch160.txt",
+  "json": "sanskrit/narration/ch160.json",
+  "textHash": "fnv1a64:ee482493159ddef0",
+  "jsonHash": "fnv1a64:b06cb239f3d99894",
+  "findings": []
+}

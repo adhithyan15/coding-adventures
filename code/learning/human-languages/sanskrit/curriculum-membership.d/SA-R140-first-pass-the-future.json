@@ -1,0 +1,11 @@
+{
+  "id": "SA-R140-first-pass-the-future",
+  "pathSegment": "SA-PATH-140-READ140",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "SA-EXT-140-READ140",
+      "order": 5
+    }
+  ]
+}

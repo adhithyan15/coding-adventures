@@ -1,0 +1,21 @@
+{
+  "language": "sanskrit",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:262c2f58dafd1682",
+  "lessonIds": [
+    "SA-C149-karmakarah",
+    "SA-C149-sramikah",
+    "SA-C149-adhikari",
+    "SA-C149-lipikah",
+    "SA-C149-nayakah",
+    "SA-R149-first-pass-words-from-chapters-141-144",
+    "SA-R149-second-pass-words-from-chapters-145-149"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "sanskrit/narration/ch149.txt",
+  "json": "sanskrit/narration/ch149.json",
+  "textHash": "fnv1a64:85a2e6328d1898f2",
+  "jsonHash": "fnv1a64:9bc44846032acd09",
+  "findings": []
+}

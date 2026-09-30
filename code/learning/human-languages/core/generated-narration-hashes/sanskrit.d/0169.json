@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:c8e667b18267bc9d",
+  "lessonIds": [
+    "SA-C169-parinamah",
+    "SA-C169-ankah",
+    "SA-C169-sreni",
+    "SA-C169-sabdakosah",
+    "SA-C169-lekhanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch169.txt",
+  "json": "sanskrit/narration/ch169.json",
+  "textHash": "fnv1a64:e30775e2b818ea7f",
+  "jsonHash": "fnv1a64:056e207a5ccf7d83",
+  "findings": []
+}

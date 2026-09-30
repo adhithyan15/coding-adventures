@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Regenerated both source-input projections for exact lowercase `blib`, the
+  current Lua and Forme boundary consumers, and the new canonical registry and
+  boundary digests.
+
 - Regenerated the repository source-input boundary projection against the
   neutral fixture: removed the ten Haskell roots that now carry their own
   `cabal.project` (#16153) and added the `lua/der_asn1` and

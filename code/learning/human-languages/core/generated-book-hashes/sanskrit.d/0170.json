@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:e4e070aeb7ff8b4d",
+  "lessonIds": [
+    "SA-C170-karyam",
+    "SA-C170-karma",
+    "SA-C170-udyogah",
+    "SA-C170-vrttih",
+    "SA-C170-seva"
+  ],
+  "tex": "sanskrit/book/chapters/ch170-work-action-occupation-livelihood-service.tex"
+}

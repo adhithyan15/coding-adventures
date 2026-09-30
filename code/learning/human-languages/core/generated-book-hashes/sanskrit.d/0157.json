@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 157,
+  "sourceHash": "fnv1a64:d74fa8eff942cb0a",
+  "lessonIds": [
+    "SA-C157-kupitah",
+    "SA-C157-bhitah",
+    "SA-C157-cakitah",
+    "SA-C157-srantah",
+    "SA-C157-ksudhitah"
+  ],
+  "tex": "sanskrit/book/chapters/ch157-angry-afraid-startled-tired-hungry.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C155-jirnah",
+    "language": "sanskrit",
+    "chapter": 155,
+    "sequence": 8010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2396a54994afb93"
+  },
+  "findings": []
+}

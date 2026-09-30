@@ -1,0 +1,11 @@
+{
+  "id": "SA-C156-candah",
+  "pathSegment": "SA-PATH-156-QUAL156",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-156-QUAL156",
+      "order": 3
+    }
+  ]
+}

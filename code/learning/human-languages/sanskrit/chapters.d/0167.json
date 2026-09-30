@@ -1,0 +1,19 @@
+{
+  "chapter": 167,
+  "title": "Turtle, She-buffalo, Calf, She-goat, Mare",
+  "label": "ch:sa-turtle-she-buffalo-calf-she-goat-mare",
+  "canDo": "I can say a turtle, a she-buffalo, a calf, a she-goat and a mare.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-R167-second-pass-words-from-chapters-163-167",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 167: I can say a turtle, a she-buffalo, a calf, a she-goat and a mare.",
+    "assesses": [
+      "SA-LEX-C167-THG167-03",
+      "SA-LEX-C167-THG167-04",
+      "SA-LEX-C167-THG167-05"
+    ]
+  }
+}

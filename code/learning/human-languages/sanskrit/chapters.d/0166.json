@@ -1,0 +1,19 @@
+{
+  "chapter": 166,
+  "title": "Sacred fig tree, Neem tree, Mango tree, Banyan tree, Palm tree",
+  "label": "ch:sa-sacred-fig-tree-neem-tree-mango-tree-banyan-tree-palm-tree",
+  "canDo": "I can say a sacred fig tree, a neem tree, a mango tree, a banyan tree and a palm tree.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C166-talah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 166: I can say a sacred fig tree, a neem tree, a mango tree, a banyan tree and a palm tree.",
+    "assesses": [
+      "SA-LEX-C166-THG166-03",
+      "SA-LEX-C166-THG166-04",
+      "SA-LEX-C166-THG166-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:8ce2479ab17a296c",
+  "lessonIds": [
+    "SA-C146-pautrah",
+    "SA-C146-pautri",
+    "SA-C146-pitamahi",
+    "SA-C146-matamahah",
+    "SA-C146-pitrvyah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch146.txt",
+  "json": "sanskrit/narration/ch146.json",
+  "textHash": "fnv1a64:33b395c2b7438b93",
+  "jsonHash": "fnv1a64:124cd03e7e8f443c",
+  "findings": []
+}
