@@ -603,6 +603,7 @@ jobs:
           python3 code/scripts/validate_elixir_windows_build_fronts.py --format json > /tmp/elixir-windows-build-fronts.json
           python3 -m unittest discover -s code/scripts/tests -p 'test_classical_cipher_fixtures.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_barcode_symbologies_fixtures.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_barcode_layout_1d_fixtures.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_generate_scytale_fixture_consumers.py'
           python3 code/scripts/generate_scytale_fixture_consumers.py --check
           python3 -m unittest discover -s code/scripts/tests -p 'test_generate_vigenere_fixture_consumers.py'
