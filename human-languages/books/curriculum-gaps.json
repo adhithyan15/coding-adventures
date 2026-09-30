@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 19191,
+    "totalLessons": 19480,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -40,7 +40,7 @@
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 231,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 17414,
+    "drivableLessons": 17703,
     "drivablePercent": 91,
     "chaptersWithoutDrivablePrefix": 274,
     "unexplainedModalityOverrides": 0
@@ -7577,7 +7577,62 @@
           199,
           200,
           201,
-          202
+          202,
+          203,
+          204,
+          205,
+          206,
+          207,
+          208,
+          209,
+          210,
+          211,
+          212,
+          213,
+          214,
+          215,
+          216,
+          217,
+          218,
+          219,
+          220,
+          221,
+          222,
+          223,
+          224,
+          225,
+          226,
+          227,
+          228,
+          229,
+          230,
+          231,
+          232,
+          233,
+          234,
+          235,
+          236,
+          237,
+          238,
+          239,
+          240,
+          241,
+          242,
+          243,
+          244,
+          245,
+          246,
+          247,
+          248,
+          249,
+          250,
+          251,
+          252,
+          253,
+          254,
+          255,
+          256,
+          257
         ],
         "bookChapters": [
           1,
@@ -7781,7 +7836,62 @@
           199,
           200,
           201,
-          202
+          202,
+          203,
+          204,
+          205,
+          206,
+          207,
+          208,
+          209,
+          210,
+          211,
+          212,
+          213,
+          214,
+          215,
+          216,
+          217,
+          218,
+          219,
+          220,
+          221,
+          222,
+          223,
+          224,
+          225,
+          226,
+          227,
+          228,
+          229,
+          230,
+          231,
+          232,
+          233,
+          234,
+          235,
+          236,
+          237,
+          238,
+          239,
+          240,
+          241,
+          242,
+          243,
+          244,
+          245,
+          246,
+          247,
+          248,
+          249,
+          250,
+          251,
+          252,
+          253,
+          254,
+          255,
+          256,
+          257
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -8854,9 +8964,9 @@
       {
         "language": "sanskrit",
         "status": "version-2",
-        "lessonCount": 1102,
+        "lessonCount": 1391,
         "versions": {
-          "2": 1102
+          "2": 1391
         }
       },
       {
@@ -9701,8 +9811,8 @@
       },
       {
         "language": "sanskrit",
-        "bookChapters": 202,
-        "declaredChapters": 202,
+        "bookChapters": 257,
+        "declaredChapters": 257,
         "missingCapability": 0,
         "findings": 10,
         "clean": false
@@ -9741,8 +9851,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 3879,
-      "declaredChapters": 3879,
+      "bookChapters": 3934,
+      "declaredChapters": 3934,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 94,
@@ -9754,10 +9864,10 @@
     }
   },
   "levels": {
-    "totalLessons": 19191,
+    "totalLessons": 19480,
     "byLevel": {
-      "pre-A1": 8818,
-      "A1": 9294,
+      "pre-A1": 8865,
+      "A1": 9536,
       "A2": 995,
       "B1": 39,
       "B2": 17,
@@ -10039,10 +10149,10 @@
       },
       {
         "language": "sanskrit",
-        "lessonCount": 1102,
+        "lessonCount": 1391,
         "byLevel": {
-          "pre-A1": 448,
-          "A1": 599,
+          "pre-A1": 495,
+          "A1": 841,
           "A2": 55,
           "B1": 0,
           "B2": 0,
@@ -10703,8 +10813,8 @@
       },
       {
         "language": "sanskrit",
-        "lessonCount": 1102,
-        "measurable": 1100,
+        "lessonCount": 1391,
+        "measurable": 1389,
         "unmeasurable": 2,
         "lessonViolations": 0,
         "chapterViolations": 7
@@ -11265,7 +11375,7 @@
           "language": "sanskrit",
           "script": "devanagari",
           "latinScript": false,
-          "lessonCount": 1102,
+          "lessonCount": 1391,
           "totalGlyphs": 50,
           "lessonViolations": 3,
           "systemViolations": 0,
@@ -65750,6 +65860,678 @@
           "R4"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C190-THG190-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C190-kharjuram",
+        "introducedAt": 1033,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C190-THG190-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C190-amalakam",
+        "introducedAt": 1034,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "SA-LEX-C190-THG190-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C190-jambuphalam",
+        "introducedAt": 1035,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "SA-LEX-C193-THG193-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C193-vikrayah",
+        "introducedAt": 1049,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C193-THG193-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C193-vastu",
+        "introducedAt": 1050,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C193-THG193-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C193-padarthah",
+        "introducedAt": 1051,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C193-THG193-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C193-upakaranam",
+        "introducedAt": 1052,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C194-THG194-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C194-paritosikam",
+        "introducedAt": 1053,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C196-THG196-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C196-ratnakarah",
+        "introducedAt": 1065,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C196-THG196-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C196-sarit",
+        "introducedAt": 1066,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "SA-LEX-C196-THG196-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C196-guha",
+        "introducedAt": 1067,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "SA-LEX-C199-SCH199-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C199-bhasa",
+        "introducedAt": 1081,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C199-SCH199-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C199-vyakaranam",
+        "introducedAt": 1082,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C199-SCH199-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C199-ganitam",
+        "introducedAt": 1083,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C199-SCH199-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C199-vijnanam",
+        "introducedAt": 1084,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C200-SCH200-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C200-pathanam",
+        "introducedAt": 1085,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C202-TRV202-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C202-purva",
+        "introducedAt": 1097,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C202-TRV202-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C202-pascima",
+        "introducedAt": 1098,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "SA-LEX-C202-TRV202-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C202-uttara",
+        "introducedAt": 1099,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "SA-LEX-C208-PPL208-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C208-sakha",
+        "introducedAt": 1129,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C208-PPL208-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C208-satruh",
+        "introducedAt": 1130,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C208-PPL208-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C208-prativesi",
+        "introducedAt": 1131,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C209-PPL209-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C209-kavih",
+        "introducedAt": 1132,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C211-WEL211-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C211-sramah",
+        "introducedAt": 1144,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C211-WEL211-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C211-klantih",
+        "introducedAt": 1145,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "SA-LEX-C211-WEL211-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C211-snanam",
+        "introducedAt": 1146,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "SA-LEX-C217-QUAL217-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C217-kapilah",
+        "introducedAt": 1176,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C217-QUAL217-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C217-samah",
+        "introducedAt": 1177,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C217-QUAL217-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C217-visamah",
+        "introducedAt": 1178,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C218-THG218-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C218-sammarjani",
+        "introducedAt": 1179,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C220-THG220-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C220-dandah",
+        "introducedAt": 1191,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C220-THG220-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C220-yastih",
+        "introducedAt": 1192,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "SA-LEX-C220-THG220-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C220-dhanuh",
+        "introducedAt": 1193,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "SA-LEX-C223-THG223-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C223-margadarsakah",
+        "introducedAt": 1207,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C223-THG223-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C223-tirtham",
+        "introducedAt": 1208,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C223-THG223-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C223-asramah",
+        "introducedAt": 1209,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C223-THG223-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C223-mathah",
+        "introducedAt": 1210,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C224-THG224-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C224-kendram",
+        "introducedAt": 1211,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C226-THG226-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C226-pasuh",
+        "introducedAt": 1223,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C226-THG226-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C226-jantuh",
+        "introducedAt": 1224,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "SA-LEX-C226-THG226-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C226-paksi",
+        "introducedAt": 1225,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "SA-LEX-C228-SCH228-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C228-bhugolah",
+        "introducedAt": 1234,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C228-SCH228-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C228-sangitam",
+        "introducedAt": 1235,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C228-SCH228-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C228-nrtyam",
+        "introducedAt": 1236,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C228-SCH228-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C228-citrakala",
+        "introducedAt": 1237,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C229-SCH229-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C229-niyamah",
+        "introducedAt": 1238,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C231-TRV231-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C231-nivasah",
+        "introducedAt": 1250,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C231-TRV231-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C231-atithigrham",
+        "introducedAt": 1251,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "SA-LEX-C231-TRV231-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C231-pravasah",
+        "introducedAt": 1252,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "SA-LEX-C237-PPL237-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C237-lohakarah",
+        "introducedAt": 1282,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C237-PPL237-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C237-tantuvayah",
+        "introducedAt": 1283,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C237-PPL237-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C237-rajakah",
+        "introducedAt": 1284,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C238-PPL238-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C238-paricarika",
+        "introducedAt": 1285,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C240-TIME240-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C240-pratidinam",
+        "introducedAt": 1297,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C240-TIME240-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C240-pratyaham",
+        "introducedAt": 1298,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "SA-LEX-C240-TIME240-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C240-nityam",
+        "introducedAt": 1299,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
       },
       {
         "atom": "SA-LEX-C51-KIN-02",
@@ -176608,134 +177390,486 @@
         "revisits": 3
       },
       {
-        "atom": "SA-LEX-C190-THG190-03",
+        "atom": "SA-LEX-C188-QUAL188-02",
         "language": "sanskrit",
-        "introducedBy": "SA-C190-kharjuram",
-        "introducedAt": 1033,
+        "introducedBy": "SA-C188-sajjah",
+        "introducedAt": 1022,
         "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "SA-LEX-C190-THG190-04",
+        "atom": "SA-LEX-C188-QUAL188-03",
         "language": "sanskrit",
-        "introducedBy": "SA-C190-amalakam",
-        "introducedAt": 1034,
+        "introducedBy": "SA-C188-vyastah",
+        "introducedAt": 1023,
         "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 4
-      },
-      {
-        "atom": "SA-LEX-C190-THG190-05",
-        "language": "sanskrit",
-        "introducedBy": "SA-C190-jambuphalam",
-        "introducedAt": 1035,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 4
-      },
-      {
-        "atom": "SA-LEX-C193-THG193-02",
-        "language": "sanskrit",
-        "introducedBy": "SA-C193-vikrayah",
-        "introducedAt": 1049,
-        "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "SA-LEX-C193-THG193-03",
+        "atom": "SA-LEX-C188-QUAL188-04",
         "language": "sanskrit",
-        "introducedBy": "SA-C193-vastu",
-        "introducedAt": 1050,
+        "introducedBy": "SA-C188-nirmalah",
+        "introducedAt": 1024,
         "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "SA-LEX-C193-THG193-04",
+        "atom": "SA-LEX-C188-QUAL188-05",
         "language": "sanskrit",
-        "introducedBy": "SA-C193-padarthah",
-        "introducedAt": 1051,
+        "introducedBy": "SA-C188-ujjvalah",
+        "introducedAt": 1025,
         "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "SA-LEX-C193-THG193-05",
+        "atom": "SA-LEX-C189-THG189-01",
         "language": "sanskrit",
-        "introducedBy": "SA-C193-upakaranam",
-        "introducedAt": 1052,
+        "introducedBy": "SA-C189-manjusa",
+        "introducedAt": 1026,
         "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "SA-LEX-C194-THG194-01",
+        "atom": "SA-LEX-C189-THG189-02",
         "language": "sanskrit",
-        "introducedBy": "SA-C194-paritosikam",
-        "introducedAt": 1053,
+        "introducedBy": "SA-C189-sikyam",
+        "introducedAt": 1027,
         "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "SA-LEX-C196-THG196-03",
+        "atom": "SA-LEX-C189-THG189-03",
         "language": "sanskrit",
-        "introducedBy": "SA-C196-ratnakarah",
-        "introducedAt": 1065,
+        "introducedBy": "SA-C189-pitakam",
+        "introducedAt": 1028,
         "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "SA-LEX-C196-THG196-04",
+        "atom": "SA-LEX-C189-THG189-04",
         "language": "sanskrit",
-        "introducedBy": "SA-C196-sarit",
-        "introducedAt": 1066,
+        "introducedBy": "SA-C189-katah",
+        "introducedAt": 1029,
         "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 4
+        "revisits": 3
       },
       {
-        "atom": "SA-LEX-C196-THG196-05",
+        "atom": "SA-LEX-C189-THG189-05",
         "language": "sanskrit",
-        "introducedBy": "SA-C196-guha",
-        "introducedAt": 1067,
+        "introducedBy": "SA-C189-astaranam",
+        "introducedAt": 1030,
         "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 4
+        "revisits": 3
       },
       {
-        "atom": "SA-LEX-C199-SCH199-02",
+        "atom": "SA-LEX-C190-THG190-01",
         "language": "sanskrit",
-        "introducedBy": "SA-C199-bhasa",
-        "introducedAt": 1081,
+        "introducedBy": "SA-C190-masah",
+        "introducedAt": 1031,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C190-THG190-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C190-yavah",
+        "introducedAt": 1032,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C191-THG191-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C191-saravah",
+        "introducedAt": 1038,
         "missed": [
           "R2",
-          "R3"
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C191-THG191-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C191-kumbhah",
+        "introducedAt": 1039,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C191-THG191-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C191-ulukhalam",
+        "introducedAt": 1040,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C191-THG191-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C191-musalam",
+        "introducedAt": 1041,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C191-THG191-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C191-calani",
+        "introducedAt": 1042,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C192-THG192-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C192-harah",
+        "introducedAt": 1043,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C192-THG192-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C192-mukutam",
+        "introducedAt": 1044,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C192-THG192-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C192-adhovastram",
+        "introducedAt": 1045,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C192-THG192-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C192-paridhanam",
+        "introducedAt": 1046,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C192-THG192-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C192-vasanam",
+        "introducedAt": 1047,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C193-THG193-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C193-krayah",
+        "introducedAt": 1048,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C194-THG194-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C194-nimantranam",
+        "introducedAt": 1054,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C194-THG194-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C194-sabha",
+        "introducedAt": 1055,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C194-THG194-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C194-gosthi",
+        "introducedAt": 1056,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C194-THG194-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C194-melakah",
+        "introducedAt": 1057,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C195-THG195-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C195-pattanam",
+        "introducedAt": 1058,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C195-THG195-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C195-rajadhani",
+        "introducedAt": 1059,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C195-THG195-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C195-janapadah",
+        "introducedAt": 1060,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C195-THG195-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C195-prantah",
+        "introducedAt": 1061,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C195-THG195-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C195-sima",
+        "introducedAt": 1062,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C196-THG196-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C196-tamram",
+        "introducedAt": 1063,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C196-THG196-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C196-pasanah",
+        "introducedAt": 1064,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C197-THG197-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C197-venuvanam",
+        "introducedAt": 1070,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C197-THG197-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C197-indradhanuh",
+        "introducedAt": 1071,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C197-THG197-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C197-karaka",
+        "introducedAt": 1072,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C197-THG197-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C197-avasyayah",
+        "introducedAt": 1073,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C197-THG197-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C197-jyotsna",
+        "introducedAt": 1074,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C198-THG198-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C198-harinah",
+        "introducedAt": 1075,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C198-THG198-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C198-citrakah",
+        "introducedAt": 1076,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C198-THG198-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C198-gandakah",
+        "introducedAt": 1077,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C198-THG198-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C198-nidam",
+        "introducedAt": 1078,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C198-THG198-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C198-andam",
+        "introducedAt": 1079,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C199-SCH199-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C199-vakyam",
+        "introducedAt": 1080,
+        "missed": [
+          "R2",
+          "R4"
         ],
         "revisits": 3
       },
@@ -176784,6 +177918,1788 @@
         "revisits": 2
       },
       {
+        "atom": "SA-LEX-C200-SCH200-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C200-sravanam",
+        "introducedAt": 1086,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C200-SCH200-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C200-bhasanam",
+        "introducedAt": 1087,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C200-SCH200-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C200-carca",
+        "introducedAt": 1088,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C200-SCH200-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C200-vivadah",
+        "introducedAt": 1089,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C201-WRK201-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C201-yojana",
+        "introducedAt": 1090,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C201-WRK201-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C201-laksyam",
+        "introducedAt": 1091,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C201-WRK201-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C201-upayah",
+        "introducedAt": 1092,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C201-WRK201-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C201-samasya",
+        "introducedAt": 1093,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C201-WRK201-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C201-samadhanam",
+        "introducedAt": 1094,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C202-TRV202-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C202-pathikah",
+        "introducedAt": 1095,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C202-TRV202-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C202-disa",
+        "introducedAt": 1096,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C203-ACT203-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C203-modate",
+        "introducedAt": 1102,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C203-ACT203-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C203-vandate",
+        "introducedAt": 1103,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C203-ACT203-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C203-yacate",
+        "introducedAt": 1104,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C203-ACT203-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C203-bhasate",
+        "introducedAt": 1105,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C203-ACT203-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C203-sobhate",
+        "introducedAt": 1106,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C204-ACT204-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C204-sucayati",
+        "introducedAt": 1107,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C204-ACT204-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C204-khanati",
+        "introducedAt": 1108,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C204-ACT204-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C204-vapati",
+        "introducedAt": 1109,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C204-ACT204-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C204-jivati",
+        "introducedAt": 1110,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C204-ACT204-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C204-tapati",
+        "introducedAt": 1111,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C205-ACT205-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C205-ksamate",
+        "introducedAt": 1112,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C205-ACT205-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C205-nindati",
+        "introducedAt": 1113,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C205-ACT205-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C205-prasamsati",
+        "introducedAt": 1114,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C205-ACT205-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C205-svikaroti",
+        "introducedAt": 1115,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C205-ACT205-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C205-vikasati",
+        "introducedAt": 1116,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C206-ACT206-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C206-majjati",
+        "introducedAt": 1117,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C206-ACT206-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C206-snati",
+        "introducedAt": 1118,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C206-ACT206-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C206-khelati",
+        "introducedAt": 1119,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C206-ACT206-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C206-nimilayati",
+        "introducedAt": 1120,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C206-ACT206-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C206-unmilayati",
+        "introducedAt": 1121,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C207-ACT207-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C207-divyati",
+        "introducedAt": 1122,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C207-ACT207-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C207-pravahati",
+        "introducedAt": 1123,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C207-ACT207-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C207-asvadayati",
+        "introducedAt": 1124,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C207-ACT207-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C207-upadisati",
+        "introducedAt": 1125,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C207-ACT207-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C207-sammanayati",
+        "introducedAt": 1126,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C208-PPL208-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C208-parivarah",
+        "introducedAt": 1127,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C208-PPL208-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C208-bandhuh",
+        "introducedAt": 1128,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C209-PPL209-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C209-gayakah",
+        "introducedAt": 1133,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C209-PPL209-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C209-nartakah",
+        "introducedAt": 1134,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C209-PPL209-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C209-citrakarah",
+        "introducedAt": 1135,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C209-PPL209-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C209-silpi",
+        "introducedAt": 1136,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C210-PPL210-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C210-acaryah",
+        "introducedAt": 1137,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C210-PPL210-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C210-pradhanacaryah",
+        "introducedAt": 1138,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C210-PPL210-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C210-vidyarthi",
+        "introducedAt": 1139,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C210-PPL210-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C210-sahapathi",
+        "introducedAt": 1140,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C210-PPL210-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C210-cikitsakah",
+        "introducedAt": 1141,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C211-WEL211-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C211-vyayamah",
+        "introducedAt": 1142,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C211-WEL211-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C211-yogah",
+        "introducedAt": 1143,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C212-WEL212-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C212-buddhih",
+        "introducedAt": 1149,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C212-WEL212-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C212-manah",
+        "introducedAt": 1150,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C212-WEL212-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C212-atma",
+        "introducedAt": 1151,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C212-WEL212-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C212-svapnah",
+        "introducedAt": 1152,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C212-WEL212-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C212-trptih",
+        "introducedAt": 1153,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C213-TIME213-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C213-sadyah",
+        "introducedAt": 1154,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C213-TIME213-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C213-tatksanam",
+        "introducedAt": 1155,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C213-TIME213-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C213-prak",
+        "introducedAt": 1156,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C213-TIME213-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C213-anantaram",
+        "introducedAt": 1157,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C213-TIME213-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C213-yavat",
+        "introducedAt": 1158,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C214-WHY214-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C214-eva",
+        "introducedAt": 1159,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C214-WHY214-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C214-khalu",
+        "introducedAt": 1160,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C214-WHY214-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C214-iva",
+        "introducedAt": 1161,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C214-WHY214-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C214-vina",
+        "introducedAt": 1162,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C214-WHY214-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C214-prati",
+        "introducedAt": 1163,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C215-QUAL215-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C215-calah",
+        "introducedAt": 1164,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C215-QUAL215-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C215-mandah",
+        "introducedAt": 1165,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C215-QUAL215-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C215-tiksnah",
+        "introducedAt": 1166,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C215-QUAL215-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C215-kunthah",
+        "introducedAt": 1167,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C215-QUAL215-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C215-mulyavan",
+        "introducedAt": 1168,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C216-QUAL216-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C216-kusalah",
+        "introducedAt": 1169,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C216-QUAL216-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C216-nipunah",
+        "introducedAt": 1170,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C216-QUAL216-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C216-ajnah",
+        "introducedAt": 1171,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C216-QUAL216-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C216-vijnah",
+        "introducedAt": 1172,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C216-QUAL216-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C216-buddhiman",
+        "introducedAt": 1173,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C217-QUAL217-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C217-raktah",
+        "introducedAt": 1174,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C217-QUAL217-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C217-arunah",
+        "introducedAt": 1175,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C218-THG218-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C218-kutharah",
+        "introducedAt": 1180,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C218-THG218-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C218-khanitram",
+        "introducedAt": 1181,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C218-THG218-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C218-halam",
+        "introducedAt": 1182,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C218-THG218-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C218-datram",
+        "introducedAt": 1183,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C219-THG219-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C219-bilvam",
+        "introducedAt": 1184,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C219-THG219-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C219-narangam",
+        "introducedAt": 1185,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C219-THG219-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C219-kapitthah",
+        "introducedAt": 1186,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C219-THG219-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C219-sevaphalam",
+        "introducedAt": 1187,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C219-THG219-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C219-cipitakah",
+        "introducedAt": 1188,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C220-THG220-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C220-tula",
+        "introducedAt": 1189,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C220-THG220-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C220-manadandah",
+        "introducedAt": 1190,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C221-THG221-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C221-karpasah",
+        "introducedAt": 1196,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C221-THG221-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C221-kauseyam",
+        "introducedAt": 1197,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C221-THG221-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C221-carma",
+        "introducedAt": 1198,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C221-THG221-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C221-granthih",
+        "introducedAt": 1199,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C221-THG221-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C221-pithika",
+        "introducedAt": 1200,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C222-THG222-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C222-sadhanam",
+        "introducedAt": 1201,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C222-THG222-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C222-bharah",
+        "introducedAt": 1202,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C222-THG222-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C222-panyam",
+        "introducedAt": 1203,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C222-THG222-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C222-apanikah",
+        "introducedAt": 1204,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C222-THG222-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C222-patrika",
+        "introducedAt": 1205,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C223-THG223-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C223-yatrikah",
+        "introducedAt": 1206,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C224-THG224-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C224-attalika",
+        "introducedAt": 1212,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C224-THG224-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C224-andhakarah",
+        "introducedAt": 1213,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C224-THG224-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C224-jyotih",
+        "introducedAt": 1214,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C224-THG224-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C224-bhumih",
+        "introducedAt": 1215,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C225-THG225-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C225-upatyaka",
+        "introducedAt": 1216,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C225-THG225-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C225-marubhumih",
+        "introducedAt": 1217,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C225-THG225-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C225-kananam",
+        "introducedAt": 1218,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C225-THG225-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C225-kunjah",
+        "introducedAt": 1219,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C225-THG225-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C225-sadvalam",
+        "introducedAt": 1220,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C226-THG226-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C226-grahah",
+        "introducedAt": 1221,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C226-THG226-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C226-dhumaketuh",
+        "introducedAt": 1222,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C227-THG227-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C227-paksah",
+        "introducedAt": 1228,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C227-THG227-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C227-pucchah",
+        "introducedAt": 1229,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C227-THG227-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C227-srngam",
+        "introducedAt": 1230,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C227-THG227-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C227-cancuh",
+        "introducedAt": 1231,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C227-THG227-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C227-grdhrah",
+        "introducedAt": 1232,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C228-SCH228-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C228-itihasah",
+        "introducedAt": 1233,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C229-SCH229-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C229-dharmah",
+        "introducedAt": 1239,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C229-SCH229-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C229-kartavyam",
+        "introducedAt": 1240,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C229-SCH229-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C229-adhikarah",
+        "introducedAt": 1241,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C229-SCH229-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C229-prasnapatram",
+        "introducedAt": 1242,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C230-WRK230-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C230-saphalata",
+        "introducedAt": 1243,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C230-WRK230-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C230-viphalata",
+        "introducedAt": 1244,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C230-WRK230-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C230-prayatnah",
+        "introducedAt": 1245,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C230-WRK230-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C230-avasarah",
+        "introducedAt": 1246,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C230-WRK230-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C230-anubhavah",
+        "introducedAt": 1247,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C231-TRV231-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C231-manacitram",
+        "introducedAt": 1248,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C231-TRV231-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C231-sthanam",
+        "introducedAt": 1249,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C232-ACT232-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C232-vartate",
+        "introducedAt": 1255,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C232-ACT232-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C232-jayate",
+        "introducedAt": 1256,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C232-ACT232-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C232-mriyate",
+        "introducedAt": 1257,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C232-ACT232-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C232-nasyati",
+        "introducedAt": 1258,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C232-ACT232-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C232-kupyati",
+        "introducedAt": 1259,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C233-ACT233-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C233-varsati",
+        "introducedAt": 1260,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C233-ACT233-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C233-rohati",
+        "introducedAt": 1261,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C233-ACT233-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C233-pratiksate",
+        "introducedAt": 1262,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C233-ACT233-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C233-anugacchati",
+        "introducedAt": 1263,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C233-ACT233-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C233-nirgacchati",
+        "introducedAt": 1264,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C234-ACT234-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C234-susyati",
+        "introducedAt": 1265,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C234-ACT234-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C234-plavate",
+        "introducedAt": 1266,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C234-ACT234-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C234-arabhate",
+        "introducedAt": 1267,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C234-ACT234-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C234-samapayati",
+        "introducedAt": 1268,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C234-ACT234-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C234-prayacchati",
+        "introducedAt": 1269,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C235-ACT235-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C235-pidadhati",
+        "introducedAt": 1270,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C235-ACT235-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C235-aropayati",
+        "introducedAt": 1271,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C235-ACT235-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C235-calayati",
+        "introducedAt": 1272,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C235-ACT235-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C235-alingati",
+        "introducedAt": 1273,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C235-ACT235-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C235-cumbati",
+        "introducedAt": 1274,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C236-PPL236-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C236-sisuh",
+        "introducedAt": 1275,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C236-PPL236-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C236-kumarah",
+        "introducedAt": 1276,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C236-PPL236-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C236-kumari",
+        "introducedAt": 1277,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C236-PPL236-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C236-yuvatih",
+        "introducedAt": 1278,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C236-PPL236-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C236-purusah",
+        "introducedAt": 1279,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C237-PPL237-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C237-kumbhakarah",
+        "introducedAt": 1280,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C237-PPL237-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C237-svarnakarah",
+        "introducedAt": 1281,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C238-PPL238-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C238-abhiyanta",
+        "introducedAt": 1286,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C238-PPL238-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C238-vaijnanikah",
+        "introducedAt": 1287,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C238-PPL238-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C238-araksakah",
+        "introducedAt": 1288,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C238-PPL238-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C238-calakah",
+        "introducedAt": 1289,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C239-WEL239-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C239-asa",
+        "introducedAt": 1290,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C239-WEL239-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C239-prema",
+        "introducedAt": 1291,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C239-WEL239-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C239-snehah",
+        "introducedAt": 1292,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C239-WEL239-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C239-daya",
+        "introducedAt": 1293,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C239-WEL239-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C239-karuna",
+        "introducedAt": 1294,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "SA-LEX-C24-ASK-01",
         "language": "sanskrit",
         "introducedBy": "SA-C24-water",
@@ -176813,6 +179729,204 @@
         "missed": [
           "R3",
           "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "SA-LEX-C240-TIME240-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C240-tavat",
+        "introducedAt": 1295,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C240-TIME240-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C240-sanaih",
+        "introducedAt": 1296,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C241-WHY241-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C241-krte",
+        "introducedAt": 1302,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C241-WHY241-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C241-yena",
+        "introducedAt": 1303,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C241-WHY241-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C241-tena",
+        "introducedAt": 1304,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C241-WHY241-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C241-yat",
+        "introducedAt": 1305,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C241-WHY241-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C241-parantu",
+        "introducedAt": 1306,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C242-QUAL242-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C242-sulabhah",
+        "introducedAt": 1307,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C242-QUAL242-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C242-durlabhah",
+        "introducedAt": 1308,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C242-QUAL242-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C242-jatilah",
+        "introducedAt": 1309,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C242-QUAL242-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C242-sukarah",
+        "introducedAt": 1310,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C246-THG246-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C246-saktuh",
+        "introducedAt": 1329,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C246-THG246-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C246-ksaudram",
+        "introducedAt": 1330,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C246-THG246-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C246-mistannam",
+        "introducedAt": 1331,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C247-THG247-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C247-banah",
+        "introducedAt": 1332,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C249-THG249-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C249-kavyam",
+        "introducedAt": 1344,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C249-THG249-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C249-citrapatah",
+        "introducedAt": 1345,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "SA-LEX-C249-THG249-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C249-khela",
+        "introducedAt": 1346,
+        "missed": [
+          "R2",
+          "R3"
         ],
         "revisits": 4
       },
@@ -218747,96 +221861,6 @@
         "revisits": 4
       },
       {
-        "atom": "SA-LEX-C188-QUAL188-02",
-        "language": "sanskrit",
-        "introducedBy": "SA-C188-sajjah",
-        "introducedAt": 1022,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C188-QUAL188-03",
-        "language": "sanskrit",
-        "introducedBy": "SA-C188-vyastah",
-        "introducedAt": 1023,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C188-QUAL188-04",
-        "language": "sanskrit",
-        "introducedBy": "SA-C188-nirmalah",
-        "introducedAt": 1024,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C188-QUAL188-05",
-        "language": "sanskrit",
-        "introducedBy": "SA-C188-ujjvalah",
-        "introducedAt": 1025,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C189-THG189-01",
-        "language": "sanskrit",
-        "introducedBy": "SA-C189-manjusa",
-        "introducedAt": 1026,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C189-THG189-02",
-        "language": "sanskrit",
-        "introducedBy": "SA-C189-sikyam",
-        "introducedAt": 1027,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C189-THG189-03",
-        "language": "sanskrit",
-        "introducedBy": "SA-C189-pitakam",
-        "introducedAt": 1028,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C189-THG189-04",
-        "language": "sanskrit",
-        "introducedBy": "SA-C189-katah",
-        "introducedAt": 1029,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C189-THG189-05",
-        "language": "sanskrit",
-        "introducedBy": "SA-C189-astaranam",
-        "introducedAt": 1030,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "SA-LEX-C19-NUM-01",
         "language": "sanskrit",
         "introducedBy": "SA-C19-six",
@@ -218887,386 +221911,6 @@
         "revisits": 4
       },
       {
-        "atom": "SA-LEX-C190-THG190-01",
-        "language": "sanskrit",
-        "introducedBy": "SA-C190-masah",
-        "introducedAt": 1031,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C190-THG190-02",
-        "language": "sanskrit",
-        "introducedBy": "SA-C190-yavah",
-        "introducedAt": 1032,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C191-THG191-01",
-        "language": "sanskrit",
-        "introducedBy": "SA-C191-saravah",
-        "introducedAt": 1038,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C191-THG191-02",
-        "language": "sanskrit",
-        "introducedBy": "SA-C191-kumbhah",
-        "introducedAt": 1039,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C191-THG191-03",
-        "language": "sanskrit",
-        "introducedBy": "SA-C191-ulukhalam",
-        "introducedAt": 1040,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C191-THG191-04",
-        "language": "sanskrit",
-        "introducedBy": "SA-C191-musalam",
-        "introducedAt": 1041,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C191-THG191-05",
-        "language": "sanskrit",
-        "introducedBy": "SA-C191-calani",
-        "introducedAt": 1042,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C192-THG192-01",
-        "language": "sanskrit",
-        "introducedBy": "SA-C192-harah",
-        "introducedAt": 1043,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C192-THG192-02",
-        "language": "sanskrit",
-        "introducedBy": "SA-C192-mukutam",
-        "introducedAt": 1044,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C192-THG192-03",
-        "language": "sanskrit",
-        "introducedBy": "SA-C192-adhovastram",
-        "introducedAt": 1045,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C192-THG192-04",
-        "language": "sanskrit",
-        "introducedBy": "SA-C192-paridhanam",
-        "introducedAt": 1046,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C192-THG192-05",
-        "language": "sanskrit",
-        "introducedBy": "SA-C192-vasanam",
-        "introducedAt": 1047,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C193-THG193-01",
-        "language": "sanskrit",
-        "introducedBy": "SA-C193-krayah",
-        "introducedAt": 1048,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C194-THG194-02",
-        "language": "sanskrit",
-        "introducedBy": "SA-C194-nimantranam",
-        "introducedAt": 1054,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C194-THG194-03",
-        "language": "sanskrit",
-        "introducedBy": "SA-C194-sabha",
-        "introducedAt": 1055,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C194-THG194-04",
-        "language": "sanskrit",
-        "introducedBy": "SA-C194-gosthi",
-        "introducedAt": 1056,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C194-THG194-05",
-        "language": "sanskrit",
-        "introducedBy": "SA-C194-melakah",
-        "introducedAt": 1057,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C195-THG195-01",
-        "language": "sanskrit",
-        "introducedBy": "SA-C195-pattanam",
-        "introducedAt": 1058,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C195-THG195-02",
-        "language": "sanskrit",
-        "introducedBy": "SA-C195-rajadhani",
-        "introducedAt": 1059,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C195-THG195-03",
-        "language": "sanskrit",
-        "introducedBy": "SA-C195-janapadah",
-        "introducedAt": 1060,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C195-THG195-04",
-        "language": "sanskrit",
-        "introducedBy": "SA-C195-prantah",
-        "introducedAt": 1061,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C195-THG195-05",
-        "language": "sanskrit",
-        "introducedBy": "SA-C195-sima",
-        "introducedAt": 1062,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C196-THG196-01",
-        "language": "sanskrit",
-        "introducedBy": "SA-C196-tamram",
-        "introducedAt": 1063,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C196-THG196-02",
-        "language": "sanskrit",
-        "introducedBy": "SA-C196-pasanah",
-        "introducedAt": 1064,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C197-THG197-01",
-        "language": "sanskrit",
-        "introducedBy": "SA-C197-venuvanam",
-        "introducedAt": 1070,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C197-THG197-02",
-        "language": "sanskrit",
-        "introducedBy": "SA-C197-indradhanuh",
-        "introducedAt": 1071,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C197-THG197-03",
-        "language": "sanskrit",
-        "introducedBy": "SA-C197-karaka",
-        "introducedAt": 1072,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C197-THG197-04",
-        "language": "sanskrit",
-        "introducedBy": "SA-C197-avasyayah",
-        "introducedAt": 1073,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C197-THG197-05",
-        "language": "sanskrit",
-        "introducedBy": "SA-C197-jyotsna",
-        "introducedAt": 1074,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C198-THG198-01",
-        "language": "sanskrit",
-        "introducedBy": "SA-C198-harinah",
-        "introducedAt": 1075,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C198-THG198-02",
-        "language": "sanskrit",
-        "introducedBy": "SA-C198-citrakah",
-        "introducedAt": 1076,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C198-THG198-03",
-        "language": "sanskrit",
-        "introducedBy": "SA-C198-gandakah",
-        "introducedAt": 1077,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C198-THG198-04",
-        "language": "sanskrit",
-        "introducedBy": "SA-C198-nidam",
-        "introducedAt": 1078,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C198-THG198-05",
-        "language": "sanskrit",
-        "introducedBy": "SA-C198-andam",
-        "introducedAt": 1079,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C199-SCH199-01",
-        "language": "sanskrit",
-        "introducedBy": "SA-C199-vakyam",
-        "introducedAt": 1080,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C199-SCH199-03",
-        "language": "sanskrit",
-        "introducedBy": "SA-C199-vyakaranam",
-        "introducedAt": 1082,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C199-SCH199-04",
-        "language": "sanskrit",
-        "introducedBy": "SA-C199-ganitam",
-        "introducedAt": 1083,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "SA-LEX-C199-SCH199-05",
-        "language": "sanskrit",
-        "introducedBy": "SA-C199-vijnanam",
-        "introducedAt": 1084,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "SA-LEX-C20-PERSON-03",
         "language": "sanskrit",
         "introducedBy": "SA-C20-child",
@@ -219275,16 +221919,6 @@
           "R3"
         ],
         "revisits": 6
-      },
-      {
-        "atom": "SA-LEX-C200-SCH200-01",
-        "language": "sanskrit",
-        "introducedBy": "SA-C200-pathanam",
-        "introducedAt": 1085,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
       },
       {
         "atom": "SA-LEX-C24-ASK-03",
@@ -219305,6 +221939,556 @@
           "R3"
         ],
         "revisits": 5
+      },
+      {
+        "atom": "SA-LEX-C242-QUAL242-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C242-duskarah",
+        "introducedAt": 1311,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C243-QUAL243-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C243-balavan",
+        "introducedAt": 1312,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C243-QUAL243-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C243-rugnah",
+        "introducedAt": 1313,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C243-QUAL243-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C243-svasthah",
+        "introducedAt": 1314,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C243-QUAL243-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C243-sukhi",
+        "introducedAt": 1315,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C243-QUAL243-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C243-duhkhi",
+        "introducedAt": 1316,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C244-QUAL244-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C244-ucitah",
+        "introducedAt": 1317,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C244-QUAL244-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C244-anucitah",
+        "introducedAt": 1318,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C244-QUAL244-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C244-avasyakah",
+        "introducedAt": 1319,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C244-QUAL244-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C244-anyah",
+        "introducedAt": 1320,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C244-QUAL244-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C244-ekaki",
+        "introducedAt": 1321,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C245-THG245-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C245-nalika",
+        "introducedAt": 1322,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C245-THG245-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C245-takram",
+        "introducedAt": 1323,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C245-THG245-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C245-phalarasah",
+        "introducedAt": 1324,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C245-THG245-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C245-lavangam",
+        "introducedAt": 1325,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C245-THG245-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C245-ela",
+        "introducedAt": 1326,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C246-THG246-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C246-lajah",
+        "introducedAt": 1327,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C246-THG246-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C246-dhanyam",
+        "introducedAt": 1328,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C247-THG247-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C247-khadgah",
+        "introducedAt": 1333,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C247-THG247-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C247-kavacam",
+        "introducedAt": 1334,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C247-THG247-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C247-dhvajah",
+        "introducedAt": 1335,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C247-THG247-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C247-patahah",
+        "introducedAt": 1336,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C248-THG248-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C248-kosah",
+        "introducedAt": 1337,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C248-THG248-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C248-nidhih",
+        "introducedAt": 1338,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C248-THG248-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C248-rupyakam",
+        "introducedAt": 1339,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C248-THG248-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C248-panah",
+        "introducedAt": 1340,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C248-THG248-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C248-sulkam",
+        "introducedAt": 1341,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C249-THG249-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C249-varta",
+        "introducedAt": 1342,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C249-THG249-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C249-natakam",
+        "introducedAt": 1343,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C250-THG250-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C250-durgam",
+        "introducedAt": 1349,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C250-THG250-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C250-prasadah",
+        "introducedAt": 1350,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C250-THG250-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C250-kutiram",
+        "introducedAt": 1351,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C250-THG250-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C250-bhavanam",
+        "introducedAt": 1352,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C250-THG250-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C250-avasah",
+        "introducedAt": 1353,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C251-THG251-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C251-prthivi",
+        "introducedAt": 1354,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C251-THG251-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C251-jagat",
+        "introducedAt": 1355,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C251-THG251-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C251-lokah",
+        "introducedAt": 1356,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C251-THG251-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C251-prakrtih",
+        "introducedAt": 1357,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C251-THG251-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C251-pankah",
+        "introducedAt": 1358,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C252-THG252-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C252-valli",
+        "introducedAt": 1359,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C252-THG252-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C252-kantakah",
+        "introducedAt": 1360,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C252-THG252-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C252-kalika",
+        "introducedAt": 1361,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C252-THG252-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C252-mallika",
+        "introducedAt": 1362,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C252-THG252-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C252-tulasi",
+        "introducedAt": 1363,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C253-THG253-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C253-kitah",
+        "introducedAt": 1364,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C253-THG253-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C253-luta",
+        "introducedAt": 1365,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C253-THG253-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C253-vrscikah",
+        "introducedAt": 1366,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C253-THG253-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C253-godha",
+        "introducedAt": 1367,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C253-THG253-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C253-nakrah",
+        "introducedAt": 1368,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C254-THG254-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C254-cakravakah",
+        "introducedAt": 1369,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C254-THG254-02",
+        "language": "sanskrit",
+        "introducedBy": "SA-C254-syenah",
+        "introducedAt": 1370,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C254-THG254-03",
+        "language": "sanskrit",
+        "introducedBy": "SA-C254-pratarasah",
+        "introducedAt": 1371,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C254-THG254-04",
+        "language": "sanskrit",
+        "introducedBy": "SA-C254-ratribhojanam",
+        "introducedAt": 1372,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C254-THG254-05",
+        "language": "sanskrit",
+        "introducedBy": "SA-C254-pakvannam",
+        "introducedAt": 1373,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "SA-LEX-C255-SCH255-01",
+        "language": "sanskrit",
+        "introducedBy": "SA-C255-siksa",
+        "introducedAt": 1374,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
       },
       {
         "atom": "SA-LEX-C26-ROLE-01",
@@ -232436,11 +235620,11 @@
       },
       {
         "language": "sanskrit",
-        "lessonCount": 1102,
+        "lessonCount": 1391,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 1109,
+        "atomsTaught": 1384,
         "atomsNeverRevisited": 20,
         "forwardReferences": 3
       },
@@ -232490,14 +235674,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 20196,
+      "atomsTaught": 20471,
       "atomsNeverRevisited": 156,
       "neverRevisitedPercent": 1,
       "missedByWindow": {
         "R1": 1745,
-        "R2": 13109,
-        "R3": 11434,
-        "R4": 14699
+        "R2": 13307,
+        "R3": 11562,
+        "R4": 14972
       },
       "forwardReferences": 968
     }
@@ -232676,7 +235860,7 @@
       {
         "language": "sanskrit",
         "script": "devanagari",
-        "lessonCount": 1102,
+        "lessonCount": 1391,
         "scriptLessons": 73,
         "taughtGlyphs": 50,
         "shownGlyphs": 50,
@@ -253741,8 +256925,8 @@
       },
       {
         "language": "sanskrit",
-        "lessonCount": 1102,
-        "atomMeasurableLessons": 1100,
+        "lessonCount": 1391,
+        "atomMeasurableLessons": 1389,
         "atomMeasurementBlindLessons": 2,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -253757,14 +256941,14 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 3,
-        "atomsTaught": 1109,
+        "atomsTaught": 1384,
         "atomsNeverRevisited": 20,
-        "reinforcementWindowMisses": 2323,
+        "reinforcementWindowMisses": 2922,
         "reinforcementMissesByWindow": {
           "R1": 86,
-          "R2": 644,
-          "R3": 634,
-          "R4": 959
+          "R2": 842,
+          "R3": 762,
+          "R4": 1232
         },
         "payoffSurprises": 10,
         "writingPracticeLessons": 87,
@@ -253802,7 +256986,7 @@
           {
             "language": "sanskrit",
             "kind": "reinforcement",
-            "count": 2323,
+            "count": 2922,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -254565,7 +257749,7 @@
       {
         "language": "sanskrit",
         "kind": "reinforcement",
-        "count": 2323,
+        "count": 2922,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -255294,7 +258478,7 @@
             "shortfall": 2
           }
         ],
-        "vocabulary": 951
+        "vocabulary": 1226
       },
       {
         "language": "spanish",
@@ -255389,11 +258573,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 19191,
-    "voice": 16837,
+    "totalLessons": 19480,
+    "voice": 17126,
     "sight": 991,
     "pen": 1363,
-    "coreVoice": 17414,
+    "coreVoice": 17703,
     "lessonsWithWritingSegments": 880,
     "drivablePercent": 91,
     "tracks": [
@@ -294840,13 +298024,13 @@
       },
       {
         "language": "sanskrit",
-        "lessonCount": 1102,
-        "voice": 998,
+        "lessonCount": 1391,
+        "voice": 1287,
         "sight": 31,
         "pen": 73,
-        "coreVoice": 1012,
-        "drivablePercent": 92,
-        "drivablePrefixTotal": 925,
+        "coreVoice": 1301,
+        "drivablePercent": 94,
+        "drivablePrefixTotal": 1214,
         "chapters": [
           {
             "language": "sanskrit",
@@ -297720,6 +300904,776 @@
           {
             "language": "sanskrit",
             "chapter": 202,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 203,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 204,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 205,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 206,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 207,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 208,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 209,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 210,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 211,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 212,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 213,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 214,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 215,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 216,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 217,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 218,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 219,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 220,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 221,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 222,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 223,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 224,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 225,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 226,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 227,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 228,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 229,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 230,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 231,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 232,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 233,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 234,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 235,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 236,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 237,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 238,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 239,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 240,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 241,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 242,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 243,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 244,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 245,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 246,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 247,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 248,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 249,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 250,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 251,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 252,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 253,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 254,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 255,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 256,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "sanskrit",
+            "chapter": 257,
             "lessonCount": 7,
             "voice": 7,
             "sight": 0,
@@ -311491,7 +315445,7 @@
     "underspentPercent": 89
   },
   "infoDump": {
-    "lessons": 19191,
+    "lessons": 19480,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -311499,11 +315453,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 19191,
-    "measuredLessons": 15018,
-    "idiomMeasuredLessons": 15018,
-    "senseMeasuredLessons": 15019,
-    "cultureClaimMeasuredLessons": 15018,
+    "lessons": 19480,
+    "measuredLessons": 15307,
+    "idiomMeasuredLessons": 15307,
+    "senseMeasuredLessons": 15308,
+    "cultureClaimMeasuredLessons": 15307,
     "idioms": 101,
     "senses": 103,
     "cultureClaims": 208,
@@ -311512,10 +315466,10 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 18279,
-    "usesBeforeIntroduction": 35875,
-    "technicalUsesBeforeIntroduction": 6362,
-    "technicalLessons": 3581,
+    "lessonsUsingTerms": 18568,
+    "usesBeforeIntroduction": 36173,
+    "technicalUsesBeforeIntroduction": 6363,
+    "technicalLessons": 3582,
     "worstTerms": [
       {
         "term": "verb",
@@ -311544,12 +315498,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 19191,
+    "lessonsScanned": 19480,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 3948,
+    "filesScanned": 4003,
     "mainCharacters": 135,
     "scriptCharacters": 802,
     "gaps": 0
