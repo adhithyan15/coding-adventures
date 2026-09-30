@@ -1,0 +1,19 @@
+{
+  "chapter": 164,
+  "title": "Courtyard, Small garden, Park, Playground, Airport",
+  "label": "ch:sa-courtyard-small-garden-park-playground-airport",
+  "canDo": "I can say a courtyard, a small garden, a park, a playground and an airport.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C164-vimanapattanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 164: I can say a courtyard, a small garden, a park, a playground and an airport.",
+    "assesses": [
+      "SA-LEX-C164-THG164-03",
+      "SA-LEX-C164-THG164-04",
+      "SA-LEX-C164-THG164-05"
+    ]
+  }
+}

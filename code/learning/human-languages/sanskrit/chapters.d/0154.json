@@ -1,0 +1,19 @@
+{
+  "chapter": 154,
+  "title": "If, Provided that, Even so, Although, Or else",
+  "label": "ch:sa-if-provided-that-even-so-although-or-else",
+  "canDo": "I can say if, provided that, even so, although and or else.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "SA-C154-athava",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 154: I can say if, provided that, even so, although and or else.",
+    "assesses": [
+      "SA-LEX-C154-WHY154-03",
+      "SA-LEX-C154-WHY154-04",
+      "SA-LEX-C154-WHY154-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C157-ksudhitah",
+  "pathSegment": "SA-PATH-157-QUAL157",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-157-QUAL157",
+      "order": 4
+    }
+  ]
+}

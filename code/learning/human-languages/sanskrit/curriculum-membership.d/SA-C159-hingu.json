@@ -1,0 +1,11 @@
+{
+  "id": "SA-C159-hingu",
+  "pathSegment": "SA-PATH-159-THG159",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-159-THG159",
+      "order": 2
+    }
+  ]
+}

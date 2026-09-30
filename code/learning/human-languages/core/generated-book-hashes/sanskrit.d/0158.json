@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:e1e5c130be54657c",
+  "lessonIds": [
+    "SA-C158-lekhani",
+    "SA-C158-masi",
+    "SA-C158-pattika",
+    "SA-C158-dipika",
+    "SA-C158-kapatam",
+    "SA-R158-first-pass-words-from-chapters-150-153",
+    "SA-R158-second-pass-words-from-chapters-154-158"
+  ],
+  "tex": "sanskrit/book/chapters/ch158-pen-ink-slate-small-lamp-door-panel.tex"
+}

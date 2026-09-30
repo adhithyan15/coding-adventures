@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:3ec39629e00acdae",
+  "lessonIds": [
+    "SA-C153-itah",
+    "SA-C153-tatah",
+    "SA-C153-ubhayatah",
+    "SA-C153-paritah",
+    "SA-C153-samantatah"
+  ],
+  "tex": "sanskrit/book/chapters/ch153-from-here-from-there-on-both-sides-all-around-on-all-sides.tex"
+}

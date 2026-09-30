@@ -1,0 +1,11 @@
+{
+  "id": "SA-C152-dinankah",
+  "pathSegment": "SA-PATH-152-TIME152",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-152-TIME152",
+      "order": 3
+    }
+  ]
+}

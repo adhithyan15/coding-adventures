@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:0db96da661a3e819",
+  "lessonIds": [
+    "SA-C160-bhojanam",
+    "SA-C160-vyanjanam",
+    "SA-C160-aharah",
+    "SA-C160-asanam",
+    "SA-C160-kalasi"
+  ],
+  "tex": "sanskrit/book/chapters/ch160-meal-curry-food-eating-small-pitcher.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 150,
+  "title": "Remedy, Wound, Swelling, Vomiting, Stomach ache",
+  "label": "ch:sa-remedy-wound-swelling-vomiting-stomach-ache",
+  "canDo": "I can say a remedy, a wound, a swelling, vomiting and a stomach ache.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "SA-C150-udarapida",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 150: I can say a remedy, a wound, a swelling, vomiting and a stomach ache.",
+    "assesses": [
+      "SA-LEX-C150-WEL150-03",
+      "SA-LEX-C150-WEL150-04",
+      "SA-LEX-C150-WEL150-05"
+    ]
+  }
+}

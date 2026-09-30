@@ -1,0 +1,19 @@
+{
+  "chapter": 158,
+  "title": "Pen, Ink, Slate, Small lamp, Door panel",
+  "label": "ch:sa-pen-ink-slate-small-lamp-door-panel",
+  "canDo": "I can say a pen, ink, a slate, a small lamp and a door panel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-R158-second-pass-words-from-chapters-154-158",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 158: I can say a pen, ink, a slate, a small lamp and a door panel.",
+    "assesses": [
+      "SA-LEX-C158-THG158-03",
+      "SA-LEX-C158-THG158-04",
+      "SA-LEX-C158-THG158-05"
+    ]
+  }
+}

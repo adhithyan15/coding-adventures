@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-158-THG158",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a pen, ink, a slate, a small lamp and a door panel.",
+  "prerequisites": []
+}

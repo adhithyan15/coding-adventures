@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C164-pranganam",
+    "language": "sanskrit",
+    "chapter": 164,
+    "sequence": 8640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2cf9a141a53f5d28"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C163-upaharah",
+    "language": "sanskrit",
+    "chapter": 163,
+    "sequence": 8630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40d9eb8bf4ef35de"
+  },
+  "findings": []
+}

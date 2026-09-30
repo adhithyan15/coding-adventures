@@ -1,0 +1,11 @@
+{
+  "id": "SA-C155-jirnah",
+  "pathSegment": "SA-PATH-155-QUAL155",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-155-QUAL155",
+      "order": 1
+    }
+  ]
+}

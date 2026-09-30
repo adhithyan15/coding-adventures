@@ -1,0 +1,19 @@
+{
+  "chapter": 155,
+  "title": "Fresh, Worn out, Hot, Chilly, Harsh",
+  "label": "ch:sa-fresh-worn-out-hot-chilly-harsh",
+  "canDo": "I can say fresh, worn out, hot, chilly and harsh.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "SA-C155-kathorah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 155: I can say fresh, worn out, hot, chilly and harsh.",
+    "assesses": [
+      "SA-LEX-C155-QUAL155-03",
+      "SA-LEX-C155-QUAL155-04",
+      "SA-LEX-C155-QUAL155-05"
+    ]
+  }
+}

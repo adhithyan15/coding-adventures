@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 156,
+  "sourceHash": "fnv1a64:140392c9d012986a",
+  "lessonIds": [
+    "SA-C156-priyah",
+    "SA-C156-apriyah",
+    "SA-C156-santah",
+    "SA-C156-candah",
+    "SA-C156-krurah"
+  ],
+  "tex": "sanskrit/book/chapters/ch156-dear-unpleasant-calm-fierce-cruel.tex"
+}

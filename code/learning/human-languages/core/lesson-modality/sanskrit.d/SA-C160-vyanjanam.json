@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C160-vyanjanam",
+    "language": "sanskrit",
+    "chapter": 160,
+    "sequence": 8450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:693de509c7b6ac92"
+  },
+  "findings": []
+}

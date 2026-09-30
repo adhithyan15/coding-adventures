@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:5f0ffa02beca0eb9",
+  "lessonIds": [
+    "SA-C141-pibati",
+    "SA-C141-vasati",
+    "SA-C141-carati",
+    "SA-C141-sprsati",
+    "SA-C141-tyajati"
+  ],
+  "tex": "sanskrit/book/chapters/ch141-drinks-dwells-moves-about-touches-leaves.tex"
+}

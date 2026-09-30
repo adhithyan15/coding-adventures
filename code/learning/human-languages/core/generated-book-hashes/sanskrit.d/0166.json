@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:d104d421a98049f9",
+  "lessonIds": [
+    "SA-C166-asvatthah",
+    "SA-C166-nimbah",
+    "SA-C166-amravrksah",
+    "SA-C166-vatah",
+    "SA-C166-talah"
+  ],
+  "tex": "sanskrit/book/chapters/ch166-sacred-fig-tree-neem-tree-mango-tree-banyan-tree-palm-tree.tex"
+}

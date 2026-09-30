@@ -1,0 +1,11 @@
+{
+  "id": "SA-C172-yanapatram",
+  "pathSegment": "SA-PATH-172-TRV172",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-172-TRV172",
+      "order": 1
+    }
+  ]
+}

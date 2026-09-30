@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C171-karyakramah",
+    "language": "sanskrit",
+    "chapter": 171,
+    "sequence": 9210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d3451f15f3130b0"
+  },
+  "findings": []
+}

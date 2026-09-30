@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:7a7f619097291716",
+  "lessonIds": [
+    "SA-C154-yadi",
+    "SA-C154-cet",
+    "SA-C154-tathapi",
+    "SA-C154-yadyapi",
+    "SA-C154-athava"
+  ],
+  "tex": "sanskrit/book/chapters/ch154-if-provided-that-even-so-although-or-else.tex"
+}

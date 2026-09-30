@@ -1,0 +1,11 @@
+{
+  "id": "SA-C162-rnam",
+  "pathSegment": "SA-PATH-162-THG162",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-162-THG162",
+      "order": 1
+    }
+  ]
+}

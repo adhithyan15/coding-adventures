@@ -1,0 +1,19 @@
+{
+  "chapter": 162,
+  "title": "Wages, Debt, Profit, Loss, Trade",
+  "label": "ch:sa-wages-debt-profit-loss-trade",
+  "canDo": "I can say wages, a debt, profit, loss and trade.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C162-vyaparah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 162: I can say wages, a debt, profit, loss and trade.",
+    "assesses": [
+      "SA-LEX-C162-THG162-03",
+      "SA-LEX-C162-THG162-04",
+      "SA-LEX-C162-THG162-05"
+    ]
+  }
+}

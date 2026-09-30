@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:b28105336169077e",
+  "lessonIds": [
+    "SA-C149-karmakarah",
+    "SA-C149-sramikah",
+    "SA-C149-adhikari",
+    "SA-C149-lipikah",
+    "SA-C149-nayakah",
+    "SA-R149-first-pass-words-from-chapters-141-144",
+    "SA-R149-second-pass-words-from-chapters-145-149"
+  ],
+  "tex": "sanskrit/book/chapters/ch149-worker-labourer-official-clerk-leader.tex"
+}

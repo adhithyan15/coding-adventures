@@ -1,0 +1,11 @@
+{
+  "id": "SA-C152-varah",
+  "pathSegment": "SA-PATH-152-TIME152",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-152-TIME152",
+      "order": 1
+    }
+  ]
+}

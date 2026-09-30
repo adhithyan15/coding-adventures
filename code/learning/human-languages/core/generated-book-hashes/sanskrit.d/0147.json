@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 147,
+  "sourceHash": "fnv1a64:548c3f08ad0a727a",
+  "lessonIds": [
+    "SA-C147-svami",
+    "SA-C147-sevakah",
+    "SA-C147-rajni",
+    "SA-C147-mantri",
+    "SA-C147-senapatih"
+  ],
+  "tex": "sanskrit/book/chapters/ch147-master-servant-queen-minister-general.tex"
+}

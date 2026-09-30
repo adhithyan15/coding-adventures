@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:aa7c1a5f6c0448f5",
+  "lessonIds": [
+    "SA-C168-kaksa",
+    "SA-C168-adhyayah",
+    "SA-C168-aksaram",
+    "SA-C168-varnah",
+    "SA-C168-padam"
+  ],
+  "tex": "sanskrit/book/chapters/ch168-class-chapter-syllable-colour-word.tex"
+}

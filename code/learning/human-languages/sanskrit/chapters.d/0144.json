@@ -1,0 +1,19 @@
+{
+  "chapter": 144,
+  "title": "Shares, Weighs, Flies up, Puts in, Joins",
+  "label": "ch:sa-shares-weighs-flies-up-puts-in-joins",
+  "canDo": "I can say shares, weighs, flies up, puts in and joins.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C144-yojayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 144: I can say shares, weighs, flies up, puts in and joins.",
+    "assesses": [
+      "SA-LEX-C144-ACT144-03",
+      "SA-LEX-C144-ACT144-04",
+      "SA-LEX-C144-ACT144-05"
+    ]
+  }
+}

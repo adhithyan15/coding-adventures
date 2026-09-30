@@ -1,0 +1,21 @@
+{
+  "language": "sanskrit",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:e628d79caddff096",
+  "lessonIds": [
+    "SA-C158-lekhani",
+    "SA-C158-masi",
+    "SA-C158-pattika",
+    "SA-C158-dipika",
+    "SA-C158-kapatam",
+    "SA-R158-first-pass-words-from-chapters-150-153",
+    "SA-R158-second-pass-words-from-chapters-154-158"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "sanskrit/narration/ch158.txt",
+  "json": "sanskrit/narration/ch158.json",
+  "textHash": "fnv1a64:3c24e582af342fcf",
+  "jsonHash": "fnv1a64:02a37fa8815ee65b",
+  "findings": []
+}

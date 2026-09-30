@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:f62d4a3045bfff05",
+  "lessonIds": [
+    "SA-C165-dhulih",
+    "SA-C165-dhumah",
+    "SA-C165-jvala",
+    "SA-C165-angarah",
+    "SA-C165-lauham"
+  ],
+  "tex": "sanskrit/book/chapters/ch165-dust-smoke-flame-live-coal-iron.tex"
+}

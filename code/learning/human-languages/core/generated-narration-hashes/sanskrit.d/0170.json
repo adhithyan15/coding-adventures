@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:6ede4bb3dac06244",
+  "lessonIds": [
+    "SA-C170-karyam",
+    "SA-C170-karma",
+    "SA-C170-udyogah",
+    "SA-C170-vrttih",
+    "SA-C170-seva"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch170.txt",
+  "json": "sanskrit/narration/ch170.json",
+  "textHash": "fnv1a64:da2d9898d00df22f",
+  "jsonHash": "fnv1a64:f3e5e8520e1a72b6",
+  "findings": []
+}

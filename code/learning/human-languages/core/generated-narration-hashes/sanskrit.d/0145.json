@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:a257c0d9bbf55615",
+  "lessonIds": [
+    "SA-C145-nandati",
+    "SA-C145-krandati",
+    "SA-C145-garjati",
+    "SA-C145-kujati",
+    "SA-C145-jalpati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch145.txt",
+  "json": "sanskrit/narration/ch145.json",
+  "textHash": "fnv1a64:fc24ac02d004baa6",
+  "jsonHash": "fnv1a64:79eb6439e3c39a8c",
+  "findings": []
+}

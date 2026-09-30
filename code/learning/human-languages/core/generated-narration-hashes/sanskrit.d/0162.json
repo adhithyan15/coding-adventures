@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:260eda038c44315f",
+  "lessonIds": [
+    "SA-C162-vetanam",
+    "SA-C162-rnam",
+    "SA-C162-labhah",
+    "SA-C162-hanih",
+    "SA-C162-vyaparah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch162.txt",
+  "json": "sanskrit/narration/ch162.json",
+  "textHash": "fnv1a64:c8f144dab9809ac1",
+  "jsonHash": "fnv1a64:b0490ec3744e4eed",
+  "findings": []
+}

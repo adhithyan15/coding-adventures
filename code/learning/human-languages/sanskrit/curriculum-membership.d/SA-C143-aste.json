@@ -1,0 +1,11 @@
+{
+  "id": "SA-C143-aste",
+  "pathSegment": "SA-PATH-143-ACT143",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-143-ACT143",
+      "order": 2
+    }
+  ]
+}

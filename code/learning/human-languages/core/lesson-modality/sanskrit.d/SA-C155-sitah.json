@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C155-sitah",
+    "language": "sanskrit",
+    "chapter": 155,
+    "sequence": 8030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1eaae61066983c6f"
+  },
+  "findings": []
+}

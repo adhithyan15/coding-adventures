@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C161-sankhah",
+    "language": "sanskrit",
+    "chapter": 161,
+    "sequence": 8490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2e3b359ef683457"
+  },
+  "findings": []
+}

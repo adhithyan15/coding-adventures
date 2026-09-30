@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:ffe6e433fa51cef4",
+  "lessonIds": [
+    "SA-C161-sankhah",
+    "SA-C161-venuh",
+    "SA-C161-mrdangah",
+    "SA-C161-nupuram",
+    "SA-C161-kundalam"
+  ],
+  "tex": "sanskrit/book/chapters/ch161-conch-flute-mridanga-drum-anklet-earring.tex"
+}
