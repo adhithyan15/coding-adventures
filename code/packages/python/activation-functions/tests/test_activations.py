@@ -17,7 +17,7 @@ from activation_functions import (
 )
 
 
-@pytest.mark.parametrize("value", [-3.5, 0.0, 7.25])
+@pytest.mark.parametrize("value", [-3.0, 0.0, 5.0])
 def test_linear_and_derivative(value: float) -> None:
     assert linear(value) == value
     assert linear_derivative(value) == 1.0
@@ -51,7 +51,7 @@ def test_sigmoid_clamps_overflow_boundaries() -> None:
 
 @pytest.mark.parametrize(
     ("value", "expected", "derivative"),
-    [(-2.0, 0.0, 0.0), (0.0, 0.0, 0.0), (2.0, 2.0, 1.0)],
+    [(-3.0, 0.0, 0.0), (0.0, 0.0, 0.0), (5.0, 5.0, 1.0)],
 )
 def test_relu_zero_convention(value: float, expected: float, derivative: float) -> None:
     assert relu(value) == expected
@@ -60,7 +60,7 @@ def test_relu_zero_convention(value: float, expected: float, derivative: float) 
 
 @pytest.mark.parametrize(
     ("value", "expected", "derivative"),
-    [(-2.0, -0.02, 0.01), (0.0, 0.0, 0.01), (2.0, 2.0, 1.0)],
+    [(-3.0, -0.03, 0.01), (0.0, 0.0, 0.01), (5.0, 5.0, 1.0)],
 )
 def test_leaky_relu_zero_convention(value: float, expected: float, derivative: float) -> None:
     assert leaky_relu(value) == pytest.approx(expected)
