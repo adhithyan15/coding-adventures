@@ -11,7 +11,7 @@ capabilities, and no application carries its own copy (§7).
 | SwiftUI (macOS) | `MosaicPlatformEffects.swift` | done; iOS/iPadOS fail each request with a message until UI89 step 6 |
 | Qt | `MosaicPlatformEffects.{h,cpp}` | done (§7.4a) |
 | XAML (WinUI 3) | `MosaicPlatformEffects.cs` | done (§7.6) |
-| Flutter | — | not started |
+| Flutter | `mosaic_platform_effects.dart` + `mosaic_platform_effects_core.dart` | done (§7.7); Android/iOS fail each request with a message until UI89 |
 
 First consumer: Journal's Export (J6a, #16034).
 
@@ -149,7 +149,7 @@ generated project the same way:
 | --- | --- | --- |
 | Compose | `MosaicPlatformEffects.kt` | desktop: `java.awt.FileDialog` (the native macOS/Windows/GTK dialog, not Swing's); Android (UI89): `ActivityResultContracts` |
 | SwiftUI | `MosaicPlatformEffects.swift` | macOS: `NSOpenPanel` / `NSSavePanel`; iOS/iPadOS (UI89): `UIDocumentPickerViewController` (until then each request fails with "… is not available on this platform yet", never a silent cancel) |
-| Flutter | `mosaic_platform_effects.dart` | `file_selector` on desktop; share sheet for save on mobile |
+| Flutter | `mosaic_platform_effects.dart` (+ its plain-Dart `_core.dart`, §7.7) | `file_selector` on desktop; share sheet for save on mobile (until UI89, each mobile request fails with a message) |
 | Qt | `MosaicPlatformEffects.{h,cpp}` | `QFileDialog` (native where the platform has one) |
 | XAML | `MosaicPlatformEffects.cs` | `FileOpenPicker` / `FileSavePicker` |
 | web family | `mosaic-file-effects.mjs` (exists) | `showOpenFilePicker` / `showSaveFilePicker`; without them, `files.save` downloads the bytes and reports `ok { name, download: true }` (a download is not a durable save the person placed), and an `<input type=file>` fallback for `files.open` follows |
@@ -202,7 +202,11 @@ escape hatch, used deliberately and visibly.
   the platform library, becoming the second consumer. *Compose, Qt and XAML
   done* (their handlers removed; SwiftUI never had one): the app claims no
   kinds, so once each backend's library existed the router sent `files.open`
-  there and the app's handler was never reached. Flutter follows its library.
+  there and the app's handler was never reached. Flutter's library exists
+  too (§7.7); photo-picker's Flutter handler likewise claims no kinds, so
+  `files.open` no longer reaches it, and removing it (with its
+  `file_selector` `[host_assets]` coordinate, now redundant) is the
+  follow-up.
 - Engram's `importAnki` / `exportAnki` can later become `files.open` /
   `files.save` plus Rust-side parsing, which removes about 1,300 lines of
   per-backend handler code. That is a separate change.
@@ -339,6 +343,110 @@ equivalent), so an answer given after deferral reaches the runtime at once
 but the window only at the next dispatch (or environment report, which
 re-applies a newer revision). The photo-picker handler this replaces had the
 same limit. Closing it is a host change.
+
+### 7.7 Flutter, as built
+
+`mosaic_platform_effects_core.dart` answers the Compose library's contract:
+the same kinds, limits (50 MiB open, bounded while reading; 16 MiB save,
+checked on the encoded length first), MIME table in the same order,
+plain-name rule (including the default-ignorable ranges), executable list and
+failure messages. A Rust test pins the tables, ranges and messages to the
+Kotlin file. What differs is how Dart and Flutter shape the rest:
+
+- **Two files.** Dart has no conditional compilation, and the dialogs need
+  the Flutter engine. So the contract, the file I/O and the router are plain
+  Dart (dart:io, dart:ffi, package:ffi) in `mosaic_platform_effects_core.dart`,
+  and `mosaic_platform_effects.dart` adds `package:file_selector`'s dialogs and
+  `installMosaicPlatformEffects(host, appKinds: …)`, re-exporting the core.
+  The builder writes both beside `mosaic_host.dart` in every generated
+  project; `main.dart` imports the second.
+- **Installation.** The generated `main.dart` installs the library right after
+  the host is assigned, after the package's own `[host_effects]` handler (the
+  router wraps whatever handler is set, so that order is what lets the app's
+  kinds reach the app): on the strict shell's local `host`, before
+  `setPropsChangedHandler` and the first props read; on the permissive shell
+  through the same guarded local (`mosaicEffectHost`) the package handler
+  uses. The handler's `kinds` become `const <String>['…']`, re-checked against
+  the manifest's dotted-name shape before being written (a quote, backslash
+  or `$` would otherwise become Dart code); an empty list is
+  `const <String>[]`, and no `kinds` is `null`, the original meaning.
+  `MosaicHost` gains an `effectHandler` getter so the router can wrap the
+  app's handler. A second install on the same host changes nothing.
+- **Answers go to the host that asked.** The router holds the `MosaicHost`
+  instance it was installed on (through `MosaicHostEffects`), never a static
+  facade. The shell's retried start disposes that host and loads a new one,
+  running the install lines again, so the new runtime gets its own router and
+  busy flag. A dialog left open across the retry answers the disposed host,
+  whose runtime's `completeEffect` throws (`_ensureOpen`), and the router
+  drops it; it cannot settle the new runtime's effect that reuses the id. No
+  equivalent of XAML's `EffectScope` is needed.
+- **Threading.** A Dart isolate is single-threaded: there is no host lock
+  and nothing to marshal. For each standard `Await` the payload is deep-copied
+  (before the busy flag is taken), the effect deferred, and the dialog started
+  from a microtask, after the settle returns. The chosen file is read and
+  base64-encoded, or written and flushed, in a short-lived background isolate
+  (`Isolate.run`, from top-level functions that capture only a path and the
+  bytes), so a 50 MiB file never stalls a frame; the answer is given back on
+  the UI isolate, and the host's props-changed handler redraws -- Flutter has
+  no equivalent of XAML's known gap. A scheduler that throws and a dialog
+  that throws are both `failed { "the file dialog failed" }`; a disposed host
+  swallows the answer; nothing escapes.
+- **Dialogs.** `file_selector` (published by the Flutter team), pinned
+  exactly: `file_selector: 1.0.4` in every generated `pubspec.yaml`. 1.0.4
+  rather than 1.1.0 because 1.1.0 requires Flutter 3.35 and generated projects
+  declare 3.32 as their floor; 1.0.4 requires 3.29. Generated projects ship no
+  lockfile, so its platform packages (`file_selector_linux` and so on) resolve
+  within 1.0.4's own ranges at `pub get`. A package's `[host_assets]`
+  coordinate for a package the project already declares is left out, because
+  YAML refuses a duplicate key: Engram's and photo-picker's
+  `file_selector: '>=1.0.0 <2.0.0'` admit the pin. Extensions are passed bare,
+  as one type group, or no group at all for "any file" (Linux refuses an
+  empty group). A choice with no local path is a failure, not a cancel.
+- **Files through dart:io, plus two libc calls.** Open checks the type on the
+  path, following a link the person chose: a directory, a missing file, a FIFO
+  or a device is "not a regular file"; the read is bounded in 64 KiB chunks.
+  Dart has neither `O_NONBLOCK` nor `fstat`, so unlike SwiftUI and Qt the type
+  cannot be re-checked on the opened descriptor: a FIFO swapped in between the
+  check and the open would block the background isolate (never the UI), and
+  hold that request -- and the busy flag -- until something writes to it.
+  Save on POSIX: dart:io can neither create a file with a mode nor `chmod`
+  one, and `Directory.createTemp` is 0777 minus the umask, not `mkdtemp`'s
+  0700. So the library creates a private directory beside the target with
+  libc `mkdir(…, 0700)` (which fails if the name exists), writes and flushes
+  the bytes inside it, gives the file the replaced regular file's rwx bits
+  (never setuid, setgid or sticky; a new name or a link stays 0600) with libc
+  `chmod` on a path nobody else can reach, renames it onto the chosen path --
+  replacing a chosen link rather than writing through it, as Compose and Qt
+  do -- and removes the directory. On Windows it writes an exclusively created
+  temporary beside the target, flushes it, and moves it with
+  `MoveFileExW(MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH)`, the move
+  the host uses for its own state; the folder's ACL applies, as with Compose
+  and Qt (XAML's `File.Replace` keeps the replaced file's). The base64
+  alphabet is checked first, because Dart's decoder also accepts the URL-safe
+  alphabet and `%3D` padding.
+- **Platforms.** Linux, macOS and Windows have the dialogs. On Android and iOS
+  each request fails at once with "`<kind>` is not available on this platform
+  yet", nothing deferred, as SwiftUI does on iOS, until UI89 adds a document
+  picker and a share sheet. A sandboxed macOS build needs the
+  `com.apple.security.files.user-selected.read-write` entitlement, which the
+  runner `flutter create` generates does not have; there the panel fails and
+  the request is answered `failed { "the file dialog failed" }`.
+- **Tests.** `conformance/flutter-platform-effects/` runs the core on the
+  plain Dart VM with a fake host and fake dialogs: the Compose test's cases,
+  the SwiftUI and XAML harnesses' router cases (including the host disposed
+  while a dialog is open), a FIFO refused, a chosen link replaced, no dialogs
+  on mobile, and the adapter over a `MosaicHost` with no runtime.
+  `tests/flutter_platform_effects.rs` runs it wherever `dart` is installed;
+  the Flutter CI lane checks TaskApp's `main.dart` installs the library and
+  runs the harness against TaskApp's generated files. The dialogs file is
+  compiled by that lane's `flutter analyze` and `flutter build linux` of every
+  generated project.
+
+**Known gaps.** `file_selector_linux` never turns on GTK's overwrite
+confirmation (off by default), so on Linux saving onto an existing name
+replaces it without asking; NSSavePanel and the Windows dialog ask. The macOS
+entitlement above belongs to whatever generates the macOS runner. Both, and
+the FIFO window, are follow-ups.
 
 ## 6. What this does not decide
 
