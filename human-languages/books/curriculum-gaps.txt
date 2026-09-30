@@ -13,8 +13,8 @@ cousin layer: 216 lessons show another script (max 26 glyphs) — context, never
 script closure: 180 lessons ask the reader to decode a glyph nobody taught them, across 17 non-Latin tracks; 0 of those tracks teach NO letters at all
 exposure: 46 native-script headwords carry no romanization, so they are load-bearing rather than exposure; the rule exempts 1622 glyphs and makes 548 lessons clean on its own
 order: 0 lessons with no declared sequence across 0 tracks; 0 prerequisites and 0 reviews pointing forward
-reinforcement: 173 of 18772 atoms never revisited (1%); missed windows R1 1760, R2 12120, R3 10767, R4 13268
-forward references: 917 uses of material a later lesson teaches
+reinforcement: 157 of 18772 atoms never revisited (1%); missed windows R1 1745, R2 12093, R3 10760, R4 13268
+forward references: 930 uses of material a later lesson teaches
 writing stages: 23/23 tracks prove the cumulative pre-A1 ladder; 794 evidence blocks, 0 invalid; 243 missing (track, level, stage) pairs
 super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 110 named track/debt items
 writing ramp: 0 track(s) never practise writing; 6 start after lesson one
@@ -37,15 +37,15 @@ per-track ladder (HL09 §3.1), fewest criteria left first, every blocker listed 
   tamil       touches A2     complete pre-A1 working A1     vocabulary 600/600 — 1 blocker: writing-stage 2
   telugu      touches A2     complete pre-A1 working A1     vocabulary 600/600 — 1 blocker: writing-stage 2
   urdu        touches A2     complete pre-A1 working A1     vocabulary 600/600 — 1 blocker: writing-stage 2
+  spanish     touches C2     complete A1     working A2     vocabulary 1020/1200 — 2 blockers: verb-vocabulary 29, vocabulary 180
   arabic      touches A2     complete A1     working A2     vocabulary 627/1200 — 3 blockers: spine-nodes 3, verb-vocabulary 51, vocabulary 573
   chinese     touches A2     complete none   working pre-A1 vocabulary 48/300 — 3 blockers: spine-nodes 1, verb-vocabulary 4, vocabulary 252
+  french      touches A2     complete A1     working A2     vocabulary 631/1200 — 3 blockers: spine-nodes 4, verb-vocabulary 36, vocabulary 569
+  german      touches A2     complete A1     working A2     vocabulary 662/1200 — 3 blockers: spine-nodes 2, verb-vocabulary 42, vocabulary 538
   hindi       touches A2     complete A1     working A2     vocabulary 650/1200 — 3 blockers: spine-nodes 1, verb-vocabulary 49, vocabulary 550
   latin       touches A2     complete A1     working A2     vocabulary 635/1200 — 3 blockers: spine-nodes 4, verb-vocabulary 9, vocabulary 565
   marathi     touches A2     complete A1     working A2     vocabulary 631/1200 — 3 blockers: spine-nodes 3, verb-vocabulary 22, vocabulary 569
   punjabi     touches A2     complete A1     working A2     vocabulary 623/1200 — 3 blockers: spine-nodes 4, verb-vocabulary 38, vocabulary 577
-  spanish     touches C2     complete A1     working A2     vocabulary 1020/1200 — 3 blockers: reinforcement 32, verb-vocabulary 29, vocabulary 180
-  french      touches A2     complete A1     working A2     vocabulary 631/1200 — 4 blockers: reinforcement 8, spine-nodes 4, verb-vocabulary 36, vocabulary 569
-  german      touches A2     complete A1     working A2     vocabulary 662/1200 — 4 blockers: reinforcement 11, spine-nodes 2, verb-vocabulary 42, vocabulary 538
   marwadi     touches A1     complete A1     working A2     vocabulary 624/1200 — 4 blockers: spine-nodes 5, verb-vocabulary 34, vocabulary 576, writing-stage 1
 0 of 3593 book chapters without an HL05 capability; 94 payoffs below the 0.5 representativeness floor; 10 tracks already clean
 
@@ -128,7 +128,7 @@ info dump (report-only): 120 of 17686 lessons -- 32 rule statements, 91 paradigm
 lesson content budgets (report-only): 13513 of 17686 lessons measured -- 101 idioms, 103 senses, 208 culture claims; 0 lessons over budget
   annotation coverage: idioms 13513, senses 13514, culture claims 13513
 
-metalanguage: 54 of 54 grammar terms appear in 16775 lessons; 34249 uses come before introduction, of which 6318 are technical terms across 3554 lessons
-  most-used-before-introduction: verb (2041 lessons), noun (1202 lessons), adjective (374 lessons), pronoun (261 lessons), article (255 lessons), tense (250 lessons)
+metalanguage: 54 of 54 grammar terms appear in 16775 lessons; 34282 uses come before introduction, of which 6335 are technical terms across 3555 lessons
+  most-used-before-introduction: verb (2046 lessons), noun (1202 lessons), adjective (375 lessons), pronoun (261 lessons), article (255 lessons), tense (251 lessons)
 literal markup: none in 17686 lessons or any generated book
 glyph coverage: every character renders -- 134 main-font and 800 script characters across 3662 generated files
