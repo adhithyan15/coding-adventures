@@ -14714,8 +14714,6 @@ version = "1"
         assert_eq!(v, vec![None]);
     }
 
-    /// Bare default + one named variant: returns `[None, Some("touch")]`
-    /// in that order (default first per UI30 §5).
     #[test]
     fn discover_variants_refuses_names_that_collide_as_generated_views() {
         for (first, second) in [("touch", "Touch"), ("task-list", "task_list"), ("task-list", "tasklist")] {
@@ -14737,6 +14735,8 @@ version = "1"
         assert_eq!(discover_variants(tmp.path(), "Grid").unwrap().len(), 3);
     }
 
+    /// Bare default + one named variant: returns `[None, Some("touch")]`
+    /// in that order (default first per UI30 §5).
     #[test]
     fn discover_variants_default_plus_named_returns_both_in_order() {
         let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
