@@ -15280,6 +15280,41 @@ reconciliation owner. The fresh clean sparse branch
 `codex/parity-barcode-layout-conformance-20260930` starts from exact current
 main above.
 
+### Barcode layout 1D neutral integer contract
+
+The selected slice now defines `barcode-layout-1d-v1` as a closed,
+language-neutral portable boundary. Its 56 generated cases cover fixed binary
+and configurable scalar narrow/wide expansion, checked run and content limits,
+strict alternation and quiet zones, inferred and explicit symbol spans,
+integer rectangle projection, authoritative string metadata, Unicode scalar
+handling, stable payload-blind failures, and rejection of both text request
+forms before any font or native backend work. Large run outputs have an exact
+canonical JSON digest recipe, while the strict fixture loader rejects oversized
+or deeply nested input, duplicate keys, invalid scalars, non-finite values, and
+external schema references.
+
+The target registry names exactly the existing C#, F#, Go, Haskell, Perl,
+Python, Rust, and TypeScript implementations. Every target remains
+`pending-adoption`; none is credited with conformance from package prose or an
+empty capability manifest alone. The registry preserves the reviewed legacy,
+metadata, fractional-geometry, missing-manifest, and Rust native-font
+divergences, and requires an immutable revision, corpus digest, adoption PR,
+real conformance test, explicit manifest, and zero-authority call-graph evidence
+before a lane can be promoted.
+
+Parallel read-only reviews found and closed four high-value fixture risks before
+publication: caller metadata can legally produce 74 output properties, operation
+and expected-result shapes must be coupled, successful runs must require
+positive modules, and digest bytes must be normative and independently checked.
+The focused suite also mutation-tests those schema boundaries. The repo-wide
+metadata-contract workflow now executes it.
+
+Before publication, `origin/main` advanced through Italian curriculum and
+Telugu ductus changes to `e07375d500da64d31373ecf0c79e947a78609fcd`.
+The branch rebased cleanly. The intervening package changes remain inside two
+existing TypeScript identities and do not alter any package root or manifest,
+so the collision-clean schema-3 inventory totals remain unchanged.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

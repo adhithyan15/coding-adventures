@@ -19,7 +19,7 @@
     "notes": "Every final-head check reached an acceptable terminal conclusion, including both Ubuntu builds, both metadata-contract runs, Python CodeQL, the human-language gate, CI push gate, and CI gate. GitHub reported MERGEABLE and CLEAN, guarded squash auto-merge was enabled, and PR #16321 merged automatically as 68afa3eedabb0bc1bfc98165e1b4b023013f1fa7 without a plain manual merge command."
   },
   "last_inventory": {
-    "revision": "68afa3eedabb0bc1bfc98165e1b4b023013f1fa7",
+    "revision": "e07375d500da64d31373ecf0c79e947a78609fcd",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1473,
@@ -10327,6 +10327,8 @@
       "selected_at": "2026-09-30T22:26:43Z",
       "selection_revision": "68afa3eedabb0bc1bfc98165e1b4b023013f1fa7",
       "selection_notes": "Selected only after PR #16321 completed every final-head check acceptably and merged through guarded squash auto-merge as 68afa3eedabb0bc1bfc98165e1b4b023013f1fa7. The exact-main package-tree delta from the prior collision-checked 0d12bc3c4caf1b9baff45029eac13bf39337378d inventory contains no package-root additions, removals, or manifest identity changes, so the schema-3 totals remain 15 established lanes, 1,473 implementation identities, 4,740 slots, 1,515 all-reported identities, completion bands 178/265, 123/934, 181/2,282, and 991/13,874, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. Parallel read-only ranking gives this dependency-free neutral contract 3 direct and 15 total unfinished descendants, ahead of the Haskell ITF and Python gradient-descent alternatives, with zero open-PR path or ownership overlap. A fresh clean sparse worktree starts from exact current main.",
+      "implementation_revision": "e07375d500da64d31373ecf0c79e947a78609fcd",
+      "implementation_notes": "Defines the bounded barcode-layout-1d-v1 portable integer contract, 56 generated vectors, closed operation-specific schemas, canonical large-output digesting, exact eight-lane pending-adoption registry with immutable conformance-evidence gates, strict hostile-input loader coverage, and repo-wide metadata-contract CI registration. All current implementations remain pending adoption; this slice changes no package source, dependency metadata, build front, package identity, or runtime authority. Parallel read-only reviews drove metadata input/output separation, exact error precedence, Unicode-scalar markers, source-attribution failures, zero-authority evidence, lane-divergence records, and schema mutation tests. The branch rebased cleanly through exact main e07375d500da64d31373ecf0c79e947a78609fcd; intervening changes touched existing human-language and script-ductus source/test/documentation paths but no package-root or manifest identity, so inventory totals remain unchanged.",
       "notes": "Freeze the portable integer geometry subset before adding Java, Kotlin, and Dart. Specify exact pattern expansion, quiet-zone and alternation rules, symbol inference, checked integer overflow and resource ceilings, string-only metadata projection, immutable copied outputs, and fail-closed text handling. Keep fractional/native paint, raster, font, shaping, device, filesystem, and process authority outside this contract."
     },
     {
