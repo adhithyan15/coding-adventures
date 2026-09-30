@@ -354,7 +354,7 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
             'cmp "$task_runtime_library" "$installed_taskapp_runtime"', workflow
         )
         self.assertIn("*/bin/task_app", workflow)
-        self.assertIn('xvfb-run -a timeout 8s "$installed_taskapp"', workflow)
+        self.assertIn('run-under-xvfb.sh" timeout 8s "$installed_taskapp"', workflow)
         self.assertIn('test "$taskapp_status" -eq 124', workflow)
         self.assertIn("Mosaic Rust runtime unavailable", workflow)
         self.assertIn("--runtime-library \"$runtime_library\"", workflow)
