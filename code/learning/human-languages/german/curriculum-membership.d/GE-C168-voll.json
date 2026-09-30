@@ -1,0 +1,11 @@
+{
+  "id": "GE-C168-voll",
+  "pathSegment": "GE-PATH-168-QUAL168",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-168-QUAL168",
+      "order": 3
+    }
+  ]
+}

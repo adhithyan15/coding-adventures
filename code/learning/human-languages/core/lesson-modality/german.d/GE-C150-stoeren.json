@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C150-stoeren",
+    "language": "german",
+    "chapter": 150,
+    "sequence": 6700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c62568574d2fc3b"
+  },
+  "findings": []
+}

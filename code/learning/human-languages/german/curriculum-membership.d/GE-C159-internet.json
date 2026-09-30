@@ -1,0 +1,11 @@
+{
+  "id": "GE-C159-internet",
+  "pathSegment": "GE-PATH-159-THING159",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-159-THING159",
+      "order": 2
+    }
+  ]
+}

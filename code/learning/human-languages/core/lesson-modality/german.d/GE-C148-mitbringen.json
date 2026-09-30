@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C148-mitbringen",
+    "language": "german",
+    "chapter": 148,
+    "sequence": 6600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1259b33ed7e6041e"
+  },
+  "findings": []
+}

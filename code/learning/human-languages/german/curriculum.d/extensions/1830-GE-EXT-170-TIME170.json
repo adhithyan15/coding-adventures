@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-170-TIME170",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say rarely, mostly, right away, finally and still.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:6ddec7447af15386",
+  "lessonIds": [
+    "GE-C149-nennen",
+    "GE-C149-riechen",
+    "GE-C149-sammeln",
+    "GE-C149-schenken",
+    "GE-C149-schreien"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch149.txt",
+  "json": "german/narration/ch149.json",
+  "textHash": "fnv1a64:c19f55ef77bb4cd7",
+  "jsonHash": "fnv1a64:7c58b1a1fefd3233",
+  "findings": []
+}

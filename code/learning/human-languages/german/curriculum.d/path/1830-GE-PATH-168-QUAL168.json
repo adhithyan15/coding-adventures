@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-168-QUAL168",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "GE-EXT-168-QUAL168"
+  ],
+  "after": []
+}

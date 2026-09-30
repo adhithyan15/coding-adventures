@@ -1,0 +1,11 @@
+{
+  "id": "GE-C164-cousine",
+  "pathSegment": "GE-PATH-164-THING164",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-164-THING164",
+      "order": 1
+    }
+  ]
+}

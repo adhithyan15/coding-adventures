@@ -1,0 +1,11 @@
+{
+  "id": "GE-C154-firma",
+  "pathSegment": "GE-PATH-154-THING154",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-154-THING154",
+      "order": 1
+    }
+  ]
+}

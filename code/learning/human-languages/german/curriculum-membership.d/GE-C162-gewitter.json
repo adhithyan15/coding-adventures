@@ -1,0 +1,11 @@
+{
+  "id": "GE-C162-gewitter",
+  "pathSegment": "GE-PATH-162-THING162",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-162-THING162",
+      "order": 4
+    }
+  ]
+}

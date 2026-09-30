@@ -1,0 +1,11 @@
+{
+  "id": "GE-C169-nervoes",
+  "pathSegment": "GE-PATH-169-QUAL169",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-169-QUAL169",
+      "order": 2
+    }
+  ]
+}

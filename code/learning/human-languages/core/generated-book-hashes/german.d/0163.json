@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:219d59d9ab7e0241",
+  "lessonIds": [
+    "GE-C163-temperatur",
+    "GE-C163-geburtstag",
+    "GE-C163-hochzeit",
+    "GE-C163-party",
+    "GE-C163-einladung"
+  ],
+  "tex": "german/book/chapters/ch163-the-temperature-a-birthday-a-wedding-a-party-an-invitation.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C155-gehalt",
+    "language": "german",
+    "chapter": 155,
+    "sequence": 7110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:541144af2848b7c9"
+  },
+  "findings": []
+}

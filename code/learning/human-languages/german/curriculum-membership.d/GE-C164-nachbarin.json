@@ -1,0 +1,11 @@
+{
+  "id": "GE-C164-nachbarin",
+  "pathSegment": "GE-PATH-164-THING164",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-164-THING164",
+      "order": 0
+    }
+  ]
+}

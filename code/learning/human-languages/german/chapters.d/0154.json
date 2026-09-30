@@ -1,0 +1,19 @@
+{
+  "chapter": 154,
+  "title": "A workplace, A company, A colleague, A colleague, A job",
+  "label": "ch:ge-a-workplace-a-company-a-colleague-a-colleague-a-job",
+  "canDo": "I can say a workplace, a company, a colleague, a colleague and a job.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C154-stelle",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 154: i can say a workplace, a company, a colleague, a colleague and a job.",
+    "assesses": [
+      "GE-LEX-C154-THING154-03",
+      "GE-LEX-C154-THING154-04",
+      "GE-LEX-C154-THING154-05"
+    ]
+  }
+}

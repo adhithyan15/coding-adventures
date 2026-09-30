@@ -1,0 +1,11 @@
+{
+  "id": "GE-C169-wuetend",
+  "pathSegment": "GE-PATH-169-QUAL169",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-169-QUAL169",
+      "order": 4
+    }
+  ]
+}

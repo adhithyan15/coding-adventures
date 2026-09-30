@@ -1,0 +1,11 @@
+{
+  "id": "GE-C157-versicherung",
+  "pathSegment": "GE-PATH-157-THING157",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-157-THING157",
+      "order": 1
+    }
+  ]
+}

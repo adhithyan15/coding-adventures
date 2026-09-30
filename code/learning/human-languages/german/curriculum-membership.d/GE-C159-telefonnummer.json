@@ -1,0 +1,11 @@
+{
+  "id": "GE-C159-telefonnummer",
+  "pathSegment": "GE-PATH-159-THING159",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-159-THING159",
+      "order": 1
+    }
+  ]
+}

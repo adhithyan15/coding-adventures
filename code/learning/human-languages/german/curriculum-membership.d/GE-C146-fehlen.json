@@ -1,0 +1,11 @@
+{
+  "id": "GE-C146-fehlen",
+  "pathSegment": "GE-PATH-146-VERB146",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-146-VERB146",
+      "order": 1
+    }
+  ]
+}

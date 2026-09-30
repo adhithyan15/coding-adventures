@@ -1,0 +1,11 @@
+{
+  "id": "GE-C148-lieben",
+  "pathSegment": "GE-PATH-148-VERB148",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-148-VERB148",
+      "order": 2
+    }
+  ]
+}

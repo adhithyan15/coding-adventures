@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:1c7376b19b4e2805",
+  "lessonIds": [
+    "GE-C154-arbeitsplatz",
+    "GE-C154-firma",
+    "GE-C154-kollegin",
+    "GE-C154-kollege",
+    "GE-C154-stelle"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch154.txt",
+  "json": "german/narration/ch154.json",
+  "textHash": "fnv1a64:828352faa04e28cb",
+  "jsonHash": "fnv1a64:aa13f91d879bdbaf",
+  "findings": []
+}

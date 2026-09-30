@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C169-fremd",
+    "language": "german",
+    "chapter": 169,
+    "sequence": 8170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5597c01c34405568"
+  },
+  "findings": []
+}

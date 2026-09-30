@@ -1,0 +1,11 @@
+{
+  "id": "GE-C144-anrufen",
+  "pathSegment": "GE-PATH-144-VERB144",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-144-VERB144",
+      "order": 1
+    }
+  ]
+}

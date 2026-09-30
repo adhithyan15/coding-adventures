@@ -1,0 +1,21 @@
+{
+  "language": "german",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:b81cb0c7990b8b09",
+  "lessonIds": [
+    "GE-C152-unterschreiben",
+    "GE-C152-verdienen",
+    "GE-C152-verkaufen",
+    "GE-C152-versprechen",
+    "GE-C152-vorstellen",
+    "GE-R152-first-pass-words-from-chapters-144-147",
+    "GE-R152-second-pass-words-from-chapters-148-152"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "german/narration/ch152.txt",
+  "json": "german/narration/ch152.json",
+  "textHash": "fnv1a64:bd877133f247c429",
+  "jsonHash": "fnv1a64:ba423adc1fbce1f7",
+  "findings": []
+}

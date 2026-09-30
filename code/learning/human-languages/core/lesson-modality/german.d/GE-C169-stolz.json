@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C169-stolz",
+    "language": "german",
+    "chapter": 169,
+    "sequence": 8190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e2fca25a7e93e87"
+  },
+  "findings": []
+}

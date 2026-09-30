@@ -1,0 +1,19 @@
+{
+  "chapter": 160,
+  "title": "A university, A course, A task, A dictionary, A mistake",
+  "label": "ch:ge-a-university-a-course-a-task-a-dictionary-a-mistake",
+  "canDo": "I can say a university, a course, a task, a dictionary and a mistake.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C160-fehler",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 160: i can say a university, a course, a task, a dictionary and a mistake.",
+    "assesses": [
+      "GE-LEX-C160-THING160-03",
+      "GE-LEX-C160-THING160-04",
+      "GE-LEX-C160-THING160-05"
+    ]
+  }
+}

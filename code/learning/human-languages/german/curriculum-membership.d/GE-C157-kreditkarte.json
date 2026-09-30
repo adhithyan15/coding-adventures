@@ -1,0 +1,11 @@
+{
+  "id": "GE-C157-kreditkarte",
+  "pathSegment": "GE-PATH-157-THING157",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-157-THING157",
+      "order": 3
+    }
+  ]
+}

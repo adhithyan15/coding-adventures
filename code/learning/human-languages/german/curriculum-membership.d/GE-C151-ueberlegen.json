@@ -1,0 +1,11 @@
+{
+  "id": "GE-C151-ueberlegen",
+  "pathSegment": "GE-PATH-151-VERB151",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-151-VERB151",
+      "order": 3
+    }
+  ]
+}

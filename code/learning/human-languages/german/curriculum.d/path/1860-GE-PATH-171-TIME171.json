@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-171-TIME171",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "before": [],
+  "inline": [
+    "GE-EXT-171-TIME171"
+  ],
+  "after": []
+}

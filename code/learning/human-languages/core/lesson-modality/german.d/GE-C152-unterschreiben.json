@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C152-unterschreiben",
+    "language": "german",
+    "chapter": 152,
+    "sequence": 6770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:19e20f29d88536fd"
+  },
+  "findings": []
+}

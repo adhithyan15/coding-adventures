@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C152-versprechen",
+    "language": "german",
+    "chapter": 152,
+    "sequence": 6800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f35ba01c09a8ba3a"
+  },
+  "findings": []
+}

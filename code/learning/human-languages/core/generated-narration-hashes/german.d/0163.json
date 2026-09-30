@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:8a3f112122bdbddc",
+  "lessonIds": [
+    "GE-C163-temperatur",
+    "GE-C163-geburtstag",
+    "GE-C163-hochzeit",
+    "GE-C163-party",
+    "GE-C163-einladung"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch163.txt",
+  "json": "german/narration/ch163.json",
+  "textHash": "fnv1a64:2971b4fc5298ff91",
+  "jsonHash": "fnv1a64:22c4cbddcd7c9dd1",
+  "findings": []
+}

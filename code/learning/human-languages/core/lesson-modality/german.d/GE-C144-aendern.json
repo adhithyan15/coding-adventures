@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C144-aendern",
+    "language": "german",
+    "chapter": 144,
+    "sequence": 6370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3ff0457f72ce1e4"
+  },
+  "findings": []
+}

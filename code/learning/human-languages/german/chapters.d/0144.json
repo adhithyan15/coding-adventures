@@ -1,0 +1,19 @@
+{
+  "chapter": 144,
+  "title": "To change, To phone, To stop, To go out, To look",
+  "label": "ch:ge-to-change-to-phone-to-stop-to-go-out-to-look",
+  "canDo": "I can say to change, to phone, to stop, to go out and to look.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C144-aussehen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 144: i can say to change, to phone, to stop, to go out and to look.",
+    "assesses": [
+      "GE-LEX-C144-VERB144-03",
+      "GE-LEX-C144-VERB144-04",
+      "GE-LEX-C144-VERB144-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C164-enkelin",
+  "pathSegment": "GE-PATH-164-THING164",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-164-THING164",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R173-second-pass-words-from-chapters-171-173",
+    "language": "german",
+    "chapter": 173,
+    "sequence": 8420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa02f685bdb17cd0"
+  },
+  "findings": []
+}

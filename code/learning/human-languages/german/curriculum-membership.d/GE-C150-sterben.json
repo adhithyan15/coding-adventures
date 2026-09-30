@@ -1,0 +1,11 @@
+{
+  "id": "GE-C150-sterben",
+  "pathSegment": "GE-PATH-150-VERB150",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-150-VERB150",
+      "order": 2
+    }
+  ]
+}

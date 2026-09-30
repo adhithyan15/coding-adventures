@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C162-wind",
+    "language": "german",
+    "chapter": 162,
+    "sequence": 7680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9117c05b6ab4008"
+  },
+  "findings": []
+}
