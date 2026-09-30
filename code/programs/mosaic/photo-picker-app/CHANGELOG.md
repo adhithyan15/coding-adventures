@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed — the Qt `files.open` handler (UI87 §7.4)
+
+`host/qt/PhotoPickerEffects.{h,cpp}` and their `[host_effects]` file and
+handler entries are gone. Mosaic's Qt platform library (UI87 §7.4a) answers
+`files.open` for every app, and this app claims no effect kinds, so the
+router sent `files.open` to the library and the handler was never reached.
+The generated `main.cpp` now installs only `installMosaicPlatformEffects`
+(checked by generating the native-complete Qt project). The XAML and Flutter
+handlers stay until those backends' libraries land. The smoke test asserts
+there is no Compose, SwiftUI or Qt handler and that `host/qt/` is gone.
+
 ### Removed — the Compose `files.open` handler (UI87 §7.4)
 
 `host/compose/PhotoPickerEffects.kt` and its `[host_effects]` file and handler

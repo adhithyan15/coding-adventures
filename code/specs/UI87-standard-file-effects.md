@@ -198,9 +198,9 @@ escape hatch, used deliberately and visibly.
 ### 7.4 Migration
 
 - `photo-picker-app` drops its four per-backend `files.open` handlers and uses
-  the platform library, becoming the second consumer. *Compose done* (its
-  handler removed; SwiftUI never had one); XAML, Qt and Flutter follow their
-  libraries.
+  the platform library, becoming the second consumer. *Compose and Qt done*
+  (their handlers removed; SwiftUI never had one); XAML and Flutter follow
+  their libraries.
 - Engram's `importAnki` / `exportAnki` can later become `files.open` /
   `files.save` plus Rust-side parsing, which removes about 1,300 lines of
   per-backend handler code. That is a separate change.
@@ -222,8 +222,9 @@ second owner of an id. So on Qt:
 - `installMosaicPlatformEffects(host, appKinds)` sets that slot to the
   router (§7.2). A kind that goes to the app is delivered the old way: to a
   handler previously set in the slot, or else by emitting `effectRequested`,
-  so `connect`ed package handlers (Engram's, photo-picker's) keep working
-  unchanged. A standard kind the app did not claim is answered by the
+  so `connect`ed package handlers (Engram's) keep working unchanged.
+  (Photo-picker's Qt handler, which claimed no kinds and so was never
+  reached once the library answered `files.open`, was retired, §7.4.) A standard kind the app did not claim is answered by the
   library, and the signal is not emitted for it.
 - `deferEffect` refuses an id that is already deferred: an effect has one
   owner.

@@ -25,6 +25,10 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Changed
 
+- Split the FIFO-manifest regression from the portable B07 executor probes so
+  Windows can compile and run the package tests without the Unix-only
+  `syscall.Mkfifo` symbol. Unix hosts still execute the original security
+  regression.
 - CI-gate match-work preflight now deduplicates identical globs and applies a
   sound literal path-segment prefix/suffix filter before charging the full glob
   grid. Large path-sharded diffs under an unrelated subtree therefore keep
@@ -39,10 +43,6 @@ All notable changes to the Go build tool will be documented in this file.
   observed before this change.
 
 ### Fixed
-
-- Kept the FIFO manifest security regression on POSIX hosts while moving its
-  `mkfifo` syscall behind build-tagged test helpers, so the executor test suite
-  compiles on Windows and explicitly skips only the unavailable FIFO probe.
 
 - Strict Starlark diff selection now recognizes only the five canonical BUILD
   front basenames. Near names such as `BUILD_debug`, `BUILD.bak`, and

@@ -109,7 +109,7 @@ jobs:
       run_d18t_durable_epoch_activation_conformance: ${{ steps.detect.outputs.run_d18t_durable_epoch_activation_conformance }}
       run_ruby_grammar_regen_check: ${{ steps.detect.outputs.run_ruby_grammar_regen_check }}
       run_mosaic_grammar_regen_check: ${{ steps.detect.outputs.run_mosaic_grammar_regen_check }}
-      run_macrooct_grammar_regen_check: ${{ steps.detect.outputs.run_macrooct_grammar_regen_check }}
+      run_rust_grammar_regen_check: ${{ steps.detect.outputs.run_rust_grammar_regen_check }}
       run_unicode17_elixir_conformance: ${{ steps.detect.outputs.run_unicode17_elixir_conformance }}
       run_unicode17_lua_conformance: ${{ steps.detect.outputs.run_unicode17_lua_conformance }}
       run_unicode17_perl_conformance: ${{ steps.detect.outputs.run_unicode17_perl_conformance }}
@@ -1152,16 +1152,15 @@ jobs:
           fi
           echo "All Mosaic compiled grammars are up to date."
 
-  # ── Job 7c: MacroOct compiled-grammar regeneration check ────────
+  # ── Job 7c: reconciled Rust compiled-grammar regeneration ──────
   #
-  # MacroOct's token grammar and committed Rust table agree on current main.
-  # Protect this reconciled lane without running the still-drifting full Rust
-  # grammar sweep tracked by #14202. Its lexer test checks token semantics;
-  # this job also catches generator changes that alter the committed output.
-  macrooct-grammar-regen-check:
-    name: MacroOct compiled-grammar regeneration check
+  # MacroOct and Nib are the first reconciled Rust grammar lanes. Protect them
+  # without running the still-drifting full Rust sweep tracked by #14202. Keep
+  # widening this job only after each additional lane has been reconciled.
+  rust-grammar-regen-check:
+    name: Reconciled Rust compiled-grammar regeneration check
     needs: detect
-    if: needs.detect.outputs.run_macrooct_grammar_regen_check == 'true'
+    if: needs.detect.outputs.run_rust_grammar_regen_check == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -1173,20 +1172,27 @@ jobs:
       - name: Build grammar-tools
         run: cargo build --release --manifest-path code/programs/rust/grammar-tools/Cargo.toml
 
-      - name: Regenerate MacroOct's _grammar.rs from macrooct.tokens
+      - name: Regenerate the reconciled Rust grammar lanes
         run: |
-          code/programs/rust/grammar-tools/target/release/grammar-tools \
-            generate-rust-compiled-grammars macrooct
+          GT=code/programs/rust/grammar-tools/target/release/grammar-tools
+          for stem in macrooct nib; do
+            "$GT" generate-rust-compiled-grammars "$stem"
+          done
 
-      - name: Fail if the generated table differs from the committed file
+      - name: Fail if generated tables differ from committed files
         run: |
-          if ! git diff --quiet -- code/packages/rust/macrooct-lexer/src/_grammar.rs; then
-            echo "::error::MacroOct's compiled Rust grammar differs from macrooct.tokens."
-            git diff --stat -- code/packages/rust/macrooct-lexer/src/_grammar.rs
-            echo "Regenerate with: grammar-tools generate-rust-compiled-grammars macrooct"
+          paths=(
+            code/packages/rust/macrooct-lexer/src/_grammar.rs
+            code/packages/rust/nib-lexer/src/_grammar.rs
+            code/packages/rust/nib-parser/src/_grammar.rs
+          )
+          if ! git diff --quiet -- "${paths[@]}"; then
+            echo "::error::A reconciled Rust compiled grammar differs from its canonical source."
+            git diff --stat -- "${paths[@]}"
+            echo "Regenerate with: for s in macrooct nib; do grammar-tools generate-rust-compiled-grammars \$s; done"
             exit 1
           fi
-          echo "MacroOct's compiled grammar is up to date."
+          echo "All reconciled Rust compiled grammars are up to date."
 
   # ── Job 8: Unicode 17 generated Elixir conformance ─────────────
   unicode17-elixir-conformance:
@@ -3840,7 +3846,7 @@ jobs:
   # dependency failed, so it can report the failure rather than being skipped.
   ci-gate:
     name: ${{ github.event_name == 'pull_request' && 'CI gate' || 'CI push gate' }}
-    needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, macrooct-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, unicode17-dart-conformance, build]
+    needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, rust-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, unicode17-dart-conformance, build]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -3857,7 +3863,7 @@ jobs:
           D18T_RESULT: ${{ needs['d18t-durable-epoch-activation-conformance'].result }}
           RUBY_GRAMMAR_REGEN_RESULT: ${{ needs['ruby-grammar-regen-check'].result }}
           MOSAIC_GRAMMAR_REGEN_RESULT: ${{ needs['mosaic-grammar-regen-check'].result }}
-          MACROOCT_GRAMMAR_REGEN_RESULT: ${{ needs['macrooct-grammar-regen-check'].result }}
+          RUST_GRAMMAR_REGEN_RESULT: ${{ needs['rust-grammar-regen-check'].result }}
           UNICODE17_ELIXIR_RESULT: ${{ needs['unicode17-elixir-conformance'].result }}
           UNICODE17_LUA_RESULT: ${{ needs['unicode17-lua-conformance'].result }}
           UNICODE17_PERL_RESULT: ${{ needs['unicode17-perl-conformance'].result }}
@@ -3866,9 +3872,9 @@ jobs:
           UNICODE17_DART_RESULT: ${{ needs['unicode17-dart-conformance'].result }}
           BUILD_RESULT: ${{ needs.build.result }}
         run: |
-          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT ocaml_capability=$OCAML_CAPABILITY_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT macrooct_grammar_regen=$MACROOCT_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT unicode17_dart=$UNICODE17_DART_RESULT build=$BUILD_RESULT"
+          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT ocaml_capability=$OCAML_CAPABILITY_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT rust_grammar_regen=$RUST_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT unicode17_dart=$UNICODE17_DART_RESULT build=$BUILD_RESULT"
           fail=0
-          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$OCAML_CAPABILITY_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$MACROOCT_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$UNICODE17_DART_RESULT" "$BUILD_RESULT"; do
+          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$OCAML_CAPABILITY_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$RUST_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$UNICODE17_DART_RESULT" "$BUILD_RESULT"; do
             case "$r" in
               success|skipped) ;;
               *) echo "::error::a required job did not pass (result: $r)"; fail=1 ;;
