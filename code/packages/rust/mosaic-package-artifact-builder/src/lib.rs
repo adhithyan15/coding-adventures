@@ -4881,6 +4881,13 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     &xaml_opts.namespace,
                     package_name,
                 );
+                // The platform library (UI87 §7.6), in the runtime binding's
+                // namespace. Written into every WinUI project -- the SDK globs
+                // `**/*.cs`, so it compiles in the stub shell too -- and
+                // installed only by the runtime-backed window, the one shell
+                // with a host to install onto.
+                let platform_effects =
+                    mosaic_app_bindings::xaml_platform_effects(&xaml_opts.namespace);
                 let runtime_distribution = if runtime_library.is_some() {
                     "The selected target Rust engine is copied into the project as `mosaic_app.dll`. The generated MSBuild target copies it beside the WinUI executable, and the standard binding resolves it through `AppContext.BaseDirectory` before global lookup; no environment variable or global library install is required."
                 } else {
@@ -4907,6 +4914,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     ("build.ps1".to_string(), &proj.build_script),
                     ("README.md".to_string(), &readme),
                     ("MosaicRuntimeHost.cs".to_string(), &runtime_binding),
+                    ("MosaicPlatformEffects.cs".to_string(), &platform_effects),
                 ];
                 for (rel, body) in flat {
                     let p = backend_dir.join(rel);
@@ -6213,19 +6221,25 @@ fn flutter_main_with_host_effects(
 /// `include` is refused for that reason -- C# has no include directive, and a
 /// `using` that the install name makes unnecessary would be a second way to say
 /// the same thing.
+///
+/// Every runtime-backed window also gets the platform library (UI87 §7.6):
+/// after the package's handler, if any, `MosaicPlatformEffects.Install(this,
+/// ...)` wraps it and routes each effect by kind. The handler's `kinds`
+/// (validated in the manifest to a shape with no quote or backslash) become
+/// the set the router checks; without `kinds`, `null` keeps the original
+/// meaning. `this` is the window: its handle owns the pickers and its
+/// `DispatcherQueue` runs them.
 fn xaml_main_with_host_effects(
     generated: &str,
     host_effects: &mosaic_package_manifest::HostEffectsSection,
 ) -> Result<String, BuildError> {
-    let Some(handler) = host_effects
+    let handler = host_effects
         .handlers
         .iter()
-        .find(|handler| handler.backend == "xaml")
-    else {
-        return Ok(generated.to_string());
-    };
+        .find(|handler| handler.backend == "xaml");
 
-    if let Some(include) = handler.include.as_deref() {
+    if let Some(include) = handler.and_then(|handler| handler.include.as_deref()) {
+        let handler = handler.expect("an include belongs to a handler");
         return Err(BuildError::Io(format!(
             "`[host_effects]` declares a XAML handler `{}` with `include = \"{include}\"`, \
              but C# has no include directive and every type in the assembly is \
@@ -6250,6 +6264,12 @@ fn xaml_main_with_host_effects(
     // every path that reaches the next line.
     const ANCHOR: &str = "MosaicRuntimeHost.LoadRequired();";
     let Some(at) = line_anchored_find(generated, ANCHOR) else {
+        // Without a declared handler there is nothing to refuse: the stub
+        // shell below cannot install the platform library either, and its
+        // file is merely compiled there, as `MosaicRuntimeHost.cs` is.
+        let Some(handler) = handler else {
+            return Ok(generated.to_string());
+        };
         // Loud, as on every other backend, and for the same reason sharpened:
         // `Microsoft.NET.Sdk` globs `**/*.cs` by default, so a copied handler is
         // compiled and shipped whether or not anything installs it. There is no
@@ -6288,17 +6308,52 @@ fn xaml_main_with_host_effects(
         .find('\n')
         .map_or(generated.len(), |index| at + index + 1);
 
-    let mut out = String::with_capacity(generated.len() + 128);
+    let mut out = String::with_capacity(generated.len() + 384);
     out.push_str(&generated[..line_end]);
+    if let Some(handler) = handler {
+        writeln!(
+            out,
+            "{indent}// Package-declared effect handler, from `[host_effects]`.\n\
+             {indent}{}();",
+            handler.install
+        )
+        .expect("write XAML host-effect install");
+    }
+    // After the package's handler: the router wraps whatever handler is set
+    // when it is installed, so this order is what lets the app's kinds reach
+    // the app (UI87 §7.2).
     writeln!(
         out,
-        "{indent}// Package-declared effect handler, from `[host_effects]`.\n\
-         {indent}{}();",
-        handler.install
+        "{}",
+        xaml_platform_install_line(
+            &indent,
+            handler.and_then(|handler| handler.kinds.as_deref())
+        )
     )
-    .expect("write XAML host-effect install");
+    .expect("write XAML platform-effects install");
     out.push_str(&generated[line_end..]);
     Ok(out)
+}
+
+/// The `MainWindow.xaml.cs` line that installs the platform library (UI87
+/// §7.6). The package handler's `kinds` become a C# array literal the router
+/// checks; without `kinds`, `null` keeps the original meaning.
+fn xaml_platform_install_line(indent: &str, kinds: Option<&[String]>) -> String {
+    let claimed = match kinds {
+        None => "null".to_string(),
+        Some(kinds) => format!(
+            "new[] {{ {} }}",
+            kinds
+                .iter()
+                .map(|kind| format!("\"{kind}\""))
+                .collect::<Vec<_>>()
+                .join(", ")
+        ),
+    };
+    format!(
+        "{indent}// Mosaic's platform library: standard effect kinds, routed by kind (UI87 §7).\n\
+         {indent}MosaicPlatformEffects.Install(this, appKinds: {claimed});"
+    )
 }
 
 fn build_electron_package_json(
@@ -12631,6 +12686,25 @@ layout NativeEvents {
         assert!(host.contains("native-complete requires the Mosaic Rust application runtime"));
         assert!(host.contains("Path.Combine(AppContext.BaseDirectory, \"mosaic_app.dll\")"));
 
+        // UI87 §7.6: the platform library sits beside the host, in its
+        // namespace, and the window installs it once the runtime is loaded.
+        let platform_path = out.path().join("xaml/MosaicPlatformEffects.cs");
+        assert!(result.artifacts.contains(&platform_path));
+        let platform = fs::read_to_string(platform_path).unwrap();
+        assert_eq!(
+            platform,
+            mosaic_app_bindings::xaml_platform_effects("Mosaic.Generated")
+        );
+        assert!(host.contains("namespace Mosaic.Generated;"));
+        assert!(platform.contains("namespace Mosaic.Generated;"));
+        let load = window
+            .find("MosaicRuntimeHost.LoadRequired();")
+            .expect("load");
+        let install = window
+            .find("MosaicPlatformEffects.Install(this, appKinds: null);")
+            .expect("the platform library is installed");
+        assert!(load < install, "{window}");
+
         let project = fs::read_to_string(out.path().join("xaml/Card.csproj")).unwrap();
         assert!(project.contains("CopyMosaicNativeHostLibraries"));
         // #12026 (mosaic-emit-xaml): narrowed from a `*.dll` glob (a
@@ -15456,6 +15530,7 @@ version = "1"
                     "build.ps1",
                     "README.md",
                     "MosaicRuntimeHost.cs",
+                    "MosaicPlatformEffects.cs",
                 ],
             ),
         ] {
@@ -17990,20 +18065,98 @@ handlers = [
         "}\n",
     );
 
+    /// The platform library's install line, as `MAIN_WINDOW` indents it.
+    fn platform_install(claimed: &str) -> String {
+        format!(
+            "        // Mosaic's platform library: standard effect kinds, routed by kind (UI87 §7).\n        \
+             MosaicPlatformEffects.Install(this, appKinds: {claimed});\n"
+        )
+    }
+
+    /// A package with no XAML handler still gets the platform library (UI87
+    /// §7.6), installed right after the runtime loads, with no claimed kinds.
     #[test]
-    fn a_package_with_no_xaml_handler_is_untouched() {
+    fn a_package_with_no_xaml_handler_gets_only_the_platform_library() {
         let empty = section("");
         assert_eq!(
             xaml_main_with_host_effects(MAIN_WINDOW, &empty).expect("wiring must succeed"),
-            MAIN_WINDOW
+            MAIN_WINDOW.replacen(
+                "        MosaicRuntimeHost.LoadRequired();\n",
+                &format!(
+                    "        MosaicRuntimeHost.LoadRequired();\n{}",
+                    platform_install("null")
+                ),
+                1
+            )
         );
     }
 
-    /// A handler for another backend leaves the XAML window alone.
+    /// The stub shell has no host to install onto; without a declared
+    /// handler there is nothing to refuse, so it is left as it is.
+    #[test]
+    fn a_window_without_the_runtime_is_untouched_without_a_handler() {
+        let stub = "public class Nothing {}\n";
+        assert_eq!(
+            xaml_main_with_host_effects(stub, &section("")).expect("stub"),
+            stub
+        );
+    }
+
+    /// After the package's handler, which the router wraps; the handler's
+    /// kinds reach the router as a C# array.
+    #[test]
+    fn the_xaml_platform_library_wraps_the_package_handler_with_its_kinds() {
+        let wired = xaml_main_with_host_effects(MAIN_WINDOW, &handler()).expect("wiring");
+        let load = wired
+            .find("MosaicRuntimeHost.LoadRequired();")
+            .expect("load");
+        let package = wired
+            .find("ProbeEffects.Install();")
+            .expect("package install");
+        let platform = wired
+            .find("MosaicPlatformEffects.Install(this, appKinds: null);")
+            .expect("platform install without kinds");
+        let apply = wired
+            .find("MosaicRuntimeHost.ApplyRequiredProps")
+            .expect("apply");
+        assert!(
+            load < package && package < platform && platform < apply,
+            "{wired}"
+        );
+
+        let claimed = section(
+            r#"
+[host_effects]
+files = [
+  { backend = "xaml", source = "host/xaml/Effects.cs", target = "ProbeEffects.cs" },
+]
+handlers = [
+  { backend = "xaml", install = "ProbeEffects.Install", kinds = ["importAnki", "files.save"] },
+]
+"#,
+        );
+        let wired = xaml_main_with_host_effects(MAIN_WINDOW, &claimed).expect("wiring");
+        let package = wired
+            .find("ProbeEffects.Install();")
+            .expect("package install");
+        let platform = wired
+            .find(r#"MosaicPlatformEffects.Install(this, appKinds: new[] { "importAnki", "files.save" });"#)
+            .expect("platform install with claimed kinds");
+        assert!(package < platform, "{wired}");
+        assert_eq!(
+            wired.matches("MosaicPlatformEffects.Install(").count(),
+            1,
+            "{wired}"
+        );
+    }
+
+    /// A handler for another backend leaves the XAML package handler out.
     ///
     /// The "does not fire" direction. Every shipped manifest with
     /// `[host_effects]` declares several backends, so a match keyed too broadly
-    /// would wire the wrong install into this file.
+    /// would wire the wrong install into this file. The platform library is
+    /// installed either way, with no claimed kinds: the Qt handler's kinds
+    /// are the Qt router's business.
     #[test]
     fn a_qt_only_handler_leaves_the_window_alone() {
         let qt_only = section(
@@ -18013,13 +18166,13 @@ files = [
   { backend = "qt", source = "host/qt/effects.cpp", target = "probe_effects.cpp" },
 ]
 handlers = [
-  { backend = "qt", include = "probe_effects.h", install = "installProbeEffects" },
+  { backend = "qt", include = "probe_effects.h", install = "installProbeEffects", kinds = ["importAnki"] },
 ]
 "#,
         );
         assert_eq!(
             xaml_main_with_host_effects(MAIN_WINDOW, &qt_only).expect("wiring must succeed"),
-            MAIN_WINDOW
+            xaml_main_with_host_effects(MAIN_WINDOW, &section("")).expect("wiring must succeed"),
         );
     }
 
@@ -18161,10 +18314,16 @@ handlers = [
                     .find("MosaicRuntimeHost.LoadRequired();")
                     .expect("the load call");
                 let install = wired.find("ProbeEffects.Install();").expect("the install");
+                let platform = wired
+                    .find("MosaicPlatformEffects.Install(this, appKinds: null);")
+                    .expect("the platform library");
                 let apply = wired
                     .find("MosaicRuntimeHost.ApplyRequiredProps")
                     .expect("the props call");
-                assert!(load < install && install < apply, "{wired}");
+                assert!(
+                    load < install && install < platform && platform < apply,
+                    "{wired}"
+                );
                 assert!(wired.contains("RetryStartup_Click"), "{wired}");
             } else {
                 let error = wired.expect_err("the stub shell must refuse, not emit a dead install");
