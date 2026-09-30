@@ -1,0 +1,105 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: HI-R183-first-pass-verbs-of-feeling-and-conflict
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 8860
+chapter: 183
+type: review
+headword: (dialogue)
+gloss: first pass over chapters 176-179
+concept_tag: REVIEW
+prerequisites: [HI-C176-hilana, HI-C176-khicna, HI-C176-dhakelna, HI-C176-phekna, HI-C176-cakhna, HI-C177-sughna, HI-C177-manana, HI-C177-pisna, HI-C177-ubalna, HI-C177-talna, HI-C178-bunna, HI-C178-maarnaa, HI-C178-larna, HI-C178-darna, HI-C178-cillana, HI-C179-thakna, HI-C179-sahna, HI-C179-hatana, HI-C179-hatna, HI-C179-guzarna, HI-C183-baithak, HI-C183-rasoi]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [HI-LEX-C176-ACT176-01, HI-LEX-C176-ACT176-02, HI-LEX-C176-ACT176-03, HI-LEX-C176-ACT176-04, HI-LEX-C176-ACT176-05, HI-LEX-C177-ACT177-01, HI-LEX-C177-ACT177-02, HI-LEX-C177-ACT177-03, HI-LEX-C177-ACT177-04, HI-LEX-C177-ACT177-05, HI-LEX-C178-ACT178-01, HI-LEX-C178-ACT178-02, HI-LEX-C178-ACT178-03, HI-LEX-C178-ACT178-04, HI-LEX-C178-ACT178-05, HI-LEX-C179-ACT179-01, HI-LEX-C179-ACT179-02, HI-LEX-C179-ACT179-03, HI-LEX-C179-ACT179-04, HI-LEX-C179-ACT179-05, HI-LEX-C183-THG183-04, HI-LEX-C183-THG183-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [HI-LEX-C176-ACT176-01, HI-LEX-C176-ACT176-02, HI-LEX-C176-ACT176-03, HI-LEX-C176-ACT176-04, HI-LEX-C176-ACT176-05, HI-LEX-C177-ACT177-01, HI-LEX-C177-ACT177-02, HI-LEX-C177-ACT177-03, HI-LEX-C177-ACT177-04, HI-LEX-C177-ACT177-05, HI-LEX-C178-ACT178-01, HI-LEX-C178-ACT178-02, HI-LEX-C178-ACT178-03, HI-LEX-C178-ACT178-04, HI-LEX-C178-ACT178-05, HI-LEX-C179-ACT179-01, HI-LEX-C179-ACT179-02, HI-LEX-C179-ACT179-03, HI-LEX-C179-ACT179-04, HI-LEX-C179-ACT179-05, HI-LEX-C183-THG183-04, HI-LEX-C183-THG183-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [HI-C176-hilana, HI-C176-khicna, HI-C176-dhakelna, HI-C176-phekna, HI-C176-cakhna, HI-C177-sughna, HI-C177-manana, HI-C177-pisna, HI-C177-ubalna, HI-C177-talna, HI-C178-bunna, HI-C178-maarnaa, HI-C178-larna, HI-C178-darna, HI-C178-cillana, HI-C179-thakna, HI-C179-sahna, HI-C179-hatana, HI-C179-hatna, HI-C179-guzarna, HI-C183-baithak, HI-C183-rasoi]
+---
+
+# Verbs of feeling and conflict — a first pass
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C183-THG183-04, HI-LEX-C183-THG183-05] -->
+
+[PAUSE 3s] Say the words for a meeting and a kitchen.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C176-ACT176-01, HI-LEX-C176-ACT176-02, HI-LEX-C176-ACT176-03, HI-LEX-C176-ACT176-04, HI-LEX-C176-ACT176-05, HI-LEX-C177-ACT177-01, HI-LEX-C177-ACT177-02, HI-LEX-C177-ACT177-03, HI-LEX-C177-ACT177-04, HI-LEX-C177-ACT177-05, HI-LEX-C178-ACT178-01, HI-LEX-C178-ACT178-02, HI-LEX-C178-ACT178-03, HI-LEX-C178-ACT178-04, HI-LEX-C178-ACT178-05, HI-LEX-C179-ACT179-01, HI-LEX-C179-ACT179-02, HI-LEX-C179-ACT179-03, HI-LEX-C179-ACT179-04, HI-LEX-C179-ACT179-05, HI-LEX-C183-THG183-04, HI-LEX-C183-THG183-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to shake, to pull, to push, to throw, to taste]
+- [YOU SAY: to smell, to celebrate, to grind, to boil, to fry]
+- [YOU SAY: to weave, to hit, to fight, to be afraid, to shout]
+- [YOU SAY: to get tired, to bear, to remove, to move aside, to pass by]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C176-ACT176-01, HI-LEX-C176-ACT176-02, HI-LEX-C176-ACT176-03, HI-LEX-C176-ACT176-04, HI-LEX-C176-ACT176-05, HI-LEX-C177-ACT177-01, HI-LEX-C177-ACT177-02, HI-LEX-C177-ACT177-03, HI-LEX-C177-ACT177-04, HI-LEX-C177-ACT177-05, HI-LEX-C178-ACT178-01, HI-LEX-C178-ACT178-02, HI-LEX-C178-ACT178-03, HI-LEX-C178-ACT178-04, HI-LEX-C178-ACT178-05, HI-LEX-C179-ACT179-01, HI-LEX-C179-ACT179-02, HI-LEX-C179-ACT179-03, HI-LEX-C179-ACT179-04, HI-LEX-C179-ACT179-05, HI-LEX-C183-THG183-04, HI-LEX-C183-THG183-05] -->
+
+[PAUSE 3s] To shake? (**हिलाना**, *hilānā*.) To pull? (**खींचना**, *khī̃cnā*.) To push? (**धकेलना**, *dhakelnā*.) To throw? (**फेंकना**, *phẽknā*.) To taste? (**चखना**, *cakhnā*.) To smell? (**सूँघना**, *sū̃ghnā*.) To celebrate? (**मनाना**, *manānā*.) To grind? (**पीसना**, *pīsnā*.) To boil? (**उबालना**, *ubālnā*.) To fry? (**तलना**, *talnā*.) To weave? (**बुनना**, *bunnā*.) To hit? (**मारना**, *mārnā*.) To fight? (**लड़ना**, *laṛnā*.) To be afraid? (**डरना**, *ḍarnā*.) To shout? (**चिल्लाना**, *cillānā*.) To get tired? (**थकना**, *thaknā*.) To bear? (**सहना**, *sahnā*.) To remove? (**हटाना**, *haṭānā*.) To move aside? (**हटना**, *haṭnā*.) To pass by? (**गुज़रना**, *guzarnā*.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: HI-R183-second-pass-health-travel-and-work
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 8870
+chapter: 183
+type: review
+headword: (dialogue)
+gloss: second pass over chapters 180-183
+concept_tag: REVIEW
+prerequisites: [HI-C180-dava, HI-C180-mariz, HI-C180-ilaj, HI-C180-yatra, HI-C180-saman, HI-C181-naqsa, HI-C181-rasta, HI-C181-mor, HI-C181-cauraha, HI-C181-jahaz, HI-C182-nav, HI-C182-sit, HI-C182-tankhvah, HI-C182-malik, HI-C182-mazdur, HI-C183-karkhana, HI-C183-dukandar, HI-C183-grahak, HI-C183-baithak, HI-C183-rasoi]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [HI-LEX-C180-THG180-01, HI-LEX-C180-THG180-02, HI-LEX-C180-THG180-03, HI-LEX-C180-THG180-04, HI-LEX-C180-THG180-05, HI-LEX-C181-THG181-01, HI-LEX-C181-THG181-02, HI-LEX-C181-THG181-03, HI-LEX-C181-THG181-04, HI-LEX-C181-THG181-05, HI-LEX-C182-THG182-01, HI-LEX-C182-THG182-02, HI-LEX-C182-THG182-03, HI-LEX-C182-THG182-04, HI-LEX-C182-THG182-05, HI-LEX-C183-THG183-01, HI-LEX-C183-THG183-02, HI-LEX-C183-THG183-03, HI-LEX-C183-THG183-04, HI-LEX-C183-THG183-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [HI-LEX-C180-THG180-01, HI-LEX-C180-THG180-02, HI-LEX-C180-THG180-03, HI-LEX-C180-THG180-04, HI-LEX-C180-THG180-05, HI-LEX-C181-THG181-01, HI-LEX-C181-THG181-02, HI-LEX-C181-THG181-03, HI-LEX-C181-THG181-04, HI-LEX-C181-THG181-05, HI-LEX-C182-THG182-01, HI-LEX-C182-THG182-02, HI-LEX-C182-THG182-03, HI-LEX-C182-THG182-04, HI-LEX-C182-THG182-05, HI-LEX-C183-THG183-01, HI-LEX-C183-THG183-02, HI-LEX-C183-THG183-03, HI-LEX-C183-THG183-04, HI-LEX-C183-THG183-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [HI-C180-dava, HI-C180-mariz, HI-C180-ilaj, HI-C180-yatra, HI-C180-saman, HI-C181-naqsa, HI-C181-rasta, HI-C181-mor, HI-C181-cauraha, HI-C181-jahaz, HI-C182-nav, HI-C182-sit, HI-C182-tankhvah, HI-C182-malik, HI-C182-mazdur, HI-C183-karkhana, HI-C183-dukandar, HI-C183-grahak, HI-C183-baithak, HI-C183-rasoi]
+---
+
+# Health, travel and work — a second pass
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C180-THG180-01, HI-LEX-C180-THG180-02] -->
+
+[PAUSE 3s] Say the words for medicine and a patient.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C180-THG180-01, HI-LEX-C180-THG180-02, HI-LEX-C180-THG180-03, HI-LEX-C180-THG180-04, HI-LEX-C180-THG180-05, HI-LEX-C181-THG181-01, HI-LEX-C181-THG181-02, HI-LEX-C181-THG181-03, HI-LEX-C181-THG181-04, HI-LEX-C181-THG181-05, HI-LEX-C182-THG182-01, HI-LEX-C182-THG182-02, HI-LEX-C182-THG182-03, HI-LEX-C182-THG182-04, HI-LEX-C182-THG182-05, HI-LEX-C183-THG183-01, HI-LEX-C183-THG183-02, HI-LEX-C183-THG183-03, HI-LEX-C183-THG183-04, HI-LEX-C183-THG183-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: medicine, a patient, treatment, a journey, luggage]
+- [YOU SAY: a map, a way, a turn, a crossroads, a ship]
+- [YOU SAY: a boat, a seat, a salary, an owner, a labourer]
+- [YOU SAY: a factory, a shopkeeper, a customer, a meeting, a kitchen]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C180-THG180-01, HI-LEX-C180-THG180-02, HI-LEX-C180-THG180-03, HI-LEX-C180-THG180-04, HI-LEX-C180-THG180-05, HI-LEX-C181-THG181-01, HI-LEX-C181-THG181-02, HI-LEX-C181-THG181-03, HI-LEX-C181-THG181-04, HI-LEX-C181-THG181-05, HI-LEX-C182-THG182-01, HI-LEX-C182-THG182-02, HI-LEX-C182-THG182-03, HI-LEX-C182-THG182-04, HI-LEX-C182-THG182-05, HI-LEX-C183-THG183-01, HI-LEX-C183-THG183-02, HI-LEX-C183-THG183-03, HI-LEX-C183-THG183-04, HI-LEX-C183-THG183-05] -->
+
+[PAUSE 3s] Medicine? (**दवा**, *davā*.) A patient? (**मरीज़**, *marīz*.) Treatment? (**इलाज**, *ilāj*.) A journey? (**यात्रा**, *yātrā*.) Luggage? (**सामान**, *sāmān*.) A map? (**नक़्शा**, *naqśā*.) A way? (**रास्ता**, *rāstā*.) A turn? (**मोड़**, *moṛ*.) A crossroads? (**चौराहा**, *caurāhā*.) A ship? (**जहाज़**, *jahāz*.) A boat? (**नाव**, *nāv*.) A seat? (**सीट**, *sīṭ*.) A salary? (**तनख़्वाह**, *tankhvāh*.) An owner? (**मालिक**, *mālik*.) A labourer? (**मज़दूर**, *mazdūr*.) A factory? (**कारख़ाना**, *kārkhānā*.) A shopkeeper? (**दुकानदार**, *dukāndār*.) A customer? (**ग्राहक**, *grāhak*.) A meeting? (**बैठक**, *baiṭhak*.) A kitchen? (**रसोई**, *rasoī*.)
+`;export{t as n,r as t};
