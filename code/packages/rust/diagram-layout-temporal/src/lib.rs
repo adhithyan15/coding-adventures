@@ -1256,10 +1256,11 @@ pub fn layout_event_model_diagram(
     }
 
     let title_height = if diagram.title.is_some() { 42.0 } else { 16.0 };
-    let lane_height = 92.0;
+    let has_inline_data = diagram.frames.iter().any(|frame| frame.data.is_some());
+    let lane_height = if has_inline_data { 108.0 } else { 92.0 };
     let label_width = 150.0;
     let frame_width = 122.0;
-    let frame_height = 54.0;
+    let frame_height = if has_inline_data { 70.0 } else { 54.0 };
     let frame_step = 148.0;
     let width = canvas_width.max(label_width + 32.0 + diagram.frames.len() as f64 * frame_step);
     let height = title_height + lane_indices.len() as f64 * lane_height + 20.0;
@@ -1289,6 +1290,10 @@ pub fn layout_event_model_diagram(
             width: frame_width,
             height: frame_height,
             label: frame.label.clone(),
+            data_label: frame.data.as_ref().map(|data| match &frame.data_type {
+                Some(data_type) => format!("{data_type}: {data}"),
+                None => data.clone(),
+            }),
             kind: frame.kind.clone(),
         });
     }
@@ -2410,6 +2415,8 @@ mod tests {
                     kind: EventModelEntityKind::Ui,
                     reset: true,
                     source_frames: Vec::new(),
+                    data_type: None,
+                    data: None,
                 },
                 EventModelFrame {
                     id: "02".into(),
@@ -2419,6 +2426,8 @@ mod tests {
                     kind: EventModelEntityKind::Command,
                     reset: false,
                     source_frames: vec!["01".into()],
+                    data_type: Some("json".into()),
+                    data: Some("\"total\": 42".into()),
                 },
             ],
         };
@@ -2429,5 +2438,10 @@ mod tests {
         assert_eq!(layout.items.iter().filter(|item| matches!(
             item, LayoutedEventModelItem::Relation { .. }
         )).count(), 1);
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedEventModelItem::Frame { data_label: Some(data), .. }
+                if data == "json: \"total\": 42"
+        )));
     }
 }

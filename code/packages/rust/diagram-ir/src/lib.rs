@@ -1256,6 +1256,8 @@ pub struct EventModelFrame {
     pub kind: EventModelEntityKind,
     pub reset: bool,
     pub source_frames: Vec<String>,
+    pub data_type: Option<String>,
+    pub data: Option<String>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -1282,6 +1284,7 @@ pub enum LayoutedEventModelItem {
         width: f64,
         height: f64,
         label: String,
+        data_label: Option<String>,
         kind: EventModelEntityKind,
     },
     Relation {

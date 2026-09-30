@@ -713,7 +713,7 @@ where
                     label_color,
                 ));
             }
-            LayoutedEventModelItem::Frame { x, y, width, height, label, kind } => {
+            LayoutedEventModelItem::Frame { x, y, width, height, label, data_label, kind } => {
                 let fill = match kind {
                     EventModelEntityKind::Ui => "#dbeafe",
                     EventModelEntityKind::Processor => "#e0e7ff",
@@ -739,10 +739,21 @@ where
                     x + 6.0,
                     y + 6.0,
                     width - 12.0,
-                    height - 12.0,
+                    if data_label.is_some() { 24.0 } else { height - 12.0 },
                     options.label_font.clone(),
                     label_color,
                 ));
+                if let Some(data_label) = data_label {
+                    text_children.push(text_node(
+                        data_label,
+                        x + 6.0,
+                        y + 32.0,
+                        width - 12.0,
+                        height - 38.0,
+                        options.label_font.clone(),
+                        label_color,
+                    ));
+                }
             }
             LayoutedEventModelItem::Relation { from, to } => {
                 instructions.push(PaintInstruction::Path(line_path(
