@@ -16,6 +16,12 @@ documented in this file.
 - Export the canonical `tanh` name while retaining `tanh_func` as a compatibility
   alias.
 
+### Fixed
+
+- Exercise every mandatory ML04 sigmoid, tanh, and softplus vector plus the
+  symmetry, range, idempotence, derivative-identity, and non-negative-gradient
+  properties.
+
 ## [0.1.0] - 2026-03-20
 
 ### Added
