@@ -17,7 +17,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, VecDeque};
 
-pub const VERSION: &str = "0.20.0";
+pub const VERSION: &str = "0.21.0";
 
 const MARGIN: f64 = 24.0;
 const TITLE_H: f64 = 32.0;
@@ -1406,6 +1406,20 @@ fn radar_cubic_segments(points: &[Point], tension: f64) -> Vec<CubicCurveSegment
         .collect()
 }
 
+fn chart_color_with_opacity(color: &str, opacity: f64) -> String {
+    let hex = color.trim_start_matches('#');
+    if hex.len() == 6 {
+        if let (Ok(r), Ok(g), Ok(b)) = (
+            u8::from_str_radix(&hex[0..2], 16),
+            u8::from_str_radix(&hex[2..4], 16),
+            u8::from_str_radix(&hex[4..6], 16),
+        ) {
+            return format!("rgba({r},{g},{b},{})", opacity.clamp(0.0, 1.0));
+        }
+    }
+    color.to_string()
+}
+
 fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram {
     let margin_top = diagram.radar_config.margin_top.unwrap_or(0.0);
     let margin_bottom = diagram.radar_config.margin_bottom.unwrap_or(0.0);
@@ -1444,9 +1458,20 @@ fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagra
         if let Some(first) = points.first().cloned() {
             points.push(first);
         }
-        items.push(LayoutedChartItem::LinePath {
+        items.push(LayoutedChartItem::FilledLinePath {
             points,
-            color: "#d1d5db".into(),
+            fill: diagram
+                .radar_config
+                .graticule_color
+                .clone()
+                .unwrap_or_else(|| "#dedede".into()),
+            fill_opacity: diagram.radar_config.graticule_opacity.unwrap_or(0.3),
+            stroke: diagram
+                .radar_config
+                .graticule_color
+                .clone()
+                .unwrap_or_else(|| "#dedede".into()),
+            stroke_width: diagram.radar_config.graticule_stroke_width.unwrap_or(1.0),
         });
     }
 
@@ -1465,18 +1490,30 @@ fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagra
             index,
             count,
         );
-        items.push(LayoutedChartItem::GridLine {
+        items.push(LayoutedChartItem::StyledLine {
             x1: cx,
             y1: cy,
             x2: outer.x,
             y2: outer.y,
+            color: diagram
+                .radar_config
+                .axis_color
+                .clone()
+                .unwrap_or_else(|| "#374151".into()),
+            stroke_width: diagram.radar_config.axis_stroke_width.unwrap_or(2.0),
         });
         items.push(LayoutedChartItem::DataLabel {
             x: label_point.x,
             y: label_point.y,
             text: label.clone(),
-            font_size: Some(12.0),
-            color: Some("#374151".into()),
+            font_size: Some(diagram.radar_config.axis_label_font_size.unwrap_or(12.0)),
+            color: Some(
+                diagram
+                    .radar_config
+                    .axis_color
+                    .clone()
+                    .unwrap_or_else(|| "#374151".into()),
+            ),
         });
     }
 
@@ -1501,7 +1538,14 @@ fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagra
                 )
             })
             .collect::<Vec<_>>();
-        let color = SERIES_COLORS[series_index % SERIES_COLORS.len()].into();
+        let color = diagram
+            .radar_config
+            .series_colors
+            .get(series_index % diagram.radar_config.series_colors.len().max(1))
+            .cloned()
+            .unwrap_or_else(|| SERIES_COLORS[series_index % SERIES_COLORS.len()].into());
+        let curve_opacity = diagram.radar_config.curve_opacity.unwrap_or(0.5);
+        let curve_stroke_width = diagram.radar_config.curve_stroke_width.unwrap_or(2.0);
         if diagram.radar_config.graticule == RadarGraticule::Circle && points.len() >= 3 {
             items.push(LayoutedChartItem::CubicPath {
                 start: points[0].clone(),
@@ -1509,6 +1553,9 @@ fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagra
                     &points,
                     diagram.radar_config.curve_tension.unwrap_or(0.17),
                 ),
+                fill: Some(color.clone()),
+                fill_opacity: Some(curve_opacity),
+                stroke_width: curve_stroke_width,
                 color,
             });
         } else {
@@ -1516,7 +1563,13 @@ fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagra
             if let Some(first) = points.first().cloned() {
                 points.push(first);
             }
-            items.push(LayoutedChartItem::LinePath { points, color });
+            items.push(LayoutedChartItem::FilledLinePath {
+                points,
+                fill: color.clone(),
+                fill_opacity: curve_opacity,
+                stroke: color,
+                stroke_width: curve_stroke_width,
+            });
         }
     }
 
@@ -1529,14 +1582,22 @@ fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagra
                 .iter()
                 .enumerate()
                 .map(|(index, plot)| LegendEntry {
-                    color: SERIES_COLORS[index % SERIES_COLORS.len()].into(),
+                    color: chart_color_with_opacity(
+                        diagram
+                            .radar_config
+                            .series_colors
+                            .get(index % diagram.radar_config.series_colors.len().max(1))
+                            .map(String::as_str)
+                            .unwrap_or(SERIES_COLORS[index % SERIES_COLORS.len()]),
+                        diagram.radar_config.curve_opacity.unwrap_or(0.5),
+                    ),
                     label: plot
                         .label
                         .clone()
                         .unwrap_or_else(|| format!("Series {}", index + 1)),
                 })
                 .collect(),
-            font_size: Some(12.0),
+            font_size: Some(diagram.radar_config.legend_font_size.unwrap_or(12.0)),
         });
     }
 
@@ -1628,7 +1689,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.20.0");
+        assert_eq!(crate::VERSION, "0.21.0");
     }
 
     #[test]
@@ -2321,6 +2382,16 @@ mod tests {
             axis_scale_factor: None,
             axis_label_factor: None,
             curve_tension: None,
+            axis_color: Some("#203040".into()),
+            axis_stroke_width: Some(3.0),
+            axis_label_font_size: Some(15.0),
+            curve_opacity: Some(0.4),
+            curve_stroke_width: Some(4.0),
+            graticule_color: Some("#304050".into()),
+            graticule_stroke_width: Some(2.0),
+            graticule_opacity: Some(0.2),
+            legend_font_size: Some(14.0),
+            series_colors: vec!["#102030".into()],
         };
 
         let layout = layout_chart_diagram(&diagram, 500.0, 500.0);
@@ -2328,13 +2399,30 @@ mod tests {
             .items
             .iter()
             .filter_map(|item| match item {
-                LayoutedChartItem::LinePath { points, .. } => Some(points),
+                LayoutedChartItem::FilledLinePath { points, .. } => Some(points),
                 _ => None,
             })
             .collect::<Vec<_>>();
         assert_eq!(paths.len(), 5);
         assert!(paths[..4].iter().all(|points| points.len() == 4));
         assert!(paths[4][0].x.is_finite() && paths[4][0].y.is_finite());
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedChartItem::FilledLinePath {
+                fill,
+                fill_opacity,
+                stroke_width,
+                ..
+            } if fill == "#102030" && *fill_opacity == 0.4 && *stroke_width == 4.0
+        )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedChartItem::StyledLine {
+                color,
+                stroke_width,
+                ..
+            } if color == "#203040" && *stroke_width == 3.0
+        )));
         assert!(!layout
             .items
             .iter()
@@ -2368,7 +2456,9 @@ mod tests {
         assert_eq!((layout.width, layout.height), (450.0, 350.0));
 
         let first_axis = layout.items.iter().find_map(|item| match item {
-            LayoutedChartItem::GridLine { x1, y1, x2, y2 } => Some((*x1, *y1, *x2, *y2)),
+            LayoutedChartItem::StyledLine { x1, y1, x2, y2, .. } => {
+                Some((*x1, *y1, *x2, *y2))
+            }
             _ => None,
         });
         assert_eq!(first_axis, Some((220.0, 170.0, 220.0, 124.0)));

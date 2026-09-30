@@ -231,6 +231,16 @@ fn pinned_radar_subset_corpus_parses_to_chart_ir() {
         } else if id == "front-matter-layout-config" {
             assert_eq!(chart.radar_config.width, Some(440.0));
             assert_eq!(chart.radar_config.axis_scale_factor, Some(0.8));
+        } else if id == "init-theme-style" {
+            assert_eq!(chart.radar_config.axis_color.as_deref(), Some("#203040"));
+            assert_eq!(chart.radar_config.axis_stroke_width, Some(3.0));
+            assert_eq!(chart.radar_config.curve_opacity, Some(0.4));
+            assert_eq!(chart.radar_config.graticule_stroke_width, Some(2.0));
+            assert_eq!(chart.radar_config.series_colors, vec!["#102030"]);
+        } else if id == "front-matter-theme-style" {
+            assert_eq!(chart.radar_config.axis_color.as_deref(), Some("#506070"));
+            assert_eq!(chart.radar_config.curve_opacity, Some(0.35));
+            assert_eq!(chart.radar_config.series_colors, vec!["#405060"]);
         }
     }
 }

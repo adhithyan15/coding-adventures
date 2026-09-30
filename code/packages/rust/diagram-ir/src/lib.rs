@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.71.0";
+pub const VERSION: &str = "0.72.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -945,6 +945,16 @@ pub struct RadarConfig {
     pub axis_scale_factor: Option<f64>,
     pub axis_label_factor: Option<f64>,
     pub curve_tension: Option<f64>,
+    pub axis_color: Option<String>,
+    pub axis_stroke_width: Option<f64>,
+    pub axis_label_font_size: Option<f64>,
+    pub curve_opacity: Option<f64>,
+    pub curve_stroke_width: Option<f64>,
+    pub graticule_color: Option<String>,
+    pub graticule_stroke_width: Option<f64>,
+    pub graticule_opacity: Option<f64>,
+    pub legend_font_size: Option<f64>,
+    pub series_colors: Vec<String>,
 }
 
 impl Default for RadarConfig {
@@ -964,6 +974,16 @@ impl Default for RadarConfig {
             axis_scale_factor: None,
             axis_label_factor: None,
             curve_tension: None,
+            axis_color: None,
+            axis_stroke_width: None,
+            axis_label_font_size: None,
+            curve_opacity: None,
+            curve_stroke_width: None,
+            graticule_color: None,
+            graticule_stroke_width: None,
+            graticule_opacity: None,
+            legend_font_size: None,
+            series_colors: Vec::new(),
         }
     }
 }
@@ -1064,6 +1084,24 @@ pub enum LayoutedChartItem {
         start: Point,
         segments: Vec<CubicCurveSegment>,
         color: String,
+        fill: Option<String>,
+        fill_opacity: Option<f64>,
+        stroke_width: f64,
+    },
+    FilledLinePath {
+        points: Vec<Point>,
+        fill: String,
+        fill_opacity: f64,
+        stroke: String,
+        stroke_width: f64,
+    },
+    StyledLine {
+        x1: f64,
+        y1: f64,
+        x2: f64,
+        y2: f64,
+        color: String,
+        stroke_width: f64,
     },
     PointLabel {
         x: f64,
@@ -2295,7 +2333,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.71.0");
+        assert_eq!(VERSION, "0.72.0");
     }
     #[test]
     fn default_direction_is_tb() {
