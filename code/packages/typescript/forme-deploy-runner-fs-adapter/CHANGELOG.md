@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Exercise disappearing nested-target races with native paths on every
+  supported operating system, including Windows.
 - Add a zero-write target inspection API for `forme deploy --dry-run`; it
   preflights content and verifies existing target state without locks, staging,
   root creation, or transaction residue.

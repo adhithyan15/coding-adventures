@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Make discovery and ignored-signal escalation coverage deterministic across
+  POSIX and Windows hosts.
+
 ## 0.1.0 — 2026-09-27
 
 - Add deterministic manifest discovery and `StageRef` resolution.

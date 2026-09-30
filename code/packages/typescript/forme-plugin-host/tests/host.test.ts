@@ -79,7 +79,7 @@ function processFactory(
         exited: new Promise((resolve) => child.once("exit", (code, signal) => resolve({ code, signal }))),
         signal(value) {
           signals.push(value);
-          child.kill(value);
+          if (value !== "SIGTERM" || !flags.includes("--ignore-term")) child.kill(value);
         },
       };
     },

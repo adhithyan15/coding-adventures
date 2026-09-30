@@ -1,4 +1,4 @@
-import { mkdtemp, mkdir, symlink, writeFile } from "node:fs/promises";
+import { mkdtemp, mkdir, realpath, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -186,7 +186,7 @@ signedAt = "2026-05-16T00:00:00Z"
     await writeFile(join(good, "plugin.toml"), binaryManifest("@example/binary", "./runner"));
     await writeFile(join(good, "runner"), "binary");
     const found = await discoverPlugins([base]);
-    expect(found.get("@example/binary")?.entryPath).toMatch(/\/good\/runner$/);
+    expect(found.get("@example/binary")?.entryPath).toBe(await realpath(join(good, "runner")));
 
     const badRoot = await mkdtemp(join(tmpdir(), "forme-plugin-binary-missing-"));
     const bad = join(badRoot, "bad");
