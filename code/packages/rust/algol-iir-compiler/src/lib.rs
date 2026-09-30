@@ -6830,7 +6830,18 @@ impl Compiler {
                                     &assignment.name,
                                 )
                             {
-                                return None;
+                                // Exact acyclic conditionals are evaluated from
+                                // the current snapshot. Unproven direct
+                                // self-reference still requires a known cycle.
+                                let mut dependencies = HashSet::new();
+                                collect_expression_dependency_names(
+                                    assignment.expression,
+                                    "",
+                                    &mut dependencies,
+                                );
+                                if dependencies.contains(&assignment.name) {
+                                    return None;
+                                }
                             }
                             self.static_recurrence_boolean_value(assignment.expression)
                                 .map(StaticScalarSnapshot::Boolean)
@@ -15119,6 +15130,48 @@ mod tests {
             "test",
         )
         .expect_err("a dynamic branch without self-reference must remain conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_acyclic_conditional_selector_tracks_recurrence_cycle_statements() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := true; for i := i + 1 while i <= n do begin n := n - delta; choose := if i < 2 then true else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact acyclic conditional selector may drive recurrence-cycle statements");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "0.5", "-0.75"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_acyclic_conditional_selector_selects_recurrence_cycle_expression() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := true; for i := i + 1 while i <= n do begin n := n - delta; choose := if i < 2 then true else false; delta := if choose then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact acyclic conditional selector may choose a recurrence-cycle expression");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "0.5", "-0.75"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_unknown_acyclic_conditional_selector_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, other; i := 0; n := 4; delta := 2; choose := true; for i := i + 1 while i <= n do begin n := n - delta; choose := if other then true else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("an unknown acyclic conditional selector must remain conservative");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 

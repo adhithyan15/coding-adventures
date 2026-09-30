@@ -1065,6 +1065,10 @@ backend immediately) come before the enabler-dependent items.
   in the graph may use a conditional
   expression selected by the controlled scalar or another exact local
   snapshot; capped execution re-evaluates the selected leaf on every pass.
+  An acyclic boolean recurrence may likewise use an exact conditional
+  expression to choose different values on successive passes before selecting
+  recurrence-cycle statements or expressions; unknown conditional inputs
+  remain conservative.
   The recurrence assignment may instead occur in one or both branches of a
   conditional statement selected by those exact snapshots. A branch without
   the assignment preserves the dependency for that pass; unknown selectors
