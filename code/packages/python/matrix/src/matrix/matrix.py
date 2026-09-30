@@ -22,7 +22,7 @@ Design principles
 from __future__ import annotations
 
 import math
-from typing import Callable, Tuple
+from collections.abc import Callable
 
 
 class Matrix:
@@ -59,18 +59,29 @@ class Matrix:
             self.data = [[float(data)]]
             self.rows, self.cols = 1, 1
         elif isinstance(data, list) and len(data) > 0 and isinstance(data[0], (int, float)):
+            if not all(isinstance(value, (int, float)) for value in data):
+                raise TypeError("Matrix vectors must contain only numbers")
             self.data = [[float(x) for x in data]]
             self.rows, self.cols = 1, len(data)
         elif isinstance(data, list) and len(data) > 0 and isinstance(data[0], list):
-            self.data = data
+            if not all(isinstance(row, list) for row in data):
+                raise TypeError("Matrix rows must all be lists")
+            width = len(data[0])
+            if width == 0 or any(len(row) != width for row in data):
+                raise ValueError("Matrix rows must be non-empty and rectangular")
+            if not all(isinstance(value, (int, float)) for row in data for value in row):
+                raise TypeError("Matrix rows must contain only numbers")
+            self.data = [[float(value) for value in row] for row in data]
             self.rows = len(data)
-            self.cols = len(data[0]) if self.rows > 0 else 0
-        else:
+            self.cols = width
+        elif isinstance(data, list) and len(data) == 0:
             self.data = []
             self.rows, self.cols = 0, 0
+        else:
+            raise TypeError("Matrix data must be a number, vector, or rectangular grid")
 
     @classmethod
-    def zeros(cls, rows: int, cols: int) -> "Matrix":
+    def zeros(cls, rows: int, cols: int) -> Matrix:
         """Create an ``rows x cols`` matrix filled with zeros.
 
         >>> Matrix.zeros(2, 3).data
@@ -83,7 +94,7 @@ class Matrix:
     # ------------------------------------------------------------------
 
     @classmethod
-    def identity(cls, n: int) -> "Matrix":
+    def identity(cls, n: int) -> Matrix:
         """Create an ``n x n`` identity matrix.
 
         The identity matrix is the matrix equivalent of the number 1:
@@ -97,7 +108,7 @@ class Matrix:
         return cls(data)
 
     @classmethod
-    def from_diagonal(cls, values: list) -> "Matrix":
+    def from_diagonal(cls, values: list) -> Matrix:
         """Create a square diagonal matrix from a list of values.
 
         A diagonal matrix has non-zero entries only on the main diagonal.
@@ -117,26 +128,46 @@ class Matrix:
 
     def __add__(self, other):
         if isinstance(other, (int, float)):
-            return Matrix([[self.data[i][j] + other for j in range(self.cols)] for i in range(self.rows)])
+            return Matrix(
+                [[self.data[i][j] + other for j in range(self.cols)] for i in range(self.rows)]
+            )
         if self.rows != other.rows or self.cols != other.cols:
-            raise ValueError(f"Addition dimension mismatch: {self.rows}x{self.cols} vs {other.rows}x{other.cols}")
-        return Matrix([[self.data[i][j] + other.data[i][j] for j in range(self.cols)] for i in range(self.rows)])
+            raise ValueError(
+                f"Addition dimension mismatch: {self.rows}x{self.cols} vs {other.rows}x{other.cols}"
+            )
+        return Matrix(
+            [
+                [self.data[i][j] + other.data[i][j] for j in range(self.cols)]
+                for i in range(self.rows)
+            ]
+        )
 
     def __sub__(self, other):
         if isinstance(other, (int, float)):
-            return Matrix([[self.data[i][j] - other for j in range(self.cols)] for i in range(self.rows)])
+            return Matrix(
+                [[self.data[i][j] - other for j in range(self.cols)] for i in range(self.rows)]
+            )
         if self.rows != other.rows or self.cols != other.cols:
             raise ValueError("Subtraction dimension mismatch.")
-        return Matrix([[self.data[i][j] - other.data[i][j] for j in range(self.cols)] for i in range(self.rows)])
+        return Matrix(
+            [
+                [self.data[i][j] - other.data[i][j] for j in range(self.cols)]
+                for i in range(self.rows)
+            ]
+        )
 
     def __mul__(self, scalar: float):
         """Element-wise scalar multiplication mapped to the * operator"""
-        return Matrix([[self.data[i][j] * scalar for j in range(self.cols)] for i in range(self.rows)])
+        return Matrix(
+            [[self.data[i][j] * scalar for j in range(self.cols)] for i in range(self.rows)]
+        )
 
-    def dot(self, other: "Matrix") -> "Matrix":
+    def dot(self, other: Matrix) -> Matrix:
         """Matrix dot product execution"""
         if self.cols != other.rows:
-            raise ValueError(f"Dot product dimension mismatch: {self.cols} cols vs {other.rows} rows.")
+            raise ValueError(
+                f"Dot product dimension mismatch: {self.cols} cols vs {other.rows} rows."
+            )
         C = Matrix.zeros(self.rows, other.cols)
         for i in range(self.rows):
             for j in range(other.cols):
@@ -144,7 +175,7 @@ class Matrix:
                     C.data[i][j] += self.data[i][k] * other.data[k][j]
         return C
 
-    def transpose(self) -> "Matrix":
+    def transpose(self) -> Matrix:
         return Matrix([[self.data[j][i] for j in range(self.rows)] for i in range(self.cols)])
 
     def __eq__(self, other):
@@ -167,10 +198,12 @@ class Matrix:
         2.0
         """
         if row < 0 or row >= self.rows or col < 0 or col >= self.cols:
-            raise IndexError(f"Index ({row}, {col}) out of bounds for {self.rows}x{self.cols} matrix")
+            raise IndexError(
+                f"Index ({row}, {col}) out of bounds for {self.rows}x{self.cols} matrix"
+            )
         return float(self.data[row][col])
 
-    def set(self, row: int, col: int, value: float) -> "Matrix":
+    def set(self, row: int, col: int, value: float) -> Matrix:
         """Return a new matrix with the element at ``(row, col)`` replaced.
 
         The original matrix is unchanged — this follows the immutable-
@@ -180,7 +213,9 @@ class Matrix:
         [[99.0, 2.0], [3.0, 4.0]]
         """
         if row < 0 or row >= self.rows or col < 0 or col >= self.cols:
-            raise IndexError(f"Index ({row}, {col}) out of bounds for {self.rows}x{self.cols} matrix")
+            raise IndexError(
+                f"Index ({row}, {col}) out of bounds for {self.rows}x{self.cols} matrix"
+            )
         new_data = [r[:] for r in self.data]
         new_data[row][col] = float(value)
         return Matrix(new_data)
@@ -207,7 +242,7 @@ class Matrix:
                 total += val
         return total
 
-    def sum_rows(self) -> "Matrix":
+    def sum_rows(self) -> Matrix:
         """Sum each row, returning an ``(rows x 1)`` column vector.
 
         Imagine collapsing every row into a single number by adding all
@@ -219,7 +254,7 @@ class Matrix:
         """
         return Matrix([[float(builtins_sum(row))] for row in self.data])
 
-    def sum_cols(self) -> "Matrix":
+    def sum_cols(self) -> Matrix:
         """Sum each column, returning a ``(1 x cols)`` row vector.
 
         Imagine collapsing every column downward.  The result is a wide,
@@ -278,7 +313,7 @@ class Matrix:
                     result = val
         return float(result)
 
-    def argmin(self) -> Tuple[int, int]:
+    def argmin(self) -> tuple[int, int]:
         """Position ``(row, col)`` of the smallest element.
 
         If the minimum value appears more than once, the *first*
@@ -298,7 +333,7 @@ class Matrix:
                     best_r, best_c = i, j
         return (best_r, best_c)
 
-    def argmax(self) -> Tuple[int, int]:
+    def argmax(self) -> tuple[int, int]:
         """Position ``(row, col)`` of the largest element.
 
         First occurrence wins on ties.
@@ -323,7 +358,7 @@ class Matrix:
     # These methods apply a function to every element independently.
     # The shape stays the same; only the values change.
 
-    def map(self, fn: Callable[[float], float]) -> "Matrix":
+    def map(self, fn: Callable[[float], float]) -> Matrix:
         """Apply ``fn`` to every element, returning a new matrix.
 
         This is the most general element-wise operation.  All of
@@ -334,7 +369,7 @@ class Matrix:
         """
         return Matrix([[fn(self.data[i][j]) for j in range(self.cols)] for i in range(self.rows)])
 
-    def sqrt(self) -> "Matrix":
+    def sqrt(self) -> Matrix:
         """Element-wise square root.
 
         Each cell ``x`` becomes ``sqrt(x)``.  Negative values will
@@ -345,7 +380,7 @@ class Matrix:
         """
         return self.map(math.sqrt)
 
-    def abs(self) -> "Matrix":
+    def abs(self) -> Matrix:
         """Element-wise absolute value.
 
         Flips negative numbers to positive; leaves positive numbers
@@ -356,7 +391,7 @@ class Matrix:
         """
         return self.map(builtins_abs)
 
-    def pow(self, exp: float) -> "Matrix":
+    def pow(self, exp: float) -> Matrix:
         """Raise every element to the power ``exp``.
 
         ``M.pow(2)`` squares each element.  ``M.pow(0.5)`` is the same
@@ -374,7 +409,7 @@ class Matrix:
     # altering their values.  Think of them as rearranging tiles on a
     # grid.
 
-    def flatten(self) -> "Matrix":
+    def flatten(self) -> Matrix:
         """Flatten to a ``1 x n`` row vector.
 
         All elements are placed into a single row, reading left-to-right
@@ -388,7 +423,7 @@ class Matrix:
             flat.extend(float(v) for v in row)
         return Matrix([flat])
 
-    def reshape(self, rows: int, cols: int) -> "Matrix":
+    def reshape(self, rows: int, cols: int) -> Matrix:
         """Reshape to ``rows x cols``.
 
         The total number of elements must stay the same — you cannot
@@ -399,6 +434,8 @@ class Matrix:
         [[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]]
         """
         total = self.rows * self.cols
+        if rows <= 0 or cols <= 0:
+            raise ValueError("Reshape dimensions must be positive")
         if rows * cols != total:
             raise ValueError(
                 f"Cannot reshape {self.rows}x{self.cols} ({total} elements) "
@@ -410,7 +447,7 @@ class Matrix:
             new_data.append(flat[i * cols : (i + 1) * cols])
         return Matrix(new_data)
 
-    def row(self, i: int) -> "Matrix":
+    def row(self, i: int) -> Matrix:
         """Extract row ``i`` as a ``1 x cols`` matrix.
 
         >>> Matrix([[1, 2], [3, 4]]).row(0).data
@@ -420,7 +457,7 @@ class Matrix:
             raise IndexError(f"Row {i} out of bounds for {self.rows}-row matrix")
         return Matrix([list(self.data[i])])
 
-    def col(self, j: int) -> "Matrix":
+    def col(self, j: int) -> Matrix:
         """Extract column ``j`` as a ``rows x 1`` matrix.
 
         >>> Matrix([[1, 2], [3, 4]]).col(0).data
@@ -430,7 +467,7 @@ class Matrix:
             raise IndexError(f"Column {j} out of bounds for {self.cols}-column matrix")
         return Matrix([[self.data[i][j]] for i in range(self.rows)])
 
-    def slice(self, r0: int, r1: int, c0: int, c1: int) -> "Matrix":
+    def slice(self, r0: int, r1: int, c0: int, c1: int) -> Matrix:
         """Extract a sub-matrix for rows ``[r0, r1)`` and cols ``[c0, c1)``.
 
         Uses half-open intervals, just like Python slicing — ``r0`` is
@@ -441,21 +478,17 @@ class Matrix:
         """
         if r0 < 0 or r1 > self.rows or c0 < 0 or c1 > self.cols:
             raise IndexError(
-                f"Slice [{r0}:{r1}, {c0}:{c1}] out of bounds for "
-                f"{self.rows}x{self.cols} matrix"
+                f"Slice [{r0}:{r1}, {c0}:{c1}] out of bounds for {self.rows}x{self.cols} matrix"
             )
         if r0 >= r1 or c0 >= c1:
             raise ValueError("Slice dimensions must be positive (r0 < r1, c0 < c1)")
-        return Matrix([
-            [float(self.data[i][j]) for j in range(c0, c1)]
-            for i in range(r0, r1)
-        ])
+        return Matrix([[float(self.data[i][j]) for j in range(c0, c1)] for i in range(r0, r1)])
 
     # ------------------------------------------------------------------
     # Equality and comparison
     # ------------------------------------------------------------------
 
-    def equals(self, other: "Matrix") -> bool:
+    def equals(self, other: Matrix) -> bool:
         """Exact element-wise equality.
 
         Two matrices are equal if they have the same shape and every
@@ -472,7 +505,7 @@ class Matrix:
                     return False
         return True
 
-    def close(self, other: "Matrix", tolerance: float = 1e-9) -> bool:
+    def close(self, other: Matrix, tolerance: float = 1e-9) -> bool:
         """Check whether two matrices are element-wise close.
 
         Useful for comparing results of floating-point arithmetic, where
