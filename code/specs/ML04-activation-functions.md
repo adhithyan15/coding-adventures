@@ -156,7 +156,7 @@ Activation functions are tested for exact mathematical parity using hardcoded sc
 |-------|----------------|-------|
 | `0.0` | `0.25` | Maximum derivative |
 | `1.0` | `0.19661193324148185` | |
-| `10.0` | `~0.0000453978` | Near-zero (saturated region) |
+| `10.0` | `~0.0000453958` | Near-zero (saturated region) |
 
 **ReLU**
 | Input | Expected Output |

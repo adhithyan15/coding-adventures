@@ -12,21 +12,21 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16315,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16315",
-    "item_id": "python-activation-matrix-loss-perceptron-build-front-coverage",
-    "branch": "codex/parity-python-neural-fronts-20260930",
-    "head_revision": "f961c9b8cde6ad7dabbe0311ce95c6ebd61c1e2c",
+    "number": 16321,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16321",
+    "item_id": "python-neural-primitive-spec-vector-test-coverage",
+    "branch": "codex/parity-python-neural-spec-tests-v2-20260930",
+    "head_revision": "f832f1eb370b9ad9c826ede718c79e68b82dd3f3",
     "status": "pr-open"
   },
   "last_ci_action": {
-    "observed_at": "2026-09-30T21:29:19Z",
-    "pr_number": 16315,
+    "observed_at": "2026-09-30T22:09:58Z",
+    "pr_number": 16321,
     "status": "checks-pending",
-    "notes": "Ready-for-review PR #16315 is open and GitHub reports MERGEABLE. Initial CI detect, CodeQL language detection, and human-language change detection are queued; auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no merge conflict."
+    "notes": "Ready-for-review PR #16321 is open and GitHub reports MERGEABLE but BLOCKED while CI detect, CodeQL language detection, and human-language change detection are queued or in progress. Auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no merge conflict."
   },
   "last_inventory": {
-    "revision": "6c0273d68563c8d3b2babdda66636daa848ad4ad",
+    "revision": "0d12bc3c4caf1b9baff45029eac13bf39337378d",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1473,
@@ -11055,23 +11055,50 @@
     {
       "id": "python-activation-matrix-loss-perceptron-build-front-coverage",
       "title": "Add tested BUILD fronts for Python activation-functions, matrix, loss-functions, and perceptron",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/parity-python-neural-fronts-20260930",
       "pr_number": 16315,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16315",
       "selected_at": "2026-09-30T21:03:05Z",
       "selection_revision": "c6685aa8d882b061ef810f32027331b40898eebd",
       "selection_notes": "Selected only after PR #16310 completed every final-head check acceptably and merged through guarded squash auto-merge as c6685aa8d882b061ef810f32027331b40898eebd. The exact-main schema-3 refresh is collision-clean at 15 established lanes, 1,473 implementation identities, 4,740 package slots, 1,515 all-reported identities, completion bands 178/265, 123/934, 181/2,282, and 991/13,874, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. The only identity delta is the already-owned TypeScript forme-plugin-runner-ts singleton from merged PR #16296, so no new owner is required. This dependency-free four-package Python chain closes four reviewed orphan roots, exercises five direct downstream consumers, and has no overlap with current open PRs. The fresh clean branch starts from exact current main.",
+      "merged_head_revision": "55aaf83f02c8c3d107d610222f9b5372e75cdcdc",
+      "merged_at": "2026-09-30T21:40:37Z",
+      "merge_revision": "7a91de5ceb0eb36079e011557ae3028d9d1fb5f8",
+      "merge_notes": "All reported final-head checks reached acceptable terminal conclusions. GitHub reported MERGEABLE and CLEAN, guarded squash auto-merge was enabled, and PR #16315 merged automatically without a plain manual merge command.",
       "notes": "Implemented four fail-closed cross-platform BUILD fronts with explicit activation-functions, matrix, and loss-functions edges into perceptron; direct ML01/ML03/ML04 and AND-learning coverage; package documentation; publishable Hatch metadata; and four exact orphan-ledger retirements. Activation-functions now exports the canonical ML04 tanh name with its compatibility alias, while matrix construction deep-copies and validates rectangular numeric grids. Local validation covers 97 direct tests at 99-100% package coverage, Ruff check/format, four wheel and sdist builds plus clean wheel imports, four executable downstream program smokes, the Go build-tool suite, a production four-package build with all internal edges and orphan validation, capability review, doc-shard and metadata checks, and diff checks. The read-only downstream audit discovered that the five dependent Python predictor programs have no BUILD fronts and xor-classifier is metadata-only with incorrect matrix/loss distribution names; that separate coherent follow-up is now owned by python-neural-predictor-program-front-and-metadata-coverage. Before publication, origin/main advanced only through existing Rust ALGOL and photo-picker roots; the branch rebased cleanly to 6c0273d68563c8d3b2babdda66636daa848ad4ad, so the collision-clean inventory counts remain unchanged and its exact revision is refreshed."
+    },
+    {
+      "id": "python-neural-primitive-spec-vector-test-coverage",
+      "title": "Complete Python activation and loss neutral-spec vector coverage",
+      "status": "pr-open",
+      "depends_on": ["python-activation-matrix-loss-perceptron-build-front-coverage"],
+      "branch": "codex/parity-python-neural-spec-tests-v2-20260930",
+      "pr_number": 16321,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16321",
+      "opened_at": "2026-09-30T22:09:55Z",
+      "opened_revision": "f832f1eb370b9ad9c826ede718c79e68b82dd3f3",
+      "selected_at": "2026-09-30T21:42:12Z",
+      "selection_revision": "4f264437f57f650bae5972bb7f1fc4fec94dfda9",
+      "selection_notes": "Selected after PR #16315 completed every final-head check acceptably and merged through guarded squash auto-merge as 7a91de5ceb0eb36079e011557ae3028d9d1fb5f8. The exact-main schema-3 inventory remains collision-clean and identity-neutral at 15 established lanes, 1,473 implementation identities, 4,740 package slots, 1,515 all-reported identities, completion bands 178/265, 123/934, 181/2,282, and 991/13,874, 805 Rust singletons, five emerging OCaml packages, zero collisions, and zero unknown buckets. Parallel audits found the predictor-front successor blocked on the separately owned gradient-descent front, ranked barcode-layout neutral conformance and Haskell ITF Windows fronts as the next broad alternatives, and identified this smaller newly eligible neutral-spec regression gap on the just-merged Python primitives. The bounded tests-only follow-up is dependency-ready, changes no package identity or authority, and starts from exact main in a fresh clean sparse worktree after a collision-free backlog refresh.",
+      "implementation_revision": "6b08af5f0d7b001837dc7a7942c6ddedb30d047d",
+      "validation_revision": "72b39c4135d497b2d3fd8d1d0ec694578b59ee96",
+      "validation_notes": "The neutral ML01 contract now pins epsilon exactly to 1e-7 and records observable BCE/CCE boundary values plus derivatives; ML04's approximate sigmoid-prime-at-10 literal now agrees with its formula. Python executes every mandatory activation vector plus symmetry, range, idempotence, derivative-identity, and non-negative-gradient properties, and asserts exact formula-derived BCE/CCE clamp behavior at zero and one. Activation-functions passes 32 tests and loss-functions 17 tests under Python 3.12 with 100% coverage and clean Ruff check/format. Their canonical BUILD_windows fronts pass, four sdists/wheels build and clean wheel imports pass, perceptron's dependent BUILD_windows suite passes three tests at 100%, and the deterministic space-launch-predictor smoke produces the expected safe/abort classifications. The complete Go build-tool suite, vet, and trimpath build pass; a production sparse exact-diff run discovers four packages, selects both changed packages plus matrix and perceptron, verifies their dependency order, and builds all four successfully. Ten reporter tests, the collision-clean schema-3 inventory, the unique dependency-complete acyclic 940-owner/1,811-edge state graph, TypeScript compilation plus root changelog reconstruction, Bandit, changed-line credential scanning, JSON parsing, and diff hygiene pass. No production source, dependency metadata, package identity, capability, workflow, or runtime authority changed.",
+      "final_review_revision": "72b39c4135d497b2d3fd8d1d0ec694578b59ee96",
+      "final_review_notes": "Independent correctness review verified the ML01 formulas, ML04 literals, exact mandatory inputs, Python assertions, lifecycle transition, and complete acyclic state graph. It caught a root changelog filename whose slug and digest did not match its heading; the focused rename now uses the exact heading-derived slug and SHA-256 prefix, and reconstruction plus an explicit digest check pass. Independent security review issued SHIP after confirming no production, dependency, capability, BUILD, workflow, secret, generated-artifact, mode, or overlap change; all thirteen live PRs have zero exact path overlap.",
+      "rebase_notes": "Before publication, origin/main advanced to 0d12bc3c4caf1b9baff45029eac13bf39337378d through PR #16314's existing Rust Mosaic Flutter host-environment behavior and two lessons. Those paths have zero exact overlap with this Python/spec/state tranche. All nine commits rebased conflict-free. The regenerated schema-3 inventory is unchanged and collision-clean, and the rebased 32-test activation, 17-test loss, three-test perceptron, Ruff, changelog reconstruction, state-DAG, JSON, and diff checks pass.",
+      "publication_notes": "Opened ready-for-review PR #16321 from clean validated head f832f1eb370b9ad9c826ede718c79e68b82dd3f3 after a normal first push from exact origin/main 0d12bc3c4caf1b9baff45029eac13bf39337378d. Immediately before publication, the remote branch and prior PR were absent, thirteen live PRs had zero exact path overlap, focused package/downstream/build-tool/parity/state/metadata/security checks were acceptable, and independent correctness and security reviews passed after the changelog shard identity repair. GitHub reports MERGEABLE but BLOCKED with initial CI, CodeQL, and human-language detection queued or in progress; auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
+      "notes": "Discovered by the final read-only review of PR #16315. The activation suite omits mandatory nonzero ML04 derivative vectors plus specified symmetry, idempotence, and derivative properties, so constant derivative regressions could pass. The loss boundary test asserts only finiteness and does not prove ML01's exact [1e-7, 1-1e-7] clamp for BCE/CCE values and derivatives. Add exact language-neutral vector and property coverage without changing already-correct package behavior, then rerun direct coverage, BUILD fronts, downstream smokes, metadata, parity, diff, and security checks."
     },
     {
       "id": "python-neural-predictor-program-front-and-metadata-coverage",
       "title": "Add tested BUILD fronts and corrected dependency metadata for Python neural predictor programs",
       "status": "pending",
-      "depends_on": ["python-activation-matrix-loss-perceptron-build-front-coverage"],
+      "depends_on": ["python-activation-matrix-loss-perceptron-build-front-coverage", "python-gradient-descent-build-front-coverage"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered by the bounded downstream audit for the Python neural-primitives tranche. celsius-to-fahrenheit-predictor, house-price-predictor, mansion-classifier, space-launch-predictor, and xor-classifier have no BUILD fronts. The first four have executable mains and validated smoke closures; xor-classifier is metadata-only and incorrectly requests matrix and loss-functions instead of the actual coding-adventures-matrix and coding-adventures-loss-functions distributions. Add program fronts in dependency order, repair or complete the XOR program contract without fabricating runtime coverage, and validate build-tool edges plus all executable downstream smokes as a separate item."
+      "notes": "Discovered by the bounded downstream audit for the Python neural-primitives tranche. celsius-to-fahrenheit-predictor, house-price-predictor, mansion-classifier, space-launch-predictor, and xor-classifier have no BUILD fronts. The first four have executable mains but no direct tests, currently fail Ruff import ordering and formatting, and need deterministic behavioral coverage before their fronts. Celsius also imports gradient-descent, so this owner must wait for python-gradient-descent-build-front-coverage. xor-classifier has never contained source or tests, duplicates the later runnable xor-hidden-layer-demo concept, and incorrectly requests matrix and loss-functions instead of the actual coding-adventures-matrix and coding-adventures-loss-functions distributions. Classify or remove that stale metadata-only root rather than inventing a passing BUILD; add exact build-tool dependency declarations for valid unprefixed distributions and validate the executable downstream closure."
     },
     {
       "id": "python-gradient-descent-build-front-coverage",

@@ -15176,6 +15176,79 @@ mergeable; initial CI, CodeQL language detection, and human-language change
 detection are queued. Guarded auto-merge remains disabled until every required
 check reaches a terminal acceptable state and the branch remains conflict-free.
 
+### PR #16315 merge and post-merge neural audit
+
+Every final-head check completed acceptably, including both Ubuntu builds,
+both repository-metadata runs, the CI gate, Python CodeQL, and the
+human-language gate. GitHub reported the branch mergeable and clean, guarded
+squash auto-merge was enabled, and PR #16315 merged automatically at
+`2026-09-30T21:40:37Z` as
+`7a91de5ceb0eb36079e011557ae3028d9d1fb5f8`; no plain manual merge command was
+used.
+
+The exact-main schema-3 inventory remains collision-clean at 15 established
+lanes, 1,473 implementation identities, 4,740 package slots, 1,515
+all-reported identities, completion bands 178/265, 123/934, 181/2,282, and
+991/13,874, 805 Rust singletons, five emerging OCaml packages, zero canonical
+collisions, and zero unknown buckets. The package topology is unchanged.
+
+The preserved read-only audits add two corrections before reprioritization.
+First, the Python activation suite does not execute all mandatory ML04 vectors
+and properties, and the loss boundary test proves only finite output rather
+than ML01's exact epsilon clamp. Pending owner
+`python-neural-primitive-spec-vector-test-coverage` records that bounded
+follow-up. Second, Celsius imports the separately unfronted Python
+`gradient-descent` package, so the predictor-program owner now depends on
+`python-gradient-descent-build-front-coverage`. The same audit confirms that
+`xor-classifier` has always been metadata-only; it should be classified or
+removed rather than given a fabricated passing front.
+
+The dependency/leverage refresh selects
+`python-neural-primitive-spec-vector-test-coverage`. The broader predictor
+successor is blocked on its newly recorded gradient-descent prerequisite,
+while this bounded regression-proofing slice is dependency-ready and directly
+closes a just-confirmed neutral-contract evidence gap. It adds no package
+identity or runtime authority. The fresh clean sparse worktree branch
+`codex/parity-python-neural-spec-tests-v2-20260930` starts from exact main
+`7a91de5ceb0eb36079e011557ae3028d9d1fb5f8`.
+
+### Python neural primitive neutral-vector completion
+
+ML01 now makes its `1e-7` clamp canonical and observable through exact
+formula-derived BCE and CCE boundary vectors for both loss and derivative
+paths. ML04's approximate sigmoid derivative at ten now agrees with the
+normative formula. The Python activation suite executes every mandatory table
+row plus the specified symmetry, strict ordinary-input ranges, ReLU
+idempotence, softplus derivative identity, and non-negative derivative
+properties. The loss suite asserts the exact clamp at both zero and one rather
+than merely checking finite output. Production source remains unchanged.
+
+Activation-functions passes 32 tests and loss-functions 17 tests under Python
+3.12 with 100% coverage and clean Ruff gates. Both Windows BUILD fronts pass;
+four distribution artifacts build and import cleanly; perceptron's dependent
+front passes three tests at 100%; and space-launch-predictor reproduces its
+deterministic safe/abort output. The complete Go build-tool suite, vet, and
+trimpath build pass. A production exact-diff run discovers the four available
+dependency-ordered packages and builds activation-functions, loss-functions,
+matrix, and perceptron. Collision, state-DAG, changelog reconstruction,
+Bandit, changed-line credential, JSON, and diff-hygiene checks pass, with no
+package identity, capability, workflow, dependency metadata, or runtime
+authority change.
+
+Before publication, `origin/main` advanced to
+`0d12bc3c4caf1b9baff45029eac13bf39337378d` through PR #16314's existing Rust
+Mosaic Flutter host-environment behavior and two lessons. Those paths have zero
+exact overlap with this tranche. All nine commits rebased conflict-free; the
+collision inventory remains unchanged, and the rebased focused suites, Ruff,
+changelog reconstruction, state-DAG, JSON, and diff checks pass.
+
+Ready-for-review PR #16321 publishes this bounded follow-up from
+`codex/parity-python-neural-spec-tests-v2-20260930`. GitHub reports the branch
+mergeable but blocked while initial CI, CodeQL, and human-language detection
+are queued or in progress. Guarded auto-merge remains disabled until every
+required check is terminal and acceptable and the branch remains
+conflict-free.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
