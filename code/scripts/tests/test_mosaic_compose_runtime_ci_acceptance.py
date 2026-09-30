@@ -174,6 +174,20 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
             workflow[setup:workflow.index("\n", setup + 40)],
         )
 
+    def test_trestle_android_apk_carries_the_rust_runtime(self) -> None:
+        """UI89 step 5: every ABI's engine is built with cargo-ndk, installed
+        through --runtime-library, and proven in the APK by its symbol."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("- name: Build Trestle for Android with its Rust runtime (UI89 step 5)")
+        block = workflow[start:workflow.index("\n      - name:", start)]
+        self.assertIn("needs.detect.outputs.needs_mosaic_compose_runtime == 'true'", block)
+        self.assertIn('bash code/scripts/build-mosaic-android-libs.sh task-mosaic-app "$jni_libs"', block)
+        self.assertIn('--runtime-library "$jni_libs"', block)
+        self.assertIn("for abi in arm64-v8a armeabi-v7a x86_64 x86; do", block)
+        self.assertIn("' T mosaic_app_create$'", block)
+        self.assertIn("cargo install --locked cargo-ndk --version", block)
+
     def test_task_app_requires_acceptance(self) -> None:
         self.assertTrue(
             MODULE.requires_mosaic_compose_runtime(
