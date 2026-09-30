@@ -14955,7 +14955,7 @@ The combined language-neutral corpus validates 162 cases and 285 staged files.
 Its generated-directory source registry digest is
 `9bc672eac5d5ffc8e2d7d9ff94709a80bdcf0c2de01e7984d9cf8671d3dfa823`, and its
 post-Forme repository-boundary digest is
-`95a30543f60bebeda68e77813f37154cc4431f511a37da8de11d4266d378903c`.
+`af6ae391a86167eb453bb4f5c2bed97cfb885039ce3ca0fce6cf2984ee5b4be7`.
 All 86 focused semantic-runner tests pass after the rebase.
 
 The collision-checked schema-3 inventory at that exact merge now contains 15

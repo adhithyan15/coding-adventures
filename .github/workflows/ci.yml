@@ -3464,6 +3464,40 @@ jobs:
             fi
           done
 
+      # UI89 step 5, second half: the APK above runs. An x86_64 emulator boots
+      # headless under KVM, and mosaic-android-emulator-gate.sh installs
+      # Trestle, launches MosaicActivity three times and requires that it
+      # writes its state under filesDir, restores it, quarantines state the
+      # runtime refuses, and is still running ten seconds after each launch.
+      - name: Launch Trestle on an Android emulator (UI89 step 5)
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
+        shell: bash
+        timeout-minutes: 30
+        run: |
+          set -euo pipefail
+          # Let the runner's user open /dev/kvm (GitHub's documented recipe).
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules > /dev/null
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+          export PATH="$ANDROID_HOME/platform-tools:$PATH"
+
+          apk="$(find "$RUNNER_TEMP/mosaic-compose-taskapp-android-runtime/compose/android/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
+          test -n "$apk"
+          emulator_log="$RUNNER_TEMP/mosaic-android-emulator.log"
+          # However the step ends: stop the emulator, and on failure show why.
+          finish() {
+            local status=$?
+            adb emu kill > /dev/null 2>&1 || true
+            if [ "$status" -ne 0 ]; then
+              echo "---- emulator log ----"
+              tail -n 80 "$emulator_log" || true
+              df -h "$RUNNER_TEMP" "$HOME" || true
+            fi
+          }
+          trap finish EXIT
+          bash code/scripts/start-mosaic-android-emulator.sh "$emulator_log"
+          bash code/scripts/mosaic-android-emulator-gate.sh "$apk" dev.codingadventures.trestle task-app
+
       - name: Build concrete Mosaic TaskApp WinUI shell
         if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
         shell: pwsh

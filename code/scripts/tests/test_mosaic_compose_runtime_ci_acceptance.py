@@ -188,6 +188,77 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("' T mosaic_app_create$'", block)
         self.assertIn("cargo install --locked cargo-ndk --version", block)
 
+    def test_trestle_launches_and_restores_on_an_android_emulator(self) -> None:
+        """UI89 step 5, second half: the APK with the runtime boots on an
+        x86_64 emulator, keeps its state and quarantines refused state."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("- name: Launch Trestle on an Android emulator (UI89 step 5)")
+        block = workflow[start:workflow.index("\n      - name:", start)]
+        self.assertLess(
+            workflow.index("- name: Build Trestle for Android with its Rust runtime (UI89 step 5)"),
+            start,
+        )
+        self.assertIn("needs.detect.outputs.needs_mosaic_compose_runtime == 'true'", block)
+        self.assertIn("mosaic-compose-taskapp-android-runtime/compose/android/build/outputs/apk/debug", block)
+        self.assertIn('bash code/scripts/start-mosaic-android-emulator.sh "$emulator_log"', block)
+        self.assertIn(
+            'bash code/scripts/mosaic-android-emulator-gate.sh "$apk" dev.codingadventures.trestle task-app',
+            block,
+        )
+        self.assertIn("adb emu kill", block)
+
+        scripts = SCRIPT.parent
+        gate = (scripts / "mosaic-android-emulator-gate.sh").read_text(encoding="utf-8")
+        # Where MosaicActivity points the host, the three launches, and the
+        # checks that make each one mean something.
+        self.assertIn('state="files/$application_id/mosaic-state.v1.json"', gate)
+        self.assertIn('activity="$package/mosaic.android.MosaicActivity"', gate)
+        self.assertIn('printf {} > $state', gate)
+        self.assertIn("FATAL EXCEPTION", gate)
+        self.assertIn("rejected persisted state", gate)
+        self.assertLess(gate.index('eventually "test -e $corrupt"'), gate.rindex("expect_state_written\n"))
+        emulator = (scripts / "start-mosaic-android-emulator.sh").read_text(encoding="utf-8")
+        self.assertIn('image="system-images;android-34;default;x86_64"', emulator)
+        self.assertIn("sys.boot_completed", emulator)
+        # The device lives where the emulator looks, and is listed before the
+        # wait: the first CI run created it somewhere else and booted nothing.
+        self.assertIn('export ANDROID_AVD_HOME="${ANDROID_AVD_HOME:-$HOME/.android/avd}"', emulator)
+        self.assertIn('avds="$("$emulator" -list-avds 2>/dev/null || true)"', emulator)
+        self.assertNotIn('-list-avds | grep', emulator)
+        self.assertIn("the emulator exited before it appeared to adb", emulator)
+
+    def test_a_lane_script_change_alone_requires_acceptance(self) -> None:
+        """The Android scripts belong to no package; changing one must still
+        run the lane that executes it."""
+
+        with tempfile.TemporaryDirectory() as directory:
+            repo = Path(directory)
+
+            def git(*arguments: str) -> None:
+                subprocess.run(
+                    ["git", "-c", "user.name=t", "-c", "user.email=t@example.com", *arguments],
+                    cwd=repo,
+                    check=True,
+                    capture_output=True,
+                )
+
+            git("init", "-q", "-b", "main")
+            for path in (MODULE.CI_WORKFLOW_PATH, *MODULE.CI_SCRIPT_PATHS, "README.md"):
+                (repo / path).parent.mkdir(parents=True, exist_ok=True)
+                (repo / path).write_text("v1\n", encoding="utf-8")
+            git("add", ".")
+            git("commit", "-q", "-m", "base")
+            git("checkout", "-q", "-b", "change")
+            (repo / "README.md").write_text("v2\n", encoding="utf-8")
+            git("commit", "-q", "-am", "unrelated")
+            self.assertFalse(MODULE.workflow_changed(repo, "main"))
+            for path in MODULE.CI_SCRIPT_PATHS:
+                (repo / path).write_text("v2\n", encoding="utf-8")
+                git("commit", "-q", "-am", f"change {path}")
+                self.assertTrue(MODULE.workflow_changed(repo, "main"), path)
+                git("reset", "-q", "--hard", "HEAD~1")
+
     def test_task_app_requires_acceptance(self) -> None:
         self.assertTrue(
             MODULE.requires_mosaic_compose_runtime(
