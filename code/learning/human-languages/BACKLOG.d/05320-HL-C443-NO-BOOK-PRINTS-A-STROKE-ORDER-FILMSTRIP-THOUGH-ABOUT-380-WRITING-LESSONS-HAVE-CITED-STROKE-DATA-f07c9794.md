@@ -141,6 +141,11 @@ That is about 380 filmstrips that could print today.
   `TE-S132` already extracts `ఞ` from `కృతజ్ఞత`. Its eight separately numbered
   movements trace the two upper loops, lower body, right bar and upper stem,
   again following the packaged tracing guide and Noto Sans Telugu fit.
+- **Telugu ట begins the retroflex row.** `TE-S152` already extracts the letter
+  from `ఏమిటి`, so no vocabulary debt blocks it. Its six separately numbered
+  movements trace the inner shoulder, the rounded outer body in four sections,
+  and the separate upper stem, using the same packaged tracing guide and Noto
+  Sans Telugu fit.
 
 ### The shape of the writing ramp (project owner, 2026-09-25)
 
