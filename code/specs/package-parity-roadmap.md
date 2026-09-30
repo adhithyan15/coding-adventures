@@ -15176,6 +15176,33 @@ mergeable; initial CI, CodeQL language detection, and human-language change
 detection are queued. Guarded auto-merge remains disabled until every required
 check reaches a terminal acceptable state and the branch remains conflict-free.
 
+### PR #16315 merge and post-merge neural audit
+
+Every final-head check completed acceptably, including both Ubuntu builds,
+both repository-metadata runs, the CI gate, Python CodeQL, and the
+human-language gate. GitHub reported the branch mergeable and clean, guarded
+squash auto-merge was enabled, and PR #16315 merged automatically at
+`2026-09-30T21:40:37Z` as
+`7a91de5ceb0eb36079e011557ae3028d9d1fb5f8`; no plain manual merge command was
+used.
+
+The exact-main schema-3 inventory remains collision-clean at 15 established
+lanes, 1,473 implementation identities, 4,740 package slots, 1,515
+all-reported identities, completion bands 178/265, 123/934, 181/2,282, and
+991/13,874, 805 Rust singletons, five emerging OCaml packages, zero canonical
+collisions, and zero unknown buckets. The package topology is unchanged.
+
+The preserved read-only audits add two corrections before reprioritization.
+First, the Python activation suite does not execute all mandatory ML04 vectors
+and properties, and the loss boundary test proves only finite output rather
+than ML01's exact epsilon clamp. Pending owner
+`python-neural-primitive-spec-vector-test-coverage` records that bounded
+follow-up. Second, Celsius imports the separately unfronted Python
+`gradient-descent` package, so the predictor-program owner now depends on
+`python-gradient-descent-build-front-coverage`. The same audit confirms that
+`xor-classifier` has always been metadata-only; it should be classified or
+removed rather than given a fabricated passing front.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
