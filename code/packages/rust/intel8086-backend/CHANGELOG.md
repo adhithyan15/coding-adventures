@@ -1,5 +1,12 @@
 # Changelog — intel8086-backend
 
+## Unreleased — WORD03b structured control
+
+- Lower labels and conditional/unconditional jumps with final byte-displacement
+  fixups, using an inverted short branch over a near jump for full rel16 reach.
+- Compute liveness across control-flow edges and execute a backward loop with
+  both taken and untaken branch outcomes in `intel8086-simulator`.
+
 ## Unreleased — WORD03a normalized comparisons
 
 - Execute unsigned `cmp_{eq,ne,lt,le,gt,ge}_{u8,u16}` with `CMP` and short

@@ -1,5 +1,12 @@
 # Changelog — z80-backend
 
+## Unreleased — WORD03b structured control
+
+- Lower labels and conditional/unconditional jumps with final byte-address
+  fixups through the encoder's absolute `JP` forms.
+- Compute liveness across control-flow edges and execute a backward loop with
+  both taken and untaken branch outcomes in `z80-simulator`.
+
 ## Unreleased — WORD03a normalized comparisons
 
 - Execute unsigned `cmp_{eq,ne,lt,le,gt,ge}_{u8,u16}` as normalized Boolean

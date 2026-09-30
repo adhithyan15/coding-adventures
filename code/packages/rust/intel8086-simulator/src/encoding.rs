@@ -69,6 +69,13 @@ pub fn encode_jcc_short(condition: u8, displacement: i8) -> Vec<u8> {
     vec![0x70 | condition, displacement as u8]
 }
 
+/// Near unconditional jump with a signed 16-bit displacement measured from
+/// the end of the three-byte instruction.
+pub fn encode_jmp_near(displacement: i16) -> Vec<u8> {
+    let [low, high] = displacement.to_le_bytes();
+    vec![0xE9, low, high]
+}
+
 /// `INC reg16` — `[0x40+reg]`.
 pub fn encode_inc_reg16(reg: u8) -> Vec<u8> {
     vec![opcodes::INC_REG16_BASE + reg]
