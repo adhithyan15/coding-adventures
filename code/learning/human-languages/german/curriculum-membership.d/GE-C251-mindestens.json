@@ -1,0 +1,11 @@
+{
+  "id": "GE-C251-mindestens",
+  "pathSegment": "GE-PATH-251-LINK251",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-251-LINK251",
+      "order": 3
+    }
+  ]
+}

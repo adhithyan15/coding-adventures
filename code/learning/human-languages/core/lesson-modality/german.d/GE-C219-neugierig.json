@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C219-neugierig",
+    "language": "german",
+    "chapter": 219,
+    "sequence": 11600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50762302bb0f1309"
+  },
+  "findings": []
+}

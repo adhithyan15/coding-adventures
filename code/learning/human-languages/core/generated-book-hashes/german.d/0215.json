@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:761e2b106c37aefe",
+  "lessonIds": [
+    "GE-C215-gerecht",
+    "GE-C215-geschieden",
+    "GE-C215-gleichzeitig",
+    "GE-C215-grosszuegig",
+    "GE-C215-guenstig"
+  ],
+  "tex": "german/book/chapters/ch215-fair-divorced-at-the-same-time-generous-good-value.tex"
+}

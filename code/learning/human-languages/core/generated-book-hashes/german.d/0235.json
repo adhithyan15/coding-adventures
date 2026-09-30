@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:d4ce6f92aca7efdb",
+  "lessonIds": [
+    "GE-C235-neuigkeit",
+    "GE-C235-nummer",
+    "GE-C235-oeffentlichkeit",
+    "GE-C235-ordnung",
+    "GE-C235-paar"
+  ],
+  "tex": "german/book/chapters/ch235-a-piece-of-news-a-number-the-public-order-a-couple.tex"
+}

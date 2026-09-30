@@ -1,0 +1,11 @@
+{
+  "id": "GE-C245-ausgeben",
+  "pathSegment": "GE-PATH-245-VERB245",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-245-VERB245",
+      "order": 1
+    }
+  ]
+}

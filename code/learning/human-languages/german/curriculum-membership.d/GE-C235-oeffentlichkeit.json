@@ -1,0 +1,11 @@
+{
+  "id": "GE-C235-oeffentlichkeit",
+  "pathSegment": "GE-PATH-235-THING235",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-235-THING235",
+      "order": 2
+    }
+  ]
+}

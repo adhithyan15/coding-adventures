@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:3c283353150305de",
+  "lessonIds": [
+    "GE-C212-bewoelkt",
+    "GE-C212-blond",
+    "GE-C212-ehrlich",
+    "GE-C212-eilig",
+    "GE-C212-einsam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch212.txt",
+  "json": "german/narration/ch212.json",
+  "textHash": "fnv1a64:86eee34fe8ed9b3c",
+  "jsonHash": "fnv1a64:a301785129b09bb7",
+  "findings": []
+}

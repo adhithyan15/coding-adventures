@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:3d6333e5af3252bb",
+  "lessonIds": [
+    "GE-C216-gruendlich",
+    "GE-C216-haeufig",
+    "GE-C216-herrlich",
+    "GE-C216-hilfsbereit",
+    "GE-C216-intelligent"
+  ],
+  "tex": "german/book/chapters/ch216-thorough-frequent-wonderful-helpful-intelligent.tex"
+}

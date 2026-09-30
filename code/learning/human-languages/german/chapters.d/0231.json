@@ -1,0 +1,19 @@
+{
+  "chapter": 231,
+  "title": "A hobby, Hope, Humour, An interest, Youth",
+  "label": "ch:ge-a-hobby-hope-humour-an-interest-youth",
+  "canDo": "I can say a hobby, hope, humour, an interest and youth.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C231-jugend",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 231: i can say a hobby, hope, humour, an interest and youth.",
+    "assesses": [
+      "GE-LEX-C231-THING231-03",
+      "GE-LEX-C231-THING231-04",
+      "GE-LEX-C231-THING231-05"
+    ]
+  }
+}

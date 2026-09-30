@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:f6dc582e97374358",
+  "lessonIds": [
+    "GE-C234-lohn",
+    "GE-C234-mannschaft",
+    "GE-C234-mehrheit",
+    "GE-C234-mode",
+    "GE-C234-mut"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch234.txt",
+  "json": "german/narration/ch234.json",
+  "textHash": "fnv1a64:53972f806336c488",
+  "jsonHash": "fnv1a64:2ce1e3e8d24cf283",
+  "findings": []
+}

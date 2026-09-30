@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:fadde4566f46f7dc",
+  "lessonIds": [
+    "GE-C242-verkehr",
+    "GE-C242-vertrauen",
+    "GE-C242-verein",
+    "GE-C242-vorsicht",
+    "GE-C242-vorteil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch242.txt",
+  "json": "german/narration/ch242.json",
+  "textHash": "fnv1a64:ce8c45ac5c07c5fd",
+  "jsonHash": "fnv1a64:eb52bc5179f3f5d3",
+  "findings": []
+}

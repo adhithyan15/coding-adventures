@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:82bfc51c3d3355a3",
+  "lessonIds": [
+    "GE-C244-anbieten",
+    "GE-C244-annehmen",
+    "GE-C244-ablehnen",
+    "GE-C244-abschliessen",
+    "GE-C244-anmelden"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch244.txt",
+  "json": "german/narration/ch244.json",
+  "textHash": "fnv1a64:e306b0e7dde3444e",
+  "jsonHash": "fnv1a64:3d123fa7e2819335",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-233-THING233",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say noise, a mood, a CV, an achievement and a lesson.",
+  "prerequisites": []
+}

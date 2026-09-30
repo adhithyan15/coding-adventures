@@ -1,0 +1,11 @@
+{
+  "id": "GE-C247-beweisen",
+  "pathSegment": "GE-PATH-247-VERB247",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-247-VERB247",
+      "order": 1
+    }
+  ]
+}

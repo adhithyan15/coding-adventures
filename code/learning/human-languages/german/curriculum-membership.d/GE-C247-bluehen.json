@@ -1,0 +1,11 @@
+{
+  "id": "GE-C247-bluehen",
+  "pathSegment": "GE-PATH-247-VERB247",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-247-VERB247",
+      "order": 2
+    }
+  ]
+}

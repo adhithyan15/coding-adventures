@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:448c6ae7b09d71ea",
+  "lessonIds": [
+    "GE-C220-puenktlich",
+    "GE-C220-regnerisch",
+    "GE-C220-roh",
+    "GE-C220-salzig",
+    "GE-C220-sauer"
+  ],
+  "tex": "german/book/chapters/ch220-punctual-rainy-raw-salty-sour.tex"
+}

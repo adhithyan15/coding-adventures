@@ -1,0 +1,11 @@
+{
+  "id": "GE-C239-stimmung",
+  "pathSegment": "GE-PATH-239-THING239",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-239-THING239",
+      "order": 0
+    }
+  ]
+}

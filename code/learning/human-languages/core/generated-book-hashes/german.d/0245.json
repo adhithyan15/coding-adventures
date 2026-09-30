@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:6b6618a6f5369c55",
+  "lessonIds": [
+    "GE-C245-aufpassen",
+    "GE-C245-ausgeben",
+    "GE-C245-aussprechen",
+    "GE-C245-beantworten",
+    "GE-C245-beenden"
+  ],
+  "tex": "german/book/chapters/ch245-to-pay-attention-to-spend-to-pronounce-to-answer-to-end.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C219-nuetzlich",
+    "language": "german",
+    "chapter": 219,
+    "sequence": 11610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e15e0268d1d0352"
+  },
+  "findings": []
+}

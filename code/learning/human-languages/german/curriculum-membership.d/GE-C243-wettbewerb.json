@@ -1,0 +1,11 @@
+{
+  "id": "GE-C243-wettbewerb",
+  "pathSegment": "GE-PATH-243-THING243",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-243-THING243",
+      "order": 3
+    }
+  ]
+}

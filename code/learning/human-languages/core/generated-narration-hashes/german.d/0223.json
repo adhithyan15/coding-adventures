@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:82d842edefc42b6c",
+  "lessonIds": [
+    "GE-C223-treu",
+    "GE-C223-typisch",
+    "GE-C223-ungeduldig",
+    "GE-C223-ungluecklich",
+    "GE-C223-verheiratet"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch223.txt",
+  "json": "german/narration/ch223.json",
+  "textHash": "fnv1a64:e059e7bfa37168c3",
+  "jsonHash": "fnv1a64:f0258e217d19dbae",
+  "findings": []
+}

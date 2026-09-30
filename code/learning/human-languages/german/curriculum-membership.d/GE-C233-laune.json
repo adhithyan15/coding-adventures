@@ -1,0 +1,11 @@
+{
+  "id": "GE-C233-laune",
+  "pathSegment": "GE-PATH-233-THING233",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-233-THING233",
+      "order": 1
+    }
+  ]
+}

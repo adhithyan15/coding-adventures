@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:38e6e64c037aee4b",
+  "lessonIds": [
+    "GE-C211-aengstlich",
+    "GE-C211-anstrengend",
+    "GE-C211-aufgeregt",
+    "GE-C211-ausgezeichnet",
+    "GE-C211-berufstaetig"
+  ],
+  "tex": "german/book/chapters/ch211-anxious-tiring-excited-excellent-working.tex"
+}

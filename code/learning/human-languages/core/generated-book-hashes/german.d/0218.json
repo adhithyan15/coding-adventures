@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:0daf588476972b9b",
+  "lessonIds": [
+    "GE-C218-lecker",
+    "GE-C218-lieb",
+    "GE-C218-locker",
+    "GE-C218-mager",
+    "GE-C218-mutig"
+  ],
+  "tex": "german/book/chapters/ch218-tasty-kind-relaxed-thin-brave.tex"
+}

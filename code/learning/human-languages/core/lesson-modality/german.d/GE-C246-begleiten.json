@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C246-begleiten",
+    "language": "german",
+    "chapter": 246,
+    "sequence": 13520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b63066463881ec1f"
+  },
+  "findings": []
+}

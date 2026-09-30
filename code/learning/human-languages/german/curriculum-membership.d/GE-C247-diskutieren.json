@@ -1,0 +1,11 @@
+{
+  "id": "GE-C247-diskutieren",
+  "pathSegment": "GE-PATH-247-VERB247",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-247-VERB247",
+      "order": 3
+    }
+  ]
+}

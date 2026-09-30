@@ -1,0 +1,19 @@
+{
+  "chapter": 213,
+  "title": "Jealous, Successful, Having a cold, Fantastic, Damp",
+  "label": "ch:ge-jealous-successful-having-a-cold-fantastic-damp",
+  "canDo": "I can say jealous, successful, having a cold, fantastic and damp.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GE-C213-feucht",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 213: i can say jealous, successful, having a cold, fantastic and damp.",
+    "assesses": [
+      "GE-LEX-C213-QUAL213-03",
+      "GE-LEX-C213-QUAL213-04",
+      "GE-LEX-C213-QUAL213-05"
+    ]
+  }
+}

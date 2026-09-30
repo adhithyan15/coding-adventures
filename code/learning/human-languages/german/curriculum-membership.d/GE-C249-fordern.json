@@ -1,0 +1,11 @@
+{
+  "id": "GE-C249-fordern",
+  "pathSegment": "GE-PATH-249-VERB249",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-249-VERB249",
+      "order": 4
+    }
+  ]
+}

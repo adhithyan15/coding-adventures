@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:9b5a2f934508219c",
+  "lessonIds": [
+    "GE-C213-eifersuechtig",
+    "GE-C213-erfolgreich",
+    "GE-C213-erkaeltet",
+    "GE-C213-fantastisch",
+    "GE-C213-feucht"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch213.txt",
+  "json": "german/narration/ch213.json",
+  "textHash": "fnv1a64:e25875fd9d5356fd",
+  "jsonHash": "fnv1a64:574d7ddabcdf664d",
+  "findings": []
+}

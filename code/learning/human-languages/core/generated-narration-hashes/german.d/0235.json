@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:e335afd4b564f43b",
+  "lessonIds": [
+    "GE-C235-neuigkeit",
+    "GE-C235-nummer",
+    "GE-C235-oeffentlichkeit",
+    "GE-C235-ordnung",
+    "GE-C235-paar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch235.txt",
+  "json": "german/narration/ch235.json",
+  "textHash": "fnv1a64:550ec3abbbbfebeb",
+  "jsonHash": "fnv1a64:d5424c95352e9d36",
+  "findings": []
+}

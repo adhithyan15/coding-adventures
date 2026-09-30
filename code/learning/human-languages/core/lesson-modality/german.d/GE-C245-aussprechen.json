@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C245-aussprechen",
+    "language": "german",
+    "chapter": 245,
+    "sequence": 13490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a164865417a7e8c4"
+  },
+  "findings": []
+}

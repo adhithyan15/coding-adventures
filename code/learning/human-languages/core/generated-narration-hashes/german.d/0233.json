@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:1385184433f75737",
+  "lessonIds": [
+    "GE-C233-laerm",
+    "GE-C233-laune",
+    "GE-C233-lebenslauf",
+    "GE-C233-leistung",
+    "GE-C233-lektion"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch233.txt",
+  "json": "german/narration/ch233.json",
+  "textHash": "fnv1a64:50975a6bb0143dc8",
+  "jsonHash": "fnv1a64:ae765daf34a00f46",
+  "findings": []
+}

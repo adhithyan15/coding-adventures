@@ -1,0 +1,11 @@
+{
+  "id": "GE-C218-mager",
+  "pathSegment": "GE-PATH-218-QUAL218",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-218-QUAL218",
+      "order": 3
+    }
+  ]
+}

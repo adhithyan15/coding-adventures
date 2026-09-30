@@ -1,0 +1,19 @@
+{
+  "chapter": 242,
+  "title": "Traffic, Trust, A club, Caution, An advantage",
+  "label": "ch:ge-traffic-trust-a-club-caution-an-advantage",
+  "canDo": "I can say traffic, trust, a club, caution and an advantage.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C242-vorteil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 242: i can say traffic, trust, a club, caution and an advantage.",
+    "assesses": [
+      "GE-LEX-C242-THING242-03",
+      "GE-LEX-C242-THING242-04",
+      "GE-LEX-C242-THING242-05"
+    ]
+  }
+}

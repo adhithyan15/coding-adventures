@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:f793494b07474eb9",
+  "lessonIds": [
+    "GE-C248-einrichten",
+    "GE-C248-enden",
+    "GE-C248-entdecken",
+    "GE-C248-entschuldigen",
+    "GE-C248-erfahren"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch248.txt",
+  "json": "german/narration/ch248.json",
+  "textHash": "fnv1a64:89b70a4b98117885",
+  "jsonHash": "fnv1a64:bb982583ba7941a0",
+  "findings": []
+}

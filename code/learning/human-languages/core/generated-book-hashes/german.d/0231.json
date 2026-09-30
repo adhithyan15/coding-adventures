@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:c8d3dead5f7c6ec0",
+  "lessonIds": [
+    "GE-C231-hobby",
+    "GE-C231-hoffnung",
+    "GE-C231-humor",
+    "GE-C231-interesse",
+    "GE-C231-jugend"
+  ],
+  "tex": "german/book/chapters/ch231-a-hobby-hope-humour-an-interest-youth.tex"
+}

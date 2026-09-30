@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C246-beraten",
+    "language": "german",
+    "chapter": 246,
+    "sequence": 13540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f47df7d1cf035ad3"
+  },
+  "findings": []
+}

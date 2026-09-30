@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:a4641b6182dc1b23",
+  "lessonIds": [
+    "GE-C218-lecker",
+    "GE-C218-lieb",
+    "GE-C218-locker",
+    "GE-C218-mager",
+    "GE-C218-mutig"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch218.txt",
+  "json": "german/narration/ch218.json",
+  "textHash": "fnv1a64:6d8451584f37c018",
+  "jsonHash": "fnv1a64:aa2a5cb8b34a4111",
+  "findings": []
+}

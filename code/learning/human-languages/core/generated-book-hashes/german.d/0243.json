@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:58da65d638d3355f",
+  "lessonIds": [
+    "GE-C243-nachteil",
+    "GE-C243-wahrheit",
+    "GE-C243-werbung",
+    "GE-C243-wettbewerb",
+    "GE-C243-ziel"
+  ],
+  "tex": "german/book/chapters/ch243-a-disadvantage-the-truth-advertising-a-competition-a-goal.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:ca57bd41614d97cb",
+  "lessonIds": [
+    "GE-C249-ergaenzen",
+    "GE-C249-erledigen",
+    "GE-C249-erscheinen",
+    "GE-C249-erzeugen",
+    "GE-C249-fordern"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch249.txt",
+  "json": "german/narration/ch249.json",
+  "textHash": "fnv1a64:eefe958a9a1f6fe2",
+  "jsonHash": "fnv1a64:e2f219e78c6ba78a",
+  "findings": []
+}

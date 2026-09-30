@@ -1,0 +1,11 @@
+{
+  "id": "GE-C228-erlaubnis",
+  "pathSegment": "GE-PATH-228-THING228",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-228-THING228",
+      "order": 2
+    }
+  ]
+}

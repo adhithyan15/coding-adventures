@@ -1,0 +1,11 @@
+{
+  "id": "GE-C246-begleiten",
+  "pathSegment": "GE-PATH-246-VERB246",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-246-VERB246",
+      "order": 0
+    }
+  ]
+}

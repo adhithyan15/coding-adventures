@@ -1,0 +1,11 @@
+{
+  "id": "GE-C218-lieb",
+  "pathSegment": "GE-PATH-218-QUAL218",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-218-QUAL218",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C244-annehmen",
+    "language": "german",
+    "chapter": 244,
+    "sequence": 13430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c0482c3463b7247"
+  },
+  "findings": []
+}

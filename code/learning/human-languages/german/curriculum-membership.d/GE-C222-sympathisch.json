@@ -1,0 +1,11 @@
+{
+  "id": "GE-C222-sympathisch",
+  "pathSegment": "GE-PATH-222-QUAL222",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-222-QUAL222",
+      "order": 3
+    }
+  ]
+}

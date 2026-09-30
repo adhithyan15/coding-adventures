@@ -1,0 +1,11 @@
+{
+  "id": "GE-C244-ablehnen",
+  "pathSegment": "GE-PATH-244-VERB244",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-244-VERB244",
+      "order": 2
+    }
+  ]
+}

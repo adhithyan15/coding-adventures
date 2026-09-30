@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:351a69933a5e6fdc",
+  "lessonIds": [
+    "GE-C216-gruendlich",
+    "GE-C216-haeufig",
+    "GE-C216-herrlich",
+    "GE-C216-hilfsbereit",
+    "GE-C216-intelligent"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch216.txt",
+  "json": "german/narration/ch216.json",
+  "textHash": "fnv1a64:9cac2b82f8e50852",
+  "jsonHash": "fnv1a64:e55f85d9312fc9ee",
+  "findings": []
+}

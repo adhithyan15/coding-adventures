@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C246-besichtigen",
+    "language": "german",
+    "chapter": 246,
+    "sequence": 13560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fdba3a4eb24a14c5"
+  },
+  "findings": []
+}

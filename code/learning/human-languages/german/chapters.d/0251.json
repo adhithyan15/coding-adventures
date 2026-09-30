@@ -1,0 +1,19 @@
+{
+  "chapter": 251,
+  "title": "By the way, Anyway, At most, At least, During",
+  "label": "ch:ge-by-the-way-anyway-at-most-at-least-during",
+  "canDo": "I can say by the way, anyway, at most, at least and during.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "GE-R251-second-pass-words-from-chapters-249-251",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 251: i can say by the way, anyway, at most, at least and during.",
+    "assesses": [
+      "GE-LEX-C251-LINK251-03",
+      "GE-LEX-C251-LINK251-04",
+      "GE-LEX-C251-LINK251-05"
+    ]
+  }
+}

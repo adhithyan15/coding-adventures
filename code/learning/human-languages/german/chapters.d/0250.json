@@ -1,0 +1,19 @@
+{
+  "chapter": 250,
+  "title": "Besides, Therefore, Nevertheless, In any case, Actually",
+  "label": "ch:ge-besides-therefore-nevertheless-in-any-case-actually",
+  "canDo": "I can say besides, therefore, nevertheless, in any case and actually.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "GE-C250-eigentlich",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 250: i can say besides, therefore, nevertheless, in any case and actually.",
+    "assesses": [
+      "GE-LEX-C250-LINK250-03",
+      "GE-LEX-C250-LINK250-04",
+      "GE-LEX-C250-LINK250-05"
+    ]
+  }
+}

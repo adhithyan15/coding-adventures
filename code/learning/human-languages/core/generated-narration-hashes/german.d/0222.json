@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:6d69a9f8ff86860c",
+  "lessonIds": [
+    "GE-C222-sparsam",
+    "GE-C222-sportlich",
+    "GE-C222-streng",
+    "GE-C222-sympathisch",
+    "GE-C222-tot"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch222.txt",
+  "json": "german/narration/ch222.json",
+  "textHash": "fnv1a64:015a5c72f6ce4791",
+  "jsonHash": "fnv1a64:bdf902d2730ec590",
+  "findings": []
+}
