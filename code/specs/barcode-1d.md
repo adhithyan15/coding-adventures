@@ -1,5 +1,10 @@
 # Barcode 1D
 
+> **Portable conformance:** [barcode-layout-1d-v1.md](barcode-layout-1d-v1.md)
+> is the normative language-neutral integer geometry contract. This older
+> teaching overview remains useful context but does not define portable limits,
+> stable errors, text authority, or fixture behavior.
+
 ## Overview
 
 This spec defines the shared abstraction for linear barcode formats in the
