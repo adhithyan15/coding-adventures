@@ -4294,17 +4294,14 @@ pub fn lower_iir_to_beam(
                         // Stage every source into scratch BEFORE any call —
                         // same parallel-move-hazard/GC-safety discipline as
                         // the atomics staging just below.
-                        // BEAM10: the handle is the pair `[Tab | N]`, so the
-                        // table is its HEAD. `get_list` is a plain opcode —
-                        // no call, no allocation, nothing to reserve — and it
-                        // is emitted before the staging below so everything
-                        // downstream sees a table exactly as it did when the
-                        // handle WAS the table.
+                        // BEAM10: the handle is `[Tab | N]`. BEAM12 keeps N
+                        // until the index has passed the same guards as
+                        // array_get. `get_list` is a plain opcode, so no
+                        // value crosses an imported call during this check.
                         instrs.push(BEAMInstruction::new(OP_GET_LIST, vec![
                             BEAMOperand::x(r_handle),  // Src  = [Tab | N]
                             BEAMOperand::x(s_ref),     // Head = Tab
-                            BEAMOperand::x(s_list),    // Tail = N (unused; s_list is
-                                                       // overwritten below)
+                            BEAMOperand::x(s_list),    // Tail = N, then list/tuple scratch
                         ]));
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                             BEAMOperand::x(r_idx), BEAMOperand::x(s_idx),
@@ -4312,6 +4309,36 @@ pub fn lower_iir_to_beam(
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                             BEAMOperand::x(r_val), BEAMOperand::x(s_val),
                         ]));
+
+                        // ETS accepts any term as a key and has no declared
+                        // extent. Reject malformed, negative, and upper-bound
+                        // indexes before allocating the tuple or inserting it.
+                        // In particular, numeric comparisons alone accept a
+                        // fractional key, so is_integer must come first.
+                        let trap_lbl = alloc_synth_label!("array_set bounds checks");
+                        let ok_lbl = alloc_synth_label!("array_set bounds checks");
+                        instrs.push(BEAMInstruction::new(OP_IS_INTEGER, vec![
+                            BEAMOperand::f(trap_lbl), BEAMOperand::x(s_idx),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_IS_GE, vec![
+                            BEAMOperand::f(trap_lbl), BEAMOperand::x(s_idx), BEAMOperand::i(0),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_IS_LT, vec![
+                            BEAMOperand::f(trap_lbl), BEAMOperand::x(s_idx), BEAMOperand::x(s_list),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_JUMP, vec![BEAMOperand::f(ok_lbl)]));
+                        instrs.push(BEAMInstruction::new(
+                            OP_LABEL, vec![BEAMOperand::u(trap_lbl as u64)],
+                        ));
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::a(atom_badarg), BEAMOperand::x(0),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                            BEAMOperand::u(1), BEAMOperand::u(import_error as u64),
+                        ]));
+                        instrs.push(BEAMInstruction::new(
+                            OP_LABEL, vec![BEAMOperand::u(ok_lbl as u64)],
+                        ));
 
                         save_live_across_imported_call!(cur_idx);
 
@@ -4343,7 +4370,7 @@ pub fn lower_iir_to_beam(
                             BEAMOperand::x(s_ref), BEAMOperand::x(0),
                         ]));
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                            BEAMOperand::x(r_idx), BEAMOperand::x(1),
+                            BEAMOperand::x(s_idx), BEAMOperand::x(1),
                         ]));
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                             BEAMOperand::x(s_val), BEAMOperand::x(2),

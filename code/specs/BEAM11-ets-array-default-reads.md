@@ -61,6 +61,6 @@ without changing the O(1) allocation contract.
 4. Run `iir-to-beam` tests and Clippy; retain the non-ALGOL matrix's existing
    BEAM cells.
 
-`array_set` range enforcement is outside this change; frontends currently
-emit their own bounds checks. Audit direct out-of-range stores separately if
-the new read tests expose a reachable language-level discrepancy.
+`array_set` range enforcement is outside this BEAM11 change. The separate
+BEAM12 / VM-073 contract covers direct stores and a reachable Dartmouth BASIC
+path that does not emit an independent bounds check.

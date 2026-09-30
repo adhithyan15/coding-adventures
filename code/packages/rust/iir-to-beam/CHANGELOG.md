@@ -1,5 +1,21 @@
 # Changelog — iir-to-beam
 
+## 0.19.2 - BEAM12: bound ets-backed array stores
+
+`array_set` on a float or string array now verifies that its index is an
+integer in the declared `[Table | Length]` extent before constructing a tuple
+or calling `ets:insert/2`. Negative, upper-bound, and fractional indexes raise
+`badarg`, matching BEAM11 reads and the integer-array store path. Direct IIR
+could previously insert those keys silently; Dartmouth BASIC's assignment and
+`READ` paths emitted stores without an independent range guard.
+
+A real-Erlang direct-IIR regression covers both ETS element types, both valid
+boundaries, and the three invalid index classes. Existing float/string
+round-trip and overwrite tests retain the in-range behavior. A second
+real-Erlang regression exposed a pre-existing register overlap: an index
+arriving in x0 was overwritten by the table before `test_heap`, so the tuple
+used the wrong key. Heap preparation now uses the staged index.
+
 ## 0.19.1 - BEAM11: zero-valued reads for sparse float/string arrays
 
 `array_get` on an ets-backed `array<f64>` or `array<str>` now checks the

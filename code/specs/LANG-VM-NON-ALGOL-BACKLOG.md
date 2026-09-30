@@ -15,38 +15,38 @@ PR #16208 delivered the first VM-067 guard and merged as
 MacroOct lane now regenerates its committed Rust lexer table byte-for-byte in
 CI whenever its grammar, artifact, or generator changes.
 
-A fresh audit of issue #14202 found Nib is the next bounded reconciled lane.
-Its parser artifact already matches `nib.grammar` exactly. Its lexer artifact
-differs from `nib.tokens` output only because the committed file was formatted
-after generation; committing the generator's canonical bytes removes that
-format-only drift. The selected slice widens the existing job to MacroOct and
-Nib rather than adding another queued CI job.
+PR #16232 delivered the next VM-067 lane and merged as
+`dac9dddff9a234a659094f2ef88f93f14c30d173`. Nib's parser artifact already
+matched `nib.grammar`; its lexer artifact needed only canonical generator
+formatting. The shared CI job now guards both MacroOct and Nib.
 
 The first protected Windows run exposed the already documented B07 test-only
 compile limitation: `syscall.Mkfifo` is unavailable on Windows, so touching the
 Go build tool made the package uncompilable before the gate tests could run.
-Keep the portable B07 probes cross-platform and move only the FIFO security
-regression behind explicit Unix build tags; the original regression continues
-to execute on Unix hosts.
+The repair kept portable B07 probes cross-platform and placed the FIFO security
+regression behind a platform build tag.
+
+VM-073 is the next priority. The ets-backed `array_set` path ignores the
+declared `[Table | Length]` extent, while BEAM11 `array_get` and the
+integer-array `:atomics` store enforce it. Direct IIR can write an arbitrary
+ETS key. Dartmouth BASIC emits `array_set` after subscript flattening for
+`LET A(i)` and `READ A(i)` without an independent range guard. BEAM12
+specifies a shared-backend guard and a real-Erlang regression for both ets
+element types.
 
 The current queue is:
 
-1. **VM-067 Nib (selected):** reconcile Nib's generated lexer bytes, then
-   regenerate its lexer and parser artifacts in the shared Rust grammar gate.
-   Trigger the gate for both Nib sources, both packages, both artifacts, and
-   the generator. Prove every input fires the gate and unrelated grammars do
-   not.
-2. **VM-073:** audit ets-backed `array_set` extent checks and execute a
-   real-Erlang regression if an out-of-range insertion is reachable.
-3. **WORD03 / VM-072:** add normalized comparisons and structured control on
+1. **VM-073 (selected):** enforce integer and declared-extent checks for
+   ets-backed `array_set`; execute in-range, overwrite, negative, upper-bound,
+   and fractional cases on real Erlang.
+2. **WORD03 / VM-072:** add normalized comparisons and structured control on
    both target backends.
-4. **VM-069 / PREP01:** continue expansion-definition provenance and
+3. **VM-069 / PREP01:** continue expansion-definition provenance and
    `defined()` operand expansion.
-5. **VM-075 / VM-076:** reconcile the 8086 and Z80 simulator documentation
+4. **VM-075 / VM-076:** reconcile the 8086 and Z80 simulator documentation
    claims recorded below.
 
 The following run records the first VM-067 selection.
-
 ## Prioritization run — 2026-09-28
 
 PR #16202 delivered WORD02b on both simulators and merged as
@@ -202,9 +202,10 @@ and the guard runs in CI.
 
 **VM-073 (discovered during BEAM11):** the ets-backed `array_set` lowering
 inserts an arbitrary integer key without consulting the `[Table | Length]`
-extent, whereas the `:atomics` path traps on an out-of-range index. Existing
-language frontends emit bounds checks, so this is not yet a proven declared
-matrix failure. Audit direct IIR consumers and any reachable frontend path,
+extent, whereas the `:atomics` path traps on an out-of-range index. At this
+discovery point, language frontends were assumed to emit bounds checks, so it
+was not yet a proven declared matrix failure. Audit direct IIR consumers and
+any reachable frontend path,
 then either enforce bounds in the shared backend with a real-Erlang regression
 or document the frontend precondition explicitly. Rank it after the measured
 VM-071 failure and the missing CI protection above unless execution proves a
