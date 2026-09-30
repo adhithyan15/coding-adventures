@@ -202,9 +202,10 @@ and the guard runs in CI.
 
 **VM-073 (discovered during BEAM11):** the ets-backed `array_set` lowering
 inserts an arbitrary integer key without consulting the `[Table | Length]`
-extent, whereas the `:atomics` path traps on an out-of-range index. Existing
-language frontends emit bounds checks, so this is not yet a proven declared
-matrix failure. Audit direct IIR consumers and any reachable frontend path,
+extent, whereas the `:atomics` path traps on an out-of-range index. At this
+discovery point, language frontends were assumed to emit bounds checks, so it
+was not yet a proven declared matrix failure. Audit direct IIR consumers and
+any reachable frontend path,
 then either enforce bounds in the shared backend with a real-Erlang regression
 or document the frontend precondition explicitly. Rank it after the measured
 VM-071 failure and the missing CI protection above unless execution proves a

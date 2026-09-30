@@ -32,9 +32,16 @@ tuple construction, or imported ETS call. The length scratch register can
 then be reused for the temporary `[Index, Value]` list and tuple. No value
 crosses an imported call solely to perform the guard.
 
+The store already stages its sources above the live SSA register set. Before
+`test_heap`, move the staged index into x1, since moving the table into x0
+first would overwrite an index whose original source was x0. Restore the
+staged values after the heap test for tuple construction.
+
 ## Acceptance
 
 Execute direct IIR modules on real Erlang for both `f64` and `str` stores.
 Assert that an in-range write and overwrite round-trip, and that negative,
 upper-bound, and fractional indexes raise `badarg`. Retain existing BEAM10
-and BEAM11 array regressions. Run the `iir-to-beam` package tests and Clippy.
+and BEAM11 array regressions. Execute an in-range store whose index arrives
+in x0 to prove heap preparation preserves it. Run the `iir-to-beam` package
+tests and Clippy.

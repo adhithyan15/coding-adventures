@@ -3914,6 +3914,105 @@ fn beam11_real_erl_unset_string_and_out_of_range_reads() {
     }
 }
 
+/// BEAM12: direct IIR reaches `array_set` without a frontend bounds guard.
+/// ETS itself accepts every key, so each invalid store must trap before insert.
+#[test]
+fn beam12_real_erl_ets_array_store_bounds() {
+    use iir_to_beam::encode_beam;
+
+    if !erl_available() {
+        return;
+    }
+
+    for (name, array_ty, elem_ty, index, index_ty, valid) in [
+        ("beam12_float_zero", "array<f64>", "f64", Operand::Int(0), "i64", true),
+        ("beam12_float_last", "array<f64>", "f64", Operand::Int(2), "i64", true),
+        ("beam12_float_negative", "array<f64>", "f64", Operand::Int(-1), "i64", false),
+        ("beam12_float_upper", "array<f64>", "f64", Operand::Int(3), "i64", false),
+        ("beam12_float_fractional", "array<f64>", "f64", Operand::Float(1.5), "f64", false),
+        ("beam12_string_zero", "array<str>", "str", Operand::Int(0), "i64", true),
+        ("beam12_string_last", "array<str>", "str", Operand::Int(2), "i64", true),
+        ("beam12_string_negative", "array<str>", "str", Operand::Int(-1), "i64", false),
+        ("beam12_string_upper", "array<str>", "str", Operand::Int(3), "i64", false),
+        ("beam12_string_fractional", "array<str>", "str", Operand::Float(1.5), "f64", false),
+    ] {
+        let value = if elem_ty == "f64" {
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Float(42.0)], "f64")
+        } else {
+            IIRInstr::new("str_const", Some("v".into()), vec![Operand::Str("ok".into())], "str")
+        };
+        let module = make_module_fn("main", vec![], "i64", vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(3)], "i64"),
+            IIRInstr::new("alloc_array", Some("p".into()), vec![Operand::Var("n".into())], array_ty),
+            IIRInstr::new("const", Some("i".into()), vec![index], index_ty),
+            value,
+            IIRInstr::new("array_set", None,
+                vec![Operand::Var("p".into()), Operand::Var("i".into()), Operand::Var("v".into())], elem_ty),
+            IIRInstr::new("const", Some("result".into()), vec![Operand::Int(7)], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("result".into())], "i64"),
+        ]);
+        let cfg = IIRBeamConfig::new(name);
+        let beam = lower_iir_to_beam(&module, &cfg).expect("lower BEAM12 array store");
+        let tmp = std::env::temp_dir().join(format!("iir_to_beam_tests_{}", std::process::id()));
+        std::fs::create_dir_all(&tmp).expect("create test directory");
+        std::fs::write(tmp.join(format!("{name}.beam")), encode_beam(&beam))
+            .expect("write BEAM12 module");
+        let output = std::process::Command::new("erl")
+            .arg("-noshell")
+            .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+            .arg("-eval")
+            .arg(format!("io:format(\"~w~n\",[{name}:main()]),halt(0)."))
+            .output().expect("spawn erl");
+        if valid {
+            assert!(output.status.success(), "{name}: {}",
+                String::from_utf8_lossy(&output.stderr));
+            assert_eq!(String::from_utf8_lossy(&output.stdout).trim(), "7", "{name}");
+        } else {
+            assert!(!output.status.success(), "{name} must trap");
+            assert!(String::from_utf8_lossy(&output.stderr).contains("badarg"),
+                "{name}: {}", String::from_utf8_lossy(&output.stderr));
+        }
+    }
+}
+
+/// The index can occupy x0 at entry. Reserving heap for the ETS tuple must
+/// use its staged copy: moving the table into x0 first destroys the source.
+#[test]
+fn beam12_real_erl_ets_array_store_index_in_x0() {
+    use iir_to_beam::encode_beam;
+
+    if !erl_available() {
+        return;
+    }
+
+    let name = "beam12_index_in_x0";
+    let module = make_module_fn("main", vec![("i", "i64")], "f64", vec![
+        IIRInstr::new("const", Some("n".into()), vec![Operand::Int(3)], "i64"),
+        IIRInstr::new("alloc_array", Some("p".into()), vec![Operand::Var("n".into())], "array<f64>"),
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Float(42.0)], "f64"),
+        IIRInstr::new("array_set", None,
+            vec![Operand::Var("p".into()), Operand::Var("i".into()), Operand::Var("v".into())], "f64"),
+        IIRInstr::new("array_get", Some("r".into()),
+            vec![Operand::Var("p".into()), Operand::Var("i".into())], "f64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "f64"),
+    ]);
+    let cfg = IIRBeamConfig::new(name);
+    let beam = lower_iir_to_beam(&module, &cfg).expect("lower BEAM12 x0 index");
+    let tmp = std::env::temp_dir().join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create test directory");
+    std::fs::write(tmp.join(format!("{name}.beam")), encode_beam(&beam))
+        .expect("write BEAM12 x0 module");
+    let output = std::process::Command::new("erl")
+        .arg("-noshell")
+        .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+        .arg("-eval")
+        .arg(format!("io:format(\"~w~n\",[{name}:main(1)]),halt(0)."))
+        .output().expect("spawn erl");
+    assert!(output.status.success(), "{name}: {}",
+        String::from_utf8_lossy(&output.stderr));
+    assert_eq!(String::from_utf8_lossy(&output.stdout).trim(), "42.0");
+}
+
 // ===========================================================================
 // 98. VM-D035: call_closure must save/restore variables live across it
 // ===========================================================================
