@@ -1,0 +1,19 @@
+{
+  "chapter": 236,
+  "title": "To rest, To wake up, To comb one's hair, To be bored, To have fun",
+  "label": "ch:it-to-rest-to-wake-up-to-comb-one-s-hair-to-be-bored-to-have-fun",
+  "canDo": "I can say to rest, to wake up, to comb one's hair, to be bored and to have fun.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C236-divertirsi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 236: I can say to rest, to wake up, to comb one's hair, to be bored and to have fun.",
+    "assesses": [
+      "IT-LEX-C236-VERBI236-03",
+      "IT-LEX-C236-VERBI236-04",
+      "IT-LEX-C236-VERBI236-05"
+    ]
+  }
+}

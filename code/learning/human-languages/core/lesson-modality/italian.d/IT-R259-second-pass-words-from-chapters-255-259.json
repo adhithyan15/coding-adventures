@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-R259-second-pass-words-from-chapters-255-259",
+    "language": "italian",
+    "chapter": 259,
+    "sequence": 15610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9c5e5b934415e40"
+  },
+  "findings": []
+}

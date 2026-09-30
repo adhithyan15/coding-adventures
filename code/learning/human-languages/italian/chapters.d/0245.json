@@ -1,0 +1,19 @@
+{
+  "chapter": 245,
+  "title": "Smooth, Rough, Deep, Fat, Unknown",
+  "label": "ch:it-smooth-rough-deep-fat-unknown",
+  "canDo": "I can say smooth, rough, deep, fat and unknown.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "IT-C245-sconosciuto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 245: I can say smooth, rough, deep, fat and unknown.",
+    "assesses": [
+      "IT-LEX-C245-QUAL245-03",
+      "IT-LEX-C245-QUAL245-04",
+      "IT-LEX-C245-QUAL245-05"
+    ]
+  }
+}

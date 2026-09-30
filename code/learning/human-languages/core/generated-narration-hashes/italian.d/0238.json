@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 238,
+  "sourceHash": "fnv1a64:dc81069e5ca24d02",
+  "lessonIds": [
+    "IT-C238-indicare",
+    "IT-C238-informare",
+    "IT-C238-inviare",
+    "IT-C238-lamentarsi",
+    "IT-C238-mancare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch238.txt",
+  "json": "italian/narration/ch238.json",
+  "textHash": "fnv1a64:b8f9c069d1ada7d9",
+  "jsonHash": "fnv1a64:c9d17bf245985669",
+  "findings": []
+}

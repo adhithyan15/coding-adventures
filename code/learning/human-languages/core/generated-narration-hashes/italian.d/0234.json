@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:c585f737ae697f82",
+  "lessonIds": [
+    "IT-C234-cambiare",
+    "IT-C234-spostare",
+    "IT-C234-togliere",
+    "IT-C234-lasciare",
+    "IT-C234-perdere"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch234.txt",
+  "json": "italian/narration/ch234.json",
+  "textHash": "fnv1a64:279fc1947316470a",
+  "jsonHash": "fnv1a64:8f90dc611d6a1c5e",
+  "findings": []
+}

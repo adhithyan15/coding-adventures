@@ -1,0 +1,11 @@
+{
+  "id": "IT-C246-piccante",
+  "pathSegment": "IT-PATH-246-QUAL246",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-246-QUAL246",
+      "order": 2
+    }
+  ]
+}

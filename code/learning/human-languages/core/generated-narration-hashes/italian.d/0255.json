@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:3343eff0018472d1",
+  "lessonIds": [
+    "IT-C255-fontana",
+    "IT-C255-cancello",
+    "IT-C255-recinzione",
+    "IT-C255-cortile",
+    "IT-C255-cantina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch255.txt",
+  "json": "italian/narration/ch255.json",
+  "textHash": "fnv1a64:edc042f2f65496c6",
+  "jsonHash": "fnv1a64:0285200acfe1c18d",
+  "findings": []
+}

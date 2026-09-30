@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C248-governo",
+    "language": "italian",
+    "chapter": 248,
+    "sequence": 14850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e001efcb0a42481"
+  },
+  "findings": []
+}

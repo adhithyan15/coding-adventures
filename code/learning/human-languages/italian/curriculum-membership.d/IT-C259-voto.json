@@ -1,0 +1,11 @@
+{
+  "id": "IT-C259-voto",
+  "pathSegment": "IT-PATH-259-LAV259",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-259-LAV259",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-258-COSE258",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a fan, a prize, a delay, a connection and the return.",
+  "prerequisites": []
+}

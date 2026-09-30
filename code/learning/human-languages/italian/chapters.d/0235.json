@@ -1,0 +1,19 @@
+{
+  "chapter": 235,
+  "title": "To check, To sign, To fill in, To send, To receive",
+  "label": "ch:it-to-check-to-sign-to-fill-in-to-send-to-receive",
+  "canDo": "I can say to check, to sign, to fill in, to send and to receive.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C235-ricevere",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 235: I can say to check, to sign, to fill in, to send and to receive.",
+    "assesses": [
+      "IT-LEX-C235-VERBI235-03",
+      "IT-LEX-C235-VERBI235-04",
+      "IT-LEX-C235-VERBI235-05"
+    ]
+  }
+}

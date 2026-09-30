@@ -1,0 +1,19 @@
+{
+  "chapter": 254,
+  "title": "Vehicle seat, Steering wheel, Wheel, Engine, Petrol",
+  "label": "ch:it-vehicle-seat-steering-wheel-wheel-engine-petrol",
+  "canDo": "I can say a vehicle seat, a steering wheel, a wheel, an engine and petrol.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C254-benzina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 254: I can say a vehicle seat, a steering wheel, a wheel, an engine and petrol.",
+    "assesses": [
+      "IT-LEX-C254-COSE254-03",
+      "IT-LEX-C254-COSE254-04",
+      "IT-LEX-C254-COSE254-05"
+    ]
+  }
+}

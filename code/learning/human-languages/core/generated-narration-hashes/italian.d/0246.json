@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:6d3a8274f9074d98",
+  "lessonIds": [
+    "IT-C246-antico",
+    "IT-C246-giovane",
+    "IT-C246-piccante",
+    "IT-C246-crudo",
+    "IT-C246-cotto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch246.txt",
+  "json": "italian/narration/ch246.json",
+  "textHash": "fnv1a64:0fe511425511c4ff",
+  "jsonHash": "fnv1a64:c83d86c1a9688dc2",
+  "findings": []
+}

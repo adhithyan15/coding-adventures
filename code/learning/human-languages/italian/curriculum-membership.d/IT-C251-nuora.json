@@ -1,0 +1,11 @@
+{
+  "id": "IT-C251-nuora",
+  "pathSegment": "IT-PATH-251-COSE251",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-251-COSE251",
+      "order": 3
+    }
+  ]
+}

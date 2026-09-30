@@ -1,0 +1,21 @@
+{
+  "language": "italian",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:1e943a28c77b4116",
+  "lessonIds": [
+    "IT-C250-giornalista",
+    "IT-C250-architetto",
+    "IT-C250-dentista",
+    "IT-C250-farmacista",
+    "IT-C250-macellaio",
+    "IT-R250-first-pass-words-from-chapters-242-245",
+    "IT-R250-second-pass-words-from-chapters-246-250"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "italian/narration/ch250.txt",
+  "json": "italian/narration/ch250.json",
+  "textHash": "fnv1a64:584f4134788c46e8",
+  "jsonHash": "fnv1a64:66340889b8ea8de3",
+  "findings": []
+}

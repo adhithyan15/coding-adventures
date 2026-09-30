@@ -1,0 +1,19 @@
+{
+  "chapter": 251,
+  "title": "Father-in-law, Mother-in-law, Son-in-law, Daughter-in-law, Boyfriend",
+  "label": "ch:it-father-in-law-mother-in-law-son-in-law-daughter-in-law-boyfriend",
+  "canDo": "I can say a father-in-law, a mother-in-law, a son-in-law, a daughter-in-law and a boyfriend.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C251-fidanzato",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 251: I can say a father-in-law, a mother-in-law, a son-in-law, a daughter-in-law and a boyfriend.",
+    "assesses": [
+      "IT-LEX-C251-COSE251-03",
+      "IT-LEX-C251-COSE251-04",
+      "IT-LEX-C251-COSE251-05"
+    ]
+  }
+}

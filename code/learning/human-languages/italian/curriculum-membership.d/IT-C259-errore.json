@@ -1,0 +1,11 @@
+{
+  "id": "IT-C259-errore",
+  "pathSegment": "IT-PATH-259-LAV259",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-259-LAV259",
+      "order": 3
+    }
+  ]
+}

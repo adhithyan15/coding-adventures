@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C244-soltanto",
+    "language": "italian",
+    "chapter": 244,
+    "sequence": 14640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18c4ceb35aa84fa5"
+  },
+  "findings": []
+}

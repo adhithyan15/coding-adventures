@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C247-bottone",
+    "language": "italian",
+    "chapter": 247,
+    "sequence": 14760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c31a9f251f243c2e"
+  },
+  "findings": []
+}

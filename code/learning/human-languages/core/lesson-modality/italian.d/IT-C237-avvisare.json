@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C237-avvisare",
+    "language": "italian",
+    "chapter": 237,
+    "sequence": 14070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9dfee55c5d12cec"
+  },
+  "findings": []
+}

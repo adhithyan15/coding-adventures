@@ -1,0 +1,19 @@
+{
+  "chapter": 237,
+  "title": "To warn, To burn, To throw away, To calculate, To hit",
+  "label": "ch:it-to-warn-to-burn-to-throw-away-to-calculate-to-hit",
+  "canDo": "I can say to warn, to burn, to throw away, to calculate and to hit.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C237-colpire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 237: I can say to warn, to burn, to throw away, to calculate and to hit.",
+    "assesses": [
+      "IT-LEX-C237-VERBI237-03",
+      "IT-LEX-C237-VERBI237-04",
+      "IT-LEX-C237-VERBI237-05"
+    ]
+  }
+}

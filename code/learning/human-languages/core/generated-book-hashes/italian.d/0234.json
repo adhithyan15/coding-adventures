@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:bc98c99273459fca",
+  "lessonIds": [
+    "IT-C234-cambiare",
+    "IT-C234-spostare",
+    "IT-C234-togliere",
+    "IT-C234-lasciare",
+    "IT-C234-perdere"
+  ],
+  "tex": "italian/book/chapters/ch234-to-change-to-move-to-take-off-to-leave-to-lose.tex"
+}

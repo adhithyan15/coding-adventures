@@ -1,0 +1,11 @@
+{
+  "id": "IT-C242-rivolgersi",
+  "pathSegment": "IT-PATH-242-VERBI242",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-242-VERBI242",
+      "order": 4
+    }
+  ]
+}

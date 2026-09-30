@@ -1,0 +1,19 @@
+{
+  "chapter": 234,
+  "title": "To change, To move, To take off, To leave, To lose",
+  "label": "ch:it-to-change-to-move-to-take-off-to-leave-to-lose",
+  "canDo": "I can say to change, to move, to take off, to leave and to lose.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C234-perdere",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 234: I can say to change, to move, to take off, to leave and to lose.",
+    "assesses": [
+      "IT-LEX-C234-VERBI234-03",
+      "IT-LEX-C234-VERBI234-04",
+      "IT-LEX-C234-VERBI234-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C237-buttare",
+  "pathSegment": "IT-PATH-237-VERBI237",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-237-VERBI237",
+      "order": 2
+    }
+  ]
+}

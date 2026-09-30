@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:48bd845e84d03a76",
+  "lessonIds": [
+    "IT-C247-bottone",
+    "IT-C247-taglia",
+    "IT-C247-colore",
+    "IT-C247-insalata",
+    "IT-C247-spuntino"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch247.txt",
+  "json": "italian/narration/ch247.json",
+  "textHash": "fnv1a64:c0831dea9b24c51e",
+  "jsonHash": "fnv1a64:754d776cf695874d",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:dfbe803fd9035e8a",
+  "lessonIds": [
+    "IT-C252-differenza",
+    "IT-C252-esempio",
+    "IT-C252-verita",
+    "IT-C252-bugia",
+    "IT-C252-segreto"
+  ],
+  "tex": "italian/book/chapters/ch252-difference-example-truth-lie-secret.tex"
+}

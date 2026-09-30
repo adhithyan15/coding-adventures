@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C250-giornalista",
+    "language": "italian",
+    "chapter": 250,
+    "sequence": 14910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4fb6f74c6ea87d85"
+  },
+  "findings": []
+}

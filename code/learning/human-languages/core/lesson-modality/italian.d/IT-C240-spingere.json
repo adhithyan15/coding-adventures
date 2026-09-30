@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C240-spingere",
+    "language": "italian",
+    "chapter": 240,
+    "sequence": 14220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e31b2418b8bbe289"
+  },
+  "findings": []
+}

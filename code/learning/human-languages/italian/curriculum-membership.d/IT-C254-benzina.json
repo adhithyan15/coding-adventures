@@ -1,0 +1,11 @@
+{
+  "id": "IT-C254-benzina",
+  "pathSegment": "IT-PATH-254-COSE254",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-254-COSE254",
+      "order": 4
+    }
+  ]
+}

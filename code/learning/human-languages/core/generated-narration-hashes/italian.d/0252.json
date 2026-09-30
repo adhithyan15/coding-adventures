@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:480de4ceb7f0c98d",
+  "lessonIds": [
+    "IT-C252-differenza",
+    "IT-C252-esempio",
+    "IT-C252-verita",
+    "IT-C252-bugia",
+    "IT-C252-segreto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch252.txt",
+  "json": "italian/narration/ch252.json",
+  "textHash": "fnv1a64:76b4c23f53b50725",
+  "jsonHash": "fnv1a64:784f0fbf2930f26f",
+  "findings": []
+}

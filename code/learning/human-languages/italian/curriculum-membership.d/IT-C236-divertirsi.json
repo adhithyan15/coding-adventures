@@ -1,0 +1,11 @@
+{
+  "id": "IT-C236-divertirsi",
+  "pathSegment": "IT-PATH-236-VERBI236",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-236-VERBI236",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:f6a63455eed32f96",
+  "lessonIds": [
+    "IT-C233-ordinare",
+    "IT-C233-tagliare",
+    "IT-C233-asciugare",
+    "IT-C233-stirare",
+    "IT-C233-costruire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch233.txt",
+  "json": "italian/narration/ch233.json",
+  "textHash": "fnv1a64:d40883848cff3b29",
+  "jsonHash": "fnv1a64:7ace6d118e699054",
+  "findings": []
+}

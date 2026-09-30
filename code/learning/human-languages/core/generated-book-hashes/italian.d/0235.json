@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:df3e1d96a52a908b",
+  "lessonIds": [
+    "IT-C235-controllare",
+    "IT-C235-firmare",
+    "IT-C235-compilare",
+    "IT-C235-spedire",
+    "IT-C235-ricevere"
+  ],
+  "tex": "italian/book/chapters/ch235-to-check-to-sign-to-fill-in-to-send-to-receive.tex"
+}

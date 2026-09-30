@@ -40,7 +40,9 @@ it("pins Italian lesson-content budgets", () =>
     // two reviews per run.
     // 1018 -> 1171: the third tranche, chapters 204-232: 145 word lessons and
     // two reviews per run.
-    lessons: 1171,
+    // 1171 -> 1312: the fourth and last tranche, chapters 233-259: 135 word
+    // lessons and two reviews per run. Italian attains A2 here.
+    lessons: 1312,
     idioms: 4,
     senses: 9,
     cultureClaims: 11,

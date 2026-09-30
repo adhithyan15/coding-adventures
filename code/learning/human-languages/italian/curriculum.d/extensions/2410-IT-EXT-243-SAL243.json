@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-243-SAL243",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a plaster, an ambulance, a sick bay, an emergency and an accident.",
+  "prerequisites": []
+}

@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "italian",
+  "chapter": 259,
+  "title": "University, Mark, Teacher, Mistake, History",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:cf003c3b8dcbae3c",
+  "lessons": [
+    {
+      "id": "IT-C259-universita",
+      "sequence": 15550,
+      "title": "l'università — a university",
+      "headword": "l'università",
+      "romanization": "l'università",
+      "gloss": "a university",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:396a39a2a612976a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for a connection, then the Italian for the return."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: l'università",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'università — \"a university\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'università",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'università*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'università, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'università*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say l'università",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *l'università*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for a connection, then the Italian for the return, then say l'università again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for a connection, then the Italian for the return, then say *l'università* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does l'università mean? (\"A university\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C259-voto",
+      "sequence": 15560,
+      "title": "il voto — a mark, a grade",
+      "headword": "il voto",
+      "romanization": "il voto",
+      "gloss": "a mark, a grade",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39c423a093d63930",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the return, then the Italian for a university."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: il voto",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "il voto — \"a mark, a grade\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il voto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il voto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il voto, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il voto*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say il voto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *il voto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the return, then the Italian for a university, then say il voto again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the return, then the Italian for a university, then say *il voto* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does il voto mean? (\"A mark, a grade\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C259-insegnante",
+      "sequence": 15570,
+      "title": "l'insegnante — a teacher",
+      "headword": "l'insegnante",
+      "romanization": "l'insegnante",
+      "gloss": "a teacher",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e3c3eff412be766",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for a university, then the Italian for a mark."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: l'insegnante",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'insegnante — \"a teacher\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'insegnante",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'insegnante*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'insegnante, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'insegnante*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say l'insegnante",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *l'insegnante*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for a university, then the Italian for a mark, then say l'insegnante again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for a university, then the Italian for a mark, then say *l'insegnante* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does l'insegnante mean? (\"A teacher\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C259-errore",
+      "sequence": 15580,
+      "title": "l'errore — a mistake",
+      "headword": "l'errore",
+      "romanization": "l'errore",
+      "gloss": "a mistake",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ce03dfd36bf8176",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for a mark, then the Italian for a teacher."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: l'errore",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'errore — \"a mistake\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'errore",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'errore*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'errore, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'errore*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say l'errore",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *l'errore*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for a mark, then the Italian for a teacher, then say l'errore again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for a mark, then the Italian for a teacher, then say *l'errore* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does l'errore mean? (\"A mistake\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C259-storia",
+      "sequence": 15590,
+      "title": "la storia — history, a story",
+      "headword": "la storia",
+      "romanization": "la storia",
+      "gloss": "history, a story",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba7a866854bfed97",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for a teacher, then the Italian for a mistake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la storia",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la storia — \"history, a story\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la storia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la storia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la storia, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la storia*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say la storia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *la storia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for a teacher, then the Italian for a mistake, then say la storia again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for a teacher, then the Italian for a mistake, then say *la storia* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la storia mean? (\"History, a story\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-R259-first-pass-words-from-chapters-251-254",
+      "sequence": 15600,
+      "title": "Words from chapters 251-254 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "first pass over chapters 251-254",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b84240959265f127",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a mistake and history."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a father-in-law, a mother-in-law, a son-in-law, a daughter-in-law, a boyfriend",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a father-in-law, a mother-in-law, a son-in-law, a daughter-in-law, a boyfriend]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a difference, an example, the truth, a lie, a secret",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a difference, an example, the truth, a lie, a secret]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bank account, a loan, a debt, a tax, a form",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bank account, a loan, a debt, a tax, a form]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a vehicle seat, a steering wheel, a wheel, an engine, petrol",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a vehicle seat, a steering wheel, a wheel, an engine, petrol]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A father-in-law? (il suocero.) A mother-in-law? (la suocera.) A son-in-law? (il genero.) A daughter-in-law? (la nuora.) A boyfriend? (il fidanzato.) A difference? (la differenza.) An example? (l'esempio.) The truth? (la verità.) A lie? (la bugia.) A secret? (il segreto.) A bank account? (il conto corrente.) A loan? (il prestito.) A debt? (il debito.) A tax? (la tassa.) A form? (il modulo.) A vehicle seat? (il sedile.) A steering wheel? (il volante.) A wheel? (la ruota.) An engine? (il motore.) Petrol? (la benzina.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-R259-second-pass-words-from-chapters-255-259",
+      "sequence": 15610,
+      "title": "Words from chapters 255-259 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "second pass over chapters 255-259",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9c5e5b934415e40",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a fountain and a gate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fountain, a gate, a fence, a courtyard, a cellar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fountain, a gate, a fence, a courtyard, a cellar]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a flame, lightning, thunder, a rainbow, the climate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a flame, lightning, thunder, a rainbow, the climate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "metal, a brick, a small bag, a thread, a tool",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: metal, a brick, a small bag, a thread, a tool]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fan, a prize, a delay, a connection, the return",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fan, a prize, a delay, a connection, the return]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a university, a mark, a teacher, a mistake, history",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a university, a mark, a teacher, a mistake, history]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A fountain? (la fontana.) A gate? (il cancello.) A fence? (la recinzione.) A courtyard? (il cortile.) A cellar? (la cantina.) A flame? (la fiamma.) Lightning? (il fulmine.) Thunder? (il tuono.) A rainbow? (l'arcobaleno.) The climate? (il clima.) Metal? (il metallo.) A brick? (il mattone.) A small bag? (il sacchetto.) A thread? (il filo.) A tool? (lo strumento.) A fan? (il tifoso.) A prize? (il premio.) A delay? (il ritardo.) A connection? (la coincidenza.) The return? (il ritorno.) A university? (l'università.) A mark? (il voto.) A teacher? (l'insegnante.) A mistake? (l'errore.) History? (la storia.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

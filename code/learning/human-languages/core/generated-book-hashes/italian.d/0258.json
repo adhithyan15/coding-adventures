@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:9e7ad91faff1e2ba",
+  "lessonIds": [
+    "IT-C258-tifoso",
+    "IT-C258-premio",
+    "IT-C258-ritardo",
+    "IT-C258-coincidenza",
+    "IT-C258-ritorno"
+  ],
+  "tex": "italian/book/chapters/ch258-fan-prize-delay-connection-return.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C259-errore",
+    "language": "italian",
+    "chapter": 259,
+    "sequence": 15580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ce03dfd36bf8176"
+  },
+  "findings": []
+}

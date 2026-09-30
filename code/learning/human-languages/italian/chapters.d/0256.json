@@ -1,0 +1,19 @@
+{
+  "chapter": 256,
+  "title": "Flame, Lightning, Thunder, Rainbow, Climate",
+  "label": "ch:it-flame-lightning-thunder-rainbow-climate",
+  "canDo": "I can say a flame, lightning, thunder, a rainbow and the climate.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C256-clima",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 256: I can say a flame, lightning, thunder, a rainbow and the climate.",
+    "assesses": [
+      "IT-LEX-C256-COSE256-03",
+      "IT-LEX-C256-COSE256-04",
+      "IT-LEX-C256-COSE256-05"
+    ]
+  }
+}

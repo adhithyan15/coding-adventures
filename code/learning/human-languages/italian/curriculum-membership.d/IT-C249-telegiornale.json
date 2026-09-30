@@ -1,0 +1,11 @@
+{
+  "id": "IT-C249-telegiornale",
+  "pathSegment": "IT-PATH-249-COSE249",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-249-COSE249",
+      "order": 2
+    }
+  ]
+}

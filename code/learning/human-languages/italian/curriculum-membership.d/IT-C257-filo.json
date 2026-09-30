@@ -1,0 +1,11 @@
+{
+  "id": "IT-C257-filo",
+  "pathSegment": "IT-PATH-257-COSE257",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-257-COSE257",
+      "order": 3
+    }
+  ]
+}

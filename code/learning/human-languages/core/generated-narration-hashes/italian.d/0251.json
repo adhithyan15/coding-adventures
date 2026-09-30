@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:dc0098d10ca54d20",
+  "lessonIds": [
+    "IT-C251-suocero",
+    "IT-C251-suocera",
+    "IT-C251-genero",
+    "IT-C251-nuora",
+    "IT-C251-fidanzato"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch251.txt",
+  "json": "italian/narration/ch251.json",
+  "textHash": "fnv1a64:0412a511e7dfd608",
+  "jsonHash": "fnv1a64:83c76e2d5a583fe6",
+  "findings": []
+}

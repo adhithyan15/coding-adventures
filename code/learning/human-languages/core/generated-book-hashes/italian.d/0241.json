@@ -1,0 +1,15 @@
+{
+  "language": "italian",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:80493341b13c2f5c",
+  "lessonIds": [
+    "IT-C241-consegnare",
+    "IT-C241-correggere",
+    "IT-C241-dirigere",
+    "IT-C241-distruggere",
+    "IT-C241-esagerare",
+    "IT-R241-first-pass-words-from-chapters-233-236",
+    "IT-R241-second-pass-words-from-chapters-237-241"
+  ],
+  "tex": "italian/book/chapters/ch241-to-deliver-to-correct-to-direct-to-destroy-to-exaggerate.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C240-tirare",
+  "pathSegment": "IT-PATH-240-VERBI240",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-240-VERBI240",
+      "order": 1
+    }
+  ]
+}

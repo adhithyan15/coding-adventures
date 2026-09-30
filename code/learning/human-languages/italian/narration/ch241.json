@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "italian",
+  "chapter": 241,
+  "title": "To deliver, To correct, To direct, To destroy, To exaggerate",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:8cdf7546c93a3a39",
+  "lessons": [
+    {
+      "id": "IT-C241-consegnare",
+      "sequence": 14270,
+      "title": "consegnare — to deliver",
+      "headword": "consegnare",
+      "romanization": "consegnare",
+      "gloss": "to deliver",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b39dc9eb6e8f8bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for to overtake, then the Italian for to perform."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: consegnare",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "consegnare — \"to deliver\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "consegnare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *consegnare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "consegnare, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *consegnare*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say consegnare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *consegnare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for to overtake, then the Italian for to perform, then say consegnare again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for to overtake, then the Italian for to perform, then say *consegnare* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does consegnare mean? (\"To deliver\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C241-correggere",
+      "sequence": 14280,
+      "title": "correggere — to correct",
+      "headword": "correggere",
+      "romanization": "correggere",
+      "gloss": "to correct",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69b6362f48ed5920",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for to perform, then the Italian for to deliver."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: correggere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "correggere — \"to correct\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "correggere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *correggere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "correggere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *correggere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say correggere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *correggere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for to perform, then the Italian for to deliver, then say correggere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for to perform, then the Italian for to deliver, then say *correggere* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does correggere mean? (\"To correct\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C241-dirigere",
+      "sequence": 14290,
+      "title": "dirigere — to direct",
+      "headword": "dirigere",
+      "romanization": "dirigere",
+      "gloss": "to direct",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a715f9261974d41f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for to deliver, then the Italian for to correct."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dirigere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dirigere — \"to direct\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dirigere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dirigere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dirigere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dirigere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say dirigere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *dirigere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for to deliver, then the Italian for to correct, then say dirigere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for to deliver, then the Italian for to correct, then say *dirigere* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dirigere mean? (\"To direct\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C241-distruggere",
+      "sequence": 14300,
+      "title": "distruggere — to destroy",
+      "headword": "distruggere",
+      "romanization": "distruggere",
+      "gloss": "to destroy",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:721724aa46d19e52",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for to correct, then the Italian for to direct."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: distruggere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "distruggere — \"to destroy\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "distruggere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *distruggere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "distruggere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *distruggere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say distruggere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *distruggere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for to correct, then the Italian for to direct, then say distruggere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for to correct, then the Italian for to direct, then say *distruggere* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does distruggere mean? (\"To destroy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C241-esagerare",
+      "sequence": 14310,
+      "title": "esagerare — to exaggerate",
+      "headword": "esagerare",
+      "romanization": "esagerare",
+      "gloss": "to exaggerate",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bbe5cb77d9527d48",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for to direct, then the Italian for to destroy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: esagerare",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "esagerare — \"to exaggerate\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "esagerare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *esagerare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "esagerare, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *esagerare*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say esagerare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *esagerare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for to direct, then the Italian for to destroy, then say esagerare again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for to direct, then the Italian for to destroy, then say *esagerare* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does esagerare mean? (\"To exaggerate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-R241-first-pass-words-from-chapters-233-236",
+      "sequence": 14320,
+      "title": "Words from chapters 233-236 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "first pass over chapters 233-236",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:37e9a8cc8720fdfb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to destroy and to exaggerate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to order, to cut, to dry, to iron, to build",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to order, to cut, to dry, to iron, to build]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to change, to move, to take off, to leave, to lose",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to change, to move, to take off, to leave, to lose]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to check, to sign, to fill in, to send, to receive",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to check, to sign, to fill in, to send, to receive]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to rest, to wake up, to comb one's hair, to be bored, to have fun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to rest, to wake up, to comb one's hair, to be bored, to have fun]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To order? (ordinare.) To cut? (tagliare.) To dry? (asciugare.) To iron? (stirare.) To build? (costruire.) To change? (cambiare.) To move? (spostare.) To take off? (togliere.) To leave? (lasciare.) To lose? (perdere.) To check? (controllare.) To sign? (firmare.) To fill in? (compilare.) To send? (spedire.) To receive? (ricevere.) To rest? (riposare.) To wake up? (svegliarsi.) To comb one's hair? (pettinarsi.) To be bored? (annoiarsi.) To have fun? (divertirsi.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-R241-second-pass-words-from-chapters-237-241",
+      "sequence": 14330,
+      "title": "Words from chapters 237-241 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "second pass over chapters 237-241",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ddf1943877392b42",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to warn and to burn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to warn, to burn, to throw away, to calculate, to hit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to warn, to burn, to throw away, to calculate, to hit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to point out, to inform, to dispatch, to complain, to be missing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to point out, to inform, to dispatch, to complain, to be missing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to reach, to achieve, to give, to give back, to recognise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to reach, to achieve, to give, to give back, to recognise]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to push, to pull, to waste, to overtake, to perform",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to push, to pull, to waste, to overtake, to perform]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to deliver, to correct, to direct, to destroy, to exaggerate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to deliver, to correct, to direct, to destroy, to exaggerate]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To warn? (avvisare.) To burn? (bruciare.) To throw away? (buttare.) To calculate? (calcolare.) To hit? (colpire.) To point out? (indicare.) To inform? (informare.) To dispatch? (inviare.) To complain? (lamentarsi.) To be missing? (mancare.) To reach? (raggiungere.) To achieve? (realizzare.) To give? (regalare.) To give back? (restituire.) To recognise? (riconoscere.) To push? (spingere.) To pull? (tirare.) To waste? (sprecare.) To overtake? (superare.) To perform? (svolgere.) To deliver? (consegnare.) To correct? (correggere.) To direct? (dirigere.) To destroy? (distruggere.) To exaggerate? (esagerare.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

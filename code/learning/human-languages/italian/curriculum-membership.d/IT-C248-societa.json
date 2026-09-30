@@ -1,0 +1,11 @@
+{
+  "id": "IT-C248-societa",
+  "pathSegment": "IT-PATH-248-COSE248",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-248-COSE248",
+      "order": 3
+    }
+  ]
+}

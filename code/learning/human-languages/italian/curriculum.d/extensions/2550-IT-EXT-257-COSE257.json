@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-257-COSE257",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say metal, a brick, a small bag, a thread and a tool.",
+  "prerequisites": []
+}

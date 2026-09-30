@@ -1,0 +1,19 @@
+{
+  "chapter": 246,
+  "title": "Ancient, Young, Spicy, Raw, Cooked",
+  "label": "ch:it-ancient-young-spicy-raw-cooked",
+  "canDo": "I can say ancient, young, spicy, raw and cooked.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "IT-C246-cotto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 246: I can say ancient, young, spicy, raw and cooked.",
+    "assesses": [
+      "IT-LEX-C246-QUAL246-03",
+      "IT-LEX-C246-QUAL246-04",
+      "IT-LEX-C246-QUAL246-05"
+    ]
+  }
+}

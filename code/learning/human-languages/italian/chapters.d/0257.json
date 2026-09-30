@@ -1,0 +1,19 @@
+{
+  "chapter": 257,
+  "title": "Metal, Brick, Small bag, Thread, Tool",
+  "label": "ch:it-metal-brick-small-bag-thread-tool",
+  "canDo": "I can say metal, a brick, a small bag, a thread and a tool.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C257-strumento",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 257: I can say metal, a brick, a small bag, a thread and a tool.",
+    "assesses": [
+      "IT-LEX-C257-COSE257-03",
+      "IT-LEX-C257-COSE257-04",
+      "IT-LEX-C257-COSE257-05"
+    ]
+  }
+}

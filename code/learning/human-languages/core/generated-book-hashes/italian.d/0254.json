@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:c5659839ac992990",
+  "lessonIds": [
+    "IT-C254-sedile",
+    "IT-C254-volante",
+    "IT-C254-ruota",
+    "IT-C254-motore",
+    "IT-C254-benzina"
+  ],
+  "tex": "italian/book/chapters/ch254-vehicle-seat-steering-wheel-wheel-engine-petrol.tex"
+}
