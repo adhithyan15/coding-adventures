@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 19480,
+    "totalLessons": 19497,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -40,7 +40,7 @@
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 231,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 17703,
+    "drivableLessons": 17720,
     "drivablePercent": 91,
     "chaptersWithoutDrivablePrefix": 274,
     "unexplainedModalityOverrides": 0
@@ -5123,7 +5123,10 @@
           133,
           134,
           135,
-          136
+          136,
+          137,
+          138,
+          139
         ],
         "bookChapters": [
           1,
@@ -5261,7 +5264,10 @@
           133,
           134,
           135,
-          136
+          136,
+          137,
+          138,
+          139
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -8900,9 +8906,9 @@
       {
         "language": "italian",
         "status": "version-2",
-        "lessonCount": 665,
+        "lessonCount": 682,
         "versions": {
-          "2": 665
+          "2": 682
         }
       },
       {
@@ -9723,8 +9729,8 @@
       },
       {
         "language": "italian",
-        "bookChapters": 136,
-        "declaredChapters": 136,
+        "bookChapters": 139,
+        "declaredChapters": 139,
         "missingCapability": 0,
         "findings": 1,
         "clean": false
@@ -9851,8 +9857,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 3934,
-      "declaredChapters": 3934,
+      "bookChapters": 3937,
+      "declaredChapters": 3937,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 94,
@@ -9864,11 +9870,11 @@
     }
   },
   "levels": {
-    "totalLessons": 19480,
+    "totalLessons": 19497,
     "byLevel": {
       "pre-A1": 8865,
       "A1": 9536,
-      "A2": 995,
+      "A2": 1012,
       "B1": 39,
       "B2": 17,
       "C1": 10,
@@ -9984,11 +9990,11 @@
       },
       {
         "language": "italian",
-        "lessonCount": 665,
+        "lessonCount": 682,
         "byLevel": {
           "pre-A1": 319,
           "A1": 325,
-          "A2": 21,
+          "A2": 38,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -10725,8 +10731,8 @@
       },
       {
         "language": "italian",
-        "lessonCount": 665,
-        "measurable": 665,
+        "lessonCount": 682,
+        "measurable": 682,
         "unmeasurable": 0,
         "lessonViolations": 0,
         "chapterViolations": 3
@@ -11265,7 +11271,7 @@
           "language": "italian",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 665,
+          "lessonCount": 682,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -47176,6 +47182,54 @@
           "R4"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "IT-LEX-C123-COLORI123-03",
+        "language": "italian",
+        "introducedBy": "IT-C123-marrone",
+        "introducedAt": 593,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C123-COLORI123-04",
+        "language": "italian",
+        "introducedBy": "IT-C123-arancione",
+        "introducedAt": 594,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C123-COLORI123-05",
+        "language": "italian",
+        "introducedBy": "IT-C123-carino",
+        "introducedAt": 595,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C124-QUALITA124-01",
+        "language": "italian",
+        "introducedBy": "IT-C124-occupato",
+        "introducedAt": 596,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
       },
       {
         "atom": "IT-LEX-C45-FAMIGLIA2-02",
@@ -125503,46 +125557,145 @@
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C123-COLORI123-03",
+        "atom": "IT-LEX-C121-ANIMALI121-05",
         "language": "italian",
-        "introducedBy": "IT-C123-marrone",
-        "introducedAt": 593,
+        "introducedBy": "IT-C121-delfino",
+        "introducedAt": 585,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C123-COLORI123-04",
+        "atom": "IT-LEX-C122-CORPO122-01",
         "language": "italian",
-        "introducedBy": "IT-C123-arancione",
-        "introducedAt": 594,
+        "introducedBy": "IT-C122-gomito",
+        "introducedAt": 586,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C123-COLORI123-05",
+        "atom": "IT-LEX-C122-CORPO122-02",
         "language": "italian",
-        "introducedBy": "IT-C123-carino",
-        "introducedAt": 595,
+        "introducedBy": "IT-C122-caviglia",
+        "introducedAt": 587,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C124-QUALITA124-01",
+        "atom": "IT-LEX-C122-CORPO122-03",
         "language": "italian",
-        "introducedBy": "IT-C124-occupato",
-        "introducedAt": 596,
+        "introducedBy": "IT-C122-polso",
+        "introducedAt": 588,
         "missed": [
           "R2",
-          "R3"
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C122-CORPO122-04",
+        "language": "italian",
+        "introducedBy": "IT-C122-guancia",
+        "introducedAt": 589,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C122-CORPO122-05",
+        "language": "italian",
+        "introducedBy": "IT-C122-labbra",
+        "introducedAt": 590,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C123-COLORI123-01",
+        "language": "italian",
+        "introducedBy": "IT-C123-rosa",
+        "introducedAt": 591,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C123-COLORI123-02",
+        "language": "italian",
+        "introducedBy": "IT-C123-viola",
+        "introducedAt": 592,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C124-QUALITA124-02",
+        "language": "italian",
+        "introducedBy": "IT-C124-libero",
+        "introducedAt": 597,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C124-QUALITA124-03",
+        "language": "italian",
+        "introducedBy": "IT-C124-aperto",
+        "introducedAt": 598,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C124-QUALITA124-04",
+        "language": "italian",
+        "introducedBy": "IT-C124-chiuso",
+        "introducedAt": 599,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C124-QUALITA124-05",
+        "language": "italian",
+        "introducedBy": "IT-C124-tranquillo",
+        "introducedAt": 600,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C125-QUALITA125-01",
+        "language": "italian",
+        "introducedBy": "IT-C125-rumoroso",
+        "introducedAt": 601,
+        "missed": [
+          "R3",
+          "R4"
         ],
         "revisits": 3
       },
@@ -125573,6 +125726,72 @@
         "language": "italian",
         "introducedBy": "IT-C126-gentile",
         "introducedAt": 610,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "IT-LEX-C133-VERBI133-03",
+        "language": "italian",
+        "introducedBy": "IT-C133-mettere",
+        "introducedAt": 645,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C133-VERBI133-04",
+        "language": "italian",
+        "introducedBy": "IT-C133-credere",
+        "introducedAt": 646,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C133-VERBI133-05",
+        "language": "italian",
+        "introducedBy": "IT-C133-guidare",
+        "introducedAt": 647,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C134-VERBI134-01",
+        "language": "italian",
+        "introducedBy": "IT-C134-vestirsi",
+        "introducedAt": 648,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C136-VERBI136-03",
+        "language": "italian",
+        "introducedBy": "IT-C136-pulire",
+        "introducedAt": 660,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C136-VERBI136-04",
+        "language": "italian",
+        "introducedBy": "IT-C136-trovare",
+        "introducedAt": 661,
         "missed": [
           "R2",
           "R3"
@@ -208721,136 +208940,6 @@
         "revisits": 4
       },
       {
-        "atom": "IT-LEX-C121-ANIMALI121-05",
-        "language": "italian",
-        "introducedBy": "IT-C121-delfino",
-        "introducedAt": 585,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C122-CORPO122-01",
-        "language": "italian",
-        "introducedBy": "IT-C122-gomito",
-        "introducedAt": 586,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C122-CORPO122-02",
-        "language": "italian",
-        "introducedBy": "IT-C122-caviglia",
-        "introducedAt": 587,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C122-CORPO122-03",
-        "language": "italian",
-        "introducedBy": "IT-C122-polso",
-        "introducedAt": 588,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C122-CORPO122-04",
-        "language": "italian",
-        "introducedBy": "IT-C122-guancia",
-        "introducedAt": 589,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C122-CORPO122-05",
-        "language": "italian",
-        "introducedBy": "IT-C122-labbra",
-        "introducedAt": 590,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C123-COLORI123-01",
-        "language": "italian",
-        "introducedBy": "IT-C123-rosa",
-        "introducedAt": 591,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C123-COLORI123-02",
-        "language": "italian",
-        "introducedBy": "IT-C123-viola",
-        "introducedAt": 592,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C124-QUALITA124-02",
-        "language": "italian",
-        "introducedBy": "IT-C124-libero",
-        "introducedAt": 597,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C124-QUALITA124-03",
-        "language": "italian",
-        "introducedBy": "IT-C124-aperto",
-        "introducedAt": 598,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C124-QUALITA124-04",
-        "language": "italian",
-        "introducedBy": "IT-C124-chiuso",
-        "introducedAt": 599,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C124-QUALITA124-05",
-        "language": "italian",
-        "introducedBy": "IT-C124-tranquillo",
-        "introducedAt": 600,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C125-QUALITA125-01",
-        "language": "italian",
-        "introducedBy": "IT-C125-rumoroso",
-        "introducedAt": 601,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "IT-LEX-C125-QUALITA125-02",
         "language": "italian",
         "introducedBy": "IT-C125-ultimo",
@@ -209231,44 +209320,124 @@
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C133-VERBI133-03",
+        "atom": "IT-LEX-C134-VERBI134-02",
         "language": "italian",
-        "introducedBy": "IT-C133-mettere",
-        "introducedAt": 645,
+        "introducedBy": "IT-C134-lavarsi",
+        "introducedAt": 649,
         "missed": [
-          "R2"
+          "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C133-VERBI133-04",
+        "atom": "IT-LEX-C134-VERBI134-03",
         "language": "italian",
-        "introducedBy": "IT-C133-credere",
-        "introducedAt": 646,
+        "introducedBy": "IT-C134-alzarsi",
+        "introducedAt": 650,
         "missed": [
-          "R2"
+          "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C133-VERBI133-05",
+        "atom": "IT-LEX-C134-VERBI134-04",
         "language": "italian",
-        "introducedBy": "IT-C133-guidare",
-        "introducedAt": 647,
+        "introducedBy": "IT-C134-sedersi",
+        "introducedAt": 651,
         "missed": [
-          "R2"
+          "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C134-VERBI134-01",
+        "atom": "IT-LEX-C134-VERBI134-05",
         "language": "italian",
-        "introducedBy": "IT-C134-vestirsi",
-        "introducedAt": 648,
+        "introducedBy": "IT-C134-cadere",
+        "introducedAt": 652,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C135-VERBI135-01",
+        "language": "italian",
+        "introducedBy": "IT-C135-salire",
+        "introducedAt": 653,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C135-VERBI135-02",
+        "language": "italian",
+        "introducedBy": "IT-C135-scendere",
+        "introducedAt": 654,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C135-VERBI135-03",
+        "language": "italian",
+        "introducedBy": "IT-C135-restare",
+        "introducedAt": 655,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C135-VERBI135-04",
+        "language": "italian",
+        "introducedBy": "IT-C135-affittare",
+        "introducedAt": 656,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C135-VERBI135-05",
+        "language": "italian",
+        "introducedBy": "IT-C135-riparare",
+        "introducedAt": 657,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C136-VERBI136-01",
+        "language": "italian",
+        "introducedBy": "IT-C136-raccontare",
+        "introducedAt": 658,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C136-VERBI136-02",
+        "language": "italian",
+        "introducedBy": "IT-C136-camminare",
+        "introducedAt": 659,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C136-VERBI136-05",
+        "language": "italian",
+        "introducedBy": "IT-C136-cercare",
+        "introducedAt": 662,
         "missed": [
           "R2"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "IT-LEX-CAFFE-02",
@@ -235510,11 +235679,11 @@
       },
       {
         "language": "italian",
-        "lessonCount": 665,
+        "lessonCount": 682,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 811,
+        "atomsTaught": 826,
         "atomsNeverRevisited": 1,
         "forwardReferences": 34
       },
@@ -235674,14 +235843,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 20471,
+      "atomsTaught": 20486,
       "atomsNeverRevisited": 156,
       "neverRevisitedPercent": 1,
       "missedByWindow": {
         "R1": 1745,
-        "R2": 13307,
-        "R3": 11562,
-        "R4": 14972
+        "R2": 13310,
+        "R3": 11579,
+        "R4": 14989
       },
       "forwardReferences": 968
     }
@@ -256124,8 +256293,8 @@
       },
       {
         "language": "italian",
-        "lessonCount": 665,
-        "atomMeasurableLessons": 665,
+        "lessonCount": 682,
+        "atomMeasurableLessons": 682,
         "atomMeasurementBlindLessons": 0,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -256140,14 +256309,14 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 34,
-        "atomsTaught": 811,
+        "atomsTaught": 826,
         "atomsNeverRevisited": 1,
-        "reinforcementWindowMisses": 1426,
+        "reinforcementWindowMisses": 1463,
         "reinforcementMissesByWindow": {
           "R1": 40,
-          "R2": 542,
-          "R3": 324,
-          "R4": 520
+          "R2": 545,
+          "R3": 341,
+          "R4": 537
         },
         "payoffSurprises": 1,
         "writingPracticeLessons": 4,
@@ -256171,7 +256340,7 @@
           {
             "language": "italian",
             "kind": "reinforcement",
-            "count": 1426,
+            "count": 1463,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -257838,6 +258007,13 @@
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
+        "language": "italian",
+        "kind": "reinforcement",
+        "count": 1463,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
         "language": "gujarati",
         "kind": "reinforcement",
         "count": 1462,
@@ -257848,13 +258024,6 @@
         "language": "marathi",
         "kind": "reinforcement",
         "count": 1450,
-        "unit": "missed window(s)",
-        "detail": "add retrieval at the expanding R1-R4 intervals"
-      },
-      {
-        "language": "italian",
-        "kind": "reinforcement",
-        "count": 1426,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -258279,7 +258448,7 @@
             "shortfall": 2
           }
         ],
-        "vocabulary": 629
+        "vocabulary": 644
       },
       {
         "language": "japanese",
@@ -258573,11 +258742,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 19480,
-    "voice": 17126,
+    "totalLessons": 19497,
+    "voice": 17143,
     "sight": 991,
     "pen": 1363,
-    "coreVoice": 17703,
+    "coreVoice": 17720,
     "lessonsWithWritingSegments": 880,
     "drivablePercent": 91,
     "tracks": [
@@ -274852,13 +275021,13 @@
       },
       {
         "language": "italian",
-        "lessonCount": 665,
-        "voice": 643,
+        "lessonCount": 682,
+        "voice": 660,
         "sight": 18,
         "pen": 4,
-        "coreVoice": 644,
+        "coreVoice": 661,
         "drivablePercent": 97,
-        "drivablePrefixTotal": 615,
+        "drivablePrefixTotal": 632,
         "chapters": [
           {
             "language": "italian",
@@ -276765,6 +276934,48 @@
           {
             "language": "italian",
             "chapter": 136,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 137,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 138,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 139,
             "lessonCount": 7,
             "voice": 7,
             "sight": 0,
@@ -315445,7 +315656,7 @@
     "underspentPercent": 89
   },
   "infoDump": {
-    "lessons": 19480,
+    "lessons": 19497,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -315453,11 +315664,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 19480,
-    "measuredLessons": 15307,
-    "idiomMeasuredLessons": 15307,
-    "senseMeasuredLessons": 15308,
-    "cultureClaimMeasuredLessons": 15307,
+    "lessons": 19497,
+    "measuredLessons": 15324,
+    "idiomMeasuredLessons": 15324,
+    "senseMeasuredLessons": 15325,
+    "cultureClaimMeasuredLessons": 15324,
     "idioms": 101,
     "senses": 103,
     "cultureClaims": 208,
@@ -315466,14 +315677,14 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 18568,
-    "usesBeforeIntroduction": 36173,
-    "technicalUsesBeforeIntroduction": 6363,
-    "technicalLessons": 3582,
+    "lessonsUsingTerms": 18585,
+    "usesBeforeIntroduction": 36206,
+    "technicalUsesBeforeIntroduction": 6368,
+    "technicalLessons": 3586,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 2053
+        "lessons": 2054
       },
       {
         "term": "noun",
@@ -315498,12 +315709,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 19480,
+    "lessonsScanned": 19497,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 4003,
+    "filesScanned": 4006,
     "mainCharacters": 135,
     "scriptCharacters": 802,
     "gaps": 0
