@@ -1,0 +1,11 @@
+{
+  "id": "GE-C203-wolle",
+  "pathSegment": "GE-PATH-203-THING203",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-203-THING203",
+      "order": 3
+    }
+  ]
+}

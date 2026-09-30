@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:c904fea99aff5467",
+  "lessonIds": [
+    "GE-C193-fahrplan",
+    "GE-C193-rueckfahrt",
+    "GE-C193-unterkunft",
+    "GE-C193-jugendherberge",
+    "GE-C193-gepaeck"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch193.txt",
+  "json": "german/narration/ch193.json",
+  "textHash": "fnv1a64:f5a78e1837849bba",
+  "jsonHash": "fnv1a64:4541aa8384e54246",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C201-ofen",
+  "pathSegment": "GE-PATH-201-THING201",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-201-THING201",
+      "order": 3
+    }
+  ]
+}

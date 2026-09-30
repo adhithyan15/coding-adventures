@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C180-fernsehen",
+    "language": "german",
+    "chapter": 180,
+    "sequence": 8840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f1ea2bd0c691da52"
+  },
+  "findings": []
+}

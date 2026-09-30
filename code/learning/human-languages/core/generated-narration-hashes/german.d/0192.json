@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:8a4921d1de43e544",
+  "lessonIds": [
+    "GE-C192-abfahrt",
+    "GE-C192-ankunft",
+    "GE-C192-abflug",
+    "GE-C192-verspaetung",
+    "GE-C192-gleis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch192.txt",
+  "json": "german/narration/ch192.json",
+  "textHash": "fnv1a64:6a88281d8cd96a20",
+  "jsonHash": "fnv1a64:4cda5c79cc57117c",
+  "findings": []
+}

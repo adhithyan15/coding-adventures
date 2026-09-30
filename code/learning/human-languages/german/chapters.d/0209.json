@@ -1,0 +1,19 @@
+{
+  "chapter": 209,
+  "title": "A citizen, An election, A party, Politics, The economy",
+  "label": "ch:ge-a-citizen-an-election-a-party-politics-the-economy",
+  "canDo": "I can say a citizen, an election, a party, politics and the economy.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C209-wirtschaft",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 209: i can say a citizen, an election, a party, politics and the economy.",
+    "assesses": [
+      "GE-LEX-C209-THING209-03",
+      "GE-LEX-C209-THING209-04",
+      "GE-LEX-C209-THING209-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C185-schmecken",
+    "language": "german",
+    "chapter": 185,
+    "sequence": 9300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:75ce889c30bada8b"
+  },
+  "findings": []
+}

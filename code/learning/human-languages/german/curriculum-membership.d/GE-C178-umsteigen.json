@@ -1,0 +1,11 @@
+{
+  "id": "GE-C178-umsteigen",
+  "pathSegment": "GE-PATH-178-VERB178",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-178-VERB178",
+      "order": 4
+    }
+  ]
+}

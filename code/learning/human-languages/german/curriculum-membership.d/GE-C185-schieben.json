@@ -1,0 +1,11 @@
+{
+  "id": "GE-C185-schieben",
+  "pathSegment": "GE-PATH-185-VERB185",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-185-VERB185",
+      "order": 2
+    }
+  ]
+}

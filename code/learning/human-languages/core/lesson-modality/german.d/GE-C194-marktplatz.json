@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C194-marktplatz",
+    "language": "german",
+    "chapter": 194,
+    "sequence": 9940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5fb7900332f293cc"
+  },
+  "findings": []
+}

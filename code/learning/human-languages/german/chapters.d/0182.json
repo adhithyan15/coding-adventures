@@ -1,0 +1,19 @@
+{
+  "chapter": 182,
+  "title": "To fight, To climb, To take care, To land, To smile",
+  "label": "ch:ge-to-fight-to-climb-to-take-care-to-land-to-smile",
+  "canDo": "I can say to fight, to climb, to take care, to land and to smile.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-R182-second-pass-words-from-chapters-178-182",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 182: i can say to fight, to climb, to take care, to land and to smile.",
+    "assesses": [
+      "GE-LEX-C182-VERB182-03",
+      "GE-LEX-C182-VERB182-04",
+      "GE-LEX-C182-VERB182-05"
+    ]
+  }
+}

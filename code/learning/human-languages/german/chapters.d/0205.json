@@ -1,0 +1,19 @@
+{
+  "chapter": 205,
+  "title": "A bone, A dentist, Surgery hours, An examination, An injury",
+  "label": "ch:ge-a-bone-a-dentist-surgery-hours-an-examination-an-injury",
+  "canDo": "I can say a bone, a dentist, surgery hours, an examination and an injury.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-R205-second-pass-words-from-chapters-203-205",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 205: i can say a bone, a dentist, surgery hours, an examination and an injury.",
+    "assesses": [
+      "GE-LEX-C205-THING205-03",
+      "GE-LEX-C205-THING205-04",
+      "GE-LEX-C205-THING205-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:811236f5e21bafbe",
+  "lessonIds": [
+    "GE-C194-rucksack",
+    "GE-C194-sehenswuerdigkeit",
+    "GE-C194-stadtplan",
+    "GE-C194-rundfahrt",
+    "GE-C194-marktplatz"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch194.txt",
+  "json": "german/narration/ch194.json",
+  "textHash": "fnv1a64:eaed12e2c4b915c8",
+  "jsonHash": "fnv1a64:52e91028de7a5c2b",
+  "findings": []
+}

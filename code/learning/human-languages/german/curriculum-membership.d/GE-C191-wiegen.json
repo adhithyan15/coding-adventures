@@ -1,0 +1,11 @@
+{
+  "id": "GE-C191-wiegen",
+  "pathSegment": "GE-PATH-191-VERB191",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-191-VERB191",
+      "order": 3
+    }
+  ]
+}

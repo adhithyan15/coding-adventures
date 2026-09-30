@@ -1,0 +1,11 @@
+{
+  "id": "GE-C182-kuemmern",
+  "pathSegment": "GE-PATH-182-VERB182",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-182-VERB182",
+      "order": 2
+    }
+  ]
+}

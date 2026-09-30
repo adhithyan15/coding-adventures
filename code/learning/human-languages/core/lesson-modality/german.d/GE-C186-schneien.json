@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C186-schneien",
+    "language": "german",
+    "chapter": 186,
+    "sequence": 9310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2909846d06e0b000"
+  },
+  "findings": []
+}

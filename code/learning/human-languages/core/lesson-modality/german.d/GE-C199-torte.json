@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C199-torte",
+    "language": "german",
+    "chapter": 199,
+    "sequence": 10190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:802c00f1f959f1f7"
+  },
+  "findings": []
+}

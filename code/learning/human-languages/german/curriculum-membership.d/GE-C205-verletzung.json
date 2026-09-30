@@ -1,0 +1,11 @@
+{
+  "id": "GE-C205-verletzung",
+  "pathSegment": "GE-PATH-205-THING205",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-205-THING205",
+      "order": 4
+    }
+  ]
+}

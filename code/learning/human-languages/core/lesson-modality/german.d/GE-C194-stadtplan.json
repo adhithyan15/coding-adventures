@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C194-stadtplan",
+    "language": "german",
+    "chapter": 194,
+    "sequence": 9920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8cfe36f8dddbda3"
+  },
+  "findings": []
+}

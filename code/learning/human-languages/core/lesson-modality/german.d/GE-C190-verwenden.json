@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C190-verwenden",
+    "language": "german",
+    "chapter": 190,
+    "sequence": 9550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ac4d2b401ecadb11"
+  },
+  "findings": []
+}

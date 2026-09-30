@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-199-THING199",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say grass, a fruit, a carrot, a chicken and a gateau.",
+  "prerequisites": []
+}

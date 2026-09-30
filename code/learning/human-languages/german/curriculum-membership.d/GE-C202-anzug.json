@@ -1,0 +1,11 @@
+{
+  "id": "GE-C202-anzug",
+  "pathSegment": "GE-PATH-202-THING202",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-202-THING202",
+      "order": 4
+    }
+  ]
+}

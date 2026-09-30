@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 183,
+  "sourceHash": "fnv1a64:a524f1dbdd5e7844",
+  "lessonIds": [
+    "GE-C183-leiden",
+    "GE-C183-messen",
+    "GE-C183-mischen",
+    "GE-C183-naehen",
+    "GE-C183-niesen"
+  ],
+  "tex": "german/book/chapters/ch183-to-suffer-to-measure-to-mix-to-sew-to-sneeze.tex"
+}

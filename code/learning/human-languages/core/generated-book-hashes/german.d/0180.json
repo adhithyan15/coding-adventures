@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:1da3ae63024526b5",
+  "lessonIds": [
+    "GE-C180-erwarten",
+    "GE-C180-fangen",
+    "GE-C180-fernsehen",
+    "GE-C180-festhalten",
+    "GE-C180-fluestern"
+  ],
+  "tex": "german/book/chapters/ch180-to-expect-to-catch-to-watch-television-to-hold-on-to-to-whisper.tex"
+}

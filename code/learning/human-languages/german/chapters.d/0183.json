@@ -1,0 +1,19 @@
+{
+  "chapter": 183,
+  "title": "To suffer, To measure, To mix, To sew, To sneeze",
+  "label": "ch:ge-to-suffer-to-measure-to-mix-to-sew-to-sneeze",
+  "canDo": "I can say to suffer, to measure, to mix, to sew and to sneeze.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C183-niesen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 183: i can say to suffer, to measure, to mix, to sew and to sneeze.",
+    "assesses": [
+      "GE-LEX-C183-VERB183-03",
+      "GE-LEX-C183-VERB183-04",
+      "GE-LEX-C183-VERB183-05"
+    ]
+  }
+}

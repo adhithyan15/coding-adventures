@@ -1,0 +1,11 @@
+{
+  "id": "GE-C199-frucht",
+  "pathSegment": "GE-PATH-199-THING199",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-199-THING199",
+      "order": 1
+    }
+  ]
+}

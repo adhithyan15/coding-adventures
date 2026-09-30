@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-196-THING196",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a harbour, a bank, a beach, a meadow and a valley.",
+  "prerequisites": []
+}

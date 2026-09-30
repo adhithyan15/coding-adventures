@@ -1,0 +1,11 @@
+{
+  "id": "GE-C198-schmetterling",
+  "pathSegment": "GE-PATH-198-THING198",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-198-THING198",
+      "order": 3
+    }
+  ]
+}

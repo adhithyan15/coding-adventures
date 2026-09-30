@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C189-verbieten",
+    "language": "german",
+    "chapter": 189,
+    "sequence": 9490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bbe1267e03895ff1"
+  },
+  "findings": []
+}

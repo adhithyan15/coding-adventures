@@ -1,0 +1,11 @@
+{
+  "id": "GE-C186-spazieren",
+  "pathSegment": "GE-PATH-186-VERB186",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-186-VERB186",
+      "order": 4
+    }
+  ]
+}

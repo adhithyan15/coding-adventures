@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C178-umsteigen",
+    "language": "german",
+    "chapter": 178,
+    "sequence": 8760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ddf20469621aabce"
+  },
+  "findings": []
+}

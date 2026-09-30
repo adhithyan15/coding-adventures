@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:916761196c1d63d8",
+  "lessonIds": [
+    "GE-C200-speisekarte",
+    "GE-C200-bestellung",
+    "GE-C200-trinkgeld",
+    "GE-C200-kellnerin",
+    "GE-C200-besteck",
+    "GE-R200-first-pass-words-from-chapters-192-195",
+    "GE-R200-second-pass-words-from-chapters-196-200"
+  ],
+  "tex": "german/book/chapters/ch200-a-menu-an-order-a-tip-a-waitress-cutlery.tex"
+}

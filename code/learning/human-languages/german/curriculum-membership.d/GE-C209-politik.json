@@ -1,0 +1,11 @@
+{
+  "id": "GE-C209-politik",
+  "pathSegment": "GE-PATH-209-THING209",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-209-THING209",
+      "order": 3
+    }
+  ]
+}

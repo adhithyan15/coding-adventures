@@ -1,0 +1,11 @@
+{
+  "id": "GE-C195-turm",
+  "pathSegment": "GE-PATH-195-THING195",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-195-THING195",
+      "order": 3
+    }
+  ]
+}

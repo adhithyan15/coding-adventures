@@ -1,0 +1,11 @@
+{
+  "id": "GE-C175-ausruhen",
+  "pathSegment": "GE-PATH-175-VERB175",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-175-VERB175",
+      "order": 1
+    }
+  ]
+}

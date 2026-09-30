@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:e3d5420ce2280c61",
+  "lessonIds": [
+    "GE-C175-ausfuellen",
+    "GE-C175-ausruhen",
+    "GE-C175-backen",
+    "GE-C175-baden",
+    "GE-C175-bauen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch175.txt",
+  "json": "german/narration/ch175.json",
+  "textHash": "fnv1a64:3eeb61d0f2acc893",
+  "jsonHash": "fnv1a64:0c07b1df47e7f2b5",
+  "findings": []
+}

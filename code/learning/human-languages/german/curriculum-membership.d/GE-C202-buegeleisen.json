@@ -1,0 +1,11 @@
+{
+  "id": "GE-C202-buegeleisen",
+  "pathSegment": "GE-PATH-202-THING202",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-202-THING202",
+      "order": 1
+    }
+  ]
+}

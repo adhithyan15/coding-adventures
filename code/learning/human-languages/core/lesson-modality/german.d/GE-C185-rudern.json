@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C185-rudern",
+    "language": "german",
+    "chapter": 185,
+    "sequence": 9270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a8a9f5f5595cb02"
+  },
+  "findings": []
+}

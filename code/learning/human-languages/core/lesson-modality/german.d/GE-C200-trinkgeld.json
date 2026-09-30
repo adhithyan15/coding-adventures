@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C200-trinkgeld",
+    "language": "german",
+    "chapter": 200,
+    "sequence": 10220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e73f3806cf4ed27"
+  },
+  "findings": []
+}

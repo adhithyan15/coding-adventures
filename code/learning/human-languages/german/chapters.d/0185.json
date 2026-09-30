@@ -1,0 +1,19 @@
+{
+  "chapter": 185,
+  "title": "To rescue, To row, To push, To hit, To taste",
+  "label": "ch:ge-to-rescue-to-row-to-push-to-hit-to-taste",
+  "canDo": "I can say to rescue, to row, to push, to hit and to taste.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C185-schmecken",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 185: i can say to rescue, to row, to push, to hit and to taste.",
+    "assesses": [
+      "GE-LEX-C185-VERB185-03",
+      "GE-LEX-C185-VERB185-04",
+      "GE-LEX-C185-VERB185-05"
+    ]
+  }
+}

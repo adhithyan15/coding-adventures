@@ -1,0 +1,11 @@
+{
+  "id": "GE-C187-stehlen",
+  "pathSegment": "GE-PATH-187-VERB187",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-187-VERB187",
+      "order": 3
+    }
+  ]
+}

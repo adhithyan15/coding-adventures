@@ -1,0 +1,11 @@
+{
+  "id": "GE-C201-dose",
+  "pathSegment": "GE-PATH-201-THING201",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-201-THING201",
+      "order": 0
+    }
+  ]
+}

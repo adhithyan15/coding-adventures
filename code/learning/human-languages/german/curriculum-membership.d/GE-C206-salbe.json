@@ -1,0 +1,11 @@
+{
+  "id": "GE-C206-salbe",
+  "pathSegment": "GE-PATH-206-THING206",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-206-THING206",
+      "order": 2
+    }
+  ]
+}

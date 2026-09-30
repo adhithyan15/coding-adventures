@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:f58f57ea9ecea76f",
+  "lessonIds": [
+    "GE-C209-buerger",
+    "GE-C209-wahl",
+    "GE-C209-partei",
+    "GE-C209-politik",
+    "GE-C209-wirtschaft"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch209.txt",
+  "json": "german/narration/ch209.json",
+  "textHash": "fnv1a64:72e635e534a66e1a",
+  "jsonHash": "fnv1a64:a292c53fe64fcbae",
+  "findings": []
+}

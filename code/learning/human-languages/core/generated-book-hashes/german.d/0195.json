@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:2249e084c386d8d9",
+  "lessonIds": [
+    "GE-C195-fussgaengerzone",
+    "GE-C195-dom",
+    "GE-C195-denkmal",
+    "GE-C195-turm",
+    "GE-C195-burg"
+  ],
+  "tex": "german/book/chapters/ch195-a-pedestrian-zone-a-cathedral-a-monument-a-tower-a-castle.tex"
+}

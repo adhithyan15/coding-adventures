@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:9f2deb7787623de8",
+  "lessonIds": [
+    "GE-C190-vergleichen",
+    "GE-C190-verletzen",
+    "GE-C190-verpassen",
+    "GE-C190-verschieben",
+    "GE-C190-verwenden"
+  ],
+  "tex": "german/book/chapters/ch190-to-compare-to-injure-to-miss-to-postpone-to-use.tex"
+}

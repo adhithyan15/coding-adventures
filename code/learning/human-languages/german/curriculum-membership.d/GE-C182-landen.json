@@ -1,0 +1,11 @@
+{
+  "id": "GE-C182-landen",
+  "pathSegment": "GE-PATH-182-VERB182",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-182-VERB182",
+      "order": 3
+    }
+  ]
+}

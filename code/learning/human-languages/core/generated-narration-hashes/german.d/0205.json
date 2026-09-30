@@ -1,0 +1,21 @@
+{
+  "language": "german",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:fb2d83f063eccd73",
+  "lessonIds": [
+    "GE-C205-knochen",
+    "GE-C205-zahnarzt",
+    "GE-C205-sprechstunde",
+    "GE-C205-untersuchung",
+    "GE-C205-verletzung",
+    "GE-R205-first-pass-words-from-chapters-201-202",
+    "GE-R205-second-pass-words-from-chapters-203-205"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "german/narration/ch205.txt",
+  "json": "german/narration/ch205.json",
+  "textHash": "fnv1a64:9b08379509adbc08",
+  "jsonHash": "fnv1a64:1af758fad06e2cba",
+  "findings": []
+}

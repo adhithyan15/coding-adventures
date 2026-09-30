@@ -1,0 +1,11 @@
+{
+  "id": "GE-C208-regierung",
+  "pathSegment": "GE-PATH-208-THING208",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-208-THING208",
+      "order": 2
+    }
+  ]
+}

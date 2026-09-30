@@ -1,0 +1,11 @@
+{
+  "id": "GE-C185-schmecken",
+  "pathSegment": "GE-PATH-185-VERB185",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-185-VERB185",
+      "order": 4
+    }
+  ]
+}

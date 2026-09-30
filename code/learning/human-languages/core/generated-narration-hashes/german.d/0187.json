@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:db6b56cd8365e1e4",
+  "lessonIds": [
+    "GE-C187-spuelen",
+    "GE-C187-starten",
+    "GE-C187-stecken",
+    "GE-C187-stehlen",
+    "GE-C187-steigen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch187.txt",
+  "json": "german/narration/ch187.json",
+  "textHash": "fnv1a64:aecca49612fba3c4",
+  "jsonHash": "fnv1a64:7878f3ae7f636243",
+  "findings": []
+}

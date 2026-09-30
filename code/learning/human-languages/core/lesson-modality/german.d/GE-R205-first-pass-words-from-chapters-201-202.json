@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R205-first-pass-words-from-chapters-201-202",
+    "language": "german",
+    "chapter": 205,
+    "sequence": 10690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5cc9734ea4ccb4d0"
+  },
+  "findings": []
+}

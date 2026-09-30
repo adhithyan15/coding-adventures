@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:836ed392c901e255",
+  "lessonIds": [
+    "GE-C179-empfangen",
+    "GE-C179-erinnern",
+    "GE-C179-erlauben",
+    "GE-C179-ernaehren",
+    "GE-C179-erreichen"
+  ],
+  "tex": "german/book/chapters/ch179-to-receive-to-remind-to-allow-to-feed-to-reach.tex"
+}

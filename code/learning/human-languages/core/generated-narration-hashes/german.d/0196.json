@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:16c7771ffeac2b45",
+  "lessonIds": [
+    "GE-C196-hafen",
+    "GE-C196-ufer",
+    "GE-C196-strand",
+    "GE-C196-wiese",
+    "GE-C196-tal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch196.txt",
+  "json": "german/narration/ch196.json",
+  "textHash": "fnv1a64:fb755183fd431a6b",
+  "jsonHash": "fnv1a64:e20fb504dd149334",
+  "findings": []
+}

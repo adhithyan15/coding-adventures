@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:996d824628aff962",
+  "lessonIds": [
+    "GE-C187-spuelen",
+    "GE-C187-starten",
+    "GE-C187-stecken",
+    "GE-C187-stehlen",
+    "GE-C187-steigen"
+  ],
+  "tex": "german/book/chapters/ch187-to-rinse-to-start-to-put-to-steal-to-climb.tex"
+}

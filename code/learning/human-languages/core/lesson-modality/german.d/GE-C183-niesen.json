@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C183-niesen",
+    "language": "german",
+    "chapter": 183,
+    "sequence": 9200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d192ee20829953a"
+  },
+  "findings": []
+}
