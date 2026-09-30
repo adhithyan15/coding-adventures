@@ -5876,21 +5876,26 @@ fn host_button_style_arg(node: &LayoutNode, part_styles: &HashMap<String, String
             tier.button_elevation()
         ));
     }
-    let base_padding = style_prop(&props, "padding").map(|v| parse_pixel_value(v));
+    let base_padding = flutter_padding_edges(&props);
     if base_padding.is_some() || layers.iter().any(|layer| layer.padding.is_some()) {
         if layers.iter().all(|layer| layer.padding.is_none()) {
+            let edges = base_padding.unwrap_or_else(|| std::array::from_fn(|_| "0".into()));
             style_parts.push(format!(
-                "padding: WidgetStatePropertyAll(const EdgeInsets.all({}))",
-                base_padding.as_deref().unwrap_or("0")
+                "padding: WidgetStatePropertyAll({})",
+                flutter_edge_insets(&edges, true)
             ));
         } else {
-            let padding = state_color_expr(
-                &layers,
-                |layer| layer.padding.as_ref(),
-                base_padding.as_deref().unwrap_or("0"),
-            );
+            let edges = base_padding.unwrap_or_else(|| std::array::from_fn(|_| "0".into()));
+            let padding = std::array::from_fn(|index| {
+                state_color_expr(
+                    &layers,
+                    |layer| layer.padding.as_ref(),
+                    edges[index].as_str(),
+                )
+            });
             style_parts.push(format!(
-                "padding: WidgetStatePropertyAll(EdgeInsets.all({padding}))"
+                "padding: WidgetStatePropertyAll({})",
+                flutter_edge_insets(&padding, false)
             ));
         }
     }
@@ -9553,6 +9558,55 @@ mod tests {
     }
 
     #[test]
+    fn host_button_padding_resolves_each_edge_with_longhand_precedence() {
+        let style = StyleDef {
+            component_name: "X".into(),
+            parts: vec![PartStyle {
+                name: "directional".into(),
+                base: vec![
+                    StyleProp {
+                        name: "padding".into(),
+                        value: "8px".into(),
+                    },
+                    StyleProp {
+                        name: "padding-left".into(),
+                        value: "18px".into(),
+                    },
+                    StyleProp {
+                        name: "padding-top".into(),
+                        value: "6px".into(),
+                    },
+                    StyleProp {
+                        name: "padding-right".into(),
+                        value: "7px".into(),
+                    },
+                ],
+                transitions: vec![],
+                states: Vec::new(),
+            }],
+        };
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            LayoutNode {
+                tag: "HostButton".into(),
+                part_name: Some("directional".into()),
+                props: vec![LayoutProp {
+                    name: "label".into(),
+                    value: LayoutPropValue::String("Edges".into()),
+                }],
+                children: vec![],
+            },
+        );
+
+        let out = from_pipeline(&m, &l, &style).expect("emit ok").output;
+        assert!(
+            out.contains("padding: WidgetStatePropertyAll(const EdgeInsets.fromLTRB(18, 6, 7, 8))"),
+            "directional padding did not reach the host button:\n{out}"
+        );
+    }
+
+    #[test]
     fn ui49_slot_states_follow_model_order_and_reach_containers_and_buttons() {
         let m = component(
             "VariantCard",
@@ -9622,6 +9676,10 @@ mod tests {
                             name: "padding".into(),
                             value: "8px".into(),
                         },
+                        StyleProp {
+                            name: "padding-left".into(),
+                            value: "12px".into(),
+                        },
                     ],
                     transitions: vec![],
                     // Deliberately not model order: the emitted cascade must
@@ -9684,8 +9742,19 @@ mod tests {
             .expect("variant state must be the inner enum axis");
         assert!(variant > 0, "variant condition must follow size:\n{out}");
         assert!(
-            out.contains("EdgeInsets.all(_mosaicTruthy(( (size == \"compact\") )) ? 4 : 8)"),
-            "size state did not reach button padding:\n{out}"
+            out.contains("EdgeInsets.fromLTRB("),
+            "directional base padding did not survive a state override:\n{out}"
+        );
+        let state_prefix = "_mosaicTruthy(( (size == \"compact\") )) ? 4 : ";
+        assert_eq!(
+            out.matches(&format!("{state_prefix}12")).count(),
+            1,
+            "left-edge base value did not survive the state fallback:\n{out}"
+        );
+        assert_eq!(
+            out.matches(&format!("{state_prefix}8")).count(),
+            3,
+            "state shorthand did not override all four edges:\n{out}"
         );
     }
 
