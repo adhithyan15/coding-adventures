@@ -1141,6 +1141,8 @@ struct CellTextStyle {
     font_family_mono: bool,
     /// Integer `font.pixelSize` value.
     font_pixel_size: Option<String>,
+    /// Whether the descendant text uses a bold Qt font weight.
+    font_bold: Option<bool>,
     font_binding: Option<LayoutPropValue>,
     /// Inner content inset, from `padding: Npx`.
     padding: Option<String>,
@@ -1152,6 +1154,7 @@ impl CellTextStyle {
             && self.horizontal_alignment.is_none()
             && !self.font_family_mono
             && self.font_pixel_size.is_none()
+            && self.font_bold.is_none()
             && self.font_binding.is_none()
             && self.padding.is_none()
     }
@@ -1787,6 +1790,7 @@ fn lower_styled_box(node: &LayoutNode, part: &str, ctx: &EmitCtx) -> StyledBox {
         font_pixel_size: style_prop(base, "font-size")
             .and_then(qml_font_pixel_size)
             .or_else(|| ctx.inherited.font_pixel_size.clone()),
+        font_bold: style_prop(base, "font-weight").and_then(qml_font_weight_is_bold),
         font_binding: if style_prop(base, "font-size").is_some() { None } else { ctx.inherited.font_binding.clone() },
         padding: style_prop(base, "padding").and_then(qml_px_or_none),
         color: None,
@@ -2460,6 +2464,95 @@ fn qml_text_part_style_lines(props: &[StyleProp]) -> Vec<String> {
         lines.push(format!("horizontalAlignment: {align}"));
     }
     lines
+}
+
+/// Give a styled `Text` the paint box that QML's bare `Text` cannot own.
+///
+/// Qt Quick `Text` has foreground/font properties but no background,
+/// border, radius, or padding.  When a text part authors one of those
+/// surface properties, keep the semantic/accessibility node as the inner
+/// `Text` and introduce a `Rectangle` solely for paint and box geometry.
+/// Text parts without a surface property retain their historical bare shape.
+fn wrap_styled_text_surface_qml(
+    node: &LayoutNode,
+    depth: usize,
+    ctx: &EmitCtx<'_>,
+    text_qml: String,
+) -> Option<String> {
+    let part = node.part_name.as_deref()?;
+    let props = ctx.part_styles.get(part).map(Vec::as_slice).unwrap_or(&[]);
+    let state_layers = collect_state_layers(node, part, ctx.part_styles);
+    let needs_wrapper = needs_container_wrapper(props)
+        || state_layers
+            .iter()
+            .any(|layer| needs_container_wrapper(layer.props));
+    if !needs_wrapper {
+        return None;
+    }
+
+    let pad = "    ".repeat(depth);
+    let inner = "    ".repeat(depth + 1);
+    let nested = "    ".repeat(depth + 2);
+    let (left, top, right, bottom) = qml_padding_edges(props);
+    let paint_lines = qml_rectangle_paint_lines_with_states(props, &state_layers);
+    let has_fixed_width = style_prop(props, "width")
+        .and_then(qml_px_or_none)
+        .is_some();
+    let has_fixed_height = style_prop(props, "height")
+        .and_then(qml_px_or_none)
+        .is_some();
+    let elevation = part_elevation_tier(props);
+    let elevation_id = elevation.is_some().then(|| next_elevation_id(ctx));
+    let content_id = next_content_id(ctx);
+
+    let mut out = String::new();
+    writeln!(out, "{pad}Rectangle {{").unwrap();
+    if let Some(id) = &elevation_id {
+        writeln!(out, "{inner}id: {id}").unwrap();
+    }
+    if ctx.cell_fill_children {
+        writeln!(out, "{inner}anchors.fill: parent").unwrap();
+    }
+    for line in qml_layout_size_lines(props) {
+        writeln!(out, "{inner}{line}").unwrap();
+    }
+    if !has_fixed_width {
+        writeln!(
+            out,
+            "{inner}implicitWidth: {content_id}.implicitWidth + {left} + {right}"
+        )
+        .unwrap();
+    }
+    if !has_fixed_height {
+        writeln!(
+            out,
+            "{inner}implicitHeight: {content_id}.implicitHeight + {top} + {bottom}"
+        )
+        .unwrap();
+    }
+    if paint_lines.iter().all(|line| !line.starts_with("color:")) {
+        writeln!(out, "{inner}color: \"transparent\"").unwrap();
+    }
+    for line in &paint_lines {
+        writeln!(out, "{inner}{line}").unwrap();
+    }
+    for line in qml_per_edge_border_lines(props, &inner) {
+        writeln!(out, "{line}").unwrap();
+    }
+
+    for (index, line) in text_qml.lines().enumerate() {
+        writeln!(out, "    {line}").unwrap();
+        if index == 0 {
+            writeln!(out, "{nested}id: {content_id}").unwrap();
+            writeln!(out, "{nested}x: {left}").unwrap();
+            writeln!(out, "{nested}y: {top}").unwrap();
+        }
+    }
+    writeln!(out, "{pad}}}").unwrap();
+    if let Some(id) = &elevation_id {
+        out = qml_elevation_wrap(out, elevation, id, &pad);
+    }
+    Some(out)
 }
 
 fn emit_styled_layout_container_qml(
@@ -3413,6 +3506,11 @@ fn emit_qml_tree(
     )?);
 
     writeln!(out, "{pad}}}").unwrap();
+    if is_text {
+        if let Some(wrapped) = wrap_styled_text_surface_qml(node, depth, ctx, out.clone()) {
+            return Ok(wrapped);
+        }
+    }
     Ok(out)
 }
 
@@ -3441,6 +3539,9 @@ fn cell_text_style_lines(ts: &CellTextStyle) -> Vec<String> {
     }
     if let Some(sz) = &ts.font_pixel_size {
         lines.push(format!("font.pixelSize: {sz}"));
+    }
+    if let Some(is_bold) = ts.font_bold {
+        lines.push(format!("font.bold: {is_bold}"));
     }
     lines
 }
@@ -15185,6 +15286,7 @@ mod tests {
                         sp("padding", "2px"),
                         sp("height", "22px"),
                         sp("text-align", "right"),
+                        sp("font-weight", "600"),
                     ],
                     transitions: vec![],
                     states: vec![
@@ -15649,6 +15751,10 @@ mod tests {
         assert!(
             out.contains("font.pixelSize: 13"),
             "fractional inherited font size must lower to a Qt integer:\n{out}"
+        );
+        assert!(
+            out.contains("font.bold: true"),
+            "the Box part's font weight must reach its descendant Text:\n{out}"
         );
     }
 
@@ -16449,6 +16555,72 @@ mod tests {
         assert!(
             out.contains("horizontalAlignment: Text.AlignHCenter"),
             "missing text alignment:\n{out}"
+        );
+        assert_eq!(
+            out.matches("Rectangle {").count(),
+            0,
+            "text-only styling must keep the bare Text shape:\n{out}"
+        );
+    }
+
+    #[test]
+    fn styled_text_surface_wraps_paint_and_padding_around_semantic_text() {
+        let style = StyleDef {
+            component_name: "PanelLabel".to_string(),
+            parts: vec![PartStyle {
+                name: "label".to_string(),
+                base: vec![
+                    sp("background", "#252019"),
+                    sp("border-color", "#6b5f50"),
+                    sp("border-width", "2px"),
+                    sp("border-radius", "4px"),
+                    sp("padding", "8px"),
+                    sp("padding-left", "13px"),
+                    sp("padding-bottom", "11px"),
+                    sp("color", "#f8fafc"),
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let layout = LayoutDef {
+            component_name: "PanelLabel".to_string(),
+            root: LayoutNode {
+                tag: "Text".to_string(),
+                part_name: Some("label".to_string()),
+                props: vec![
+                    lp("content", LayoutPropValue::String("Details".to_string())),
+                    lp("a11y-role", LayoutPropValue::Keyword("heading".to_string())),
+                ],
+                children: vec![],
+            },
+        };
+        let model = component("PanelLabel", vec![], vec![]);
+        let out = from_pipeline(&model, &layout, &style).unwrap().output;
+
+        for expected in [
+            "Rectangle {",
+            "color: \"#252019\"",
+            "border.color: \"#6b5f50\"",
+            "border.width: 2",
+            "radius: 4",
+            "implicitWidth: mosaicContent0.implicitWidth + 13 + 8",
+            "implicitHeight: mosaicContent0.implicitHeight + 8 + 11",
+            "id: mosaicContent0",
+            "x: 13",
+            "y: 8",
+            "Text {",
+            "text: \"Details\"",
+            "color: \"#f8fafc\"",
+            "Accessible.role: Accessible.Heading",
+        ] {
+            assert!(out.contains(expected), "missing {expected:?}:\n{out}");
+        }
+
+        let dropped = dropped_style_properties(&model, &layout, &style);
+        assert!(
+            dropped.is_empty(),
+            "the surface wrapper must consume every authored property: {dropped:?}"
         );
     }
 
