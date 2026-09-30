@@ -3803,6 +3803,36 @@ jobs:
             throw "Mosaic XAML required-runtime failure check failed with exit code $LASTEXITCODE"
           }
 
+      # UI87 §7.6: the XAML platform library (files.open / files.save and the
+      # router), driven headless with a fake picker and a fake host. The files
+      # are the ones TaskApp's generated WinUI project compiled in the step
+      # above, so what is tested is what shipped; run here, rather than on
+      # Linux, so the save's move-into-place runs on NTFS.
+      - name: Check the XAML platform library headless
+        if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
+        shell: pwsh
+        timeout-minutes: 10
+        run: |
+          $generated = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-taskapp/xaml'
+          $window = Get-Content (Join-Path $generated 'MainWindow.xaml.cs') -Raw
+          if (!$window.Contains('MosaicPlatformEffects.Install(this, appKinds: null);')) {
+            throw 'TaskApp MainWindow.xaml.cs does not install the XAML platform library'
+          }
+          $platformHarness = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-platform-effects'
+          New-Item -ItemType Directory -Path $platformHarness -Force | Out-Null
+          Copy-Item 'code/packages/rust/mosaic-app-bindings/conformance/xaml-platform-effects/*' $platformHarness -Recurse
+          foreach ($file in 'MosaicPlatformEffects.cs', 'MosaicRuntimeHost.cs') {
+            $source = Join-Path $generated $file
+            if (!(Test-Path $source)) {
+              throw "Generated XAML $file not found at $source"
+            }
+            Copy-Item $source (Join-Path $platformHarness $file)
+          }
+          dotnet run -c Release --project (Join-Path $platformHarness 'XamlPlatformEffectsConformance.csproj')
+          if ($LASTEXITCODE -ne 0) {
+            throw "Mosaic XAML platform library conformance failed with exit code $LASTEXITCODE"
+          }
+
       - name: Upload failed Mosaic TaskApp WinUI diagnostics
         if: failure() && runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
         uses: actions/upload-artifact@v7

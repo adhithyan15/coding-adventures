@@ -231,6 +231,41 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
         self.assertIn("namespace Windows.UI;", color_stub)
         self.assertIn("Color FromArgb", color_stub)
 
+    def test_windows_lane_checks_the_xaml_platform_library(self) -> None:
+        # UI87 §7.6: the platform library TaskApp's generated project compiled
+        # is installed by its window and driven headless in the same lane.
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        step = workflow.index("- name: Check the XAML platform library headless")
+        body = workflow[step : workflow.index("\n      - name:", step + 1)]
+        self.assertIn(
+            "if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'",
+            body,
+        )
+        self.assertIn("'mosaic-xaml-taskapp/xaml'", body)
+        self.assertIn("MosaicPlatformEffects.Install(this, appKinds: null);", body)
+        self.assertIn("conformance/xaml-platform-effects/*", body)
+        self.assertIn("'MosaicPlatformEffects.cs', 'MosaicRuntimeHost.cs'", body)
+        self.assertIn("XamlPlatformEffectsConformance.csproj", body)
+        self.assertIn("Mosaic XAML platform library conformance failed", body)
+        # After the TaskApp build that generates the files it copies.
+        self.assertLess(
+            workflow.index("Build concrete Mosaic TaskApp WinUI shell"), step
+        )
+
+        harness = XAML_CONFORMANCE.parent / "xaml-platform-effects"
+        project = (harness / "XamlPlatformEffectsConformance.csproj").read_text(
+            encoding="utf-8"
+        )
+        program = (harness / "Program.cs").read_text(encoding="utf-8")
+        self.assertIn("<TargetFramework>net9.0</TargetFramework>", project)
+        self.assertIn("MOSAIC_HEADLESS_TEST", project)
+        self.assertNotIn("Microsoft.WindowsAppSDK", project)
+        color_stub = (harness / "WindowsColorStub.cs").read_text(encoding="utf-8")
+        self.assertIn("namespace Windows.UI;", color_stub)
+        self.assertIn("Mosaic XAML platform effects conformance passed", program)
+        self.assertIn("class FakeDialogs : IMosaicFileDialogs", program)
+        self.assertIn("class FakeHost : IMosaicPlatformEffectHost", program)
+
     def test_conformance_engine_has_a_real_mosaic_package(self) -> None:
         self.assertTrue((XAML_PACKAGE / "mosaic-package.toml").is_file())
         for suffix in ("mil", "mll", "msl"):

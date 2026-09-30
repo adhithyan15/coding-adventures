@@ -10,7 +10,8 @@ capabilities, and no application carries its own copy (§7).
 | web family | `mosaic-file-effects.mjs` answers `files.*` | done (#16032) |
 | SwiftUI (macOS) | `MosaicPlatformEffects.swift` | done; iOS/iPadOS fail each request with a message until UI89 step 6 |
 | Qt | `MosaicPlatformEffects.{h,cpp}` | done (§7.4a) |
-| XAML, Flutter | — | not started |
+| XAML (WinUI 3) | `MosaicPlatformEffects.cs` | done (§7.6) |
+| Flutter | — | not started |
 
 First consumer: Journal's Export (J6a, #16034).
 
@@ -199,8 +200,9 @@ escape hatch, used deliberately and visibly.
 
 - `photo-picker-app` drops its four per-backend `files.open` handlers and uses
   the platform library, becoming the second consumer. *Compose and Qt done*
-  (their handlers removed; SwiftUI never had one); XAML and Flutter follow
-  their libraries.
+  (their handlers removed; SwiftUI never had one). XAML's library exists
+  (§7.6); photo-picker's XAML handler claims no kinds, so it is no longer
+  reached, and removing it is the follow-up. Flutter follows its library.
 - Engram's `importAnki` / `exportAnki` can later become `files.open` /
   `files.save` plus Rust-side parsing, which removes about 1,300 lines of
   per-backend handler code. That is a separate change.
@@ -240,6 +242,103 @@ second owner of an id. So on Qt:
 1. `files.save` and routing in the Compose platform library, with a
    conformance test; the browser executor answering `files.*`.
 2. Journal export (Compose and web) on top of it.
+
+### 7.6 XAML, as built
+
+`MosaicPlatformEffects.cs` answers the Compose library's contract: the same
+kinds, limits (50 MiB open, bounded while reading; 16 MiB save, checked on
+the encoded length first), MIME table in the same order, plain-name rule,
+executable list and failure messages. A Rust test pins the tables and
+messages to the Kotlin file. What differs is how WinUI 3 and a static host
+shape the rest:
+
+- **The host is static.** `MosaicRuntimeHost` is a static class, so the
+  router talks to it through `IMosaicPlatformEffectHost`, implemented by
+  `MosaicRuntimeHostEffects` (and by a fake in the test). The
+  generated `MainWindow.xaml.cs` installs the library with
+  `MosaicPlatformEffects.Install(this, appKinds: …)` right after
+  `MosaicRuntimeHost.LoadRequired();` and the package's own `[host_effects]`
+  handler, whose `kinds` become the `appKinds` array (`null` without them).
+  Before `LoadRequired` the host's `EffectHandler` setter assigns nothing, so
+  the order is load-bearing, as it is for the package handler. The stub shell
+  (no `LoadRequired`) compiles the file but installs nothing; it has no host.
+  A retried start (`Close`, then `LoadRequired`) is a new runtime with no
+  handler, and gets a new router along with the package handler.
+- **Answers go to the runtime that asked.** The static `CompleteEffect`
+  answers whichever runtime is loaded when it is called, and a fresh
+  runtime's effect ids restart at 1. A picker still open across a retried
+  start would therefore answer the new runtime, where the reused id could be
+  an unrelated effect — the conformance runtime confirms both ids are 1, and
+  the stale answer settled it. So `MosaicRuntimeHost` exposes an
+  `EffectScope`: a handle bound to the runtime loaded when it was taken,
+  whose `DeferEffect` refuses once that runtime is no longer the loaded one
+  and whose `CompleteEffect` throws `ObjectDisposedException` once it is
+  closed. `MosaicRuntimeHostEffects` wraps the scope taken at install, so a
+  late answer meets the closed runtime and the router drops it; the new
+  runtime's own router (with its own busy flag) is unaffected. The
+  effect-completion driver checks this against the real runtime.
+- **Threading.** The host calls `EffectHandler` inside its settle, holding a
+  reentrant lock, and WinUI pickers are asynchronous COM calls that can pump
+  messages. So each standard effect is deferred (`DeferEffect`) and the picker
+  is started from the window's `DispatcherQueue`, after the settle returns;
+  the answer comes from the picker's continuation on the same UI thread.
+  The file itself is read (up to 50 MiB, then base64-encoded) or written and
+  flushed on the thread pool (`await Task.Run`), so the window keeps
+  painting; the await resumes on the UI thread, where the answer is given.
+  Every path after deferral ends in `CompleteEffect`: a picker that throws
+  (an elevated process, a file with no local path) is
+  `failed { "the file dialog failed" }`, and so is a queue that refuses the
+  work (a closing window), which Compose's `invokeLater` cannot do. A host
+  closed underneath swallows the answer; nothing escapes. The payload is
+  cloned before the router marks itself busy (so nothing between taking
+  and handing on the busy flag can throw and strand it), because it belongs
+  to the host's parsed update. One file operation at a time, as elsewhere.
+- **Pickers.** `FileOpenPicker` / `FileSavePicker`, initialised with the
+  window's handle (`InitializeWithWindow`), which an unpackaged WinUI 3 app
+  must do or the picker throws. Open filters on the accepted extensions, or
+  `*`. Save is given the suggested name without its extension and that
+  extension as the first file-type choice (the picker appends the chosen
+  one), then the accepted ones; a name with no extension gets the `.` choice,
+  since the list may not be empty.
+- **Files through System.IO.** The pickers return a path, and reading and
+  writing go through `FileStream`, so the bounded read and the save are the
+  code the headless test runs. Save writes a `CreateNew` temporary beside the
+  target (owner-only on Unix) and flushes it to disk. On Windows, over an
+  existing file, it is put in place with `File.Replace` (`ReplaceFileW`,
+  `ignoreMetadataErrors`), which keeps the replaced file's ACL, attributes
+  and alternate streams — a plain move would give it the folder's inherited
+  ACL, widening a file the person had locked down; this goes further than
+  the Compose and Qt libraries, which leave the folder's ACL. A new file (or
+  a target gone by the time of the replace) falls back to
+  `File.Move(overwrite: true)` (`MoveFileEx`), and on Unix the move is
+  `rename`, with the replaced file's rwx bits (never setuid, setgid or
+  sticky) applied to the temporary through the open handle. Unverified:
+  `FileSavePicker` may create an empty placeholder at the chosen path before
+  returning (UWP's did); if it does, the save takes the `File.Replace` path
+  over that placeholder, whose ACL is the folder's anyway. A chosen path
+  that is a symlink or junction is written through to its target by
+  `File.Replace` (the move replaced the link itself); the person picked that
+  path, so this is the file they chose.
+  .NET has no `O_NONBLOCK`, so unlike SwiftUI and Qt a Unix FIFO cannot be
+  refused without blocking; the WinUI picker shows only the Windows file
+  system, which has none. `Convert.FromBase64String` skips whitespace, so the
+  alphabet is checked first, to refuse what Compose and SwiftUI refuse.
+- **Headless split.** Everything WinUI (the pickers, the window handle, the
+  `DispatcherQueue`) sits inside `#if !MOSAIC_HEADLESS_TEST`, which no
+  generated project defines, in one file rather than a split pair, so the
+  builder copies one file and a project cannot keep the logic without the
+  pickers. `conformance/xaml-platform-effects/` defines the symbol and runs
+  the Compose test's cases (and the SwiftUI harness's router cases) with a
+  fake picker and a fake host on plain .NET; CI runs it in the Windows XAML
+  lane against TaskApp's generated files, so the save's move runs on NTFS.
+  The WinUI half is compiled for real only by that lane's TaskApp build.
+
+**Known gap, the host's rather than the library's:** the XAML host has no
+props-changed notification (Compose's `propsChangedHandler`, SwiftUI's
+equivalent), so an answer given after deferral reaches the runtime at once
+but the window only at the next dispatch (or environment report, which
+re-applies a newer revision). The photo-picker handler this replaces had the
+same limit. Closing it is a host change.
 
 ## 6. What this does not decide
 
