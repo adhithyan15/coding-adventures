@@ -30,12 +30,13 @@
   the replaced regular file's rwx bits only when this user owns it (Linux
   `statx`, Apple `lstat`); otherwise 0600, or `& 0755` where the owner cannot
   be read. The `open(2)` flags come from per-ABI tables (Linux x64 and arm64,
-  macOS). Windows: `CreateFileW(CREATE_NEW)`, `WriteFile`, `FlushFileBuffers`,
+  macOS). Windows: `CreateFileW(CREATE_NEW, FILE_FLAG_OPEN_REPARSE_POINT)`, `WriteFile`, `FlushFileBuffers`,
   `CloseHandle` on that handle, then
   `MoveFileExW(REPLACE_EXISTING | WRITE_THROUGH)`.
 - Open on POSIX: after the path check, one `open(O_RDONLY | O_NONBLOCK |
   O_NOFOLLOW | O_CLOEXEC)` typed with `fstat` and read through that
-  descriptor, so a FIFO swapped in cannot block the read.
+  descriptor, so a FIFO swapped in cannot block the read; where the type
+  cannot be had (no `statx`, or refused), the read fails closed.
 - `FLUTTER_FILE_SELECTOR_VERSION` (`1.0.4`) and
   `flutter_pubspec_with_platform_effects` pin `file_selector` exactly in every
   generated pubspec. `flutter_pubspec_with_host_asset_dependencies` now leaves

@@ -433,10 +433,14 @@ Kotlin file. What differs is how Dart and Flutter shape the rest:
   it. The resolved path is then opened once with `O_RDONLY | O_NONBLOCK |
   O_NOFOLLOW | O_CLOEXEC` and typed with `fstat` on that descriptor, so a
   FIFO or device swapped in after the check is refused without blocking,
-  and a link swapped in is not followed. The bytes are read through the
-  same descriptor in 64 KiB chunks, bounded while reading.
-  On Windows the save is `CreateFileW(CREATE_NEW, no sharing)` beside the
-  target, `WriteFile` and `FlushFileBuffers` through that handle,
+  and a link swapped in is not followed. Where that descriptor's type
+  cannot be had -- no `statx` (glibc older than 2.28), or a sandbox that
+  refuses it -- the open fails closed with "couldn't read the selected
+  file" rather than read an untyped descriptor. The bytes are read through
+  the same descriptor in 64 KiB chunks, bounded while reading.
+  On Windows the save is `CreateFileW(CREATE_NEW, no sharing,
+  FILE_FLAG_OPEN_REPARSE_POINT)` beside the target, `WriteFile` and
+  `FlushFileBuffers` through that handle,
   `CloseHandle`, then `MoveFileExW(MOVEFILE_REPLACE_EXISTING |
   MOVEFILE_WRITE_THROUGH)`, the move the host uses for its own state (the
   temporary is deleted only on failure). The folder's ACL applies, as with

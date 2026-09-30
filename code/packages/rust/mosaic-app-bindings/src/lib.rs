@@ -1553,17 +1553,21 @@ mod tests {
             .find("bool _mosaicSavePosix(")
             .map(|at| &core[at..])
             .expect("the POSIX save");
+        let buffer = save.find("final buffer = malloc<Uint8>(max(length, 1));").expect("buffer first");
         let open = save
-            .find("flags.writeOnly |\n        flags.create |\n        flags.exclusive |\n        flags.noFollow |\n        flags.closeOnExec,\n    0x180, // 0600")
+            .find("flags.writeOnly |\n          flags.create |\n          flags.exclusive |\n          flags.noFollow |\n          flags.closeOnExec,\n      0x180, // 0600")
             .expect("an exclusive, no-follow, owner-only open");
-        let write = save.find("posix.write(descriptor, buffer + written").expect("write");
+        let write = save.find("buffer + written,").expect("write");
         let fchmod = save.find("posix.fchmod(descriptor, mode) == 0 &&").expect("fchmod");
         let fsync = save.find("posix.fsync(descriptor) == 0;").expect("fsync");
         let close = save.find("if (posix.close(descriptor) != 0) complete = false;").expect("close");
-        let rename = save.find("if (complete && posix.rename(temporary, full) == 0) return true;").expect("rename");
-        let unlink = save.find("  posix.unlink(temporary);\n  return false;").expect("unlink");
-        assert!(open < write && write < fchmod && fchmod < fsync && fsync < close);
-        assert!(close < rename && rename < unlink);
+        let rename = save.find("renamed = complete && posix.rename(temporary, full) == 0;").expect("rename");
+        let unlink = save.find("if (!renamed) posix.unlink(temporary);").expect("unlink");
+        let free = save.find("    malloc.free(buffer);\n  }\n}").expect("free last");
+        // The buffer exists before the open, so nothing between the open and
+        // the finally blocks can throw and leak the descriptor.
+        assert!(buffer < open && open < write && write < fchmod && fchmod < fsync);
+        assert!(fsync < close && close < rename && rename < unlink && unlink < free);
         for gone in [
             "_mosaicLibcPathMode",
             "privateDirectory",
@@ -1601,11 +1605,20 @@ mod tests {
         // The open: one descriptor, non-blocking and no-follow, typed by
         // fstat before it is read.
         assert!(core.contains("    MosaicOpenFlags.readOnly |\n        flags.nonBlocking |\n        flags.noFollow |\n        flags.closeOnExec,"));
-        assert!(core.contains("if (status != null && !mosaicIsRegularMode(status.mode)) {"));
+        // Fail closed: an untyped descriptor is never read; the buffer is
+        // allocated before the open.
+        assert!(core.contains("    if (status == null) return _mosaicUnreadable();\n    if (!mosaicIsRegularMode(status.mode)) {"));
+        let read = core
+            .find("Map<String, Object?>? mosaicReadThroughDescriptor(String path) {")
+            .map(|at| &core[at..])
+            .expect("the POSIX read");
+        assert!(read.find("buffer = malloc<Uint8>(chunk);").unwrap() < read.find("final descriptor = posix.open(").unwrap());
         // Windows: CreateFileW(CREATE_NEW), written and flushed through that
         // handle, then MoveFileExW with write-through, the move the host uses
         // for its own state.
         assert!(core.contains("const createNew = 1;"));
+        assert!(core.contains("const fileFlagOpenReparsePoint = 0x00200000;"));
+        assert!(core.contains("fileAttributeNormal | fileFlagOpenReparsePoint,"));
         assert!(core.contains("flushFileBuffers(handle) != 0"));
         assert!(core.contains("moveFileReplaceExisting | moveFileWriteThrough"));
         // No static host: nothing answers "whichever runtime is loaded".

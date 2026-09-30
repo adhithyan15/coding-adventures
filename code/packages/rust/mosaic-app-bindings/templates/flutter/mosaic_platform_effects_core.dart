@@ -554,10 +554,14 @@ Map<String, Object?> _mosaicOpened(String path, Uint8List bytes) {
 ///      -- and any read -- return at once on a FIFO swapped in, where a
 ///      blocking open would wait for a writer forever and hold `_busy`.
 ///   3. The type is `fstat` on that descriptor, never a second lookup: only a
-///      regular file is read. (Where `fstat` is unavailable -- a glibc older
-///      than 2.28 has no `statx` -- the up-front check and `O_NONBLOCK` still
-///      keep a FIFO from blocking; a device would read to the size limit.)
+///      regular file is read. Where the type cannot be had -- no `statx` (a
+///      glibc older than 2.28), or a sandbox that refuses it -- the read
+///      fails closed with the generic "couldn't read" message rather than
+///      read an untyped descriptor.
 ///   4. It is read through the same descriptor with `read(2)`.
+///
+/// The buffer is allocated before the open, so nothing between the open and
+/// the `finally` that closes the descriptor can throw.
 ///
 /// Null where there is no descriptor to read through (Windows, or a POSIX ABI
 /// without a flag table). Public so the conformance harness can hand it a
@@ -573,6 +577,13 @@ Map<String, Object?>? mosaicReadThroughDescriptor(String path) {
   } on Object {
     return _mosaicUnreadable();
   }
+  const chunk = 64 * 1024;
+  final Pointer<Uint8> buffer;
+  try {
+    buffer = malloc<Uint8>(chunk);
+  } on Object {
+    return _mosaicUnreadable();
+  }
   final flags = posix.flags;
   final descriptor = posix.open(
     resolved,
@@ -582,12 +593,15 @@ Map<String, Object?>? mosaicReadThroughDescriptor(String path) {
         flags.closeOnExec,
     0,
   );
-  if (descriptor < 0) return _mosaicUnreadable();
-  const chunk = 64 * 1024;
-  final buffer = malloc<Uint8>(chunk);
+  if (descriptor < 0) {
+    malloc.free(buffer);
+    return _mosaicUnreadable();
+  }
   try {
     final status = posix.statusOfDescriptor(descriptor);
-    if (status != null && !mosaicIsRegularMode(status.mode)) {
+    // Fail closed: an untyped descriptor is never read.
+    if (status == null) return _mosaicUnreadable();
+    if (!mosaicIsRegularMode(status.mode)) {
       return mosaicFailed('that is not a regular file');
     }
     final builder = BytesBuilder(copy: true);
@@ -788,40 +802,57 @@ bool _mosaicSavePosix(
     posix.statusOfPath(full) ?? _mosaicStatusWithoutOwner(full),
     posix.getuid(),
   );
-  final flags = posix.flags;
-  final descriptor = posix.open(
-    temporary,
-    flags.writeOnly |
-        flags.create |
-        flags.exclusive |
-        flags.noFollow |
-        flags.closeOnExec,
-    0x180, // 0600
-  );
-  if (descriptor < 0) return false;
-  var complete = false;
   final length = bytes.length;
+  // Allocated and filled before the open, so nothing between the open and
+  // the `finally` blocks below can throw and leak the descriptor or leave
+  // the temporary behind.
   final buffer = malloc<Uint8>(max(length, 1));
   try {
     buffer.asTypedList(length).setAll(0, bytes);
-    var written = 0;
-    while (written < length) {
-      final step = posix.write(descriptor, buffer + written, length - written);
-      // A regular file does not return EINTR mid-write; -1 or 0 is a failure.
-      if (step <= 0) break;
-      written += step;
+    final flags = posix.flags;
+    final descriptor = posix.open(
+      temporary,
+      flags.writeOnly |
+          flags.create |
+          flags.exclusive |
+          flags.noFollow |
+          flags.closeOnExec,
+      0x180, // 0600
+    );
+    // Nothing was created: whatever is at that name is not ours to remove.
+    if (descriptor < 0) return false;
+    var renamed = false;
+    try {
+      var complete = false;
+      try {
+        var written = 0;
+        while (written < length) {
+          final step = posix.write(
+            descriptor,
+            buffer + written,
+            length - written,
+          );
+          // A regular file does not return EINTR mid-write; -1 or 0 fails.
+          if (step <= 0) break;
+          written += step;
+        }
+        complete =
+            written == length &&
+            posix.fchmod(descriptor, mode) == 0 &&
+            posix.fsync(descriptor) == 0;
+      } finally {
+        if (posix.close(descriptor) != 0) complete = false;
+      }
+      renamed = complete && posix.rename(temporary, full) == 0;
+      return renamed;
+    } finally {
+      // The temporary is ours (O_EXCL created it); unlink removes the name,
+      // never follows it.
+      if (!renamed) posix.unlink(temporary);
     }
-    complete =
-        written == length &&
-        posix.fchmod(descriptor, mode) == 0 &&
-        posix.fsync(descriptor) == 0;
   } finally {
     malloc.free(buffer);
-    if (posix.close(descriptor) != 0) complete = false;
   }
-  if (complete && posix.rename(temporary, full) == 0) return true;
-  posix.unlink(temporary);
-  return false;
 }
 
 /// The chosen path's type and rwx bits, owner unknown -- for a POSIX system
@@ -1137,9 +1168,10 @@ typedef _MosaicMoveFileEx = int Function(Pointer<Utf16>, Pointer<Utf16>, int);
 
 /// The Windows save, through the handle that created the temporary:
 ///
-///   1. `CreateFileW(temporary, GENERIC_WRITE, no sharing, CREATE_NEW)` -- a
-///      new file or nothing: anything already at that name, a link included,
-///      fails the call and is left alone;
+///   1. `CreateFileW(temporary, GENERIC_WRITE, no sharing, CREATE_NEW,
+///      FILE_FLAG_OPEN_REPARSE_POINT)` -- a new file or nothing: anything
+///      already at that name, a link included, fails the call and is left
+///      alone (the reparse-point flag is belt and braces);
 ///   2. `WriteFile` and `FlushFileBuffers` on that handle, then `CloseHandle`;
 ///   3. `MoveFileExW(MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH)` --
 ///      the move the generated host uses for its own state file. Only if
@@ -1166,6 +1198,8 @@ bool _mosaicSaveWindows(String full, String temporary, Uint8List bytes) {
   const genericWrite = 0x40000000;
   const createNew = 1;
   const fileAttributeNormal = 0x80;
+  // Belt and braces with CREATE_NEW: never act on a reparse point's target.
+  const fileFlagOpenReparsePoint = 0x00200000;
   const invalidHandleValue = -1; // (HANDLE)-1
   const moveFileReplaceExisting = 0x1;
   const moveFileWriteThrough = 0x8;
@@ -1183,7 +1217,7 @@ bool _mosaicSaveWindows(String full, String temporary, Uint8List bytes) {
       0,
       nullptr,
       createNew,
-      fileAttributeNormal,
+      fileAttributeNormal | fileFlagOpenReparsePoint,
       nullptr,
     );
     if (handle.address == invalidHandleValue) return false;
