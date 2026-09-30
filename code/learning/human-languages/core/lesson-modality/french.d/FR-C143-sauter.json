@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C143-sauter",
+    "language": "french",
+    "chapter": 143,
+    "sequence": 6810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0b809f95b440d7f"
+  },
+  "findings": []
+}

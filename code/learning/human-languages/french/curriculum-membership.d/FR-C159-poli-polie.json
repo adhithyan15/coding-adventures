@@ -1,0 +1,11 @@
+{
+  "id": "FR-C159-poli-polie",
+  "pathSegment": "FR-PATH-159-QUAL159",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-159-QUAL159",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:fb818a5c32091097",
+  "lessonIds": [
+    "FR-C167-belle-mere",
+    "FR-C167-gendre",
+    "FR-C167-belle-fille",
+    "FR-C167-fiance",
+    "FR-C167-fiancee"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch167.txt",
+  "json": "french/narration/ch167.json",
+  "textHash": "fnv1a64:246dc8ef15d13aa6",
+  "jsonHash": "fnv1a64:4349ec95fae46f69",
+  "findings": []
+}

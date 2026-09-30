@@ -1,0 +1,19 @@
+{
+  "chapter": 164,
+  "title": "Passport, Customs, Booking, Butcher's, Large river",
+  "label": "ch:fr-passport-customs-booking-butcher-s-large-river",
+  "canDo": "I can say a passport, customs, a booking, a butcher's and a large river.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C164-fleuve",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 164: I can say a passport, customs, a booking, a butcher's and a large river.",
+    "assesses": [
+      "FR-LEX-C164-CHOSES164-03",
+      "FR-LEX-C164-CHOSES164-04",
+      "FR-LEX-C164-CHOSES164-05"
+    ]
+  }
+}

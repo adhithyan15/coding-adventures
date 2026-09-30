@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C161-moderne",
+    "language": "french",
+    "chapter": 161,
+    "sequence": 8070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0748088b93f26a0f"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 143,
+  "sourceHash": "fnv1a64:91981d826b321fcc",
+  "lessonIds": [
+    "FR-C143-allumer",
+    "FR-C143-eteindre",
+    "FR-C143-sauter",
+    "FR-C143-sourire",
+    "FR-C143-crier"
+  ],
+  "tex": "french/book/chapters/ch143-to-switch-on-to-switch-off-to-jump-to-smile-to-shout.tex"
+}

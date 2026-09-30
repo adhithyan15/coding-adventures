@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:c21de2546aa857d1",
+  "lessonIds": [
+    "FR-C150-eloigner",
+    "FR-C150-approcher",
+    "FR-C150-bavarder",
+    "FR-C150-brancher",
+    "FR-C150-livrer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch150.txt",
+  "json": "french/narration/ch150.json",
+  "textHash": "fnv1a64:18915b4957ac9d45",
+  "jsonHash": "fnv1a64:c8c01ada44ad6448",
+  "findings": []
+}

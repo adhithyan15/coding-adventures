@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C154-sante",
+    "language": "french",
+    "chapter": 154,
+    "sequence": 7530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2056c93bc113412d"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C162-celibataire",
+  "pathSegment": "FR-PATH-162-QUAL162",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-162-QUAL162",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 168,
+  "title": "Rule, Permission, Ban, Safety, Advice",
+  "label": "ch:fr-rule-permission-ban-safety-advice",
+  "canDo": "I can say a rule, permission, a ban, safety and advice.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C168-conseil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 168: I can say a rule, permission, a ban, safety and advice.",
+    "assesses": [
+      "FR-LEX-C168-CHOSES168-03",
+      "FR-LEX-C168-CHOSES168-04",
+      "FR-LEX-C168-CHOSES168-05"
+    ]
+  }
+}

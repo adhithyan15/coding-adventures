@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C150-brancher",
+    "language": "french",
+    "chapter": 150,
+    "sequence": 7170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c088935c66632501"
+  },
+  "findings": []
+}

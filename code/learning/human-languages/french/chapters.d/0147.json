@@ -1,0 +1,19 @@
+{
+  "chapter": 147,
+  "title": "To compare, To advise, To convince, To criticise, To prove",
+  "label": "ch:fr-to-compare-to-advise-to-convince-to-criticise-to-prove",
+  "canDo": "I can say to compare, to advise, to convince, to criticise and to prove.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C147-demontrer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 147: I can say to compare, to advise, to convince, to criticise and to prove.",
+    "assesses": [
+      "FR-LEX-C147-VERBES147-03",
+      "FR-LEX-C147-VERBES147-04",
+      "FR-LEX-C147-VERBES147-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C174-reunion",
+  "pathSegment": "FR-PATH-174-TRAV174",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-174-TRAV174",
+      "order": 3
+    }
+  ]
+}

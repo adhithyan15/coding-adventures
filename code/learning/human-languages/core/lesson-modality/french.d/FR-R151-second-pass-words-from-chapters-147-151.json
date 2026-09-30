@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R151-second-pass-words-from-chapters-147-151",
+    "language": "french",
+    "chapter": 151,
+    "sequence": 7250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c79ae4b24e5555b6"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C147-critiquer",
+  "pathSegment": "FR-PATH-147-VERBES147",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-147-VERBES147",
+      "order": 3
+    }
+  ]
+}

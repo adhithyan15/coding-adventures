@@ -1,0 +1,11 @@
+{
+  "id": "FR-C156-ensuite",
+  "pathSegment": "FR-PATH-156-TEMPS156",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-156-TEMPS156",
+      "order": 1
+    }
+  ]
+}

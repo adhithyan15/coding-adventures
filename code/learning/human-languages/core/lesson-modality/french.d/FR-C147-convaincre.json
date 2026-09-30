@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C147-convaincre",
+    "language": "french",
+    "chapter": 147,
+    "sequence": 7010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6fd89d50bd4e2902"
+  },
+  "findings": []
+}

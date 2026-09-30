@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 171,
+  "sourceHash": "fnv1a64:3f95b806ffb048a8",
+  "lessonIds": [
+    "FR-C171-volcan",
+    "FR-C171-plaine",
+    "FR-C171-cascade",
+    "FR-C171-rocher",
+    "FR-C171-caillou"
+  ],
+  "tex": "french/book/chapters/ch171-volcano-plain-waterfall-rock-pebble.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C171-cascade",
+    "language": "french",
+    "chapter": 171,
+    "sequence": 8780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a584bf28f7c994d"
+  },
+  "findings": []
+}

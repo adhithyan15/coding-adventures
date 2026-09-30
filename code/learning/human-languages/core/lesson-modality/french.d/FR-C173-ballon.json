@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C173-ballon",
+    "language": "french",
+    "chapter": 173,
+    "sequence": 8860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c05136c94b32fed5"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C168-securite",
+    "language": "french",
+    "chapter": 168,
+    "sequence": 8450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b9cc51141292f26"
+  },
+  "findings": []
+}

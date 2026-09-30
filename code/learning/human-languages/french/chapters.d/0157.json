@@ -1,0 +1,19 @@
+{
+  "chapter": 157,
+  "title": "Above, Below, In front, Behind, Beside",
+  "label": "ch:fr-above-below-in-front-behind-beside",
+  "canDo": "I can say above, below, in front, behind and beside.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "FR-C157-a-cote",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 157: I can say above, below, in front, behind and beside.",
+    "assesses": [
+      "FR-LEX-C157-LIEU157-03",
+      "FR-LEX-C157-LIEU157-04",
+      "FR-LEX-C157-LIEU157-05"
+    ]
+  }
+}

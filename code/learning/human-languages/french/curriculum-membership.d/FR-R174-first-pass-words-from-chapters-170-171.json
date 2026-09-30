@@ -1,0 +1,11 @@
+{
+  "id": "FR-R174-first-pass-words-from-chapters-170-171",
+  "pathSegment": "FR-PATH-174-TRAV174",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-174-TRAV174",
+      "order": 5
+    }
+  ]
+}

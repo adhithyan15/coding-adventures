@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C147-critiquer",
+    "language": "french",
+    "chapter": 147,
+    "sequence": 7020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:765d6ff0e8691848"
+  },
+  "findings": []
+}

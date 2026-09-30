@@ -1,0 +1,11 @@
+{
+  "id": "FR-C152-baisser",
+  "pathSegment": "FR-PATH-152-VERBES152",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-152-VERBES152",
+      "order": 4
+    }
+  ]
+}

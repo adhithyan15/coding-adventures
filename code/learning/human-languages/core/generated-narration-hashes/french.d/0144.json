@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:67f56c91c058ed16",
+  "lessonIds": [
+    "FR-C144-expliquer",
+    "FR-C144-traduire",
+    "FR-C144-decider",
+    "FR-C144-essayer",
+    "FR-C144-continuer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch144.txt",
+  "json": "french/narration/ch144.json",
+  "textHash": "fnv1a64:562b7691bca8228c",
+  "jsonHash": "fnv1a64:23ca66c5c855f08d",
+  "findings": []
+}

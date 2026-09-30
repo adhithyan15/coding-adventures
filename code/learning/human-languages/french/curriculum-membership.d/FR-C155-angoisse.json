@@ -1,0 +1,11 @@
+{
+  "id": "FR-C155-angoisse",
+  "pathSegment": "FR-PATH-155-SANTE155",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-155-SANTE155",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 143,
+  "sourceHash": "fnv1a64:d17d9f915a906515",
+  "lessonIds": [
+    "FR-C143-allumer",
+    "FR-C143-eteindre",
+    "FR-C143-sauter",
+    "FR-C143-sourire",
+    "FR-C143-crier"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch143.txt",
+  "json": "french/narration/ch143.json",
+  "textHash": "fnv1a64:f12b317d9c92eb26",
+  "jsonHash": "fnv1a64:2fa853925303523c",
+  "findings": []
+}

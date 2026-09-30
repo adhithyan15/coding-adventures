@@ -1,0 +1,11 @@
+{
+  "id": "FR-C161-epice-epicee",
+  "pathSegment": "FR-PATH-161-QUAL161",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-161-QUAL161",
+      "order": 3
+    }
+  ]
+}

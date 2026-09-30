@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-166-CHOSES166",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a photographer, a journalist, an architect, a dentist and a pharmacist.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C152-avancer",
+  "pathSegment": "FR-PATH-152-VERBES152",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-152-VERBES152",
+      "order": 2
+    }
+  ]
+}

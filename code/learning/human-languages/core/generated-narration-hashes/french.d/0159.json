@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:fdfc37c2c5312bde",
+  "lessonIds": [
+    "FR-C159-confortable",
+    "FR-C159-inconfortable",
+    "FR-C159-poli-polie",
+    "FR-C159-impoli-impolie",
+    "FR-C159-desagreable"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch159.txt",
+  "json": "french/narration/ch159.json",
+  "textHash": "fnv1a64:ea10a6ed79f167ec",
+  "jsonHash": "fnv1a64:f3a3759459bc94d7",
+  "findings": []
+}

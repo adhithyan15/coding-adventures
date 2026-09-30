@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:43228554c65ff206",
+  "lessonIds": [
+    "FR-C161-moderne",
+    "FR-C161-ancien-ancienne",
+    "FR-C161-frais-fraiche",
+    "FR-C161-epice-epicee",
+    "FR-C161-cru-crue"
+  ],
+  "tex": "french/book/chapters/ch161-modern-former-fresh-spicy-raw.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C171-rocher",
+  "pathSegment": "FR-PATH-171-CHOSES171",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-171-CHOSES171",
+      "order": 3
+    }
+  ]
+}

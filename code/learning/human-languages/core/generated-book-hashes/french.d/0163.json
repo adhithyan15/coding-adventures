@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:6cf2c9ec5fa3192c",
+  "lessonIds": [
+    "FR-C163-appartement",
+    "FR-C163-salle-a-manger",
+    "FR-C163-balcon",
+    "FR-C163-serrure",
+    "FR-C163-sonnette"
+  ],
+  "tex": "french/book/chapters/ch163-flat-dining-room-balcony-lock-doorbell.tex"
+}

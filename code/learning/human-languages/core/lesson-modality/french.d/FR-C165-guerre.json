@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C165-guerre",
+    "language": "french",
+    "chapter": 165,
+    "sequence": 8270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f6529c27c5cc49c4"
+  },
+  "findings": []
+}

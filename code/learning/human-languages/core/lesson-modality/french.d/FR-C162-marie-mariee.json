@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C162-marie-mariee",
+    "language": "french",
+    "chapter": 162,
+    "sequence": 8150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f616f31bf98e5c31"
+  },
+  "findings": []
+}

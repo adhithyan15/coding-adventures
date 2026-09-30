@@ -1,0 +1,11 @@
+{
+  "id": "FR-C153-remarquer",
+  "pathSegment": "FR-PATH-153-VERBES153",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-153-VERBES153",
+      "order": 0
+    }
+  ]
+}

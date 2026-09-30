@@ -1,0 +1,11 @@
+{
+  "id": "FR-C162-marie-mariee",
+  "pathSegment": "FR-PATH-162-QUAL162",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-162-QUAL162",
+      "order": 3
+    }
+  ]
+}

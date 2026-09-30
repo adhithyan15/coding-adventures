@@ -1,0 +1,11 @@
+{
+  "id": "FR-C166-architecte",
+  "pathSegment": "FR-PATH-166-CHOSES166",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-166-CHOSES166",
+      "order": 2
+    }
+  ]
+}

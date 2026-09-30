@@ -1,0 +1,19 @@
+{
+  "chapter": 170,
+  "title": "Castle, Tower, Monument, Statue, Fountain",
+  "label": "ch:fr-castle-tower-monument-statue-fountain",
+  "canDo": "I can say a castle, a tower, a monument, a statue and a fountain.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C170-fontaine",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 170: I can say a castle, a tower, a monument, a statue and a fountain.",
+    "assesses": [
+      "FR-LEX-C170-CHOSES170-03",
+      "FR-LEX-C170-CHOSES170-04",
+      "FR-LEX-C170-CHOSES170-05"
+    ]
+  }
+}

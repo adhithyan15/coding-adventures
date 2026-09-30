@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:1b2354591193c527",
+  "lessonIds": [
+    "FR-C165-guerre",
+    "FR-C165-paix",
+    "FR-C165-armee",
+    "FR-C165-soldat",
+    "FR-C165-tradition"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch165.txt",
+  "json": "french/narration/ch165.json",
+  "textHash": "fnv1a64:45a2bfa97d5cab4e",
+  "jsonHash": "fnv1a64:c4442f88fb996da9",
+  "findings": []
+}

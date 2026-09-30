@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:3962e230b0087f55",
+  "lessonIds": [
+    "FR-C153-remarquer",
+    "FR-C153-remplacer",
+    "FR-C153-rencontrer",
+    "FR-C153-rougir",
+    "FR-C153-saigner"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch153.txt",
+  "json": "french/narration/ch153.json",
+  "textHash": "fnv1a64:68ba415a1d6b553a",
+  "jsonHash": "fnv1a64:eae8cdafef54c1b1",
+  "findings": []
+}

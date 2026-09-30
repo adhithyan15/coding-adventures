@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:6052a80204f73d22",
+  "lessonIds": [
+    "FR-C158-donc",
+    "FR-C158-pourtant",
+    "FR-C158-de-toute-facon",
+    "FR-C158-au-contraire",
+    "FR-C158-bien-que"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch158.txt",
+  "json": "french/narration/ch158.json",
+  "textHash": "fnv1a64:fe676426906ec423",
+  "jsonHash": "fnv1a64:b1bbc7aa4c98a53b",
+  "findings": []
+}

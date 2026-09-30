@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R160-second-pass-words-from-chapters-156-160",
+    "language": "french",
+    "chapter": 160,
+    "sequence": 7890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25824203ebe67850"
+  },
+  "findings": []
+}

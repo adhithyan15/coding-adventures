@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:d942340871ccda86",
+  "lessonIds": [
+    "FR-C170-chateau",
+    "FR-C170-tour",
+    "FR-C170-monument",
+    "FR-C170-statue",
+    "FR-C170-fontaine"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch170.txt",
+  "json": "french/narration/ch170.json",
+  "textHash": "fnv1a64:1aab7900036431c4",
+  "jsonHash": "fnv1a64:d6f1f78ab1ee3c43",
+  "findings": []
+}

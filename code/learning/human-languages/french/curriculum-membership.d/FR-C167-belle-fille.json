@@ -1,0 +1,11 @@
+{
+  "id": "FR-C167-belle-fille",
+  "pathSegment": "FR-PATH-167-CHOSES167",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-167-CHOSES167",
+      "order": 2
+    }
+  ]
+}

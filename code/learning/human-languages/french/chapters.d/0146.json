@@ -1,0 +1,19 @@
+{
+  "chapter": 146,
+  "title": "To be bored, To have fun, To get angry, To worry, To smoke",
+  "label": "ch:fr-to-be-bored-to-have-fun-to-get-angry-to-worry-to-smoke",
+  "canDo": "I can say to be bored, to have fun, to get angry, to worry and to smoke.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C146-fumer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 146: I can say to be bored, to have fun, to get angry, to worry and to smoke.",
+    "assesses": [
+      "FR-LEX-C146-VERBES146-03",
+      "FR-LEX-C146-VERBES146-04",
+      "FR-LEX-C146-VERBES146-05"
+    ]
+  }
+}

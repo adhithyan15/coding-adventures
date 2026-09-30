@@ -1,0 +1,19 @@
+{
+  "chapter": 156,
+  "title": "Rarely, Afterwards, Finally, From now on, Still",
+  "label": "ch:fr-rarely-afterwards-finally-from-now-on-still",
+  "canDo": "I can say rarely, afterwards, finally, from now on and still.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "FR-C156-encore",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 156: I can say rarely, afterwards, finally, from now on and still.",
+    "assesses": [
+      "FR-LEX-C156-TEMPS156-03",
+      "FR-LEX-C156-TEMPS156-04",
+      "FR-LEX-C156-TEMPS156-05"
+    ]
+  }
+}

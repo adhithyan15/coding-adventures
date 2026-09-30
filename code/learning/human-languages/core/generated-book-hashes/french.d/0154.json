@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:53a89f51e7e0e173",
+  "lessonIds": [
+    "FR-C154-sante",
+    "FR-C154-cerveau",
+    "FR-C154-poumon",
+    "FR-C154-foie",
+    "FR-C154-rein"
+  ],
+  "tex": "french/book/chapters/ch154-health-brain-lung-liver-kidney.tex"
+}

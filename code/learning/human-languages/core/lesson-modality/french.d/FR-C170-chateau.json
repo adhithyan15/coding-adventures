@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C170-chateau",
+    "language": "french",
+    "chapter": 170,
+    "sequence": 8710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a42c15a9c9b63e7a"
+  },
+  "findings": []
+}

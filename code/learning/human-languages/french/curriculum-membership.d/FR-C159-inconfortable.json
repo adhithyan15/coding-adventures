@@ -1,0 +1,11 @@
+{
+  "id": "FR-C159-inconfortable",
+  "pathSegment": "FR-PATH-159-QUAL159",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-159-QUAL159",
+      "order": 1
+    }
+  ]
+}

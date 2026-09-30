@@ -1,0 +1,11 @@
+{
+  "id": "FR-C157-au-dessous",
+  "pathSegment": "FR-PATH-157-LIEU157",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-157-LIEU157",
+      "order": 1
+    }
+  ]
+}

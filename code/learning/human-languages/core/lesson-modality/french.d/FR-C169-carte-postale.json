@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C169-carte-postale",
+    "language": "french",
+    "chapter": 169,
+    "sequence": 8470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80cce2c1966405a0"
+  },
+  "findings": []
+}
