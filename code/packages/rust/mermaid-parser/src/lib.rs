@@ -4051,14 +4051,24 @@ pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseErro
                     Some(token.value[open + 1..close].trim().to_string());
             }
             "FRAME_STATEMENT" => {
-                let inline_open = token.value.find('{');
-                let inline_data = inline_open.map(|open| {
-                    let close = token.value.rfind('}').expect("grammar requires inline data to close");
-                    token.value[open + 1..close].trim().to_string()
+                let data_start = [
+                    token.value.find('{'),
+                    token.value.find('"'),
+                    token.value.find('\''),
+                ]
+                .into_iter()
+                .flatten()
+                .min();
+                let inline_data = data_start.map(|start| {
+                    let delimiter = token.value.as_bytes()[start] as char;
+                    let close_delimiter = if delimiter == '{' { '}' } else { delimiter };
+                    let close = token.value.rfind(close_delimiter)
+                        .expect("grammar requires inline data to close");
+                    token.value[start + 1..close].trim().to_string()
                 });
-                let mut frame_end = inline_open.unwrap_or(token.value.len());
-                let data_type = inline_open.and_then(|open| {
-                    let prefix = token.value[..open].trim_end();
+                let mut frame_end = data_start.unwrap_or(token.value.len());
+                let data_type = data_start.and_then(|start| {
+                    let prefix = token.value[..start].trim_end();
                     if !prefix.ends_with('`') {
                         return None;
                     }

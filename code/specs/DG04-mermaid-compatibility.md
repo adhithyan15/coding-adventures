@@ -492,7 +492,8 @@ compatibility gap.
 The initial Mermaid 11.16.1 Event Modeling slice uses dedicated portable
 grammars and semantic event-model IR for numbered time and reset frames,
 entity-kind aliases, qualified namespaces, inferred sequence relations, and
-explicit multi-source relations. Typed and untyped inline frame data plus
+explicit multi-source relations. Typed and untyped inline frame data in object,
+single-quoted, or double-quoted form plus
 reusable multiline data blocks survive in semantic IR and render as secondary
 frame labels. Temporal swimlane layout lowers through
 backend-neutral PaintScene instructions and a native Metal-to-PNG fixture.
