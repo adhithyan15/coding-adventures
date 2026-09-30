@@ -277,12 +277,7 @@ fn expand_at(
         let def = &stored.def;
         let produced = match &def.params {
             None => {
-                let expansion = map.intern_expansion(
-                    &name,
-                    cur.position,
-                    def.defined_at,
-                    cur.expansion,
-                );
+                let expansion = intern_invocation(map, &name, &cur, def.defined_at, bounds)?;
                 substitute_object_like(def, cur.hide, name_id, expansion, hides, bounds, spend)?
             }
             Some(params) => {
@@ -295,24 +290,8 @@ fn expand_at(
                     continue;
                 }
                 let (args, close_hide) = collect_args(&mut work, params.len(), bounds, spend, &cur)?;
-                let expansion = map.intern_expansion(
-                    &name,
-                    cur.position,
-                    def.defined_at,
-                    cur.expansion,
-                );
-                let args = args
-                    .into_iter()
-                    .map(|argument| {
-                        argument
-                            .into_iter()
-                            .map(|mut token| {
-                                token.expansion = Some(expansion);
-                                token
-                            })
-                            .collect()
-                    })
-                    .collect();
+                let expansion = intern_invocation(map, &name, &cur, def.defined_at, bounds)?;
+                let args = attach_arguments(args, cur.expansion, expansion, map, bounds)?;
                 let expanded_args = pre_expand_args(
                     args,
                     table,
@@ -351,6 +330,42 @@ fn expand_at(
     }
 
     Ok(out)
+}
+
+fn intern_invocation(
+    map: &mut SourceMap,
+    name: &str,
+    invocation: &MToken,
+    defined_at: Position,
+    bounds: &Bounds,
+) -> Result<ExpansionId, PpError> {
+    if map.expansion_count() as u64 >= bounds.expansion_rounds {
+        return Err(PpError::new("macro provenance exceeded the expansion node budget"));
+    }
+    Ok(map.intern_expansion(name, invocation.position, defined_at, invocation.expansion))
+}
+
+fn attach_arguments(
+    args: Vec<Vec<MToken>>,
+    old_parent: Option<ExpansionId>,
+    new_parent: ExpansionId,
+    map: &mut SourceMap,
+    bounds: &Bounds,
+) -> Result<Vec<Vec<MToken>>, PpError> {
+    let mut attached = Vec::with_capacity(args.len());
+    for mut argument in args {
+        for token in &mut argument {
+            token.expansion = match token.expansion {
+                Some(inner) if Some(inner) != old_parent => Some(
+                    map.reparent_chain(inner, old_parent, new_parent, bounds.expansion_rounds)
+                        .ok_or_else(|| PpError::new("macro provenance exceeded the expansion node budget"))?,
+                ),
+                _ => Some(new_parent),
+            };
+        }
+        attached.push(argument);
+    }
+    Ok(attached)
 }
 
 /// Charge `n` tokens and `bytes` of token text against the budgets.
@@ -769,6 +784,39 @@ mod tests {
         let mut t = MacroTable::new();
         func(&mut t, "ID", &["x"], "x");
         assert_eq!(run(&t, "ID ( 42 )").unwrap(), "42");
+    }
+
+    #[test]
+    fn forwarding_an_already_expanded_argument_keeps_every_macro() {
+        let mut t = MacroTable::new();
+        obj(&mut t, "H", "7");
+        func(&mut t, "G", &["x"], "x");
+        func(&mut t, "F", &["x"], "G ( x )");
+        func(&mut t, "OUTER", &["x"], "F ( x )");
+        let mut hides = HideSets::new();
+        let mut spend = Spend::default();
+        let mut map = SourceMap::new();
+        let out = expand(toks("OUTER ( H )"), &t, &mut hides, &mut map, &Bounds::default(), &mut spend).unwrap();
+        assert_eq!(out.len(), 1);
+        assert_eq!(out[0].token.value, "7");
+        let mut names = Vec::new();
+        let mut cursor = out[0].expansion;
+        while let Some(id) = cursor {
+            names.push(map.expansion_site(id).unwrap().0);
+            cursor = map.expansion_parent(id);
+        }
+        assert_eq!(names, ["H", "G", "F", "OUTER"]);
+        assert_eq!(out[0].position, position());
+
+        // Four substitutions fit this limit, but forwarding needs copied
+        // provenance nodes. Refuse them before the arena can grow without bound.
+        let mut hides = HideSets::new();
+        let mut spend = Spend::default();
+        let mut map = SourceMap::new();
+        let bounds = Bounds { expansion_rounds: 4, ..Bounds::default() };
+        let err = expand(toks("OUTER ( H )"), &t, &mut hides, &mut map, &bounds, &mut spend)
+            .expect_err("the copied chain must obey the node cap");
+        assert!(err.to_string().contains("provenance"), "{err}");
     }
 
     #[test]

@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — forwarded macro provenance repair
+
+- Preserve an argument's earlier macro expansions when another function macro
+  forwards it. Copy and memoize the affected chain prefix without changing
+  shared records, and cap copied nodes before allocation.
+- Add a regression that failed on `H -> G -> F -> OUTER` and a tight-budget
+  check for the copied provenance nodes.
+
 ## Unreleased — VM-069 expansion provenance
 
 - Expanded tokens now retain the physical position of their macro-body

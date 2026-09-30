@@ -43,6 +43,7 @@
 //! which makes the map `O(tokens + expansions)`. This is load-bearing for the
 //! memory bounds in [`crate::bounds`], not an optimisation.
 
+use std::collections::HashMap;
 use std::num::NonZeroU32;
 
 /// An opaque handle to a source file.
@@ -68,7 +69,7 @@ impl FileId {
 }
 
 /// An interned macro expansion: which macro, expanded where, nested in what.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct ExpansionId(u32);
 
 #[derive(Debug, Clone)]
@@ -115,6 +116,8 @@ pub struct Locus {
 pub struct SourceMap {
     loci: Vec<Locus>,
     expansions: Vec<Expansion>,
+    /// Reuse copied prefixes when a pre-expanded argument appears repeatedly.
+    reparented: HashMap<(ExpansionId, Option<ExpansionId>, ExpansionId), ExpansionId>,
 }
 
 impl SourceMap {
@@ -179,6 +182,46 @@ impl SourceMap {
     #[must_use]
     pub fn expansion_definition(&self, id: ExpansionId) -> Option<Position> {
         self.expansions.get(id.0 as usize).map(|e| e.defined_at)
+    }
+
+    /// Insert a new invocation between an argument's existing expansion
+    /// prefix and its shared outer parent. Copy the prefix: mutating an arena
+    /// record would change every earlier token that points to it. Memoized
+    /// copies and the pre-allocation cap bound work and memory.
+    pub(crate) fn reparent_chain(
+        &mut self,
+        inner: ExpansionId,
+        old_parent: Option<ExpansionId>,
+        new_parent: ExpansionId,
+        max_nodes: u64,
+    ) -> Option<ExpansionId> {
+        let mut prefix = Vec::new();
+        let mut cursor = Some(inner);
+        let mut parent = new_parent;
+        while let Some(id) = cursor {
+            if Some(id) == old_parent {
+                break;
+            }
+            if let Some(&cached) = self.reparented.get(&(id, old_parent, new_parent)) {
+                parent = cached;
+                break;
+            }
+            let expansion = self.expansions.get(id.0 as usize)?;
+            prefix.push(id);
+            cursor = expansion.parent;
+        }
+        if (self.expansions.len() as u64).saturating_add(prefix.len() as u64) > max_nodes {
+            return None;
+        }
+        for id in prefix.into_iter().rev() {
+            let original = self.expansions[id.0 as usize].clone();
+            let copied = self.intern_expansion(
+                original.name, original.at, original.defined_at, Some(parent),
+            );
+            self.reparented.insert((id, old_parent, new_parent), copied);
+            parent = copied;
+        }
+        Some(parent)
     }
 
     /// Number of interned expansions. With [`SourceMap::len`] this is the whole

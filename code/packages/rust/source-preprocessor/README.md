@@ -120,6 +120,9 @@ interned chain whose nodes record the macro name, definition site, invocation
 site, and parent expansion. Nested object-like expansion and function-argument
 pre-expansion both preserve that chain, while the side table remains
 `O(tokens + expansions)`.
+Forwarding an already expanded argument through another function macro keeps
+the inner macro in the chain. Shared expansion nodes stay immutable; copied
+prefixes are memoized and capped by the expansion-round limit.
 
 One implementation limitation remains recorded rather than papered over:
 argument pre-expansion is the one place the expander recurses natively; it is
