@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Let the GET-only GitHub Pages dry-run boundary use the fixed `GITHUB_TOKEN`
+  when available, avoiding shared anonymous API limits while preserving
+  tokenless local inspection.
+
 ## 0.5.0 — 2026-09-27
 
 - Added `forme deploy` through CLI Builder with mutually exclusive directory,

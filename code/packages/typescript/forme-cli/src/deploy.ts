@@ -173,7 +173,8 @@ export async function executeDeploy(invocation: DeployInvocation): Promise<strin
       ? undefined
       : await readBoundedJson(resolveInput(invocation.cwd, invocation.bootstrapOwnershipPath)) as GitHubPagesBootstrapExpectation;
     if (invocation.dryRun) {
-      const boundary = createGitHubRestReadBoundary();
+      const token = process.env.GITHUB_TOKEN;
+      const boundary = createGitHubRestReadBoundary(token === undefined ? {} : { token });
       if (bootstrap !== undefined) assertBootstrapExpectation(bootstrap, config);
       await inspectGitHubPagesSite({
         ...common,

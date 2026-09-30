@@ -306,10 +306,12 @@ boundary and fail closed instead.
 
 ### 5.2 Environment variables
 
-The filesystem target reads no environment variables. A real GitHub Pages
-publication reads exactly `GITHUB_TOKEN`; anonymous dry-run reads no credential.
-The fixed target config value prevents selecting an arbitrary environment
-variable. No other deploy-specific environment variables exist in v0.
+The filesystem target reads no environment variables. GitHub Pages publication
+reads exactly `GITHUB_TOKEN`. Its GET-only dry-run boundary uses that same token
+when it is present (for authenticated API rate limits) and remains anonymous
+when it is absent. The fixed target config value prevents selecting an
+arbitrary environment variable. No other deploy-specific environment variables
+exist in v0.
 
 ### 5.3 Exit codes
 

@@ -3,13 +3,15 @@ import { constants } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { executeDeploy, materializeDeployInput } from "../src/index.js";
 
 const roots: string[] = [];
 const encoder = new TextEncoder();
 
 afterEach(async () => {
+  vi.unstubAllEnvs();
+  vi.unstubAllGlobals();
   await Promise.all(roots.splice(0).map(root => rm(root, { recursive: true, force: true })));
 });
 
@@ -94,6 +96,42 @@ describe("executeDeploy", () => {
     };
     expect(published.summary.totalBytesWritten).toBe(4);
     expect(await readFile(join(target, "index.html"), "utf8")).toBe("home");
+  });
+
+  it("authenticates the GET-only GitHub dry-run boundary when the fixed token is available", async () => {
+    const root = await temporaryRoot();
+    const packaged = await materializeDeployInput({
+      site: { variant: { kind: "dist-tree" }, files: { "index.html": encoder.encode("home") } },
+    }, "input", root);
+    const targetConfig = join(root, "github-pages.json");
+    await writeFile(targetConfig, JSON.stringify({
+      owner: "octo",
+      repository: "site",
+      ref: "heads/gh-pages",
+      deploymentOwner: "blog",
+      destination: "blog",
+      tokenEnv: "GITHUB_TOKEN",
+    }));
+    let authorization: string | null = null;
+    vi.stubEnv("GITHUB_TOKEN", "read-token");
+    vi.stubGlobal("fetch", vi.fn(async (_input: string | URL | Request, init?: RequestInit) => {
+      authorization = new Headers(init?.headers).get("Authorization");
+      return new Response('{"message":"stop after observing the request"}', {
+        status: 403,
+        headers: { "Content-Type": "application/json" },
+      });
+    }));
+
+    await expect(executeDeploy({
+      cwd: root,
+      manifestPath: packaged.manifestPath,
+      content: { kind: "directory", path: packaged.contentDirectory },
+      target: "github-pages",
+      targetConfigPath: targetConfig,
+      retryLimit: 0,
+      dryRun: true,
+    })).rejects.toThrow(/403/);
+    expect(authorization).toBe("Bearer read-token");
   });
 
   it("rejects unexpected directory-store entries without reading them", async () => {
