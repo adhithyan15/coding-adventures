@@ -175,11 +175,12 @@ LLVM's `SourceManager` does. That makes the map `O(tokens + expansions)`. This
 is normative, because §6's memory bounds depend on it.
 
 **Implemented in VM-069.** `MToken` carries its physical `Position` and an
-optional `ExpansionId`; every actual substitution interns one node containing
-the macro name, definition site, invocation site, and parent. Macro-body tokens
-therefore keep their defining file/line/column while diagnostics can walk from
-the innermost expansion out through nested object-like and function-argument
-expansions. `lexer::token::Token` remains unchanged.
+optional `ExpansionId`; every actual substitution interns an invocation node
+containing the macro name, definition site, invocation site, and parent.
+Macro-body tokens therefore keep their defining file/line/column while
+diagnostics can walk from the innermost expansion out through nested
+object-like and function-argument expansions. `lexer::token::Token` remains
+unchanged.
 
 Function-argument forwarding must preserve an argument's existing inner macro
 chain. If `H` is pre-expanded inside `OUTER(x)` and its result passes through

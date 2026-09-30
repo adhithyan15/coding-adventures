@@ -216,7 +216,10 @@ impl SourceMap {
         for id in prefix.into_iter().rev() {
             let original = self.expansions[id.0 as usize].clone();
             let copied = self.intern_expansion(
-                original.name, original.at, original.defined_at, Some(parent),
+                original.name,
+                original.at,
+                original.defined_at,
+                Some(parent),
             );
             self.reparented.insert((id, old_parent, new_parent), copied);
             parent = copied;

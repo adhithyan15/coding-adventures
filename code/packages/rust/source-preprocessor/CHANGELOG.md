@@ -1,13 +1,5 @@
 # Changelog
 
-## Unreleased — forwarded macro provenance repair
-
-- Preserve an argument's earlier macro expansions when another function macro
-  forwards it. Copy and memoize the affected chain prefix without changing
-  shared records, and cap copied nodes before allocation.
-- Add a regression that failed on `H -> G -> F -> OUTER` and a tight-budget
-  check for the copied provenance nodes.
-
 ## Unreleased — VM-069 expansion provenance
 
 - Expanded tokens now retain the physical position of their macro-body
@@ -16,8 +8,12 @@
   position, and parent expansion. `SourceMap::expansion_definition` exposes the
   definition end of that diagnostic chain.
 - Nested object-like expansion and function-argument pre-expansion preserve
-  parent links. One node is allocated per actual substitution, so provenance
-  remains `O(tokens + expansions)` rather than copying a chain per token.
+  parent links. Each actual substitution allocates its invocation node;
+  forwarded arguments copy and memoize only the affected prefix because shared
+  records cannot be mutated. All arena nodes obey the expansion-round cap, so
+  provenance remains bounded rather than copying an unbounded chain per token.
+- A regression covers `H -> G -> F -> OUTER`, plus a tight-budget check for
+  copied provenance nodes.
 - `MacroDef` records its definition position and `MToken` carries position and
   expansion metadata alongside its hide set. The shared lexer `Token` remains
   unchanged.

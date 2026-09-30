@@ -515,8 +515,10 @@ The completed provenance path below supersedes that approximation.
 
 **Expansion provenance implemented in this selected slice:** `MToken` now
 carries its physical `Position` and `Option<ExpansionId>` alongside the hide
-set. Every actual substitution interns one expansion node with the macro name,
-definition position, invocation position, and parent. `emit` writes that data
+set. Every actual substitution interns an invocation node with the macro name,
+definition position, invocation position, and parent. Forwarded, already
+expanded arguments copy and memoize only the affected prefix so shared records
+remain immutable; copied nodes obey the same arena cap. `emit` writes that data
 to `Locus`, and `SourceMap::expansion_definition` exposes the definition end of
 the chain. Macro-body spellings keep their defining file/line/column rather
 than being restamped with an unrelated file.
@@ -528,9 +530,10 @@ expansion**" as one of the three hard parts this crate exists to solve, and
 stays `O(tokens + expansions)` rather than `O(tokens × depth)`.
 
 The acceptance proof covers an included-file definition used in the main file,
-nested object-like macros, and function-argument pre-expansion. It asserts one
-arena node per actual substitution, correct innermost-to-outermost parents, and
-ordinary tokens with no expansion. The shared lexer `Token` remains unchanged.
+nested object-like macros, function-argument pre-expansion, and an
+already-expanded argument forwarded through two function macros. It asserts
+correct innermost-to-outermost parents, bounded copied prefixes, and ordinary
+tokens with no expansion. The shared lexer `Token` remains unchanged.
 
 Worth doing before C (slice 4): C programs nest macros deeply enough that
 "which expansion produced this token" is the difference between a usable

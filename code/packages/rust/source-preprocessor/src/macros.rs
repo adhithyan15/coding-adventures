@@ -796,7 +796,15 @@ mod tests {
         let mut hides = HideSets::new();
         let mut spend = Spend::default();
         let mut map = SourceMap::new();
-        let out = expand(toks("OUTER ( H )"), &t, &mut hides, &mut map, &Bounds::default(), &mut spend).unwrap();
+        let out = expand(
+            toks("OUTER ( H )"),
+            &t,
+            &mut hides,
+            &mut map,
+            &Bounds::default(),
+            &mut spend,
+        )
+        .unwrap();
         assert_eq!(out.len(), 1);
         assert_eq!(out[0].token.value, "7");
         let mut names = Vec::new();
@@ -813,7 +821,10 @@ mod tests {
         let mut hides = HideSets::new();
         let mut spend = Spend::default();
         let mut map = SourceMap::new();
-        let bounds = Bounds { expansion_rounds: 4, ..Bounds::default() };
+        let bounds = Bounds {
+            expansion_rounds: 4,
+            ..Bounds::default()
+        };
         let err = expand(toks("OUTER ( H )"), &t, &mut hides, &mut map, &bounds, &mut spend)
             .expect_err("the copied chain must obey the node cap");
         assert!(err.to_string().contains("provenance"), "{err}");
