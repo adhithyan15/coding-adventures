@@ -247,9 +247,10 @@ An acyclic boolean recurrence may use an exact conditional expression to choose
 different boolean values on successive passes and then select recurrence-cycle
 statements or expressions. Such an exact evolving selector may also choose
 between a directly self-recursive boolean leaf and a non-recursive exact leaf;
-a finite chain of distinct exact bare-variable copies may sit between that
-selector recurrence and the partial self-recursive assignment. Copy cycles and
-unknown conditional inputs still fail closed.
+a finite chain of distinct exact boolean identity copies may sit between that
+selector recurrence and the partial self-recursive assignment. These include
+bare variables, neutral boolean operations, and even `not` chains. Copy cycles,
+changing expressions, and unknown conditional inputs still fail closed.
 Unknown selectors, unsupported selector or dependency writes, string targets, overflow,
 non-finite values, and loops that do not reach false within 4,096 evaluations
 fail closed.
