@@ -3758,8 +3758,16 @@ fn emit_container(
     } else {
         None
     };
+    let cross_axis_alignment = flutter_cross_axis_alignment(&props, widget);
+    let cross_axis_arg = cross_axis_alignment
+        .map(|alignment| format!("{inner_pad}crossAxisAlignment: {alignment},\n"))
+        .unwrap_or_default();
     let body = if children.is_empty() {
-        format!("{pad}const {widget}(children: [])\n")
+        if let Some(alignment) = cross_axis_alignment {
+            format!("{pad}const {widget}(crossAxisAlignment: {alignment}, children: [])\n")
+        } else {
+            format!("{pad}const {widget}(children: [])\n")
+        }
     } else if let Some(gap) = gap {
         let axis = if widget == "Row" {
             "Axis.horizontal"
@@ -3767,10 +3775,10 @@ fn emit_container(
             "Axis.vertical"
         };
         format!(
-            "{pad}{widget}(\n{inner_pad}children: _mosaicWithGap(<Widget>[\n{children}{inner_pad}], {gap}, {axis}),\n{pad})\n"
+            "{pad}{widget}(\n{cross_axis_arg}{inner_pad}children: _mosaicWithGap(<Widget>[\n{children}{inner_pad}], {gap}, {axis}),\n{pad})\n"
         )
     } else {
-        format!("{pad}{widget}(\n{inner_pad}children: [\n{children}{inner_pad}],\n{pad})\n")
+        format!("{pad}{widget}(\n{cross_axis_arg}{inner_pad}children: [\n{children}{inner_pad}],\n{pad})\n")
     };
 
     // `Row`/`Column`/`Stack` have no decoration mechanism of their own
@@ -3908,6 +3916,20 @@ fn emit_container(
         ));
     }
     Ok(body)
+}
+
+fn flutter_cross_axis_alignment(
+    props: &HashMap<String, String>,
+    widget: &str,
+) -> Option<&'static str> {
+    let value = props.get("align")?.trim();
+    let alignment = match (widget, value) {
+        ("Row", "center-vertical" | "center")
+        | ("Column", "center-horizontal" | "center") => "CrossAxisAlignment.center",
+        _ => return None,
+    };
+    record_style_read("align");
+    Some(alignment)
 }
 
 /// Walk a sibling list with two pieces of sibling-aware behaviour:
@@ -16069,6 +16091,59 @@ mod tests {
             assert_eq!(drops.len(), 1, "got: {drops:?}");
             assert_eq!(drops[0].name, "font-size");
         }
+    }
+
+    #[test]
+    fn flex_align_lowers_to_cross_axis_alignment() {
+        for (tag, value) in [
+            ("Row", "center-vertical"),
+            ("Column", "center-horizontal"),
+        ] {
+            let m = component("X", vec![], vec![]);
+            let l = layout(
+                "X",
+                flex_node_with_part(tag, "items", vec![text_node("one"), text_node("two")]),
+            );
+            let s = style_with_part(
+                "X",
+                "items",
+                vec![StyleProp {
+                    name: "align".into(),
+                    value: value.into(),
+                }],
+            );
+
+            let out = from_pipeline(&m, &l, &s).expect("ok").output;
+
+            assert!(
+                out.contains("crossAxisAlignment: CrossAxisAlignment.center"),
+                "got:\n{out}"
+            );
+            assert!(dropped_style_properties(&m, &l, &s).is_empty());
+        }
+    }
+
+    #[test]
+    fn unsupported_flutter_align_value_remains_a_reported_drop() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            flex_node_with_part("Row", "items", vec![text_node("one")]),
+        );
+        let s = style_with_part(
+            "X",
+            "items",
+            vec![StyleProp {
+                name: "align".into(),
+                value: "space-between".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(!out.contains("crossAxisAlignment:"), "got:\n{out}");
+        let drops = dropped_style_properties(&m, &l, &s);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "align");
     }
 
     // ====================================================================
