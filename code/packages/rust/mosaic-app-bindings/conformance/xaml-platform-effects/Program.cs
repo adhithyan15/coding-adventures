@@ -52,28 +52,68 @@ internal sealed class FakeDialogs : IMosaicFileDialogs
     }
 }
 
+/// <summary>
+/// One runtime's effect surface. The library reads and writes files on the
+/// thread pool and answers when that finishes, so an answer can arrive on
+/// another thread after the call that queued the work returned: answers are
+/// recorded under a lock, and <see cref="Answer"/> waits for one.
+/// </summary>
 internal sealed class FakeHost : IMosaicPlatformEffectHost
 {
+    private readonly object gate = new();
+    private readonly Dictionary<ulong, string> answers = new();
+    private int completeAttempts;
+
     public Action<ulong, string, JsonElement, string>? EffectHandler { get; set; }
     public HashSet<ulong> WaitingOn { get; set; } = new();
     public List<ulong> Deferred { get; } = new();
-    public Dictionary<ulong, string> Answers { get; } = new();
-    public bool ThrowOnComplete { get; set; }
+
+    /// <summary>
+    /// Closed, as the generated host's runtime is after <c>Close</c>: deferral
+    /// is refused and an answer throws ObjectDisposedException, which is what
+    /// <c>MosaicRuntimeHost.EffectScope</c> does for a runtime a retried start
+    /// replaced.
+    /// </summary>
+    public bool Closed { get; set; }
+
+    public int CompleteAttempts => Volatile.Read(ref completeAttempts);
 
     public bool DeferEffect(ulong id)
     {
-        if (!WaitingOn.Contains(id)) return false;
-        Deferred.Add(id);
-        return true;
+        lock (gate)
+        {
+            if (Closed || !WaitingOn.Contains(id)) return false;
+            Deferred.Add(id);
+            return true;
+        }
     }
 
     public void CompleteEffect(ulong id, object result)
     {
-        if (ThrowOnComplete) throw new InvalidOperationException("the runtime is closed");
-        // Recorded as the JSON the real host would hand the runtime.
-        Answers[id] = JsonSerializer.Serialize(result);
-        WaitingOn.Remove(id);
+        Interlocked.Increment(ref completeAttempts);
+        lock (gate)
+        {
+            if (Closed) throw new ObjectDisposedException("MosaicRuntimeHost");
+            // Recorded as the JSON the real host would hand the runtime.
+            answers[id] = JsonSerializer.Serialize(result);
+            WaitingOn.Remove(id);
+        }
     }
+
+    public bool HasAnswer(ulong id)
+    {
+        lock (gate) return answers.ContainsKey(id);
+    }
+
+    /// <summary>The answer for <paramref name="id"/>, waiting up to ten seconds for it.</summary>
+    public string? Answer(ulong id)
+    {
+        SpinWait.SpinUntil(() => HasAnswer(id), TimeSpan.FromSeconds(10));
+        lock (gate) return answers.TryGetValue(id, out var json) ? json : null;
+    }
+
+    public void WaitForAttempts(int count) =>
+        SpinWait.SpinUntil(() => CompleteAttempts >= count, TimeSpan.FromSeconds(10));
 }
 
 internal static class Program
@@ -113,14 +153,14 @@ internal static class Program
         outcome.TryGetValue("ok", out var ok) ? ok as Dictionary<string, object?> : null;
 
     private static string? AnsweredFailure(FakeHost host, ulong id) =>
-        host.Answers.TryGetValue(id, out var json)
+        host.Answer(id) is { } json
         && JsonDocument.Parse(json).RootElement is { ValueKind: JsonValueKind.Object } root
         && root.TryGetProperty("failed", out var failed)
             ? failed.GetProperty("message").GetString()
             : null;
 
     private static string? AnsweredName(FakeHost host, ulong id) =>
-        host.Answers.TryGetValue(id, out var json)
+        host.Answer(id) is { } json
         && JsonDocument.Parse(json).RootElement is { ValueKind: JsonValueKind.Object } root
         && root.TryGetProperty("ok", out var ok)
             ? ok.GetProperty("name").GetString()
@@ -358,7 +398,7 @@ internal static class Program
         host.WaitingOn = new HashSet<ulong> { 1, 2 };
         host.EffectHandler!(1, "files.save", payload, "await");
         Check(host.Deferred.SequenceEqual(new ulong[] { 1 }), "a standard kind is deferred before any picker");
-        Check(!host.Answers.ContainsKey(1) && queued.Count == 1, "answered later, on the UI queue");
+        Check(!host.HasAnswer(1) && queued.Count == 1, "answered later, on the UI queue");
         // One file operation at a time: a second request while the first is open.
         host.EffectHandler!(2, "files.save", payload, "await");
         Check(AnsweredFailure(host, 2) == "another file operation is in progress", "busy");
@@ -394,19 +434,19 @@ internal static class Program
         host.WaitingOn = new HashSet<ulong> { 5 };
         host.EffectHandler!(5, "files.open", NoPayload, "notify");
         Check(appCalls.SequenceEqual(new[] { "importAnki" }), $"only the claimed kind reaches the app: {string.Join(",", appCalls)}");
-        Check(!host.Answers.ContainsKey(4) && !host.Answers.ContainsKey(5), "nothing answered for 4 and 5");
+        Check(!host.HasAnswer(4) && !host.HasAnswer(5), "nothing answered for 4 and 5");
         Check(queued.Count == 0, "a notify opens no picker");
 
         // Not waiting on the id: no picker, and the router is free again.
         host.WaitingOn = new HashSet<ulong>();
         host.EffectHandler!(6, "files.open", NoPayload, "await");
-        Check(queued.Count == 0 && !host.Answers.ContainsKey(6), "an id nobody awaits opens nothing");
+        Check(queued.Count == 0 && !host.HasAnswer(6), "an id nobody awaits opens nothing");
         host.WaitingOn = new HashSet<ulong> { 7 };
         host.EffectHandler!(7, "files.open", NoPayload, "AWAIT");
         Check(queued.Count == 1, "the router is not left busy by a refused deferral (and AWAIT is an await)");
         queued[0]();
         queued.Clear();
-        Check(host.Answers.ContainsKey(7), "answered after the refused deferral");
+        Check(host.Answer(7) is not null, "answered after the refused deferral");
 
         // A claimed standard kind reaches the app, not the library.
         var claimed = new FakeHost();
@@ -432,14 +472,14 @@ internal static class Program
         partly.EffectHandler!(1, "files.open", NoPayload, "await");
         Check(partlyCalls.Count == 0 && claimedQueue.Count == 1, "the unclaimed standard kind reaches the library");
         claimedQueue[0]();
-        Check(partly.Answers[1] == "{\"cancelled\":{}}", $"a cancelled picker answers cancelled: {partly.Answers[1]}");
+        Check(partly.Answer(1) == "{\"cancelled\":{}}", $"a cancelled picker answers cancelled: {partly.Answer(1)}");
 
         // No app handler and no kinds: a custom kind goes to nobody here.
         var bare = new FakeHost();
         MosaicPlatformEffects.Install(bare, null, new FakeDialogs(null), work => { work(); return true; });
         bare.WaitingOn = new HashSet<ulong> { 1 };
         bare.EffectHandler!(1, "importAnki", NoPayload, "await");
-        Check(!bare.Answers.ContainsKey(1) && bare.Deferred.Count == 0, "no handler: left for the host's sweep");
+        Check(!bare.HasAnswer(1) && bare.Deferred.Count == 0, "no handler: left for the host's sweep");
 
         // A queue that refuses the work (a closing window): failed at once,
         // because a deferred effect is out of the host's sweep.
@@ -469,12 +509,54 @@ internal static class Program
         Check(AnsweredFailure(broken, 2) == "the file dialog failed", "and does not leave the router busy");
 
         // A host that refuses the answer (closed underneath): nothing escapes.
-        var closed = new FakeHost { ThrowOnComplete = true };
-        MosaicPlatformEffects.Install(closed, null, new FakeDialogs(null), work => { work(); return true; });
-        closed.WaitingOn = new HashSet<ulong> { 1, 2 };
+        var closedQueue = new List<Action>();
+        var closed = new FakeHost();
+        MosaicPlatformEffects.Install(closed, null, new FakeDialogs(null), work =>
+        {
+            closedQueue.Add(work);
+            return true;
+        });
+        closed.WaitingOn = new HashSet<ulong> { 1 };
         closed.EffectHandler!(1, "files.open", NoPayload, "await");
-        closed.EffectHandler!(2, "files.open", NoPayload, "await");
-        Check(closed.Deferred.SequenceEqual(new ulong[] { 1, 2 }), "a refused answer does not leave the router busy");
+        closed.Closed = true;
+        closedQueue[0]();
+        closed.WaitForAttempts(1);
+        Check(closed.CompleteAttempts == 1 && !closed.HasAnswer(1), "an answer to a closed host is dropped, not thrown");
+
+        // A retried start (Close, then LoadRequired) swaps the runtime while a
+        // picker from the old one is still open (UI87 §7.6). The old router is
+        // bound to the old runtime: its late answer meets that closed runtime
+        // and is dropped, and never reaches the new runtime -- which reuses
+        // effect id 1 -- nor holds the new router busy.
+        var oldQueue = new List<Action>();
+        var oldHost = new FakeHost();
+        MosaicPlatformEffects.Install(oldHost, null, new FakeDialogs(target), work =>
+        {
+            oldQueue.Add(work);
+            return true;
+        });
+        oldHost.WaitingOn = new HashSet<ulong> { 1 };
+        oldHost.EffectHandler!(1, "files.save", payload, "await");
+        Check(oldHost.Deferred.SequenceEqual(new ulong[] { 1 }) && oldQueue.Count == 1, "the old runtime's picker is open");
+        oldHost.Closed = true;
+        var newQueue = new List<Action>();
+        var newHost = new FakeHost();
+        MosaicPlatformEffects.Install(newHost, null, new FakeDialogs(null), work =>
+        {
+            newQueue.Add(work);
+            return true;
+        });
+        newHost.WaitingOn = new HashSet<ulong> { 1 };
+        newHost.EffectHandler!(1, "files.open", NoPayload, "await");
+        Check(newHost.Deferred.SequenceEqual(new ulong[] { 1 }) && newQueue.Count == 1,
+            "the new runtime's router is not busy with the old runtime's picker");
+        oldQueue[0](); // the old picker finishes, after the swap
+        oldHost.WaitForAttempts(1);
+        Check(oldHost.CompleteAttempts == 1 && !oldHost.HasAnswer(1), "the late answer went to the old runtime, which dropped it");
+        Check(!newHost.HasAnswer(1) && newHost.CompleteAttempts == 0,
+            "a late answer from the old runtime never reaches the new one");
+        newQueue[0]();
+        Check(newHost.Answer(1) == "{\"cancelled\":{}}", "the new runtime gets only its own answer");
     }
 
     private static string JsonEscape(string text)

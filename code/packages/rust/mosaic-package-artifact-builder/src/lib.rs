@@ -6322,15 +6322,11 @@ fn xaml_main_with_host_effects(
     // After the package's handler: the router wraps whatever handler is set
     // when it is installed, so this order is what lets the app's kinds reach
     // the app (UI87 §7.2).
-    writeln!(
-        out,
-        "{}",
-        xaml_platform_install_line(
-            &indent,
-            handler.and_then(|handler| handler.kinds.as_deref())
-        )
-    )
-    .expect("write XAML platform-effects install");
+    let install = xaml_platform_install_line(
+        &indent,
+        handler.and_then(|handler| handler.kinds.as_deref()),
+    )?;
+    writeln!(out, "{install}").expect("write XAML platform-effects install");
     out.push_str(&generated[line_end..]);
     Ok(out)
 }
@@ -6338,22 +6334,55 @@ fn xaml_main_with_host_effects(
 /// The `MainWindow.xaml.cs` line that installs the platform library (UI87
 /// §7.6). The package handler's `kinds` become a C# array literal the router
 /// checks; without `kinds`, `null` keeps the original meaning.
-fn xaml_platform_install_line(indent: &str, kinds: Option<&[String]>) -> String {
+///
+/// Each kind is spliced into a C# string literal. The manifest already
+/// refuses any kind outside the dotted-name shape, but this is the line that
+/// would turn a quote or backslash into generated code, so it checks the
+/// shape again itself rather than trusting a validation it cannot see: a
+/// `HostEffectsSection` built some other way (a test, a future caller) gets a
+/// build error, never an injected statement. An empty list -- also refused
+/// by the manifest -- is `System.Array.Empty<string>()`, which claims
+/// nothing, rather than the malformed-looking `new[] {  }`.
+fn xaml_platform_install_line(
+    indent: &str,
+    kinds: Option<&[String]>,
+) -> Result<String, BuildError> {
     let claimed = match kinds {
         None => "null".to_string(),
-        Some(kinds) => format!(
-            "new[] {{ {} }}",
-            kinds
-                .iter()
-                .map(|kind| format!("\"{kind}\""))
-                .collect::<Vec<_>>()
-                .join(", ")
-        ),
+        Some([]) => "System.Array.Empty<string>()".to_string(),
+        Some(kinds) => {
+            if let Some(bad) = kinds.iter().find(|kind| !is_host_effect_kind_shape(kind)) {
+                return Err(BuildError::Io(format!(
+                    "`[host_effects]` XAML handler kind {bad:?} is not a dotted name \
+                     (letters, digits and `_`, segments starting with a letter, \
+                     joined by `.`), so it cannot be written into MainWindow.xaml.cs"
+                )));
+            }
+            format!(
+                "new[] {{ {} }}",
+                kinds
+                    .iter()
+                    .map(|kind| format!("\"{kind}\""))
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            )
+        }
     };
-    format!(
+    Ok(format!(
         "{indent}// Mosaic's platform library: standard effect kinds, routed by kind (UI87 §7).\n\
          {indent}MosaicPlatformEffects.Install(this, appKinds: {claimed});"
-    )
+    ))
+}
+
+/// The manifest's `host_effect_kind_re`, `^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$`,
+/// by hand: dot-separated segments, each an ASCII letter followed by ASCII
+/// letters, digits or `_`. No quote, backslash, space or newline can pass.
+fn is_host_effect_kind_shape(kind: &str) -> bool {
+    kind.split('.').all(|segment| {
+        let mut chars = segment.chars();
+        matches!(chars.next(), Some(first) if first.is_ascii_alphabetic())
+            && chars.all(|c| c.is_ascii_alphanumeric() || c == '_')
+    })
 }
 
 fn build_electron_package_json(
@@ -18148,6 +18177,86 @@ handlers = [
             1,
             "{wired}"
         );
+    }
+
+    /// The install line checks each kind's shape itself before splicing it
+    /// into a C# string literal, rather than trusting the manifest's check.
+    #[test]
+    fn the_xaml_install_line_refuses_a_kind_that_is_not_a_dotted_name() {
+        for bad in [
+            "a\"); Evil(); (\"",
+            "a\\b",
+            "files.",
+            ".save",
+            "files..save",
+            "has space",
+            "1st",
+            "line\nbreak",
+            "caf\u{e9}",
+            "",
+        ] {
+            let kinds = vec![bad.to_string()];
+            let error = xaml_platform_install_line("    ", Some(&kinds))
+                .expect_err("a kind outside the dotted-name shape must be refused");
+            assert!(
+                format!("{error:?}").contains("not a dotted name"),
+                "{bad:?}: {error:?}"
+            );
+        }
+        let kinds: Vec<String> = ["files.save", "importAnki", "a_b.c9"]
+            .iter()
+            .map(|kind| kind.to_string())
+            .collect();
+        let line = xaml_platform_install_line("    ", Some(&kinds)).expect("valid kinds");
+        assert!(
+            line.ends_with(r#"appKinds: new[] { "files.save", "importAnki", "a_b.c9" });"#),
+            "{line}"
+        );
+    }
+
+    /// The builder's shape check accepts exactly what the manifest accepts,
+    /// so it can never refuse a package the manifest let through.
+    #[test]
+    fn the_xaml_kind_check_agrees_with_the_manifest() {
+        for kind in [
+            "files.save",
+            "importAnki",
+            "a_b.c9",
+            "A",
+            "files.",
+            ".save",
+            "has space",
+            "1st",
+            "a-b",
+            "a\\b",
+            "a\"b",
+        ] {
+            let manifest = format!(
+                "[package]\nname = \"mosaic-pkg-probe\"\nversion = \"0.1.0\"\n\
+                 description = \"probe\"\nlicense = \"MIT\"\n\n[components]\n\
+                 exports = [\"Probe\"]\n\n[dependencies]\n\n[host_effects]\n\
+                 handlers = [ {{ backend = \"xaml\", install = \"Probe.Install\", kinds = [{kind:?}] }} ]\n\n\
+                 [kernel]\nversion = \"1\"\n"
+            );
+            assert_eq!(
+                mosaic_package_manifest::parse(&manifest).is_ok(),
+                is_host_effect_kind_shape(kind),
+                "{kind:?}"
+            );
+        }
+    }
+
+    /// An empty list claims nothing, spelled as C# says it.
+    #[test]
+    fn an_empty_xaml_kind_list_is_an_empty_array() {
+        let line = xaml_platform_install_line("", Some(&[])).expect("empty kinds");
+        assert!(
+            line.ends_with(
+                "MosaicPlatformEffects.Install(this, appKinds: System.Array.Empty<string>());"
+            ),
+            "{line}"
+        );
+        assert!(!line.contains("new[] {"), "{line}");
     }
 
     /// A handler for another backend leaves the XAML package handler out.

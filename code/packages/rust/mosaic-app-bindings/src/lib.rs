@@ -705,12 +705,60 @@ mod tests {
         );
         assert!(xaml.contains("work => queue.TryEnqueue(() => work())"));
         // Deferred before any picker; a refused queue is answered, not lost.
-        let deferred = xaml.find("if (!host.DeferEffect(id))").expect("defer");
+        let deferred = xaml.find("owned = host.DeferEffect(id);").expect("defer");
         let queued = xaml.find("queued = runOnUi(").expect("queue");
         let refused = xaml
             .find("TryComplete(id, MosaicPlatformEffects.Failed(\"the file dialog failed\"));")
             .expect("refused");
         assert!(deferred < queued && queued < refused);
+        // Copied before the router is marked busy, so a throw cannot strand it.
+        let clone = xaml.find("payload.Clone();").expect("clone");
+        let busy = xaml
+            .find("Interlocked.CompareExchange(ref busy, 1, 0)")
+            .expect("busy");
+        assert!(clone < busy);
+        // File I/O runs off the UI thread.
+        assert!(xaml.contains("return await Task.Run(() => ReadOpened(chosen));"));
+        assert!(xaml.contains("return await Task.Run(() => WriteReplacing(target, bytes));"));
+        // Saving over a file on Windows keeps its ACL and attributes.
+        assert!(xaml.contains(
+            "File.Replace(temporary, full, destinationBackupFileName: null, ignoreMetadataErrors: true);"
+        ));
+    }
+
+    /// A picker left open across a retried start (`Close`, then
+    /// `LoadRequired`) must not answer the new runtime, whose effect ids
+    /// restart (UI87 §7.6). So the library never answers through the static
+    /// host, which forwards to whichever runtime is loaded; it answers through
+    /// an `EffectScope` bound to the runtime loaded at install.
+    #[test]
+    fn xaml_platform_effects_answer_the_runtime_that_asked() {
+        let xaml = xaml_platform_effects("Mosaic.Generated");
+        let code: String = xaml
+            .lines()
+            .filter(|line| !line.trim_start().starts_with("//"))
+            .collect::<Vec<_>>()
+            .join("\n");
+        for static_call in [
+            "MosaicRuntimeHost.CompleteEffect(",
+            "MosaicRuntimeHost.DeferEffect(",
+            "MosaicRuntimeHost.EffectHandler",
+        ] {
+            assert!(!code.contains(static_call), "{static_call}");
+        }
+        assert!(xaml.contains("MosaicRuntimeHost.EffectScope.Current() is { } scope"));
+        assert!(xaml.contains("public void CompleteEffect(ulong id, object result) => scope.CompleteEffect(id, result);"));
+        assert!(xaml.contains("if (MosaicRuntimeHostEffects.Current() is not { } host) return;"));
+
+        let host = xaml_runtime_binding("Mosaic.Generated");
+        assert!(host.contains("public sealed class EffectScope"));
+        assert!(host.contains("public bool IsCurrent => ReferenceEquals(State, runtime);"));
+        assert!(host.contains(
+            "public bool DeferEffect(ulong id) => IsCurrent && runtime.DeferEffect(id);"
+        ));
+        assert!(host.contains(
+            "public void CompleteEffect(ulong id, object result) => runtime.CompleteEffect(id, result);"
+        ));
     }
 
     /// AppKit exists only on macOS; the iOS app target compiles this file too

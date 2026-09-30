@@ -26,7 +26,16 @@ Compose library's `MosaicPlatformEffectsTest.kt` and the SwiftUI harness's
   a notify ignored, a refused deferral leaving it free, and every way the
   work can fail after deferral (a refused or throwing queue, a throwing
   picker, a host that refuses the answer) still ending in an answer or, for
-  a closed host, in nothing escaping.
+  a closed host, in nothing escaping;
+- a runtime swapped while a picker is open (a retried start): the old
+  router's late answer is dropped by the closed runtime, never reaches the
+  new one (which reuses the effect id), and does not hold the new router
+  busy. Answers arrive from the thread pool, where the file I/O runs, so the
+  fake host records them under a lock and the checks wait for them.
+
+The binding to one runtime is the generated host's `EffectScope`; the
+effect-completion driver (`tests/xaml_effect_driver`, case `scoped`) checks
+it against the real conformance runtime.
 
 The `.csproj` defines `MOSAIC_HEADLESS_TEST`, which compiles the library
 without its WinUI fence (the pickers, the window handle and the

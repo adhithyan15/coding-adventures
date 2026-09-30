@@ -317,6 +317,76 @@ internal static class Driver
                 + Suffix(persisted, settledStatus));
     }
 
+    /// A deferred effect answered AFTER a retried start (Close, then
+    /// LoadRequired) must not reach the new runtime (UI87 §7.6).
+    ///
+    /// The static `CompleteEffect` answers whichever runtime is loaded, and a
+    /// fresh runtime's effect ids restart -- so a picker left open across a
+    /// retry could settle an unrelated effect that reuses its id. An
+    /// `EffectScope` is bound to the runtime it was taken from: after the
+    /// swap it refuses to defer, its answer throws, and the new runtime's
+    /// effect stays exactly as it was.
+    private static async Task CaseScopedAcrossRetry()
+    {
+        var oldScope = MosaicRuntimeHost.EffectScope.Current()!;
+        ulong? oldId = null;
+        oldScope.EffectHandler = (id, kind, payload, delivery) =>
+        {
+            if (!IsAwait(delivery)) return;
+            oldId = id;
+            oldScope.DeferEffect(id); // "the picker is open"
+        };
+        await Request();
+        Check(oldId is not null && oldScope.IsCurrent, "the old runtime's effect is deferred");
+
+        // The retry: a new runtime, and a new effect deferred on it.
+        MosaicRuntimeHost.Close();
+        MosaicRuntimeHost.LoadRequired();
+        var newScope = MosaicRuntimeHost.EffectScope.Current()!;
+        ulong? newId = null;
+        newScope.EffectHandler = (id, kind, payload, delivery) =>
+        {
+            if (!IsAwait(delivery)) return;
+            newId = id;
+            newScope.DeferEffect(id);
+        };
+        var (pending, _) = await Request();
+        Check(!oldScope.IsCurrent && newScope.IsCurrent, "the retry replaced the runtime");
+        Check(Awaited(pending, "new runtime") == 1, "the new runtime awaits its own effect");
+        Console.WriteLine($"effect ids: old {oldId}, new {newId}");
+        Check(!oldScope.DeferEffect(newId ?? 0), "a scope on a closed runtime defers nothing");
+
+        // ...and now the old picker finishes.
+        var refused = false;
+        try
+        {
+            oldScope.CompleteEffect(oldId!.Value, new Dictionary<string, object?>
+            {
+                ["ok"] = new Dictionary<string, object?> { ["amount"] = 9 },
+            });
+        }
+        catch (ObjectDisposedException)
+        {
+            refused = true;
+        }
+        Check(refused, "a late answer to the closed runtime is refused");
+        var after = new EffectComponent();
+        MosaicRuntimeHost.ApplyProps(after);
+        Check(
+            Awaited(after, "after late answer") == 1,
+            "the late answer did not settle the new runtime's effect");
+
+        newScope.EffectHandler = null;
+        newScope.CompleteEffect(newId!.Value, new Dictionary<string, object?>
+        {
+            ["ok"] = new Dictionary<string, object?> { ["amount"] = 4 },
+        });
+        var settled = new EffectComponent();
+        MosaicRuntimeHost.ApplyProps(settled);
+        Check(Awaited(settled, "own answer") == 0, "the new runtime's own answer settles it");
+        Check(Counted(settled, "own answer") == 4, "and its value, not the stale one, reached the app");
+    }
+
     public static async Task<int> Main()
     {
         var probeCase = Environment.GetEnvironmentVariable("MOSAIC_PROBE_CASE") ?? string.Empty;
@@ -330,6 +400,7 @@ internal static class Driver
             case "runaway": await CaseRunawayChaining(); break;
             case "closes": await CaseHandlerClosesHost(); break;
             case "deferred": await CaseDeferred(); break;
+            case "scoped": await CaseScopedAcrossRetry(); break;
             default:
                 Console.WriteLine($"unknown MOSAIC_PROBE_CASE `{probeCase}`");
                 return 2;

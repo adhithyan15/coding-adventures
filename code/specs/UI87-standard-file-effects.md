@@ -253,8 +253,8 @@ messages to the Kotlin file. What differs is how WinUI 3 and a static host
 shape the rest:
 
 - **The host is static.** `MosaicRuntimeHost` is a static class, so the
-  router talks to it through `IMosaicPlatformEffectHost`, implemented by a
-  forwarding `MosaicRuntimeHostEffects` (and by a fake in the test). The
+  router talks to it through `IMosaicPlatformEffectHost`, implemented by
+  `MosaicRuntimeHostEffects` (and by a fake in the test). The
   generated `MainWindow.xaml.cs` installs the library with
   `MosaicPlatformEffects.Install(this, appKinds: …)` right after
   `MosaicRuntimeHost.LoadRequired();` and the package's own `[host_effects]`
@@ -264,18 +264,35 @@ shape the rest:
   (no `LoadRequired`) compiles the file but installs nothing; it has no host.
   A retried start (`Close`, then `LoadRequired`) is a new runtime with no
   handler, and gets a new router along with the package handler.
+- **Answers go to the runtime that asked.** The static `CompleteEffect`
+  answers whichever runtime is loaded when it is called, and a fresh
+  runtime's effect ids restart at 1. A picker still open across a retried
+  start would therefore answer the new runtime, where the reused id could be
+  an unrelated effect — the conformance runtime confirms both ids are 1, and
+  the stale answer settled it. So `MosaicRuntimeHost` exposes an
+  `EffectScope`: a handle bound to the runtime loaded when it was taken,
+  whose `DeferEffect` refuses once that runtime is no longer the loaded one
+  and whose `CompleteEffect` throws `ObjectDisposedException` once it is
+  closed. `MosaicRuntimeHostEffects` wraps the scope taken at install, so a
+  late answer meets the closed runtime and the router drops it; the new
+  runtime's own router (with its own busy flag) is unaffected. The
+  effect-completion driver checks this against the real runtime.
 - **Threading.** The host calls `EffectHandler` inside its settle, holding a
   reentrant lock, and WinUI pickers are asynchronous COM calls that can pump
   messages. So each standard effect is deferred (`DeferEffect`) and the picker
   is started from the window's `DispatcherQueue`, after the settle returns;
   the answer comes from the picker's continuation on the same UI thread.
+  The file itself is read (up to 50 MiB, then base64-encoded) or written and
+  flushed on the thread pool (`await Task.Run`), so the window keeps
+  painting; the await resumes on the UI thread, where the answer is given.
   Every path after deferral ends in `CompleteEffect`: a picker that throws
   (an elevated process, a file with no local path) is
   `failed { "the file dialog failed" }`, and so is a queue that refuses the
   work (a closing window), which Compose's `invokeLater` cannot do. A host
   closed underneath swallows the answer; nothing escapes. The payload is
-  cloned before deferral, because it belongs to the host's parsed update.
-  One file operation at a time, as elsewhere.
+  cloned before the router marks itself busy (so nothing between taking
+  and handing on the busy flag can throw and strand it), because it belongs
+  to the host's parsed update. One file operation at a time, as elsewhere.
 - **Pickers.** `FileOpenPicker` / `FileSavePicker`, initialised with the
   window's handle (`InitializeWithWindow`), which an unpackaged WinUI 3 app
   must do or the picker throws. Open filters on the accepted extensions, or
@@ -286,12 +303,19 @@ shape the rest:
 - **Files through System.IO.** The pickers return a path, and reading and
   writing go through `FileStream`, so the bounded read and the save are the
   code the headless test runs. Save writes a `CreateNew` temporary beside the
-  target (owner-only on Unix), flushes it to disk and moves it over the
-  target with `File.Move(overwrite: true)` — `MoveFileEx` on Windows,
-  `rename` on Unix. On Windows the file's ACL is inherited from the folder,
-  as the Compose and Qt libraries leave it; on Unix the replaced file's rwx
-  bits (never setuid, setgid or sticky) are applied through the open handle.
-  `File.Replace` was not used: it fails when the target does not yet exist.
+  target (owner-only on Unix) and flushes it to disk. On Windows, over an
+  existing file, it is put in place with `File.Replace` (`ReplaceFileW`,
+  `ignoreMetadataErrors`), which keeps the replaced file's ACL, attributes
+  and alternate streams — a plain move would give it the folder's inherited
+  ACL, widening a file the person had locked down; this goes further than
+  the Compose and Qt libraries, which leave the folder's ACL. A new file (or
+  a target gone by the time of the replace) falls back to
+  `File.Move(overwrite: true)` (`MoveFileEx`), and on Unix the move is
+  `rename`, with the replaced file's rwx bits (never setuid, setgid or
+  sticky) applied to the temporary through the open handle. Unverified:
+  `FileSavePicker` may create an empty placeholder at the chosen path before
+  returning (UWP's did); if it does, the save takes the `File.Replace` path
+  over that placeholder, whose ACL is the folder's anyway.
   .NET has no `O_NONBLOCK`, so unlike SwiftUI and Qt a Unix FIFO cannot be
   refused without blocking; the WinUI picker shows only the Windows file
   system, which has none. `Convert.FromBase64String` skips whitespace, so the

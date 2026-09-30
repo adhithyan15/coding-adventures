@@ -43,8 +43,18 @@
 // calls that can pump messages -- so starting one inside the settle could let
 // an input event dispatch into the host half-way through that settle. Each
 // standard effect is therefore DEFERRED, and the picker is started from the
-// window's DispatcherQueue, after the settle has returned. The answer is
-// given from the picker's continuation, which resumes on the same UI thread.
+// window's DispatcherQueue, after the settle has returned. The file is read
+// or written on the thread pool (`Task.Run`), so a 50 MiB read never freezes
+// the window, and the answer is given back on the UI thread, where the
+// picker's continuation resumes.
+//
+// The answer goes to the runtime that asked. The generated host is static,
+// and a retried start (`Close`, then `LoadRequired`) swaps the runtime behind
+// it while a picker may still be open; the new runtime's effect ids restart,
+// so a late answer through the static `CompleteEffect` could settle an
+// unrelated effect. The router is therefore bound to the runtime loaded when
+// it was installed (`MosaicRuntimeHost.EffectScope`), and a late answer meets
+// that closed runtime and is dropped.
 //
 // Nothing may escape that work. Once deferred, an effect is out of the host's
 // fail sweep, so an exception that ended the task, or a queue that refused
@@ -99,22 +109,40 @@ public interface IMosaicPlatformEffectHost
     void CompleteEffect(ulong id, object result);
 }
 
-/// <summary>The generated runtime host, seen through <see cref="IMosaicPlatformEffectHost"/>.</summary>
+/// <summary>
+/// The generated runtime host, seen through <see cref="IMosaicPlatformEffectHost"/>,
+/// bound to the ONE runtime loaded when it was made.
+/// </summary>
+/// <remarks>
+/// Not the static <c>MosaicRuntimeHost.CompleteEffect</c>: that answers
+/// whichever runtime is loaded at the time. A picker left open across a
+/// retried start (<c>Close</c>, then <c>LoadRequired</c>) would then answer
+/// the new runtime, whose effect ids restart -- a stale <c>files.open</c>
+/// answer could settle an unrelated effect that reuses the id. Bound to an
+/// <see cref="MosaicRuntimeHost.EffectScope"/>, the late answer meets the
+/// closed runtime instead, which throws, and the router's
+/// <c>TryComplete</c> drops it. The new runtime gets its own router (the
+/// window reinstalls on every start), with its own busy flag.
+/// </remarks>
 public sealed class MosaicRuntimeHostEffects : IMosaicPlatformEffectHost
 {
-    public static readonly MosaicRuntimeHostEffects Instance = new();
+    private readonly MosaicRuntimeHost.EffectScope scope;
 
-    private MosaicRuntimeHostEffects() { }
+    public MosaicRuntimeHostEffects(MosaicRuntimeHost.EffectScope scope) => this.scope = scope;
+
+    /// <summary>Bound to the runtime loaded now, or null when none is.</summary>
+    public static MosaicRuntimeHostEffects? Current() =>
+        MosaicRuntimeHost.EffectScope.Current() is { } scope ? new MosaicRuntimeHostEffects(scope) : null;
 
     public Action<ulong, string, JsonElement, string>? EffectHandler
     {
-        get => MosaicRuntimeHost.EffectHandler;
-        set => MosaicRuntimeHost.EffectHandler = value;
+        get => scope.EffectHandler;
+        set => scope.EffectHandler = value;
     }
 
-    public bool DeferEffect(ulong id) => MosaicRuntimeHost.DeferEffect(id);
+    public bool DeferEffect(ulong id) => scope.DeferEffect(id);
 
-    public void CompleteEffect(ulong id, object result) => MosaicRuntimeHost.CompleteEffect(id, result);
+    public void CompleteEffect(ulong id, object result) => scope.CompleteEffect(id, result);
 }
 
 public static class MosaicPlatformEffects
@@ -459,6 +487,17 @@ public static class MosaicPlatformEffects
     {
         var chosen = await dialogs.ChooseFileToOpenAsync(ExtensionsFor(payload));
         if (chosen is null) return Cancelled();
+        // Up to 50 MiB read and base64-encoded: on the thread pool, not the
+        // UI thread the picker's continuation resumed on, so the window keeps
+        // painting. The await brings the outcome back to that UI thread
+        // (WinUI's synchronization context), where the answer is given, so
+        // answers stay in the order their work finished.
+        return await Task.Run(() => ReadOpened(chosen));
+    }
+
+    /// <summary>The <c>files.open</c> outcome for a chosen path: read, typed, encoded.</summary>
+    private static Dictionary<string, object?> ReadOpened(string chosen)
+    {
         // Not the exception's own text: it can carry the full local path, and
         // a failure message is data the app sees.
         switch (ReadChosenFile(chosen, MaxOpenBytes, out var bytes))
@@ -554,7 +593,9 @@ public static class MosaicPlatformEffects
         }
         var target = await dialogs.ChooseFileToSaveAsync(suggestedName, extensions);
         if (target is null) return Cancelled();
-        return WriteReplacing(target, bytes);
+        // Up to 16 MiB written and flushed to disk: off the UI thread, as the
+        // read in files.open is. WriteReplacing never throws.
+        return await Task.Run(() => WriteReplacing(target, bytes));
     }
 
     /// <summary>
@@ -570,13 +611,11 @@ public static class MosaicPlatformEffects
     /// <item>On Unix it takes the rwx bits of the file it replaces -- never
     /// setuid, setgid or sticky -- through the open handle, as <c>fchmod</c>
     /// would, so saving over a private file never leaves the new one readable
-    /// by other users. On Windows the file's ACL is inherited from the folder,
-    /// as the Compose and Qt libraries leave it.</item>
-    /// <item>It is flushed to disk, then moved over the target with
-    /// <c>File.Move(overwrite: true)</c>: <c>rename(2)</c> on Unix and
-    /// <c>MoveFileEx(MOVEFILE_REPLACE_EXISTING)</c> on Windows, both a single
-    /// step within one folder. <c>File.Replace</c> was not used: it fails when
-    /// the target does not exist yet, which is the common case for a save.</item>
+    /// by other users. On Windows the replace itself keeps the old file's ACL
+    /// (<see cref="MoveIntoPlace"/>); a new file inherits the folder's.</item>
+    /// <item>It is flushed to disk, then put in place by
+    /// <see cref="MoveIntoPlace"/>: <c>File.Replace</c> over an existing file
+    /// on Windows, otherwise a single-step move within one folder.</item>
     /// </list>
     /// </remarks>
     private static Dictionary<string, object?> WriteReplacing(string target, byte[] bytes)
@@ -604,7 +643,7 @@ public static class MosaicPlatformEffects
                 if (!OperatingSystem.IsWindows()) CopyPermissions(full, stream);
                 stream.Flush(flushToDisk: true);
             }
-            File.Move(temporary, full, overwrite: true);
+            MoveIntoPlace(temporary, full);
             temporary = null;
             return Ok(new Dictionary<string, object?> { ["name"] = Path.GetFileName(full) });
         }
@@ -619,6 +658,42 @@ public static class MosaicPlatformEffects
                 try { File.Delete(temporary); } catch (Exception) { /* best effort */ }
             }
         }
+    }
+
+    /// <summary>
+    /// Put the written temporary where the person chose.
+    /// </summary>
+    /// <remarks>
+    /// <list type="bullet">
+    /// <item>Windows, over an existing file: <c>File.Replace</c>
+    /// (<c>ReplaceFileW</c>), which keeps the replaced file's ACL, attributes
+    /// and alternate streams -- a plain move would give it the folder's
+    /// inherited ACL instead, widening a file the person had locked down.
+    /// <c>ignoreMetadataErrors</c>, so a volume that cannot carry some of that
+    /// metadata still saves. <c>ReplaceFileW</c> fails when the target does
+    /// not exist, so a new name (or one deleted since the picker returned)
+    /// falls back to the move.</item>
+    /// <item>Windows, new file, and Unix: <c>File.Move(overwrite: true)</c> --
+    /// <c>MoveFileEx(MOVEFILE_REPLACE_EXISTING)</c> or <c>rename(2)</c>, a
+    /// single step within one folder. On Unix the permission bits were already
+    /// copied onto the temporary (<see cref="CopyPermissions"/>).</item>
+    /// </list>
+    /// </remarks>
+    private static void MoveIntoPlace(string temporary, string full)
+    {
+        if (OperatingSystem.IsWindows() && File.Exists(full))
+        {
+            try
+            {
+                File.Replace(temporary, full, destinationBackupFileName: null, ignoreMetadataErrors: true);
+                return;
+            }
+            catch (FileNotFoundException)
+            {
+                // The target went away between the check and the replace.
+            }
+        }
+        File.Move(temporary, full, overwrite: true);
     }
 
     /// <summary>
@@ -687,12 +762,16 @@ public static class MosaicPlatformEffects
     /// </summary>
     public static void Install(global::Microsoft.UI.Xaml.Window window, IEnumerable<string>? appKinds)
     {
+        // Bound to the runtime loaded NOW, so a picker still open when a
+        // retried start replaces it cannot answer its successor. Null only
+        // when nothing is loaded, where there is nothing to install onto.
+        if (MosaicRuntimeHostEffects.Current() is not { } host) return;
         // An unpackaged WinUI 3 app has no CoreWindow, so a picker must be
         // told which window owns it (InitializeWithWindow) or it throws.
         var handle = global::WinRT.Interop.WindowNative.GetWindowHandle(window);
         var queue = window.DispatcherQueue;
         Install(
-            MosaicRuntimeHostEffects.Instance,
+            host,
             appKinds,
             new WinUIMosaicFileDialogs(handle),
             work => queue.TryEnqueue(() => work()));
@@ -755,19 +834,35 @@ public sealed class MosaicPlatformRouter
     {
         // Only an Await has someone waiting for the answer.
         if (!string.Equals(delivery, "await", StringComparison.OrdinalIgnoreCase)) return;
+        // The payload belongs to the host's parsed update, which is not
+        // guaranteed to outlive this call; the picker answers long after it.
+        // A missing payload (Undefined) has nothing to copy. Copied BEFORE
+        // the router is marked busy: anything that can throw between taking
+        // `busy` and handing it to AnswerAsync must release it, and the
+        // fewer such steps the better. (A throw here reaches the host's own
+        // catch, which fails the effect with the reason -- it is not
+        // deferred yet.)
+        var request = payload.ValueKind == JsonValueKind.Undefined ? payload : payload.Clone();
         if (Interlocked.CompareExchange(ref busy, 1, 0) != 0)
         {
             // Inline: the host's lock is reentrant, and this is its settle.
             host.CompleteEffect(id, MosaicPlatformEffects.Failed("another file operation is in progress"));
             return;
         }
-        // The payload belongs to the host's parsed update, which is not
-        // guaranteed to outlive this call; the picker answers long after it.
-        // A missing payload (Undefined) has nothing to copy.
-        var request = payload.ValueKind == JsonValueKind.Undefined ? payload : payload.Clone();
-        // Ownership first. False means the runtime is not waiting on this id,
-        // and the right move is to open no picker at all.
-        if (!host.DeferEffect(id))
+        // Ownership first. False means the runtime is not waiting on this id
+        // (or, for the generated host, that this router's runtime is no
+        // longer the one loaded), and the right move is to open no picker.
+        bool owned;
+        try
+        {
+            owned = host.DeferEffect(id);
+        }
+        catch (Exception)
+        {
+            Volatile.Write(ref busy, 0);
+            throw;
+        }
+        if (!owned)
         {
             Volatile.Write(ref busy, 0);
             return;

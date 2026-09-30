@@ -169,6 +169,7 @@ fn the_emitted_xaml_host_answers_effects() {
         "runaway",
         "closes",
         "deferred",
+        "scoped",
     ] {
         let stdout = run(
             Command::new("dotnet")
@@ -218,6 +219,14 @@ fn the_emitted_xaml_host_answers_effects() {
         "answering a deferred effect settles it",
         "the deferred answer's value reached the app",
         "state persists again once the deferred effect is answered",
+        "the old runtime's effect is deferred",
+        "the retry replaced the runtime",
+        "the new runtime awaits its own effect",
+        "a scope on a closed runtime defers nothing",
+        "a late answer to the closed runtime is refused",
+        "the late answer did not settle the new runtime's effect",
+        "the new runtime's own answer settles it",
+        "and its value, not the stale one, reached the app",
     ] {
         assert!(
             transcript.contains(expected),

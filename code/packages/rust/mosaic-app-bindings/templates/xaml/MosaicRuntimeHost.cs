@@ -198,6 +198,45 @@ public static class MosaicRuntimeHost
     /// </summary>
     public static bool DeferEffect(ulong id) => State?.DeferEffect(id) ?? false;
 
+    /// <summary>
+    /// The effect surface of ONE loaded runtime, for work that answers later.
+    /// </summary>
+    /// <remarks>
+    /// The static <c>CompleteEffect</c> answers whichever runtime is loaded
+    /// when it is called. Work that deferred an effect and answers after a
+    /// <c>Close</c> and <c>LoadRequired</c> (a retried start) would then
+    /// answer the NEW runtime -- whose effect ids restart, so a stale answer
+    /// could settle an unrelated effect that happens to reuse the id. A scope
+    /// is bound to the runtime loaded when it was taken: once that runtime is
+    /// closed, <c>DeferEffect</c> refuses and <c>CompleteEffect</c> throws
+    /// <see cref="ObjectDisposedException"/>, and the new runtime never sees
+    /// the answer. The platform library (MosaicPlatformEffects.cs) installs
+    /// through one.
+    /// </remarks>
+    public sealed class EffectScope
+    {
+        private readonly Runtime runtime;
+
+        private EffectScope(Runtime runtime) => this.runtime = runtime;
+
+        /// <summary>A scope on the runtime loaded now, or null when none is.</summary>
+        public static EffectScope? Current() => State is { } runtime ? new EffectScope(runtime) : null;
+
+        /// <summary>True while this scope's runtime is the one loaded.</summary>
+        public bool IsCurrent => ReferenceEquals(State, runtime);
+
+        public Action<ulong, string, JsonElement, string>? EffectHandler
+        {
+            get => runtime.EffectHandler;
+            set => runtime.EffectHandler = value;
+        }
+
+        public bool DeferEffect(ulong id) => IsCurrent && runtime.DeferEffect(id);
+
+        /// <summary>Throws <see cref="ObjectDisposedException"/> once this runtime is closed.</summary>
+        public void CompleteEffect(ulong id, object result) => runtime.CompleteEffect(id, result);
+    }
+
     public static void Close()
     {
         State?.Dispose();
