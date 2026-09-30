@@ -74,6 +74,16 @@ in_app() {
   adb shell "run-as $package sh -c '$1'"
 }
 
+# This launch's log, read whole. A failed read must fail the gate: an empty
+# log would read as "no crash" and "nothing refused". Captured rather than
+# piped into `grep -q`, which can close the pipe early and, under pipefail,
+# turn a match into a failure.
+launch_log() {
+  local log
+  log="$(adb logcat -d -v brief)" || fail "could not read $package's logcat"
+  printf '%s\n' "$log"
+}
+
 launch() {
   adb logcat -c
   adb shell am start -W -n "$activity" > /dev/null
@@ -87,7 +97,9 @@ expect_running() {
   if ! adb shell pidof "$package" > /dev/null; then
     fail "$package is not running $1 seconds after launch"
   fi
-  if adb logcat -d -v brief | grep -F "FATAL EXCEPTION" > /dev/null; then
+  local log
+  log="$(launch_log)"
+  if grep -F "FATAL EXCEPTION" <<< "$log" > /dev/null; then
     fail "$package threw an uncaught exception"
   fi
 }
@@ -131,7 +143,8 @@ expect_running 10
 if in_app "test -e $corrupt"; then
   fail "the state launch 1 wrote was quarantined on launch 2"
 fi
-if adb logcat -d -v brief | grep -E "rejected persisted state|Ignored invalid Mosaic state" > /dev/null; then
+log="$(launch_log)"
+if grep -E "rejected persisted state|Ignored invalid Mosaic state" <<< "$log" > /dev/null; then
   fail "the host refused the state launch 1 wrote"
 fi
 in_app "test -s $state" || fail "launch 2 left no state behind"
@@ -147,6 +160,10 @@ if [[ "$(in_app "cat $corrupt" | tr -d '\r')" != "{}" ]]; then
   fail "$corrupt does not hold the refused state"
 fi
 expect_state_written
+# Written afresh, not the seed left in place beside a copy.
+if [[ "$(in_app "cat $state" | tr -d '\r')" == "{}" ]]; then
+  fail "launch 3 left the refused state in place"
+fi
 expect_running 10
 
 stop_app

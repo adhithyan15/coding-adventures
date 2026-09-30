@@ -9,8 +9,8 @@
 # boots in tens of minutes, not one or two. The emulator keeps running in the
 # background, writing to <log-file>; stop it with `adb emu kill`.
 #
-# The system image is pinned (API level, variant, ABI) so every run boots the
-# same Android:
+# The system image's API level, variant and ABI are pinned; its revision, like
+# the emulator's, is whatever the SDK repository serves (logged below):
 #
 #   API 34    well above the app's minimum (26), and a level the emulator's
 #             software renderer is widely run headless on in CI
@@ -43,6 +43,8 @@ emulator="$ANDROID_HOME/emulator/emulator"
 # would report as a failure; only sdkmanager's own status matters.
 (yes || true) | "$sdkmanager" --licenses > /dev/null
 "$sdkmanager" --install emulator platform-tools "$image" > /dev/null
+# The revisions this run got, for comparing a failing run with a passing one.
+"$sdkmanager" --list_installed | grep -E "emulator|platform-tools|system-images" || true
 # avdmanager asks whether to write a custom hardware profile; answer no.
 echo no | "$avdmanager" create avd --force --name "$avd" --package "$image" --device pixel_6 > /dev/null
 

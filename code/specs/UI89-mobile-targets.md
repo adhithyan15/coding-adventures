@@ -261,10 +261,11 @@ What step 4 changed from §3.4, and why:
 
 ### 3.7 The Android emulator gate, as built (step 5, second half)
 
-- **The emulator.** `code/scripts/start-mosaic-android-emulator.sh` boots a
-  pinned image (`system-images;android-34;default;x86_64`: plain AOSP, no
-  Google services to sign in to, the ABI KVM runs natively) headless, cold and
-  software-rendered, and waits for `sys.boot_completed`. It refuses to start
+- **The emulator.** `code/scripts/start-mosaic-android-emulator.sh` boots
+  `system-images;android-34;default;x86_64` (plain AOSP, no Google services
+  to sign in to, the ABI KVM runs natively; API level, variant and ABI are
+  pinned, the revision is the SDK repository's and is logged) headless, cold
+  and software-rendered, and waits for `sys.boot_completed`. It refuses to start
   without `/dev/kvm`; CI opens it to the runner's user first.
 - **No UI automation, as on iOS (§2.3).** The host persists after every event,
   and the first event needs no finger: the activity reports the window's

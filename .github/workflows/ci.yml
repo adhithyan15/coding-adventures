@@ -3470,19 +3470,22 @@ jobs:
           sudo udevadm trigger --name-match=kvm
           export PATH="$ANDROID_HOME/platform-tools:$PATH"
 
-          apk="$(find "$RUNNER_TEMP/mosaic-compose-taskapp-android-runtime/compose/android/build/outputs/apk/debug" -name '*.apk' -print -quit)"
+          apk="$(find "$RUNNER_TEMP/mosaic-compose-taskapp-android-runtime/compose/android/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
           test -n "$apk"
           emulator_log="$RUNNER_TEMP/mosaic-android-emulator.log"
+          # However the step ends: stop the emulator, and on failure show why.
+          finish() {
+            local status=$?
+            adb emu kill > /dev/null 2>&1 || true
+            if [ "$status" -ne 0 ]; then
+              echo "---- emulator log ----"
+              tail -n 80 "$emulator_log" || true
+              df -h "$RUNNER_TEMP" "$HOME" || true
+            fi
+          }
+          trap finish EXIT
           bash code/scripts/start-mosaic-android-emulator.sh "$emulator_log"
-          status=0
-          bash code/scripts/mosaic-android-emulator-gate.sh "$apk" dev.codingadventures.trestle task-app || status=$?
-          adb emu kill > /dev/null 2>&1 || true
-          if [ "$status" -ne 0 ]; then
-            echo "---- emulator log ----"
-            tail -n 80 "$emulator_log"
-            df -h "$RUNNER_TEMP" "$HOME"
-          fi
-          exit "$status"
+          bash code/scripts/mosaic-android-emulator-gate.sh "$apk" dev.codingadventures.trestle task-app
 
       - name: Build concrete Mosaic TaskApp WinUI shell
         if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
