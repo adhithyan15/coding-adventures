@@ -29,6 +29,7 @@ const TELUGU_TTA = DUCTUS[ductusKey("telugu", "ట")];
 const TELUGU_TTHA = DUCTUS[ductusKey("telugu", "ఠ")];
 const TELUGU_DDA = DUCTUS[ductusKey("telugu", "డ")];
 const TELUGU_DDHA = DUCTUS[ductusKey("telugu", "ఢ")];
+const TELUGU_NNA = DUCTUS[ductusKey("telugu", "ణ")];
 const TELUGU_AA = DUCTUS[ductusKey("telugu", "ఆ")];
 const TELUGU_I = DUCTUS[ductusKey("telugu", "ఇ")];
 const TELUGU_U = DUCTUS[ductusKey("telugu", "ఉ")];
@@ -44,26 +45,38 @@ const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
 );
 
 describe("handwriting ductus", () => {
-  // The sourced క, ఙ, ఛ, ఝ, ఞ, ట, డ and ఢ routes and five-run pedagogical ఐ route cross
+  // The sourced క, ఙ, ఛ, ఝ, ఞ, ట, డ, ఢ and ణ routes and five-run pedagogical ఐ route cross
   // narrow printed counter transitions while still covering their complete
   // outlines. ట's six separately numbered source movements cut across the
   // broad printed bowl most strongly. డ's separately numbered arcs likewise
   // cross the printed joins between the broad body sections.
-  registerStrokeHonestyTests(letters, {
-    అ: 0.96,
-    క: 0.93,
-    ఖ: 0.93,
-    ఙ: 0.9,
-    ఞ: 0.86,
-    ట: 0.55,
-    ఛ: 0.92,
-    డ: 0.32,
-    ఢ: 0.32,
-    ఝ: 0.75,
-    ఐ: 0.59,
-    ఒ: 0.84,
-    ఋ: 0.84,
-  });
+  registerStrokeHonestyTests(
+    letters,
+    {
+      అ: 0.96,
+      క: 0.93,
+      ఖ: 0.93,
+      ఙ: 0.9,
+      ఞ: 0.86,
+      ట: 0.55,
+      ఛ: 0.92,
+      డ: 0.32,
+      ఢ: 0.32,
+      // The packaged ణ guide follows the five broad curves rather than the
+      // squared inner joins in Noto Sans Telugu, so those attested centerlines
+      // necessarily spend substantial distance outside the font's ink.
+      ణ: 0.18,
+      ఝ: 0.75,
+      ఐ: 0.59,
+      ఒ: 0.84,
+      ఋ: 0.84,
+    },
+    {
+      // The same guide omits Noto's long inner joining shelves while still
+      // tracing every sourced curve; retain a bounded glyph-specific ceiling.
+      ణ: 0.12,
+    },
+  );
 
   beforeAll(() => {
     expect(verifiedLetterFont("క", TELUGU_KA.source.url)).toBe(
@@ -106,6 +119,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("ఢ", TELUGU_DDHA.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("ణ", TELUGU_NNA.source.url)).toBe(
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("అ", TELUGU_A.source.url)).toBe(
@@ -356,6 +372,20 @@ describe("handwriting ductus", () => {
       "curve left around the upper-right shoulder",
       "curl upward through the separate top flourish",
       "draw the separate lower stem downward",
+    ]);
+  });
+
+  it("Telugu ణ preserves all five source-verified pen-down runs", () => {
+    expect(penLifts(TELUGU_NNA)).toBe(4);
+    expect(TELUGU_NNA.strokes).toHaveLength(5);
+    expect(
+      TELUGU_NNA.strokes.map((stroke) => stroke.segments[0]!.label),
+    ).toEqual([
+      "sweep left and upward around the lower-left bowl",
+      "curve right across the upper-left bowl",
+      "arch right and downward over the upper-right bowl",
+      "turn left around the lower-right bowl",
+      "sweep upward along the inner curve",
     ]);
   });
 
