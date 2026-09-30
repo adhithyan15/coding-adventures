@@ -33,7 +33,10 @@ reviews_of: [TE-S121-letter-lla, TE-S136-vowel-sign-ai, TE-S112-letter-ca]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-121, TE-SCRIPT-RECOG-136] -->
 
-[PAUSE 1s] Before the new one: ళ — what does it do? And one from further back: ◌ై?
+[PAUSE 2s] Say the month **ఆషాఢం** once. Now find the familiar **ఆ** at its
+start. Keep the whole word in your ear while you look for one new shape inside it.
+
+[PAUSE 1s] Before that new one: ళ — what does it do? And one from further back: ◌ై?
 
 [PAUSE 2s] One character this time — and you have been saying it for pages
 without knowing which mark on the page it was.
@@ -56,17 +59,17 @@ You already say this one, and the breathed letter is inside it:
 
 - **ఆషాఢం** *Āṣāḍhaṁ* — the fourth of the twelve months
 
-## Writing: ఢ — copy what you see
+## Writing: ఢ — six movements, six runs
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-139] -->
+<!-- hl-writing-stage: observe-trace -->
 
-Put your pen on ఢ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+Follow the filmstrip slowly. Movements 1–4 travel around the rounded body in
+four separate sections. Movement 5 makes the upper flourish. Movement 6 draws
+the separate stem downward from the bottom centre.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+The numbered route is one attested school-style order; Telugu handwriting can
+vary. Keep all six pen-down runs distinct, and notice that the final downward
+stem is the extra shape that separates **ఢ** from **డ** on the page.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-139] -->
@@ -76,7 +79,8 @@ and larger than it is printed.
 
 > ఆషాఢం  ·  ఉండు
 
-- [YOU TRACE: ఢ three times, saying *ḍha* with the tongue curled back as you finish each one]
+- [YOU TRACE: ఢ once, following the six numbered movements]
+- [YOU COPY: ఢ twice without tracing, saying *ḍha* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ఢ once more]
 
 ## Wrap-up Recall
