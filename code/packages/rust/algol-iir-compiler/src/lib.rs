@@ -7917,10 +7917,16 @@ impl Compiler {
         let is_boolean = self
             .require_var(name)
             .is_ok_and(|binding| binding.ty == ScalarType::Boolean);
+        let then_value = literal_boolean_value(then_node);
+        let else_value = literal_boolean_value(else_node);
         if is_boolean
-            && self.boolean_identity_expression_preserves_name(condition, name)
-            && literal_boolean_value(then_node) == Some(true)
-            && literal_boolean_value(else_node) == Some(false)
+            && ((self.boolean_identity_expression_preserves_name(condition, name)
+                && then_value == Some(true)
+                && else_value == Some(false))
+                || (self.boolean_identity_expression_preserves_name_with_negation(
+                    condition, name, true,
+                ) && then_value == Some(false)
+                    && else_value == Some(true)))
         {
             return true;
         }
@@ -15518,6 +15524,32 @@ mod tests {
                     && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
             }));
         }
+    }
+
+    #[test]
+    fn al4_complemented_projection_selector_copy_tracks_partial_self_recursion() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := if not flag then false else true; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("a complemented conditional projection may forward its boolean selector");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_unbalanced_complemented_projection_selector_copy_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := if not flag then true else false; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("an unbalanced complemented projection must remain conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
