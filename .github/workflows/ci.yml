@@ -631,6 +631,7 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_qt_runtime_ci_acceptance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_flutter_runtime_ci_acceptance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_compose_runtime_ci_acceptance.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_run_under_xvfb.py'
           python3 code/scripts/package_parity_report.py --format json --fail-on-collisions > /tmp/package-parity-report.json
 
       # The cgroup lifecycle (mkdir, chown, trap, cleanup) must stay inside one
@@ -2949,7 +2950,7 @@ jobs:
           cmp "$task_runtime_library" "$bundled_taskapp_runtime"
           taskapp_log="$RUNNER_TEMP/mosaic-flutter-taskapp-launch.log"
           set +e
-          env -u MOSAIC_APP_LIBRARY xvfb-run -a timeout 8s "$installed_taskapp" >"$taskapp_log" 2>&1
+          env -u MOSAIC_APP_LIBRARY bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" timeout 8s "$installed_taskapp" >"$taskapp_log" 2>&1
           taskapp_status=$?
           set -e
           test "$taskapp_status" -eq 124
@@ -3165,7 +3166,7 @@ jobs:
           test -n "$installed_taskapp"
           taskapp_log="$RUNNER_TEMP/mosaic-compose-taskapp-launch.log"
           set +e
-          env -u MOSAIC_APP_LIBRARY xvfb-run -a timeout 8s "$installed_taskapp" >"$taskapp_log" 2>&1
+          env -u MOSAIC_APP_LIBRARY bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" timeout 8s "$installed_taskapp" >"$taskapp_log" 2>&1
           taskapp_status=$?
           set -e
           test "$taskapp_status" -eq 124
@@ -3195,11 +3196,11 @@ jobs:
           rm -f "$taskapp_ui_state" "$taskapp_ui_state.corrupt" "$taskapp_ui_state.tmp"
           MOSAIC_APP_STATE_PATH="$taskapp_ui_state" \
             JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_taskapp_runtime")" \
-            xvfb-run -a gradle --no-daemon --stacktrace -p "$taskapp_output/compose" \
+            bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" gradle --no-daemon --stacktrace -p "$taskapp_output/compose" \
               test --tests TaskAppUiTest
           MOSAIC_APP_STATE_PATH="$taskapp_ui_state" MOSAIC_EXPECT_RESTORED=1 \
             JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_taskapp_runtime")" \
-            xvfb-run -a gradle --no-daemon --stacktrace --rerun-tasks -p "$taskapp_output/compose" \
+            bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" gradle --no-daemon --stacktrace --rerun-tasks -p "$taskapp_output/compose" \
               test --tests TaskAppUiTest.generatedControlsDriveRustSchedulingLifecycle
 
           # Engram on Compose, the mirror of the SwiftUI and Qt Engram lanes.
@@ -3284,11 +3285,11 @@ jobs:
           rm -f "$journal_ui_state" "$journal_ui_state.corrupt" "$journal_ui_state.tmp"
           MOSAIC_APP_STATE_PATH="$journal_ui_state" \
             JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_journal_runtime")" \
-            xvfb-run -a gradle --no-daemon --stacktrace -p "$journal_output/compose" \
+            bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" gradle --no-daemon --stacktrace -p "$journal_output/compose" \
               test --tests JournalUiTest
           MOSAIC_APP_STATE_PATH="$journal_ui_state" MOSAIC_EXPECT_RESTORED=1 \
             JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_journal_runtime")" \
-            xvfb-run -a gradle --no-daemon --stacktrace --rerun-tasks -p "$journal_output/compose" \
+            bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" gradle --no-daemon --stacktrace --rerun-tasks -p "$journal_output/compose" \
               test --tests JournalUiTest
 
           # The platform library's own behaviour (UI87 §7): every Compose app

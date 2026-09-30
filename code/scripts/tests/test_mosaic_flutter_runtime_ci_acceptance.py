@@ -154,7 +154,7 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn('libtask_mosaic_app.so', workflow)
         self.assertIn('cmp "$task_runtime_library" "$bundled_taskapp_runtime"', workflow)
         self.assertIn("-path '*/bundle/mosaic_taskapp_acceptance'", workflow)
-        self.assertIn('xvfb-run -a timeout 8s "$installed_taskapp"', workflow)
+        self.assertIn('run-under-xvfb.sh" timeout 8s "$installed_taskapp"', workflow)
         self.assertIn('test "$taskapp_status" -eq 124', workflow)
         self.assertIn('Mosaic Rust runtime unavailable', workflow)
         self.assertIn("--runtime-library \"$runtime_library\"", workflow)
