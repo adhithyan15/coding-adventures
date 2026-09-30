@@ -243,6 +243,9 @@ recurrences. A dependency may be assigned repeatedly in one body pass; bounded
 execution applies every supported write in source order. The next `while`
 element expression consumes all resulting exact dependency and control
 snapshots, and terminating sibling snapshots remain available after the loop.
+An acyclic boolean recurrence may use an exact conditional expression to choose
+different boolean values on successive passes and then select recurrence-cycle
+statements or expressions. Unknown conditional inputs still fail closed.
 Unknown selectors, unsupported selector or dependency writes, string targets, overflow,
 non-finite values, and loops that do not reach false within 4,096 evaluations
 fail closed.
