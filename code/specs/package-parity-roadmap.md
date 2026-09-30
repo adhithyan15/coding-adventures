@@ -14969,12 +14969,18 @@ plugin host rather than a blib package-identity change.
 Parallel read-only audits registered dependency-shaped neutral, existing-lane,
 classifier, and Lua-lane owners for the ARM and Intel 4004 assembler families.
 They also identified Rope and Dartmouth BASIC IR compiler decompositions that
-must be materialized with their prerequisite owners before the next selection,
-plus a current structural high-consensus audit of 278 missing slots: 107 Dart,
-58 Java, 58 Kotlin, 51 Swift, three Haskell, and one Python. Those raw slots
-remain under `high-consensus-unowned-gap-classification-20260905` until exact
-semantic family owners and verified dependency edges replace structural
-package-name evidence.
+must be materialized with their prerequisite owners before the next selection.
+The retained 278-slot structural high-consensus audit is historical evidence
+from `d3ff1ec2e`, with canonical list digest
+`b36dc2dac9cb7ace83fbaf568b7b020ddc5f8cccc8202c96cb135993ac1219c8`.
+Current exact-main instead has 265 missing slots: 97 Dart, 53 Java, 53 Kotlin,
+51 Swift, four Haskell, two Perl, and one each Elixir, Lua, Python, Ruby, and
+Rust; its canonical list digest is
+`d7da6fff66017cf4e1de86f3ea95382d06f23d4ab725d16f22684271325dc7dc`.
+Those raw slots remain under
+`high-consensus-unowned-gap-classification-20260905` until exact semantic
+family owners and verified dependency edges replace structural package-name
+evidence.
 
 After blib merges, the highest-leverage dependency-ready owner is
 `build-tool-orphan-package-root-validation-corpus-and-go-adoption`. Its direct
