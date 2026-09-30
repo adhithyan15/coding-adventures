@@ -12,7 +12,7 @@
       "mode": "repository_boundary",
       "language": "typescript",
       "package_root": "code/packages/typescript/human-language-data",
-      "boundary_sha256": "7983f42a84dc9905f50729798a5d7d4000a4356016eb2b9cfd42217b15070b59",
+      "boundary_sha256": "95a30543f60bebeda68e77813f37154cc4431f511a37da8de11d4266d378903c",
       "candidates": [
         {"path": "code/learning/human-languages/core/grammar-slots.json", "kind": "file", "tracked": true, "content_hex": "736f757263650a"},
         {"path": "code/learning/human-languages/data/generate_grammar_cells.py", "kind": "file", "tracked": true, "content_hex": "736f757263650a"},

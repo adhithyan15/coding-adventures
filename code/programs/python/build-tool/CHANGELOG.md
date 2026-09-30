@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- Source hashing now follows the 27-component neutral generated-directory
+  registry, pruning exact lowercase `blib` while retaining `Blib` and
+  `blib-example` in both extension and declared-source modes.
+
 ## [0.3.18] - 2026-09-27
 
 ### Added

@@ -6,6 +6,12 @@
   workspace source boundary. Refreshed its digest in ten conformance cases and
   the canonical summary test, which now pins 479 scopes and 482 authorizations.
 
+## 2026-09-27
+
+- Added exact lowercase `blib` to the canonical generated-directory registry,
+  preserved `Blib` and `blib-example` as source, and refreshed both source
+  modes plus the language-registry and repository-boundary digest cascades.
+
 ## 2026-09-19
 
 - Made the CI-gate match-work boundary fixtures wildcard-bounded so they still

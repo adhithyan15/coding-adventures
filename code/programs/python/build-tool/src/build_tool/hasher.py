@@ -97,6 +97,7 @@ GENERATED_DIRECTORY_COMPONENTS: frozenset[str] = frozenset(
         "dist",
         "dist-newstyle",
         "_build",
+        "blib",
         "build",
         "target",
         ".claude",

@@ -225,6 +225,7 @@ SOURCE_COLLECTION_SKIP_COMPONENTS = frozenset(
         "dist",
         "dist-newstyle",
         "_build",
+        "blib",
         "build",
         "target",
         ".claude",

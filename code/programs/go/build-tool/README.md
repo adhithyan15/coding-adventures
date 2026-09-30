@@ -26,9 +26,9 @@ they are derived only from exact paths relative to the nearest real Git
 repository root, so arbitrary, nested, and outside site roots fail before
 traversal. Their eight and five authored
 inputs are exact paths, so Markdown, identity JSON, image, and root CSS suffixes
-do not widen to other packages. The exact case-sensitive 26-component
+do not widen to other packages. The exact case-sensitive 27-component
 generated-directory registry is applied before every selector while preserving
-near names such as `_Build` and `_build-example`; symlink and Windows
+near names such as `_Build`, `Blib`, `blib-example`, and `_build-example`; symlink and Windows
 reparse-point components are never traversed.
 
 Regenerate the embedded projection deterministically from the repository root:

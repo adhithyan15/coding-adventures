@@ -68,10 +68,10 @@ other build-tool implementations.
 
 Both extension-based and declared-source collection prune exact generated,
 dependency, VCS, cache, and temporary-directory components before matching
-files. The 26-name registry is case-sensitive: `_build`, `dist-newstyle`, and
-`build` are generated output, while `_Build`, `_build-example`,
-`Dist-newstyle`, `dist-newstyle-example`, and discovery-only `specs`
-directories remain eligible source. Top-down pruning avoids enumerating
+files. The 27-name registry is case-sensitive: `_build`, `blib`,
+`dist-newstyle`, and `build` are generated output, while `_Build`, `Blib`,
+`blib-example`, `_build-example`, `Dist-newstyle`, `dist-newstyle-example`, and
+discovery-only `specs` directories remain eligible source. Top-down pruning avoids enumerating
 generated descendants, and lexical `lstat` checks keep stable file and
 directory links outside collection and package hashing.
 

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Regenerated both source-input projections for exact lowercase `blib`, the
+  current Lua and Forme boundary consumers, and the new canonical registry and
+  boundary digests shared by the C# engine and F# facade.
+
 - Retained a hard bound on Git-index snapshot capture while raising its timeout
   from 15 to 60 seconds, preventing valid large-checkout enumeration from
   failing on contended macOS CI runners.

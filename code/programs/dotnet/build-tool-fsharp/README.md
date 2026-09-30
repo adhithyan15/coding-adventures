@@ -29,9 +29,10 @@ The discovery facade independently consumes the complete language-neutral
 registry through F#. Its fixture pins exact package/program bucket
 classification, program identities, domain-language buckets, unknown buckets,
 non-package BUILD roots, and exact case-sensitive generated-directory pruning,
-including Dune `_build`. Direct C# evidence additionally proves that `_Build`
-and `_build-example` remain source. This facade intentionally performs the same
-filesystem discovery as the CLI and adds no second implementation or authority.
+including Dune `_build` and Perl `blib`. Direct C# evidence additionally proves
+that `_Build`, `Blib`, `blib-example`, and `_build-example` remain source. This
+facade intentionally performs the same filesystem discovery as the CLI and adds
+no second implementation or authority.
 
 The source-hashing facades independently consume all 16 neutral source-
 collection cases and all three package-digest cases through F#. They prove the

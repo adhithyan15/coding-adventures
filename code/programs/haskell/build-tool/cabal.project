@@ -2,3 +2,4 @@ packages: .
           ../../../packages/haskell/graph
           ../../../packages/haskell/directed-graph
           ../../../packages/haskell/sha256
+tests: True

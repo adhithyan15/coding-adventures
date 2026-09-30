@@ -3,7 +3,7 @@
 # t/02-hasher.t -- Tests for CodingAdventures::BuildTool::Hasher
 # ==============================================================
 #
-# 10 test cases covering determinism, extension allowlists, and
+# 11 test cases covering determinism, extension allowlists, and
 # the special filenames allowlist.
 
 use strict;
@@ -14,6 +14,7 @@ use lib "$Bin/../lib";
 use Test2::V0;
 use File::Temp qw(tempdir);
 use File::Path qw(make_path);
+use File::Spec ();
 
 use CodingAdventures::BuildTool::Hasher;
 
@@ -160,6 +161,29 @@ subtest 'nested .pm files in subdirectory are included' => sub {
 
     ok(scalar @pm_files >= 1, 'found at least one .pm in subdirectory');
     ok(grep { /Foo\.pm$/ } @pm_files, 'Foo.pm is in the list');
+};
+
+# ---------------------------------------------------------------------------
+# Test 11: exact lowercase blib is generated while near names remain source
+# ---------------------------------------------------------------------------
+subtest 'blib pruning is exact and case-sensitive' => sub {
+    my $dir = tempdir(CLEANUP => 1);
+    for my $relative (qw(excluded/blib near-case/Blib near-name/blib-example)) {
+        make_path("$dir/$relative");
+        write_file("$dir/$relative/source.pm", "package Source;\n1;\n");
+    }
+
+    my @relative = map {
+        my $path = File::Spec->abs2rel($_, $dir);
+        $path =~ s{\\}{/}g;
+        $path;
+    } $h->collect_source_files(make_pkg($dir));
+
+    is(
+        \@relative,
+        [qw(near-case/Blib/source.pm near-name/blib-example/source.pm)],
+        'only exact lowercase blib is pruned',
+    );
 };
 
 done_testing();
