@@ -15249,6 +15249,87 @@ are queued or in progress. Guarded auto-merge remains disabled until every
 required check is terminal and acceptable and the branch remains
 conflict-free.
 
+### PR #16321 merge and barcode-layout neutral-contract selection
+
+Every final-head check completed acceptably, including both Ubuntu builds,
+both repository-metadata runs, Python CodeQL, the human-language gate, the CI
+push gate, and the CI gate. GitHub reported the branch mergeable and clean,
+guarded squash auto-merge was enabled, and PR #16321 merged automatically at
+`2026-09-30T22:24:41Z` as
+`68afa3eedabb0bc1bfc98165e1b4b023013f1fa7`; no plain manual merge command was
+used.
+
+The exact package-tree delta from the prior collision-checked inventory at
+`0d12bc3c4caf1b9baff45029eac13bf39337378d` contains no package-root additions,
+removals, or manifest identity changes. The exact-main schema-3 inventory is
+therefore unchanged at 15 established lanes, 1,473 implementation identities,
+4,740 package slots, 1,515 all-reported identities, completion bands 178/265,
+123/934, 181/2,282, and 991/13,874, 805 Rust singletons, five emerging OCaml
+packages, zero canonical collisions, and zero unknown buckets.
+
+The preserved parallel audit ranks
+`barcode-layout-1d-language-neutral-conformance` first: it is dependency-free
+and unlocks three direct and fifteen total unfinished descendants. The next
+alternatives are the Haskell ITF Windows-front tranche (three direct and eight
+total descendants) and the Python gradient-descent front (two descendants).
+All current open PRs have zero exact path or conceptual ownership overlap with
+the selected contract. The bounded work freezes a separate pure integer
+geometry fixture and specification rather than widening the encoder-only
+barcode corpus or modifying implementations before the existing-lane
+reconciliation owner. The fresh clean sparse branch
+`codex/parity-barcode-layout-conformance-20260930` starts from exact current
+main above.
+
+### Barcode layout 1D neutral integer contract
+
+The selected slice now defines `barcode-layout-1d-v1` as a closed,
+language-neutral portable boundary. Its 56 generated cases cover fixed binary
+and configurable scalar narrow/wide expansion, checked run and content limits,
+strict alternation and quiet zones, inferred and explicit symbol spans,
+integer rectangle projection, authoritative string metadata, Unicode scalar
+handling, stable payload-blind failures, and rejection of both text request
+forms before any font or native backend work. Large run outputs have an exact
+canonical JSON digest recipe, while the strict fixture loader rejects oversized
+or deeply nested input, duplicate keys, invalid scalars, non-finite values, and
+external schema references.
+
+The target registry names exactly the existing C#, F#, Go, Haskell, Perl,
+Python, Rust, and TypeScript implementations. Every target remains
+`pending-adoption`; none is credited with conformance from package prose or an
+empty capability manifest alone. The registry preserves the reviewed legacy,
+metadata, fractional-geometry, missing-manifest, and Rust native-font
+divergences, and requires an immutable revision, corpus digest, adoption PR,
+real conformance test, explicit manifest, and zero-authority call-graph evidence
+before a lane can be promoted.
+
+Parallel read-only reviews found and closed four high-value fixture risks before
+publication: caller metadata can legally produce 74 output properties, operation
+and expected-result shapes must be coupled, successful runs must require
+positive modules, and digest bytes must be normative and independently checked.
+The focused suite also mutation-tests those schema boundaries. The repo-wide
+metadata-contract workflow now executes it.
+
+Local validation passes eight strict corpus tests, the byte-for-byte generator
+check, Ruff check and format, Bandit, and ten package-parity reporter tests. The
+existing Go implementation passes its two direct tests at 80% statement
+coverage, `go vet`, and the checked-in `BUILD` command. The TypeScript
+human-language-data build and complete doc-shard reconstruction gate pass.
+JSON/schema parsing, the 940-owner/1,811-edge acyclic state graph, changelog
+identity, changed-line credential and file-mode review, diff hygiene, and exact
+package/build-metadata neutrality also pass.
+
+Before publication, `origin/main` advanced through Italian curriculum and
+Telugu ductus changes to `e07375d500da64d31373ecf0c79e947a78609fcd`.
+The branch rebased cleanly. The intervening package changes remain inside two
+existing TypeScript identities and do not alter any package root or manifest,
+so the collision-clean schema-3 inventory totals remain unchanged.
+
+Ready-for-review PR #16327 publishes the contract from validated head
+`183cd17d2b3ebe4006d80820528f61ddad91dca9`. GitHub reports the branch
+mergeable but blocked while initial CI, CodeQL, and human-language detection
+are queued or in progress. Guarded auto-merge remains disabled until every
+required check is terminal and acceptable and the branch remains conflict-free.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

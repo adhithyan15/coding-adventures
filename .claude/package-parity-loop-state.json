@@ -12,21 +12,21 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16321,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16321",
-    "item_id": "python-neural-primitive-spec-vector-test-coverage",
-    "branch": "codex/parity-python-neural-spec-tests-v2-20260930",
-    "head_revision": "f832f1eb370b9ad9c826ede718c79e68b82dd3f3",
+    "number": 16327,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16327",
+    "item_id": "barcode-layout-1d-language-neutral-conformance",
+    "branch": "codex/parity-barcode-layout-conformance-20260930",
+    "head_revision": "183cd17d2b3ebe4006d80820528f61ddad91dca9",
     "status": "pr-open"
   },
   "last_ci_action": {
-    "observed_at": "2026-09-30T22:09:58Z",
-    "pr_number": 16321,
+    "observed_at": "2026-09-30T23:00:46Z",
+    "pr_number": 16327,
     "status": "checks-pending",
-    "notes": "Ready-for-review PR #16321 is open and GitHub reports MERGEABLE but BLOCKED while CI detect, CodeQL language detection, and human-language change detection are queued or in progress. Auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no merge conflict."
+    "notes": "Ready-for-review PR #16327 is open from validated head 183cd17d2b3ebe4006d80820528f61ddad91dca9. GitHub reports MERGEABLE and BLOCKED while CI detect, CodeQL language detection, and human-language change detection are queued or in progress. Auto-merge remains disabled until every required check is terminal and acceptable and the branch remains conflict-free."
   },
   "last_inventory": {
-    "revision": "0d12bc3c4caf1b9baff45029eac13bf39337378d",
+    "revision": "e07375d500da64d31373ecf0c79e947a78609fcd",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1473,
@@ -10327,10 +10327,20 @@
     {
       "id": "barcode-layout-1d-language-neutral-conformance",
       "title": "Define the neutral barcode-layout-1d geometry contract",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-barcode-layout-conformance-20260930",
+      "pr_number": 16327,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16327",
+      "opened_at": "2026-09-30T23:00:13Z",
+      "opened_revision": "183cd17d2b3ebe4006d80820528f61ddad91dca9",
+      "selected_at": "2026-09-30T22:26:43Z",
+      "selection_revision": "68afa3eedabb0bc1bfc98165e1b4b023013f1fa7",
+      "selection_notes": "Selected only after PR #16321 completed every final-head check acceptably and merged through guarded squash auto-merge as 68afa3eedabb0bc1bfc98165e1b4b023013f1fa7. The exact-main package-tree delta from the prior collision-checked 0d12bc3c4caf1b9baff45029eac13bf39337378d inventory contains no package-root additions, removals, or manifest identity changes, so the schema-3 totals remain 15 established lanes, 1,473 implementation identities, 4,740 slots, 1,515 all-reported identities, completion bands 178/265, 123/934, 181/2,282, and 991/13,874, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. Parallel read-only ranking gives this dependency-free neutral contract 3 direct and 15 total unfinished descendants, ahead of the Haskell ITF and Python gradient-descent alternatives, with zero open-PR path or ownership overlap. A fresh clean sparse worktree starts from exact current main.",
+      "implementation_revision": "e07375d500da64d31373ecf0c79e947a78609fcd",
+      "implementation_notes": "Defines the bounded barcode-layout-1d-v1 portable integer contract, 56 generated vectors, closed operation-specific schemas, canonical large-output digesting, exact eight-lane pending-adoption registry with immutable conformance-evidence gates, strict hostile-input loader coverage, and repo-wide metadata-contract CI registration. All current implementations remain pending adoption; this slice changes no package source, dependency metadata, build front, package identity, or runtime authority. Parallel read-only reviews drove metadata input/output separation, exact error precedence, Unicode-scalar markers, source-attribution failures, zero-authority evidence, lane-divergence records, and schema mutation tests. The branch rebased cleanly through exact main e07375d500da64d31373ecf0c79e947a78609fcd; intervening changes touched existing human-language and script-ductus source/test/documentation paths but no package-root or manifest identity, so inventory totals remain unchanged.",
+      "validation_notes": "The strict corpus suite passes 8 tests, byte-for-byte generator drift is clean, Ruff check and format pass, and Bandit reports no findings. The package-parity reporter passes 10 tests. The existing Go barcode-layout-1d package passes two direct tests at 80% statement coverage, go vet, and its checked-in BUILD command. The TypeScript human-language-data package builds and the full doc-shard reconstruction gate passes. JSON/schema parsing, the 940-owner/1,811-edge acyclic state graph, changelog rank/heading digest, changed-line credential scan, file-mode review, git diff --check, and exact-diff package/build-metadata neutrality all pass.",
+      "publication_notes": "Opened ready-for-review PR #16327 from clean validated head 183cd17d2b3ebe4006d80820528f61ddad91dca9 after confirming no other active parity PR and no origin/main drift. GitHub reports MERGEABLE and BLOCKED while initial CI, CodeQL, and human-language detection are queued or in progress; guarded auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
       "notes": "Freeze the portable integer geometry subset before adding Java, Kotlin, and Dart. Specify exact pattern expansion, quiet-zone and alternation rules, symbol inference, checked integer overflow and resource ceilings, string-only metadata projection, immutable copied outputs, and fail-closed text handling. Keep fractional/native paint, raster, font, shaping, device, filesystem, and process authority outside this contract."
     },
     {
@@ -11072,7 +11082,7 @@
     {
       "id": "python-neural-primitive-spec-vector-test-coverage",
       "title": "Complete Python activation and loss neutral-spec vector coverage",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["python-activation-matrix-loss-perceptron-build-front-coverage"],
       "branch": "codex/parity-python-neural-spec-tests-v2-20260930",
       "pr_number": 16321,
@@ -11089,6 +11099,10 @@
       "final_review_notes": "Independent correctness review verified the ML01 formulas, ML04 literals, exact mandatory inputs, Python assertions, lifecycle transition, and complete acyclic state graph. It caught a root changelog filename whose slug and digest did not match its heading; the focused rename now uses the exact heading-derived slug and SHA-256 prefix, and reconstruction plus an explicit digest check pass. Independent security review issued SHIP after confirming no production, dependency, capability, BUILD, workflow, secret, generated-artifact, mode, or overlap change; all thirteen live PRs have zero exact path overlap.",
       "rebase_notes": "Before publication, origin/main advanced to 0d12bc3c4caf1b9baff45029eac13bf39337378d through PR #16314's existing Rust Mosaic Flutter host-environment behavior and two lessons. Those paths have zero exact overlap with this Python/spec/state tranche. All nine commits rebased conflict-free. The regenerated schema-3 inventory is unchanged and collision-clean, and the rebased 32-test activation, 17-test loss, three-test perceptron, Ruff, changelog reconstruction, state-DAG, JSON, and diff checks pass.",
       "publication_notes": "Opened ready-for-review PR #16321 from clean validated head f832f1eb370b9ad9c826ede718c79e68b82dd3f3 after a normal first push from exact origin/main 0d12bc3c4caf1b9baff45029eac13bf39337378d. Immediately before publication, the remote branch and prior PR were absent, thirteen live PRs had zero exact path overlap, focused package/downstream/build-tool/parity/state/metadata/security checks were acceptable, and independent correctness and security reviews passed after the changelog shard identity repair. GitHub reports MERGEABLE but BLOCKED with initial CI, CodeQL, and human-language detection queued or in progress; auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
+      "merged_head_revision": "665742dad697d7cec42ec013703cdda8c572e578",
+      "merged_at": "2026-09-30T22:24:41Z",
+      "merge_revision": "68afa3eedabb0bc1bfc98165e1b4b023013f1fa7",
+      "merge_notes": "Every final-head check reached an acceptable terminal conclusion. GitHub reported MERGEABLE and CLEAN, guarded squash auto-merge was enabled, and PR #16321 merged automatically without a plain manual merge command.",
       "notes": "Discovered by the final read-only review of PR #16315. The activation suite omits mandatory nonzero ML04 derivative vectors plus specified symmetry, idempotence, and derivative properties, so constant derivative regressions could pass. The loss boundary test asserts only finiteness and does not prove ML01's exact [1e-7, 1-1e-7] clamp for BCE/CCE values and derivatives. Add exact language-neutral vector and property coverage without changing already-correct package behavior, then rerun direct coverage, BUILD fronts, downstream smokes, metadata, parity, diff, and security checks."
     },
     {
