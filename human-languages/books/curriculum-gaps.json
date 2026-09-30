@@ -24,16 +24,16 @@
     "version2SchemaTracks": 23,
     "lessonsWithoutLevel": 0,
     "rampOverBudgetLessons": 0,
-    "scriptRampOverBudgetLessons": 32,
+    "scriptRampOverBudgetLessons": 30,
     "lessonsOpeningMultipleScripts": 0,
-    "scriptClosureViolations": 243,
+    "scriptClosureViolations": 180,
     "scriptExposureExemptedGlyphs": 1622,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 46,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 173,
-    "forwardReferences": 919,
+    "forwardReferences": 917,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 94,
     "chapterGateCleanTracks": 10,
@@ -10221,28 +10221,6 @@
           "budget": 3
         },
         {
-          "lessonId": "HI-C01-dhanyavad",
-          "language": "hindi",
-          "chapter": 1,
-          "glyphs": 7,
-          "sample": "दधयवशिु",
-          "systems": [
-            "Devanagari"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "HI-C01-namaste",
-          "language": "hindi",
-          "chapter": 1,
-          "glyphs": 7,
-          "sample": "ःतनमसे्",
-          "systems": [
-            "Devanagari"
-          ],
-          "budget": 3
-        },
-        {
           "lessonId": "KA-C01-namaskara",
           "language": "kannada",
           "chapter": 1,
@@ -10272,6 +10250,17 @@
           "sample": "গপভলেো",
           "systems": [
             "Bengali"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "HI-C01-namaste",
+          "language": "hindi",
+          "chapter": 1,
+          "glyphs": 6,
+          "sample": "तनमसे्",
+          "systems": [
+            "Devanagari"
           ],
           "budget": 3
         },
@@ -10375,11 +10364,11 @@
           "budget": 3
         },
         {
-          "lessonId": "HI-C01-namaskar",
+          "lessonId": "HI-C01-dhanyavad",
           "language": "hindi",
           "chapter": 1,
           "glyphs": 4,
-          "sample": "कराृ",
+          "sample": "दधयव",
           "systems": [
             "Devanagari"
           ],
@@ -10474,17 +10463,6 @@
           "budget": 3
         },
         {
-          "lessonId": "SA-C06-numbers-1-5",
-          "language": "sanskrit",
-          "chapter": 6,
-          "glyphs": 4,
-          "sample": "एञणौ",
-          "systems": [
-            "Devanagari"
-          ],
-          "budget": 3
-        },
-        {
           "lessonId": "TA-C01-nandri",
           "language": "tamil",
           "chapter": 1,
@@ -10546,7 +10524,7 @@
           "script": "bengali",
           "latinScript": false,
           "lessonCount": 766,
-          "totalGlyphs": 55,
+          "totalGlyphs": 52,
           "lessonViolations": 3,
           "systemViolations": 0,
           "lessonsWithForeignScript": 0
@@ -10596,8 +10574,8 @@
           "script": "devanagari",
           "latinScript": false,
           "lessonCount": 827,
-          "totalGlyphs": 57,
-          "lessonViolations": 3,
+          "totalGlyphs": 56,
+          "lessonViolations": 2,
           "systemViolations": 0,
           "lessonsWithForeignScript": 18
         },
@@ -10716,8 +10694,8 @@
           "script": "devanagari",
           "latinScript": false,
           "lessonCount": 761,
-          "totalGlyphs": 53,
-          "lessonViolations": 4,
+          "totalGlyphs": 50,
+          "lessonViolations": 3,
           "systemViolations": 0,
           "lessonsWithForeignScript": 1
         },
@@ -10763,7 +10741,7 @@
         }
       ],
       "summary": {
-        "lessonViolations": 32,
+        "lessonViolations": 30,
         "systemViolations": 0,
         "lessonsWithForeignScript": 216,
         "maxForeignGlyphsInALesson": 26,
@@ -212781,14 +212759,6 @@
         "lessonsEarly": 32
       },
       {
-        "lessonId": "BN-R08-second-pass-four-exchanges",
-        "language": "bengali",
-        "position": 56,
-        "word": "দেখা",
-        "taughtBy": "BN-C07-dekha",
-        "lessonsEarly": 31
-      },
-      {
         "lessonId": "FR-C34-il-y-a",
         "language": "french",
         "position": 241,
@@ -214765,14 +214735,6 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "HI-C01-dhanyavad",
-        "language": "hindi",
-        "position": 2,
-        "word": "शुक्रिया",
-        "taughtBy": "HI-C01-shukriya",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "HI-C07-haan",
         "language": "hindi",
         "position": 58,
@@ -215424,7 +215386,7 @@
         "forwardReviews": 0,
         "atomsTaught": 745,
         "atomsNeverRevisited": 0,
-        "forwardReferences": 9
+        "forwardReferences": 8
       },
       {
         "language": "chinese",
@@ -215474,7 +215436,7 @@
         "forwardReviews": 0,
         "atomsTaught": 846,
         "atomsNeverRevisited": 0,
-        "forwardReferences": 21
+        "forwardReferences": 20
       },
       {
         "language": "italian",
@@ -215651,7 +215613,7 @@
         "R3": 10767,
         "R4": 13268
       },
-      "forwardReferences": 919
+      "forwardReferences": 917
     }
   },
   "scriptClosure": {
@@ -215675,10 +215637,10 @@
         "lessonCount": 766,
         "scriptLessons": 83,
         "taughtGlyphs": 52,
-        "shownGlyphs": 55,
-        "neverTaughtGlyphs": 3,
-        "violations": 22,
-        "exposureOnly": 24,
+        "shownGlyphs": 52,
+        "neverTaughtGlyphs": 0,
+        "violations": 0,
+        "exposureOnly": 33,
         "exposureExemptedGlyphs": 75,
         "headwordsWithoutRomanization": 0
       },
@@ -215714,10 +215676,10 @@
         "lessonCount": 827,
         "scriptLessons": 90,
         "taughtGlyphs": 56,
-        "shownGlyphs": 57,
-        "neverTaughtGlyphs": 1,
-        "violations": 20,
-        "exposureOnly": 48,
+        "shownGlyphs": 56,
+        "neverTaughtGlyphs": 0,
+        "violations": 0,
+        "exposureOnly": 58,
         "exposureExemptedGlyphs": 112,
         "headwordsWithoutRomanization": 1
       },
@@ -215831,10 +215793,10 @@
         "lessonCount": 761,
         "scriptLessons": 70,
         "taughtGlyphs": 50,
-        "shownGlyphs": 53,
-        "neverTaughtGlyphs": 3,
-        "violations": 21,
-        "exposureOnly": 54,
+        "shownGlyphs": 50,
+        "neverTaughtGlyphs": 0,
+        "violations": 0,
+        "exposureOnly": 68,
         "exposureExemptedGlyphs": 176,
         "headwordsWithoutRomanization": 0
       },
@@ -216083,13 +216045,6 @@
         "count": 8
       },
       {
-        "lessonId": "HI-C01-dhanyavad",
-        "language": "hindi",
-        "chapter": 1,
-        "glyphs": "कतमरशसिु",
-        "count": 8
-      },
-      {
         "lessonId": "RU-C01-privet",
         "language": "russian",
         "chapter": 1,
@@ -216209,13 +216164,6 @@
         "count": 7
       },
       {
-        "lessonId": "HI-C02-practice",
-        "language": "hindi",
-        "chapter": 2,
-        "glyphs": "आईय़ीुै",
-        "count": 7
-      },
-      {
         "lessonId": "RU-C02-practice-cases",
         "language": "russian",
         "chapter": 2,
@@ -216300,13 +216248,6 @@
         "count": 6
       },
       {
-        "lessonId": "HI-C01-alvida",
-        "language": "hindi",
-        "chapter": 1,
-        "glyphs": "कयरशु्",
-        "count": 6
-      },
-      {
         "lessonId": "RU-C11-do-skorogo",
         "language": "russian",
         "chapter": 11,
@@ -216377,20 +216318,6 @@
         "count": 5
       },
       {
-        "lessonId": "HI-C01-practice",
-        "language": "hindi",
-        "chapter": 1,
-        "glyphs": "धयलवु",
-        "count": 5
-      },
-      {
-        "lessonId": "HI-C05-karna",
-        "language": "hindi",
-        "chapter": 5,
-        "glyphs": "ँइब़ृ",
-        "count": 5
-      },
-      {
         "lessonId": "RU-C01-pozhaluysta",
         "language": "russian",
         "chapter": 1,
@@ -216444,13 +216371,6 @@
         "language": "russian",
         "chapter": 13,
         "glyphs": "Мжуць",
-        "count": 5
-      },
-      {
-        "lessonId": "SA-C09-prcchati",
-        "language": "sanskrit",
-        "chapter": 9,
-        "glyphs": "ऋगणशू",
         "count": 5
       },
       {
@@ -216510,13 +216430,6 @@
         "count": 4
       },
       {
-        "lessonId": "BN-C04-dekha-hobe",
-        "language": "bengali",
-        "chapter": 7,
-        "glyphs": "ওভ়ূ",
-        "count": 4
-      },
-      {
         "lessonId": "FA-C06-budan",
         "language": "persian",
         "chapter": 6,
@@ -216542,20 +216455,6 @@
         "language": "persian",
         "chapter": 13,
         "glyphs": "بتزک",
-        "count": 4
-      },
-      {
-        "lessonId": "HI-C01-namaskar",
-        "language": "hindi",
-        "chapter": 1,
-        "glyphs": "ःतृे",
-        "count": 4
-      },
-      {
-        "lessonId": "HI-C01-shukriya",
-        "language": "hindi",
-        "chapter": 1,
-        "glyphs": "दधनव",
         "count": 4
       },
       {
@@ -216591,34 +216490,6 @@
         "language": "russian",
         "chapter": 7,
         "glyphs": "Буыь",
-        "count": 4
-      },
-      {
-        "lessonId": "SA-C06-numbers-1-5",
-        "language": "sanskrit",
-        "chapter": 6,
-        "glyphs": "णीेौ",
-        "count": 4
-      },
-      {
-        "lessonId": "SA-C07-asti",
-        "language": "sanskrit",
-        "chapter": 7,
-        "glyphs": "गणधू",
-        "count": 4
-      },
-      {
-        "lessonId": "SA-C09-grhnati",
-        "language": "sanskrit",
-        "chapter": 9,
-        "glyphs": "ंऋघज",
-        "count": 4
-      },
-      {
-        "lessonId": "SA-C10-paniyam",
-        "language": "sanskrit",
-        "chapter": 10,
-        "glyphs": "उजबल",
         "count": 4
       },
       {
@@ -216692,31 +216563,10 @@
         "count": 3
       },
       {
-        "lessonId": "BN-R08-second-pass-four-exchanges",
-        "language": "bengali",
-        "chapter": 7,
-        "glyphs": "খদব",
-        "count": 3
-      },
-      {
         "lessonId": "FA-C04-chetor",
         "language": "persian",
         "chapter": 4,
         "glyphs": "تهی",
-        "count": 3
-      },
-      {
-        "lessonId": "HI-C07-nahin",
-        "language": "hindi",
-        "chapter": 7,
-        "glyphs": "आठय",
-        "count": 3
-      },
-      {
-        "lessonId": "HI-C08-kripaya",
-        "language": "hindi",
-        "chapter": 8,
-        "glyphs": "इएग",
         "count": 3
       },
       {
@@ -216752,55 +216602,6 @@
         "language": "russian",
         "chapter": 12,
         "glyphs": "Мкь",
-        "count": 3
-      },
-      {
-        "lessonId": "SA-C07-agacchati",
-        "language": "sanskrit",
-        "chapter": 7,
-        "glyphs": "ंउक",
-        "count": 3
-      },
-      {
-        "lessonId": "SA-C08-cintayati",
-        "language": "sanskrit",
-        "chapter": 8,
-        "glyphs": "गजण",
-        "count": 3
-      },
-      {
-        "lessonId": "SA-C08-likhati",
-        "language": "sanskrit",
-        "chapter": 8,
-        "glyphs": "धबी",
-        "count": 3
-      },
-      {
-        "lessonId": "SA-C08-pathati",
-        "language": "sanskrit",
-        "chapter": 8,
-        "glyphs": "थवी",
-        "count": 3
-      },
-      {
-        "lessonId": "SA-C12-akshi",
-        "language": "sanskrit",
-        "chapter": 12,
-        "glyphs": "ँणौ",
-        "count": 3
-      },
-      {
-        "lessonId": "SA-C12-karnah",
-        "language": "sanskrit",
-        "chapter": 12,
-        "glyphs": "गषौ",
-        "count": 3
-      },
-      {
-        "lessonId": "SA-C13-hridayam",
-        "language": "sanskrit",
-        "chapter": 13,
-        "glyphs": "ऋगण",
         "count": 3
       },
       {
@@ -216965,41 +216766,6 @@
         "count": 2
       },
       {
-        "lessonId": "BN-C03-tumi-kemon-achho",
-        "language": "bengali",
-        "chapter": 5,
-        "glyphs": "ওপ",
-        "count": 2
-      },
-      {
-        "lessonId": "BN-C08-lekha",
-        "language": "bengali",
-        "chapter": 14,
-        "glyphs": "ঝড",
-        "count": 2
-      },
-      {
-        "lessonId": "BN-C13-maf-korben",
-        "language": "bengali",
-        "chapter": 22,
-        "glyphs": "টষ",
-        "count": 2
-      },
-      {
-        "lessonId": "BN-C13-sbagotom",
-        "language": "bengali",
-        "chapter": 22,
-        "glyphs": "ঃফ",
-        "count": 2
-      },
-      {
-        "lessonId": "BN-C14-shada",
-        "language": "bengali",
-        "chapter": 23,
-        "glyphs": "ঙশ",
-        "count": 2
-      },
-      {
         "lessonId": "FA-C02-esm-e-man",
         "language": "persian",
         "chapter": 2,
@@ -217063,27 +216829,6 @@
         "count": 2
       },
       {
-        "lessonId": "HI-C03-kaise",
-        "language": "hindi",
-        "chapter": 3,
-        "glyphs": "यृ",
-        "count": 2
-      },
-      {
-        "lessonId": "HI-C03-thik",
-        "language": "hindi",
-        "chapter": 3,
-        "glyphs": "ँड",
-        "count": 2
-      },
-      {
-        "lessonId": "HI-C16-mahine",
-        "language": "hindi",
-        "chapter": 16,
-        "glyphs": "भौ",
-        "count": 2
-      },
-      {
         "lessonId": "RU-C02-ty-vy",
         "language": "russian",
         "chapter": 2,
@@ -217102,27 +216847,6 @@
         "language": "russian",
         "chapter": 12,
         "glyphs": "Мч",
-        "count": 2
-      },
-      {
-        "lessonId": "SA-C07-janati",
-        "language": "sanskrit",
-        "chapter": 7,
-        "glyphs": "गछ",
-        "count": 2
-      },
-      {
-        "lessonId": "SA-C11-bhagini",
-        "language": "sanskrit",
-        "chapter": 11,
-        "glyphs": "इई",
-        "count": 2
-      },
-      {
-        "lessonId": "SA-C13-nasika",
-        "language": "sanskrit",
-        "chapter": 13,
-        "glyphs": "इग",
         "count": 2
       },
       {
@@ -217315,111 +217039,6 @@
         "count": 1
       },
       {
-        "lessonId": "BN-C02-amar",
-        "language": "bengali",
-        "chapter": 3,
-        "glyphs": "ি",
-        "count": 1
-      },
-      {
-        "lessonId": "BN-C02-tomar-naam-ki",
-        "language": "bengali",
-        "chapter": 3,
-        "glyphs": "প",
-        "count": 1
-      },
-      {
-        "lessonId": "BN-C02-tumi-apni",
-        "language": "bengali",
-        "chapter": 3,
-        "glyphs": "ই",
-        "count": 1
-      },
-      {
-        "lessonId": "BN-C03-bhalo",
-        "language": "bengali",
-        "chapter": 5,
-        "glyphs": "ছ",
-        "count": 1
-      },
-      {
-        "lessonId": "BN-C05-kaj-kora",
-        "language": "bengali",
-        "chapter": 11,
-        "glyphs": "থ",
-        "count": 1
-      },
-      {
-        "lessonId": "BN-C07-howa",
-        "language": "bengali",
-        "chapter": 13,
-        "glyphs": "থ",
-        "count": 1
-      },
-      {
-        "lessonId": "BN-C07-jana",
-        "language": "bengali",
-        "chapter": 13,
-        "glyphs": "ঞ",
-        "count": 1
-      },
-      {
-        "lessonId": "BN-C07-khaowa",
-        "language": "bengali",
-        "chapter": 13,
-        "glyphs": "ষ",
-        "count": 1
-      },
-      {
-        "lessonId": "BN-C08-pora",
-        "language": "bengali",
-        "chapter": 14,
-        "glyphs": "ঝ",
-        "count": 1
-      },
-      {
-        "lessonId": "BN-C09-sahajjo-kora",
-        "language": "bengali",
-        "chapter": 15,
-        "glyphs": "ঞ",
-        "count": 1
-      },
-      {
-        "lessonId": "BN-C13-doya-kore",
-        "language": "bengali",
-        "chapter": 22,
-        "glyphs": "ঞ",
-        "count": 1
-      },
-      {
-        "lessonId": "BN-C14-lal",
-        "language": "bengali",
-        "chapter": 23,
-        "glyphs": "ফ",
-        "count": 1
-      },
-      {
-        "lessonId": "BN-C14-shobuj",
-        "language": "bengali",
-        "chapter": 23,
-        "glyphs": "ী",
-        "count": 1
-      },
-      {
-        "lessonId": "BN-C15-choshma",
-        "language": "bengali",
-        "chapter": 25,
-        "glyphs": "ঞ",
-        "count": 1
-      },
-      {
-        "lessonId": "BN-C15-shari",
-        "language": "bengali",
-        "chapter": 25,
-        "glyphs": "ষ",
-        "count": 1
-      },
-      {
         "lessonId": "FA-C03-shoma-to",
         "language": "persian",
         "chapter": 3,
@@ -217462,62 +217081,6 @@
         "count": 1
       },
       {
-        "lessonId": "HI-C01-namaste",
-        "language": "hindi",
-        "chapter": 1,
-        "glyphs": "ः",
-        "count": 1
-      },
-      {
-        "lessonId": "HI-C03-main",
-        "language": "hindi",
-        "chapter": 3,
-        "glyphs": "य",
-        "count": 1
-      },
-      {
-        "lessonId": "HI-C05-bolta-hun",
-        "language": "hindi",
-        "chapter": 5,
-        "glyphs": "आ",
-        "count": 1
-      },
-      {
-        "lessonId": "HI-C05-rahna",
-        "language": "hindi",
-        "chapter": 5,
-        "glyphs": "ँ",
-        "count": 1
-      },
-      {
-        "lessonId": "HI-C23-billi-history",
-        "language": "hindi",
-        "chapter": 23,
-        "glyphs": "ड",
-        "count": 1
-      },
-      {
-        "lessonId": "HI-C36-darvaaza",
-        "language": "hindi",
-        "chapter": 36,
-        "glyphs": "भ",
-        "count": 1
-      },
-      {
-        "lessonId": "HI-C39-aurat",
-        "language": "hindi",
-        "chapter": 39,
-        "glyphs": "भ",
-        "count": 1
-      },
-      {
-        "lessonId": "HI-C53-forehead",
-        "language": "hindi",
-        "chapter": 53,
-        "glyphs": "भ",
-        "count": 1
-      },
-      {
         "lessonId": "PA-C06-panj-convergence",
         "language": "punjabi",
         "chapter": 6,
@@ -217537,55 +217100,13 @@
         "chapter": 7,
         "glyphs": "П",
         "count": 1
-      },
-      {
-        "lessonId": "SA-C08-avagacchati",
-        "language": "sanskrit",
-        "chapter": 8,
-        "glyphs": "उ",
-        "count": 1
-      },
-      {
-        "lessonId": "SA-C09-sahayyam-karoti",
-        "language": "sanskrit",
-        "chapter": 9,
-        "glyphs": "इ",
-        "count": 1
-      },
-      {
-        "lessonId": "SA-C15-new",
-        "language": "sanskrit",
-        "chapter": 15,
-        "glyphs": "उ",
-        "count": 1
-      },
-      {
-        "lessonId": "SA-C16-forest",
-        "language": "sanskrit",
-        "chapter": 16,
-        "glyphs": "ग",
-        "count": 1
-      },
-      {
-        "lessonId": "SA-C20-woman",
-        "language": "sanskrit",
-        "chapter": 20,
-        "glyphs": "ई",
-        "count": 1
-      },
-      {
-        "lessonId": "SA-C26-king",
-        "language": "sanskrit",
-        "chapter": 26,
-        "glyphs": "ऋ",
-        "count": 1
       }
     ],
     "summary": {
       "tracksWithScript": 17,
       "tracksTeachingNothing": 0,
-      "violations": 243,
-      "exposureOnly": 515,
+      "violations": 180,
+      "exposureOnly": 548,
       "exposureExemptedGlyphs": 1622,
       "headwordsWithoutRomanization": 46,
       "tracksWithUnknownScript": 0
@@ -235909,14 +235430,14 @@
         "atomChapterSpikes": 0,
         "glyphLessonSpikes": 3,
         "scriptSystemSpikes": 0,
-        "scriptClosureViolations": 22,
-        "neverTaughtGlyphs": 3,
+        "scriptClosureViolations": 0,
+        "neverTaughtGlyphs": 0,
         "orderDefects": 0,
         "lessonsWithoutSequence": 0,
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 9,
+        "forwardReferences": 8,
         "atomsTaught": 745,
         "atomsNeverRevisited": 0,
         "reinforcementWindowMisses": 1386,
@@ -235934,16 +235455,9 @@
           {
             "language": "bengali",
             "kind": "forward-language",
-            "count": 9,
+            "count": 8,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
-          },
-          {
-            "language": "bengali",
-            "kind": "script-closure",
-            "count": 3,
-            "unit": "glyph(s)",
-            "detail": "teach every load-bearing glyph before asking the learner to decode it"
           },
           {
             "language": "bengali",
@@ -235970,7 +235484,7 @@
         "next": {
           "language": "bengali",
           "kind": "forward-language",
-          "count": 9,
+          "count": 8,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
@@ -236266,16 +235780,16 @@
         "durationViolations": 0,
         "atomLessonSpikes": 0,
         "atomChapterSpikes": 2,
-        "glyphLessonSpikes": 3,
+        "glyphLessonSpikes": 2,
         "scriptSystemSpikes": 0,
-        "scriptClosureViolations": 20,
-        "neverTaughtGlyphs": 1,
+        "scriptClosureViolations": 0,
+        "neverTaughtGlyphs": 0,
         "orderDefects": 0,
         "lessonsWithoutSequence": 0,
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 21,
+        "forwardReferences": 20,
         "atomsTaught": 846,
         "atomsNeverRevisited": 0,
         "reinforcementWindowMisses": 1982,
@@ -236293,16 +235807,9 @@
           {
             "language": "hindi",
             "kind": "forward-language",
-            "count": 21,
+            "count": 20,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
-          },
-          {
-            "language": "hindi",
-            "kind": "script-closure",
-            "count": 1,
-            "unit": "glyph(s)",
-            "detail": "teach every load-bearing glyph before asking the learner to decode it"
           },
           {
             "language": "hindi",
@@ -236314,7 +235821,7 @@
           {
             "language": "hindi",
             "kind": "glyph-step",
-            "count": 3,
+            "count": 2,
             "unit": "lesson/system spike(s)",
             "detail": "split new glyphs and writing systems across gentler steps"
           },
@@ -236343,7 +235850,7 @@
         "next": {
           "language": "hindi",
           "kind": "forward-language",
-          "count": 21,
+          "count": 20,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
@@ -237157,10 +236664,10 @@
         "durationViolations": 0,
         "atomLessonSpikes": 0,
         "atomChapterSpikes": 7,
-        "glyphLessonSpikes": 4,
+        "glyphLessonSpikes": 3,
         "scriptSystemSpikes": 0,
-        "scriptClosureViolations": 21,
-        "neverTaughtGlyphs": 3,
+        "scriptClosureViolations": 0,
+        "neverTaughtGlyphs": 0,
         "orderDefects": 0,
         "lessonsWithoutSequence": 0,
         "unknownPrerequisites": 0,
@@ -237190,13 +236697,6 @@
           },
           {
             "language": "sanskrit",
-            "kind": "script-closure",
-            "count": 3,
-            "unit": "glyph(s)",
-            "detail": "teach every load-bearing glyph before asking the learner to decode it"
-          },
-          {
-            "language": "sanskrit",
             "kind": "writing-ramp",
             "count": 2,
             "unit": "opening lesson(s)",
@@ -237212,7 +236712,7 @@
           {
             "language": "sanskrit",
             "kind": "glyph-step",
-            "count": 4,
+            "count": 3,
             "unit": "lesson/system spike(s)",
             "detail": "split new glyphs and writing systems across gentler steps"
           },
@@ -237597,7 +237097,7 @@
       {
         "language": "hindi",
         "kind": "forward-language",
-        "count": 21,
+        "count": 20,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
@@ -237646,7 +237146,7 @@
       {
         "language": "bengali",
         "kind": "forward-language",
-        "count": 9,
+        "count": 8,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
@@ -237703,27 +237203,6 @@
         "language": "arabic",
         "kind": "script-closure",
         "count": 4,
-        "unit": "glyph(s)",
-        "detail": "teach every load-bearing glyph before asking the learner to decode it"
-      },
-      {
-        "language": "bengali",
-        "kind": "script-closure",
-        "count": 3,
-        "unit": "glyph(s)",
-        "detail": "teach every load-bearing glyph before asking the learner to decode it"
-      },
-      {
-        "language": "sanskrit",
-        "kind": "script-closure",
-        "count": 3,
-        "unit": "glyph(s)",
-        "detail": "teach every load-bearing glyph before asking the learner to decode it"
-      },
-      {
-        "language": "hindi",
-        "kind": "script-closure",
-        "count": 1,
         "unit": "glyph(s)",
         "detail": "teach every load-bearing glyph before asking the learner to decode it"
       },
@@ -237903,13 +237382,6 @@
         "detail": "split new glyphs and writing systems across gentler steps"
       },
       {
-        "language": "sanskrit",
-        "kind": "glyph-step",
-        "count": 4,
-        "unit": "lesson/system spike(s)",
-        "detail": "split new glyphs and writing systems across gentler steps"
-      },
-      {
         "language": "bengali",
         "kind": "glyph-step",
         "count": 3,
@@ -237917,7 +237389,7 @@
         "detail": "split new glyphs and writing systems across gentler steps"
       },
       {
-        "language": "hindi",
+        "language": "sanskrit",
         "kind": "glyph-step",
         "count": 3,
         "unit": "lesson/system spike(s)",
@@ -237927,6 +237399,13 @@
         "language": "telugu",
         "kind": "glyph-step",
         "count": 3,
+        "unit": "lesson/system spike(s)",
+        "detail": "split new glyphs and writing systems across gentler steps"
+      },
+      {
+        "language": "hindi",
+        "kind": "glyph-step",
+        "count": 2,
         "unit": "lesson/system spike(s)",
         "detail": "split new glyphs and writing systems across gentler steps"
       },
@@ -238350,7 +237829,7 @@
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 6,
       "atomMeasurementBlindLessons": 103,
-      "findings": 113
+      "findings": 110
     }
   },
   "levelGate": {
@@ -290981,7 +290460,7 @@
   "glyphCoverage": {
     "filesScanned": 3662,
     "mainCharacters": 134,
-    "scriptCharacters": 802,
+    "scriptCharacters": 800,
     "gaps": 0
   }
 }
