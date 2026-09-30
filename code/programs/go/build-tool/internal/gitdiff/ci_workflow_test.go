@@ -40,6 +40,26 @@ func TestAnalyzeCIWorkflowPatchAllowsToolchainScopedOCamlChanges(t *testing.T) {
 	}
 }
 
+func TestAnalyzeCIWorkflowPatchAllowsHaskellIndexBootstrapVerification(t *testing.T) {
+	patch := `
+@@ -1945,0 +1946,6 @@
++      - name: Verify Haskell package index
++        if: needs.detect.outputs.needs_haskell == 'true'
++        shell: bash
++        run: |
++          cabal list --simple-output hspec | grep -Eq '^hspec [0-9]'
+`
+
+	change := AnalyzeCIWorkflowPatch(patch)
+	if change.RequiresFullRebuild {
+		t.Fatal("expected Haskell index verification to stay toolchain-scoped")
+	}
+	got := SortedToolchains(change.Toolchains)
+	if len(got) != 1 || got[0] != "haskell" {
+		t.Fatalf("expected Haskell toolchain only, got %v", got)
+	}
+}
+
 func TestAnalyzeCIWorkflowPatchAllowsToolchainScopedSwiftChanges(t *testing.T) {
 	patch := `
 @@ -300,0 +301,54 @@

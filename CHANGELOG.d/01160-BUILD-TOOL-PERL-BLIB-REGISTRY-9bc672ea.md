@@ -6,3 +6,5 @@
   registry and boundary digests through every checked build-tool projection.
 - Added direct Perl evidence and refreshed the Python, Ruby, Rust, TypeScript,
   Go, Haskell, Swift, C#, and F# consumers of the shared authority.
+- Prime and verify Cabal's Hackage index cache after Haskell setup so fresh
+  hosted runners do not hand the first package test a test-disabled plan.
