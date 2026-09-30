@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C180-panditah",
+    "language": "sanskrit",
+    "chapter": 180,
+    "sequence": 9810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d9e5b835c3bb7a2"
+  },
+  "findings": []
+}

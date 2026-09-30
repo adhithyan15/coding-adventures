@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C191-ulukhalam",
+    "language": "sanskrit",
+    "chapter": 191,
+    "sequence": 10730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32a3132ebb2f4ba1"
+  },
+  "findings": []
+}

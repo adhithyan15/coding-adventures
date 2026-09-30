@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C179-sainikah",
+    "language": "sanskrit",
+    "chapter": 179,
+    "sequence": 9730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77d9ca082cbb7010"
+  },
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:1cf03fc78904ae9f",
+  "lessonIds": [
+    "SA-C190-masah",
+    "SA-C190-yavah",
+    "SA-C190-kharjuram",
+    "SA-C190-amalakam",
+    "SA-C190-jambuphalam",
+    "SA-R190-first-pass-words-from-chapters-182-185",
+    "SA-R190-second-pass-words-from-chapters-186-190"
+  ],
+  "tex": "sanskrit/book/chapters/ch190-black-gram-barley-date-palm-s-fruit-amla-rose-apple.tex"
+}

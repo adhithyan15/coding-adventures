@@ -1,0 +1,19 @@
+{
+  "chapter": 196,
+  "title": "Copper, Rock, Ocean, Stream, Cave",
+  "label": "ch:sa-copper-rock-ocean-stream-cave",
+  "canDo": "I can say copper, a rock, the ocean, a stream and a cave.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-R196-second-pass-words-from-chapters-194-196",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 196: I can say copper, a rock, the ocean, a stream and a cave.",
+    "assesses": [
+      "SA-LEX-C196-THG196-03",
+      "SA-LEX-C196-THG196-04",
+      "SA-LEX-C196-THG196-05"
+    ]
+  }
+}

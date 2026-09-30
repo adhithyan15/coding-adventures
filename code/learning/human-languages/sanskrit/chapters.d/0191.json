@@ -1,0 +1,19 @@
+{
+  "chapter": 191,
+  "title": "Earthen dish, Pitcher, Mortar, Pestle, Sieve",
+  "label": "ch:sa-earthen-dish-pitcher-mortar-pestle-sieve",
+  "canDo": "I can say an earthen dish, a pitcher, a mortar, a pestle and a sieve.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C191-calani",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 191: I can say an earthen dish, a pitcher, a mortar, a pestle and a sieve.",
+    "assesses": [
+      "SA-LEX-C191-THG191-03",
+      "SA-LEX-C191-THG191-04",
+      "SA-LEX-C191-THG191-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C202-pathikah",
+  "pathSegment": "SA-PATH-202-TRV202",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-202-TRV202",
+      "order": 0
+    }
+  ]
+}

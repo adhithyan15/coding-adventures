@@ -1,0 +1,19 @@
+{
+  "chapter": 183,
+  "title": "Age, Auspicious hour, Hour, For a long time, After a long time",
+  "label": "ch:sa-age-auspicious-hour-hour-for-a-long-time-after-a-long-time",
+  "canDo": "I can say an age, an auspicious hour, an hour, for a long time and after a long time.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "SA-C183-cirat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 183: I can say an age, an auspicious hour, an hour, for a long time and after a long time.",
+    "assesses": [
+      "SA-LEX-C183-TIME183-03",
+      "SA-LEX-C183-TIME183-04",
+      "SA-LEX-C183-TIME183-05"
+    ]
+  }
+}

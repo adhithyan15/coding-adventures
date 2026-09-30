@@ -1,0 +1,19 @@
+{
+  "chapter": 175,
+  "title": "Takes away, Supports, Carries, Endures, Tries",
+  "label": "ch:sa-takes-away-supports-carries-endures-tries",
+  "canDo": "I can say takes away, supports, carries, endures and tries.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C175-yatate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 175: I can say takes away, supports, carries, endures and tries.",
+    "assesses": [
+      "SA-LEX-C175-ACT175-03",
+      "SA-LEX-C175-ACT175-04",
+      "SA-LEX-C175-ACT175-05"
+    ]
+  }
+}

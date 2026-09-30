@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R190-first-pass-words-from-chapters-182-185",
+    "language": "sanskrit",
+    "chapter": 190,
+    "sequence": 10520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63e2a71bb91c6f1f"
+  },
+  "findings": []
+}

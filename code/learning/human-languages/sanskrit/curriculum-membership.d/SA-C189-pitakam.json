@@ -1,0 +1,11 @@
+{
+  "id": "SA-C189-pitakam",
+  "pathSegment": "SA-PATH-189-THG189",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-189-THG189",
+      "order": 2
+    }
+  ]
+}

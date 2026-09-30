@@ -1,0 +1,19 @@
+{
+  "chapter": 195,
+  "title": "Port town, Capital, District, Province, Boundary",
+  "label": "ch:sa-port-town-capital-district-province-boundary",
+  "canDo": "I can say a port town, a capital, a district, a province and a boundary.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C195-sima",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 195: I can say a port town, a capital, a district, a province and a boundary.",
+    "assesses": [
+      "SA-LEX-C195-THG195-03",
+      "SA-LEX-C195-THG195-04",
+      "SA-LEX-C195-THG195-05"
+    ]
+  }
+}

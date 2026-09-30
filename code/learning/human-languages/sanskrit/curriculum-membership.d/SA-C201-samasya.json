@@ -1,0 +1,11 @@
+{
+  "id": "SA-C201-samasya",
+  "pathSegment": "SA-PATH-201-WRK201",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-201-WRK201",
+      "order": 3
+    }
+  ]
+}

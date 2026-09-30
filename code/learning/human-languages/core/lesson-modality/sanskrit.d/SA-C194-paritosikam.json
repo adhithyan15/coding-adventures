@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C194-paritosikam",
+    "language": "sanskrit",
+    "chapter": 194,
+    "sequence": 10860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4cc9213cb9193023"
+  },
+  "findings": []
+}

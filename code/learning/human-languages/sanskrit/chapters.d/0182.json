@@ -1,0 +1,19 @@
+{
+  "chapter": 182,
+  "title": "Wonder, Grief, Contentment, Gratitude, Memory",
+  "label": "ch:sa-wonder-grief-contentment-gratitude-memory",
+  "canDo": "I can say wonder, grief, contentment, gratitude and memory.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "SA-C182-smrtih",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 182: I can say wonder, grief, contentment, gratitude and memory.",
+    "assesses": [
+      "SA-LEX-C182-WEL182-03",
+      "SA-LEX-C182-WEL182-04",
+      "SA-LEX-C182-WEL182-05"
+    ]
+  }
+}

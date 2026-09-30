@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:9db309065eb2dbdb",
+  "lessonIds": [
+    "SA-C177-pracchadayati",
+    "SA-C177-vitarati",
+    "SA-C177-sangrhnati",
+    "SA-C177-visvasiti",
+    "SA-C177-lajjate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch177.txt",
+  "json": "sanskrit/narration/ch177.json",
+  "textHash": "fnv1a64:28516dd1a5f5d955",
+  "jsonHash": "fnv1a64:80dec52c67a9a6f1",
+  "findings": []
+}

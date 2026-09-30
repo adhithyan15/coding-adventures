@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C197-avasyayah",
+    "language": "sanskrit",
+    "chapter": 197,
+    "sequence": 11200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:925da4a3fd0459b4"
+  },
+  "findings": []
+}

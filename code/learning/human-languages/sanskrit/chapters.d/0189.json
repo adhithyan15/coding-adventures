@@ -1,0 +1,19 @@
+{
+  "chapter": 189,
+  "title": "Trunk, Hanging basket, Basket, Mat, Carpet",
+  "label": "ch:sa-trunk-hanging-basket-basket-mat-carpet",
+  "canDo": "I can say a trunk, a hanging basket, a basket, a mat and a carpet.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C189-astaranam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 189: I can say a trunk, a hanging basket, a basket, a mat and a carpet.",
+    "assesses": [
+      "SA-LEX-C189-THG189-03",
+      "SA-LEX-C189-THG189-04",
+      "SA-LEX-C189-THG189-05"
+    ]
+  }
+}

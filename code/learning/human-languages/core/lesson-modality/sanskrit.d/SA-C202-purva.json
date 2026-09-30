@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C202-purva",
+    "language": "sanskrit",
+    "chapter": 202,
+    "sequence": 11440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ab001644e5d5b2b"
+  },
+  "findings": []
+}

@@ -1,0 +1,51 @@
+---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-R196-second-pass-words-from-chapters-194-196
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 11020
+chapter: 196
+type: review
+headword: (dialogue)
+gloss: second pass over chapters 194-196
+concept_tag: REVIEW
+prerequisites: [SA-C194-paritosikam, SA-C194-nimantranam, SA-C194-sabha, SA-C194-gosthi, SA-C194-melakah, SA-C195-pattanam, SA-C195-rajadhani, SA-C195-janapadah, SA-C195-prantah, SA-C195-sima, SA-C196-tamram, SA-C196-pasanah, SA-C196-ratnakarah, SA-C196-sarit, SA-C196-guha]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [SA-LEX-C194-THG194-01, SA-LEX-C194-THG194-02, SA-LEX-C194-THG194-03, SA-LEX-C194-THG194-04, SA-LEX-C194-THG194-05, SA-LEX-C195-THG195-01, SA-LEX-C195-THG195-02, SA-LEX-C195-THG195-03, SA-LEX-C195-THG195-04, SA-LEX-C195-THG195-05, SA-LEX-C196-THG196-01, SA-LEX-C196-THG196-02, SA-LEX-C196-THG196-03, SA-LEX-C196-THG196-04, SA-LEX-C196-THG196-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-LEX-C194-THG194-01, SA-LEX-C194-THG194-02, SA-LEX-C194-THG194-03, SA-LEX-C194-THG194-04, SA-LEX-C194-THG194-05, SA-LEX-C195-THG195-01, SA-LEX-C195-THG195-02, SA-LEX-C195-THG195-03, SA-LEX-C195-THG195-04, SA-LEX-C195-THG195-05, SA-LEX-C196-THG196-01, SA-LEX-C196-THG196-02, SA-LEX-C196-THG196-03, SA-LEX-C196-THG196-04, SA-LEX-C196-THG196-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C194-paritosikam, SA-C194-nimantranam, SA-C194-sabha, SA-C194-gosthi, SA-C194-melakah, SA-C195-pattanam, SA-C195-rajadhani, SA-C195-janapadah, SA-C195-prantah, SA-C195-sima, SA-C196-tamram, SA-C196-pasanah, SA-C196-ratnakarah, SA-C196-sarit, SA-C196-guha]
+---
+
+# Words from chapters 194-196 — a second pass
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C194-THG194-01, SA-LEX-C194-THG194-02] -->
+
+[PAUSE 3s] Say the words for a prize and an invitation.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C194-THG194-01, SA-LEX-C194-THG194-02, SA-LEX-C194-THG194-03, SA-LEX-C194-THG194-04, SA-LEX-C194-THG194-05, SA-LEX-C195-THG195-01, SA-LEX-C195-THG195-02, SA-LEX-C195-THG195-03, SA-LEX-C195-THG195-04, SA-LEX-C195-THG195-05, SA-LEX-C196-THG196-01, SA-LEX-C196-THG196-02, SA-LEX-C196-THG196-03, SA-LEX-C196-THG196-04, SA-LEX-C196-THG196-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a prize, an invitation, an assembly, a discussion group, a fair]
+- [YOU SAY: a port town, a capital, a district, a province, a boundary]
+- [YOU SAY: copper, a rock, the ocean, a stream, a cave]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C194-THG194-01, SA-LEX-C194-THG194-02, SA-LEX-C194-THG194-03, SA-LEX-C194-THG194-04, SA-LEX-C194-THG194-05, SA-LEX-C195-THG195-01, SA-LEX-C195-THG195-02, SA-LEX-C195-THG195-03, SA-LEX-C195-THG195-04, SA-LEX-C195-THG195-05, SA-LEX-C196-THG196-01, SA-LEX-C196-THG196-02, SA-LEX-C196-THG196-03, SA-LEX-C196-THG196-04, SA-LEX-C196-THG196-05] -->
+
+[PAUSE 3s] A prize? (**पारितोषिकम्**, *pāritoṣikam*.) An invitation? (**निमन्त्रणम्**, *nimantraṇam*.) An assembly? (**सभा**, *sabhā*.) A discussion group? (**गोष्ठी**, *goṣṭhī*.) A fair? (**मेलकः**, *melakaḥ*.) A port town? (**पत्तनम्**, *pattanam*.) A capital? (**राजधानी**, *rājadhānī*.) A district? (**जनपदः**, *janapadaḥ*.) A province? (**प्रान्तः**, *prāntaḥ*.) A boundary? (**सीमा**, *sīmā*.) Copper? (**ताम्रम्**, *tāmram*.) A rock? (**पाषाणः**, *pāṣāṇaḥ*.) The ocean? (**रत्नाकरः**, *ratnākaraḥ*.) A stream? (**सरित्**, *sarit*.) A cave? (**गुहा**, *guhā*.)

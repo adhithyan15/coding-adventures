@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C184-duratah",
+    "language": "sanskrit",
+    "chapter": 184,
+    "sequence": 10170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ddce1908596241d2"
+  },
+  "findings": []
+}

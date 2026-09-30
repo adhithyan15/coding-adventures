@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-174-ACT174",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say steals, eats up, strikes, keeps and hurts.",
+  "prerequisites": []
+}

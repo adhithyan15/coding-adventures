@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C175-bharati",
+    "language": "sanskrit",
+    "chapter": 175,
+    "sequence": 9540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:85de81e8d0478b68"
+  },
+  "findings": []
+}

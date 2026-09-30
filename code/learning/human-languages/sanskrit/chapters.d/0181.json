@@ -1,0 +1,19 @@
+{
+  "chapter": 181,
+  "title": "Toothache, Head cold, Breath, Pulse, Fitness",
+  "label": "ch:sa-toothache-head-cold-breath-pulse-fitness",
+  "canDo": "I can say a toothache, a head cold, breath, the pulse and fitness.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "SA-R181-second-pass-words-from-chapters-177-181",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 181: I can say a toothache, a head cold, breath, the pulse and fitness.",
+    "assesses": [
+      "SA-LEX-C181-WEL181-03",
+      "SA-LEX-C181-WEL181-04",
+      "SA-LEX-C181-WEL181-05"
+    ]
+  }
+}

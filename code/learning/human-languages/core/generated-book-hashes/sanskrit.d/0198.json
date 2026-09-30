@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:96947d5321f63c16",
+  "lessonIds": [
+    "SA-C198-harinah",
+    "SA-C198-citrakah",
+    "SA-C198-gandakah",
+    "SA-C198-nidam",
+    "SA-C198-andam"
+  ],
+  "tex": "sanskrit/book/chapters/ch198-deer-leopard-rhinoceros-nest-egg.tex"
+}

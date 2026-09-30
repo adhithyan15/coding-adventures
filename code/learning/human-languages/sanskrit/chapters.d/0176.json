@@ -1,0 +1,19 @@
+{
+  "chapter": 176,
+  "title": "Changes, Reports, Invites, Cleans, Fills",
+  "label": "ch:sa-changes-reports-invites-cleans-fills",
+  "canDo": "I can say changes, reports, invites, cleans and fills.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C176-purayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 176: I can say changes, reports, invites, cleans and fills.",
+    "assesses": [
+      "SA-LEX-C176-ACT176-03",
+      "SA-LEX-C176-ACT176-04",
+      "SA-LEX-C176-ACT176-05"
+    ]
+  }
+}

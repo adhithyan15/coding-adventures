@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 181,
+  "sourceHash": "fnv1a64:8838a8b03b22651e",
+  "lessonIds": [
+    "SA-C181-dantapida",
+    "SA-C181-pratisyayah",
+    "SA-C181-svasah",
+    "SA-C181-nadi",
+    "SA-C181-svasthyam",
+    "SA-R181-first-pass-words-from-chapters-173-176",
+    "SA-R181-second-pass-words-from-chapters-177-181"
+  ],
+  "tex": "sanskrit/book/chapters/ch181-toothache-head-cold-breath-pulse-fitness.tex"
+}

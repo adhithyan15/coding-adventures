@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C178-jamata",
+    "language": "sanskrit",
+    "chapter": 178,
+    "sequence": 9710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:970b8f04ec4326c9"
+  },
+  "findings": []
+}

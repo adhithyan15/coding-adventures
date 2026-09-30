@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C196-pasanah",
+    "language": "sanskrit",
+    "chapter": 196,
+    "sequence": 10970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bfef98a0a45ece7d"
+  },
+  "findings": []
+}

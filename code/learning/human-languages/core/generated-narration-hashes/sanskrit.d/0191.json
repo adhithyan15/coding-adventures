@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:0383d4b884d87013",
+  "lessonIds": [
+    "SA-C191-saravah",
+    "SA-C191-kumbhah",
+    "SA-C191-ulukhalam",
+    "SA-C191-musalam",
+    "SA-C191-calani"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch191.txt",
+  "json": "sanskrit/narration/ch191.json",
+  "textHash": "fnv1a64:f7529b3000c52216",
+  "jsonHash": "fnv1a64:81b758327a10bb3b",
+  "findings": []
+}

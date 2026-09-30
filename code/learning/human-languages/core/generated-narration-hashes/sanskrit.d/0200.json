@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:4d022552791e19d8",
+  "lessonIds": [
+    "SA-C200-pathanam",
+    "SA-C200-sravanam",
+    "SA-C200-bhasanam",
+    "SA-C200-carca",
+    "SA-C200-vivadah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch200.txt",
+  "json": "sanskrit/narration/ch200.json",
+  "textHash": "fnv1a64:007f18a118b811b0",
+  "jsonHash": "fnv1a64:0a5f62cbe29a5370",
+  "findings": []
+}

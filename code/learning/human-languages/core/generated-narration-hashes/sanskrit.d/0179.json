@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:23250773c9769f8c",
+  "lessonIds": [
+    "SA-C179-sainikah",
+    "SA-C179-raksakah",
+    "SA-C179-nyayadhisah",
+    "SA-C179-adhivakta",
+    "SA-C179-lekhakah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch179.txt",
+  "json": "sanskrit/narration/ch179.json",
+  "textHash": "fnv1a64:abea964adf914e72",
+  "jsonHash": "fnv1a64:385fd460b30c1240",
+  "findings": []
+}

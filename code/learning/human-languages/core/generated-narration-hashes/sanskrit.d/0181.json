@@ -1,0 +1,21 @@
+{
+  "language": "sanskrit",
+  "chapter": 181,
+  "sourceHash": "fnv1a64:9f85d1e149b72095",
+  "lessonIds": [
+    "SA-C181-dantapida",
+    "SA-C181-pratisyayah",
+    "SA-C181-svasah",
+    "SA-C181-nadi",
+    "SA-C181-svasthyam",
+    "SA-R181-first-pass-words-from-chapters-173-176",
+    "SA-R181-second-pass-words-from-chapters-177-181"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "sanskrit/narration/ch181.txt",
+  "json": "sanskrit/narration/ch181.json",
+  "textHash": "fnv1a64:3fbaf8c9a6ee4ff0",
+  "jsonHash": "fnv1a64:2df969c97e489737",
+  "findings": []
+}

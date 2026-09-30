@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C201-samasya",
+    "language": "sanskrit",
+    "chapter": 201,
+    "sequence": 11400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df143ef5bfa8bfc8"
+  },
+  "findings": []
+}

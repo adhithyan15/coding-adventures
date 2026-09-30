@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R196-second-pass-words-from-chapters-194-196",
+    "language": "sanskrit",
+    "chapter": 196,
+    "sequence": 11020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:696faf4b3cb27aab"
+  },
+  "findings": []
+}

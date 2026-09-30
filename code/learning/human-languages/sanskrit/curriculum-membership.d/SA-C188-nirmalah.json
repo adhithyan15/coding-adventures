@@ -1,0 +1,11 @@
+{
+  "id": "SA-C188-nirmalah",
+  "pathSegment": "SA-PATH-188-QUAL188",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-188-QUAL188",
+      "order": 3
+    }
+  ]
+}

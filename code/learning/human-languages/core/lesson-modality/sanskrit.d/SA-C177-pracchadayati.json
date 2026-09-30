@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C177-pracchadayati",
+    "language": "sanskrit",
+    "chapter": 177,
+    "sequence": 9630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8411752cb784a48e"
+  },
+  "findings": []
+}

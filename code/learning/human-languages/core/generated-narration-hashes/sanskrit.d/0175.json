@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:32f79507c545ad61",
+  "lessonIds": [
+    "SA-C175-harati",
+    "SA-C175-bharati",
+    "SA-C175-vahati",
+    "SA-C175-sahate",
+    "SA-C175-yatate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch175.txt",
+  "json": "sanskrit/narration/ch175.json",
+  "textHash": "fnv1a64:5b82f2faf361f49d",
+  "jsonHash": "fnv1a64:6432070736055876",
+  "findings": []
+}

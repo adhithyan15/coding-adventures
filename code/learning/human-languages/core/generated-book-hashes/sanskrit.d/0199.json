@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:75e972a4c2c1f917",
+  "lessonIds": [
+    "SA-C199-vakyam",
+    "SA-C199-bhasa",
+    "SA-C199-vyakaranam",
+    "SA-C199-ganitam",
+    "SA-C199-vijnanam"
+  ],
+  "tex": "sanskrit/book/chapters/ch199-sentence-language-grammar-mathematics-science.tex"
+}

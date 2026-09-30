@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C191-musalam",
+    "language": "sanskrit",
+    "chapter": 191,
+    "sequence": 10740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e0850ea3249b835"
+  },
+  "findings": []
+}

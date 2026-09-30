@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C202-disa",
+    "language": "sanskrit",
+    "chapter": 202,
+    "sequence": 11430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21f070d367c0bf0a"
+  },
+  "findings": []
+}

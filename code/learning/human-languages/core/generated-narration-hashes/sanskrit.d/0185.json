@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:86d70986bfde47fb",
+  "lessonIds": [
+    "SA-C185-kiyat",
+    "SA-C185-kidrsah",
+    "SA-C185-hi",
+    "SA-C185-nunam",
+    "SA-C185-avasyam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch185.txt",
+  "json": "sanskrit/narration/ch185.json",
+  "textHash": "fnv1a64:a4a39f23e95a120d",
+  "jsonHash": "fnv1a64:7a91b9210c2e48ab",
+  "findings": []
+}

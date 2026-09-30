@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:1cf00301618f8ea9",
+  "lessonIds": [
+    "SA-C185-kiyat",
+    "SA-C185-kidrsah",
+    "SA-C185-hi",
+    "SA-C185-nunam",
+    "SA-C185-avasyam"
+  ],
+  "tex": "sanskrit/book/chapters/ch185-how-much-of-what-kind-for-surely-certainly.tex"
+}

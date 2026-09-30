@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-180-PPL180",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a hunter, a thief, a beggar, a scholar and a learned person.",
+  "prerequisites": []
+}

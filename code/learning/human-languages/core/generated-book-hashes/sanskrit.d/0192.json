@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:7336733fd281292e",
+  "lessonIds": [
+    "SA-C192-harah",
+    "SA-C192-mukutam",
+    "SA-C192-adhovastram",
+    "SA-C192-paridhanam",
+    "SA-C192-vasanam"
+  ],
+  "tex": "sanskrit/book/chapters/ch192-necklace-crown-lower-garment-clothing-garment.tex"
+}

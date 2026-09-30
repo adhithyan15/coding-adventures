@@ -1,0 +1,11 @@
+{
+  "id": "SA-C187-udarah",
+  "pathSegment": "SA-PATH-187-QUAL187",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-187-QUAL187",
+      "order": 1
+    }
+  ]
+}

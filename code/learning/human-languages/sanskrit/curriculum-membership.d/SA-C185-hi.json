@@ -1,0 +1,11 @@
+{
+  "id": "SA-C185-hi",
+  "pathSegment": "SA-PATH-185-WHY185",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-185-WHY185",
+      "order": 2
+    }
+  ]
+}

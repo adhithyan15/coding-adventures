@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:7df962ed8aa6f2d0",
+  "lessonIds": [
+    "SA-C187-dayaluh",
+    "SA-C187-udarah",
+    "SA-C187-krpanah",
+    "SA-C187-satyavadi",
+    "SA-C187-patuh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch187.txt",
+  "json": "sanskrit/narration/ch187.json",
+  "textHash": "fnv1a64:b1976384e89b2f61",
+  "jsonHash": "fnv1a64:1f21c7ef7f67f7b4",
+  "findings": []
+}

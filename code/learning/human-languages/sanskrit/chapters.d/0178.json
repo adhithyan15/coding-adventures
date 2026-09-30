@@ -1,0 +1,19 @@
+{
+  "chapter": 178,
+  "title": "Mother's brother's wife, Father-in-law, Mother-in-law, Son-in-law, Daughter-in-law",
+  "label": "ch:sa-mother-s-brother-s-wife-father-in-law-mother-in-law-son-in-law-daughter-in-law",
+  "canDo": "I can say a mother's brother's wife, a father-in-law, a mother-in-law, a son-in-law and a daughter-in-law.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "SA-C178-snusa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 178: I can say a mother's brother's wife, a father-in-law, a mother-in-law, a son-in-law and a daughter-in-law.",
+    "assesses": [
+      "SA-LEX-C178-PPL178-03",
+      "SA-LEX-C178-PPL178-04",
+      "SA-LEX-C178-PPL178-05"
+    ]
+  }
+}

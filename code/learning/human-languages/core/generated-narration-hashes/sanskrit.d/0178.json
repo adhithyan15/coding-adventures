@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:b31e3f189f4bdde9",
+  "lessonIds": [
+    "SA-C178-matulani",
+    "SA-C178-svasurah",
+    "SA-C178-svasruh",
+    "SA-C178-jamata",
+    "SA-C178-snusa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch178.txt",
+  "json": "sanskrit/narration/ch178.json",
+  "textHash": "fnv1a64:d404093550988e12",
+  "jsonHash": "fnv1a64:1ddd4862bd7bc56d",
+  "findings": []
+}

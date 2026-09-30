@@ -1,0 +1,19 @@
+{
+  "chapter": 186,
+  "title": "Tender, Dwarfish, Vast, Fine, Steady",
+  "label": "ch:sa-tender-dwarfish-vast-fine-steady",
+  "canDo": "I can say tender, dwarfish, vast, fine and steady.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "SA-C186-sthirah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 186: I can say tender, dwarfish, vast, fine and steady.",
+    "assesses": [
+      "SA-LEX-C186-QUAL186-03",
+      "SA-LEX-C186-QUAL186-04",
+      "SA-LEX-C186-QUAL186-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C199-vyakaranam",
+    "language": "sanskrit",
+    "chapter": 199,
+    "sequence": 11290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:049b83d71f04e57b"
+  },
+  "findings": []
+}

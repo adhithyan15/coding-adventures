@@ -1,0 +1,11 @@
+{
+  "id": "SA-C195-janapadah",
+  "pathSegment": "SA-PATH-195-THG195",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-195-THG195",
+      "order": 2
+    }
+  ]
+}

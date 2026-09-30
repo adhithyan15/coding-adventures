@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C190-yavah",
+    "language": "sanskrit",
+    "chapter": 190,
+    "sequence": 10480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2065633d61280859"
+  },
+  "findings": []
+}
