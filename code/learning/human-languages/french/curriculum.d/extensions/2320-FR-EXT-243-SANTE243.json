@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-243-SANTE243",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a plaster, the emergency department, an emergency, a medical appointment and a diet.",
+  "prerequisites": []
+}

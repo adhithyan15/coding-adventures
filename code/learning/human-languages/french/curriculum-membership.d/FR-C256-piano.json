@@ -1,0 +1,11 @@
+{
+  "id": "FR-C256-piano",
+  "pathSegment": "FR-PATH-256-CHOSES256",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-256-CHOSES256",
+      "order": 2
+    }
+  ]
+}

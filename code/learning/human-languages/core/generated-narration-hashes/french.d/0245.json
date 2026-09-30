@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:7816ed62b9673d2e",
+  "lessonIds": [
+    "FR-C245-semblable",
+    "FR-C245-juste",
+    "FR-C245-faux-fausse",
+    "FR-C245-pret-prete",
+    "FR-C245-gratuit-gratuite"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch245.txt",
+  "json": "french/narration/ch245.json",
+  "textHash": "fnv1a64:9b3bbce463314253",
+  "jsonHash": "fnv1a64:17607f52caedfecb",
+  "findings": []
+}

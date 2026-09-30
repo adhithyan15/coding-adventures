@@ -1,0 +1,11 @@
+{
+  "id": "FR-C253-permis-de-conduire",
+  "pathSegment": "FR-PATH-253-CHOSES253",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-253-CHOSES253",
+      "order": 0
+    }
+  ]
+}

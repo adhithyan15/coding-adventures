@@ -1,0 +1,11 @@
+{
+  "id": "FR-C239-unir",
+  "pathSegment": "FR-PATH-239-VERBES239",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-239-VERBES239",
+      "order": 0
+    }
+  ]
+}

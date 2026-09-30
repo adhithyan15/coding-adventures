@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R241-first-pass-words-from-chapters-233-236",
+    "language": "french",
+    "chapter": 241,
+    "sequence": 13840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2379818b66cde5a6"
+  },
+  "findings": []
+}

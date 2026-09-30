@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:5ee77e6a65b04ef8",
+  "lessonIds": [
+    "FR-C234-remplir",
+    "FR-C234-vider",
+    "FR-C234-mesurer",
+    "FR-C234-peser",
+    "FR-C234-verifier"
+  ],
+  "tex": "french/book/chapters/ch234-to-fill-to-empty-to-measure-to-weigh-to-check.tex"
+}

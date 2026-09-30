@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:35d11325ba86b40a",
+  "lessonIds": [
+    "FR-C251-resultat",
+    "FR-C251-difference",
+    "FR-C251-exemple",
+    "FR-C251-verite",
+    "FR-C251-mensonge"
+  ],
+  "tex": "french/book/chapters/ch251-result-difference-example-truth-lie.tex"
+}

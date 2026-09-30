@@ -1,0 +1,11 @@
+{
+  "id": "FR-C253-chantier",
+  "pathSegment": "FR-PATH-253-CHOSES253",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-253-CHOSES253",
+      "order": 3
+    }
+  ]
+}

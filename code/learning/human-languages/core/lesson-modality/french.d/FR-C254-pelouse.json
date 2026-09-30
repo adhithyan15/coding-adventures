@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C254-pelouse",
+    "language": "french",
+    "chapter": 254,
+    "sequence": 14840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:54791c3249ce16ff"
+  },
+  "findings": []
+}

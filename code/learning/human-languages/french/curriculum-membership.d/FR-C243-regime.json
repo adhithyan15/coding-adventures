@@ -1,0 +1,11 @@
+{
+  "id": "FR-C243-regime",
+  "pathSegment": "FR-PATH-243-SANTE243",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-243-SANTE243",
+      "order": 4
+    }
+  ]
+}

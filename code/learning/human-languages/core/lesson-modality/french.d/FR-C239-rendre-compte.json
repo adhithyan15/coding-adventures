@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C239-rendre-compte",
+    "language": "french",
+    "chapter": 239,
+    "sequence": 13720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a06e2d5c9280a73"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R250-second-pass-words-from-chapters-246-250",
+    "language": "french",
+    "chapter": 250,
+    "sequence": 14490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b0d60c742272c50"
+  },
+  "findings": []
+}

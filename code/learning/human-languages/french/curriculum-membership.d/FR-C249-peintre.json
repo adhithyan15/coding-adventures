@@ -1,0 +1,11 @@
+{
+  "id": "FR-C249-peintre",
+  "pathSegment": "FR-PATH-249-CHOSES249",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-249-CHOSES249",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C256-violon",
+    "language": "french",
+    "chapter": 256,
+    "sequence": 14950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d6e827d11fab3fe7"
+  },
+  "findings": []
+}

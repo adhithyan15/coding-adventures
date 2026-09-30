@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-256-CHOSES256",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a tool, a guitar, a piano, a violin and a drum.",
+  "prerequisites": []
+}

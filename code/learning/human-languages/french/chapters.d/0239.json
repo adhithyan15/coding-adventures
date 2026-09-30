@@ -1,0 +1,19 @@
+{
+  "chapter": 239,
+  "title": "To unite, To be worth, To get used to, To realise, To hurry",
+  "label": "ch:fr-to-unite-to-be-worth-to-get-used-to-to-realise-to-hurry",
+  "canDo": "I can say to unite, to be worth, to get used to, to realise and to hurry.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C239-depecher",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 239: I can say to unite, to be worth, to get used to, to realise and to hurry.",
+    "assesses": [
+      "FR-LEX-C239-VERBES239-03",
+      "FR-LEX-C239-VERBES239-04",
+      "FR-LEX-C239-VERBES239-05"
+    ]
+  }
+}

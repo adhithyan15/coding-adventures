@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C242-maigrir",
+    "language": "french",
+    "chapter": 242,
+    "sequence": 14030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5cdc2c353b20b65b"
+  },
+  "findings": []
+}

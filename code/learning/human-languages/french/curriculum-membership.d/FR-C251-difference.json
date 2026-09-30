@@ -1,0 +1,11 @@
+{
+  "id": "FR-C251-difference",
+  "pathSegment": "FR-PATH-251-CHOSES251",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-251-CHOSES251",
+      "order": 1
+    }
+  ]
+}

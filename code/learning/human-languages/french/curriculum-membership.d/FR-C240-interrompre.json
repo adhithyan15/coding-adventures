@@ -1,0 +1,11 @@
+{
+  "id": "FR-C240-interrompre",
+  "pathSegment": "FR-PATH-240-VERBES240",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-240-VERBES240",
+      "order": 1
+    }
+  ]
+}

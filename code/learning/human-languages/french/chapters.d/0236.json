@@ -1,0 +1,19 @@
+{
+  "chapter": 236,
+  "title": "To be enough, To burn, To throw away, To calculate, To hit",
+  "label": "ch:fr-to-be-enough-to-burn-to-throw-away-to-calculate-to-hit",
+  "canDo": "I can say to be enough, to burn, to throw away, to calculate and to hit.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C236-frapper",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 236: I can say to be enough, to burn, to throw away, to calculate and to hit.",
+    "assesses": [
+      "FR-LEX-C236-VERBES236-03",
+      "FR-LEX-C236-VERBES236-04",
+      "FR-LEX-C236-VERBES236-05"
+    ]
+  }
+}

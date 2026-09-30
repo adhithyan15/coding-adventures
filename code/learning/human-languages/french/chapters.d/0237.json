@@ -1,0 +1,19 @@
+{
+  "chapter": 237,
+  "title": "To miss, To deserve, To improve, To get worse, To offer",
+  "label": "ch:fr-to-miss-to-deserve-to-improve-to-get-worse-to-offer",
+  "canDo": "I can say to miss, to deserve, to improve, to get worse and to offer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C237-offrir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 237: I can say to miss, to deserve, to improve, to get worse and to offer.",
+    "assesses": [
+      "FR-LEX-C237-VERBES237-03",
+      "FR-LEX-C237-VERBES237-04",
+      "FR-LEX-C237-VERBES237-05"
+    ]
+  }
+}

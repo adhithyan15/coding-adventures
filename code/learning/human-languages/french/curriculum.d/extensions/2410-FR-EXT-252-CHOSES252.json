@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-252-CHOSES252",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a tax, a form, an envelope, a stamp and a parcel.",
+  "prerequisites": []
+}

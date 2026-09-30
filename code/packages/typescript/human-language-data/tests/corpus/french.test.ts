@@ -203,7 +203,9 @@ it("pins French lesson-content budgets", () =>
     // two reviews per run.
     // 1097 -> 1245: the third tranche, chapters 205-232: 140 word lessons and
     // two reviews per run.
-    lessons: 1245,
+    // 1245 -> 1376: the fourth and last tranche, chapters 233-257: 125 word
+    // lessons and two reviews per run. French attains A2 here.
+    lessons: 1376,
     idioms: 3,
     senses: 7,
     cultureClaims: 27,

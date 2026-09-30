@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:33e3ee7c0be89a35",
+  "lessonIds": [
+    "FR-C252-impot",
+    "FR-C252-formulaire",
+    "FR-C252-enveloppe",
+    "FR-C252-timbre",
+    "FR-C252-colis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch252.txt",
+  "json": "french/narration/ch252.json",
+  "textHash": "fnv1a64:640ef7ed4ce39a91",
+  "jsonHash": "fnv1a64:8bf1054972d760c4",
+  "findings": []
+}

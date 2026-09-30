@@ -1,0 +1,11 @@
+{
+  "id": "FR-R257-first-pass-words-from-chapters-251-253",
+  "pathSegment": "FR-PATH-257-TRAV257",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-257-TRAV257",
+      "order": 5
+    }
+  ]
+}

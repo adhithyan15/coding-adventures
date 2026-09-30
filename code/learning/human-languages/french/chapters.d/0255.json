@@ -1,0 +1,19 @@
+{
+  "chapter": 255,
+  "title": "Rubbish, Recycling, Energy, Electricity, Gas",
+  "label": "ch:fr-rubbish-recycling-energy-electricity-gas",
+  "canDo": "I can say rubbish, recycling, energy, electricity and gas.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C255-gaz",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 255: I can say rubbish, recycling, energy, electricity and gas.",
+    "assesses": [
+      "FR-LEX-C255-CHOSES255-03",
+      "FR-LEX-C255-CHOSES255-04",
+      "FR-LEX-C255-CHOSES255-05"
+    ]
+  }
+}

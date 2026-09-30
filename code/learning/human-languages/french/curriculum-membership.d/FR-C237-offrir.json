@@ -1,0 +1,11 @@
+{
+  "id": "FR-C237-offrir",
+  "pathSegment": "FR-PATH-237-VERBES237",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-237-VERBES237",
+      "order": 4
+    }
+  ]
+}

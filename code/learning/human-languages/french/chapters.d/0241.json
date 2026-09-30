@@ -1,0 +1,19 @@
+{
+  "chapter": 241,
+  "title": "To cough, To tremble, To scream, To vote, To welcome",
+  "label": "ch:fr-to-cough-to-tremble-to-scream-to-vote-to-welcome",
+  "canDo": "I can say to cough, to tremble, to scream, to vote and to welcome.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-R241-second-pass-words-from-chapters-237-241",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 241: I can say to cough, to tremble, to scream, to vote and to welcome.",
+    "assesses": [
+      "FR-LEX-C241-VERBES241-03",
+      "FR-LEX-C241-VERBES241-04",
+      "FR-LEX-C241-VERBES241-05"
+    ]
+  }
+}

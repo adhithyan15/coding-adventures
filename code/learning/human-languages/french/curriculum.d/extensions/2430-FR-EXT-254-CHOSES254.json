@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-254-CHOSES254",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a trunk, a thorn, a lawn, a path and a cave.",
+  "prerequisites": []
+}

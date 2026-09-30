@@ -1,0 +1,11 @@
+{
+  "id": "FR-C251-verite",
+  "pathSegment": "FR-PATH-251-CHOSES251",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-251-CHOSES251",
+      "order": 3
+    }
+  ]
+}

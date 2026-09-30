@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:8b0f99c38685e74c",
+  "lessonIds": [
+    "FR-C252-impot",
+    "FR-C252-formulaire",
+    "FR-C252-enveloppe",
+    "FR-C252-timbre",
+    "FR-C252-colis"
+  ],
+  "tex": "french/book/chapters/ch252-tax-form-envelope-stamp-parcel.tex"
+}

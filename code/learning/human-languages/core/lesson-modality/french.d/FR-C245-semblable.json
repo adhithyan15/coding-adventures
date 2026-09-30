@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C245-semblable",
+    "language": "french",
+    "chapter": 245,
+    "sequence": 14180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6b8fe5406d6c6786"
+  },
+  "findings": []
+}

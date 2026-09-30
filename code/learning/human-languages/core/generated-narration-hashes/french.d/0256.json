@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:88964674d7cfac7d",
+  "lessonIds": [
+    "FR-C256-outil",
+    "FR-C256-guitare",
+    "FR-C256-piano",
+    "FR-C256-violon",
+    "FR-C256-tambour"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch256.txt",
+  "json": "french/narration/ch256.json",
+  "textHash": "fnv1a64:4c372659550de9a7",
+  "jsonHash": "fnv1a64:3ea625637f35f8d8",
+  "findings": []
+}

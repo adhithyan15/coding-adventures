@@ -1,0 +1,11 @@
+{
+  "id": "FR-C248-economie",
+  "pathSegment": "FR-PATH-248-CHOSES248",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-248-CHOSES248",
+      "order": 4
+    }
+  ]
+}

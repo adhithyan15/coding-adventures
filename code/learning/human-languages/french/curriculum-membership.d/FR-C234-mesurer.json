@@ -1,0 +1,11 @@
+{
+  "id": "FR-C234-mesurer",
+  "pathSegment": "FR-PATH-234-VERBES234",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-234-VERBES234",
+      "order": 2
+    }
+  ]
+}

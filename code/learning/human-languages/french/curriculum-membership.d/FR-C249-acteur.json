@@ -1,0 +1,11 @@
+{
+  "id": "FR-C249-acteur",
+  "pathSegment": "FR-PATH-249-CHOSES249",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-249-CHOSES249",
+      "order": 0
+    }
+  ]
+}

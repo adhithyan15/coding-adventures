@@ -1,0 +1,19 @@
+{
+  "chapter": 245,
+  "title": "Similar, Fair, False, Ready, Free of charge",
+  "label": "ch:fr-similar-fair-false-ready-free-of-charge",
+  "canDo": "I can say similar, fair, false, ready and free of charge.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FR-C245-gratuit-gratuite",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 245: I can say similar, fair, false, ready and free of charge.",
+    "assesses": [
+      "FR-LEX-C245-QUAL245-03",
+      "FR-LEX-C245-QUAL245-04",
+      "FR-LEX-C245-QUAL245-05"
+    ]
+  }
+}

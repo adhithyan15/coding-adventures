@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:6214ac0e281cbc87",
+  "lessonIds": [
+    "FR-C240-insister",
+    "FR-C240-interrompre",
+    "FR-C240-attacher",
+    "FR-C240-melanger",
+    "FR-C240-obeir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch240.txt",
+  "json": "french/narration/ch240.json",
+  "textHash": "fnv1a64:d6cdd656195ba357",
+  "jsonHash": "fnv1a64:1277509b3f0712f7",
+  "findings": []
+}

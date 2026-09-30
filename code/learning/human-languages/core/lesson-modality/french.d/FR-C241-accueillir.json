@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C241-accueillir",
+    "language": "french",
+    "chapter": 241,
+    "sequence": 13830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c06e0ef925999dd"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C253-immeuble",
+  "pathSegment": "FR-PATH-253-CHOSES253",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-253-CHOSES253",
+      "order": 4
+    }
+  ]
+}

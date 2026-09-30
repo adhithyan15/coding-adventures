@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:fdfc5ab14f82a390",
+  "lessonIds": [
+    "FR-C254-tronc",
+    "FR-C254-epine",
+    "FR-C254-pelouse",
+    "FR-C254-sentier",
+    "FR-C254-grotte"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch254.txt",
+  "json": "french/narration/ch254.json",
+  "textHash": "fnv1a64:5c09ae0cbe82e473",
+  "jsonHash": "fnv1a64:f1fc78d3c6f76ff3",
+  "findings": []
+}

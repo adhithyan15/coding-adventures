@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:7bcc92f39efa1160",
+  "lessonIds": [
+    "FR-C235-demenager",
+    "FR-C235-louer",
+    "FR-C235-reposer",
+    "FR-C235-reveiller",
+    "FR-C235-coiffer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch235.txt",
+  "json": "french/narration/ch235.json",
+  "textHash": "fnv1a64:47fcb36eb639b66f",
+  "jsonHash": "fnv1a64:776952575f8293b6",
+  "findings": []
+}

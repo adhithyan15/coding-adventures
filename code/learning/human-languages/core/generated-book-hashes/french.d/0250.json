@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:2434330e5ff6ff3f",
+  "lessonIds": [
+    "FR-C250-etranger",
+    "FR-C250-touriste",
+    "FR-C250-adulte",
+    "FR-C250-personne-agee",
+    "FR-C250-jumeau",
+    "FR-R250-first-pass-words-from-chapters-242-245",
+    "FR-R250-second-pass-words-from-chapters-246-250"
+  ],
+  "tex": "french/book/chapters/ch250-foreigner-tourist-adult-elderly-person-twin.tex"
+}

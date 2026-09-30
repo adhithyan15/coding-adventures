@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C242-plaisanter",
+    "language": "french",
+    "chapter": 242,
+    "sequence": 14060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd44532919587da2"
+  },
+  "findings": []
+}

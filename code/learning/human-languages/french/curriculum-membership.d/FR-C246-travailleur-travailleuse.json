@@ -1,0 +1,11 @@
+{
+  "id": "FR-C246-travailleur-travailleuse",
+  "pathSegment": "FR-PATH-246-QUAL246",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-246-QUAL246",
+      "order": 2
+    }
+  ]
+}

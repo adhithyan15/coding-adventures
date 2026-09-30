@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:98a23b6385f63ae4",
+  "lessonIds": [
+    "FR-C249-acteur",
+    "FR-C249-actrice",
+    "FR-C249-poeme",
+    "FR-C249-ecrivain",
+    "FR-C249-peintre"
+  ],
+  "tex": "french/book/chapters/ch249-actor-actress-poem-writer-painter.tex"
+}

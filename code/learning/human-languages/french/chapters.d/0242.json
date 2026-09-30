@@ -1,0 +1,19 @@
+{
+  "chapter": 242,
+  "title": "To lose weight, To feed, To go on holiday, To joke, To tidy up",
+  "label": "ch:fr-to-lose-weight-to-feed-to-go-on-holiday-to-joke-to-tidy-up",
+  "canDo": "I can say to lose weight, to feed, to go on holiday, to joke and to tidy up.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C242-ranger",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 242: I can say to lose weight, to feed, to go on holiday, to joke and to tidy up.",
+    "assesses": [
+      "FR-LEX-C242-VERBES242-03",
+      "FR-LEX-C242-VERBES242-04",
+      "FR-LEX-C242-VERBES242-05"
+    ]
+  }
+}
