@@ -1254,12 +1254,19 @@ fn android_jni_libs(path: &Path) -> Result<Vec<(&'static str, PathBuf)>, BuildEr
 /// Copy an Android runtime directory into the Android project's jniLibs, where
 /// Gradle packages each ABI's library into the APK and JNA finds it by name.
 fn install_android_runtime_libraries(source: &Path, backend_dir: &Path) -> Result<Vec<PathBuf>, BuildError> {
+    let libraries = android_jni_libs(source)?;
+    // Only the selected ABIs: a reused output keeps no library from an
+    // earlier build in an ABI this one does not have.
+    let jni_libs = backend_dir.join(ANDROID_PROJECT_DIR).join("src/main/jniLibs");
+    if fs::symlink_metadata(&jni_libs).is_ok() {
+        fs::remove_dir_all(&jni_libs).map_err(|error| BuildError::Io(format!(
+            "cannot clear {}: {error}",
+            jni_libs.display()
+        )))?;
+    }
     let mut written = Vec::new();
-    for (abi, library) in android_jni_libs(source)? {
-        let bytes = fs::read(&library).map_err(|error| BuildError::InvalidRuntimeLibrary {
-            path: library.clone(),
-            reason: format!("cannot read selected file: {error}"),
-        })?;
+    for (abi, library) in libraries {
+        let bytes = read_regular_file_without_links(&library)?;
         let target = backend_dir
             .join(ANDROID_PROJECT_DIR)
             .join("src/main/jniLibs")
@@ -1269,6 +1276,35 @@ fn install_android_runtime_libraries(source: &Path, backend_dir: &Path) -> Resul
         written.push(target);
     }
     Ok(written)
+}
+
+/// Read a file validated as a regular file, refusing it if the path has
+/// become a link, or a different file, since it was checked. The handle is
+/// compared with the path after opening, so a link swapped in between the
+/// check and the read is caught (UI89 §3.6).
+fn read_regular_file_without_links(path: &Path) -> Result<Vec<u8>, BuildError> {
+    use std::io::Read;
+    let refuse = |reason: String| BuildError::InvalidRuntimeLibrary {
+        path: path.to_path_buf(),
+        reason,
+    };
+    let mut file = fs::File::open(path).map_err(|error| refuse(format!("cannot read selected file: {error}")))?;
+    let opened = file.metadata().map_err(|error| refuse(format!("cannot read selected file: {error}")))?;
+    let at_path = fs::symlink_metadata(path).map_err(|error| refuse(format!("cannot read selected file: {error}")))?;
+    #[cfg(unix)]
+    let same = {
+        use std::os::unix::fs::MetadataExt;
+        opened.dev() == at_path.dev() && opened.ino() == at_path.ino()
+    };
+    #[cfg(not(unix))]
+    let same = true;
+    if !opened.is_file() || !at_path.is_file() || !same {
+        return Err(refuse("the file changed, or became a link, after it was checked".to_string()));
+    }
+    let mut bytes = Vec::new();
+    file.read_to_end(&mut bytes)
+        .map_err(|error| refuse(format!("cannot read selected file: {error}")))?;
+    Ok(bytes)
 }
 
 fn validate_runtime_library_selection(
@@ -12290,6 +12326,16 @@ layout NativeEvents {
                 format!("elf-{abi}")
             );
         }
+        // A rebuild with fewer ABIs leaves none of the old ones behind.
+        let fewer = android_runtime_dir(&pkg.path().join("fewer"), &["x86_64"]);
+        build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &out, Backend::Compose),
+            BuildProfile::NativeComplete,
+            Some(&fewer),
+        )
+        .expect("rebuild with one ABI");
+        let left: Vec<_> = fs::read_dir(&jni).unwrap().map(|e| e.unwrap().file_name()).collect();
+        assert_eq!(left, ["x86_64"], "{left:?}");
         // The desktop project bundles nothing: this runtime is not its own.
         assert!(!out.path().join("compose/app-resources").exists());
         let gradle = fs::read_to_string(out.path().join("compose/build.gradle.kts")).unwrap();

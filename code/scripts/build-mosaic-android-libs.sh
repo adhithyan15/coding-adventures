@@ -40,8 +40,12 @@ if [[ -n "$release" && "$release" != "--release" ]]; then
 fi
 # A package name is a cargo identifier; refuse anything else before it reaches
 # a command line or a path.
-if [[ ! "$package" =~ ^[A-Za-z0-9_-]+$ ]]; then
+if [[ ! "$package" =~ ^[A-Za-z0-9][A-Za-z0-9_-]*$ ]]; then
   echo "invalid cargo package name: $package" >&2
+  exit 2
+fi
+if [[ -z "$output" ]]; then
+  echo "the jniLibs directory must not be empty" >&2
   exit 2
 fi
 if [[ -z "${ANDROID_NDK_HOME:-}" || ! -d "$ANDROID_NDK_HOME" ]]; then
@@ -69,11 +73,15 @@ if [[ "$release" == "--release" ]]; then
 fi
 cargo ndk "${ndk_args[@]}" --platform "$api_level" -o "$staging" "${cargo_args[@]}" >&2
 
-rm -rf -- "$output"
+# Replace only the four ABI directories, never the directory the caller
+# named: a wrong path costs nothing but four stray folders, and anything else
+# found there makes the artifact builder refuse the directory.
+mkdir -p -- "$output"
 for abi in "${abis[@]}"; do
   built="$staging/$abi/$library"
   test -f "$built" || { echo "cargo-ndk did not produce $built" >&2; exit 1; }
-  mkdir -p "$output/$abi"
+  rm -rf -- "${output:?}/$abi"
+  mkdir -p -- "$output/$abi"
   cp -- "$built" "$output/$abi/libmosaic_app.so"
 done
 echo "wrote $output"
