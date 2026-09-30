@@ -7594,6 +7594,7 @@ public sealed partial class MainWindow : Window
     private static readonly string[] RequiredProps = {required_props};
     private bool dispatchWired;
     private bool environmentWired;
+    private bool environmentReportQueued;
 
     public MainWindow()
     {{
@@ -7677,11 +7678,25 @@ public sealed partial class MainWindow : Window
         if (this.Content is not FrameworkElement root) return;
         if (!this.environmentWired)
         {{
-            root.SizeChanged += (_, _) => ReportEnvironment();
-            root.ActualThemeChanged += (_, _) => ReportEnvironment();
+            root.SizeChanged += (_, _) => QueueEnvironmentReport();
+            root.ActualThemeChanged += (_, _) => QueueEnvironmentReport();
             this.environmentWired = true;
         }}
         ReportEnvironment();
+    }}
+
+    // Changes report from the dispatcher queue, never from inside the
+    // handler: a change raised synchronously while an effect is being settled
+    // would otherwise dispatch in the middle of that settle. One report is
+    // queued at a time, so a burst of resize ticks costs one.
+    private void QueueEnvironmentReport()
+    {{
+        if (this.environmentReportQueued) return;
+        this.environmentReportQueued = this.DispatcherQueue.TryEnqueue(() =>
+        {{
+            this.environmentReportQueued = false;
+            ReportEnvironment();
+        }});
     }}
 
     private void ReportEnvironment()
@@ -7690,7 +7705,7 @@ public sealed partial class MainWindow : Window
         if (this.Content is not FrameworkElement root || root.ActualWidth <= 0) return;
         var report = MosaicRuntimeHost.EnvironmentReport(
             root.ActualWidth, root.ActualHeight, root.ActualTheme == ElementTheme.Dark);
-        // Only a refusal is worth the status line; an accepted report is not
+        // Only a failure is worth the status line; an accepted report is not
         // something the user did.
         if (MosaicRuntimeHost.ReportEnvironment(this.Component, report, RequiredProps) is {{ }} refusal)
         {{
@@ -18771,6 +18786,12 @@ mod tests {
         assert!(source.contains("private bool environmentWired;"), "{source}");
         assert_eq!(source.matches("root.SizeChanged += ").count(), 1, "{source}");
         assert_eq!(source.matches("root.ActualThemeChanged += ").count(), 1, "{source}");
+        // Changes go through the dispatcher queue, one at a time, never
+        // straight from the handler (it may fire inside a settle).
+        assert!(source.contains("root.SizeChanged += (_, _) => QueueEnvironmentReport();"));
+        assert!(source.contains("root.ActualThemeChanged += (_, _) => QueueEnvironmentReport();"));
+        assert!(source.contains("if (this.environmentReportQueued) return;"));
+        assert!(source.contains("this.environmentReportQueued = this.DispatcherQueue.TryEnqueue(() =>"));
         // Effective pixels and the rendered theme, through the host's reducer.
         assert!(source.contains(
             "MosaicRuntimeHost.EnvironmentReport(\n            root.ActualWidth, root.ActualHeight, root.ActualTheme == ElementTheme.Dark)"

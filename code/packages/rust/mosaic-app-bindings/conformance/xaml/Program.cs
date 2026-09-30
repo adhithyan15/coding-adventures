@@ -136,25 +136,36 @@ internal static class Program
         MosaicRuntimeHost.ApplyRequiredProps(component, required);
         Require(component.Count == count && component.Status == "dispatched", "an ignored report keeps the props");
 
-        // Invalid: refused, the props stay, and it is not remembered -- sent
-        // again, it is refused again rather than dropped as a duplicate.
+        // Invalid: refused, and the props stay.
         var invalid = new Dictionary<string, string>(compact) { ["sizeClass"] = "enormous" };
         var refusal = MosaicRuntimeHost.ReportEnvironment(component, invalid, required);
-        Require(refusal?.StartsWith("Status: Mosaic runtime refused the environment", StringComparison.Ordinal) == true, "an invalid report is refused");
-        Require(MosaicRuntimeHost.ReportEnvironment(component, invalid, required) is not null, "a refused report is not remembered");
+        Require(refusal?.StartsWith("Status: Mosaic environment report failed", StringComparison.Ordinal) == true, "an invalid report is refused");
         MosaicRuntimeHost.ApplyRequiredProps(component, required);
         Require(component.Count == count && component.Status == "dispatched", "a refusal keeps the props");
+        // The identical refused report is held back, not refused again.
+        Require(MosaicRuntimeHost.ReportEnvironment(component, invalid, required) is null, "a refused report is not re-sent");
 
         // Sent or not: every dispatch persists, so with a state file the
         // file's reappearance shows whether a report reached the runtime.
         var statePath = Environment.GetEnvironmentVariable("MOSAIC_APP_STATE_PATH");
-        if (string.IsNullOrWhiteSpace(statePath)) return;
+        if (string.IsNullOrWhiteSpace(statePath))
+        {
+            Console.WriteLine("MOSAIC_APP_STATE_PATH unset: skipped the checks that a report is or is not sent");
+            return;
+        }
         Require(File.Exists(statePath), "state persisted");
         File.Delete(statePath);
+        Require(MosaicRuntimeHost.ReportEnvironment(component, invalid, required) is null, "held-back report");
+        Require(!File.Exists(statePath), "the refused report is not re-sent");
+        // The refusal did not replace the last report taken: that one is
+        // still unchanged, so still not sent.
         Require(MosaicRuntimeHost.ReportEnvironment(component, compact, required) is null, "unchanged report");
         Require(!File.Exists(statePath), "an unchanged report is not sent");
         Require(MosaicRuntimeHost.ReportEnvironment(component, regular, required) is null, "changed report accepted");
         Require(File.Exists(statePath), "a changed report is sent");
+        component.Status = "sentinel";
+        Require(MosaicRuntimeHost.ReportEnvironment(component, compact, required) is null, "changed back");
+        Require(component.Status == "sentinel", "an ignored changed report re-applies nothing");
     }
 
     private static void Require(bool condition, string assertion)

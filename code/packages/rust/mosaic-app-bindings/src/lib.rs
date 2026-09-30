@@ -398,20 +398,34 @@ mod tests {
         let host = xaml_runtime_binding_for_application("Acme.App", "probe");
         assert!(host.contains("public static string? ReportEnvironment("));
         assert!(host.contains("Dispatch(\"environmentChanged\", report);"));
-        // Dropped when equal to the last one taken, remembered only after the
-        // dispatch (which throws on a refusal) and the apply.
-        let dropped = host.find("&& !last.Except(report).Any())").expect("dedupe");
+        // Dropped when equal to the last one taken or the last one refused;
+        // a refusal is recorded as refused; the one taken is remembered before
+        // the apply (the runtime has it), and a tripped guard is reported.
+        let held_back = host
+            .find("if (SameEnvironment(lastRefusedEnvironment, report)) return null;")
+            .expect("hold back refused");
         let sent = host.find("Dispatch(\"environmentChanged\", report);").unwrap();
+        let refused = host.find("lastRefusedEnvironment = report;").expect("refused");
+        let remembered = host.find("lastReportedEnvironment = report;").expect("remember");
+        let guard = host
+            .find("if (settleError is not null)\n                    return Status(")
+            .expect("guard");
         let applied = host
             .find("ApplyProps(component, requiredProps, strict: requiredProps.Count > 0);")
             .expect("apply");
-        let remembered = host.find("lastReportedEnvironment = report;").expect("remember");
-        assert!(dropped < sent && sent < applied && applied < remembered);
-        // Re-applied only when the revision moved.
-        assert!(host.contains("if (Revision(latestUpdate) != shownRevision)"));
+        assert!(held_back < sent && sent < refused && refused < remembered);
+        assert!(remembered < guard && guard < applied);
+        assert!(host.contains("if (settling > 0) return null;"));
+        // Re-applied only when something newer than the last apply is showing.
+        assert!(host.contains("if (Revision(latestUpdate) != appliedRevision)"));
+        assert!(host.contains("appliedRevision = Revision(latestUpdate);"));
         // Props kept only at the revision already showing, on every dispatch.
         assert!(host.contains("|| revision != shownRevision)"));
-        assert!(host.contains("latestUpdate = KeepShowingProps(SettleEffects(update));"));
+        assert_eq!(
+            host.matches("latestUpdate = KeepShowingProps(SettleEffects(update));").count(),
+            2,
+            "dispatch and effect completion"
+        );
         // The thresholds every host uses, and the desktop's pointer.
         assert!(host.contains(
             "[\"sizeClass\"] = width < 600 ? \"compact\" : width < 1024 ? \"regular\" : \"expanded\","
