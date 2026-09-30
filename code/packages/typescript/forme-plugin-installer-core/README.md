@@ -60,10 +60,12 @@ replace mode restores the old target if commit fails or cancellation arrives
 after backup. Existing-tree inspection has independent directory, file, depth,
 and aggregate-entry ceilings, including for directory-only trees.
 
-POSIX roots must not be group- or world-writable. Windows callers must supply
-`verifyWindowsRootAcl`, which independently verifies that the canonical root's
-ACL excludes untrusted writers; installation fails closed without it. Every
-created lock, stage, and backup is rechecked against the root owner and device.
+POSIX roots and every accepted existing target directory/file must not be
+group- or world-writable. Windows callers must supply `verifyWindowsAcl`, which
+independently verifies both the canonical install root and, when present, the
+complete existing target tree exclude untrusted writers; installation fails
+closed without it. Every created lock, stage, and backup is rechecked against
+the root owner and device.
 
 ## Development
 

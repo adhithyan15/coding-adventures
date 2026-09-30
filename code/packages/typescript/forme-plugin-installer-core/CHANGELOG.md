@@ -17,7 +17,8 @@
   directory-only trees; reserve the full case-folded `grants.toml` namespace.
 - Use reversible URI capability path expansion for drive letters, backslashes,
   whitespace, controls, and non-ASCII bytes without POSIX path aliasing.
-- Reject shared-writable POSIX roots, require an explicit Windows ACL verifier,
-  and bind every transaction directory to the root owner and filesystem.
+- Reject shared-writable POSIX roots and existing trees, require an explicit
+  Windows root-and-tree ACL verifier, and bind every transaction directory to
+  the root owner and filesystem.
 - Detect exact and case-folded file/ancestor collisions independent of input
   order before any filesystem operation.

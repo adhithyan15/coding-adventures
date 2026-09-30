@@ -261,6 +261,20 @@ describe("installPreparedPlugin", () => {
       .rejects.toMatchObject({ code: "ROOT_UNSAFE" });
   });
 
+  it.runIf(process.platform !== "win32")("rejects shared-writable existing target content", async () => {
+    const root = await fixture();
+    await installPreparedPlugin({ prepared: root.prepared });
+    await chmod(root.prepared.destinationPath, 0o770);
+    await expect(installPreparedPlugin({ prepared: root.prepared }))
+      .rejects.toMatchObject({ code: "TARGET_UNSAFE" });
+
+    const nested = await fixture();
+    await installPreparedPlugin({ prepared: nested.prepared });
+    await chmod(join(nested.prepared.destinationPath, "plugin.mjs"), 0o420);
+    await expect(installPreparedPlugin({ prepared: nested.prepared }))
+      .rejects.toMatchObject({ code: "TARGET_UNSAFE" });
+  });
+
   it("bounds cancellation, target depth, and target entry scans", async () => {
     const cancelled = await fixture();
     await installPreparedPlugin({ prepared: cancelled.prepared });

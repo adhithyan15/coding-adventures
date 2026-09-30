@@ -549,12 +549,14 @@ Cancellation is checked before staging, between file writes, and before the
 commit rename. The single-user threat model still excludes a privileged actor
 that can replace the install root itself.
 
-On POSIX, the installer rejects an install root writable by group or other
-users and verifies every transaction directory has the root's owner and
-device. On Windows, POSIX mode bits do not describe ACL authority, so callers
-MUST provide the install operation's `verifyWindowsRootAcl` callback; the core
-fails closed unless it confirms that the canonical root ACL excludes writers
-other than the current host user and trusted administrators.
+On POSIX, the installer rejects an install root or any accepted existing target
+directory/file writable by group or other users and verifies every transaction
+directory has the root's owner and device. On Windows, POSIX mode bits do not
+describe ACL authority, so callers MUST provide the install operation's
+`verifyWindowsAcl` callback; the core invokes it for both the canonical install
+root and the complete existing target tree, when present, and fails closed
+unless both exclude writers other than the current host user and trusted
+administrators.
 
 `forme install` is outside FM02's package surface (it lives in the
 CLI, FM07), but the trust-store and grants-file formats are FM02's

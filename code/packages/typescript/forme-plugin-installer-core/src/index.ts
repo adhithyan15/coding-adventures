@@ -219,8 +219,11 @@ export interface InstallPreparedPluginOptions {
   readonly prepared: PreparedPluginInstall;
   readonly mode?: "replace" | "immutable";
   readonly signal?: AbortSignal;
-  /** Required on Windows; must verify the canonical root ACL excludes other writers. */
-  readonly verifyWindowsRootAcl?: (canonicalRoot: string) => boolean | Promise<boolean>;
+  /** Required on Windows; must verify the named root or complete existing tree excludes other writers. */
+  readonly verifyWindowsAcl?: (
+    canonicalPath: string,
+    scope: "install-root" | "existing-target-tree",
+  ) => boolean | Promise<boolean>;
 }
 
 export interface PluginInstallResult {
@@ -264,7 +267,7 @@ export async function installPreparedPlugin(
   const root = await requireSafeRoot(
     dirname(prepared.destinationPath),
     prepared.destinationPath,
-    options.verifyWindowsRootAcl,
+    options.verifyWindowsAcl,
   );
   const targetPath = join(root.path, prepared.destinationName);
   const lockPath = join(root.path, `.${prepared.destinationName}.forme-lock`);
@@ -277,7 +280,13 @@ export async function installPreparedPlugin(
   let status: PluginInstallResult["status"] = "installed";
   try {
     throwIfAborted(options.signal);
-    const existing = await inspectExistingTree(targetPath, prepared, root, options.signal);
+    const existing = await inspectExistingTree(
+      targetPath,
+      prepared,
+      root,
+      options.signal,
+      options.verifyWindowsAcl,
+    );
     if (existing?.matches) {
       await requireRootStable(root);
       await requireOwnedDirectory(existing, "TARGET_UNSAFE");
@@ -385,7 +394,7 @@ function resultFor(
 async function requireSafeRoot(
   rootPath: string,
   destinationPath: string,
-  verifyWindowsRootAcl?: (canonicalRoot: string) => boolean | Promise<boolean>,
+  verifyWindowsAcl?: InstallPreparedPluginOptions["verifyWindowsAcl"],
 ): Promise<OwnedDirectory> {
   try {
     const lexicalRoot = resolve(rootPath);
@@ -403,12 +412,12 @@ async function requireSafeRoot(
     if (typeof process.getuid === "function" && canonicalInfo.uid !== BigInt(process.getuid())) {
       throw new Error("install root is not owned by the current host user");
     }
-    if (process.platform !== "win32" && (canonicalInfo.mode & 0o022n) !== 0n) {
+    if (isSharedWritable(canonicalInfo)) {
       throw new Error("install root must not be writable by group or other users");
     }
     /* v8 ignore next 4 -- exercised by BUILD_windows; Windows has no trustworthy POSIX mode bits */
     if (process.platform === "win32" &&
-        (verifyWindowsRootAcl === undefined || !await verifyWindowsRootAcl(canonicalRoot))) {
+        (verifyWindowsAcl === undefined || !await verifyWindowsAcl(canonicalRoot, "install-root"))) {
       throw new Error("install root ACL was not verified as private to the current host user");
     }
     return { path: canonicalRoot, identity: identity(canonicalInfo), ownerUid: canonicalInfo.uid };
@@ -514,6 +523,7 @@ async function inspectExistingTree(
   prepared: PreparedPluginInstall,
   owner: OwnedDirectory,
   signal?: AbortSignal,
+  verifyWindowsAcl?: InstallPreparedPluginOptions["verifyWindowsAcl"],
 ): Promise<ExistingTree | undefined> {
   let rootInfo;
   try {
@@ -526,6 +536,14 @@ async function inspectExistingTree(
   if (rootInfo.isSymbolicLink() || !rootInfo.isDirectory() ||
       rootInfo.uid !== owner.ownerUid || rootInfo.dev !== owner.identity.dev) {
     throw new PluginInstallError("TARGET_UNSAFE", "existing plugin target is not a real host-owned directory");
+  }
+  if (isSharedWritable(rootInfo)) {
+    throw new PluginInstallError("TARGET_UNSAFE", "existing plugin target is writable by group or other users");
+  }
+  /* v8 ignore next 4 -- exercised by BUILD_windows after a target exists */
+  if (process.platform === "win32" &&
+      (verifyWindowsAcl === undefined || !await verifyWindowsAcl(targetPath, "existing-target-tree"))) {
+    throw new PluginInstallError("TARGET_UNSAFE", "existing plugin target ACL was not verified as private");
   }
   return inspectTree(targetPath, prepared, owner, signal, "TARGET_UNSAFE", identity(rootInfo));
 }
@@ -564,6 +582,9 @@ async function inspectTree(
           throw new Error(`installed path ${JSON.stringify(relativePath)} is not host-owned on the install filesystem`);
         }
         if (info.isSymbolicLink()) throw new Error(`installed path ${JSON.stringify(relativePath)} is a symbolic link`);
+        if (isSharedWritable(info)) {
+          throw new Error(`installed path ${JSON.stringify(relativePath)} is writable by group or other users`);
+        }
         if (info.isDirectory()) {
           directoryCount += 1;
           if (directoryCount > PLUGIN_INSTALL_LIMITS.maxDirectoryCount) {
@@ -638,6 +659,10 @@ function identity(info: { readonly dev: bigint; readonly ino: bigint }): PathIde
 
 function sameIdentity(left: PathIdentity, right: PathIdentity): boolean {
   return left.dev === right.dev && left.ino === right.ino;
+}
+
+function isSharedWritable(info: { readonly mode: bigint }): boolean {
+  return process.platform !== "win32" && (info.mode & 0o022n) !== 0n;
 }
 
 function throwIfAborted(signal?: AbortSignal): void {
