@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 238,
+  "sourceHash": "fnv1a64:ed3309e98dcd9d71",
+  "lessonIds": [
+    "SA-C238-paricarika",
+    "SA-C238-abhiyanta",
+    "SA-C238-vaijnanikah",
+    "SA-C238-araksakah",
+    "SA-C238-calakah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch238.txt",
+  "json": "sanskrit/narration/ch238.json",
+  "textHash": "fnv1a64:beffd1087fdd8f9e",
+  "jsonHash": "fnv1a64:fe1b112077084d4f",
+  "findings": []
+}

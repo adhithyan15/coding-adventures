@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:72ad09c54beb3ec3",
+  "lessonIds": [
+    "SA-C240-tavat",
+    "SA-C240-sanaih",
+    "SA-C240-pratidinam",
+    "SA-C240-pratyaham",
+    "SA-C240-nityam",
+    "SA-R240-first-pass-words-from-chapters-232-235",
+    "SA-R240-second-pass-words-from-chapters-236-240"
+  ],
+  "tex": "sanskrit/book/chapters/ch240-so-long-gradually-every-day-daily-constantly.tex"
+}

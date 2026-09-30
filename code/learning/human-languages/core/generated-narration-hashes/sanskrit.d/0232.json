@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:deb55242e3853b7a",
+  "lessonIds": [
+    "SA-C232-vartate",
+    "SA-C232-jayate",
+    "SA-C232-mriyate",
+    "SA-C232-nasyati",
+    "SA-C232-kupyati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch232.txt",
+  "json": "sanskrit/narration/ch232.json",
+  "textHash": "fnv1a64:53efecd44bbedc7e",
+  "jsonHash": "fnv1a64:ab8f0e1ce0a4b426",
+  "findings": []
+}

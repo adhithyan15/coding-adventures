@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:42f958cb94b4eebc",
+  "lessonIds": [
+    "SA-C237-kumbhakarah",
+    "SA-C237-svarnakarah",
+    "SA-C237-lohakarah",
+    "SA-C237-tantuvayah",
+    "SA-C237-rajakah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch237.txt",
+  "json": "sanskrit/narration/ch237.json",
+  "textHash": "fnv1a64:fe4846efacae3301",
+  "jsonHash": "fnv1a64:984a4c0c21e0387b",
+  "findings": []
+}

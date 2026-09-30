@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-232-ACT232",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say is present, is born, dies, is lost and gets angry.",
+  "prerequisites": []
+}

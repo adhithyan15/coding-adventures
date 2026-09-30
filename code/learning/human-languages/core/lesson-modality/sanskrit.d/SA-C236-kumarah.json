@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C236-kumarah",
+    "language": "sanskrit",
+    "chapter": 236,
+    "sequence": 13980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7daaeee38a45b0e6"
+  },
+  "findings": []
+}

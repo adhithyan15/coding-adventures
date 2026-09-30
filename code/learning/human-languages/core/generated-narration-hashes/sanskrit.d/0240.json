@@ -1,0 +1,21 @@
+{
+  "language": "sanskrit",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:fc5e9b035240c4f6",
+  "lessonIds": [
+    "SA-C240-tavat",
+    "SA-C240-sanaih",
+    "SA-C240-pratidinam",
+    "SA-C240-pratyaham",
+    "SA-C240-nityam",
+    "SA-R240-first-pass-words-from-chapters-232-235",
+    "SA-R240-second-pass-words-from-chapters-236-240"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "sanskrit/narration/ch240.txt",
+  "json": "sanskrit/narration/ch240.json",
+  "textHash": "fnv1a64:f52353b62015ef7b",
+  "jsonHash": "fnv1a64:5f885c6533b0d310",
+  "findings": []
+}

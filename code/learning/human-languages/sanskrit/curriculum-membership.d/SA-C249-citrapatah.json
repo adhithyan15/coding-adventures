@@ -1,0 +1,11 @@
+{
+  "id": "SA-C249-citrapatah",
+  "pathSegment": "SA-PATH-249-THG249",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-249-THG249",
+      "order": 3
+    }
+  ]
+}

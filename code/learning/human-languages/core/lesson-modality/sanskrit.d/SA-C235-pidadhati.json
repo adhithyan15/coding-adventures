@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C235-pidadhati",
+    "language": "sanskrit",
+    "chapter": 235,
+    "sequence": 13920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:183891e6b7250d19"
+  },
+  "findings": []
+}

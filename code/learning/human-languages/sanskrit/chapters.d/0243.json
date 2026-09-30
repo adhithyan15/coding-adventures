@@ -1,0 +1,19 @@
+{
+  "chapter": 243,
+  "title": "Mighty, Sick, Healthy, Happy, Unhappy",
+  "label": "ch:sa-mighty-sick-healthy-happy-unhappy",
+  "canDo": "I can say mighty, sick, healthy, happy and unhappy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "SA-C243-duhkhi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 243: I can say mighty, sick, healthy, happy and unhappy.",
+    "assesses": [
+      "SA-LEX-C243-QUAL243-03",
+      "SA-LEX-C243-QUAL243-04",
+      "SA-LEX-C243-QUAL243-05"
+    ]
+  }
+}

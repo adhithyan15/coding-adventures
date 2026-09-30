@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:7d3bfdb98c82a00e",
+  "lessonIds": [
+    "SA-C248-kosah",
+    "SA-C248-nidhih",
+    "SA-C248-rupyakam",
+    "SA-C248-panah",
+    "SA-C248-sulkam"
+  ],
+  "tex": "sanskrit/book/chapters/ch248-sheath-treasure-rupee-stake-fee.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 236,
+  "title": "Baby, Boy, Maiden, Young woman, Person",
+  "label": "ch:sa-baby-boy-maiden-young-woman-person",
+  "canDo": "I can say a baby, a boy, a maiden, a young woman and a person.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "SA-C236-purusah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 236: I can say a baby, a boy, a maiden, a young woman and a person.",
+    "assesses": [
+      "SA-LEX-C236-PPL236-03",
+      "SA-LEX-C236-PPL236-04",
+      "SA-LEX-C236-PPL236-05"
+    ]
+  }
+}

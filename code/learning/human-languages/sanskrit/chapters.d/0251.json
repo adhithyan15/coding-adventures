@@ -1,0 +1,19 @@
+{
+  "chapter": 251,
+  "title": "Earth, Universe, World, Nature, Mud",
+  "label": "ch:sa-earth-universe-world-nature-mud",
+  "canDo": "I can say the earth, the universe, the world, nature and mud.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C251-pankah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 251: I can say the earth, the universe, the world, nature and mud.",
+    "assesses": [
+      "SA-LEX-C251-THG251-03",
+      "SA-LEX-C251-THG251-04",
+      "SA-LEX-C251-THG251-05"
+    ]
+  }
+}

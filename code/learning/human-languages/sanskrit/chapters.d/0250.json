@@ -1,0 +1,19 @@
+{
+  "chapter": 250,
+  "title": "Fort, Palace, Hut, Building, Lodging",
+  "label": "ch:sa-fort-palace-hut-building-lodging",
+  "canDo": "I can say a fort, a palace, a hut, a building and lodging.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C250-avasah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 250: I can say a fort, a palace, a hut, a building and lodging.",
+    "assesses": [
+      "SA-LEX-C250-THG250-03",
+      "SA-LEX-C250-THG250-04",
+      "SA-LEX-C250-THG250-05"
+    ]
+  }
+}

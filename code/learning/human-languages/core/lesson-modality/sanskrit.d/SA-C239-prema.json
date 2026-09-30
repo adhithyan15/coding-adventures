@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C239-prema",
+    "language": "sanskrit",
+    "chapter": 239,
+    "sequence": 14130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b41950f8226b3e95"
+  },
+  "findings": []
+}

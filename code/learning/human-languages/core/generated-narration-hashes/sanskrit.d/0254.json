@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:d4a412abc7b686a8",
+  "lessonIds": [
+    "SA-C254-cakravakah",
+    "SA-C254-syenah",
+    "SA-C254-pratarasah",
+    "SA-C254-ratribhojanam",
+    "SA-C254-pakvannam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch254.txt",
+  "json": "sanskrit/narration/ch254.json",
+  "textHash": "fnv1a64:c2076b82a192c0ae",
+  "jsonHash": "fnv1a64:86db56a047be1b10",
+  "findings": []
+}

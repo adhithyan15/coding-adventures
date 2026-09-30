@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-234-ACT234",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say dries up, floats, begins, finishes and hands over.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C240-tavat",
+  "pathSegment": "SA-PATH-240-TIME240",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-240-TIME240",
+      "order": 0
+    }
+  ]
+}

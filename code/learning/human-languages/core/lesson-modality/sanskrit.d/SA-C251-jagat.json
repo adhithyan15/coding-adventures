@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C251-jagat",
+    "language": "sanskrit",
+    "chapter": 251,
+    "sequence": 15110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ffacc72f8c2d9a89"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-237-PPL237",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a potter, a goldsmith, a blacksmith, a weaver and a washerman.",
+  "prerequisites": []
+}

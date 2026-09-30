@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C239-karuna",
+    "language": "sanskrit",
+    "chapter": 239,
+    "sequence": 14160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a9b5fe69cb3ccf5"
+  },
+  "findings": []
+}

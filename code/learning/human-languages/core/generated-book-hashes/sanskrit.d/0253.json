@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:34b5d53696b76ce3",
+  "lessonIds": [
+    "SA-C253-kitah",
+    "SA-C253-luta",
+    "SA-C253-vrscikah",
+    "SA-C253-godha",
+    "SA-C253-nakrah"
+  ],
+  "tex": "sanskrit/book/chapters/ch253-insect-spider-scorpion-lizard-crocodile.tex"
+}

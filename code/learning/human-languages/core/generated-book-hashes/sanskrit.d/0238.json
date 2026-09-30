@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 238,
+  "sourceHash": "fnv1a64:3ca84844ed0a8a15",
+  "lessonIds": [
+    "SA-C238-paricarika",
+    "SA-C238-abhiyanta",
+    "SA-C238-vaijnanikah",
+    "SA-C238-araksakah",
+    "SA-C238-calakah"
+  ],
+  "tex": "sanskrit/book/chapters/ch238-nurse-engineer-scientist-policeman-driver.tex"
+}

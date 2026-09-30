@@ -1,0 +1,11 @@
+{
+  "id": "SA-C244-anucitah",
+  "pathSegment": "SA-PATH-244-QUAL244",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-244-QUAL244",
+      "order": 1
+    }
+  ]
+}

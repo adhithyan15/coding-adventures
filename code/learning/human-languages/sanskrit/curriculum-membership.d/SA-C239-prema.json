@@ -1,0 +1,11 @@
+{
+  "id": "SA-C239-prema",
+  "pathSegment": "SA-PATH-239-WEL239",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-239-WEL239",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 238,
+  "title": "Nurse, Engineer, Scientist, Policeman, Driver",
+  "label": "ch:sa-nurse-engineer-scientist-policeman-driver",
+  "canDo": "I can say a nurse, an engineer, a scientist, a policeman and a driver.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "SA-C238-calakah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 238: I can say a nurse, an engineer, a scientist, a policeman and a driver.",
+    "assesses": [
+      "SA-LEX-C238-PPL238-03",
+      "SA-LEX-C238-PPL238-04",
+      "SA-LEX-C238-PPL238-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 252,
+  "title": "Vine, Thorn, Bud, Jasmine, Holy basil",
+  "label": "ch:sa-vine-thorn-bud-jasmine-holy-basil",
+  "canDo": "I can say a vine, a thorn, a bud, jasmine and holy basil.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C252-tulasi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 252: I can say a vine, a thorn, a bud, jasmine and holy basil.",
+    "assesses": [
+      "SA-LEX-C252-THG252-03",
+      "SA-LEX-C252-THG252-04",
+      "SA-LEX-C252-THG252-05"
+    ]
+  }
+}

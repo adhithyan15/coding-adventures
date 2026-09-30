@@ -1,0 +1,11 @@
+{
+  "id": "SA-C253-luta",
+  "pathSegment": "SA-PATH-253-THG253",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-253-THG253",
+      "order": 1
+    }
+  ]
+}

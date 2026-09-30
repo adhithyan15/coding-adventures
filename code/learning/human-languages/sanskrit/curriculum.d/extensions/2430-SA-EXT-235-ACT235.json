@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-235-ACT235",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say covers, plants, drives, embraces and kisses.",
+  "prerequisites": []
+}

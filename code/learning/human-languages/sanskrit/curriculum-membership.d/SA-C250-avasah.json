@@ -1,0 +1,11 @@
+{
+  "id": "SA-C250-avasah",
+  "pathSegment": "SA-PATH-250-THG250",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-250-THG250",
+      "order": 4
+    }
+  ]
+}

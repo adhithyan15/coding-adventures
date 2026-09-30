@@ -117,7 +117,9 @@ it("pins Sanskrit lesson-content budgets", () =>
     // two reviews per run, again with no idiom, sense or culture claim.
     // 1102 -> 1255: the third tranche, chapters 203-231: 145 word lessons and
     // two reviews per run.
-    lessons: 1255,
+    // 1255 -> 1391: the fourth and last tranche, chapters 232-257: 130 word
+    // lessons and two reviews per run. Sanskrit attains A2 here.
+    lessons: 1391,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

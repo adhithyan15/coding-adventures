@@ -1,0 +1,11 @@
+{
+  "id": "SA-C238-vaijnanikah",
+  "pathSegment": "SA-PATH-238-PPL238",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-238-PPL238",
+      "order": 2
+    }
+  ]
+}

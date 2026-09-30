@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C239-snehah",
+    "language": "sanskrit",
+    "chapter": 239,
+    "sequence": 14140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dec35011d125d456"
+  },
+  "findings": []
+}

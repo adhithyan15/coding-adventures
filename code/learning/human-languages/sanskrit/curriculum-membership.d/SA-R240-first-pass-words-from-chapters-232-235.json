@@ -1,0 +1,11 @@
+{
+  "id": "SA-R240-first-pass-words-from-chapters-232-235",
+  "pathSegment": "SA-PATH-240-TIME240",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "SA-EXT-240-TIME240",
+      "order": 5
+    }
+  ]
+}

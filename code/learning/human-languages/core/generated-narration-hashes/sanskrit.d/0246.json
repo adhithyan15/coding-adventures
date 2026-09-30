@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:d50c873fb51c89ec",
+  "lessonIds": [
+    "SA-C246-lajah",
+    "SA-C246-dhanyam",
+    "SA-C246-saktuh",
+    "SA-C246-ksaudram",
+    "SA-C246-mistannam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch246.txt",
+  "json": "sanskrit/narration/ch246.json",
+  "textHash": "fnv1a64:ca4643a8e2e910d4",
+  "jsonHash": "fnv1a64:ac10d839d3ca85e3",
+  "findings": []
+}

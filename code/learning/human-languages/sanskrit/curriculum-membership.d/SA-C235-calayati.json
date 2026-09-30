@@ -1,0 +1,11 @@
+{
+  "id": "SA-C235-calayati",
+  "pathSegment": "SA-PATH-235-ACT235",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-235-ACT235",
+      "order": 2
+    }
+  ]
+}

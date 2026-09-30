@@ -1,0 +1,11 @@
+{
+  "id": "SA-C241-yena",
+  "pathSegment": "SA-PATH-241-WHY241",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-241-WHY241",
+      "order": 1
+    }
+  ]
+}

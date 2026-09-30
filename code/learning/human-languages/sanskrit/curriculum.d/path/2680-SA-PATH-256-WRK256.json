@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-256-WRK256",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "SA-EXT-256-WRK256"
+  ],
+  "after": []
+}

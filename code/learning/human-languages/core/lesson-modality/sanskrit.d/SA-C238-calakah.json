@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C238-calakah",
+    "language": "sanskrit",
+    "chapter": 238,
+    "sequence": 14110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6b3ef6ab6e384116"
+  },
+  "findings": []
+}

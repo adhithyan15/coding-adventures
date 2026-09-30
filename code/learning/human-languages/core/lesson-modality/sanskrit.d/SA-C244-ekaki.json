@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C244-ekaki",
+    "language": "sanskrit",
+    "chapter": 244,
+    "sequence": 14600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:001c30b877fac1e1"
+  },
+  "findings": []
+}

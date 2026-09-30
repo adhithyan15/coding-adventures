@@ -1,0 +1,21 @@
+{
+  "language": "sanskrit",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:2c3251c3a7eaffb7",
+  "lessonIds": [
+    "SA-C249-varta",
+    "SA-C249-natakam",
+    "SA-C249-kavyam",
+    "SA-C249-citrapatah",
+    "SA-C249-khela",
+    "SA-R249-first-pass-words-from-chapters-241-244",
+    "SA-R249-second-pass-words-from-chapters-245-249"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "sanskrit/narration/ch249.txt",
+  "json": "sanskrit/narration/ch249.json",
+  "textHash": "fnv1a64:dfdacb563080b205",
+  "jsonHash": "fnv1a64:51468fd6772924b6",
+  "findings": []
+}

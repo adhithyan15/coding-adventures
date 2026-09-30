@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:9f8bc325226afe49",
+  "lessonIds": [
+    "SA-C250-durgam",
+    "SA-C250-prasadah",
+    "SA-C250-kutiram",
+    "SA-C250-bhavanam",
+    "SA-C250-avasah"
+  ],
+  "tex": "sanskrit/book/chapters/ch250-fort-palace-hut-building-lodging.tex"
+}
