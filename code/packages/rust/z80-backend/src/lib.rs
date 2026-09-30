@@ -37,7 +37,7 @@
 
 use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};
-use std::collections::{HashMap, HashSet};
+use std::collections::{HashMap, HashSet, VecDeque};
 use std::fmt;
 use vm_core::value::Value;
 use z80_encoder::{
@@ -103,6 +103,9 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
     let (live_before, live_after) = liveness(cir)?;
     let mut labels = HashMap::new();
     let mut fixups: Vec<(usize, String)> = Vec::new();
+    let mut label_slots: HashMap<String, (HashSet<String>, [Option<CurrentValue>; 2])> =
+        HashMap::new();
+    let mut branch_slots: Vec<(String, [Option<CurrentValue>; 2])> = Vec::new();
     // Tracks whether a REAL HALT was emitted -- NOT whether `bytes` is
     // non-empty. CIR that ends in `const_*` with no following `ret_*`
     // would otherwise fall through with `bytes` non-empty (the LD A,n
@@ -127,6 +130,8 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
             if labels.insert(name.clone(), bytes.len()).is_some() {
                 return Err(BackendError::DuplicateLabel(name));
             }
+            label_slots.insert(name, (live_before[index].clone(), slots.clone()));
+            terminated = false;
             continue;
         }
 
@@ -135,7 +140,8 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
             let target = parse_var_src(instr, 0, op)?;
             let patch = bytes.len() + 1;
             bytes.extend_from_slice(&encode_jp(0));
-            fixups.push((patch, target));
+            fixups.push((patch, target.clone()));
+            branch_slots.push((target, slots.clone()));
             terminated = false;
             continue;
         }
@@ -165,7 +171,8 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
                 if op == "jmp_if_true" { COND_NZ } else { COND_Z },
                 0,
             ));
-            fixups.push((patch, target));
+            fixups.push((patch, target.clone()));
+            branch_slots.push((target, slots.clone()));
             terminated = false;
             continue;
         }
@@ -466,6 +473,7 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
         })?;
         bytes[patch..patch + 2].copy_from_slice(&address.to_le_bytes());
     }
+    validate_branch_slots(&label_slots, &branch_slots)?;
     Ok(bytes)
 }
 
@@ -512,52 +520,63 @@ fn liveness(cir: &[CIRInstr]) -> Result<LiveSets, BackendError> {
         }
     }
 
+    let mut successors = vec![Vec::new(); cir.len()];
+    let mut predecessors = vec![Vec::new(); cir.len()];
+    for (index, instr) in cir.iter().enumerate() {
+        match instr.op.as_str() {
+            op if op.starts_with("ret_") => {}
+            "jmp" => successors[index].push(branch_target_index(instr, 0, &label_indices)?),
+            "jmp_if_true" | "jmp_if_false" => {
+                successors[index].push(branch_target_index(instr, 1, &label_indices)?);
+                if index + 1 < cir.len() {
+                    successors[index].push(index + 1);
+                }
+            }
+            _ if index + 1 < cir.len() => successors[index].push(index + 1),
+            _ => {}
+        }
+        for &next in &successors[index] {
+            predecessors[next].push(index);
+        }
+    }
     let mut before = vec![HashSet::new(); cir.len()];
     let mut after = before.clone();
-    loop {
-        let old_before = before.clone();
-        for index in (0..cir.len()).rev() {
-            let instr = &cir[index];
-            let mut successors = Vec::new();
-            match instr.op.as_str() {
-                op if op.starts_with("ret_") => {}
-                "jmp" => successors.push(branch_target_index(instr, 0, &label_indices)?),
-                "jmp_if_true" | "jmp_if_false" => {
-                    successors.push(branch_target_index(instr, 1, &label_indices)?);
-                    if index + 1 < cir.len() {
-                        successors.push(index + 1);
-                    }
-                }
-                _ if index + 1 < cir.len() => successors.push(index + 1),
-                _ => {}
-            }
-            after[index] = successors
-                .into_iter()
-                .flat_map(|successor| before[successor].iter().cloned())
-                .collect();
-            let mut live = after[index].clone();
-            if let Some(dest) = &instr.dest {
-                live.remove(dest);
-            }
-            let value_sources = match instr.op.as_str() {
-                "label" | "jmp" => 0,
-                "jmp_if_true" | "jmp_if_false" => 1,
-                _ => instr.srcs.len(),
-            };
-            for source in instr.srcs.iter().take(value_sources) {
-                if let CIROperand::Var(name) = source {
-                    live.insert(name.clone());
-                }
-            }
-            if live.len() > 2 {
-                return Err(BackendError::UnsupportedOp(
-                    "WORD03b requires a third live value; spilling is deferred".into(),
-                ));
-            }
-            before[index] = live;
+    let mut pending: VecDeque<usize> = (0..cir.len()).rev().collect();
+    let mut queued = vec![true; cir.len()];
+    while let Some(index) = pending.pop_front() {
+        queued[index] = false;
+        let instr = &cir[index];
+        after[index] = successors[index]
+            .iter()
+            .flat_map(|&next| before[next].iter().cloned())
+            .collect();
+        let mut live = after[index].clone();
+        if let Some(dest) = &instr.dest {
+            live.remove(dest);
         }
-        if before == old_before {
-            break;
+        let value_sources = match instr.op.as_str() {
+            "label" | "jmp" => 0,
+            "jmp_if_true" | "jmp_if_false" => 1,
+            _ => instr.srcs.len(),
+        };
+        for source in instr.srcs.iter().take(value_sources) {
+            if let CIROperand::Var(name) = source {
+                live.insert(name.clone());
+            }
+        }
+        if live.len() > 2 {
+            return Err(BackendError::UnsupportedOp(
+                "WORD03b requires a third live value; spilling is deferred".into(),
+            ));
+        }
+        if live != before[index] {
+            before[index] = live;
+            for &prior in &predecessors[index] {
+                if !queued[prior] {
+                    pending.push_back(prior);
+                    queued[prior] = true;
+                }
+            }
         }
     }
     Ok((before, after))
@@ -577,6 +596,29 @@ fn branch_target_index(
         .get(target)
         .copied()
         .ok_or_else(|| BackendError::UndefinedLabel(target.to_string()))
+}
+
+fn validate_branch_slots(
+    labels: &HashMap<String, (HashSet<String>, [Option<CurrentValue>; 2])>,
+    branches: &[(String, [Option<CurrentValue>; 2])],
+) -> Result<(), BackendError> {
+    for (target, source_slots) in branches {
+        let (live, target_slots) = labels
+            .get(target)
+            .ok_or_else(|| BackendError::UndefinedLabel(target.clone()))?;
+        for name in live {
+            let source = find_slot(source_slots, name);
+            let destination = find_slot(target_slots, name);
+            if source != destination
+                || source.is_none_or(|slot| source_slots[slot] != target_slots[slot])
+            {
+                return Err(BackendError::UnsupportedOp(format!(
+                    "WORD03b branch to {target:?} has divergent live register mapping"
+                )));
+            }
+        }
+    }
+    Ok(())
 }
 
 fn find_slot(slots: &[Option<CurrentValue>; 2], name: &str) -> Option<usize> {

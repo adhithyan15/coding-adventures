@@ -136,6 +136,59 @@ fn word03b_rejects_an_undefined_branch_label() {
 }
 
 #[test]
+fn word03b_rejects_divergent_live_registers_at_join() {
+    let cir = vec![
+        ci(
+            "const_bool",
+            Some("cond"),
+            vec![CIROperand::Bool(true)],
+            "bool",
+        ),
+        ci(
+            "jmp_if_false",
+            None,
+            vec![
+                CIROperand::Var("cond".into()),
+                CIROperand::Var("other".into()),
+            ],
+            "void",
+        ),
+        ci("const_u8", Some("x"), vec![CIROperand::Int(5)], "u8"),
+        ci("const_u8", Some("y"), vec![CIROperand::Int(2)], "u8"),
+        ci("jmp", None, vec![CIROperand::Var("join".into())], "void"),
+        ci("label", None, vec![CIROperand::Var("other".into())], "void"),
+        ci("const_u8", Some("y"), vec![CIROperand::Int(3)], "u8"),
+        ci("const_u8", Some("x"), vec![CIROperand::Int(9)], "u8"),
+        ci("label", None, vec![CIROperand::Var("join".into())], "void"),
+        ci(
+            "sub_u8",
+            Some("result"),
+            vec![CIROperand::Var("x".into()), CIROperand::Var("y".into())],
+            "u8",
+        ),
+        ci("ret_u8", None, vec![CIROperand::Var("result".into())], "u8"),
+    ];
+    assert!(matches!(
+        compile(&ctx("join", &[], "u8"), &cir),
+        Err(BackendError::UnsupportedOp(message)) if message.contains("divergent live register mapping")
+    ));
+}
+
+#[test]
+fn word03b_branch_to_trailing_label_still_halts() {
+    let cir = vec![
+        ci("jmp", None, vec![CIROperand::Var("done".into())], "void"),
+        ci("ret_void", None, vec![], "void"),
+        ci("label", None, vec![CIROperand::Var("done".into())], "void"),
+    ];
+    let bytes = compile(&ctx("trailing_label", &[], "void"), &cir).unwrap();
+    assert_eq!(bytes.last(), Some(&0xF4));
+    let mut sim = Intel8086Simulator::new(65536);
+    sim.load_program(&bytes);
+    assert!(sim.run_loaded_with_limit(20).halted);
+}
+
+#[test]
 fn word03a_comparisons_execute_as_normalized_unsigned_booleans() {
     let cases = [
         ("eq", 7, 7, 1),
