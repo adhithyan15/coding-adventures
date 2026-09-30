@@ -1061,9 +1061,11 @@ internal static class SourceInputRegistryProjection
       "input_origin": "lua",
       "applies_to": {
         "exact_roots": [
+          "code/packages/lua/der_asn1",
           "code/packages/lua/der_tlv",
           "code/packages/lua/image-codec-png",
           "code/packages/lua/pixel-container",
+          "code/packages/lua/x509_extension",
           "code/packages/lua/zip"
         ],
         "descendant_roots": [],
