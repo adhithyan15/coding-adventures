@@ -13,26 +13,26 @@
   },
   "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-09-28T00:06:50Z",
-    "pr_number": 16198,
+    "observed_at": "2026-09-30T11:41:38Z",
+    "pr_number": 16204,
     "status": "merged",
-    "notes": "PR #16198 completed all final-head checks acceptably with GitHub reporting MERGEABLE/CLEAN and no pending or failed checks. Guarded squash auto-merge was then enabled and merged the reviewed head as fc06b4ca20f911fcb3334bb7b73d9f20408d7a88 without a plain manual merge command."
+    "notes": "External Forme plugin-host PR #16204 completed all final-head checks acceptably and merged automatically as 2ab5963263a70206616078aef0bf1c7de69bea8c. The parity loop did not manually merge it or mutate its implementation; the selected blib tranche remained in-progress until this terminal disposition and was then rebased and reconciled onto the exact merge."
   },
   "last_inventory": {
-    "revision": "ae8a418726475025343e430816429311302713b5",
+    "revision": "9240d08f6c6af840e9378cdb90420c53b1821e2d",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1470,
-    "implementation_package_slots": 4737,
-    "all_reported_identities": 1512,
+    "implementation_identities": 1471,
+    "implementation_package_slots": 4738,
+    "all_reported_identities": 1513,
     "high_consensus_packages": 178,
     "high_consensus_missing_slots": 265,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 181,
     "two_to_four_missing_slots": 2282,
-    "singleton_packages": 988,
-    "singleton_missing_slots": 13832,
+    "singleton_packages": 989,
+    "singleton_missing_slots": 13846,
     "rust_singletons": 805,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
@@ -1439,12 +1439,12 @@
       "selected_at": "2026-09-28T00:07:00Z",
       "selection_revision": "fc06b4ca20f911fcb3334bb7b73d9f20408d7a88",
       "selection_notes": "Selected only after PR #16198 completed every final-head check acceptably and merged through guarded squash auto-merge. The collision-checked exact-main schema-3 inventory remains unchanged at 15 established lanes, 1,470 implementation identities, 4,737 implementation slots, 1,512 all-reported identities, 178 high-consensus packages with 265 missing slots, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. All three formal dependencies are merged, the owner is not selection-blocked, and the refreshed dependency/leverage audit ranks this bounded Perl registry repair first with two direct and eight transitive unfinished descendants.",
-      "rebase_revision": "ae8a418726475025343e430816429311302713b5",
-      "rebase_notes": "Rebased conflict-free before publication after exact main advanced through Flutter Text part typography, ALGOL mutually recursive recurrence selectors, Mermaid architecture edge length, and WORD02 Z80/8086 arithmetic. Those four merged changes have zero exact-path overlap with this 62-file tranche. At the rebase refresh, all ten then-open PRs were collision-free and the regenerated schema-3 inventory retained the recorded counts with zero collisions or unknown buckets.",
-      "collision_refresh_notes": "Ready-for-review Forme plugin-host PR #16204 opened after the implementation and rebase audits. It overlaps the governed repository-boundary authority, pins, projections, runner test, and roadmap, so this item remains in-progress and unpublished while #16204 checks are queued. Do not open this parity PR until #16204 reaches terminal disposition, origin/main is refreshed, the authority changes are reconciled, and the full digest/projection validation is rerun.",
-      "implementation_revision": "6e380ce81efb3d0d1d4d4310ac5db413ab7e9902",
-      "validation_revision": "6e380ce81efb3d0d1d4d4310ac5db413ab7e9902",
-      "validation_notes": "The language-neutral corpus validates all 162 cases and 285 staged files with registry digest 9bc672eac5d5ffc8e2d7d9ff94709a80bdcf0c2de01e7984d9cf8671d3dfa823 and repository-boundary digest 4304623b34cdabe960daee7301b05f61afda1af2a72977c6540384f1dbf5f083. Full suites pass for Perl (149 top-level tests), Python (523 passed, four skipped, 91.95% coverage), Ruby (376 runs, 923 assertions, four skips, 91.48% line coverage), Rust (176 unit plus three CLI tests), TypeScript (361 tests and 91.45% statement coverage), Haskell (79 examples), Swift (86 tests), C# (82 tests), and F# (18 tests); affected Go hasher and graphdiff packages pass, Go vet and trimpath build pass, while the unrelated Windows-only full Go test remains blocked by its pre-existing syscall.Mkfifo test compile. All five projection generators are idempotent, the real Go build tool selects exactly perl/programs/build-tool from the origin/main diff, Rust Clippy, TypeScript typecheck, targeted Python Ruff, Perl MakeMaker with explicit cmd.exe shell, package-parity reporting, state graph validation, diff hygiene, and credential scanning pass. The complete neutral unittest run has one pre-existing Haskell boundary-root expectation failure introduced by PR #16153 and already tracked separately; all other 233 tests pass with 23 expected platform skips. Repository-wide Python Ruff, Rustfmt, and Perl::Critic expose only pre-existing broad drift outside the changed lines, and cpan-audit reports installed/core toolchain advisories without any dependency-manifest change; npm audit reports zero vulnerabilities.",
+      "rebase_revision": "9240d08f6c6af840e9378cdb90420c53b1821e2d",
+      "rebase_notes": "After external PR #16204 merged automatically, the branch was rebased through its exact merge 2ab5963263a70206616078aef0bf1c7de69bea8c and then onto current origin/main 9240d08f6c6af840e9378cdb90420c53b1821e2d after disjoint German curriculum PR #16252 merged. Forme's overlapping repository-boundary additions were preserved while the blib registry and projection delta was reconciled across C#, Swift, the neutral corpus, runner expectations, changelogs, and roadmap metadata. The combined repository-boundary digest is 95a30543f60bebeda68e77813f37154cc4431f511a37da8de11d4266d378903c.",
+      "collision_refresh_notes": "PR #16204 is terminal and merged. The regenerated collision-checked schema-3 inventory on its exact merge contains 15 established lanes, 1,471 implementation identities, 4,738 implementation slots, 1,513 all-reported identities, 178 high-consensus packages with 265 missing slots, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. Parallel audits were incorporated before publication.",
+      "implementation_revision": "51ccaa3c23067acd59663e6a66438b4f955b4614",
+      "validation_revision": "2aebeec176a816b9c7aef472a7fb474e52257a30",
+      "validation_notes": "The language-neutral corpus validates all 162 cases and 285 staged files with registry digest 9bc672eac5d5ffc8e2d7d9ff94709a80bdcf0c2de01e7984d9cf8671d3dfa823 and post-Forme repository-boundary digest 95a30543f60bebeda68e77813f37154cc4431f511a37da8de11d4266d378903c. The focused post-rebase semantic runner passes all 86 tests and diff hygiene is clean. The pre-rebase full validation remains applicable to the preserved blib implementation: Perl 149 top-level tests; Python 523 passed, four skipped, 91.95% coverage; Ruby 376 runs, 923 assertions, four skips, 91.48% line coverage; Rust 176 unit plus three CLI tests; TypeScript 361 tests and 91.45% statement coverage; Haskell 79 examples; Swift 86 tests; C# 82 tests; F# 18 tests; affected Go packages, vet, trimpath build, all five projection generators, real Go diff selection, Rust Clippy, TypeScript typecheck, targeted Python Ruff, Perl MakeMaker, package-parity reporting, state graph validation, credential scanning, and npm audit all pass. The unrelated Windows-only full Go test remains blocked by its pre-existing syscall.Mkfifo compile, while repository-wide Ruff, Rustfmt, Perl::Critic, and cpan-audit expose only pre-existing broad drift or installed/core advisories without dependency-manifest changes.",
       "review_notes": "Three parallel read-only reviews confirmed canonical ordering, exact case-sensitive pruning, zero open-PR or main-path collisions, complete digest propagation, deterministic C#/Swift projection catch-up, and no new dependency edge or backlog owner. Review findings for missing Haskell documentation, root changelog metadata, roadmap metadata, and introduced long lines were resolved before publication.",
       "notes": "Add exact lowercase blib to the canonical generated-component registry; update generated-directory and source-collection fixtures, registry digest, repository-boundary digest/pin, every checked projection, and equality tests while preserving case and near-name behavior. Do not retain an engine-only selector or broad exception."
     },
@@ -9759,7 +9759,7 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "The exact-main audit found 93 Java/Kotlin/Dart high-consensus identities and 50 Swift high-consensus identities without exact package owners. The post-#14519 audit owns the SHA-512, barcode-layout/facade/symbology, and HMAC/HKDF/PBKDF2 Java/Kotlin/Dart fronts; the post-#14615 audit materializes `swift-hash-functions-lane-parity` as the first dependency-shaped Swift child, leaving 49 non-CT Swift identities under this classifier until decomposed. Continue splitting exact package children before implementation. Point2d still requires contract repair and existing-lane conformance before Java/Kotlin/Dart expansion."
+      "notes": "The post-#16204 exact-main structural audit records 278 high-consensus missing slots: 107 Dart, 58 Java, 58 Kotlin, 51 Swift, three Haskell, and one Python. This supersedes the older 93 Java/Kotlin/Dart plus 50 Swift snapshot, but package-name presence is not yet a semantic owner: continue decomposing exact dependency-shaped families before implementation. Existing SHA-512, barcode, HMAC/HKDF/PBKDF2, font, and Swift hash owners remain authoritative; Point2d still requires contract repair and existing-lane conformance before Java/Kotlin/Dart expansion. Preserve verified spec or manifest edges only and do not encode priority-only sequencing as dependencies."
     },
     {
       "id": "swift-hash-functions-lane-parity",
@@ -11071,10 +11071,84 @@
       "id": "build-tool-orphan-package-root-validation-corpus-and-go-adoption",
       "title": "Generalize orphan package-root validation and adopt it in Go",
       "status": "pending",
-      "depends_on": ["build-tool-orphan-crate-validation-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit"],
+      "depends_on": ["build-tool-orphan-crate-validation-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-perl-blib-generated-directory-registry-repair"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered when the post-PR #16133 audit found 36 tracked established-lane package roots without BUILD fronts while the current gate scans only Cargo crates. Define language-neutral fixtures and stable validation over the reviewed package-root and source-input registries, including every platform front, ancestor coverage, generated and virtual exclusions, exemptions, collisions, stale entries, and deterministic diagnostics; then adopt the generalized process-free contract in the Go build tool. This validator owns discovery enforcement, not implementation of the missing fronts, and adds no filesystem authority beyond the existing caller-supplied repository snapshot boundary."
+      "notes": "Discovered when the post-PR #16133 audit found tracked established-lane package roots without BUILD fronts while the current gate scans only Cargo crates. Define a distinct orphan_package_root_snapshot contract with at most 8,192 roots, at most 16,384 aggregate BUILD fronts, at most 2,000,000 UTF-8 bytes, compact source evidence, and streaming Go discovery over the reviewed package-root and source-input registries. Validate every platform front, ancestor coverage, generated and virtual exclusions, exemptions, collisions, stale entries, and deterministic diagnostics without raising the legacy orphan-crate snapshot ceiling. This validator owns discovery enforcement, not implementation of missing fronts, and adds no filesystem authority beyond the existing caller-supplied repository snapshot boundary."
+    },
+    {
+      "id": "assembler-lua-arm-prerequisite-classification",
+      "title": "Classify Lua prerequisites for portable ARM assembler parity",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": false,
+      "notes": "Resolve and durably record the Lua applicability boundary for the generic ARM assembler before implementing the lane child. Governing-spec and package review finds the portable assembler to be a deterministic parser and encoder: the real C, C++, C#, F#, Rust, and TypeScript lanes do not require a runtime arm-simulator dependency, while Elixir and Ruby manifest coupling and Python development-only simulator references are integration choices rather than intrinsic prerequisites. Lua 5.4 provides the exact integer and bitwise operations needed for unsigned 32-bit encodings; the absence of the separately named arm-simulator package is not a prerequisite gap, and the existing arm1_simulator and arm1_gatelevel packages may remain optional downstream execution oracles. Classify Lua as applicable and keep this owner selectable so its reviewed decision can merge before assembler-lua-lane-parity."
+    },
+    {
+      "id": "assembler-language-neutral-conformance",
+      "title": "Define language-neutral ARM assembler conformance",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Repair code/specs/06-assembler.md into a closed versioned portable ARM assembler contract before adding lanes. Define the supported instruction and condition-code subset, register and immediate bounds, labels and forward references, branches and load/store addressing, canonical unsigned 32-bit words and byte serialization, sorted symbols, deterministic address-to-source mapping, stable payload-blind diagnostics, explicit ceilings, and language-neutral cases. Keep simulator execution as an optional downstream integration fixture; the portable parser and encoder has an empty capability envelope."
+    },
+    {
+      "id": "assembler-existing-lane-conformance",
+      "title": "Validate existing ARM assembler lanes against neutral conformance",
+      "status": "pending",
+      "depends_on": ["assembler-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Adopt the closed ARM assembler corpus in every existing implementation lane and reconcile divergent instruction subsets, byte and word ordering, label behavior, source maps, diagnostics, and resource ceilings. Existing manifest or development-only simulator references must not turn optional execution tests into a portable-core prerequisite."
+    },
+    {
+      "id": "assembler-lua-lane-parity",
+      "title": "Implement portable ARM assembler parity in Lua",
+      "status": "pending",
+      "depends_on": ["assembler-language-neutral-conformance", "assembler-existing-lane-conformance", "assembler-lua-arm-prerequisite-classification"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the authority-free ARM parser and encoder in Lua 5.4 and consume every neutral fixture with exact unsigned 32-bit word, byte, symbol, source-map, diagnostic, and ceiling equality. Existing Lua ARM simulator and gate-level packages remain optional downstream oracles, not production dependencies."
+    },
+    {
+      "id": "intel4004-lua-toolchain-applicability",
+      "title": "Classify Intel 4004 assembler applicability in Lua",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": false,
+      "notes": "Resolve and durably record the Lua applicability boundary for the standalone Intel 4004 assembler before implementing the lane child. Review of the complete instruction and two-pass assembler contracts and seven existing lanes shows that assembly requires no compiler backend, simulator, packager, filesystem, process, or native prerequisite. Lua has deterministic byte, integer, and bitwise semantics; existing simulator and gate-level packages remain optional downstream evidence."
+    },
+    {
+      "id": "intel4004-assembler-language-neutral-conformance",
+      "title": "Define language-neutral Intel 4004 assembler conformance",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Close the standalone two-pass assembler contract from code/specs/07d-intel4004-simulator.md and code/specs/NIB01-intel-4004-backend.md. Publish exact-byte fixtures for all instructions, syntax, registers, bounds, ORG, current-location and label references, page-relative branches, reusable stateless assembly, stable payload-blind diagnostics, and the 4096-byte ROM boundary. Specify zero-byte NOP gap filling in assembler output while leaving full-ROM padding to the packager."
+    },
+    {
+      "id": "intel4004-assembler-existing-lane-conformance",
+      "title": "Validate existing Intel 4004 assembler lanes against neutral conformance",
+      "status": "pending",
+      "depends_on": ["intel4004-assembler-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Adopt the closed Intel 4004 assembler corpus in the existing C, C++, Elixir, Go, Python, Rust, and TypeScript lanes, reconciling exact encoding, ORG-gap, label, page-relative branch, error, limit, and stateless-reuse behavior while preserving the assembler as a standalone zero-authority package."
+    },
+    {
+      "id": "intel4004-assembler-lua-lane-parity",
+      "title": "Implement Intel 4004 assembler parity in Lua",
+      "status": "pending",
+      "depends_on": ["intel4004-assembler-language-neutral-conformance", "intel4004-assembler-existing-lane-conformance", "intel4004-lua-toolchain-applicability"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the standalone two-pass Intel 4004 assembler in Lua and consume every neutral case with exact byte, address, label, page-relative branch, diagnostic, limit, and stateless-reuse equality. Keep packaging, compiler lowering, backend integration, and host authority outside."
     }
   ]
 }

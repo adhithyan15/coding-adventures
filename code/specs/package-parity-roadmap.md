@@ -14942,6 +14942,46 @@ projection now carries the governed registry digest. Perl already implemented
 the correct production selector, so this tranche adds direct regression
 evidence without widening its authority.
 
+### PR #16204 merge, blib rebase, and audit refresh
+
+External Forme plugin-host PR #16204 completed its final-head checks and merged
+automatically at `2026-09-30T11:41:38Z` as
+`2ab5963263a70206616078aef0bf1c7de69bea8c`. The parity loop did not mutate or
+manually merge that branch. The selected blib tranche was then rebased onto the
+exact merge, preserving the Forme boundary additions and reconciling every
+overlapping projection, fixture, runner expectation, changelog, and digest.
+
+The combined language-neutral corpus validates 162 cases and 285 staged files.
+Its generated-directory source registry digest is
+`9bc672eac5d5ffc8e2d7d9ff94709a80bdcf0c2de01e7984d9cf8671d3dfa823`, and its
+post-Forme repository-boundary digest is
+`95a30543f60bebeda68e77813f37154cc4431f511a37da8de11d4266d378903c`.
+All 86 focused semantic-runner tests pass after the rebase.
+
+The collision-checked schema-3 inventory at that exact merge now contains 15
+established lanes, 1,471 implementation identities, 4,738 implementation
+slots, 1,513 all-reported identities, 178 high-consensus packages with 265
+missing slots, 989 singleton packages with 13,846 missing slots, 805 Rust
+singletons, five emerging OCaml packages, zero canonical collisions, and zero
+unknown language buckets. The extra identity and slot are the merged Forme
+plugin host rather than a blib package-identity change.
+
+Parallel read-only audits registered dependency-shaped neutral, existing-lane,
+classifier, and Lua-lane owners for the ARM and Intel 4004 assembler families.
+They also identified Rope and Dartmouth BASIC IR compiler decompositions that
+must be materialized with their prerequisite owners before the next selection,
+plus a current structural high-consensus audit of 278 missing slots: 107 Dart,
+58 Java, 58 Kotlin, 51 Swift, three Haskell, and one Python. Those raw slots
+remain under `high-consensus-unowned-gap-classification-20260905` until exact
+semantic family owners and verified dependency edges replace structural
+package-name evidence.
+
+After blib merges, the highest-leverage dependency-ready owner is
+`build-tool-orphan-package-root-validation-corpus-and-go-adoption`. Its direct
+blib dependency is now recorded. That owner must introduce a distinct bounded
+`orphan_package_root_snapshot` contract and streaming Go discovery rather than
+raising the legacy orphan-crate snapshot ceiling.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
