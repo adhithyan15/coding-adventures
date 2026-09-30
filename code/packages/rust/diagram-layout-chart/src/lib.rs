@@ -13,11 +13,11 @@
 
 use diagram_ir::{
     AxisKind, ChartDiagram, ChartKind, LayoutedChartDiagram, LayoutedChartItem, LegendEntry,
-    Orientation, Point, SeriesKind,
+    Orientation, Point, RadarGraticule, SeriesKind,
 };
 use std::collections::{HashMap, VecDeque};
 
-pub const VERSION: &str = "0.17.0";
+pub const VERSION: &str = "0.18.0";
 
 const MARGIN: f64 = 24.0;
 const TITLE_H: f64 = 32.0;
@@ -1390,7 +1390,7 @@ fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagra
         .map(|axis| axis.categories.as_slice())
         .unwrap_or(&[]);
     let title_height = diagram.title.as_ref().map_or(0.0, |_| TITLE_H);
-    let legend_height = if diagram.series.is_empty() {
+    let legend_height = if diagram.series.is_empty() || !diagram.radar_config.show_legend {
         0.0
     } else {
         LEGEND_H
@@ -1401,10 +1401,14 @@ fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagra
     let count = categories.len().max(1);
     let mut items = Vec::new();
 
-    for tick in 1..=GRID_COUNT {
-        let tick_radius = radius * tick as f64 / GRID_COUNT as f64;
-        let mut points = (0..count)
-            .map(|index| radar_point(cx, cy, tick_radius, index, count))
+    for tick in 1..=diagram.radar_config.ticks.ceil() as usize {
+        let tick_radius = radius * tick as f64 / diagram.radar_config.ticks;
+        let point_count = match diagram.radar_config.graticule {
+            RadarGraticule::Circle => 64,
+            RadarGraticule::Polygon => count,
+        };
+        let mut points = (0..point_count)
+            .map(|index| radar_point(cx, cy, tick_radius, index, point_count))
             .collect::<Vec<_>>();
         if let Some(first) = points.first().cloned() {
             points.push(first);
@@ -1436,8 +1440,9 @@ fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagra
     let max = diagram
         .y_axis
         .as_ref()
-        .map_or(1.0, |axis| axis.max)
-        .max(1.0);
+        .map_or(1.0, |axis| axis.max);
+    let min = diagram.y_axis.as_ref().map_or(0.0, |axis| axis.min);
+    let range = (max - min).max(f64::EPSILON);
     for (series_index, plot) in diagram.series.iter().enumerate() {
         let mut points = plot
             .data
@@ -1447,7 +1452,7 @@ fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagra
                 radar_point(
                     cx,
                     cy,
-                    radius * (point.value / max).clamp(0.0, 1.0),
+                    radius * ((point.value - min) / range).clamp(0.0, 1.0),
                     index,
                     count,
                 )
@@ -1462,7 +1467,7 @@ fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagra
         });
     }
 
-    if !diagram.series.is_empty() {
+    if !diagram.series.is_empty() && diagram.radar_config.show_legend {
         items.push(LayoutedChartItem::Legend {
             x: MARGIN,
             y: ch - LEGEND_H,
@@ -1563,13 +1568,14 @@ mod tests {
             quadrant_points: vec![],
             quadrant_config: QuadrantConfig::default(),
             xy_config: XyChartConfig::default(),
+            radar_config: RadarConfig::default(),
             orientation: ChartOrientation::Vertical,
         }
     }
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.17.0");
+        assert_eq!(crate::VERSION, "0.18.0");
     }
 
     #[test]
@@ -1960,6 +1966,7 @@ mod tests {
             quadrant_points: vec![],
             quadrant_config: QuadrantConfig::default(),
             xy_config: XyChartConfig::default(),
+            radar_config: RadarConfig::default(),
             orientation: ChartOrientation::Vertical,
         };
         let d = layout_chart_diagram(&diagram, 400.0, 400.0);
@@ -2022,6 +2029,7 @@ mod tests {
             quadrant_points: vec![],
             quadrant_config: QuadrantConfig::default(),
             xy_config: XyChartConfig::default(),
+            radar_config: RadarConfig::default(),
             orientation: ChartOrientation::Horizontal,
         };
         let d = layout_chart_diagram(&diagram, 600.0, 400.0);
@@ -2075,6 +2083,7 @@ mod tests {
             }],
             quadrant_config: QuadrantConfig::default(),
             xy_config: XyChartConfig::default(),
+            radar_config: RadarConfig::default(),
             orientation: ChartOrientation::Vertical,
         };
         let layout = layout_chart_diagram(&diagram, 500.0, 500.0);
@@ -2216,5 +2225,57 @@ mod tests {
             bottom.0 > 640.0,
             "right y-axis label should be right of the plot"
         );
+    }
+
+    #[test]
+    fn radar_layout_applies_options_to_graticule_scale_and_legend() {
+        let mut diagram = xy_diagram();
+        diagram.kind = ChartKind::Radar;
+        diagram.x_axis = Some(Axis {
+            kind: AxisKind::Categorical,
+            title: None,
+            categories: vec!["A".into(), "B".into(), "C".into()],
+            min: 0.0,
+            max: 3.0,
+        });
+        diagram.y_axis = Some(Axis {
+            kind: AxisKind::Numeric,
+            title: None,
+            categories: vec![],
+            min: 10.0,
+            max: 90.0,
+        });
+        diagram.series = vec![ChartSeries {
+            kind: SeriesKind::Line,
+            label: Some("Scores".into()),
+            data: [10.0, 50.0, 90.0]
+                .into_iter()
+                .map(|value| ChartDataPoint { value, label: None })
+                .collect(),
+        }];
+        diagram.radar_config = RadarConfig {
+            show_legend: false,
+            ticks: 4.0,
+            min: 10.0,
+            max: Some(90.0),
+            graticule: RadarGraticule::Polygon,
+        };
+
+        let layout = layout_chart_diagram(&diagram, 500.0, 500.0);
+        let paths = layout
+            .items
+            .iter()
+            .filter_map(|item| match item {
+                LayoutedChartItem::LinePath { points, .. } => Some(points),
+                _ => None,
+            })
+            .collect::<Vec<_>>();
+        assert_eq!(paths.len(), 5);
+        assert!(paths[..4].iter().all(|points| points.len() == 4));
+        assert!(paths[4][0].x.is_finite() && paths[4][0].y.is_finite());
+        assert!(!layout
+            .items
+            .iter()
+            .any(|item| matches!(item, LayoutedChartItem::Legend { .. })));
     }
 }

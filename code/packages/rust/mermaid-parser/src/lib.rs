@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.128.0";
+pub const VERSION: &str = "0.129.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{HashMap, HashSet};
@@ -574,7 +574,8 @@ use diagram_ir::{
     Compartment, CompartmentKind, GanttConfig, GanttDateFormat, GanttDateFormatPart, GanttDiagram, GanttDisplayMode, GanttDuration, GanttDurationUnit, GanttSection, GanttTask, GitBranch, GitCommitType,
     EventModelDiagram, EventModelEntityKind, EventModelFrame, GitDiagram, GitEvent, JourneyConfig,
     JourneyDiagram, JourneySection, JourneyTask, PieSlice,
-    QuadrantConfig, QuadrantPoint, RelKind, RequirementElementMetadata, RequirementKind,
+    QuadrantConfig, QuadrantPoint, RadarConfig, RadarGraticule, RelKind,
+    RequirementElementMetadata, RequirementKind,
     RequirementMetadata, RequirementRisk, RequirementVerifyMethod, SankeyFlow, SankeyNode,
     SequenceArrowhead, SequenceBlockKind, SequenceCentralConnection, SequenceDiagram,
     SequenceEvent, SequenceLineStyle, SequenceLink, SequenceNotePlacement, SequenceParticipant,
@@ -5041,6 +5042,7 @@ pub fn parse_radar(source: &str) -> Result<ChartDiagram, ParseError> {
     let mut axis_ids = Vec::<String>::new();
     let mut axis_labels = Vec::<String>::new();
     let mut series = Vec::<ChartSeries>::new();
+    let mut radar_config = RadarConfig::default();
 
     for token in &tokens {
         match token_name(token) {
@@ -5149,6 +5151,35 @@ pub fn parse_radar(source: &str) -> Result<ChartDiagram, ParseError> {
                         .collect(),
                 });
             }
+            "OPTION_STATEMENT" => {
+                for option in token.value.split(',') {
+                    let mut parts = option.split_whitespace();
+                    let name = parts.next().expect("grammar requires option name");
+                    let value = parts.next().expect("grammar requires option value");
+                    match name.to_ascii_lowercase().as_str() {
+                        "showlegend" => {
+                            radar_config.show_legend = value.eq_ignore_ascii_case("true")
+                        }
+                        "ticks" => {
+                            let parsed = parse_radar_number(value, token)?;
+                            if parsed <= 0.0 {
+                                return Err(token_error(token, "radar ticks must be positive"));
+                            }
+                            radar_config.ticks = parsed;
+                        }
+                        "min" => radar_config.min = parse_radar_number(value, token)?,
+                        "max" => radar_config.max = Some(parse_radar_number(value, token)?),
+                        "graticule" => {
+                            radar_config.graticule = if value.eq_ignore_ascii_case("polygon") {
+                                RadarGraticule::Polygon
+                            } else {
+                                RadarGraticule::Circle
+                            };
+                        }
+                        _ => unreachable!("grammar restricts radar option names"),
+                    }
+                }
+            }
             _ => {}
         }
     }
@@ -5165,6 +5196,14 @@ pub fn parse_radar(source: &str) -> Result<ChartDiagram, ParseError> {
         .flat_map(|plot| plot.data.iter().map(|point| point.value))
         .fold(0.0_f64, f64::max)
         .max(1.0);
+    let resolved_maximum = radar_config.max.unwrap_or(maximum);
+    if resolved_maximum <= radar_config.min {
+        return Err(ParseError {
+            message: "radar max must be greater than min".into(),
+            line: 1,
+            col: 1,
+        });
+    }
     Ok(ChartDiagram {
         title,
         accessibility_title,
@@ -5182,8 +5221,8 @@ pub fn parse_radar(source: &str) -> Result<ChartDiagram, ParseError> {
             kind: AxisKind::Numeric,
             title: None,
             categories: Vec::new(),
-            min: 0.0,
-            max: maximum,
+            min: radar_config.min,
+            max: resolved_maximum,
         }),
         series,
         slices: vec![],
@@ -5193,6 +5232,7 @@ pub fn parse_radar(source: &str) -> Result<ChartDiagram, ParseError> {
         quadrant_points: vec![],
         quadrant_config: QuadrantConfig::default(),
         xy_config: XyChartConfig::default(),
+        radar_config,
         orientation: ChartOrientation::Vertical,
     })
 }
@@ -5334,6 +5374,7 @@ pub fn parse_xychart(source: &str) -> Result<ChartDiagram, ParseError> {
         quadrant_points: vec![],
         quadrant_config: QuadrantConfig::default(),
         xy_config,
+        radar_config: RadarConfig::default(),
         orientation,
     })
 }
@@ -5915,6 +5956,7 @@ pub fn parse_quadrant_chart(source: &str) -> Result<ChartDiagram, ParseError> {
         quadrant_points,
         quadrant_config,
         xy_config: XyChartConfig::default(),
+        radar_config: RadarConfig::default(),
         orientation: ChartOrientation::Vertical,
     })
 }
@@ -8381,6 +8423,7 @@ pub fn parse_pie(source: &str) -> Result<ChartDiagram, ParseError> {
         quadrant_points: vec![],
         quadrant_config: QuadrantConfig::default(),
         xy_config: XyChartConfig::default(),
+        radar_config: RadarConfig::default(),
         orientation: ChartOrientation::Vertical,
     })
 }
@@ -8514,6 +8557,7 @@ pub fn parse_sankey(source: &str) -> Result<ChartDiagram, ParseError> {
         quadrant_points: vec![],
         quadrant_config: QuadrantConfig::default(),
         xy_config: XyChartConfig::default(),
+        radar_config: RadarConfig::default(),
         orientation: ChartOrientation::Horizontal,
     })
 }
@@ -13509,7 +13553,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.128.0");
+        assert_eq!(crate::VERSION, "0.129.0");
     }
 
     #[test]

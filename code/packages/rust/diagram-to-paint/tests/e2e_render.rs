@@ -2360,7 +2360,7 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_radar_to_png() {
         let chart = parse_radar(
-            "radar-beta\ntitle Product Comparison\naxis speed[\"Speed\"], quality[\"Quality\"], cost[\"Cost\"], support[\"Support\"]\ncurve alpha[\"Alpha\"]{80, 65, 45, 90}\ncurve beta[\"Beta\"]{55, 85, 75, 60}",
+            "radar-beta\ntitle Product Comparison\naxis speed[\"Speed\"], quality[\"Quality\"], cost[\"Cost\"], support[\"Support\"]\ncurve alpha[\"Alpha\"]{80, 65, 45, 90}\ncurve beta[\"Beta\"]{55, 85, 75, 60}\nticks 4\nmin 20\nmax 100\ngraticule polygon\nshowLegend true",
         )
         .expect("radar parse failed");
         let layout = layout_chart_diagram(&chart, 640.0, 560.0);
