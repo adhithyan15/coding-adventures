@@ -2162,14 +2162,19 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_event_modeling_to_png() {
         let diagram = parse_event_modeling(
-            "eventmodeling\ntitle Checkout flow\naccTitle: Checkout event model\nrf 01 ui Sales.CheckoutUI\ntf 02 cmd Sales.SubmitOrder ->> 01 `json`{ \"total\": 42 }\ntf 03 evt Sales.OrderSubmitted ->> 02",
+            "eventmodeling\ntitle Checkout flow\naccTitle: Checkout event model\nrf 01 ui Sales.CheckoutUI\ntf 02 cmd Sales.SubmitOrder ->> 01 [[OrderData]]\ntf 03 evt Sales.OrderSubmitted ->> 02\ndata OrderData `json`{ \"total\": 42 }",
         )
         .expect("event modeling parse failed");
         let layout = layout_event_model_diagram(&diagram, 720.0);
+        assert_eq!(diagram.frames[1].data_reference.as_deref(), Some("OrderData"));
         assert!(layout.items.iter().any(|item| matches!(
             item,
-            diagram_ir::LayoutedEventModelItem::Frame { data_label: Some(data), .. }
-                if data == "json: \"total\": 42"
+            diagram_ir::LayoutedEventModelItem::Frame {
+                data_reference: Some(reference),
+                data_label: Some(data),
+                ..
+            }
+                if reference == "OrderData" && data == "json: \"total\": 42"
         )));
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
@@ -2187,6 +2192,12 @@ line "Target" [35, 50, 68, 82]"##,
             scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.title")),
             Some(&"Checkout event model".to_string())
         );
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Rect(rect)
+                if rect.base.metadata.as_ref().and_then(|metadata| metadata.get("eventModel.dataReference"))
+                    == Some(&"OrderData".to_string())
+        )));
         assert!(!scene.instructions.is_empty());
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_eventmodeling_e2e.png").expect("PNG write failed");

@@ -713,7 +713,7 @@ where
                     label_color,
                 ));
             }
-            LayoutedEventModelItem::Frame { x, y, width, height, label, data_label, kind } => {
+            LayoutedEventModelItem::Frame { x, y, width, height, label, data_reference, data_label, kind } => {
                 let fill = match kind {
                     EventModelEntityKind::Ui => "#dbeafe",
                     EventModelEntityKind::Processor => "#e0e7ff",
@@ -721,8 +721,11 @@ where
                     EventModelEntityKind::ReadModel => "#dcfce7",
                     EventModelEntityKind::Event => "#fee2e2",
                 };
+                let frame_metadata = data_reference.as_ref().map(|reference| {
+                    HashMap::from([("eventModel.dataReference".into(), reference.clone())])
+                });
                 instructions.push(PaintInstruction::Rect(PaintRect {
-                    base: PaintBase::default(),
+                    base: PaintBase { metadata: frame_metadata, ..PaintBase::default() },
                     x: *x,
                     y: *y,
                     width: *width,

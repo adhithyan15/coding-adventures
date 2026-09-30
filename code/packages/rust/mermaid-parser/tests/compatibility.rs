@@ -194,8 +194,20 @@ fn pinned_event_modeling_subset_corpus_parses_to_semantic_ir() {
             assert_eq!(diagram.frames[1].data.as_deref(), Some("description: string"));
             assert_eq!(diagram.frames[2].data_type.as_deref(), Some("json"));
             assert_eq!(diagram.frames[2].data.as_deref(), Some("\"description\": \"book\""));
+        } else if id == "data-blocks" {
+            assert_eq!(diagram.data_blocks.len(), 2);
+            assert_eq!(diagram.frames[1].data_reference.as_deref(), Some("AddItemData"));
+            assert_eq!(diagram.frames[1].data_type.as_deref(), Some("json"));
+            assert!(diagram.frames[1].data.as_deref().is_some_and(|data| data.contains("quantity")));
+            assert_eq!(diagram.frames[2].data_reference.as_deref(), Some("ItemAddedData"));
         }
     }
+    assert!(parse_event_modeling(
+        "eventmodeling\ntf 01 cmd AddItem [[MissingData]]"
+    ).is_err());
+    assert!(parse_event_modeling(
+        "eventmodeling\ntf 01 cmd AddItem [[Payload]]\ndata Payload { one: 1 }\ndata Payload { two: 2 }"
+    ).is_err());
 }
 
 #[test]
