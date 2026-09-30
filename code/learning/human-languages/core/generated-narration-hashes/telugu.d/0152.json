@@ -1,0 +1,17 @@
+{
+  "language": "telugu",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:74f636ef06b24ada",
+  "lessonIds": [
+    "TE-C152-jhankaram",
+    "TE-S173-letter-jha",
+    "TE-R152-jhankaram-recall"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 1,
+  "text": "telugu/narration/ch152.txt",
+  "json": "telugu/narration/ch152.json",
+  "textHash": "fnv1a64:817bf2f6aba6b0cf",
+  "jsonHash": "fnv1a64:674b0d3b9ac06f32",
+  "findings": []
+}

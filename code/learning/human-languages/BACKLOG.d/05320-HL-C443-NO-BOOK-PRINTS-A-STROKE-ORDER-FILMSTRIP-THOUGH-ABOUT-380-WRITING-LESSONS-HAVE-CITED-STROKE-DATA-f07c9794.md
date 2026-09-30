@@ -159,11 +159,16 @@ That is about 380 filmstrips that could print today.
   the retroflex from `డప్పు`, already taught earlier in the chapter. Its five
   movements draw the rounded body in four sections and finish with the separate
   upper flourish, following the packaged tracing guide and Noto Sans Telugu fit.
-- **Next priority: Telugu ఝ needs its word first.** No existing lesson owns the
-  base letter or teaches a word containing it, so the next tranche must verify
-  an authentic, useful lexical anchor before adding a writing lesson. The same
-  packaged source does contain `dot_stroke_c_2_4_jha.png`; stroke extraction is
-  ready only after that vocabulary dependency is satisfied.
+- **Telugu ఝ now gets the word first.** Chapter 152 introduces **ఝంకారం**
+  (*jhaṅkāraṁ*, a buzz or hum) before `TE-S173` extracts the uncommon aspirated
+  letter from the learned word. Its five separately numbered movements trace
+  the three round sections, the upper flourish and the downward stem. The order
+  comes from the packaged `dot_stroke_c_2_4_jha.png` and
+  `line_stroke_c_2_4_jha.png` tracing guides and is fitted to Noto Sans Telugu.
+- **Next priority: Telugu ఱ needs its word first.** It is the remaining base
+  consonant in the inventory-without-a-word list. Verify a useful authentic
+  lexical anchor before extracting the letter and the packaged tracing route;
+  do not teach the historical shape as a cold alphabet item.
 
 ### The shape of the writing ramp (project owner, 2026-09-25)
 

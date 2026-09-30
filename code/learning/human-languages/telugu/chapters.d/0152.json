@@ -1,0 +1,18 @@
+{
+  "chapter": 152,
+  "title": "A Word for Buzzing — Then Its First Letter",
+  "label": "ch:te-jhankaram-jha",
+  "canDo": "I can say a learned Telugu word for a buzz or hum, recognise its uncommon first letter, and write that letter in a source-backed order.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "TE-S173-letter-jha",
+    "kind": "production",
+    "summary": "Take ఝ from the already-known word ఝంకారం and write its five separately numbered movements.",
+    "assesses": [
+      "TE-LEX-C152-BUZZ-01",
+      "TE-SCRIPT-RECOG-173"
+    ]
+  }
+}

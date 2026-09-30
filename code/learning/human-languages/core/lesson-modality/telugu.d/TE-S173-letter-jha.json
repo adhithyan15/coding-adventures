@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TE-S173-letter-jha",
+    "language": "telugu",
+    "chapter": 152,
+    "sequence": 6600,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a4f636894d1d8341",
+    "detachableSegments": [
+      "Script you'll notice: ఝ",
+      "Writing: ఝ — five movements, five runs"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

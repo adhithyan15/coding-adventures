@@ -40,7 +40,8 @@ it("pins Telugu's pre-A1 writing ladder", () => {
   // stage exercised on a harder pair. `TE-S171` and `TE-S172` then return to
   // observe-and-trace for newly introduced rare letters. A rung may repeat;
   // the ORDER assertion below still forbids one arriving before its
-  // prerequisite stages.
+  // prerequisite stages. TE-S173 adds the same evidence for jha after its
+  // newly taught word.
   expect(track.validEvidence.map((entry) => [entry.lessonId, entry.stage])).toEqual([
     ["TE-S152-letter-tta", "observe-trace"],
     ["TE-S123-letter-dda", "observe-trace"],
@@ -53,6 +54,7 @@ it("pins Telugu's pre-A1 writing ladder", () => {
     ["TE-S170-script-dictation-courtesy-letters", "dictation-transcription"],
     ["TE-S171-letter-nga", "observe-trace"],
     ["TE-S172-letter-chha", "observe-trace"],
+    ["TE-S173-letter-jha", "observe-trace"],
   ]);
   expect(track.defects).toEqual([]);
   expect(track.levels[0]).toMatchObject({

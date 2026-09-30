@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-152-BUZZ",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "before": [],
+  "inline": [
+    "TE-EXT-152-BUZZ"
+  ],
+  "after": []
+}

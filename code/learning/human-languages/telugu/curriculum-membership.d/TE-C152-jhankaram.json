@@ -1,0 +1,11 @@
+{
+  "id": "TE-C152-jhankaram",
+  "pathSegment": "TE-PATH-152-BUZZ",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-152-BUZZ",
+      "order": 0
+    }
+  ]
+}

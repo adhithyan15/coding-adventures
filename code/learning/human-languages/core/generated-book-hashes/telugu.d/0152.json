@@ -1,0 +1,11 @@
+{
+  "language": "telugu",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:b964ea1554398082",
+  "lessonIds": [
+    "TE-C152-jhankaram",
+    "TE-S173-letter-jha",
+    "TE-R152-jhankaram-recall"
+  ],
+  "tex": "telugu/book/chapters/ch152-a-word-for-buzzing-then-its-first-letter.tex"
+}

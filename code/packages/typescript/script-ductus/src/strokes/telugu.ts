@@ -22,6 +22,82 @@ const teluguIndependentVowelSource = teluguLetterSource;
 
 export const entries: DuctusEntry[] = [
   [
+    "telugu:ఝ",
+    {
+      script: "telugu",
+      glyph: "ఝ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "circle clockwise around the left bowl",
+              path: [
+                { x: 296, y: 462 }, { x: 215, y: 445 }, { x: 140, y: 400 },
+                { x: 90, y: 335 }, { x: 76, y: 255 }, { x: 92, y: 170 },
+                { x: 145, y: 95 }, { x: 220, y: 45 }, { x: 296, y: 28 },
+                { x: 375, y: 48 }, { x: 445, y: 100 }, { x: 500, y: 175 },
+                { x: 517, y: 250 }, { x: 500, y: 330 }, { x: 445, y: 400 },
+                { x: 375, y: 445 }, { x: 296, y: 462 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "circle clockwise around the middle bowl",
+              path: [
+                { x: 648, y: 462 }, { x: 595, y: 425 }, { x: 555, y: 370 },
+                { x: 525, y: 300 }, { x: 535, y: 220 }, { x: 575, y: 145 },
+                { x: 640, y: 75 }, { x: 710, y: 28 }, { x: 790, y: 45 },
+                { x: 850, y: 105 }, { x: 863, y: 190 }, { x: 845, y: 270 },
+                { x: 805, y: 345 }, { x: 745, y: 410 }, { x: 648, y: 462 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "circle clockwise around the right bowl",
+              path: [
+                { x: 995, y: 462 }, { x: 942, y: 425 }, { x: 902, y: 370 },
+                { x: 872, y: 300 }, { x: 882, y: 220 }, { x: 922, y: 145 },
+                { x: 987, y: 75 }, { x: 1057, y: 28 }, { x: 1137, y: 45 },
+                { x: 1197, y: 105 }, { x: 1210, y: 190 }, { x: 1192, y: 270 },
+                { x: 1152, y: 345 }, { x: 1092, y: 410 }, { x: 995, y: 462 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "curl upward through the top flourish",
+              path: [
+                { x: 175, y: 520 }, { x: 220, y: 468 }, { x: 275, y: 463 },
+                { x: 330, y: 490 }, { x: 380, y: 535 }, { x: 430, y: 590 },
+                { x: 485, y: 645 }, { x: 545, y: 685 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "restart and draw the separate downward stem",
+              path: [
+                { x: 882, y: 10 }, { x: 884, y: -35 }, { x: 886, y: -80 },
+                { x: 888, y: -120 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguLetterSource("ఝ"),
+    },
+  ],
+  [
     "telugu:డ",
     {
       script: "telugu",

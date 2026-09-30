@@ -1,0 +1,11 @@
+{
+  "id": "TE-R152-jhankaram-recall",
+  "pathSegment": "TE-PATH-152-BUZZ",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-152-BUZZ",
+      "order": 2
+    }
+  ]
+}
