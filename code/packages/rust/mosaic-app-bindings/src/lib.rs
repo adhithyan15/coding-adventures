@@ -342,10 +342,10 @@ pub fn flutter_pubspec_with_runtime_binding(pubspec_yaml: &str) -> String {
 /// A coordinate for a package the generated manifest already depends on is
 /// left out: YAML refuses a duplicate key, so writing both would break
 /// `pub get` for the whole project. The generated entry wins, because the
-/// generated code was built against it. This is what lets Engram and
-/// photo-picker keep declaring `file_selector` for their own handlers now that
-/// every project depends on it for the platform library (UI87 §7.7): their
-/// range admits the pinned release.
+/// generated code was built against it. This is what lets Engram keep
+/// declaring `file_selector` for its own handler now that every project
+/// depends on it for the platform library (UI87 §7.7): its range admits the
+/// pinned release.
 pub fn flutter_pubspec_with_host_asset_dependencies(
     pubspec_yaml: &str,
     coordinates: &[String],
@@ -1318,9 +1318,9 @@ mod tests {
         );
     }
 
-    /// A package that declares `file_selector` for its own handler (Engram,
-    /// photo-picker) must not produce a second `file_selector:` key, which YAML
-    /// refuses and `pub get` with it. Other coordinates are still added.
+    /// A package that declares `file_selector` for its own handler (Engram)
+    /// must not produce a second `file_selector:` key, which YAML refuses and
+    /// `pub get` with it. Other coordinates are still added.
     #[test]
     fn flutter_host_asset_dependencies_skip_what_the_project_already_declares() {
         let base = flutter_pubspec_with_platform_effects(

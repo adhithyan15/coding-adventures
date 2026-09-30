@@ -7,41 +7,12 @@ license = "MIT"
 [components]
 exports = ["PhotoPickerApp"]
 
-# Flutter carries this app's own `files.open` handler (UI59 §2). Compose,
-# SwiftUI, Qt and XAML answer it from Mosaic's platform library (UI87 §7),
-# and Flutter moves onto its own when that library lands (UI87 §7.4).
-#
-# `[host_assets]` exists ONLY to declare the Flutter handler's third-party pub
-# dependency -- unlike Engram, this app has no legacy hand-written host to
-# retire, so it has no `[host_assets].files` entries at all.
-[host_assets]
-dependencies = [
-  # `PhotoPickerEffects.dart` opens the platform file picker via
-  # `package:file_selector`. No generated Dart uses it, so the emitter has no
-  # reason to declare it -- matching engram-app's own reasoning and its own
-  # `{ backend = "flutter", coordinate = "file_selector: '>=1.0.0 <2.0.0'" }`
-  # entry exactly (same coordinate, for parity/consistency).
-  { backend = "flutter", coordinate = "file_selector: '>=1.0.0 <2.0.0'" },
-]
-
-[host_effects]
-files = [
-  # No Compose, SwiftUI, Qt or XAML entry: Mosaic's platform library answers
-  # `files.open` for every app on those backends (UI87 §7, §7.4a, §7.6), so
-  # this app keeps no copy of its own (UI87 §7.4).
-  # Dart compiles everything under `lib/`, like Kotlin does under
-  # `src/main/kotlin` -- but unlike Kotlin, Dart resolves nothing across
-  # files without an import, so this one still needs an `include` below.
-  # Matches engram-app's own Flutter entry exactly.
-  { backend = "flutter", source = "host/flutter/PhotoPickerEffects.dart", target = "lib/PhotoPickerEffects.dart" },
-]
-handlers = [
-  # `include` names the file relative to `lib/`, matching engram-app's own
-  # Flutter entry -- Dart, unlike Kotlin/Swift, resolves nothing across
-  # files without an explicit import, and `flutter_main_with_host_effects`
-  # refuses to proceed without one.
-  { backend = "flutter", include = "PhotoPickerEffects.dart", install = "installPhotoPickerEffects" },
-]
+# No `[host_effects]` or `[host_assets]`: Mosaic's platform library answers
+# `files.open` on every backend -- Compose, SwiftUI, Qt, XAML and Flutter
+# (UI87 §7) -- and this app claims no effect kinds, so the router sends it
+# there. The per-backend handlers this app used to carry, and the Flutter
+# handler's `file_selector` coordinate (every generated Flutter project now
+# pins it for the library), were retired for it (UI87 §7.4).
 
 [kernel]
 version = "1"

@@ -2,9 +2,9 @@
 
 ## Status
 
-> Since superseded for Compose, Qt and XAML: those per-app handlers were
-> retired for Mosaic's platform libraries (UI87 §7.4), which answer this
-> contract for every app. Flutter's handler remains until its library lands.
+> Since superseded on every backend: the per-app Compose, Qt, XAML and
+> Flutter handlers were retired for Mosaic's platform libraries (UI87 §7.4),
+> which answer this contract for every app.
 
 XAML shipped (PR #15218, merged); Qt shipped (PR #15252, merged);
 Compose shipped (PR #15329, merged); Flutter shipped in this
@@ -519,6 +519,13 @@ messages) is copied unchanged.
    lessons applied from the first draft, same as Qt.
 
 ## 13. Flutter implementation
+
+> **Retired (UI87 §7.4).** This Flutter handler no longer exists, nor does
+> the `file_selector` `[host_assets]` coordinate it needed: Mosaic's Flutter
+> platform library (UI87 §7.7) answers `files.open` for every app, and every
+> generated Flutter project pins `file_selector` for it. `photo-picker-app`
+> claims no effect kinds, so the router sends it there. The section is kept
+> as the design record the library follows.
 
 ### 13.1 Where the handler lives
 
