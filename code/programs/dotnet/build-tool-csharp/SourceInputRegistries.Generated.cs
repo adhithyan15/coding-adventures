@@ -1032,28 +1032,18 @@ internal static class SourceInputRegistryProjection
       "applies_to": {
         "exact_roots": [
           "code/packages/haskell/arithmetic",
-          "code/packages/haskell/aztec-code",
-          "code/packages/haskell/barcode-2d",
           "code/packages/haskell/block-ram",
           "code/packages/haskell/clock",
-          "code/packages/haskell/data-matrix",
           "code/packages/haskell/discrete-waveform",
           "code/packages/haskell/electronics",
           "code/packages/haskell/fpga",
-          "code/packages/haskell/gf256",
           "code/packages/haskell/graph",
           "code/packages/haskell/image-geometric-transforms",
           "code/packages/haskell/image-point-ops",
           "code/packages/haskell/logic-gates",
-          "code/packages/haskell/micro-qr",
           "code/packages/haskell/note-frequency",
-          "code/packages/haskell/paint-instructions",
-          "code/packages/haskell/pdf417",
           "code/packages/haskell/pixel-container",
-          "code/packages/haskell/polynomial",
           "code/packages/haskell/power-supply",
-          "code/packages/haskell/qr-code",
-          "code/packages/haskell/reed-solomon",
           "code/packages/haskell/single-layer-network",
           "code/packages/haskell/two-layer-network"
         ],
@@ -1071,9 +1061,11 @@ internal static class SourceInputRegistryProjection
       "input_origin": "lua",
       "applies_to": {
         "exact_roots": [
+          "code/packages/lua/der_asn1",
           "code/packages/lua/der_tlv",
           "code/packages/lua/image-codec-png",
           "code/packages/lua/pixel-container",
+          "code/packages/lua/x509_extension",
           "code/packages/lua/zip"
         ],
         "descendant_roots": [],

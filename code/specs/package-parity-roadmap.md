@@ -13668,7 +13668,7 @@ cover both exact packages plus the foreign-package rejection boundary.
 The language registry digest is now
 `190d7e79d88d8ab4478d29f1e41d355271b466e8c21ffdaca97ffb443130a530`.
 Its repository-boundary cascade is
-`c36bb88a03fa6bd7585e22139f59f4c64e1f8547dbe64bad234483cc2a7b4566`.
+`4b1830332a5e4510d8195ceb8266e0bfec1610ff680d8a319b6c4513a8bd466e`.
 The Python oracle and already-adopted Go, Haskell, Swift, and shared .NET
 engines consume the same exact-root rules; all five checked projections
 regenerate byte-for-byte. The registry test additionally proves that every
@@ -14437,7 +14437,7 @@ the aggregate repository-source boundary, and ten boundary-derived corpus cases.
 The combined Lua boundary keeps both the new `der_asn1` root from #16100 and
 this branch's `x509_extension` root: 18 boundaries, 21 inputs, 489 scopes, 492
 authorizations, and digest
-`252845441c83ddece72e81504bf59319bb0c469e0e0d48b567c3eb1a4c1225b3`. The
+`4b1830332a5e4510d8195ceb8266e0bfec1610ff680d8a319b6c4513a8bd466e`. The
 disjoint official OCaml content-addressed archive mirror repair is preserved.
 The regenerated exact-main inventory is topology-neutral at 1,470 identities,
 4,723 slots, and zero collisions; the branch remains 1,470 identities, 4,737

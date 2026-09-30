@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Regenerated the repository source-input boundary projection against the
+  neutral fixture: removed the ten Haskell roots that now carry their own
+  `cabal.project` (#16153) and added the `lua/der_asn1` and
+  `lua/x509_extension` lint roots the fixture gained earlier without this
+  projection being regenerated. Digest updated to
+  `4b1830332a5e4510d8195ceb8266e0bfec1610ff680d8a319b6c4513a8bd466e`.
+
 - Regenerated the source-input registry projection to pick up the
   `forme-deploy-runner-fs-adapter` and `forme-deploy-runner-github-pages-adapter`
   TypeScript roots (added on main without regenerating this checked
