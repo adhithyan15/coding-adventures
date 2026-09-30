@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-30 (flex cross-axis alignment)
+
+- Row and Column parts now lower Mosaic's cross-axis centering styles to child `Layout.alignment` bindings: `center-vertical` for rows, `center-horizontal` for columns, and `center` for either. Unsupported values remain reported degradations.
+- Fresh TaskApp generation removes all 22 Qt `align` drops, reducing its Qt style-degradation inventory from 185 to 163. Engram's Qt and Flutter `align` pins are retired after fresh strict generation, while main-axis and Text semantics remain tracked in #16293.
+
 ## 2026-09-30 (host-control geometry)
 
 - Qt host controls now lower expressible numeric `width` and `height` styles to matching `implicit*` and `Layout.preferred*` bindings, including state-layer overrides. Percentage and intrinsic keyword sizes remain reported degradations rather than being presented as native coverage.
