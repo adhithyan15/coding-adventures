@@ -1,26 +1,24 @@
 # @version 1
 #
-# Mermaid 11.16.1 event-modeling token grammar. This first native slice covers
-# timeline/reset frames, compact and relaxed entity kinds, explicit frame
-# sources, standalone entities, inline and block data payloads, notes,
-# Given/When/Then scenarios, titles, and accessibility metadata.
+# Mermaid 11.16.1 event-modeling token grammar.
 
 case_sensitive: true
 
 skip:
   WHITESPACE          = /[ \t]+/
   COMMENT             = /%%[^\r\n]*/
+  ML_COMMENT          = /\/\*[\s\S]*?\*\//
   SL_COMMENT          = /\/\/[^\r\n]*/
 
 NEWLINE               = /\r?\n/
 SEMICOLON             = ";"
 HEADER                = "eventmodeling"
 ACC_DESCR_BLOCK       = /accDescr[ \t]*\{[^}]*\}/
-ACC_TITLE_STATEMENT   = /accTitle[ \t]*:[^\r\n;%]+/
-ACC_DESCR_STATEMENT   = /accDescr[ \t]*:[^\r\n;%]+/
-TITLE_STATEMENT       = /title[ \t]+[^\r\n;%]+/
-DATA_BLOCK            = /data[ \t]+[_A-Za-z][A-Za-z0-9_]*(?:[ \t]+`(?:json|jsobj|figma|salt|uri|md|html|text)`)?[ \t]*\{(?:[^{}]|\{[^{}]*\})*\}/
-NOTE_BLOCK            = /note[ \t]+[0-9]{1,3}(?:[ \t]+`(?:json|jsobj|figma|salt|uri|md|html|text)`)?[ \t]*\{(?:[^{}]|\{[^{}]*\})*\}/
+ACC_TITLE_STATEMENT   = /accTitle[ \t]*:[^\r\n;%]*/
+ACC_DESCR_STATEMENT   = /accDescr[ \t]*:[^\r\n;%]*/
+TITLE_STATEMENT       = /title(?:[ \t]+[^\r\n;%]*)?/
+DATA_BLOCK            = /data[ \t]+[_A-Za-z][A-Za-z0-9_]*(?:[ \t]+`(?:json|jsobj|figma|salt|uri|md|html|text)`)?[ \t\r\n]*\{(?:[^{}]|\{(?:[^{}]|\{[^{}]*\})*\})*\}/
+NOTE_BLOCK            = /note[ \t]+[0-9]{1,3}(?:[ \t]+`(?:json|jsobj|figma|salt|uri|md|html|text)`)?[ \t\r\n]*\{(?:[^{}]|\{(?:[^{}]|\{[^{}]*\})*\})*\}/
 GWT_BLOCK             = /gwt[ \t\r\n]+[0-9]{1,3}[ \t\r\n]+given(?:[ \t\r\n]+(?:rmo|readmodel|ui|cmd|command|evt|event|pcr|processor)[ \t\r\n]+[_A-Za-z][A-Za-z0-9_]*)+(?:[ \t\r\n]+when(?:[ \t\r\n]+(?:rmo|readmodel|ui|cmd|command|evt|event|pcr|processor)[ \t\r\n]+[_A-Za-z][A-Za-z0-9_]*)+)?[ \t\r\n]+then(?:[ \t\r\n]+(?:rmo|readmodel|ui|cmd|command|evt|event|pcr|processor)[ \t\r\n]+[_A-Za-z][A-Za-z0-9_]*)+/
 ENTITY_STATEMENT      = /entity[ \t]+[_A-Za-z][A-Za-z0-9_]*(?:\.[_A-Za-z][A-Za-z0-9_]*)*/
 DATA_REFERENCE        = /\x5B\x5B[_A-Za-z][A-Za-z0-9_]*\x5D\x5D/

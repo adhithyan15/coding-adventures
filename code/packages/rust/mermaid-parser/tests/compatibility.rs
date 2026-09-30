@@ -56,6 +56,10 @@ const EVENTMODELING_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/eventmodeling-11.16.1-corpus.json"
 ));
+const EVENTMODELING_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/eventmodeling-11.16.1-visual-corpus.json"
+));
 const TREEMAP_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/treemap-11.16.1-corpus.json"
@@ -180,16 +184,16 @@ fn pinned_treemap_subset_corpus_parses_to_hierarchy_ir() {
 }
 
 #[test]
-fn pinned_event_modeling_subset_corpus_parses_to_semantic_ir() {
+fn pinned_event_modeling_corpus_matches_upstream_acceptance() {
     let corpus: Value = serde_json::from_str(EVENTMODELING_CORPUS)
         .expect("event modeling corpus must be JSON");
     assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
-    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
+    assert_eq!(corpus["level"].as_str(), Some("full"));
+    for fixture in corpus["valid"].as_array().expect("valid fixture array") {
         let id = fixture["id"].as_str().expect("fixture id");
         let source = fixture["source"].as_str().expect("fixture source");
         let diagram = parse_event_modeling(source)
             .unwrap_or_else(|error| panic!("event modeling fixture {id} failed: {error}"));
-        assert!(!diagram.frames.is_empty());
         if id == "inline-data" {
             assert_eq!(diagram.frames[1].data.as_deref(), Some("description: string"));
             assert_eq!(diagram.frames[2].data_type.as_deref(), Some("json"));
@@ -241,28 +245,22 @@ fn pinned_event_modeling_subset_corpus_parses_to_semantic_ir() {
             assert_eq!(diagram.config.styles.processor_stroke, "#223344");
             assert_eq!(diagram.config.styles.read_model_fill, "#334455");
             assert_eq!(diagram.config.styles.read_model_stroke, "#445566");
+        } else if id == "header-only" {
+            assert!(diagram.frames.is_empty());
+        } else if id == "upstream-complex-model" {
+            assert_eq!(diagram.frames.len(), 6);
+            assert_eq!(diagram.data_blocks.len(), 3);
+            assert_eq!(diagram.notes.len(), 2);
+            assert_eq!(diagram.gwt.len(), 2);
+        } else if id == "separated-block-opening-and-data-types" {
+            assert_eq!(diagram.data_blocks[0].data_type.as_deref(), Some("html"));
+            assert_eq!(diagram.notes[0].data_type.as_deref(), Some("json"));
         }
     }
-    assert!(parse_event_modeling(
-        "eventmodeling\ntf 01 cmd AddItem [[MissingData]]"
-    ).is_err());
-    assert!(parse_event_modeling(
-        "eventmodeling\ntf 01 cmd AddItem [[Payload]]\ndata Payload { one: 1 }\ndata Payload { two: 2 }"
-    ).is_err());
-    assert!(parse_event_modeling(
-        "eventmodeling\ntf 01 cmd AddItem\nnote 02 { Missing frame }"
-    ).is_err());
-    assert!(parse_event_modeling(
-        "eventmodeling\ntf 01 cmd AddItem\ngwt 02 given evt Started then evt Finished"
-    ).is_err());
-    for invalid in [
-        "eventmodeling\nrf 01 rmo View\nrf 02 evt Changed ->> 01",
-        "eventmodeling\nrf 01 evt Changed\nrf 02 cmd Update ->> 01",
-        "eventmodeling\nrf 01 evt Changed\nrf 02 ui Screen ->> 01",
-        "eventmodeling\nrf 01 pcr Projector\nrf 02 rmo View ->> 01",
-        "eventmodeling\nrf 01 evt Changed\nrf 02 pcr Projector ->> 01",
-    ] {
-        assert!(parse_event_modeling(invalid).is_err(), "accepted invalid source types: {invalid}");
+    for fixture in corpus["invalid"].as_array().expect("invalid fixture array") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let source = fixture["source"].as_str().expect("fixture source");
+        assert!(parse_event_modeling(source).is_err(), "invalid fixture {id} parsed");
     }
     let error = parse_event_modeling(
         "eventmodeling\nrf 01 evt Changed\nrf 02 cmd Update\nrf 03 pcr Projector ->> 01 ->> 02",
@@ -271,6 +269,40 @@ fn pinned_event_modeling_subset_corpus_parses_to_semantic_ir() {
     assert_eq!(error.message.lines().count(), 2);
     assert!(error.message.contains("not from 'evt'"));
     assert!(error.message.contains("not from 'cmd'"));
+}
+
+#[test]
+fn event_modeling_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
+    let manifest: Value =
+        serde_json::from_str(COMPATIBILITY_MANIFEST).expect("compatibility manifest must be JSON");
+    let family = manifest["families"]
+        .as_array()
+        .expect("families array")
+        .iter()
+        .find(|family| family["id"] == "eventmodeling")
+        .expect("event modeling family");
+    assert_eq!(family["status"].as_str(), Some("full"));
+
+    let syntax: Value =
+        serde_json::from_str(EVENTMODELING_CORPUS).expect("event modeling corpus must be JSON");
+    let visual: Value = serde_json::from_str(EVENTMODELING_VISUAL_CORPUS)
+        .expect("event modeling visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let valid_ids = syntax["valid"]
+        .as_array()
+        .expect("valid fixture array")
+        .iter()
+        .map(|fixture| fixture["id"].as_str().expect("fixture id"))
+        .collect::<BTreeSet<_>>();
+    let visual_ids = visual["fixtures"]
+        .as_array()
+        .expect("visual fixture array")
+        .iter()
+        .map(|id| id.as_str().expect("visual fixture id"))
+        .collect::<BTreeSet<_>>();
+    assert!(!syntax["invalid"].as_array().expect("invalid fixture array").is_empty());
+    assert!(!visual_ids.is_empty());
+    assert!(visual_ids.is_subset(&valid_ids));
 }
 
 #[test]

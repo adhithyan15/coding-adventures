@@ -4344,13 +4344,6 @@ pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseErro
             });
         }
     }
-    if diagram.frames.is_empty() {
-        return Err(ParseError {
-            message: "event-modeling diagrams require at least one frame".into(),
-            line: 1,
-            col: 1,
-        });
-    }
     Ok(diagram)
 }
 
