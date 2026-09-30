@@ -1,5 +1,14 @@
 # B07 — Build Shared-Directory Safety
 
+## CI test portability repair (2026-09-30)
+
+The Go executor's manifest probe tests must compile on every supported CI
+host. The FIFO case needs `syscall.Mkfifo`, which does not exist on Windows;
+that case belongs in a `!windows` test file. Keep the symlink and package-walk
+cases in a common test file so they still compile and execute on Windows.
+Verify the executor tests on the host and compile them for Windows, without
+removing the FIFO assertion on Unix.
+
 ## Overview
 
 The build-tool can schedule two packages concurrently when one of them
