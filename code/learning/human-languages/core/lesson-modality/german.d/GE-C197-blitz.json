@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C197-blitz",
+    "language": "german",
+    "chapter": 197,
+    "sequence": 10090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:107340834bc5810a"
+  },
+  "findings": []
+}

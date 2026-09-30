@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:bb125252ecf60e25",
+  "lessonIds": [
+    "GE-C192-abfahrt",
+    "GE-C192-ankunft",
+    "GE-C192-abflug",
+    "GE-C192-verspaetung",
+    "GE-C192-gleis"
+  ],
+  "tex": "german/book/chapters/ch192-a-departure-an-arrival-a-take-off-a-delay-a-platform.tex"
+}

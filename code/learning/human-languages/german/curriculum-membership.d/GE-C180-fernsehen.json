@@ -1,0 +1,11 @@
+{
+  "id": "GE-C180-fernsehen",
+  "pathSegment": "GE-PATH-180-VERB180",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-180-VERB180",
+      "order": 2
+    }
+  ]
+}

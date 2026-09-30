@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C181-fruehstuecken",
+    "language": "german",
+    "chapter": 181,
+    "sequence": 8880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0482921852b5d78"
+  },
+  "findings": []
+}

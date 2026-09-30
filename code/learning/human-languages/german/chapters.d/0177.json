@@ -1,0 +1,19 @@
+{
+  "chapter": 177,
+  "title": "To apply, To bend, To fry, To spell, To print",
+  "label": "ch:ge-to-apply-to-bend-to-fry-to-spell-to-print",
+  "canDo": "I can say to apply, to bend, to fry, to spell and to print.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C177-drucken",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 177: i can say to apply, to bend, to fry, to spell and to print.",
+    "assesses": [
+      "GE-LEX-C177-VERB177-03",
+      "GE-LEX-C177-VERB177-04",
+      "GE-LEX-C177-VERB177-05"
+    ]
+  }
+}

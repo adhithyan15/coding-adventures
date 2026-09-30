@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:61dde0cfb2278bad",
+  "lessonIds": [
+    "GE-C205-knochen",
+    "GE-C205-zahnarzt",
+    "GE-C205-sprechstunde",
+    "GE-C205-untersuchung",
+    "GE-C205-verletzung",
+    "GE-R205-first-pass-words-from-chapters-201-202",
+    "GE-R205-second-pass-words-from-chapters-203-205"
+  ],
+  "tex": "german/book/chapters/ch205-a-bone-a-dentist-surgery-hours-an-examination-an-injury.tex"
+}

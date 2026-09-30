@@ -1,0 +1,11 @@
+{
+  "id": "GE-C207-krankenwagen",
+  "pathSegment": "GE-PATH-207-THING207",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-207-THING207",
+      "order": 0
+    }
+  ]
+}

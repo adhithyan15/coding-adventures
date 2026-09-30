@@ -1,0 +1,11 @@
+{
+  "id": "GE-C176-behalten",
+  "pathSegment": "GE-PATH-176-VERB176",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-176-VERB176",
+      "order": 2
+    }
+  ]
+}

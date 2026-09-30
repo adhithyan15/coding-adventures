@@ -1,0 +1,11 @@
+{
+  "id": "GE-R205-first-pass-words-from-chapters-201-202",
+  "pathSegment": "GE-PATH-205-THING205",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-205-THING205",
+      "order": 5
+    }
+  ]
+}

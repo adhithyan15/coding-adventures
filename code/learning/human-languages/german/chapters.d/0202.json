@@ -1,0 +1,19 @@
+{
+  "chapter": 202,
+  "title": "A vacuum cleaner, An iron, Shampoo, A brush, A suit",
+  "label": "ch:ge-a-vacuum-cleaner-an-iron-shampoo-a-brush-a-suit",
+  "canDo": "I can say a vacuum cleaner, an iron, shampoo, a brush and a suit.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C202-anzug",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 202: i can say a vacuum cleaner, an iron, shampoo, a brush and a suit.",
+    "assesses": [
+      "GE-LEX-C202-THING202-03",
+      "GE-LEX-C202-THING202-04",
+      "GE-LEX-C202-THING202-05"
+    ]
+  }
+}

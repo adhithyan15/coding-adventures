@@ -1,0 +1,11 @@
+{
+  "id": "GE-C187-stecken",
+  "pathSegment": "GE-PATH-187-VERB187",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-187-VERB187",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C209-partei",
+  "pathSegment": "GE-PATH-209-THING209",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-209-THING209",
+      "order": 2
+    }
+  ]
+}

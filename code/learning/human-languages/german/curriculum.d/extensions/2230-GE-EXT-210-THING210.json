@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-210-THING210",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say industry, a workshop, a shop, a butcher's and a department store.",
+  "prerequisites": []
+}

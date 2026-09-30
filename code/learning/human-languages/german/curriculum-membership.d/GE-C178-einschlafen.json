@@ -1,0 +1,11 @@
+{
+  "id": "GE-C178-einschlafen",
+  "pathSegment": "GE-PATH-178-VERB178",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-178-VERB178",
+      "order": 1
+    }
+  ]
+}

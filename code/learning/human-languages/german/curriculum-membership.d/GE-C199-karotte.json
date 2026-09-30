@@ -1,0 +1,11 @@
+{
+  "id": "GE-C199-karotte",
+  "pathSegment": "GE-PATH-199-THING199",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-199-THING199",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-192-THING192",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a departure, an arrival, a take-off, a delay and a platform.",
+  "prerequisites": []
+}

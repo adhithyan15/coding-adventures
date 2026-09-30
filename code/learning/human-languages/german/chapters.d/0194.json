@@ -1,0 +1,19 @@
+{
+  "chapter": 194,
+  "title": "A rucksack, A sight, A city map, A round trip, A market square",
+  "label": "ch:ge-a-rucksack-a-sight-a-city-map-a-round-trip-a-market-square",
+  "canDo": "I can say a rucksack, a sight, a city map, a round trip and a market square.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C194-marktplatz",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 194: i can say a rucksack, a sight, a city map, a round trip and a market square.",
+    "assesses": [
+      "GE-LEX-C194-THING194-03",
+      "GE-LEX-C194-THING194-04",
+      "GE-LEX-C194-THING194-05"
+    ]
+  }
+}

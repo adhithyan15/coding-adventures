@@ -1,0 +1,11 @@
+{
+  "id": "GE-C200-trinkgeld",
+  "pathSegment": "GE-PATH-200-THING200",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-200-THING200",
+      "order": 2
+    }
+  ]
+}

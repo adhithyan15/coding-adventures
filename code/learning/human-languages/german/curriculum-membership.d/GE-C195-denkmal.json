@@ -1,0 +1,11 @@
+{
+  "id": "GE-C195-denkmal",
+  "pathSegment": "GE-PATH-195-THING195",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-195-THING195",
+      "order": 2
+    }
+  ]
+}

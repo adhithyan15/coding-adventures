@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:a4b99f523a9c4a82",
+  "lessonIds": [
+    "GE-C202-staubsauger",
+    "GE-C202-buegeleisen",
+    "GE-C202-shampoo",
+    "GE-C202-buerste",
+    "GE-C202-anzug"
+  ],
+  "tex": "german/book/chapters/ch202-a-vacuum-cleaner-an-iron-shampoo-a-brush-a-suit.tex"
+}

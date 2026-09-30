@@ -1,0 +1,11 @@
+{
+  "id": "GE-C191-wecken",
+  "pathSegment": "GE-PATH-191-VERB191",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-191-VERB191",
+      "order": 2
+    }
+  ]
+}

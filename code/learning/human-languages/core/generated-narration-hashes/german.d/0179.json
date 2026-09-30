@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:e8ddeb50945ba850",
+  "lessonIds": [
+    "GE-C179-empfangen",
+    "GE-C179-erinnern",
+    "GE-C179-erlauben",
+    "GE-C179-ernaehren",
+    "GE-C179-erreichen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch179.txt",
+  "json": "german/narration/ch179.json",
+  "textHash": "fnv1a64:82692a7ec54988cf",
+  "jsonHash": "fnv1a64:f8fd5d6897d4f178",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C201-spuelmaschine",
+  "pathSegment": "GE-PATH-201-THING201",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-201-THING201",
+      "order": 4
+    }
+  ]
+}

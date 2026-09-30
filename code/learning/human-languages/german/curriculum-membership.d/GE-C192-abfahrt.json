@@ -1,0 +1,11 @@
+{
+  "id": "GE-C192-abfahrt",
+  "pathSegment": "GE-PATH-192-THING192",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-192-THING192",
+      "order": 0
+    }
+  ]
+}

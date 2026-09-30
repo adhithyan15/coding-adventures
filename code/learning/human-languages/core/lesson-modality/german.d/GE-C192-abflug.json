@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C192-abflug",
+    "language": "german",
+    "chapter": 192,
+    "sequence": 9820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b7f3f6ce09c1a91c"
+  },
+  "findings": []
+}

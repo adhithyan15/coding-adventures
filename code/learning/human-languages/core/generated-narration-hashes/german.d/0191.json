@@ -1,0 +1,21 @@
+{
+  "language": "german",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:677668b4ff64c65e",
+  "lessonIds": [
+    "GE-C191-vorbereiten",
+    "GE-C191-waehlen",
+    "GE-C191-wecken",
+    "GE-C191-wiegen",
+    "GE-C191-zeichnen",
+    "GE-R191-first-pass-words-from-chapters-183-186",
+    "GE-R191-second-pass-words-from-chapters-187-191"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "german/narration/ch191.txt",
+  "json": "german/narration/ch191.json",
+  "textHash": "fnv1a64:e7b0ee4db165a19b",
+  "jsonHash": "fnv1a64:e1754d4621df08a6",
+  "findings": []
+}

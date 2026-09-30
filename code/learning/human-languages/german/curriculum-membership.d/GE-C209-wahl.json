@@ -1,0 +1,11 @@
+{
+  "id": "GE-C209-wahl",
+  "pathSegment": "GE-PATH-209-THING209",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-209-THING209",
+      "order": 1
+    }
+  ]
+}

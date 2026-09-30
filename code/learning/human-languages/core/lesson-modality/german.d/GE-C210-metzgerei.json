@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C210-metzgerei",
+    "language": "german",
+    "chapter": 210,
+    "sequence": 11070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7fdc7a550cc76cb2"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 176,
+  "title": "To mean, To hurry, To keep, To describe, To enter",
+  "label": "ch:ge-to-mean-to-hurry-to-keep-to-describe-to-enter",
+  "canDo": "I can say to mean, to hurry, to keep, to describe and to enter.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C176-betreten",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 176: i can say to mean, to hurry, to keep, to describe and to enter.",
+    "assesses": [
+      "GE-LEX-C176-VERB176-03",
+      "GE-LEX-C176-VERB176-04",
+      "GE-LEX-C176-VERB176-05"
+    ]
+  }
+}

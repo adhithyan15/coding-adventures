@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:b8e473243e6febae",
+  "lessonIds": [
+    "GE-C198-tier",
+    "GE-C198-hase",
+    "GE-C198-fliege",
+    "GE-C198-schmetterling",
+    "GE-C198-pflanze"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch198.txt",
+  "json": "german/narration/ch198.json",
+  "textHash": "fnv1a64:1a485002915bf847",
+  "jsonHash": "fnv1a64:ca06122821b785ce",
+  "findings": []
+}

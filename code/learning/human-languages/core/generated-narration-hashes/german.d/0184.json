@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 184,
+  "sourceHash": "fnv1a64:15c9331f3cfe0503",
+  "lessonIds": [
+    "GE-C184-parken",
+    "GE-C184-pflegen",
+    "GE-C184-pfluecken",
+    "GE-C184-pruefen",
+    "GE-C184-reinigen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch184.txt",
+  "json": "german/narration/ch184.json",
+  "textHash": "fnv1a64:16669e87ba26fa26",
+  "jsonHash": "fnv1a64:baf3ffcc7fde37fd",
+  "findings": []
+}

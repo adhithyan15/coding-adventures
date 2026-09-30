@@ -1,0 +1,19 @@
+{
+  "chapter": 175,
+  "title": "To fill in, To rest, To bake, To bathe, To build",
+  "label": "ch:ge-to-fill-in-to-rest-to-bake-to-bathe-to-build",
+  "canDo": "I can say to fill in, to rest, to bake, to bathe and to build.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C175-bauen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 175: i can say to fill in, to rest, to bake, to bathe and to build.",
+    "assesses": [
+      "GE-LEX-C175-VERB175-03",
+      "GE-LEX-C175-VERB175-04",
+      "GE-LEX-C175-VERB175-05"
+    ]
+  }
+}

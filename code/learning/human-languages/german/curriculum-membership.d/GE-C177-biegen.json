@@ -1,0 +1,11 @@
+{
+  "id": "GE-C177-biegen",
+  "pathSegment": "GE-PATH-177-VERB177",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-177-VERB177",
+      "order": 1
+    }
+  ]
+}

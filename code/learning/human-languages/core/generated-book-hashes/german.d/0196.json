@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:7bae98d68d375a51",
+  "lessonIds": [
+    "GE-C196-hafen",
+    "GE-C196-ufer",
+    "GE-C196-strand",
+    "GE-C196-wiese",
+    "GE-C196-tal"
+  ],
+  "tex": "german/book/chapters/ch196-a-harbour-a-bank-a-beach-a-meadow-a-valley.tex"
+}

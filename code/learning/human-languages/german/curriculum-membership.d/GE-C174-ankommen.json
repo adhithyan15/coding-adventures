@@ -1,0 +1,11 @@
+{
+  "id": "GE-C174-ankommen",
+  "pathSegment": "GE-PATH-174-VERB174",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-174-VERB174",
+      "order": 2
+    }
+  ]
+}

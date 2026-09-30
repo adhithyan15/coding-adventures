@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:245bc154ac9eb8ca",
+  "lessonIds": [
+    "GE-C204-leder",
+    "GE-C204-holz",
+    "GE-C204-metall",
+    "GE-C204-kunststoff",
+    "GE-C204-koerper"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch204.txt",
+  "json": "german/narration/ch204.json",
+  "textHash": "fnv1a64:6255ab00ec978daf",
+  "jsonHash": "fnv1a64:437032c5f8217f13",
+  "findings": []
+}

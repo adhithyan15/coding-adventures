@@ -1,0 +1,11 @@
+{
+  "id": "GE-C189-verbinden",
+  "pathSegment": "GE-PATH-189-VERB189",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-189-VERB189",
+      "order": 4
+    }
+  ]
+}

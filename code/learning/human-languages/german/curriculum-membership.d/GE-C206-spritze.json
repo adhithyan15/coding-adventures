@@ -1,0 +1,11 @@
+{
+  "id": "GE-C206-spritze",
+  "pathSegment": "GE-PATH-206-THING206",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-206-THING206",
+      "order": 3
+    }
+  ]
+}

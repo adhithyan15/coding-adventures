@@ -1,0 +1,11 @@
+{
+  "id": "GE-C203-seide",
+  "pathSegment": "GE-PATH-203-THING203",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-203-THING203",
+      "order": 4
+    }
+  ]
+}

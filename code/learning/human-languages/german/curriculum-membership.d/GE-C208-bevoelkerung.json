@@ -1,0 +1,11 @@
+{
+  "id": "GE-C208-bevoelkerung",
+  "pathSegment": "GE-PATH-208-THING208",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-208-THING208",
+      "order": 4
+    }
+  ]
+}

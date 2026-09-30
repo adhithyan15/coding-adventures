@@ -1,0 +1,11 @@
+{
+  "id": "GE-C206-wunde",
+  "pathSegment": "GE-PATH-206-THING206",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-206-THING206",
+      "order": 0
+    }
+  ]
+}

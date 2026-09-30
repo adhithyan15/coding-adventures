@@ -1,0 +1,11 @@
+{
+  "id": "GE-C200-bestellung",
+  "pathSegment": "GE-PATH-200-THING200",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-200-THING200",
+      "order": 1
+    }
+  ]
+}

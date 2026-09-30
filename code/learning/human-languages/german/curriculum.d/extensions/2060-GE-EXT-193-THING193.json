@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-193-THING193",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a timetable, a return journey, accommodation, a youth hostel and luggage.",
+  "prerequisites": []
+}

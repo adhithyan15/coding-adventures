@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 181,
+  "sourceHash": "fnv1a64:ad1b39e31faae36b",
+  "lessonIds": [
+    "GE-C181-fotografieren",
+    "GE-C181-fruehstuecken",
+    "GE-C181-giessen",
+    "GE-C181-gruessen",
+    "GE-C181-informieren"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch181.txt",
+  "json": "german/narration/ch181.json",
+  "textHash": "fnv1a64:dff7f87a266313ad",
+  "jsonHash": "fnv1a64:05ba15856ef34766",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:f8c700758aa606f3",
+  "lessonIds": [
+    "GE-C178-duschen",
+    "GE-C178-einschlafen",
+    "GE-C178-einsteigen",
+    "GE-C178-aussteigen",
+    "GE-C178-umsteigen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch178.txt",
+  "json": "german/narration/ch178.json",
+  "textHash": "fnv1a64:f34a2585d8b7adaa",
+  "jsonHash": "fnv1a64:8412d8f422a19629",
+  "findings": []
+}

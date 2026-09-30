@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C192-ankunft",
+    "language": "german",
+    "chapter": 192,
+    "sequence": 9810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2203ab3c03e8e582"
+  },
+  "findings": []
+}
