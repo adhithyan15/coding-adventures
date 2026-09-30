@@ -15324,6 +15324,12 @@ The branch rebased cleanly. The intervening package changes remain inside two
 existing TypeScript identities and do not alter any package root or manifest,
 so the collision-clean schema-3 inventory totals remain unchanged.
 
+Ready-for-review PR #16327 publishes the contract from validated head
+`183cd17d2b3ebe4006d80820528f61ddad91dca9`. GitHub reports the branch
+mergeable but blocked while initial CI, CodeQL, and human-language detection
+are queued or in progress. Guarded auto-merge remains disabled until every
+required check is terminal and acceptable and the branch remains conflict-free.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
