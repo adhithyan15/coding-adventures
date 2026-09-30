@@ -1,0 +1,19 @@
+{
+  "chapter": 169,
+  "title": "Result, Mark, Row, Dictionary, Writing",
+  "label": "ch:sa-result-mark-row-dictionary-writing",
+  "canDo": "I can say a result, a mark, a row, a dictionary and writing.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C169-lekhanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 169: I can say a result, a mark, a row, a dictionary and writing.",
+    "assesses": [
+      "SA-LEX-C169-SCH169-03",
+      "SA-LEX-C169-SCH169-04",
+      "SA-LEX-C169-SCH169-05"
+    ]
+  }
+}

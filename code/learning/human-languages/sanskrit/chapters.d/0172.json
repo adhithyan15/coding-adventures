@@ -1,0 +1,19 @@
+{
+  "chapter": 172,
+  "title": "Passenger, Ticket, Tour, Tourism, Tourist",
+  "label": "ch:sa-passenger-ticket-tour-tourism-tourist",
+  "canDo": "I can say a passenger, a ticket, a tour, tourism and a tourist.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-R172-second-pass-words-from-chapters-170-172",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 172: I can say a passenger, a ticket, a tour, tourism and a tourist.",
+    "assesses": [
+      "SA-LEX-C172-TRV172-03",
+      "SA-LEX-C172-TRV172-04",
+      "SA-LEX-C172-TRV172-05"
+    ]
+  }
+}

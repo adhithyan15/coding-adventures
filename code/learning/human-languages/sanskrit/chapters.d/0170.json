@@ -1,0 +1,19 @@
+{
+  "chapter": 170,
+  "title": "Work, Action, Occupation, Livelihood, Service",
+  "label": "ch:sa-work-action-occupation-livelihood-service",
+  "canDo": "I can say work, an action, an occupation, a livelihood and service.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C170-seva",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 170: I can say work, an action, an occupation, a livelihood and service.",
+    "assesses": [
+      "SA-LEX-C170-WRK170-03",
+      "SA-LEX-C170-WRK170-04",
+      "SA-LEX-C170-WRK170-05"
+    ]
+  }
+}

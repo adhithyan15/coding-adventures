@@ -1,0 +1,11 @@
+{
+  "id": "SA-C141-vasati",
+  "pathSegment": "SA-PATH-141-ACT141",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-141-ACT141",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 149,
+  "title": "Worker, Labourer, Official, Clerk, Leader",
+  "label": "ch:sa-worker-labourer-official-clerk-leader",
+  "canDo": "I can say a worker, a labourer, an official, a clerk and a leader.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "SA-R149-second-pass-words-from-chapters-145-149",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 149: I can say a worker, a labourer, an official, a clerk and a leader.",
+    "assesses": [
+      "SA-LEX-C149-PPL149-03",
+      "SA-LEX-C149-PPL149-04",
+      "SA-LEX-C149-PPL149-05"
+    ]
+  }
+}

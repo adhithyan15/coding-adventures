@@ -1,0 +1,11 @@
+{
+  "id": "SA-C169-ankah",
+  "pathSegment": "SA-PATH-169-SCH169",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-169-SCH169",
+      "order": 1
+    }
+  ]
+}

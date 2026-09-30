@@ -110,7 +110,10 @@ it("pins Sanskrit lesson-content budgets", () =>
     // the future and reading practical texts. Ten word lessons and two reviews;
     // they declare no idioms, senses or culture claims, so the three content
     // totals below stay where they were.
-    lessons: 776,
+    // 776 -> 944: the first Sanskrit A2 vocabulary tranche, chapters 141-172.
+    // 160 word lessons in thirty-two chapters, plus two reviews per run of at
+    // most nine chapters. None declares an idiom, a sense or a culture claim.
+    lessons: 944,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C148-malakarah",
+  "pathSegment": "SA-PATH-148-PPL148",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-148-PPL148",
+      "order": 2
+    }
+  ]
+}

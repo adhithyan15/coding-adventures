@@ -1,0 +1,11 @@
+{
+  "id": "SA-C153-ubhayatah",
+  "pathSegment": "SA-PATH-153-LOC153",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-153-LOC153",
+      "order": 2
+    }
+  ]
+}

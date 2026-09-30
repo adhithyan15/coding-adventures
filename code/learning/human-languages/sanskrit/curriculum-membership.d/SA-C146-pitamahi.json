@@ -1,0 +1,11 @@
+{
+  "id": "SA-C146-pitamahi",
+  "pathSegment": "SA-PATH-146-PPL146",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-146-PPL146",
+      "order": 2
+    }
+  ]
+}

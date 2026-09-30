@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:00387faeb9dd658d",
+  "lessonIds": [
+    "SA-C167-kacchapah",
+    "SA-C167-mahisi",
+    "SA-C167-vatsah",
+    "SA-C167-aja",
+    "SA-C167-asva",
+    "SA-R167-first-pass-words-from-chapters-159-162",
+    "SA-R167-second-pass-words-from-chapters-163-167"
+  ],
+  "tex": "sanskrit/book/chapters/ch167-turtle-she-buffalo-calf-she-goat-mare.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C169-parinamah",
+  "pathSegment": "SA-PATH-169-SCH169",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-169-SCH169",
+      "order": 0
+    }
+  ]
+}

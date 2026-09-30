@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:f18b91ba9e9c864a",
+  "lessonIds": [
+    "SA-C163-krida",
+    "SA-C163-dyutam",
+    "SA-C163-utsavah",
+    "SA-C163-vivahah",
+    "SA-C163-upaharah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch163.txt",
+  "json": "sanskrit/narration/ch163.json",
+  "textHash": "fnv1a64:6aa98f48837225b7",
+  "jsonHash": "fnv1a64:b762ea852b3b7ba7",
+  "findings": []
+}

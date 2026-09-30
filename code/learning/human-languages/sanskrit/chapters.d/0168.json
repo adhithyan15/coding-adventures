@@ -1,0 +1,19 @@
+{
+  "chapter": 168,
+  "title": "Class, Chapter, Syllable, Colour, Word",
+  "label": "ch:sa-class-chapter-syllable-colour-word",
+  "canDo": "I can say a class, a chapter, a syllable, a colour and a word.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C168-padam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 168: I can say a class, a chapter, a syllable, a colour and a word.",
+    "assesses": [
+      "SA-LEX-C168-SCH168-03",
+      "SA-LEX-C168-SCH168-04",
+      "SA-LEX-C168-SCH168-05"
+    ]
+  }
+}

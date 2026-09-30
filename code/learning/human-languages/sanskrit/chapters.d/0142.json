@@ -1,0 +1,19 @@
+{
+  "chapter": 142,
+  "title": "Is pleased, Gets tired, Composes, Shows, Worships",
+  "label": "ch:sa-is-pleased-gets-tired-composes-shows-worships",
+  "canDo": "I can say is pleased, gets tired, composes, shows and worships.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C142-pujayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 142: I can say is pleased, gets tired, composes, shows and worships.",
+    "assesses": [
+      "SA-LEX-C142-ACT142-03",
+      "SA-LEX-C142-ACT142-04",
+      "SA-LEX-C142-ACT142-05"
+    ]
+  }
+}

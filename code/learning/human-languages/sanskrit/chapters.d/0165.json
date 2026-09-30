@@ -1,0 +1,19 @@
+{
+  "chapter": 165,
+  "title": "Dust, Smoke, Flame, Live coal, Iron",
+  "label": "ch:sa-dust-smoke-flame-live-coal-iron",
+  "canDo": "I can say dust, smoke, a flame, a live coal and iron.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C165-lauham",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 165: I can say dust, smoke, a flame, a live coal and iron.",
+    "assesses": [
+      "SA-LEX-C165-THG165-03",
+      "SA-LEX-C165-THG165-04",
+      "SA-LEX-C165-THG165-05"
+    ]
+  }
+}

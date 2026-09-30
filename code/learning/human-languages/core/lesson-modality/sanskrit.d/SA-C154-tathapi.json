@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C154-tathapi",
+    "language": "sanskrit",
+    "chapter": 154,
+    "sequence": 7970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c4ca69d4d89e8c4e"
+  },
+  "findings": []
+}

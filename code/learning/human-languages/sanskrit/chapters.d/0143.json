@@ -1,0 +1,19 @@
+{
+  "chapter": 143,
+  "title": "Comes back, Lies down, Sits, Is afraid, Meditates",
+  "label": "ch:sa-comes-back-lies-down-sits-is-afraid-meditates",
+  "canDo": "I can say comes back, lies down, sits, is afraid and meditates.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C143-dhyayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 143: I can say comes back, lies down, sits, is afraid and meditates.",
+    "assesses": [
+      "SA-LEX-C143-ACT143-03",
+      "SA-LEX-C143-ACT143-04",
+      "SA-LEX-C143-ACT143-05"
+    ]
+  }
+}

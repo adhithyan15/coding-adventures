@@ -1,0 +1,19 @@
+{
+  "chapter": 156,
+  "title": "Dear, Unpleasant, Calm, Fierce, Cruel",
+  "label": "ch:sa-dear-unpleasant-calm-fierce-cruel",
+  "canDo": "I can say dear, unpleasant, calm, fierce and cruel.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "SA-C156-krurah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 156: I can say dear, unpleasant, calm, fierce and cruel.",
+    "assesses": [
+      "SA-LEX-C156-QUAL156-03",
+      "SA-LEX-C156-QUAL156-04",
+      "SA-LEX-C156-QUAL156-05"
+    ]
+  }
+}

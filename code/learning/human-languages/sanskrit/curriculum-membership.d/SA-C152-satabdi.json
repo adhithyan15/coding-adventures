@@ -1,0 +1,11 @@
+{
+  "id": "SA-C152-satabdi",
+  "pathSegment": "SA-PATH-152-TIME152",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-152-TIME152",
+      "order": 4
+    }
+  ]
+}

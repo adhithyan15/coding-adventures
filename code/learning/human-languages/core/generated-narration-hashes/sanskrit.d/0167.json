@@ -1,0 +1,21 @@
+{
+  "language": "sanskrit",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:1c19759045c7b3f8",
+  "lessonIds": [
+    "SA-C167-kacchapah",
+    "SA-C167-mahisi",
+    "SA-C167-vatsah",
+    "SA-C167-aja",
+    "SA-C167-asva",
+    "SA-R167-first-pass-words-from-chapters-159-162",
+    "SA-R167-second-pass-words-from-chapters-163-167"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "sanskrit/narration/ch167.txt",
+  "json": "sanskrit/narration/ch167.json",
+  "textHash": "fnv1a64:f5986667522c8742",
+  "jsonHash": "fnv1a64:5010eb67e7f475a0",
+  "findings": []
+}

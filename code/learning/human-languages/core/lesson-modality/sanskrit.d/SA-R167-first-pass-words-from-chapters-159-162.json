@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R167-first-pass-words-from-chapters-159-162",
+    "language": "sanskrit",
+    "chapter": 167,
+    "sequence": 8840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3e4794514729eed"
+  },
+  "findings": []
+}

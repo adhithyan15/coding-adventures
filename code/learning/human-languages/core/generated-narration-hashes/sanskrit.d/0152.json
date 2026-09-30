@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:7a8a3fc34fd5439e",
+  "lessonIds": [
+    "SA-C152-kalah",
+    "SA-C152-varah",
+    "SA-C152-tithih",
+    "SA-C152-dinankah",
+    "SA-C152-satabdi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch152.txt",
+  "json": "sanskrit/narration/ch152.json",
+  "textHash": "fnv1a64:37ca33e97005f29f",
+  "jsonHash": "fnv1a64:43efc067fb1aa56e",
+  "findings": []
+}

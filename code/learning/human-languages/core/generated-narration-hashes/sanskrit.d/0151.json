@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:235a04babd1c8743",
+  "lessonIds": [
+    "SA-C151-utsahah",
+    "SA-C151-dhairyam",
+    "SA-C151-alasyam",
+    "SA-C151-matsarah",
+    "SA-C151-garvah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch151.txt",
+  "json": "sanskrit/narration/ch151.json",
+  "textHash": "fnv1a64:d4d5b3cc58341ae9",
+  "jsonHash": "fnv1a64:4539b2ed316e441f",
+  "findings": []
+}

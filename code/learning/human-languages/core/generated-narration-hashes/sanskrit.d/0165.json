@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:a05684dc184fd934",
+  "lessonIds": [
+    "SA-C165-dhulih",
+    "SA-C165-dhumah",
+    "SA-C165-jvala",
+    "SA-C165-angarah",
+    "SA-C165-lauham"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch165.txt",
+  "json": "sanskrit/narration/ch165.json",
+  "textHash": "fnv1a64:0b2561d33ad27a50",
+  "jsonHash": "fnv1a64:c07d594104024bdb",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:85e420cfafa1233b",
+  "lessonIds": [
+    "SA-C141-pibati",
+    "SA-C141-vasati",
+    "SA-C141-carati",
+    "SA-C141-sprsati",
+    "SA-C141-tyajati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch141.txt",
+  "json": "sanskrit/narration/ch141.json",
+  "textHash": "fnv1a64:1ce2cae3e411635b",
+  "jsonHash": "fnv1a64:80a026dc0032fc6d",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C170-seva",
+  "pathSegment": "SA-PATH-170-WRK170",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-170-WRK170",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C159-canakah",
+    "language": "sanskrit",
+    "chapter": 159,
+    "sequence": 8430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ea78f302ecd43c3"
+  },
+  "findings": []
+}

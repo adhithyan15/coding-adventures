@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:74decf61c33b7ed7",
+  "lessonIds": [
+    "SA-C172-yatri",
+    "SA-C172-yanapatram",
+    "SA-C172-bhramanam",
+    "SA-C172-paryatanam",
+    "SA-C172-paryatakah",
+    "SA-R172-first-pass-words-from-chapters-168-169",
+    "SA-R172-second-pass-words-from-chapters-170-172"
+  ],
+  "tex": "sanskrit/book/chapters/ch172-passenger-ticket-tour-tourism-tourist.tex"
+}

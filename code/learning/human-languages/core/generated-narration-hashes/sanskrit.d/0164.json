@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:08bfe4a75401cee1",
+  "lessonIds": [
+    "SA-C164-pranganam",
+    "SA-C164-vatika",
+    "SA-C164-upavanam",
+    "SA-C164-kridanganam",
+    "SA-C164-vimanapattanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch164.txt",
+  "json": "sanskrit/narration/ch164.json",
+  "textHash": "fnv1a64:08ee7c3d308805fa",
+  "jsonHash": "fnv1a64:1f97fd7948ecf09b",
+  "findings": []
+}

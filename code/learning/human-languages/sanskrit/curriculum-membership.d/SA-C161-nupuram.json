@@ -1,0 +1,11 @@
+{
+  "id": "SA-C161-nupuram",
+  "pathSegment": "SA-PATH-161-THG161",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-161-THG161",
+      "order": 3
+    }
+  ]
+}

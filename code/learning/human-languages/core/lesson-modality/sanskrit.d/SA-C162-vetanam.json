@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C162-vetanam",
+    "language": "sanskrit",
+    "chapter": 162,
+    "sequence": 8540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:606706e3b0955d21"
+  },
+  "findings": []
+}

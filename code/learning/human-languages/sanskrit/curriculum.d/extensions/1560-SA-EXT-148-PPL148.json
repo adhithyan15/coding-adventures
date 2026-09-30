@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-148-PPL148",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a barber, a cook, a gardener, a fisherman and a cowherd.",
+  "prerequisites": []
+}

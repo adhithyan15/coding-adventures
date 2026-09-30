@@ -1,0 +1,11 @@
+{
+  "id": "SA-C145-garjati",
+  "pathSegment": "SA-PATH-145-ACT145",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-145-ACT145",
+      "order": 2
+    }
+  ]
+}

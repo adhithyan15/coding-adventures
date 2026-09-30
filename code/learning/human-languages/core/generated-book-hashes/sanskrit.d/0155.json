@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 155,
+  "sourceHash": "fnv1a64:ebe22da55d026219",
+  "lessonIds": [
+    "SA-C155-nutanah",
+    "SA-C155-jirnah",
+    "SA-C155-usnah",
+    "SA-C155-sitah",
+    "SA-C155-kathorah"
+  ],
+  "tex": "sanskrit/book/chapters/ch155-fresh-worn-out-hot-chilly-harsh.tex"
+}

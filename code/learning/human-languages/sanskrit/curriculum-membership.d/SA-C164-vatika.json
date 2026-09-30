@@ -1,0 +1,11 @@
+{
+  "id": "SA-C164-vatika",
+  "pathSegment": "SA-PATH-164-THG164",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-164-THG164",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C147-senapatih",
+    "language": "sanskrit",
+    "chapter": 147,
+    "sequence": 7450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10283c6e06b45cc5"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-157-QUAL157",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say angry, afraid, startled, tired and hungry.",
+  "prerequisites": []
+}

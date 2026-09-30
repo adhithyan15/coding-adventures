@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C168-aksaram",
+    "language": "sanskrit",
+    "chapter": 168,
+    "sequence": 9050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c6d74d3e4f0364a"
+  },
+  "findings": []
+}

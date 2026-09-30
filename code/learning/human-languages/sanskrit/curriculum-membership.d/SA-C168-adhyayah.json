@@ -1,0 +1,11 @@
+{
+  "id": "SA-C168-adhyayah",
+  "pathSegment": "SA-PATH-168-SCH168",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-168-SCH168",
+      "order": 1
+    }
+  ]
+}

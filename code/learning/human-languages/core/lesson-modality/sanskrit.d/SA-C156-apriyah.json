@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C156-apriyah",
+    "language": "sanskrit",
+    "chapter": 156,
+    "sequence": 8060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:102bd73990492265"
+  },
+  "findings": []
+}

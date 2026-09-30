@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:215cd813972742cf",
+  "lessonIds": [
+    "SA-C151-utsahah",
+    "SA-C151-dhairyam",
+    "SA-C151-alasyam",
+    "SA-C151-matsarah",
+    "SA-C151-garvah"
+  ],
+  "tex": "sanskrit/book/chapters/ch151-enthusiasm-courage-laziness-jealousy-pride.tex"
+}
