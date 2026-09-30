@@ -11,12 +11,19 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16298,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16298",
+    "item_id": "build-tool-orphan-package-root-validation-corpus-and-go-adoption",
+    "branch": "codex/parity-orphan-package-root-20260930",
+    "head_revision": "839f4c3dc090024c2443f4f1c2e4d086be93a859",
+    "status": "pr-open"
+  },
   "last_ci_action": {
-    "observed_at": "2026-09-30T16:00:37Z",
-    "pr_number": 16257,
-    "status": "merged",
-    "notes": "Every required final-head check completed successfully or with an expected skip, GitHub reported MERGEABLE/CLEAN, and guarded squash auto-merge merged PR #16257 as 9e3c76378499464c1ab5a0d1a7e2187d614ff58f without a manual merge."
+    "observed_at": "2026-09-30T18:18:17Z",
+    "pr_number": 16298,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #16298 is open and mergeable. Initial CI, CodeQL language detection, and human-language change detection are queued; auto-merge remains disabled until every required check is terminal and acceptable."
   },
   "last_inventory": {
     "revision": "9fc12ead72cbd04c8689cfbae425fb20251c7209",
@@ -11103,14 +11110,18 @@
     {
       "id": "build-tool-orphan-package-root-validation-corpus-and-go-adoption",
       "title": "Generalize orphan package-root validation and adopt it in Go",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-orphan-crate-validation-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-perl-blib-generated-directory-registry-repair"],
       "branch": "codex/parity-orphan-package-root-20260930",
-      "pr_number": null,
+      "pr_number": 16298,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16298",
+      "opened_at": "2026-09-30T18:17:56Z",
+      "opened_revision": "839f4c3dc090024c2443f4f1c2e4d086be93a859",
       "selected_at": "2026-09-30T16:02:00Z",
       "selection_revision": "9e3c76378499464c1ab5a0d1a7e2187d614ff58f",
       "selection_notes": "Selected only after PR #16257 completed every final-head check acceptably and merged through guarded squash auto-merge. The regenerated exact-main schema-3 inventory remains collision-clean and identity-neutral at 15 established lanes, 1,471 implementation identities, 4,738 implementation slots, 1,513 all-reported identities, completion bands 178/265, 123/934, 181/2,282, and 989/13,846, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown language buckets. Parallel audits added the Haskell Cabal test-component and Perl source-metadata/native-stability owners before ranking. This owner remains the highest-leverage ready item because the production gate is structurally blind outside Cargo and it supplies bounded repository-wide enforcement for the 51 reviewed established-lane roots without absorbing implementation of their missing fronts. Twelve live open PRs have zero exact overlap after excluding the merged blib PR, and this tranche requires no CI workflow edit.",
       "rebase_notes": "Before implementation publication, origin/main first advanced through unrelated preprocessor, Mermaid, Forme, and Sanskrit merges, and the branch rebased cleanly onto 290170573666eafc1c3d30dfa34fd3c159ff617d. A final pre-push refresh then rebased onto exact current main 9fc12ead72cbd04c8689cfbae425fb20251c7209 after Mermaid, ALGOL, Telugu, Sanskrit, TaskApp, and the independent Forme boundary repair merged. The refreshed collision-clean inventory remains 15 established lanes, 1,472 implementation identities, 4,739 slots, 1,514 all-reported identities, completion bands 178/265, 123/934, 181/2,282, and 990/13,860, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. The TypeScript forme-plugin-installer-core singleton remains owned by its deterministic snapshot planner, while native installation authority remains excluded from autonomous selection. Upstream PR #16285 now owns the repository-source boundary registration, so this tranche preserves that exact digest without duplicating its projection changes.",
+      "publication_notes": "Opened ready-for-review PR #16298 from validated clean head 839f4c3dc090024c2443f4f1c2e4d086be93a859. The neutral corpus validates 166 cases across 285 files, the Python suite passes 114 tests, Go test and vet passed on the final implementation, the production gate evaluated 45 BUILD files and 5,264 packages with all missing roots represented as owned pending debt, C# and Swift conformance passed, Ruff source lint, Bandit, diff hygiene, inventory collision checks, and the state DAG passed, and independent correctness and security reviews found no actionable issue. A final redundant focused Go validator relink was prevented by local disk exhaustion after the post-rebase full suite had already passed. Thirteen live open PRs had zero path overlap and no other parity PR was active immediately before publication. GitHub reports the PR non-draft and mergeable with initial checks queued; auto-merge remains disabled until every required check is terminal and acceptable.",
       "notes": "Discovered when the post-PR #16133 audit found tracked established-lane package roots without BUILD fronts while the current gate scans only Cargo crates. Define a distinct orphan_package_root_snapshot contract with at most 8,192 roots, at most 16,384 aggregate BUILD fronts, at most 2,000,000 UTF-8 bytes, compact source evidence, and streaming Go discovery over the reviewed package-root and source-input registries. Validate every platform front, ancestor coverage, generated and virtual exclusions, exemptions, collisions, stale entries, and deterministic diagnostics without raising the legacy orphan-crate snapshot ceiling. This validator owns discovery enforcement, not implementation of missing fronts, and adds no filesystem authority beyond the existing caller-supplied repository snapshot boundary."
     },
     {
