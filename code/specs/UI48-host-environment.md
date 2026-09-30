@@ -1,6 +1,6 @@
 # UI48 — Host environment: runtime viewport, input modality, and variant selection
 
-**Status:** In progress — ENV1's runtime half implemented in `mosaic-app-runtime` (§7.1); ENV2 and ENV3 on SwiftUI (§7.2) and Compose (§7.5); ENV4 on SwiftUI (§7.3), Compose (§7.4) and Qt (§7.6)
+**Status:** In progress — ENV1's runtime half implemented in `mosaic-app-runtime` (§7.1); ENV2 and ENV3 on SwiftUI (§7.2) and Compose (§7.5); ENV4 on SwiftUI (§7.3), Compose (§7.4), Qt (§7.6), XAML (§7.7) and Flutter (§7.8)
 **Layer:** UI / standard Mosaic app ABI
 **Depends on:** UI29 (primitive kernel), UI30 (multi-layout pipelines), UI38
 (native application runtime), `mosaic-app-runtime`, `mosaic-app-capi`
@@ -707,6 +707,67 @@ template and the shell (the observer after start, wired once, queued, strict,
 only failures shown; none in a sample or dialog shell). The TaskApp WinUI
 build compiles the observer. As on the other hosts, the resize-and-assert
 gate lands with ENV-last.
+
+### 7.8 ENV4 on Flutter, as built
+
+The §7.3 contract on the Flutter shell. Flutter has no layout variants yet,
+so this is the report alone.
+
+- **The host owns the values.** `MosaicHost.environmentReport(width, height,
+  dark, {reduceMotion})` reduces a window to the six §4 values from logical
+  pixels (`MediaQuery`'s size) -- `sizeClass` at 600 and 1024, `orientation`
+  from height against width (a square is landscape), `colorScheme` light or
+  dark, and `reducedMotion` from the platform's `disableAnimations` -- plus
+  `MosaicHost.initialEnvironment()`: `coarse`/`none` on Android and iOS,
+  `fine`/`hover` elsewhere, and `reducedMotion` `no-preference`. The binding
+  stays free of Flutter imports (the conformance harness runs it on the plain
+  Dart VM), so it cannot read the motion setting before the first frame; the
+  start context carries the initial values and the shell's first report
+  corrects the rest, as on SwiftUI.
+- **The shell observes.** The native-complete `main.dart` passes
+  `builder: _observeEnvironment` to its `MaterialApp`. The builder runs below
+  the app's `MediaQuery` and above every route, and reads only the aspects the
+  report needs (`MediaQuery.sizeOf`, `platformBrightnessOf` -- the rendered
+  scheme, since `themeMode` is `system` -- and `disableAnimationsOf`), so a
+  change to exactly those rebuilds it. It records the report and queues one
+  post-frame callback; it never dispatches during build. One report is queued
+  at a time and it sends what the last build saw, so a burst of resize frames
+  costs one. Nothing is reported until the runtime has started and is
+  showing; a retried start reports afresh to its new host. A sample-props
+  shell has no runtime to tell, and its host may be a package's own (Venture
+  replaces `mosaic_host.dart`), so it does not observe.
+- **Deduplicated in the host, per runtime.** `reportEnvironment` sends nothing
+  without a runtime, inside a settle (a backstop; not remembered), when the
+  report equals the last one the runtime took, or when it equals the last one
+  the runtime refused. A refusal does not replace the last report taken; a
+  report the runtime took is remembered at once.
+- **"No reaction" keeps the current props, and rebuilds nothing.** Every
+  dispatch and effect completion keeps the props showing when its update
+  carries `props: null` at the revision showing -- the runtime's own props,
+  before the persistence warning is folded in, as on Qt. `reportEnvironment`
+  answers null when the revision did not move, so the shell calls no
+  `setState` for an ignored report; an answer that moved it, or carries a
+  tripped settle guard's `error`, is shown exactly as an event's answer is.
+- **A failure is logged, never fatal.** The public `reportEnvironment` never
+  throws: a refusal (an invalid environment) or a closed runtime comes back as
+  `{'error': 'Mosaic environment report failed: ...'}`, which the shell logs
+  with `debugPrint`. A resize is not something the user did, so it never
+  reaches the startup-failure screen, and a refusal's missing props are never
+  applied.
+
+**Acceptance.** The Flutter conformance harness, run in CI's Linux lane
+("Round-trip Rust engine through standard Flutter binding") against the
+conformance runtime (which ignores the event), checks the six values and
+thresholds, that an ignored report has nothing to show and keeps the props and
+revision, that an invalid report is refused as an `error` answer and keeps the
+props, and -- through the state file every dispatch rewrites -- that the
+refused report is not re-sent, that it did not replace the last report taken,
+that an unchanged report is not sent and a changed one is. Rust tests pin the
+host template and the shell (the builder, the aspect reads, the post-frame
+queue, nothing before the host is ready, failures only logged; none in a
+sample shell). The same lane runs `flutter analyze`, a launch and the TaskApp
+lifecycle widget test on the generated TaskApp, which observes at start. As on
+the other hosts, the resize-and-assert gate lands with ENV-last.
 
 ## 8. Open questions
 
