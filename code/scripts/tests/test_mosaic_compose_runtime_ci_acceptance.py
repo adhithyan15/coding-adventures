@@ -221,6 +221,12 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         emulator = (scripts / "start-mosaic-android-emulator.sh").read_text(encoding="utf-8")
         self.assertIn('image="system-images;android-34;default;x86_64"', emulator)
         self.assertIn("sys.boot_completed", emulator)
+        # The device lives where the emulator looks, and is listed before the
+        # wait: the first CI run created it somewhere else and booted nothing.
+        self.assertIn('export ANDROID_AVD_HOME="${ANDROID_AVD_HOME:-$HOME/.android/avd}"', emulator)
+        self.assertIn('avds="$("$emulator" -list-avds 2>/dev/null || true)"', emulator)
+        self.assertNotIn('-list-avds | grep', emulator)
+        self.assertIn("the emulator exited before it appeared to adb", emulator)
 
     def test_a_lane_script_change_alone_requires_acceptance(self) -> None:
         """The Android scripts belong to no package; changing one must still
