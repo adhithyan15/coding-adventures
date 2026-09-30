@@ -16,3 +16,10 @@ Rust C ABI, and the CI step has a ten-minute hard timeout.
 
 That lane also relaunches against persisted and incompatible state, covering
 restore-before-render, atomic dispatch persistence, and recoverable quarantine.
+
+It also checks UI48 ENV4 (environment reporting, spec §7.7) against the
+conformance runtime, which ignores `environmentChanged`: the six reported
+values and thresholds, that an ignored report re-applies nothing and keeps the
+props, that an invalid report is refused and the identical one held back, and -- with
+`MOSAIC_APP_STATE_PATH` set, since every dispatch rewrites the state file --
+that an unchanged report is not sent and a changed one is.

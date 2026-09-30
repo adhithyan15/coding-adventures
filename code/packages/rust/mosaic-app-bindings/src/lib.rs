@@ -391,6 +391,53 @@ mod tests {
         assert!(host.contains("mapOf(\"pointer\" to \"coarse\", \"hover\" to \"none\", \"reducedMotion\" to \"no-preference\")"));
     }
 
+    /// UI48 ENV4 on XAML (§7.7): the same contract as Compose's, plus the
+    /// reducer the WinUI shell calls, and no re-apply for an ignored report.
+    #[test]
+    fn xaml_host_reports_the_environment() {
+        let host = xaml_runtime_binding_for_application("Acme.App", "probe");
+        assert!(host.contains("public static string? ReportEnvironment("));
+        assert!(host.contains("Dispatch(\"environmentChanged\", report);"));
+        // Dropped when equal to the last one taken or the last one refused;
+        // a refusal is recorded as refused; the one taken is remembered before
+        // the apply (the runtime has it), and a tripped guard is reported.
+        let held_back = host
+            .find("if (SameEnvironment(lastRefusedEnvironment, report)) return null;")
+            .expect("hold back refused");
+        let sent = host.find("Dispatch(\"environmentChanged\", report);").unwrap();
+        let refused = host.find("lastRefusedEnvironment = report;").expect("refused");
+        let remembered = host.find("lastReportedEnvironment = report;").expect("remember");
+        let guard = host
+            .find("if (settleError is not null)\n                    return Status(")
+            .expect("guard");
+        let applied = host
+            .find("ApplyProps(component, requiredProps, strict: requiredProps.Count > 0);")
+            .expect("apply");
+        assert!(held_back < sent && sent < refused && refused < remembered);
+        assert!(remembered < guard && guard < applied);
+        assert!(host.contains("if (settling > 0) return null;"));
+        // Re-applied only when something newer than the last apply is showing.
+        assert!(host.contains("if (Revision(latestUpdate) != appliedRevision)"));
+        assert!(host.contains("appliedRevision = Revision(latestUpdate);"));
+        // Props kept only at the revision already showing, on every dispatch.
+        assert!(host.contains("|| revision != shownRevision)"));
+        assert_eq!(
+            host.matches("latestUpdate = KeepShowingProps(SettleEffects(update));").count(),
+            2,
+            "dispatch and effect completion"
+        );
+        // The thresholds every host uses, and the desktop's pointer.
+        assert!(host.contains(
+            "[\"sizeClass\"] = width < 600 ? \"compact\" : width < 1024 ? \"regular\" : \"expanded\","
+        ));
+        assert!(host.contains("[\"orientation\"] = height > width ? \"portrait\" : \"landscape\","));
+        assert!(host.contains("[\"pointer\"] = \"fine\","));
+        assert!(host.contains("[\"hover\"] = \"hover\","));
+        assert!(host.contains("[\"reducedMotion\"] = \"no-preference\","));
+        // The start context carries them too.
+        assert!(host.contains("foreach (var (axis, value) in InitialEnvironment()) start[axis] = value;"));
+    }
+
     /// The SwiftUI and Compose libraries answer one contract (UI87 §7.1): the
     /// same kinds, limits and MIME table, so an app sees the same outcome on
     /// either host. A drift in one template fails here, not on a Mac.

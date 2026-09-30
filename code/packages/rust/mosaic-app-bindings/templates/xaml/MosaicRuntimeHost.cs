@@ -92,6 +92,92 @@ public static class MosaicRuntimeHost
     }
 
     /// <summary>
+    /// What the platform knows before the first frame (UI48 ENV4): a Windows
+    /// desktop has a mouse that hovers. WinUI's reduced-motion setting is not
+    /// read yet, so that axis is <c>no-preference</c>, as on Compose Desktop
+    /// and Qt. The same values go into the start context.
+    /// </summary>
+    public static IReadOnlyDictionary<string, string> InitialEnvironment() =>
+        new Dictionary<string, string>
+        {
+            ["pointer"] = "fine",
+            ["hover"] = "hover",
+            ["reducedMotion"] = "no-preference",
+        };
+
+    /// <summary>
+    /// A window reduced to the six UI48 §4 values, under
+    /// <c>mosaic-app-runtime</c>'s wire names. <paramref name="width"/> and
+    /// <paramref name="height"/> are effective pixels (WinUI's
+    /// <c>ActualWidth</c>/<c>ActualHeight</c>), bucketed at 600 and 1024 as on
+    /// every other host, so one window size is one size class everywhere.
+    /// </summary>
+    /// <remarks>
+    /// <code>
+    ///   width      sizeClass     height vs width   orientation
+    ///   &lt; 600      compact       taller            portrait
+    ///   &lt; 1024     regular       otherwise         landscape (a square too)
+    ///   otherwise  expanded
+    /// </code>
+    /// </remarks>
+    public static IReadOnlyDictionary<string, string> EnvironmentReport(
+        double width, double height, bool dark) =>
+        new Dictionary<string, string>(InitialEnvironment())
+        {
+            ["colorScheme"] = dark ? "dark" : "light",
+            ["sizeClass"] = width < 600 ? "compact" : width < 1024 ? "regular" : "expanded",
+            ["orientation"] = height > width ? "portrait" : "landscape",
+        };
+
+    /// <summary>
+    /// Tell the runtime the window's environment (UI48 ENV4) as
+    /// <c>environmentChanged</c>, and show its answer on
+    /// <paramref name="component"/>.
+    /// </summary>
+    /// <returns>
+    /// Null when there was nothing to say or the runtime took it and it was
+    /// shown; a status line when it failed (refused, or its props could not be
+    /// applied) or when taking it tripped a settle guard. Accepting says nothing, so the status
+    /// bar keeps describing the user's last action rather than a resize.
+    /// </returns>
+    /// <remarks>
+    /// <list type="bullet">
+    /// <item>No runtime, the same report as the last one taken, or the same
+    /// as the last one refused: nothing is sent.</item>
+    /// <item>An app that does not react answers at the revision already
+    /// showing, without props. The props showing stay (see
+    /// <c>KeepShowingProps</c>) and nothing is re-applied, so lists are not
+    /// rebuilt under the user on every resize.</item>
+    /// <item>An answer with new props is applied, strictly when
+    /// <paramref name="requiredProps"/> are named (a native-complete shell), as
+    /// <see cref="HandleRequiredEvent"/> applies an event's.</item>
+    /// <item>A refusal (an invalid environment) leaves the screen as it is and
+    /// is not remembered as taken; only that identical report is held back.
+    /// A report the runtime took but whose strict apply failed IS remembered
+    /// (the runtime has it); the apply is retried by the next report or
+    /// event.</item>
+    /// </list>
+    /// </remarks>
+    public static string? ReportEnvironment(
+        object component,
+        IReadOnlyDictionary<string, string> environment,
+        params string[] requiredProps)
+    {
+        var runtime = State;
+        if (runtime is null) return null;
+        try
+        {
+            return runtime.ReportEnvironment(component, environment, requiredProps);
+        }
+        catch (Exception error)
+        {
+            // A refusal, a strict apply that found props missing, or a
+            // runtime closed underneath: each leaves the screen as it was.
+            return $"Status: Mosaic environment report failed: {error.GetType().Name}: {error.Message}";
+        }
+    }
+
+    /// <summary>
     /// Called once per effect the runtime asks for. See the runtime's own
     /// documentation; setting it with no runtime loaded is a no-op, matching
     /// every other accessor here.
@@ -194,6 +280,20 @@ public static class MosaicRuntimeHost
         private ulong sequence;
         private JsonElement latestUpdate;
         private string? persistenceWarning;
+        /// <summary>
+        /// The last environment the runtime took (UI48 ENV4), so an unchanged
+        /// report is not sent twice. Per runtime: a retried start reports
+        /// afresh.
+        /// </summary>
+        private Dictionary<string, string>? lastReportedEnvironment;
+        /// <summary>The last report the runtime refused, not re-sent unchanged.</summary>
+        private Dictionary<string, string>? lastRefusedEnvironment;
+        /// <summary>
+        /// The revision last applied to a component, so an environment report
+        /// re-applies only when there is something new to show -- or an
+        /// earlier apply is still owed.
+        /// </summary>
+        private ulong? appliedRevision;
         private readonly Create create;
         private readonly Dispatch dispatch;
         private readonly Snapshot snapshot;
@@ -305,6 +405,10 @@ public static class MosaicRuntimeHost
                     ["platform"] = "windows",
                     ["restoredSnapshot"] = restoredSnapshot,
                 };
+                // What the platform knows before the first frame (UI48 ENV4).
+                // The window's size class and orientation arrive with the
+                // shell's first environment report.
+                foreach (var (axis, value) in InitialEnvironment()) start[axis] = value;
                 // Minutes east of UTC, so an app can tell the user's local day (UI38 "Local time"). Left out when outside -840..=840 (a custom TZ string can say anything): the runtime would refuse it and the app would not start; without it the app uses UTC.
                 var utcOffsetMinutes = (int)TimeZoneInfo.Local.GetUtcOffset(DateTime.Now).TotalMinutes;
                 if (utcOffsetMinutes >= -840 && utcOffsetMinutes <= 840) start["utcOffsetMinutes"] = utcOffsetMinutes;
@@ -378,10 +482,93 @@ public static class MosaicRuntimeHost
                 // Settle BEFORE persisting: the runtime refuses to snapshot
                 // while an effect is outstanding, so persisting first warns on
                 // every effect.
-                latestUpdate = SettleEffects(update);
+                latestUpdate = KeepShowingProps(SettleEffects(update));
                 PersistSnapshot();
             }
         }
+
+        /// <summary>
+        /// An update without props AT THE REVISION ALREADY SHOWING (an
+        /// environment the app did not react to, UI48 §7.1) carries nothing to
+        /// render: keep the props showing, so a later <c>ApplyProps</c> still
+        /// has them. Only then -- a props-less update that moves the revision
+        /// is a defect, and is left as it is so it surfaces.
+        /// </summary>
+        private JsonElement KeepShowingProps(JsonElement update)
+        {
+            if (update.ValueKind != JsonValueKind.Object
+                || !update.TryGetProperty("props", out var props)
+                || props.ValueKind != JsonValueKind.Null)
+                return update;
+            if (latestUpdate.ValueKind != JsonValueKind.Object
+                || !latestUpdate.TryGetProperty("props", out var showing)
+                || showing.ValueKind != JsonValueKind.Object)
+                return update;
+            if (Revision(update) is not { } revision
+                || Revision(latestUpdate) is not { } shownRevision
+                || revision != shownRevision)
+                return update;
+            return WithProperty(update, "props", showing);
+        }
+
+        private static ulong? Revision(JsonElement update) =>
+            update.ValueKind == JsonValueKind.Object
+                && update.TryGetProperty("revision", out var revision)
+                && revision.ValueKind == JsonValueKind.Number
+                && revision.TryGetUInt64(out var value)
+                ? value
+                : null;
+
+        /// <summary>The host half of <see cref="MosaicRuntimeHost.ReportEnvironment"/>.</summary>
+        public string? ReportEnvironment(
+            object component,
+            IReadOnlyDictionary<string, string> environment,
+            IReadOnlyCollection<string> requiredProps)
+        {
+            lock (gate)
+            {
+                EnsureOpen();
+                // Inside a settle -- an effect handler that changed the window
+                // synchronously -- a dispatch would nest in the outer settle
+                // and be overwritten by it. The shell reports from the
+                // dispatcher queue, so this is only a backstop; not remembered,
+                // so the next report is sent.
+                if (settling > 0) return null;
+                var report = new Dictionary<string, string>(environment);
+                if (SameEnvironment(lastReportedEnvironment, report)) return null;
+                // A report the runtime refused is not re-sent until it
+                // changes: a drag over a threshold would otherwise send it,
+                // and rewrite the status line, on every tick.
+                if (SameEnvironment(lastRefusedEnvironment, report)) return null;
+                try
+                {
+                    Dispatch("environmentChanged", report);
+                }
+                catch
+                {
+                    lastRefusedEnvironment = report;
+                    throw;
+                }
+                // The runtime took it: remembered now, whether or not the
+                // apply below succeeds. An apply still owed is retried by the
+                // next report or event, which compare against what was last
+                // APPLIED rather than what was showing before this dispatch.
+                lastReportedEnvironment = report;
+                lastRefusedEnvironment = null;
+                // A tripped settle guard reaches the caller only through
+                // Status, which consumes it.
+                if (settleError is not null)
+                    return Status("Mosaic runtime handled environmentChanged");
+                if (Revision(latestUpdate) != appliedRevision)
+                    ApplyProps(component, requiredProps, strict: requiredProps.Count > 0);
+                return null;
+            }
+        }
+
+        private static bool SameEnvironment(
+            Dictionary<string, string>? last, Dictionary<string, string> report) =>
+            // Set equality: keys are unique and KeyValuePair compares ordinally.
+            last is not null && last.Count == report.Count && !last.Except(report).Any();
 
         public JsonElement? Snapshot()
         {
@@ -444,7 +631,7 @@ public static class MosaicRuntimeHost
                     answered = true;
                     return;
                 }
-                latestUpdate = SettleEffects(update);
+                latestUpdate = KeepShowingProps(SettleEffects(update));
                 PersistSnapshot();
             }
         }
@@ -862,6 +1049,7 @@ public static class MosaicRuntimeHost
                     }
                     property.SetValue(component, converted.value);
                 }
+                appliedRevision = Revision(latestUpdate);
             }
         }
 
