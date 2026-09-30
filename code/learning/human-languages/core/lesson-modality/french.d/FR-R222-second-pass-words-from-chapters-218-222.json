@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R222-second-pass-words-from-chapters-218-222",
+    "language": "french",
+    "chapter": 222,
+    "sequence": 12410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00c65c6e6b8e640a"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C205-secher",
+  "pathSegment": "FR-PATH-205-VERBES205",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-205-VERBES205",
+      "order": 4
+    }
+  ]
+}

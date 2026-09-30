@@ -1,0 +1,11 @@
+{
+  "id": "FR-C209-plaindre",
+  "pathSegment": "FR-PATH-209-VERBES209",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-209-VERBES209",
+      "order": 4
+    }
+  ]
+}

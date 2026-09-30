@@ -1,0 +1,19 @@
+{
+  "chapter": 231,
+  "title": "Return, Arrival, Departure, Destination, Landscape",
+  "label": "ch:fr-return-arrival-departure-destination-landscape",
+  "canDo": "I can say the return, arrival, departure, a destination and a landscape.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C231-paysage",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 231: I can say the return, arrival, departure, a destination and a landscape.",
+    "assesses": [
+      "FR-LEX-C231-CHOSES231-03",
+      "FR-LEX-C231-CHOSES231-04",
+      "FR-LEX-C231-CHOSES231-05"
+    ]
+  }
+}

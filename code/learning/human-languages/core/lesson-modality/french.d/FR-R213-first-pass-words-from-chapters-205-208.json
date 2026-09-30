@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R213-first-pass-words-from-chapters-205-208",
+    "language": "french",
+    "chapter": 213,
+    "sequence": 11760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:93cfdfa5f2f855fd"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:e5b5b69fcda96f0d",
+  "lessonIds": [
+    "FR-C228-vase",
+    "FR-C228-plante",
+    "FR-C228-graine",
+    "FR-C228-racine",
+    "FR-C228-branche"
+  ],
+  "tex": "french/book/chapters/ch228-vase-plant-seed-root-branch.tex"
+}

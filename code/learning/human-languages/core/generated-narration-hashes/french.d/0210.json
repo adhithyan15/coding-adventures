@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:02dc6cadf13988d9",
+  "lessonIds": [
+    "FR-C210-atteindre",
+    "FR-C210-realiser",
+    "FR-C210-offrir-un-cadeau",
+    "FR-C210-rendre",
+    "FR-C210-reconnaitre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch210.txt",
+  "json": "french/narration/ch210.json",
+  "textHash": "fnv1a64:3efef2746994864c",
+  "jsonHash": "fnv1a64:463bff6d080a9911",
+  "findings": []
+}

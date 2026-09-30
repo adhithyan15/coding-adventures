@@ -1,0 +1,19 @@
+{
+  "chapter": 207,
+  "title": "To be born, To die, To grow old, To marry, To divorce",
+  "label": "ch:fr-to-be-born-to-die-to-grow-old-to-marry-to-divorce",
+  "canDo": "I can say to be born, to die, to grow old, to marry and to divorce.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C207-divorcer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 207: I can say to be born, to die, to grow old, to marry and to divorce.",
+    "assesses": [
+      "FR-LEX-C207-VERBES207-03",
+      "FR-LEX-C207-VERBES207-04",
+      "FR-LEX-C207-VERBES207-05"
+    ]
+  }
+}

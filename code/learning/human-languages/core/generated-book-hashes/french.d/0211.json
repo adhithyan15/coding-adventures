@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:649f9a7ba6540d2a",
+  "lessonIds": [
+    "FR-C211-taire",
+    "FR-C211-craindre",
+    "FR-C211-tenter",
+    "FR-C211-transporter",
+    "FR-C211-tuer"
+  ],
+  "tex": "french/book/chapters/ch211-to-be-silent-to-fear-to-attempt-to-transport-to-kill.tex"
+}

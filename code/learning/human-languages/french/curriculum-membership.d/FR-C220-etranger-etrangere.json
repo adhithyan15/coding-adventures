@@ -1,0 +1,11 @@
+{
+  "id": "FR-C220-etranger-etrangere",
+  "pathSegment": "FR-PATH-220-QUAL220",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-220-QUAL220",
+      "order": 1
+    }
+  ]
+}

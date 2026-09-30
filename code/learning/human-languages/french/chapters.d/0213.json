@@ -1,0 +1,19 @@
+{
+  "chapter": 213,
+  "title": "To lift, To surprise, To suspect, To squeeze, To suggest",
+  "label": "ch:fr-to-lift-to-surprise-to-suspect-to-squeeze-to-suggest",
+  "canDo": "I can say to lift, to surprise, to suspect, to squeeze and to suggest.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-R213-second-pass-words-from-chapters-209-213",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 213: I can say to lift, to surprise, to suspect, to squeeze and to suggest.",
+    "assesses": [
+      "FR-LEX-C213-VERBES213-03",
+      "FR-LEX-C213-VERBES213-04",
+      "FR-LEX-C213-VERBES213-05"
+    ]
+  }
+}

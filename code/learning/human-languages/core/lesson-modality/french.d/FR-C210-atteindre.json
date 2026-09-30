@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C210-atteindre",
+    "language": "french",
+    "chapter": 210,
+    "sequence": 11560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a9fdd6393ffabda5"
+  },
+  "findings": []
+}

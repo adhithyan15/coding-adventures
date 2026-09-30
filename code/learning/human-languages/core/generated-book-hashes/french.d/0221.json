@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:ecde91c81538f5be",
+  "lessonIds": [
+    "FR-C221-ciseaux",
+    "FR-C221-montre",
+    "FR-C221-pyjama",
+    "FR-C221-bouton",
+    "FR-C221-peche"
+  ],
+  "tex": "french/book/chapters/ch221-scissors-watch-pyjamas-button-peach.tex"
+}

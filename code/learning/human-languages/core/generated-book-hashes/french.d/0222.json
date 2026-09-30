@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:302fb2d4fe8af10f",
+  "lessonIds": [
+    "FR-C222-societe",
+    "FR-C222-gouvernement",
+    "FR-C222-loi",
+    "FR-C222-tribunal",
+    "FR-C222-juge",
+    "FR-R222-first-pass-words-from-chapters-214-217",
+    "FR-R222-second-pass-words-from-chapters-218-222"
+  ],
+  "tex": "french/book/chapters/ch222-society-government-law-court-judge.tex"
+}

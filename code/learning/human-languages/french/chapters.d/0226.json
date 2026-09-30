@@ -1,0 +1,19 @@
+{
+  "chapter": 226,
+  "title": "Bank card, Cash machine, Bank account, Loan, Debt",
+  "label": "ch:fr-bank-card-cash-machine-bank-account-loan-debt",
+  "canDo": "I can say a bank card, a cash machine, a bank account, a loan and a debt.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C226-dette",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 226: I can say a bank card, a cash machine, a bank account, a loan and a debt.",
+    "assesses": [
+      "FR-LEX-C226-CHOSES226-03",
+      "FR-LEX-C226-CHOSES226-04",
+      "FR-LEX-C226-CHOSES226-05"
+    ]
+  }
+}

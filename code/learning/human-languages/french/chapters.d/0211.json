@@ -1,0 +1,19 @@
+{
+  "chapter": 211,
+  "title": "To be silent, To fear, To attempt, To transport, To kill",
+  "label": "ch:fr-to-be-silent-to-fear-to-attempt-to-transport-to-kill",
+  "canDo": "I can say to be silent, to fear, to attempt, to transport and to kill.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C211-tuer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 211: I can say to be silent, to fear, to attempt, to transport and to kill.",
+    "assesses": [
+      "FR-LEX-C211-VERBES211-03",
+      "FR-LEX-C211-VERBES211-04",
+      "FR-LEX-C211-VERBES211-05"
+    ]
+  }
+}

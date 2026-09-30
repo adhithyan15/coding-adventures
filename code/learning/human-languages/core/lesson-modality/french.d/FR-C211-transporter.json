@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C211-transporter",
+    "language": "french",
+    "chapter": 211,
+    "sequence": 11640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3fbcf90d989bac9"
+  },
+  "findings": []
+}

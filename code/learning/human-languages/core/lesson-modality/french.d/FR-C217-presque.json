@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C217-presque",
+    "language": "french",
+    "chapter": 217,
+    "sequence": 12100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f38c750b8544939"
+  },
+  "findings": []
+}

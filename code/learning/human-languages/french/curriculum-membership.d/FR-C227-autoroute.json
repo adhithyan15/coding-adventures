@@ -1,0 +1,11 @@
+{
+  "id": "FR-C227-autoroute",
+  "pathSegment": "FR-PATH-227-CHOSES227",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-227-CHOSES227",
+      "order": 3
+    }
+  ]
+}

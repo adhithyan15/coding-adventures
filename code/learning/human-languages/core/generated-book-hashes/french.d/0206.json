@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:02eb1115f1859bf5",
+  "lessonIds": [
+    "FR-C206-casser",
+    "FR-C206-toucher",
+    "FR-C206-gouter",
+    "FR-C206-chauffer",
+    "FR-C206-refroidir"
+  ],
+  "tex": "french/book/chapters/ch206-to-break-to-touch-to-taste-to-heat-to-cool-down.tex"
+}

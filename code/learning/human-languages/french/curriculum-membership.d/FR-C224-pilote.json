@@ -1,0 +1,11 @@
+{
+  "id": "FR-C224-pilote",
+  "pathSegment": "FR-PATH-224-CHOSES224",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-224-CHOSES224",
+      "order": 1
+    }
+  ]
+}

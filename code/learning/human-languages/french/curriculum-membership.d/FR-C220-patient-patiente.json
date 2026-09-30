@@ -1,0 +1,11 @@
+{
+  "id": "FR-C220-patient-patiente",
+  "pathSegment": "FR-PATH-220-QUAL220",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-220-QUAL220",
+      "order": 4
+    }
+  ]
+}

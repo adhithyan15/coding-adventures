@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C215-ordonnance",
+    "language": "french",
+    "chapter": 215,
+    "sequence": 12010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:de8150bb6eec01ef"
+  },
+  "findings": []
+}

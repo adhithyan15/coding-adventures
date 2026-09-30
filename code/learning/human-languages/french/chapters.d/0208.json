@@ -1,0 +1,19 @@
+{
+  "chapter": 208,
+  "title": "To applaud, To cross, To increase, To decrease, To warn",
+  "label": "ch:fr-to-applaud-to-cross-to-increase-to-decrease-to-warn",
+  "canDo": "I can say to applaud, to cross, to increase, to decrease and to warn.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C208-prevenir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 208: I can say to applaud, to cross, to increase, to decrease and to warn.",
+    "assesses": [
+      "FR-LEX-C208-VERBES208-03",
+      "FR-LEX-C208-VERBES208-04",
+      "FR-LEX-C208-VERBES208-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 218,
+  "title": "Curious, Jealous, Proud, Nervous, Quiet",
+  "label": "ch:fr-curious-jealous-proud-nervous-quiet",
+  "canDo": "I can say curious, jealous, proud, nervous and quiet.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FR-C218-tranquille",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 218: I can say curious, jealous, proud, nervous and quiet.",
+    "assesses": [
+      "FR-LEX-C218-QUAL218-03",
+      "FR-LEX-C218-QUAL218-04",
+      "FR-LEX-C218-QUAL218-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C228-racine",
+    "language": "french",
+    "chapter": 228,
+    "sequence": 13020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be63037f60c51b91"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:546529907827a948",
+  "lessonIds": [
+    "FR-C211-taire",
+    "FR-C211-craindre",
+    "FR-C211-tenter",
+    "FR-C211-transporter",
+    "FR-C211-tuer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch211.txt",
+  "json": "french/narration/ch211.json",
+  "textHash": "fnv1a64:d27a88e87512087b",
+  "jsonHash": "fnv1a64:9f0271d12d36d3fe",
+  "findings": []
+}

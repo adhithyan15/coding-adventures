@@ -1,0 +1,11 @@
+{
+  "id": "FR-C232-erreur",
+  "pathSegment": "FR-PATH-232-TRAV232",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-232-TRAV232",
+      "order": 3
+    }
+  ]
+}

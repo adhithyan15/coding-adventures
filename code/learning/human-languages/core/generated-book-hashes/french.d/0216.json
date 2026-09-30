@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:a28da9499ca9e5c9",
+  "lessonIds": [
+    "FR-C216-autour",
+    "FR-C216-partout",
+    "FR-C216-ailleurs",
+    "FR-C216-la-haut",
+    "FR-C216-banlieue"
+  ],
+  "tex": "french/book/chapters/ch216-around-everywhere-elsewhere-up-there-suburbs.tex"
+}

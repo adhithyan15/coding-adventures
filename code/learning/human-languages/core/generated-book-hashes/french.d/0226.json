@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:7542df616962c275",
+  "lessonIds": [
+    "FR-C226-carte-bancaire",
+    "FR-C226-distributeur",
+    "FR-C226-compte-bancaire",
+    "FR-C226-pret",
+    "FR-C226-dette"
+  ],
+  "tex": "french/book/chapters/ch226-bank-card-cash-machine-bank-account-loan-debt.tex"
+}

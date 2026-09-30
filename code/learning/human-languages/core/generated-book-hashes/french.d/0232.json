@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:38ea49991629f630",
+  "lessonIds": [
+    "FR-C232-magazine",
+    "FR-C232-dictionnaire",
+    "FR-C232-universite",
+    "FR-C232-erreur",
+    "FR-C232-histoire",
+    "FR-R232-first-pass-words-from-chapters-228-229",
+    "FR-R232-second-pass-words-from-chapters-230-232"
+  ],
+  "tex": "french/book/chapters/ch232-magazine-dictionary-university-mistake-history.tex"
+}

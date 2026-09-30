@@ -1,0 +1,11 @@
+{
+  "id": "FR-C224-scientifique",
+  "pathSegment": "FR-PATH-224-CHOSES224",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-224-CHOSES224",
+      "order": 3
+    }
+  ]
+}

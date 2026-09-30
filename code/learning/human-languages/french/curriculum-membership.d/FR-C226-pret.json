@@ -1,0 +1,11 @@
+{
+  "id": "FR-C226-pret",
+  "pathSegment": "FR-PATH-226-CHOSES226",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-226-CHOSES226",
+      "order": 3
+    }
+  ]
+}
