@@ -384,4 +384,28 @@ class TestBarcodeLayout1DConformance < Minitest::Test
     assert_equal "value", second.metadata.fetch("caller")
     assert_equal "A", second.instructions.first.metadata.fetch("sourceLabel")
   end
+
+  def test_direct_api_rejects_invalid_utf8_at_every_scalar_ingress
+    invalid = "\xFF".b
+
+    error = assert_raises(Implementation::BarcodeV1Error) do
+      Implementation.expand_binary_v1("1", source_label: invalid, source_index: 0, role: "data")
+    end
+    assert_equal "invalid-source-attribution", error.error_id
+
+    error = assert_raises(Implementation::BarcodeV1Error) do
+      Implementation.project_scene_v1([], 1, {render_config: {foreground: invalid}})
+    end
+    assert_equal "invalid-render-config", error.error_id
+
+    error = assert_raises(Implementation::BarcodeV1Error) do
+      Implementation.project_scene_v1([], 1, {metadata: {"key" => invalid}})
+    end
+    assert_equal "metadata-too-large", error.error_id
+
+    error = assert_raises(Implementation::BarcodeV1Error) do
+      Implementation.project_scene_v1([], 1, {label: invalid})
+    end
+    assert_equal "metadata-too-large", error.error_id
+  end
 end

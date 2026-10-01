@@ -181,9 +181,19 @@ module CodingAdventures
     end
 
     def v1_scalar_length(value, error_id)
-      v1_fail!(error_id) unless value.is_a?(String) && value.valid_encoding?
+      v1_utf8(value, error_id).each_codepoint.count
+    end
 
-      value.each_codepoint.count
+    def v1_utf8(value, error_id)
+      v1_fail!(error_id) unless value.is_a?(String)
+
+      encoded = value.encode(Encoding::UTF_8)
+      v1_fail!(error_id) unless encoded.valid_encoding?
+
+      encoded
+    rescue Encoding::InvalidByteSequenceError, Encoding::UndefinedConversionError,
+      Encoding::CompatibilityError
+      v1_fail!(error_id)
     end
 
     def v1_integer?(value)
@@ -332,12 +342,15 @@ module CodingAdventures
           v1_scalar_length(background, "invalid-render-config") <= MAX_COLOR_SCALARS
         v1_fail!("invalid-render-config")
       end
+      foreground = v1_utf8(foreground, "invalid-render-config")
+      background = v1_utf8(background, "invalid-render-config")
 
       symbols = v1_value(options, :symbols, nil)
       layout = compute_layout_v1(runs, quiet_zone_modules, symbols)
       metadata = validate_v1_metadata!(v1_value(options, :metadata, {}))
       label = v1_value(options, :label, "1D barcode")
       v1_fail!("metadata-too-large") if v1_scalar_length(label, "metadata-too-large") > MAX_LABEL_SCALARS
+      label = v1_utf8(label, "metadata-too-large")
 
       instructions = []
       cursor = quiet_zone_modules
@@ -388,7 +401,7 @@ module CodingAdventures
       {
         color: color.dup,
         modules: modules,
-        source_label: label.dup,
+        source_label: v1_utf8(label, "invalid-source-attribution"),
         source_index: index,
         role: role.dup
       }
@@ -439,7 +452,7 @@ module CodingAdventures
 
     def v1_symbol_layout(tuple, start_module, end_module)
       {
-        "label" => tuple[0].dup,
+        "label" => v1_utf8(tuple[0], "invalid-source-attribution"),
         "startModule" => start_module,
         "endModule" => end_module,
         "sourceIndex" => tuple[1],
@@ -451,9 +464,8 @@ module CodingAdventures
       v1_fail!("metadata-too-large") unless metadata.is_a?(Hash) && metadata.length <= MAX_METADATA_ENTRIES
       total = 0
       metadata.each_with_object({}) do |(key, value), copied|
-        unless key.is_a?(String) && value.is_a?(String) && key.valid_encoding? && value.valid_encoding?
-          v1_fail!("metadata-too-large")
-        end
+        key = v1_utf8(key, "metadata-too-large")
+        value = v1_utf8(value, "metadata-too-large")
         if v1_scalar_length(key, "metadata-too-large") > MAX_METADATA_KEY_SCALARS ||
             v1_scalar_length(value, "metadata-too-large") > MAX_METADATA_VALUE_SCALARS
           v1_fail!("metadata-too-large")
@@ -464,7 +476,7 @@ module CodingAdventures
       end
     end
 
-    private_class_method :v1_fail!, :v1_scalar_length, :v1_integer?,
+    private_class_method :v1_fail!, :v1_scalar_length, :v1_utf8, :v1_integer?,
       :validate_v1_source!, :v1_value, :v1_run, :infer_v1_symbols,
       :explicit_v1_symbols, :v1_symbol_layout, :validate_v1_metadata!
   end

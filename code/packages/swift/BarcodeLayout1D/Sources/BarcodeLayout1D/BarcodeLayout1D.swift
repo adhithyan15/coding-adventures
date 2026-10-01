@@ -379,10 +379,13 @@ public func expandBinaryV1(
     sourceIndex: Int,
     role: String
 ) throws -> [Barcode1DRunV1] {
-    let tokens = Array(pattern)
-    guard tokens.count <= BarcodeV1Limit.patternScalars else { try barcodeV1Fail("pattern-too-long") }
+    let scalarCount = pattern.unicodeScalars.prefix(BarcodeV1Limit.patternScalars + 1).count
+    guard scalarCount <= BarcodeV1Limit.patternScalars else { try barcodeV1Fail("pattern-too-long") }
+    let tokens = Array(pattern.unicodeScalars)
     guard !tokens.isEmpty else { try barcodeV1Fail("empty-pattern") }
-    guard tokens.allSatisfy({ $0 == "0" || $0 == "1" }) else { try barcodeV1Fail("invalid-binary-token") }
+    guard tokens.allSatisfy({ $0.value == 48 || $0.value == 49 }) else {
+        try barcodeV1Fail("invalid-binary-token")
+    }
     try barcodeV1ValidateSource(sourceLabel, sourceIndex)
     guard barcodeV1Roles.contains(role) else { try barcodeV1Fail("invalid-source-attribution") }
 
@@ -396,7 +399,7 @@ public func expandBinaryV1(
         } else {
             guard result.count < BarcodeV1Limit.runs else { try barcodeV1Fail("too-many-runs") }
             result.append(Barcode1DRunV1(
-                color: current == "1" ? "bar" : "space",
+                color: current.value == 49 ? "bar" : "space",
                 modules: width,
                 sourceLabel: sourceLabel,
                 sourceIndex: sourceIndex,
@@ -408,7 +411,7 @@ public func expandBinaryV1(
     }
     guard result.count < BarcodeV1Limit.runs else { try barcodeV1Fail("too-many-runs") }
     result.append(Barcode1DRunV1(
-        color: current == "1" ? "bar" : "space",
+        color: current.value == 49 ? "bar" : "space",
         modules: width,
         sourceLabel: sourceLabel,
         sourceIndex: sourceIndex,
@@ -428,15 +431,16 @@ public func expandWidthV1(
     wideModules: Int = 3,
     startingColor: String = "bar"
 ) throws -> [Barcode1DRunV1] {
-    let tokens = Array(pattern)
-    guard tokens.count <= BarcodeV1Limit.patternScalars else { try barcodeV1Fail("pattern-too-long") }
+    let scalarCount = pattern.unicodeScalars.prefix(BarcodeV1Limit.patternScalars + 1).count
+    guard scalarCount <= BarcodeV1Limit.patternScalars else { try barcodeV1Fail("pattern-too-long") }
+    let tokens = Array(pattern.unicodeScalars)
     guard !tokens.isEmpty else { try barcodeV1Fail("empty-pattern") }
     guard narrowMarker.unicodeScalars.count == 1,
           wideMarker.unicodeScalars.count == 1,
           narrowMarker != wideMarker
     else { try barcodeV1Fail("invalid-marker-configuration") }
-    let narrow = Character(narrowMarker)
-    let wide = Character(wideMarker)
+    let narrow = narrowMarker.unicodeScalars.first!
+    let wide = wideMarker.unicodeScalars.first!
     guard tokens.allSatisfy({ $0 == narrow || $0 == wide }) else { try barcodeV1Fail("invalid-width-token") }
     guard narrowModules > 0, wideModules > 0 else { try barcodeV1Fail("invalid-module-count") }
     try barcodeV1ValidateSource(sourceLabel, sourceIndex)
