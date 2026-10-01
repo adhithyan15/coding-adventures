@@ -676,7 +676,9 @@ async fn receive<S: Stage>(
             ProtocolError::ResourceLimit("too many concurrent host requests".into())
         })?;
         let method = method.to_owned();
-        let (ready_sender, ready_receiver) = if method == "stage.run" {
+        let needs_stream_barrier =
+            method == "stage.run" && runtime.metadata.consumes.starts_with("Stream<");
+        let (ready_sender, ready_receiver) = if needs_stream_barrier {
             let (sender, receiver) = oneshot::channel();
             (Some(sender), Some(receiver))
         } else {
