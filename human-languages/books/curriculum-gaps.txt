@@ -15,7 +15,7 @@ exposure: 46 native-script headwords carry no romanization, so they are load-bea
 order: 0 lessons with no declared sequence across 0 tracks; 0 prerequisites and 0 reviews pointing forward
 reinforcement: 156 of 21681 atoms never revisited (1%); missed windows R1 1745, R2 14163, R3 12145, R4 16182
 forward references: 1001 uses of material a later lesson teaches
-writing stages: 23/23 tracks prove the cumulative pre-A1 ladder; 815 evidence blocks, 0 invalid; 231 missing (track, level, stage) pairs
+writing stages: 23/23 tracks prove the cumulative pre-A1 ladder; 816 evidence blocks, 0 invalid; 231 missing (track, level, stage) pairs
 super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 110 named track/debt items
 writing ramp: 0 track(s) never practise writing; 6 start after lesson one
 gentleness measurement: 104 lesson(s) remain atom-measurement blind

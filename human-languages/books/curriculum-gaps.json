@@ -269117,6 +269117,15 @@
           },
           {
             "language": "telugu",
+            "lessonId": "TE-S06-letter-ra",
+            "blockIndex": 2,
+            "blockTitle": "Writing: ర — two calm movements",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 185
+          },
+          {
+            "language": "telugu",
             "lessonId": "TE-S123-letter-dda",
             "blockIndex": 2,
             "blockTitle": "Writing: డ — five deliberate movements",
@@ -269350,6 +269359,15 @@
             "stage": "observe-trace",
             "level": "pre-A1",
             "sequence": 181
+          },
+          {
+            "language": "telugu",
+            "lessonId": "TE-S06-letter-ra",
+            "blockIndex": 2,
+            "blockTitle": "Writing: ర — two calm movements",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 185
           },
           {
             "language": "telugu",
@@ -270057,7 +270075,7 @@
       "tracks": 23,
       "tracksWithAnyEvidence": 23,
       "tracksCompleteAtPreA1": 23,
-      "evidenceBlocks": 815,
+      "evidenceBlocks": 816,
       "invalidEvidenceBlocks": 0,
       "missingTrackLevelStages": 231
     }
