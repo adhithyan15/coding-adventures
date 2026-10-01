@@ -4349,8 +4349,44 @@ pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseErro
 
 // ── treemap parser ────────────────────────────────────────────────────────
 
+fn parse_treemap_config(source: &str) -> diagram_ir::TreemapConfig {
+    let front_matter = mermaid_front_matter_section(source, &["config", "treemap"]);
+    let config_source = mermaid_directive_object(source, "treemap")
+        .or(front_matter.as_deref())
+        .unwrap_or("");
+    let value = |key| {
+        quadrant_directive_value(config_source, key).or_else(|| {
+            config_source.lines().find_map(|line| {
+                let (name, value) = line.trim().split_once(':')?;
+                (name.trim() == key).then(|| value.trim().trim_matches(['\"', '\'']).to_string())
+            })
+        })
+    };
+    let defaults = diagram_ir::TreemapConfig::default();
+    let non_negative = |key, fallback| value(key).and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value >= 0.0).unwrap_or(fallback);
+    let positive = |key, fallback| value(key).and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value > 0.0).unwrap_or(fallback);
+    let boolean = |key, fallback| value(key).and_then(|value| match value.to_ascii_lowercase().as_str() {
+        "true" => Some(true), "false" => Some(false), _ => None,
+    }).unwrap_or(fallback);
+    diagram_ir::TreemapConfig {
+        use_max_width: boolean("useMaxWidth", defaults.use_max_width),
+        padding: non_negative("padding", defaults.padding),
+        diagram_padding: non_negative("diagramPadding", defaults.diagram_padding),
+        show_values: boolean("showValues", defaults.show_values),
+        node_width: positive("nodeWidth", defaults.node_width),
+        node_height: positive("nodeHeight", defaults.node_height),
+        border_width: non_negative("borderWidth", defaults.border_width),
+        value_font_size: positive("valueFontSize", defaults.value_font_size),
+        label_font_size: positive("labelFontSize", defaults.label_font_size),
+        value_format: value("valueFormat").filter(|value| !value.is_empty()).unwrap_or(defaults.value_format),
+    }
+}
+
 /// Parse the Mermaid 11.16.1 quoted, indentation-based treemap syntax.
 pub fn parse_treemap(source: &str) -> Result<TreemapDiagram, ParseError> {
+    let config = parse_treemap_config(source);
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_treemap(&prepared).map_err(|message| ParseError {
         message,
@@ -4369,6 +4405,7 @@ pub fn parse_treemap(source: &str) -> Result<TreemapDiagram, ParseError> {
         })?;
 
     let mut diagram = TreemapDiagram {
+        config,
         title: None,
         accessibility_title: None,
         accessibility_description: None,
@@ -13925,6 +13962,31 @@ B//-A: reverse stick top
                 SequenceEvent::BlockEnd { .. }
             ] if label == "Ping"
         ));
+    }
+
+    #[test]
+    fn treemap_parses_init_configuration_into_semantic_ir() {
+        let diagram = parse_treemap(
+            "%%{init: {\"treemap\": {\"padding\": 4, \"diagramPadding\": 12, \"showValues\": false, \"nodeWidth\": 64, \"nodeHeight\": 48, \"borderWidth\": 2, \"valueFontSize\": 10, \"labelFontSize\": 16, \"valueFormat\": \"$0,0\", \"useMaxWidth\": false}}}%%\ntreemap\n\"Root\": 1200",
+        ).unwrap();
+        assert_eq!(diagram.config.padding, 4.0);
+        assert_eq!(diagram.config.diagram_padding, 12.0);
+        assert!(!diagram.config.show_values);
+        assert_eq!((diagram.config.node_width, diagram.config.node_height), (64.0, 48.0));
+        assert_eq!((diagram.config.value_font_size, diagram.config.label_font_size), (10.0, 16.0));
+        assert_eq!(diagram.config.value_format, "$0,0");
+        assert!(!diagram.config.use_max_width);
+    }
+
+    #[test]
+    fn treemap_parses_yaml_configuration_and_uses_defaults_for_invalid_values() {
+        let diagram = parse_treemap(
+            "---\nconfig:\n  treemap:\n    padding: -1\n    nodeWidth: 72\n    showValues: false\n    valueFormat: '.2f'\n---\ntreemap\n\"Root\": 5",
+        ).unwrap();
+        assert_eq!(diagram.config.padding, 10.0);
+        assert_eq!(diagram.config.node_width, 72.0);
+        assert!(!diagram.config.show_values);
+        assert_eq!(diagram.config.value_format, ".2f");
     }
 }
 #[cfg(test)]

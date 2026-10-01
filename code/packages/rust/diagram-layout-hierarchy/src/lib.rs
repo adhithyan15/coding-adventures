@@ -10,10 +10,8 @@ use diagram_ir::{
     RailroadDiagram, RailroadElementKind, RailroadExpression,
 };
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 
-const OUTER_PADDING: f64 = 8.0;
-const NODE_GAP: f64 = 3.0;
 const PARENT_HEADER: f64 = 24.0;
 
 /// Lay out explicit Railroad constructors into rule rows and branch paths.
@@ -208,9 +206,10 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
     }
 }
 /// Lay out a treemap using stable alternating slice-and-dice partitions.
-pub fn layout_treemap(diagram: &TreemapDiagram, canvas_width: f64) -> LayoutedTreemapDiagram {
-    let width = canvas_width.max(320.0);
-    let height = (width * 0.62).max(240.0);
+pub fn layout_treemap(diagram: &TreemapDiagram, _canvas_width: f64) -> LayoutedTreemapDiagram {
+    let width = (diagram.config.node_width * 10.0).max(1.0);
+    let height = (diagram.config.node_height * 10.0).max(1.0);
+    let outer_padding = diagram.config.diagram_padding;
     let title_height = if diagram.title.is_some() { 40.0 } else { 0.0 };
     let mut children = HashMap::<Option<&str>, Vec<usize>>::new();
     for (index, node) in diagram.nodes.iter().enumerate() {
@@ -241,15 +240,16 @@ pub fn layout_treemap(diagram: &TreemapDiagram, canvas_width: f64) -> LayoutedTr
         &totals,
         &roots,
         0,
-        OUTER_PADDING,
-        title_height + OUTER_PADDING,
-        width - OUTER_PADDING * 2.0,
-        height - title_height - OUTER_PADDING * 2.0,
+        outer_padding,
+        title_height + outer_padding,
+        (width - outer_padding * 2.0).max(0.0),
+        (height - title_height - outer_padding * 2.0).max(0.0),
         &mut nodes,
     );
     LayoutedTreemapDiagram {
         width,
         height,
+        config: diagram.config.clone(),
         title: diagram.title.clone(),
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
@@ -302,6 +302,7 @@ fn layout_siblings(
     height: f64,
     output: &mut Vec<LayoutedTreemapNode>,
 ) {
+    let node_gap = diagram.config.padding / 2.0;
     let total = siblings
         .iter()
         .map(|index| totals[*index])
@@ -337,10 +338,11 @@ fn layout_siblings(
             label: node.label.clone(),
             value: totals[*index],
             depth,
-            x: node_x + NODE_GAP,
-            y: node_y + NODE_GAP,
-            width: (node_width - NODE_GAP * 2.0).max(0.0),
-            height: (node_height - NODE_GAP * 2.0).max(0.0),
+            has_children: child_indices.is_some_and(|children| !children.is_empty()),
+            x: node_x + node_gap,
+            y: node_y + node_gap,
+            width: (node_width - node_gap * 2.0).max(0.0),
+            height: (node_height - node_gap * 2.0).max(0.0),
             class_selector: node.class_selector.clone(),
         });
         if let Some(child_indices) = child_indices {
@@ -350,10 +352,10 @@ fn layout_siblings(
                 totals,
                 child_indices,
                 depth + 1,
-                node_x + NODE_GAP * 2.0,
+                node_x + node_gap * 2.0,
                 node_y + PARENT_HEADER,
-                (node_width - NODE_GAP * 4.0).max(0.0),
-                (node_height - PARENT_HEADER - NODE_GAP).max(0.0),
+                (node_width - node_gap * 4.0).max(0.0),
+                (node_height - PARENT_HEADER - node_gap).max(0.0),
                 output,
             );
         }
@@ -368,6 +370,7 @@ mod tests {
     #[test]
     fn child_areas_follow_values_and_stay_inside_parent() {
         let diagram = TreemapDiagram {
+            config: Default::default(),
             title: None,
             accessibility_title: None,
             accessibility_description: None,
@@ -402,6 +405,20 @@ mod tests {
             .nodes
             .iter()
             .all(|node| node.width >= 0.0 && node.height >= 0.0));
+        assert_eq!((layout.width, layout.height), (1000.0, 400.0));
+    }
+
+    #[test]
+    fn treemap_configuration_controls_canvas_and_spacing() {
+        let diagram = TreemapDiagram {
+            config: diagram_ir::TreemapConfig { node_width: 64.0, node_height: 48.0, diagram_padding: 20.0, padding: 4.0, ..Default::default() },
+            title: None, accessibility_title: None, accessibility_description: None,
+            nodes: vec![TreemapNode { id: "root".into(), label: "Root".into(), value: Some(1.0), class_selector: None, parent_id: None }],
+        };
+        let layout = layout_treemap(&diagram, 999.0);
+        assert_eq!((layout.width, layout.height), (640.0, 480.0));
+        assert_eq!((layout.nodes[0].x, layout.nodes[0].y), (22.0, 22.0));
+        assert_eq!(layout.config.padding, 4.0);
     }
 
     #[test]
