@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C241-sollicitus",
+    "language": "latin",
+    "chapter": 241,
+    "sequence": 12590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:313b9e618ef35da3"
+  },
+  "findings": []
+}

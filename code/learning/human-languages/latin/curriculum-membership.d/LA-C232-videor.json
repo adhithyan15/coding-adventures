@@ -1,0 +1,11 @@
+{
+  "id": "LA-C232-videor",
+  "pathSegment": "LA-PATH-232-ACT232",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-232-ACT232",
+      "order": 2
+    }
+  ]
+}

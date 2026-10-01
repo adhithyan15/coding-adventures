@@ -1,0 +1,19 @@
+{
+  "chapter": 242,
+  "title": "Few, All, Whole, Others, Other",
+  "label": "ch:la-few-all-whole-others-other",
+  "canDo": "I can say few, all, whole, the others and other.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-C242-alius",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 242: I can say few, all, whole, the others and other.",
+    "assesses": [
+      "LA-LEX-C242-QUAL242-03",
+      "LA-LEX-C242-QUAL242-04",
+      "LA-LEX-C242-QUAL242-05"
+    ]
+  }
+}

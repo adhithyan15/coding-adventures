@@ -1,0 +1,11 @@
+{
+  "id": "LA-C237-cotidie",
+  "pathSegment": "LA-PATH-237-TEMP237",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-237-TEMP237",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C238-apud",
+  "pathSegment": "LA-PATH-238-LOC238",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-238-LOC238",
+      "order": 2
+    }
+  ]
+}

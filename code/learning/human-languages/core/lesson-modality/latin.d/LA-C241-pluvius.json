@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C241-pluvius",
+    "language": "latin",
+    "chapter": 241,
+    "sequence": 12610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d84e0f9b9100d8c1"
+  },
+  "findings": []
+}

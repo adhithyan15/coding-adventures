@@ -1,0 +1,19 @@
+{
+  "chapter": 252,
+  "title": "Small flask, Frying pan, Oven, Candlestick, Small tablet",
+  "label": "ch:la-small-flask-frying-pan-oven-candlestick-small-tablet",
+  "canDo": "I can say a small flask, a frying pan, an oven, a candlestick and a small tablet.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C252-tabella",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 252: I can say a small flask, a frying pan, an oven, a candlestick and a small tablet.",
+    "assesses": [
+      "LA-LEX-C252-RES252-03",
+      "LA-LEX-C252-RES252-04",
+      "LA-LEX-C252-RES252-05"
+    ]
+  }
+}

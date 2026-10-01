@@ -1,0 +1,11 @@
+{
+  "id": "LA-C251-clava",
+  "pathSegment": "LA-PATH-251-RES251",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-251-RES251",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-251-RES251",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a puppy, a tiger, a club, a chain and a shield.",
+  "prerequisites": []
+}

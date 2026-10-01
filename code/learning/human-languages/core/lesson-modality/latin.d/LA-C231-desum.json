@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C231-desum",
+    "language": "latin",
+    "chapter": 231,
+    "sequence": 11920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aed3428196089b96"
+  },
+  "findings": []
+}

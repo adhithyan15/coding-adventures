@@ -1,0 +1,19 @@
+{
+  "chapter": 249,
+  "title": "Wood, Marble, Glass, Hide, Linen",
+  "label": "ch:la-wood-marble-glass-hide-linen",
+  "canDo": "I can say wood, marble, glass, hide and linen.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C249-linum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 249: I can say wood, marble, glass, hide and linen.",
+    "assesses": [
+      "LA-LEX-C249-RES249-03",
+      "LA-LEX-C249-RES249-04",
+      "LA-LEX-C249-RES249-05"
+    ]
+  }
+}

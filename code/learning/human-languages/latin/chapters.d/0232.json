@@ -1,0 +1,19 @@
+{
+  "chapter": 232,
+  "title": "To steal, To uncover, To seem, To serve, To suffer",
+  "label": "ch:la-to-steal-to-uncover-to-seem-to-serve-to-suffer",
+  "canDo": "I can say to steal, to uncover, to seem, to serve and to suffer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C232-patior",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 232: I can say to steal, to uncover, to seem, to serve and to suffer.",
+    "assesses": [
+      "LA-LEX-C232-ACT232-03",
+      "LA-LEX-C232-ACT232-04",
+      "LA-LEX-C232-ACT232-05"
+    ]
+  }
+}

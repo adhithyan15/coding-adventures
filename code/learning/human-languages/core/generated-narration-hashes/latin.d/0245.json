@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:c23ed646a8d55b1c",
+  "lessonIds": [
+    "LA-C245-fur",
+    "LA-C245-latro",
+    "LA-C245-consul",
+    "LA-C245-imperator",
+    "LA-C245-regnum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch245.txt",
+  "json": "latin/narration/ch245.json",
+  "textHash": "fnv1a64:bc092e3e00728d32",
+  "jsonHash": "fnv1a64:1791d332afc5c421",
+  "findings": []
+}

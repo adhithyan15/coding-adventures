@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C233-pareo",
+    "language": "latin",
+    "chapter": 233,
+    "sequence": 12020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:420b1e3203fc1809"
+  },
+  "findings": []
+}

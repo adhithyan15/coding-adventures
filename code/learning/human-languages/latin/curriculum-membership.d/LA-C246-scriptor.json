@@ -1,0 +1,11 @@
+{
+  "id": "LA-C246-scriptor",
+  "pathSegment": "LA-PATH-246-RES246",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-246-RES246",
+      "order": 2
+    }
+  ]
+}

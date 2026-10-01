@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:cf400d47083ed520",
+  "lessonIds": [
+    "LA-C252-ampulla",
+    "LA-C252-sartago",
+    "LA-C252-furnus",
+    "LA-C252-candelabrum",
+    "LA-C252-tabella"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch252.txt",
+  "json": "latin/narration/ch252.json",
+  "textHash": "fnv1a64:ead026f07efafb81",
+  "jsonHash": "fnv1a64:c0d989fa9bbe804c",
+  "findings": []
+}

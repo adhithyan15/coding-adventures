@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-252-RES252",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a small flask, a frying pan, an oven, a candlestick and a small tablet.",
+  "prerequisites": []
+}

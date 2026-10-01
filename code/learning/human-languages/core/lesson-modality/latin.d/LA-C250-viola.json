@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C250-viola",
+    "language": "latin",
+    "chapter": 250,
+    "sequence": 13250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5317fefff58d4bea"
+  },
+  "findings": []
+}

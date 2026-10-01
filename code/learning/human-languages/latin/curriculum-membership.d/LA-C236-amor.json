@@ -1,0 +1,11 @@
+{
+  "id": "LA-C236-amor",
+  "pathSegment": "LA-PATH-236-VALE236",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-236-VALE236",
+      "order": 3
+    }
+  ]
+}

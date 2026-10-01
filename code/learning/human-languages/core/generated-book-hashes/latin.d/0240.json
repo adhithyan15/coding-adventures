@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:f7edba2e4c97237c",
+  "lessonIds": [
+    "LA-C240-asper",
+    "LA-C240-profundus",
+    "LA-C240-ignotus",
+    "LA-C240-necessarius",
+    "LA-C240-inutilis"
+  ],
+  "tex": "latin/book/chapters/ch240-rough-deep-unknown-necessary-useless.tex"
+}

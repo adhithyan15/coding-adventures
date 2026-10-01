@@ -1,0 +1,19 @@
+{
+  "chapter": 243,
+  "title": "Doubtful, Faithful, Loyal, Unlucky, Blessed",
+  "label": "ch:la-doubtful-faithful-loyal-unlucky-blessed",
+  "canDo": "I can say doubtful, faithful, loyal, unlucky and blessed.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-C243-beatus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 243: I can say doubtful, faithful, loyal, unlucky and blessed.",
+    "assesses": [
+      "LA-LEX-C243-QUAL243-03",
+      "LA-LEX-C243-QUAL243-04",
+      "LA-LEX-C243-QUAL243-05"
+    ]
+  }
+}

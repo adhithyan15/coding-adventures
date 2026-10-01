@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R237-first-pass-words-from-chapters-229-232",
+    "language": "latin",
+    "chapter": 237,
+    "sequence": 12230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:27b82de8fde6ba46"
+  },
+  "findings": []
+}

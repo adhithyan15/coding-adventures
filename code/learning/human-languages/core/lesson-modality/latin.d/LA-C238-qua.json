@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C238-qua",
+    "language": "latin",
+    "chapter": 238,
+    "sequence": 12460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d14bb88d99e578d4"
+  },
+  "findings": []
+}

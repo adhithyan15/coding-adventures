@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:2974e991894499a5",
+  "lessonIds": [
+    "LA-C247-geminus",
+    "LA-C247-socer",
+    "LA-C247-socrus",
+    "LA-C247-gener",
+    "LA-C247-nurus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch247.txt",
+  "json": "latin/narration/ch247.json",
+  "textHash": "fnv1a64:bc511edfea0b76f0",
+  "jsonHash": "fnv1a64:1f2a852fc1384099",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C249-corium",
+  "pathSegment": "LA-PATH-249-RES249",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-249-RES249",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C250-laurus",
+  "pathSegment": "LA-PATH-250-RES250",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-250-RES250",
+      "order": 3
+    }
+  ]
+}

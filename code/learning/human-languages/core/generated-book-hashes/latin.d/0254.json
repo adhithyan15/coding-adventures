@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:996a812185c166aa",
+  "lessonIds": [
+    "LA-C254-sarcina",
+    "LA-C254-pera",
+    "LA-C254-marsuppium",
+    "LA-C254-tabernaculum",
+    "LA-C254-vexillum",
+    "LA-R254-first-pass-words-from-chapters-247-250",
+    "LA-R254-second-pass-words-from-chapters-251-254"
+  ],
+  "tex": "latin/book/chapters/ch254-pack-satchel-money-bag-tent-flag.tex"
+}

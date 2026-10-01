@@ -1,0 +1,11 @@
+{
+  "id": "LA-C249-vitrum",
+  "pathSegment": "LA-PATH-249-RES249",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-249-RES249",
+      "order": 2
+    }
+  ]
+}

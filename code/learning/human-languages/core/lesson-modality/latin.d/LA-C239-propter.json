@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C239-propter",
+    "language": "latin",
+    "chapter": 239,
+    "sequence": 12510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:034bdd72135d7299"
+  },
+  "findings": []
+}

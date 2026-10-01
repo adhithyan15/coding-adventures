@@ -1,0 +1,19 @@
+{
+  "chapter": 233,
+  "title": "To press on, To break off, To tie, To mix, To obey",
+  "label": "ch:la-to-press-on-to-break-off-to-tie-to-mix-to-obey",
+  "canDo": "I can say to press on, to break off, to tie, to mix and to obey.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C233-pareo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 233: I can say to press on, to break off, to tie, to mix and to obey.",
+    "assesses": [
+      "LA-LEX-C233-ACT233-03",
+      "LA-LEX-C233-ACT233-04",
+      "LA-LEX-C233-ACT233-05"
+    ]
+  }
+}

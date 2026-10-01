@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:b53898438ec9f5a5",
+  "lessonIds": [
+    "LA-C236-emplastrum",
+    "LA-C236-remedium",
+    "LA-C236-somnium",
+    "LA-C236-amor",
+    "LA-C236-amicitia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch236.txt",
+  "json": "latin/narration/ch236.json",
+  "textHash": "fnv1a64:9b5a5d9175b7d22f",
+  "jsonHash": "fnv1a64:988ad486691552c9",
+  "findings": []
+}

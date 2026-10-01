@@ -1,0 +1,11 @@
+{
+  "id": "LA-C242-ceteri",
+  "pathSegment": "LA-PATH-242-QUAL242",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-242-QUAL242",
+      "order": 3
+    }
+  ]
+}

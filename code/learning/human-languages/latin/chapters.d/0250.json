@@ -1,0 +1,19 @@
+{
+  "chapter": 250,
+  "title": "Vine, Oak, Pine, Laurel, Violet",
+  "label": "ch:la-vine-oak-pine-laurel-violet",
+  "canDo": "I can say a vine, an oak, a pine, a laurel and a violet.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C250-viola",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 250: I can say a vine, an oak, a pine, a laurel and a violet.",
+    "assesses": [
+      "LA-LEX-C250-RES250-03",
+      "LA-LEX-C250-RES250-04",
+      "LA-LEX-C250-RES250-05"
+    ]
+  }
+}

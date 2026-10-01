@@ -1,0 +1,11 @@
+{
+  "id": "LA-C237-interdum",
+  "pathSegment": "LA-PATH-237-TEMP237",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-237-TEMP237",
+      "order": 2
+    }
+  ]
+}

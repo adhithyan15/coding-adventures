@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-239-CAUSA239",
+  "spine_node": "SPINE-SAY-WHY",
+  "before": [],
+  "inline": [
+    "LA-EXT-239-CAUSA239"
+  ],
+  "after": []
+}

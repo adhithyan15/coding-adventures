@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C231-verto",
+    "language": "latin",
+    "chapter": 231,
+    "sequence": 11880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b110a4ad74bfc266"
+  },
+  "findings": []
+}

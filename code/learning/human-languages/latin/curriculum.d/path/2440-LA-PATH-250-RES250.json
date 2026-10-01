@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-250-RES250",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "LA-EXT-250-RES250"
+  ],
+  "after": []
+}

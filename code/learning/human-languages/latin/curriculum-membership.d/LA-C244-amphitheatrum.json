@@ -1,0 +1,11 @@
+{
+  "id": "LA-C244-amphitheatrum",
+  "pathSegment": "LA-PATH-244-RES244",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-244-RES244",
+      "order": 4
+    }
+  ]
+}

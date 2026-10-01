@@ -1,0 +1,11 @@
+{
+  "id": "LA-C253-convivium",
+  "pathSegment": "LA-PATH-253-RES253",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-253-RES253",
+      "order": 1
+    }
+  ]
+}

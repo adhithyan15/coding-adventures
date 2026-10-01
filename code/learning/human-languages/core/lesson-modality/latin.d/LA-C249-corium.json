@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C249-corium",
+    "language": "latin",
+    "chapter": 249,
+    "sequence": 13190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8510a42383ed8e9"
+  },
+  "findings": []
+}

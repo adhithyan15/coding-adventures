@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:f27371014f560c40",
+  "lessonIds": [
+    "LA-C240-asper",
+    "LA-C240-profundus",
+    "LA-C240-ignotus",
+    "LA-C240-necessarius",
+    "LA-C240-inutilis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch240.txt",
+  "json": "latin/narration/ch240.json",
+  "textHash": "fnv1a64:eef96803ac093da9",
+  "jsonHash": "fnv1a64:1dd36fbe8afb3dbb",
+  "findings": []
+}

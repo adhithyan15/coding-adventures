@@ -1,0 +1,11 @@
+{
+  "id": "LA-C238-ultra",
+  "pathSegment": "LA-PATH-238-LOC238",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-238-LOC238",
+      "order": 0
+    }
+  ]
+}

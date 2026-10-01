@@ -1,0 +1,11 @@
+{
+  "id": "LA-C252-furnus",
+  "pathSegment": "LA-PATH-252-RES252",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-252-RES252",
+      "order": 2
+    }
+  ]
+}
