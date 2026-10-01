@@ -1,0 +1,19 @@
+{
+  "chapter": 191,
+  "title": "Charcoal, Crag, Constellation, Storm, Rain cloud",
+  "label": "ch:la-charcoal-crag-constellation-storm-rain-cloud",
+  "canDo": "I can say charcoal, a crag, a constellation, a storm and a rain cloud.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-R191-second-pass-words-from-chapters-187-191",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 191: I can say charcoal, a crag, a constellation, a storm and a rain cloud.",
+    "assesses": [
+      "LA-LEX-C191-RES191-03",
+      "LA-LEX-C191-RES191-04",
+      "LA-LEX-C191-RES191-05"
+    ]
+  }
+}

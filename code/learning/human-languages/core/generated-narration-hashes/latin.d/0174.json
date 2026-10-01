@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:0a69a6c0794e0685",
+  "lessonIds": [
+    "LA-C174-patientia",
+    "LA-C174-lacrima",
+    "LA-C174-risus",
+    "LA-C174-vox",
+    "LA-C174-animus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch174.txt",
+  "json": "latin/narration/ch174.json",
+  "textHash": "fnv1a64:9612cb928e5008bb",
+  "jsonHash": "fnv1a64:87569dba46dc7757",
+  "findings": []
+}

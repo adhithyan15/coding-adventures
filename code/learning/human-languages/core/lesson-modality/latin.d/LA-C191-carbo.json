@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C191-carbo",
+    "language": "latin",
+    "chapter": 191,
+    "sequence": 8820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8a64062a3465d9a"
+  },
+  "findings": []
+}

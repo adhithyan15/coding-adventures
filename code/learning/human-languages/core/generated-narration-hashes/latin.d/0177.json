@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:0da80fe4ea833c54",
+  "lessonIds": [
+    "LA-C177-longe",
+    "LA-C177-alibi",
+    "LA-C177-illic",
+    "LA-C177-intus",
+    "LA-C177-foris"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch177.txt",
+  "json": "latin/narration/ch177.json",
+  "textHash": "fnv1a64:59502ea0fb9b311c",
+  "jsonHash": "fnv1a64:f30abc14af50c827",
+  "findings": []
+}

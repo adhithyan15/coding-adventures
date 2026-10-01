@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C166-signo",
+    "language": "latin",
+    "chapter": 166,
+    "sequence": 7200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a3d037fd1319ff63"
+  },
+  "findings": []
+}

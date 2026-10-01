@@ -1,0 +1,11 @@
+{
+  "id": "LA-C188-figulus",
+  "pathSegment": "LA-PATH-188-RES188",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-188-RES188",
+      "order": 2
+    }
+  ]
+}

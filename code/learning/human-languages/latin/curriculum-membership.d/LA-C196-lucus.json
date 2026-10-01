@@ -1,0 +1,11 @@
+{
+  "id": "LA-C196-lucus",
+  "pathSegment": "LA-PATH-196-RES196",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-196-RES196",
+      "order": 4
+    }
+  ]
+}

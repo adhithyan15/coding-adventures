@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:c02dd55c416cae4b",
+  "lessonIds": [
+    "LA-C172-sero",
+    "LA-C172-meto",
+    "LA-C172-venor",
+    "LA-C172-piscor",
+    "LA-C172-nego"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch172.txt",
+  "json": "latin/narration/ch172.json",
+  "textHash": "fnv1a64:c9e67a412354a4ac",
+  "jsonHash": "fnv1a64:04e0c9c7f67c2976",
+  "findings": []
+}

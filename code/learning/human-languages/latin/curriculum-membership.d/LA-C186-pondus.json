@@ -1,0 +1,11 @@
+{
+  "id": "LA-C186-pondus",
+  "pathSegment": "LA-PATH-186-RES186",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-186-RES186",
+      "order": 2
+    }
+  ]
+}

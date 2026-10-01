@@ -1,0 +1,11 @@
+{
+  "id": "LA-C187-dux",
+  "pathSegment": "LA-PATH-187-RES187",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-187-RES187",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C170-suspicor",
+    "language": "latin",
+    "chapter": 170,
+    "sequence": 7420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:75b6275fe7224094"
+  },
+  "findings": []
+}

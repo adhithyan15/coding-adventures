@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:f13763176ef25edb",
+  "lessonIds": [
+    "LA-C190-vectigal",
+    "LA-C190-tributum",
+    "LA-C190-merces",
+    "LA-C190-denarius",
+    "LA-C190-sestertius"
+  ],
+  "tex": "latin/book/chapters/ch190-tax-tribute-wages-denarius-sesterce.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:a79d770585a762ba",
+  "lessonIds": [
+    "LA-C169-interficio",
+    "LA-C169-consuesco",
+    "LA-C169-propero",
+    "LA-C169-recedo",
+    "LA-C169-appropinquo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch169.txt",
+  "json": "latin/narration/ch169.json",
+  "textHash": "fnv1a64:01d0fee983d6190e",
+  "jsonHash": "fnv1a64:0e5f07ecaa307d29",
+  "findings": []
+}

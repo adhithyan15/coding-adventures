@@ -1,0 +1,11 @@
+{
+  "id": "LA-C177-foris",
+  "pathSegment": "LA-PATH-177-LOC177",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-177-LOC177",
+      "order": 4
+    }
+  ]
+}

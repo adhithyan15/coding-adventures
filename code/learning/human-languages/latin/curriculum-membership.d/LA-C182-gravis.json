@@ -1,0 +1,11 @@
+{
+  "id": "LA-C182-gravis",
+  "pathSegment": "LA-PATH-182-QUAL182",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-182-QUAL182",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 182,
+  "title": "Public, Private, Common, Hollow, Heavy",
+  "label": "ch:la-public-private-common-hollow-heavy",
+  "canDo": "I can say public, private, common, hollow and heavy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-R182-second-pass-words-from-chapters-178-182",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 182: I can say public, private, common, hollow and heavy.",
+    "assesses": [
+      "LA-LEX-C182-QUAL182-03",
+      "LA-LEX-C182-QUAL182-04",
+      "LA-LEX-C182-QUAL182-05"
+    ]
+  }
+}

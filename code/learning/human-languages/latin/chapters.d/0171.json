@@ -1,0 +1,19 @@
+{
+  "chapter": 171,
+  "title": "To deceive, To endure, To found, To create, To believe",
+  "label": "ch:la-to-deceive-to-endure-to-found-to-create-to-believe",
+  "canDo": "I can say to deceive, to endure, to found, to create and to believe.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C171-credo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 171: I can say to deceive, to endure, to found, to create and to believe.",
+    "assesses": [
+      "LA-LEX-C171-ACT171-03",
+      "LA-LEX-C171-ACT171-04",
+      "LA-LEX-C171-ACT171-05"
+    ]
+  }
+}

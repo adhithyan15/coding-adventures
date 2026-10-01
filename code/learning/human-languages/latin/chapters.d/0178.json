@@ -1,0 +1,19 @@
+{
+  "chapter": 178,
+  "title": "Therefore, However, Although, Even if, Unless",
+  "label": "ch:la-therefore-however-although-even-if-unless",
+  "canDo": "I can say therefore, however, although, even if and unless.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "LA-C178-nisi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 178: I can say therefore, however, although, even if and unless.",
+    "assesses": [
+      "LA-LEX-C178-CAUSA178-03",
+      "LA-LEX-C178-CAUSA178-04",
+      "LA-LEX-C178-CAUSA178-05"
+    ]
+  }
+}

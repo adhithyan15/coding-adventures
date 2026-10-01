@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:98233cf52815b7d7",
+  "lessonIds": [
+    "LA-C166-probo",
+    "LA-C166-signo",
+    "LA-C166-disputo",
+    "LA-C166-promitto",
+    "LA-C166-permitto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch166.txt",
+  "json": "latin/narration/ch166.json",
+  "textHash": "fnv1a64:990e6c46e7986f7e",
+  "jsonHash": "fnv1a64:ba497171aa435f0b",
+  "findings": []
+}

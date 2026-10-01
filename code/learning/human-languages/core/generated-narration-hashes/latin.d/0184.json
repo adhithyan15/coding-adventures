@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 184,
+  "sourceHash": "fnv1a64:aa27013f92d0ed0e",
+  "lessonIds": [
+    "LA-C184-prodigus",
+    "LA-C184-modestus",
+    "LA-C184-facundus",
+    "LA-C184-mutus",
+    "LA-C184-claudus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch184.txt",
+  "json": "latin/narration/ch184.json",
+  "textHash": "fnv1a64:ca4083ee61fd7d24",
+  "jsonHash": "fnv1a64:b608fd6c1432b050",
+  "findings": []
+}

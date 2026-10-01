@@ -1,0 +1,11 @@
+{
+  "id": "LA-C181-longinquus",
+  "pathSegment": "LA-PATH-181-QUAL181",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-181-QUAL181",
+      "order": 4
+    }
+  ]
+}

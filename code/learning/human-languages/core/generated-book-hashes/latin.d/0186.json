@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 186,
+  "sourceHash": "fnv1a64:e695ab6b04dd90e0",
+  "lessonIds": [
+    "LA-C186-gubernator",
+    "LA-C186-mercatus",
+    "LA-C186-pondus",
+    "LA-C186-mensura",
+    "LA-C186-libra"
+  ],
+  "tex": "latin/book/chapters/ch186-helmsman-market-weight-measure-pound.tex"
+}

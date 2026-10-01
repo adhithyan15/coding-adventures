@@ -38,7 +38,10 @@ it("pins Latin lesson-content budgets", () =>
     // saying no and asking which of two, the past, the future and reading
     // practical texts. Twenty word lessons and two reviews, with no idiom,
     // sense or culture claim.
-    lessons: 699,
+    // 699 -> 867: the first Latin A2 vocabulary tranche, chapters 165-196.
+    // 160 word lessons (forty verbs) and two reviews per run of at most nine
+    // chapters. No idiom, sense or culture claim.
+    lessons: 867,
     idioms: 16,
     senses: 6,
     cultureClaims: 17,

@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:017c33c6cb72628a",
+  "lessonIds": [
+    "LA-C196-fluvius",
+    "LA-C196-palus",
+    "LA-C196-pratum",
+    "LA-C196-nemus",
+    "LA-C196-lucus",
+    "LA-R196-first-pass-words-from-chapters-192-193",
+    "LA-R196-second-pass-words-from-chapters-194-196"
+  ],
+  "tex": "latin/book/chapters/ch196-running-stream-marsh-meadow-grove-sacred-grove.tex"
+}

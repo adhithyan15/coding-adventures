@@ -1,0 +1,19 @@
+{
+  "chapter": 177,
+  "title": "Far, Elsewhere, Over there, Within, Out of doors",
+  "label": "ch:la-far-elsewhere-over-there-within-out-of-doors",
+  "canDo": "I can say far, elsewhere, over there, within and out of doors.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "LA-C177-foris",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 177: I can say far, elsewhere, over there, within and out of doors.",
+    "assesses": [
+      "LA-LEX-C177-LOC177-03",
+      "LA-LEX-C177-LOC177-04",
+      "LA-LEX-C177-LOC177-05"
+    ]
+  }
+}

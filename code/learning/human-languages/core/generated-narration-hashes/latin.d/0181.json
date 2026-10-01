@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 181,
+  "sourceHash": "fnv1a64:ece48b258b30b307",
+  "lessonIds": [
+    "LA-C181-gratuitus",
+    "LA-C181-recens",
+    "LA-C181-crudus",
+    "LA-C181-coctus",
+    "LA-C181-longinquus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch181.txt",
+  "json": "latin/narration/ch181.json",
+  "textHash": "fnv1a64:5f3dd6293fd965d0",
+  "jsonHash": "fnv1a64:21bd597ca697b9ac",
+  "findings": []
+}

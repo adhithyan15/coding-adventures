@@ -1,0 +1,21 @@
+{
+  "language": "latin",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:603d5076ed20e1d7",
+  "lessonIds": [
+    "LA-C196-fluvius",
+    "LA-C196-palus",
+    "LA-C196-pratum",
+    "LA-C196-nemus",
+    "LA-C196-lucus",
+    "LA-R196-first-pass-words-from-chapters-192-193",
+    "LA-R196-second-pass-words-from-chapters-194-196"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "latin/narration/ch196.txt",
+  "json": "latin/narration/ch196.json",
+  "textHash": "fnv1a64:0461ec08c0b10d97",
+  "jsonHash": "fnv1a64:a77325466adacd8a",
+  "findings": []
+}

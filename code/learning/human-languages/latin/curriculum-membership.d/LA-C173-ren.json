@@ -1,0 +1,11 @@
+{
+  "id": "LA-C173-ren",
+  "pathSegment": "LA-PATH-173-VALE173",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-173-VALE173",
+      "order": 4
+    }
+  ]
+}

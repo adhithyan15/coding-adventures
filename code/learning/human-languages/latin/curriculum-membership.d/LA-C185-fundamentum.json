@@ -1,0 +1,11 @@
+{
+  "id": "LA-C185-fundamentum",
+  "pathSegment": "LA-PATH-185-RES185",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-185-RES185",
+      "order": 4
+    }
+  ]
+}

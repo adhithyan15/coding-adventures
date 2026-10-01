@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 191,
+  "title": "Charcoal, Crag, Constellation, Storm, Rain cloud",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:ca7e2f2a7ad37fc1",
+  "lessons": [
+    {
+      "id": "LA-C191-carbo",
+      "sequence": 8820,
+      "title": "carbō, carbōnis — charcoal",
+      "headword": "carbō, carbōnis",
+      "romanization": "carbō, carbōnis",
+      "gloss": "charcoal",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8a64062a3465d9a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a denarius, then the Latin for a sesterce."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: carbō, carbōnis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "carbō, carbōnis — \"charcoal\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "carbō, carbōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *carbō, carbōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "carbō, carbōnis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *carbō, carbōnis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say carbō, carbōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *carbō, carbōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a denarius, then the Latin for a sesterce, then say carbō, carbōnis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a denarius, then the Latin for a sesterce, then say *carbō, carbōnis* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does carbō, carbōnis mean? (\"Charcoal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C191-scopulus",
+      "sequence": 8830,
+      "title": "scopulus, scopulī — a crag, a cliff",
+      "headword": "scopulus, scopulī",
+      "romanization": "scopulus, scopulī",
+      "gloss": "a crag, a cliff",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:efab18874183dd88",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a sesterce, then the Latin for charcoal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: scopulus, scopulī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "scopulus, scopulī — \"a crag, a cliff\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "scopulus, scopulī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *scopulus, scopulī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "scopulus, scopulī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *scopulus, scopulī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say scopulus, scopulī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *scopulus, scopulī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a sesterce, then the Latin for charcoal, then say scopulus, scopulī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a sesterce, then the Latin for charcoal, then say *scopulus, scopulī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does scopulus, scopulī mean? (\"A crag, a cliff\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C191-sidus",
+      "sequence": 8840,
+      "title": "sīdus, sīderis — a constellation, a star",
+      "headword": "sīdus, sīderis",
+      "romanization": "sīdus, sīderis",
+      "gloss": "a constellation, a star",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d380070a464dfe0c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for charcoal, then the Latin for a crag."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: sīdus, sīderis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sīdus, sīderis — \"a constellation, a star\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sīdus, sīderis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sīdus, sīderis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sīdus, sīderis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sīdus, sīderis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say sīdus, sīderis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *sīdus, sīderis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for charcoal, then the Latin for a crag, then say sīdus, sīderis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for charcoal, then the Latin for a crag, then say *sīdus, sīderis* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does sīdus, sīderis mean? (\"A constellation, a star\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C191-procella",
+      "sequence": 8850,
+      "title": "procella, procellae — a storm, a gale",
+      "headword": "procella, procellae",
+      "romanization": "procella, procellae",
+      "gloss": "a storm, a gale",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9372fe99f351abb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a crag, then the Latin for a constellation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: procella, procellae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "procella, procellae — \"a storm, a gale\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "procella, procellae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *procella, procellae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "procella, procellae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *procella, procellae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say procella, procellae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *procella, procellae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a crag, then the Latin for a constellation, then say procella, procellae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a crag, then the Latin for a constellation, then say *procella, procellae* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does procella, procellae mean? (\"A storm, a gale\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C191-nimbus",
+      "sequence": 8860,
+      "title": "nimbus, nimbī — a rain cloud",
+      "headword": "nimbus, nimbī",
+      "romanization": "nimbus, nimbī",
+      "gloss": "a rain cloud",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05cfc8c635987c50",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a constellation, then the Latin for a storm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: nimbus, nimbī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nimbus, nimbī — \"a rain cloud\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nimbus, nimbī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nimbus, nimbī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nimbus, nimbī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nimbus, nimbī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say nimbus, nimbī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *nimbus, nimbī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a constellation, then the Latin for a storm, then say nimbus, nimbī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a constellation, then the Latin for a storm, then say *nimbus, nimbī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does nimbus, nimbī mean? (\"A rain cloud\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R191-first-pass-words-from-chapters-183-186",
+      "sequence": 8870,
+      "title": "Words from chapters 183-186 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "first pass over chapters 183-186",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d3e8135375247f0a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a storm and a rain cloud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "known, famous, honourable, middle, highest",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: known, famous, honourable, middle, highest]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wasteful, moderate, eloquent, mute, lame",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: wasteful, moderate, eloquent, mute, lame]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a storeroom, a study, a colonnaded garden, a rain basin, a foundation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a storeroom, a study, a colonnaded garden, a rain basin, a foundation]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a helmsman, a market, a weight, a measure, a pound; a pair of scales",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a helmsman, a market, a weight, a measure, a pound; a pair of scales]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Known? (nōtus, nōta, nōtum.) Famous? (celeber, celebris, celebre.) Honourable? (honestus, honesta, honestum.) Middle? (medius, media, medium.) Highest? (summus, summa, summum.) Wasteful? (prōdigus, prōdiga, prōdigum.) Moderate? (modestus, modesta, modestum.) Eloquent? (fācundus, fācunda, fācundum.) Mute? (mūtus, mūta, mūtum.) Lame? (claudus, clauda, claudum.) A storeroom? (cella, cellae.) A study? (tablīnum, tablīnī.) A colonnaded garden? (peristylium, peristyliī.) A rain basin? (impluvium, impluviī.) A foundation? (fundāmentum, fundāmentī.) A helmsman? (gubernātor, gubernātōris.) A market? (mercātus, mercātūs.) A weight? (pondus, ponderis.) A measure? (mēnsūra, mēnsūrae.) A pound; a pair of scales? (lībra, lībrae.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R191-second-pass-words-from-chapters-187-191",
+      "sequence": 8880,
+      "title": "Words from chapters 187-191 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "second pass over chapters 187-191",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:27db2f295b15d5c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for peace and a leader."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peace, a leader, victory, freedom, glory",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: peace, a leader, victory, freedom, glory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an architect, a weaver, a potter, a farm manager, a tenant farmer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an architect, a weaver, a potter, a farm manager, a tenant farmer]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a blood relative, a mother's brother, a mother's sister, truth, a lie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a blood relative, a mother's brother, a mother's sister, truth, a lie]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tax, a tribute, wages, a denarius, a sesterce",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tax, a tribute, wages, a denarius, a sesterce]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "charcoal, a crag, a constellation, a storm, a rain cloud",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: charcoal, a crag, a constellation, a storm, a rain cloud]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Peace? (pāx, pācis.) A leader? (dux, ducis.) Victory? (victōria, victōriae.) Freedom? (lībertās, lībertātis.) Glory? (glōria, glōriae.) An architect? (architectus, architectī.) A weaver? (textor, textōris.) A potter? (figulus, figulī.) A farm manager? (vīlicus, vīlicī.) A tenant farmer? (colōnus, colōnī.) A blood relative? (cognātus, cognātī.) A mother's brother? (avunculus, avunculī.) A mother's sister? (mātertera, māterterae.) Truth? (vēritās, vēritātis.) A lie? (mendācium, mendāciī.) A tax? (vectīgal, vectīgālis.) A tribute? (tribūtum, tribūtī.) Wages? (mercēs, mercēdis.) A denarius? (dēnārius, dēnāriī.) A sesterce? (sēstertius, sēstertiī.) Charcoal? (carbō, carbōnis.) A crag? (scopulus, scopulī.) A constellation? (sīdus, sīderis.) A storm? (procella, procellae.) A rain cloud? (nimbus, nimbī.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

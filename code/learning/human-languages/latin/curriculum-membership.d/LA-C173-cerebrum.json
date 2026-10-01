@@ -1,0 +1,11 @@
+{
+  "id": "LA-C173-cerebrum",
+  "pathSegment": "LA-PATH-173-VALE173",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-173-VALE173",
+      "order": 1
+    }
+  ]
+}
