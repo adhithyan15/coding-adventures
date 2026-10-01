@@ -1,0 +1,11 @@
+{
+  "id": "MR-C244-kothimbir",
+  "pathSegment": "MR-PATH-244-VASTU244",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-244-VASTU244",
+      "order": 1
+    }
+  ]
+}

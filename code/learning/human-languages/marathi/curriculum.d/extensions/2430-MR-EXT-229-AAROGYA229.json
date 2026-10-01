@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-229-AAROGYA229",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a tablet, an ointment, a bandage, an ambulance and a diet.",
+  "prerequisites": []
+}

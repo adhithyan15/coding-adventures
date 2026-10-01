@@ -1,0 +1,19 @@
+{
+  "chapter": 240,
+  "title": "Entry, Entrance, Luggage, Seat, Wheel",
+  "label": "ch:mr-entry-entrance-luggage-seat-wheel",
+  "canDo": "I can say entry, an entrance, luggage, a seat and a wheel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-R240-second-pass-words-from-chapters-236-240",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 240: I can say entry, an entrance, luggage, a seat and a wheel.",
+    "assesses": [
+      "MR-LEX-C240-VASTU240-03",
+      "MR-LEX-C240-VASTU240-04",
+      "MR-LEX-C240-VASTU240-05"
+    ]
+  }
+}

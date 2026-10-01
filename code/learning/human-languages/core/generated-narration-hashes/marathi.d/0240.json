@@ -1,0 +1,21 @@
+{
+  "language": "marathi",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:26d138abd2392340",
+  "lessonIds": [
+    "MR-C240-praves",
+    "MR-C240-pravesdvar",
+    "MR-C240-saman",
+    "MR-C240-asan",
+    "MR-C240-cak",
+    "MR-R240-first-pass-words-from-chapters-232-235",
+    "MR-R240-second-pass-words-from-chapters-236-240"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marathi/narration/ch240.txt",
+  "json": "marathi/narration/ch240.json",
+  "textHash": "fnv1a64:719465c12c38bacc",
+  "jsonHash": "fnv1a64:8244d0aabacef058",
+  "findings": []
+}

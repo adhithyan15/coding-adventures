@@ -1,0 +1,11 @@
+{
+  "id": "MR-C232-gulgulit",
+  "pathSegment": "MR-PATH-232-GUN232",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-232-GUN232",
+      "order": 3
+    }
+  ]
+}

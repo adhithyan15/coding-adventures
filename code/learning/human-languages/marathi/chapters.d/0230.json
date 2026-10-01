@@ -1,0 +1,19 @@
+{
+  "chapter": 230,
+  "title": "Beginning, Deadline, Daily, Meanwhile, For good",
+  "label": "ch:mr-beginning-deadline-daily-meanwhile-for-good",
+  "canDo": "I can say the beginning, a deadline, daily, meanwhile and for good.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "MR-C230-kayam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 230: I can say the beginning, a deadline, daily, meanwhile and for good.",
+    "assesses": [
+      "MR-LEX-C230-VEL230-03",
+      "MR-LEX-C230-VEL230-04",
+      "MR-LEX-C230-VEL230-05"
+    ]
+  }
+}

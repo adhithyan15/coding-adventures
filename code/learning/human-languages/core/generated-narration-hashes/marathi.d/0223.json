@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:d9a2a0707523c2ed",
+  "lessonIds": [
+    "MR-C223-durust-karne",
+    "MR-C223-photo-kadhne",
+    "MR-C223-samjavne",
+    "MR-C223-bhasantar-karne",
+    "MR-C223-nirnay-ghene"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch223.txt",
+  "json": "marathi/narration/ch223.json",
+  "textHash": "fnv1a64:47ec942a0c4831a2",
+  "jsonHash": "fnv1a64:be86e41e202e7e2d",
+  "findings": []
+}

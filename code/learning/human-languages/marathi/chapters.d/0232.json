@@ -1,0 +1,19 @@
+{
+  "chapter": 232,
+  "title": "Jealous, Proud, Uneasy, Smooth, Rough",
+  "label": "ch:mr-jealous-proud-uneasy-smooth-rough",
+  "canDo": "I can say jealous, proud, uneasy, smooth and rough.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MR-C232-kharkharit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 232: I can say jealous, proud, uneasy, smooth and rough.",
+    "assesses": [
+      "MR-LEX-C232-GUN232-03",
+      "MR-LEX-C232-GUN232-04",
+      "MR-LEX-C232-GUN232-05"
+    ]
+  }
+}

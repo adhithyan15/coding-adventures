@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C227-tarangne",
+    "language": "marathi",
+    "chapter": 227,
+    "sequence": 12430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c668690857cbbc1"
+  },
+  "findings": []
+}

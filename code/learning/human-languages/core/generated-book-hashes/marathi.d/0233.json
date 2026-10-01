@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:f53f620c443c5725",
+  "lessonIds": [
+    "MR-C233-gadad",
+    "MR-C233-phikat",
+    "MR-C233-durca",
+    "MR-C233-vaktasir",
+    "MR-C233-sahansil"
+  ],
+  "tex": "marathi/book/chapters/ch233-dark-pale-distant-punctual-patient.tex"
+}

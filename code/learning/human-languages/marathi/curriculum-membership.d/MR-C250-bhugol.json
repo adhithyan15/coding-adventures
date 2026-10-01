@@ -1,0 +1,11 @@
+{
+  "id": "MR-C250-bhugol",
+  "pathSegment": "MR-PATH-250-KAAM250",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-250-KAAM250",
+      "order": 1
+    }
+  ]
+}

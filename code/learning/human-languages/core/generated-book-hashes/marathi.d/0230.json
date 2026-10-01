@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:8eb681bf1e2258a2",
+  "lessonIds": [
+    "MR-C230-suruvat",
+    "MR-C230-mudat",
+    "MR-C230-darroj",
+    "MR-C230-darmyan",
+    "MR-C230-kayam"
+  ],
+  "tex": "marathi/book/chapters/ch230-beginning-deadline-daily-meanwhile-for-good.tex"
+}

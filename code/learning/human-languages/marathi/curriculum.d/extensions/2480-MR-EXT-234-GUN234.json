@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-234-GUN234",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say important, entertaining, filthy, full and slow.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:f595bf52ec65ed93",
+  "lessonIds": [
+    "MR-C249-jhopala",
+    "MR-C249-khelni",
+    "MR-C249-bahuli",
+    "MR-C249-patang",
+    "MR-C249-bhovra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch249.txt",
+  "json": "marathi/narration/ch249.json",
+  "textHash": "fnv1a64:992c7ad098f40322",
+  "jsonHash": "fnv1a64:df8b2adb0afc8f14",
+  "findings": []
+}

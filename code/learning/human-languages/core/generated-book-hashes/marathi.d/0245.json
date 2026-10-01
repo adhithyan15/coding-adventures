@@ -1,0 +1,15 @@
+{
+  "language": "marathi",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:75db81572f3ede18",
+  "lessonIds": [
+    "MR-C245-mala2",
+    "MR-C245-gotha",
+    "MR-C245-masid",
+    "MR-C245-mahavidyalay",
+    "MR-C245-sangrahalay",
+    "MR-R245-first-pass-words-from-chapters-241-242",
+    "MR-R245-second-pass-words-from-chapters-243-245"
+  ],
+  "tex": "marathi/book/chapters/ch245-farm-plot-cowshed-mosque-college-museum.tex"
+}

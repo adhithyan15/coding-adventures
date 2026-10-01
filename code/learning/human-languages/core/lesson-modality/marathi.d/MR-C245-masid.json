@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C245-masid",
+    "language": "marathi",
+    "chapter": 245,
+    "sequence": 13700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b7db1f423efca654"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:5fbb952de01e4587",
+  "lessonIds": [
+    "MR-C241-kundi",
+    "MR-C241-rop",
+    "MR-C241-khod",
+    "MR-C241-hirval",
+    "MR-C241-payvat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch241.txt",
+  "json": "marathi/narration/ch241.json",
+  "textHash": "fnv1a64:02dfb71a85f3e670",
+  "jsonHash": "fnv1a64:027de5aa7b427756",
+  "findings": []
+}

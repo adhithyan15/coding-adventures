@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C239-niyam",
+    "language": "marathi",
+    "chapter": 239,
+    "sequence": 13230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f5adcde0b998aba7"
+  },
+  "findings": []
+}

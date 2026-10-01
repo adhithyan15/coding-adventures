@@ -1,0 +1,19 @@
+{
+  "chapter": 233,
+  "title": "Dark, Pale, Distant, Punctual, Patient",
+  "label": "ch:mr-dark-pale-distant-punctual-patient",
+  "canDo": "I can say dark, pale, distant, punctual and patient.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MR-C233-sahansil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 233: I can say dark, pale, distant, punctual and patient.",
+    "assesses": [
+      "MR-LEX-C233-GUN233-03",
+      "MR-LEX-C233-GUN233-04",
+      "MR-LEX-C233-GUN233-05"
+    ]
+  }
+}

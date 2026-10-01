@@ -1,0 +1,19 @@
+{
+  "chapter": 236,
+  "title": "Platform, Passport, Octroi, Booking, River valley",
+  "label": "ch:mr-platform-passport-octroi-booking-river-valley",
+  "canDo": "I can say a platform, a passport, octroi, a booking and a river valley.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C236-khore",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 236: I can say a platform, a passport, octroi, a booking and a river valley.",
+    "assesses": [
+      "MR-LEX-C236-VASTU236-03",
+      "MR-LEX-C236-VASTU236-04",
+      "MR-LEX-C236-VASTU236-05"
+    ]
+  }
+}

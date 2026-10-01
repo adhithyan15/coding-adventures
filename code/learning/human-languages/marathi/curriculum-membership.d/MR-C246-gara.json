@@ -1,0 +1,11 @@
+{
+  "id": "MR-C246-gara",
+  "pathSegment": "MR-PATH-246-VASTU246",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-246-VASTU246",
+      "order": 1
+    }
+  ]
+}

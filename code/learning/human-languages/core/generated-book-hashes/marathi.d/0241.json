@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:45b44c0ad22f876a",
+  "lessonIds": [
+    "MR-C241-kundi",
+    "MR-C241-rop",
+    "MR-C241-khod",
+    "MR-C241-hirval",
+    "MR-C241-payvat"
+  ],
+  "tex": "marathi/book/chapters/ch241-flowerpot-seedling-trunk-lawn-footpath.tex"
+}

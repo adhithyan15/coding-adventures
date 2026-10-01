@@ -1,0 +1,11 @@
+{
+  "id": "MR-C229-goli",
+  "pathSegment": "MR-PATH-229-AAROGYA229",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MR-EXT-229-AAROGYA229",
+      "order": 0
+    }
+  ]
+}

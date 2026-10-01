@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-235-GUN235",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "MR-EXT-235-GUN235"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C228-kautuk-karne",
+    "language": "marathi",
+    "chapter": 228,
+    "sequence": 12450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a95f9081dbb28744"
+  },
+  "findings": []
+}

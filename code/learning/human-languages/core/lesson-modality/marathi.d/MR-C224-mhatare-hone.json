@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C224-mhatare-hone",
+    "language": "marathi",
+    "chapter": 224,
+    "sequence": 12250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09cd5c093d5e9269"
+  },
+  "findings": []
+}
