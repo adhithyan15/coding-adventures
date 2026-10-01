@@ -15470,6 +15470,11 @@ either legacy API. Implementation revision
 `0d3e662c9d3a0b96ef08465c8b64906bca3a6a4c`; the evidence-only follow-up
 commit leaves both package roots untouched. The registry now reports both
 lanes conformant while keeping Elixir and Lua explicitly pending adoption.
+PR #16361 squash-merged as `02e8b7fc6dc0156808acf3d0395974c13ff6aa75`; the
+durable evidence registry now names that reachable merge revision (the
+pre-squash `e32c3e4b11f14de694b3358f3045b15632b255f3` is not reachable from
+any branch) while retaining the verified package-tree identities, which are
+identical at the merge revision.
 
 Ruby completed 2 native runs with 5 assertions and 64 conformance runs with
 122 assertions. Swift
