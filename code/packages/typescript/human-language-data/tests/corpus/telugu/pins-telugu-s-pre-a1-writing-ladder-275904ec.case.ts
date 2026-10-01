@@ -36,8 +36,8 @@ it("pins Telugu's pre-A1 writing ladder", () => {
   // familiar-word pa before the first complete ladder. TE-S116 gives
   // familiar-word da the same source-backed
   // rung. TE-S155 revisits the stage for the aspirated partner ttha after the
-  // first complete ladder. TE-S130 and TE-S132 later revisit it for newly
-  // introduced tha and nya.
+  // first complete ladder. TE-S128 then adds familiar-word bha; TE-S130 and
+  // TE-S132 later revisit the stage for newly introduced tha and nya.
   // The next rung is a SECOND dictation, roughly 1,150 sequence steps after the
   // first. It is here because the ladder proves the stages are reachable, not
   // that each is practised once: `TE-S170` asks the hand to turn *gau* and
@@ -63,6 +63,7 @@ it("pins Telugu's pre-A1 writing ladder", () => {
     ["TE-S160-letter-pha", "observe-trace"],
     ["TE-S139-letter-ddha", "observe-trace"],
     ["TE-S126-letter-nna", "observe-trace"],
+    ["TE-S128-letter-bha", "observe-trace"],
     ["TE-S130-letter-tha", "observe-trace"],
     ["TE-S132-letter-nya", "observe-trace"],
     ["TE-S170-script-dictation-courtesy-letters", "dictation-transcription"],

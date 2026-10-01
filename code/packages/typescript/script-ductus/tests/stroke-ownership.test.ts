@@ -276,12 +276,16 @@ describe("stroke ownership migration baseline", () => {
       // Telugu బ follows with four separately sourced bowl movements. Keys
       // move 400 -> 401 and Telugu 31 -> 32; shared-identity values remain
       // unchanged.
+      //
+      // Telugu భ follows with six sourced movements, including its separate
+      // upper flourish and lower stem. Keys move 401 -> 402 and Telugu 32 ->
+      // 33; shared-identity values remain unchanged.
     }).toEqual({
-      keys: 401,
+      keys: 402,
       keyHash:
-        "6db7677d8bed7a1b1cb2375d541d9213579bc0a888ce35fc918367c2e67f5585",
+        "92914351bc53f5b4928bdd2cf5709b31f475f77673adf730dfbf50a38bd3fcc1",
       nonTamilDataHash:
-        "333898866c06adbc2fdc9d4eb4fa40ae8f85d1de7c6ff1d93e8a5b84697e3aa7",
+        "805dda75193ec6c72aa2539477d38bc702fce01b13debac6f130e836266f1132",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -297,7 +301,7 @@ describe("stroke ownership migration baseline", () => {
         malayalam: 14,
         "perso-arabic": 24,
         tamil: 29,
-        telugu: 32,
+        telugu: 33,
         "urdu-nastaliq": 31,
       },
     });
