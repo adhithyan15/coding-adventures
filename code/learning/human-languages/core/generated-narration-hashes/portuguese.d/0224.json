@@ -1,0 +1,21 @@
+{
+  "language": "portuguese",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:9f1a6301b1035040",
+  "lessonIds": [
+    "PT-C224-sotao",
+    "PT-C224-garagem",
+    "PT-C224-horta",
+    "PT-C224-jarra",
+    "PT-C224-planta",
+    "PT-R224-first-pass-words-from-chapters-219-221",
+    "PT-R224-second-pass-words-from-chapters-222-224"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "portuguese/narration/ch224.txt",
+  "json": "portuguese/narration/ch224.json",
+  "textHash": "fnv1a64:66ce3fe0dc532078",
+  "jsonHash": "fnv1a64:5ff851e3a9dc48a3",
+  "findings": []
+}

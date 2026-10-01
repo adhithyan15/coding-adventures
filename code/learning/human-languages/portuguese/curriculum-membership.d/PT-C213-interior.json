@@ -1,0 +1,11 @@
+{
+  "id": "PT-C213-interior",
+  "pathSegment": "PT-PATH-213-LUGAR213",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-213-LUGAR213",
+      "order": 2
+    }
+  ]
+}

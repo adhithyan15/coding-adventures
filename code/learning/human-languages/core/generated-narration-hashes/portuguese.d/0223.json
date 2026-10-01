@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:94cddb52d685d5c2",
+  "lessonIds": [
+    "PT-C223-saida",
+    "PT-C223-bagagem",
+    "PT-C223-lugar",
+    "PT-C223-volante",
+    "PT-C223-roda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch223.txt",
+  "json": "portuguese/narration/ch223.json",
+  "textHash": "fnv1a64:b4a5277de5d70c25",
+  "jsonHash": "fnv1a64:564f30b5d344253a",
+  "findings": []
+}

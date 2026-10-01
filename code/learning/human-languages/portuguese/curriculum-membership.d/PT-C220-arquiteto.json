@@ -1,0 +1,11 @@
+{
+  "id": "PT-C220-arquiteto",
+  "pathSegment": "PT-PATH-220-COISAS220",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-220-COISAS220",
+      "order": 1
+    }
+  ]
+}

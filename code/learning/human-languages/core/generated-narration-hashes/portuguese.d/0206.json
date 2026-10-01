@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:1a933f3b4b3f8afe",
+  "lessonIds": [
+    "PT-C206-roubar",
+    "PT-C206-descobrir",
+    "PT-C206-parecer",
+    "PT-C206-servir",
+    "PT-C206-sofrer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch206.txt",
+  "json": "portuguese/narration/ch206.json",
+  "textHash": "fnv1a64:8d4c77f3074f1d02",
+  "jsonHash": "fnv1a64:dc452e5575cd760e",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C202-esvaziar",
+  "pathSegment": "PT-PATH-202-VERBOS202",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-202-VERBOS202",
+      "order": 3
+    }
+  ]
+}

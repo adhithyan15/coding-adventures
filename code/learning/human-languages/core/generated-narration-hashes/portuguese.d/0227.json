@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:7ca993d382512a33",
+  "lessonIds": [
+    "PT-C227-papelaria",
+    "PT-C227-livraria",
+    "PT-C227-peixaria",
+    "PT-C227-centro-comercial",
+    "PT-C227-montra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch227.txt",
+  "json": "portuguese/narration/ch227.json",
+  "textHash": "fnv1a64:ed6006da64576e3c",
+  "jsonHash": "fnv1a64:9e8d32108a978ff5",
+  "findings": []
+}

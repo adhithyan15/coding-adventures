@@ -1,0 +1,11 @@
+{
+  "id": "PT-C203-acordar",
+  "pathSegment": "PT-PATH-203-VERBOS203",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-203-VERBOS203",
+      "order": 2
+    }
+  ]
+}

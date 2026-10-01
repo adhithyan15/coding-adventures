@@ -1,0 +1,11 @@
+{
+  "id": "PT-C216-moderno-moderna",
+  "pathSegment": "PT-PATH-216-QUAL216",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-216-QUAL216",
+      "order": 1
+    }
+  ]
+}

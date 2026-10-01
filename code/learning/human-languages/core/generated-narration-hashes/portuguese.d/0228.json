@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:29e490995ae68c64",
+  "lessonIds": [
+    "PT-C228-frasco",
+    "PT-C228-fatia",
+    "PT-C228-pedaco",
+    "PT-C228-duzia",
+    "PT-C228-metade"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch228.txt",
+  "json": "portuguese/narration/ch228.json",
+  "textHash": "fnv1a64:6ac1ff4b7b0f1517",
+  "jsonHash": "fnv1a64:55deecb88e8ba7eb",
+  "findings": []
+}

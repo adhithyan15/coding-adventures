@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:c46d74035756d69a",
+  "lessonIds": [
+    "PT-C214-apenas",
+    "PT-C214-juntos-juntas",
+    "PT-C214-contudo",
+    "PT-C214-talvez",
+    "PT-C214-alias"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch214.txt",
+  "json": "portuguese/narration/ch214.json",
+  "textHash": "fnv1a64:532f37b1bdfc770a",
+  "jsonHash": "fnv1a64:71fec0d3f10111b6",
+  "findings": []
+}

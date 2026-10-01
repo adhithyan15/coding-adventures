@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:3ae34c62cdcf9d1c",
+  "lessonIds": [
+    "PT-C229-lavatorio",
+    "PT-C229-sanita",
+    "PT-C229-colchao",
+    "PT-C229-tomada",
+    "PT-C229-interruptor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch229.txt",
+  "json": "portuguese/narration/ch229.json",
+  "textHash": "fnv1a64:3c4007f2812e884c",
+  "jsonHash": "fnv1a64:b8622bbbef914e3c",
+  "findings": []
+}

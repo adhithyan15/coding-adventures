@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:79893dd476c62f8d",
+  "lessonIds": [
+    "PT-C215-ciumento-ciumenta",
+    "PT-C215-orgulhoso-orgulhosa",
+    "PT-C215-nervoso-nervosa",
+    "PT-C215-tranquilo-tranquila",
+    "PT-C215-silencioso-silenciosa"
+  ],
+  "tex": "portuguese/book/chapters/ch215-jealous-proud-nervous-quiet-silent.tex"
+}

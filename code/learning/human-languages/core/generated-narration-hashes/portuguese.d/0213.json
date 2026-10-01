@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:48a4742dfb743acf",
+  "lessonIds": [
+    "PT-C213-dentro",
+    "PT-C213-fora",
+    "PT-C213-interior",
+    "PT-C213-fronteira",
+    "PT-C213-regiao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch213.txt",
+  "json": "portuguese/narration/ch213.json",
+  "textHash": "fnv1a64:24c65b4931289d49",
+  "jsonHash": "fnv1a64:64f5d883286d83c6",
+  "findings": []
+}

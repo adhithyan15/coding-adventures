@@ -1,0 +1,11 @@
+{
+  "id": "PT-C205-passear",
+  "pathSegment": "PT-PATH-205-VERBOS205",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-205-VERBOS205",
+      "order": 4
+    }
+  ]
+}

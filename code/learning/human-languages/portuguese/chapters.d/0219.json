@@ -1,0 +1,19 @@
+{
+  "chapter": 219,
+  "title": "War, Peace, Army, Soldier, Tradition",
+  "label": "ch:pt-war-peace-army-soldier-tradition",
+  "canDo": "I can say war, peace, an army, a soldier and a tradition.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C219-tradicao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 219: I can say war, peace, an army, a soldier and a tradition.",
+    "assesses": [
+      "PT-LEX-C219-COISAS219-03",
+      "PT-LEX-C219-COISAS219-04",
+      "PT-LEX-C219-COISAS219-05"
+    ]
+  }
+}

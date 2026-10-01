@@ -1,0 +1,11 @@
+{
+  "id": "PT-C209-exprimir",
+  "pathSegment": "PT-PATH-209-VERBOS209",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-209-VERBOS209",
+      "order": 4
+    }
+  ]
+}

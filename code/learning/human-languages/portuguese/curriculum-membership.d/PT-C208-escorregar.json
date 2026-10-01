@@ -1,0 +1,11 @@
+{
+  "id": "PT-C208-escorregar",
+  "pathSegment": "PT-PATH-208-VERBOS208",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-208-VERBOS208",
+      "order": 4
+    }
+  ]
+}

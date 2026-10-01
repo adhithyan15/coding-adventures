@@ -1,0 +1,19 @@
+{
+  "chapter": 207,
+  "title": "To come near, To chat, To ring, To deliver, To correct",
+  "label": "ch:pt-to-come-near-to-chat-to-ring-to-deliver-to-correct",
+  "canDo": "I can say to come near, to chat, to ring, to deliver and to correct.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C207-corrigir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 207: I can say to come near, to chat, to ring, to deliver and to correct.",
+    "assesses": [
+      "PT-LEX-C207-VERBOS207-03",
+      "PT-LEX-C207-VERBOS207-04",
+      "PT-LEX-C207-VERBOS207-05"
+    ]
+  }
+}

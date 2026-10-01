@@ -1,0 +1,11 @@
+{
+  "id": "PT-C223-bagagem",
+  "pathSegment": "PT-PATH-223-COISAS223",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-223-COISAS223",
+      "order": 1
+    }
+  ]
+}

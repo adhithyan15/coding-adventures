@@ -1,0 +1,11 @@
+{
+  "id": "PT-C214-juntos-juntas",
+  "pathSegment": "PT-PATH-214-PORQUE214",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-214-PORQUE214",
+      "order": 1
+    }
+  ]
+}

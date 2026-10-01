@@ -1,0 +1,19 @@
+{
+  "chapter": 201,
+  "title": "To book, To spend, To save, To order, To dry",
+  "label": "ch:pt-to-book-to-spend-to-save-to-order-to-dry",
+  "canDo": "I can say to book, to spend, to save, to order and to dry.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C201-secar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 201: I can say to book, to spend, to save, to order and to dry.",
+    "assesses": [
+      "PT-LEX-C201-VERBOS201-03",
+      "PT-LEX-C201-VERBOS201-04",
+      "PT-LEX-C201-VERBOS201-05"
+    ]
+  }
+}

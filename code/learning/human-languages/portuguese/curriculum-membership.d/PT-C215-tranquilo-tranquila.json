@@ -1,0 +1,11 @@
+{
+  "id": "PT-C215-tranquilo-tranquila",
+  "pathSegment": "PT-PATH-215-QUAL215",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-215-QUAL215",
+      "order": 3
+    }
+  ]
+}

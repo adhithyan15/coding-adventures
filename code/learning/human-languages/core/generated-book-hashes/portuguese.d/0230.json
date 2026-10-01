@@ -1,0 +1,15 @@
+{
+  "language": "portuguese",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:da792ee735a134c2",
+  "lessonIds": [
+    "PT-C230-universidade",
+    "PT-C230-erro",
+    "PT-C230-historia",
+    "PT-C230-geografia",
+    "PT-C230-matematica",
+    "PT-R230-first-pass-words-from-chapters-225-227",
+    "PT-R230-second-pass-words-from-chapters-228-230"
+  ],
+  "tex": "portuguese/book/chapters/ch230-university-mistake-history-geography-mathematics.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 203,
+  "title": "To get divorced, To rest, To wake up, To comb one's hair, To get bored",
+  "label": "ch:pt-to-get-divorced-to-rest-to-wake-up-to-comb-one-s-hair-to-get-bored",
+  "canDo": "I can say to get divorced, to rest, to wake up, to comb one's hair and to get bored.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C203-aborrecer-se",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 203: I can say to get divorced, to rest, to wake up, to comb one's hair and to get bored.",
+    "assesses": [
+      "PT-LEX-C203-VERBOS203-03",
+      "PT-LEX-C203-VERBOS203-04",
+      "PT-LEX-C203-VERBOS203-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C210-comprimido",
+  "pathSegment": "PT-PATH-210-SAUDE210",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-210-SAUDE210",
+      "order": 2
+    }
+  ]
+}

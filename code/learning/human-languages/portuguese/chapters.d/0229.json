@@ -1,0 +1,19 @@
+{
+  "chapter": 229,
+  "title": "Washbasin, Toilet, Mattress, Socket, Light switch",
+  "label": "ch:pt-washbasin-toilet-mattress-socket-light-switch",
+  "canDo": "I can say a washbasin, a toilet, a mattress, a socket and a light switch.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C229-interruptor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 229: I can say a washbasin, a toilet, a mattress, a socket and a light switch.",
+    "assesses": [
+      "PT-LEX-C229-COISAS229-03",
+      "PT-LEX-C229-COISAS229-04",
+      "PT-LEX-C229-COISAS229-05"
+    ]
+  }
+}

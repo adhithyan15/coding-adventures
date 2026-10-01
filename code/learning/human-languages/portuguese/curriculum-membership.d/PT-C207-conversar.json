@@ -1,0 +1,11 @@
+{
+  "id": "PT-C207-conversar",
+  "pathSegment": "PT-PATH-207-VERBOS207",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-207-VERBOS207",
+      "order": 1
+    }
+  ]
+}

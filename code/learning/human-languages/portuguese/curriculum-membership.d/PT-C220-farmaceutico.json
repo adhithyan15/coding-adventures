@@ -1,0 +1,11 @@
+{
+  "id": "PT-C220-farmaceutico",
+  "pathSegment": "PT-PATH-220-COISAS220",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-220-COISAS220",
+      "order": 3
+    }
+  ]
+}

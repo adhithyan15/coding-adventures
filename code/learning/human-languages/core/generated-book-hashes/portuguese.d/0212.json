@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:20f89ad48e5c1953",
+  "lessonIds": [
+    "PT-C212-fim",
+    "PT-C212-inicio",
+    "PT-C212-prazo",
+    "PT-C212-epoca",
+    "PT-C212-feriado"
+  ],
+  "tex": "portuguese/book/chapters/ch212-end-beginning-deadline-period-public-holiday.tex"
+}

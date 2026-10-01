@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:290d104f86b9a52a",
+  "lessonIds": [
+    "PT-C220-jornalista",
+    "PT-C220-arquiteto",
+    "PT-C220-dentista",
+    "PT-C220-farmaceutico",
+    "PT-C220-talhante"
+  ],
+  "tex": "portuguese/book/chapters/ch220-journalist-architect-dentist-pharmacist-butcher.tex"
+}

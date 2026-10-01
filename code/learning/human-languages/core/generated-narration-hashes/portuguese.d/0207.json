@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:17986adcb3f74782",
+  "lessonIds": [
+    "PT-C207-aproximar-se",
+    "PT-C207-conversar",
+    "PT-C207-ligar",
+    "PT-C207-entregar",
+    "PT-C207-corrigir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch207.txt",
+  "json": "portuguese/narration/ch207.json",
+  "textHash": "fnv1a64:6d13f79ac37dcb25",
+  "jsonHash": "fnv1a64:154fb85157a0c7a8",
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "portuguese",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:32b02f1814d9ac44",
+  "lessonIds": [
+    "PT-C218-pequeno-almoco",
+    "PT-C218-lanche",
+    "PT-C218-gorjeta",
+    "PT-C218-cais",
+    "PT-C218-passaporte",
+    "PT-R218-first-pass-words-from-chapters-210-213",
+    "PT-R218-second-pass-words-from-chapters-214-218"
+  ],
+  "tex": "portuguese/book/chapters/ch218-breakfast-snack-tip-platform-passport.tex"
+}

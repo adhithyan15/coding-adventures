@@ -1,0 +1,11 @@
+{
+  "id": "PT-C217-chuvoso-chuvosa",
+  "pathSegment": "PT-PATH-217-QUAL217",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-217-QUAL217",
+      "order": 3
+    }
+  ]
+}

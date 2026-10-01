@@ -1,0 +1,19 @@
+{
+  "chapter": 226,
+  "title": "Racket, Gym, Swimming, Tennis, Victory",
+  "label": "ch:pt-racket-gym-swimming-tennis-victory",
+  "canDo": "I can say a racket, a gym, swimming, tennis and a victory.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C226-vitoria",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 226: I can say a racket, a gym, swimming, tennis and a victory.",
+    "assesses": [
+      "PT-LEX-C226-COISAS226-03",
+      "PT-LEX-C226-COISAS226-04",
+      "PT-LEX-C226-COISAS226-05"
+    ]
+  }
+}

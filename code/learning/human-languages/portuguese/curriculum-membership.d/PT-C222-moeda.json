@@ -1,0 +1,11 @@
+{
+  "id": "PT-C222-moeda",
+  "pathSegment": "PT-PATH-222-COISAS222",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-222-COISAS222",
+      "order": 4
+    }
+  ]
+}

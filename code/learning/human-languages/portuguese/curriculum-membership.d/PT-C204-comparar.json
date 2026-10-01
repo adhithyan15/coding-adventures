@@ -1,0 +1,11 @@
+{
+  "id": "PT-C204-comparar",
+  "pathSegment": "PT-PATH-204-VERBOS204",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-204-VERBOS204",
+      "order": 4
+    }
+  ]
+}

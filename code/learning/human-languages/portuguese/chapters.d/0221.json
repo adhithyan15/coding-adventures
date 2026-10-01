@@ -1,0 +1,19 @@
+{
+  "chapter": 221,
+  "title": "Son-in-law, Daughter-in-law, Fiancé, Fiancée, Widower",
+  "label": "ch:pt-son-in-law-daughter-in-law-fiance-fiancee-widower",
+  "canDo": "I can say a son-in-law, a daughter-in-law, a fiancé, a fiancée and a widower.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C221-viuvo-a-viuva",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 221: I can say a son-in-law, a daughter-in-law, a fiancé, a fiancée and a widower.",
+    "assesses": [
+      "PT-LEX-C221-COISAS221-03",
+      "PT-LEX-C221-COISAS221-04",
+      "PT-LEX-C221-COISAS221-05"
+    ]
+  }
+}

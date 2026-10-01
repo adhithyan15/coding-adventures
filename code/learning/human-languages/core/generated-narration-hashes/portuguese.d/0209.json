@@ -1,0 +1,21 @@
+{
+  "language": "portuguese",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:b67c2891e599e887",
+  "lessonIds": [
+    "PT-C209-desaparecer",
+    "PT-C209-gravar",
+    "PT-C209-manter",
+    "PT-C209-existir",
+    "PT-C209-exprimir",
+    "PT-R209-first-pass-words-from-chapters-201-204",
+    "PT-R209-second-pass-words-from-chapters-205-209"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "portuguese/narration/ch209.txt",
+  "json": "portuguese/narration/ch209.json",
+  "textHash": "fnv1a64:95fa6814b93031d3",
+  "jsonHash": "fnv1a64:c2eafae063c9699b",
+  "findings": []
+}
