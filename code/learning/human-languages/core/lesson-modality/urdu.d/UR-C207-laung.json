@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C207-laung",
+    "language": "urdu",
+    "chapter": 207,
+    "sequence": 12100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:001d5b805b1e3df2"
+  },
+  "findings": []
+}

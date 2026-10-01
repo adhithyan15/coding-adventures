@@ -1,0 +1,15 @@
+{
+  "language": "urdu",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:f1481ba434021935",
+  "lessonIds": [
+    "UR-C206-dhul",
+    "UR-C206-dhuan",
+    "UR-C206-rakh",
+    "UR-C206-chandni",
+    "UR-C206-tufan",
+    "UR-R206-first-pass-words-from-chapters-198-201",
+    "UR-R206-second-pass-words-from-chapters-202-206"
+  ],
+  "tex": "urdu/book/chapters/ch206-dust-smoke-ash-moonlight-tempest.tex"
+}

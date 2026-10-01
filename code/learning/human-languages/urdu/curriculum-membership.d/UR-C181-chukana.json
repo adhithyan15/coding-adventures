@@ -1,0 +1,11 @@
+{
+  "id": "UR-C181-chukana",
+  "pathSegment": "UR-PATH-181-ACT181",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-181-ACT181",
+      "order": 1
+    }
+  ]
+}

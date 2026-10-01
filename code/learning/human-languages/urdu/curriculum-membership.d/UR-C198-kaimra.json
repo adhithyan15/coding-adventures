@@ -1,0 +1,11 @@
+{
+  "id": "UR-C198-kaimra",
+  "pathSegment": "UR-PATH-198-CHIZ198",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-198-CHIZ198",
+      "order": 2
+    }
+  ]
+}

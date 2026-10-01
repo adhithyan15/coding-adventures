@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-210-KAM210",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a barber, a washerman, a cobbler, a blacksmith and a carpenter.",
+  "prerequisites": []
+}

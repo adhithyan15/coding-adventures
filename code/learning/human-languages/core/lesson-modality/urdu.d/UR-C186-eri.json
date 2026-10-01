@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C186-eri",
+    "language": "urdu",
+    "chapter": 186,
+    "sequence": 10480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c145a1253a1916a"
+  },
+  "findings": []
+}

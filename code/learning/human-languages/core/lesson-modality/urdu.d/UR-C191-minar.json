@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C191-minar",
+    "language": "urdu",
+    "chapter": 191,
+    "sequence": 10960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7cea2a260b413642"
+  },
+  "findings": []
+}

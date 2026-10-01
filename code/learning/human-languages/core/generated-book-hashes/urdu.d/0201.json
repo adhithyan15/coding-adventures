@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:2951b078adbe261f",
+  "lessonIds": [
+    "UR-C201-haki",
+    "UR-C201-tenis",
+    "UR-C201-shatranj",
+    "UR-C201-tash",
+    "UR-C201-daur"
+  ],
+  "tex": "urdu/book/chapters/ch201-hockey-tennis-chess-playing-cards-race.tex"
+}

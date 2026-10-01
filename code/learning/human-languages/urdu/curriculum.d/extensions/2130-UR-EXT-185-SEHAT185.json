@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-185-SEHAT185",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a pill, a prescription, an injection, a wound and an injury.",
+  "prerequisites": []
+}

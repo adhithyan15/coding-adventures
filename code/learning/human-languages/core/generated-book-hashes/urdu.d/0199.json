@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:87137fe8c8766f90",
+  "lessonIds": [
+    "UR-C199-chapati",
+    "UR-C199-ghi",
+    "UR-C199-masala",
+    "UR-C199-haldi",
+    "UR-C199-zira"
+  ],
+  "tex": "urdu/book/chapters/ch199-chapati-ghee-spice-turmeric-cumin.tex"
+}

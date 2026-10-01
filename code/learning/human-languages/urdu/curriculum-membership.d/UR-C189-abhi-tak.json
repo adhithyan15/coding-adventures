@@ -1,0 +1,11 @@
+{
+  "id": "UR-C189-abhi-tak",
+  "pathSegment": "UR-PATH-189-VAQT189",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-189-VAQT189",
+      "order": 2
+    }
+  ]
+}

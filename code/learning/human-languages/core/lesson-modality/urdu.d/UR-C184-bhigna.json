@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C184-bhigna",
+    "language": "urdu",
+    "chapter": 184,
+    "sequence": 10410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b56c13ab059e5d4e"
+  },
+  "findings": []
+}

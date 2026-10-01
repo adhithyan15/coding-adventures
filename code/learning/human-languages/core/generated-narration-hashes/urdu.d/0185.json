@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:adbfa28347834f56",
+  "lessonIds": [
+    "UR-C185-goli",
+    "UR-C185-nuskha",
+    "UR-C185-injekshan",
+    "UR-C185-zakhm",
+    "UR-C185-chot"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch185.txt",
+  "json": "urdu/narration/ch185.json",
+  "textHash": "fnv1a64:ac76f4579354357f",
+  "jsonHash": "fnv1a64:1ac5a533b64a38ba",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 201,
+  "title": "Hockey, Tennis, Chess, Playing cards, Race",
+  "label": "ch:ur-hockey-tennis-chess-playing-cards-race",
+  "canDo": "I can say hockey, tennis, chess, playing cards and a race.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C201-daur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 201: I can say hockey, tennis, chess, playing cards and a race.",
+    "assesses": [
+      "UR-LEX-C201-CHIZ201-03",
+      "UR-LEX-C201-CHIZ201-04",
+      "UR-LEX-C201-CHIZ201-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 202,
+  "title": "Party, Gift, Traveller, Taxi, Rickshaw",
+  "label": "ch:ur-party-gift-traveller-taxi-rickshaw",
+  "canDo": "I can say a party, a gift, a traveller, a taxi and a rickshaw.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C202-riksha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 202: I can say a party, a gift, a traveller, a taxi and a rickshaw.",
+    "assesses": [
+      "UR-LEX-C202-CHIZ202-03",
+      "UR-LEX-C202-CHIZ202-04",
+      "UR-LEX-C202-CHIZ202-05"
+    ]
+  }
+}

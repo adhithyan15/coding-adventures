@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C201-tash",
+    "language": "urdu",
+    "chapter": 201,
+    "sequence": 11640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2d06d6d3371f7e6"
+  },
+  "findings": []
+}

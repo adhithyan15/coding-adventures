@@ -1,0 +1,19 @@
+{
+  "chapter": 209,
+  "title": "Banknote, Debt, Tax, Bill, Expense",
+  "label": "ch:ur-banknote-debt-tax-bill-expense",
+  "canDo": "I can say a banknote, a debt, a tax, a bill and an expense.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C209-kharch",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 209: I can say a banknote, a debt, a tax, a bill and an expense.",
+    "assesses": [
+      "UR-LEX-C209-KAM209-03",
+      "UR-LEX-C209-KAM209-04",
+      "UR-LEX-C209-KAM209-05"
+    ]
+  }
+}

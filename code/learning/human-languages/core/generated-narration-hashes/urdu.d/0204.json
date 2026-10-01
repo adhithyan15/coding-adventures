@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:264dfc810f2083ae",
+  "lessonIds": [
+    "UR-C204-nambar",
+    "UR-C204-khabar",
+    "UR-C204-bat",
+    "UR-C204-batchit",
+    "UR-C204-mashvara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch204.txt",
+  "json": "urdu/narration/ch204.json",
+  "textHash": "fnv1a64:3f0ac825a6dd728a",
+  "jsonHash": "fnv1a64:4b1a135fd0fd368b",
+  "findings": []
+}

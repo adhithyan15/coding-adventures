@@ -1,0 +1,15 @@
+{
+  "language": "urdu",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:4d277839cc900f75",
+  "lessonIds": [
+    "UR-C197-chatai",
+    "UR-C197-shaimpu",
+    "UR-C197-tuthpest",
+    "UR-C197-brash",
+    "UR-C197-ustara",
+    "UR-R197-first-pass-words-from-chapters-189-192",
+    "UR-R197-second-pass-words-from-chapters-193-197"
+  ],
+  "tex": "urdu/book/chapters/ch197-mat-shampoo-toothpaste-brush-razor.tex"
+}

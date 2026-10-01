@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 186,
+  "sourceHash": "fnv1a64:0243b1c3409e94e8",
+  "lessonIds": [
+    "UR-C186-eri",
+    "UR-C186-mutthi",
+    "UR-C186-hatheli",
+    "UR-C186-jigar",
+    "UR-C186-phephra"
+  ],
+  "tex": "urdu/book/chapters/ch186-heel-fist-palm-liver-lung.tex"
+}

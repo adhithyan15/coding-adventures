@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:8ae5e01a7e45146c",
+  "lessonIds": [
+    "UR-C205-qanun",
+    "UR-C205-haq",
+    "UR-C205-farz",
+    "UR-C205-taraqqi",
+    "UR-C205-kamyabi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch205.txt",
+  "json": "urdu/narration/ch205.json",
+  "textHash": "fnv1a64:a03d985bc7a6e5d7",
+  "jsonHash": "fnv1a64:f2fceb2d0436efb3",
+  "findings": []
+}

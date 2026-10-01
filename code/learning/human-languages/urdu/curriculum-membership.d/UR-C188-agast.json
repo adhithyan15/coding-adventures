@@ -1,0 +1,11 @@
+{
+  "id": "UR-C188-agast",
+  "pathSegment": "UR-PATH-188-VAQT188",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-188-VAQT188",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C182-thakna",
+    "language": "urdu",
+    "chapter": 182,
+    "sequence": 10280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d797d869d689bf6"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C199-haldi",
+  "pathSegment": "UR-PATH-199-CHIZ199",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-199-CHIZ199",
+      "order": 3
+    }
+  ]
+}

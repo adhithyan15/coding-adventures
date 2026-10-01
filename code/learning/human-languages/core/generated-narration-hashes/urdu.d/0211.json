@@ -1,0 +1,21 @@
+{
+  "language": "urdu",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:52f7e8f550cd627b",
+  "lessonIds": [
+    "UR-C211-sekretari",
+    "UR-C211-mainejar",
+    "UR-C211-klas",
+    "UR-C211-naukar",
+    "UR-C211-rahgir",
+    "UR-R211-first-pass-words-from-chapters-207-208",
+    "UR-R211-second-pass-words-from-chapters-209-211"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "urdu/narration/ch211.txt",
+  "json": "urdu/narration/ch211.json",
+  "textHash": "fnv1a64:d48bc07a6dfb1d3f",
+  "jsonHash": "fnv1a64:8179f612e0037511",
+  "findings": []
+}

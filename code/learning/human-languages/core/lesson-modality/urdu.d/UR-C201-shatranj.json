@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C201-shatranj",
+    "language": "urdu",
+    "chapter": 201,
+    "sequence": 11630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f5647435b55e95b3"
+  },
+  "findings": []
+}

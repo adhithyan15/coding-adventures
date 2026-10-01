@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 186,
+  "sourceHash": "fnv1a64:7850950bce823256",
+  "lessonIds": [
+    "UR-C186-eri",
+    "UR-C186-mutthi",
+    "UR-C186-hatheli",
+    "UR-C186-jigar",
+    "UR-C186-phephra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch186.txt",
+  "json": "urdu/narration/ch186.json",
+  "textHash": "fnv1a64:2a4ec96fdc59a856",
+  "jsonHash": "fnv1a64:dc26e55b3e92ec0b",
+  "findings": []
+}

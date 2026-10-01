@@ -1,0 +1,11 @@
+{
+  "id": "UR-C191-girja-ghar",
+  "pathSegment": "UR-PATH-191-JAGAH191",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-191-JAGAH191",
+      "order": 1
+    }
+  ]
+}

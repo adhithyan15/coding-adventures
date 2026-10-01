@@ -1,0 +1,11 @@
+{
+  "id": "UR-C187-khurak",
+  "pathSegment": "UR-PATH-187-SEHAT187",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-187-SEHAT187",
+      "order": 1
+    }
+  ]
+}

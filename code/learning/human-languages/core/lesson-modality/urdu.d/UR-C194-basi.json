@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C194-basi",
+    "language": "urdu",
+    "chapter": 194,
+    "sequence": 11100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d4cad4ca39c9152"
+  },
+  "findings": []
+}

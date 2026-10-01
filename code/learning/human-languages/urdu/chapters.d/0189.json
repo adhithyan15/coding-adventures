@@ -1,0 +1,19 @@
+{
+  "chapter": 189,
+  "title": "Until, Till then, So far, Right away, Late",
+  "label": "ch:ur-until-till-then-so-far-right-away-late",
+  "canDo": "I can say until, till then, so far, right away and late.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "UR-C189-der-se",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 189: I can say until, till then, so far, right away and late.",
+    "assesses": [
+      "UR-LEX-C189-VAQT189-03",
+      "UR-LEX-C189-VAQT189-04",
+      "UR-LEX-C189-VAQT189-05"
+    ]
+  }
+}

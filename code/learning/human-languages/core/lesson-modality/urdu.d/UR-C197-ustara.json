@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C197-ustara",
+    "language": "urdu",
+    "chapter": 197,
+    "sequence": 11260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ba77873ef7b3c441"
+  },
+  "findings": []
+}

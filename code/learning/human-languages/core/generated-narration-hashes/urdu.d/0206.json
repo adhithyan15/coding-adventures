@@ -1,0 +1,21 @@
+{
+  "language": "urdu",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:91d4a63fba2a3430",
+  "lessonIds": [
+    "UR-C206-dhul",
+    "UR-C206-dhuan",
+    "UR-C206-rakh",
+    "UR-C206-chandni",
+    "UR-C206-tufan",
+    "UR-R206-first-pass-words-from-chapters-198-201",
+    "UR-R206-second-pass-words-from-chapters-202-206"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "urdu/narration/ch206.txt",
+  "json": "urdu/narration/ch206.json",
+  "textHash": "fnv1a64:62fa6d869f368a5b",
+  "jsonHash": "fnv1a64:5e51168f6b9932c3",
+  "findings": []
+}

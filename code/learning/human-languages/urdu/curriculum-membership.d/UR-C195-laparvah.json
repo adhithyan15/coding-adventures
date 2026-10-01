@@ -1,0 +1,11 @@
+{
+  "id": "UR-C195-laparvah",
+  "pathSegment": "UR-PATH-195-SIFAT195",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-195-SIFAT195",
+      "order": 4
+    }
+  ]
+}

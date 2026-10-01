@@ -1,0 +1,19 @@
+{
+  "chapter": 184,
+  "title": "To fall ill, To swell, To shiver, To get wet, To travel",
+  "label": "ch:ur-to-fall-ill-to-swell-to-shiver-to-get-wet-to-travel",
+  "canDo": "I can say to fall ill, to swell, to shiver, to get wet and to travel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C184-safar-karna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 184: I can say to fall ill, to swell, to shiver, to get wet and to travel.",
+    "assesses": [
+      "UR-LEX-C184-ACT184-03",
+      "UR-LEX-C184-ACT184-04",
+      "UR-LEX-C184-ACT184-05"
+    ]
+  }
+}

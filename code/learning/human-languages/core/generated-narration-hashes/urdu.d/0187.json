@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:f7c4f4a2222b436b",
+  "lessonIds": [
+    "UR-C187-sujan",
+    "UR-C187-khurak",
+    "UR-C187-parhez",
+    "UR-C187-varzish",
+    "UR-C187-jism"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch187.txt",
+  "json": "urdu/narration/ch187.json",
+  "textHash": "fnv1a64:e27713b8d8bbfe8d",
+  "jsonHash": "fnv1a64:b81e5f67b2f3f587",
+  "findings": []
+}

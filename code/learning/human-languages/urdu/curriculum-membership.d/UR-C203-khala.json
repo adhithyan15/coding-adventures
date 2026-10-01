@@ -1,0 +1,11 @@
+{
+  "id": "UR-C203-khala",
+  "pathSegment": "UR-PATH-203-CHIZ203",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-203-CHIZ203",
+      "order": 1
+    }
+  ]
+}

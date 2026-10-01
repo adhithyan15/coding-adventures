@@ -1,0 +1,19 @@
+{
+  "chapter": 183,
+  "title": "To pay a visit, To marry, To be alive, To die, To increase",
+  "label": "ch:ur-to-pay-a-visit-to-marry-to-be-alive-to-die-to-increase",
+  "canDo": "I can say to pay a visit, to marry, to be alive, to die and to increase.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C183-barhana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 183: I can say to pay a visit, to marry, to be alive, to die and to increase.",
+    "assesses": [
+      "UR-LEX-C183-ACT183-03",
+      "UR-LEX-C183-ACT183-04",
+      "UR-LEX-C183-ACT183-05"
+    ]
+  }
+}

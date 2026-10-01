@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:a64d8b3bf353e925",
+  "lessonIds": [
+    "UR-C194-chaukor",
+    "UR-C194-terha",
+    "UR-C194-uthla",
+    "UR-C194-basi",
+    "UR-C194-tikha"
+  ],
+  "tex": "urdu/book/chapters/ch194-square-crooked-shallow-stale-spicy.tex"
+}

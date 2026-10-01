@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C199-ghi",
+    "language": "urdu",
+    "chapter": 199,
+    "sequence": 11520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0bc5ece8a4accba"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C207-ilaichi",
+    "language": "urdu",
+    "chapter": 207,
+    "sequence": 12110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:368e70873f7ca1ee"
+  },
+  "findings": []
+}

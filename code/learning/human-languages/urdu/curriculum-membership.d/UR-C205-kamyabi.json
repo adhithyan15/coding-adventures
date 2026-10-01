@@ -1,0 +1,11 @@
+{
+  "id": "UR-C205-kamyabi",
+  "pathSegment": "UR-PATH-205-CHIZ205",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-205-CHIZ205",
+      "order": 4
+    }
+  ]
+}

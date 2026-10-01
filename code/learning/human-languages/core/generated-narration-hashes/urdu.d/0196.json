@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:96b89c8f100618eb",
+  "lessonIds": [
+    "UR-C196-bechain",
+    "UR-C196-badnam",
+    "UR-C196-nek",
+    "UR-C196-naujavan",
+    "UR-C196-jadid"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch196.txt",
+  "json": "urdu/narration/ch196.json",
+  "textHash": "fnv1a64:be39b33b2618980a",
+  "jsonHash": "fnv1a64:d115becc3fd46580",
+  "findings": []
+}

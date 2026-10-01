@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C182-intizar-karna",
+    "language": "urdu",
+    "chapter": 182,
+    "sequence": 10320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd47159969503697"
+  },
+  "findings": []
+}

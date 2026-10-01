@@ -1,0 +1,19 @@
+{
+  "chapter": 197,
+  "title": "Mat, Shampoo, Toothpaste, Brush, Razor",
+  "label": "ch:ur-mat-shampoo-toothpaste-brush-razor",
+  "canDo": "I can say a mat, shampoo, toothpaste, a brush and a razor.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-R197-second-pass-words-from-chapters-193-197",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 197: I can say a mat, shampoo, toothpaste, a brush and a razor.",
+    "assesses": [
+      "UR-LEX-C197-CHIZ197-03",
+      "UR-LEX-C197-CHIZ197-04",
+      "UR-LEX-C197-CHIZ197-05"
+    ]
+  }
+}

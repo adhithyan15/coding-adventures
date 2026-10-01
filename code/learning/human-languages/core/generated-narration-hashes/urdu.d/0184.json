@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 184,
+  "sourceHash": "fnv1a64:cf79b54b24daefbf",
+  "lessonIds": [
+    "UR-C184-bimar-parna",
+    "UR-C184-sujna",
+    "UR-C184-kanpna",
+    "UR-C184-bhigna",
+    "UR-C184-safar-karna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch184.txt",
+  "json": "urdu/narration/ch184.json",
+  "textHash": "fnv1a64:312862a324240b9d",
+  "jsonHash": "fnv1a64:881b899559a8ed3e",
+  "findings": []
+}

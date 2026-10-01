@@ -1,0 +1,19 @@
+{
+  "chapter": 192,
+  "title": "But rather, Perhaps, Certainly, Of course, Regret",
+  "label": "ch:ur-but-rather-perhaps-certainly-of-course-regret",
+  "canDo": "I can say but rather, perhaps, certainly, of course and regret.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "UR-C192-afsos",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 192: I can say but rather, perhaps, certainly, of course and regret.",
+    "assesses": [
+      "UR-LEX-C192-VAJAH192-03",
+      "UR-LEX-C192-VAJAH192-04",
+      "UR-LEX-C192-VAJAH192-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 193,
+  "title": "Honest, Cowardly, Stingy, Greedy, Worried",
+  "label": "ch:ur-honest-cowardly-stingy-greedy-worried",
+  "canDo": "I can say honest, cowardly, stingy, greedy and worried.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "UR-C193-pareshan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 193: I can say honest, cowardly, stingy, greedy and worried.",
+    "assesses": [
+      "UR-LEX-C193-SIFAT193-03",
+      "UR-LEX-C193-SIFAT193-04",
+      "UR-LEX-C193-SIFAT193-05"
+    ]
+  }
+}

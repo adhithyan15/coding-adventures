@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C202-tohfa",
+    "language": "urdu",
+    "chapter": 202,
+    "sequence": 11670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:86f3b13e37c88f6d"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 182,
+  "title": "To get tired, To rest, To lie down, To stand up, To wait",
+  "label": "ch:ur-to-get-tired-to-rest-to-lie-down-to-stand-up-to-wait",
+  "canDo": "I can say to get tired, to rest, to lie down, to stand up and to wait.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C182-intizar-karna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 182: I can say to get tired, to rest, to lie down, to stand up and to wait.",
+    "assesses": [
+      "UR-LEX-C182-ACT182-03",
+      "UR-LEX-C182-ACT182-04",
+      "UR-LEX-C182-ACT182-05"
+    ]
+  }
+}

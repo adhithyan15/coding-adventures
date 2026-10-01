@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:b8ab7fd7f1642f3b",
+  "lessonIds": [
+    "UR-C193-imandar",
+    "UR-C193-buzdil",
+    "UR-C193-kanjus",
+    "UR-C193-lalchi",
+    "UR-C193-pareshan"
+  ],
+  "tex": "urdu/book/chapters/ch193-honest-cowardly-stingy-greedy-worried.tex"
+}

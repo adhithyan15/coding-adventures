@@ -1,0 +1,11 @@
+{
+  "id": "UR-C202-riksha",
+  "pathSegment": "UR-PATH-202-CHIZ202",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-202-CHIZ202",
+      "order": 4
+    }
+  ]
+}

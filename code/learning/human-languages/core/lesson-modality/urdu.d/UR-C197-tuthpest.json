@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C197-tuthpest",
+    "language": "urdu",
+    "chapter": 197,
+    "sequence": 11240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10324c17ddf31540"
+  },
+  "findings": []
+}

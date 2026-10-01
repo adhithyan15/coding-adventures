@@ -1,0 +1,11 @@
+{
+  "id": "UR-C187-varzish",
+  "pathSegment": "UR-PATH-187-SEHAT187",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-187-SEHAT187",
+      "order": 3
+    }
+  ]
+}

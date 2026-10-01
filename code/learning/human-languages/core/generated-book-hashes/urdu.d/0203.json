@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:b4215bd54c9adae2",
+  "lessonIds": [
+    "UR-C203-mamun",
+    "UR-C203-khala",
+    "UR-C203-phuphi",
+    "UR-C203-bhatija",
+    "UR-C203-pota"
+  ],
+  "tex": "urdu/book/chapters/ch203-maternal-uncle-maternal-aunt-paternal-aunt-nephew-grandson.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 203,
+  "title": "Maternal uncle, Maternal aunt, Paternal aunt, Nephew, Grandson",
+  "label": "ch:ur-maternal-uncle-maternal-aunt-paternal-aunt-nephew-grandson",
+  "canDo": "I can say a maternal uncle, a maternal aunt, a paternal aunt, a nephew and a grandson.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C203-pota",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 203: I can say a maternal uncle, a maternal aunt, a paternal aunt, a nephew and a grandson.",
+    "assesses": [
+      "UR-LEX-C203-CHIZ203-03",
+      "UR-LEX-C203-CHIZ203-04",
+      "UR-LEX-C203-CHIZ203-05"
+    ]
+  }
+}

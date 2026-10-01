@@ -1,0 +1,11 @@
+{
+  "id": "UR-C193-lalchi",
+  "pathSegment": "UR-PATH-193-SIFAT193",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-193-SIFAT193",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:95bedd827d7e879e",
+  "lessonIds": [
+    "UR-C190-vadi",
+    "UR-C190-chirya-ghar",
+    "UR-C190-yunivarsiti",
+    "UR-C190-kalij",
+    "UR-C190-makan"
+  ],
+  "tex": "urdu/book/chapters/ch190-valley-zoo-university-college-dwelling.tex"
+}
