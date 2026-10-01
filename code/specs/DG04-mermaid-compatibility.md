@@ -528,7 +528,8 @@ pinned Mermaid diagnostic. Deterministic alternating partitions
 lower through backend-neutral rectangles and glyph runs, with native
 Metal-to-PNG validation. Named `classDef` declarations resolve fill, stroke,
 dash, dash offset, fill/stroke/overall opacity, text color, and font styling
-through semantic IR and backend-neutral paint. Class text alignment and
+through semantic IR and backend-neutral paint. Class border radii likewise
+reach backend-neutral rectangle geometry. Class text alignment and
 none/upper/lower/capitalize transforms and none/underline/overline/line-through
 decoration combinations, including independently authored decoration colors,
 and solid/double/dotted/dashed/wavy decoration styles also survive into shaped
