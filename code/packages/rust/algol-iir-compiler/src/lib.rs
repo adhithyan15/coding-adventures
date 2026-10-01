@@ -5845,7 +5845,7 @@ impl Compiler {
             let tracks_while_body = is_while_element
                 && executes == Some(true)
                 && !entry_tracking_disabled
-                && (self.for_body_avoids_target(target, body)
+                && (self.for_body_preserves_target(target, body)
                     || static_while_exit_real.is_some()
                     || static_while_exit_integer.is_some()
                     || static_while_body_assignments.is_some());
@@ -5878,7 +5878,7 @@ impl Compiler {
                     )?;
                 }
             } else if tracks_step_body && !self.static_real_tracking_disabled {
-                if !step_executes_exactly_once && !self.for_body_avoids_target(target, body) {
+                if !step_executes_exactly_once && !self.for_body_preserves_target(target, body) {
                     self.static_real_slots.clear();
                     self.static_integer_slots.clear();
                     self.static_boolean_slots.clear();
@@ -6044,7 +6044,7 @@ impl Compiler {
                     self.static_boolean_slots = saved_booleans;
                     return (None, exit);
                 }
-                if !self.for_body_avoids_target(target, body) {
+                if !self.for_body_preserves_target(target, body) {
                     return (None, None);
                 }
                 let start = i128::from(start);
@@ -6154,7 +6154,7 @@ impl Compiler {
                     self.static_boolean_slots = saved_booleans;
                     return (exit.map(|value| value.to_string()), None);
                 }
-                if !self.for_body_avoids_target(target, body) {
+                if !self.for_body_preserves_target(target, body) {
                     return (None, None);
                 }
                 let mut control = start;
@@ -6331,7 +6331,7 @@ impl Compiler {
         succeeded.then_some(snapshots)
     }
 
-    fn for_body_avoids_target(
+    fn for_body_preserves_target(
         &self,
         target: &GrammarASTNode,
         body: &GrammarASTNode,
@@ -6339,9 +6339,7 @@ impl Compiler {
         let Ok(target_name) = self.simple_variable_name(target) else {
             return false;
         };
-        !recursive_tokens(body).iter().any(|token| {
-            token.effective_type_name() == "NAME" && token.value == target_name
-        })
+        !self.for_body_writes_name(body, &target_name, &target_name, body)
     }
 
     fn for_body_static_target_expression<'a>(
@@ -17022,6 +17020,20 @@ mod tests {
             "test",
         )
         .expect("literal string predicates may select headers across mixed for elements");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "7.25")
+        }));
+    }
+
+    #[test]
+    fn al4_step_while_list_sequences_literal_string_selected_values() {
+        let module = compile_source(
+            "begin integer i; real total; total := 0.25; for i := if 'ALPHA' < 'BETA' then 1 else 9 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'ALPHA' < 'BETA' then 2 else 0, if 'BETA' < 'ALPHA' then i + 3 else i + 1 while i <= 4 do total := total + i; print(total) end",
+            "test",
+        )
+        .expect("literal string predicates may select values across step and while elements");
         let main = module.get_function("main").expect("has main");
         assert!(main.instructions.iter().any(|instr| {
             instr.op == "str_const"
