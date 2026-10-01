@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:5df2483ca678e605",
+  "lessonIds": [
+    "FR-C214-enregistrer",
+    "FR-C214-entretenir",
+    "FR-C214-exister",
+    "FR-C214-exprimer",
+    "FR-C214-grossir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch214.txt",
+  "json": "french/narration/ch214.json",
+  "textHash": "fnv1a64:781070199ff93364",
+  "jsonHash": "fnv1a64:1a774fcb4399be17",
+  "findings": []
+}

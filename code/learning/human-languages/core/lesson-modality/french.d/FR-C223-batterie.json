@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C223-batterie",
+    "language": "french",
+    "chapter": 223,
+    "sequence": 12590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1fbdff05036fd13f"
+  },
+  "findings": []
+}

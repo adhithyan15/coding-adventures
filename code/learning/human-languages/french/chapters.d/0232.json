@@ -1,0 +1,19 @@
+{
+  "chapter": 232,
+  "title": "Magazine, Dictionary, University, Mistake, History",
+  "label": "ch:fr-magazine-dictionary-university-mistake-history",
+  "canDo": "I can say a magazine, a dictionary, a university, a mistake and history.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-R232-second-pass-words-from-chapters-230-232",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 232: I can say a magazine, a dictionary, a university, a mistake and history.",
+    "assesses": [
+      "FR-LEX-C232-TRAV232-03",
+      "FR-LEX-C232-TRAV232-04",
+      "FR-LEX-C232-TRAV232-05"
+    ]
+  }
+}

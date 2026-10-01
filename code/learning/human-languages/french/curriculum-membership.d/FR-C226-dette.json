@@ -1,0 +1,11 @@
+{
+  "id": "FR-C226-dette",
+  "pathSegment": "FR-PATH-226-CHOSES226",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-226-CHOSES226",
+      "order": 4
+    }
+  ]
+}

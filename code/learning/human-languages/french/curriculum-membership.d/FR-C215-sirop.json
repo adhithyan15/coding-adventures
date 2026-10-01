@@ -1,0 +1,11 @@
+{
+  "id": "FR-C215-sirop",
+  "pathSegment": "FR-PATH-215-SANTE215",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-215-SANTE215",
+      "order": 3
+    }
+  ]
+}

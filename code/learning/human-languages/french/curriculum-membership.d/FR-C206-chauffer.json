@@ -1,0 +1,11 @@
+{
+  "id": "FR-C206-chauffer",
+  "pathSegment": "FR-PATH-206-VERBES206",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-206-VERBES206",
+      "order": 3
+    }
+  ]
+}

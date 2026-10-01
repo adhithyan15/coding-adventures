@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-223-CHOSES223",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a battery, a charger, a singer, a concert and a show.",
+  "prerequisites": []
+}

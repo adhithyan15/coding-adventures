@@ -1,0 +1,19 @@
+{
+  "chapter": 229,
+  "title": "Lightning, Thunder, Climate, Environment, Pollution",
+  "label": "ch:fr-lightning-thunder-climate-environment-pollution",
+  "canDo": "I can say lightning, thunder, the climate, the environment and pollution.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C229-pollution",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 229: I can say lightning, thunder, the climate, the environment and pollution.",
+    "assesses": [
+      "FR-LEX-C229-CHOSES229-03",
+      "FR-LEX-C229-CHOSES229-04",
+      "FR-LEX-C229-CHOSES229-05"
+    ]
+  }
+}

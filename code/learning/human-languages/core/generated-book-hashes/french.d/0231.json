@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:342c8a2a3ac89b00",
+  "lessonIds": [
+    "FR-C231-retour",
+    "FR-C231-arrivee",
+    "FR-C231-depart",
+    "FR-C231-destination",
+    "FR-C231-paysage"
+  ],
+  "tex": "french/book/chapters/ch231-return-arrival-departure-destination-landscape.tex"
+}

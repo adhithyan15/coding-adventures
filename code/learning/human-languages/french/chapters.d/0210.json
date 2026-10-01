@@ -1,0 +1,19 @@
+{
+  "chapter": 210,
+  "title": "To reach, To achieve, To give a present, To give back, To recognise",
+  "label": "ch:fr-to-reach-to-achieve-to-give-a-present-to-give-back-to-recognise",
+  "canDo": "I can say to reach, to achieve, to give a present, to give back and to recognise.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C210-reconnaitre",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 210: I can say to reach, to achieve, to give a present, to give back and to recognise.",
+    "assesses": [
+      "FR-LEX-C210-VERBES210-03",
+      "FR-LEX-C210-VERBES210-04",
+      "FR-LEX-C210-VERBES210-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C206-chauffer",
+    "language": "french",
+    "chapter": 206,
+    "sequence": 11390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:acbab3f6572891ac"
+  },
+  "findings": []
+}

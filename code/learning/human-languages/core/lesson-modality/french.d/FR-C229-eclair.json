@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C229-eclair",
+    "language": "french",
+    "chapter": 229,
+    "sequence": 13040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e374ebee97a4705e"
+  },
+  "findings": []
+}

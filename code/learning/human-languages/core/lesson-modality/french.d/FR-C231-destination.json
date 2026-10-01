@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C231-destination",
+    "language": "french",
+    "chapter": 231,
+    "sequence": 13170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3fc0f6b1616228ad"
+  },
+  "findings": []
+}

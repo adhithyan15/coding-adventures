@@ -1,0 +1,11 @@
+{
+  "id": "FR-C229-tonnerre",
+  "pathSegment": "FR-PATH-229-CHOSES229",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-229-CHOSES229",
+      "order": 1
+    }
+  ]
+}

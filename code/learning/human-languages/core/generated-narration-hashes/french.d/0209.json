@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:5d01dfb6d68e3dd2",
+  "lessonIds": [
+    "FR-C209-profiter",
+    "FR-C209-imaginer",
+    "FR-C209-indiquer",
+    "FR-C209-informer",
+    "FR-C209-plaindre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch209.txt",
+  "json": "french/narration/ch209.json",
+  "textHash": "fnv1a64:889dd3d49614588c",
+  "jsonHash": "fnv1a64:a3b0a5d6a77efb7e",
+  "findings": []
+}

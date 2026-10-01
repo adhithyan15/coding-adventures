@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R213-second-pass-words-from-chapters-209-213",
+    "language": "french",
+    "chapter": 213,
+    "sequence": 11770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:99a391ec98a88ac4"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C212-freiner",
+  "pathSegment": "FR-PATH-212-VERBES212",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-212-VERBES212",
+      "order": 1
+    }
+  ]
+}

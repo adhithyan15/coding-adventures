@@ -1,0 +1,11 @@
+{
+  "id": "FR-C228-graine",
+  "pathSegment": "FR-PATH-228-CHOSES228",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-228-CHOSES228",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "language": "french",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:c1e023b96fd2af54",
+  "lessonIds": [
+    "FR-C232-magazine",
+    "FR-C232-dictionnaire",
+    "FR-C232-universite",
+    "FR-C232-erreur",
+    "FR-C232-histoire",
+    "FR-R232-first-pass-words-from-chapters-228-229",
+    "FR-R232-second-pass-words-from-chapters-230-232"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "french/narration/ch232.txt",
+  "json": "french/narration/ch232.json",
+  "textHash": "fnv1a64:63e2df9ddbeafeaa",
+  "jsonHash": "fnv1a64:481631a9008c6de9",
+  "findings": []
+}

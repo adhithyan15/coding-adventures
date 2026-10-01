@@ -1,0 +1,19 @@
+{
+  "chapter": 209,
+  "title": "To enjoy, To imagine, To point out, To inform, To complain",
+  "label": "ch:fr-to-enjoy-to-imagine-to-point-out-to-inform-to-complain",
+  "canDo": "I can say to enjoy, to imagine, to point out, to inform and to complain.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C209-plaindre",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 209: I can say to enjoy, to imagine, to point out, to inform and to complain.",
+    "assesses": [
+      "FR-LEX-C209-VERBES209-03",
+      "FR-LEX-C209-VERBES209-04",
+      "FR-LEX-C209-VERBES209-05"
+    ]
+  }
+}

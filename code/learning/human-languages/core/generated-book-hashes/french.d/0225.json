@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:190aedae779f80d7",
+  "lessonIds": [
+    "FR-C225-experience",
+    "FR-C225-choix",
+    "FR-C225-decision",
+    "FR-C225-possibilite",
+    "FR-C225-raison"
+  ],
+  "tex": "french/book/chapters/ch225-experience-choice-decision-possibility-reason.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:76e36cc302eff85f",
+  "lessonIds": [
+    "FR-C224-employe",
+    "FR-C224-pilote",
+    "FR-C224-comptable",
+    "FR-C224-scientifique",
+    "FR-C224-chercheur"
+  ],
+  "tex": "french/book/chapters/ch224-employee-pilot-accountant-scientist-researcher.tex"
+}

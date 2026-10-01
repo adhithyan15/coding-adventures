@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:9697abb8dbdc947d",
+  "lessonIds": [
+    "FR-C212-fixer",
+    "FR-C212-freiner",
+    "FR-C212-fonctionner",
+    "FR-C212-flotter",
+    "FR-C212-poursuivre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch212.txt",
+  "json": "french/narration/ch212.json",
+  "textHash": "fnv1a64:cc7493131dd7ee4f",
+  "jsonHash": "fnv1a64:8b438659bf1a7f65",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C230-marteau",
+  "pathSegment": "FR-PATH-230-CHOSES230",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-230-CHOSES230",
+      "order": 3
+    }
+  ]
+}

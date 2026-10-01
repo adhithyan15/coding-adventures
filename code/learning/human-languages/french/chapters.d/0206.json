@@ -1,0 +1,19 @@
+{
+  "chapter": 206,
+  "title": "To break, To touch, To taste, To heat, To cool down",
+  "label": "ch:fr-to-break-to-touch-to-taste-to-heat-to-cool-down",
+  "canDo": "I can say to break, to touch, to taste, to heat and to cool down.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C206-refroidir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 206: I can say to break, to touch, to taste, to heat and to cool down.",
+    "assesses": [
+      "FR-LEX-C206-VERBES206-03",
+      "FR-LEX-C206-VERBES206-04",
+      "FR-LEX-C206-VERBES206-05"
+    ]
+  }
+}

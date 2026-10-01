@@ -1,0 +1,11 @@
+{
+  "id": "FR-C219-pareil-pareille",
+  "pathSegment": "FR-PATH-219-QUAL219",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-219-QUAL219",
+      "order": 4
+    }
+  ]
+}

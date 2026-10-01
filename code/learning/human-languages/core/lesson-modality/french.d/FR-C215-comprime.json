@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C215-comprime",
+    "language": "french",
+    "chapter": 215,
+    "sequence": 12020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd6133b093f1bf30"
+  },
+  "findings": []
+}

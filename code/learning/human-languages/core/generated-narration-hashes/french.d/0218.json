@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:7e16a54d169a6246",
+  "lessonIds": [
+    "FR-C218-curieux-curieuse",
+    "FR-C218-jaloux-jalouse",
+    "FR-C218-fier-fiere",
+    "FR-C218-nerveux-nerveuse",
+    "FR-C218-tranquille"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch218.txt",
+  "json": "french/narration/ch218.json",
+  "textHash": "fnv1a64:41f656b9bbcbc81d",
+  "jsonHash": "fnv1a64:910e40245e58da0e",
+  "findings": []
+}

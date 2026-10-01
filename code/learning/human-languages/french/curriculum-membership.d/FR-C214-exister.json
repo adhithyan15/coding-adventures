@@ -1,0 +1,11 @@
+{
+  "id": "FR-C214-exister",
+  "pathSegment": "FR-PATH-214-VERBES214",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-214-VERBES214",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C208-traverser",
+  "pathSegment": "FR-PATH-208-VERBES208",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-208-VERBES208",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C216-la-haut",
+  "pathSegment": "FR-PATH-216-LIEU216",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-216-LIEU216",
+      "order": 3
+    }
+  ]
+}

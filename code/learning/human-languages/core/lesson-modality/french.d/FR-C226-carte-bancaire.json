@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C226-carte-bancaire",
+    "language": "french",
+    "chapter": 226,
+    "sequence": 12740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4cf494f2177f28c7"
+  },
+  "findings": []
+}

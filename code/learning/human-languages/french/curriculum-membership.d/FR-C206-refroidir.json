@@ -1,0 +1,11 @@
+{
+  "id": "FR-C206-refroidir",
+  "pathSegment": "FR-PATH-206-VERBES206",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-206-VERBES206",
+      "order": 4
+    }
+  ]
+}

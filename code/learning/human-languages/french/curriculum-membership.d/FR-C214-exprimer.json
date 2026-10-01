@@ -1,0 +1,11 @@
+{
+  "id": "FR-C214-exprimer",
+  "pathSegment": "FR-PATH-214-VERBES214",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-214-VERBES214",
+      "order": 3
+    }
+  ]
+}

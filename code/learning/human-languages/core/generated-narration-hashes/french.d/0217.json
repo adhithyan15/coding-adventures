@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:619cf21b373bc518",
+  "lessonIds": [
+    "FR-C217-presque",
+    "FR-C217-environ",
+    "FR-C217-seulement",
+    "FR-C217-ensemble",
+    "FR-C217-cependant"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch217.txt",
+  "json": "french/narration/ch217.json",
+  "textHash": "fnv1a64:6d7af910707f34d6",
+  "jsonHash": "fnv1a64:7df1010e4a7e3710",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C226-dette",
+    "language": "french",
+    "chapter": 226,
+    "sequence": 12780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:de6ac2e36f130a7c"
+  },
+  "findings": []
+}

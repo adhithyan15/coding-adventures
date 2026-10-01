@@ -1,0 +1,11 @@
+{
+  "id": "FR-C217-cependant",
+  "pathSegment": "FR-PATH-217-POURQUOI217",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-217-POURQUOI217",
+      "order": 4
+    }
+  ]
+}

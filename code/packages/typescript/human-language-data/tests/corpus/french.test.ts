@@ -201,7 +201,9 @@ it("pins French lesson-content budgets", () =>
     // nine chapters. No idiom, sense or culture claim.
     // 939 -> 1097: the second tranche, chapters 175-204: 150 word lessons and
     // two reviews per run.
-    lessons: 1097,
+    // 1097 -> 1245: the third tranche, chapters 205-232: 140 word lessons and
+    // two reviews per run.
+    lessons: 1245,
     idioms: 3,
     senses: 7,
     cultureClaims: 27,

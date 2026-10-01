@@ -1,0 +1,19 @@
+{
+  "chapter": 217,
+  "title": "Almost, About, Only, Together, Nevertheless",
+  "label": "ch:fr-almost-about-only-together-nevertheless",
+  "canDo": "I can say almost, about, only, together and nevertheless.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "FR-C217-cependant",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 217: I can say almost, about, only, together and nevertheless.",
+    "assesses": [
+      "FR-LEX-C217-POURQUOI217-03",
+      "FR-LEX-C217-POURQUOI217-04",
+      "FR-LEX-C217-POURQUOI217-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C208-augmenter",
+  "pathSegment": "FR-PATH-208-VERBES208",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-208-VERBES208",
+      "order": 2
+    }
+  ]
+}

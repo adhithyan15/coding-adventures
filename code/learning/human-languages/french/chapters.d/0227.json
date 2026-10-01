@@ -1,0 +1,19 @@
+{
+  "chapter": 227,
+  "title": "Wheel, Engine, Toll, Motorway, Fine",
+  "label": "ch:fr-wheel-engine-toll-motorway-fine",
+  "canDo": "I can say a wheel, an engine, a toll, a motorway and a fine.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-R227-second-pass-words-from-chapters-225-227",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 227: I can say a wheel, an engine, a toll, a motorway and a fine.",
+    "assesses": [
+      "FR-LEX-C227-CHOSES227-03",
+      "FR-LEX-C227-CHOSES227-04",
+      "FR-LEX-C227-CHOSES227-05"
+    ]
+  }
+}

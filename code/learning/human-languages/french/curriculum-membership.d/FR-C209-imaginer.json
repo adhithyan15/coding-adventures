@@ -1,0 +1,11 @@
+{
+  "id": "FR-C209-imaginer",
+  "pathSegment": "FR-PATH-209-VERBES209",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-209-VERBES209",
+      "order": 1
+    }
+  ]
+}

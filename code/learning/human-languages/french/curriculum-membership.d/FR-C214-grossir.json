@@ -1,0 +1,11 @@
+{
+  "id": "FR-C214-grossir",
+  "pathSegment": "FR-PATH-214-VERBES214",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-214-VERBES214",
+      "order": 4
+    }
+  ]
+}

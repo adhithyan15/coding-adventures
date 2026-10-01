@@ -1,0 +1,11 @@
+{
+  "id": "FR-C206-toucher",
+  "pathSegment": "FR-PATH-206-VERBES206",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-206-VERBES206",
+      "order": 1
+    }
+  ]
+}
