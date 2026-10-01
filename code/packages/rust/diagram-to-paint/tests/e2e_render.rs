@@ -2289,7 +2289,7 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_treemap_to_png() {
         let diagram = parse_treemap(
-            "%%{init: {\"treemap\": {\"padding\": 4, \"nodeWidth\": 64, \"nodeHeight\": 48, \"labelFontSize\": 15, \"valueFontSize\": 11, \"valueFormat\": \".2s\"}, \"themeVariables\": {\"cScale0\": \"#cffafe\", \"cScalePeer0\": \"#0e7490\", \"cScaleLabel0\": \"#164e63\"}}}%%\ntreemap-beta\ntitle Product Mix\naccTitle: Product allocation\n\"Products\"\n  \"Hardware\"\n    \"Laptops\": 4500\n    \"Phones\": 2500\n  \"Services\"\n    \"Support\": 2000\n    \"Training\": 1000:::accent\nclassDef accent fill:#fee2e2,stroke:#991b1b,color:#450a0a,stroke-width:3px",
+            "%%{init: {\"treemap\": {\"padding\": 4, \"nodeWidth\": 64, \"nodeHeight\": 48, \"sectionFillColor\": \"#e0f2fe\", \"sectionStrokeColor\": \"#0369a1\", \"sectionStrokeWidth\": 2, \"leafFillColor\": \"#dcfce7\", \"leafStrokeColor\": \"#15803d\", \"leafStrokeWidth\": 2, \"labelColor\": \"#0c4a6e\", \"valueColor\": \"#166534\", \"titleColor\": \"#7c2d12\", \"titleFontSize\": 20, \"labelFontSize\": 15, \"valueFontSize\": 11, \"valueFormat\": \".2s\"}, \"themeVariables\": {\"cScale0\": \"#cffafe\", \"cScalePeer0\": \"#0e7490\", \"cScaleLabel0\": \"#164e63\"}}}%%\ntreemap-beta\ntitle Product Mix\naccTitle: Product allocation\n\"Products\"\n  \"Hardware\"\n    \"Laptops\": 4500\n    \"Phones\": 2500\n  \"Services\"\n    \"Support\": 2000\n    \"Training\": 1000:::accent\nclassDef accent fill:#fee2e2,stroke:#991b1b,color:#450a0a,stroke-width:3px",
         )
         .expect("treemap parse failed");
         let layout = layout_treemap(&diagram, 720.0);
@@ -2312,8 +2312,22 @@ line "Target" [35, 50, 68, 82]"##,
                     && rect.stroke.as_deref() == Some("#991b1b"))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             paint_instructions::PaintInstruction::Rect(rect)
-                if rect.fill.as_deref() == Some("#cffafe")
-                    && rect.stroke.as_deref() == Some("#0e7490"))));
+                if rect.fill.as_deref() == Some("#dcfce7")
+                    && rect.stroke.as_deref() == Some("#15803d")
+                    && rect.stroke_width == Some(2.0))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            paint_instructions::PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some("#e0f2fe")
+                    && rect.stroke.as_deref() == Some("#0369a1")
+                    && rect.stroke_width == Some(2.0))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            paint_instructions::PaintInstruction::GlyphRun(run)
+                if run.font_size == 20.0 && run.fill.as_deref() == Some("rgb(124, 45, 18)"))));
+        for color in ["rgb(12, 74, 110)", "rgb(22, 101, 52)"] {
+            assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                paint_instructions::PaintInstruction::GlyphRun(run)
+                    if run.fill.as_deref() == Some(color))));
+        }
         assert_eq!(
             scene.metadata.as_ref().and_then(|metadata| metadata.get("treemap.valueFormat")),
             Some(&".2s".to_string())
