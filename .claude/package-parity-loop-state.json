@@ -11,19 +11,12 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 16361,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16361",
-    "item_id": "barcode-layout-1d-ruby-swift-v1-conformance",
-    "branch": "codex/parity-barcode-layout-ruby-swift-20261001",
-    "head_revision": "e32c3e4b11f14de694b3358f3045b15632b255f3",
-    "status": "pr-open"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-01T04:25:46Z",
-    "pr_number": 16343,
+    "observed_at": "2026-10-01T21:43:28Z",
+    "pr_number": 16361,
     "status": "merged-after-guarded-auto-merge",
-    "notes": "All 51 final-head checks completed acceptably: 47 succeeded, three expected CodeQL or publishing jobs were skipped, and the aggregate CodeQL check was neutral. GitHub reported head f12ad9eca4532044feafe8c4ac12ad6842cd0dd2 MERGEABLE and CLEAN; guarded squash auto-merge was enabled only then, and PR #16343 merged automatically as 2a75d68df071c01cbe9cd76d791904afb19819a5 without a plain manual merge command."
+    "notes": "PR #16361 merged through squash auto-merge as durable revision 02e8b7fc6dc0156808acf3d0395974c13ff6aa75. The merge preserves the exact validated Ruby and Swift package trees; registry evidence now names the durable merge rather than a deleted PR-head object."
   },
   "last_inventory": {
     "revision": "2a75d68df071c01cbe9cd76d791904afb19819a5",
@@ -10619,7 +10612,7 @@
     {
       "id": "barcode-layout-1d-ruby-swift-v1-conformance",
       "title": "Reconcile Ruby and Swift barcode-layout-1d with the neutral contract",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["barcode-layout-1d-language-neutral-conformance", "barcode-layout-existing-lanes-v1-conformance"],
       "branch": "codex/parity-barcode-layout-ruby-swift-20261001",
       "pr_number": 16361,
@@ -10629,7 +10622,11 @@
       "validation_revision": "02e8b7fc6dc0156808acf3d0395974c13ff6aa75",
       "selection_notes": "Selected only after PR #16343 completed every final-head check acceptably and merged through guarded squash auto-merge as 2a75d68df071c01cbe9cd76d791904afb19819a5. The refreshed full-tree schema-3 inventory is collision-clean at 15 established lanes, 1,475 implementation identities, 4,742 package slots, 1,517 all-reported identities, completion bands 178/265, 123/934, 181/2,282, and 993/13,902, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. Ruby/Swift is the highest-leverage ready omitted-lane tranche; it establishes the exact 12-target registry shape while leaving Elixir/Lua truthfully pending, unblocks the later Elixir/Lua adoption, and precedes Java/Kotlin/Dart porting. A live open-PR path audit found no overlap with the package, registry, validator, state, roadmap, or changelog surfaces. The fresh clean sparse worktree starts from the exact merge revision.",
       "validation_notes": "Ruby completed 2 native runs with 5 assertions and 64 conformance runs with 122 assertions; Swift completed seven native and conformance tests with coverage and release builds. The shared registry validator completed nine tests. All six portable symbology downstreams passed in each lane; Ruby's aggregate passed with one expected platform-native skip, while Swift's aggregate compiled its complete package graph and then encountered the pre-existing absent paint_vm_direct2d_c.lib linker artifact. Every Unix build command is independently shell-complete for the line-oriented build tool, and both Windows fronts fail closed. The second read-only security review reported no vulnerabilities after bounded Unicode-scalar ingress fixes.",
-      "publication_notes": "PR #16361 merged as 02e8b7fc6dc0156808acf3d0395974c13ff6aa75. Ruby package tree aafff095367353ae3da9738dfd82198c63b7913f and Swift package tree 0d3e662c9d3a0b96ef08465c8b64906bca3a6a4c are bound to that durable squash-merge revision.",
+      "publication_notes": "PR #16361 merged through squash auto-merge. Ruby package tree aafff095367353ae3da9738dfd82198c63b7913f and Swift package tree 0d3e662c9d3a0b96ef08465c8b64906bca3a6a4c are bound to durable merge revision 02e8b7fc6dc0156808acf3d0395974c13ff6aa75; deleted PR-head objects are not used as repository evidence.",
+      "merged_head_revision": "37659c7097713ac15812b9866da02ac3c76567e5",
+      "merged_at": "2026-10-01T21:43:28Z",
+      "merge_revision": "02e8b7fc6dc0156808acf3d0395974c13ff6aa75",
+      "merge_notes": "Squash auto-merge completed after the final head passed its required gates. The durable merge commit preserves both pinned package trees and remains reachable after branch deletion.",
       "notes": "Ruby and Swift retain their legacy public APIs and now expose strict additive v1 facades, execute all 56 neutral cases dynamically, publish empty capability manifests, preserve zero-authority resolver precedence, and carry native build and downstream evidence. Elixir and Lua remain truthfully pending in the complete 12-target registry."
     },
     {
