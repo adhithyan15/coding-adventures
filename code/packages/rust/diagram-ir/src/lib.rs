@@ -1438,6 +1438,7 @@ pub struct TreemapNode {
     pub label: String,
     pub value: Option<f64>,
     pub class_selector: Option<String>,
+    pub style: Option<DiagramStyle>,
     pub parent_id: Option<String>,
 }
 
@@ -1462,6 +1463,7 @@ pub struct LayoutedTreemapNode {
     pub width: f64,
     pub height: f64,
     pub class_selector: Option<String>,
+    pub style: Option<DiagramStyle>,
 }
 
 #[derive(Clone, Debug, PartialEq)]

@@ -526,11 +526,13 @@ metadata into dedicated hierarchy IR. Empty documents match the upstream
 grammar, while semantic validation rejects a second unindented root with the
 pinned Mermaid diagnostic. Deterministic alternating partitions
 lower through backend-neutral rectangles and glyph runs, with native
-Metal-to-PNG validation. `classDef` declarations are grammar-accepted but their
-style bodies, the full D3 value-format language, and theme-exact color matching
-remain unsupported at the partial level. Treemap layout, value visibility, font,
-border, and basic grouped/currency value-format configuration flow through the
-semantic IR, hierarchy layout, and backend-neutral paint scene.
+Metal-to-PNG validation. Named `classDef` declarations resolve fill, stroke,
+dash, text color, and font styling through semantic IR and backend-neutral
+paint. The broader CSS property surface, full D3 value-format language, and
+theme-exact color matching remain unsupported at the partial level. Treemap
+layout, value visibility, font, border, and basic grouped/currency value-format
+configuration also flow through the semantic IR, hierarchy layout, and paint
+scene.
 
 ### Venn Native Slice
 

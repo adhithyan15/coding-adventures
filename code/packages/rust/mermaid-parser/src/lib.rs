@@ -4395,7 +4395,7 @@ pub fn parse_treemap(source: &str) -> Result<TreemapDiagram, ParseError> {
     })?;
     let grammar = parse_parser_grammar(TREEMAP_PARSER_GRAMMAR_SOURCE)
         .unwrap_or_else(|error| panic!("Failed to parse treemap.grammar: {error}"));
-    GrammarParser::new(tokens, grammar)
+    GrammarParser::new(tokens.clone(), grammar)
         .with_max_depth(MAX_RULE_DEPTH)
         .parse()
         .map_err(|error| ParseError {
@@ -4411,6 +4411,14 @@ pub fn parse_treemap(source: &str) -> Result<TreemapDiagram, ParseError> {
         accessibility_description: None,
         nodes: Vec::new(),
     };
+    let mut class_styles = HashMap::<String, DiagramStyle>::new();
+    for token in tokens.iter().filter(|token| token_name(token) == "CLASS_DEF_STATEMENT") {
+        let declaration = token.value.trim().trim_end_matches(';').trim();
+        let value = declaration.strip_prefix("classDef").expect("grammar requires classDef").trim();
+        let (name, declarations) = value.split_once(char::is_whitespace)
+            .ok_or_else(|| token_error(token, "treemap classDef requires a name and style"))?;
+        class_styles.insert(name.to_string(), parse_block_style(token, declarations)?);
+    }
     let mut ancestors = Vec::<(usize, String)>::new();
     let mut seen_root = false;
 
@@ -4492,11 +4500,13 @@ pub fn parse_treemap(source: &str) -> Result<TreemapDiagram, ParseError> {
         }
         let id = format!("treemap-{}", diagram.nodes.len() + 1);
         let parent_id = ancestors.last().map(|(_, id)| id.clone());
+        let style = class_selector.as_ref().and_then(|class| class_styles.get(class)).cloned();
         diagram.nodes.push(TreemapNode {
             id: id.clone(),
             label,
             value,
             class_selector,
+            style,
             parent_id,
         });
         ancestors.push((indentation, id));
@@ -13987,6 +13997,23 @@ B//-A: reverse stick top
         assert_eq!(diagram.config.node_width, 72.0);
         assert!(!diagram.config.show_values);
         assert_eq!(diagram.config.value_format, ".2f");
+    }
+
+    #[test]
+    fn treemap_resolves_class_definitions_declared_after_nodes() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Styled\": 5:::accent\nclassDef accent fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:3px,stroke-dasharray:5 2,font-size:16px,font-weight:bold,font-style:italic,font-family:Avenir",
+        ).unwrap();
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.fill.as_deref(), Some("#fef3c7"));
+        assert_eq!(style.stroke.as_deref(), Some("#b45309"));
+        assert_eq!(style.text_color.as_deref(), Some("#78350f"));
+        assert_eq!(style.stroke_width, Some(3.0));
+        assert_eq!(style.stroke_dash.as_deref(), Some(&[5.0, 2.0][..]));
+        assert_eq!(style.font_size, Some(16.0));
+        assert_eq!(style.font_weight, Some(700));
+        assert_eq!(style.font_italic, Some(true));
+        assert_eq!(style.font_family.as_deref(), Some("Avenir"));
     }
 }
 #[cfg(test)]
