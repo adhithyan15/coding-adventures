@@ -4,15 +4,15 @@
 > persistence implemented in FM-B048; atomic installation implemented in FM-B049;
 > the TypeScript runtime adapter implemented in FM-B050; the reusable runner
 > conformance harness implemented in FM-B053; the Python and Rust runtimes
-> implemented in FM-B054/FM-B055 and closed by FM-B051; and the remaining OS
-> sandboxes tracked in FM-B052 and the FM-B015
-> completion milestone.
+> implemented in FM-B054/FM-B055 and closed by FM-B051; production OS
+> sandboxes implemented in FM-B052; and product integration tracked by the
+> FM-B015 completion milestone.
 > Read alongside FM00 (vision), FM01 (kernel), and FM03 (orchestrator).
 > **Scope:** Everything required to load third-party Forme plugins
 > safely and run them under a strong isolation boundary. The packages
 > `forme-manifest`, `forme-plugin-host`, `forme-plugin-runner-ts`,
 > `forme-plugin-runner-conformance`,
-> and the per-OS sandbox modules `forme-sandbox-linux`,
+> the shared launcher package `forme-sandbox-core`, and the per-OS sandbox modules `forme-sandbox-linux`,
 > `forme-sandbox-macos`, `forme-sandbox-windows`.
 > **Out of scope:** The orchestrator runtime itself (FM03), the
 > kernel types every plugin speaks (FM01), the IRs plugins
@@ -32,8 +32,8 @@
 | Shared runner conformance | Implemented | FM-B053 provides canonical vectors and a language-neutral subprocess driver, with the TypeScript runner passing the extracted suite. |
 | Python runner | Implemented | FM-B054 provides the first non-TypeScript SDK and passes the complete shared corpus without fixture changes. |
 | Rust runner | Implemented | FM-B055 provides typed stage/context APIs, bounded protocol concurrency and streams, and passes the complete shared corpus without fixture changes. |
-| OS sandbox profiles | Active | FM-B052 follows completed atomic installation and runner conformance. |
-| Install/trust CLI | Blocked | FM-B049 owns the install core; FM07 exposes it after the FM-B015 milestone. |
+| OS sandbox profiles | Implemented | FM-B052 ships exact-snapshot Linux, macOS, and Windows launchers with platform CI. |
+| Install/trust CLI | Active | FM-B015 integrates the completed installer, authority stores, runners, and sandbox factories into FM07. |
 
 ---
 
@@ -108,7 +108,8 @@ FM02 specifies.
 11. **Plugin SDKs.** The per-language libraries that hide the wire
     protocol behind a clean `defineStage`-shaped API. Reference
     TypeScript SDK; sketch for Python and Rust.
-12. **Package layout.** Six new packages; their dependencies; their
+12. **Package layout.** Eight TypeScript packages plus the Python and Rust
+    runner SDKs; their dependencies; their
     BUILD ordering.
 13. **Testing contract.** The fault-injection matrix every
     implementation must pass.
@@ -1519,6 +1520,8 @@ the OS sandbox before the plugin's user code begins executing.
 - **PID namespace** so the plugin can't see other host processes.
 - **`no_new_privs`** to prevent setuid escape paths.
 - **cgroups v2** for memory and CPU limits.
+  The host runner MUST delegate a private writable subtree to the launcher;
+  inability to configure the per-plugin cgroup fails launch.
 
 This is bubblewrap / nsjail-style isolation. The implementation
 SHOULD use `libseccomp` and the `unshare` syscall directly rather
@@ -1545,7 +1548,14 @@ is acceptable as a v0 fallback.
   ```
 - **`taskgated`** is not used; we rely on the in-process profile
   installed during the runner's startup.
-- Resource limits via `setrlimit` (POSIX-compatible).
+- CPU and descriptor limits via `setrlimit` (POSIX-compatible). Modern macOS
+  rejects useful address-space rlimits, so the unsandboxed trusted launcher
+parent monitors the single sandbox child with `proc_pidinfo` and kills it
+when resident memory exceeds the manifest ceiling. No plugin code runs in
+that parent. Before Seatbelt installation, the child becomes a session leader
+and creates a descriptor-closed trusted `kqueue` watcher. The watcher binds to
+stable supervisor/plugin process identities and kills the plugin session if
+the supervisor exits unexpectedly; it exits when the plugin does.
 
 ### 12.3 Windows
 
@@ -1560,9 +1570,17 @@ is acceptable as a v0 fallback.
   with `SECURITY_MANDATORY_LOW_RID` integrity level.
 - **AppContainer** (Windows 8+) with no capabilities granted —
   blocks network and most filesystem access at the kernel.
-- **Process Mitigations**: ASLR, DEP, CFG, no remote images, no
-  dynamic code.
-- File-handle limits via Job Object.
+- **Process Mitigations**: ASLR, DEP, CFG, and no remote images. JIT runtimes
+  require dynamic code, so a blanket dynamic-code prohibition is not applied;
+  the capability-free AppContainer and Job boundary remain authoritative.
+- File-handle limits via the trusted launcher parent polling
+  `GetProcessHandleCount`; exceeding the ceiling terminates the Job Object.
+- A private host-to-supervisor control pipe handles routine termination and
+  host-pipe loss. The supervisor terminates the Job and deletes its ephemeral
+  AppContainer profile before exiting; the host never directly kills the
+  supervisor during normal cancellation. A detached, argument-restricted
+  janitor watches the stable supervisor process handle and deletes the profile
+  after abnormal supervisor death as well.
 
 ### 12.4 If the OS doesn't support a feature
 
@@ -1573,6 +1591,71 @@ it. First-party plugins (in-process) are unaffected."
 
 Future revisions may relax this (e.g. allow opt-in unsandboxed
 plugins for trusted dev environments) but **never silently**.
+
+### 12.5 Launcher boundary and snapshot staging
+
+The three platform packages expose structurally compatible
+`PluginProcessFactory` implementations.  A launcher MUST complete the
+following sequence before it returns a process to the host:
+
+1. Recompute the FM02 manifest/entry identity and reject a request whose
+   supplied `manifestHash` does not match the exact entry bytes.
+2. Require an empty, host-created working directory, reject symbolic links,
+   and write the entry and optional config schema with exclusive creation in a
+   host-owned snapshot subdirectory distinct from plugin scratch output.
+3. Re-read the staged files through no-follow handles and compare their bytes
+   and identities with the verified request snapshots.
+4. Resolve the runtime from a host-owned allow-list.  Plugin-controlled
+   `PATH`, shell lookup, command strings, and interpreter flags are forbidden.
+5. Construct a minimal environment containing only launcher-owned runtime and
+   temporary-directory values.  The ambient host environment is not copied.
+6. Start the checked-in native launcher with only stdin/stdout/stderr
+   inherited.  The native launcher installs resource limits and the complete
+   OS sandbox before it executes the language runtime or binary entry.
+7. Re-hash the entry and schema after installing the OS boundary. Linux exposes
+   them through read-only namespace mounts, macOS explicitly denies writes to
+   snapshot literals, and Windows pins non-delete-sharing file handles. The
+   launcher does not attest readiness until runtime exec has committed.
+8. Return `isolation: "sandboxed"` only after the native launcher has sent a
+   bounded, authenticated readiness record identifying the platform policy,
+   manifest hash, schema hash, and staged-entry hash.  EOF, timeout, malformed
+   data, or an identity mismatch is a launch failure and the process is
+killed.
+
+On POSIX, the host creates a fresh launcher process group. Ordinary signals
+reach both the group and trusted supervisor. Because `SIGKILL` cannot be
+forwarded, the host uses a reserved supervisor control signal; the supervisor
+kills and reaps its directly owned child even if malicious code escaped the
+original group. An unexpected supervisor exit triggers a best-effort group
+kill. JavaScript never retains a bare plugin PID.
+
+The native launcher is a standalone executable rather than an in-process Node
+addon.  This keeps the trusted pre-exec path independent of the JavaScript
+event loop and ensures no plugin bytecode runs in the host process.  Each
+platform package ships its launcher source and builds it on that platform;
+prebuilt or missing helpers are never silently substituted.
+
+The launcher may preserve the one replacement `exec` needed to enter the
+selected runtime.  It MUST deny creation of an additional process.  Runtime
+threads are permitted only where the platform can distinguish threads from
+processes.  A plugin that replaces its own runtime process merely destroys its
+protocol session and cannot obtain another process slot.
+
+### 12.6 Resource-limit defaults and ceilings
+
+Missing manifest values use host-owned defaults: 256 MiB memory, 30 seconds
+wall clock, and 128 descriptors.  Launchers reject non-positive, fractional,
+or platform-unrepresentable values.  The host may lower these values but may
+not raise the manifest request. Wall-clock expiry is enforced by both the
+host's cancellation/kill sequence and an independent native monotonic
+watchdog. The native launcher also enforces memory, CPU, descriptor, and
+single-process ceilings. Limit setup is
+part of sandbox readiness: a failed limit is a failed launch.
+
+Platform policy identities are versioned (`forme-linux-v1`,
+`forme-macos-v1`, and `forme-windows-v1`).  The process attestation uses the
+matching identity as its `isolationProvider`; callers must not accept an
+unknown or unversioned provider.
 
 ---
 
@@ -1717,9 +1800,10 @@ A new SDK is "ready" when it passes the suite.
 
 ## 14. Package Layout
 
-Seven new packages under `code/packages/typescript/` (plus per-OS
-sandbox modules that may be native add-ons or shell-outs to
-existing tools like `bwrap` / `sandbox-exec`).
+Eight packages under `code/packages/typescript/`, plus the Python and Rust
+runner SDKs.  The per-OS packages compile their checked-in native launchers on
+the target platform; they do not download prebuilt helpers or shell out to an
+ambient sandbox tool.
 
 ### 14.1 `@coding-adventures/forme-manifest`
 
@@ -1785,62 +1869,74 @@ The language-neutral subprocess driver and canonical FM02 runner corpus.
 The package imports no SDK implementation. Each language supplies fixture
 commands for the four I/O shapes and must pass the same public corpus.
 
-### 14.5 `@coding-adventures/forme-sandbox-linux`
+### 14.5 `@coding-adventures/forme-sandbox-core`
+
+Platform-neutral launch safety shared by all three OS modules.
+
+- exact manifest/entry/schema identity verification
+- exclusive no-follow staging into an empty host-created directory
+- absolute trusted runtime selection and minimal environment construction
+- bounded private-fd readiness attestation and failed-launch cleanup
+
+### 14.6 `@coding-adventures/forme-sandbox-linux`
 
 Linux-only sandbox primitives.
 
 - `src/seccomp.ts` — generates seccomp-bpf programs
 - `src/namespaces.ts` — `unshare` wrapper
 - `src/cgroups.ts` — cgroup v2 setup
-- Native addon (Rust + N-API) for the syscalls Node can't make
-  directly.
+- `native/launcher.c` — checked-in pre-exec helper for namespace, mount,
+  seccomp, no-new-privileges, cgroup/rlimit, and descriptor setup.  It is
+  compiled locally on Linux and is never downloaded as a prebuilt binary.
 
-### 14.6 `@coding-adventures/forme-sandbox-macos`
+### 14.7 `@coding-adventures/forme-sandbox-macos`
 
 macOS-only sandbox primitives.
 
 - `src/sandbox-exec.ts` — generates `sandbox_init` profiles
-- `src/rlimits.ts` — `setrlimit` wrapper
+- `src/rlimits.ts` — resource-limit validation and launcher arguments
+- `native/launcher.c` — checked-in `sandbox_init` + `setrlimit` pre-exec
+  helper, compiled locally on macOS.
 
-### 14.7 `@coding-adventures/forme-sandbox-windows`
+### 14.8 `@coding-adventures/forme-sandbox-windows`
 
 Windows-only sandbox primitives.
 
 - `src/job-object.ts` — Job Object creation and assignment
 - `src/appcontainer.ts` — AppContainer setup
 - `src/restricted-token.ts` — token creation
-- Native addon for Win32 APIs not exposed in Node.
+- `native/launcher.c` — checked-in Win32 helper for restricted-token,
+  AppContainer, mitigation-policy, Job Object, resource, and inherited-handle
+  setup, compiled locally with MSVC.
 
-### 14.8 Dependency graph
+### 14.9 Dependency graph
 
 ```
-forme-types ◄── forme-errors ◄── forme-capability ◄── forme-manifest
-                                                              │
-                                              ┌──────────────┴──┐
-                                              │                 │
-                              forme-sandbox-* (per OS)   forme-plugin-host
-                                                                 │
-                                              forme-plugin-runner-ts
-                                                                 │
-                                              (depends on forme-stage,
-                                               forme-types — same as any
-                                               in-process stage author)
+forme-types ──► forme-capability ──► forme-manifest ──► forme-plugin-host
+                                                            │
+                                                            ▼
+                                                  forme-sandbox-core
+                                                    ├──► forme-sandbox-linux
+                                                    ├──► forme-sandbox-macos
+                                                    └──► forme-sandbox-windows
 
-forme-plugin-runner-conformance ──subprocess-drives──► every runner fixture
+forme-stage + forme-types ──► forme-plugin-runner-ts
+
+forme-plugin-runner-conformance ──subprocess-drives──► TypeScript/Python/Rust fixtures
 ```
 
-### 14.9 BUILD ordering
+### 14.10 BUILD ordering
 
 Leaf-to-root, per `lessons.md` convention:
 
 ```
-forme-types → forme-errors → forme-capability → forme-manifest
-                                              → forme-sandbox-linux
-                                              → forme-sandbox-macos
-                                              → forme-sandbox-windows
-                                              → forme-plugin-host
-                                              → forme-plugin-runner-ts
-                                              → forme-plugin-runner-conformance
+forme-types → forme-capability → forme-manifest → forme-plugin-host
+                                                  → forme-sandbox-core
+                                                    ├→ forme-sandbox-linux
+                                                    ├→ forme-sandbox-macos
+                                                    └→ forme-sandbox-windows
+forme-stage + forme-types → forme-plugin-runner-ts
+forme-plugin-runner-conformance → each language fixture
 ```
 
 ---
@@ -1907,6 +2003,14 @@ forme-types → forme-errors → forme-capability → forme-manifest
 - The sandbox enforces memory limit (a fixture allocates 1 GiB
   with a 256 MiB cap; process killed).
 - The sandbox enforces fd limit.
+- Snapshot races are covered: mutation between verification and staging,
+  symbolic-link substitution, a non-empty work directory, and staged-file
+  replacement all fail before readiness.
+- The child sees no ambient environment variables and inherits only the three
+  protocol descriptors.
+- A missing native primitive, helper build, readiness record, or resource
+  limit fails closed with `SANDBOX_UNAVAILABLE`; no test-only attestation can
+  be selected by a production constructor.
 
 ### 15.6 Integration tests
 
@@ -2018,14 +2122,17 @@ FM-B014 (host and wire protocol) is complete when:
    cross-process contract tests.
 3. Production loading fails closed when no isolation-establishing launcher is
    installed. FM-B048 adds bounded manifest-bound grant and trust persistence;
-   the TypeScript/Python/Rust runners, install UX, and OS sandbox launchers
-   remain FM-B049–FM-B052 under the FM-B015 milestone.
+   the TypeScript/Python/Rust runners and OS sandbox launchers are complete in
+   FM-B049–FM-B052; install UX and product integration remain in FM-B015.
 
 FM02 as a whole is complete when:
 
-1. **All seven packages exist** under `code/packages/typescript/forme-*`,
-   each with `package.json`, `BUILD`, `BUILD_windows`,
-   `README.md`, `CHANGELOG.md`.
+1. **All required TypeScript packages exist** under
+   `code/packages/typescript/forme-*`, each with `package.json`, `BUILD`,
+   `README.md`, and `CHANGELOG.md`; the Python and Rust runner packages carry
+   the equivalent language-native metadata. Native sandbox helpers are built
+   by each target platform's package script and exercised by that platform's
+   CI leg.
 2. **Test coverage ≥ 95%** for `forme-manifest` and
    `forme-plugin-host`, ≥ 90% for the per-OS sandbox modules.
 3. **The fixture plugin** (§15.5) loads end-to-end through

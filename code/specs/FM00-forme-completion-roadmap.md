@@ -1,6 +1,6 @@
 # Forme Completion Roadmap
 
-> **Status:** Living delivery backlog, last prioritized 2026-09-30.
+> **Status:** Living delivery backlog, last prioritized 2026-10-01.
 > This roadmap turns the north-star in [FM00](FM00-forme-vision.md) into
 > merge-sized work. Update it whenever implementation work discovers a new
 > gap, and reprioritize it after every merged Forme pull request.
@@ -11,7 +11,7 @@
 |---|---|---|
 | Vision and delivery backlog | Active | [FM00 vision](FM00-forme-vision.md) and this roadmap |
 | Kernel | Implemented | [FM01](FM01-forme-kernel.md) |
-| Plugin host | Host/wire boundary implemented; runtime sandboxes active | [FM02](FM02-forme-plugin-host.md) |
+| Plugin host | Host/wire boundary and runtime sandboxes implemented; product integration active | [FM02](FM02-forme-plugin-host.md) |
 | Orchestrator | Headless v0 implemented | [FM03](FM03-forme-orchestrator.md) |
 | Style IR | Implemented | [FM04](FM04-forme-style-ir.md) |
 | Interactivity IR | Location reserved; contract pending | [FM05](FM05-forme-interactivity-ir.md) |
@@ -72,8 +72,8 @@ The implementation now forms a complete headless v0 product:
   owned output sets, performs write-free target inspection, and produces
   deterministic reports. The filesystem adapter reversibly swaps complete
   validated trees, while the GitHub Pages adapter publishes independently owned
-  prefixes through non-forced ref updates. The plugin host, runtime sandbox,
-  interactivity contract, and authoring shell remain.
+  prefixes through non-forced ref updates. Plugin product integration, the
+  interactivity contract, and the authoring shell remain.
 - The CLI now persists per-invocation cache entries and topology-scoped
   materialized checkpoints through a containment-checked project cache.
   Filesystem sources publish validated external-state manifests, and successful
@@ -164,8 +164,8 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 45 | FM-B054 | done | Implement the Python plugin runner | Depends on completed FM-B053. An idiomatic Python SDK exposes authored stage metadata and a wire-backed asynchronous context, fails closed on malformed or oversized peers, and passes the complete canonical runner corpus as a real subprocess. |
 | 46 | FM-B055 | done | Implement the Rust plugin runner | Depends on completed FM-B054 so the first non-TypeScript SDK can settle any language-neutral fixture gaps before a compiled implementation repeats the same corpus. The Rust SDK exposes typed stage/context traits and passes the complete canonical runner corpus as a real subprocess. |
 | 47 | FM-B051 | done | Complete Python and Rust plugin runners | Depends on FM-B054 and FM-B055. Both SDKs pass the same handshake, value, capability, stream, cancellation, error, malformed-peer, and bounded-resource vectors as the TypeScript runner. |
-| 48 | FM-B052 | active | Implement production OS sandbox launchers | Depends on completed FM-B049–FM-B051. Linux, macOS, and Windows launchers stage exact verified snapshots, attest their identities, and block ungranted filesystem, network, environment, process, descriptor, memory, and CPU access in platform CI. |
-| 49 | FM-B015 | blocked | Complete plugin installation, runtimes, and sandboxes | Depends on FM-B048–FM-B055. `forme install`, persistent grants, all supported runners, production sandbox profiles, and mixed first-/third-party product integration close the Extensible v1 runtime path. |
+| 48 | FM-B052 | done | Implement production OS sandbox launchers | Depends on completed FM-B049–FM-B051. Linux, macOS, and Windows launchers stage exact verified snapshots, attest their identities, and block ungranted filesystem, network, environment, process, descriptor, memory, and CPU access in platform CI. |
+| 49 | FM-B015 | active | Complete plugin installation, runtimes, and sandboxes | Depends on completed FM-B048–FM-B055. `forme install`, persistent grants, all supported runners, production sandbox profiles, and mixed first-/third-party product integration close the Extensible v1 runtime path. |
 | 50 | FM-B013 | ready | Specify and implement Interactivity IR | Define the behavior/event/state schema and validator, integrate per-page island tracking, and prove a progressively enhanced interactive component with a no-JS fallback. |
 | 51 | FM-B016 | blocked | Build the authoring shell | Depends on FM-B009, FM-B013, and FM-B015. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
 | 52 | FM-B017 | blocked | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
@@ -182,9 +182,9 @@ The completed dependency path to Headless v0 was:
 FM-B020 retires the temporary compatibility path after the routed product DAG
 is proven, but it does not block FM-B004.
 
-Headless v0 is complete. The completed runner path is FM-B048 →
-FM-B049/FM-B050 → FM-B053 → FM-B054 → FM-B055 → FM-B051. The shortest
-remaining path to Extensible v1 is now FM-B052 → FM-B015. FM-B013 can proceed
+Headless v0 is complete. The completed runtime path is FM-B048 →
+FM-B049/FM-B050 → FM-B053 → FM-B054 → FM-B055 → FM-B051 → FM-B052. The
+shortest remaining path to Extensible v1 is now FM-B015. FM-B013 can proceed
 independently before joining the
 authoring path at FM-B016 and the backend proof at FM-B017.
 
@@ -275,6 +275,7 @@ work.
 | 2026-10-01 | FM-B053 landed the reusable subprocess driver and canonical corpus, including cross-platform resource and process-lifecycle hardening. Implementing two new public SDKs in one review would still combine separate packaging, concurrency, framing, and API-design risks. | Close FM-B053, split FM-B051 into FM-B054 (Python) and FM-B055 (Rust), and keep FM-B051 as their completion milestone. Settle any genuinely language-neutral fixture gaps with the smaller Python boundary before compiling the Rust SDK against the same corpus. |
 | 2026-10-01 | FM-B054 implemented the Python runner without requiring changes to the language-neutral corpus. The SDK passed the complete subprocess suite plus strict typing, lint, formatting, unit tests, and combined coverage while keeping all privileged operations host-mediated. | Close FM-B054 and activate FM-B055. Implement the Rust runner against the unchanged corpus, retaining the same bounded framing, single-active-run, cancellation, stream, error, and capability semantics. |
 | 2026-10-01 | FM-B055 implemented the compiled Rust runner against the unchanged corpus with typed stage/input/output/context APIs, canonical framing, bounded concurrent work and retained streams, capability mediation, cancellation, signal retirement, and fail-closed malformed-peer handling. Python and Rust now satisfy every shared runner vector alongside TypeScript. | Close FM-B055 and its FM-B051 completion milestone, then activate FM-B052 as the sole remaining runtime-isolation blocker for Extensible v1. |
+| 2026-10-01 | FM-B052 implemented shared exact-snapshot staging plus native Linux, macOS, and Windows supervisors. Platform gates prove pre-runtime attestation, minimal environments, resource ceilings, syscall/filesystem/network/process denial, descendant retirement, and abnormal-supervisor cleanup; mandatory adversarial review found no remaining blockers. | Close FM-B052 and activate FM-B015. Integrate the completed installer, persistent authority, three runners, and platform sandbox factory into the CLI/orchestrator product path as the final Extensible v1 milestone. |
 
 ## Loop protocol
 
