@@ -2335,6 +2335,8 @@ fn parse_block_style(token: &Token, source: &str) -> Result<DiagramStyle, ParseE
             "font-weight" => style.font_weight = Some(match value.to_ascii_lowercase().as_str() {
                 "normal" => 400,
                 "bold" => 700,
+                "lighter" => 300,
+                "bolder" => 700,
                 _ => value.parse().map_err(|_| token_error(token, "invalid block font weight"))?,
             }),
             "font-style" => style.font_italic = Some(match value.to_ascii_lowercase().as_str() {
@@ -14150,7 +14152,7 @@ B//-A: reverse stick top
     #[test]
     fn treemap_resolves_class_definitions_declared_after_nodes() {
         let diagram = parse_treemap(
-            "treemap\n\"Root\"\n  \"Styled node\": 5:::accent\nclassDef accent fill:#fef3c7,fill-opacity:0.7,stroke:#b45309,stroke-opacity:0.5,opacity:0.8,stroke-width:3px,stroke-dasharray:5 2,stroke-dashoffset:-1px,border-radius:9px,color:#78350f,font-size:16px,font-weight:bold,font-style:italic,font-family:Avenir,text-align:right,text-transform:uppercase,text-decoration:underline overline line-through,text-decoration-color:#2563eb,text-decoration-style:wavy,line-height:150%",
+            "treemap\n\"Root\"\n  \"Styled node\": 5:::accent\nclassDef accent fill:#fef3c7,fill-opacity:0.7,stroke:#b45309,stroke-opacity:0.5,opacity:0.8,stroke-width:3px,stroke-dasharray:5 2,stroke-dashoffset:-1px,border-radius:9px,color:#78350f,font-size:16px,font-weight:bolder,font-style:italic,font-family:Avenir,text-align:right,text-transform:uppercase,text-decoration:underline overline line-through,text-decoration-color:#2563eb,text-decoration-style:wavy,line-height:150%",
         ).unwrap();
         let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
         assert_eq!(style.node.fill.as_deref(), Some("#fef3c7"));
@@ -14198,6 +14200,15 @@ B//-A: reverse stick top
         assert!(parse_treemap(
             "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent line-height:0",
         ).is_err());
+    }
+
+    #[test]
+    fn treemap_resolves_relative_font_weights() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Heavy\": 1:::heavy\n  \"Light\": 1:::light\nclassDef heavy font-weight:bolder\nclassDef light font-weight:lighter",
+        ).expect("relative font weights must parse");
+        assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.node.font_weight), Some(700));
+        assert_eq!(diagram.nodes[2].style.as_ref().and_then(|style| style.node.font_weight), Some(300));
     }
 }
 #[cfg(test)]
