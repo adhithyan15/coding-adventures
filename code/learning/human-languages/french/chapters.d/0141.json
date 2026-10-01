@@ -1,0 +1,19 @@
+{
+  "chapter": 141,
+  "title": "The Future, This Evening, a Plan, To Foresee, To Organise",
+  "label": "ch:fr-the-future-this-evening-a-plan-to-foresee-to-organise",
+  "canDo": "I can say what will happen, and when: this evening, next week, in a year.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "FR-C141-organiser",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 141: I can say what will happen, and when: this evening, next week, in a year.",
+    "assesses": [
+      "FR-LEX-C141-FUT141-03",
+      "FR-LEX-C141-FUT141-04",
+      "FR-LEX-C141-FUT141-05"
+    ]
+  }
+}

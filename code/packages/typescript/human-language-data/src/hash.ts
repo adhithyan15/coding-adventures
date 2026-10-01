@@ -18,14 +18,52 @@ function sortedFrontmatter(frontmatter: Frontmatter): Frontmatter {
   );
 }
 
-/** Browser-safe FNV-1a over UTF-8 bytes, used only as a deterministic drift fingerprint. */
+const UTF8 = new TextEncoder();
+const TWO_32 = 0x1_0000_0000;
+
+/**
+ * Browser-safe FNV-1a over UTF-8 bytes, used only as a deterministic drift fingerprint.
+ *
+ * FNV-1a is two steps per byte, starting from a fixed offset basis:
+ *
+ *     hash = 0xcbf29ce484222325
+ *     for each byte:  hash ^= byte;  hash = (hash * 0x100000001b3) mod 2^64
+ *
+ * The obvious way to write that in JavaScript is with BigInt. It is correct, and this
+ * function was written that way until the corpus reached about 20,000 lessons. By then
+ * it was the single most expensive function in the gap report: every lesson is hashed,
+ * and each byte allocated fresh BigInts for the xor, the multiply and the truncation.
+ * Profiling put about 4s of a 24s report in this loop.
+ *
+ * So the 64-bit state is held as two unsigned 32-bit halves, `hi` and `lo`, in ordinary
+ * numbers. The prime makes the multiply cheap to split, because it is 2^40 + 0x1b3:
+ *
+ *     hash * prime = hash * 0x1b3  +  hash << 40
+ *
+ *   - `lo * 0x1b3` is below 2^41, so it is exact in a double. Its low 32 bits are the
+ *     new `lo`, and everything above them carries into `hi`.
+ *   - `hi * 0x1b3` only matters modulo 2^32, which is exactly what `Math.imul` gives.
+ *   - `hash << 40` moves `lo` up by 40 bits. That lands `lo << 8` in the high half,
+ *     and pushes `hi` entirely past bit 63, where the modulus discards it.
+ *
+ * The xor touches only the low byte, so it only ever changes `lo`.
+ *
+ * The output is the same 16 hex digits as before: `hi`, then `lo`, each padded to 8.
+ * The published test vectors in tests/hash.test.ts pin that, and so do the generated
+ * book and narration hash ledgers. Every lesson hash in them must come out
+ * byte-identical, or those checks fail.
+ */
 export function fnv1a64(value: string): string {
-  let hash = 0xcbf29ce484222325n;
-  for (const byte of new TextEncoder().encode(value)) {
-    hash ^= BigInt(byte);
-    hash = BigInt.asUintN(64, hash * 0x100000001b3n);
+  let hi = 0xcbf29ce4;
+  let lo = 0x84222325;
+  const bytes = UTF8.encode(value);
+  for (let index = 0; index < bytes.length; index += 1) {
+    lo = (lo ^ bytes[index]!) >>> 0;
+    const low = lo * 0x1b3;
+    hi = (Math.imul(hi, 0x1b3) + Math.floor(low / TWO_32) + (lo << 8)) >>> 0;
+    lo = low >>> 0;
   }
-  return `fnv1a64:${hash.toString(16).padStart(16, "0")}`;
+  return `fnv1a64:${hi.toString(16).padStart(8, "0")}${lo.toString(16).padStart(8, "0")}`;
 }
 
 /** Stable serialization of the canonical lesson AST shared by books and the app. */

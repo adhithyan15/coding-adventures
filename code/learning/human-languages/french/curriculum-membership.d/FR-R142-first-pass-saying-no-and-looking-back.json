@@ -1,0 +1,11 @@
+{
+  "id": "FR-R142-first-pass-saying-no-and-looking-back",
+  "pathSegment": "FR-PATH-142-LIRE142",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-142-LIRE142",
+      "order": 5
+    }
+  ]
+}

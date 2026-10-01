@@ -1,0 +1,19 @@
+{
+  "chapter": 142,
+  "title": "Opening Hours, a Notice, the Rent, an Advert, a Bill",
+  "label": "ch:fr-opening-hours-a-notice-the-rent-an-advert-a-bill",
+  "canDo": "I can read opening hours, a notice, an advert and a bill, and act on what they say.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "FR-R142-second-pass-looking-ahead-and-reading-notices",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 142: I can read opening hours, a notice, an advert and a bill, and act on what they say.",
+    "assesses": [
+      "FR-LEX-C142-LIRE142-03",
+      "FR-LEX-C142-LIRE142-04",
+      "FR-LEX-C142-LIRE142-05"
+    ]
+  }
+}

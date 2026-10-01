@@ -1,0 +1,19 @@
+{
+  "chapter": 139,
+  "title": "Nothing, None, Neither, Which One, Anything at All",
+  "label": "ch:fr-nothing-none-neither-which-one-anything-at-all",
+  "canDo": "I can say that there is nothing and none, ask which one, and answer \"me neither\".",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "FR-C139-nimporte-quoi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 139: I can say that there is nothing and none, ask which one, and answer \"me neither\".",
+    "assesses": [
+      "FR-LEX-C139-NEG139-03",
+      "FR-LEX-C139-NEG139-04",
+      "FR-LEX-C139-NEG139-05"
+    ]
+  }
+}

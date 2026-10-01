@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:5ed49ddd733f6865",
+  "lessonIds": [
+    "FR-C141-lavenir",
+    "FR-C141-ce-soir",
+    "FR-C141-le-projet",
+    "FR-C141-prevoir",
+    "FR-C141-organiser"
+  ],
+  "tex": "french/book/chapters/ch141-the-future-this-evening-a-plan-to-foresee-to-organise.tex"
+}

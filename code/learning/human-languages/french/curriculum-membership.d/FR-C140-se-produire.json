@@ -1,0 +1,11 @@
+{
+  "id": "FR-C140-se-produire",
+  "pathSegment": "FR-PATH-140-PAS140",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-140-PAS140",
+      "order": 4
+    }
+  ]
+}

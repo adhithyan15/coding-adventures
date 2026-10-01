@@ -1,0 +1,11 @@
+{
+  "id": "FR-C141-lavenir",
+  "pathSegment": "FR-PATH-141-FUT141",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-141-FUT141",
+      "order": 0
+    }
+  ]
+}

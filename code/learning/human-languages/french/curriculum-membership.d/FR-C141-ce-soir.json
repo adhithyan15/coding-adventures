@@ -1,0 +1,11 @@
+{
+  "id": "FR-C141-ce-soir",
+  "pathSegment": "FR-PATH-141-FUT141",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-141-FUT141",
+      "order": 1
+    }
+  ]
+}

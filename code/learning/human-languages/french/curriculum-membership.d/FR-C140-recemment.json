@@ -1,0 +1,11 @@
+{
+  "id": "FR-C140-recemment",
+  "pathSegment": "FR-PATH-140-PAS140",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-140-PAS140",
+      "order": 1
+    }
+  ]
+}

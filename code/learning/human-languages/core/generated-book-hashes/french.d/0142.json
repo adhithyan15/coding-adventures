@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:f4870e997aa683ae",
+  "lessonIds": [
+    "FR-C142-lhoraire",
+    "FR-C142-lavis",
+    "FR-C142-le-loyer",
+    "FR-C142-lannonce",
+    "FR-C142-la-facture",
+    "FR-R142-first-pass-saying-no-and-looking-back",
+    "FR-R142-second-pass-looking-ahead-and-reading-notices"
+  ],
+  "tex": "french/book/chapters/ch142-opening-hours-a-notice-the-rent-an-advert-a-bill.tex"
+}

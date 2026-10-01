@@ -1,0 +1,11 @@
+{
+  "id": "FR-C141-le-projet",
+  "pathSegment": "FR-PATH-141-FUT141",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-141-FUT141",
+      "order": 2
+    }
+  ]
+}
