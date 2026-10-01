@@ -16,14 +16,14 @@
     "url": "https://github.com/adhithyan15/coding-adventures/pull/16343",
     "item_id": "barcode-layout-existing-lanes-v1-conformance",
     "branch": "codex/parity-barcode-layout-existing-lanes-20260930",
-    "head_revision": "d9a613fa23e2d882f4ea649814942cc096d5c5dc",
+    "head_revision": "0fc147e227f883afa294b0bed31e95391df875c7",
     "status": "pr-open"
   },
   "last_ci_action": {
-    "observed_at": "2026-10-01T01:07:59Z",
+    "observed_at": "2026-10-01T02:15:32Z",
     "pr_number": 16343,
-    "status": "draft-opened-for-evidence-binding",
-    "notes": "Draft PR #16343 opened from validated initial head d9a613fa23e2d882f4ea649814942cc096d5c5dc only to bind the durable adoption PR number into the eight conformant target records. The PR remains draft until that evidence and the pr-open lifecycle transition are committed and pushed."
+    "status": "ci-failures-repaired-replacement-pending",
+    "notes": "Initial head 9a650b988e6a6b01f45c6a0bb2641e8557b3c03f failed macOS job 110173556809 because Node 22 strip-only mode rejected the TypeScript parameter property, and Windows job 110173556795 because the Python BUILD_windows front omitted jsonschema from its explicit test-tool installation. Focused repair 0fc147e227f883afa294b0bed31e95391df875c7 fixes both failures and hardens the Rust resolver-precedence evidence plus bounded Haskell, Perl, and Rust fixture readers. Replacement checks are pending; auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no merge conflict."
   },
   "last_inventory": {
     "revision": "4d6f27159239d6d3f8d408a5a4c0ecb5ca8059f5",
@@ -10185,6 +10185,15 @@
       "notes": "Own deterministic treemap, tree-view, swimlane, and railroad typed-IR layout behavior, geometry and ordering, metadata, numeric validation, recursion ceilings, stable failures, and an empty capability profile. Keep parsing, fonts, themes, paint backends, interaction, and unsupported dialects outside this portable core."
     },
     {
+      "id": "mermaid-treemap-language-neutral-conformance",
+      "title": "Fixture the portable Mermaid treemap pipeline",
+      "status": "pending",
+      "depends_on": ["diagram-layout-hierarchy-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #16345 extended the existing Rust Mermaid parser, diagram IR, hierarchy layout, and paint projection with grammar-backed treemap class styling without adding a package identity. Define a language-neutral contract and adversarial fixture corpus for treemap declarations, indentation, stable node identity and ordering, classDef resolution before or after styled nodes, fill, stroke, dash, text color, typography, deterministic hierarchy geometry, backend-neutral paint projection, malformed inputs, numeric behavior, recursion and resource ceilings, and stable diagnostics. Keep fonts, native Metal or PNG capture, devices, filesystem, interaction, and unsupported Mermaid dialect behavior outside the portable contract."
+    },
+    {
       "id": "layout-backgrounds-portable-core-conformance",
       "title": "Define portable layout-backgrounds core conformance",
       "status": "pending",
@@ -10585,10 +10594,28 @@
       "selection_revision": "6bcec12e1559f0944005f10570a2771e617e4d7f",
       "selection_notes": "Selected only after PR #16327 completed every final-head check acceptably and merged through guarded squash auto-merge as 6bcec12e1559f0944005f10570a2771e617e4d7f. The collision-checked package topology remains unchanged at 15 established lanes, 1,473 implementation identities, 4,740 slots, 1,515 all-reported identities, completion bands 178/265, 123/934, 181/2,282, and 991/13,874, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. This newly ready adoption owner has two direct and thirteen total unfinished descendants, ahead of the neutral facade alternative at one direct and five total, and no open PR exactly overlaps any of the eight barcode-layout-1d roots. The fresh clean sparse worktree starts from the exact merge revision.",
       "notes": "Dynamically execute the neutral layout corpus in every current lane and reconcile observed divergence in empty patterns, zero quiet zones, run alternation, integer versus fractional geometry, text behavior, metadata projection, error precedence, overflow, and output mutability before those implementations become the oracle for missing lanes.",
-      "implementation_revision": "95d15e3bd8c0a5ba0e01cf8f297e6115ecaf03bc",
-      "validation_revision": "95d15e3bd8c0a5ba0e01cf8f297e6115ecaf03bc",
-      "validation_notes": "All eight strict facades dynamically execute the 56-case neutral corpus. Focused native suites pass with 11 C# tests, 13 F# tests, 87.0% Go statement coverage, 26 Haskell examples, 70 Perl tests, 71 Python tests at 90.27% coverage, 7 Rust unit plus 3 conformance tests and all barcode downstreams, and 76 TypeScript tests at 93.55% statement coverage. Ruff, mypy, Go vet/build, cabal check, cargo fmt/clippy/audit, TypeScript build/BUILD/audit, capability manifests, nine shared fixture tests plus five subtests, state DAG, collision inventory, and diff hygiene pass. Rust LLVM coverage test execution passed but Windows report generation hit the existing path-length error 206.",
+      "implementation_revision": "0fc147e227f883afa294b0bed31e95391df875c7",
+      "validation_revision": "0fc147e227f883afa294b0bed31e95391df875c7",
+      "validation_notes": "All eight strict facades dynamically execute the 56-case neutral corpus. Focused native suites pass with 11 C# tests, 13 F# tests, 87.0% Go statement coverage, 27 Haskell examples, 66 Perl tests, 71 Python tests at 90.27% coverage, 7 Rust unit plus 5 conformance tests and six direct barcode downstreams, and 76 TypeScript tests at 93.55% statement coverage. The TypeScript barcode-1d native downstream also builds and passes six Node tests on Windows. Ruff, mypy, Go vet/build, cabal check, cargo fmt/clippy/audit, TypeScript build/BUILD/audit, capability manifests, nine shared fixture tests plus five subtests, state DAG, collision inventory, and diff hygiene pass. Rust LLVM coverage test execution passed but Windows report generation hit the existing path-length error 206; the aggregate Rust barcode-1d downstream was blocked locally by Skia download DNS and Windows symlink privilege while the six pure direct downstream suites passed.",
       "publication_notes": "Draft PR #16343 opened only to obtain the durable adoption PR number. The initial push was based on exact origin/main 3733335aa3c2faf845282bd0935349aa228809c6; before evidence publication the branch rebased cleanly again onto 4d6f27159239d6d3f8d408a5a4c0ecb5ca8059f5. No other parity PR was active, and the open-PR path audit found no barcode-layout overlap. The PR will be marked ready only after conformant evidence and this pr-open state are pushed."
+    },
+    {
+      "id": "barcode-layout-1d-elixir-lua-v1-conformance",
+      "title": "Reconcile Elixir and Lua barcode-layout-1d with the neutral contract",
+      "status": "pending",
+      "depends_on": ["barcode-layout-1d-language-neutral-conformance", "barcode-layout-existing-lanes-v1-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The collision-checked follow-up audit found established implementations at code/packages/elixir/barcode_layout_1d and code/packages/lua/barcode_layout_1d that were omitted from the eight-target adoption registry. Reconcile both legacy APIs with the complete barcode-layout-1d-v1 corpus, strict bounded fixture loading, exact error precedence, zero-authority text rejection, metadata projection, overflow behavior, immutability, native build fronts, capability evidence, and downstream consumers before either lane is reported conformant."
+    },
+    {
+      "id": "barcode-layout-1d-ruby-swift-v1-conformance",
+      "title": "Reconcile Ruby and Swift barcode-layout-1d with the neutral contract",
+      "status": "pending",
+      "depends_on": ["barcode-layout-1d-language-neutral-conformance", "barcode-layout-existing-lanes-v1-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The collision-checked follow-up audit found established implementations at code/packages/ruby/barcode_layout_1d and code/packages/swift/BarcodeLayout1D that were omitted from the eight-target adoption registry. Reconcile both legacy APIs with the complete barcode-layout-1d-v1 corpus, strict bounded fixture loading, exact error precedence, zero-authority text rejection, metadata projection, overflow behavior, immutability, native build fronts, capability evidence, and downstream consumers before either lane is reported conformant."
     },
     {
       "id": "barcode-layout-1d-java-kotlin-dart-lane-parity",

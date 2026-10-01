@@ -15293,7 +15293,7 @@ canonical JSON digest recipe, while the strict fixture loader rejects oversized
 or deeply nested input, duplicate keys, invalid scalars, non-finite values, and
 external schema references.
 
-The target registry names exactly the existing C#, F#, Go, Haskell, Perl,
+The initial target registry names the eight scoped C#, F#, Go, Haskell, Perl,
 Python, Rust, and TypeScript implementations. Every target remains
 `pending-adoption`; none is credited with conformance from package prose or an
 empty capability manifest alone. The registry preserves the reviewed legacy,
@@ -15370,7 +15370,7 @@ the eight C#, F#, Go, Haskell, Perl, Python, Rust, or TypeScript package roots.
 The fresh clean sparse branch
 `codex/parity-barcode-layout-existing-lanes-20260930` starts from the exact merge
 revision. It will first make adoption evidence mechanically truthful, then run
-the complete neutral corpus through every existing lane and reconcile source,
+the complete neutral corpus through each scoped lane and reconcile source,
 tests, build fronts, capability manifests, and affected barcode downstreams.
 
 ### Post-#16323 inventory and Swift store-chain audit
@@ -15401,6 +15401,37 @@ AVL-backed tree-set and compressed radix-tree remain independent exact
 children. The selection-blocked Swift/Dart umbrella now names all seven, while
 each bounded leaf remains selectable subject to its explicit dependencies and
 the one-active-PR rule.
+
+### PR #16343 CI repair and omitted-lane backlog
+
+The first reviewed head of PR #16343 exposed two exact build-front failures.
+Node 22 strip-only mode rejected a TypeScript parameter property in the shared
+layout error, blocking the native `barcode-1d` downstream on macOS and Windows.
+The Windows Python front also installed its development package with
+`--no-deps` but omitted the test-only `jsonschema` dependency from the explicit
+tool installation. Focused repair `0fc147e227f883afa294b0bed31e95391df875c7`
+uses strip-only-compatible TypeScript syntax and restores the missing Windows
+test dependency. The same bounded repair replaces compile-time and unbounded
+fixture reads in Rust, Haskell, and Perl, and adds real Rust resolver probes for
+both fail-closed text forms. Replacement checks remain required before guarded
+auto-merge can be enabled.
+
+Parallel collision-checked audits also found four established implementations
+that the eight-target registry did not materialize: Elixir and Lua use
+`barcode_layout_1d`, Ruby uses `barcode_layout_1d`, and Swift uses
+`BarcodeLayout1D`. Their legacy APIs diverge materially from the v1 contract,
+so two pending dependency-shaped owners now preserve that work without widening
+the active PR. A later registry revision must support their exact canonical
+roots and native package identities before reporting them conformant. The
+existing Java/Kotlin/Dart port remains a separate missing-lane owner.
+
+Merged PR #16345 independently added Rust Mermaid treemap class styling without
+a new package identity. A new pending neutral-treemap owner depends on the
+existing hierarchy-layout contract and owns parser, styling, deterministic
+geometry, backend-neutral projection, malformed-input, and resource-limit
+fixtures. These three discoveries leave the package inventory totals unchanged
+while increasing the durable state graph to 972 owners and 1,873 edges: 242
+merged, 729 pending, and one active PR.
 
 ## Autonomous Loop Protocol
 
