@@ -1,4 +1,4 @@
-# Barcode layout v1 parity for Ruby and Swift
+### Barcode layout v1 parity for Ruby and Swift
 
 - Adds strict Ruby and Swift `barcode-layout-1d-v1` adapters without changing
   the established legacy APIs.

@@ -15465,7 +15465,7 @@ changelog paths.
 
 PR #16361 records the complete Ruby and Swift adoption without changing
 either legacy API. Implementation revision
-`2065348834ee77356d9084f3e6ea70545f38201d` binds Ruby package tree
+`15405d4a4bb56feccb398daef46d11b701c03aa1` binds Ruby package tree
 `b0bc75e0d7321fb1c80c6bc5faa93a018f7f6af6` and Swift package tree
 `2be6f16d9050faacb2395ed30b18f9a6d1f7cccf`; the evidence-only follow-up
 commit leaves both package roots untouched. The registry now reports both
