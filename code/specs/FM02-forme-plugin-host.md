@@ -1574,7 +1574,10 @@ the supervisor exits unexpectedly; it exits when the plugin does.
   capabilities process attribute. The launcher MUST NOT combine a separately
   created primary token with that attribute.
 - **AppContainer** (Windows 8+) with no capabilities granted —
-  blocks network and most filesystem access at the kernel.
+  blocks network and most filesystem access at the kernel. The launcher grants
+  the unique AppContainer SID write access only to plugin scratch, while the
+  pre-existing snapshot directory uses a protected DACL and the directory,
+  entry, and schema receive explicit read/traverse ACLs without write authority.
 - **Process Mitigations**: ASLR, DEP, CFG, and no remote images. JIT runtimes
   require dynamic code, so a blanket dynamic-code prohibition is not applied;
   the capability-free AppContainer and Job boundary remain authoritative.

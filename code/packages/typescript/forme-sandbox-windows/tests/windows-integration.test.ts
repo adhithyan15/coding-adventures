@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
@@ -25,13 +26,18 @@ async function request(probe: string): Promise<SandboxLaunchRequest> {
     contributes: { stages: [{ id: probe, consumes: "ContentSource", produces: "ContentNode" }], kinds: [] },
     resources: { maxMemoryMb: 64, maxWallClockMs: 2_000, maxFileDescriptors: 32 },
   };
+  const schemaBytes = new TextEncoder().encode('{"type":"object"}\n');
   return {
     plugin: { manifest, manifestHash: computeManifestHash(manifest, entryBytes), entryBytes },
     stage: manifest.contributes.stages[0]!,
     instanceId: `probe/${probe}`,
     workingDirectory,
     resources: manifest.resources,
-    configSchema: null,
+    configSchema: probe === "snapshot" ? {
+      relativePath: "plugin-config-schema.json",
+      bytes: schemaBytes,
+      hash: `sha256:${createHash("sha256").update(schemaBytes).digest("hex")}`,
+    } : null,
   };
 }
 
@@ -61,7 +67,7 @@ describe.skipIf(process.platform !== "win32")("Windows native sandbox", () => {
     expect(await child.exited).toEqual({ code: 0, signal: null });
   });
 
-  it.each(["filesystem", "network", "process", "memory", "descriptors", "environment", "cpu", "wall-clock"])(
+  it.each(["filesystem", "network", "process", "snapshot", "memory", "descriptors", "environment", "cpu", "wall-clock"])(
     "blocks unauthorized %s access",
     async probe => {
       process.env.FORME_SANDBOX_AMBIENT_SENTINEL = "must-not-cross";
@@ -69,7 +75,7 @@ describe.skipIf(process.platform !== "win32")("Windows native sandbox", () => {
         const child = await createWindowsSandboxFactory({ launcherPath, readinessTimeoutMs: 2_000 })
           .launch(await request(probe));
         const exit = await child.exited;
-        if (["memory", "descriptors", "cpu", "wall-clock"].includes(probe)) expect(exit.code).not.toBe(0);
+        if (["descriptors", "cpu", "wall-clock"].includes(probe)) expect(exit.code).not.toBe(0);
         else expect(exit).toEqual({ code: 0, signal: null });
       } finally {
         delete process.env.FORME_SANDBOX_AMBIENT_SENTINEL;

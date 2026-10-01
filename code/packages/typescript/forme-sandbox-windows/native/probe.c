@@ -42,6 +42,57 @@ int wmain(int argc, wchar_t **argv) {
         if (created) { TerminateProcess(process.hProcess, 72); CloseHandle(process.hThread); CloseHandle(process.hProcess); }
         return created ? 73 : 0;
     }
+    if (wcscmp(probe, L"snapshot") == 0) {
+        wchar_t snapshot[MAX_PATH];
+        wchar_t created_file[MAX_PATH];
+        wchar_t created_directory[MAX_PATH];
+        wchar_t renamed_snapshot[MAX_PATH];
+        wchar_t schema[MAX_PATH];
+        if (argc < 2 || wcslen(argv[1]) >= MAX_PATH
+                || wcscpy_s(snapshot, MAX_PATH, argv[1]) != 0) return 80;
+        wchar_t *separator = wcsrchr(snapshot, L'\\');
+        if (separator == NULL) return 80;
+        *separator = L'\0';
+        if (swprintf(created_file, MAX_PATH, L"%s\\unauthorized.txt", snapshot) < 0
+                || swprintf(created_directory, MAX_PATH, L"%s\\unauthorized-dir", snapshot) < 0
+                || swprintf(schema, MAX_PATH, L"%s\\plugin-config-schema.json", snapshot) < 0) return 80;
+        if (wcscpy_s(renamed_snapshot, MAX_PATH, snapshot) != 0) return 80;
+        separator = wcsrchr(renamed_snapshot, L'\\');
+        if (separator == NULL || swprintf(separator + 1,
+                MAX_PATH - (size_t)(separator + 1 - renamed_snapshot), L".forme-snapshot-renamed") < 0) return 80;
+
+        HANDLE created = CreateFileW(created_file, GENERIC_WRITE, FILE_SHARE_READ, NULL,
+            CREATE_NEW, FILE_ATTRIBUTE_NORMAL, NULL);
+        if (created != INVALID_HANDLE_VALUE) {
+            CloseHandle(created);
+            DeleteFileW(created_file);
+            return 81;
+        }
+        if (CreateDirectoryW(created_directory, NULL)) {
+            RemoveDirectoryW(created_directory);
+            return 82;
+        }
+        HANDLE entry_write = CreateFileW(argv[1], GENERIC_WRITE,
+            FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING,
+            FILE_ATTRIBUTE_NORMAL, NULL);
+        if (entry_write != INVALID_HANDLE_VALUE) {
+            CloseHandle(entry_write);
+            return 83;
+        }
+        HANDLE schema_write = CreateFileW(schema, GENERIC_WRITE,
+            FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING,
+            FILE_ATTRIBUTE_NORMAL, NULL);
+        if (schema_write != INVALID_HANDLE_VALUE) {
+            CloseHandle(schema_write);
+            return 84;
+        }
+        if (DeleteFileW(argv[1]) || DeleteFileW(schema)) return 85;
+        if (MoveFileExW(snapshot, renamed_snapshot, 0)) {
+            MoveFileExW(renamed_snapshot, snapshot, 0);
+            return 86;
+        }
+        return 0;
+    }
     if (wcscmp(probe, L"memory") == 0) {
         SIZE_T size = (SIZE_T)1024 * 1024 * 1024;
         volatile unsigned char *bytes = VirtualAlloc(NULL, size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);

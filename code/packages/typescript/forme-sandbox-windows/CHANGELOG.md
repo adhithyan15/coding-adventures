@@ -18,3 +18,6 @@
   and namespace without a conflicting separately supplied primary token.
 - Added the required validated `LOCALAPPDATA` environment bootstrap and used
   the documented null-token `CreateProcessAsUserW` AppContainer launch path.
+- Protected the pre-existing staged snapshot from scratch ACL inheritance,
+  applied explicit read/traverse ACLs, and added mutation probes.
+- Moved the asynchronous profile janitor's cwd outside plugin scratch.

@@ -16,3 +16,4 @@
 - Preserved bounded child setup exit codes for host-side attestation diagnostics.
 - Required the host build process to begin in a delegated child cgroup and
   restored launcher membership there before removing each plugin leaf.
+- Preserved the exact private-root mount stage in pre-attestation diagnostics.

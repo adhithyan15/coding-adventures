@@ -110,7 +110,11 @@ static wchar_t *quote(const wchar_t *value) {
 
 static int start_profile_janitor(const wchar_t *profile_name) {
     wchar_t executable[MAX_PATH];
-    if (GetModuleFileNameW(NULL, executable, MAX_PATH) == 0) return -1;
+    wchar_t safe_cwd[MAX_PATH];
+    DWORD executable_length = GetModuleFileNameW(NULL, executable, MAX_PATH);
+    UINT safe_cwd_length = GetWindowsDirectoryW(safe_cwd, MAX_PATH);
+    if (executable_length == 0 || executable_length >= MAX_PATH
+            || safe_cwd_length == 0 || safe_cwd_length >= MAX_PATH) return -1;
     HANDLE supervisor = NULL;
     if (!DuplicateHandle(GetCurrentProcess(), GetCurrentProcess(), GetCurrentProcess(),
             &supervisor, SYNCHRONIZE, TRUE, 0)) return -1;
@@ -150,7 +154,7 @@ static int start_profile_janitor(const wchar_t *profile_name) {
     startup.lpAttributeList = attributes;
     BOOL created = CreateProcessW(executable, command, NULL, NULL, TRUE,
         CREATE_NO_WINDOW | CREATE_UNICODE_ENVIRONMENT | EXTENDED_STARTUPINFO_PRESENT,
-        NULL, NULL, &startup.StartupInfo, &process);
+        NULL, safe_cwd, &startup.StartupInfo, &process);
     DeleteProcThreadAttributeList(attributes);
     HeapFree(GetProcessHeap(), 0, attributes);
     CloseHandle(supervisor);
@@ -170,7 +174,12 @@ static int ascii(const wchar_t *source, char *target, size_t size) {
     return 0;
 }
 
-static int add_appcontainer_acl(const wchar_t *path, PSID sid) {
+static int add_appcontainer_acl(
+    const wchar_t *path,
+    PSID sid,
+    DWORD permissions,
+    DWORD inheritance
+) {
     PACL old_acl = NULL;
     PSECURITY_DESCRIPTOR descriptor = NULL;
     DWORD result = GetNamedSecurityInfoW((LPWSTR)path, SE_FILE_OBJECT, DACL_SECURITY_INFORMATION,
@@ -178,11 +187,11 @@ static int add_appcontainer_acl(const wchar_t *path, PSID sid) {
     if (result != ERROR_SUCCESS) return -1;
     EXPLICIT_ACCESSW access;
     ZeroMemory(&access, sizeof(access));
-    access.grfAccessPermissions = GENERIC_READ | GENERIC_WRITE | GENERIC_EXECUTE | DELETE;
+    access.grfAccessPermissions = permissions;
     access.grfAccessMode = GRANT_ACCESS;
-    access.grfInheritance = SUB_CONTAINERS_AND_OBJECTS_INHERIT;
+    access.grfInheritance = inheritance;
     access.Trustee.TrusteeForm = TRUSTEE_IS_SID;
-    access.Trustee.TrusteeType = TRUSTEE_IS_WELL_KNOWN_GROUP;
+    access.Trustee.TrusteeType = TRUSTEE_IS_USER;
     access.Trustee.ptstrName = sid;
     PACL new_acl = NULL;
     result = SetEntriesInAclW(1, &access, old_acl, &new_acl);
@@ -193,6 +202,34 @@ static int add_appcontainer_acl(const wchar_t *path, PSID sid) {
     if (new_acl != NULL) LocalFree(new_acl);
     if (descriptor != NULL) LocalFree(descriptor);
     return result == ERROR_SUCCESS ? 0 : -1;
+}
+
+static int protect_dacl(const wchar_t *path) {
+    PACL acl = NULL;
+    PSECURITY_DESCRIPTOR descriptor = NULL;
+    DWORD result = GetNamedSecurityInfoW((LPWSTR)path, SE_FILE_OBJECT,
+        DACL_SECURITY_INFORMATION, NULL, NULL, &acl, NULL, &descriptor);
+    if (result != ERROR_SUCCESS) return -1;
+    result = SetNamedSecurityInfoW((LPWSTR)path, SE_FILE_OBJECT,
+        DACL_SECURITY_INFORMATION | PROTECTED_DACL_SECURITY_INFORMATION,
+        NULL, NULL, acl, NULL);
+    LocalFree(descriptor);
+    return result == ERROR_SUCCESS ? 0 : -1;
+}
+
+static wchar_t *parent_path(const wchar_t *path) {
+    wchar_t *parent = _wcsdup(path);
+    if (parent == NULL) return NULL;
+    wchar_t *backslash = wcsrchr(parent, L'\\');
+    wchar_t *slash = wcsrchr(parent, L'/');
+    wchar_t *separator = backslash == NULL ? slash
+        : (slash == NULL || backslash > slash ? backslash : slash);
+    if (separator == NULL || separator == parent) {
+        free(parent);
+        return NULL;
+    }
+    *separator = L'\0';
+    return parent;
 }
 
 static HANDLE configured_job(unsigned long long memory, unsigned long long cpu_ms) {
@@ -303,7 +340,20 @@ int wmain(int argc, wchar_t **argv) {
         (unsigned int)profile_nonce[14], (unsigned int)profile_nonce[15]);
     PSID app_sid = NULL;
     HRESULT profile = CreateAppContainerProfile(profile_name, profile_name, L"Ephemeral Forme plugin sandbox", NULL, 0, &app_sid);
-    if (FAILED(profile) || app_sid == NULL || add_appcontainer_acl(working_directory, app_sid) != 0) {
+    wchar_t *snapshot_directory = parent_path(entry);
+    int acl_failed = FAILED(profile) || app_sid == NULL || snapshot_directory == NULL
+        || protect_dacl(snapshot_directory) != 0
+        || add_appcontainer_acl(snapshot_directory, app_sid,
+            GENERIC_READ | GENERIC_EXECUTE, NO_INHERITANCE) != 0
+        || add_appcontainer_acl(entry, app_sid,
+            GENERIC_READ | GENERIC_EXECUTE, NO_INHERITANCE) != 0
+        || (wcscmp(schema_hash, L"-") != 0
+            && add_appcontainer_acl(schema, app_sid, GENERIC_READ, NO_INHERITANCE) != 0)
+        || add_appcontainer_acl(working_directory, app_sid,
+            GENERIC_READ | GENERIC_WRITE | GENERIC_EXECUTE | DELETE,
+            SUB_CONTAINERS_AND_OBJECTS_INHERIT) != 0;
+    free(snapshot_directory);
+    if (FAILED(profile) || acl_failed) {
         if (app_sid != NULL) FreeSid(app_sid);
         if (SUCCEEDED(profile)) DeleteAppContainerProfile(profile_name);
         CloseHandle(pinned_entry);

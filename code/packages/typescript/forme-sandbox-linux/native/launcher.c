@@ -30,6 +30,7 @@
 
 static volatile sig_atomic_t sandbox_child = -1;
 static char original_cgroup_procs[PATH_MAX];
+static const char *root_setup_stage = "not-started";
 
 static void forward_signal(int signal_number) {
     if (sandbox_child > 0) {
@@ -265,14 +266,17 @@ static int setup_root(
     char *sandbox_entry,
     size_t entry_size
 ) {
+    root_setup_stage = "create-root-directory";
     char template[] = "/tmp/forme-sandbox-root-XXXXXX";
     char *created = mkdtemp(template);
     if (created == NULL || strlen(created) >= root_size) return -1;
     strcpy(root, created);
+    root_setup_stage = "mount-private-tmpfs";
     if (mount("tmpfs", root, "tmpfs", MS_NOSUID | MS_NODEV, "mode=0755,size=32m") != 0) return -1;
 
     char target[PATH_MAX];
     snprintf(target, sizeof(target), "%s/work", root);
+    root_setup_stage = "bind-plugin-work-directory";
     if (make_directory(target, 0700) != 0
             || mount(working_directory, target, NULL, MS_BIND | MS_REC, NULL) != 0
             || mount(NULL, target, NULL, MS_BIND | MS_REMOUNT | MS_NOSUID | MS_NODEV, NULL) != 0) return -1;
@@ -280,20 +284,25 @@ static int setup_root(
     if (snprintf(snapshot_source, sizeof(snapshot_source), "%s/.forme-snapshot", working_directory)
             >= (int)sizeof(snapshot_source)) return -1;
     snprintf(target, sizeof(target), "%s/work/.forme-snapshot", root);
+    root_setup_stage = "remount-snapshot-read-only";
     if (bind_read_only(snapshot_source, target) != 0) return -1;
     snprintf(target, sizeof(target), "%s/proc", root);
+    root_setup_stage = "create-proc-mountpoint";
     if (make_directory(target, 0555) != 0) return -1;
     snprintf(target, sizeof(target), "%s/dev", root);
+    root_setup_stage = "create-device-mountpoint";
     if (make_directory(target, 0555) != 0) return -1;
     const char *devices[] = { "/dev/null", "/dev/urandom", "/dev/random", NULL };
     for (size_t index = 0; devices[index] != NULL; index++) {
         const char *name = strrchr(devices[index], '/');
         snprintf(target, sizeof(target), "%s/dev/%s", root, name + 1);
+        root_setup_stage = "bind-device-read-only";
         if (bind_read_only(devices[index], target) != 0) return -1;
     }
     const char *libraries[] = { "/lib", "/lib64", "/usr/lib", "/usr/lib64", NULL };
     for (size_t index = 0; libraries[index] != NULL; index++) {
         snprintf(target, sizeof(target), "%s%s", root, libraries[index]);
+        root_setup_stage = "bind-system-library-read-only";
         if (bind_read_only(libraries[index], target) != 0) return -1;
     }
 
@@ -306,6 +315,7 @@ static int setup_root(
     } else {
         const char *relative_runtime = runtime + strlen(runtime_root);
         snprintf(target, sizeof(target), "%s/runtime", root);
+        root_setup_stage = "bind-runtime-read-only";
         if (bind_read_only(runtime_root, target) != 0
                 || snprintf(sandbox_runtime, runtime_size, "/runtime%s", relative_runtime) >= (int)runtime_size) return -1;
     }
@@ -756,7 +766,7 @@ int main(int argc, char **argv) {
     char root[PATH_MAX] = {0}, sandbox_runtime[PATH_MAX], sandbox_entry[PATH_MAX];
     if (setup_root(canonical_cwd, canonical_runtime, canonical_runtime_root, canonical_entry, root, sizeof(root),
             sandbox_runtime, sizeof(sandbox_runtime), sandbox_entry, sizeof(sandbox_entry)) != 0) {
-        perror("private root setup");
+        fprintf(stderr, "private root setup (%s): %s\n", root_setup_stage, strerror(errno));
         if (root[0] != '\0') {
             umount2(root, MNT_DETACH);
             rmdir(root);
