@@ -276,6 +276,27 @@ QVariantMap MosaicHost::props()
   return withContentSurface(response(applyProps_(browser_)));
 }
 
+QVariantMap MosaicHost::reportEnvironment(const QVariantMap &environment)
+{
+  Q_UNUSED(environment);
+  return {};
+}
+
+QVariantMap MosaicHost::environmentReport(double width, double height, bool dark)
+{
+  return {
+    {QStringLiteral("colorScheme"), dark ? QStringLiteral("dark") : QStringLiteral("light")},
+    {QStringLiteral("sizeClass"), width < 600 ? QStringLiteral("compact")
+                                               : width < 1024 ? QStringLiteral("regular")
+                                                              : QStringLiteral("expanded")},
+    {QStringLiteral("orientation"), height > width ? QStringLiteral("portrait")
+                                                    : QStringLiteral("landscape")},
+    {QStringLiteral("pointer"), QStringLiteral("fine")},
+    {QStringLiteral("hover"), QStringLiteral("hover")},
+    {QStringLiteral("reducedMotion"), QStringLiteral("no-preference")},
+  };
+}
+
 QVariantMap MosaicHost::handleEvent(const QVariantMap &event)
 {
   if (!browser_ || !handleEvent_) {

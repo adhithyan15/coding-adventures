@@ -33,7 +33,7 @@
 
 use std::collections::HashMap;
 
-pub const VERSION: &str = "0.4.0";
+pub const VERSION: &str = "0.5.0";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Size values
@@ -217,6 +217,10 @@ impl TextDecorationLines {
 pub enum TextDecorationStyle {
     #[default]
     Solid,
+    Double,
+    Dotted,
+    Dashed,
+    Wavy,
 }
 
 /// Paint-independent text decoration inherited by inline text descendants.

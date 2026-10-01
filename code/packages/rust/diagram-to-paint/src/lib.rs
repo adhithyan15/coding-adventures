@@ -329,8 +329,15 @@ fn treemap_text_node(
             let decoration_color = style.and_then(|style| style.text_decoration_color.as_deref())
                 .map(css_to_color)
                 .map(|color| color_with_opacity(color, style.and_then(|style| style.opacity).unwrap_or(1.0)));
+            let decoration_style = match style.and_then(|style| style.text_decoration_style) {
+                Some(diagram_ir::TreemapTextDecorationStyle::Double) => TextDecorationStyle::Double,
+                Some(diagram_ir::TreemapTextDecorationStyle::Dotted) => TextDecorationStyle::Dotted,
+                Some(diagram_ir::TreemapTextDecorationStyle::Dashed) => TextDecorationStyle::Dashed,
+                Some(diagram_ir::TreemapTextDecorationStyle::Wavy) => TextDecorationStyle::Wavy,
+                _ => TextDecorationStyle::Solid,
+            };
             (lines != TextDecorationLines::NONE).then_some(TextDecoration {
-                lines, style: TextDecorationStyle::Solid, color: decoration_color,
+                lines, style: decoration_style, color: decoration_color,
             })
         });
     }
@@ -6853,6 +6860,7 @@ mod tests {
                         underline: true, overline: true, line_through: true,
                     }),
                     text_decoration_color: Some("#2563eb".into()),
+                    text_decoration_style: Some(diagram_ir::TreemapTextDecorationStyle::Wavy),
                     line_height: Some(diagram_ir::TreemapLineHeight::Pixels(24.0)),
                 }),
             }],
@@ -6864,7 +6872,8 @@ mod tests {
         );
         assert!(matches!(styled_text.content,
             Some(Content::Text(TextContent { value, text_align: TextAlign::End,
-                decoration: Some(TextDecoration { lines, color: Some(decoration_color), .. }), .. }))
+                decoration: Some(TextDecoration { lines, color: Some(decoration_color),
+                    style: TextDecorationStyle::Wavy }), .. }))
                 if value == "STYLED NODE"
                     && lines.contains(TextDecorationLines::UNDERLINE)
                     && lines.contains(TextDecorationLines::OVERLINE)
