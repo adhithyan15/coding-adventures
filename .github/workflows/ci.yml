@@ -3061,6 +3061,20 @@ jobs:
             flutter test test/widget_test.dart
           )
 
+          # UI48 §7.9 (ENV2/ENV3): the resize gate §7 asks for. The fixture has
+          # a default and a `compact` layout; its widget test changes the
+          # window's size across 600 logical pixels and asserts the root
+          # swaps, so a shell frozen on one layout fails here.
+          layout_variants_output="$RUNNER_TEMP/mosaic-flutter-layout-variants"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-flutter/fixtures/layout-variants --backend flutter --output "$layout_variants_output" --emit-project
+          (
+            cd "$layout_variants_output/flutter"
+            cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/layout-variants-test/widget_test.dart" test/widget_test.dart
+            flutter pub get
+            flutter analyze
+            flutter test test/widget_test.dart
+          )
+
           toolkit_output="$RUNNER_TEMP/mosaic-flutter-toolkit"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend flutter --output "$toolkit_output" --emit-project
           (
@@ -3139,6 +3153,15 @@ jobs:
           install = text.index("installEngramEffects(host);")
           assert install > assign, "handler is installed before the host exists"
           PY
+
+          # UI48 §7.9 (ENV2/ENV3): Engram is the one package with a layout
+          # variant (EngramApp.touch.mll). Both roots and the selector must be
+          # in lib/, so the analyze and build below prove they coexist.
+          grep -q '^class EngramAppTouch extends StatelessWidget {$' "$engram_output/flutter/lib/EngramApp.touch.dart"
+          if grep -q '^sealed class EngramAppEvent' "$engram_output/flutter/lib/EngramApp.touch.dart"; then exit 1; fi
+          grep -q "^import 'EngramApp.touch.dart';$" "$engram_output/flutter/lib/main.dart"
+          grep -q 'switch (mosaicLayoutVariant(environment))' "$engram_output/flutter/lib/main.dart"
+          grep -q 'return EngramAppTouch($' "$engram_output/flutter/lib/main.dart"
 
           (
             cd "$engram_output/flutter"
