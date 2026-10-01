@@ -15384,7 +15384,7 @@ the owner still excludes subprocess, filesystem, network, storage, shell,
 signal, timer, native-limit, sandbox, trust, and installation authority.
 
 The exact-main schema-3 inventory at
-`a960adc4734c03909692a6adc7f3c5ce41b983f0` is collision-clean at 15
+`4d6f27159239d6d3f8d408a5a4c0ecb5ca8059f5` is collision-clean at 15
 established lanes, 1,474 implementation identities, 4,741 package slots, 1,516
 all-reported identities, completion bands 178/265, 123/934, 181/2,282, and
 992/13,888, 805 Rust singletons, five emerging OCaml packages, zero canonical

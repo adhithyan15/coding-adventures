@@ -427,7 +427,24 @@ class BarcodeLayoutFixtureTests(unittest.TestCase):
         target_schema = _read_bounded(FIXTURE_ROOT / "targets.schema.json")
         targets = _load(target_schema, _read_bounded(FIXTURE_ROOT / "targets.json"))
 
-        pending_with_evidence = json.loads(json.dumps(targets))
+        pending = json.loads(json.dumps(targets))
+        pending_target = pending["targets"][0]
+        pending_target["status"] = "pending-adoption"
+        pending_target["planned_conformance_test_path"] = pending_target.pop(
+            "conformance_test_path"
+        )
+        pending_target["known_divergences"] = ["not adopted"]
+        for field in (
+            "verified_revision",
+            "package_tree",
+            "corpus_sha256",
+            "adoption_pr",
+            "zero_authority_evidence",
+        ):
+            pending_target.pop(field)
+        _load(target_schema, json.dumps(pending).encode())
+
+        pending_with_evidence = json.loads(json.dumps(pending))
         pending_with_evidence["targets"][0]["corpus_sha256"] = (
             "be95aa0381041ef3bd729b36bb4292f7a20692e139b53adca97af4e157cb7388"
         )
@@ -435,23 +452,6 @@ class BarcodeLayoutFixtureTests(unittest.TestCase):
             _load(target_schema, json.dumps(pending_with_evidence).encode())
 
         promoted = json.loads(json.dumps(targets))
-        target = promoted["targets"][0]
-        target["status"] = "conformant"
-        target["conformance_test_path"] = target.pop("planned_conformance_test_path")
-        target["known_divergences"] = []
-        target["verified_revision"] = "a" * 40
-        target["package_tree"] = "b" * 40
-        target["corpus_sha256"] = (
-            "be95aa0381041ef3bd729b36bb4292f7a20692e139b53adca97af4e157cb7388"
-        )
-        target["adoption_pr"] = 1
-        target["zero_authority_evidence"] = {
-            "test_path": target["conformance_test_path"],
-            "assertions": [
-                "text-value-fails-before-native-resolution",
-                "text-enabled-fails-before-native-resolution",
-            ],
-        }
         _load(target_schema, json.dumps(promoted).encode())
 
         mutations = []
