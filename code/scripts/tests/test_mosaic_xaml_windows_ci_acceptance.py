@@ -266,6 +266,82 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
         self.assertIn("class FakeDialogs : IMosaicFileDialogs", program)
         self.assertIn("class FakeHost : IMosaicPlatformEffectHost", program)
 
+    def test_layout_rules_require_acceptance(self) -> None:
+        # UI48 §7.11: the rules the WinUI window switches layouts by.
+        self.assertTrue(
+            MODULE.requires_mosaic_xaml_windows(
+                {"affected_packages": ["rust/mosaic-package-manifest"]}
+            )
+        )
+
+    def test_windows_lane_resizes_the_layout_variants_fixture(self) -> None:
+        # UI48 §7.11: the gate that changes the environment. The fixture is
+        # built native-complete against the conformance runtime, its source
+        # contract checked, its WinUI project built, and the real window
+        # resized across 600 effective pixels both ways.
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        step = workflow.index("- name: Resize the WinUI layout-variants fixture (UI48 §7.11)")
+        body = workflow[step : workflow.index("\n      - name:", step + 1)]
+        self.assertIn(
+            "if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'",
+            body,
+        )
+        self.assertIn("shell: pwsh", body)
+        self.assertIn(
+            "pkg code/packages/rust/mosaic-emit-xaml/fixtures/layout-variants --backend xaml",
+            body,
+        )
+        self.assertIn("--profile native-complete --runtime-library $library.Path", body)
+        self.assertIn("mosaic_app_conformance.dll", body)
+        for marker in (
+            '("compact", new[] { ("sizeClass", "compact") }),',
+            "var root = new LayoutProbeCompact();",
+            "MosaicRuntimeHost.ApplyRequiredProps(next, RequiredProps);",
+            "this.layoutSwitchQueued = this.DispatcherQueue.TryEnqueue(SwitchLayout);",
+            "if (MosaicRuntimeHost.IsSettling)",
+        ):
+            self.assertIn(marker, body)
+        self.assertIn("LayoutProbe.compact.Event.cs", body)
+        self.assertIn("public event EventHandler<LayoutProbeEvent>? Dispatch;", body)
+        self.assertIn("dotnet build (Split-Path -Leaf $project)", body)
+        self.assertIn("code/scripts/mosaic-xaml-layout-variants-smoke.ps1", body)
+        # Every external command's failure is a thrown error, never ignored.
+        # cargo build, mosaic-compile and the smoke; dotnet build below.
+        self.assertEqual(body.count("if ($LASTEXITCODE -ne 0)"), 3)
+        self.assertIn("if ($buildExitCode -ne 0)", body)
+
+        fixture = XAML_PACKAGE.parents[1] / "mosaic-emit-xaml" / "fixtures" / "layout-variants"
+        self.assertNotIn(
+            "[[app.layouts]]",
+            (fixture / "mosaic-package.toml").read_text(encoding="utf-8").replace(
+                "# No `[[app.layouts]]`", ""
+            ),
+            "the compact layout is selected by convention",
+        )
+        interface = (fixture / "src" / "LayoutProbe.mil").read_text(encoding="utf-8")
+        # Two of the conformance runtime's props, so it drives the window.
+        self.assertIn("slot platform : text ;", interface)
+        self.assertIn("slot status : text ;", interface)
+        counter = (XAML_PACKAGE / "src" / "Counter.mil").read_text(encoding="utf-8")
+        self.assertIn("slot platform : text;", counter)
+        self.assertIn("slot status : text;", counter)
+        for layout, marker in (
+            ("LayoutProbe.mll", "Layout: default"),
+            ("LayoutProbe.compact.mll", "Layout: compact"),
+        ):
+            self.assertIn(marker, (fixture / "src" / layout).read_text(encoding="utf-8"))
+
+        smoke = (
+            WORKFLOW.parents[2] / "code" / "scripts" / "mosaic-xaml-layout-variants-smoke.ps1"
+        ).read_text(encoding="utf-8")
+        self.assertIn("$ErrorActionPreference = 'Stop'", smoke)
+        self.assertIn("SetWindowPos", smoke)
+        self.assertIn("'Layout: default'", smoke)
+        self.assertIn("'Layout: compact'", smoke)
+        # Wide, narrow, wide, narrow: both directions, twice.
+        self.assertEqual(smoke.count("Resize-AndExpect $process $root 1300"), 2)
+        self.assertEqual(smoke.count("Resize-AndExpect $process $root 420"), 2)
+
     def test_conformance_engine_has_a_real_mosaic_package(self) -> None:
         self.assertTrue((XAML_PACKAGE / "mosaic-package.toml").is_file())
         for suffix in ("mil", "mll", "msl"):

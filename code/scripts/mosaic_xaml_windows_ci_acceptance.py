@@ -19,6 +19,9 @@ ACCEPTANCE_PACKAGES = frozenset(
         "rust/mosaic-compile",
         "rust/mosaic-emit-xaml",
         "rust/mosaic-package-artifact-builder",
+        # UI48 §7.11: the `[[app.layouts]]` rules (and the conventions) the
+        # WinUI window switches layouts by, which the resize gate exercises.
+        "rust/mosaic-package-manifest",
         "rust/moslayout-compiler",
         "rust/mosmodel-compiler",
         "rust/mosstyle-compiler",
