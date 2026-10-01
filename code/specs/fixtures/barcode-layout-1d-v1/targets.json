@@ -25,6 +25,27 @@
       "zero_authority_evidence": {"test_path": "code/packages/csharp/barcode-layout-1d/tests/CodingAdventures.BarcodeLayout1D.Tests/BarcodeLayout1DConformanceTests.cs", "assertions": ["text-value-fails-before-native-resolution", "text-enabled-fails-before-native-resolution"]}
     },
     {
+      "language": "elixir",
+      "status": "pending-adoption",
+      "api_family": "legacy",
+      "package_root": "code/packages/elixir/barcode_layout_1d",
+      "native_test_path": "code/packages/elixir/barcode_layout_1d/test/barcode_layout_1d_test.exs",
+      "planned_conformance_test_path": "code/packages/elixir/barcode_layout_1d/test/barcode_layout_1d_conformance_test.exs",
+      "capability_manifest": null,
+      "binary_runs": "runs_from_binary_pattern_v1 (planned)",
+      "width_runs": "runs_from_width_pattern_v1 (planned)",
+      "layout": "compute_barcode_1d_layout_v1 (planned)",
+      "scene": "project_barcode_1d_scene_v1 (planned)",
+      "error_projection": "exception adapter (planned)",
+      "metadata_projection": "map adapter (planned)",
+      "copy_semantics_hook": "list and map mutation assertions (planned)",
+      "known_divergences": [
+        "No strict v1 facade or dynamic neutral-corpus runner.",
+        "Legacy empty-pattern, quiet-zone, metadata, overflow, and error behavior diverges from v1.",
+        "No capability manifest or resolver-precedence evidence."
+      ]
+    },
+    {
       "language": "fsharp",
       "status": "conformant",
       "api_family": "modern",
@@ -91,6 +112,27 @@
       "zero_authority_evidence": {"test_path": "code/packages/haskell/barcode-layout-1d/test/BarcodeLayout1DConformanceSpec.hs", "assertions": ["text-value-fails-before-native-resolution", "text-enabled-fails-before-native-resolution"]}
     },
     {
+      "language": "lua",
+      "status": "pending-adoption",
+      "api_family": "legacy",
+      "package_root": "code/packages/lua/barcode_layout_1d",
+      "native_test_path": "code/packages/lua/barcode_layout_1d/tests/test_barcode_layout_1d.lua",
+      "planned_conformance_test_path": "code/packages/lua/barcode_layout_1d/tests/test_barcode_layout_1d_conformance.lua",
+      "capability_manifest": null,
+      "binary_runs": "runs_from_binary_pattern_v1 (planned)",
+      "width_runs": "runs_from_width_pattern_v1 (planned)",
+      "layout": "compute_barcode_1d_layout_v1 (planned)",
+      "scene": "project_barcode_1d_scene_v1 (planned)",
+      "error_projection": "error adapter (planned)",
+      "metadata_projection": "table adapter (planned)",
+      "copy_semantics_hook": "table mutation assertions (planned)",
+      "known_divergences": [
+        "No strict v1 facade or dynamic neutral-corpus runner.",
+        "Legacy empty-pattern, quiet-zone, metadata, overflow, and error behavior diverges from v1.",
+        "No resolver-precedence evidence."
+      ]
+    },
+    {
       "language": "perl",
       "status": "conformant",
       "api_family": "legacy",
@@ -135,6 +177,28 @@
       "zero_authority_evidence": {"test_path": "code/packages/python/barcode-layout-1d/tests/test_conformance.py", "assertions": ["text-value-fails-before-native-resolution", "text-enabled-fails-before-native-resolution"]}
     },
     {
+      "language": "ruby",
+      "status": "conformant",
+      "api_family": "legacy",
+      "package_root": "code/packages/ruby/barcode_layout_1d",
+      "native_test_path": "code/packages/ruby/barcode_layout_1d/test/test_barcode_layout_1d.rb",
+      "conformance_test_path": "code/packages/ruby/barcode_layout_1d/test/test_barcode_layout_1d_conformance.rb",
+      "capability_manifest": "code/packages/ruby/barcode_layout_1d/required_capabilities.json",
+      "binary_runs": "expand_binary_v1",
+      "width_runs": "expand_width_v1",
+      "layout": "compute_layout_v1",
+      "scene": "project_scene_v1",
+      "error_projection": "BarcodeV1Error adapter",
+      "metadata_projection": "Hash String String adapter",
+      "copy_semantics_hook": "array, hash, and string mutation assertions",
+      "known_divergences": [],
+      "verified_revision": "e32c3e4b11f14de694b3358f3045b15632b255f3",
+      "package_tree": "aafff095367353ae3da9738dfd82198c63b7913f",
+      "corpus_sha256": "be95aa0381041ef3bd729b36bb4292f7a20692e139b53adca97af4e157cb7388",
+      "adoption_pr": 16361,
+      "zero_authority_evidence": {"test_path": "code/packages/ruby/barcode_layout_1d/test/test_barcode_layout_1d_conformance.rb", "assertions": ["text-value-fails-before-native-resolution", "text-enabled-fails-before-native-resolution"]}
+    },
+    {
       "language": "rust",
       "status": "conformant",
       "api_family": "modern",
@@ -155,6 +219,28 @@
       "corpus_sha256": "be95aa0381041ef3bd729b36bb4292f7a20692e139b53adca97af4e157cb7388",
       "adoption_pr": 16343,
       "zero_authority_evidence": {"test_path": "code/packages/rust/barcode-layout-1d/tests/conformance.rs", "assertions": ["text-value-fails-before-native-resolution", "text-enabled-fails-before-native-resolution"]}
+    },
+    {
+      "language": "swift",
+      "status": "conformant",
+      "api_family": "legacy",
+      "package_root": "code/packages/swift/BarcodeLayout1D",
+      "native_test_path": "code/packages/swift/BarcodeLayout1D/Tests/BarcodeLayout1DTests/BarcodeLayout1DTests.swift",
+      "conformance_test_path": "code/packages/swift/BarcodeLayout1D/Tests/BarcodeLayout1DTests/BarcodeLayout1DConformanceTests.swift",
+      "capability_manifest": "code/packages/swift/BarcodeLayout1D/required_capabilities.json",
+      "binary_runs": "expandBinaryV1",
+      "width_runs": "expandWidthV1",
+      "layout": "computeLayoutV1",
+      "scene": "projectSceneV1",
+      "error_projection": "BarcodeLayoutV1Error adapter",
+      "metadata_projection": "String dictionary adapter",
+      "copy_semantics_hook": "value-copy mutation assertions",
+      "known_divergences": [],
+      "verified_revision": "e32c3e4b11f14de694b3358f3045b15632b255f3",
+      "package_tree": "0d3e662c9d3a0b96ef08465c8b64906bca3a6a4c",
+      "corpus_sha256": "be95aa0381041ef3bd729b36bb4292f7a20692e139b53adca97af4e157cb7388",
+      "adoption_pr": 16361,
+      "zero_authority_evidence": {"test_path": "code/packages/swift/BarcodeLayout1D/Tests/BarcodeLayout1DTests/BarcodeLayout1DConformanceTests.swift", "assertions": ["text-value-fails-before-native-resolution", "text-enabled-fails-before-native-resolution"]}
     },
     {
       "language": "typescript",

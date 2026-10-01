@@ -15435,6 +15435,55 @@ fixtures. These three discoveries leave the package inventory totals unchanged
 while increasing the durable state graph to 972 owners and 1,873 edges: 242
 merged, 729 pending, and one active PR.
 
+### PR #16343 merge and Ruby/Swift barcode-layout selection
+
+The post-merge full-tree schema-3 refresh at `2a75d68df0` remains
+collision-clean across 15 established lanes. It records 1,475 implementation
+identities, 4,742 package slots, 1,517 all-reported identities, completion
+bands 178/265, 123/934, 181/2,282, and 993/13,902, 805 Rust singletons, five
+emerging OCaml packages, zero canonical collisions, and zero unknown buckets.
+The only newly incorporated identity is the independently merged Python Forme
+plugin runner, which remains assigned to the existing runner lifecycle owner
+with process and signal authority explicitly excluded.
+
+The refreshed dependency pass selects
+`barcode-layout-1d-ruby-swift-v1-conformance` on fresh clean sparse branch
+`codex/parity-barcode-layout-ruby-swift-20261001`. The bounded tranche keeps
+both legacy public APIs intact while adding strict portable v1 facades, dynamic
+execution of all 56 neutral cases, bounded hostile fixture loaders, exact
+zero-authority text precedence, package capability evidence, native build
+fronts, and seven direct downstream regressions per lane. It also expands the
+registry once to the complete 12 established implementations: Ruby and Swift
+become conformant while Elixir and Lua are recorded truthfully as
+`pending-adoption`. The Elixir/Lua tranche follows this registry foundation;
+Java/Kotlin/Dart porting depends on both omitted-lane adoptions so the former
+eight-lane registry cannot become its oracle. A live open-PR audit found zero
+overlap with the selected package, fixture, validator, state, roadmap, and
+changelog paths.
+
+### Ruby and Swift barcode-layout v1 adoption PR
+
+PR #16361 records the complete Ruby and Swift adoption without changing
+either legacy API. Implementation revision
+`e32c3e4b11f14de694b3358f3045b15632b255f3` binds Ruby package tree
+`aafff095367353ae3da9738dfd82198c63b7913f` and Swift package tree
+`0d3e662c9d3a0b96ef08465c8b64906bca3a6a4c`; the evidence-only follow-up
+commit leaves both package roots untouched. The registry now reports both
+lanes conformant while keeping Elixir and Lua explicitly pending adoption.
+
+Ruby completed 2 native runs with 5 assertions and 64 conformance runs with
+122 assertions. Swift
+completed seven native and conformance tests with coverage and release builds.
+The shared registry validator completed nine tests, and all six portable
+symbology downstream packages passed in both lanes. Ruby's aggregate passed
+with one expected platform-native skip. Swift's aggregate compiled the full
+package graph before the pre-existing absent `paint_vm_direct2d_c.lib` linker
+artifact prevented the final Windows executable link. Both Windows build
+fronts fail closed. Every Unix build command is independently shell-complete
+for the line-oriented build tool. Two read-only security-review rounds
+completed; the second
+reported no vulnerabilities after bounded Unicode-scalar ingress fixes.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
