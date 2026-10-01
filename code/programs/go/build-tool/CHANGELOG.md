@@ -25,6 +25,9 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Changed
 
+- Moved the FIFO manifest probe into a `!windows` test file because
+  `syscall.Mkfifo` is unavailable on Windows. The symlink and package-walk
+  probes remain in the shared file, so Windows CI still executes them.
 - CI-gate match-work preflight now deduplicates identical globs and applies a
   sound literal path-segment prefix/suffix filter before charging the full glob
   grid. Large path-sharded diffs under an unrelated subtree therefore keep
