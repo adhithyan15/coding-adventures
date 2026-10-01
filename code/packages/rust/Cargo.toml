@@ -156,6 +156,7 @@ members = [
     "flow-matic-lexer",
     "flow-matic-parser",
     "flow-matic-iir-compiler",
+    "forme-plugin-runner-rs",
     "font-parser",
     "font-subset",
     "glyph-parser",

@@ -1,0 +1,13 @@
+# build-tool: deps=typescript/forme-plugin-runner-conformance
+(cd ../../typescript/document-ast && npm ci --quiet)
+(cd ../../typescript/forme-types && npm ci --quiet && npm run build)
+(cd ../../typescript/forme-errors && npm ci --quiet && npm run build)
+(cd ../../typescript/forme-capability && npm ci --quiet)
+(cd ../../typescript/forme-stage && npm ci --quiet && npm run build)
+(cd ../../typescript/forme-plugin-runner-ts && npm ci --quiet && npm run build)
+(cd ../../typescript/forme-plugin-runner-conformance && npm ci --quiet && npm run build)
+cargo fmt --package forme-plugin-runner-rs -- --check
+cargo clippy -p forme-plugin-runner-rs --all-targets -- -D warnings
+cargo test -p forme-plugin-runner-rs --tests -- --nocapture
+cargo build -p forme-plugin-runner-rs --bin forme-rust-conformance-fixture
+node tests/conformance.mjs ../target/debug/forme-rust-conformance-fixture.exe

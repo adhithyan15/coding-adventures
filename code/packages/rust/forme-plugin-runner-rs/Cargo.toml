@@ -1,0 +1,19 @@
+[package]
+name = "forme-plugin-runner-rs"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded FM02 subprocess runner and typed Rust SDK for Forme plugins"
+license = "MIT"
+
+[dependencies]
+async-trait = "0.1"
+coding_adventures_base64 = { path = "../base64" }
+serde_json = "1"
+tokio = { version = "1", features = ["io-std", "io-util", "macros", "rt-multi-thread", "signal", "sync", "time"] }
+
+[dev-dependencies]
+serde_json = "1"
+
+[[bin]]
+name = "forme-rust-conformance-fixture"
+path = "src/bin/conformance_fixture.rs"
