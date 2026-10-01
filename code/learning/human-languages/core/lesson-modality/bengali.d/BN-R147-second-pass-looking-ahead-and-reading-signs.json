@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R147-second-pass-looking-ahead-and-reading-signs",
+    "language": "bengali",
+    "chapter": 147,
+    "sequence": 8130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c87e2be6243676b1"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:266a64ad94bacef4",
+  "lessonIds": [
+    "BN-C145-somproti",
+    "BN-C145-agei",
+    "BN-C145-goto",
+    "BN-C145-ekshomoy",
+    "BN-C145-katano"
+  ],
+  "tex": "bengali/book/chapters/ch145-recently-already-last-once-to-spend-time.tex"
+}

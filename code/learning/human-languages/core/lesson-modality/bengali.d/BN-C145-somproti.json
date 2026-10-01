@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C145-somproti",
+    "language": "bengali",
+    "chapter": 145,
+    "sequence": 7970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a82ab2dc0b7eef89"
+  },
+  "findings": []
+}

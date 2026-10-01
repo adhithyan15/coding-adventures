@@ -1,0 +1,19 @@
+{
+  "chapter": 145,
+  "title": "Recently, Already, Last, Once, To Spend (Time)",
+  "label": "ch:bn-recently-already-last-once-to-spend-time",
+  "canDo": "I can say what happened, and when: recently, already, last week.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "BN-C145-katano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 145: I can say what happened, and when: recently, already, last week.",
+    "assesses": [
+      "BN-LEX-C145-ATIT145-03",
+      "BN-LEX-C145-ATIT145-04",
+      "BN-LEX-C145-ATIT145-05"
+    ]
+  }
+}

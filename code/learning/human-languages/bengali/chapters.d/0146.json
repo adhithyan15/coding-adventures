@@ -1,0 +1,19 @@
+{
+  "chapter": 146,
+  "title": "Next, After This, a Plan, To Decide, To Hope",
+  "label": "ch:bn-next-after-this-a-plan-to-decide-to-hope",
+  "canDo": "I can say what will happen, and when: next week, from now on, and what I plan.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "BN-C146-asha-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 146: I can say what will happen, and when: next week, from now on, and what I plan.",
+    "assesses": [
+      "BN-LEX-C146-AGAMI146-03",
+      "BN-LEX-C146-AGAMI146-04",
+      "BN-LEX-C146-AGAMI146-05"
+    ]
+  }
+}

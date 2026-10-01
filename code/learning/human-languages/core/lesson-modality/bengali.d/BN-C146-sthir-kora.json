@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C146-sthir-kora",
+    "language": "bengali",
+    "chapter": 146,
+    "sequence": 8050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:87eb77dee2495d64"
+  },
+  "findings": []
+}
