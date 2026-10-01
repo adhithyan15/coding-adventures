@@ -4104,6 +4104,16 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("6.253.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — exact literal string predicates may choose values in
+    // successive single-value and bounded while elements of one for list.
+    // Each element sees the exact control snapshot left by its predecessor.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real total; total := 0.25; for i := if 'ALPHA' < 'BETA' then 1 else 9, if 'BETA' < 'ALPHA' then 8 else 2, if 'ALPHA' < 'BETA' then i + 1 else i + 3 while i <= 4 do total := total + i; print(total) end",
+        expect: Expect::Stdout("10.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — an exact control recurrence remains analyzable when every
     // additional compound-body statement is an inert local scalar assignment.
     Prog {
@@ -14351,6 +14361,31 @@ fn algol_literal_string_selected_while_values_run_on_every_available_standard_ba
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the literal-string-selected while values did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_for_list_values_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("for i := if 'ALPHA' < 'BETA' then 1 else 9,")
+        })
+        .expect("the literal-string-selected for-list values must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected for-list values did not run"
             );
             continue;
         };
