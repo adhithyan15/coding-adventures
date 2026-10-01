@@ -354,6 +354,61 @@ export const entries: DuctusEntry[] = [
     },
   ],
   [
+    "telugu:న",
+    {
+      script: "telugu",
+      glyph: "న",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "sweep upward around the left bowl and into the middle",
+              path: [
+                { x: 105, y: 5 }, { x: 75, y: 65 },
+                { x: 60, y: 135 }, { x: 70, y: 205 },
+                { x: 100, y: 250 }, { x: 140, y: 270 },
+                { x: 180, y: 260 }, { x: 220, y: 225 },
+                { x: 260, y: 175 }, { x: 300, y: 120 },
+                { x: 345, y: 75 }, { x: 395, y: 50 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "sweep right and upward around the broad lower bowl",
+              path: [
+                { x: 425, y: 40 }, { x: 475, y: 15 },
+                { x: 530, y: 15 }, { x: 585, y: 45 },
+                { x: 625, y: 95 }, { x: 645, y: 155 },
+                { x: 640, y: 225 }, { x: 615, y: 290 },
+                { x: 575, y: 345 }, { x: 525, y: 390 },
+                { x: 470, y: 420 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "curl upward through the separate top flourish",
+              path: [
+                { x: 125, y: 570 }, { x: 145, y: 520 },
+                { x: 180, y: 470 }, { x: 225, y: 440 },
+                { x: 270, y: 445 }, { x: 315, y: 480 },
+                { x: 360, y: 535 }, { x: 410, y: 595 },
+                { x: 465, y: 650 }, { x: 520, y: 690 },
+                { x: 565, y: 700 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguLetterSource("న"),
+    },
+  ],
+  [
     "telugu:ణ",
     {
       script: "telugu",

@@ -51,17 +51,18 @@ You already say these, and every one of them has న somewhere inside it:
 - **ధన్యవాదములు** *dhanyavādamulu* — thank you (dhanyavādamulu — "utterances of 'worthy'")
 - **అవును** *avunu* — yes (avunu)
 
-## Writing: న — copy what you see
+## Writing: న — three gentle sweeps
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-109] -->
+<!-- hl-writing-stage: observe-trace -->
 
-Put your pen on న and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+Watch the numbered filmstrip once before your pen moves. Movement 1 sweeps up
+around the left bowl and into the middle. Lift, then movement 2 travels right
+around the broad lower bowl and rises along its outer edge. Lift once more for
+movement 3, the small rising flourish above.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+Trace the same route slowly. This is one attested school-style order fitted to
+the printed shape here; Telugu handwriting varies, so keep the three clear
+movements instead of closing the small gaps.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-109] -->

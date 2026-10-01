@@ -260,12 +260,16 @@ describe("stroke ownership migration baseline", () => {
       // Telugu ధ opens the word-first writing ladder. Its six sourced
       // movements remain six pen-down runs. Keys move 396 -> 397 and Telugu
       // 27 -> 28; shared-identity values remain unchanged.
+      //
+      // Telugu న follows with its familiar-word lesson owner. Its three
+      // sourced movements remain three pen-down runs. Keys move 397 -> 398
+      // and Telugu 28 -> 29; shared-identity values remain unchanged.
     }).toEqual({
-      keys: 397,
+      keys: 398,
       keyHash:
-        "8a4beec5162ae07a58c68cef019be26a5724c0d41bc4bbab4e50c5cdfb9d0173",
+        "3c9bad861cf2ed603a29fa38d8a9e6e9de7c4a1aed9b04d8a964ebc3b84ecd9a",
       nonTamilDataHash:
-        "b8a95082b1c0000e604558d623d116344b6a1cb5220e9da39abcba838c7c04c9",
+        "9d90b49ff86a510cc6f1170f94488e2867f4a88810fed505bc82d310ee730726",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -281,7 +285,7 @@ describe("stroke ownership migration baseline", () => {
         malayalam: 14,
         "perso-arabic": 24,
         tamil: 29,
-        telugu: 28,
+        telugu: 29,
         "urdu-nastaliq": 31,
       },
     });
