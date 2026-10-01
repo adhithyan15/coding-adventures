@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — docs: the platform library answers the effect on Flutter too
+
+The README and crate docs no longer say photo-picker-app's own handler
+answers `files.open` on Flutter: that handler was retired for Mosaic's
+Flutter platform library (UI87 §7.4, §7.7), so the library answers the
+effect on every backend. Documentation only.
+
 ### Changed — docs name the platform library as the effect's handler
 
 The README and crate docs no longer say photo-picker-app's own XAML handler

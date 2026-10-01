@@ -199,14 +199,13 @@ escape hatch, used deliberately and visibly.
 ### 7.4 Migration
 
 - `photo-picker-app` drops its four per-backend `files.open` handlers and uses
-  the platform library, becoming the second consumer. *Compose, Qt and XAML
-  done* (their handlers removed; SwiftUI never had one): the app claims no
-  kinds, so once each backend's library existed the router sent `files.open`
-  there and the app's handler was never reached. Flutter's library exists
-  too (§7.7); photo-picker's Flutter handler likewise claims no kinds, so
-  `files.open` no longer reaches it, and removing it (with its
-  `file_selector` `[host_assets]` coordinate, now redundant) is the
-  follow-up.
+  the platform library, becoming the second consumer. *Done* (Compose, Qt,
+  XAML and Flutter handlers removed; SwiftUI never had one): the app claims
+  no kinds, so once each backend's library existed the router sent
+  `files.open` there and the app's handler was never reached. The Flutter
+  handler's `file_selector` `[host_assets]` coordinate went with it, since
+  every generated Flutter project pins `file_selector` for the library
+  (§7.7). The app now carries no host code at all.
 - Engram's `importAnki` / `exportAnki` can later become `files.open` /
   `files.save` plus Rust-side parsing, which removes about 1,300 lines of
   per-backend handler code. That is a separate change.
@@ -398,8 +397,8 @@ Kotlin file. What differs is how Dart and Flutter shape the rest:
   lockfile, so its platform packages (`file_selector_linux` and so on) resolve
   within 1.0.4's own ranges at `pub get`. A package's `[host_assets]`
   coordinate for a package the project already declares is left out, because
-  YAML refuses a duplicate key: Engram's and photo-picker's
-  `file_selector: '>=1.0.0 <2.0.0'` admit the pin. Extensions are passed bare,
+  YAML refuses a duplicate key: Engram's
+  `file_selector: '>=1.0.0 <2.0.0'` admits the pin. Extensions are passed bare,
   as one type group, or no group at all for "any file" (Linux refuses an
   empty group). A choice with no local path is a failure, not a cancel.
 - **Files through libc, as Qt and SwiftUI do it.** dart:io cannot do what

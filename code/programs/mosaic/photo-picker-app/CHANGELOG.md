@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed — the Flutter `files.open` handler (UI87 §7.4)
+
+`host/flutter/PhotoPickerEffects.dart`, its `[host_effects]` file and handler
+entries, and the `file_selector` `[host_assets]` coordinate it needed are
+gone; the app now carries no host code at all. Mosaic's Flutter platform
+library (UI87 §7.7) answers `files.open` for every Flutter app, and this app
+claims no effect kinds, so the router sent `files.open` to the library and
+the handler was never reached. Every generated Flutter project pins
+`file_selector` for the library, so the coordinate was redundant. Visible
+differences: the dialog's filter is labelled "Files" rather than "Images",
+and its button uses the platform default rather than "Pick"; the library's
+failure messages are generic; and on Android and iOS the effect now fails
+with "files.open is not available on this platform yet" (until UI89) instead
+of trying `file_selector`'s picker. The smoke test (3 tests) asserts the manifest
+declares no handler or host asset and that `host/` is gone. UI59 §13 is
+marked retired and UI87 §7.4 is done.
+
 ### Removed — the XAML `files.open` handler (UI87 §7.4)
 
 `host/xaml/PhotoPickerEffects.cs` and its `[host_effects]` file and handler
