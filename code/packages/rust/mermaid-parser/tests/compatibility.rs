@@ -179,7 +179,20 @@ fn pinned_treemap_subset_corpus_parses_to_hierarchy_ir() {
         let source = fixture["source"].as_str().expect("fixture source");
         let diagram = parse_treemap(source)
             .unwrap_or_else(|error| panic!("treemap fixture {name} failed: {error}"));
-        assert!(!diagram.nodes.is_empty());
+        if name == "empty" {
+            assert!(diagram.nodes.is_empty());
+        } else {
+            assert!(!diagram.nodes.is_empty());
+        }
+    }
+    for fixture in corpus["invalid"].as_array().expect("invalid fixture array") {
+        let name = fixture["name"].as_str().expect("fixture name");
+        let source = fixture["source"].as_str().expect("fixture source");
+        let error = match parse_treemap(source) {
+            Ok(_) => panic!("invalid treemap fixture {name} parsed"),
+            Err(error) => error,
+        };
+        assert!(error.message.contains("Multiple root nodes"));
     }
 }
 

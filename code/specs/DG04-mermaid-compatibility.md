@@ -522,7 +522,9 @@ browser-only responsive resizing remains outside the backend-neutral contract.
 The initial Mermaid 11.16.1 Treemap slice recognizes both `treemap` and
 `treemap-beta` and parses quoted parent and leaf nodes, indentation hierarchy,
 colon or comma numeric values, class selectors, titles, and accessibility
-metadata into dedicated hierarchy IR. Deterministic alternating partitions
+metadata into dedicated hierarchy IR. Empty documents match the upstream
+grammar, while semantic validation rejects a second unindented root with the
+pinned Mermaid diagnostic. Deterministic alternating partitions
 lower through backend-neutral rectangles and glyph runs, with native
 Metal-to-PNG validation. `classDef` declarations are grammar-accepted but their
 style bodies, D3 value formats, configuration overrides, and theme-exact color
