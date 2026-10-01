@@ -58,6 +58,7 @@ it("pins Telugu's pre-A1 writing ladder", () => {
     ["TE-S01-dictation", "dictation-transcription"],
     ["TE-S116-letter-da", "observe-trace"],
     ["TE-S155-letter-ttha", "observe-trace"],
+    ["TE-S160-letter-pha", "observe-trace"],
     ["TE-S139-letter-ddha", "observe-trace"],
     ["TE-S126-letter-nna", "observe-trace"],
     ["TE-S130-letter-tha", "observe-trace"],

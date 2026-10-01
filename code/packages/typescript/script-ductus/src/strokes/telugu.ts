@@ -475,6 +475,83 @@ export const entries: DuctusEntry[] = [
     },
   ],
   [
+    "telugu:ఫ",
+    {
+      script: "telugu",
+      glyph: "ఫ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "sweep left across the upper-left curve",
+              path: [
+                { x: 360, y: 90 }, { x: 325, y: 125 },
+                { x: 290, y: 170 }, { x: 250, y: 215 },
+                { x: 210, y: 245 }, { x: 165, y: 260 },
+                { x: 120, y: 255 }, { x: 80, y: 230 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "turn right around the lower-left bowl",
+              path: [
+                { x: 65, y: 205 }, { x: 55, y: 150 },
+                { x: 65, y: 95 }, { x: 95, y: 50 },
+                { x: 140, y: 25 }, { x: 195, y: 25 },
+                { x: 245, y: 50 }, { x: 285, y: 90 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "sweep upward around the broad right bowl",
+              path: [
+                { x: 340, y: 45 }, { x: 395, y: 20 },
+                { x: 455, y: 15 }, { x: 515, y: 30 },
+                { x: 565, y: 65 }, { x: 605, y: 115 },
+                { x: 625, y: 180 }, { x: 625, y: 245 },
+                { x: 605, y: 315 }, { x: 565, y: 375 },
+                { x: 515, y: 420 }, { x: 465, y: 450 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "curl upward through the separate top flourish",
+              path: [
+                { x: 85, y: 570 }, { x: 105, y: 520 },
+                { x: 140, y: 470 }, { x: 185, y: 440 },
+                { x: 230, y: 445 }, { x: 275, y: 480 },
+                { x: 320, y: 535 }, { x: 370, y: 595 },
+                { x: 425, y: 650 }, { x: 480, y: 690 },
+                { x: 525, y: 700 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "draw the lower stem downward",
+              path: [
+                { x: 325, y: 12 }, { x: 325, y: -32 },
+                { x: 325, y: -78 }, { x: 325, y: -120 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguLetterSource("ఫ"),
+    },
+  ],
+  [
     "telugu:ణ",
     {
       script: "telugu",
