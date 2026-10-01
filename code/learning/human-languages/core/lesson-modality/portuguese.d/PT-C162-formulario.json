@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C162-formulario",
+    "language": "portuguese",
+    "chapter": 162,
+    "sequence": 8540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5bc88f7ec61e0d1a"
+  },
+  "findings": []
+}

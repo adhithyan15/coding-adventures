@@ -1,0 +1,11 @@
+{
+  "id": "PT-C157-campainha",
+  "pathSegment": "PT-PATH-157-COISAS157",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-157-COISAS157",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "language": "portuguese",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:f70781eaa3e8f545",
+  "lessonIds": [
+    "PT-C164-relvado",
+    "PT-C164-caminho",
+    "PT-C164-planicie",
+    "PT-C164-seixo",
+    "PT-C164-terra",
+    "PT-R164-first-pass-words-from-chapters-156-159",
+    "PT-R164-second-pass-words-from-chapters-160-164"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "portuguese/narration/ch164.txt",
+  "json": "portuguese/narration/ch164.json",
+  "textHash": "fnv1a64:7273e19d71e5668e",
+  "jsonHash": "fnv1a64:3f1eb067567935f7",
+  "findings": []
+}

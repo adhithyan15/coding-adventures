@@ -1,0 +1,19 @@
+{
+  "chapter": 147,
+  "title": "To replace, To blush, To bleed, To make a mistake, To put up with",
+  "label": "ch:pt-to-replace-to-blush-to-bleed-to-make-a-mistake-to-put-up-with",
+  "canDo": "I can say to replace, to blush, to bleed, to make a mistake and to put up with.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C147-aguentar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 147: I can say to replace, to blush, to bleed, to make a mistake and to put up with.",
+    "assesses": [
+      "PT-LEX-C147-VERBOS147-03",
+      "PT-LEX-C147-VERBOS147-04",
+      "PT-LEX-C147-VERBOS147-05"
+    ]
+  }
+}

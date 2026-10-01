@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:89be4a9c18b2e612",
+  "lessonIds": [
+    "PT-C162-divida",
+    "PT-C162-imposto",
+    "PT-C162-formulario",
+    "PT-C162-envelope",
+    "PT-C162-encomenda"
+  ],
+  "tex": "portuguese/book/chapters/ch162-debt-tax-form-envelope-parcel.tex"
+}

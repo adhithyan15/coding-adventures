@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-168-COISAS168",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an octopus, lettuce, spinach, a pumpkin and a pea.",
+  "prerequisites": []
+}

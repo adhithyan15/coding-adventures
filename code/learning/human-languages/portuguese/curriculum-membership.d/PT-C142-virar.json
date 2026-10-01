@@ -1,0 +1,11 @@
+{
+  "id": "PT-C142-virar",
+  "pathSegment": "PT-PATH-142-VERBOS142",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-142-VERBOS142",
+      "order": 2
+    }
+  ]
+}

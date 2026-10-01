@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:76809ba748feec41",
+  "lessonIds": [
+    "PT-C141-acompanhar",
+    "PT-C141-acrescentar",
+    "PT-C141-anunciar",
+    "PT-C141-aparecer",
+    "PT-C141-aplaudir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch141.txt",
+  "json": "portuguese/narration/ch141.json",
+  "textHash": "fnv1a64:8b0b741dce8f0e38",
+  "jsonHash": "fnv1a64:788ecb117fc77acc",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C148-figado",
+  "pathSegment": "PT-PATH-148-SAUDE148",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-148-SAUDE148",
+      "order": 3
+    }
+  ]
+}

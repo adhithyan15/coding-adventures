@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 143,
+  "sourceHash": "fnv1a64:9a527f1d5034f752",
+  "lessonIds": [
+    "PT-C143-propor",
+    "PT-C143-apanhar",
+    "PT-C143-alcancar",
+    "PT-C143-devolver",
+    "PT-C143-reconhecer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch143.txt",
+  "json": "portuguese/narration/ch143.json",
+  "textHash": "fnv1a64:8c97d25aa33bb2aa",
+  "jsonHash": "fnv1a64:f470733f78421bb0",
+  "findings": []
+}

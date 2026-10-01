@@ -1,0 +1,11 @@
+{
+  "id": "PT-C145-perseguir",
+  "pathSegment": "PT-PATH-145-VERBOS145",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-145-VERBOS145",
+      "order": 1
+    }
+  ]
+}

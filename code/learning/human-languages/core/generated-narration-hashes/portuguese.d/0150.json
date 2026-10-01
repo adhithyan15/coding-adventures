@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:ce7bfb5da727242a",
+  "lessonIds": [
+    "PT-C150-raramente",
+    "PT-C150-seguir",
+    "PT-C150-finalmente",
+    "PT-C150-partir-de-agora",
+    "PT-C150-ainda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch150.txt",
+  "json": "portuguese/narration/ch150.json",
+  "textHash": "fnv1a64:fcb1cdc91fc83171",
+  "jsonHash": "fnv1a64:c5515356c15829ae",
+  "findings": []
+}

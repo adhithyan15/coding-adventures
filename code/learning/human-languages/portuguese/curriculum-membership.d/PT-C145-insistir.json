@@ -1,0 +1,11 @@
+{
+  "id": "PT-C145-insistir",
+  "pathSegment": "PT-PATH-145-VERBOS145",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-145-VERBOS145",
+      "order": 2
+    }
+  ]
+}

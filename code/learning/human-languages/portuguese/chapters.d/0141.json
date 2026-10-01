@@ -1,0 +1,19 @@
+{
+  "chapter": 141,
+  "title": "To go with, To add, To announce, To appear, To applaud",
+  "label": "ch:pt-to-go-with-to-add-to-announce-to-appear-to-applaud",
+  "canDo": "I can say to go with, to add, to announce, to appear and to applaud.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C141-aplaudir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 141: I can say to go with, to add, to announce, to appear and to applaud.",
+    "assesses": [
+      "PT-LEX-C141-VERBOS141-03",
+      "PT-LEX-C141-VERBOS141-04",
+      "PT-LEX-C141-VERBOS141-05"
+    ]
+  }
+}

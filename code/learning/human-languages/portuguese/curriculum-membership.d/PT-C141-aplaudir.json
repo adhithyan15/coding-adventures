@@ -1,0 +1,11 @@
+{
+  "id": "PT-C141-aplaudir",
+  "pathSegment": "PT-PATH-141-VERBOS141",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-141-VERBOS141",
+      "order": 4
+    }
+  ]
+}

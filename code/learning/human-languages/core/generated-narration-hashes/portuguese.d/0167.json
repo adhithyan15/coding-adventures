@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:4ae21ed865fe2898",
+  "lessonIds": [
+    "PT-C167-carrinho",
+    "PT-C167-cesto",
+    "PT-C167-lista",
+    "PT-C167-marca",
+    "PT-C167-qualidade"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch167.txt",
+  "json": "portuguese/narration/ch167.json",
+  "textHash": "fnv1a64:af668c90c7feb302",
+  "jsonHash": "fnv1a64:4ee610946bf144ee",
+  "findings": []
+}

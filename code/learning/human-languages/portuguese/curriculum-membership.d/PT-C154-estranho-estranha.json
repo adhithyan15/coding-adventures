@@ -1,0 +1,11 @@
+{
+  "id": "PT-C154-estranho-estranha",
+  "pathSegment": "PT-PATH-154-QUAL154",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-154-QUAL154",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:3fc17ba0a32fe810",
+  "lessonIds": [
+    "PT-C161-possibilidade",
+    "PT-C161-resultado",
+    "PT-C161-diferenca",
+    "PT-C161-exemplo",
+    "PT-C161-verdade"
+  ],
+  "tex": "portuguese/book/chapters/ch161-possibility-result-difference-example-truth.tex"
+}

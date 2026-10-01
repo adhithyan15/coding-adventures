@@ -1,0 +1,11 @@
+{
+  "id": "PT-C139-continuar",
+  "pathSegment": "PT-PATH-139-VERBOS139",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-139-VERBOS139",
+      "order": 2
+    }
+  ]
+}

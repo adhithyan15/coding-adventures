@@ -1,0 +1,21 @@
+{
+  "language": "portuguese",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:63ed0bbac147a577",
+  "lessonIds": [
+    "PT-C170-empresa",
+    "PT-C170-colega",
+    "PT-C170-salario",
+    "PT-C170-reuniao",
+    "PT-C170-contrato",
+    "PT-R170-first-pass-words-from-chapters-165-167",
+    "PT-R170-second-pass-words-from-chapters-168-170"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "portuguese/narration/ch170.txt",
+  "json": "portuguese/narration/ch170.json",
+  "textHash": "fnv1a64:9e22d63ff72c0620",
+  "jsonHash": "fnv1a64:077337a8df1896f7",
+  "findings": []
+}

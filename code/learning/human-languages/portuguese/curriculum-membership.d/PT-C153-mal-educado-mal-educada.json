@@ -1,0 +1,11 @@
+{
+  "id": "PT-C153-mal-educado-mal-educada",
+  "pathSegment": "PT-PATH-153-QUAL153",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-153-QUAL153",
+      "order": 3
+    }
+  ]
+}

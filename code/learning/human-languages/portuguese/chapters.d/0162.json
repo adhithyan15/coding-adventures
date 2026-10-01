@@ -1,0 +1,19 @@
+{
+  "chapter": 162,
+  "title": "Debt, Tax, Form, Envelope, Parcel",
+  "label": "ch:pt-debt-tax-form-envelope-parcel",
+  "canDo": "I can say a debt, a tax, a form, an envelope and a parcel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C162-encomenda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 162: I can say a debt, a tax, a form, an envelope and a parcel.",
+    "assesses": [
+      "PT-LEX-C162-COISAS162-03",
+      "PT-LEX-C162-COISAS162-04",
+      "PT-LEX-C162-COISAS162-05"
+    ]
+  }
+}

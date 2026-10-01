@@ -1,0 +1,11 @@
+{
+  "id": "PT-C146-votar",
+  "pathSegment": "PT-PATH-146-VERBOS146",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-146-VERBOS146",
+      "order": 2
+    }
+  ]
+}

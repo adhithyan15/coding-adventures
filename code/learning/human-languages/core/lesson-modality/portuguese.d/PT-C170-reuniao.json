@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C170-reuniao",
+    "language": "portuguese",
+    "chapter": 170,
+    "sequence": 9140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ea8b251ff6f6dee"
+  },
+  "findings": []
+}

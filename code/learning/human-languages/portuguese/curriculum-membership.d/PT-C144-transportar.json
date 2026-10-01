@@ -1,0 +1,11 @@
+{
+  "id": "PT-C144-transportar",
+  "pathSegment": "PT-PATH-144-VERBOS144",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-144-VERBOS144",
+      "order": 2
+    }
+  ]
+}

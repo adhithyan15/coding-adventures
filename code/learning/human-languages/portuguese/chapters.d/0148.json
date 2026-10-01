@@ -1,0 +1,19 @@
+{
+  "chapter": 148,
+  "title": "Health, Brain, Lung, Liver, Kidney",
+  "label": "ch:pt-health-brain-lung-liver-kidney",
+  "canDo": "I can say health, the brain, a lung, the liver and a kidney.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PT-C148-rim",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 148: I can say health, the brain, a lung, the liver and a kidney.",
+    "assesses": [
+      "PT-LEX-C148-SAUDE148-03",
+      "PT-LEX-C148-SAUDE148-04",
+      "PT-LEX-C148-SAUDE148-05"
+    ]
+  }
+}

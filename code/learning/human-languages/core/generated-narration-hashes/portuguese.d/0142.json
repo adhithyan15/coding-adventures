@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:fdc281050290d171",
+  "lessonIds": [
+    "PT-C142-evitar",
+    "PT-C142-atirar",
+    "PT-C142-virar",
+    "PT-C142-aproveitar",
+    "PT-C142-imaginar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch142.txt",
+  "json": "portuguese/narration/ch142.json",
+  "textHash": "fnv1a64:b868a4ff28499b21",
+  "jsonHash": "fnv1a64:700dcbaf02d94df2",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C150-partir-de-agora",
+    "language": "portuguese",
+    "chapter": 150,
+    "sequence": 7760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f5c553ac83aa8889"
+  },
+  "findings": []
+}

@@ -31,7 +31,10 @@ it("pins Portuguese lesson-content budgets", () =>
     // nodes: saying no and asking which, the past, the future and reading
     // practical texts. Twenty word lessons and two reviews, with no idiom,
     // sense or culture claim.
-    lessons: 676,
+    // 676 -> 849: the first Portuguese A2 vocabulary tranche, chapters
+    // 138-170. 165 word lessons (fifty verbs) and two reviews per run of at
+    // most nine chapters. No idiom, sense or culture claim.
+    lessons: 849,
     idioms: 7,
     senses: 7,
     cultureClaims: 11,

@@ -1,0 +1,15 @@
+{
+  "language": "portuguese",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:27767efc3454cb54",
+  "lessonIds": [
+    "PT-C170-empresa",
+    "PT-C170-colega",
+    "PT-C170-salario",
+    "PT-C170-reuniao",
+    "PT-C170-contrato",
+    "PT-R170-first-pass-words-from-chapters-165-167",
+    "PT-R170-second-pass-words-from-chapters-168-170"
+  ],
+  "tex": "portuguese/book/chapters/ch170-company-colleague-salary-meeting-contract.tex"
+}

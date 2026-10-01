@@ -1,0 +1,19 @@
+{
+  "chapter": 165,
+  "title": "Leather, Metal, Brick, Sack, Thread",
+  "label": "ch:pt-leather-metal-brick-sack-thread",
+  "canDo": "I can say leather, metal, a brick, a sack and a thread.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C165-fio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 165: I can say leather, metal, a brick, a sack and a thread.",
+    "assesses": [
+      "PT-LEX-C165-COISAS165-03",
+      "PT-LEX-C165-COISAS165-04",
+      "PT-LEX-C165-COISAS165-05"
+    ]
+  }
+}

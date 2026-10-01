@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:2c15372d27ff3a46",
+  "lessonIds": [
+    "PT-C158-mosquito",
+    "PT-C158-sociedade",
+    "PT-C158-governo",
+    "PT-C158-lei",
+    "PT-C158-tribunal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch158.txt",
+  "json": "portuguese/narration/ch158.json",
+  "textHash": "fnv1a64:78845bd3f1f4017c",
+  "jsonHash": "fnv1a64:0d9ba6fec4004229",
+  "findings": []
+}

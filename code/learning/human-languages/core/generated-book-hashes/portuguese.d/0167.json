@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:4f74d97fca924165",
+  "lessonIds": [
+    "PT-C167-carrinho",
+    "PT-C167-cesto",
+    "PT-C167-lista",
+    "PT-C167-marca",
+    "PT-C167-qualidade"
+  ],
+  "tex": "portuguese/book/chapters/ch167-trolley-basket-list-brand-quality.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C155-honesto-honesta",
+  "pathSegment": "PT-PATH-155-QUAL155",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-155-QUAL155",
+      "order": 1
+    }
+  ]
+}

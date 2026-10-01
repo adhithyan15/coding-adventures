@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:366dc181bdb7f307",
+  "lessonIds": [
+    "PT-C168-polvo",
+    "PT-C168-alface",
+    "PT-C168-espinafres",
+    "PT-C168-abobora",
+    "PT-C168-ervilha"
+  ],
+  "tex": "portuguese/book/chapters/ch168-octopus-lettuce-spinach-pumpkin-pea.tex"
+}

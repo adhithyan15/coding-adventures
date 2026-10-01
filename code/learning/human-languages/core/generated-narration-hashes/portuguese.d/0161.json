@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:c8c8d9c4c1db1896",
+  "lessonIds": [
+    "PT-C161-possibilidade",
+    "PT-C161-resultado",
+    "PT-C161-diferenca",
+    "PT-C161-exemplo",
+    "PT-C161-verdade"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch161.txt",
+  "json": "portuguese/narration/ch161.json",
+  "textHash": "fnv1a64:e76fb5d11d8af9b7",
+  "jsonHash": "fnv1a64:09042577f0a23cb4",
+  "findings": []
+}

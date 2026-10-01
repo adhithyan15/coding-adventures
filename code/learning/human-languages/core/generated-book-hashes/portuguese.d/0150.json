@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:67374cf4ddbeb13c",
+  "lessonIds": [
+    "PT-C150-raramente",
+    "PT-C150-seguir",
+    "PT-C150-finalmente",
+    "PT-C150-partir-de-agora",
+    "PT-C150-ainda"
+  ],
+  "tex": "portuguese/book/chapters/ch150-rarely-then-finally-from-now-on-still.tex"
+}

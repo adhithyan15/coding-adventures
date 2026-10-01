@@ -1,0 +1,11 @@
+{
+  "id": "PT-C165-saco",
+  "pathSegment": "PT-PATH-165-COISAS165",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-165-COISAS165",
+      "order": 3
+    }
+  ]
+}

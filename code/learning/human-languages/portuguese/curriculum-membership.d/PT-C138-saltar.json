@@ -1,0 +1,11 @@
+{
+  "id": "PT-C138-saltar",
+  "pathSegment": "PT-PATH-138-VERBOS138",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-138-VERBOS138",
+      "order": 2
+    }
+  ]
+}

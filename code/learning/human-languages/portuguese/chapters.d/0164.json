@@ -1,0 +1,19 @@
+{
+  "chapter": 164,
+  "title": "Lawn, Path, Plain, Pebble, Earth",
+  "label": "ch:pt-lawn-path-plain-pebble-earth",
+  "canDo": "I can say a lawn, a path, a plain, a pebble and earth.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-R164-second-pass-words-from-chapters-160-164",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 164: I can say a lawn, a path, a plain, a pebble and earth.",
+    "assesses": [
+      "PT-LEX-C164-COISAS164-03",
+      "PT-LEX-C164-COISAS164-04",
+      "PT-LEX-C164-COISAS164-05"
+    ]
+  }
+}

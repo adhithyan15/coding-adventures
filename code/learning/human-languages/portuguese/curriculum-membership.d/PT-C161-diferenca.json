@@ -1,0 +1,11 @@
+{
+  "id": "PT-C161-diferenca",
+  "pathSegment": "PT-PATH-161-COISAS161",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-161-COISAS161",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:5fc4e3b6ac20098a",
+  "lessonIds": [
+    "PT-C152-portanto",
+    "PT-C152-de-qualquer-maneira",
+    "PT-C152-embora",
+    "PT-C152-apesar-de",
+    "PT-C152-infelizmente"
+  ],
+  "tex": "portuguese/book/chapters/ch152-therefore-anyway-although-despite-unfortunately.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C149-ansiedade",
+  "pathSegment": "PT-PATH-149-SAUDE149",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-149-SAUDE149",
+      "order": 1
+    }
+  ]
+}

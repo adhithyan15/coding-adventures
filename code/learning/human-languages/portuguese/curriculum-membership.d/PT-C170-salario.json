@@ -1,0 +1,11 @@
+{
+  "id": "PT-C170-salario",
+  "pathSegment": "PT-PATH-170-TRAB170",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-170-TRAB170",
+      "order": 2
+    }
+  ]
+}

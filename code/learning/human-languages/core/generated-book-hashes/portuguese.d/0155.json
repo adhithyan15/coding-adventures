@@ -1,0 +1,15 @@
+{
+  "language": "portuguese",
+  "chapter": 155,
+  "sourceHash": "fnv1a64:1f0773d8997bf840",
+  "lessonIds": [
+    "PT-C155-pontual",
+    "PT-C155-honesto-honesta",
+    "PT-C155-paciente",
+    "PT-C155-generoso-generosa",
+    "PT-C155-preguicoso-preguicosa",
+    "PT-R155-first-pass-words-from-chapters-147-150",
+    "PT-R155-second-pass-words-from-chapters-151-155"
+  ],
+  "tex": "portuguese/book/chapters/ch155-punctual-honest-patient-generous-lazy.tex"
+}

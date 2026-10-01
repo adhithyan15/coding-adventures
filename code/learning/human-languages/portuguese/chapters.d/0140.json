@@ -1,0 +1,19 @@
+{
+  "chapter": 140,
+  "title": "To discuss, To promise, To allow, To forbid, To protect",
+  "label": "ch:pt-to-discuss-to-promise-to-allow-to-forbid-to-protect",
+  "canDo": "I can say to discuss, to promise, to allow, to forbid and to protect.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C140-proteger",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 140: I can say to discuss, to promise, to allow, to forbid and to protect.",
+    "assesses": [
+      "PT-LEX-C140-VERBOS140-03",
+      "PT-LEX-C140-VERBOS140-04",
+      "PT-LEX-C140-VERBOS140-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:d03f27f9c7fb8632",
+  "lessonIds": [
+    "PT-C152-portanto",
+    "PT-C152-de-qualquer-maneira",
+    "PT-C152-embora",
+    "PT-C152-apesar-de",
+    "PT-C152-infelizmente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch152.txt",
+  "json": "portuguese/narration/ch152.json",
+  "textHash": "fnv1a64:13f04e30fd793c5c",
+  "jsonHash": "fnv1a64:216d3d5b506abb46",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 142,
+  "title": "To avoid, To throw, To turn, To make the most of, To imagine",
+  "label": "ch:pt-to-avoid-to-throw-to-turn-to-make-the-most-of-to-imagine",
+  "canDo": "I can say to avoid, to throw, to turn, to make the most of and to imagine.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C142-imaginar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 142: I can say to avoid, to throw, to turn, to make the most of and to imagine.",
+    "assesses": [
+      "PT-LEX-C142-VERBOS142-03",
+      "PT-LEX-C142-VERBOS142-04",
+      "PT-LEX-C142-VERBOS142-05"
+    ]
+  }
+}

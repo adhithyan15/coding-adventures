@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:18955e131b676ccf",
+  "lessonIds": [
+    "PT-C144-calar-se",
+    "PT-C144-temer",
+    "PT-C144-transportar",
+    "PT-C144-matar",
+    "PT-C144-unir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch144.txt",
+  "json": "portuguese/narration/ch144.json",
+  "textHash": "fnv1a64:15f88c0ae168508f",
+  "jsonHash": "fnv1a64:87d41bb44d2d9e17",
+  "findings": []
+}

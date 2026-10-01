@@ -1,0 +1,19 @@
+{
+  "chapter": 166,
+  "title": "Connection, Return, Arrival, Departure, Destination",
+  "label": "ch:pt-connection-return-arrival-departure-destination",
+  "canDo": "I can say a connection, the return, arrival, departure and a destination.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C166-destino",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 166: I can say a connection, the return, arrival, departure and a destination.",
+    "assesses": [
+      "PT-LEX-C166-COISAS166-03",
+      "PT-LEX-C166-COISAS166-04",
+      "PT-LEX-C166-COISAS166-05"
+    ]
+  }
+}
