@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C194-salat",
+    "language": "russian",
+    "chapter": 194,
+    "sequence": 11280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca61464812a3accc"
+  },
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 181,
+  "sourceHash": "fnv1a64:4fecf6b9f842f5ad",
+  "lessonIds": [
+    "RU-C181-yanvar",
+    "RU-C181-fevral",
+    "RU-C181-mart",
+    "RU-C181-aprel",
+    "RU-C181-may",
+    "RU-R181-first-pass-words-from-chapters-173-176",
+    "RU-R181-second-pass-words-from-chapters-177-181"
+  ],
+  "tex": "russian/book/chapters/ch181-january-february-march-april-may.tex"
+}

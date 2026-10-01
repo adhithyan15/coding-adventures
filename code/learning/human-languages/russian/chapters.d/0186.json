@@ -1,0 +1,19 @@
+{
+  "chapter": 186,
+  "title": "Rude, Honest, Brave, Generous, Greedy",
+  "label": "ch:ru-rude-honest-brave-generous-greedy",
+  "canDo": "I can say rude, honest, brave, generous and greedy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "RU-C186-zhadnyy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 186: I can say rude, honest, brave, generous and greedy.",
+    "assesses": [
+      "RU-LEX-C186-KACH186-03",
+      "RU-LEX-C186-KACH186-04",
+      "RU-LEX-C186-KACH186-05"
+    ]
+  }
+}

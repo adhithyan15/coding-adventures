@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C190-kran",
+    "language": "russian",
+    "chapter": 190,
+    "sequence": 10900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad477f9ab7391a42"
+  },
+  "findings": []
+}

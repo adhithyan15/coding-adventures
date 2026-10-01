@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C178-trenirovatsya",
+    "language": "russian",
+    "chapter": 178,
+    "sequence": 10090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:768910a157a5ad37"
+  },
+  "findings": []
+}

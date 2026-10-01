@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:f22890f88e2d1b72",
+  "lessonIds": [
+    "RU-C177-obnimat",
+    "RU-C177-tselovat",
+    "RU-C177-sporit",
+    "RU-C177-ssoritsya",
+    "RU-C177-miritsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch177.txt",
+  "json": "russian/narration/ch177.json",
+  "textHash": "fnv1a64:f5d287c1ab26f7bd",
+  "jsonHash": "fnv1a64:90ed1ed434faef5f",
+  "findings": []
+}

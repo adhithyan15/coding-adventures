@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:cff759eab794bc18",
+  "lessonIds": [
+    "RU-C187-polnyy",
+    "RU-C187-glubokiy",
+    "RU-C187-rovnyy",
+    "RU-C187-kvadratnyy",
+    "RU-C187-ostryy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch187.txt",
+  "json": "russian/narration/ch187.json",
+  "textHash": "fnv1a64:bfedb7aababbdd78",
+  "jsonHash": "fnv1a64:0386047d7c177e8a",
+  "findings": []
+}

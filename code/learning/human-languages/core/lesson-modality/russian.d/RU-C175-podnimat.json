@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C175-podnimat",
+    "language": "russian",
+    "chapter": 175,
+    "sequence": 9950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d98e57679e35adf"
+  },
+  "findings": []
+}

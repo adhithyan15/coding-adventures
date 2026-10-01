@@ -1,0 +1,11 @@
+{
+  "id": "RU-C203-moneta",
+  "pathSegment": "RU-PATH-203-RABOTA203",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-203-RABOTA203",
+      "order": 4
+    }
+  ]
+}

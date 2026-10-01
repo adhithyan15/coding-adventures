@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:1a7d34d29cca5831",
+  "lessonIds": [
+    "RU-C175-tyanut",
+    "RU-C175-podnimat",
+    "RU-C175-vklyuchat",
+    "RU-C175-vyklyuchat",
+    "RU-C175-zazhigat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch175.txt",
+  "json": "russian/narration/ch175.json",
+  "textHash": "fnv1a64:32b0fddd7ddb25f1",
+  "jsonHash": "fnv1a64:00afd824b9596a8e",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:1249e0ddefb2e4df",
+  "lessonIds": [
+    "RU-C202-elektrik",
+    "RU-C202-santekhnik",
+    "RU-C202-lyotchik",
+    "RU-C202-moryak",
+    "RU-C202-rybak"
+  ],
+  "tex": "russian/book/chapters/ch202-electrician-plumber-pilot-sailor-fisherman.tex"
+}

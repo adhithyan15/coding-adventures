@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:102720cc99355ddf",
+  "lessonIds": [
+    "RU-C195-priroda",
+    "RU-C195-vetka",
+    "RU-C195-koren",
+    "RU-C195-roza",
+    "RU-C195-dub"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch195.txt",
+  "json": "russian/narration/ch195.json",
+  "textHash": "fnv1a64:e965d951df519caa",
+  "jsonHash": "fnv1a64:cd5b62a4ecf5d917",
+  "findings": []
+}

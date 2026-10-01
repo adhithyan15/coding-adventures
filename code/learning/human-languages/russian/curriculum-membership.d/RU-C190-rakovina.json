@@ -1,0 +1,11 @@
+{
+  "id": "RU-C190-rakovina",
+  "pathSegment": "RU-PATH-190-VESHCH190",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-190-VESHCH190",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 173,
+  "title": "To sew, To cut, To boil, To fry, To pour",
+  "label": "ch:ru-to-sew-to-cut-to-boil-to-fry-to-pour",
+  "canDo": "I can say to sew, to cut, to boil, to fry and to pour.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C173-nalivat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 173: I can say to sew, to cut, to boil, to fry and to pour.",
+    "assesses": [
+      "RU-LEX-C173-ACT173-03",
+      "RU-LEX-C173-ACT173-04",
+      "RU-LEX-C173-ACT173-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 188,
+  "title": "Useful, Harmful, Necessary, Possible, Complicated",
+  "label": "ch:ru-useful-harmful-necessary-possible-complicated",
+  "canDo": "I can say useful, harmful, necessary, possible and complicated.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "RU-C188-slozhnyy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 188: I can say useful, harmful, necessary, possible and complicated.",
+    "assesses": [
+      "RU-LEX-C188-KACH188-03",
+      "RU-LEX-C188-KACH188-04",
+      "RU-LEX-C188-KACH188-05"
+    ]
+  }
+}

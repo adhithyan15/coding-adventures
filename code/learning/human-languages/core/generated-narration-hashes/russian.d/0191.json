@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:03cd2412281a3216",
+  "lessonIds": [
+    "RU-C191-batareya",
+    "RU-C191-rozetka",
+    "RU-C191-provod",
+    "RU-C191-zaryadka",
+    "RU-C191-noutbuk"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch191.txt",
+  "json": "russian/narration/ch191.json",
+  "textHash": "fnv1a64:44cae4fd26d9d77c",
+  "jsonHash": "fnv1a64:a74c6eb21b79e0cd",
+  "findings": []
+}

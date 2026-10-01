@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-192-VESHCH192",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a newspaper, a magazine, a dictionary, a ruler and a folder.",
+  "prerequisites": []
+}

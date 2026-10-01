@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:fa96819041ccd5a6",
+  "lessonIds": [
+    "RU-C188-poleznyy",
+    "RU-C188-vrednyy",
+    "RU-C188-nuzhnyy",
+    "RU-C188-vozmozhnyy",
+    "RU-C188-slozhnyy"
+  ],
+  "tex": "russian/book/chapters/ch188-useful-harmful-necessary-possible-complicated.tex"
+}

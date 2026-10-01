@@ -1,0 +1,11 @@
+{
+  "id": "RU-C178-katatsya",
+  "pathSegment": "RU-PATH-178-ACT178",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-178-ACT178",
+      "order": 3
+    }
+  ]
+}

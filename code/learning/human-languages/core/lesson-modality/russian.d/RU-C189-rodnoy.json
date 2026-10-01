@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C189-rodnoy",
+    "language": "russian",
+    "chapter": 189,
+    "sequence": 10840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9130c7760515272"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C175-vyklyuchat",
+    "language": "russian",
+    "chapter": 175,
+    "sequence": 9970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:26a8f7a753175f90"
+  },
+  "findings": []
+}

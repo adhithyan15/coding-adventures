@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:34ca0d7272a58db9",
+  "lessonIds": [
+    "RU-C197-khobbi",
+    "RU-C197-vystavka",
+    "RU-C197-spektakl",
+    "RU-C197-gitara",
+    "RU-C197-pianino"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch197.txt",
+  "json": "russian/narration/ch197.json",
+  "textHash": "fnv1a64:d4a17c7b25450c57",
+  "jsonHash": "fnv1a64:10d71b38a87dd50e",
+  "findings": []
+}

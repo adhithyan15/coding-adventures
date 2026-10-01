@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:f061bebb77ef1225",
+  "lessonIds": [
+    "RU-C194-pelmeni",
+    "RU-C194-salat",
+    "RU-C194-kapusta",
+    "RU-C194-svyokla",
+    "RU-C194-gorokh"
+  ],
+  "tex": "russian/book/chapters/ch194-dumplings-salad-cabbage-beetroot-peas.tex"
+}

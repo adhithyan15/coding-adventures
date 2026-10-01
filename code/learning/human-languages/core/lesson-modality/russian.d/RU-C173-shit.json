@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C173-shit",
+    "language": "russian",
+    "chapter": 173,
+    "sequence": 9840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a187f9bfe49a2f73"
+  },
+  "findings": []
+}

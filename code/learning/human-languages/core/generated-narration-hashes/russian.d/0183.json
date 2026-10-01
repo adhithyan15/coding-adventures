@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 183,
+  "sourceHash": "fnv1a64:8aca7f532bb70163",
+  "lessonIds": [
+    "RU-C183-pereulok",
+    "RU-C183-trotuar",
+    "RU-C183-doroga",
+    "RU-C183-shosse",
+    "RU-C183-port"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch183.txt",
+  "json": "russian/narration/ch183.json",
+  "textHash": "fnv1a64:bee886ac5f2fdeba",
+  "jsonHash": "fnv1a64:26c875a36161f0bd",
+  "findings": []
+}

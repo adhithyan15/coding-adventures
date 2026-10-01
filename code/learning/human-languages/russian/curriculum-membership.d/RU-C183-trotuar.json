@@ -1,0 +1,11 @@
+{
+  "id": "RU-C183-trotuar",
+  "pathSegment": "RU-PATH-183-MESTO183",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-183-MESTO183",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 194,
+  "title": "Dumplings, Salad, Cabbage, Beetroot, Peas",
+  "label": "ch:ru-dumplings-salad-cabbage-beetroot-peas",
+  "canDo": "I can say dumplings, a salad, cabbage, beetroot and peas.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C194-gorokh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 194: I can say dumplings, a salad, cabbage, beetroot and peas.",
+    "assesses": [
+      "RU-LEX-C194-VESHCH194-03",
+      "RU-LEX-C194-VESHCH194-04",
+      "RU-LEX-C194-VESHCH194-05"
+    ]
+  }
+}

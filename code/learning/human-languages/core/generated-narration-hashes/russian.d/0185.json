@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:156165d04928849f",
+  "lessonIds": [
+    "RU-C185-prichina",
+    "RU-C185-tsel",
+    "RU-C185-rezultat",
+    "RU-C185-znachit",
+    "RU-C185-naprimer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch185.txt",
+  "json": "russian/narration/ch185.json",
+  "textHash": "fnv1a64:0ca9d5f973194cc2",
+  "jsonHash": "fnv1a64:60539aeed00421bc",
+  "findings": []
+}

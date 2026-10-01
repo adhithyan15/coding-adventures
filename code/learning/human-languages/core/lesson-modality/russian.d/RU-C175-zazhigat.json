@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C175-zazhigat",
+    "language": "russian",
+    "chapter": 175,
+    "sequence": 9980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:29e7a9d5607d833d"
+  },
+  "findings": []
+}

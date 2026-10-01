@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:20ad386f880defeb",
+  "lessonIds": [
+    "RU-C199-molodyozh",
+    "RU-C199-grazhdanin",
+    "RU-C199-inostranets",
+    "RU-C199-turist",
+    "RU-C199-tekst",
+    "RU-R199-first-pass-words-from-chapters-191-194",
+    "RU-R199-second-pass-words-from-chapters-195-199"
+  ],
+  "tex": "russian/book/chapters/ch199-young-people-citizen-foreigner-tourist-text.tex"
+}

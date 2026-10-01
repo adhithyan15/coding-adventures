@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C179-sinyak",
+    "language": "russian",
+    "chapter": 179,
+    "sequence": 10170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9157ada7739e64d"
+  },
+  "findings": []
+}

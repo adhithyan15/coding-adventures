@@ -1,0 +1,19 @@
+{
+  "chapter": 197,
+  "title": "Hobby, Exhibition, Play, Guitar, Piano",
+  "label": "ch:ru-hobby-exhibition-play-guitar-piano",
+  "canDo": "I can say a hobby, an exhibition, a play, a guitar and a piano.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C197-pianino",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 197: I can say a hobby, an exhibition, a play, a guitar and a piano.",
+    "assesses": [
+      "RU-LEX-C197-VESHCH197-03",
+      "RU-LEX-C197-VESHCH197-04",
+      "RU-LEX-C197-VESHCH197-05"
+    ]
+  }
+}

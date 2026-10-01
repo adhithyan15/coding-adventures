@@ -1,0 +1,19 @@
+{
+  "chapter": 185,
+  "title": "Reason, Goal, Result, That means, For example",
+  "label": "ch:ru-reason-goal-result-that-means-for-example",
+  "canDo": "I can say a reason, a goal, a result, that means and for example.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "RU-C185-naprimer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 185: I can say a reason, a goal, a result, that means and for example.",
+    "assesses": [
+      "RU-LEX-C185-PRICH185-03",
+      "RU-LEX-C185-PRICH185-04",
+      "RU-LEX-C185-PRICH185-05"
+    ]
+  }
+}

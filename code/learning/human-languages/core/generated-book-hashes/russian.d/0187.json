@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:356e4d1c5d90dbf1",
+  "lessonIds": [
+    "RU-C187-polnyy",
+    "RU-C187-glubokiy",
+    "RU-C187-rovnyy",
+    "RU-C187-kvadratnyy",
+    "RU-C187-ostryy"
+  ],
+  "tex": "russian/book/chapters/ch187-full-deep-even-square-sharp.tex"
+}

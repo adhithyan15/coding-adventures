@@ -1,0 +1,11 @@
+{
+  "id": "RU-C178-prygat",
+  "pathSegment": "RU-PATH-178-ACT178",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-178-ACT178",
+      "order": 2
+    }
+  ]
+}

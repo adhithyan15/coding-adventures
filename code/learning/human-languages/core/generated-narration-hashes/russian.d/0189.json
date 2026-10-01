@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:a785129bbed40a45",
+  "lessonIds": [
+    "RU-C189-chuzhoy",
+    "RU-C189-rodnoy",
+    "RU-C189-mestnyy",
+    "RU-C189-inostrannyy",
+    "RU-C189-russkiy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch189.txt",
+  "json": "russian/narration/ch189.json",
+  "textHash": "fnv1a64:22e82e8ddbb677e1",
+  "jsonHash": "fnv1a64:df2c8b7f342a9603",
+  "findings": []
+}

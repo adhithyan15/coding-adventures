@@ -1,0 +1,19 @@
+{
+  "chapter": 190,
+  "title": "Heavy curtain, Sink, Tap, Toilet, Shampoo",
+  "label": "ch:ru-heavy-curtain-sink-tap-toilet-shampoo",
+  "canDo": "I can say a heavy curtain, a sink, a tap, a toilet and shampoo.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-R190-second-pass-words-from-chapters-186-190",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 190: I can say a heavy curtain, a sink, a tap, a toilet and shampoo.",
+    "assesses": [
+      "RU-LEX-C190-VESHCH190-03",
+      "RU-LEX-C190-VESHCH190-04",
+      "RU-LEX-C190-VESHCH190-05"
+    ]
+  }
+}

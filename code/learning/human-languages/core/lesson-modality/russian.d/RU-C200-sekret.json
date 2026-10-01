@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C200-sekret",
+    "language": "russian",
+    "chapter": 200,
+    "sequence": 11760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a0372c4c3eaa846"
+  },
+  "findings": []
+}

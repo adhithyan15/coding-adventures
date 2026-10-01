@@ -1,0 +1,11 @@
+{
+  "id": "RU-C195-vetka",
+  "pathSegment": "RU-PATH-195-VESHCH195",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-195-VESHCH195",
+      "order": 1
+    }
+  ]
+}
