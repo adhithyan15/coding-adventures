@@ -178,6 +178,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TE-S157-letter-ba",
+      "sourceHash": "fnv1a64:c8ff99557a617a10",
+      "svgHash": "fnv1a64:2c0813c7b95a59f6",
+      "svg": "telugu/book/figures/TE-S157-letter-ba-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TE-S160-letter-pha",
       "sourceHash": "fnv1a64:fa0244b457ed26ec",
       "svgHash": "fnv1a64:aa25523cad144bbb",
