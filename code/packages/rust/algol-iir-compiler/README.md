@@ -254,7 +254,8 @@ changing expressions, and unknown conditional inputs still fail closed. A
 conditional identity copy may have a dynamic selector when both branches
 preserve the same unique forwarded selector. A boolean projection of the form
 `if selector then true else false` is also an exact selector copy, as is its
-complemented form `if not selector then false else true`.
+complemented form `if not selector then false else true`. Either literal branch
+may instead be the selector itself, yielding a one-sided guarded projection.
 Unknown selectors, unsupported selector or dependency writes, string targets, overflow,
 non-finite values, and loops that do not reach false within 4,096 evaluations
 fail closed.
