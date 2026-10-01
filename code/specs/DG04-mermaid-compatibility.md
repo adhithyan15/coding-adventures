@@ -543,6 +543,8 @@ overline, and line-through values. Decoration `currentColor` remains semantic
 until it resolves against the final label color. Auto, pixel, and percentage underline offsets follow the same
 backend-neutral geometry path. Normal, unitless,
 percentage, and pixel line heights flow through the same text layout path.
+Pixel and percentage first-line text indents likewise adjust the backend-neutral
+label line box before glyph shaping.
 All twelve `cScale`,
 `cScalePeer`, and `cScaleLabel` theme-variable slots
 also flow from init directives or YAML front matter through category-aware
