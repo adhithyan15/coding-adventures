@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:568f9427ffe24d75",
+  "sourceHash": "fnv1a64:88ea724917e63083",
   "lessons": [
     {
       "id": "TE-C04-dappu",
@@ -857,7 +857,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f650196d6ea8f2d3",
+      "sourceHash": "fnv1a64:1faf6b9a5c40a91e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -932,15 +932,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ప — copy what you see",
+          "title": "Writing: ప — four calm curves",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ప (pa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Watch the numbered filmstrip once before your pen moves. Movement 1 sweeps left across the upper part of the small bowl. Lift, then movement 2 turns around its lower half. Movement 3 makes the broad bowl on the right. Lift once more for movement 4, the small rising flourish above."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "Trace the same route slowly. This is one attested school-style order fitted to the printed shape here; Telugu handwriting varies, so keep the four clear movements instead of closing the small gaps."
             }
           ]
         },

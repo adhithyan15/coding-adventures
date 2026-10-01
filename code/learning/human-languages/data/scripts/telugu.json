@@ -3379,8 +3379,20 @@
       "components": [
         "ప  pa — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "sweep left across the upper-left curve",
+        "turn right around the lower-left bowl",
+        "sweep upward around the broad right bowl",
+        "curl upward through the separate top flourish"
+      ],
+      "strokeOrderNote": "Four numbered movements in four pen-down runs: movements 1 and 2 build the left bowl, movement 3 forms the broad right bowl, and movement 4 adds the separate top flourish.",
+      "penLifts": 3,
+      "strokeOrderSource": {
+        "url": "https://play.google.com/store/apps/details?id=com.sathishshanmugam.writetelugualphabets",
+        "citation": "Sathish Shanmugam, Write Telugu Alphabets, consonant ప packaged tracing guides res/drawable/dot_stroke_c_5_1_pa.png and res/drawable/line_stroke_c_5_1_pa.png, movements 1–4 (version 2.6)",
+        "accessed": "2026-10-01",
+        "variation": "The packaged guide separates the left bowl into two movements, gives the broad right bowl a third movement, and adds the top flourish last. The c_5_1 filename, its position before c_5_2 ఫ, and the pictured glyph agree that this guide teaches ప. The bundled Noto Sans Telugu outline tightens the joins between the printed bowls, so the filmstrip preserves the four attested school-style movement boundaries while fitting their centre lines to that outline."
+      }
     },
     {
       "glyph": "పా",
