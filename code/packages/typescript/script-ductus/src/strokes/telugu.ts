@@ -1045,6 +1045,70 @@ export const entries: DuctusEntry[] = [
     },
   ],
   [
+    "telugu:శ",
+    {
+      script: "telugu",
+      glyph: "శ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "loop around the broad lower-left bowl",
+              path: [
+                { x: 85, y: 190 }, { x: 90, y: 225 },
+                { x: 110, y: 260 }, { x: 145, y: 290 },
+                { x: 190, y: 310 }, { x: 240, y: 315 },
+                { x: 290, y: 305 }, { x: 340, y: 285 },
+                { x: 385, y: 255 }, { x: 420, y: 220 },
+                { x: 450, y: 180 }, { x: 465, y: 140 },
+                { x: 460, y: 95 }, { x: 440, y: 60 },
+                { x: 405, y: 35 }, { x: 365, y: 25 },
+                { x: 330, y: 35 }, { x: 305, y: 60 },
+                { x: 295, y: 90 }, { x: 275, y: 115 },
+                { x: 260, y: 145 }, { x: 250, y: 175 },
+                { x: 245, y: 205 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "sweep around the tall lower and right body",
+              path: [
+                { x: 245, y: 205 }, { x: 275, y: 225 },
+                { x: 310, y: 245 }, { x: 350, y: 260 },
+                { x: 390, y: 275 }, { x: 420, y: 300 },
+                { x: 430, y: 335 }, { x: 435, y: 375 },
+                { x: 425, y: 410 }, { x: 390, y: 440 },
+                { x: 350, y: 458 }, { x: 305, y: 460 },
+                { x: 260, y: 465 }, { x: 220, y: 475 },
+                { x: 190, y: 490 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "draw down and up through the separate upper chevron",
+              path: [
+                { x: 175, y: 570 }, { x: 190, y: 535 },
+                { x: 215, y: 490 }, { x: 245, y: 465 },
+                { x: 275, y: 465 }, { x: 320, y: 500 },
+                { x: 375, y: 535 }, { x: 405, y: 570 },
+                { x: 430, y: 605 }, { x: 455, y: 640 },
+                { x: 490, y: 670 }, { x: 530, y: 690 },
+                { x: 570, y: 690 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguLetterSource("శ"),
+    },
+  ],
+  [
     "telugu:ణ",
     {
       script: "telugu",

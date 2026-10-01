@@ -4883,8 +4883,19 @@
       "components": [
         "శ  śa — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "loop around the broad lower-left bowl",
+        "sweep around the tall lower and right body",
+        "draw down and up through the separate upper chevron"
+      ],
+      "strokeOrderNote": "Three numbered movements in three pen-down runs: movement 1 loops around the broad lower-left bowl, movement 2 sweeps around the tall lower and right body, and movement 3 draws the separate upper chevron.",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "url": "https://play.google.com/store/apps/details?id=com.banuchanderjj.tracer.telugu",
+        "citation": "AppChant, Telugu Alphabets Writing, consonant శ animated path guide encoded by LettersPointsTelugu::getAllPointsArrayForLetterTelugu_శ in version 3.8.05 (3805)",
+        "accessed": "2026-10-01",
+        "variation": "The packaged auto-trace data gives three ordered starts, paths, and ends. Its rotated శ.png atlas mapping and pictured glyph independently identify U+0C36 శ. The bundled Noto Sans Telugu outline rounds the printed joins differently, so the filmstrip preserves the three attested movement boundaries and directions while fitting their centre lines to that outline. Inspected XAPK SHA-256: 30c6e520a5b469cbe8d17568718bf75796987ea9596f69850eb921db2fe7bd57; libTracer.so SHA-256: 444511c98b69ada4de57900776945837c013da6a4fbfb21833c180d06f9c3ac5."
+      }
     },
     {
       "glyph": "శా",
