@@ -1402,6 +1402,24 @@ pub struct LayoutedEventModelDiagram {
 
 // HIERARCHY FAMILY
 #[derive(Clone, Debug, PartialEq)]
+pub struct TreemapTheme {
+    pub fills: Vec<String>,
+    pub strokes: Vec<String>,
+    pub labels: Vec<String>,
+}
+
+impl Default for TreemapTheme {
+    fn default() -> Self {
+        let fills = ["#dbeafe", "#dcfce7", "#fef3c7", "#fee2e2", "#e0e7ff"];
+        Self {
+            fills: (0..12).map(|index| fills[index % fills.len()].into()).collect(),
+            strokes: vec!["#475569".into(); 12],
+            labels: vec!["#0f172a".into(); 12],
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct TreemapConfig {
     pub use_max_width: bool,
     pub padding: f64,
@@ -1413,6 +1431,7 @@ pub struct TreemapConfig {
     pub value_font_size: f64,
     pub label_font_size: f64,
     pub value_format: String,
+    pub theme: TreemapTheme,
 }
 
 impl Default for TreemapConfig {
@@ -1428,6 +1447,7 @@ impl Default for TreemapConfig {
             value_font_size: 12.0,
             label_font_size: 14.0,
             value_format: ",".into(),
+            theme: TreemapTheme::default(),
         }
     }
 }
@@ -1458,6 +1478,7 @@ pub struct LayoutedTreemapNode {
     pub value: f64,
     pub depth: usize,
     pub has_children: bool,
+    pub palette_index: Option<usize>,
     pub x: f64,
     pub y: f64,
     pub width: f64,

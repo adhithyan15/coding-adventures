@@ -10,7 +10,7 @@ use diagram_ir::{
     RailroadDiagram, RailroadElementKind, RailroadExpression,
 };
 
-pub const VERSION: &str = "0.3.0";
+pub const VERSION: &str = "0.4.0";
 
 const PARENT_HEADER: f64 = 24.0;
 
@@ -232,12 +232,36 @@ pub fn layout_treemap(diagram: &TreemapDiagram, _canvas_width: f64) -> LayoutedT
         }
     }
 
+    let mut color_domain = HashMap::<String, usize>::new();
+    let mut next_color = 0usize;
+    for node in &diagram.nodes {
+        if children.get(&Some(node.id.as_str())).is_some_and(|children| !children.is_empty()) {
+            color_domain.entry(node.label.clone()).or_insert_with(|| {
+                let index = next_color;
+                next_color += 1;
+                index
+            });
+        }
+    }
+    let palette_indices = diagram.nodes.iter().map(|node| {
+        let key = node.parent_id.as_deref()
+            .and_then(|parent_id| diagram.nodes.iter().find(|candidate| candidate.id == parent_id))
+            .map_or(node.label.as_str(), |parent| parent.label.as_str());
+        let ordinal = *color_domain.entry(key.to_string()).or_insert_with(|| {
+            let index = next_color;
+            next_color += 1;
+            index
+        });
+        ordinal.checked_sub(1).map(|index| index % 12)
+    }).collect::<Vec<_>>();
+
     let mut nodes = Vec::new();
     let roots = children.get(&None).cloned().unwrap_or_default();
     layout_siblings(
         diagram,
         &children,
         &totals,
+        &palette_indices,
         &roots,
         0,
         outer_padding,
@@ -294,6 +318,7 @@ fn layout_siblings(
     diagram: &TreemapDiagram,
     children: &HashMap<Option<&str>, Vec<usize>>,
     totals: &[f64],
+    palette_indices: &[Option<usize>],
     siblings: &[usize],
     depth: usize,
     x: f64,
@@ -339,6 +364,7 @@ fn layout_siblings(
             value: totals[*index],
             depth,
             has_children: child_indices.is_some_and(|children| !children.is_empty()),
+            palette_index: palette_indices[*index],
             x: node_x + node_gap,
             y: node_y + node_gap,
             width: (node_width - node_gap * 2.0).max(0.0),
@@ -351,6 +377,7 @@ fn layout_siblings(
                 diagram,
                 children,
                 totals,
+                palette_indices,
                 child_indices,
                 depth + 1,
                 node_x + node_gap * 2.0,
