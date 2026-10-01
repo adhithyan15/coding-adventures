@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 21107,
+    "totalLessons": 21396,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -33,14 +33,14 @@
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 156,
-    "forwardReferences": 1027,
+    "forwardReferences": 1034,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 94,
     "chapterGateCleanTracks": 10,
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 231,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 19326,
+    "drivableLessons": 19615,
     "drivablePercent": 92,
     "chaptersWithoutDrivablePrefix": 275,
     "unexplainedModalityOverrides": 0
@@ -5954,7 +5954,62 @@
           197,
           198,
           199,
-          200
+          200,
+          201,
+          202,
+          203,
+          204,
+          205,
+          206,
+          207,
+          208,
+          209,
+          210,
+          211,
+          212,
+          213,
+          214,
+          215,
+          216,
+          217,
+          218,
+          219,
+          220,
+          221,
+          222,
+          223,
+          224,
+          225,
+          226,
+          227,
+          228,
+          229,
+          230,
+          231,
+          232,
+          233,
+          234,
+          235,
+          236,
+          237,
+          238,
+          239,
+          240,
+          241,
+          242,
+          243,
+          244,
+          245,
+          246,
+          247,
+          248,
+          249,
+          250,
+          251,
+          252,
+          253,
+          254,
+          255
         ],
         "bookChapters": [
           1,
@@ -6156,7 +6211,62 @@
           197,
           198,
           199,
-          200
+          200,
+          201,
+          202,
+          203,
+          204,
+          205,
+          206,
+          207,
+          208,
+          209,
+          210,
+          211,
+          212,
+          213,
+          214,
+          215,
+          216,
+          217,
+          218,
+          219,
+          220,
+          221,
+          222,
+          223,
+          224,
+          225,
+          226,
+          227,
+          228,
+          229,
+          230,
+          231,
+          232,
+          233,
+          234,
+          235,
+          236,
+          237,
+          238,
+          239,
+          240,
+          241,
+          242,
+          243,
+          244,
+          245,
+          246,
+          247,
+          248,
+          249,
+          250,
+          251,
+          252,
+          253,
+          254,
+          255
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -9526,9 +9636,9 @@
       {
         "language": "portuguese",
         "status": "version-2",
-        "lessonCount": 1007,
+        "lessonCount": 1296,
         "versions": {
-          "2": 1007
+          "2": 1296
         }
       },
       {
@@ -10405,8 +10515,8 @@
       },
       {
         "language": "portuguese",
-        "bookChapters": 200,
-        "declaredChapters": 200,
+        "bookChapters": 255,
+        "declaredChapters": 255,
         "missingCapability": 0,
         "findings": 1,
         "clean": false
@@ -10469,8 +10579,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 4243,
-      "declaredChapters": 4243,
+      "bookChapters": 4298,
+      "declaredChapters": 4298,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 94,
@@ -10482,10 +10592,10 @@
     }
   },
   "levels": {
-    "totalLessons": 21107,
+    "totalLessons": 21396,
     "byLevel": {
-      "pre-A1": 8950,
-      "A1": 11017,
+      "pre-A1": 8965,
+      "A1": 11291,
       "A2": 1056,
       "B1": 39,
       "B2": 17,
@@ -10722,10 +10832,10 @@
       },
       {
         "language": "portuguese",
-        "lessonCount": 1007,
+        "lessonCount": 1296,
         "byLevel": {
-          "pre-A1": 341,
-          "A1": 626,
+          "pre-A1": 356,
+          "A1": 900,
           "A2": 40,
           "B1": 0,
           "B2": 0,
@@ -11407,8 +11517,8 @@
       },
       {
         "language": "portuguese",
-        "lessonCount": 1007,
-        "measurable": 1007,
+        "lessonCount": 1296,
+        "measurable": 1296,
         "unmeasurable": 0,
         "lessonViolations": 0,
         "chapterViolations": 3
@@ -11963,7 +12073,7 @@
           "language": "portuguese",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 1007,
+          "lessonCount": 1296,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -65638,6 +65748,678 @@
           "R4"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C188-COISAS188-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C188-poltrona",
+        "introducedAt": 938,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C188-COISAS188-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C188-pijama",
+        "introducedAt": 939,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "PT-LEX-C188-COISAS188-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C188-botao",
+        "introducedAt": 940,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "PT-LEX-C191-COISAS191-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C191-idoso",
+        "introducedAt": 954,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C191-COISAS191-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C191-gemeo-a-gemea",
+        "introducedAt": 955,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C191-COISAS191-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C191-sogra",
+        "introducedAt": 956,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C191-COISAS191-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C191-sogro",
+        "introducedAt": 957,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C192-COISAS192-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C192-mentira",
+        "introducedAt": 958,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C194-COISAS194-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C194-fonte",
+        "introducedAt": 970,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C194-COISAS194-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C194-portao",
+        "introducedAt": 971,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "PT-LEX-C194-COISAS194-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C194-vedacao",
+        "introducedAt": 972,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "PT-LEX-C197-COISAS197-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C197-visita-guiada",
+        "introducedAt": 986,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C197-COISAS197-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C197-rececao",
+        "introducedAt": 987,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C197-COISAS197-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C197-lavandaria",
+        "introducedAt": 988,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C197-COISAS197-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C197-cabeleireiro",
+        "introducedAt": 989,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C198-COISAS198-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C198-quantidade",
+        "introducedAt": 990,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C200-TRAB200-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C200-impressora",
+        "introducedAt": 1002,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C200-TRAB200-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C200-revista",
+        "introducedAt": 1003,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "PT-LEX-C200-TRAB200-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C200-dicionario",
+        "introducedAt": 1004,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "PT-LEX-C206-VERBOS206-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C206-parecer",
+        "introducedAt": 1034,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C206-VERBOS206-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C206-servir",
+        "introducedAt": 1035,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C206-VERBOS206-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C206-sofrer",
+        "introducedAt": 1036,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C207-VERBOS207-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C207-aproximar-se",
+        "introducedAt": 1037,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C209-VERBOS209-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C209-manter",
+        "introducedAt": 1049,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C209-VERBOS209-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C209-existir",
+        "introducedAt": 1050,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "PT-LEX-C209-VERBOS209-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C209-exprimir",
+        "introducedAt": 1051,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "PT-LEX-C215-QUAL215-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C215-nervoso-nervosa",
+        "introducedAt": 1081,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C215-QUAL215-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C215-tranquilo-tranquila",
+        "introducedAt": 1082,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C215-QUAL215-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C215-silencioso-silenciosa",
+        "introducedAt": 1083,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C216-QUAL216-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C216-gratuito-gratuita",
+        "introducedAt": 1084,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C218-COISAS218-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C218-gorjeta",
+        "introducedAt": 1096,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C218-COISAS218-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C218-cais",
+        "introducedAt": 1097,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "PT-LEX-C218-COISAS218-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C218-passaporte",
+        "introducedAt": 1098,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "PT-LEX-C221-COISAS221-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C221-nora",
+        "introducedAt": 1112,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C221-COISAS221-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C221-noivo",
+        "introducedAt": 1113,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C221-COISAS221-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C221-noiva",
+        "introducedAt": 1114,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C221-COISAS221-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C221-viuvo-a-viuva",
+        "introducedAt": 1115,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C222-COISAS222-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C222-conselho",
+        "introducedAt": 1116,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C224-COISAS224-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C224-horta",
+        "introducedAt": 1128,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C224-COISAS224-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C224-jarra",
+        "introducedAt": 1129,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "PT-LEX-C224-COISAS224-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C224-planta",
+        "introducedAt": 1130,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "PT-LEX-C227-COISAS227-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C227-livraria",
+        "introducedAt": 1144,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C227-COISAS227-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C227-peixaria",
+        "introducedAt": 1145,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C227-COISAS227-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C227-centro-comercial",
+        "introducedAt": 1146,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C227-COISAS227-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C227-montra",
+        "introducedAt": 1147,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C228-COISAS228-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C228-frasco",
+        "introducedAt": 1148,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C230-TRAB230-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C230-historia",
+        "introducedAt": 1160,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C230-TRAB230-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C230-geografia",
+        "introducedAt": 1161,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "PT-LEX-C230-TRAB230-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C230-matematica",
+        "introducedAt": 1162,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "PT-LEX-C236-VERBOS236-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C236-puxar",
+        "introducedAt": 1192,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C236-VERBOS236-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C236-desperdicar",
+        "introducedAt": 1193,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C236-VERBOS236-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C236-ultrapassar",
+        "introducedAt": 1194,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C237-VERBOS237-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C237-destruir",
+        "introducedAt": 1195,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C239-VERBOS239-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C239-alimentar",
+        "introducedAt": 1207,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C239-VERBOS239-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C239-arrumar",
+        "introducedAt": 1208,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "PT-LEX-C239-VERBOS239-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C239-notar",
+        "introducedAt": 1209,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
       },
       {
         "atom": "PT-LEX-C40-VERBOS1-02",
@@ -181521,10 +182303,2397 @@
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C188-COISAS188-03",
+        "atom": "PT-LEX-C186-QUAL186-02",
         "language": "portuguese",
-        "introducedBy": "PT-C188-poltrona",
-        "introducedAt": 938,
+        "introducedBy": "PT-C186-igual",
+        "introducedAt": 927,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C186-QUAL186-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C186-parecido-parecida",
+        "introducedAt": 928,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C186-QUAL186-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C186-justo-justa",
+        "introducedAt": 929,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C186-QUAL186-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C186-falso-falsa",
+        "introducedAt": 930,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C187-QUAL187-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C187-trabalhador-trabalhadora",
+        "introducedAt": 931,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C187-QUAL187-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C187-falador-faladora",
+        "introducedAt": 932,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C187-QUAL187-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C187-preocupado-preocupada",
+        "introducedAt": 933,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C187-QUAL187-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C187-constipado-constipada",
+        "introducedAt": 934,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C187-QUAL187-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C187-solteiro-solteira",
+        "introducedAt": 935,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C188-COISAS188-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C188-lencol",
+        "introducedAt": 936,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C188-COISAS188-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C188-gaveta",
+        "introducedAt": 937,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C189-COISAS189-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C189-juiz-a-juiza",
+        "introducedAt": 943,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C189-COISAS189-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C189-eleicoes",
+        "introducedAt": 944,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C189-COISAS189-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C189-voto",
+        "introducedAt": 945,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C189-COISAS189-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C189-politica",
+        "introducedAt": 946,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C189-COISAS189-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C189-economia",
+        "introducedAt": 947,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C190-COISAS190-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C190-atriz",
+        "introducedAt": 948,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C190-COISAS190-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C190-poema",
+        "introducedAt": 949,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C190-COISAS190-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C190-escritor-a-escritora",
+        "introducedAt": 950,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C190-COISAS190-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C190-pintor-a-pintora",
+        "introducedAt": 951,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C190-COISAS190-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C190-fotografo",
+        "introducedAt": 952,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C191-COISAS191-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C191-adulto",
+        "introducedAt": 953,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C192-COISAS192-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C192-regra",
+        "introducedAt": 959,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C192-COISAS192-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C192-autorizacao",
+        "introducedAt": 960,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C192-COISAS192-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C192-proibicao",
+        "introducedAt": 961,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C192-COISAS192-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C192-seguranca",
+        "introducedAt": 962,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C193-COISAS193-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C193-postal",
+        "introducedAt": 963,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C193-COISAS193-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C193-pasta",
+        "introducedAt": 964,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C193-COISAS193-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C193-etiqueta",
+        "introducedAt": 965,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C193-COISAS193-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C193-guia",
+        "introducedAt": 966,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C193-COISAS193-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C193-entrada",
+        "introducedAt": 967,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C194-COISAS194-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C194-monumento",
+        "introducedAt": 968,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C194-COISAS194-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C194-estatua",
+        "introducedAt": 969,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C195-COISAS195-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C195-lama",
+        "introducedAt": 975,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C195-COISAS195-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C195-po",
+        "introducedAt": 976,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C195-COISAS195-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C195-fumo",
+        "introducedAt": 977,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C195-COISAS195-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C195-chama",
+        "introducedAt": 978,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C195-COISAS195-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C195-clima",
+        "introducedAt": 979,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C196-COISAS196-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C196-agulha",
+        "introducedAt": 980,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C196-COISAS196-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C196-ferramenta",
+        "introducedAt": 981,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C196-COISAS196-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C196-guitarra",
+        "introducedAt": 982,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C196-COISAS196-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C196-violino",
+        "introducedAt": 983,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C196-COISAS196-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C196-tambor",
+        "introducedAt": 984,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C197-COISAS197-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C197-paisagem",
+        "introducedAt": 985,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C198-COISAS198-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C198-quilo",
+        "introducedAt": 991,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C198-COISAS198-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C198-litro",
+        "introducedAt": 992,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C198-COISAS198-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C198-pacote",
+        "introducedAt": 993,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C198-COISAS198-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C198-lata",
+        "introducedAt": 994,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C199-COISAS199-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C199-milho",
+        "introducedAt": 995,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C199-COISAS199-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C199-canela",
+        "introducedAt": 996,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C199-COISAS199-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C199-ementa",
+        "introducedAt": 997,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C199-COISAS199-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C199-aquecimento",
+        "introducedAt": 998,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C199-COISAS199-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C199-torneira",
+        "introducedAt": 999,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C200-TRAB200-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C200-entrevista",
+        "introducedAt": 1000,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C200-TRAB200-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C200-carreira",
+        "introducedAt": 1001,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C201-VERBOS201-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C201-reservar",
+        "introducedAt": 1007,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C201-VERBOS201-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C201-gastar",
+        "introducedAt": 1008,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C201-VERBOS201-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C201-poupar",
+        "introducedAt": 1009,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C201-VERBOS201-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C201-encomendar",
+        "introducedAt": 1010,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C201-VERBOS201-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C201-secar",
+        "introducedAt": 1011,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C202-VERBOS202-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C202-aquecer",
+        "introducedAt": 1012,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C202-VERBOS202-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C202-arrefecer",
+        "introducedAt": 1013,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C202-VERBOS202-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C202-encher",
+        "introducedAt": 1014,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C202-VERBOS202-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C202-esvaziar",
+        "introducedAt": 1015,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C202-VERBOS202-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C202-medir",
+        "introducedAt": 1016,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C203-VERBOS203-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C203-divorciar-se",
+        "introducedAt": 1017,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C203-VERBOS203-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C203-descansar",
+        "introducedAt": 1018,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C203-VERBOS203-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C203-acordar",
+        "introducedAt": 1019,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C203-VERBOS203-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C203-pentear-se",
+        "introducedAt": 1020,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C203-VERBOS203-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C203-aborrecer-se",
+        "introducedAt": 1021,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C204-VERBOS204-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C204-queimar",
+        "introducedAt": 1022,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C204-VERBOS204-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C204-deitar-fora",
+        "introducedAt": 1023,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C204-VERBOS204-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C204-calcular",
+        "introducedAt": 1024,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C204-VERBOS204-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C204-bater",
+        "introducedAt": 1025,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C204-VERBOS204-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C204-comparar",
+        "introducedAt": 1026,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C205-VERBOS205-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C205-piorar",
+        "introducedAt": 1027,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C205-VERBOS205-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C205-oferecer",
+        "introducedAt": 1028,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C205-VERBOS205-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C205-observar",
+        "introducedAt": 1029,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C205-VERBOS205-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C205-participar",
+        "introducedAt": 1030,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C205-VERBOS205-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C205-passear",
+        "introducedAt": 1031,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C206-VERBOS206-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C206-roubar",
+        "introducedAt": 1032,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C206-VERBOS206-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C206-descobrir",
+        "introducedAt": 1033,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C207-VERBOS207-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C207-conversar",
+        "introducedAt": 1038,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C207-VERBOS207-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C207-ligar",
+        "introducedAt": 1039,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C207-VERBOS207-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C207-entregar",
+        "introducedAt": 1040,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C207-VERBOS207-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C207-corrigir",
+        "introducedAt": 1041,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C208-VERBOS208-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C208-desistir",
+        "introducedAt": 1042,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C208-VERBOS208-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C208-trocar",
+        "introducedAt": 1043,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C208-VERBOS208-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C208-descarregar",
+        "introducedAt": 1044,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C208-VERBOS208-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C208-esquiar",
+        "introducedAt": 1045,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C208-VERBOS208-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C208-escorregar",
+        "introducedAt": 1046,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C209-VERBOS209-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C209-desaparecer",
+        "introducedAt": 1047,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C209-VERBOS209-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C209-gravar",
+        "introducedAt": 1048,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C210-SAUDE210-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C210-gripe",
+        "introducedAt": 1054,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C210-SAUDE210-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C210-receita",
+        "introducedAt": 1055,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C210-SAUDE210-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C210-comprimido",
+        "introducedAt": 1056,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C210-SAUDE210-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C210-xarope",
+        "introducedAt": 1057,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C210-SAUDE210-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C210-pomada",
+        "introducedAt": 1058,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C211-SAUDE211-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C211-paciencia",
+        "introducedAt": 1059,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C211-SAUDE211-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C211-sorte",
+        "introducedAt": 1060,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C211-SAUDE211-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C211-osso",
+        "introducedAt": 1061,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C211-SAUDE211-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C211-alergia",
+        "introducedAt": 1062,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C211-SAUDE211-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C211-dor-de-cabeca",
+        "introducedAt": 1063,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C212-TEMPO212-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C212-fim",
+        "introducedAt": 1064,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C212-TEMPO212-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C212-inicio",
+        "introducedAt": 1065,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C212-TEMPO212-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C212-prazo",
+        "introducedAt": 1066,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C212-TEMPO212-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C212-epoca",
+        "introducedAt": 1067,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C212-TEMPO212-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C212-feriado",
+        "introducedAt": 1068,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C213-LUGAR213-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C213-dentro",
+        "introducedAt": 1069,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C213-LUGAR213-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C213-fora",
+        "introducedAt": 1070,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C213-LUGAR213-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C213-interior",
+        "introducedAt": 1071,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C213-LUGAR213-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C213-fronteira",
+        "introducedAt": 1072,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C213-LUGAR213-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C213-regiao",
+        "introducedAt": 1073,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C214-PORQUE214-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C214-apenas",
+        "introducedAt": 1074,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C214-PORQUE214-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C214-juntos-juntas",
+        "introducedAt": 1075,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C214-PORQUE214-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C214-contudo",
+        "introducedAt": 1076,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C214-PORQUE214-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C214-talvez",
+        "introducedAt": 1077,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C214-PORQUE214-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C214-alias",
+        "introducedAt": 1078,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C215-QUAL215-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C215-ciumento-ciumenta",
+        "introducedAt": 1079,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C215-QUAL215-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C215-orgulhoso-orgulhosa",
+        "introducedAt": 1080,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C216-QUAL216-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C216-moderno-moderna",
+        "introducedAt": 1085,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C216-QUAL216-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C216-antigo-antiga",
+        "introducedAt": 1086,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C216-QUAL216-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C216-picante",
+        "introducedAt": 1087,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C216-QUAL216-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C216-cru-crua",
+        "introducedAt": 1088,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C217-QUAL217-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C217-divorciado-divorciada",
+        "introducedAt": 1089,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C217-QUAL217-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C217-nublado-nublada",
+        "introducedAt": 1090,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C217-QUAL217-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C217-solarengo-solarenga",
+        "introducedAt": 1091,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C217-QUAL217-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C217-chuvoso-chuvosa",
+        "introducedAt": 1092,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C217-QUAL217-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C217-gordo-gorda",
+        "introducedAt": 1093,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C218-COISAS218-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C218-pequeno-almoco",
+        "introducedAt": 1094,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C218-COISAS218-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C218-lanche",
+        "introducedAt": 1095,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C219-COISAS219-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C219-guerra",
+        "introducedAt": 1101,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C219-COISAS219-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C219-paz",
+        "introducedAt": 1102,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C219-COISAS219-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C219-exercito",
+        "introducedAt": 1103,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C219-COISAS219-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C219-soldado",
+        "introducedAt": 1104,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C219-COISAS219-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C219-tradicao",
+        "introducedAt": 1105,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C220-COISAS220-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C220-jornalista",
+        "introducedAt": 1106,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C220-COISAS220-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C220-arquiteto",
+        "introducedAt": 1107,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C220-COISAS220-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C220-dentista",
+        "introducedAt": 1108,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C220-COISAS220-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C220-farmaceutico",
+        "introducedAt": 1109,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C220-COISAS220-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C220-talhante",
+        "introducedAt": 1110,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C221-COISAS221-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C221-genro",
+        "introducedAt": 1111,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C222-COISAS222-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C222-promessa",
+        "introducedAt": 1117,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C222-COISAS222-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C222-desconto",
+        "introducedAt": 1118,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C222-COISAS222-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C222-saldos",
+        "introducedAt": 1119,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C222-COISAS222-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C222-moeda",
+        "introducedAt": 1120,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C223-COISAS223-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C223-saida",
+        "introducedAt": 1121,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C223-COISAS223-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C223-bagagem",
+        "introducedAt": 1122,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C223-COISAS223-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C223-lugar",
+        "introducedAt": 1123,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C223-COISAS223-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C223-volante",
+        "introducedAt": 1124,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C223-COISAS223-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C223-roda",
+        "introducedAt": 1125,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C224-COISAS224-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C224-sotao",
+        "introducedAt": 1126,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C224-COISAS224-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C224-garagem",
+        "introducedAt": 1127,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C225-COISAS225-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C225-ambiente",
+        "introducedAt": 1133,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C225-COISAS225-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C225-poluicao",
+        "introducedAt": 1134,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C225-COISAS225-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C225-reciclagem",
+        "introducedAt": 1135,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C225-COISAS225-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C225-energia",
+        "introducedAt": 1136,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C225-COISAS225-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C225-eletricidade",
+        "introducedAt": 1137,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C226-COISAS226-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C226-raquete",
+        "introducedAt": 1138,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C226-COISAS226-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C226-ginasio",
+        "introducedAt": 1139,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C226-COISAS226-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C226-natacao",
+        "introducedAt": 1140,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C226-COISAS226-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C226-tenis",
+        "introducedAt": 1141,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C226-COISAS226-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C226-vitoria",
+        "introducedAt": 1142,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C227-COISAS227-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C227-papelaria",
+        "introducedAt": 1143,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C228-COISAS228-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C228-fatia",
+        "introducedAt": 1149,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C228-COISAS228-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C228-pedaco",
+        "introducedAt": 1150,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C228-COISAS228-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C228-duzia",
+        "introducedAt": 1151,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C228-COISAS228-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C228-metade",
+        "introducedAt": 1152,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C229-COISAS229-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C229-lavatorio",
+        "introducedAt": 1153,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C229-COISAS229-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C229-sanita",
+        "introducedAt": 1154,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C229-COISAS229-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C229-colchao",
+        "introducedAt": 1155,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C229-COISAS229-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C229-tomada",
+        "introducedAt": 1156,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C229-COISAS229-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C229-interruptor",
+        "introducedAt": 1157,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C230-TRAB230-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C230-universidade",
+        "introducedAt": 1158,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C230-TRAB230-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C230-erro",
+        "introducedAt": 1159,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C231-VERBOS231-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C231-construir",
+        "introducedAt": 1165,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C231-VERBOS231-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C231-fotografar",
+        "introducedAt": 1166,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C231-VERBOS231-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C231-repetir",
+        "introducedAt": 1167,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C231-VERBOS231-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C231-explicar",
+        "introducedAt": 1168,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C231-VERBOS231-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C231-traduzir",
+        "introducedAt": 1169,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C232-VERBOS232-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C232-pesar",
+        "introducedAt": 1170,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C232-VERBOS232-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C232-verificar",
+        "introducedAt": 1171,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C232-VERBOS232-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C232-assinar",
+        "introducedAt": 1172,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C232-VERBOS232-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C232-preencher",
+        "introducedAt": 1173,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C232-VERBOS232-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C232-telefonar",
+        "introducedAt": 1174,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C233-VERBOS233-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C233-divertir-se",
+        "introducedAt": 1175,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C233-VERBOS233-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C233-zangar-se",
+        "introducedAt": 1176,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C233-VERBOS233-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C233-preocupar-se",
+        "introducedAt": 1177,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C233-VERBOS233-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C233-fumar",
+        "introducedAt": 1178,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C233-VERBOS233-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C233-nevar",
+        "introducedAt": 1179,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C234-VERBOS234-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C234-aconselhar",
+        "introducedAt": 1180,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C234-VERBOS234-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C234-convencer",
+        "introducedAt": 1181,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C234-VERBOS234-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C234-criticar",
+        "introducedAt": 1182,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C234-VERBOS234-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C234-depender",
+        "introducedAt": 1183,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C234-VERBOS234-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C234-partilhar",
+        "introducedAt": 1184,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C235-VERBOS235-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C235-dobrar",
+        "introducedAt": 1185,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C235-VERBOS235-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C235-possuir",
+        "introducedAt": 1186,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C235-VERBOS235-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C235-preparar",
+        "introducedAt": 1187,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C235-VERBOS235-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C235-apresentar",
+        "introducedAt": 1188,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C235-VERBOS235-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C235-emprestar",
+        "introducedAt": 1189,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C236-VERBOS236-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C236-sonhar",
+        "introducedAt": 1190,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C236-VERBOS236-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C236-empurrar",
+        "introducedAt": 1191,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C237-VERBOS237-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C237-exagerar",
+        "introducedAt": 1196,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C237-VERBOS237-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C237-celebrar",
+        "introducedAt": 1197,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C237-VERBOS237-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C237-travar",
+        "introducedAt": 1198,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C237-VERBOS237-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C237-funcionar",
+        "introducedAt": 1199,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C238-VERBOS238-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C238-levantar",
+        "introducedAt": 1200,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C238-VERBOS238-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C238-surpreender",
+        "introducedAt": 1201,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C238-VERBOS238-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C238-suspeitar",
+        "introducedAt": 1202,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C238-VERBOS238-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C238-apertar",
+        "introducedAt": 1203,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C238-VERBOS238-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C238-sugerir",
+        "introducedAt": 1204,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C239-VERBOS239-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C239-engordar",
+        "introducedAt": 1205,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C239-VERBOS239-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C239-emagrecer",
+        "introducedAt": 1206,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C240-SAUDE240-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C240-urgencias",
+        "introducedAt": 1212,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C240-SAUDE240-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C240-emergencia",
+        "introducedAt": 1213,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C240-SAUDE240-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C240-consulta",
+        "introducedAt": 1214,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C240-SAUDE240-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C240-dieta",
+        "introducedAt": 1215,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C245-COISAS245-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C245-publicidade",
+        "introducedAt": 1239,
         "missed": [
           "R2",
           "R3"
@@ -181532,10 +184701,54 @@
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C188-COISAS188-04",
+        "atom": "PT-LEX-C245-COISAS245-04",
         "language": "portuguese",
-        "introducedBy": "PT-C188-pijama",
-        "introducedAt": 939,
+        "introducedBy": "PT-C245-ecra",
+        "introducedAt": 1240,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C245-COISAS245-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C245-teclado",
+        "introducedAt": 1241,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C246-COISAS246-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C246-mecanico",
+        "introducedAt": 1242,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C248-COISAS248-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C248-multibanco",
+        "introducedAt": 1254,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C248-COISAS248-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C248-conta-bancaria",
+        "introducedAt": 1255,
         "missed": [
           "R2",
           "R3"
@@ -181543,114 +184756,15 @@
         "revisits": 4
       },
       {
-        "atom": "PT-LEX-C188-COISAS188-05",
+        "atom": "PT-LEX-C248-COISAS248-05",
         "language": "portuguese",
-        "introducedBy": "PT-C188-botao",
-        "introducedAt": 940,
+        "introducedBy": "PT-C248-emprestimo",
+        "introducedAt": 1256,
         "missed": [
           "R2",
           "R3"
         ],
         "revisits": 4
-      },
-      {
-        "atom": "PT-LEX-C191-COISAS191-02",
-        "language": "portuguese",
-        "introducedBy": "PT-C191-idoso",
-        "introducedAt": 954,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "PT-LEX-C191-COISAS191-03",
-        "language": "portuguese",
-        "introducedBy": "PT-C191-gemeo-a-gemea",
-        "introducedAt": 955,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "PT-LEX-C191-COISAS191-04",
-        "language": "portuguese",
-        "introducedBy": "PT-C191-sogra",
-        "introducedAt": 956,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "PT-LEX-C191-COISAS191-05",
-        "language": "portuguese",
-        "introducedBy": "PT-C191-sogro",
-        "introducedAt": 957,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "PT-LEX-C192-COISAS192-01",
-        "language": "portuguese",
-        "introducedBy": "PT-C192-mentira",
-        "introducedAt": 958,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "PT-LEX-C194-COISAS194-03",
-        "language": "portuguese",
-        "introducedBy": "PT-C194-fonte",
-        "introducedAt": 970,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "PT-LEX-C194-COISAS194-04",
-        "language": "portuguese",
-        "introducedBy": "PT-C194-portao",
-        "introducedAt": 971,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 4
-      },
-      {
-        "atom": "PT-LEX-C194-COISAS194-05",
-        "language": "portuguese",
-        "introducedBy": "PT-C194-vedacao",
-        "introducedAt": 972,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 4
-      },
-      {
-        "atom": "PT-LEX-C197-COISAS197-02",
-        "language": "portuguese",
-        "introducedBy": "PT-C197-visita-guiada",
-        "introducedAt": 986,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
       },
       {
         "atom": "PT-LEX-C30-CORPO1-01",
@@ -237761,480 +240875,550 @@
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C186-QUAL186-02",
+        "atom": "PT-LEX-C240-SAUDE240-05",
         "language": "portuguese",
-        "introducedBy": "PT-C186-igual",
-        "introducedAt": 927,
+        "introducedBy": "PT-C240-descanso",
+        "introducedAt": 1216,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C241-QUAL241-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C241-liso-lisa",
+        "introducedAt": 1217,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C241-QUAL241-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C241-aspero-aspera",
+        "introducedAt": 1218,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C241-QUAL241-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C241-profundo-profunda",
+        "introducedAt": 1219,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C241-QUAL241-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C241-desconhecido-desconhecida",
+        "introducedAt": 1220,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C241-QUAL241-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C241-simples",
+        "introducedAt": 1221,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C242-QUAL242-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C242-cozido-cozida",
+        "introducedAt": 1222,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C242-QUAL242-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C242-maduro-madura",
+        "introducedAt": 1223,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C242-QUAL242-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C242-escuro-escura",
+        "introducedAt": 1224,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C242-QUAL242-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C242-claro-clara",
+        "introducedAt": 1225,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C242-QUAL242-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C242-distante",
+        "introducedAt": 1226,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C243-QUAL243-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C243-jovem",
+        "introducedAt": 1227,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C243-QUAL243-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C243-inteligente",
+        "introducedAt": 1228,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C243-QUAL243-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C243-possivel",
+        "introducedAt": 1229,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C243-QUAL243-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C243-impossivel",
+        "introducedAt": 1230,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C243-QUAL243-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C243-principal",
+        "introducedAt": 1231,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C244-COISAS244-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C244-alfandega",
+        "introducedAt": 1232,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C244-COISAS244-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C244-reserva",
+        "introducedAt": 1233,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C244-COISAS244-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C244-vale",
+        "introducedAt": 1234,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C244-COISAS244-04",
+        "language": "portuguese",
+        "introducedBy": "PT-C244-temperatura",
+        "introducedAt": 1235,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C244-COISAS244-05",
+        "language": "portuguese",
+        "introducedBy": "PT-C244-mosca",
+        "introducedAt": 1236,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C245-COISAS245-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C245-dialeto",
+        "introducedAt": 1237,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C245-COISAS245-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C245-noticia",
+        "introducedAt": 1238,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "PT-LEX-C246-COISAS246-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C246-eletricista",
+        "introducedAt": 1243,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C186-QUAL186-03",
+        "atom": "PT-LEX-C246-COISAS246-03",
         "language": "portuguese",
-        "introducedBy": "PT-C186-parecido-parecida",
-        "introducedAt": 928,
+        "introducedBy": "PT-C246-canalizador",
+        "introducedAt": 1244,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C186-QUAL186-04",
+        "atom": "PT-LEX-C246-COISAS246-04",
         "language": "portuguese",
-        "introducedBy": "PT-C186-justo-justa",
-        "introducedAt": 929,
+        "introducedBy": "PT-C246-operario",
+        "introducedAt": 1245,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C186-QUAL186-05",
+        "atom": "PT-LEX-C246-COISAS246-05",
         "language": "portuguese",
-        "introducedBy": "PT-C186-falso-falsa",
-        "introducedAt": 930,
+        "introducedBy": "PT-C246-piloto",
+        "introducedAt": 1246,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C187-QUAL187-01",
+        "atom": "PT-LEX-C247-COISAS247-01",
         "language": "portuguese",
-        "introducedBy": "PT-C187-trabalhador-trabalhadora",
-        "introducedAt": 931,
+        "introducedBy": "PT-C247-sucesso",
+        "introducedAt": 1247,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C187-QUAL187-02",
+        "atom": "PT-LEX-C247-COISAS247-02",
         "language": "portuguese",
-        "introducedBy": "PT-C187-falador-faladora",
-        "introducedAt": 932,
+        "introducedBy": "PT-C247-fracasso",
+        "introducedAt": 1248,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C187-QUAL187-03",
+        "atom": "PT-LEX-C247-COISAS247-03",
         "language": "portuguese",
-        "introducedBy": "PT-C187-preocupado-preocupada",
-        "introducedAt": 933,
+        "introducedBy": "PT-C247-experiencia",
+        "introducedAt": 1249,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C187-QUAL187-04",
+        "atom": "PT-LEX-C247-COISAS247-04",
         "language": "portuguese",
-        "introducedBy": "PT-C187-constipado-constipada",
-        "introducedAt": 934,
+        "introducedBy": "PT-C247-escolha",
+        "introducedAt": 1250,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C187-QUAL187-05",
+        "atom": "PT-LEX-C247-COISAS247-05",
         "language": "portuguese",
-        "introducedBy": "PT-C187-solteiro-solteira",
-        "introducedAt": 935,
+        "introducedBy": "PT-C247-decisao",
+        "introducedAt": 1251,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C188-COISAS188-01",
+        "atom": "PT-LEX-C248-COISAS248-01",
         "language": "portuguese",
-        "introducedBy": "PT-C188-lencol",
-        "introducedAt": 936,
+        "introducedBy": "PT-C248-nota",
+        "introducedAt": 1252,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C188-COISAS188-02",
+        "atom": "PT-LEX-C248-COISAS248-02",
         "language": "portuguese",
-        "introducedBy": "PT-C188-gaveta",
-        "introducedAt": 937,
+        "introducedBy": "PT-C248-cartao-bancario",
+        "introducedAt": 1253,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C189-COISAS189-01",
+        "atom": "PT-LEX-C249-COISAS249-01",
         "language": "portuguese",
-        "introducedBy": "PT-C189-juiz-a-juiza",
-        "introducedAt": 943,
+        "introducedBy": "PT-C249-motor",
+        "introducedAt": 1259,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C189-COISAS189-02",
+        "atom": "PT-LEX-C249-COISAS249-02",
         "language": "portuguese",
-        "introducedBy": "PT-C189-eleicoes",
-        "introducedAt": 944,
+        "introducedBy": "PT-C249-portagem",
+        "introducedAt": 1260,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C189-COISAS189-03",
+        "atom": "PT-LEX-C249-COISAS249-03",
         "language": "portuguese",
-        "introducedBy": "PT-C189-voto",
-        "introducedAt": 945,
+        "introducedBy": "PT-C249-autoestrada",
+        "introducedAt": 1261,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C189-COISAS189-04",
+        "atom": "PT-LEX-C249-COISAS249-04",
         "language": "portuguese",
-        "introducedBy": "PT-C189-politica",
-        "introducedAt": 946,
+        "introducedBy": "PT-C249-multa",
+        "introducedAt": 1262,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C189-COISAS189-05",
+        "atom": "PT-LEX-C249-COISAS249-05",
         "language": "portuguese",
-        "introducedBy": "PT-C189-economia",
-        "introducedAt": 947,
+        "introducedBy": "PT-C249-capacete",
+        "introducedAt": 1263,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C190-COISAS190-01",
+        "atom": "PT-LEX-C250-COISAS250-01",
         "language": "portuguese",
-        "introducedBy": "PT-C190-atriz",
-        "introducedAt": 948,
+        "introducedBy": "PT-C250-semente",
+        "introducedAt": 1264,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C190-COISAS190-02",
+        "atom": "PT-LEX-C250-COISAS250-02",
         "language": "portuguese",
-        "introducedBy": "PT-C190-poema",
-        "introducedAt": 949,
+        "introducedBy": "PT-C250-raiz",
+        "introducedAt": 1265,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C190-COISAS190-03",
+        "atom": "PT-LEX-C250-COISAS250-03",
         "language": "portuguese",
-        "introducedBy": "PT-C190-escritor-a-escritora",
-        "introducedAt": 950,
+        "introducedBy": "PT-C250-ramo",
+        "introducedAt": 1266,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C190-COISAS190-04",
+        "atom": "PT-LEX-C250-COISAS250-04",
         "language": "portuguese",
-        "introducedBy": "PT-C190-pintor-a-pintora",
-        "introducedAt": 951,
+        "introducedBy": "PT-C250-tronco",
+        "introducedAt": 1267,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C190-COISAS190-05",
+        "atom": "PT-LEX-C250-COISAS250-05",
         "language": "portuguese",
-        "introducedBy": "PT-C190-fotografo",
-        "introducedAt": 952,
+        "introducedBy": "PT-C250-espinho",
+        "introducedAt": 1268,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C191-COISAS191-01",
+        "atom": "PT-LEX-C251-COISAS251-01",
         "language": "portuguese",
-        "introducedBy": "PT-C191-adulto",
-        "introducedAt": 953,
+        "introducedBy": "PT-C251-gas",
+        "introducedAt": 1269,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C192-COISAS192-02",
+        "atom": "PT-LEX-C251-COISAS251-02",
         "language": "portuguese",
-        "introducedBy": "PT-C192-regra",
-        "introducedAt": 959,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "PT-LEX-C192-COISAS192-03",
-        "language": "portuguese",
-        "introducedBy": "PT-C192-autorizacao",
-        "introducedAt": 960,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "PT-LEX-C192-COISAS192-04",
-        "language": "portuguese",
-        "introducedBy": "PT-C192-proibicao",
-        "introducedAt": 961,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "PT-LEX-C192-COISAS192-05",
-        "language": "portuguese",
-        "introducedBy": "PT-C192-seguranca",
-        "introducedAt": 962,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "PT-LEX-C193-COISAS193-01",
-        "language": "portuguese",
-        "introducedBy": "PT-C193-postal",
-        "introducedAt": 963,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "PT-LEX-C193-COISAS193-02",
-        "language": "portuguese",
-        "introducedBy": "PT-C193-pasta",
-        "introducedAt": 964,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "PT-LEX-C193-COISAS193-03",
-        "language": "portuguese",
-        "introducedBy": "PT-C193-etiqueta",
-        "introducedAt": 965,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "PT-LEX-C193-COISAS193-04",
-        "language": "portuguese",
-        "introducedBy": "PT-C193-guia",
-        "introducedAt": 966,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "PT-LEX-C193-COISAS193-05",
-        "language": "portuguese",
-        "introducedBy": "PT-C193-entrada",
-        "introducedAt": 967,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "PT-LEX-C194-COISAS194-01",
-        "language": "portuguese",
-        "introducedBy": "PT-C194-monumento",
-        "introducedAt": 968,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "PT-LEX-C194-COISAS194-02",
-        "language": "portuguese",
-        "introducedBy": "PT-C194-estatua",
-        "introducedAt": 969,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "PT-LEX-C195-COISAS195-01",
-        "language": "portuguese",
-        "introducedBy": "PT-C195-lama",
-        "introducedAt": 975,
+        "introducedBy": "PT-C251-plastico",
+        "introducedAt": 1270,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C195-COISAS195-02",
+        "atom": "PT-LEX-C251-COISAS251-03",
         "language": "portuguese",
-        "introducedBy": "PT-C195-po",
-        "introducedAt": 976,
+        "introducedBy": "PT-C251-algodao",
+        "introducedAt": 1271,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C195-COISAS195-03",
+        "atom": "PT-LEX-C251-COISAS251-04",
         "language": "portuguese",
-        "introducedBy": "PT-C195-fumo",
-        "introducedAt": 977,
+        "introducedBy": "PT-C251-la",
+        "introducedAt": 1272,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C195-COISAS195-04",
+        "atom": "PT-LEX-C251-COISAS251-05",
         "language": "portuguese",
-        "introducedBy": "PT-C195-chama",
-        "introducedAt": 978,
+        "introducedBy": "PT-C251-seda",
+        "introducedAt": 1273,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C195-COISAS195-05",
+        "atom": "PT-LEX-C252-COISAS252-01",
         "language": "portuguese",
-        "introducedBy": "PT-C195-clima",
-        "introducedAt": 979,
+        "introducedBy": "PT-C252-derrota",
+        "introducedAt": 1274,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C196-COISAS196-01",
+        "atom": "PT-LEX-C252-COISAS252-02",
         "language": "portuguese",
-        "introducedBy": "PT-C196-agulha",
-        "introducedAt": 980,
+        "introducedBy": "PT-C252-campeonato",
+        "introducedAt": 1275,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C196-COISAS196-02",
+        "atom": "PT-LEX-C252-COISAS252-03",
         "language": "portuguese",
-        "introducedBy": "PT-C196-ferramenta",
-        "introducedAt": 981,
+        "introducedBy": "PT-C252-jogador",
+        "introducedAt": 1276,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C196-COISAS196-03",
+        "atom": "PT-LEX-C252-COISAS252-04",
         "language": "portuguese",
-        "introducedBy": "PT-C196-guitarra",
-        "introducedAt": 982,
+        "introducedBy": "PT-C252-treinador",
+        "introducedAt": 1277,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C196-COISAS196-04",
+        "atom": "PT-LEX-C252-COISAS252-05",
         "language": "portuguese",
-        "introducedBy": "PT-C196-violino",
-        "introducedAt": 983,
+        "introducedBy": "PT-C252-adepto",
+        "introducedAt": 1278,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "PT-LEX-C196-COISAS196-05",
+        "atom": "PT-LEX-C253-COISAS253-01",
         "language": "portuguese",
-        "introducedBy": "PT-C196-tambor",
-        "introducedAt": 984,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "PT-LEX-C197-COISAS197-01",
-        "language": "portuguese",
-        "introducedBy": "PT-C197-paisagem",
-        "introducedAt": 985,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "PT-LEX-C197-COISAS197-03",
-        "language": "portuguese",
-        "introducedBy": "PT-C197-rececao",
-        "introducedAt": 987,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "PT-LEX-C197-COISAS197-04",
-        "language": "portuguese",
-        "introducedBy": "PT-C197-lavandaria",
-        "introducedAt": 988,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "PT-LEX-C197-COISAS197-05",
-        "language": "portuguese",
-        "introducedBy": "PT-C197-cabeleireiro",
-        "introducedAt": 989,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "PT-LEX-C198-COISAS198-01",
-        "language": "portuguese",
-        "introducedBy": "PT-C198-quantidade",
-        "introducedAt": 990,
+        "introducedBy": "PT-C253-provador",
+        "introducedAt": 1279,
         "missed": [
           "R2"
         ],
@@ -246147,6 +249331,14 @@
         "lessonsEarly": 923
       },
       {
+        "lessonId": "PT-C34-dor",
+        "language": "portuguese",
+        "position": 140,
+        "word": "dor de cabeça",
+        "taughtBy": "PT-C211-dor-de-cabeca",
+        "lessonsEarly": 923
+      },
+      {
         "lessonId": "ES-C50-hable-usted",
         "language": "spanish",
         "position": 259,
@@ -247651,6 +250843,14 @@
         "lessonsEarly": 439
       },
       {
+        "lessonId": "PT-C128-fim-de-semana",
+        "language": "portuguese",
+        "position": 625,
+        "word": "o fim",
+        "taughtBy": "PT-C212-fim",
+        "lessonsEarly": 439
+      },
+      {
         "lessonId": "ES-C41-creer",
         "language": "spanish",
         "position": 332,
@@ -247819,6 +251019,22 @@
         "lessonsEarly": 413
       },
       {
+        "lessonId": "PT-R133-first-pass-more-describing-words-and-time",
+        "language": "portuguese",
+        "position": 652,
+        "word": "o fim",
+        "taughtBy": "PT-C212-fim",
+        "lessonsEarly": 412
+      },
+      {
+        "lessonId": "PT-R133-first-pass-more-describing-words-and-time",
+        "language": "portuguese",
+        "position": 652,
+        "word": "fim",
+        "taughtBy": "PT-C212-fim",
+        "lessonsEarly": 412
+      },
+      {
         "lessonId": "ES-C276-asonancia",
         "language": "spanish",
         "position": 484,
@@ -247889,6 +251105,22 @@
         "word": "वसंत",
         "taughtBy": "HI-C221-vasant",
         "lessonsEarly": 402
+      },
+      {
+        "lessonId": "PT-C136-o-plano",
+        "language": "portuguese",
+        "position": 666,
+        "word": "o fim",
+        "taughtBy": "PT-C212-fim",
+        "lessonsEarly": 398
+      },
+      {
+        "lessonId": "PT-C136-o-plano",
+        "language": "portuguese",
+        "position": 666,
+        "word": "fim",
+        "taughtBy": "PT-C212-fim",
+        "lessonsEarly": 398
       },
       {
         "lessonId": "ES-C57-dijo-que",
@@ -251563,6 +254795,14 @@
         "lessonsEarly": 18
       },
       {
+        "lessonId": "PT-R209-first-pass-words-from-chapters-201-204",
+        "language": "portuguese",
+        "position": 1052,
+        "word": "fora",
+        "taughtBy": "PT-C213-fora",
+        "lessonsEarly": 18
+      },
+      {
         "lessonId": "ES-C38-repaso-los-tres-porques",
         "language": "spanish",
         "position": 320,
@@ -253972,13 +257212,13 @@
       },
       {
         "language": "portuguese",
-        "lessonCount": 1007,
+        "lessonCount": 1296,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 1090,
+        "atomsTaught": 1365,
         "atomsNeverRevisited": 2,
-        "forwardReferences": 95
+        "forwardReferences": 102
       },
       {
         "language": "punjabi",
@@ -254056,16 +257296,16 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 22016,
+      "atomsTaught": 22291,
       "atomsNeverRevisited": 156,
       "neverRevisitedPercent": 1,
       "missedByWindow": {
         "R1": 1745,
-        "R2": 14398,
-        "R3": 12311,
-        "R4": 16519
+        "R2": 14596,
+        "R3": 12439,
+        "R4": 16792
       },
-      "forwardReferences": 1027
+      "forwardReferences": 1034
     }
   },
   "scriptClosure": {
@@ -273275,6 +276515,15 @@
           },
           {
             "language": "telugu",
+            "lessonId": "TE-S158-letter-ssa",
+            "blockIndex": 2,
+            "blockTitle": "Writing: ష — four calm movements",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 276
+          },
+          {
+            "language": "telugu",
             "lessonId": "TE-S110-letter-ya",
             "blockIndex": 2,
             "blockTitle": "Writing: య — four calm movements",
@@ -273544,6 +276793,15 @@
             "stage": "dictation-transcription",
             "level": "pre-A1",
             "sequence": 258
+          },
+          {
+            "language": "telugu",
+            "lessonId": "TE-S158-letter-ssa",
+            "blockIndex": 2,
+            "blockTitle": "Writing: ష — four calm movements",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 276
           },
           {
             "language": "telugu",
@@ -274224,7 +277482,7 @@
       "tracks": 23,
       "tracksWithAnyEvidence": 23,
       "tracksCompleteAtPreA1": 23,
-      "evidenceBlocks": 819,
+      "evidenceBlocks": 820,
       "invalidEvidenceBlocks": 0,
       "missingTrackLevelStages": 231
     }
@@ -275324,8 +278582,8 @@
       },
       {
         "language": "portuguese",
-        "lessonCount": 1007,
-        "atomMeasurableLessons": 1007,
+        "lessonCount": 1296,
+        "atomMeasurableLessons": 1296,
         "atomMeasurementBlindLessons": 0,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -275339,15 +278597,15 @@
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 95,
-        "atomsTaught": 1090,
+        "forwardReferences": 102,
+        "atomsTaught": 1365,
         "atomsNeverRevisited": 2,
-        "reinforcementWindowMisses": 2317,
+        "reinforcementWindowMisses": 2916,
         "reinforcementMissesByWindow": {
           "R1": 50,
-          "R2": 830,
-          "R3": 578,
-          "R4": 859
+          "R2": 1028,
+          "R3": 706,
+          "R4": 1132
         },
         "payoffSurprises": 1,
         "writingPracticeLessons": 4,
@@ -275357,7 +278615,7 @@
           {
             "language": "portuguese",
             "kind": "forward-language",
-            "count": 95,
+            "count": 102,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
           },
@@ -275371,7 +278629,7 @@
           {
             "language": "portuguese",
             "kind": "reinforcement",
-            "count": 2317,
+            "count": 2916,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -275386,7 +278644,7 @@
         "next": {
           "language": "portuguese",
           "kind": "forward-language",
-          "count": 95,
+          "count": 102,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
@@ -275970,7 +279228,7 @@
       {
         "language": "portuguese",
         "kind": "forward-language",
-        "count": 95,
+        "count": 102,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
@@ -276395,16 +279653,16 @@
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
-        "language": "italian",
+        "language": "portuguese",
         "kind": "reinforcement",
-        "count": 2768,
+        "count": 2916,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
-        "language": "portuguese",
+        "language": "italian",
         "kind": "reinforcement",
-        "count": 2317,
+        "count": 2768,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -277055,7 +280313,7 @@
             "shortfall": 2
           }
         ],
-        "vocabulary": 956
+        "vocabulary": 1231
       },
       {
         "language": "punjabi",
@@ -277202,11 +280460,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 21107,
-    "voice": 18749,
+    "totalLessons": 21396,
+    "voice": 19038,
     "sight": 995,
     "pen": 1363,
-    "coreVoice": 19326,
+    "coreVoice": 19615,
     "lessonsWithWritingSegments": 880,
     "drivablePercent": 92,
     "tracks": [
@@ -314036,13 +317294,13 @@
       },
       {
         "language": "portuguese",
-        "lessonCount": 1007,
-        "voice": 994,
+        "lessonCount": 1296,
+        "voice": 1283,
         "sight": 9,
         "pen": 4,
-        "coreVoice": 995,
+        "coreVoice": 1284,
         "drivablePercent": 99,
-        "drivablePrefixTotal": 983,
+        "drivablePrefixTotal": 1272,
         "chapters": [
           {
             "language": "portuguese",
@@ -316838,6 +320096,776 @@
           {
             "language": "portuguese",
             "chapter": 200,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 201,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 202,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 203,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 204,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 205,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 206,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 207,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 208,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 209,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 210,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 211,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 212,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 213,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 214,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 215,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 216,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 217,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 218,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 219,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 220,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 221,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 222,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 223,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 224,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 225,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 226,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 227,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 228,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 229,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 230,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 231,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 232,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 233,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 234,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 235,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 236,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 237,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 238,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 239,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 240,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 241,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 242,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 243,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 244,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 245,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 246,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 247,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 248,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 249,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 250,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 251,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 252,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 253,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 254,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "portuguese",
+            "chapter": 255,
             "lessonCount": 7,
             "voice": 7,
             "sight": 0,
@@ -338403,7 +342431,7 @@
     "underspentPercent": 89
   },
   "infoDump": {
-    "lessons": 21107,
+    "lessons": 21396,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -338411,11 +342439,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 21107,
-    "measuredLessons": 16934,
-    "idiomMeasuredLessons": 16934,
-    "senseMeasuredLessons": 16935,
-    "cultureClaimMeasuredLessons": 16934,
+    "lessons": 21396,
+    "measuredLessons": 17223,
+    "idiomMeasuredLessons": 17223,
+    "senseMeasuredLessons": 17224,
+    "cultureClaimMeasuredLessons": 17223,
     "idioms": 101,
     "senses": 103,
     "cultureClaims": 208,
@@ -338424,8 +342452,8 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 20195,
-    "usesBeforeIntroduction": 37880,
+    "lessonsUsingTerms": 20484,
+    "usesBeforeIntroduction": 38174,
     "technicalUsesBeforeIntroduction": 6386,
     "technicalLessons": 3602,
     "worstTerms": [
@@ -338456,12 +342484,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 21107,
+    "lessonsScanned": 21396,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 4312,
+    "filesScanned": 4367,
     "mainCharacters": 135,
     "scriptCharacters": 802,
     "gaps": 0
