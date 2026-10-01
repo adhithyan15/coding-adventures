@@ -1,0 +1,19 @@
+{
+  "chapter": 208,
+  "title": "To give up, To exchange, To download, To ski, To slip",
+  "label": "ch:pt-to-give-up-to-exchange-to-download-to-ski-to-slip",
+  "canDo": "I can say to give up, to exchange, to download, to ski and to slip.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C208-escorregar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 208: I can say to give up, to exchange, to download, to ski and to slip.",
+    "assesses": [
+      "PT-LEX-C208-VERBOS208-03",
+      "PT-LEX-C208-VERBOS208-04",
+      "PT-LEX-C208-VERBOS208-05"
+    ]
+  }
+}

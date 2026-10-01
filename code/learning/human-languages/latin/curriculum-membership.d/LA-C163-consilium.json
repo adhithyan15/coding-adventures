@@ -1,0 +1,11 @@
+{
+  "id": "LA-C163-consilium",
+  "pathSegment": "LA-PATH-163-FUT163",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-163-FUT163",
+      "order": 2
+    }
+  ]
+}

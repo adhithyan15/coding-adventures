@@ -1,0 +1,11 @@
+{
+  "id": "PT-C174-bastar",
+  "pathSegment": "PT-PATH-174-VERBOS174",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-174-VERBOS174",
+      "order": 4
+    }
+  ]
+}

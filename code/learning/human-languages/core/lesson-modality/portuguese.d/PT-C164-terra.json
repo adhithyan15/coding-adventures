@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C164-terra",
+    "language": "portuguese",
+    "chapter": 164,
+    "sequence": 8660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b7ea47d457a049ce"
+  },
+  "findings": []
+}

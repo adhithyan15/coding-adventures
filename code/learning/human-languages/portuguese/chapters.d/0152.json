@@ -1,0 +1,19 @@
+{
+  "chapter": 152,
+  "title": "Therefore, Anyway, Although, Despite, Unfortunately",
+  "label": "ch:pt-therefore-anyway-although-despite-unfortunately",
+  "canDo": "I can say therefore, anyway, although, despite and unfortunately.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "PT-C152-infelizmente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 152: I can say therefore, anyway, although, despite and unfortunately.",
+    "assesses": [
+      "PT-LEX-C152-PORQUE152-03",
+      "PT-LEX-C152-PORQUE152-04",
+      "PT-LEX-C152-PORQUE152-05"
+    ]
+  }
+}

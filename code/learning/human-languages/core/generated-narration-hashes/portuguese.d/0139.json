@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:e6a2adc518688be3",
+  "lessonIds": [
+    "PT-C139-decidir",
+    "PT-C139-experimentar",
+    "PT-C139-continuar",
+    "PT-C139-parar",
+    "PT-C139-mudar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch139.txt",
+  "json": "portuguese/narration/ch139.json",
+  "textHash": "fnv1a64:57ace4dcbb2916ca",
+  "jsonHash": "fnv1a64:af809650fb61d31e",
+  "findings": []
+}

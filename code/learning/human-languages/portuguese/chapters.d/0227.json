@@ -1,0 +1,19 @@
+{
+  "chapter": 227,
+  "title": "Stationer's, Bookshop, Fishmonger's, Shopping centre, Shop window",
+  "label": "ch:pt-stationer-s-bookshop-fishmonger-s-shopping-centre-shop-window",
+  "canDo": "I can say a stationer's, a bookshop, a fishmonger's, a shopping centre and a shop window.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C227-montra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 227: I can say a stationer's, a bookshop, a fishmonger's, a shopping centre and a shop window.",
+    "assesses": [
+      "PT-LEX-C227-COISAS227-03",
+      "PT-LEX-C227-COISAS227-04",
+      "PT-LEX-C227-COISAS227-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C202-encher",
+  "pathSegment": "PT-PATH-202-VERBOS202",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-202-VERBOS202",
+      "order": 2
+    }
+  ]
+}

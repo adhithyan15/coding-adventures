@@ -1,0 +1,11 @@
+{
+  "id": "PT-C224-garagem",
+  "pathSegment": "PT-PATH-224-COISAS224",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-224-COISAS224",
+      "order": 1
+    }
+  ]
+}

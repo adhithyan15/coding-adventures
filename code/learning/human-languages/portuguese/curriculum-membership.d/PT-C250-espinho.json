@@ -1,0 +1,11 @@
+{
+  "id": "PT-C250-espinho",
+  "pathSegment": "PT-PATH-250-COISAS250",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-250-COISAS250",
+      "order": 4
+    }
+  ]
+}

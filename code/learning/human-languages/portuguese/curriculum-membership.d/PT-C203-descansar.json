@@ -1,0 +1,11 @@
+{
+  "id": "PT-C203-descansar",
+  "pathSegment": "PT-PATH-203-VERBOS203",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-203-VERBOS203",
+      "order": 1
+    }
+  ]
+}

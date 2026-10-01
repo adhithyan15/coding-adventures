@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R191-second-pass-words-from-chapters-187-191",
+    "language": "latin",
+    "chapter": 191,
+    "sequence": 8880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:27db2f295b15d5c9"
+  },
+  "findings": []
+}

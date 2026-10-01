@@ -1,0 +1,11 @@
+{
+  "id": "PT-C167-qualidade",
+  "pathSegment": "PT-PATH-167-COISAS167",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-167-COISAS167",
+      "order": 4
+    }
+  ]
+}

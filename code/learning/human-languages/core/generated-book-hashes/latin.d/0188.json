@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:b6260e2bd70737fc",
+  "lessonIds": [
+    "LA-C188-architectus",
+    "LA-C188-textor",
+    "LA-C188-figulus",
+    "LA-C188-vilicus",
+    "LA-C188-colonus"
+  ],
+  "tex": "latin/book/chapters/ch188-architect-weaver-potter-farm-manager-tenant-farmer.tex"
+}

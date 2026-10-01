@@ -1,0 +1,19 @@
+{
+  "chapter": 250,
+  "title": "Seed, Root, Branch, Trunk, Thorn",
+  "label": "ch:pt-seed-root-branch-trunk-thorn",
+  "canDo": "I can say a seed, a root, a branch, a trunk and a thorn.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C250-espinho",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 250: I can say a seed, a root, a branch, a trunk and a thorn.",
+    "assesses": [
+      "PT-LEX-C250-COISAS250-03",
+      "PT-LEX-C250-COISAS250-04",
+      "PT-LEX-C250-COISAS250-05"
+    ]
+  }
+}

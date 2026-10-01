@@ -1,0 +1,19 @@
+{
+  "chapter": 175,
+  "title": "At last, From now on, Still, Suddenly, Until",
+  "label": "ch:la-at-last-from-now-on-still-suddenly-until",
+  "canDo": "I can say at last, from now on, still, suddenly and until.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "LA-C175-donec",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 175: I can say at last, from now on, still, suddenly and until.",
+    "assesses": [
+      "LA-LEX-C175-TEMP175-03",
+      "LA-LEX-C175-TEMP175-04",
+      "LA-LEX-C175-TEMP175-05"
+    ]
+  }
+}

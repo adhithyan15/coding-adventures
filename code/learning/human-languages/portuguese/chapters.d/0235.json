@@ -1,0 +1,19 @@
+{
+  "chapter": 235,
+  "title": "To fold, To own, To prepare, To introduce, To lend",
+  "label": "ch:pt-to-fold-to-own-to-prepare-to-introduce-to-lend",
+  "canDo": "I can say to fold, to own, to prepare, to introduce and to lend.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C235-emprestar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 235: I can say to fold, to own, to prepare, to introduce and to lend.",
+    "assesses": [
+      "PT-LEX-C235-VERBOS235-03",
+      "PT-LEX-C235-VERBOS235-04",
+      "PT-LEX-C235-VERBOS235-05"
+    ]
+  }
+}

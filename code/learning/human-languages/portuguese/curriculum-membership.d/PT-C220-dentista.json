@@ -1,0 +1,11 @@
+{
+  "id": "PT-C220-dentista",
+  "pathSegment": "PT-PATH-220-COISAS220",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-220-COISAS220",
+      "order": 2
+    }
+  ]
+}

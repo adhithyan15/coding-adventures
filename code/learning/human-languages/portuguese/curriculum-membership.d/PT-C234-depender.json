@@ -1,0 +1,11 @@
+{
+  "id": "PT-C234-depender",
+  "pathSegment": "PT-PATH-234-VERBOS234",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-234-VERBOS234",
+      "order": 3
+    }
+  ]
+}

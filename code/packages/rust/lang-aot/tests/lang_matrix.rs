@@ -2898,6 +2898,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — true and false literal string predicates may select exact
+    // initial, step, and limit expressions for finite step loops.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, total; total := 0; for i := if 'ALPHA' < 'BETA' then 1 else 4 step if 'ALPHA' < 'BETA' then 1 else 2 until if 'ALPHA' < 'BETA' then 3 else 4 do total := total + i; print(total + 0.25); total := 0; for i := if 'BETA' < 'ALPHA' then 1 else 2 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'BETA' < 'ALPHA' then 5 else 4 do total := total + i; print(total + 0.25) end",
+        expect: Expect::Stdout("6.259.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a straight-line boolean snapshot can select a statement
     // branch that establishes definite string initialization.
     Prog {
@@ -3519,6 +3528,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a variable-free literal string predicate may discard a
+    // changing leaf while preserving a transitive recurrence dependency.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if 'ALPHA' < 'BETA' then limit else limit + 1 end; print(i + 0.25) end",
+        expect: Expect::Stdout("3.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — an unchanged known local selector may discard a changing
     // leaf while preserving a transitive dependency through the selected leaf.
     Prog {
@@ -4057,6 +4075,53 @@ fn main() { out(1, VALUE); }\n",
         ext: "alg",
         src: "begin integer i; real x; for i := 1 step 1 until 10 do if i < 4 then i := i * 2 else i := i + 3; print(i + 0.25); for x := 1.0 step 0.5 until 10.0 do if x < 4.0 then x := x * 2.0 else x := x + 3.0; print(x) end",
         expect: Expect::Stdout("11.2512.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — true and false literal string predicates may select distinct
+    // bounded controlled-scalar recurrences.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, j; for i := 1 step 1 until 10 do if 'ALPHA' < 'BETA' then i := i * 2 else i := i + 3; print(i + 0.25); for j := 1 step 1 until 10 do if 'BETA' < 'ALPHA' then j := j * 2 else j := j + 3; print(j + 0.25) end",
+        expect: Expect::Stdout("15.2513.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — true and false literal string predicates may select distinct
+    // terminating conditions while bounded scalar recurrences advance.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, j; real x, y; i := 0; x := 0.25; for i := i + 1 while if 'ALPHA' < 'BETA' then i <= 3 else i <= 1 do x := x + i; print(x); j := 0; y := 0.25; for j := j + 1 while if 'BETA' < 'ALPHA' then j <= 1 else j <= 2 do y := y + j; print(y) end",
+        expect: Expect::Stdout("6.253.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — true and false literal string predicates may select distinct
+    // controlled expressions while bounded predicates terminate each loop.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, j; real x, y; i := 0; x := 0.25; for i := if 'ALPHA' < 'BETA' then i + 1 else i + 2 while i <= 3 do x := x + i; print(x); j := 0; y := 0.25; for j := if 'BETA' < 'ALPHA' then j + 2 else j + 1 while j <= 2 do y := y + j; print(y) end",
+        expect: Expect::Stdout("6.253.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — exact literal string predicates may choose values in
+    // successive single-value and bounded while elements of one for list.
+    // Each element sees the exact control snapshot left by its predecessor.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real total; total := 0.25; for i := if 'ALPHA' < 'BETA' then 1 else 9, if 'BETA' < 'ALPHA' then 8 else 2, if 'ALPHA' < 'BETA' then i + 1 else i + 3 while i <= 4 do total := total + i; print(total) end",
+        expect: Expect::Stdout("10.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — exact literal string predicates may choose every header of
+    // a bounded step element and the value of the following single-value
+    // element. The step exit snapshot feeds the next element exactly.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real total; total := 0.25; for i := if 'ALPHA' < 'BETA' then 1 else 9 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'ALPHA' < 'BETA' then 2 else 0, if 'BETA' < 'ALPHA' then 8 else 4 do total := total + i; print(total) end",
+        expect: Expect::Stdout("7.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — an exact control recurrence remains analyzable when every
@@ -13746,6 +13811,31 @@ fn algol_tracked_step_bounds_run_on_every_available_standard_backend() {
 }
 
 #[test]
+fn algol_literal_string_selected_step_bounds_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("for i := if 'ALPHA' < 'BETA' then 1 else 4 step")
+        })
+        .expect("the literal-string-selected step bounds must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected step bounds did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
 fn algol_static_statement_condition_runs_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()
@@ -14206,6 +14296,131 @@ fn algol_static_conditional_control_recurrences_run_on_every_available_standard_
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the static conditional control recurrences did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_predicate_control_recurrences_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("if 'ALPHA' < 'BETA' then i := i * 2 else i := i + 3")
+        })
+        .expect("the literal-string-predicate control recurrences must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-predicate control recurrences did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_while_predicates_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("while if 'ALPHA' < 'BETA' then i <= 3 else i <= 1")
+        })
+        .expect("the literal-string-selected while predicates must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected while predicates did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_while_values_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("for i := if 'ALPHA' < 'BETA' then i + 1 else i + 2 while")
+        })
+        .expect("the literal-string-selected while values must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected while values did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_for_list_values_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("for i := if 'ALPHA' < 'BETA' then 1 else 9,")
+        })
+        .expect("the literal-string-selected for-list values must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected for-list values did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_mixed_for_list_headers_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "for i := if 'ALPHA' < 'BETA' then 1 else 9 step if 'BETA' < 'ALPHA'",
+                )
+        })
+        .expect("the literal-string-selected mixed for-list headers must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected mixed for-list headers did not run"
             );
             continue;
         };
@@ -15698,6 +15913,32 @@ fn algol_static_transitive_selector_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the static transitive selector did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_predicate_transitive_dependency_selectors_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "limit := if 'ALPHA' < 'BETA' then limit else limit + 1 end; print(i + 0.25)",
+                )
+        })
+        .expect("the literal-string-predicate transitive dependency selector must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-predicate transitive dependency selector did not run"
             );
             continue;
         };

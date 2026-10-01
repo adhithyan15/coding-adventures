@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:349874c2658278c7",
+  "lessonIds": [
+    "PT-C217-divorciado-divorciada",
+    "PT-C217-nublado-nublada",
+    "PT-C217-solarengo-solarenga",
+    "PT-C217-chuvoso-chuvosa",
+    "PT-C217-gordo-gorda"
+  ],
+  "tex": "portuguese/book/chapters/ch217-divorced-cloudy-sunny-rainy-fat.tex"
+}

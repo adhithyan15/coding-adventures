@@ -1,0 +1,11 @@
+{
+  "id": "PT-C218-cais",
+  "pathSegment": "PT-PATH-218-COISAS218",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-218-COISAS218",
+      "order": 3
+    }
+  ]
+}

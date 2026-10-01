@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:0b64d7dc08b114c6",
+  "lessonIds": [
+    "PT-C235-dobrar",
+    "PT-C235-possuir",
+    "PT-C235-preparar",
+    "PT-C235-apresentar",
+    "PT-C235-emprestar"
+  ],
+  "tex": "portuguese/book/chapters/ch235-to-fold-to-own-to-prepare-to-introduce-to-lend.tex"
+}

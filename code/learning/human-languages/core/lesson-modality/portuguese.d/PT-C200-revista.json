@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C200-revista",
+    "language": "portuguese",
+    "chapter": 200,
+    "sequence": 11340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:37f48d2cca75f750"
+  },
+  "findings": []
+}

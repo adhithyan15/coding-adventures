@@ -261,8 +261,11 @@ identity operands. Literal integer predicates, including checked literal
 arithmetic operands, finite binary64 literal predicates, and literal string
 predicates may also supply boolean identity operands. Variable-free literal
 string predicates may select statement or expression branches in bounded
-recurrence bodies, including the preserving leaf of a conditional selector
-assignment.
+recurrence bodies, including preserving leaves of conditional dependency or
+selector assignments, bounded controlled-scalar recurrences, conditional value
+expressions and predicates of bounded `while` elements, finite step-loop header
+expressions, and values sequenced across bounded multi-element `for` lists,
+including mixed finite-step and single-value elements.
 Unknown selectors, unsupported selector or dependency writes, string targets, overflow,
 non-finite values, and loops that do not reach false within 4,096 evaluations
 fail closed.

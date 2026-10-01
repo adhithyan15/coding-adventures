@@ -1,0 +1,19 @@
+{
+  "chapter": 194,
+  "title": "Monument, Statue, Fountain, Gate, Fence",
+  "label": "ch:pt-monument-statue-fountain-gate-fence",
+  "canDo": "I can say a monument, a statue, a fountain, a gate and a fence.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-R194-second-pass-words-from-chapters-192-194",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 194: I can say a monument, a statue, a fountain, a gate and a fence.",
+    "assesses": [
+      "PT-LEX-C194-COISAS194-03",
+      "PT-LEX-C194-COISAS194-04",
+      "PT-LEX-C194-COISAS194-05"
+    ]
+  }
+}

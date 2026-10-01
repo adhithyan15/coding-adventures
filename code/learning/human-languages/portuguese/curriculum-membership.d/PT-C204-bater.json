@@ -1,0 +1,11 @@
+{
+  "id": "PT-C204-bater",
+  "pathSegment": "PT-PATH-204-VERBOS204",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-204-VERBOS204",
+      "order": 3
+    }
+  ]
+}

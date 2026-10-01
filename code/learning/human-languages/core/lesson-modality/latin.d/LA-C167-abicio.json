@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C167-abicio",
+    "language": "latin",
+    "chapter": 167,
+    "sequence": 7260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48d81ea22e14573a"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C255-quintal",
+  "pathSegment": "PT-PATH-255-COISAS255",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-255-COISAS255",
+      "order": 1
+    }
+  ]
+}

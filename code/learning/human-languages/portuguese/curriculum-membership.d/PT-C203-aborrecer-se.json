@@ -1,0 +1,11 @@
+{
+  "id": "PT-C203-aborrecer-se",
+  "pathSegment": "PT-PATH-203-VERBOS203",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-203-VERBOS203",
+      "order": 4
+    }
+  ]
+}

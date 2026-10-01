@@ -1,0 +1,11 @@
+{
+  "id": "PT-R200-first-pass-words-from-chapters-195-197",
+  "pathSegment": "PT-PATH-200-TRAB200",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-200-TRAB200",
+      "order": 5
+    }
+  ]
+}

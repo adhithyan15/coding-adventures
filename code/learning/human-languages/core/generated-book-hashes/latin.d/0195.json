@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:49b42b3b70c6b5e6",
+  "lessonIds": [
+    "LA-C195-libum",
+    "LA-C195-acetum",
+    "LA-C195-garum",
+    "LA-C195-perna",
+    "LA-C195-dies-natalis"
+  ],
+  "tex": "latin/book/chapters/ch195-cake-vinegar-fish-sauce-ham-birthday.tex"
+}

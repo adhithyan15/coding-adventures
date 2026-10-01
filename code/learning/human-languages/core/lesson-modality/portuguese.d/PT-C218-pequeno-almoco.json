@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C218-pequeno-almoco",
+    "language": "portuguese",
+    "chapter": 218,
+    "sequence": 12560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cbd5204f64e5d1ef"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C168-praeparo",
+    "language": "latin",
+    "chapter": 168,
+    "sequence": 7310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91329d65f667ae0c"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 239,
+  "title": "To put on weight, To lose weight, To feed, To tidy up, To notice",
+  "label": "ch:pt-to-put-on-weight-to-lose-weight-to-feed-to-tidy-up-to-notice",
+  "canDo": "I can say to put on weight, to lose weight, to feed, to tidy up and to notice.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-R239-second-pass-words-from-chapters-235-239",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 239: I can say to put on weight, to lose weight, to feed, to tidy up and to notice.",
+    "assesses": [
+      "PT-LEX-C239-VERBOS239-03",
+      "PT-LEX-C239-VERBOS239-04",
+      "PT-LEX-C239-VERBOS239-05"
+    ]
+  }
+}

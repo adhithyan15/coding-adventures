@@ -1,0 +1,19 @@
+{
+  "chapter": 156,
+  "title": "Previous, Following, Public, Private, Personal",
+  "label": "ch:pt-previous-following-public-private-personal",
+  "canDo": "I can say previous, following, public, private and personal.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PT-C156-pessoal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 156: I can say previous, following, public, private and personal.",
+    "assesses": [
+      "PT-LEX-C156-QUAL156-03",
+      "PT-LEX-C156-QUAL156-04",
+      "PT-LEX-C156-QUAL156-05"
+    ]
+  }
+}

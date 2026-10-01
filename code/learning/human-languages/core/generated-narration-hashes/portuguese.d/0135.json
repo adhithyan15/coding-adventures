@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:99611804f7e9a229",
+  "lessonIds": [
+    "PT-C135-recentemente",
+    "PT-C135-anteontem",
+    "PT-C135-antigamente",
+    "PT-C135-o-passado",
+    "PT-C135-acontecer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch135.txt",
+  "json": "portuguese/narration/ch135.json",
+  "textHash": "fnv1a64:adeef473e49af712",
+  "jsonHash": "fnv1a64:9e022f59fd2ec59f",
+  "findings": []
+}

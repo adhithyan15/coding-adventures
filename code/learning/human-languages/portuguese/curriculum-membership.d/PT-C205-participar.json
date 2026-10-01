@@ -1,0 +1,11 @@
+{
+  "id": "PT-C205-participar",
+  "pathSegment": "PT-PATH-205-VERBOS205",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-205-VERBOS205",
+      "order": 3
+    }
+  ]
+}

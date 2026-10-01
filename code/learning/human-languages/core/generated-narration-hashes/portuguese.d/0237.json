@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:a04a19004de534c1",
+  "lessonIds": [
+    "PT-C237-destruir",
+    "PT-C237-exagerar",
+    "PT-C237-celebrar",
+    "PT-C237-travar",
+    "PT-C237-funcionar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch237.txt",
+  "json": "portuguese/narration/ch237.json",
+  "textHash": "fnv1a64:61e6ec09529ea89c",
+  "jsonHash": "fnv1a64:4831753ed6503f16",
+  "findings": []
+}

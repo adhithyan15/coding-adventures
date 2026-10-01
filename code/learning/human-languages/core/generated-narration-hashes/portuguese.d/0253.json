@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:0e6580f860a47465",
+  "lessonIds": [
+    "PT-C253-provador",
+    "PT-C253-tamanho",
+    "PT-C253-troco",
+    "PT-C253-recibo",
+    "PT-C253-fila"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch253.txt",
+  "json": "portuguese/narration/ch253.json",
+  "textHash": "fnv1a64:88aae01b484481cd",
+  "jsonHash": "fnv1a64:4f1edd0204745a17",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 220,
+  "title": "Journalist, Architect, Dentist, Pharmacist, Butcher",
+  "label": "ch:pt-journalist-architect-dentist-pharmacist-butcher",
+  "canDo": "I can say a journalist, an architect, a dentist, a pharmacist and a butcher.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C220-talhante",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 220: I can say a journalist, an architect, a dentist, a pharmacist and a butcher.",
+    "assesses": [
+      "PT-LEX-C220-COISAS220-03",
+      "PT-LEX-C220-COISAS220-04",
+      "PT-LEX-C220-COISAS220-05"
+    ]
+  }
+}

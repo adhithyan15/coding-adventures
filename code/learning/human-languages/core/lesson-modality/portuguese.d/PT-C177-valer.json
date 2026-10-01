@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C177-valer",
+    "language": "portuguese",
+    "chapter": 177,
+    "sequence": 9620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8fcbb37a33c3b87"
+  },
+  "findings": []
+}

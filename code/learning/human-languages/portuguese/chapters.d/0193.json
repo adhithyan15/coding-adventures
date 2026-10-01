@@ -1,0 +1,19 @@
+{
+  "chapter": 193,
+  "title": "Postcard, Folder, Label, Guide, Entrance",
+  "label": "ch:pt-postcard-folder-label-guide-entrance",
+  "canDo": "I can say a postcard, a folder, a label, a guide and an entrance.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C193-entrada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 193: I can say a postcard, a folder, a label, a guide and an entrance.",
+    "assesses": [
+      "PT-LEX-C193-COISAS193-03",
+      "PT-LEX-C193-COISAS193-04",
+      "PT-LEX-C193-COISAS193-05"
+    ]
+  }
+}

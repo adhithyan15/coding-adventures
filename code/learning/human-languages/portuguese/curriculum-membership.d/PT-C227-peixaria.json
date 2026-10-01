@@ -1,0 +1,11 @@
+{
+  "id": "PT-C227-peixaria",
+  "pathSegment": "PT-PATH-227-COISAS227",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-227-COISAS227",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C189-mendacium",
+  "pathSegment": "LA-PATH-189-RES189",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-189-RES189",
+      "order": 4
+    }
+  ]
+}

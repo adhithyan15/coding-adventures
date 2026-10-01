@@ -1,0 +1,11 @@
+{
+  "id": "PT-C214-alias",
+  "pathSegment": "PT-PATH-214-PORQUE214",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-214-PORQUE214",
+      "order": 4
+    }
+  ]
+}

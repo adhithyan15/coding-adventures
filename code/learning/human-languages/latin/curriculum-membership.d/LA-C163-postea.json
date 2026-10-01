@@ -1,0 +1,11 @@
+{
+  "id": "LA-C163-postea",
+  "pathSegment": "LA-PATH-163-FUT163",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-163-FUT163",
+      "order": 1
+    }
+  ]
+}

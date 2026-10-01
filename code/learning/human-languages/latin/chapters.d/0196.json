@@ -1,0 +1,19 @@
+{
+  "chapter": 196,
+  "title": "Running stream, Marsh, Meadow, Grove, Sacred grove",
+  "label": "ch:la-running-stream-marsh-meadow-grove-sacred-grove",
+  "canDo": "I can say a running stream, a marsh, a meadow, a grove and a sacred grove.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-R196-second-pass-words-from-chapters-194-196",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 196: I can say a running stream, a marsh, a meadow, a grove and a sacred grove.",
+    "assesses": [
+      "LA-LEX-C196-RES196-03",
+      "LA-LEX-C196-RES196-04",
+      "LA-LEX-C196-RES196-05"
+    ]
+  }
+}

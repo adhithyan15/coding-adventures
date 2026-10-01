@@ -1,0 +1,11 @@
+{
+  "id": "PT-C226-ginasio",
+  "pathSegment": "PT-PATH-226-COISAS226",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-226-COISAS226",
+      "order": 1
+    }
+  ]
+}

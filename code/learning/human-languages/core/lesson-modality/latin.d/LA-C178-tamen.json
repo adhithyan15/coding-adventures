@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C178-tamen",
+    "language": "latin",
+    "chapter": 178,
+    "sequence": 7990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:49de22fb8e9a8c09"
+  },
+  "findings": []
+}

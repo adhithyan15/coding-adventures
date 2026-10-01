@@ -33,7 +33,7 @@
 
 use std::collections::HashMap;
 
-pub const VERSION: &str = "0.4.0";
+pub const VERSION: &str = "0.5.0";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Size values
@@ -217,15 +217,23 @@ impl TextDecorationLines {
 pub enum TextDecorationStyle {
     #[default]
     Solid,
+    Double,
+    Dotted,
+    Dashed,
+    Wavy,
 }
 
 /// Paint-independent text decoration inherited by inline text descendants.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct TextDecoration {
     pub lines: TextDecorationLines,
     pub style: TextDecorationStyle,
     /// `None` means use the text foreground color.
     pub color: Option<Color>,
+    /// Authored logical-unit thickness. `None` uses font metrics.
+    pub thickness: Option<f64>,
+    /// Authored underline distance below the baseline. `None` uses font metrics.
+    pub underline_offset: Option<f64>,
 }
 
 impl TextDecoration {
@@ -234,6 +242,8 @@ impl TextDecoration {
             lines: TextDecorationLines::UNDERLINE,
             style: TextDecorationStyle::Solid,
             color: None,
+            thickness: None,
+            underline_offset: None,
         }
     }
 }

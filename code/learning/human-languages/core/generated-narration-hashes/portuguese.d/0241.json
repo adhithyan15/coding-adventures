@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:1d3fc295cc622070",
+  "lessonIds": [
+    "PT-C241-liso-lisa",
+    "PT-C241-aspero-aspera",
+    "PT-C241-profundo-profunda",
+    "PT-C241-desconhecido-desconhecida",
+    "PT-C241-simples"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch241.txt",
+  "json": "portuguese/narration/ch241.json",
+  "textHash": "fnv1a64:bd380103469ba7e3",
+  "jsonHash": "fnv1a64:0a8e47e2054e57c8",
+  "findings": []
+}

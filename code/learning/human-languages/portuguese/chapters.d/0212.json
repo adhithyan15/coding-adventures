@@ -1,0 +1,19 @@
+{
+  "chapter": 212,
+  "title": "End, Beginning, Deadline, Period, Public holiday",
+  "label": "ch:pt-end-beginning-deadline-period-public-holiday",
+  "canDo": "I can say the end, the beginning, a deadline, a period and a public holiday.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "PT-C212-feriado",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 212: I can say the end, the beginning, a deadline, a period and a public holiday.",
+    "assesses": [
+      "PT-LEX-C212-TEMPO212-03",
+      "PT-LEX-C212-TEMPO212-04",
+      "PT-LEX-C212-TEMPO212-05"
+    ]
+  }
+}

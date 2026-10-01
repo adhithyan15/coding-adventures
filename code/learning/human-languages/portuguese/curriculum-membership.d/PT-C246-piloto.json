@@ -1,0 +1,11 @@
+{
+  "id": "PT-C246-piloto",
+  "pathSegment": "PT-PATH-246-COISAS246",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-246-COISAS246",
+      "order": 4
+    }
+  ]
+}

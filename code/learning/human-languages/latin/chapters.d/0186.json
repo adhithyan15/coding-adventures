@@ -1,0 +1,19 @@
+{
+  "chapter": 186,
+  "title": "Helmsman, Market, Weight, Measure, Pound",
+  "label": "ch:la-helmsman-market-weight-measure-pound",
+  "canDo": "I can say a helmsman, a market, a weight, a measure and a pound.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C186-libra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 186: I can say a helmsman, a market, a weight, a measure and a pound.",
+    "assesses": [
+      "LA-LEX-C186-RES186-03",
+      "LA-LEX-C186-RES186-04",
+      "LA-LEX-C186-RES186-05"
+    ]
+  }
+}

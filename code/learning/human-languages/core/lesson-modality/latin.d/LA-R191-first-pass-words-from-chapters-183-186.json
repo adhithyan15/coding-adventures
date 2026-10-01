@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R191-first-pass-words-from-chapters-183-186",
+    "language": "latin",
+    "chapter": 191,
+    "sequence": 8870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3e8135375247f0a"
+  },
+  "findings": []
+}

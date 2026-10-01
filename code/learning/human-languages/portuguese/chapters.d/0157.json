@@ -1,0 +1,19 @@
+{
+  "chapter": 157,
+  "title": "Flat, Dining room, Balcony, Lock, Doorbell",
+  "label": "ch:pt-flat-dining-room-balcony-lock-doorbell",
+  "canDo": "I can say a flat, a dining room, a balcony, a lock and a doorbell.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C157-campainha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 157: I can say a flat, a dining room, a balcony, a lock and a doorbell.",
+    "assesses": [
+      "PT-LEX-C157-COISAS157-03",
+      "PT-LEX-C157-COISAS157-04",
+      "PT-LEX-C157-COISAS157-05"
+    ]
+  }
+}

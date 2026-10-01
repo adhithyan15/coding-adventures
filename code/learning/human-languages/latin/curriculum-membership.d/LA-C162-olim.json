@@ -1,0 +1,11 @@
+{
+  "id": "LA-C162-olim",
+  "pathSegment": "LA-PATH-162-PAS162",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-162-PAS162",
+      "order": 2
+    }
+  ]
+}

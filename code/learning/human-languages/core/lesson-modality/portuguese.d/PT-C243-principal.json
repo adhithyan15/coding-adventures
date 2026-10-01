@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C243-principal",
+    "language": "portuguese",
+    "chapter": 243,
+    "sequence": 14550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d27b21eb53cb7b9d"
+  },
+  "findings": []
+}

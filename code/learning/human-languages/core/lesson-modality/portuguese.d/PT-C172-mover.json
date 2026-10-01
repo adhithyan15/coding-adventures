@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C172-mover",
+    "language": "portuguese",
+    "chapter": 172,
+    "sequence": 9370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2874ffc3715aa46e"
+  },
+  "findings": []
+}

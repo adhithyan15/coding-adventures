@@ -35,10 +35,13 @@ it("pins Telugu's pre-A1 writing ladder", () => {
   // TE-S157 with familiar-word ba and TE-S123 with dda, another
   // vocabulary-first retroflex letter. TE-S113 adds familiar-word pa before
   // the first complete ladder. TE-S110 then revisits observe-and-trace with
-  // familiar-word ya after that ladder. TE-S116 gives
-  // familiar-word da the same source-backed
-  // rung. TE-S155 revisits the stage for the aspirated partner ttha after the
-  // first complete ladder. TE-S128 then adds familiar-word bha; TE-S130 and
+  // TE-S111 adds source-backed sa after that ladder, followed by TE-S158's
+  // source-backed ssa and TE-S125's source-backed ha before TE-S110's
+  // familiar-word ya and TE-S159's source-backed sha before TE-S114 adds
+  // familiar-word la. TE-S116 gives familiar-word da
+  // the same source-backed rung, and TE-S117 follows with familiar-word va.
+  // TE-S155 revisits the stage for the aspirated partner ttha after the first
+  // complete ladder. TE-S128 then adds familiar-word bha; TE-S130 and
   // TE-S132 later revisit the stage for newly introduced tha and nya.
   // The next rung is a SECOND dictation, roughly 1,150 sequence steps after the
   // first. It is here because the ladder proves the stages are reachable, not
@@ -62,8 +65,14 @@ it("pins Telugu's pre-A1 writing ladder", () => {
     ["TE-S01-copy-in-a-word", "guided-copy"],
     ["TE-S01-delayed-copy", "delayed-copy"],
     ["TE-S01-dictation", "dictation-transcription"],
+    ["TE-S111-letter-sa", "observe-trace"],
+    ["TE-S158-letter-ssa", "observe-trace"],
+    ["TE-S125-letter-ha", "observe-trace"],
     ["TE-S110-letter-ya", "observe-trace"],
+    ["TE-S159-letter-sha", "observe-trace"],
+    ["TE-S114-letter-la", "observe-trace"],
     ["TE-S116-letter-da", "observe-trace"],
+    ["TE-S117-letter-va", "observe-trace"],
     ["TE-S155-letter-ttha", "observe-trace"],
     ["TE-S160-letter-pha", "observe-trace"],
     ["TE-S139-letter-ddha", "observe-trace"],

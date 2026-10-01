@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:23ba3d1e90c1c0ce",
+  "lessonIds": [
+    "PT-C226-raquete",
+    "PT-C226-ginasio",
+    "PT-C226-natacao",
+    "PT-C226-tenis",
+    "PT-C226-vitoria"
+  ],
+  "tex": "portuguese/book/chapters/ch226-racket-gym-swimming-tennis-victory.tex"
+}

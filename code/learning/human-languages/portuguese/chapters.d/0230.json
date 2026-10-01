@@ -1,0 +1,19 @@
+{
+  "chapter": 230,
+  "title": "University, Mistake, History, Geography, Mathematics",
+  "label": "ch:pt-university-mistake-history-geography-mathematics",
+  "canDo": "I can say a university, a mistake, history, geography and mathematics.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-R230-second-pass-words-from-chapters-228-230",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 230: I can say a university, a mistake, history, geography and mathematics.",
+    "assesses": [
+      "PT-LEX-C230-TRAB230-03",
+      "PT-LEX-C230-TRAB230-04",
+      "PT-LEX-C230-TRAB230-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C246-canalizador",
+  "pathSegment": "PT-PATH-246-COISAS246",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-246-COISAS246",
+      "order": 2
+    }
+  ]
+}

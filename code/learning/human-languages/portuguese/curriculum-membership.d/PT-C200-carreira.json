@@ -1,0 +1,11 @@
+{
+  "id": "PT-C200-carreira",
+  "pathSegment": "PT-PATH-200-TRAB200",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-200-TRAB200",
+      "order": 1
+    }
+  ]
+}

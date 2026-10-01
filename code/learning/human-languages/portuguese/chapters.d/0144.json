@@ -1,0 +1,19 @@
+{
+  "chapter": 144,
+  "title": "To fall silent, To fear, To transport, To kill, To unite",
+  "label": "ch:pt-to-fall-silent-to-fear-to-transport-to-kill-to-unite",
+  "canDo": "I can say to fall silent, to fear, to transport, to kill and to unite.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C144-unir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 144: I can say to fall silent, to fear, to transport, to kill and to unite.",
+    "assesses": [
+      "PT-LEX-C144-VERBOS144-03",
+      "PT-LEX-C144-VERBOS144-04",
+      "PT-LEX-C144-VERBOS144-05"
+    ]
+  }
+}

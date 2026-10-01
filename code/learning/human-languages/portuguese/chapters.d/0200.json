@@ -1,0 +1,19 @@
+{
+  "chapter": 200,
+  "title": "Interview, Career, Printer, Magazine, Dictionary",
+  "label": "ch:pt-interview-career-printer-magazine-dictionary",
+  "canDo": "I can say an interview, a career, a printer, a magazine and a dictionary.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-R200-second-pass-words-from-chapters-198-200",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 200: I can say an interview, a career, a printer, a magazine and a dictionary.",
+    "assesses": [
+      "PT-LEX-C200-TRAB200-03",
+      "PT-LEX-C200-TRAB200-04",
+      "PT-LEX-C200-TRAB200-05"
+    ]
+  }
+}

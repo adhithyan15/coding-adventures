@@ -1,0 +1,21 @@
+{
+  "language": "portuguese",
+  "chapter": 137,
+  "sourceHash": "fnv1a64:f089ee208973a044",
+  "lessonIds": [
+    "PT-C137-o-horario",
+    "PT-C137-o-aviso",
+    "PT-C137-a-renda",
+    "PT-C137-o-anuncio",
+    "PT-C137-a-fatura",
+    "PT-R137-first-pass-saying-no-and-looking-back",
+    "PT-R137-second-pass-looking-ahead-and-reading-notices"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "portuguese/narration/ch137.txt",
+  "json": "portuguese/narration/ch137.json",
+  "textHash": "fnv1a64:6401c4150f7cdbf9",
+  "jsonHash": "fnv1a64:ed2ff9d0b496263c",
+  "findings": []
+}

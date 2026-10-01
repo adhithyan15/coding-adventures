@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:46ef3aa94cb0c8d4",
+  "lessonIds": [
+    "PT-C223-saida",
+    "PT-C223-bagagem",
+    "PT-C223-lugar",
+    "PT-C223-volante",
+    "PT-C223-roda"
+  ],
+  "tex": "portuguese/book/chapters/ch223-exit-luggage-seat-steering-wheel-wheel.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:92c23089bbb907ff",
+  "lessonIds": [
+    "PT-C225-ambiente",
+    "PT-C225-poluicao",
+    "PT-C225-reciclagem",
+    "PT-C225-energia",
+    "PT-C225-eletricidade"
+  ],
+  "tex": "portuguese/book/chapters/ch225-environment-pollution-recycling-energy-electricity.tex"
+}

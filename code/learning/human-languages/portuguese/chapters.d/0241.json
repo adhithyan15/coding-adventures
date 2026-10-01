@@ -1,0 +1,19 @@
+{
+  "chapter": 241,
+  "title": "Smooth, Rough, Deep, Unknown, Simple",
+  "label": "ch:pt-smooth-rough-deep-unknown-simple",
+  "canDo": "I can say smooth, rough, deep, unknown and simple.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PT-C241-simples",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 241: I can say smooth, rough, deep, unknown and simple.",
+    "assesses": [
+      "PT-LEX-C241-QUAL241-03",
+      "PT-LEX-C241-QUAL241-04",
+      "PT-LEX-C241-QUAL241-05"
+    ]
+  }
+}

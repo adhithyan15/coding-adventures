@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:798a3ea25ed6a92a",
+  "lessonIds": [
+    "PT-C242-cozido-cozida",
+    "PT-C242-maduro-madura",
+    "PT-C242-escuro-escura",
+    "PT-C242-claro-clara",
+    "PT-C242-distante"
+  ],
+  "tex": "portuguese/book/chapters/ch242-cooked-ripe-dark-clear-distant.tex"
+}

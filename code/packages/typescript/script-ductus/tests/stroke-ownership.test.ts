@@ -290,12 +290,30 @@ describe("stroke ownership migration baseline", () => {
       //
       // Telugu ర follows with two sourced paths. Keys move 404 -> 405 and
       // Telugu 35 -> 36; shared-identity values remain unchanged.
+      //
+      // Telugu ల follows with two sourced paths. Keys move 405 -> 406 and
+      // Telugu 36 -> 37; shared-identity values remain unchanged.
+      //
+      // Telugu వ follows with three sourced paths. Keys move 406 -> 407 and
+      // Telugu 37 -> 38; shared-identity values remain unchanged.
+      //
+      // Telugu శ follows with three sourced paths. Keys move 407 -> 408 and
+      // Telugu 38 -> 39; shared-identity values remain unchanged.
+      //
+      // Telugu ష follows with four sourced paths. Keys move 408 -> 409 and
+      // Telugu 39 -> 40; shared-identity values remain unchanged.
+      //
+      // Telugu స follows with two sourced paths. Keys move 409 -> 410 and
+      // Telugu 40 -> 41; shared-identity values remain unchanged.
+      //
+      // Telugu హ follows with four sourced paths. Keys move 410 -> 411 and
+      // Telugu 41 -> 42; shared-identity values remain unchanged.
     }).toEqual({
-      keys: 405,
+      keys: 411,
       keyHash:
-        "c24d93f79aa783718e75d4f9c7ed224e3beb370ca9a36dd956985b432580817e",
+        "4dc9954cdf354a8bfe3ef3af58786b5b05e38c8662a1a889005a5c2faee974a8",
       nonTamilDataHash:
-        "1850217cfe5750fa43ef005fac80597a1c8a2e442c152cdec097bf4198003dc1",
+        "e8809e5895e4d73fc86a3010a93090ae66320bc4d50393950649076ccb3e4337",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -311,7 +329,7 @@ describe("stroke ownership migration baseline", () => {
         malayalam: 14,
         "perso-arabic": 24,
         tamil: 29,
-        telugu: 36,
+        telugu: 42,
         "urdu-nastaliq": 31,
       },
     });

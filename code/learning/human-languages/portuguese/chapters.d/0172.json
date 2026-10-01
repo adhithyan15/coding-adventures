@@ -1,0 +1,19 @@
+{
+  "chapter": 172,
+  "title": "To move, To take off, To hold, To break, To taste",
+  "label": "ch:pt-to-move-to-take-off-to-hold-to-break-to-taste",
+  "canDo": "I can say to move, to take off, to hold, to break and to taste.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C172-provar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 172: I can say to move, to take off, to hold, to break and to taste.",
+    "assesses": [
+      "PT-LEX-C172-VERBOS172-03",
+      "PT-LEX-C172-VERBOS172-04",
+      "PT-LEX-C172-VERBOS172-05"
+    ]
+  }
+}

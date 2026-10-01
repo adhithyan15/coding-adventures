@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:13803813d2ba6f60",
+  "lessonIds": [
+    "PT-C153-confortavel",
+    "PT-C153-desconfortavel",
+    "PT-C153-educado-educada",
+    "PT-C153-mal-educado-mal-educada",
+    "PT-C153-desagradavel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch153.txt",
+  "json": "portuguese/narration/ch153.json",
+  "textHash": "fnv1a64:b125f2014239d3cd",
+  "jsonHash": "fnv1a64:bcc5cdc0e86e3c7b",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:43244c6043736e64",
+  "lessonIds": [
+    "PT-C251-gas",
+    "PT-C251-plastico",
+    "PT-C251-algodao",
+    "PT-C251-la",
+    "PT-C251-seda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch251.txt",
+  "json": "portuguese/narration/ch251.json",
+  "textHash": "fnv1a64:e145e36f9f4dc1b8",
+  "jsonHash": "fnv1a64:9b407098373694cd",
+  "findings": []
+}

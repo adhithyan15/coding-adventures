@@ -1,0 +1,11 @@
+{
+  "id": "PT-C151-la-em-cima",
+  "pathSegment": "PT-PATH-151-LUGAR151",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-151-LUGAR151",
+      "order": 4
+    }
+  ]
+}

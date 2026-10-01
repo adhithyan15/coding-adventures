@@ -1,0 +1,11 @@
+{
+  "id": "LA-C185-impluvium",
+  "pathSegment": "LA-PATH-185-RES185",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-185-RES185",
+      "order": 3
+    }
+  ]
+}

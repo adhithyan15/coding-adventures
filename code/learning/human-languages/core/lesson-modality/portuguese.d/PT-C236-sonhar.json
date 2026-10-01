@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C236-sonhar",
+    "language": "portuguese",
+    "chapter": 236,
+    "sequence": 13970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8281068b6bba598"
+  },
+  "findings": []
+}

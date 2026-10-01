@@ -1,0 +1,19 @@
+{
+  "chapter": 217,
+  "title": "Divorced, Cloudy, Sunny, Rainy, Fat",
+  "label": "ch:pt-divorced-cloudy-sunny-rainy-fat",
+  "canDo": "I can say divorced, cloudy, sunny, rainy and fat.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PT-C217-gordo-gorda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 217: I can say divorced, cloudy, sunny, rainy and fat.",
+    "assesses": [
+      "PT-LEX-C217-QUAL217-03",
+      "PT-LEX-C217-QUAL217-04",
+      "PT-LEX-C217-QUAL217-05"
+    ]
+  }
+}

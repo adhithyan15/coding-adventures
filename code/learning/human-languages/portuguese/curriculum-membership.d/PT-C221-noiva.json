@@ -1,0 +1,11 @@
+{
+  "id": "PT-C221-noiva",
+  "pathSegment": "PT-PATH-221-COISAS221",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-221-COISAS221",
+      "order": 3
+    }
+  ]
+}

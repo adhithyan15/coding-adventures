@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:6526dbb9c9e92041",
+  "lessonIds": [
+    "PT-C235-dobrar",
+    "PT-C235-possuir",
+    "PT-C235-preparar",
+    "PT-C235-apresentar",
+    "PT-C235-emprestar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch235.txt",
+  "json": "portuguese/narration/ch235.json",
+  "textHash": "fnv1a64:f4db91f8e1c79f9c",
+  "jsonHash": "fnv1a64:bb1f294288420b95",
+  "findings": []
+}

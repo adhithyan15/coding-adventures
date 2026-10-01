@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:57d2a9c5b22e632a",
+  "lessonIds": [
+    "PT-C193-postal",
+    "PT-C193-pasta",
+    "PT-C193-etiqueta",
+    "PT-C193-guia",
+    "PT-C193-entrada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch193.txt",
+  "json": "portuguese/narration/ch193.json",
+  "textHash": "fnv1a64:820f833af2211309",
+  "jsonHash": "fnv1a64:bd57fe1dbc9882f2",
+  "findings": []
+}

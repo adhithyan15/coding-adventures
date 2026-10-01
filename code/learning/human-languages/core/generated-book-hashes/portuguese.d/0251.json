@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:1c89da916f99f13c",
+  "lessonIds": [
+    "PT-C251-gas",
+    "PT-C251-plastico",
+    "PT-C251-algodao",
+    "PT-C251-la",
+    "PT-C251-seda"
+  ],
+  "tex": "portuguese/book/chapters/ch251-gas-plastic-cotton-wool-silk.tex"
+}

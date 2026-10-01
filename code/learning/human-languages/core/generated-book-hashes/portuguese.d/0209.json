@@ -1,0 +1,15 @@
+{
+  "language": "portuguese",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:43f2c49bb1491bce",
+  "lessonIds": [
+    "PT-C209-desaparecer",
+    "PT-C209-gravar",
+    "PT-C209-manter",
+    "PT-C209-existir",
+    "PT-C209-exprimir",
+    "PT-R209-first-pass-words-from-chapters-201-204",
+    "PT-R209-second-pass-words-from-chapters-205-209"
+  ],
+  "tex": "portuguese/book/chapters/ch209-to-disappear-to-record-to-keep-to-exist-to-express.tex"
+}

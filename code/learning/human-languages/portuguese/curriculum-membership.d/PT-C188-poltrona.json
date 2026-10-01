@@ -1,0 +1,11 @@
+{
+  "id": "PT-C188-poltrona",
+  "pathSegment": "PT-PATH-188-COISAS188",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-188-COISAS188",
+      "order": 2
+    }
+  ]
+}

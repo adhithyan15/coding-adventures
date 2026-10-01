@@ -1,0 +1,11 @@
+{
+  "id": "PT-C170-contrato",
+  "pathSegment": "PT-PATH-170-TRAB170",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-170-TRAB170",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C175-donec",
+    "language": "latin",
+    "chapter": 175,
+    "sequence": 7870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f516bec0e71097e1"
+  },
+  "findings": []
+}

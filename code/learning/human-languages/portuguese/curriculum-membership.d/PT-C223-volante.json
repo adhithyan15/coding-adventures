@@ -1,0 +1,11 @@
+{
+  "id": "PT-C223-volante",
+  "pathSegment": "PT-PATH-223-COISAS223",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-223-COISAS223",
+      "order": 3
+    }
+  ]
+}

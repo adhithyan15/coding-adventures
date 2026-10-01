@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:549230fc2f0990e3",
+  "lessonIds": [
+    "PT-C211-paciencia",
+    "PT-C211-sorte",
+    "PT-C211-osso",
+    "PT-C211-alergia",
+    "PT-C211-dor-de-cabeca"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch211.txt",
+  "json": "portuguese/narration/ch211.json",
+  "textHash": "fnv1a64:c21a98a34e803c73",
+  "jsonHash": "fnv1a64:bcb725125dbb6156",
+  "findings": []
+}

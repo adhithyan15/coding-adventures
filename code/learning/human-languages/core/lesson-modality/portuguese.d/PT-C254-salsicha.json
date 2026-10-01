@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C254-salsicha",
+    "language": "portuguese",
+    "chapter": 254,
+    "sequence": 15290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:87ed4146bc17b006"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C239-notar",
+    "language": "portuguese",
+    "chapter": 239,
+    "sequence": 14160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a298ef82ca7281d6"
+  },
+  "findings": []
+}

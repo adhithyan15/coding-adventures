@@ -448,11 +448,7 @@ fn collect_node_ids_from_subgraph(sg: &DotSubgraph) -> Vec<String> {
     for stmt in &sg.statements {
         match stmt {
             DotStatement::Node(n) => ids.push(n.id.clone()),
-            DotStatement::Edge(e) => {
-                if !e.chain.is_empty() {
-                    ids.push(e.chain[0].clone());
-                }
-            }
+            DotStatement::Edge(e) => ids.extend(e.chain.first().cloned()),
             DotStatement::Subgraph(sub) => ids.extend(collect_node_ids_from_subgraph(sub)),
             _ => {}
         }

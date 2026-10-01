@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:6848623523aeb609",
+  "lessonIds": [
+    "PT-C231-construir",
+    "PT-C231-fotografar",
+    "PT-C231-repetir",
+    "PT-C231-explicar",
+    "PT-C231-traduzir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch231.txt",
+  "json": "portuguese/narration/ch231.json",
+  "textHash": "fnv1a64:ca29cbaa9e474620",
+  "jsonHash": "fnv1a64:7d9a3967dc29e6e7",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C187-constipado-constipada",
+  "pathSegment": "PT-PATH-187-QUAL187",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-187-QUAL187",
+      "order": 3
+    }
+  ]
+}

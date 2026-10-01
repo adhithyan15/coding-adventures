@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C172-venor",
+    "language": "latin",
+    "chapter": 172,
+    "sequence": 7510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2809e26921ea471f"
+  },
+  "findings": []
+}

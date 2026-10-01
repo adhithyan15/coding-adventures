@@ -1,0 +1,11 @@
+{
+  "id": "PT-C218-gorjeta",
+  "pathSegment": "PT-PATH-218-COISAS218",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-218-COISAS218",
+      "order": 2
+    }
+  ]
+}

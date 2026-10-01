@@ -1,0 +1,11 @@
+{
+  "id": "PT-C201-encomendar",
+  "pathSegment": "PT-PATH-201-VERBOS201",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-201-VERBOS201",
+      "order": 3
+    }
+  ]
+}

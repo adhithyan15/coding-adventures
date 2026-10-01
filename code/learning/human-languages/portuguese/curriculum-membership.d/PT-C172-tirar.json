@@ -1,0 +1,11 @@
+{
+  "id": "PT-C172-tirar",
+  "pathSegment": "PT-PATH-172-VERBOS172",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-172-VERBOS172",
+      "order": 1
+    }
+  ]
+}

@@ -1483,6 +1483,9 @@ pub struct TreemapStyle {
     pub text_transform: Option<TreemapTextTransform>,
     pub text_decoration: Option<TreemapTextDecoration>,
     pub text_decoration_color: Option<String>,
+    pub text_decoration_style: Option<TreemapTextDecorationStyle>,
+    pub text_decoration_thickness: Option<TreemapTextDecorationThickness>,
+    pub text_underline_offset: Option<TreemapTextUnderlineOffset>,
     pub line_height: Option<TreemapLineHeight>,
 }
 
@@ -1490,7 +1493,7 @@ pub struct TreemapStyle {
 pub enum TreemapTextAlign { Start, Center, End }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum TreemapTextTransform { None, Uppercase, Lowercase, Capitalize }
+pub enum TreemapTextTransform { None, Uppercase, Lowercase, Capitalize, FullWidth }
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub struct TreemapTextDecoration {
@@ -1498,6 +1501,15 @@ pub struct TreemapTextDecoration {
     pub overline: bool,
     pub line_through: bool,
 }
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TreemapTextDecorationStyle { Solid, Double, Dotted, Dashed, Wavy }
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum TreemapTextDecorationThickness { Auto, FromFont, Pixels(f64), Factor(f64) }
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum TreemapTextUnderlineOffset { Auto, Pixels(f64), Factor(f64) }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum TreemapLineHeight {

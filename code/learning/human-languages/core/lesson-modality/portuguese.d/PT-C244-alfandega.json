@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C244-alfandega",
+    "language": "portuguese",
+    "chapter": 244,
+    "sequence": 14560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47e56191e6540f39"
+  },
+  "findings": []
+}

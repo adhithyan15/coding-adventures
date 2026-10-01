@@ -1,0 +1,11 @@
+{
+  "id": "PT-C228-pedaco",
+  "pathSegment": "PT-PATH-228-COISAS228",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-228-COISAS228",
+      "order": 2
+    }
+  ]
+}

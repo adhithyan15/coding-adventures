@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:8ade50057a1be333",
+  "lessonIds": [
+    "PT-C203-divorciar-se",
+    "PT-C203-descansar",
+    "PT-C203-acordar",
+    "PT-C203-pentear-se",
+    "PT-C203-aborrecer-se"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch203.txt",
+  "json": "portuguese/narration/ch203.json",
+  "textHash": "fnv1a64:8eba221a68fd8d29",
+  "jsonHash": "fnv1a64:9948c2f07ca3c537",
+  "findings": []
+}

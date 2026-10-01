@@ -1,0 +1,11 @@
+{
+  "id": "PT-C230-erro",
+  "pathSegment": "PT-PATH-230-TRAB230",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-230-TRAB230",
+      "order": 1
+    }
+  ]
+}

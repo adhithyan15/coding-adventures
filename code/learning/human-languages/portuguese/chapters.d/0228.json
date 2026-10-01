@@ -1,0 +1,19 @@
+{
+  "chapter": 228,
+  "title": "Jar, Slice, Piece, Dozen, Half",
+  "label": "ch:pt-jar-slice-piece-dozen-half",
+  "canDo": "I can say a jar, a slice, a piece, a dozen and a half.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C228-metade",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 228: I can say a jar, a slice, a piece, a dozen and a half.",
+    "assesses": [
+      "PT-LEX-C228-COISAS228-03",
+      "PT-LEX-C228-COISAS228-04",
+      "PT-LEX-C228-COISAS228-05"
+    ]
+  }
+}

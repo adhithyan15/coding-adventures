@@ -307,11 +307,26 @@ fn treemap_text_node(
     color: Color,
     style: Option<&diagram_ir::TreemapStyle>,
 ) -> PositionedNode {
+    let decoration_thickness = style.and_then(|style| style.text_decoration_thickness).and_then(|thickness| match thickness {
+        diagram_ir::TreemapTextDecorationThickness::Pixels(value) => Some(value),
+        diagram_ir::TreemapTextDecorationThickness::Factor(value) => Some(font.size * value),
+        diagram_ir::TreemapTextDecorationThickness::Auto | diagram_ir::TreemapTextDecorationThickness::FromFont => None,
+    });
+    let underline_offset = style.and_then(|style| style.text_underline_offset).and_then(|offset| match offset {
+        diagram_ir::TreemapTextUnderlineOffset::Pixels(value) => Some(value),
+        diagram_ir::TreemapTextUnderlineOffset::Factor(value) => Some(font.size * value),
+        diagram_ir::TreemapTextUnderlineOffset::Auto => None,
+    });
     let value = match style.and_then(|style| style.text_transform) {
         Some(diagram_ir::TreemapTextTransform::Uppercase) => value.to_uppercase(),
         Some(diagram_ir::TreemapTextTransform::Lowercase) => value.to_lowercase(),
         Some(diagram_ir::TreemapTextTransform::Capitalize) => value.split_whitespace()
             .map(capitalize).collect::<Vec<_>>().join(" "),
+        Some(diagram_ir::TreemapTextTransform::FullWidth) => value.chars().map(|character| match character {
+            ' ' => '\u{3000}',
+            '!'..='~' => char::from_u32(character as u32 + 0xfee0).expect("ASCII full-width mapping is valid"),
+            _ => character,
+        }).collect(),
         _ => value.to_string(),
     };
     let mut node = text_node(&value, x, y, width, height, font, color);
@@ -329,8 +344,17 @@ fn treemap_text_node(
             let decoration_color = style.and_then(|style| style.text_decoration_color.as_deref())
                 .map(css_to_color)
                 .map(|color| color_with_opacity(color, style.and_then(|style| style.opacity).unwrap_or(1.0)));
+            let decoration_style = match style.and_then(|style| style.text_decoration_style) {
+                Some(diagram_ir::TreemapTextDecorationStyle::Double) => TextDecorationStyle::Double,
+                Some(diagram_ir::TreemapTextDecorationStyle::Dotted) => TextDecorationStyle::Dotted,
+                Some(diagram_ir::TreemapTextDecorationStyle::Dashed) => TextDecorationStyle::Dashed,
+                Some(diagram_ir::TreemapTextDecorationStyle::Wavy) => TextDecorationStyle::Wavy,
+                _ => TextDecorationStyle::Solid,
+            };
             (lines != TextDecorationLines::NONE).then_some(TextDecoration {
-                lines, style: TextDecorationStyle::Solid, color: decoration_color,
+                lines, style: decoration_style, color: decoration_color,
+                thickness: decoration_thickness,
+                underline_offset,
             })
         });
     }
@@ -6844,15 +6868,18 @@ mod tests {
                     node: diagram_ir::DiagramStyle {
                         fill: Some("#fef3c7".into()), stroke: Some("#b45309".into()), stroke_width: Some(3.0),
                         stroke_dash: Some(vec![5.0, 2.0]), text_color: Some("#78350f".into()), font_size: Some(17.0),
-                        font_weight: Some(700), font_italic: Some(true), font_family: Some("Avenir".into()), corner_radius: None,
+                        font_weight: Some(700), font_italic: Some(true), font_family: Some("Avenir".into()), corner_radius: Some(9.0),
                     },
                     opacity: Some(0.8), fill_opacity: Some(0.5), stroke_opacity: Some(0.5), stroke_dash_offset: Some(-1.0),
                     text_align: Some(diagram_ir::TreemapTextAlign::End),
-                    text_transform: Some(diagram_ir::TreemapTextTransform::Uppercase),
+                    text_transform: Some(diagram_ir::TreemapTextTransform::FullWidth),
                     text_decoration: Some(diagram_ir::TreemapTextDecoration {
                         underline: true, overline: true, line_through: true,
                     }),
                     text_decoration_color: Some("#2563eb".into()),
+                    text_decoration_style: Some(diagram_ir::TreemapTextDecorationStyle::Wavy),
+                    text_decoration_thickness: Some(diagram_ir::TreemapTextDecorationThickness::Factor(0.25)),
+                    text_underline_offset: Some(diagram_ir::TreemapTextUnderlineOffset::Factor(0.25)),
                     line_height: Some(diagram_ir::TreemapLineHeight::Pixels(24.0)),
                 }),
             }],
@@ -6864,8 +6891,9 @@ mod tests {
         );
         assert!(matches!(styled_text.content,
             Some(Content::Text(TextContent { value, text_align: TextAlign::End,
-                decoration: Some(TextDecoration { lines, color: Some(decoration_color), .. }), .. }))
-                if value == "STYLED NODE"
+                decoration: Some(TextDecoration { lines, color: Some(decoration_color),
+                    style: TextDecorationStyle::Wavy, thickness: Some(3.5), underline_offset: Some(3.5) }), .. }))
+                if value == "\u{ff33}\u{ff54}\u{ff59}\u{ff4c}\u{ff45}\u{ff44}\u{3000}\u{ff4e}\u{ff4f}\u{ff44}\u{ff45}"
                     && lines.contains(TextDecorationLines::UNDERLINE)
                     && lines.contains(TextDecorationLines::OVERLINE)
                     && lines.contains(TextDecorationLines::LINE_THROUGH)
@@ -6885,6 +6913,7 @@ mod tests {
             PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("rgba(254,243,199,0.4)")
                 && rect.stroke.as_deref() == Some("rgba(180,83,9,0.4)")
                 && rect.stroke_width == Some(3.0)
+                && rect.corner_radius == Some(9.0)
                 && rect.stroke_dash.as_deref() == Some(&[5.0, 2.0][..])
                 && rect.stroke_dash_offset == Some(-1.0))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,

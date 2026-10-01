@@ -1,0 +1,11 @@
+{
+  "id": "PT-C200-impressora",
+  "pathSegment": "PT-PATH-200-TRAB200",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-200-TRAB200",
+      "order": 2
+    }
+  ]
+}

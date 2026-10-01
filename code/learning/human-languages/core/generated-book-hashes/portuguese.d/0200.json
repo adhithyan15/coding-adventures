@@ -1,0 +1,15 @@
+{
+  "language": "portuguese",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:fdb242ebbc6292ce",
+  "lessonIds": [
+    "PT-C200-entrevista",
+    "PT-C200-carreira",
+    "PT-C200-impressora",
+    "PT-C200-revista",
+    "PT-C200-dicionario",
+    "PT-R200-first-pass-words-from-chapters-195-197",
+    "PT-R200-second-pass-words-from-chapters-198-200"
+  ],
+  "tex": "portuguese/book/chapters/ch200-interview-career-printer-magazine-dictionary.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C216-antigo-antiga",
+    "language": "portuguese",
+    "chapter": 216,
+    "sequence": 12480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5509c57bd1ca738b"
+  },
+  "findings": []
+}

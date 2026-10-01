@@ -2335,12 +2335,14 @@ fn parse_block_style(token: &Token, source: &str) -> Result<DiagramStyle, ParseE
             "font-weight" => style.font_weight = Some(match value.to_ascii_lowercase().as_str() {
                 "normal" => 400,
                 "bold" => 700,
+                "lighter" => 300,
+                "bolder" => 700,
                 _ => value.parse().map_err(|_| token_error(token, "invalid block font weight"))?,
             }),
             "font-style" => style.font_italic = Some(match value.to_ascii_lowercase().as_str() {
                 "normal" => false,
-                "italic" => true,
-                _ => return Err(token_error(token, "block font style must be normal or italic")),
+                "italic" | "oblique" => true,
+                _ => return Err(token_error(token, "block font style must be normal, italic, or oblique")),
             }),
             "font-family" => style.font_family = Some(value.into()),
             property => return Err(token_error(token, format!("unsupported block style property {property:?}"))),
@@ -4562,6 +4564,7 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                     .filter(|value| value.is_finite())
                     .ok_or_else(|| token_error(token, "invalid treemap stroke dash offset"))?);
             }
+            "border-radius" => style.node.corner_radius = Some(parse_block_style_number(token, value)?),
             "text-align" => style.text_align = Some(match value.to_ascii_lowercase().as_str() {
                 "left" | "start" => diagram_ir::TreemapTextAlign::Start,
                 "center" => diagram_ir::TreemapTextAlign::Center,
@@ -4573,28 +4576,29 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                 "uppercase" => diagram_ir::TreemapTextTransform::Uppercase,
                 "lowercase" => diagram_ir::TreemapTextTransform::Lowercase,
                 "capitalize" => diagram_ir::TreemapTextTransform::Capitalize,
+                "full-width" => diagram_ir::TreemapTextTransform::FullWidth,
                 _ => return Err(token_error(token, "unsupported treemap text-transform")),
             }),
-            "text-decoration" => {
-                let mut decoration = diagram_ir::TreemapTextDecoration::default();
-                let mut count = 0;
-                for line in value.split_ascii_whitespace() {
-                    count += 1;
-                    match line.to_ascii_lowercase().as_str() {
-                        "none" if value.split_ascii_whitespace().count() == 1 => {}
-                        "underline" => decoration.underline = true,
-                        "overline" => decoration.overline = true,
-                        "line-through" => decoration.line_through = true,
-                        _ => return Err(token_error(token, "unsupported treemap text-decoration")),
-                    }
-                }
-                if count == 0 {
-                    return Err(token_error(token, "unsupported treemap text-decoration"));
-                }
-                style.text_decoration = Some(decoration);
-            }
+            "text-decoration" => parse_treemap_text_decoration(token, value, &mut style)?,
+            "text-decoration-line" => style.text_decoration = Some(
+                parse_treemap_text_decoration_line(token, value)?
+            ),
             "text-decoration-color" if !value.is_empty() => style.text_decoration_color = Some(value.into()),
             "text-decoration-color" => return Err(token_error(token, "treemap text-decoration-color cannot be empty")),
+            "text-decoration-style" => style.text_decoration_style = Some(match value.to_ascii_lowercase().as_str() {
+                "solid" => diagram_ir::TreemapTextDecorationStyle::Solid,
+                "double" => diagram_ir::TreemapTextDecorationStyle::Double,
+                "dotted" => diagram_ir::TreemapTextDecorationStyle::Dotted,
+                "dashed" => diagram_ir::TreemapTextDecorationStyle::Dashed,
+                "wavy" => diagram_ir::TreemapTextDecorationStyle::Wavy,
+                _ => return Err(token_error(token, "unsupported treemap text-decoration-style")),
+            }),
+            "text-decoration-thickness" => style.text_decoration_thickness = Some(
+                parse_treemap_text_decoration_thickness(token, value)?
+            ),
+            "text-underline-offset" => style.text_underline_offset = Some(
+                parse_treemap_text_underline_offset(token, value)?
+            ),
             "line-height" => style.line_height = Some(parse_treemap_line_height(token, value)?),
             _ => merge_treemap_node_style(&mut style.node, &parse_block_style(token, declaration)?),
         }
@@ -4605,6 +4609,131 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
 fn parse_treemap_opacity(token: &Token, source: &str) -> Result<f64, ParseError> {
     source.parse::<f64>().ok().filter(|value| value.is_finite() && (0.0..=1.0).contains(value))
         .ok_or_else(|| token_error(token, "treemap opacity must be between 0 and 1"))
+}
+
+fn parse_treemap_text_decoration(
+    token: &Token,
+    source: &str,
+    style: &mut diagram_ir::TreemapStyle,
+) -> Result<(), ParseError> {
+    let tokens = source.split_ascii_whitespace().collect::<Vec<_>>();
+    if tokens.is_empty() {
+        return Err(token_error(token, "unsupported treemap text-decoration"));
+    }
+    if tokens.iter().any(|value| value.eq_ignore_ascii_case("none")) {
+        if tokens.len() != 1 {
+            return Err(token_error(token, "treemap text-decoration none cannot be combined"));
+        }
+        style.text_decoration = Some(diagram_ir::TreemapTextDecoration::default());
+        style.text_decoration_color = None;
+        style.text_decoration_style = Some(diagram_ir::TreemapTextDecorationStyle::Solid);
+        style.text_decoration_thickness = Some(diagram_ir::TreemapTextDecorationThickness::Auto);
+        return Ok(());
+    }
+
+    let mut decoration = diagram_ir::TreemapTextDecoration::default();
+    let mut saw_line = false;
+    let mut decoration_style = None;
+    let mut thickness = None;
+    let mut color = None;
+    for value in tokens {
+        match value.to_ascii_lowercase().as_str() {
+            "underline" => { decoration.underline = true; saw_line = true; }
+            "overline" => { decoration.overline = true; saw_line = true; }
+            "line-through" => { decoration.line_through = true; saw_line = true; }
+            "solid" => decoration_style = Some(diagram_ir::TreemapTextDecorationStyle::Solid),
+            "double" => decoration_style = Some(diagram_ir::TreemapTextDecorationStyle::Double),
+            "dotted" => decoration_style = Some(diagram_ir::TreemapTextDecorationStyle::Dotted),
+            "dashed" => decoration_style = Some(diagram_ir::TreemapTextDecorationStyle::Dashed),
+            "wavy" => decoration_style = Some(diagram_ir::TreemapTextDecorationStyle::Wavy),
+            "auto" | "from-font" => thickness = Some(parse_treemap_text_decoration_thickness(token, value)?),
+            _ if value.ends_with("px") || value.ends_with('%') => {
+                thickness = Some(parse_treemap_text_decoration_thickness(token, value)?);
+            }
+            _ if color.is_none() => color = Some(value.to_string()),
+            _ => return Err(token_error(token, "unsupported treemap text-decoration")),
+        }
+    }
+    if !saw_line {
+        return Err(token_error(token, "unsupported treemap text-decoration: shorthand requires a line"));
+    }
+    style.text_decoration = Some(decoration);
+    style.text_decoration_color = color;
+    style.text_decoration_style = Some(decoration_style.unwrap_or(diagram_ir::TreemapTextDecorationStyle::Solid));
+    style.text_decoration_thickness = Some(thickness.unwrap_or(diagram_ir::TreemapTextDecorationThickness::Auto));
+    Ok(())
+}
+
+fn parse_treemap_text_decoration_line(
+    token: &Token,
+    source: &str,
+) -> Result<diagram_ir::TreemapTextDecoration, ParseError> {
+    let tokens = source.split_ascii_whitespace().collect::<Vec<_>>();
+    if tokens.is_empty() {
+        return Err(token_error(token, "unsupported treemap text-decoration-line"));
+    }
+    if tokens.iter().any(|value| value.eq_ignore_ascii_case("none")) {
+        return if tokens.len() == 1 {
+            Ok(diagram_ir::TreemapTextDecoration::default())
+        } else {
+            Err(token_error(token, "treemap text-decoration-line none cannot be combined"))
+        };
+    }
+    let mut decoration = diagram_ir::TreemapTextDecoration::default();
+    for value in tokens {
+        match value.to_ascii_lowercase().as_str() {
+            "underline" => decoration.underline = true,
+            "overline" => decoration.overline = true,
+            "line-through" => decoration.line_through = true,
+            _ => return Err(token_error(token, "unsupported treemap text-decoration-line")),
+        }
+    }
+    Ok(decoration)
+}
+
+fn parse_treemap_text_decoration_thickness(
+    token: &Token,
+    source: &str,
+) -> Result<diagram_ir::TreemapTextDecorationThickness, ParseError> {
+    match source.to_ascii_lowercase().as_str() {
+        "auto" => Ok(diagram_ir::TreemapTextDecorationThickness::Auto),
+        "from-font" => Ok(diagram_ir::TreemapTextDecorationThickness::FromFont),
+        _ => {
+            let (number, percentage) = source.strip_suffix('%').map_or_else(
+                || (source.strip_suffix("px"), false),
+                |number| (Some(number), true),
+            );
+            let value = number.and_then(|number| number.trim().parse::<f64>().ok())
+                .filter(|value| value.is_finite() && *value > 0.0)
+                .ok_or_else(|| token_error(token, "invalid treemap text-decoration-thickness"))?;
+            Ok(if percentage {
+                diagram_ir::TreemapTextDecorationThickness::Factor(value / 100.0)
+            } else {
+                diagram_ir::TreemapTextDecorationThickness::Pixels(value)
+            })
+        }
+    }
+}
+
+fn parse_treemap_text_underline_offset(
+    token: &Token,
+    source: &str,
+) -> Result<diagram_ir::TreemapTextUnderlineOffset, ParseError> {
+    if source.eq_ignore_ascii_case("auto") {
+        return Ok(diagram_ir::TreemapTextUnderlineOffset::Auto);
+    }
+    let (number, percentage) = source.strip_suffix('%').map_or_else(
+        || (source.strip_suffix("px"), false),
+        |number| (Some(number), true),
+    );
+    let value = number.and_then(|number| number.trim().parse::<f64>().ok())
+        .filter(|value| value.is_finite())
+        .ok_or_else(|| token_error(token, "invalid treemap text-underline-offset"))?;
+    Ok(if percentage {
+        diagram_ir::TreemapTextUnderlineOffset::Factor(value / 100.0)
+    } else {
+        diagram_ir::TreemapTextUnderlineOffset::Pixels(value)
+    })
 }
 
 fn parse_treemap_line_height(token: &Token, source: &str) -> Result<diagram_ir::TreemapLineHeight, ParseError> {
@@ -14141,7 +14270,7 @@ B//-A: reverse stick top
     #[test]
     fn treemap_resolves_class_definitions_declared_after_nodes() {
         let diagram = parse_treemap(
-            "treemap\n\"Root\"\n  \"Styled node\": 5:::accent\nclassDef accent fill:#fef3c7,fill-opacity:0.7,stroke:#b45309,stroke-opacity:0.5,opacity:0.8,stroke-width:3px,stroke-dasharray:5 2,stroke-dashoffset:-1px,color:#78350f,font-size:16px,font-weight:bold,font-style:italic,font-family:Avenir,text-align:right,text-transform:uppercase,text-decoration:underline overline line-through,text-decoration-color:#2563eb,line-height:150%",
+            "treemap\n\"Root\"\n  \"Styled node\": 5:::accent\nclassDef accent fill:#fef3c7,fill-opacity:0.7,stroke:#b45309,stroke-opacity:0.5,opacity:0.8,stroke-width:3px,stroke-dasharray:5 2,stroke-dashoffset:-1px,border-radius:9px,color:#78350f,font-size:16px,font-weight:bolder,font-style:oblique,font-family:Avenir,text-align:right,text-transform:full-width,text-decoration:underline overline line-through,text-decoration-color:#2563eb,text-decoration-style:wavy,text-decoration-thickness:3px,text-underline-offset:25%,line-height:150%",
         ).unwrap();
         let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
         assert_eq!(style.node.fill.as_deref(), Some("#fef3c7"));
@@ -14153,14 +14282,18 @@ B//-A: reverse stick top
         assert_eq!(style.node.font_weight, Some(700));
         assert_eq!(style.node.font_italic, Some(true));
         assert_eq!(style.node.font_family.as_deref(), Some("Avenir"));
+        assert_eq!(style.node.corner_radius, Some(9.0));
         assert_eq!((style.opacity, style.fill_opacity, style.stroke_opacity), (Some(0.8), Some(0.7), Some(0.5)));
         assert_eq!(style.stroke_dash_offset, Some(-1.0));
         assert_eq!(style.text_align, Some(diagram_ir::TreemapTextAlign::End));
-        assert_eq!(style.text_transform, Some(diagram_ir::TreemapTextTransform::Uppercase));
+        assert_eq!(style.text_transform, Some(diagram_ir::TreemapTextTransform::FullWidth));
         assert_eq!(style.text_decoration, Some(diagram_ir::TreemapTextDecoration {
             underline: true, overline: true, line_through: true,
         }));
         assert_eq!(style.text_decoration_color.as_deref(), Some("#2563eb"));
+        assert_eq!(style.text_decoration_style, Some(diagram_ir::TreemapTextDecorationStyle::Wavy));
+        assert_eq!(style.text_decoration_thickness, Some(diagram_ir::TreemapTextDecorationThickness::Pixels(3.0)));
+        assert_eq!(style.text_underline_offset, Some(diagram_ir::TreemapTextUnderlineOffset::Factor(0.25)));
         assert_eq!(style.line_height, Some(diagram_ir::TreemapLineHeight::Factor(1.5)));
     }
 
@@ -14170,6 +14303,78 @@ B//-A: reverse stick top
             "treemap\n\"Root\"\n  \"Styled node\": 5:::accent\nclassDef accent text-decoration:blink",
         ).expect_err("unsupported text decoration must fail");
         assert!(error.message.contains("unsupported treemap text-decoration"));
+    }
+
+    #[test]
+    fn treemap_parses_text_decoration_shorthand() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-decoration:underline overline wavy #2563eb 12.5%",
+        ).expect("text decoration shorthand must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.text_decoration, Some(diagram_ir::TreemapTextDecoration {
+            underline: true, overline: true, line_through: false,
+        }));
+        assert_eq!(style.text_decoration_style, Some(diagram_ir::TreemapTextDecorationStyle::Wavy));
+        assert_eq!(style.text_decoration_color.as_deref(), Some("#2563eb"));
+        assert_eq!(style.text_decoration_thickness, Some(diagram_ir::TreemapTextDecorationThickness::Factor(0.125)));
+
+        let none = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-decoration:none",
+        ).expect("none shorthand must parse");
+        assert_eq!(none.nodes[1].style.as_ref().and_then(|style| style.text_decoration),
+            Some(diagram_ir::TreemapTextDecoration::default()));
+    }
+
+    #[test]
+    fn treemap_parses_text_decoration_line_longhand() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-decoration-line:underline line-through",
+        ).expect("text decoration line longhand must parse");
+        assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_decoration),
+            Some(diagram_ir::TreemapTextDecoration {
+                underline: true, overline: false, line_through: true,
+            }));
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-decoration-line:none underline",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_rejects_invalid_text_decoration_thickness() {
+        for value in ["0", "0px", "0%", "2em", "thick"] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-decoration-thickness:{value}");
+            assert!(parse_treemap(&source).is_err());
+        }
+    }
+
+    #[test]
+    fn treemap_parses_text_decoration_thickness_forms() {
+        for (value, expected) in [
+            ("auto", diagram_ir::TreemapTextDecorationThickness::Auto),
+            ("from-font", diagram_ir::TreemapTextDecorationThickness::FromFont),
+            ("2.5px", diagram_ir::TreemapTextDecorationThickness::Pixels(2.5)),
+            ("12.5%", diagram_ir::TreemapTextDecorationThickness::Factor(0.125)),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-decoration:underline,text-decoration-thickness:{value}");
+            let diagram = parse_treemap(&source).expect("supported decoration thickness must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_decoration_thickness), Some(expected));
+        }
+    }
+
+    #[test]
+    fn treemap_parses_text_underline_offset_forms() {
+        for (value, expected) in [
+            ("auto", diagram_ir::TreemapTextUnderlineOffset::Auto),
+            ("3.5px", diagram_ir::TreemapTextUnderlineOffset::Pixels(3.5)),
+            ("-25%", diagram_ir::TreemapTextUnderlineOffset::Factor(-0.25)),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-decoration:underline,text-underline-offset:{value}");
+            let diagram = parse_treemap(&source).expect("supported underline offset must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_underline_offset), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-underline-offset:2em",
+        ).is_err());
     }
 
     #[test]
@@ -14187,6 +14392,23 @@ B//-A: reverse stick top
         assert!(parse_treemap(
             "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent line-height:0",
         ).is_err());
+    }
+
+    #[test]
+    fn treemap_resolves_relative_font_weights() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Heavy\": 1:::heavy\n  \"Light\": 1:::light\nclassDef heavy font-weight:bolder\nclassDef light font-weight:lighter",
+        ).expect("relative font weights must parse");
+        assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.node.font_weight), Some(700));
+        assert_eq!(diagram.nodes[2].style.as_ref().and_then(|style| style.node.font_weight), Some(300));
+    }
+
+    #[test]
+    fn treemap_rejects_unsupported_font_style() {
+        let error = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-style:slanted",
+        ).expect_err("unsupported font style must fail");
+        assert!(error.message.contains("normal, italic, or oblique"));
     }
 }
 #[cfg(test)]

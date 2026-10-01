@@ -1,0 +1,11 @@
+{
+  "id": "LA-C190-tributum",
+  "pathSegment": "LA-PATH-190-RES190",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-190-RES190",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:48002247da902ddc",
+  "lessonIds": [
+    "PT-C243-jovem",
+    "PT-C243-inteligente",
+    "PT-C243-possivel",
+    "PT-C243-impossivel",
+    "PT-C243-principal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch243.txt",
+  "json": "portuguese/narration/ch243.json",
+  "textHash": "fnv1a64:a40fd6acb9d30243",
+  "jsonHash": "fnv1a64:37642ba126e1c264",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C162-nuper",
+    "language": "latin",
+    "chapter": 162,
+    "sequence": 6970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f7eda2f93518b273"
+  },
+  "findings": []
+}

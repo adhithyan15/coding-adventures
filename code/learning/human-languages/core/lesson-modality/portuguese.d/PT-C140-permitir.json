@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C140-permitir",
+    "language": "portuguese",
+    "chapter": 140,
+    "sequence": 7060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f55c72c21d4504f3"
+  },
+  "findings": []
+}

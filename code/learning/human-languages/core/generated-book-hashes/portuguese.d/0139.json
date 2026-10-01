@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:1f7d14dfbe39d28c",
+  "lessonIds": [
+    "PT-C139-decidir",
+    "PT-C139-experimentar",
+    "PT-C139-continuar",
+    "PT-C139-parar",
+    "PT-C139-mudar"
+  ],
+  "tex": "portuguese/book/chapters/ch139-to-decide-to-try-to-continue-to-stop-to-change.tex"
+}

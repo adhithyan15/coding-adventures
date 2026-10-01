@@ -1,0 +1,19 @@
+{
+  "chapter": 159,
+  "title": "Battery, Charger, Singer, Show, Actor",
+  "label": "ch:pt-battery-charger-singer-show-actor",
+  "canDo": "I can say a battery, a charger, a singer, a show and an actor.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C159-ator",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 159: I can say a battery, a charger, a singer, a show and an actor.",
+    "assesses": [
+      "PT-LEX-C159-COISAS159-03",
+      "PT-LEX-C159-COISAS159-04",
+      "PT-LEX-C159-COISAS159-05"
+    ]
+  }
+}

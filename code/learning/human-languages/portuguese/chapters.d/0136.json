@@ -1,0 +1,19 @@
+{
+  "chapter": 136,
+  "title": "The Future, in a Week, a Plan, To Plan, To Organise",
+  "label": "ch:pt-the-future-in-a-week-a-plan-to-plan-to-organise",
+  "canDo": "I can say what will happen, and when: in two days, in a week, at the weekend.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "PT-C136-organizar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 136: I can say what will happen, and when: in two days, in a week, at the weekend.",
+    "assesses": [
+      "PT-LEX-C136-FUT136-03",
+      "PT-LEX-C136-FUT136-04",
+      "PT-LEX-C136-FUT136-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 179,
+  "title": "To act, To move forward, To move back, To lower, To defend",
+  "label": "ch:pt-to-act-to-move-forward-to-move-back-to-lower-to-defend",
+  "canDo": "I can say to act, to move forward, to move back, to lower and to defend.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-R179-second-pass-words-from-chapters-175-179",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 179: I can say to act, to move forward, to move back, to lower and to defend.",
+    "assesses": [
+      "PT-LEX-C179-VERBOS179-03",
+      "PT-LEX-C179-VERBOS179-04",
+      "PT-LEX-C179-VERBOS179-05"
+    ]
+  }
+}

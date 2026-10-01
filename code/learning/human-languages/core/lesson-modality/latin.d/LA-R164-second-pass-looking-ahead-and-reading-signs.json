@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R164-second-pass-looking-ahead-and-reading-signs",
+    "language": "latin",
+    "chapter": 164,
+    "sequence": 7130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:542c148ffb6b90b7"
+  },
+  "findings": []
+}

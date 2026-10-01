@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:ac3d52f20ccbbc18",
+  "lessonIds": [
+    "PT-C166-ligacao",
+    "PT-C166-regresso",
+    "PT-C166-chegada",
+    "PT-C166-partida",
+    "PT-C166-destino"
+  ],
+  "tex": "portuguese/book/chapters/ch166-connection-return-arrival-departure-destination.tex"
+}

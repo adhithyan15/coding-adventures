@@ -1,0 +1,19 @@
+{
+  "chapter": 163,
+  "title": "Tunnel, Building works, Block of flats, Castle, Tower",
+  "label": "ch:pt-tunnel-building-works-block-of-flats-castle-tower",
+  "canDo": "I can say a tunnel, building works, a block of flats, a castle and a tower.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C163-torre",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 163: I can say a tunnel, building works, a block of flats, a castle and a tower.",
+    "assesses": [
+      "PT-LEX-C163-COISAS163-03",
+      "PT-LEX-C163-COISAS163-04",
+      "PT-LEX-C163-COISAS163-05"
+    ]
+  }
+}

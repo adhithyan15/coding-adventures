@@ -63,6 +63,7 @@ use layout_backgrounds::{
 use layout_effects::{EffectBlendMode, EffectColor, EffectFilter, EffectStyle};
 use layout_ir::{
     Color, Content, ExtValue, FontSpec, PositionedNode, TextAlign, TextContent, TextDecorationLines,
+    TextDecorationStyle,
 };
 use layout_positioned::{Position, PositionedStyle};
 use layout_replaced::{object_fit_rect, IntrinsicSize};
@@ -77,7 +78,7 @@ use text_interfaces::{
     ShapeOptions, ShapedText, TextShaper,
 };
 
-pub const VERSION: &str = "0.6.0";
+pub const VERSION: &str = "0.7.0";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Options
@@ -1357,32 +1358,55 @@ fn emit_text_decorations<M>(
 
     let units_per_em = f64::from(metrics.units_per_em(handle).max(1));
     let scale = f64::from(size) / units_per_em;
-    let thickness = metrics
-        .underline_thickness(handle)
-        .map(|value| f64::from(value.max(1)) * scale)
-        .unwrap_or_else(|| (f64::from(size) * 0.05).max(dpr));
+    let thickness = decoration.thickness.filter(|value| value.is_finite() && *value > 0.0)
+        .unwrap_or_else(|| metrics
+            .underline_thickness(handle)
+            .map(|value| f64::from(value.max(1)) * scale)
+            .unwrap_or_else(|| (f64::from(size) * 0.05).max(dpr)));
     let color = color_to_css(decoration.color.unwrap_or(tc.color));
-    let mut emit_line = |y: f64| {
-        out.push(PaintInstruction::Rect(PaintRect {
-            base: PaintBase::default(),
-            x,
-            y,
-            width,
-            height: thickness,
-            fill: Some(color.clone()),
-            stroke: None,
-            stroke_width: None,
-            corner_radius: None,
-            stroke_dash: None,
-            stroke_dash_offset: None,
-        }));
+    let mut emit_line = |y: f64| match decoration.style {
+        TextDecorationStyle::Solid => emit_decoration_rect(out, x, y, width, thickness, &color),
+        TextDecorationStyle::Double => {
+            let line_thickness = (thickness / 2.0).max(dpr / 2.0);
+            emit_decoration_rect(out, x, y - line_thickness, width, line_thickness, &color);
+            emit_decoration_rect(out, x, y + line_thickness, width, line_thickness, &color);
+        }
+        TextDecorationStyle::Dotted | TextDecorationStyle::Dashed => {
+            let dash = if decoration.style == TextDecorationStyle::Dotted {
+                vec![thickness, thickness * 1.5]
+            } else {
+                vec![thickness * 3.0, thickness * 2.0]
+            };
+            out.push(PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: vec![PathCommand::MoveTo { x, y }, PathCommand::LineTo { x: x + width, y }],
+                fill: None, fill_rule: None, stroke: Some(color.clone()), stroke_width: Some(thickness),
+                stroke_cap: None, stroke_join: None, stroke_dash: Some(dash), stroke_dash_offset: None,
+            }));
+        }
+        TextDecorationStyle::Wavy => {
+            let step = (thickness * 2.0).max(dpr * 2.0);
+            let mut commands = vec![PathCommand::MoveTo { x, y }];
+            let mut cursor = x;
+            let mut up = true;
+            while cursor < x + width {
+                cursor = (cursor + step).min(x + width);
+                commands.push(PathCommand::LineTo { x: cursor, y: y + if up { -thickness } else { thickness } });
+                up = !up;
+            }
+            out.push(PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(), commands, fill: None, fill_rule: None,
+                stroke: Some(color.clone()), stroke_width: Some(thickness), stroke_cap: None,
+                stroke_join: None, stroke_dash: None, stroke_dash_offset: None,
+            }));
+        }
     };
 
     if decoration.lines.contains(TextDecorationLines::UNDERLINE) {
-        let position = metrics
+        let position = decoration.underline_offset.unwrap_or_else(|| metrics
             .underline_position(handle)
             .map(|value| f64::from(value) * scale)
-            .unwrap_or_else(|| f64::from(size) * 0.08);
+            .unwrap_or_else(|| f64::from(size) * 0.08));
         emit_line(baseline_y + position);
     }
     if decoration.lines.contains(TextDecorationLines::OVERLINE) {
@@ -1395,6 +1419,15 @@ fn emit_text_decorations<M>(
             .unwrap_or(ascent * 0.5);
         emit_line(baseline_y - x_height * 0.5);
     }
+}
+
+fn emit_decoration_rect(
+    out: &mut Vec<PaintInstruction>, x: f64, y: f64, width: f64, height: f64, color: &str,
+) {
+    out.push(PaintInstruction::Rect(PaintRect {
+        base: PaintBase::default(), x, y, width, height, fill: Some(color.into()), stroke: None,
+        stroke_width: None, corner_radius: None, stroke_dash: None, stroke_dash_offset: None,
+    }));
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1956,6 +1989,61 @@ mod tests {
         assert_eq!(underline.width, 64.0);
         assert_eq!(underline.height, 2.0);
         assert!(underline.y > glyph.glyphs[0].y);
+    }
+
+    #[test]
+    fn underline_styles_lower_to_backend_neutral_geometry() {
+        for style in [
+            TextDecorationStyle::Double,
+            TextDecorationStyle::Dotted,
+            TextDecorationStyle::Dashed,
+            TextDecorationStyle::Wavy,
+        ] {
+            let mut text = text_content("styled");
+            text.decoration = Some(layout_ir::TextDecoration {
+                lines: TextDecorationLines::UNDERLINE,
+                style,
+                color: Some(rgb(37, 99, 235)),
+                thickness: Some(3.0),
+                underline_offset: None,
+            });
+            let root = positioned_leaf(text, 0.0, 0.0, 200.0, 30.0);
+            let shaper = FakeShaper;
+            let metrics = FakeMetrics;
+            let resolver = FakeResolver;
+            let scene = layout_to_paint(&root, &make_options(&shaper, &metrics, &resolver));
+            let has_rect = scene.instructions.iter().any(|instruction| matches!(instruction,
+                PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("rgb(37, 99, 235)")));
+            let has_path = scene.instructions.iter().any(|instruction| matches!(instruction,
+                PaintInstruction::Path(path) if path.stroke.as_deref() == Some("rgb(37, 99, 235)")));
+            assert!(has_rect || has_path);
+        }
+    }
+
+    #[test]
+    fn authored_underline_geometry_overrides_font_metrics() {
+        let mut text = text_content("thick");
+        text.decoration = Some(layout_ir::TextDecoration {
+            lines: TextDecorationLines::UNDERLINE,
+            style: TextDecorationStyle::Solid,
+            color: None,
+            thickness: Some(3.5),
+            underline_offset: Some(5.0),
+        });
+        let root = positioned_leaf(text, 0.0, 0.0, 200.0, 30.0);
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let scene = layout_to_paint(&root, &make_options(&shaper, &metrics, &resolver));
+        let baseline = scene.instructions.iter().find_map(|instruction| match instruction {
+            PaintInstruction::GlyphRun(run) => run.glyphs.first().map(|glyph| glyph.y),
+            _ => None,
+        }).expect("decorated text should emit glyphs");
+        let underline = scene.instructions.iter().find_map(|instruction| match instruction {
+            PaintInstruction::Rect(rect) if rect.height == 3.5 => Some(rect),
+            _ => None,
+        }).expect("authored underline should emit a rectangle");
+        assert_eq!(underline.y - baseline, 5.0);
     }
 
     #[test]

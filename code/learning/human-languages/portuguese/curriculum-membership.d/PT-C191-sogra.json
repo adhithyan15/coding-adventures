@@ -1,0 +1,11 @@
+{
+  "id": "PT-C191-sogra",
+  "pathSegment": "PT-PATH-191-COISAS191",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-191-COISAS191",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 190,
+  "title": "Actress, Poem, Writer, Painter, Photographer",
+  "label": "ch:pt-actress-poem-writer-painter-photographer",
+  "canDo": "I can say an actress, a poem, a writer, a painter and a photographer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C190-fotografo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 190: I can say an actress, a poem, a writer, a painter and a photographer.",
+    "assesses": [
+      "PT-LEX-C190-COISAS190-03",
+      "PT-LEX-C190-COISAS190-04",
+      "PT-LEX-C190-COISAS190-05"
+    ]
+  }
+}

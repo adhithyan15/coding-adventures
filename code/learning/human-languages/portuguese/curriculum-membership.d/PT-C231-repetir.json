@@ -1,0 +1,11 @@
+{
+  "id": "PT-C231-repetir",
+  "pathSegment": "PT-PATH-231-VERBOS231",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-231-VERBOS231",
+      "order": 2
+    }
+  ]
+}

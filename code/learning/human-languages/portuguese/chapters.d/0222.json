@@ -1,0 +1,19 @@
+{
+  "chapter": 222,
+  "title": "Piece of advice, Promise, Discount, Sales, Coin",
+  "label": "ch:pt-piece-of-advice-promise-discount-sales-coin",
+  "canDo": "I can say a piece of advice, a promise, a discount, the sales and a coin.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C222-moeda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 222: I can say a piece of advice, a promise, a discount, the sales and a coin.",
+    "assesses": [
+      "PT-LEX-C222-COISAS222-03",
+      "PT-LEX-C222-COISAS222-04",
+      "PT-LEX-C222-COISAS222-05"
+    ]
+  }
+}

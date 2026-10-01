@@ -1,0 +1,19 @@
+{
+  "chapter": 238,
+  "title": "To lift, To surprise, To suspect, To squeeze, To suggest",
+  "label": "ch:pt-to-lift-to-surprise-to-suspect-to-squeeze-to-suggest",
+  "canDo": "I can say to lift, to surprise, to suspect, to squeeze and to suggest.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C238-sugerir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 238: I can say to lift, to surprise, to suspect, to squeeze and to suggest.",
+    "assesses": [
+      "PT-LEX-C238-VERBOS238-03",
+      "PT-LEX-C238-VERBOS238-04",
+      "PT-LEX-C238-VERBOS238-05"
+    ]
+  }
+}

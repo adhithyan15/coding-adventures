@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C191-sidus",
+    "language": "latin",
+    "chapter": 191,
+    "sequence": 8840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d380070a464dfe0c"
+  },
+  "findings": []
+}

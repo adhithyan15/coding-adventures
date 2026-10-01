@@ -1,0 +1,11 @@
+{
+  "id": "PT-C168-espinafres",
+  "pathSegment": "PT-PATH-168-COISAS168",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-168-COISAS168",
+      "order": 2
+    }
+  ]
+}

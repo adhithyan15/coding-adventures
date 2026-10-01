@@ -1,0 +1,19 @@
+{
+  "chapter": 167,
+  "title": "Trolley, Basket, List, Brand, Quality",
+  "label": "ch:pt-trolley-basket-list-brand-quality",
+  "canDo": "I can say a trolley, a basket, a list, a brand and quality.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C167-qualidade",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 167: I can say a trolley, a basket, a list, a brand and quality.",
+    "assesses": [
+      "PT-LEX-C167-COISAS167-03",
+      "PT-LEX-C167-COISAS167-04",
+      "PT-LEX-C167-COISAS167-05"
+    ]
+  }
+}

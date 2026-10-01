@@ -1,0 +1,19 @@
+{
+  "chapter": 139,
+  "title": "To decide, To try, To continue, To stop, To change",
+  "label": "ch:pt-to-decide-to-try-to-continue-to-stop-to-change",
+  "canDo": "I can say to decide, to try, to continue, to stop and to change.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C139-mudar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 139: I can say to decide, to try, to continue, to stop and to change.",
+    "assesses": [
+      "PT-LEX-C139-VERBOS139-03",
+      "PT-LEX-C139-VERBOS139-04",
+      "PT-LEX-C139-VERBOS139-05"
+    ]
+  }
+}

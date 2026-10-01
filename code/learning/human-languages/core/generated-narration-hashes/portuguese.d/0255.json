@@ -1,0 +1,21 @@
+{
+  "language": "portuguese",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:0f3016cd1e6fefc6",
+  "lessonIds": [
+    "PT-C255-corredor",
+    "PT-C255-quintal",
+    "PT-C255-oceano",
+    "PT-C255-selva",
+    "PT-C255-chinelo",
+    "PT-R255-first-pass-words-from-chapters-249-251",
+    "PT-R255-second-pass-words-from-chapters-252-255"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "portuguese/narration/ch255.txt",
+  "json": "portuguese/narration/ch255.json",
+  "textHash": "fnv1a64:b1d2a0eb85ef2877",
+  "jsonHash": "fnv1a64:27208e4b7c2a3d6e",
+  "findings": []
+}

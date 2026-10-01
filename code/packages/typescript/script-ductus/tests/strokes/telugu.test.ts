@@ -42,6 +42,12 @@ const TELUGU_BHA = DUCTUS[ductusKey("telugu", "భ")];
 const TELUGU_MA = DUCTUS[ductusKey("telugu", "మ")];
 const TELUGU_YA = DUCTUS[ductusKey("telugu", "య")];
 const TELUGU_RA = DUCTUS[ductusKey("telugu", "ర")];
+const TELUGU_LA = DUCTUS[ductusKey("telugu", "ల")];
+const TELUGU_VA = DUCTUS[ductusKey("telugu", "వ")];
+const TELUGU_SHA = DUCTUS[ductusKey("telugu", "శ")];
+const TELUGU_SSA = DUCTUS[ductusKey("telugu", "ష")];
+const TELUGU_SA = DUCTUS[ductusKey("telugu", "స")];
+const TELUGU_HA = DUCTUS[ductusKey("telugu", "హ")];
 const TELUGU_AA = DUCTUS[ductusKey("telugu", "ఆ")];
 const TELUGU_I = DUCTUS[ductusKey("telugu", "ఇ")];
 const TELUGU_U = DUCTUS[ductusKey("telugu", "ఉ")];
@@ -94,6 +100,10 @@ describe("handwriting ductus", () => {
       // The source-faithful paired-bowl route leaves a small font-only wedge
       // at Noto's upper-right join outside the centerline envelope.
       త: 0.05,
+      // AppChant's four sourced centerlines preserve the separate upper
+      // chevron and three-part lower body, while Noto's broad joins leave a
+      // small font-only shoulder outside that teaching route.
+      హ: 0.05,
     },
   );
 
@@ -177,6 +187,24 @@ describe("handwriting ductus", () => {
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("ర", TELUGU_RA.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("ల", TELUGU_LA.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("వ", TELUGU_VA.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("శ", TELUGU_SHA.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("ష", TELUGU_SSA.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("స", TELUGU_SA.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("హ", TELUGU_HA.source.url)).toBe(
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("అ", TELUGU_A.source.url)).toBe(
@@ -612,6 +640,78 @@ describe("handwriting ductus", () => {
       TELUGU_RA.strokes.map((stroke) => stroke.segments[0]!.label),
     ).toEqual([
       "loop counterclockwise around the main bowl",
+      "draw down and up through the separate upper chevron",
+    ]);
+  });
+
+  it("Telugu ల preserves both source-verified pen-down runs", () => {
+    expect(penLifts(TELUGU_LA)).toBe(1);
+    expect(TELUGU_LA.strokes).toHaveLength(2);
+    expect(
+      TELUGU_LA.strokes.map((stroke) => stroke.segments[0]!.label),
+    ).toEqual([
+      "loop counterclockwise around the small upper bowl",
+      "sweep down and around the broad lower bowl",
+    ]);
+  });
+
+  it("Telugu వ preserves all three source-verified pen-down runs", () => {
+    expect(penLifts(TELUGU_VA)).toBe(2);
+    expect(TELUGU_VA.strokes).toHaveLength(3);
+    expect(
+      TELUGU_VA.strokes.map((stroke) => stroke.segments[0]!.label),
+    ).toEqual([
+      "loop counterclockwise around the small lower-left bowl",
+      "sweep around the broad lower and right body",
+      "draw down and up through the separate upper chevron",
+    ]);
+  });
+
+  it("Telugu శ preserves all three source-verified pen-down runs", () => {
+    expect(penLifts(TELUGU_SHA)).toBe(2);
+    expect(TELUGU_SHA.strokes).toHaveLength(3);
+    expect(
+      TELUGU_SHA.strokes.map((stroke) => stroke.segments[0]!.label),
+    ).toEqual([
+      "loop around the broad lower-left bowl",
+      "sweep around the tall lower and right body",
+      "draw down and up through the separate upper chevron",
+    ]);
+  });
+
+  it("Telugu ష preserves all four source-verified pen-down runs", () => {
+    expect(penLifts(TELUGU_SSA)).toBe(3);
+    expect(TELUGU_SSA.strokes).toHaveLength(4);
+    expect(
+      TELUGU_SSA.strokes.map((stroke) => stroke.segments[0]!.label),
+    ).toEqual([
+      "loop around the lower-left bowl",
+      "sweep around the broad lower and right body",
+      "add the short lower-right tail",
+      "draw down and up through the separate upper chevron",
+    ]);
+  });
+
+  it("Telugu స preserves both source-verified pen-down runs", () => {
+    expect(penLifts(TELUGU_SA)).toBe(1);
+    expect(TELUGU_SA.strokes).toHaveLength(2);
+    expect(
+      TELUGU_SA.strokes.map((stroke) => stroke.segments[0]!.label),
+    ).toEqual([
+      "loop around the left bowl and sweep around the right body",
+      "draw down and up through the separate upper chevron",
+    ]);
+  });
+
+  it("Telugu హ preserves all four source-verified pen-down runs", () => {
+    expect(penLifts(TELUGU_HA)).toBe(3);
+    expect(TELUGU_HA.strokes).toHaveLength(4);
+    expect(
+      TELUGU_HA.strokes.map((stroke) => stroke.segments[0]!.label),
+    ).toEqual([
+      "loop around the lower-left bowl",
+      "sweep around the broad lower and right body",
+      "draw right across the middle bar and curl around its end",
       "draw down and up through the separate upper chevron",
     ]);
   });

@@ -1,0 +1,19 @@
+{
+  "chapter": 252,
+  "title": "Defeat, Championship, Player, Coach, Fan",
+  "label": "ch:pt-defeat-championship-player-coach-fan",
+  "canDo": "I can say a defeat, a championship, a player, a coach and a fan.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C252-adepto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 252: I can say a defeat, a championship, a player, a coach and a fan.",
+    "assesses": [
+      "PT-LEX-C252-COISAS252-03",
+      "PT-LEX-C252-COISAS252-04",
+      "PT-LEX-C252-COISAS252-05"
+    ]
+  }
+}

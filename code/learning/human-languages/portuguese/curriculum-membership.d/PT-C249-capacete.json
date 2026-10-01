@@ -1,0 +1,11 @@
+{
+  "id": "PT-C249-capacete",
+  "pathSegment": "PT-PATH-249-COISAS249",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-249-COISAS249",
+      "order": 4
+    }
+  ]
+}

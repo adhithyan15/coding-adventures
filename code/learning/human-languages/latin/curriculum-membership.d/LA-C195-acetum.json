@@ -1,0 +1,11 @@
+{
+  "id": "LA-C195-acetum",
+  "pathSegment": "LA-PATH-195-RES195",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-195-RES195",
+      "order": 1
+    }
+  ]
+}

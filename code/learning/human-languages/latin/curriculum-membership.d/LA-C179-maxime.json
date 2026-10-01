@@ -1,0 +1,11 @@
+{
+  "id": "LA-C179-maxime",
+  "pathSegment": "LA-PATH-179-CAUSA179",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-179-CAUSA179",
+      "order": 2
+    }
+  ]
+}

@@ -34,7 +34,14 @@ it("pins Latin lesson-content budgets", () =>
     // 407 -> 677: the A1 tranche, chapters 109-160. 260 word lessons
     // (forty-seven verbs) in five runs of ten or eleven chapters, each closing on
     // two reviews. No idiom, sense or culture claim.
-    lessons: 677,
+    // 677 -> 699: chapters 161-164 realize Latin's last four A2 spine nodes:
+    // saying no and asking which of two, the past, the future and reading
+    // practical texts. Twenty word lessons and two reviews, with no idiom,
+    // sense or culture claim.
+    // 699 -> 867: the first Latin A2 vocabulary tranche, chapters 165-196.
+    // 160 word lessons (forty verbs) and two reviews per run of at most nine
+    // chapters. No idiom, sense or culture claim.
+    lessons: 867,
     idioms: 16,
     senses: 6,
     cultureClaims: 17,

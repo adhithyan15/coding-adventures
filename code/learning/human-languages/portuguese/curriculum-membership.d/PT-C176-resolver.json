@@ -1,0 +1,11 @@
+{
+  "id": "PT-C176-resolver",
+  "pathSegment": "PT-PATH-176-VERBOS176",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-176-VERBOS176",
+      "order": 3
+    }
+  ]
+}

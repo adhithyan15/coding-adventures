@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:ac964688719b760d",
+  "lessonIds": [
+    "PT-C196-agulha",
+    "PT-C196-ferramenta",
+    "PT-C196-guitarra",
+    "PT-C196-violino",
+    "PT-C196-tambor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch196.txt",
+  "json": "portuguese/narration/ch196.json",
+  "textHash": "fnv1a64:30b58142190c4df7",
+  "jsonHash": "fnv1a64:c1226885efa4bbdb",
+  "findings": []
+}

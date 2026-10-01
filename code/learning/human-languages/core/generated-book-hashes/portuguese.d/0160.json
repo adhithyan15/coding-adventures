@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:9c3337ef2c07cacc",
+  "lessonIds": [
+    "PT-C160-contabilista",
+    "PT-C160-cientista",
+    "PT-C160-investigador",
+    "PT-C160-estrangeiro",
+    "PT-C160-turista"
+  ],
+  "tex": "portuguese/book/chapters/ch160-accountant-scientist-researcher-foreigner-tourist.tex"
+}

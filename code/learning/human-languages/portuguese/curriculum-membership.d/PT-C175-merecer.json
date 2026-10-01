@@ -1,0 +1,11 @@
+{
+  "id": "PT-C175-merecer",
+  "pathSegment": "PT-PATH-175-VERBOS175",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-175-VERBOS175",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C230-geografia",
+  "pathSegment": "PT-PATH-230-TRAB230",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-230-TRAB230",
+      "order": 3
+    }
+  ]
+}

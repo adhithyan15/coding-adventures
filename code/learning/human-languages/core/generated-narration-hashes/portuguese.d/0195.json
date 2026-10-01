@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:23f696ef7975c3ba",
+  "lessonIds": [
+    "PT-C195-lama",
+    "PT-C195-po",
+    "PT-C195-fumo",
+    "PT-C195-chama",
+    "PT-C195-clima"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch195.txt",
+  "json": "portuguese/narration/ch195.json",
+  "textHash": "fnv1a64:de73fde769e3dfc6",
+  "jsonHash": "fnv1a64:b11a9a3869306f35",
+  "findings": []
+}

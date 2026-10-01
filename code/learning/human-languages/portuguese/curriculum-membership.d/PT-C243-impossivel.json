@@ -1,0 +1,11 @@
+{
+  "id": "PT-C243-impossivel",
+  "pathSegment": "PT-PATH-243-QUAL243",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-243-QUAL243",
+      "order": 3
+    }
+  ]
+}

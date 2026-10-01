@@ -1,0 +1,19 @@
+{
+  "chapter": 211,
+  "title": "Patience, Luck, Bone, Allergy, Headache",
+  "label": "ch:pt-patience-luck-bone-allergy-headache",
+  "canDo": "I can say patience, luck, a bone, an allergy and a headache.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PT-C211-dor-de-cabeca",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 211: I can say patience, luck, a bone, an allergy and a headache.",
+    "assesses": [
+      "PT-LEX-C211-SAUDE211-03",
+      "PT-LEX-C211-SAUDE211-04",
+      "PT-LEX-C211-SAUDE211-05"
+    ]
+  }
+}

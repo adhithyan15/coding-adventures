@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C238-levantar",
+    "language": "portuguese",
+    "chapter": 238,
+    "sequence": 14070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:040b41afad9e30b2"
+  },
+  "findings": []
+}

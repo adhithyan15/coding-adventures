@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 183,
+  "sourceHash": "fnv1a64:2f143ab39b0634ce",
+  "lessonIds": [
+    "PT-C183-arredores",
+    "PT-C183-centro",
+    "PT-C183-lado",
+    "PT-C183-canto",
+    "PT-C183-meio"
+  ],
+  "tex": "portuguese/book/chapters/ch183-outskirts-centre-side-corner-middle.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:e57b00c8b8eead3e",
+  "lessonIds": [
+    "PT-C217-divorciado-divorciada",
+    "PT-C217-nublado-nublada",
+    "PT-C217-solarengo-solarenga",
+    "PT-C217-chuvoso-chuvosa",
+    "PT-C217-gordo-gorda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch217.txt",
+  "json": "portuguese/narration/ch217.json",
+  "textHash": "fnv1a64:22a9b57f9fddde1a",
+  "jsonHash": "fnv1a64:88a734c5d545920a",
+  "findings": []
+}

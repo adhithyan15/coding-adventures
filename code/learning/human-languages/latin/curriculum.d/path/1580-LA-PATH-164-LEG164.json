@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-164-LEG164",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-164-LEG164"
+  ],
+  "after": []
+}

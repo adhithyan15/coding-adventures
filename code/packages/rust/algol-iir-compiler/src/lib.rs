@@ -7845,7 +7845,7 @@ impl Compiler {
             }
         }
         if node.rule_name == "for_stmt"
-            && first_direct_node(node, "variable").is_some_and(&targets_name)
+            && first_direct_node(node, "variable").is_some_and(targets_name)
         {
             return true;
         }
@@ -7885,7 +7885,7 @@ impl Compiler {
             }
         }
         if node.rule_name == "for_stmt"
-            && first_direct_node(node, "variable").is_some_and(&targets_name)
+            && first_direct_node(node, "variable").is_some_and(targets_name)
         {
             return true;
         }
@@ -14063,6 +14063,22 @@ mod tests {
     }
 
     #[test]
+    fn al4_literal_string_predicates_select_step_loop_bounds() {
+        let module = compile_source(
+            "begin integer i, total; total := 0; for i := if 'ALPHA' < 'BETA' then 1 else 4 step if 'ALPHA' < 'BETA' then 1 else 2 until if 'ALPHA' < 'BETA' then 3 else 4 do total := total + i; print(total + 0.25); total := 0; for i := if 'BETA' < 'ALPHA' then 1 else 2 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'BETA' < 'ALPHA' then 5 else 4 do total := total + i; print(total + 0.25) end",
+            "test",
+        )
+        .expect("literal string predicates may select exact finite step-loop bounds");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["6.25", "9.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
     fn al4_tracked_zero_trip_step_loop_does_not_initialize_string() {
         let err = compile_source(
             "begin integer i, first, last; string s; first := 2; last := 1; for i := first step 1 until last do s := 'OK'; print(s) end",
@@ -14445,6 +14461,25 @@ mod tests {
             "test",
         )
         .expect("a static selector may choose a preserving transitive dependency leaf");
+    }
+
+    #[test]
+    fn al4_literal_string_predicate_selects_preserving_transitive_dependency_branch() {
+        compile_source(
+            "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if 'ALPHA' < 'BETA' then limit else limit + 1 end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("a literal string predicate may choose a preserving transitive dependency leaf");
+    }
+
+    #[test]
+    fn al4_false_literal_string_predicate_transitive_dependency_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if 'BETA' < 'ALPHA' then limit else limit + 1 end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a literal string predicate that selects a changing dependency leaf must stay conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
@@ -16915,6 +16950,82 @@ mod tests {
         assert!(main.instructions.iter().any(|instr| {
             instr.op == "str_const"
                 && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "12.5")
+        }));
+    }
+
+    #[test]
+    fn al4_step_loop_tracks_literal_string_selected_control_recurrences() {
+        let module = compile_source(
+            "begin integer i, j; for i := 1 step 1 until 10 do if 'ALPHA' < 'BETA' then i := i * 2 else i := i + 3; print(i + 0.25); for j := 1 step 1 until 10 do if 'BETA' < 'ALPHA' then j := j * 2 else j := j + 3; print(j + 0.25) end",
+            "test",
+        )
+        .expect("literal string predicates may select bounded control recurrences");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["15.25", "13.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_while_loop_tracks_literal_string_selected_predicates() {
+        let module = compile_source(
+            "begin integer i, j; real x, y; i := 0; x := 0.25; for i := i + 1 while if 'ALPHA' < 'BETA' then i <= 3 else i <= 1 do x := x + i; print(x); j := 0; y := 0.25; for j := j + 1 while if 'BETA' < 'ALPHA' then j <= 1 else j <= 2 do y := y + j; print(y) end",
+            "test",
+        )
+        .expect("literal string predicates may select bounded while predicates");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["6.25", "3.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_while_loop_tracks_literal_string_selected_values() {
+        let module = compile_source(
+            "begin integer i, j; real x, y; i := 0; x := 0.25; for i := if 'ALPHA' < 'BETA' then i + 1 else i + 2 while i <= 3 do x := x + i; print(x); j := 0; y := 0.25; for j := if 'BETA' < 'ALPHA' then j + 2 else j + 1 while j <= 2 do y := y + j; print(y) end",
+            "test",
+        )
+        .expect("literal string predicates may select bounded while values");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["6.25", "3.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_for_list_sequences_literal_string_selected_values() {
+        let module = compile_source(
+            "begin integer i; real total; total := 0.25; for i := if 'ALPHA' < 'BETA' then 1 else 9, if 'BETA' < 'ALPHA' then 8 else 2, if 'ALPHA' < 'BETA' then i + 1 else i + 3 while i <= 4 do total := total + i; print(total) end",
+            "test",
+        )
+        .expect("literal string predicates may select values across a bounded for list");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "10.25")
+        }));
+    }
+
+    #[test]
+    fn al4_mixed_for_list_sequences_literal_string_selected_headers() {
+        let module = compile_source(
+            "begin integer i; real total; total := 0.25; for i := if 'ALPHA' < 'BETA' then 1 else 9 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'ALPHA' < 'BETA' then 2 else 0, if 'BETA' < 'ALPHA' then 8 else 4 do total := total + i; print(total) end",
+            "test",
+        )
+        .expect("literal string predicates may select headers across mixed for elements");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "7.25")
         }));
     }
 

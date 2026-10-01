@@ -1,0 +1,11 @@
+{
+  "id": "PT-C216-antigo-antiga",
+  "pathSegment": "PT-PATH-216-QUAL216",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-216-QUAL216",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:fe924044e9d92ffe",
+  "lessonIds": [
+    "PT-C169-sandalia",
+    "PT-C169-bolso",
+    "PT-C169-fecho",
+    "PT-C169-manga",
+    "PT-C169-guarda-roupa"
+  ],
+  "tex": "portuguese/book/chapters/ch169-sandal-pocket-zip-sleeve-wardrobe.tex"
+}

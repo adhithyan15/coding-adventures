@@ -1,0 +1,19 @@
+{
+  "chapter": 146,
+  "title": "To cough, To tremble, To vote, To welcome, To admire",
+  "label": "ch:pt-to-cough-to-tremble-to-vote-to-welcome-to-admire",
+  "canDo": "I can say to cough, to tremble, to vote, to welcome and to admire.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-R146-second-pass-words-from-chapters-142-146",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 146: I can say to cough, to tremble, to vote, to welcome and to admire.",
+    "assesses": [
+      "PT-LEX-C146-VERBOS146-03",
+      "PT-LEX-C146-VERBOS146-04",
+      "PT-LEX-C146-VERBOS146-05"
+    ]
+  }
+}

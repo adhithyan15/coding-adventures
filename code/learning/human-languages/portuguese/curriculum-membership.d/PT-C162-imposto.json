@@ -1,0 +1,11 @@
+{
+  "id": "PT-C162-imposto",
+  "pathSegment": "PT-PATH-162-COISAS162",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-162-COISAS162",
+      "order": 1
+    }
+  ]
+}

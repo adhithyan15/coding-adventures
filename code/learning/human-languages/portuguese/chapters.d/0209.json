@@ -1,0 +1,19 @@
+{
+  "chapter": 209,
+  "title": "To disappear, To record, To keep, To exist, To express",
+  "label": "ch:pt-to-disappear-to-record-to-keep-to-exist-to-express",
+  "canDo": "I can say to disappear, to record, to keep, to exist and to express.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-R209-second-pass-words-from-chapters-205-209",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 209: I can say to disappear, to record, to keep, to exist and to express.",
+    "assesses": [
+      "PT-LEX-C209-VERBOS209-03",
+      "PT-LEX-C209-VERBOS209-04",
+      "PT-LEX-C209-VERBOS209-05"
+    ]
+  }
+}

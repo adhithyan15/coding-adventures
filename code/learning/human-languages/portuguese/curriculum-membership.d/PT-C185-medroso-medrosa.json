@@ -1,0 +1,11 @@
+{
+  "id": "PT-C185-medroso-medrosa",
+  "pathSegment": "PT-PATH-185-QUAL185",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-185-QUAL185",
+      "order": 3
+    }
+  ]
+}

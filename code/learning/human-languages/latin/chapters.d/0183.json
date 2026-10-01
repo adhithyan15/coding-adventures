@@ -1,0 +1,19 @@
+{
+  "chapter": 183,
+  "title": "Known, Famous, Honourable, Middle, Highest",
+  "label": "ch:la-known-famous-honourable-middle-highest",
+  "canDo": "I can say known, famous, honourable, middle and highest.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-C183-summus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 183: I can say known, famous, honourable, middle and highest.",
+    "assesses": [
+      "LA-LEX-C183-QUAL183-03",
+      "LA-LEX-C183-QUAL183-04",
+      "LA-LEX-C183-QUAL183-05"
+    ]
+  }
+}

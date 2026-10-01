@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C212-inicio",
+    "language": "portuguese",
+    "chapter": 212,
+    "sequence": 12270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4174d00b23a6ddc6"
+  },
+  "findings": []
+}

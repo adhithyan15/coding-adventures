@@ -1,0 +1,11 @@
+{
+  "id": "PT-C241-desconhecido-desconhecida",
+  "pathSegment": "PT-PATH-241-QUAL241",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-241-QUAL241",
+      "order": 3
+    }
+  ]
+}

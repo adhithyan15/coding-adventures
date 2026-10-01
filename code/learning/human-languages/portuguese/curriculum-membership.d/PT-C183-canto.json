@@ -1,0 +1,11 @@
+{
+  "id": "PT-C183-canto",
+  "pathSegment": "PT-PATH-183-LUGAR183",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-183-LUGAR183",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C189-eleicoes",
+    "language": "portuguese",
+    "chapter": 189,
+    "sequence": 10610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c900b68d3f1fc38c"
+  },
+  "findings": []
+}

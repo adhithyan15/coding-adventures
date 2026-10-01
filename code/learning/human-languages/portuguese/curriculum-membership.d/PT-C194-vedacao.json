@@ -1,0 +1,11 @@
+{
+  "id": "PT-C194-vedacao",
+  "pathSegment": "PT-PATH-194-COISAS194",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-194-COISAS194",
+      "order": 4
+    }
+  ]
+}

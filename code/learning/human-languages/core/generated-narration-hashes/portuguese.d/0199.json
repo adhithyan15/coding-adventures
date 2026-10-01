@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:8f44bddd978a7740",
+  "lessonIds": [
+    "PT-C199-milho",
+    "PT-C199-canela",
+    "PT-C199-ementa",
+    "PT-C199-aquecimento",
+    "PT-C199-torneira"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch199.txt",
+  "json": "portuguese/narration/ch199.json",
+  "textHash": "fnv1a64:40b16e3a751b8a57",
+  "jsonHash": "fnv1a64:48e4322c45b89fc1",
+  "findings": []
+}

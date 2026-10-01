@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-R248-first-pass-words-from-chapters-240-243",
+    "language": "portuguese",
+    "chapter": 248,
+    "sequence": 14810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d9a547264d007b9"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C180-urbanus",
+    "language": "latin",
+    "chapter": 180,
+    "sequence": 8090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0832ee0aec1d4ed1"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C150-partir-de-agora",
+  "pathSegment": "PT-PATH-150-TEMPO150",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-150-TEMPO150",
+      "order": 3
+    }
+  ]
+}

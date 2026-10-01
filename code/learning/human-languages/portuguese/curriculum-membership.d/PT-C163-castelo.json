@@ -1,0 +1,11 @@
+{
+  "id": "PT-C163-castelo",
+  "pathSegment": "PT-PATH-163-COISAS163",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-163-COISAS163",
+      "order": 3
+    }
+  ]
+}

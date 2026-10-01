@@ -1,0 +1,11 @@
+{
+  "id": "PT-C156-privado-privada",
+  "pathSegment": "PT-PATH-156-QUAL156",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-156-QUAL156",
+      "order": 3
+    }
+  ]
+}

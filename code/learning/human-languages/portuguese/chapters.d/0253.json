@@ -1,0 +1,19 @@
+{
+  "chapter": 253,
+  "title": "Fitting room, Size, Change you get back, Receipt, Queue",
+  "label": "ch:pt-fitting-room-size-change-you-get-back-receipt-queue",
+  "canDo": "I can say a fitting room, a size, the change you get back, a receipt and a queue.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C253-fila",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 253: I can say a fitting room, a size, the change you get back, a receipt and a queue.",
+    "assesses": [
+      "PT-LEX-C253-COISAS253-03",
+      "PT-LEX-C253-COISAS253-04",
+      "PT-LEX-C253-COISAS253-05"
+    ]
+  }
+}

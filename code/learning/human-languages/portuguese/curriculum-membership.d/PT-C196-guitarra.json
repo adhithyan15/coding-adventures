@@ -1,0 +1,11 @@
+{
+  "id": "PT-C196-guitarra",
+  "pathSegment": "PT-PATH-196-COISAS196",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-196-COISAS196",
+      "order": 2
+    }
+  ]
+}

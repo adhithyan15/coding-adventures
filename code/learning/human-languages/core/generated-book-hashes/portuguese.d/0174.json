@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:c2bf24f8fc5a5fa2",
+  "lessonIds": [
+    "PT-C174-atravessar",
+    "PT-C174-aumentar",
+    "PT-C174-diminuir",
+    "PT-C174-avisar",
+    "PT-C174-bastar"
+  ],
+  "tex": "portuguese/book/chapters/ch174-to-cross-to-increase-to-decrease-to-warn-to-be-enough.tex"
+}

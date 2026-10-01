@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:ae4aa672a9ed2bd5",
+  "lessonIds": [
+    "PT-C185-alegre",
+    "PT-C185-timido-timida",
+    "PT-C185-corajoso-corajosa",
+    "PT-C185-medroso-medrosa",
+    "PT-C185-curioso-curiosa"
+  ],
+  "tex": "portuguese/book/chapters/ch185-cheerful-shy-brave-fearful-curious.tex"
+}

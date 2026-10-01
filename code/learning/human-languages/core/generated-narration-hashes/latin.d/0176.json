@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:ad2cf8d857990b27",
+  "lessonIds": [
+    "LA-C176-prius",
+    "LA-C176-quotannis",
+    "LA-C176-nonnumquam",
+    "LA-C176-semel",
+    "LA-C176-bis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch176.txt",
+  "json": "latin/narration/ch176.json",
+  "textHash": "fnv1a64:8d221d6539b3aea3",
+  "jsonHash": "fnv1a64:ad06a6a3b687d134",
+  "findings": []
+}

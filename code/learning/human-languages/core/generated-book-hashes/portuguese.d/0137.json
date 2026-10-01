@@ -1,0 +1,15 @@
+{
+  "language": "portuguese",
+  "chapter": 137,
+  "sourceHash": "fnv1a64:c87569fc8b6fb43d",
+  "lessonIds": [
+    "PT-C137-o-horario",
+    "PT-C137-o-aviso",
+    "PT-C137-a-renda",
+    "PT-C137-o-anuncio",
+    "PT-C137-a-fatura",
+    "PT-R137-first-pass-saying-no-and-looking-back",
+    "PT-R137-second-pass-looking-ahead-and-reading-notices"
+  ],
+  "tex": "portuguese/book/chapters/ch137-opening-hours-a-notice-the-rent-an-advert-a-bill.tex"
+}

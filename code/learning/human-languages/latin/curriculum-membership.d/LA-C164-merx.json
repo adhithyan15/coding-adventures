@@ -1,0 +1,11 @@
+{
+  "id": "LA-C164-merx",
+  "pathSegment": "LA-PATH-164-LEG164",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-164-LEG164",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-R179-first-pass-words-from-chapters-171-174",
+    "language": "portuguese",
+    "chapter": 179,
+    "sequence": 9770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:399401da2a5064ce"
+  },
+  "findings": []
+}

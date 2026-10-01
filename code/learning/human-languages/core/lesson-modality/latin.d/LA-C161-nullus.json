@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C161-nullus",
+    "language": "latin",
+    "chapter": 161,
+    "sequence": 6940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4127f77e55203f5a"
+  },
+  "findings": []
+}

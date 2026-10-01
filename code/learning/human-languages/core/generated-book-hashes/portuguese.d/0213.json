@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:2dd9904aba94c278",
+  "lessonIds": [
+    "PT-C213-dentro",
+    "PT-C213-fora",
+    "PT-C213-interior",
+    "PT-C213-fronteira",
+    "PT-C213-regiao"
+  ],
+  "tex": "portuguese/book/chapters/ch213-inside-outside-interior-border-region.tex"
+}

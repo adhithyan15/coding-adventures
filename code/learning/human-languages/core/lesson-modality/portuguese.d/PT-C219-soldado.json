@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C219-soldado",
+    "language": "portuguese",
+    "chapter": 219,
+    "sequence": 12830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a3deedc8454d8c38"
+  },
+  "findings": []
+}

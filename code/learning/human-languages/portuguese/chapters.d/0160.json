@@ -1,0 +1,19 @@
+{
+  "chapter": 160,
+  "title": "Accountant, Scientist, Researcher, Foreigner, Tourist",
+  "label": "ch:pt-accountant-scientist-researcher-foreigner-tourist",
+  "canDo": "I can say an accountant, a scientist, a researcher, a foreigner and a tourist.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C160-turista",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 160: I can say an accountant, a scientist, a researcher, a foreigner and a tourist.",
+    "assesses": [
+      "PT-LEX-C160-COISAS160-03",
+      "PT-LEX-C160-COISAS160-04",
+      "PT-LEX-C160-COISAS160-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C154-necessario-necessaria",
+    "language": "portuguese",
+    "chapter": 154,
+    "sequence": 7940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df90d0e4b7b5d052"
+  },
+  "findings": []
+}

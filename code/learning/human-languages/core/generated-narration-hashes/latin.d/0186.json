@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 186,
+  "sourceHash": "fnv1a64:afdf62758c0243fc",
+  "lessonIds": [
+    "LA-C186-gubernator",
+    "LA-C186-mercatus",
+    "LA-C186-pondus",
+    "LA-C186-mensura",
+    "LA-C186-libra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch186.txt",
+  "json": "latin/narration/ch186.json",
+  "textHash": "fnv1a64:33ff4e4210f12222",
+  "jsonHash": "fnv1a64:6601856d78bf7797",
+  "findings": []
+}

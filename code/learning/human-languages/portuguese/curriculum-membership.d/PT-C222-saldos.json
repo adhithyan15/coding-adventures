@@ -1,0 +1,11 @@
+{
+  "id": "PT-C222-saldos",
+  "pathSegment": "PT-PATH-222-COISAS222",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-222-COISAS222",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C161-nullus",
+  "pathSegment": "LA-PATH-161-NEG161",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-161-NEG161",
+      "order": 2
+    }
+  ]
+}

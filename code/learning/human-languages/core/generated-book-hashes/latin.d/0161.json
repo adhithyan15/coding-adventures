@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:dbe564fb64600469",
+  "lessonIds": [
+    "LA-C161-nihil",
+    "LA-C161-nemo",
+    "LA-C161-nullus",
+    "LA-C161-uter",
+    "LA-C161-neque"
+  ],
+  "tex": "latin/book/chapters/ch161-nothing-nobody-no-which-of-two-neither-nor.tex"
+}

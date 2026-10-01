@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C161-nihil",
+    "language": "latin",
+    "chapter": 161,
+    "sequence": 6920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc985cc7480d54b5"
+  },
+  "findings": []
+}

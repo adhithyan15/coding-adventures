@@ -1,0 +1,11 @@
+{
+  "id": "PT-C138-sorrir",
+  "pathSegment": "PT-PATH-138-VERBOS138",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-138-VERBOS138",
+      "order": 3
+    }
+  ]
+}

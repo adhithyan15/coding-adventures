@@ -1,0 +1,11 @@
+{
+  "id": "LA-C167-abicio",
+  "pathSegment": "LA-PATH-167-ACT167",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-167-ACT167",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C167-marca",
+  "pathSegment": "PT-PATH-167-COISAS167",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-167-COISAS167",
+      "order": 3
+    }
+  ]
+}

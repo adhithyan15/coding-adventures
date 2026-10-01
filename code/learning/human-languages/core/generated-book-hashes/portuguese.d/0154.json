@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:99251fb60396963d",
+  "lessonIds": [
+    "PT-C154-complicado-complicada",
+    "PT-C154-necessario-necessaria",
+    "PT-C154-util",
+    "PT-C154-inutil",
+    "PT-C154-estranho-estranha"
+  ],
+  "tex": "portuguese/book/chapters/ch154-complicated-necessary-useful-useless-strange.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 164,
+  "title": "A Notice, an Inscription, a Price, For Sale, Goods",
+  "label": "ch:la-a-notice-an-inscription-a-price-for-sale-goods",
+  "canDo": "I can read a notice, an inscription, a price and a sale sign, and act on what they say.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "LA-R164-second-pass-looking-ahead-and-reading-signs",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 164: I can read a notice, an inscription, a price and a sale sign, and act on what they say.",
+    "assesses": [
+      "LA-LEX-C164-LEG164-03",
+      "LA-LEX-C164-LEG164-04",
+      "LA-LEX-C164-LEG164-05"
+    ]
+  }
+}

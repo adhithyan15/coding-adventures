@@ -1,0 +1,11 @@
+{
+  "id": "PT-C203-pentear-se",
+  "pathSegment": "PT-PATH-203-VERBOS203",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-203-VERBOS203",
+      "order": 3
+    }
+  ]
+}

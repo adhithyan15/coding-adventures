@@ -1,0 +1,11 @@
+{
+  "id": "PT-C136-daqui-a",
+  "pathSegment": "PT-PATH-136-FUT136",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-136-FUT136",
+      "order": 1
+    }
+  ]
+}

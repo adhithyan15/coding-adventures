@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:aa1f5f7816d17e1c",
+  "lessonIds": [
+    "PT-C172-mover",
+    "PT-C172-tirar",
+    "PT-C172-segurar",
+    "PT-C172-partir",
+    "PT-C172-provar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch172.txt",
+  "json": "portuguese/narration/ch172.json",
+  "textHash": "fnv1a64:85321dc5e0ad2f6b",
+  "jsonHash": "fnv1a64:7fe3984f0f0d1f8a",
+  "findings": []
+}

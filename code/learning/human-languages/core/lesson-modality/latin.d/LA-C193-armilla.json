@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C193-armilla",
+    "language": "latin",
+    "chapter": 193,
+    "sequence": 9140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0334bffe97e12436"
+  },
+  "findings": []
+}

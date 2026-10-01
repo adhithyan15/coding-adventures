@@ -1,0 +1,19 @@
+{
+  "chapter": 210,
+  "title": "Flu, Prescription, Tablet, Syrup, Ointment",
+  "label": "ch:pt-flu-prescription-tablet-syrup-ointment",
+  "canDo": "I can say flu, a prescription, a tablet, a syrup and an ointment.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PT-C210-pomada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 210: I can say flu, a prescription, a tablet, a syrup and an ointment.",
+    "assesses": [
+      "PT-LEX-C210-SAUDE210-03",
+      "PT-LEX-C210-SAUDE210-04",
+      "PT-LEX-C210-SAUDE210-05"
+    ]
+  }
+}

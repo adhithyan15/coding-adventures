@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:3abe8f1aa6e4bea5",
+  "lessonIds": [
+    "PT-C240-urgencias",
+    "PT-C240-emergencia",
+    "PT-C240-consulta",
+    "PT-C240-dieta",
+    "PT-C240-descanso"
+  ],
+  "tex": "portuguese/book/chapters/ch240-emergency-department-emergency-medical-appointment-diet-rest.tex"
+}

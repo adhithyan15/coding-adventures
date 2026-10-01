@@ -1,0 +1,11 @@
+{
+  "id": "PT-C218-passaporte",
+  "pathSegment": "PT-PATH-218-COISAS218",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-218-COISAS218",
+      "order": 4
+    }
+  ]
+}

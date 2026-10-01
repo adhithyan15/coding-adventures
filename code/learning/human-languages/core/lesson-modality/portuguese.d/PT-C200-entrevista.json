@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C200-entrevista",
+    "language": "portuguese",
+    "chapter": 200,
+    "sequence": 11310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a40dc45326d1464c"
+  },
+  "findings": []
+}

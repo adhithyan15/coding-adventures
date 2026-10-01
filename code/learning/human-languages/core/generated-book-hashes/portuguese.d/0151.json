@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:3d1ae70f5b00fddc",
+  "lessonIds": [
+    "PT-C151-em-cima",
+    "PT-C151-em-baixo",
+    "PT-C151-ao-fundo",
+    "PT-C151-noutro-lado",
+    "PT-C151-la-em-cima"
+  ],
+  "tex": "portuguese/book/chapters/ch151-above-below-at-the-bottom-elsewhere-up-there.tex"
+}

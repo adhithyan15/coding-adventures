@@ -1,0 +1,11 @@
+{
+  "id": "PT-C197-cabeleireiro",
+  "pathSegment": "PT-PATH-197-COISAS197",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-197-COISAS197",
+      "order": 4
+    }
+  ]
+}

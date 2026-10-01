@@ -1,0 +1,19 @@
+{
+  "chapter": 188,
+  "title": "Bed sheet, Drawer, Armchair, Pyjamas, Button",
+  "label": "ch:pt-bed-sheet-drawer-armchair-pyjamas-button",
+  "canDo": "I can say a bed sheet, a drawer, an armchair, pyjamas and a button.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-R188-second-pass-words-from-chapters-184-188",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 188: I can say a bed sheet, a drawer, an armchair, pyjamas and a button.",
+    "assesses": [
+      "PT-LEX-C188-COISAS188-03",
+      "PT-LEX-C188-COISAS188-04",
+      "PT-LEX-C188-COISAS188-05"
+    ]
+  }
+}

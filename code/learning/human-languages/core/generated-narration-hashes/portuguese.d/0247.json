@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:c9cb76819082010c",
+  "lessonIds": [
+    "PT-C247-sucesso",
+    "PT-C247-fracasso",
+    "PT-C247-experiencia",
+    "PT-C247-escolha",
+    "PT-C247-decisao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch247.txt",
+  "json": "portuguese/narration/ch247.json",
+  "textHash": "fnv1a64:d78b42eab81b7d0a",
+  "jsonHash": "fnv1a64:a885288f5d02a1fd",
+  "findings": []
+}

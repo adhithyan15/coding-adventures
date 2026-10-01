@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C191-procella",
+    "language": "latin",
+    "chapter": 191,
+    "sequence": 8850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9372fe99f351abb"
+  },
+  "findings": []
+}

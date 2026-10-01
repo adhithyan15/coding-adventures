@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C141-anunciar",
+    "language": "portuguese",
+    "chapter": 141,
+    "sequence": 7110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09a8f9931c6d352a"
+  },
+  "findings": []
+}

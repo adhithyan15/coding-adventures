@@ -1,0 +1,11 @@
+{
+  "id": "PT-C233-nevar",
+  "pathSegment": "PT-PATH-233-VERBOS233",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-233-VERBOS233",
+      "order": 4
+    }
+  ]
+}

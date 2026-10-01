@@ -1,5 +1,72 @@
 # Changelog
 
+## Chapters 165-196: 160 A2 headwords, forty of them verbs
+
+The first of four Latin A2 vocabulary tranches. Thirty-two chapters of five
+words each, in four runs of at most nine chapters. Each run closes with two
+reviews.
+
+- **Chapters 165-172: forty verbs**, including *accendō*, *exstinguō*,
+  *subrīdeō*, *prōmittō*, *permittō*, *computō*, *possideō*, *commodō*,
+  *appropinquō*, *admīror*, *suspicor*, *crēdō*, *vēnor* and *negō*. Deponents
+  (*lābor*, *admīror*, *vēnor*) are listed in their dictionary form,
+  *lābor, lābī*.
+- **Chapters 173-174: the body and the mind** (*valētūdō*, *cerebrum*,
+  *pulmō*, *lacrima*, *rīsus*, *vōx*, *animus*).
+- **Chapters 175-176: time** (*tandem*, *posthāc*, *adhūc*, *subitō*,
+  *quotannīs*, *semel*, *bis*).
+- **Chapter 177: place** (*longē*, *alibī*, *illīc*, *intus*, *forīs*).
+- **Chapters 178-179: joining ideas** (*igitur*, *tamen*, *quamquam*,
+  *etsī*, *nisi*, *praesertim*, *potius*, *valdē*).
+- **Chapters 180-184: twenty-five qualities**, such as *commodus*,
+  *urbānus*, *hilaris*, *grātuītus*, *recēns*, *pūblicus*, *celeber* and
+  *fācundus*.
+- **Chapters 185-196: sixty nouns**:
+  - the Roman house (*tablīnum*, *peristylium*, *impluvium*);
+  - the market (*mercātus*, *pondus*, *lībra*);
+  - peace and glory (*pāx*, *victōria*, *lībertās*);
+  - trades (*architectus*, *figulus*, *vīlicus*);
+  - family and truth (*avunculus*, *mātertera*, *vēritās*, *mendācium*);
+  - money (*vectīgal*, *dēnārius*, *sēstertius*);
+  - weather (*sīdus*, *procella*, *nimbus*);
+  - birds (*passer*, *cicōnia*, *noctua*, *pāvō*);
+  - games (*tālus*, *tessera*);
+  - speech (*sermō*, *ōrātiō*, *rūmor*);
+  - the table (*lībum*, *garum*, *diēs nātālis*);
+  - land (*fluvius*, *palūs*, *prātum*, *lūcus*).
+- **Candidate screen.** Candidates whose lemma already appears untaught in an
+  earlier Latin lesson were dropped, so the tranche adds no forward
+  reference. Examples: *via*, *rēx*, *tempus*, *nāvis*.
+- **Glosses.** They are disambiguated against taught words that share an
+  English cue: *avunculus* is "a mother's brother", against *patruus*, and
+  *properō* is "to make haste", against *festīnō*.
+- **Pins:** the Latin lesson-content budget goes from 699 to 867.
+- **Level gate at A2:** verb vocabulary 6 short -> 0; vocabulary 545 short
+  -> 385. The strict book compile reports 1050 pages and no overfull box.
+
+## Chapters 161-164: saying no, the past, the future and practical texts
+
+Latin had realized one of its five A2 spine nodes. Four chapters realize the
+other four, so the A2 gate reports no missing spine node. Vocabulary and verb
+vocabulary remain.
+
+- Chapter 161 (SPINE-NEGATE-AND-ASK): *nihil*, *nēmō*, *nūllus*,
+  *uter*, *neque*. Latin needs no second negative, and *uter* asks "which of
+  two".
+- Chapter 162 (SPINE-TALK-ABOUT-PAST): *nūper*, *nudiustertius*, *ōlim*,
+  *anteā*, *accidō*. The notes introduce the perfect through forms like
+  *vīdī*, *lēgī*, *scrīpsī* and *habitāvī*.
+- Chapter 163 (SPINE-TALK-ABOUT-FUTURE): *perendiē*, *posteā*, *cōnsilium*,
+  *cōnstituō*, *prōvideō*. These build on the future *vidēbō* from
+  *crās tē vidēbō*, and the notes add *ībō* and *cōnstituam*.
+- Chapter 164 (SPINE-READ-PRACTICAL-TEXTS): *titulus*, *īnscrīptiō*,
+  *pretium*, *vēnālis*, *merx*. Each lesson reads a real kind of Roman
+  notice: *Cavē canem*, *SPQR*, a sale sign.
+- No new forward reference. Candidates already used untaught in an earlier
+  lesson were dropped: *num*, *-ne*, *futūrus*, *spērō*, *cavē* as a
+  headword.
+- The extensions carry stage A2. Two reviews close the four chapters.
+
 ## Chapter payoffs say "I can", not "i can"
 
 The payoff line under each chapter's goal lowercased the goal's first letter,

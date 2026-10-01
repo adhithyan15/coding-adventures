@@ -1,0 +1,11 @@
+{
+  "id": "PT-C236-desperdicar",
+  "pathSegment": "PT-PATH-236-VERBOS236",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-236-VERBOS236",
+      "order": 3
+    }
+  ]
+}

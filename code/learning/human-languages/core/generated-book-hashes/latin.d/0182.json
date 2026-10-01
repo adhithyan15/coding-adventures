@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:9f6e94b5ef4a05b8",
+  "lessonIds": [
+    "LA-C182-publicus",
+    "LA-C182-privatus",
+    "LA-C182-communis",
+    "LA-C182-inanis",
+    "LA-C182-gravis",
+    "LA-R182-first-pass-words-from-chapters-174-177",
+    "LA-R182-second-pass-words-from-chapters-178-182"
+  ],
+  "tex": "latin/book/chapters/ch182-public-private-common-hollow-heavy.tex"
+}

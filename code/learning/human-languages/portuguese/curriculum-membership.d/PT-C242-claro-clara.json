@@ -1,0 +1,11 @@
+{
+  "id": "PT-C242-claro-clara",
+  "pathSegment": "PT-PATH-242-QUAL242",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-242-QUAL242",
+      "order": 3
+    }
+  ]
+}

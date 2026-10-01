@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:6be5e79514309b2a",
+  "lessonIds": [
+    "PT-C159-bateria",
+    "PT-C159-carregador",
+    "PT-C159-cantor-a-cantora",
+    "PT-C159-espetaculo",
+    "PT-C159-ator"
+  ],
+  "tex": "portuguese/book/chapters/ch159-battery-charger-singer-show-actor.tex"
+}

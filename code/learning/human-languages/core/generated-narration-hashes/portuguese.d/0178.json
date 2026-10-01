@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:2bec1d3703495c86",
+  "lessonIds": [
+    "PT-C178-misturar",
+    "PT-C178-obedecer",
+    "PT-C178-rezar",
+    "PT-C178-recomendar",
+    "PT-C178-respirar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch178.txt",
+  "json": "portuguese/narration/ch178.json",
+  "textHash": "fnv1a64:373b13aa8fbddbe6",
+  "jsonHash": "fnv1a64:8d8c360fba93c2df",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:fed0ffe9a7b44c7f",
+  "lessonIds": [
+    "PT-C153-confortavel",
+    "PT-C153-desconfortavel",
+    "PT-C153-educado-educada",
+    "PT-C153-mal-educado-mal-educada",
+    "PT-C153-desagradavel"
+  ],
+  "tex": "portuguese/book/chapters/ch153-comfortable-uncomfortable-polite-rude-unpleasant.tex"
+}

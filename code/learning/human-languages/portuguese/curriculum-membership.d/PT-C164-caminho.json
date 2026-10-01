@@ -1,0 +1,11 @@
+{
+  "id": "PT-C164-caminho",
+  "pathSegment": "PT-PATH-164-COISAS164",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-164-COISAS164",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 154,
+  "title": "Complicated, Necessary, Useful, Useless, Strange",
+  "label": "ch:pt-complicated-necessary-useful-useless-strange",
+  "canDo": "I can say complicated, necessary, useful, useless and strange.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PT-C154-estranho-estranha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 154: I can say complicated, necessary, useful, useless and strange.",
+    "assesses": [
+      "PT-LEX-C154-QUAL154-03",
+      "PT-LEX-C154-QUAL154-04",
+      "PT-LEX-C154-QUAL154-05"
+    ]
+  }
+}

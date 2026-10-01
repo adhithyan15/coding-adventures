@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C165-couro",
+    "language": "portuguese",
+    "chapter": 165,
+    "sequence": 8860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ea2c01f3259b5a8"
+  },
+  "findings": []
+}

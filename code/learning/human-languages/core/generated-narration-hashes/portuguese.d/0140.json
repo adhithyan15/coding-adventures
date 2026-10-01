@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:148906b4ba93dc56",
+  "lessonIds": [
+    "PT-C140-discutir",
+    "PT-C140-prometer",
+    "PT-C140-permitir",
+    "PT-C140-proibir",
+    "PT-C140-proteger"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch140.txt",
+  "json": "portuguese/narration/ch140.json",
+  "textHash": "fnv1a64:969cefc50f68c098",
+  "jsonHash": "fnv1a64:b3939f15f31cf29d",
+  "findings": []
+}

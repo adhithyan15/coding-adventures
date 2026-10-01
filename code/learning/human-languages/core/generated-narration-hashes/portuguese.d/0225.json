@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:3b52b4451b7142ff",
+  "lessonIds": [
+    "PT-C225-ambiente",
+    "PT-C225-poluicao",
+    "PT-C225-reciclagem",
+    "PT-C225-energia",
+    "PT-C225-eletricidade"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch225.txt",
+  "json": "portuguese/narration/ch225.json",
+  "textHash": "fnv1a64:cdd96c15ae4984da",
+  "jsonHash": "fnv1a64:b3fdb0314b2d1d88",
+  "findings": []
+}

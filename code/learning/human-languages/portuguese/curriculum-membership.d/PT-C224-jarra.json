@@ -1,0 +1,11 @@
+{
+  "id": "PT-C224-jarra",
+  "pathSegment": "PT-PATH-224-COISAS224",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-224-COISAS224",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 150,
+  "title": "Rarely, Then, Finally, From now on, Still",
+  "label": "ch:pt-rarely-then-finally-from-now-on-still",
+  "canDo": "I can say rarely, then, finally, from now on and still.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "PT-C150-ainda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 150: I can say rarely, then, finally, from now on and still.",
+    "assesses": [
+      "PT-LEX-C150-TEMPO150-03",
+      "PT-LEX-C150-TEMPO150-04",
+      "PT-LEX-C150-TEMPO150-05"
+    ]
+  }
+}
