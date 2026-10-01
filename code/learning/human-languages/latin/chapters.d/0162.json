@@ -1,0 +1,19 @@
+{
+  "chapter": 162,
+  "title": "Recently, the Day before Yesterday, Once, Before, To Happen",
+  "label": "ch:la-recently-the-day-before-yesterday-once-before-to-happen",
+  "canDo": "I can say what happened, and when: recently, the day before yesterday, long ago.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "LA-C162-accido",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 162: I can say what happened, and when: recently, the day before yesterday, long ago.",
+    "assesses": [
+      "LA-LEX-C162-PAS162-03",
+      "LA-LEX-C162-PAS162-04",
+      "LA-LEX-C162-PAS162-05"
+    ]
+  }
+}

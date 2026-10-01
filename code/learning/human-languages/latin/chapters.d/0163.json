@@ -1,0 +1,19 @@
+{
+  "chapter": 163,
+  "title": "The Day after Tomorrow, Afterwards, a Plan, To Decide, To Foresee",
+  "label": "ch:la-the-day-after-tomorrow-afterwards-a-plan-to-decide-to-foresee",
+  "canDo": "I can say what will happen, and when: the day after tomorrow, afterwards, and what I plan.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "LA-C163-provideo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 163: I can say what will happen, and when: the day after tomorrow, afterwards, and what I plan.",
+    "assesses": [
+      "LA-LEX-C163-FUT163-03",
+      "LA-LEX-C163-FUT163-04",
+      "LA-LEX-C163-FUT163-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C162-antea",
+    "language": "latin",
+    "chapter": 162,
+    "sequence": 7000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:056e1daf1bb46a32"
+  },
+  "findings": []
+}

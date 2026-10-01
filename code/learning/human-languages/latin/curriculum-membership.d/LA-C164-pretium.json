@@ -1,0 +1,11 @@
+{
+  "id": "LA-C164-pretium",
+  "pathSegment": "LA-PATH-164-LEG164",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-164-LEG164",
+      "order": 2
+    }
+  ]
+}
