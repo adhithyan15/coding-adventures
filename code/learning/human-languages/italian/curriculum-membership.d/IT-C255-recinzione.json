@@ -1,0 +1,11 @@
+{
+  "id": "IT-C255-recinzione",
+  "pathSegment": "IT-PATH-255-COSE255",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-255-COSE255",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:21aea89b193e3c5e",
+  "lessonIds": [
+    "IT-C243-cerotto",
+    "IT-C243-ambulanza",
+    "IT-C243-infermeria",
+    "IT-C243-emergenza",
+    "IT-C243-incidente"
+  ],
+  "tex": "italian/book/chapters/ch243-plaster-ambulance-sick-bay-emergency-accident.tex"
+}

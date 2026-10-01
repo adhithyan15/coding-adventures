@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C235-controllare",
+    "language": "italian",
+    "chapter": 235,
+    "sequence": 13970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3956edf28f342c91"
+  },
+  "findings": []
+}

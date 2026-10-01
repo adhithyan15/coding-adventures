@@ -1,0 +1,11 @@
+{
+  "id": "IT-C233-stirare",
+  "pathSegment": "IT-PATH-233-VERBI233",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-233-VERBI233",
+      "order": 3
+    }
+  ]
+}

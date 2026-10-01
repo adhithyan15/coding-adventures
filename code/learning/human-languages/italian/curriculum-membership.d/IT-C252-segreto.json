@@ -1,0 +1,11 @@
+{
+  "id": "IT-C252-segreto",
+  "pathSegment": "IT-PATH-252-COSE252",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-252-COSE252",
+      "order": 4
+    }
+  ]
+}

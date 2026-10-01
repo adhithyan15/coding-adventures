@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C236-pettinarsi",
+    "language": "italian",
+    "chapter": 236,
+    "sequence": 14040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f0cc36b8b307a2c"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C253-debito",
+  "pathSegment": "IT-PATH-253-COSE253",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-253-COSE253",
+      "order": 2
+    }
+  ]
+}

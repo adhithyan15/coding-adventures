@@ -1,0 +1,21 @@
+{
+  "language": "italian",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:8cdf7546c93a3a39",
+  "lessonIds": [
+    "IT-C241-consegnare",
+    "IT-C241-correggere",
+    "IT-C241-dirigere",
+    "IT-C241-distruggere",
+    "IT-C241-esagerare",
+    "IT-R241-first-pass-words-from-chapters-233-236",
+    "IT-R241-second-pass-words-from-chapters-237-241"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "italian/narration/ch241.txt",
+  "json": "italian/narration/ch241.json",
+  "textHash": "fnv1a64:482c47c64872f0cd",
+  "jsonHash": "fnv1a64:2b17252bbef963bb",
+  "findings": []
+}

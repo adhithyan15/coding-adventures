@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:1029564835d2d722",
+  "lessonIds": [
+    "IT-C258-tifoso",
+    "IT-C258-premio",
+    "IT-C258-ritardo",
+    "IT-C258-coincidenza",
+    "IT-C258-ritorno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch258.txt",
+  "json": "italian/narration/ch258.json",
+  "textHash": "fnv1a64:b9892cb521f59594",
+  "jsonHash": "fnv1a64:bac6f47807981a75",
+  "findings": []
+}

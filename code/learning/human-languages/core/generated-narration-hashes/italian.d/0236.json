@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:2a472191f64d3a8c",
+  "lessonIds": [
+    "IT-C236-riposare",
+    "IT-C236-svegliarsi",
+    "IT-C236-pettinarsi",
+    "IT-C236-annoiarsi",
+    "IT-C236-divertirsi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch236.txt",
+  "json": "italian/narration/ch236.json",
+  "textHash": "fnv1a64:8811b40aae329554",
+  "jsonHash": "fnv1a64:e38e0434b1ddbf97",
+  "findings": []
+}

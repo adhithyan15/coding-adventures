@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:1ecbc3d48dd3b782",
+  "lessonIds": [
+    "IT-C237-avvisare",
+    "IT-C237-bruciare",
+    "IT-C237-buttare",
+    "IT-C237-calcolare",
+    "IT-C237-colpire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch237.txt",
+  "json": "italian/narration/ch237.json",
+  "textHash": "fnv1a64:ccce9d1b5bee4906",
+  "jsonHash": "fnv1a64:b956039a027b7d1d",
+  "findings": []
+}

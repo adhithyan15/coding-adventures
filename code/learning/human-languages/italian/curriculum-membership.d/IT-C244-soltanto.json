@@ -1,0 +1,11 @@
+{
+  "id": "IT-C244-soltanto",
+  "pathSegment": "IT-PATH-244-PERCHE244",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-244-PERCHE244",
+      "order": 3
+    }
+  ]
+}

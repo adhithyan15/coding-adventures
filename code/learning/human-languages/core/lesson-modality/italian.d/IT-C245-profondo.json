@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C245-profondo",
+    "language": "italian",
+    "chapter": 245,
+    "sequence": 14680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a61ec0253f033b83"
+  },
+  "findings": []
+}

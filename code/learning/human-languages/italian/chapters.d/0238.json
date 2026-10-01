@@ -1,0 +1,19 @@
+{
+  "chapter": 238,
+  "title": "To point out, To inform, To dispatch, To complain, To be missing",
+  "label": "ch:it-to-point-out-to-inform-to-dispatch-to-complain-to-be-missing",
+  "canDo": "I can say to point out, to inform, to dispatch, to complain and to be missing.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C238-mancare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 238: I can say to point out, to inform, to dispatch, to complain and to be missing.",
+    "assesses": [
+      "IT-LEX-C238-VERBI238-03",
+      "IT-LEX-C238-VERBI238-04",
+      "IT-LEX-C238-VERBI238-05"
+    ]
+  }
+}

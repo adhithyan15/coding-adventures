@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C255-fontana",
+    "language": "italian",
+    "chapter": 255,
+    "sequence": 15350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:95cc54391f2f4c33"
+  },
+  "findings": []
+}

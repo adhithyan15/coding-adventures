@@ -1,0 +1,11 @@
+{
+  "id": "IT-C255-cantina",
+  "pathSegment": "IT-PATH-255-COSE255",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-255-COSE255",
+      "order": 4
+    }
+  ]
+}

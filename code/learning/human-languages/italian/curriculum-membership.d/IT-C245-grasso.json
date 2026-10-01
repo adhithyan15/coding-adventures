@@ -1,0 +1,11 @@
+{
+  "id": "IT-C245-grasso",
+  "pathSegment": "IT-PATH-245-QUAL245",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-245-QUAL245",
+      "order": 3
+    }
+  ]
+}

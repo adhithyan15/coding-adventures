@@ -1,0 +1,11 @@
+{
+  "id": "IT-C241-consegnare",
+  "pathSegment": "IT-PATH-241-VERBI241",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-241-VERBI241",
+      "order": 0
+    }
+  ]
+}

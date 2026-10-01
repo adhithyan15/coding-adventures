@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C248-societa",
+    "language": "italian",
+    "chapter": 248,
+    "sequence": 14840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8703f0ef6e2794ae"
+  },
+  "findings": []
+}

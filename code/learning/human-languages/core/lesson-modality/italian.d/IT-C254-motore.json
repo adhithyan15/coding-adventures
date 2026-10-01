@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C254-motore",
+    "language": "italian",
+    "chapter": 254,
+    "sequence": 15330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18a433dc7288daa2"
+  },
+  "findings": []
+}

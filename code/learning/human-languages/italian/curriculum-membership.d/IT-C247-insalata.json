@@ -1,0 +1,11 @@
+{
+  "id": "IT-C247-insalata",
+  "pathSegment": "IT-PATH-247-COSE247",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-247-COSE247",
+      "order": 3
+    }
+  ]
+}

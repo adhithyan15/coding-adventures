@@ -1,0 +1,19 @@
+{
+  "chapter": 252,
+  "title": "Difference, Example, Truth, Lie, Secret",
+  "label": "ch:it-difference-example-truth-lie-secret",
+  "canDo": "I can say a difference, an example, the truth, a lie and a secret.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C252-segreto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 252: I can say a difference, an example, the truth, a lie and a secret.",
+    "assesses": [
+      "IT-LEX-C252-COSE252-03",
+      "IT-LEX-C252-COSE252-04",
+      "IT-LEX-C252-COSE252-05"
+    ]
+  }
+}

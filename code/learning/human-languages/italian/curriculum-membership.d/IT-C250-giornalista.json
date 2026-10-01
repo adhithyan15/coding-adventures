@@ -1,0 +1,11 @@
+{
+  "id": "IT-C250-giornalista",
+  "pathSegment": "IT-PATH-250-COSE250",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-250-COSE250",
+      "order": 0
+    }
+  ]
+}

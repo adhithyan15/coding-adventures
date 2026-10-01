@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 257,
+  "sourceHash": "fnv1a64:a752da81805d5a2a",
+  "lessonIds": [
+    "IT-C257-metallo",
+    "IT-C257-mattone",
+    "IT-C257-sacchetto",
+    "IT-C257-filo",
+    "IT-C257-strumento"
+  ],
+  "tex": "italian/book/chapters/ch257-metal-brick-small-bag-thread-tool.tex"
+}

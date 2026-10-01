@@ -1,0 +1,19 @@
+{
+  "chapter": 247,
+  "title": "Button, Size, Colour, Salad, Snack",
+  "label": "ch:it-button-size-colour-salad-snack",
+  "canDo": "I can say a button, a size, a colour, salad and a snack.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C247-spuntino",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 247: I can say a button, a size, a colour, salad and a snack.",
+    "assesses": [
+      "IT-LEX-C247-COSE247-03",
+      "IT-LEX-C247-COSE247-04",
+      "IT-LEX-C247-COSE247-05"
+    ]
+  }
+}

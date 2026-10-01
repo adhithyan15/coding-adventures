@@ -1,0 +1,19 @@
+{
+  "chapter": 240,
+  "title": "To push, To pull, To waste, To overtake, To perform",
+  "label": "ch:it-to-push-to-pull-to-waste-to-overtake-to-perform",
+  "canDo": "I can say to push, to pull, to waste, to overtake and to perform.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C240-svolgere",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 240: I can say to push, to pull, to waste, to overtake and to perform.",
+    "assesses": [
+      "IT-LEX-C240-VERBI240-03",
+      "IT-LEX-C240-VERBI240-04",
+      "IT-LEX-C240-VERBI240-05"
+    ]
+  }
+}

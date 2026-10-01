@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:97503ec998632ccc",
+  "lessonIds": [
+    "IT-C244-proprio",
+    "IT-C244-quasi",
+    "IT-C244-circa",
+    "IT-C244-soltanto",
+    "IT-C244-insieme"
+  ],
+  "tex": "italian/book/chapters/ch244-exactly-almost-about-only-together.tex"
+}

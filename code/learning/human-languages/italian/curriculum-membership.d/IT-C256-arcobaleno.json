@@ -1,0 +1,11 @@
+{
+  "id": "IT-C256-arcobaleno",
+  "pathSegment": "IT-PATH-256-COSE256",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-256-COSE256",
+      "order": 3
+    }
+  ]
+}

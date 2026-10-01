@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C259-insegnante",
+    "language": "italian",
+    "chapter": 259,
+    "sequence": 15570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e3c3eff412be766"
+  },
+  "findings": []
+}

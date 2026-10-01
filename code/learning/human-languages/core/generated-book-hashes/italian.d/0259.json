@@ -1,0 +1,15 @@
+{
+  "language": "italian",
+  "chapter": 259,
+  "sourceHash": "fnv1a64:0213654aef877568",
+  "lessonIds": [
+    "IT-C259-universita",
+    "IT-C259-voto",
+    "IT-C259-insegnante",
+    "IT-C259-errore",
+    "IT-C259-storia",
+    "IT-R259-first-pass-words-from-chapters-251-254",
+    "IT-R259-second-pass-words-from-chapters-255-259"
+  ],
+  "tex": "italian/book/chapters/ch259-university-mark-teacher-mistake-history.tex"
+}

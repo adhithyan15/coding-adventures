@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:b4b586448e9ddc9f",
+  "lessonIds": [
+    "IT-C251-suocero",
+    "IT-C251-suocera",
+    "IT-C251-genero",
+    "IT-C251-nuora",
+    "IT-C251-fidanzato"
+  ],
+  "tex": "italian/book/chapters/ch251-father-in-law-mother-in-law-son-in-law-daughter-in-law-boyfriend.tex"
+}

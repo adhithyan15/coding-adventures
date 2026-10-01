@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:99426c0db234438e",
+  "lessonIds": [
+    "IT-C245-liscio",
+    "IT-C245-ruvido",
+    "IT-C245-profondo",
+    "IT-C245-grasso",
+    "IT-C245-sconosciuto"
+  ],
+  "tex": "italian/book/chapters/ch245-smooth-rough-deep-fat-unknown.tex"
+}

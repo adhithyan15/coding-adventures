@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C258-premio",
+    "language": "italian",
+    "chapter": 258,
+    "sequence": 15510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f7530d68f4bf9f39"
+  },
+  "findings": []
+}

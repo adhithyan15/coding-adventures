@@ -1,0 +1,11 @@
+{
+  "id": "IT-C250-farmacista",
+  "pathSegment": "IT-PATH-250-COSE250",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-250-COSE250",
+      "order": 3
+    }
+  ]
+}

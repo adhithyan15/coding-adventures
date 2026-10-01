@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:5d8b6a93f95fa17b",
+  "lessonIds": [
+    "IT-C243-cerotto",
+    "IT-C243-ambulanza",
+    "IT-C243-infermeria",
+    "IT-C243-emergenza",
+    "IT-C243-incidente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch243.txt",
+  "json": "italian/narration/ch243.json",
+  "textHash": "fnv1a64:568348331e22a185",
+  "jsonHash": "fnv1a64:1a752a4e259432dd",
+  "findings": []
+}

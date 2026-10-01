@@ -1,0 +1,19 @@
+{
+  "chapter": 258,
+  "title": "Fan, Prize, Delay, Connection, Return",
+  "label": "ch:it-fan-prize-delay-connection-return",
+  "canDo": "I can say a fan, a prize, a delay, a connection and the return.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C258-ritorno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 258: I can say a fan, a prize, a delay, a connection and the return.",
+    "assesses": [
+      "IT-LEX-C258-COSE258-03",
+      "IT-LEX-C258-COSE258-04",
+      "IT-LEX-C258-COSE258-05"
+    ]
+  }
+}

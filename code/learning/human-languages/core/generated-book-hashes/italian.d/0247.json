@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:3d0d0ca0d765ee4f",
+  "lessonIds": [
+    "IT-C247-bottone",
+    "IT-C247-taglia",
+    "IT-C247-colore",
+    "IT-C247-insalata",
+    "IT-C247-spuntino"
+  ],
+  "tex": "italian/book/chapters/ch247-button-size-colour-salad-snack.tex"
+}

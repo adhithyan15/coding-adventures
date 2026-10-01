@@ -1,0 +1,11 @@
+{
+  "id": "IT-C258-ritorno",
+  "pathSegment": "IT-PATH-258-COSE258",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-258-COSE258",
+      "order": 4
+    }
+  ]
+}

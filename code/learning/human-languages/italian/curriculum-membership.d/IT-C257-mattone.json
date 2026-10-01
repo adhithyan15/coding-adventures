@@ -1,0 +1,11 @@
+{
+  "id": "IT-C257-mattone",
+  "pathSegment": "IT-PATH-257-COSE257",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-257-COSE257",
+      "order": 1
+    }
+  ]
+}

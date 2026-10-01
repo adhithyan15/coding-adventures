@@ -1,0 +1,11 @@
+{
+  "id": "IT-C246-cotto",
+  "pathSegment": "IT-PATH-246-QUAL246",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-246-QUAL246",
+      "order": 4
+    }
+  ]
+}

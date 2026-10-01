@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:090c27c134ffe0cb",
+  "lessonIds": [
+    "IT-C249-dialetto",
+    "IT-C249-notizia",
+    "IT-C249-telegiornale",
+    "IT-C249-televisione",
+    "IT-C249-pubblicita"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch249.txt",
+  "json": "italian/narration/ch249.json",
+  "textHash": "fnv1a64:f431fcdb29ba0f93",
+  "jsonHash": "fnv1a64:f6f761b27d045afb",
+  "findings": []
+}

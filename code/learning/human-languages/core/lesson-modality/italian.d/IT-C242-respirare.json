@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C242-respirare",
+    "language": "italian",
+    "chapter": 242,
+    "sequence": 14520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a54c4f029a1c68c9"
+  },
+  "findings": []
+}

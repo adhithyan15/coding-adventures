@@ -1,0 +1,11 @@
+{
+  "id": "IT-C240-sprecare",
+  "pathSegment": "IT-PATH-240-VERBI240",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-240-VERBI240",
+      "order": 2
+    }
+  ]
+}

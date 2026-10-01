@@ -1,0 +1,11 @@
+{
+  "id": "IT-C238-mancare",
+  "pathSegment": "IT-PATH-238-VERBI238",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-238-VERBI238",
+      "order": 4
+    }
+  ]
+}

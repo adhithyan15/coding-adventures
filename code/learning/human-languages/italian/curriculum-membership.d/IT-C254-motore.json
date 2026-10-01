@@ -1,0 +1,11 @@
+{
+  "id": "IT-C254-motore",
+  "pathSegment": "IT-PATH-254-COSE254",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-254-COSE254",
+      "order": 3
+    }
+  ]
+}

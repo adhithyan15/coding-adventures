@@ -1,0 +1,19 @@
+{
+  "chapter": 242,
+  "title": "To slow down, To breathe, To give up, To collect, To turn to",
+  "label": "ch:it-to-slow-down-to-breathe-to-give-up-to-collect-to-turn-to",
+  "canDo": "I can say to slow down, to breathe, to give up, to collect and to turn to.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C242-rivolgersi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 242: I can say to slow down, to breathe, to give up, to collect and to turn to.",
+    "assesses": [
+      "IT-LEX-C242-VERBI242-03",
+      "IT-LEX-C242-VERBI242-04",
+      "IT-LEX-C242-VERBI242-05"
+    ]
+  }
+}

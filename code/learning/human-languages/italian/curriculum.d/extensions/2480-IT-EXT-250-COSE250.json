@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-250-COSE250",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a journalist, an architect, a dentist, a pharmacist and a butcher.",
+  "prerequisites": []
+}

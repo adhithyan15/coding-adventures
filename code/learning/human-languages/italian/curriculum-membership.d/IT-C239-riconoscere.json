@@ -1,0 +1,11 @@
+{
+  "id": "IT-C239-riconoscere",
+  "pathSegment": "IT-PATH-239-VERBI239",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-239-VERBI239",
+      "order": 4
+    }
+  ]
+}

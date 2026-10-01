@@ -1,0 +1,11 @@
+{
+  "id": "IT-C240-superare",
+  "pathSegment": "IT-PATH-240-VERBI240",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-240-VERBI240",
+      "order": 3
+    }
+  ]
+}

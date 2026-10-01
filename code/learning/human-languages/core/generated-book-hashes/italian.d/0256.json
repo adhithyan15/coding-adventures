@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:7eef474e18e4b00c",
+  "lessonIds": [
+    "IT-C256-fiamma",
+    "IT-C256-fulmine",
+    "IT-C256-tuono",
+    "IT-C256-arcobaleno",
+    "IT-C256-clima"
+  ],
+  "tex": "italian/book/chapters/ch256-flame-lightning-thunder-rainbow-climate.tex"
+}

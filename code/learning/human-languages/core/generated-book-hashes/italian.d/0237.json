@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:2ac5ed687fa36ddc",
+  "lessonIds": [
+    "IT-C237-avvisare",
+    "IT-C237-bruciare",
+    "IT-C237-buttare",
+    "IT-C237-calcolare",
+    "IT-C237-colpire"
+  ],
+  "tex": "italian/book/chapters/ch237-to-warn-to-burn-to-throw-away-to-calculate-to-hit.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C258-coincidenza",
+    "language": "italian",
+    "chapter": 258,
+    "sequence": 15530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e29a275bed0fce35"
+  },
+  "findings": []
+}

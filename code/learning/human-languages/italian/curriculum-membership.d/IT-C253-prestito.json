@@ -1,0 +1,11 @@
+{
+  "id": "IT-C253-prestito",
+  "pathSegment": "IT-PATH-253-COSE253",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-253-COSE253",
+      "order": 1
+    }
+  ]
+}

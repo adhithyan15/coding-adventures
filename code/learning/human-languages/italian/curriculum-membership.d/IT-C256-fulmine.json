@@ -1,0 +1,11 @@
+{
+  "id": "IT-C256-fulmine",
+  "pathSegment": "IT-PATH-256-COSE256",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-256-COSE256",
+      "order": 1
+    }
+  ]
+}

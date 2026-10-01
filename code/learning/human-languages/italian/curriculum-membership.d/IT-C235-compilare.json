@@ -1,0 +1,11 @@
+{
+  "id": "IT-C235-compilare",
+  "pathSegment": "IT-PATH-235-VERBI235",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-235-VERBI235",
+      "order": 2
+    }
+  ]
+}

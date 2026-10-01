@@ -1,0 +1,19 @@
+{
+  "chapter": 250,
+  "title": "Journalist, Architect, Dentist, Pharmacist, Butcher",
+  "label": "ch:it-journalist-architect-dentist-pharmacist-butcher",
+  "canDo": "I can say a journalist, an architect, a dentist, a pharmacist and a butcher.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-R250-second-pass-words-from-chapters-246-250",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 250: I can say a journalist, an architect, a dentist, a pharmacist and a butcher.",
+    "assesses": [
+      "IT-LEX-C250-COSE250-03",
+      "IT-LEX-C250-COSE250-04",
+      "IT-LEX-C250-COSE250-05"
+    ]
+  }
+}

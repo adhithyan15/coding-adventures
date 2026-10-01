@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C237-buttare",
+    "language": "italian",
+    "chapter": 237,
+    "sequence": 14090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63be50ba4723c0a7"
+  },
+  "findings": []
+}

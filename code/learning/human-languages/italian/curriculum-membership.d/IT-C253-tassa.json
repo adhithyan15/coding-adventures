@@ -1,0 +1,11 @@
+{
+  "id": "IT-C253-tassa",
+  "pathSegment": "IT-PATH-253-COSE253",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-253-COSE253",
+      "order": 3
+    }
+  ]
+}

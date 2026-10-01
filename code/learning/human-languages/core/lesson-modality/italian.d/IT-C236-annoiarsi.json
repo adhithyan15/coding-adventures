@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C236-annoiarsi",
+    "language": "italian",
+    "chapter": 236,
+    "sequence": 14050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0179988562f70a16"
+  },
+  "findings": []
+}

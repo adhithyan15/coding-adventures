@@ -1,0 +1,11 @@
+{
+  "id": "IT-C237-colpire",
+  "pathSegment": "IT-PATH-237-VERBI237",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-237-VERBI237",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C240-svolgere",
+    "language": "italian",
+    "chapter": 240,
+    "sequence": 14260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf24f2229aca9961"
+  },
+  "findings": []
+}

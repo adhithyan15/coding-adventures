@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-R241-second-pass-words-from-chapters-237-241",
+    "language": "italian",
+    "chapter": 241,
+    "sequence": 14330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ddf1943877392b42"
+  },
+  "findings": []
+}

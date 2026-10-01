@@ -1,0 +1,11 @@
+{
+  "id": "IT-C238-inviare",
+  "pathSegment": "IT-PATH-238-VERBI238",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-238-VERBI238",
+      "order": 2
+    }
+  ]
+}

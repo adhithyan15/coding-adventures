@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C242-rallentare",
+    "language": "italian",
+    "chapter": 242,
+    "sequence": 14510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9cc7b9d088dc677"
+  },
+  "findings": []
+}

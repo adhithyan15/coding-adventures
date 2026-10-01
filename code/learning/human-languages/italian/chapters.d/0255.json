@@ -1,0 +1,19 @@
+{
+  "chapter": 255,
+  "title": "Fountain, Gate, Fence, Courtyard, Cellar",
+  "label": "ch:it-fountain-gate-fence-courtyard-cellar",
+  "canDo": "I can say a fountain, a gate, a fence, a courtyard and a cellar.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C255-cantina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 255: I can say a fountain, a gate, a fence, a courtyard and a cellar.",
+    "assesses": [
+      "IT-LEX-C255-COSE255-03",
+      "IT-LEX-C255-COSE255-04",
+      "IT-LEX-C255-COSE255-05"
+    ]
+  }
+}

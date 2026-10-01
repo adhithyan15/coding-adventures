@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:b71059f68d199209",
+  "lessonIds": [
+    "IT-C253-conto-corrente",
+    "IT-C253-prestito",
+    "IT-C253-debito",
+    "IT-C253-tassa",
+    "IT-C253-modulo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch253.txt",
+  "json": "italian/narration/ch253.json",
+  "textHash": "fnv1a64:75a3380f098654fe",
+  "jsonHash": "fnv1a64:ac5319ca4281d71b",
+  "findings": []
+}

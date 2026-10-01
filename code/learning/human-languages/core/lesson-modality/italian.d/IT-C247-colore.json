@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C247-colore",
+    "language": "italian",
+    "chapter": 247,
+    "sequence": 14780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cecb74ed5eea0686"
+  },
+  "findings": []
+}

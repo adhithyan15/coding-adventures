@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C257-metallo",
+    "language": "italian",
+    "chapter": 257,
+    "sequence": 15450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:92c0175125810b29"
+  },
+  "findings": []
+}

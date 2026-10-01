@@ -1,0 +1,11 @@
+{
+  "id": "IT-C250-architetto",
+  "pathSegment": "IT-PATH-250-COSE250",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-250-COSE250",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C237-bruciare",
+    "language": "italian",
+    "chapter": 237,
+    "sequence": 14080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48f100797c2e011c"
+  },
+  "findings": []
+}

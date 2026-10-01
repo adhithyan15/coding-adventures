@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:a20abb8b611905aa",
+  "lessonIds": [
+    "IT-C240-spingere",
+    "IT-C240-tirare",
+    "IT-C240-sprecare",
+    "IT-C240-superare",
+    "IT-C240-svolgere"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch240.txt",
+  "json": "italian/narration/ch240.json",
+  "textHash": "fnv1a64:3a46f7eafea5b8d1",
+  "jsonHash": "fnv1a64:86a4d147e5ff97e1",
+  "findings": []
+}

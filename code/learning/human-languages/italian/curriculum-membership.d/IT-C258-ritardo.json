@@ -1,0 +1,11 @@
+{
+  "id": "IT-C258-ritardo",
+  "pathSegment": "IT-PATH-258-COSE258",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-258-COSE258",
+      "order": 2
+    }
+  ]
+}

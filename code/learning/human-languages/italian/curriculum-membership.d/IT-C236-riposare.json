@@ -1,0 +1,11 @@
+{
+  "id": "IT-C236-riposare",
+  "pathSegment": "IT-PATH-236-VERBI236",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-236-VERBI236",
+      "order": 0
+    }
+  ]
+}

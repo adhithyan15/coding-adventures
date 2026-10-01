@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:484153e4307256a1",
+  "lessonIds": [
+    "IT-C249-dialetto",
+    "IT-C249-notizia",
+    "IT-C249-telegiornale",
+    "IT-C249-televisione",
+    "IT-C249-pubblicita"
+  ],
+  "tex": "italian/book/chapters/ch249-dialect-piece-of-news-tv-news-tv-advertising.tex"
+}

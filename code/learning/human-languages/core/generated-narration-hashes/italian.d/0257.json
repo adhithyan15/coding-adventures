@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 257,
+  "sourceHash": "fnv1a64:41f7131e934281ef",
+  "lessonIds": [
+    "IT-C257-metallo",
+    "IT-C257-mattone",
+    "IT-C257-sacchetto",
+    "IT-C257-filo",
+    "IT-C257-strumento"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch257.txt",
+  "json": "italian/narration/ch257.json",
+  "textHash": "fnv1a64:d018912ef10ef6c5",
+  "jsonHash": "fnv1a64:328e230f5fce3806",
+  "findings": []
+}

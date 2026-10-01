@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:62018db485c3a596",
+  "lessonIds": [
+    "IT-C255-fontana",
+    "IT-C255-cancello",
+    "IT-C255-recinzione",
+    "IT-C255-cortile",
+    "IT-C255-cantina"
+  ],
+  "tex": "italian/book/chapters/ch255-fountain-gate-fence-courtyard-cellar.tex"
+}

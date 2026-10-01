@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C256-arcobaleno",
+    "language": "italian",
+    "chapter": 256,
+    "sequence": 15430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5319c5a4ff31b6e"
+  },
+  "findings": []
+}

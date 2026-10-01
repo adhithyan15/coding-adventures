@@ -1,0 +1,11 @@
+{
+  "id": "IT-C248-zanzara",
+  "pathSegment": "IT-PATH-248-COSE248",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-248-COSE248",
+      "order": 2
+    }
+  ]
+}
