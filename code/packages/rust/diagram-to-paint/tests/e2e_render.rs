@@ -2289,7 +2289,7 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_treemap_to_png() {
         let diagram = parse_treemap(
-            "%%{init: {\"treemap\": {\"padding\": 4, \"nodeWidth\": 64, \"nodeHeight\": 48, \"sectionFillColor\": \"#e0f2fe\", \"sectionStrokeColor\": \"#0369a1\", \"sectionStrokeWidth\": 2, \"leafFillColor\": \"#dcfce7\", \"leafStrokeColor\": \"#15803d\", \"leafStrokeWidth\": 2, \"labelColor\": \"#0c4a6e\", \"valueColor\": \"#166534\", \"titleColor\": \"#7c2d12\", \"titleFontSize\": 20, \"labelFontSize\": 15, \"valueFontSize\": 11, \"valueFormat\": \".2s\"}, \"themeVariables\": {\"cScale0\": \"#cffafe\", \"cScalePeer0\": \"#0e7490\", \"cScaleLabel0\": \"#164e63\"}}}%%\ntreemap-beta\ntitle Product Mix\naccTitle: Product allocation\n\"Products\"\n  \"Hardware\"\n    \"Laptops\": 4500\n    \"Phones\": 2500\n  \"Services\"\n    \"Support\": 2000\n    \"Training\": 1000:::accent\nclassDef accent fill:#fee2e2,stroke:#991b1b,color:#450a0a,stroke-width:3px",
+            "%%{init: {\"treemap\": {\"padding\": 4, \"nodeWidth\": 64, \"nodeHeight\": 48, \"sectionFillColor\": \"#e0f2fe\", \"sectionStrokeColor\": \"#0369a1\", \"sectionStrokeWidth\": 2, \"leafFillColor\": \"#dcfce7\", \"leafStrokeColor\": \"#15803d\", \"leafStrokeWidth\": 2, \"labelColor\": \"#0c4a6e\", \"valueColor\": \"#166534\", \"titleColor\": \"#7c2d12\", \"titleFontSize\": 20, \"labelFontSize\": 15, \"valueFontSize\": 11, \"valueFormat\": \".2s\"}, \"themeVariables\": {\"cScale0\": \"#cffafe\", \"cScalePeer0\": \"#0e7490\", \"cScaleLabel0\": \"#164e63\"}}}%%\ntreemap-beta\ntitle Product Mix\naccTitle: Product allocation\n\"Products\"\n  \"Hardware\"\n    \"Laptops\": 4500\n    \"Phones\": 2500\n  \"Services\"\n    \"Support\": 2000\n    \"Training\": 1000:::accent\nclassDef accent fill:#fee2e2,fill-opacity:0.5,stroke:#991b1b,stroke-opacity:0.5,opacity:0.8,color:#450a0a,stroke-width:3px,stroke-dasharray:6 2,stroke-dashoffset:1px",
         )
         .expect("treemap parse failed");
         let layout = layout_treemap(&diagram, 720.0);
@@ -2308,8 +2308,10 @@ line "Target" [35, 50, 68, 82]"##,
         assert_eq!((scene.width, scene.height), (640.0, 480.0));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             paint_instructions::PaintInstruction::Rect(rect)
-                if rect.fill.as_deref() == Some("#fee2e2")
-                    && rect.stroke.as_deref() == Some("#991b1b"))));
+                if rect.fill.as_deref() == Some("rgba(254,226,226,0.4)")
+                    && rect.stroke.as_deref() == Some("rgba(153,27,27,0.4)")
+                    && rect.stroke_dash.as_deref() == Some(&[6.0, 2.0][..])
+                    && rect.stroke_dash_offset == Some(1.0))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             paint_instructions::PaintInstruction::Rect(rect)
                 if rect.fill.as_deref() == Some("#dcfce7")

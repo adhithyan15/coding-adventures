@@ -4443,13 +4443,13 @@ pub fn parse_treemap(source: &str) -> Result<TreemapDiagram, ParseError> {
         accessibility_description: None,
         nodes: Vec::new(),
     };
-    let mut class_styles = HashMap::<String, DiagramStyle>::new();
+    let mut class_styles = HashMap::<String, diagram_ir::TreemapStyle>::new();
     for token in tokens.iter().filter(|token| token_name(token) == "CLASS_DEF_STATEMENT") {
         let declaration = token.value.trim().trim_end_matches(';').trim();
         let value = declaration.strip_prefix("classDef").expect("grammar requires classDef").trim();
         let (name, declarations) = value.split_once(char::is_whitespace)
             .ok_or_else(|| token_error(token, "treemap classDef requires a name and style"))?;
-        class_styles.insert(name.to_string(), parse_block_style(token, declarations)?);
+        class_styles.insert(name.to_string(), parse_treemap_style(token, declarations)?);
     }
     let mut ancestors = Vec::<(usize, String)>::new();
     let mut seen_root = false;
@@ -4545,6 +4545,45 @@ pub fn parse_treemap(source: &str) -> Result<TreemapDiagram, ParseError> {
     }
 
     Ok(diagram)
+}
+
+fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::TreemapStyle, ParseError> {
+    let mut style = diagram_ir::TreemapStyle::default();
+    for declaration in source.split(',').map(str::trim).filter(|value| !value.is_empty()) {
+        let (property, value) = declaration.split_once(':')
+            .ok_or_else(|| token_error(token, format!("invalid treemap style {declaration:?}")))?;
+        let value = value.trim().trim_matches(['\'', '"']);
+        match property.trim().to_ascii_lowercase().as_str() {
+            "opacity" => style.opacity = Some(parse_treemap_opacity(token, value)?),
+            "fill-opacity" => style.fill_opacity = Some(parse_treemap_opacity(token, value)?),
+            "stroke-opacity" => style.stroke_opacity = Some(parse_treemap_opacity(token, value)?),
+            "stroke-dashoffset" => {
+                style.stroke_dash_offset = Some(value.strip_suffix("px").unwrap_or(value).trim().parse::<f64>().ok()
+                    .filter(|value| value.is_finite())
+                    .ok_or_else(|| token_error(token, "invalid treemap stroke dash offset"))?);
+            }
+            _ => merge_treemap_node_style(&mut style.node, &parse_block_style(token, declaration)?),
+        }
+    }
+    Ok(style)
+}
+
+fn parse_treemap_opacity(token: &Token, source: &str) -> Result<f64, ParseError> {
+    source.parse::<f64>().ok().filter(|value| value.is_finite() && (0.0..=1.0).contains(value))
+        .ok_or_else(|| token_error(token, "treemap opacity must be between 0 and 1"))
+}
+
+fn merge_treemap_node_style(target: &mut DiagramStyle, source: &DiagramStyle) {
+    if source.fill.is_some() { target.fill.clone_from(&source.fill); }
+    if source.stroke.is_some() { target.stroke.clone_from(&source.stroke); }
+    if source.stroke_width.is_some() { target.stroke_width = source.stroke_width; }
+    if source.stroke_dash.is_some() { target.stroke_dash.clone_from(&source.stroke_dash); }
+    if source.text_color.is_some() { target.text_color.clone_from(&source.text_color); }
+    if source.font_size.is_some() { target.font_size = source.font_size; }
+    if source.font_weight.is_some() { target.font_weight = source.font_weight; }
+    if source.font_italic.is_some() { target.font_italic = source.font_italic; }
+    if source.font_family.is_some() { target.font_family.clone_from(&source.font_family); }
+    if source.corner_radius.is_some() { target.corner_radius = source.corner_radius; }
 }
 
 // ── venn-beta parser ──────────────────────────────────────────────────────
@@ -14050,18 +14089,20 @@ B//-A: reverse stick top
     #[test]
     fn treemap_resolves_class_definitions_declared_after_nodes() {
         let diagram = parse_treemap(
-            "treemap\n\"Root\"\n  \"Styled\": 5:::accent\nclassDef accent fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:3px,stroke-dasharray:5 2,font-size:16px,font-weight:bold,font-style:italic,font-family:Avenir",
+            "treemap\n\"Root\"\n  \"Styled\": 5:::accent\nclassDef accent fill:#fef3c7,fill-opacity:0.7,stroke:#b45309,stroke-opacity:0.5,opacity:0.8,stroke-width:3px,stroke-dasharray:5 2,stroke-dashoffset:-1px,color:#78350f,font-size:16px,font-weight:bold,font-style:italic,font-family:Avenir",
         ).unwrap();
         let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
-        assert_eq!(style.fill.as_deref(), Some("#fef3c7"));
-        assert_eq!(style.stroke.as_deref(), Some("#b45309"));
-        assert_eq!(style.text_color.as_deref(), Some("#78350f"));
-        assert_eq!(style.stroke_width, Some(3.0));
-        assert_eq!(style.stroke_dash.as_deref(), Some(&[5.0, 2.0][..]));
-        assert_eq!(style.font_size, Some(16.0));
-        assert_eq!(style.font_weight, Some(700));
-        assert_eq!(style.font_italic, Some(true));
-        assert_eq!(style.font_family.as_deref(), Some("Avenir"));
+        assert_eq!(style.node.fill.as_deref(), Some("#fef3c7"));
+        assert_eq!(style.node.stroke.as_deref(), Some("#b45309"));
+        assert_eq!(style.node.text_color.as_deref(), Some("#78350f"));
+        assert_eq!(style.node.stroke_width, Some(3.0));
+        assert_eq!(style.node.stroke_dash.as_deref(), Some(&[5.0, 2.0][..]));
+        assert_eq!(style.node.font_size, Some(16.0));
+        assert_eq!(style.node.font_weight, Some(700));
+        assert_eq!(style.node.font_italic, Some(true));
+        assert_eq!(style.node.font_family.as_deref(), Some("Avenir"));
+        assert_eq!((style.opacity, style.fill_opacity, style.stroke_opacity), (Some(0.8), Some(0.7), Some(0.5)));
+        assert_eq!(style.stroke_dash_offset, Some(-1.0));
     }
 }
 #[cfg(test)]

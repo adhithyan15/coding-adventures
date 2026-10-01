@@ -527,8 +527,9 @@ grammar, while semantic validation rejects a second unindented root with the
 pinned Mermaid diagnostic. Deterministic alternating partitions
 lower through backend-neutral rectangles and glyph runs, with native
 Metal-to-PNG validation. Named `classDef` declarations resolve fill, stroke,
-dash, text color, and font styling through semantic IR and backend-neutral
-paint. All twelve `cScale`, `cScalePeer`, and `cScaleLabel` theme-variable slots
+dash, dash offset, fill/stroke/overall opacity, text color, and font styling
+through semantic IR and backend-neutral paint. All twelve `cScale`,
+`cScalePeer`, and `cScaleLabel` theme-variable slots
 also flow from init directives or YAML front matter through category-aware
 layout into paint, with the hidden root and inherited leaf category behavior of
 the upstream renderer. Common D3 value-format families lower natively, including

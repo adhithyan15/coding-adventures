@@ -125,12 +125,19 @@ where
         let configured_fill = if node.has_children { &diagram.config.section_fill_color } else { &diagram.config.leaf_fill_color };
         let configured_stroke = if node.has_children { &diagram.config.section_stroke_color } else { &diagram.config.leaf_stroke_color };
         let configured_stroke_width = if node.has_children { diagram.config.section_stroke_width } else { diagram.config.leaf_stroke_width };
-        let fill = node.style.as_ref().and_then(|style| style.fill.clone())
+        let fill = node.style.as_ref().and_then(|style| style.node.fill.clone())
             .or_else(|| configured_fill.clone())
             .unwrap_or_else(|| palette_index.map_or_else(|| "transparent".into(), |index| diagram.config.theme.fills[index].clone()));
-        let stroke = node.style.as_ref().and_then(|style| style.stroke.clone())
+        let stroke = node.style.as_ref().and_then(|style| style.node.stroke.clone())
             .or_else(|| configured_stroke.clone())
             .unwrap_or_else(|| palette_index.map_or_else(|| "transparent".into(), |index| diagram.config.theme.strokes[index].clone()));
+        let opacity = node.style.as_ref().and_then(|style| style.opacity).unwrap_or(1.0);
+        let fill = if node.style.as_ref().is_some_and(|style| style.opacity.is_some() || style.fill_opacity.is_some()) {
+            with_opacity(&fill, node.style.as_ref().and_then(|style| style.fill_opacity).unwrap_or(1.0) * opacity)
+        } else { fill };
+        let stroke = if node.style.as_ref().is_some_and(|style| style.opacity.is_some() || style.stroke_opacity.is_some()) {
+            with_opacity(&stroke, node.style.as_ref().and_then(|style| style.stroke_opacity).unwrap_or(1.0) * opacity)
+        } else { stroke };
         instructions.push(PaintInstruction::Rect(PaintRect {
             base: PaintBase::default(),
             x: node.x,
@@ -139,25 +146,26 @@ where
             height: node.height,
             fill: Some(fill),
             stroke: Some(stroke),
-            stroke_width: Some(node.style.as_ref().and_then(|style| style.stroke_width)
+            stroke_width: Some(node.style.as_ref().and_then(|style| style.node.stroke_width)
                 .or(configured_stroke_width).unwrap_or(diagram.config.border_width)),
-            corner_radius: Some(node.style.as_ref().and_then(|style| style.corner_radius).unwrap_or(3.0)),
-            stroke_dash: node.style.as_ref().and_then(|style| style.stroke_dash.clone()),
-            stroke_dash_offset: None,
+            corner_radius: Some(node.style.as_ref().and_then(|style| style.node.corner_radius).unwrap_or(3.0)),
+            stroke_dash: node.style.as_ref().and_then(|style| style.node.stroke_dash.clone()),
+            stroke_dash_offset: node.style.as_ref().and_then(|style| style.stroke_dash_offset),
         }));
         if node.width >= 44.0 && node.height >= 22.0 {
             let mut label_font = options.label_font.clone();
-            label_font.size = node.style.as_ref().and_then(|style| style.font_size).unwrap_or(diagram.config.label_font_size);
+            label_font.size = node.style.as_ref().and_then(|style| style.node.font_size).unwrap_or(diagram.config.label_font_size);
             if let Some(style) = &node.style {
-                label_font.weight = style.font_weight.unwrap_or(label_font.weight);
-                label_font.italic = style.font_italic.unwrap_or(label_font.italic);
-                if let Some(family) = &style.font_family { label_font.family.clone_from(family); }
+                label_font.weight = style.node.font_weight.unwrap_or(label_font.weight);
+                label_font.italic = style.node.font_italic.unwrap_or(label_font.italic);
+                if let Some(family) = &style.node.font_family { label_font.family.clone_from(family); }
             }
             let palette_text_color = || palette_index
                     .map(|index| css_to_color(&diagram.config.theme.labels[index]))
                     .unwrap_or(text_color);
-            let label_text_color = node.style.as_ref().and_then(|style| style.text_color.as_deref())
+            let label_text_color = node.style.as_ref().and_then(|style| style.node.text_color.as_deref())
                 .or(diagram.config.label_color.as_deref()).map(css_to_color).unwrap_or_else(palette_text_color);
+            let label_text_color = color_with_opacity(label_text_color, opacity);
             text_children.push(text_node(
                 &node.label,
                 node.x + 6.0,
@@ -169,19 +177,20 @@ where
             ));
             if diagram.config.show_values && node.height >= 42.0 {
                 let mut value_font = options.label_font.clone();
-                value_font.size = node.style.as_ref().and_then(|style| style.font_size).unwrap_or(diagram.config.value_font_size);
+                value_font.size = node.style.as_ref().and_then(|style| style.node.font_size).unwrap_or(diagram.config.value_font_size);
                 if let Some(style) = &node.style {
-                    value_font.weight = style.font_weight.unwrap_or(value_font.weight);
-                    value_font.italic = style.font_italic.unwrap_or(value_font.italic);
-                    if let Some(family) = &style.font_family { value_font.family.clone_from(family); }
+                    value_font.weight = style.node.font_weight.unwrap_or(value_font.weight);
+                    value_font.italic = style.node.font_italic.unwrap_or(value_font.italic);
+                    if let Some(family) = &style.node.font_family { value_font.family.clone_from(family); }
                 }
                 let (value_x, value_y, value_width) = if node.has_children {
                     (node.x + node.width * 0.68, node.y + 4.0, node.width * 0.32 - 6.0)
                 } else {
                     (node.x + 6.0, node.y + 8.0 + diagram.config.label_font_size * 1.2, node.width - 12.0)
                 };
-                let value_text_color = node.style.as_ref().and_then(|style| style.text_color.as_deref())
+                let value_text_color = node.style.as_ref().and_then(|style| style.node.text_color.as_deref())
                     .or(diagram.config.value_color.as_deref()).map(css_to_color).unwrap_or_else(palette_text_color);
+                let value_text_color = color_with_opacity(value_text_color, opacity);
                 text_children.push(text_node(
                     &format_treemap_value(node.value, &diagram.config.value_format),
                     value_x,
@@ -791,6 +800,11 @@ fn with_opacity(color: &str, opacity: f64) -> String {
         }
     }
     color.to_string()
+}
+
+fn color_with_opacity(mut color: Color, opacity: f64) -> Color {
+    color.a = (f64::from(color.a) * opacity.clamp(0.0, 1.0)).round() as u8;
+    color
 }
 
 fn event_model_kind_name(kind: &EventModelEntityKind) -> &'static str {
@@ -6714,17 +6728,13 @@ mod tests {
                 width: 304.0,
                 height: 184.0,
                 class_selector: None,
-                style: Some(diagram_ir::DiagramStyle {
-                    fill: Some("#fef3c7".into()),
-                    stroke: Some("#b45309".into()),
-                    stroke_width: Some(3.0),
-                    stroke_dash: Some(vec![5.0, 2.0]),
-                    text_color: Some("#78350f".into()),
-                    font_size: Some(17.0),
-                    font_weight: Some(700),
-                    font_italic: Some(true),
-                    font_family: Some("Avenir".into()),
-                    corner_radius: None,
+                style: Some(diagram_ir::TreemapStyle {
+                    node: diagram_ir::DiagramStyle {
+                        fill: Some("#fef3c7".into()), stroke: Some("#b45309".into()), stroke_width: Some(3.0),
+                        stroke_dash: Some(vec![5.0, 2.0]), text_color: Some("#78350f".into()), font_size: Some(17.0),
+                        font_weight: Some(700), font_italic: Some(true), font_family: Some("Avenir".into()), corner_radius: None,
+                    },
+                    opacity: Some(0.8), fill_opacity: Some(0.5), stroke_opacity: Some(0.5), stroke_dash_offset: Some(-1.0),
                 }),
             }],
         };
@@ -6736,10 +6746,11 @@ mod tests {
             Some(&"Allocation treemap".to_string())
         );
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
-            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#fef3c7")
-                && rect.stroke.as_deref() == Some("#b45309")
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("rgba(254,243,199,0.4)")
+                && rect.stroke.as_deref() == Some("rgba(180,83,9,0.4)")
                 && rect.stroke_width == Some(3.0)
-                && rect.stroke_dash.as_deref() == Some(&[5.0, 2.0][..]))));
+                && rect.stroke_dash.as_deref() == Some(&[5.0, 2.0][..])
+                && rect.stroke_dash_offset == Some(-1.0))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::GlyphRun(run) if run.font_size == 17.0)));
         assert_eq!(format_treemap_value(12345.0, "$0,0"), "$12,345");
