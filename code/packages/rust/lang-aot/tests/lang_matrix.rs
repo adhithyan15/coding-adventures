@@ -4114,6 +4114,16 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("10.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — exact literal string predicates may choose every header of
+    // a bounded step element and the value of the following single-value
+    // element. The step exit snapshot feeds the next element exactly.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real total; total := 0.25; for i := if 'ALPHA' < 'BETA' then 1 else 9 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'ALPHA' < 'BETA' then 2 else 0, if 'BETA' < 'ALPHA' then 8 else 4 do total := total + i; print(total) end",
+        expect: Expect::Stdout("7.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — an exact control recurrence remains analyzable when every
     // additional compound-body statement is an inert local scalar assignment.
     Prog {
@@ -14386,6 +14396,31 @@ fn algol_literal_string_selected_for_list_values_run_on_every_available_standard
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the literal-string-selected for-list values did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_mixed_for_list_headers_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "for i := if 'ALPHA' < 'BETA' then 1 else 9 step if 'BETA' < 'ALPHA'",
+                )
+        })
+        .expect("the literal-string-selected mixed for-list headers must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected mixed for-list headers did not run"
             );
             continue;
         };
