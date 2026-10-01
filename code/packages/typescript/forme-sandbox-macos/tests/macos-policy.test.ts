@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { createMacosSandboxFactory, macosSeatbeltProfile } from "../src/index.js";
+import {
+  createMacosSandboxFactory,
+  macosRuntimeReadPaths,
+  macosSeatbeltProfile,
+} from "../src/index.js";
 
 describe("macOS sandbox policy", () => {
   it("generates a deny-default profile scoped to staged and runtime paths", () => {
@@ -36,5 +40,20 @@ describe("macOS sandbox policy", () => {
     expect(typeof createMacosSandboxFactory().launch).toBe("function");
     expect(() => createMacosSandboxFactory({ runtimeReadPaths: ["relative"] })).toThrow(/runtime read paths/);
     expect(() => createMacosSandboxFactory({ runtimeReadPaths: Array(33).fill("/trusted") })).toThrow(/runtime read paths/);
+  });
+
+  it("derives bounded Homebrew runtime dependency roots", () => {
+    const paths = macosRuntimeReadPaths([
+      "/opt/homebrew/Cellar/node/22.0.0/lib/libnode.dylib",
+      "/opt/homebrew/Cellar/icu4c/75.1/lib/libicu.dylib",
+      "/usr/lib/libSystem.B.dylib",
+      "/opt/homebrew/Cellar/node/22.0.0/lib/libnode.dylib",
+    ], path => path.endsWith("/etc/node"));
+    expect(paths).toEqual([
+      "/opt/homebrew/etc/node",
+      "/opt/homebrew/opt/icu4c",
+      "/opt/homebrew/opt/node",
+    ]);
+    expect(Object.isFrozen(paths)).toBe(true);
   });
 });

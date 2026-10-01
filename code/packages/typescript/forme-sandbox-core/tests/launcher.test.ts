@@ -1,6 +1,7 @@
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
 import { computeManifestHash, type Manifest } from "@coding-adventures/forme-manifest";
 import {
@@ -13,7 +14,7 @@ import {
 const roots: string[] = [];
 afterEach(async () => Promise.all(roots.splice(0).map(root => rm(root, { recursive: true, force: true }))));
 
-const helper = new URL("./fixtures/readiness-helper.mjs", import.meta.url).pathname;
+const helper = fileURLToPath(new URL("./fixtures/readiness-helper.mjs", import.meta.url));
 
 function policy(): NativeSandboxPolicy {
   return {

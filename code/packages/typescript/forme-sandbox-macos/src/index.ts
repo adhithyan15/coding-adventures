@@ -68,14 +68,22 @@ function defaultLauncherPath(): string {
 }
 
 function defaultRuntimeReadPaths(): readonly string[] {
-  const paths = new Set<string>();
   const report = process.report?.getReport() as { readonly sharedObjects?: readonly string[] } | undefined;
-  for (const sharedObject of report?.sharedObjects ?? []) {
+  return macosRuntimeReadPaths(report?.sharedObjects ?? []);
+}
+
+/** Derive stable Homebrew dependency roots from the runtime's loaded images. */
+export function macosRuntimeReadPaths(
+  sharedObjects: readonly string[],
+  pathExists: (path: string) => boolean = existsSync,
+): readonly string[] {
+  const paths = new Set<string>();
+  for (const sharedObject of sharedObjects) {
     const match = /^(.*)\/Cellar\/([^/]+)\//.exec(sharedObject);
     if (match) {
       paths.add(`${match[1]}/opt/${match[2]}`);
       const configuration = `${match[1]}/etc/${match[2]}`;
-      if (existsSync(configuration)) paths.add(configuration);
+      if (pathExists(configuration)) paths.add(configuration);
     }
   }
   return Object.freeze([...paths].sort());

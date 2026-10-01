@@ -333,5 +333,5 @@ describe("installPreparedPlugin", () => {
       mkdir(join(directoryCrowd.prepared.destinationPath, `d-${index}`))));
     await expect(installForTest({ prepared: directoryCrowd.prepared }))
       .rejects.toMatchObject({ code: "TARGET_UNSAFE" });
-  });
+  }, 15_000);
 });

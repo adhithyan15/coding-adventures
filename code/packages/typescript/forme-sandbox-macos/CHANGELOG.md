@@ -9,3 +9,4 @@
 - Added post-Seatbelt digest verification, explicit snapshot write denial,
   trusted runtime dependency roots, RSS/wall-clock watchdogs, and a stable
   `kqueue` parent-death watcher.
+- Added deterministic Homebrew runtime-root derivation coverage.

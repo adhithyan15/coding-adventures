@@ -12,3 +12,5 @@
   and ephemeral-profile cleanup.
 - Bound the exported process factory directly to the production
   `forme-plugin-host` request and result types.
+- Made cross-platform staging and readiness fixtures honor native Windows path
+  and executable-name semantics.

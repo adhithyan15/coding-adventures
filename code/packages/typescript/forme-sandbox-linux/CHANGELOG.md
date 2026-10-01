@@ -8,3 +8,5 @@
 - Added platform probes for filesystem, network, process, memory, and fd denial.
 - Added post-chroot digest verification, capability dropping, delegated-cgroup
   validation, a monotonic wall-clock watchdog, and mount/session escape denial.
+- Enabled unprivileged user namespaces in the dedicated hosted-runner gate when
+  Ubuntu's AppArmor sysctl otherwise blocks the required namespace primitive.

@@ -157,6 +157,9 @@ describe("stageVerifiedPlugin", () => {
       value.plugin.entryBytes,
     );
     const staged = await stageVerifiedPlugin(value);
-    expect(staged.entryPath.endsWith(kind === "python" ? ".py" : "plugin-entry")).toBe(true);
+    const expectedSuffix = kind === "python"
+      ? ".py"
+      : process.platform === "win32" ? "plugin-entry.exe" : "plugin-entry";
+    expect(staged.entryPath.endsWith(expectedSuffix)).toBe(true);
   });
 });
