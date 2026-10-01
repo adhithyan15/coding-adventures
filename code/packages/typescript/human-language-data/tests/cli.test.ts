@@ -50,6 +50,15 @@ describe("runCurriculumGapReport", () => {
   // to the corpus and that 35s covers roughly 3x today's size. If it runs close
   // before then, something has gone superlinear again: profile it, do not thin the
   // report, and do not just move this number.
+  //
+  // At 20,317 lessons (about 7x that size) the json case overran 35s on CI. It was
+  // profiled as asked, and nothing had gone superlinear: the corpus had simply
+  // outgrown the 3x estimate. The largest single cost turned out to be `fnv1a64`,
+  // which did BigInt arithmetic for every byte of every lesson. It now runs on two
+  // 32-bit halves and gives byte-identical output (src/hash.ts). One report went
+  // from ~24s to ~19s locally. The number below did not move. The next steps are
+  // the gap report's per-lesson passes (continuity, ramp, script closure), and the
+  // fact that this pair builds the whole report twice.
   it.each(["json", "text"])("prints a %s report for the real curriculum", { timeout: 35_000 }, (format) => {
     const out = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
     try {
