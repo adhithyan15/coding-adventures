@@ -108,6 +108,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TE-S121-letter-lla",
+      "sourceHash": "fnv1a64:e27412848885af94",
+      "svgHash": "fnv1a64:ca9414ed64d2f1a4",
+      "svg": "telugu/book/figures/TE-S121-letter-lla-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TE-S122-letter-u",
       "sourceHash": "fnv1a64:a631fd3a8a2e22a7",
       "svgHash": "fnv1a64:ed93fe80d2fc4db4",

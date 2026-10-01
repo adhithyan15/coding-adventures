@@ -5548,8 +5548,20 @@
       "components": [
         "ళ  ḷa — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "loop counterclockwise around the small inner bowl",
+        "sweep down around the broad left body and loop the lower bowl",
+        "sweep right and up around the broad outer body",
+        "draw down and up through the separate upper chevron"
+      ],
+      "strokeOrderNote": "Four numbered movements in four pen-down runs: movement 1 loops around the small inner bowl, movement 2 sweeps down around the broad left body and loops the lower bowl, movement 3 sweeps right and up around the broad outer body, and movement 4 draws the separate upper chevron.",
+      "penLifts": 3,
+      "strokeOrderSource": {
+        "url": "https://play.google.com/store/apps/details?id=com.banuchanderjj.tracer.telugu",
+        "citation": "AppChant, Telugu Alphabets Writing, consonant ళ animated path guide encoded by LettersPointsTelugu::getAllPointsArrayForLetterTelugu_ళ in version 3.8.05 (3805)",
+        "accessed": "2026-10-01",
+        "variation": "The packaged auto-trace data gives four ordered starts, paths, and ends. Telugu-6.plist maps ళ.png to the rotated 496×600 frame {{603,1},{496,600}}, independently identifying U+0C33 ళ. The bundled Noto Sans Telugu outline rounds and joins the printed body differently, so the filmstrip preserves the four attested movement boundaries and directions while fitting their centre lines to that outline. Inspected XAPK SHA-256: 30c6e520a5b469cbe8d17568718bf75796987ea9596f69850eb921db2fe7bd57; libTracer.so SHA-256: 444511c98b69ada4de57900776945837c013da6a4fbfb21833c180d06f9c3ac5."
+      }
     },
     {
       "glyph": "ళా",

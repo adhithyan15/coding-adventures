@@ -987,6 +987,89 @@ export const entries: DuctusEntry[] = [
     },
   ],
   [
+    "telugu:ళ",
+    {
+      script: "telugu",
+      glyph: "ళ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "loop counterclockwise around the small inner bowl",
+              path: [
+                { x: 134, y: 367 }, { x: 109, y: 340 },
+                { x: 100, y: 308 }, { x: 109, y: 276 },
+                { x: 135, y: 251 }, { x: 174, y: 239 },
+                { x: 215, y: 242 }, { x: 248, y: 262 },
+                { x: 268, y: 290 }, { x: 268, y: 323 },
+                { x: 249, y: 352 }, { x: 215, y: 372 },
+                { x: 175, y: 382 }, { x: 133, y: 383 },
+                { x: 92, y: 380 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "sweep down around the broad left body and loop the lower bowl",
+              path: [
+                { x: 163, y: 439 }, { x: 130, y: 426 },
+                { x: 102, y: 405 }, { x: 82, y: 378 },
+                { x: 70, y: 347 }, { x: 69, y: 314 },
+                { x: 79, y: 282 }, { x: 100, y: 255 },
+                { x: 129, y: 236 }, { x: 160, y: 220 },
+                { x: 194, y: 209 }, { x: 229, y: 200 },
+                { x: 264, y: 192 }, { x: 299, y: 185 },
+                { x: 334, y: 177 }, { x: 367, y: 164 },
+                { x: 394, y: 142 }, { x: 409, y: 113 },
+                { x: 409, y: 80 }, { x: 394, y: 51 },
+                { x: 366, y: 30 }, { x: 331, y: 22 },
+                { x: 297, y: 31 }, { x: 268, y: 50 },
+                { x: 250, y: 78 }, { x: 250, y: 111 },
+                { x: 265, y: 141 }, { x: 289, y: 165 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "sweep right and up around the broad outer body",
+              path: [
+                { x: 289, y: 178 }, { x: 324, y: 187 },
+                { x: 359, y: 191 }, { x: 395, y: 196 },
+                { x: 430, y: 205 }, { x: 463, y: 218 },
+                { x: 493, y: 236 }, { x: 520, y: 258 },
+                { x: 540, y: 286 }, { x: 550, y: 317 },
+                { x: 547, y: 350 }, { x: 532, y: 379 },
+                { x: 509, y: 404 }, { x: 480, y: 424 },
+                { x: 446, y: 436 }, { x: 411, y: 442 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "draw down and up through the separate upper chevron",
+              path: [
+                { x: 261, y: 518 }, { x: 278, y: 497 },
+                { x: 296, y: 476 }, { x: 314, y: 457 },
+                { x: 334, y: 438 }, { x: 355, y: 433 },
+                { x: 374, y: 451 }, { x: 392, y: 472 },
+                { x: 409, y: 493 }, { x: 427, y: 513 },
+                { x: 445, y: 533 }, { x: 462, y: 554 },
+                { x: 480, y: 574 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguLetterSource("ళ"),
+    },
+  ],
+  [
     "telugu:వ",
     {
       script: "telugu",
