@@ -232,6 +232,8 @@ pub struct TextDecoration {
     pub color: Option<Color>,
     /// Authored logical-unit thickness. `None` uses font metrics.
     pub thickness: Option<f64>,
+    /// Authored underline distance below the baseline. `None` uses font metrics.
+    pub underline_offset: Option<f64>,
 }
 
 impl TextDecoration {
@@ -241,6 +243,7 @@ impl TextDecoration {
             style: TextDecorationStyle::Solid,
             color: None,
             thickness: None,
+            underline_offset: None,
         }
     }
 }
