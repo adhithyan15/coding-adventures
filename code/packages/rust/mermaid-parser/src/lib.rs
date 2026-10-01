@@ -4562,6 +4562,19 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                     .filter(|value| value.is_finite())
                     .ok_or_else(|| token_error(token, "invalid treemap stroke dash offset"))?);
             }
+            "text-align" => style.text_align = Some(match value.to_ascii_lowercase().as_str() {
+                "left" | "start" => diagram_ir::TreemapTextAlign::Start,
+                "center" => diagram_ir::TreemapTextAlign::Center,
+                "right" | "end" => diagram_ir::TreemapTextAlign::End,
+                _ => return Err(token_error(token, "treemap text-align must be left, center, right, start, or end")),
+            }),
+            "text-transform" => style.text_transform = Some(match value.to_ascii_lowercase().as_str() {
+                "none" => diagram_ir::TreemapTextTransform::None,
+                "uppercase" => diagram_ir::TreemapTextTransform::Uppercase,
+                "lowercase" => diagram_ir::TreemapTextTransform::Lowercase,
+                "capitalize" => diagram_ir::TreemapTextTransform::Capitalize,
+                _ => return Err(token_error(token, "unsupported treemap text-transform")),
+            }),
             _ => merge_treemap_node_style(&mut style.node, &parse_block_style(token, declaration)?),
         }
     }
@@ -14089,7 +14102,7 @@ B//-A: reverse stick top
     #[test]
     fn treemap_resolves_class_definitions_declared_after_nodes() {
         let diagram = parse_treemap(
-            "treemap\n\"Root\"\n  \"Styled\": 5:::accent\nclassDef accent fill:#fef3c7,fill-opacity:0.7,stroke:#b45309,stroke-opacity:0.5,opacity:0.8,stroke-width:3px,stroke-dasharray:5 2,stroke-dashoffset:-1px,color:#78350f,font-size:16px,font-weight:bold,font-style:italic,font-family:Avenir",
+            "treemap\n\"Root\"\n  \"Styled node\": 5:::accent\nclassDef accent fill:#fef3c7,fill-opacity:0.7,stroke:#b45309,stroke-opacity:0.5,opacity:0.8,stroke-width:3px,stroke-dasharray:5 2,stroke-dashoffset:-1px,color:#78350f,font-size:16px,font-weight:bold,font-style:italic,font-family:Avenir,text-align:right,text-transform:uppercase",
         ).unwrap();
         let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
         assert_eq!(style.node.fill.as_deref(), Some("#fef3c7"));
@@ -14103,6 +14116,8 @@ B//-A: reverse stick top
         assert_eq!(style.node.font_family.as_deref(), Some("Avenir"));
         assert_eq!((style.opacity, style.fill_opacity, style.stroke_opacity), (Some(0.8), Some(0.7), Some(0.5)));
         assert_eq!(style.stroke_dash_offset, Some(-1.0));
+        assert_eq!(style.text_align, Some(diagram_ir::TreemapTextAlign::End));
+        assert_eq!(style.text_transform, Some(diagram_ir::TreemapTextTransform::Uppercase));
     }
 }
 #[cfg(test)]

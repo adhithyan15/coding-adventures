@@ -166,7 +166,7 @@ where
             let label_text_color = node.style.as_ref().and_then(|style| style.node.text_color.as_deref())
                 .or(diagram.config.label_color.as_deref()).map(css_to_color).unwrap_or_else(palette_text_color);
             let label_text_color = color_with_opacity(label_text_color, opacity);
-            text_children.push(text_node(
+            text_children.push(treemap_text_node(
                 &node.label,
                 node.x + 6.0,
                 node.y + 4.0,
@@ -174,6 +174,7 @@ where
                 diagram.config.label_font_size * 1.4,
                 label_font,
                 label_text_color,
+                node.style.as_ref(),
             ));
             if diagram.config.show_values && node.height >= 42.0 {
                 let mut value_font = options.label_font.clone();
@@ -191,7 +192,7 @@ where
                 let value_text_color = node.style.as_ref().and_then(|style| style.node.text_color.as_deref())
                     .or(diagram.config.value_color.as_deref()).map(css_to_color).unwrap_or_else(palette_text_color);
                 let value_text_color = color_with_opacity(value_text_color, opacity);
-                text_children.push(text_node(
+                text_children.push(treemap_text_node(
                     &format_treemap_value(node.value, &diagram.config.value_format),
                     value_x,
                     value_y,
@@ -199,6 +200,7 @@ where
                     diagram.config.value_font_size * 1.4,
                     value_font,
                     value_text_color,
+                    node.style.as_ref(),
                 ));
             }
         }
@@ -285,6 +287,35 @@ fn format_treemap_value(value: f64, format: &str) -> String {
     }
     let suffix = if value.is_sign_negative() && spec.sign == '(' { ")" } else { "" };
     align_treemap_number(prefix, rendered, suffix, &spec)
+}
+
+#[allow(clippy::too_many_arguments)]
+fn treemap_text_node(
+    value: &str,
+    x: f64,
+    y: f64,
+    width: f64,
+    height: f64,
+    font: FontSpec,
+    color: Color,
+    style: Option<&diagram_ir::TreemapStyle>,
+) -> PositionedNode {
+    let value = match style.and_then(|style| style.text_transform) {
+        Some(diagram_ir::TreemapTextTransform::Uppercase) => value.to_uppercase(),
+        Some(diagram_ir::TreemapTextTransform::Lowercase) => value.to_lowercase(),
+        Some(diagram_ir::TreemapTextTransform::Capitalize) => value.split_whitespace()
+            .map(capitalize).collect::<Vec<_>>().join(" "),
+        _ => value.to_string(),
+    };
+    let mut node = text_node(&value, x, y, width, height, font, color);
+    if let Some(Content::Text(content)) = &mut node.content {
+        content.text_align = match style.and_then(|style| style.text_align) {
+            Some(diagram_ir::TreemapTextAlign::Start) => TextAlign::Start,
+            Some(diagram_ir::TreemapTextAlign::End) => TextAlign::End,
+            _ => TextAlign::Center,
+        };
+    }
+    node
 }
 
 struct TreemapNumberFormat {
@@ -6789,9 +6820,19 @@ mod tests {
                         font_weight: Some(700), font_italic: Some(true), font_family: Some("Avenir".into()), corner_radius: None,
                     },
                     opacity: Some(0.8), fill_opacity: Some(0.5), stroke_opacity: Some(0.5), stroke_dash_offset: Some(-1.0),
+                    text_align: Some(diagram_ir::TreemapTextAlign::End),
+                    text_transform: Some(diagram_ir::TreemapTextTransform::Uppercase),
                 }),
             }],
         };
+
+        let styled_text = treemap_text_node(
+            "Styled node", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            Color { r: 0, g: 0, b: 0, a: 255 }, layout.nodes[0].style.as_ref(),
+        );
+        assert!(matches!(styled_text.content,
+            Some(Content::Text(TextContent { value, text_align: TextAlign::End, .. }))
+                if value == "STYLED NODE"));
 
         let scene = diagram_to_paint_treemap(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
