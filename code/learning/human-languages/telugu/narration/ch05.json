@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e5ce24a68cf31005",
+  "sourceHash": "fnv1a64:b8b84dae4326bdd8",
   "lessons": [
     {
       "id": "TE-S01-letter-ta",
@@ -829,7 +829,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:37ce8b84d085090c",
+      "sourceHash": "fnv1a64:cbb30bab2a60c351",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -904,15 +904,23 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: స — copy what you see",
+          "title": "Writing: స — two calm movements",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on స (sa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Watch the guide once before your hand moves. స (sa) arrives in two calm movements, with one lift between them:"
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "Loop around the left bowl, then keep sweeping around the broad right body."
+            },
+            {
+              "kind": "speech",
+              "text": "Lift once, then draw down and up through the separate chevron above."
+            },
+            {
+              "kind": "speech",
+              "text": "Trace the filmstrip slowly. Let the long first movement settle before you lift for the small upper mark. Then copy the whole shape once without rushing."
             }
           ]
         },

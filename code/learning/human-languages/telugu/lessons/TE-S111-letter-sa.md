@@ -51,17 +51,18 @@ You already say these, and every one of them has స somewhere inside it:
 - **సరే** *sarē* — okay / alright (sarē)
 - **వెళ్ళి వస్తాను** *veḷḷi vastānu* — goodbye (lit. "I'll go and come back")
 
-## Writing: స — copy what you see
+## Writing: స — two calm movements
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-111] -->
+<!-- hl-writing-stage: observe-trace -->
 
-Put your pen on స and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+Watch the guide once before your hand moves. స arrives in **two calm
+movements**, with one lift between them:
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+1. Loop around the left bowl, then keep sweeping around the broad right body.
+2. Lift once, then draw down and up through the separate chevron above.
+
+Trace the filmstrip slowly. Let the long first movement settle before you lift
+for the small upper mark. Then copy the whole shape once without rushing.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-111] -->

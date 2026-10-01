@@ -1186,6 +1186,60 @@ export const entries: DuctusEntry[] = [
     },
   ],
   [
+    "telugu:స",
+    {
+      script: "telugu",
+      glyph: "స",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "loop around the left bowl and sweep around the right body",
+              path: [
+                { x: 70, y: 59 }, { x: 55, y: 73 },
+                { x: 47, y: 82 }, { x: 40, y: 99 },
+                { x: 31, y: 129 }, { x: 33, y: 170 },
+                { x: 45, y: 209 }, { x: 68, y: 244 },
+                { x: 99, y: 270 }, { x: 139, y: 283 },
+                { x: 180, y: 281 }, { x: 218, y: 265 },
+                { x: 250, y: 239 }, { x: 275, y: 206 },
+                { x: 296, y: 171 }, { x: 318, y: 136 },
+                { x: 339, y: 101 }, { x: 363, y: 67 },
+                { x: 391, y: 37 }, { x: 425, y: 14 },
+                { x: 465, y: 1 }, { x: 506, y: 0 },
+                { x: 547, y: 9 }, { x: 584, y: 28 },
+                { x: 614, y: 56 }, { x: 636, y: 91 },
+                { x: 650, y: 129 }, { x: 658, y: 169 },
+                { x: 658, y: 210 }, { x: 652, y: 251 },
+                { x: 643, y: 290 }, { x: 629, y: 329 },
+                { x: 610, y: 366 }, { x: 590, y: 380 },
+                { x: 570, y: 390 }, { x: 550, y: 400 },
+                { x: 525, y: 410 }, { x: 495, y: 420 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "draw down and up through the separate upper chevron",
+              path: [
+                { x: 103, y: 569 }, { x: 130, y: 538 },
+                { x: 158, y: 507 }, { x: 186, y: 477 },
+                { x: 214, y: 447 }, { x: 243, y: 441 },
+                { x: 274, y: 469 }, { x: 302, y: 499 },
+                { x: 328, y: 531 }, { x: 355, y: 562 },
+                { x: 384, y: 592 }, { x: 412, y: 622 },
+                { x: 440, y: 645 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguLetterSource("స"),
+    },
+  ],
+  [
     "telugu:ణ",
     {
       script: "telugu",
