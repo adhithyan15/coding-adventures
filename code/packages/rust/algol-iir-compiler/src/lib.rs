@@ -10852,16 +10852,36 @@ fn literal_boolean_value(node: &GrammarASTNode) -> Option<bool> {
     }
     let tokens = direct_tokens(node);
     if tokens.len() == 1 && tokens[0].effective_type_name() == "KEYWORD" {
-        return match tokens[0].value.as_str() {
-            "true" => Some(true),
-            "false" => Some(false),
-            _ => None,
-        };
+        match tokens[0].value.as_str() {
+            "true" => return Some(true),
+            "false" => return Some(false),
+            _ => {}
+        }
+    }
+    if tokens.len() == 1 && tokens[0].value == "not" {
+        let child_nodes = direct_nodes(node);
+        if child_nodes.len() != 1 {
+            return None;
+        }
+        return literal_boolean_value(child_nodes[0]).map(|value| !value);
     }
     let child_nodes = direct_nodes(node);
-    (tokens.is_empty() && child_nodes.len() == 1)
-        .then(|| literal_boolean_value(child_nodes[0]))
-        .flatten()
+    if tokens.is_empty() && child_nodes.len() == 1 {
+        return literal_boolean_value(child_nodes[0]);
+    }
+    let sequence = pieces(node);
+    let [Piece::Node(lhs), Piece::Op(op), Piece::Node(rhs)] = sequence.as_slice() else {
+        return None;
+    };
+    let lhs = literal_boolean_value(lhs)?;
+    let rhs = literal_boolean_value(rhs)?;
+    match op.as_str() {
+        "and" => Some(lhs && rhs),
+        "or" => Some(lhs || rhs),
+        "impl" => Some(!lhs || rhs),
+        "eqv" => Some(lhs == rhs),
+        _ => None,
+    }
 }
 
 fn literal_integer_value(node: &GrammarASTNode) -> Option<i64> {
@@ -15568,6 +15588,32 @@ mod tests {
             "test",
         )
         .expect_err("a mismatched guarded projection must remain conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_literal_boolean_projection_selector_copy_tracks_partial_self_recursion() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate, key; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; key := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and (false impl true); key := if gate then (false or true) eqv not false else true and false; choose := if key then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("literal-only boolean expressions may supply projection constants");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_inverted_literal_boolean_projection_selector_copy_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := if flag then not true else true and false; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("an inverted literal-only projection must remain conservative");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
