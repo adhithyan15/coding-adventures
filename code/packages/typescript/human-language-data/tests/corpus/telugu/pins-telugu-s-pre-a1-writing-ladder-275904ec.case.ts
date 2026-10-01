@@ -36,7 +36,7 @@ it("pins Telugu's pre-A1 writing ladder", () => {
   // vocabulary-first retroflex letter. TE-S113 adds familiar-word pa before
   // the first complete ladder. TE-S110 then revisits observe-and-trace with
   // TE-S111 adds source-backed sa after that ladder, followed by TE-S158's
-  // source-backed ssa and TE-S110's
+  // source-backed ssa and TE-S125's source-backed ha before TE-S110's
   // familiar-word ya and TE-S159's source-backed sha before TE-S114 adds
   // familiar-word la. TE-S116 gives familiar-word da
   // the same source-backed rung, and TE-S117 follows with familiar-word va.
@@ -67,6 +67,7 @@ it("pins Telugu's pre-A1 writing ladder", () => {
     ["TE-S01-dictation", "dictation-transcription"],
     ["TE-S111-letter-sa", "observe-trace"],
     ["TE-S158-letter-ssa", "observe-trace"],
+    ["TE-S125-letter-ha", "observe-trace"],
     ["TE-S110-letter-ya", "observe-trace"],
     ["TE-S159-letter-sha", "observe-trace"],
     ["TE-S114-letter-la", "observe-trace"],

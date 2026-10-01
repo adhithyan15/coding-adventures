@@ -129,6 +129,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TE-S125-letter-ha",
+      "sourceHash": "fnv1a64:bf2ee19e6bccc3bb",
+      "svgHash": "fnv1a64:095a4548377dbe79",
+      "svg": "telugu/book/figures/TE-S125-letter-ha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TE-S126-letter-nna",
       "sourceHash": "fnv1a64:3dc7b291dbbfc639",
       "svgHash": "fnv1a64:9d823e359d701378",

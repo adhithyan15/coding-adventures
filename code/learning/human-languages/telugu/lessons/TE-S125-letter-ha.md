@@ -55,17 +55,20 @@ and Urdu, and that is the pattern: in the words this book has given you so far,
 It is a letter you will meet again on the very next page, in a word for help
 that came in from Sanskrit.
 
-## Writing: హ — copy what you see
+## Writing: హ — four calm movements
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-125] -->
+<!-- hl-writing-stage: observe-trace -->
 
-Put your pen on హ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+Watch the guide once before your hand moves. హ arrives in **four calm
+movements**, with a small lift between each one:
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+1. Loop around the small bowl at the lower left.
+2. Sweep around the broad lower and right body.
+3. Draw right across the middle bar and curl around its far end.
+4. Lift once more, then draw down and up through the separate chevron above.
+
+Trace the filmstrip slowly. Let every movement finish before you lift, then
+copy the whole shape once without rushing.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-125] -->
