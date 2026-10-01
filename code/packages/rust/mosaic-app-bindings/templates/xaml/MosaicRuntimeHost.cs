@@ -144,7 +144,8 @@ public static class MosaicRuntimeHost
     /// <returns>
     /// Null when there was nothing to say or the runtime took it and it was
     /// shown; a status line when it failed (refused, or its props could not be
-    /// applied) or when taking it tripped a settle guard. Accepting says nothing, so the status
+    /// applied), when taking it tripped a settle guard, or when it retried a
+    /// failed save and so set or cleared the storage warning. Accepting says nothing, so the status
     /// bar keeps describing the user's last action rather than a resize.
     /// </returns>
     /// <remarks>
@@ -166,8 +167,9 @@ public static class MosaicRuntimeHost
     /// (the runtime has it); the apply is retried by the next report or
     /// event.</item>
     /// <item>An answer at the revision showing (the app ignored it) rewrites
-    /// no state file, so a resize storm costs no disk writes, and no
-    /// persistence warning can arise from one.</item>
+    /// no state file, so a resize storm costs no disk writes -- unless an
+    /// earlier save failed, when it retries that save and shows the warning
+    /// it sets or clears.</item>
     /// </list>
     /// </remarks>
     public static string? ReportEnvironment(
@@ -560,9 +562,13 @@ public static class MosaicRuntimeHost
                 // An answer at the revision already showing -- an environment
                 // the app ignored (UI48 §7.1) -- changed nothing the app would
                 // save, so the state file is not rewritten: a resize storm
-                // costs no disk writes. So no persistence warning can arise
-                // from one either. Unreadable revisions persist.
-                if (shownRevision is null || Revision(latestUpdate) != shownRevision)
+                // costs no disk writes. Unless an earlier save failed (a
+                // warning is pending): then it retries that save, so a kill
+                // before the next event does not lose that revision.
+                // Unreadable revisions persist.
+                if (shownRevision is null
+                    || Revision(latestUpdate) != shownRevision
+                    || persistenceWarning is not null)
                     PersistSnapshot();
             }
         }
@@ -620,6 +626,7 @@ public static class MosaicRuntimeHost
                 // it changes: a drag over a threshold would otherwise send it,
                 // and rewrite the status line, on every tick.
                 if (SameEnvironment(lastRefusedEnvironment, report)) return null;
+                var warningBefore = persistenceWarning;
                 try
                 {
                     Dispatch("environmentChanged", report);
@@ -645,9 +652,13 @@ public static class MosaicRuntimeHost
                 // Status, which consumes it.
                 if (settleError is not null)
                     return Status("Mosaic runtime handled environmentChanged");
-                if (Revision(latestUpdate) != appliedRevision)
+                // An ignored report retries a failed save (see Dispatch); if
+                // that set or cleared the storage warning, it is shown as an
+                // event's would be: re-applied props and a status line.
+                var warningChanged = persistenceWarning != warningBefore;
+                if (Revision(latestUpdate) != appliedRevision || warningChanged)
                     ApplyProps(component, requiredProps, strict: requiredProps.Count > 0);
-                return null;
+                return warningChanged ? Status("Mosaic runtime handled environmentChanged") : null;
             }
         }
 

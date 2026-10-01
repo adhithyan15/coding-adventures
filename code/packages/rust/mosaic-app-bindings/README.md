@@ -70,7 +70,8 @@ successful dispatch that moved the revision, and supply it as
 `restoredSnapshot` before the first visible render. An environment report the
 app ignored (UI48 §7.1: an answer at the revision already showing) changed
 nothing the app saves, so it writes nothing -- a window drag costs no disk
-writes. Writes use a same-directory temporary file plus the platform's atomic
+writes -- unless an earlier save failed: while a `persistenceWarning` is
+pending, each ignored report retries the save (UI48 §7.12). Writes use a same-directory temporary file plus the platform's atomic
 replacement facility. Invalid JSON and runtime-incompatible snapshots are moved
 to `mosaic-state.v1.json.corrupt`; the app starts clean and exposes a
 `persistenceWarning` (or native status warning) instead of becoming unusable.

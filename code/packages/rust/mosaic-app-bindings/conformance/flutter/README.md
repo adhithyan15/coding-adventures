@@ -23,4 +23,6 @@ refused report and an unchanged one are not sent, a changed one is, and one
 that failed for the app's own reasons is sent again rather than held back.
 With `MOSAIC_APP_STATE_PATH` set it also checks that an ignored report does not
 rewrite the state file, and -- with the state path made a directory -- raises no
-persistence warning while an event that cannot persist surfaces one at once.
+persistence warning while an event that cannot persist surfaces one at once,
+and that once the path is writable again the next ignored report retries the
+failed save and shows the warning cleared.

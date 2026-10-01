@@ -224,9 +224,13 @@ QVariantMap MosaicHost::handleEvent(const QVariantMap &event)
         // An answer at the revision already showing -- an environment the app
         // ignored (UI48 §7.1) -- changed nothing the app would save, so the
         // state file is not rewritten: a resize storm costs no disk writes.
-        // So no persistence warning can arise from one either; a warning
-        // already showing stays, as it is folded in below.
-        if (!sameRevision(settled, shownRevision)) persistSnapshot();
+        // Unless an earlier save failed (a warning is pending): then the
+        // ignored report retries it, so a kill before the next event does
+        // not lose that revision. Either way the warning, set or cleared, is
+        // folded into the answer below, as an event's is.
+        if (!sameRevision(settled, shownRevision) || !persistenceWarning_.isEmpty()) {
+            persistSnapshot();
+        }
         showUpdate(settled);
         if (deferredAnswered_) {
             deferredAnswered_ = false;

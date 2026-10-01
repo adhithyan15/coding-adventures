@@ -263,9 +263,24 @@ if let host = makeHost("MOSAIC_PROBE_STATE_G") {
           "once the failure passes, the same report is taken")
     check(!FileManager.default.fileExists(atPath: path),
           "an ignored report does not rewrite the state file")
+    // With the state path a non-empty directory, any write fails and says
+    // so. Once a save has failed, the next ignored report retries it -- so a
+    // kill before the next event does not lose that revision -- and its
+    // answer carries the warning's clearing.
+    try? FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true)
+    FileManager.default.createFile(atPath: path + "/occupied", contents: Data())
+    let switchOff: NSDictionary = ["payload": ["fail": false] as NSDictionary]
+    let warned = host.handleEvent(switchOff, name: "failEnvironment") as? [String: Any]
+    check(warned?["persistenceWarning"] != nil,
+          "an event that cannot persist surfaces the warning at once")
+    try? FileManager.default.removeItem(atPath: path)
+    let cleared = host.reportEnvironment(phone) as? [String: Any]
+    check(cleared != nil && cleared?["error"] == nil && cleared?["persistenceWarning"] == nil
+            && FileManager.default.fileExists(atPath: path),
+          "an ignored report retries a failed save and clears the warning")
     check(failEnvironment(true) && FileManager.default.fileExists(atPath: path),
           "an event still persists")
-    check(host.reportEnvironment(landscape) == nil, "the report taken is held back")
+    check(host.reportEnvironment(phone) == nil, "the report taken is held back")
     check(failEnvironment(false), "the app is left taking environment changes")
   } else {
     check(false, "MOSAIC_PROBE_STATE_G names the environment host's state file")

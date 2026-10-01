@@ -191,20 +191,26 @@ internal static class Program
         Require(MosaicRuntimeHost.ReportEnvironment(component, regular, required) is null, "once the failure passes, the same report is taken");
         Require(component.Status == "sentinel", "an ignored changed report re-applies nothing");
         Require(!File.Exists(statePath), "an ignored report does not rewrite the state file");
-        // With the state path a directory, any write fails and says so. An
-        // ignored report attempts none, so it raises no warning to surface;
-        // an event still does, in its own status.
+        // With the state path a directory, any write fails and says so. With
+        // no failed save pending, an ignored report attempts none, so it
+        // raises no warning; an event still does, in its own status. Once a
+        // save has failed, the next ignored report retries it -- so a kill
+        // before the next event does not lose that revision -- and reports
+        // the warning's clearing in a status, as an event would.
+        const string loaded = "Status: Mosaic runtime props loaded";
         Directory.CreateDirectory(statePath);
         Require(MosaicRuntimeHost.ReportEnvironment(component, compact, required) is null, "a changed report accepted");
-        Require(MosaicRuntimeHost.ApplyRequiredProps(component, required) == "Status: Mosaic runtime props loaded", "an ignored report raises no persistence warning");
-        var warned = await MosaicRuntimeHost.HandleRequiredEvent(component, new FailEnvironmentEvent(true), required);
+        Require(MosaicRuntimeHost.ApplyRequiredProps(component, required) == loaded, "an ignored report raises no persistence warning");
+        var warned = await MosaicRuntimeHost.HandleRequiredEvent(component, new FailEnvironmentEvent(false), required);
         Require(warned.Status.Contains("Could not persist Mosaic state", StringComparison.Ordinal), "an event that cannot persist surfaces the warning at once");
+        Require(MosaicRuntimeHost.ReportEnvironment(component, regular, required) is null, "an ignored report while saving still fails changes nothing shown");
+        Require(MosaicRuntimeHost.ApplyRequiredProps(component, required).Contains("Could not persist Mosaic state", StringComparison.Ordinal), "the warning stays while saving fails");
         Directory.Delete(statePath);
-        await FailEnvironment(false, "the state path writable again");
-        Require(File.Exists(statePath), "the next event persists");
-        Require(MosaicRuntimeHost.ApplyRequiredProps(component, required) == "Status: Mosaic runtime props loaded", "a persisted event clears the warning");
+        Require(MosaicRuntimeHost.ReportEnvironment(component, compact, required) == "Status: Mosaic runtime handled environmentChanged", "an ignored report retries a failed save and reports the warning cleared");
+        Require(File.Exists(statePath), "the retried save wrote the state file");
+        Require(MosaicRuntimeHost.ApplyRequiredProps(component, required) == loaded, "the cleared warning stays cleared");
         await FailEnvironment(true, "the app is told to fail environment changes once more");
-        Require(MosaicRuntimeHost.ReportEnvironment(component, compact, required) is null, "the report taken while saving failed is held back");
+        Require(MosaicRuntimeHost.ReportEnvironment(component, compact, required) is null, "the report that retried the save is held back");
         await FailEnvironment(false, "the app is left taking environment changes");
     }
 

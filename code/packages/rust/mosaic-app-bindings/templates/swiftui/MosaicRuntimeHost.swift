@@ -226,7 +226,8 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
   ///   invalid, is dropped and answers nil: a drag across a threshold would
   ///   otherwise re-send a refused one on every frame.
   /// - An app that does not react answers with the props already showing
-  ///   (see `dispatchEvent`), and writes no state.
+  ///   (see `dispatchEvent`), and writes no state unless an earlier save
+  ///   failed, which it retries.
   /// - A failure answers `["error": ...]` and does not replace the last report
   ///   taken. Only a refusal of the report itself (an invalid environment) is
   ///   remembered as refused; any other failure -- an app error, which may be
@@ -346,10 +347,14 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
     }
     // An answer at the revision already showing -- that same ignored
     // environment -- changed nothing the app would save, so the state file
-    // is not rewritten: a resize storm costs no disk writes. So no
-    // persistence warning can arise from one either. Unreadable revisions
-    // persist.
-    if shownRevision == nil || (settled["revision"] as? NSNumber) != shownRevision {
+    // is not rewritten: a resize storm costs no disk writes. Unless an
+    // earlier save failed (a warning is pending): then it retries that save,
+    // so a kill before the next event does not lose that revision; the
+    // update below carries the warning or its clearing, as an event's does.
+    // Unreadable revisions persist.
+    if shownRevision == nil
+      || (settled["revision"] as? NSNumber) != shownRevision
+      || persistenceWarning != nil {
       persistSnapshot()
     }
     latestUpdate = Self.withPersistenceWarning(settled, effectWarning ?? persistenceWarning)

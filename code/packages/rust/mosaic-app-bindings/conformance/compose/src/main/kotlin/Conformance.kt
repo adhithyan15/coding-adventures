@@ -169,23 +169,30 @@ fun main() {
                 "once the failure passes, the same report is taken")
             requireConformance(!state.exists(), "an ignored report does not rewrite the state file")
             // With the state path a (non-empty) directory, any write fails and
-            // says so. An ignored report attempts none, so it raises no
-            // warning to surface; an event still does, on its own answer.
+            // says so. With no failed save pending, an ignored report
+            // attempts none, so it raises no warning; an event still does, on
+            // its own answer. Once a save has failed, the next ignored report
+            // retries it -- so a kill before the next event does not lose that
+            // revision -- and its answer carries the warning's clearing.
             requireConformance(File(state, "occupied").let { state.mkdirs() && it.createNewFile() },
                 "the state path made unwritable")
             requireConformance(
                 "persistenceWarning" !in objectMap(host.reportEnvironment(compact), "report while unwritable"),
                 "an ignored report raises no persistence warning",
             )
-            requireConformance("persistenceWarning" in failEnvironment(true, "an event while saving fails"),
+            requireConformance("persistenceWarning" in failEnvironment(false, "an event while saving fails"),
                 "an event that cannot persist surfaces the warning at once")
+            requireConformance(
+                "persistenceWarning" in objectMap(host.reportEnvironment(tablet), "report while still failing"),
+                "an ignored report while saving still fails keeps the warning",
+            )
             requireConformance(state.deleteRecursively(), "the state path made writable again")
-            val cleared = failEnvironment(false, "the next event")
+            val cleared = objectMap(host.reportEnvironment(compact), "report after the path is writable")
             requireConformance(state.isFile && "persistenceWarning" !in cleared,
-                "the next event persists and clears the warning")
+                "an ignored report retries a failed save and clears the warning")
             failEnvironment(true, "the app is told to fail environment changes once more")
             requireConformance(host.reportEnvironment(compact) == null,
-                "the report taken while saving failed is held back")
+                "the report that retried the save is held back")
             failEnvironment(false, "the app is left taking environment changes")
         }
         requireConformance(MosaicRuntimeHost.initialEnvironment()["pointer"] == "fine" &&

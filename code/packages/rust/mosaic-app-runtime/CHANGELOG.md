@@ -10,8 +10,13 @@
   hold back an identical report only when the runtime refused it as invalid,
   and send it again after any other failure (an app error may be transient);
   `mosaic-app-bindings` writes this constant into each host. A test pins that
-  no other `RuntimeError` message begins the same way. No wire or behaviour
-  change: the message text is unchanged.
+  no other `RuntimeError` message begins the same way, walking every variant
+  through an exhaustive match, so a new variant does not compile until it is
+  covered. No wire or behaviour change: the message text is unchanged.
+- **`MosaicApp::environment_changed` documents that answering `None` must
+  not change the state `snapshot` saves.** Native hosts persist an ignored
+  report only to retry a failed save (UI48 §7.12), so state recorded silently
+  would wait for the next event, and be lost if the app were killed first.
 
 ## Unreleased
 

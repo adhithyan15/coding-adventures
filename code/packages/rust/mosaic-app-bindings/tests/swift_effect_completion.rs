@@ -183,6 +183,8 @@ fn the_emitted_swiftui_host_answers_effects() {
         "the environment host persists",
         "once the failure passes, the same report is taken",
         "an ignored report does not rewrite the state file",
+        "an event that cannot persist surfaces the warning at once",
+        "an ignored report retries a failed save and clears the warning",
         "an event still persists",
         "the report taken is held back",
         "the app is left taking environment changes",

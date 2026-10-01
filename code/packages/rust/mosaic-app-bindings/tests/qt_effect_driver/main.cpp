@@ -415,20 +415,30 @@ int main(int argc, char **argv) {
                   retried.value(QStringLiteral("revision")).toLongLong() == revisionBefore,
               "once the failure passes, the same report is taken");
         check(!QFile::exists(statePath), "an ignored report does not rewrite the state file");
-        // With the state path a directory, any write fails and says so. An
-        // ignored report attempts none, so it raises no warning to surface;
-        // an event still does, on its own answer.
+        // With the state path a directory, any write fails and says so. With
+        // no failed save pending, an ignored report attempts none, so it
+        // raises no warning; an event still does, on its own answer. Once a
+        // save has failed, the next ignored report retries it -- so a kill
+        // before the next event does not lose that revision -- and its
+        // answer carries the warning's clearing, as an event's would.
         check(QDir().mkpath(statePath), "the state path made unwritable");
         check(!host.reportEnvironment(compact).contains(QStringLiteral("persistenceWarning")),
               "an ignored report raises no persistence warning");
-        check(failEnvironment(true).contains(QStringLiteral("persistenceWarning")),
+        check(failEnvironment(false).contains(QStringLiteral("persistenceWarning")),
               "an event that cannot persist surfaces the warning at once");
+        check(host.reportEnvironment(tablet).contains(QStringLiteral("persistenceWarning")),
+              "an ignored report while saving still fails keeps the warning");
         check(QDir(statePath).removeRecursively(), "the state path made writable again");
-        check(!failEnvironment(false).contains(QStringLiteral("persistenceWarning")) &&
-                  QFile::exists(statePath),
-              "the next event persists and clears the warning");
+        const auto saved = host.reportEnvironment(compact);
+        check(!saved.isEmpty() && !saved.contains(QStringLiteral("error")) &&
+                  !saved.contains(QStringLiteral("persistenceWarning")) && QFile::exists(statePath),
+              "an ignored report retries a failed save and clears the warning");
+        check(failEnvironment(true).value(QStringLiteral("error")).isNull(),
+              "the app is told to fail environment changes once more");
         check(host.reportEnvironment(compact).isEmpty(),
-              "the report taken during the warning is held back");
+              "the report that retried the save is held back");
+        check(!failEnvironment(false).contains(QStringLiteral("error")),
+              "the app is left taking environment changes");
 
         // A native-complete shell: the answer reaches QML checked and under
         // its QML names, exactly as handleRequiredEvent's does.

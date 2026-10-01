@@ -251,10 +251,13 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
         // An answer at the revision already showing -- an environment the app
         // ignored (UI48 §7.1) -- changed nothing the app would save, so the
         // state file is not rewritten: a resize storm costs no disk writes.
-        // So no persistence warning can arise from one either. Unreadable
-        // revisions persist.
+        // Unless an earlier save failed (a warning is pending): then it
+        // retries that save, so a kill before the next event does not lose
+        // that revision; the answer carries the warning or its clearing, as
+        // an event's does. Unreadable revisions persist.
         if (shownRevision == null ||
-            (settled["revision"] as? JsonPrimitive)?.longOrNull != shownRevision
+            (settled["revision"] as? JsonPrimitive)?.longOrNull != shownRevision ||
+            persistenceWarning != null
         ) {
             persistSnapshot()
         }
@@ -288,7 +291,8 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
      *   as invalid, is dropped and answers null: a drag across a threshold
      *   would otherwise re-send a refused one on every frame.
      * - An app that does not react answers with the props already showing
-     *   (see [keepShowingProps]), and writes no state.
+     *   (see [keepShowingProps]), and writes no state unless an earlier save
+     *   failed, which it retries.
      * - A runtime failure answers `{"error": ...}` instead of throwing, and
      *   does not replace the last report accepted. Only a refusal of the
      *   report itself (an invalid environment) is remembered as refused; any

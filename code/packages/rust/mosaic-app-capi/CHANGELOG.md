@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-10-01 (no diagnostic reads as an invalid environment)
+
+- Test only: native hosts hold back an environment report only when the
+  failure's diagnostic begins with `mosaic-app-runtime`'s
+  `INVALID_ENVIRONMENT_DIAGNOSTIC` (UI48 §7.12). A new test checks that none
+  of this layer's own diagnostics -- panics (string, `String` and opaque
+  payloads), decode and encode failures, null input/output/handle pointers,
+  and a poisoned handle -- begins that way. No behaviour change.
+
 ## Unreleased
 
 - Add UI47 protocol-2 effect completion with pending-work checkpoint protection,

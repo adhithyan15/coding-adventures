@@ -95,6 +95,13 @@ pub trait MosaicApp {
     /// The default ignores it, so an app that never looks at its environment
     /// keeps working when a host starts reporting one. As with dispatch, an
     /// error must leave application state unchanged.
+    ///
+    /// Returning `None` must also leave the state [`MosaicApp::snapshot`]
+    /// saves unchanged. The runtime answers `None` at the current revision,
+    /// and native hosts persist a snapshot only when the revision moves
+    /// (UI48 §7.12), so a change recorded silently would not be saved until
+    /// the next event -- and would be lost if the app were killed first. An
+    /// app that wants the environment in its saved state returns `Some`.
     fn environment_changed(
         &mut self,
         _environment: Environment,
@@ -1090,31 +1097,45 @@ mod tests {
             refused.starts_with(&format!("{INVALID_ENVIRONMENT_DIAGNOSTIC}: ")),
             "{refused}"
         );
-        let others: Vec<RuntimeError<TestError>> = vec![
-            RuntimeError::ProtocolVersionMismatch {
-                expected: 2,
-                received: 1,
-            },
-            RuntimeError::InvalidTextScale,
-            RuntimeError::InvalidUtcOffset,
-            RuntimeError::AlreadyStarted,
-            RuntimeError::NotStarted,
-            RuntimeError::UnexpectedSequence {
-                expected: 2,
-                received: 3,
-            },
-            RuntimeError::SequenceOverflow,
-            RuntimeError::RevisionOverflow,
-            RuntimeError::Application(TestError),
-            RuntimeError::PendingEffects(vec![1]),
-            RuntimeError::UnknownEffect(1),
-            RuntimeError::InvalidEffectId(1),
-            RuntimeError::EffectsRequireV2,
-            RuntimeError::CompletionUnsupported,
-            RuntimeError::Poisoned,
-        ];
-        for other in others {
-            let text = other.to_string();
+        // Every other variant, one of each, chained by an exhaustive match: a
+        // new variant does not compile until it has an arm, and so a place in
+        // the chain this walks.
+        fn successor(error: &RuntimeError<TestError>) -> Option<RuntimeError<TestError>> {
+            use RuntimeError::*;
+            Some(match error {
+                ProtocolVersionMismatch { .. } => InvalidTextScale,
+                InvalidTextScale => InvalidUtcOffset,
+                InvalidUtcOffset => AlreadyStarted,
+                AlreadyStarted => NotStarted,
+                NotStarted => UnexpectedSequence {
+                    expected: 2,
+                    received: 3,
+                },
+                UnexpectedSequence { .. } => SequenceOverflow,
+                SequenceOverflow => RevisionOverflow,
+                RevisionOverflow => Application(TestError),
+                Application(_) => PendingEffects(vec![1]),
+                PendingEffects(_) => UnknownEffect(1),
+                UnknownEffect(_) => InvalidEffectId(1),
+                InvalidEffectId(_) => EffectsRequireV2,
+                EffectsRequireV2 => CompletionUnsupported,
+                CompletionUnsupported => Poisoned,
+                Poisoned => InvalidEnvironment("the end of the chain".into()),
+                InvalidEnvironment(_) => return None,
+            })
+        }
+        let mut others = Vec::new();
+        let mut current = RuntimeError::ProtocolVersionMismatch {
+            expected: 2,
+            received: 1,
+        };
+        while !matches!(current, RuntimeError::InvalidEnvironment(_)) {
+            let next = successor(&current).expect("the chain ends at InvalidEnvironment");
+            others.push(current.to_string());
+            current = next;
+        }
+        assert_eq!(others.len(), 15, "every variant but InvalidEnvironment");
+        for text in others {
             assert!(!text.starts_with(INVALID_ENVIRONMENT_DIAGNOSTIC), "{text}");
         }
     }

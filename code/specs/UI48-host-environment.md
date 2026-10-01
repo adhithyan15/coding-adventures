@@ -1241,19 +1241,26 @@ SwiftUI). Where this section and an earlier one differ, this one is current.
   XAML on the next resize event, Flutter on the next frame whose size or
   scheme changed, Compose and SwiftUI on the next bucket change. No host
   retries on a timer.
-- **An ignored report writes no state.** A dispatch persists only when its
-  answer moved the revision (an unreadable revision persists, to be safe).
-  An environment the app ignored answers at the revision showing and changed
-  nothing the app saves, so a window drag costs no disk writes. Ordinary
-  events and effect answers always move the revision, so they persist as
-  before. An app that records its environment silently and answers "no
-  reaction" has that state saved with its next event.
-- **So no persistence warning arises from an ignored report.** The warning
-  comes only from a write, and an ignored report makes none -- which is why
-  nothing needs surfacing for one (Flutter's null answer and XAML's null
-  status could otherwise have hidden a fresh warning until the next event). A
-  warning already showing stays until the next successful write, and an
-  event's warning is surfaced with that event's answer, as before.
+- **An ignored report writes no state -- unless a save is owed.** A
+  dispatch persists when its answer moved the revision (an unreadable
+  revision persists, to be safe) or when an earlier save failed (a
+  persistence warning is pending). An environment the app ignored answers at
+  the revision showing and changed nothing the app saves, so with saving
+  healthy a window drag costs no disk writes. But a save that failed at
+  revision N would otherwise wait for the next event, and a kill before it
+  would lose N; so while a warning is pending each ignored report retries
+  the save. Ordinary events and effect answers always move the revision, so
+  they persist as before. `MosaicApp::environment_changed` documents the
+  app's side: answering `None` must not change the state `snapshot` saves.
+- **A warning an ignored report sets or clears is shown as an event's is.**
+  Only a retried save can change the warning during an ignored report. Qt
+  and Compose hand back the kept props with the warning folded in (or
+  without it, once cleared), and SwiftUI pushes them, exactly as for an
+  event. Flutter's `reportEnvironment` answers with the update rather than
+  null when the warning changed; XAML's re-applies the props and answers a
+  status line (`Mosaic runtime handled environmentChanged`, with the warning
+  if one remains) rather than null. With saving healthy no warning can arise
+  from an ignored report, since it writes nothing.
 
 **Acceptance.** The conformance app gained `failEnvironment` (`{"fail":
 true}` / `false`): while on, every `environmentChanged` that reaches it is an
@@ -1266,10 +1273,15 @@ sent again and, once the failure passes, taken; that an invalid one is still
 held back and holds back nothing else; that an ignored report does not
 rewrite the state file and, with the state path made a directory so any write
 would fail, raises no persistence warning, while an event that cannot persist
-surfaces one at once. The Swift driver checks the same except the warning
-case (it runs only on macOS). A Rust test pins, in all five hosts, the
-diagnostic written in once from the runtime, the refusal memory behind it,
-and the revision-gated persist.
+surfaces one at once; and that once the path is writable again, the next
+ignored report retries the failed save, writes the file and shows the warning
+cleared. The Swift driver checks the same except the no-warning case (it runs
+only on macOS). Rust tests pin, in all five hosts, the diagnostic written in
+once from the runtime (and that it is only ASCII letters and spaces, safe in
+every host's string literal), the refusal memory behind it, and the persist
+condition; the runtime's test walks every other `RuntimeError` variant
+through an exhaustive match, and `mosaic-app-capi`'s checks its own panic,
+decode, encode and pointer diagnostics, so none can be mistaken for it.
 
 ## 8. Open questions
 

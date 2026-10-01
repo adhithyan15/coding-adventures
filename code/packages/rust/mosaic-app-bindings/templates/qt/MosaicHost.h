@@ -43,7 +43,9 @@ public:
     //   report back; any other failure (an app error, which may be transient)
     //   lets the same report be sent again.
     // - An ignored report (no new revision) writes no state file: nothing
-    //   the app would save has changed.
+    //   the app would save has changed. Unless an earlier save failed: then
+    //   it retries that save, and the answer carries the warning or its
+    //   clearing, as an event's does.
     // - In a native-complete shell (configureRequiredProps) the answer is
     //   checked and mapped to QML names, as handleRequiredEvent's is.
     Q_INVOKABLE QVariantMap reportEnvironment(const QVariantMap &environment);

@@ -242,9 +242,11 @@ class MosaicHost {
   /// Returns null when there is nothing for the shell to do: no runtime, a
   /// report the host held back (the same as the last one taken or the last
   /// one refused as invalid), or an answer at the revision already showing --
-  /// an app that does not react, which also writes no state. Returns the
-  /// runtime's answer when it moved the revision (the app reacted) or carries
-  /// an `error`, and `{'error': 'Mosaic environment report failed: ...'}`
+  /// an app that does not react, which also writes no state unless an earlier
+  /// save failed. Returns the runtime's answer when it moved the revision (the
+  /// app reacted), set or cleared the storage warning (it retried a failed
+  /// save), or carries an `error`, and
+  /// `{'error': 'Mosaic environment report failed: ...'}`
   /// when the report failed: refused as invalid, an app error, or the runtime
   /// closed underneath.
   ///
@@ -502,10 +504,14 @@ final class _MosaicRuntime {
     _runtimeUpdate = settled;
     // An answer at the revision already showing -- an environment the app
     // ignored (UI48 §7.1) -- changed nothing the app would save, so the state
-    // file is not rewritten: a resize storm costs no disk writes. So no
-    // persistence warning can arise from one either, and the null answer
-    // [reportEnvironment] gives it hides none. Unreadable revisions persist.
-    if (shownRevision == null || _revision(settled) != shownRevision) {
+    // file is not rewritten: a resize storm costs no disk writes. Unless an
+    // earlier save failed (a warning is pending): then it retries that save,
+    // so a kill before the next event does not lose that revision, and
+    // [reportEnvironment] shows the warning it sets or clears. Unreadable
+    // revisions persist.
+    if (shownRevision == null ||
+        _revision(settled) != shownRevision ||
+        _persistenceWarning != null) {
       _persistSnapshot();
     }
     latestUpdate = _withPersistenceWarning(settled);
@@ -537,6 +543,7 @@ final class _MosaicRuntime {
     if (_sameEnvironment(_lastReportedEnvironment, report)) return null;
     if (_sameEnvironment(_lastRefusedEnvironment, report)) return null;
     final shownRevision = _revision(_runtimeUpdate);
+    final shownWarning = latestUpdate['persistenceWarning'];
     final answer = _dispatchEnvironment(report);
     _lastReportedEnvironment = report;
     _lastRefusedEnvironment = null;
@@ -544,8 +551,13 @@ final class _MosaicRuntime {
     if (answer['error'] != null) return answer;
     // An app that does not react answers at the revision already showing,
     // its props kept by [_keepShowingProps]: nothing new to show, so the
-    // shell rebuilds nothing on a resize.
-    return _revision(answer) == shownRevision ? null : answer;
+    // shell rebuilds nothing on a resize -- unless it retried a failed save
+    // and so set or cleared the storage warning, which is shown as an
+    // event's would be.
+    return _revision(answer) == shownRevision &&
+            answer['persistenceWarning'] == shownWarning
+        ? null
+        : answer;
   }
 
   /// Send [report], recording it as refused when the runtime says it is
