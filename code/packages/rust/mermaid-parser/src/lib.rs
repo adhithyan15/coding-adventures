@@ -4349,7 +4349,7 @@ pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseErro
 
 // ── treemap parser ────────────────────────────────────────────────────────
 
-/// Parse the Mermaid 11.16.1 quoted, indentation-based treemap subset.
+/// Parse the Mermaid 11.16.1 quoted, indentation-based treemap syntax.
 pub fn parse_treemap(source: &str) -> Result<TreemapDiagram, ParseError> {
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_treemap(&prepared).map_err(|message| ParseError {
@@ -4375,6 +4375,7 @@ pub fn parse_treemap(source: &str) -> Result<TreemapDiagram, ParseError> {
         nodes: Vec::new(),
     };
     let mut ancestors = Vec::<(usize, String)>::new();
+    let mut seen_root = false;
 
     for (line_index, line) in prepared.lines().enumerate() {
         let trimmed = line.trim();
@@ -4408,6 +4409,16 @@ pub fn parse_treemap(source: &str) -> Result<TreemapDiagram, ParseError> {
             .take_while(|character| character.is_whitespace())
             .map(|character| if character == '\t' { 4 } else { 1 })
             .sum::<usize>();
+        if indentation == 0 {
+            if seen_root {
+                return Err(ParseError {
+                    message: "Multiple root nodes are not allowed in a treemap.".into(),
+                    line: line_index + 1,
+                    col: 1,
+                });
+            }
+            seen_root = true;
+        }
         let quote = trimmed.chars().next().unwrap_or_default();
         let closing = trimmed[1..].find(quote).map(|offset| offset + 1).ok_or_else(|| ParseError {
             message: "unterminated treemap node label".into(),
@@ -4454,13 +4465,6 @@ pub fn parse_treemap(source: &str) -> Result<TreemapDiagram, ParseError> {
         ancestors.push((indentation, id));
     }
 
-    if diagram.nodes.is_empty() {
-        return Err(ParseError {
-            message: "treemap requires at least one node".into(),
-            line: 1,
-            col: 1,
-        });
-    }
     Ok(diagram)
 }
 

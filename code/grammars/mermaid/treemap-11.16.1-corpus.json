@@ -1,10 +1,15 @@
 {
   "upstream": "mermaid@11.16.1",
-  "scope": "native hierarchy subset",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "Native partial hierarchy slice with empty documents and upstream single-root validation.",
   "fixtures": [
     {
+      "name": "empty",
+      "source": "treemap"
+    },
+    {
       "name": "basic-colon-values",
-      "source": "treemap\n\"Category A\"\n  \"Item A1\": 10\n  \"Item A2\": 20\n\"Category B\"\n  \"Item B1\": 15"
+      "source": "treemap\n\"Root\"\n  \"Category A\"\n    \"Item A1\": 10\n    \"Item A2\": 20\n  \"Category B\"\n    \"Item B1\": 15"
     },
     {
       "name": "nested-comma-and-single-quotes",
@@ -13,6 +18,12 @@
     {
       "name": "metadata-and-classes",
       "source": "treemap\ntitle Allocation\naccTitle: Allocation treemap\naccDescr: Nested budget values\n\"Budget\":::primary\n  \"Engineering\": 60\n  \"Design\": 40:::accent\nclassDef accent fill:#f96"
+    }
+  ],
+  "invalid": [
+    {
+      "name": "multiple-roots",
+      "source": "treemap\n\"Root 1\"\n\"Root 2\""
     }
   ]
 }
