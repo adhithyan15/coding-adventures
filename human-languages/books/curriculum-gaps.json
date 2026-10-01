@@ -262007,6 +262007,15 @@
           },
           {
             "language": "telugu",
+            "lessonId": "TE-S160-letter-pha",
+            "blockIndex": 2,
+            "blockTitle": "Writing: ఫ — five calm movements",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 445
+          },
+          {
+            "language": "telugu",
             "lessonId": "TE-S139-letter-ddha",
             "blockIndex": 2,
             "blockTitle": "Writing: ఢ — six deliberate movements",
@@ -262195,6 +262204,15 @@
             "stage": "observe-trace",
             "level": "pre-A1",
             "sequence": 443
+          },
+          {
+            "language": "telugu",
+            "lessonId": "TE-S160-letter-pha",
+            "blockIndex": 2,
+            "blockTitle": "Writing: ఫ — five calm movements",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 445
           },
           {
             "language": "telugu",
@@ -262803,7 +262821,7 @@
       "tracks": 23,
       "tracksWithAnyEvidence": 23,
       "tracksCompleteAtPreA1": 23,
-      "evidenceBlocks": 810,
+      "evidenceBlocks": 811,
       "invalidEvidenceBlocks": 0,
       "missingTrackLevelStages": 231
     }
@@ -324405,7 +324423,7 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 19215,
-    "usesBeforeIntroduction": 36844,
+    "usesBeforeIntroduction": 36845,
     "technicalUsesBeforeIntroduction": 6368,
     "technicalLessons": 3586,
     "worstTerms": [
