@@ -224,12 +224,14 @@ pub enum TextDecorationStyle {
 }
 
 /// Paint-independent text decoration inherited by inline text descendants.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct TextDecoration {
     pub lines: TextDecorationLines,
     pub style: TextDecorationStyle,
     /// `None` means use the text foreground color.
     pub color: Option<Color>,
+    /// Authored logical-unit thickness. `None` uses font metrics.
+    pub thickness: Option<f64>,
 }
 
 impl TextDecoration {
@@ -238,6 +240,7 @@ impl TextDecoration {
             lines: TextDecorationLines::UNDERLINE,
             style: TextDecorationStyle::Solid,
             color: None,
+            thickness: None,
         }
     }
 }
