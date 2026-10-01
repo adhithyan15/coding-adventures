@@ -192,8 +192,8 @@
       "metadata_projection": "Hash String String adapter",
       "copy_semantics_hook": "array, hash, and string mutation assertions",
       "known_divergences": [],
-      "verified_revision": "15405d4a4bb56feccb398daef46d11b701c03aa1",
-      "package_tree": "b0bc75e0d7321fb1c80c6bc5faa93a018f7f6af6",
+      "verified_revision": "e32c3e4b11f14de694b3358f3045b15632b255f3",
+      "package_tree": "aafff095367353ae3da9738dfd82198c63b7913f",
       "corpus_sha256": "be95aa0381041ef3bd729b36bb4292f7a20692e139b53adca97af4e157cb7388",
       "adoption_pr": 16361,
       "zero_authority_evidence": {"test_path": "code/packages/ruby/barcode_layout_1d/test/test_barcode_layout_1d_conformance.rb", "assertions": ["text-value-fails-before-native-resolution", "text-enabled-fails-before-native-resolution"]}
@@ -236,8 +236,8 @@
       "metadata_projection": "String dictionary adapter",
       "copy_semantics_hook": "value-copy mutation assertions",
       "known_divergences": [],
-      "verified_revision": "15405d4a4bb56feccb398daef46d11b701c03aa1",
-      "package_tree": "2be6f16d9050faacb2395ed30b18f9a6d1f7cccf",
+      "verified_revision": "e32c3e4b11f14de694b3358f3045b15632b255f3",
+      "package_tree": "0d3e662c9d3a0b96ef08465c8b64906bca3a6a4c",
       "corpus_sha256": "be95aa0381041ef3bd729b36bb4292f7a20692e139b53adca97af4e157cb7388",
       "adoption_pr": 16361,
       "zero_authority_evidence": {"test_path": "code/packages/swift/BarcodeLayout1D/Tests/BarcodeLayout1DTests/BarcodeLayout1DConformanceTests.swift", "assertions": ["text-value-fails-before-native-resolution", "text-enabled-fails-before-native-resolution"]}

@@ -15465,9 +15465,9 @@ changelog paths.
 
 PR #16361 records the complete Ruby and Swift adoption without changing
 either legacy API. Implementation revision
-`15405d4a4bb56feccb398daef46d11b701c03aa1` binds Ruby package tree
-`b0bc75e0d7321fb1c80c6bc5faa93a018f7f6af6` and Swift package tree
-`2be6f16d9050faacb2395ed30b18f9a6d1f7cccf`; the evidence-only follow-up
+`e32c3e4b11f14de694b3358f3045b15632b255f3` binds Ruby package tree
+`aafff095367353ae3da9738dfd82198c63b7913f` and Swift package tree
+`0d3e662c9d3a0b96ef08465c8b64906bca3a6a4c`; the evidence-only follow-up
 commit leaves both package roots untouched. The registry now reports both
 lanes conformant while keeping Elixir and Lua explicitly pending adoption.
 
@@ -15479,8 +15479,9 @@ symbology downstream packages passed in both lanes. Ruby's aggregate passed
 with one expected platform-native skip. Swift's aggregate compiled the full
 package graph before the pre-existing absent `paint_vm_direct2d_c.lib` linker
 artifact prevented the final Windows executable link. Both Windows build
-fronts fail closed, including forced-failure probes for the Unix fronts. Two
-read-only security-review rounds completed; the second
+fronts fail closed. Every Unix build command is independently shell-complete
+for the line-oriented build tool. Two read-only security-review rounds
+completed; the second
 reported no vulnerabilities after bounded Unicode-scalar ingress fixes.
 
 ## Autonomous Loop Protocol
