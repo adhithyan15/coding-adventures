@@ -2501,8 +2501,13 @@ jobs:
             xcodebuild -scheme App -destination 'generic/platform=iOS Simulator' -derivedDataPath "$ios_linked_data" CODE_SIGNING_ALLOWED=NO build
             xcodebuild -scheme App -destination 'generic/platform=iOS' -derivedDataPath "$ios_linked_data" CODE_SIGNING_ALLOWED=NO build
           )
+          # nm writes to a file before grep reads it: `nm | grep -q` under
+          # pipefail fails whenever grep exits at its first match while nm is
+          # still writing (SIGPIPE, "LLVM ERROR: ... Broken pipe"), which depends
+          # only on where the symbol happens to fall in nm's output.
           for binary in "$ios_linked_data/Build/Products/Debug-iphonesimulator/App" "$ios_linked_data/Build/Products/Debug-iphoneos/App"; do
-            nm -gU "$binary" | grep -q ' _mosaic_app_create$'
+            nm -gU "$binary" > "$RUNNER_TEMP/mosaic-ios-symbols.txt"
+            grep -q ' _mosaic_app_create$' "$RUNNER_TEMP/mosaic-ios-symbols.txt"
           done
 
           # An installable iOS / iPadOS APP (UI89 §2.2): the same build wrote
@@ -2516,7 +2521,8 @@ jobs:
             xcodebuild -project App.xcodeproj -target App -sdk iphonesimulator -configuration Debug CODE_SIGNING_ALLOWED=NO SYMROOT="$ios_app_build" build
           )
           ios_app="$ios_app_build/Debug-iphonesimulator/App.app"
-          nm -gU "$ios_app/App" | grep -q ' _mosaic_app_create$'
+          nm -gU "$ios_app/App" > "$RUNNER_TEMP/mosaic-ios-app-symbols.txt"
+          grep -q ' _mosaic_app_create$' "$RUNNER_TEMP/mosaic-ios-app-symbols.txt"
           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$ios_app/Info.plist")" = dev.codingadventures.trestle
           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' "$ios_app/Info.plist")" = Trestle
           simulator="$(xcrun simctl list devices available -j | jq -r '[.devices[][] | select(.name | startswith("iPhone"))][0].udid')"
