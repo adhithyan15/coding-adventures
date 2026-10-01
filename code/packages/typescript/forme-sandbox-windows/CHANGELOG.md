@@ -9,3 +9,5 @@
 - Added pinned snapshot handles, random ephemeral profile identities, complete
   failed-launch profile cleanup, an abnormal-exit profile janitor, a private
   cancellation channel, and a native wall-clock watchdog.
+- Made the environment isolation probe clean under current MSVC secure-CRT
+  warnings-as-errors builds.

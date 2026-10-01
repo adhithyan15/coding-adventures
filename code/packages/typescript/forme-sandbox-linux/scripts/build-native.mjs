@@ -7,10 +7,9 @@ if (process.platform === "linux") {
   for (const [source, output] of [["launcher.c", "forme-sandbox-linux"], ["probe.c", "forme-sandbox-probe"]]) {
     const argumentsList = ["-std=c11", "-O2", "-Wall", "-Wextra", "-Werror"];
     if (source === "launcher.c") {
-      const sha256Root = resolve(root, "../../c/sha256");
       argumentsList.push(
-        `-I${resolve(sha256Root, "include")}`,
-        resolve(sha256Root, "src/sha256.c"),
+        `-I${resolve(root, "native")}`,
+        resolve(root, "native/sha256.c"),
       );
     }
     argumentsList.push(resolve(root, "native", source), "-o", resolve(root, "native", output));

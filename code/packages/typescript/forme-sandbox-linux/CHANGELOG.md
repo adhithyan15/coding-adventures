@@ -10,6 +10,7 @@
   validation, a monotonic wall-clock watchdog, and mount/session escape denial.
 - Enabled unprivileged user namespaces in the dedicated hosted-runner gate when
   Ubuntu's AppArmor sysctl otherwise blocks the required namespace primitive.
-- Replaced the optional Linux `AF_ALG` digest dependency with the repository's
-  portable, FIPS-vector-tested SHA-256 implementation.
+- Replaced the optional Linux `AF_ALG` digest dependency with a package-local
+  portable SHA-256 implementation derived from the repository's
+  FIPS-vector-tested C package, without adding cross-platform build edges.
 - Preserved bounded child setup exit codes for host-side attestation diagnostics.

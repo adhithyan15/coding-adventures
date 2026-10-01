@@ -59,7 +59,12 @@ int wmain(int argc, wchar_t **argv) {
         return 76;
     }
     if (wcscmp(probe, L"environment") == 0) {
-        return _wgetenv(L"FORME_SANDBOX_AMBIENT_SENTINEL") == NULL ? 0 : 78;
+        wchar_t *value = NULL;
+        size_t length = 0;
+        int error = _wdupenv_s(&value, &length, L"FORME_SANDBOX_AMBIENT_SENTINEL");
+        int isolated = error == 0 && value == NULL && length == 0;
+        free(value);
+        return isolated ? 0 : 78;
     }
     if (wcscmp(probe, L"cpu") == 0) {
         volatile unsigned long long value = 0;
