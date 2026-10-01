@@ -1,3 +1,5 @@
+set -eu
+
 if [ "$(uname -s)" = "Darwin" ]; then
   xcrun swift test --enable-code-coverage
   xcrun swift build -c release
