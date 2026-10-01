@@ -59,6 +59,10 @@ async function fixture(): Promise<{ project: string; packagePath: string; trustS
   return { project, packagePath, trustStorePath: join(root, "missing-trust.toml") };
 }
 
+function capabilityPath(path: string): string {
+  return encodeURIComponent(path).replaceAll("%2F", "/");
+}
+
 describe("executePluginInstall", () => {
   it("reviews every capability and atomically persists exactly the accepted grants", async () => {
     const setup = await fixture();
@@ -100,7 +104,7 @@ describe("executePluginInstall", () => {
         pluginName: "@example/product-install",
         pluginVersion: "1.2.3",
         trustTier: "unverified-third-party",
-        capability: `filesystem:read:${join(setup.project, "content")}`,
+        capability: `filesystem:read:${capabilityPath(join(setup.project, "content"))}`,
         required: false,
         reason: "Read the configured storage root",
         sensitive: false,
@@ -109,7 +113,7 @@ describe("executePluginInstall", () => {
         pluginName: "@example/product-install",
         pluginVersion: "1.2.3",
         trustTier: "unverified-third-party",
-        capability: `filesystem:write:${join(setup.project, ".cache")}`,
+        capability: `filesystem:write:${capabilityPath(join(setup.project, ".cache"))}`,
         required: false,
         reason: "Write the configured cache",
         sensitive: false,
