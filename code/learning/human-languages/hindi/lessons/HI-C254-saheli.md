@@ -9,7 +9,7 @@ sequence: 13800
 chapter: 254
 type: word
 headword: "सहेली"
-gloss: "a (girl's) friend"
+gloss: "a female friend (of a girl)"
 romanization: "sahelī"
 concept_tag: HI-THG254-SAHELI
 prerequisites: [HI-C253-purus, HI-C253-sisu]
@@ -31,7 +31,7 @@ variety: standard-colloquial
 reviews_of: [HI-C253-sisu]
 ---
 
-# सहेली (sahelī) — a (girl's) friend
+# सहेली (sahelī) — a female friend (of a girl)
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C253-THG253-04, HI-LEX-C253-THG253-05] -->
@@ -41,7 +41,7 @@ reviews_of: [HI-C253-sisu]
 ## You'll want to know: सहेली
 <!-- hl-knowledge: introduces=[HI-LEX-C254-THG254-01]; assesses=[] -->
 
-**सहेली** — *sahelī* — "a (girl's) friend".
+**सहेली** — *sahelī* — "a female friend (of a girl)".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -60,4 +60,4 @@ One more word for this chapter.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C254-THG254-01, HI-LEX-C253-THG253-04, HI-LEX-C253-THG253-05] -->
 
-[PAUSE 3s] What does सहेली mean? ("A (girl's) friend".) Say it once more.
+[PAUSE 3s] What does सहेली mean? ("A female friend (of a girl)".) Say it once more.

@@ -4,7 +4,7 @@
   "chapter": 260,
   "title": "A convenience, An inconvenience, A rule, A list, A candidate",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:b45f1d08bc1f40ae",
+  "sourceHash": "fnv1a64:1a72cb105a23b906",
   "lessons": [
     {
       "id": "HI-C260-suvidha",
@@ -634,7 +634,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:67a772318b93b882",
+      "sourceHash": "fnv1a64:af2319c73c4e74ea",
       "notice": null,
       "blocks": [
         {
@@ -686,11 +686,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "a, a companion, a relative, a mother-in-law, a father-in-law",
+              "instruction": "a female friend, a companion, a relative, a mother-in-law, a father-in-law",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: a, a companion, a relative, a mother-in-law, a father-in-law]"
+              "source": "[YOU SAY: a female friend, a companion, a relative, a mother-in-law, a father-in-law]"
             },
             {
               "kind": "prompt",
@@ -716,7 +716,7 @@
             },
             {
               "kind": "speech",
-              "text": "A sack? (बोरी, borī.) A branch? (डाली, ḍālī.) A bud? (कली, kalī.) A thorn? (काँटा, kā̃ṭā.) Mud? (कीचड़, kīcaṛ.) A rainbow? (इंद्रधनुष, indradhanuṣ.) An earthquake? (भूकंप, bhūkamp.) A flood? (बाढ़, bāṛh.) A man? (पुरुष, puruṣ.) A baby? (शिशु, śiśu.) A? (सहेली, sahelī.) A companion? (साथी, sāthī.) A relative? (संबंधी, sambandhī.) A mother-in-law? (सास, sās.) A father-in-law? (ससुर, sasur.) A daughter-in-law? (बहू, bahū.) A son-in-law? (दामाद, dāmād.) A husband's younger brother? (देवर, devar.) A husband's sister? (ननद, nanad.) A sister's husband? (जीजा, jījā.)"
+              "text": "A sack? (बोरी, borī.) A branch? (डाली, ḍālī.) A bud? (कली, kalī.) A thorn? (काँटा, kā̃ṭā.) Mud? (कीचड़, kīcaṛ.) A rainbow? (इंद्रधनुष, indradhanuṣ.) An earthquake? (भूकंप, bhūkamp.) A flood? (बाढ़, bāṛh.) A man? (पुरुष, puruṣ.) A baby? (शिशु, śiśu.) A female friend? (सहेली, sahelī.) A companion? (साथी, sāthī.) A relative? (संबंधी, sambandhī.) A mother-in-law? (सास, sās.) A father-in-law? (ससुर, sasur.) A daughter-in-law? (बहू, bahū.) A son-in-law? (दामाद, dāmād.) A husband's younger brother? (देवर, devar.) A husband's sister? (ननद, nanad.) A sister's husband? (जीजा, jījā.)"
             }
           ]
         }

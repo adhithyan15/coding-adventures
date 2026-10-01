@@ -36,7 +36,7 @@ reviews_of: [HI-C254-sathi]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C254-THG254-01, HI-LEX-C254-THG254-02] -->
 
-[PAUSE 2s] Before the new one: say the Hindi for a, then the Hindi for a companion.
+[PAUSE 2s] Before the new one: say the Hindi for a female friend, then the Hindi for a companion.
 
 ## You'll want to know: संबंधी
 <!-- hl-knowledge: introduces=[HI-LEX-C254-THG254-03]; assesses=[] -->
@@ -55,7 +55,7 @@ One more word for this chapter.
 - [YOU SAY: *sambandhī*]
 - [YOU SAY: *sambandhī*, once more]
 - [YOU SAY: say *sambandhī*]
-- [YOU RECALL: say the Hindi for a, then the Hindi for a companion, then say *sambandhī* again]
+- [YOU RECALL: say the Hindi for a female friend, then the Hindi for a companion, then say *sambandhī* again]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C254-THG254-03, HI-LEX-C254-THG254-01, HI-LEX-C254-THG254-02] -->

@@ -1,15 +1,15 @@
 {
   "chapter": 254,
-  "title": "A, A companion, A relative, A mother-in-law, A father-in-law",
-  "label": "ch:hi-a-a-companion-a-relative-a-mother-in-law-a-father-in-law",
-  "canDo": "I can say a, a companion, a relative, a mother-in-law and a father-in-law.",
+  "title": "A female friend, A companion, A relative, A mother-in-law, A father-in-law",
+  "label": "ch:hi-a-female-friend-a-companion-a-relative-a-mother-in-law-a-father-in-law",
+  "canDo": "I can say a female friend, a companion, a relative, a mother-in-law and a father-in-law.",
   "spineNodes": [
     "SPINE-NAME-EVERYDAY-THINGS"
   ],
   "payoff": {
     "lesson": "HI-C254-sasur",
     "kind": "production",
-    "summary": "Complete the last lesson of chapter 254: I can say a, a companion, a relative, a mother-in-law and a father-in-law.",
+    "summary": "Complete the last lesson of chapter 254: I can say a female friend, a companion, a relative, a mother-in-law and a father-in-law.",
     "assesses": [
       "HI-LEX-C254-THG254-03",
       "HI-LEX-C254-THG254-04",

@@ -36,7 +36,7 @@ reviews_of: [HI-C254-saheli]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C253-THG253-05, HI-LEX-C254-THG254-01] -->
 
-[PAUSE 2s] Before the new one: say the Hindi for a baby, then the Hindi for a.
+[PAUSE 2s] Before the new one: say the Hindi for a baby, then the Hindi for a female friend.
 
 ## You'll want to know: साथी
 <!-- hl-knowledge: introduces=[HI-LEX-C254-THG254-02]; assesses=[] -->
@@ -55,7 +55,7 @@ One more word for this chapter.
 - [YOU SAY: *sāthī*]
 - [YOU SAY: *sāthī*, once more]
 - [YOU SAY: say *sāthī*]
-- [YOU RECALL: say the Hindi for a baby, then the Hindi for a, then say *sāthī* again]
+- [YOU RECALL: say the Hindi for a baby, then the Hindi for a female friend, then say *sāthī* again]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C254-THG254-02, HI-LEX-C253-THG253-05, HI-LEX-C254-THG254-01] -->
