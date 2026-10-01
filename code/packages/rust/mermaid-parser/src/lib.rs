@@ -4607,13 +4607,9 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                 "wavy" => diagram_ir::TreemapTextDecorationStyle::Wavy,
                 _ => return Err(token_error(token, "unsupported treemap text-decoration-style")),
             }),
-            "text-decoration-thickness" => {
-                let thickness = value.strip_suffix("px")
-                    .ok_or_else(|| token_error(token, "treemap text-decoration-thickness requires pixels"))?;
-                style.text_decoration_thickness = Some(thickness.trim().parse::<f64>().ok()
-                    .filter(|value| value.is_finite() && *value > 0.0)
-                    .ok_or_else(|| token_error(token, "invalid treemap text-decoration-thickness"))?);
-            }
+            "text-decoration-thickness" => style.text_decoration_thickness = Some(
+                parse_treemap_text_decoration_thickness(token, value)?
+            ),
             "line-height" => style.line_height = Some(parse_treemap_line_height(token, value)?),
             _ => merge_treemap_node_style(&mut style.node, &parse_block_style(token, declaration)?),
         }
@@ -4624,6 +4620,30 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
 fn parse_treemap_opacity(token: &Token, source: &str) -> Result<f64, ParseError> {
     source.parse::<f64>().ok().filter(|value| value.is_finite() && (0.0..=1.0).contains(value))
         .ok_or_else(|| token_error(token, "treemap opacity must be between 0 and 1"))
+}
+
+fn parse_treemap_text_decoration_thickness(
+    token: &Token,
+    source: &str,
+) -> Result<diagram_ir::TreemapTextDecorationThickness, ParseError> {
+    match source.to_ascii_lowercase().as_str() {
+        "auto" => Ok(diagram_ir::TreemapTextDecorationThickness::Auto),
+        "from-font" => Ok(diagram_ir::TreemapTextDecorationThickness::FromFont),
+        _ => {
+            let (number, percentage) = source.strip_suffix('%').map_or_else(
+                || (source.strip_suffix("px"), false),
+                |number| (Some(number), true),
+            );
+            let value = number.and_then(|number| number.trim().parse::<f64>().ok())
+                .filter(|value| value.is_finite() && *value > 0.0)
+                .ok_or_else(|| token_error(token, "invalid treemap text-decoration-thickness"))?;
+            Ok(if percentage {
+                diagram_ir::TreemapTextDecorationThickness::Factor(value / 100.0)
+            } else {
+                diagram_ir::TreemapTextDecorationThickness::Pixels(value)
+            })
+        }
+    }
 }
 
 fn parse_treemap_line_height(token: &Token, source: &str) -> Result<diagram_ir::TreemapLineHeight, ParseError> {
@@ -14182,7 +14202,7 @@ B//-A: reverse stick top
         }));
         assert_eq!(style.text_decoration_color.as_deref(), Some("#2563eb"));
         assert_eq!(style.text_decoration_style, Some(diagram_ir::TreemapTextDecorationStyle::Wavy));
-        assert_eq!(style.text_decoration_thickness, Some(3.0));
+        assert_eq!(style.text_decoration_thickness, Some(diagram_ir::TreemapTextDecorationThickness::Pixels(3.0)));
         assert_eq!(style.line_height, Some(diagram_ir::TreemapLineHeight::Factor(1.5)));
     }
 
@@ -14196,9 +14216,23 @@ B//-A: reverse stick top
 
     #[test]
     fn treemap_rejects_invalid_text_decoration_thickness() {
-        for value in ["0", "2em", "thick"] {
+        for value in ["0", "0px", "0%", "2em", "thick"] {
             let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-decoration-thickness:{value}");
             assert!(parse_treemap(&source).is_err());
+        }
+    }
+
+    #[test]
+    fn treemap_parses_text_decoration_thickness_forms() {
+        for (value, expected) in [
+            ("auto", diagram_ir::TreemapTextDecorationThickness::Auto),
+            ("from-font", diagram_ir::TreemapTextDecorationThickness::FromFont),
+            ("2.5px", diagram_ir::TreemapTextDecorationThickness::Pixels(2.5)),
+            ("12.5%", diagram_ir::TreemapTextDecorationThickness::Factor(0.125)),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-decoration:underline,text-decoration-thickness:{value}");
+            let diagram = parse_treemap(&source).expect("supported decoration thickness must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_decoration_thickness), Some(expected));
         }
     }
 

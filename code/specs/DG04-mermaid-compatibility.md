@@ -534,8 +534,8 @@ font weights resolve against the default weight and `oblique` font style lowers
 through the existing backend-neutral italic face selection. Class text alignment and
 none/upper/lower/capitalize/full-width transforms and none/underline/overline/line-through
 decoration combinations, including independently authored decoration colors,
-solid/double/dotted/dashed/wavy decoration styles, and pixel decoration
-thicknesses also survive into shaped
+solid/double/dotted/dashed/wavy decoration styles, and auto, from-font, pixel,
+and percentage decoration thicknesses also survive into shaped
 glyph runs. Normal, unitless,
 percentage, and pixel line heights flow through the same text layout path.
 All twelve `cScale`,
