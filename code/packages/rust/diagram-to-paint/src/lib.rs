@@ -44,7 +44,10 @@ use diagram_ir::{
     GanttTaskTags, SequenceProperty, SwimlaneEdgeKind, TextAlign as GeoTextAlign, TreeViewNodeKind,
     RailroadElementKind, StructuralNodeKind,
 };
-use layout_ir::{Color, Content, FontSpec, PositionedNode, TextAlign, TextContent};
+use layout_ir::{
+    Color, Content, FontSpec, PositionedNode, TextAlign, TextContent, TextDecoration,
+    TextDecorationLines, TextDecorationStyle,
+};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
 use paint_instructions::{
     GlyphPosition, PaintBase, PaintEllipse, PaintGlyphRun, PaintGroup, PaintInstruction, PaintPath,
@@ -314,6 +317,15 @@ fn treemap_text_node(
             Some(diagram_ir::TreemapTextAlign::End) => TextAlign::End,
             _ => TextAlign::Center,
         };
+        content.decoration = style.and_then(|style| style.text_decoration).and_then(|decoration| {
+            let mut lines = TextDecorationLines::NONE;
+            if decoration.underline { lines = lines.union(TextDecorationLines::UNDERLINE); }
+            if decoration.overline { lines = lines.union(TextDecorationLines::OVERLINE); }
+            if decoration.line_through { lines = lines.union(TextDecorationLines::LINE_THROUGH); }
+            (lines != TextDecorationLines::NONE).then_some(TextDecoration {
+                lines, style: TextDecorationStyle::Solid, color: None,
+            })
+        });
     }
     node
 }
@@ -6822,6 +6834,9 @@ mod tests {
                     opacity: Some(0.8), fill_opacity: Some(0.5), stroke_opacity: Some(0.5), stroke_dash_offset: Some(-1.0),
                     text_align: Some(diagram_ir::TreemapTextAlign::End),
                     text_transform: Some(diagram_ir::TreemapTextTransform::Uppercase),
+                    text_decoration: Some(diagram_ir::TreemapTextDecoration {
+                        underline: true, overline: true, line_through: true,
+                    }),
                 }),
             }],
         };
@@ -6831,8 +6846,12 @@ mod tests {
             Color { r: 0, g: 0, b: 0, a: 255 }, layout.nodes[0].style.as_ref(),
         );
         assert!(matches!(styled_text.content,
-            Some(Content::Text(TextContent { value, text_align: TextAlign::End, .. }))
-                if value == "STYLED NODE"));
+            Some(Content::Text(TextContent { value, text_align: TextAlign::End,
+                decoration: Some(TextDecoration { lines, .. }), .. }))
+                if value == "STYLED NODE"
+                    && lines.contains(TextDecorationLines::UNDERLINE)
+                    && lines.contains(TextDecorationLines::OVERLINE)
+                    && lines.contains(TextDecorationLines::LINE_THROUGH)));
 
         let scene = diagram_to_paint_treemap(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
