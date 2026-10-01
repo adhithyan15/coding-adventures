@@ -1482,7 +1482,7 @@ pub struct TreemapStyle {
     pub text_align: Option<TreemapTextAlign>,
     pub text_transform: Option<TreemapTextTransform>,
     pub text_decoration: Option<TreemapTextDecoration>,
-    pub text_decoration_color: Option<String>,
+    pub text_decoration_color: Option<TreemapTextDecorationColor>,
     pub text_decoration_style: Option<TreemapTextDecorationStyle>,
     pub text_decoration_thickness: Option<TreemapTextDecorationThickness>,
     pub text_underline_offset: Option<TreemapTextUnderlineOffset>,
@@ -1504,6 +1504,9 @@ pub struct TreemapTextDecoration {
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum TreemapTextDecorationStyle { Solid, Double, Dotted, Dashed, Wavy }
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum TreemapTextDecorationColor { CurrentColor, Color(String) }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum TreemapTextDecorationThickness { Auto, FromFont, Pixels(f64), Factor(f64) }

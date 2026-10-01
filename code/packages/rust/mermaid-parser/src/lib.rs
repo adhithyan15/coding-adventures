@@ -4583,7 +4583,12 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
             "text-decoration-line" => style.text_decoration = Some(
                 parse_treemap_text_decoration_line(token, value)?
             ),
-            "text-decoration-color" if !value.is_empty() => style.text_decoration_color = Some(value.into()),
+            "text-decoration-color" if value.eq_ignore_ascii_case("currentcolor") => {
+                style.text_decoration_color = Some(diagram_ir::TreemapTextDecorationColor::CurrentColor);
+            }
+            "text-decoration-color" if !value.is_empty() => {
+                style.text_decoration_color = Some(diagram_ir::TreemapTextDecorationColor::Color(value.into()));
+            }
             "text-decoration-color" => return Err(token_error(token, "treemap text-decoration-color cannot be empty")),
             "text-decoration-style" => style.text_decoration_style = Some(match value.to_ascii_lowercase().as_str() {
                 "solid" => diagram_ir::TreemapTextDecorationStyle::Solid,
@@ -4658,7 +4663,13 @@ fn parse_treemap_text_decoration(
         return Err(token_error(token, "unsupported treemap text-decoration: shorthand requires a line"));
     }
     style.text_decoration = Some(decoration);
-    style.text_decoration_color = color;
+    style.text_decoration_color = color.map(|value| {
+        if value.eq_ignore_ascii_case("currentcolor") {
+            diagram_ir::TreemapTextDecorationColor::CurrentColor
+        } else {
+            diagram_ir::TreemapTextDecorationColor::Color(value)
+        }
+    });
     style.text_decoration_style = Some(decoration_style.unwrap_or(diagram_ir::TreemapTextDecorationStyle::Solid));
     style.text_decoration_thickness = Some(thickness.unwrap_or(diagram_ir::TreemapTextDecorationThickness::Auto));
     Ok(())
@@ -14290,7 +14301,7 @@ B//-A: reverse stick top
         assert_eq!(style.text_decoration, Some(diagram_ir::TreemapTextDecoration {
             underline: true, overline: true, line_through: true,
         }));
-        assert_eq!(style.text_decoration_color.as_deref(), Some("#2563eb"));
+        assert_eq!(style.text_decoration_color, Some(diagram_ir::TreemapTextDecorationColor::Color("#2563eb".into())));
         assert_eq!(style.text_decoration_style, Some(diagram_ir::TreemapTextDecorationStyle::Wavy));
         assert_eq!(style.text_decoration_thickness, Some(diagram_ir::TreemapTextDecorationThickness::Pixels(3.0)));
         assert_eq!(style.text_underline_offset, Some(diagram_ir::TreemapTextUnderlineOffset::Factor(0.25)));
@@ -14315,7 +14326,7 @@ B//-A: reverse stick top
             underline: true, overline: true, line_through: false,
         }));
         assert_eq!(style.text_decoration_style, Some(diagram_ir::TreemapTextDecorationStyle::Wavy));
-        assert_eq!(style.text_decoration_color.as_deref(), Some("#2563eb"));
+        assert_eq!(style.text_decoration_color, Some(diagram_ir::TreemapTextDecorationColor::Color("#2563eb".into())));
         assert_eq!(style.text_decoration_thickness, Some(diagram_ir::TreemapTextDecorationThickness::Factor(0.125)));
 
         let none = parse_treemap(
@@ -14337,6 +14348,15 @@ B//-A: reverse stick top
         assert!(parse_treemap(
             "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-decoration-line:none underline",
         ).is_err());
+    }
+
+    #[test]
+    fn treemap_preserves_current_decoration_color_semantics() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-decoration:underline,text-decoration-color:currentColor",
+        ).expect("currentColor must parse");
+        assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_decoration_color.clone()),
+            Some(diagram_ir::TreemapTextDecorationColor::CurrentColor));
     }
 
     #[test]

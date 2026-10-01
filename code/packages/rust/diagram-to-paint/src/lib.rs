@@ -341,9 +341,12 @@ fn treemap_text_node(
             if decoration.underline { lines = lines.union(TextDecorationLines::UNDERLINE); }
             if decoration.overline { lines = lines.union(TextDecorationLines::OVERLINE); }
             if decoration.line_through { lines = lines.union(TextDecorationLines::LINE_THROUGH); }
-            let decoration_color = style.and_then(|style| style.text_decoration_color.as_deref())
-                .map(css_to_color)
-                .map(|color| color_with_opacity(color, style.and_then(|style| style.opacity).unwrap_or(1.0)));
+            let decoration_color = style.and_then(|style| style.text_decoration_color.as_ref()).map(|authored| match authored {
+                diagram_ir::TreemapTextDecorationColor::CurrentColor => color,
+                diagram_ir::TreemapTextDecorationColor::Color(value) => color_with_opacity(
+                    css_to_color(value), style.and_then(|style| style.opacity).unwrap_or(1.0),
+                ),
+            });
             let decoration_style = match style.and_then(|style| style.text_decoration_style) {
                 Some(diagram_ir::TreemapTextDecorationStyle::Double) => TextDecorationStyle::Double,
                 Some(diagram_ir::TreemapTextDecorationStyle::Dotted) => TextDecorationStyle::Dotted,
@@ -6876,7 +6879,7 @@ mod tests {
                     text_decoration: Some(diagram_ir::TreemapTextDecoration {
                         underline: true, overline: true, line_through: true,
                     }),
-                    text_decoration_color: Some("#2563eb".into()),
+                    text_decoration_color: Some(diagram_ir::TreemapTextDecorationColor::Color("#2563eb".into())),
                     text_decoration_style: Some(diagram_ir::TreemapTextDecorationStyle::Wavy),
                     text_decoration_thickness: Some(diagram_ir::TreemapTextDecorationThickness::Factor(0.25)),
                     text_underline_offset: Some(diagram_ir::TreemapTextUnderlineOffset::Factor(0.25)),
@@ -6898,6 +6901,18 @@ mod tests {
                     && lines.contains(TextDecorationLines::OVERLINE)
                     && lines.contains(TextDecorationLines::LINE_THROUGH)
                     && decoration_color == (Color { r: 37, g: 99, b: 235, a: 204 })));
+        let mut current_color_style = layout.nodes[0].style.clone().expect("treemap style");
+        current_color_style.text_decoration_color =
+            Some(diagram_ir::TreemapTextDecorationColor::CurrentColor);
+        let current_color = Color { r: 12, g: 34, b: 56, a: 78 };
+        let current_color_text = treemap_text_node(
+            "Current color", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&current_color_style),
+        );
+        assert!(matches!(current_color_text.content,
+            Some(Content::Text(TextContent {
+                decoration: Some(TextDecoration { color: Some(color), .. }), ..
+            })) if color == current_color));
         let mut styled_font = opts.label_font.clone();
         styled_font.size = 16.0;
         apply_treemap_line_height(&mut styled_font, layout.nodes[0].style.as_ref());
