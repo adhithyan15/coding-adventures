@@ -8,6 +8,7 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../PaintInstructions"),
+        .package(path: "../sha256"),
     ],
     targets: [
         .target(
@@ -17,7 +18,11 @@ let package = Package(
         ),
         .testTarget(
             name: "BarcodeLayout1DTests",
-            dependencies: ["BarcodeLayout1D", "PaintInstructions"],
+            dependencies: [
+                "BarcodeLayout1D",
+                "PaintInstructions",
+                .product(name: "SHA256", package: "sha256"),
+            ],
             path: "Tests/BarcodeLayout1DTests"
         ),
     ]
