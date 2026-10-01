@@ -3555,6 +3555,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a variable-free literal string predicate may discard a
+    // changing leaf while leaving a known recurrence selector stable.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, limit; boolean choose; n := 3; limit := 3; choose := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else limit + 1; choose := if 'ALPHA' < 'BETA' then choose else false end; print(i + 0.25) end",
+        expect: Expect::Stdout("3.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — an unchanged known scalar may select the preserving leaf of
     // a conditional assignment to the known transitive selector.
     Prog {
@@ -15789,6 +15798,32 @@ fn algol_static_conditional_selector_assignment_runs_on_every_available_standard
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the static conditional selector assignment did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_predicate_preserving_selector_assignments_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "choose := if 'ALPHA' < 'BETA' then choose else false end; print(i + 0.25)",
+                )
+        })
+        .expect("the literal-string-predicate preserving selector assignment must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-predicate preserving selector assignment did not run"
             );
             continue;
         };

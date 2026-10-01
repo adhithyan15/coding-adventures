@@ -14484,6 +14484,25 @@ mod tests {
     }
 
     #[test]
+    fn al4_literal_string_predicate_selector_assignment_selects_preserving_leaf() {
+        compile_source(
+            "begin integer i, n, limit; boolean choose; n := 3; limit := 3; choose := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else limit + 1; choose := if 'ALPHA' < 'BETA' then choose else false end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("a literal string predicate may select the preserving selector-assignment leaf");
+    }
+
+    #[test]
+    fn al4_false_literal_string_predicate_selector_assignment_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, limit; boolean choose; n := 3; limit := 3; choose := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else limit + 1; choose := if 'BETA' < 'ALPHA' then choose else false end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a literal string predicate that selects a changing leaf must stay conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
     fn al4_stable_conditional_selector_assignment_selects_preserving_leaf() {
         compile_source(
             "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0 end; print(i + 0.25) end",
