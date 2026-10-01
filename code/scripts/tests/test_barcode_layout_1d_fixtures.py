@@ -7,6 +7,7 @@ import json
 import math
 import os
 import runpy
+import subprocess
 import unittest
 from itertools import pairwise
 from pathlib import Path
@@ -289,7 +290,7 @@ class BarcodeLayoutFixtureTests(unittest.TestCase):
         ]["metadata"]
         self.assertEqual(len(metadata_limit), 74)
 
-    def test_target_registry_is_complete_but_claims_no_conformance_yet(self) -> None:
+    def test_target_registry_lifecycle_and_repository_evidence(self) -> None:
         target_schema = _read_bounded(FIXTURE_ROOT / "targets.schema.json")
         targets = _load(target_schema, _read_bounded(FIXTURE_ROOT / "targets.json"))
         entries = targets["targets"]
@@ -307,16 +308,136 @@ class BarcodeLayoutFixtureTests(unittest.TestCase):
             },
         )
         self.assertEqual(len(entries), 8)
-        self.assertTrue(all(entry["status"] == "pending-adoption" for entry in entries))
+        corpus_digest = hashlib.sha256(self.document_encoded).hexdigest()
+        self.assertEqual(
+            corpus_digest,
+            "be95aa0381041ef3bd729b36bb4292f7a20692e139b53adca97af4e157cb7388",
+        )
+        capability_schema = json.loads(
+            (
+                REPO_ROOT
+                / "code/specs/schemas/required_capabilities.schema.json"
+            ).read_text(encoding="utf-8")
+        )
+        active_pr = json.loads(
+            (REPO_ROOT / ".claude/package-parity-loop-state.json").read_text(
+                encoding="utf-8"
+            )
+        )["active_pr"]
         for entry in entries:
-            self.assertTrue((REPO_ROOT / entry["package_root"]).is_dir())
+            package_root = REPO_ROOT / entry["package_root"]
+            self.assertTrue(package_root.is_dir())
             self.assertTrue((REPO_ROOT / entry["native_test_path"]).is_file())
-            self.assertTrue(entry["known_divergences"])
+            self.assertEqual(
+                entry["package_root"],
+                f"code/packages/{entry['language']}/barcode-layout-1d",
+            )
+            if entry["status"] == "pending-adoption":
+                self.assertTrue(entry["known_divergences"])
+                self.assertIn("planned_conformance_test_path", entry)
+                continue
+
+            self.assertEqual(entry["status"], "conformant")
+            self.assertEqual(entry["known_divergences"], [])
+            self.assertEqual(entry["corpus_sha256"], corpus_digest)
+            conformance_path = REPO_ROOT / entry["conformance_test_path"]
+            self.assertTrue(conformance_path.is_file())
+            capability_path = REPO_ROOT / entry["capability_manifest"]
+            self.assertTrue(capability_path.is_file())
+            capability = json.loads(capability_path.read_text(encoding="utf-8"))
+            Draft202012Validator(capability_schema).validate(capability)
+            self.assertEqual(
+                capability["package"], f"{entry['language']}/barcode-layout-1d"
+            )
+            self.assertEqual(capability["capabilities"], [])
+            evidence = entry["zero_authority_evidence"]
+            self.assertEqual(evidence["test_path"], entry["conformance_test_path"])
+            self.assertEqual(
+                set(evidence["assertions"]),
+                {
+                    "text-value-fails-before-native-resolution",
+                    "text-enabled-fails-before-native-resolution",
+                },
+            )
+            self.assertIsNotNone(active_pr)
+            self.assertEqual(entry["adoption_pr"], active_pr["number"])
+            revision = entry["verified_revision"]
+            subprocess.run(
+                ["git", "cat-file", "-e", f"{revision}^{{commit}}"],
+                cwd=REPO_ROOT,
+                check=True,
+                capture_output=True,
+            )
+            for relative_path in (
+                entry["conformance_test_path"],
+                entry["capability_manifest"],
+            ):
+                committed = subprocess.run(
+                    ["git", "show", f"{revision}:{relative_path}"],
+                    cwd=REPO_ROOT,
+                    check=True,
+                    capture_output=True,
+                ).stdout
+                self.assertEqual(committed, (REPO_ROOT / relative_path).read_bytes())
+
+    def test_target_registry_rejects_untruthful_lifecycle_evidence(self) -> None:
+        target_schema = _read_bounded(FIXTURE_ROOT / "targets.schema.json")
+        targets = _load(target_schema, _read_bounded(FIXTURE_ROOT / "targets.json"))
+
+        pending_with_evidence = json.loads(json.dumps(targets))
+        pending_with_evidence["targets"][0]["corpus_sha256"] = (
+            "be95aa0381041ef3bd729b36bb4292f7a20692e139b53adca97af4e157cb7388"
+        )
+        with self.assertRaisesRegex(FixtureLoadError, "fixture-schema-invalid"):
+            _load(target_schema, json.dumps(pending_with_evidence).encode())
 
         promoted = json.loads(json.dumps(targets))
-        promoted["targets"][0]["status"] = "conformant"
-        with self.assertRaisesRegex(FixtureLoadError, "fixture-schema-invalid"):
-            _load(target_schema, json.dumps(promoted).encode())
+        target = promoted["targets"][0]
+        target["status"] = "conformant"
+        target["conformance_test_path"] = target.pop(
+            "planned_conformance_test_path"
+        )
+        target["known_divergences"] = []
+        target["verified_revision"] = "a" * 40
+        target["corpus_sha256"] = (
+            "be95aa0381041ef3bd729b36bb4292f7a20692e139b53adca97af4e157cb7388"
+        )
+        target["adoption_pr"] = 1
+        target["zero_authority_evidence"] = {
+            "test_path": target["conformance_test_path"],
+            "assertions": [
+                "text-value-fails-before-native-resolution",
+                "text-enabled-fails-before-native-resolution",
+            ],
+        }
+        _load(target_schema, json.dumps(promoted).encode())
+
+        mutations = []
+        wrong_digest = json.loads(json.dumps(promoted))
+        wrong_digest["targets"][0]["corpus_sha256"] = "0" * 64
+        mutations.append(wrong_digest)
+        divergence = json.loads(json.dumps(promoted))
+        divergence["targets"][0]["known_divergences"] = ["still divergent"]
+        mutations.append(divergence)
+        wrong_root = json.loads(json.dumps(promoted))
+        wrong_root["targets"][0]["package_root"] = (
+            "code/packages/fsharp/barcode-layout-1d"
+        )
+        mutations.append(wrong_root)
+        free_text = json.loads(json.dumps(promoted))
+        free_text["targets"][0]["zero_authority_evidence"] = "trust me"
+        mutations.append(free_text)
+        planned = json.loads(json.dumps(promoted))
+        planned["targets"][0]["planned_conformance_test_path"] = (
+            planned["targets"][0]["conformance_test_path"]
+        )
+        mutations.append(planned)
+        for mutation in mutations:
+            with self.subTest(mutation=mutation["targets"][0]):
+                with self.assertRaisesRegex(
+                    FixtureLoadError, "fixture-schema-invalid"
+                ):
+                    _load(target_schema, json.dumps(mutation).encode())
 
     def test_generator_is_byte_for_byte_clean(self) -> None:
         namespace = runpy.run_path(str(FIXTURE_ROOT / "generate_cases.py"))
