@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C238-voler",
+    "language": "french",
+    "chapter": 238,
+    "sequence": 13680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e5b3c363219697e7"
+  },
+  "findings": []
+}

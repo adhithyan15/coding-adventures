@@ -1,0 +1,21 @@
+{
+  "language": "french",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:cef9c991e82e5bf1",
+  "lessonIds": [
+    "FR-C250-etranger",
+    "FR-C250-touriste",
+    "FR-C250-adulte",
+    "FR-C250-personne-agee",
+    "FR-C250-jumeau",
+    "FR-R250-first-pass-words-from-chapters-242-245",
+    "FR-R250-second-pass-words-from-chapters-246-250"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "french/narration/ch250.txt",
+  "json": "french/narration/ch250.json",
+  "textHash": "fnv1a64:06fb8a9d844ed942",
+  "jsonHash": "fnv1a64:9a533526acf8d75a",
+  "findings": []
+}

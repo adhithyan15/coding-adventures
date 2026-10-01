@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C245-pret-prete",
+    "language": "french",
+    "chapter": 245,
+    "sequence": 14210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4558f4e13f3830e5"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:b29fa1a8a33b1b80",
+  "lessonIds": [
+    "FR-C237-manquer",
+    "FR-C237-meriter",
+    "FR-C237-ameliorer",
+    "FR-C237-empirer",
+    "FR-C237-offrir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch237.txt",
+  "json": "french/narration/ch237.json",
+  "textHash": "fnv1a64:cea5611e6ee56b75",
+  "jsonHash": "fnv1a64:fc9e1cea9f50742f",
+  "findings": []
+}

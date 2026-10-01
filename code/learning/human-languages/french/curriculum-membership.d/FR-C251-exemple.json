@@ -1,0 +1,11 @@
+{
+  "id": "FR-C251-exemple",
+  "pathSegment": "FR-PATH-251-CHOSES251",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-251-CHOSES251",
+      "order": 2
+    }
+  ]
+}

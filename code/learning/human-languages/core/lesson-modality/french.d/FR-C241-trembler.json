@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C241-trembler",
+    "language": "french",
+    "chapter": 241,
+    "sequence": 13800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:919df8be529dd081"
+  },
+  "findings": []
+}

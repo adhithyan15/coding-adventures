@@ -1,0 +1,19 @@
+{
+  "chapter": 252,
+  "title": "Tax, Form, Envelope, Stamp, Parcel",
+  "label": "ch:fr-tax-form-envelope-stamp-parcel",
+  "canDo": "I can say a tax, a form, an envelope, a stamp and a parcel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C252-colis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 252: I can say a tax, a form, an envelope, a stamp and a parcel.",
+    "assesses": [
+      "FR-LEX-C252-CHOSES252-03",
+      "FR-LEX-C252-CHOSES252-04",
+      "FR-LEX-C252-CHOSES252-05"
+    ]
+  }
+}

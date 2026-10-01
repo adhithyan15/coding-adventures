@@ -1,0 +1,19 @@
+{
+  "chapter": 250,
+  "title": "Foreigner, Tourist, Adult, Elderly person, Twin",
+  "label": "ch:fr-foreigner-tourist-adult-elderly-person-twin",
+  "canDo": "I can say a foreigner, a tourist, an adult, an elderly person and a twin.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-R250-second-pass-words-from-chapters-246-250",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 250: I can say a foreigner, a tourist, an adult, an elderly person and a twin.",
+    "assesses": [
+      "FR-LEX-C250-CHOSES250-03",
+      "FR-LEX-C250-CHOSES250-04",
+      "FR-LEX-C250-CHOSES250-05"
+    ]
+  }
+}

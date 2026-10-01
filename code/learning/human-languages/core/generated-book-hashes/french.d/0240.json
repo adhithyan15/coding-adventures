@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:c6f59ae2b667ea89",
+  "lessonIds": [
+    "FR-C240-insister",
+    "FR-C240-interrompre",
+    "FR-C240-attacher",
+    "FR-C240-melanger",
+    "FR-C240-obeir"
+  ],
+  "tex": "french/book/chapters/ch240-to-insist-to-interrupt-to-tie-to-mix-to-obey.tex"
+}

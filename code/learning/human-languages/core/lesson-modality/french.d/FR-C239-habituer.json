@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C239-habituer",
+    "language": "french",
+    "chapter": 239,
+    "sequence": 13710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b1572cef9582594e"
+  },
+  "findings": []
+}

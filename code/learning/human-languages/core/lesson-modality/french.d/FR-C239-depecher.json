@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C239-depecher",
+    "language": "french",
+    "chapter": 239,
+    "sequence": 13730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:26c0aaa0b58e3d39"
+  },
+  "findings": []
+}

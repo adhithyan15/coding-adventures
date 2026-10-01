@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C235-reveiller",
+    "language": "french",
+    "chapter": 235,
+    "sequence": 13520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad5ae44b010a8112"
+  },
+  "findings": []
+}

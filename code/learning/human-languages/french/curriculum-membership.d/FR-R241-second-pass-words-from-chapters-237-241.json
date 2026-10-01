@@ -1,0 +1,11 @@
+{
+  "id": "FR-R241-second-pass-words-from-chapters-237-241",
+  "pathSegment": "FR-PATH-241-VERBES241",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "FR-EXT-241-VERBES241",
+      "order": 6
+    }
+  ]
+}

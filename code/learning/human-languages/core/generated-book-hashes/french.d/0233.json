@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:37370cdbc943ef64",
+  "lessonIds": [
+    "FR-C233-repasser",
+    "FR-C233-reparer",
+    "FR-C233-construire",
+    "FR-C233-photographier",
+    "FR-C233-repeter"
+  ],
+  "tex": "french/book/chapters/ch233-to-iron-to-repair-to-build-to-photograph-to-repeat.tex"
+}

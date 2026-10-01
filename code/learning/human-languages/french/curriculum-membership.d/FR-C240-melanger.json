@@ -1,0 +1,11 @@
+{
+  "id": "FR-C240-melanger",
+  "pathSegment": "FR-PATH-240-VERBES240",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-240-VERBES240",
+      "order": 3
+    }
+  ]
+}

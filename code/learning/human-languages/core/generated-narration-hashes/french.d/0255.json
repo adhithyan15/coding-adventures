@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:c2a3494c076c7206",
+  "lessonIds": [
+    "FR-C255-dechets",
+    "FR-C255-recyclage",
+    "FR-C255-energie",
+    "FR-C255-electricite",
+    "FR-C255-gaz"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch255.txt",
+  "json": "french/narration/ch255.json",
+  "textHash": "fnv1a64:58ad40dbf6a90495",
+  "jsonHash": "fnv1a64:ef98418983e272f8",
+  "findings": []
+}

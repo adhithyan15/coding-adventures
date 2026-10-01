@@ -1,0 +1,19 @@
+{
+  "chapter": 235,
+  "title": "To move house, To rent, To rest, To wake up, To do one's hair",
+  "label": "ch:fr-to-move-house-to-rent-to-rest-to-wake-up-to-do-one-s-hair",
+  "canDo": "I can say to move house, to rent, to rest, to wake up and to do one's hair.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C235-coiffer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 235: I can say to move house, to rent, to rest, to wake up and to do one's hair.",
+    "assesses": [
+      "FR-LEX-C235-VERBES235-03",
+      "FR-LEX-C235-VERBES235-04",
+      "FR-LEX-C235-VERBES235-05"
+    ]
+  }
+}

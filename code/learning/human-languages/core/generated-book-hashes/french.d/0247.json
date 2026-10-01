@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:9e5bd90356863a16",
+  "lessonIds": [
+    "FR-C247-addition",
+    "FR-C247-pourboire",
+    "FR-C247-arret",
+    "FR-C247-moto",
+    "FR-C247-quai"
+  ],
+  "tex": "french/book/chapters/ch247-bill-tip-stop-motorbike-platform.tex"
+}

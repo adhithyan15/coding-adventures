@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C252-colis",
+    "language": "french",
+    "chapter": 252,
+    "sequence": 14760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a4ff4ef8cc23a28"
+  },
+  "findings": []
+}

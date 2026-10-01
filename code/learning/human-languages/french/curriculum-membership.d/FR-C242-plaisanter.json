@@ -1,0 +1,11 @@
+{
+  "id": "FR-C242-plaisanter",
+  "pathSegment": "FR-PATH-242-VERBES242",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-242-VERBES242",
+      "order": 3
+    }
+  ]
+}

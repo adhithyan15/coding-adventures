@@ -1,0 +1,19 @@
+{
+  "chapter": 256,
+  "title": "Tool, Guitar, Piano, Violin, Drum",
+  "label": "ch:fr-tool-guitar-piano-violin-drum",
+  "canDo": "I can say a tool, a guitar, a piano, a violin and a drum.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C256-tambour",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 256: I can say a tool, a guitar, a piano, a violin and a drum.",
+    "assesses": [
+      "FR-LEX-C256-CHOSES256-03",
+      "FR-LEX-C256-CHOSES256-04",
+      "FR-LEX-C256-CHOSES256-05"
+    ]
+  }
+}

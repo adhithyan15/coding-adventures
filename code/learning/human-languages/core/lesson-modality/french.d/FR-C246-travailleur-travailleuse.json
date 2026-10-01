@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C246-travailleur-travailleuse",
+    "language": "french",
+    "chapter": 246,
+    "sequence": 14250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cddf1bc7e9ac1144"
+  },
+  "findings": []
+}

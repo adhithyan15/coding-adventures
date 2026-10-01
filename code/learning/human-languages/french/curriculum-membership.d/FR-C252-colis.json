@@ -1,0 +1,11 @@
+{
+  "id": "FR-C252-colis",
+  "pathSegment": "FR-PATH-252-CHOSES252",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-252-CHOSES252",
+      "order": 4
+    }
+  ]
+}

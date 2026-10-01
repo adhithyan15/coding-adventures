@@ -1,0 +1,19 @@
+{
+  "chapter": 233,
+  "title": "To iron, To repair, To build, To photograph, To repeat",
+  "label": "ch:fr-to-iron-to-repair-to-build-to-photograph-to-repeat",
+  "canDo": "I can say to iron, to repair, to build, to photograph and to repeat.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C233-repeter",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 233: I can say to iron, to repair, to build, to photograph and to repeat.",
+    "assesses": [
+      "FR-LEX-C233-VERBES233-03",
+      "FR-LEX-C233-VERBES233-04",
+      "FR-LEX-C233-VERBES233-05"
+    ]
+  }
+}

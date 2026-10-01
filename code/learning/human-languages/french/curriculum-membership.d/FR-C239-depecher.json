@@ -1,0 +1,11 @@
+{
+  "id": "FR-C239-depecher",
+  "pathSegment": "FR-PATH-239-VERBES239",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-239-VERBES239",
+      "order": 4
+    }
+  ]
+}

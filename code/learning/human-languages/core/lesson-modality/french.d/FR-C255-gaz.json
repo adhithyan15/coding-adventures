@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C255-gaz",
+    "language": "french",
+    "chapter": 255,
+    "sequence": 14910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:784d571e57825dc3"
+  },
+  "findings": []
+}

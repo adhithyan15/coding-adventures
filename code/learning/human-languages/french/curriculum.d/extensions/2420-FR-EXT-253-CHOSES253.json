@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-253-CHOSES253",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a driving licence, a helmet, a tunnel, a building site and a block of flats.",
+  "prerequisites": []
+}

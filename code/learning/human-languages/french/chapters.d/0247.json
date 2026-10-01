@@ -1,0 +1,19 @@
+{
+  "chapter": 247,
+  "title": "Bill, Tip, Stop, Motorbike, Platform",
+  "label": "ch:fr-bill-tip-stop-motorbike-platform",
+  "canDo": "I can say the bill, a tip, a stop, a motorbike and a platform.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C247-quai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 247: I can say the bill, a tip, a stop, a motorbike and a platform.",
+    "assesses": [
+      "FR-LEX-C247-CHOSES247-03",
+      "FR-LEX-C247-CHOSES247-04",
+      "FR-LEX-C247-CHOSES247-05"
+    ]
+  }
+}

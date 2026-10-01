@@ -1,0 +1,11 @@
+{
+  "id": "FR-C237-meriter",
+  "pathSegment": "FR-PATH-237-VERBES237",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-237-VERBES237",
+      "order": 1
+    }
+  ]
+}

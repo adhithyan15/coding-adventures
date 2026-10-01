@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C248-politique",
+    "language": "french",
+    "chapter": 248,
+    "sequence": 14360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9eb858c1f6e3ac09"
+  },
+  "findings": []
+}

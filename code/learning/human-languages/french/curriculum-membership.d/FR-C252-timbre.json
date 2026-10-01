@@ -1,0 +1,11 @@
+{
+  "id": "FR-C252-timbre",
+  "pathSegment": "FR-PATH-252-CHOSES252",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-252-CHOSES252",
+      "order": 3
+    }
+  ]
+}

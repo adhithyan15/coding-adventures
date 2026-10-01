@@ -1,0 +1,11 @@
+{
+  "id": "FR-C250-jumeau",
+  "pathSegment": "FR-PATH-250-CHOSES250",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-250-CHOSES250",
+      "order": 4
+    }
+  ]
+}

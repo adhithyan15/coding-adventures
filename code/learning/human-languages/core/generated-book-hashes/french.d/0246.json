@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:df29cad7954746e7",
+  "lessonIds": [
+    "FR-C246-genereux-genereuse",
+    "FR-C246-paresseux-paresseuse",
+    "FR-C246-travailleur-travailleuse",
+    "FR-C246-bavard-bavarde",
+    "FR-C246-fache-fachee"
+  ],
+  "tex": "french/book/chapters/ch246-generous-lazy-hard-working-talkative-angry.tex"
+}

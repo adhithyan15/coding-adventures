@@ -1,0 +1,11 @@
+{
+  "id": "FR-C246-paresseux-paresseuse",
+  "pathSegment": "FR-PATH-246-QUAL246",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-246-QUAL246",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C236-frapper",
+  "pathSegment": "FR-PATH-236-VERBES236",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-236-VERBES236",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R257-second-pass-words-from-chapters-254-257",
+    "language": "french",
+    "chapter": 257,
+    "sequence": 15030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a739986242b4621"
+  },
+  "findings": []
+}

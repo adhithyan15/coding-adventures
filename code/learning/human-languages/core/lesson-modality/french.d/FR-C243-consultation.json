@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C243-consultation",
+    "language": "french",
+    "chapter": 243,
+    "sequence": 14110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:baa70c51de165818"
+  },
+  "findings": []
+}

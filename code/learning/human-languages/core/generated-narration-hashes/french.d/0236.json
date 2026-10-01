@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:23a23155e30f6fa4",
+  "lessonIds": [
+    "FR-C236-suffire",
+    "FR-C236-bruler",
+    "FR-C236-jeter",
+    "FR-C236-calculer",
+    "FR-C236-frapper"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch236.txt",
+  "json": "french/narration/ch236.json",
+  "textHash": "fnv1a64:73af780f39fb82dd",
+  "jsonHash": "fnv1a64:c22ab1d0295d3ff9",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:7d135ef2409d9191",
+  "lessonIds": [
+    "FR-C253-permis-de-conduire",
+    "FR-C253-casque",
+    "FR-C253-tunnel",
+    "FR-C253-chantier",
+    "FR-C253-immeuble"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch253.txt",
+  "json": "french/narration/ch253.json",
+  "textHash": "fnv1a64:7fc37e99bef7dcd2",
+  "jsonHash": "fnv1a64:0e8db4a74c53ae63",
+  "findings": []
+}

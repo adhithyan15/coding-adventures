@@ -1,0 +1,11 @@
+{
+  "id": "FR-C248-elections",
+  "pathSegment": "FR-PATH-248-CHOSES248",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-248-CHOSES248",
+      "order": 1
+    }
+  ]
+}

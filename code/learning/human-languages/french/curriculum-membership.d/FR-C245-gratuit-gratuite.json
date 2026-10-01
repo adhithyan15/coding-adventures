@@ -1,0 +1,11 @@
+{
+  "id": "FR-C245-gratuit-gratuite",
+  "pathSegment": "FR-PATH-245-QUAL245",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-245-QUAL245",
+      "order": 4
+    }
+  ]
+}

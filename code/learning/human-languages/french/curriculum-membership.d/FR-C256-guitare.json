@@ -1,0 +1,11 @@
+{
+  "id": "FR-C256-guitare",
+  "pathSegment": "FR-PATH-256-CHOSES256",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-256-CHOSES256",
+      "order": 1
+    }
+  ]
+}

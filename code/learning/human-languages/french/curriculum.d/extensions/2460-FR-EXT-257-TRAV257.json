@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-257-TRAV257",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say geography, mathematics, art, a team and a birthday.",
+  "prerequisites": []
+}

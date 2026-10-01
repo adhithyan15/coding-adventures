@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:924d282b6e05665c",
+  "lessonIds": [
+    "FR-C247-addition",
+    "FR-C247-pourboire",
+    "FR-C247-arret",
+    "FR-C247-moto",
+    "FR-C247-quai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch247.txt",
+  "json": "french/narration/ch247.json",
+  "textHash": "fnv1a64:67975d7b19e1cb2f",
+  "jsonHash": "fnv1a64:4737fd24d7a2e091",
+  "findings": []
+}

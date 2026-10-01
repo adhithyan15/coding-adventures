@@ -1,0 +1,11 @@
+{
+  "id": "FR-C257-art",
+  "pathSegment": "FR-PATH-257-TRAV257",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-257-TRAV257",
+      "order": 2
+    }
+  ]
+}

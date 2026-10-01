@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:0b92ba954e107843",
+  "lessonIds": [
+    "FR-C234-remplir",
+    "FR-C234-vider",
+    "FR-C234-mesurer",
+    "FR-C234-peser",
+    "FR-C234-verifier"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch234.txt",
+  "json": "french/narration/ch234.json",
+  "textHash": "fnv1a64:b118612052e78a08",
+  "jsonHash": "fnv1a64:f69ca83075fd89cd",
+  "findings": []
+}

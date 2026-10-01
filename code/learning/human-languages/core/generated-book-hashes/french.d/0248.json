@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:3c9ee54c18d5263e",
+  "lessonIds": [
+    "FR-C248-maire",
+    "FR-C248-elections",
+    "FR-C248-vote",
+    "FR-C248-politique",
+    "FR-C248-economie"
+  ],
+  "tex": "french/book/chapters/ch248-mayor-elections-vote-politics-economy.tex"
+}

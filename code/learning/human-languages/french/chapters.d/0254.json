@@ -1,0 +1,19 @@
+{
+  "chapter": 254,
+  "title": "Trunk, Thorn, Lawn, Path, Cave",
+  "label": "ch:fr-trunk-thorn-lawn-path-cave",
+  "canDo": "I can say a trunk, a thorn, a lawn, a path and a cave.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C254-grotte",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 254: I can say a trunk, a thorn, a lawn, a path and a cave.",
+    "assesses": [
+      "FR-LEX-C254-CHOSES254-03",
+      "FR-LEX-C254-CHOSES254-04",
+      "FR-LEX-C254-CHOSES254-05"
+    ]
+  }
+}

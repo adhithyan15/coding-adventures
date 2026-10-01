@@ -1,0 +1,11 @@
+{
+  "id": "FR-C254-epine",
+  "pathSegment": "FR-PATH-254-CHOSES254",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-254-CHOSES254",
+      "order": 1
+    }
+  ]
+}

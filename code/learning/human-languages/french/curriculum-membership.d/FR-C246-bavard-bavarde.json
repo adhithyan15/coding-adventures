@@ -1,0 +1,11 @@
+{
+  "id": "FR-C246-bavard-bavarde",
+  "pathSegment": "FR-PATH-246-QUAL246",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-246-QUAL246",
+      "order": 3
+    }
+  ]
+}

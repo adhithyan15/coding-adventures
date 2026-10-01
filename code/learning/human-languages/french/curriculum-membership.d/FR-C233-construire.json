@@ -1,0 +1,11 @@
+{
+  "id": "FR-C233-construire",
+  "pathSegment": "FR-PATH-233-VERBES233",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-233-VERBES233",
+      "order": 2
+    }
+  ]
+}

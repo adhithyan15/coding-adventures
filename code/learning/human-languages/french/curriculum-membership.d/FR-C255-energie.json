@@ -1,0 +1,11 @@
+{
+  "id": "FR-C255-energie",
+  "pathSegment": "FR-PATH-255-CHOSES255",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-255-CHOSES255",
+      "order": 2
+    }
+  ]
+}

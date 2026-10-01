@@ -1,0 +1,19 @@
+{
+  "chapter": 243,
+  "title": "Plaster, Emergency department, Emergency, Medical appointment, Diet",
+  "label": "ch:fr-plaster-emergency-department-emergency-medical-appointment-diet",
+  "canDo": "I can say a plaster, the emergency department, an emergency, a medical appointment and a diet.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FR-C243-regime",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 243: I can say a plaster, the emergency department, an emergency, a medical appointment and a diet.",
+    "assesses": [
+      "FR-LEX-C243-SANTE243-03",
+      "FR-LEX-C243-SANTE243-04",
+      "FR-LEX-C243-SANTE243-05"
+    ]
+  }
+}

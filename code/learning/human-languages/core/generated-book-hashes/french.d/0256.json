@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:326cdb89adc6f6d2",
+  "lessonIds": [
+    "FR-C256-outil",
+    "FR-C256-guitare",
+    "FR-C256-piano",
+    "FR-C256-violon",
+    "FR-C256-tambour"
+  ],
+  "tex": "french/book/chapters/ch256-tool-guitar-piano-violin-drum.tex"
+}

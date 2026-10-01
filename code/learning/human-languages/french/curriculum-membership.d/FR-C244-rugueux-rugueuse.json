@@ -1,0 +1,11 @@
+{
+  "id": "FR-C244-rugueux-rugueuse",
+  "pathSegment": "FR-PATH-244-QUAL244",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-244-QUAL244",
+      "order": 4
+    }
+  ]
+}

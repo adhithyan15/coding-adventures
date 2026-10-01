@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:f7874a3b6e366801",
+  "lessonIds": [
+    "FR-C244-silencieux-silencieuse",
+    "FR-C244-propre",
+    "FR-C244-dur-dure",
+    "FR-C244-lisse",
+    "FR-C244-rugueux-rugueuse"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch244.txt",
+  "json": "french/narration/ch244.json",
+  "textHash": "fnv1a64:3a18863b5af9d771",
+  "jsonHash": "fnv1a64:fe5b5ad2ea13cfa1",
+  "findings": []
+}

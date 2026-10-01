@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C237-ameliorer",
+    "language": "french",
+    "chapter": 237,
+    "sequence": 13610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10be95791e6b08dd"
+  },
+  "findings": []
+}

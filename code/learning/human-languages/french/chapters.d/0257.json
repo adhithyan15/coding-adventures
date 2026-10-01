@@ -1,0 +1,19 @@
+{
+  "chapter": 257,
+  "title": "Geography, Mathematics, Art, Team, Birthday",
+  "label": "ch:fr-geography-mathematics-art-team-birthday",
+  "canDo": "I can say geography, mathematics, art, a team and a birthday.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-R257-second-pass-words-from-chapters-254-257",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 257: I can say geography, mathematics, art, a team and a birthday.",
+    "assesses": [
+      "FR-LEX-C257-TRAV257-03",
+      "FR-LEX-C257-TRAV257-04",
+      "FR-LEX-C257-TRAV257-05"
+    ]
+  }
+}

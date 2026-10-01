@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:1755a00a6dbfe4aa",
+  "lessonIds": [
+    "FR-C254-tronc",
+    "FR-C254-epine",
+    "FR-C254-pelouse",
+    "FR-C254-sentier",
+    "FR-C254-grotte"
+  ],
+  "tex": "french/book/chapters/ch254-trunk-thorn-lawn-path-cave.tex"
+}

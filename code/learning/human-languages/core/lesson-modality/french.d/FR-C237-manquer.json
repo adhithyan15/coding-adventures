@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C237-manquer",
+    "language": "french",
+    "chapter": 237,
+    "sequence": 13590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25c99fc84550a329"
+  },
+  "findings": []
+}

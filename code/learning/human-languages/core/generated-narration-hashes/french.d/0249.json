@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:0c67df24ccd52e1d",
+  "lessonIds": [
+    "FR-C249-acteur",
+    "FR-C249-actrice",
+    "FR-C249-poeme",
+    "FR-C249-ecrivain",
+    "FR-C249-peintre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch249.txt",
+  "json": "french/narration/ch249.json",
+  "textHash": "fnv1a64:5a093a68007443cf",
+  "jsonHash": "fnv1a64:8036a2b6ed0323df",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C254-grotte",
+    "language": "french",
+    "chapter": 254,
+    "sequence": 14860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21fecf33cf55f33f"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C242-nourrir",
+    "language": "french",
+    "chapter": 242,
+    "sequence": 14040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b44d80c5901c5b1c"
+  },
+  "findings": []
+}

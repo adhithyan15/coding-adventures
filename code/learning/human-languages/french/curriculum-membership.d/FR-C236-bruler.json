@@ -1,0 +1,11 @@
+{
+  "id": "FR-C236-bruler",
+  "pathSegment": "FR-PATH-236-VERBES236",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-236-VERBES236",
+      "order": 1
+    }
+  ]
+}

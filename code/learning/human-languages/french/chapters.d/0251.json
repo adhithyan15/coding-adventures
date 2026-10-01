@@ -1,0 +1,19 @@
+{
+  "chapter": 251,
+  "title": "Result, Difference, Example, Truth, Lie",
+  "label": "ch:fr-result-difference-example-truth-lie",
+  "canDo": "I can say a result, a difference, an example, the truth and a lie.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C251-mensonge",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 251: I can say a result, a difference, an example, the truth and a lie.",
+    "assesses": [
+      "FR-LEX-C251-CHOSES251-03",
+      "FR-LEX-C251-CHOSES251-04",
+      "FR-LEX-C251-CHOSES251-05"
+    ]
+  }
+}

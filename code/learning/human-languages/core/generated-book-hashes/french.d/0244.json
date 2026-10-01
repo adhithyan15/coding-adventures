@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:66f5ee78355ad55b",
+  "lessonIds": [
+    "FR-C244-silencieux-silencieuse",
+    "FR-C244-propre",
+    "FR-C244-dur-dure",
+    "FR-C244-lisse",
+    "FR-C244-rugueux-rugueuse"
+  ],
+  "tex": "french/book/chapters/ch244-silent-clean-hard-smooth-rough.tex"
+}

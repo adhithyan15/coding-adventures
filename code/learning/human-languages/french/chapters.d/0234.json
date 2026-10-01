@@ -1,0 +1,19 @@
+{
+  "chapter": 234,
+  "title": "To fill, To empty, To measure, To weigh, To check",
+  "label": "ch:fr-to-fill-to-empty-to-measure-to-weigh-to-check",
+  "canDo": "I can say to fill, to empty, to measure, to weigh and to check.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C234-verifier",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 234: I can say to fill, to empty, to measure, to weigh and to check.",
+    "assesses": [
+      "FR-LEX-C234-VERBES234-03",
+      "FR-LEX-C234-VERBES234-04",
+      "FR-LEX-C234-VERBES234-05"
+    ]
+  }
+}
