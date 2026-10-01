@@ -1,0 +1,19 @@
+{
+  "chapter": 161,
+  "title": "Possibility, Result, Difference, Example, Truth",
+  "label": "ch:pt-possibility-result-difference-example-truth",
+  "canDo": "I can say a possibility, a result, a difference, an example and the truth.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C161-verdade",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 161: I can say a possibility, a result, a difference, an example and the truth.",
+    "assesses": [
+      "PT-LEX-C161-COISAS161-03",
+      "PT-LEX-C161-COISAS161-04",
+      "PT-LEX-C161-COISAS161-05"
+    ]
+  }
+}

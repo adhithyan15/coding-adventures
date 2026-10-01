@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:bf5f57337e400209",
+  "lessonIds": [
+    "PT-C169-sandalia",
+    "PT-C169-bolso",
+    "PT-C169-fecho",
+    "PT-C169-manga",
+    "PT-C169-guarda-roupa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch169.txt",
+  "json": "portuguese/narration/ch169.json",
+  "textHash": "fnv1a64:017e2155e353882f",
+  "jsonHash": "fnv1a64:ce71f29d0e3db558",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C142-atirar",
+    "language": "portuguese",
+    "chapter": 142,
+    "sequence": 7150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2d065bac5cc093f"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C144-calar-se",
+    "language": "portuguese",
+    "chapter": 144,
+    "sequence": 7240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:17de6a9ffd6b7b19"
+  },
+  "findings": []
+}

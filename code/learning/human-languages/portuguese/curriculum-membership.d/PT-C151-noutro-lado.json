@@ -1,0 +1,11 @@
+{
+  "id": "PT-C151-noutro-lado",
+  "pathSegment": "PT-PATH-151-LUGAR151",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-151-LUGAR151",
+      "order": 3
+    }
+  ]
+}

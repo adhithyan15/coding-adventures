@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:5bde18a55a95d6dc",
+  "lessonIds": [
+    "PT-C138-acender",
+    "PT-C138-apagar",
+    "PT-C138-saltar",
+    "PT-C138-sorrir",
+    "PT-C138-gritar"
+  ],
+  "tex": "portuguese/book/chapters/ch138-to-switch-on-to-switch-off-to-jump-to-smile-to-shout.tex"
+}

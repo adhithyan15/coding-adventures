@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-R164-second-pass-words-from-chapters-160-164",
+    "language": "portuguese",
+    "chapter": 164,
+    "sequence": 8680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b955ebd0ce46605"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C154-necessario-necessaria",
+  "pathSegment": "PT-PATH-154-QUAL154",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-154-QUAL154",
+      "order": 1
+    }
+  ]
+}

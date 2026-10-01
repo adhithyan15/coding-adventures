@@ -1,0 +1,11 @@
+{
+  "id": "PT-C169-manga",
+  "pathSegment": "PT-PATH-169-COISAS169",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-169-COISAS169",
+      "order": 3
+    }
+  ]
+}

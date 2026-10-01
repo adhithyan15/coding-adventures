@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C145-amarrar",
+    "language": "portuguese",
+    "chapter": 145,
+    "sequence": 7330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89712c38658c6bdb"
+  },
+  "findings": []
+}

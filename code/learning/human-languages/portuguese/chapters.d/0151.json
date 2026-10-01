@@ -1,0 +1,19 @@
+{
+  "chapter": 151,
+  "title": "Above, Below, At the bottom, Elsewhere, Up there",
+  "label": "ch:pt-above-below-at-the-bottom-elsewhere-up-there",
+  "canDo": "I can say above, below, at the bottom, elsewhere and up there.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "PT-C151-la-em-cima",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 151: I can say above, below, at the bottom, elsewhere and up there.",
+    "assesses": [
+      "PT-LEX-C151-LUGAR151-03",
+      "PT-LEX-C151-LUGAR151-04",
+      "PT-LEX-C151-LUGAR151-05"
+    ]
+  }
+}

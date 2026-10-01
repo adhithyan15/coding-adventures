@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C143-reconhecer",
+    "language": "portuguese",
+    "chapter": 143,
+    "sequence": 7230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b20ff024db689ff7"
+  },
+  "findings": []
+}

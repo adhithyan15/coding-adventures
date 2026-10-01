@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 156,
+  "sourceHash": "fnv1a64:351a188644b23c07",
+  "lessonIds": [
+    "PT-C156-anterior",
+    "PT-C156-seguinte",
+    "PT-C156-publico-publica",
+    "PT-C156-privado-privada",
+    "PT-C156-pessoal"
+  ],
+  "tex": "portuguese/book/chapters/ch156-previous-following-public-private-personal.tex"
+}

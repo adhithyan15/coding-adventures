@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C166-regresso",
+    "language": "portuguese",
+    "chapter": 166,
+    "sequence": 8920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9fa22fa6e49850c9"
+  },
+  "findings": []
+}

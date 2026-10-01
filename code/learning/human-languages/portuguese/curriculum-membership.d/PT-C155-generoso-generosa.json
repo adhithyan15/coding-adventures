@@ -1,0 +1,11 @@
+{
+  "id": "PT-C155-generoso-generosa",
+  "pathSegment": "PT-PATH-155-QUAL155",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-155-QUAL155",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C148-rim",
+  "pathSegment": "PT-PATH-148-SAUDE148",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-148-SAUDE148",
+      "order": 4
+    }
+  ]
+}

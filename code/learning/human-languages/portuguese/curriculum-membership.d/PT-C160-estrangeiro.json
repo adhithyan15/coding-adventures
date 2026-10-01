@@ -1,0 +1,11 @@
+{
+  "id": "PT-C160-estrangeiro",
+  "pathSegment": "PT-PATH-160-COISAS160",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-160-COISAS160",
+      "order": 3
+    }
+  ]
+}

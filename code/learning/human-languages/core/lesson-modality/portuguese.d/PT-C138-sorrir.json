@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C138-sorrir",
+    "language": "portuguese",
+    "chapter": 138,
+    "sequence": 6970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7eef3e0c30c7c0e6"
+  },
+  "findings": []
+}

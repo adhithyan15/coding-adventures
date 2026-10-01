@@ -1,0 +1,11 @@
+{
+  "id": "PT-C152-de-qualquer-maneira",
+  "pathSegment": "PT-PATH-152-PORQUE152",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-152-PORQUE152",
+      "order": 1
+    }
+  ]
+}

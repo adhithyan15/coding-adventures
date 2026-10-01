@@ -1,0 +1,11 @@
+{
+  "id": "PT-C147-corar",
+  "pathSegment": "PT-PATH-147-VERBOS147",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-147-VERBOS147",
+      "order": 1
+    }
+  ]
+}

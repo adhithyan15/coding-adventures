@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:1c221dc454a6f79c",
+  "lessonIds": [
+    "PT-C165-couro",
+    "PT-C165-metal",
+    "PT-C165-tijolo",
+    "PT-C165-saco",
+    "PT-C165-fio"
+  ],
+  "tex": "portuguese/book/chapters/ch165-leather-metal-brick-sack-thread.tex"
+}

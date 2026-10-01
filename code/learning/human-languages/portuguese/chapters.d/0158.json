@@ -1,0 +1,19 @@
+{
+  "chapter": 158,
+  "title": "Mosquito, Society, Government, Law, Court",
+  "label": "ch:pt-mosquito-society-government-law-court",
+  "canDo": "I can say a mosquito, society, the government, a law and a court.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C158-tribunal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 158: I can say a mosquito, society, the government, a law and a court.",
+    "assesses": [
+      "PT-LEX-C158-COISAS158-03",
+      "PT-LEX-C158-COISAS158-04",
+      "PT-LEX-C158-COISAS158-05"
+    ]
+  }
+}

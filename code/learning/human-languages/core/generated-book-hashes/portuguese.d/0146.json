@@ -1,0 +1,15 @@
+{
+  "language": "portuguese",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:9fd6a45ca6da710d",
+  "lessonIds": [
+    "PT-C146-tossir",
+    "PT-C146-tremer",
+    "PT-C146-votar",
+    "PT-C146-acolher",
+    "PT-C146-admirar",
+    "PT-R146-first-pass-words-from-chapters-138-141",
+    "PT-R146-second-pass-words-from-chapters-142-146"
+  ],
+  "tex": "portuguese/book/chapters/ch146-to-cough-to-tremble-to-vote-to-welcome-to-admire.tex"
+}

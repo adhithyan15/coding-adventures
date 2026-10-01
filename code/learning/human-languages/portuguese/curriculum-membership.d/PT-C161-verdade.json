@@ -1,0 +1,11 @@
+{
+  "id": "PT-C161-verdade",
+  "pathSegment": "PT-PATH-161-COISAS161",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-161-COISAS161",
+      "order": 4
+    }
+  ]
+}

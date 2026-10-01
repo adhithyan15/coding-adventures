@@ -1,0 +1,21 @@
+{
+  "language": "portuguese",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:831a3d696e31908b",
+  "lessonIds": [
+    "PT-C146-tossir",
+    "PT-C146-tremer",
+    "PT-C146-votar",
+    "PT-C146-acolher",
+    "PT-C146-admirar",
+    "PT-R146-first-pass-words-from-chapters-138-141",
+    "PT-R146-second-pass-words-from-chapters-142-146"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "portuguese/narration/ch146.txt",
+  "json": "portuguese/narration/ch146.json",
+  "textHash": "fnv1a64:b4acf4ac774bb8b1",
+  "jsonHash": "fnv1a64:72a4fa60e1c0a064",
+  "findings": []
+}

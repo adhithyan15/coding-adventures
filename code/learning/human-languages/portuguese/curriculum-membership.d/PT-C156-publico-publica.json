@@ -1,0 +1,11 @@
+{
+  "id": "PT-C156-publico-publica",
+  "pathSegment": "PT-PATH-156-QUAL156",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-156-QUAL156",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C164-seixo",
+  "pathSegment": "PT-PATH-164-COISAS164",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-164-COISAS164",
+      "order": 3
+    }
+  ]
+}

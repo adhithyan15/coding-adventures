@@ -1,0 +1,11 @@
+{
+  "id": "PT-C153-educado-educada",
+  "pathSegment": "PT-PATH-153-QUAL153",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-153-QUAL153",
+      "order": 2
+    }
+  ]
+}

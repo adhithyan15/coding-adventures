@@ -1,0 +1,11 @@
+{
+  "id": "PT-C170-colega",
+  "pathSegment": "PT-PATH-170-TRAB170",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-170-TRAB170",
+      "order": 1
+    }
+  ]
+}

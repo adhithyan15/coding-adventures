@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:cb39de8546d7d3ed",
+  "lessonIds": [
+    "PT-C148-saude",
+    "PT-C148-cerebro",
+    "PT-C148-pulmao",
+    "PT-C148-figado",
+    "PT-C148-rim"
+  ],
+  "tex": "portuguese/book/chapters/ch148-health-brain-lung-liver-kidney.tex"
+}

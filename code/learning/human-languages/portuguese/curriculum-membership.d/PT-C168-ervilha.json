@@ -1,0 +1,11 @@
+{
+  "id": "PT-C168-ervilha",
+  "pathSegment": "PT-PATH-168-COISAS168",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-168-COISAS168",
+      "order": 4
+    }
+  ]
+}
