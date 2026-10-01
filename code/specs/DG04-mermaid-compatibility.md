@@ -534,8 +534,9 @@ also flow from init directives or YAML front matter through category-aware
 layout into paint, with the hidden root and inherited leaf category behavior of
 the upstream renderer. Common D3 value-format families lower natively, including
 grouped and fixed decimals, currency, significant digits, scientific notation,
-percentages, SI prefixes, radix output, signs, and trimmed zeroes. Exact D3
-alignment/localization semantics and the broader CSS property surface remain
+percentages, SI prefixes, radix output, signs, trimmed zeroes, alternate radix
+prefixes, width, fill, and left/right/center/sign-aware alignment. Exact D3
+locale-specific separators and the broader CSS property surface remain
 unsupported at the partial level. Treemap layout, value visibility, font, and
 border configuration also flow through semantic IR, hierarchy layout, and paint.
 Explicit section and leaf fill, stroke, and stroke-width options, independent

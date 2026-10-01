@@ -244,50 +244,104 @@ where
 }
 
 fn format_treemap_value(value: f64, format: &str) -> String {
-    let kind = format.chars().last().filter(|kind| "bdeEfFgGoprs%xX".contains(*kind));
-    let precision = format.split_once('.').and_then(|(_, tail)| {
-        let digits = tail.chars().take_while(|character| character.is_ascii_digit()).collect::<String>();
-        (!digits.is_empty()).then(|| {
-            if digits.chars().all(|digit| digit == '0') { Some(digits.len()) } else { digits.parse::<usize>().ok() }
-        }).flatten()
-    });
-    let mut rendered = match kind {
-        Some('b') => format!("{:b}", value.round() as i128),
-        Some('d') => format!("{:.0}", value),
+    let spec = parse_treemap_number_format(format).unwrap_or_else(|| parse_treemap_number_format(",").unwrap());
+    let magnitude = value.abs();
+    let mut rendered = match spec.kind {
+        Some('b') => format!("{:b}", magnitude.round() as i128),
+        Some('d') => format!("{magnitude:.0}"),
         Some('e' | 'E') => {
-            let precision = precision.unwrap_or(6);
-            let result = format!("{value:.precision$e}");
-            if kind == Some('E') { result.to_ascii_uppercase() } else { result }
+            let precision = spec.precision.unwrap_or(6);
+            let result = format!("{magnitude:.precision$e}");
+            if spec.kind == Some('E') { result.to_ascii_uppercase() } else { result }
         }
-        Some('f' | 'F') => format!("{value:.precision$}", precision = precision.unwrap_or(6)),
-        Some('g' | 'G' | 'r') => format_significant(value, precision.unwrap_or(6)),
-        Some('o') => format!("{:o}", value.round() as i128),
-        Some('p') => format_significant(value * 100.0, precision.unwrap_or(6)) + "%",
-        Some('%') => format!("{:.precision$}%", value * 100.0, precision = precision.unwrap_or(6)),
-        Some('s') => format_si(value, precision.unwrap_or(6)),
-        Some('x') => format!("{:x}", value.round() as i128),
-        Some('X') => format!("{:X}", value.round() as i128),
-        _ if precision.is_some() => format!("{value:.precision$}", precision = precision.unwrap_or(0)),
-        _ if value.fract() == 0.0 => format!("{value:.0}"),
-        _ => value.to_string(),
+        Some('f' | 'F') => format!("{magnitude:.precision$}", precision = spec.precision.unwrap_or(6)),
+        Some('g' | 'G' | 'r') => format_significant(magnitude, spec.precision.unwrap_or(6)),
+        Some('o') => format!("{:o}", magnitude.round() as i128),
+        Some('p') => format_significant(magnitude * 100.0, spec.precision.unwrap_or(6)) + "%",
+        Some('%') => format!("{:.precision$}%", magnitude * 100.0, precision = spec.precision.unwrap_or(6)),
+        Some('s') => format_si(magnitude, spec.precision.unwrap_or(6)),
+        Some('x') => format!("{:x}", magnitude.round() as i128),
+        Some('X') => format!("{:X}", magnitude.round() as i128),
+        _ if spec.precision.is_some() => format!("{magnitude:.precision$}", precision = spec.precision.unwrap_or(0)),
+        _ if magnitude.fract() == 0.0 => format!("{magnitude:.0}"),
+        _ => magnitude.to_string(),
     };
-    if format.contains('~') {
-        rendered = trim_decimal_zeroes(rendered);
+    if spec.trim { rendered = trim_decimal_zeroes(rendered); }
+    if spec.grouped { rendered = group_decimal_thousands(&rendered); }
+    let mut prefix = match (value.is_sign_negative(), spec.sign) {
+        (true, '(') => "(".into(),
+        (true, _) => "-".into(),
+        (false, '+') => "+".into(),
+        (false, ' ') => " ".into(),
+        _ => String::new(),
+    };
+    match spec.symbol {
+        Some('$') => prefix.push('$'),
+        Some('#') if matches!(spec.kind, Some('b')) => prefix.push_str("0b"),
+        Some('#') if matches!(spec.kind, Some('o')) => prefix.push_str("0o"),
+        Some('#') if matches!(spec.kind, Some('x')) => prefix.push_str("0x"),
+        Some('#') if matches!(spec.kind, Some('X')) => prefix.push_str("0X"),
+        _ => {}
     }
-    if format.contains(',') {
-        rendered = group_decimal_thousands(&rendered);
-    }
-    if format.starts_with('$') {
-        if let Some(rest) = rendered.strip_prefix('-') {
-            rendered = format!("-${rest}");
-        } else {
-            rendered.insert(0, '$');
+    let suffix = if value.is_sign_negative() && spec.sign == '(' { ")" } else { "" };
+    align_treemap_number(prefix, rendered, suffix, &spec)
+}
+
+struct TreemapNumberFormat {
+    fill: char, align: char, sign: char, symbol: Option<char>, width: Option<usize>, grouped: bool,
+    precision: Option<usize>, trim: bool, kind: Option<char>,
+}
+
+fn parse_treemap_number_format(source: &str) -> Option<TreemapNumberFormat> {
+    let characters = source.chars().collect::<Vec<_>>();
+    let mut index = 0;
+    let (fill, mut align) = if characters.get(1).is_some_and(|value| "<>=^".contains(*value)) {
+        index = 2; (characters[0], characters[1])
+    } else if characters.first().is_some_and(|value| "<>=^".contains(*value)) {
+        index = 1; (' ', characters[0])
+    } else { (' ', '>') };
+    let sign = characters.get(index).copied().filter(|value| "+-( ".contains(*value)).map_or('-', |value| { index += 1; value });
+    let symbol = characters.get(index).copied().filter(|value| matches!(value, '$' | '#'));
+    if symbol.is_some() { index += 1; }
+    let zero = characters.get(index) == Some(&'0');
+    if zero { index += 1; align = '='; }
+    let width_start = index;
+    while characters.get(index).is_some_and(char::is_ascii_digit) { index += 1; }
+    let width = (index > width_start).then(|| characters[width_start..index].iter().collect::<String>().parse().ok()).flatten();
+    let grouped = characters.get(index) == Some(&',');
+    if grouped { index += 1; }
+    if grouped && characters.get(index) == Some(&'0') { index += 1; }
+    let precision = if characters.get(index) == Some(&'.') {
+        index += 1;
+        let start = index;
+        while characters.get(index).is_some_and(char::is_ascii_digit) { index += 1; }
+        if start == index { return None; }
+        let digits = characters[start..index].iter().collect::<String>();
+        Some(if digits.chars().all(|digit| digit == '0') { digits.len() } else { digits.parse().ok()? })
+    } else { None };
+    let trim = characters.get(index) == Some(&'~');
+    if trim { index += 1; }
+    let kind = characters.get(index).copied().filter(|value| "bdeEfFgGoprs%xX".contains(*value));
+    if kind.is_some() { index += 1; }
+    (index == characters.len()).then_some(TreemapNumberFormat {
+        fill: if zero { '0' } else { fill }, align, sign, symbol, width, grouped, precision, trim, kind,
+    })
+}
+
+fn align_treemap_number(prefix: String, rendered: String, suffix: &str, spec: &TreemapNumberFormat) -> String {
+    let content_width = prefix.chars().count() + rendered.chars().count() + suffix.chars().count();
+    let padding = spec.width.unwrap_or(0).saturating_sub(content_width);
+    let fill = spec.fill.to_string().repeat(padding);
+    match spec.align {
+        '<' => format!("{prefix}{rendered}{suffix}{fill}"),
+        '^' => {
+            let left = spec.fill.to_string().repeat(padding / 2);
+            let right = spec.fill.to_string().repeat(padding - padding / 2);
+            format!("{left}{prefix}{rendered}{suffix}{right}")
         }
+        '=' => format!("{prefix}{fill}{rendered}{suffix}"),
+        _ => format!("{fill}{prefix}{rendered}{suffix}"),
     }
-    if format.contains('+') && value >= 0.0 {
-        rendered.insert(0, '+');
-    }
-    rendered
 }
 
 fn format_significant(value: f64, precision: usize) -> String {
@@ -6761,6 +6815,13 @@ mod tests {
         assert_eq!(format_treemap_value(255.0, "x"), "ff");
         assert_eq!(format_treemap_value(12.0, "+d"), "+12");
         assert_eq!(format_treemap_value(12.5, ".3~f"), "12.5");
+        assert_eq!(format_treemap_value(1234.5, "*>10,.2f"), "**1,234.50");
+        assert_eq!(format_treemap_value(12.5, "*^12.1f"), "****12.5****");
+        assert_eq!(format_treemap_value(12.5, "=+10.2f"), "+    12.50");
+        assert_eq!(format_treemap_value(12345.0, "08,d"), "0012,345");
+        assert_eq!(format_treemap_value(255.0, "#x"), "0xff");
+        assert_eq!(format_treemap_value(-12.0, "(10.1f"), "    (12.0)");
+        assert_eq!(format_treemap_value(12345.0, "invalid"), "12,345");
     }
 
     #[test]

@@ -21,7 +21,7 @@
     },
     {
       "name": "init-configuration",
-      "source": "%%{init: {\"treemap\": {\"padding\": 4, \"showValues\": false, \"nodeWidth\": 64, \"nodeHeight\": 48, \"sectionStrokeColor\": \"#0369a1\", \"sectionStrokeWidth\": \"2px\", \"sectionFillColor\": \"#e0f2fe\", \"leafStrokeColor\": \"#15803d\", \"leafStrokeWidth\": 2, \"leafFillColor\": \"#dcfce7\", \"labelColor\": \"#0c4a6e\", \"valueColor\": \"#166534\", \"titleColor\": \"#7c2d12\", \"titleFontSize\": \"20px\", \"valueFormat\": \".2s\"}, \"themeVariables\": {\"cScale0\": \"#cffafe\", \"cScalePeer0\": \"#0e7490\", \"cScaleLabel0\": \"#164e63\"}}}%%\ntreemap\n\"Root\"\n  \"Child\": 1200"
+      "source": "%%{init: {\"treemap\": {\"padding\": 4, \"showValues\": false, \"nodeWidth\": 64, \"nodeHeight\": 48, \"sectionStrokeColor\": \"#0369a1\", \"sectionStrokeWidth\": \"2px\", \"sectionFillColor\": \"#e0f2fe\", \"leafStrokeColor\": \"#15803d\", \"leafStrokeWidth\": 2, \"leafFillColor\": \"#dcfce7\", \"labelColor\": \"#0c4a6e\", \"valueColor\": \"#166534\", \"titleColor\": \"#7c2d12\", \"titleFontSize\": \"20px\", \"valueFormat\": \"*>8.2s\"}, \"themeVariables\": {\"cScale0\": \"#cffafe\", \"cScalePeer0\": \"#0e7490\", \"cScaleLabel0\": \"#164e63\"}}}%%\ntreemap\n\"Root\"\n  \"Child\": 1200"
     }
   ],
   "invalid": [
