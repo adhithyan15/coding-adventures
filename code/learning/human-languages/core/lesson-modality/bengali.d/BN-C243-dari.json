@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C243-dari",
+    "language": "bengali",
+    "chapter": 243,
+    "sequence": 15110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:727a0e68feff893e"
+  },
+  "findings": []
+}

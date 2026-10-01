@@ -1,0 +1,19 @@
+{
+  "chapter": 246,
+  "title": "Foreign, English, Indian, Golden, Sky blue",
+  "label": "ch:bn-foreign-english-indian-golden-sky-blue",
+  "canDo": "I can say foreign, English, Indian, golden and sky blue.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "BN-C246-akashi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 246: I can say foreign, English, Indian, golden and sky blue.",
+    "assesses": [
+      "BN-LEX-C246-GUN246-03",
+      "BN-LEX-C246-GUN246-04",
+      "BN-LEX-C246-GUN246-05"
+    ]
+  }
+}

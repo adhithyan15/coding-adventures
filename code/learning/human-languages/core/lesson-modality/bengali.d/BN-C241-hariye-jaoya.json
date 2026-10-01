@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C241-hariye-jaoya",
+    "language": "bengali",
+    "chapter": 241,
+    "sequence": 14990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c8f4f23633fc510"
+  },
+  "findings": []
+}

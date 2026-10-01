@@ -1,0 +1,19 @@
+{
+  "chapter": 239,
+  "title": "To kiss, To paint, To play music, To give back, To remember",
+  "label": "ch:bn-to-kiss-to-paint-to-play-music-to-give-back-to-remember",
+  "canDo": "I can say to kiss, to paint, to play music, to give back and to remember.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C239-mone-rakha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 239: I can say to kiss, to paint, to play music, to give back and to remember.",
+    "assesses": [
+      "BN-LEX-C239-ACT239-03",
+      "BN-LEX-C239-ACT239-04",
+      "BN-LEX-C239-ACT239-05"
+    ]
+  }
+}

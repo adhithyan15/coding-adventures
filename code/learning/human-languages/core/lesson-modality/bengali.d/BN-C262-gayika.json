@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C262-gayika",
+    "language": "bengali",
+    "chapter": 262,
+    "sequence": 16450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76b07851119cdf23"
+  },
+  "findings": []
+}

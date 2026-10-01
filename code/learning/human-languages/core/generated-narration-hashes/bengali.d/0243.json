@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:81a6d3b1997a7887",
+  "lessonIds": [
+    "BN-C243-bomi",
+    "BN-C243-chulkani",
+    "BN-C243-dari",
+    "BN-C243-goph",
+    "BN-C243-chibuk"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch243.txt",
+  "json": "bengali/narration/ch243.json",
+  "textHash": "fnv1a64:86534d0f99b19c3a",
+  "jsonHash": "fnv1a64:7d2db6a22ab74311",
+  "findings": []
+}

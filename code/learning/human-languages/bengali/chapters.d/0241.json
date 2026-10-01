@@ -1,0 +1,19 @@
+{
+  "chapter": 241,
+  "title": "To get lost, To find, To notice, To inform, To chat",
+  "label": "ch:bn-to-get-lost-to-find-to-notice-to-inform-to-chat",
+  "canDo": "I can say to get lost, to find, to notice, to inform and to chat.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C241-golpo-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 241: I can say to get lost, to find, to notice, to inform and to chat.",
+    "assesses": [
+      "BN-LEX-C241-ACT241-03",
+      "BN-LEX-C241-ACT241-04",
+      "BN-LEX-C241-ACT241-05"
+    ]
+  }
+}

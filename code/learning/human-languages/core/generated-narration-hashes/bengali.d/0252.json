@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:1578fba6613196bc",
+  "lessonIds": [
+    "BN-C252-kakima",
+    "BN-C252-bhaipo",
+    "BN-C252-nati",
+    "BN-C252-natni",
+    "BN-C252-shvoshur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch252.txt",
+  "json": "bengali/narration/ch252.json",
+  "textHash": "fnv1a64:7066e657b9b5fd4d",
+  "jsonHash": "fnv1a64:ec87b28924f05cd2",
+  "findings": []
+}

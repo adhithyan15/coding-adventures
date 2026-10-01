@@ -1,0 +1,11 @@
+{
+  "id": "BN-C261-senabahini",
+  "pathSegment": "BN-PATH-261-KAJ261",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-261-KAJ261",
+      "order": 4
+    }
+  ]
+}

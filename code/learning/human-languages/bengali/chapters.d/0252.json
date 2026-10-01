@@ -1,0 +1,19 @@
+{
+  "chapter": 252,
+  "title": "Paternal aunt, Nephew, Grandson, Granddaughter, Father-in-law",
+  "label": "ch:bn-paternal-aunt-nephew-grandson-granddaughter-father-in-law",
+  "canDo": "I can say a paternal aunt, a nephew, a grandson, a granddaughter and a father-in-law.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C252-shvoshur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 252: I can say a paternal aunt, a nephew, a grandson, a granddaughter and a father-in-law.",
+    "assesses": [
+      "BN-LEX-C252-JINIS252-03",
+      "BN-LEX-C252-JINIS252-04",
+      "BN-LEX-C252-JINIS252-05"
+    ]
+  }
+}

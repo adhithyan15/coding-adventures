@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C241-khuje-paoya",
+    "language": "bengali",
+    "chapter": 241,
+    "sequence": 15000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a6b36d874dd83da"
+  },
+  "findings": []
+}

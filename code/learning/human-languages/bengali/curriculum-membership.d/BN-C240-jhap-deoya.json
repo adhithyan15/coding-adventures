@@ -1,0 +1,11 @@
+{
+  "id": "BN-C240-jhap-deoya",
+  "pathSegment": "BN-PATH-240-ACT240",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-240-ACT240",
+      "order": 2
+    }
+  ]
+}

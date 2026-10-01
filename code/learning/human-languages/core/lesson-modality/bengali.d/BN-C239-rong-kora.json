@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C239-rong-kora",
+    "language": "bengali",
+    "chapter": 239,
+    "sequence": 14900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c51eb180c59817f6"
+  },
+  "findings": []
+}

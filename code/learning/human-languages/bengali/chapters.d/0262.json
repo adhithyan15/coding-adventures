@@ -1,0 +1,19 @@
+{
+  "chapter": 262,
+  "title": "Writer, Poet, Artist, Female singer, Female dancer",
+  "label": "ch:bn-writer-poet-artist-female-singer-female-dancer",
+  "canDo": "I can say a writer, a poet, an artist, a female singer and a female dancer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-R262-second-pass-words-from-chapters-259-262",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 262: I can say a writer, a poet, an artist, a female singer and a female dancer.",
+    "assesses": [
+      "BN-LEX-C262-KAJ262-03",
+      "BN-LEX-C262-KAJ262-04",
+      "BN-LEX-C262-KAJ262-05"
+    ]
+  }
+}

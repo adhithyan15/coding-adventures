@@ -1,0 +1,19 @@
+{
+  "chapter": 256,
+  "title": "Culture, History, Science, Art, Literature",
+  "label": "ch:bn-culture-history-science-art-literature",
+  "canDo": "I can say culture, history, science, art and literature.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C256-sahityo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 256: I can say culture, history, science, art and literature.",
+    "assesses": [
+      "BN-LEX-C256-JINIS256-03",
+      "BN-LEX-C256-JINIS256-04",
+      "BN-LEX-C256-JINIS256-05"
+    ]
+  }
+}

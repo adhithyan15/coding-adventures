@@ -1,0 +1,19 @@
+{
+  "chapter": 258,
+  "title": "Email, Message, Password, Battery, Switch",
+  "label": "ch:bn-email-message-password-battery-switch",
+  "canDo": "I can say an email, a message, a password, a battery and a switch.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C258-suich",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 258: I can say an email, a message, a password, a battery and a switch.",
+    "assesses": [
+      "BN-LEX-C258-JINIS258-03",
+      "BN-LEX-C258-JINIS258-04",
+      "BN-LEX-C258-JINIS258-05"
+    ]
+  }
+}

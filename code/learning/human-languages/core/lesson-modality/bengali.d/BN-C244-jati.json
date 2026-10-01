@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C244-jati",
+    "language": "bengali",
+    "chapter": 244,
+    "sequence": 15160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f98035813ec7e5ac"
+  },
+  "findings": []
+}

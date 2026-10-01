@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C256-itihas",
+    "language": "bengali",
+    "chapter": 256,
+    "sequence": 16130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38981f0be7a87c3a"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C252-nati",
+    "language": "bengali",
+    "chapter": 252,
+    "sequence": 15750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4357b58e66baff3e"
+  },
+  "findings": []
+}

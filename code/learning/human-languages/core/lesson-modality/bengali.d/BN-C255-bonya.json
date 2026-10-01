@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C255-bonya",
+    "language": "bengali",
+    "chapter": 255,
+    "sequence": 16090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:66f1ae9b5088da70"
+  },
+  "findings": []
+}

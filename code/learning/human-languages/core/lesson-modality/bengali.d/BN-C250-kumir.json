@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C250-kumir",
+    "language": "bengali",
+    "chapter": 250,
+    "sequence": 15630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80b9b2b11ead23e3"
+  },
+  "findings": []
+}

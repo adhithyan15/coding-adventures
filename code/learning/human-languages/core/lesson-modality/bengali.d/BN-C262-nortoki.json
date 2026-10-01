@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C262-nortoki",
+    "language": "bengali",
+    "chapter": 262,
+    "sequence": 16460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0488d538d9b484c5"
+  },
+  "findings": []
+}

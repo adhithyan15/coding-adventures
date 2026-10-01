@@ -1,0 +1,19 @@
+{
+  "chapter": 240,
+  "title": "To block, To hand in, To dive, To sink, To float",
+  "label": "ch:bn-to-block-to-hand-in-to-dive-to-sink-to-float",
+  "canDo": "I can say to block, to hand in, to dive, to sink and to float.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C240-bhasa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 240: I can say to block, to hand in, to dive, to sink and to float.",
+    "assesses": [
+      "BN-LEX-C240-ACT240-03",
+      "BN-LEX-C240-ACT240-04",
+      "BN-LEX-C240-ACT240-05"
+    ]
+  }
+}

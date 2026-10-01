@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C237-thamano",
+    "language": "bengali",
+    "chapter": 237,
+    "sequence": 14810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f3e3d3eb2703c596"
+  },
+  "findings": []
+}

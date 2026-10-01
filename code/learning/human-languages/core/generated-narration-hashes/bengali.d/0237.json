@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:0ad173ccb79ac9a6",
+  "lessonIds": [
+    "BN-C237-nebhano",
+    "BN-C237-jvalano",
+    "BN-C237-thamano",
+    "BN-C237-par-hooya",
+    "BN-C237-berano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch237.txt",
+  "json": "bengali/narration/ch237.json",
+  "textHash": "fnv1a64:9c4519d2c12ce632",
+  "jsonHash": "fnv1a64:868030703bb84c5d",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C256-songskriti",
+    "language": "bengali",
+    "chapter": 256,
+    "sequence": 16120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a7ef6badc0c5f09"
+  },
+  "findings": []
+}

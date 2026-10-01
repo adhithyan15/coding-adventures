@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:708adb311485dc6d",
+  "lessonIds": [
+    "BN-C242-berono",
+    "BN-C242-chhorano",
+    "BN-C242-gotano",
+    "BN-C242-mora2",
+    "BN-C242-khora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch242.txt",
+  "json": "bengali/narration/ch242.json",
+  "textHash": "fnv1a64:39d30f008367a0f1",
+  "jsonHash": "fnv1a64:7eefa3b1c6ce24cf",
+  "findings": []
+}

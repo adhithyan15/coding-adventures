@@ -1,0 +1,19 @@
+{
+  "chapter": 255,
+  "title": "Sunshine, Storm, Flood, Smoke, Ash",
+  "label": "ch:bn-sunshine-storm-flood-smoke-ash",
+  "canDo": "I can say sunshine, a storm, a flood, smoke and ash.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C255-chhai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 255: I can say sunshine, a storm, a flood, smoke and ash.",
+    "assesses": [
+      "BN-LEX-C255-JINIS255-03",
+      "BN-LEX-C255-JINIS255-04",
+      "BN-LEX-C255-JINIS255-05"
+    ]
+  }
+}

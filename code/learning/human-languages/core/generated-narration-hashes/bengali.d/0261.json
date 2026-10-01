@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:8e2a0c9cedf0032b",
+  "lessonIds": [
+    "BN-C261-mistri",
+    "BN-C261-radhuni",
+    "BN-C261-oyetar",
+    "BN-C261-daroyan",
+    "BN-C261-senabahini"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch261.txt",
+  "json": "bengali/narration/ch261.json",
+  "textHash": "fnv1a64:395704790fc164d2",
+  "jsonHash": "fnv1a64:67bfb1e10184479b",
+  "findings": []
+}

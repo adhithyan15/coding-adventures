@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C246-bharotiyo",
+    "language": "bengali",
+    "chapter": 246,
+    "sequence": 15450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f7fbec17c5ebc13f"
+  },
+  "findings": []
+}

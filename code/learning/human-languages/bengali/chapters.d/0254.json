@@ -1,0 +1,19 @@
+{
+  "chapter": 254,
+  "title": "Election, Advantage, Danger, Safety, Noise",
+  "label": "ch:bn-election-advantage-danger-safety-noise",
+  "canDo": "I can say an election, an advantage, danger, safety and a noise.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-R254-second-pass-words-from-chapters-250-254",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 254: I can say an election, an advantage, danger, safety and a noise.",
+    "assesses": [
+      "BN-LEX-C254-JINIS254-03",
+      "BN-LEX-C254-JINIS254-04",
+      "BN-LEX-C254-JINIS254-05"
+    ]
+  }
+}

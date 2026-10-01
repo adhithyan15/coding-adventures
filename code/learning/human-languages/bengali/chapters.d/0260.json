@@ -1,0 +1,19 @@
+{
+  "chapter": 260,
+  "title": "Longing, Prize, Punishment, Competition, Victory",
+  "label": "ch:bn-longing-prize-punishment-competition-victory",
+  "canDo": "I can say a longing, a prize, a punishment, a competition and victory.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C260-joy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 260: I can say a longing, a prize, a punishment, a competition and victory.",
+    "assesses": [
+      "BN-LEX-C260-JINIS260-03",
+      "BN-LEX-C260-JINIS260-04",
+      "BN-LEX-C260-JINIS260-05"
+    ]
+  }
+}

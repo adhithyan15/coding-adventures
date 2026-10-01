@@ -1,0 +1,11 @@
+{
+  "id": "BN-C243-goph",
+  "pathSegment": "BN-PATH-243-SVASTHYO243",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-243-SVASTHYO243",
+      "order": 3
+    }
+  ]
+}

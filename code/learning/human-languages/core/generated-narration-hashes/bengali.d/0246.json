@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:9cad9a2b2daf6403",
+  "lessonIds": [
+    "BN-C246-bideshi",
+    "BN-C246-ingreji",
+    "BN-C246-bharotiyo",
+    "BN-C246-sonali",
+    "BN-C246-akashi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch246.txt",
+  "json": "bengali/narration/ch246.json",
+  "textHash": "fnv1a64:62e8eb219b568bed",
+  "jsonHash": "fnv1a64:917c5d1dd6a47999",
+  "findings": []
+}

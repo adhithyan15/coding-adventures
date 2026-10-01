@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:6f8ff6a5249fada1",
+  "lessonIds": [
+    "BN-C250-kumir",
+    "BN-C250-jiraph",
+    "BN-C250-jebra",
+    "BN-C250-makorsa",
+    "BN-C250-chil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch250.txt",
+  "json": "bengali/narration/ch250.json",
+  "textHash": "fnv1a64:1bbf9d73e85cdfac",
+  "jsonHash": "fnv1a64:98fee7d0afdddc83",
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "bengali",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:077f98b5870d9ab1",
+  "lessonIds": [
+    "BN-C254-nirbachon",
+    "BN-C254-subidha",
+    "BN-C254-bipod",
+    "BN-C254-nirapotta",
+    "BN-C254-aoyaj",
+    "BN-R254-first-pass-words-from-chapters-246-249",
+    "BN-R254-second-pass-words-from-chapters-250-254"
+  ],
+  "tex": "bengali/book/chapters/ch254-election-advantage-danger-safety-noise.tex"
+}

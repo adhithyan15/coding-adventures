@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C247-khara",
+    "language": "bengali",
+    "chapter": 247,
+    "sequence": 15500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2397cfc2f1e5fd7"
+  },
+  "findings": []
+}

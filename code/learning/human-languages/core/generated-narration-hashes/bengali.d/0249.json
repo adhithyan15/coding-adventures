@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:68393f44f9ff56e0",
+  "lessonIds": [
+    "BN-C249-moshla",
+    "BN-C249-jire",
+    "BN-C249-dhone",
+    "BN-C249-pudina",
+    "BN-C249-kaju"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch249.txt",
+  "json": "bengali/narration/ch249.json",
+  "textHash": "fnv1a64:6239a5f29162805f",
+  "jsonHash": "fnv1a64:ca0fac2567a6115b",
+  "findings": []
+}
