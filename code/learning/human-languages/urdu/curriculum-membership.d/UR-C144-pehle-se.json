@@ -1,0 +1,11 @@
+{
+  "id": "UR-C144-pehle-se",
+  "pathSegment": "UR-PATH-144-MAZI144",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-144-MAZI144",
+      "order": 1
+    }
+  ]
+}

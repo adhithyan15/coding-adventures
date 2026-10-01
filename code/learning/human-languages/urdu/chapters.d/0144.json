@@ -1,0 +1,19 @@
+{
+  "chapter": 144,
+  "title": "Recently, Already, the Past, Last, To Happen",
+  "label": "ch:ur-recently-already-the-past-last-to-happen",
+  "canDo": "I can say what happened, and when: recently, already, last year.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "UR-C144-pesh-ana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 144: I can say what happened, and when: recently, already, last year.",
+    "assesses": [
+      "UR-LEX-C144-MAZI144-03",
+      "UR-LEX-C144-MAZI144-04",
+      "UR-LEX-C144-MAZI144-05"
+    ]
+  }
+}

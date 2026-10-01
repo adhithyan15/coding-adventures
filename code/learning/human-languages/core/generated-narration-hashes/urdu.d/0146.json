@@ -1,0 +1,21 @@
+{
+  "language": "urdu",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:4ea5d152ea4ed125",
+  "lessonIds": [
+    "UR-C146-taim-tebal",
+    "UR-C146-notis",
+    "UR-C146-kiraya",
+    "UR-C146-ishtihar",
+    "UR-C146-rasid",
+    "UR-R146-first-pass-looking-back",
+    "UR-R146-second-pass-looking-ahead-and-reading-signs"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "urdu/narration/ch146.txt",
+  "json": "urdu/narration/ch146.json",
+  "textHash": "fnv1a64:867ba2f5a6a07cbf",
+  "jsonHash": "fnv1a64:9980a02f754eca06",
+  "findings": []
+}

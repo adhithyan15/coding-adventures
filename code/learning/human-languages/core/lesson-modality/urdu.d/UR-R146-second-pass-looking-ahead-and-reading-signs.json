@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R146-second-pass-looking-ahead-and-reading-signs",
+    "language": "urdu",
+    "chapter": 146,
+    "sequence": 7700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd7702330845b86d"
+  },
+  "findings": []
+}

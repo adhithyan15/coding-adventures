@@ -307,7 +307,9 @@ describe("real curriculum", () => {
       // that, time, places, can and want, things, describing words and verbs),
       // with chapter 99 writing ز and ط from روز and طرف.
       // 142 -> 143: the first A2 writing rung, a model-free connected message.
-      ...Array.from({ length: 56 }, (_, i) => 88 + i)]);
+      // 143 -> 146: the A2 spine chapters (the past, the future, reading
+      // practical texts).
+      ...Array.from({ length: 59 }, (_, i) => 88 + i)]);
     expect(
       books.books
         .find((book) => book.language === "russian")

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C146-taim-tebal",
+  "pathSegment": "UR-PATH-146-PARH146",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-146-PARH146",
+      "order": 0
+    }
+  ]
+}
