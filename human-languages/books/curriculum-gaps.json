@@ -261944,6 +261944,15 @@
           },
           {
             "language": "telugu",
+            "lessonId": "TE-S113-letter-pa",
+            "blockIndex": 2,
+            "blockTitle": "Writing: ప — four calm curves",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 235
+          },
+          {
+            "language": "telugu",
             "lessonId": "TE-S01-letter-ta",
             "blockIndex": 3,
             "blockTitle": "Guided Practice",
@@ -262123,6 +262132,15 @@
             "stage": "observe-trace",
             "level": "pre-A1",
             "sequence": 205
+          },
+          {
+            "language": "telugu",
+            "lessonId": "TE-S113-letter-pa",
+            "blockIndex": 2,
+            "blockTitle": "Writing: ప — four calm curves",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 235
           },
           {
             "language": "telugu",
@@ -262785,7 +262803,7 @@
       "tracks": 23,
       "tracksWithAnyEvidence": 23,
       "tracksCompleteAtPreA1": 23,
-      "evidenceBlocks": 809,
+      "evidenceBlocks": 810,
       "invalidEvidenceBlocks": 0,
       "missingTrackLevelStages": 231
     }
