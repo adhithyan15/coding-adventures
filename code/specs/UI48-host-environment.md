@@ -804,7 +804,10 @@ the other hosts, the resize-and-assert gate lands with ENV-last.
   generated shell source), on SwiftUI `<X>View` and `<X>Event` (no SwiftUI
   shell type ends in `View`, also pinned). It runs before anything is
   written, flat builds included, since the flat artifacts are what a
-  consumer compiles together.
+  consumer compiles together. File names need no check: Kotlin's per-file
+  class (`Card.touch.kt` → `Card_touchKt`) could only meet an export named
+  `Card_touch`, which the manifest's `[A-Z][a-zA-Z0-9]*` rule refuses (a test
+  pins it).
 - A variant file carries only what differs: its widget and the private
   helpers its own tree uses. A leading `_` makes a Dart name private to its
   file, so those may repeat. The interface — the `<C>Event` sealed class and
@@ -932,7 +935,9 @@ the pointer is `fine`, so Engram's touch layout is compiled but not shown.
   `CardTouch`) or like another variant -- fails the build, and so does a
   variant of ANY export named like something the shell owns (`Mosaic` +
   `host`), not only the root's. The check is the one every backend shares
-  (§7.9).
+  (§7.9), run for a Qt project before anything is written, so a refused
+  build leaves no partial project. A flat Qt build is not checked: it has
+  no module, and a flat `Card.touch.qml` registers no type.
 - A native-complete shell mounts every root strictly, so it re-emits the
   root's variants under that policy (`required property var mosaicHost`,
   events through `handleRequiredEvent`) as it re-emits the default. The flat
@@ -1075,7 +1080,9 @@ holding both, and a window choosing between them.
   by the emitter among the shell's choices, by the builder among every
   export's variants. Two exports' variants that spell one type (`Card` +
   `touch-bar` and `CardTouch` + `bar`) are refused by the builder, which
-  sees them all, naming both files. The builder now makes every one of these
+  sees them all, naming both files, and so is the reverse, an export named
+  inside a variant's support names (`CardTouchMosaicSlider` beside
+  `Card.touch`). The builder now makes every one of these
   checks for the whole package before the emitter runs -- the same check as
   on the other four backends (§7.9) -- so its message, naming both `.mll`
   files or the export, is the one a package build reports; the emitter's

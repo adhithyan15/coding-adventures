@@ -282,9 +282,12 @@ Mosaic.host.mll     beside the shell's MosaicHost      -> `MosaicHost` twice
 ```
 
 What each backend's default layout and project shell declare is listed beside
-`check_layout_namespace` in `src/lib.rs`. SwiftUI, Compose, Flutter and XAML
-check before anything is written; Qt checks in its project shell, where its
-QML module is.
+`check_layout_namespace` in `src/lib.rs`. Every backend checks before anything
+is written, so a refused build leaves no partial tree. SwiftUI, Compose,
+Flutter and XAML check flat builds too; Qt checks only project builds, because
+only a project has a QML module for the names to collide in. On XAML an export
+named inside a variant's support types (`CardTouchMosaicSlider` beside
+`Card.touch`) is refused as well.
 
 ## Layout Per Backend
 

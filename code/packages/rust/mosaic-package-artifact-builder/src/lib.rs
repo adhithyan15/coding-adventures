@@ -2827,15 +2827,19 @@ fn build_package_inner(
     // variants, so a variant root may not take a name another claims
     // (`Card.touch.mll` beside an exported `CardTouch`). Checked for the
     // whole package before anything is written -- the flat artifacts are
-    // what a consumer compiles together, project or not. Qt checks in its
-    // project shell instead, where its module is
-    // (`qt_cmake_with_layout_variants`).
+    // what a consumer compiles together, project or not. Qt's collide only
+    // in a project's QML module (a flat `Card.touch.qml` registers no type),
+    // so a Qt project build checks, still before anything is written; the
+    // module is assembled later, by `qt_cmake_with_layout_variants`.
     let exports = &manifest.components.exports;
     match opts.backend {
         Backend::Xaml => xaml_check_variant_types(exports, &src_dir)?,
         Backend::SwiftUI => check_layout_namespace(&SWIFTUI_NAMESPACE, exports, &src_dir)?,
         Backend::Compose => check_layout_namespace(&COMPOSE_NAMESPACE, exports, &src_dir)?,
         Backend::Flutter => check_layout_namespace(&FLUTTER_NAMESPACE, exports, &src_dir)?,
+        Backend::Qt if opts.emit_project => {
+            check_layout_namespace(&QT_NAMESPACE, exports, &src_dir)?
+        }
         _ => {}
     }
 
@@ -5158,19 +5162,18 @@ fn qt_layout_choices(
 /// is `MosaicHost`): the emitter refuses that for every variant it emits,
 /// and this keeps the module's own list from relying on it. The check is
 /// the one every backend shares, [`check_layout_namespace`] with
-/// [`QT_NAMESPACE`]; it runs here rather than before the flat build because
-/// only the project has a module (a flat `Card.touch.qml` registers nothing).
+/// [`QT_NAMESPACE`], which `build_package` runs for a Qt project before
+/// writing anything (only the project has a module: a flat `Card.touch.qml`
+/// registers nothing), so by the time this runs every type is known unique.
 fn qt_cmake_with_layout_variants(
     generated: &str,
     mounted_component: &str,
     components: &[String],
     src_dir: &Path,
 ) -> Result<String, BuildError> {
-    // No variant of ANY export may register a name the module already holds
-    // -- an export, another variant, or a name the Qt shell owns: `Mosaic` +
-    // `host` is refused for a non-root export exactly as the emitter
-    // refuses it for the root.
-    check_layout_namespace(&QT_NAMESPACE, components, src_dir)?;
+    // No variant of ANY export registers a name the module already holds --
+    // an export, another variant, or a name the Qt shell owns (`Mosaic` +
+    // `host`): `build_package` refused those before writing anything.
     let mut added = String::new();
     for component in components {
         for variant in discover_variants(src_dir, component)?.into_iter().flatten() {
@@ -5938,10 +5941,23 @@ const XAML_NAMESPACE: LayoutNamespace = LayoutNamespace {
 /// root would take a name already claimed in `namespace` (see the table
 /// above): a name the shell declares, a name an export's default layout
 /// declares (its own component's included), another variant's root, or a
-/// name another variant's file claims. The message names the variant's
-/// `.mll` and the other claimant. Variants are visited in export order and,
-/// within one export, in `discover_variants` order, so the first collision
-/// reported is deterministic.
+/// name another variant's file claims. The reverse is refused too: an export
+/// named inside a variant's claim (`CardTouchMosaicSlider` beside
+/// `Card.touch` on XAML). The message names the variant's `.mll` and the
+/// other claimant. Variants are visited in export order and, within one
+/// export, in `discover_variants` order, so the first collision reported is
+/// deterministic.
+///
+/// File names cannot collide the same way, so they are not checked here.
+/// Kotlin compiles a file's top-level functions into a class named after the
+/// file with `.` and `-` made `_` (`Card.touch.kt` → `Card_touchKt`), which
+/// would clash with an export `Card_touch` -- but the manifest admits only
+/// `[A-Z][a-zA-Z0-9]*` export names, so no export (and no other export's
+/// variant, whose stem starts `<Other>_`) can spell `Card_touch`, and
+/// `discover_variants` already refuses `touch-bar` beside `touch_bar`.
+/// `export_names_cannot_spell_a_mangled_variant_file` pins that. Qt's
+/// `qmlcachegen` escapes `.` instead (`Card_touch_0x2e_qml`, checked on Qt
+/// 6.4), and Swift, Dart and C# keep file names out of type names.
 fn check_layout_namespace(
     namespace: &LayoutNamespace,
     components: &[String],
@@ -5997,6 +6013,15 @@ fn check_layout_namespace(
             if let Some(NameClaim::Prefix(prefix)) = (namespace.variant_claim)(other, root) {
                 let owner = format!("the layout variant {other_file}");
                 return Err(within(root, file, &prefix, &owner));
+            }
+        }
+        // And the reverse: an export named inside this variant's claim.
+        for export in components {
+            if let Some(NameClaim::Prefix(prefix)) = (namespace.variant_claim)(root, export) {
+                return Err(BuildError::Io(format!(
+                    "the export {export} ({export}.mll) is named `{export}`, a name in \
+                     `{prefix}...`, which the layout variant {file} uses in {holder}; rename one"
+                )));
             }
         }
     }
@@ -13336,16 +13361,23 @@ layout NativeEvents {
         assert!(error.to_string().contains("the WinUI shell"), "{error}");
     }
 
-    // UI48 ENV2 on SwiftUI, Compose and Flutter: one namespace per package,
-    // so a variant root may not take a name another export or variant
-    // claims -- the check Qt and XAML already made, now shared by all five
+    // UI48 ENV2 on every backend: one namespace per package, so a variant
+    // root may not take a name another export or variant claims -- the check
+    // Qt and XAML made first, now shared by all five
     // (`check_layout_namespace`). Each case runs flat and as a project,
-    // because the flat artifacts are what a consumer compiles together.
+    // because the flat artifacts are what a consumer compiles together --
+    // except on Qt, whose types collide only in a project's QML module.
 
     /// The root a variant of `component` takes on `backend`: SwiftUI adds
     /// `View`, the others do not.
     fn variant_root(backend: Backend, component: &str, variant: &str) -> String {
         match backend {
+            Backend::Qt => {
+                mosaic_emit_qt::pipeline::variant_type_name(component, variant).unwrap()
+            }
+            Backend::Xaml => {
+                mosaic_emit_xaml::pipeline::variant_type_name(component, variant).unwrap()
+            }
             Backend::SwiftUI => {
                 mosaic_emit_swiftui::pipeline::variant_view_type(component, variant).unwrap()
             }
@@ -13359,12 +13391,19 @@ layout NativeEvents {
         }
     }
 
-    /// Build `pkg` on `backend`, flat and as a project, and return both
-    /// errors (the builder refuses before writing, so both must fail).
+    /// The builds `backend` checks variant names in: flat and project, or a
+    /// Qt project only.
+    fn checked_builds(backend: Backend) -> &'static [bool] {
+        if backend == Backend::Qt { &[true] } else { &[false, true] }
+    }
+
+    /// Build `pkg` on `backend`, in every build it checks, and return the
+    /// errors (the builder refuses before writing, so each must fail and
+    /// leave no files behind -- a Qt project included).
     fn build_errors(pkg: &TempDir, backend: Backend) -> Vec<String> {
-        [false, true]
-            .into_iter()
-            .map(|emit_project| {
+        checked_builds(backend)
+            .iter()
+            .map(|&emit_project| {
                 let out = TempDir::new().unwrap();
                 let error = build_package(&BuildOptions {
                     emit_project,
@@ -13383,7 +13422,8 @@ layout NativeEvents {
             .collect()
     }
 
-    const VARIANT_ROOT_BACKENDS: [Backend; 3] = [Backend::SwiftUI, Backend::Compose, Backend::Flutter];
+    const VARIANT_ROOT_BACKENDS: [Backend; 5] =
+        [Backend::SwiftUI, Backend::Compose, Backend::Flutter, Backend::Qt, Backend::Xaml];
 
     /// `Card.touch.mll` beside an exported `CardTouch` would declare the
     /// export's root again: `CardTouch` (`CardTouchView` on SwiftUI).
@@ -13467,6 +13507,8 @@ layout NativeEvents {
             (Backend::Flutter, &["Card", "Mosaic"][..], "Mosaic.host.mll", "`MosaicHost` twice", "the Flutter shell"),
             // SwiftUI: another export's view.
             (Backend::SwiftUI, &["Card", "CardTouch"][..], "Card.touch.mll", "`CardTouchView` twice", "the export CardTouch (CardTouch.mll)"),
+            // Qt: a shell name, by a variant of a NON-root export.
+            (Backend::Qt, &["Card", "Mosaic"][..], "Mosaic.host.mll", "`MosaicHost` twice", "the Qt shell"),
         ] {
             let pkg = make_package("mosaic-pkg-card", exports);
             let component = file.split('.').next().unwrap();
@@ -13492,6 +13534,61 @@ layout NativeEvents {
         }
     }
 
+    /// A Qt flat build has no module, so the same collision does not stop
+    /// it; the project build is refused before writing anything.
+    #[test]
+    fn a_qt_flat_build_has_no_module_to_collide_in() {
+        let pkg = make_package("mosaic-pkg-card", &["Card", "CardTouch"]);
+        fs::write(pkg.path().join("src/Card.touch.mll"), minimal_mll("Card")).unwrap();
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            emit_project: false,
+            ..swiftui_options(&pkg, &out, Backend::Qt)
+        })
+        .expect("a flat Qt build registers no types");
+        assert!(out.path().join("qt/Card.touch.qml").is_file());
+    }
+
+    /// Kotlin names a file's class after the file with `.` and `-` made
+    /// `_`: `Card.touch.kt` is `Card_touchKt`, which an export `Card_touch`
+    /// (`Card_touch.kt`) would declare again ("Duplicate JVM class name").
+    /// `check_layout_namespace` does not look for that because the manifest
+    /// cannot name such an export: this pins the invariant it relies on, on
+    /// every backend, so relaxing the export-name rule fails here first.
+    #[test]
+    fn export_names_cannot_spell_a_mangled_variant_file() {
+        for backend in VARIANT_ROOT_BACKENDS {
+            let pkg = make_package("mosaic-pkg-card", &["Card", "Card_touch"]);
+            fs::write(pkg.path().join("src/Card.touch.mll"), minimal_mll("Card")).unwrap();
+            let out = TempDir::new().unwrap();
+            let error = build_package(&swiftui_options(&pkg, &out, backend))
+                .expect_err("an export name with `_` is refused")
+                .to_string();
+            assert!(error.contains("invalid component name `Card_touch`"), "{backend:?}: {error}");
+        }
+    }
+
+    /// On XAML a variant owns the support names `<Root>Mosaic...`, so an
+    /// export named inside them (`CardTouchMosaicSlider` beside
+    /// `Card.touch`) is refused too -- the reverse of a variant inside an
+    /// export's.
+    #[test]
+    fn a_xaml_export_inside_a_variants_support_names_is_refused() {
+        let pkg = make_package("mosaic-pkg-card", &["Card", "CardTouchMosaicSlider"]);
+        fs::write(pkg.path().join("src/Card.touch.mll"), minimal_mll("Card")).unwrap();
+        for error in build_errors(&pkg, Backend::Xaml) {
+            assert!(error.contains("the export CardTouchMosaicSlider (CardTouchMosaicSlider.mll)"), "{error}");
+            assert!(error.contains("`CardTouchMosaic...`"), "{error}");
+            assert!(error.contains("the layout variant Card.touch.mll"), "{error}");
+        }
+        // Only XAML's variants claim more than their root.
+        for backend in [Backend::SwiftUI, Backend::Compose, Backend::Flutter, Backend::Qt] {
+            let out = TempDir::new().unwrap();
+            build_package(&swiftui_options(&pkg, &out, backend))
+                .unwrap_or_else(|error| panic!("{backend:?}: {error}"));
+        }
+    }
+
     /// The top-level names a source declares outside any type, for the
     /// shell pins below: one per line that starts in column 0, after its
     /// modifiers, whose keyword is in `keywords`. `private` and
@@ -13499,7 +13596,7 @@ layout NativeEvents {
     fn top_level_declarations(source: &str, keywords: &[&str]) -> Vec<String> {
         const MODIFIERS: &[&str] = &[
             "public", "internal", "open", "final", "abstract", "data", "sealed", "inline",
-            "value", "indirect", "nonisolated",
+            "value", "indirect", "nonisolated", "expect", "actual",
         ];
         let mut names = Vec::new();
         for line in source.lines() {
@@ -13529,6 +13626,15 @@ layout NativeEvents {
             // `fun interface X` is an interface.
             let mut name = words.next().unwrap_or_default();
             if keyword == "fun" && name == "interface" {
+                name = words.next().unwrap_or_default();
+            }
+            // Type parameters before the name (`fun <T> MosaicBox(...)`,
+            // `fun <K, V> f`): skip to the word after the closing `>`.
+            if name.starts_with('<') {
+                let mut word = name;
+                while !word.contains('>') {
+                    word = words.next().unwrap_or(">");
+                }
                 name = words.next().unwrap_or_default();
             }
             // An extension (`fun MosaicHost.install()`) declares nothing new.
@@ -17723,7 +17829,7 @@ version = "1"
         ] {
             let file = src.path().join(format!("Mosaic.{variant}.mll"));
             fs::write(&file, "layout X { }\n").unwrap();
-            let error = qt_cmake_with_layout_variants("", "Card", &components, src.path())
+            let error = check_layout_namespace(&QT_NAMESPACE, &components, src.path())
                 .unwrap_err()
                 .to_string();
             assert!(error.contains(&format!("`{owned}` twice")), "{error}");
