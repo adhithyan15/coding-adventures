@@ -267,6 +267,25 @@ build_package(...)
   `-- Io(_)                  <- read / write / mkdir failed
 ```
 
+### Layout variant names (UI48 ENV2)
+
+A layout variant `<Component>.<variant>.mll` gets a root of its own, named
+`<Component><Variant>` (`<Component><Variant>View` on SwiftUI), and it shares
+one namespace with everything else the package declares. On SwiftUI, Compose,
+Flutter, Qt and XAML the builder refuses a variant, of any export, whose root
+would take a name already claimed, and names both claimants in the `Io` error:
+
+```text
+Card.touch.mll      beside an exported CardTouch       -> `CardTouch` twice
+Card.touch-bar.mll  beside CardTouch.bar.mll           -> `CardTouchBar` twice
+Mosaic.host.mll     beside the shell's MosaicHost      -> `MosaicHost` twice
+```
+
+What each backend's default layout and project shell declare is listed beside
+`check_layout_namespace` in `src/lib.rs`. SwiftUI, Compose, Flutter and XAML
+check before anything is written; Qt checks in its project shell, where its
+QML module is.
+
 ## Layout Per Backend
 
 | Backend | Files written |

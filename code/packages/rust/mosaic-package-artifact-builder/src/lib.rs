@@ -2823,8 +2823,20 @@ fn build_package_inner(
     let mut artifacts = Vec::new();
     let mut components_built = Vec::new();
 
-    if opts.backend == Backend::Xaml {
-        xaml_check_variant_types(&manifest.components.exports, &src_dir)?;
+    // UI48 ENV2: one namespace holds every export and every export's
+    // variants, so a variant root may not take a name another claims
+    // (`Card.touch.mll` beside an exported `CardTouch`). Checked for the
+    // whole package before anything is written -- the flat artifacts are
+    // what a consumer compiles together, project or not. Qt checks in its
+    // project shell instead, where its module is
+    // (`qt_cmake_with_layout_variants`).
+    let exports = &manifest.components.exports;
+    match opts.backend {
+        Backend::Xaml => xaml_check_variant_types(exports, &src_dir)?,
+        Backend::SwiftUI => check_layout_namespace(&SWIFTUI_NAMESPACE, exports, &src_dir)?,
+        Backend::Compose => check_layout_namespace(&COMPOSE_NAMESPACE, exports, &src_dir)?,
+        Backend::Flutter => check_layout_namespace(&FLUTTER_NAMESPACE, exports, &src_dir)?,
+        _ => {}
     }
 
     for component in &manifest.components.exports {
@@ -5144,40 +5156,28 @@ fn qt_layout_choices(
 /// than registering one type twice. So is a variant of any export named like
 /// something the Qt shell owns (`SHELL_RESERVED_NAMES`: `Mosaic` + `host`
 /// is `MosaicHost`): the emitter refuses that for every variant it emits,
-/// and this keeps the module's own list from relying on it.
+/// and this keeps the module's own list from relying on it. The check is
+/// the one every backend shares, [`check_layout_namespace`] with
+/// [`QT_NAMESPACE`]; it runs here rather than before the flat build because
+/// only the project has a module (a flat `Card.touch.qml` registers nothing).
 fn qt_cmake_with_layout_variants(
     generated: &str,
     mounted_component: &str,
     components: &[String],
     src_dir: &Path,
 ) -> Result<String, BuildError> {
-    // The names the module already holds before any variant: every export,
-    // and every name the Qt shell owns (`MosaicHost`, ...), which a variant
-    // of ANY export may not take -- `Mosaic` + `host` is refused for a
-    // non-root export exactly as the emitter refuses it for the root.
-    let mut owners: HashMap<String, String> = components
-        .iter()
-        .map(|component| (component.clone(), format!("the export {component}")))
-        .chain(
-            mosaic_emit_qt::pipeline::SHELL_RESERVED_NAMES
-                .iter()
-                .map(|name| (name.to_string(), "the Qt shell".to_string())),
-        )
-        .collect();
+    // No variant of ANY export may register a name the module already holds
+    // -- an export, another variant, or a name the Qt shell owns: `Mosaic` +
+    // `host` is refused for a non-root export exactly as the emitter
+    // refuses it for the root.
+    check_layout_namespace(&QT_NAMESPACE, components, src_dir)?;
     let mut added = String::new();
     for component in components {
         for variant in discover_variants(src_dir, component)?.into_iter().flatten() {
             let file = format!("{component}.{variant}.qml");
-            let type_name = mosaic_emit_qt::pipeline::variant_type_name(component, &variant)
-                .ok_or_else(|| {
-                    BuildError::Io(format!(
-                        "layout variant `{variant}` of {component} cannot name a QML type"
-                    ))
-                })?;
-            if let Some(owner) = owners.insert(type_name.clone(), format!("the variant {file}")) {
+            if mosaic_emit_qt::pipeline::variant_type_name(component, &variant).is_none() {
                 return Err(BuildError::Io(format!(
-                    "the Qt module would register `{type_name}` twice: for the variant {file} \
-                     and for {owner}"
+                    "layout variant `{variant}` of {component} cannot name a QML type"
                 )));
             }
             if generated.contains(&format!("qt_target_qml_sources({mounted_component} QML_FILES {file})\n")) {
@@ -5702,25 +5702,17 @@ fn xaml_layout_choices(
     Ok(choices)
 }
 
-/// Every export's layout variants compile into ONE WinUI namespace (UI48
-/// §7.11): the project globs every `.xaml` and `.cs` beside it, and
-/// `MosaicPackage.props` lists them all. Two variants of different exports
-/// may spell one type -- `Card` + `touch-bar` and `CardTouch` + `bar` are
-/// both `CardTouchBar` -- which the emitter, seeing one component at a time,
-/// cannot know. So may one variant's type and another's generated support
-/// types: `Card.touch` declares `CardTouchMosaicSlider`, which a
-/// `Card.touch-mosaic-slider` variant would declare again. Both are refused
-/// here, naming both files, before anything is written. (A variant against
-/// an export's own names, or the shell's, is the emitter's check:
-/// `EmitOptions::package_exports`.)
+/// A component with variants but no default `<C>.mll` is refused on XAML
+/// (UI48 §7.11): the variants raise `<C>Event`, which only the default
+/// layout declares, so they could not compile. No backend supports that
+/// shape -- every variant takes the interface from its default's file -- but
+/// only here would the build otherwise succeed and the WinUI compile fail.
 ///
-/// A component with variants but no default `<C>.mll` is refused too: the
-/// variants raise `<C>Event`, which only the default layout declares, so
-/// they could not compile. No backend supports that shape -- every variant
-/// takes the interface from its default's file -- but only here would the
-/// build otherwise succeed and the WinUI compile fail.
+/// Then the names: every export's variants compile into ONE WinUI namespace
+/// (the project globs every `.xaml` and `.cs` beside it, and
+/// `MosaicPackage.props` lists them all), which [`check_layout_namespace`]
+/// checks with [`XAML_NAMESPACE`] before anything is written.
 fn xaml_check_variant_types(components: &[String], src_dir: &Path) -> Result<(), BuildError> {
-    let mut owners: HashMap<String, String> = HashMap::new();
     for component in components {
         let variants = discover_variants(src_dir, component)?;
         if !variants.is_empty() && !variants.contains(&None) {
@@ -5730,33 +5722,281 @@ fn xaml_check_variant_types(components: &[String], src_dir: &Path) -> Result<(),
                  add {component}.mll"
             )));
         }
-        for variant in variants.into_iter().flatten() {
-            // A variant that cannot name a type at all is the emitter's to
-            // refuse, with its own message.
-            let Some(type_name) = mosaic_emit_xaml::pipeline::variant_type_name(component, &variant)
-            else {
-                continue;
-            };
-            let file = format!("{component}.{variant}.mll");
-            if let Some(owner) = owners.insert(type_name.clone(), file.clone()) {
-                return Err(BuildError::Io(format!(
-                    "the WinUI project would declare `{type_name}` twice: for the layout \
-                     variants {owner} and {file}; rename one"
-                )));
+    }
+    check_layout_namespace(&XAML_NAMESPACE, components, src_dir)
+}
+
+// =====================================================================
+// One namespace per package: every export, and every export's variants
+// =====================================================================
+//
+// UI48 ENV2 gives every layout variant a root of its own, named by one rule
+// on every backend: the component, then the variant in PascalCase
+// (`Card` + `touch` → `CardTouch`; SwiftUI adds `View`). That root shares a
+// namespace with everything else the package's generated files declare at
+// top level -- and the variant's name is built by concatenation, so it can
+// spell a name something else already owns:
+//
+// ```text
+//   Card.touch.mll      → CardTouch      beside an exported component CardTouch
+//   Card.touch-bar.mll  → CardTouchBar   beside CardTouch.bar.mll → CardTouchBar
+//   Mosaic.host.mll     → MosaicHost     beside the shell's own MosaicHost
+// ```
+//
+// An emitter sees one component at a time, so it cannot know the first two;
+// the builder sees the whole package, so it refuses all three here, naming
+// both claimants, before a backend compiler reports a redeclaration (or, on
+// Kotlin and Dart, silently resolves a call to the wrong one). What "the
+// namespace" is, and what a default layout's file declares in it, differ by
+// backend:
+//
+// | backend | shared by                  | variant root        | an export `Y`'s default file declares    | shell names                      |
+// |---------|----------------------------|---------------------|------------------------------------------|----------------------------------|
+// | SwiftUI | the Swift module           | `<C><Variant>View`  | `YView`, `YEvent`                        | none ends in `View` (pinned)     |
+// | Compose | the Kotlin package         | `<C><Variant>`      | `Y`, `YEvent`, `YProps`, `YProps<n>`     | [`COMPOSE_SHELL_RESERVED_NAMES`] |
+// | Flutter | the Dart package (`lib/`)  | `<C><Variant>`      | `Y`, `YEvent`, every `YEvent<Case>`      | the emitter's `SHELL_RESERVED_NAMES` |
+// | Qt      | the QML module             | `<C><Variant>`      | `Y` (the rest are members of `Y`)        | the emitter's `SHELL_RESERVED_NAMES` |
+// | XAML    | the C# namespace           | `<C><Variant>`      | `Y`, `YEvent`, every `YMosaic...`        | the emitter's `SHELL_RESERVED_NAMES` |
+//
+// Everything else a generated file declares is private to it (Kotlin
+// `private`, Swift `private`/`fileprivate`, Dart's leading `_`), nested in
+// a type above (Kotlin and Swift event cases), or -- on XAML -- named
+// inside its owner's `<X>Mosaic...` support namespace, which a variant is
+// also an owner of (`Card.touch` declares `CardTouchMosaicSlider`).
+//
+// Two prefix claims are deliberately wider than what one build emits:
+// Flutter's `YEvent<Case>` classes exist one per emit, and XAML's support
+// types one per primitive a layout uses. Claiming the whole prefix keeps
+// the rule independent of the interface and the layout -- adding an `onTap`
+// to `Card` can then never start failing a build because `Card.event-tap`
+// was already a variant. No package in the repo has a variant there.
+
+/// What else in a package's namespace claims a name a variant would take.
+#[derive(Debug, Clone, PartialEq, Eq)]
+enum NameClaim {
+    /// Exactly this name.
+    Name,
+    /// Every name that starts with this prefix and continues with another
+    /// word: `CardMosaic` (XAML's support types), `CardEvent` (Flutter's
+    /// event classes).
+    Prefix(String),
+}
+
+/// One backend's namespace, as the table above describes it.
+struct LayoutNamespace {
+    /// What holds every declaration, for messages: "the Kotlin package".
+    holder: &'static str,
+    /// Who owns `shell_names`, for messages: "the Compose shell".
+    shell: &'static str,
+    /// Public names the generated project shell declares beside the
+    /// components, which no variant root may take.
+    shell_names: &'static [&'static str],
+    /// The variant root's name, or `None` for a variant name the backend
+    /// cannot spell an identifier from -- which is that backend's emitter's
+    /// (or its project shell's) to refuse, with its own message.
+    variant_type: fn(&str, &str) -> Option<String>,
+    /// Whether export `component`'s default layout file claims `name`.
+    export_claim: fn(&str, &str) -> Option<NameClaim>,
+    /// Whether the file of the variant whose root is `variant_type` claims
+    /// `name` -- besides the root itself, which is always checked.
+    variant_claim: fn(&str, &str) -> Option<NameClaim>,
+}
+
+/// `rest` continues a name with another word: it is non-empty and does not
+/// start with a lowercase letter (`CardEventTap` continues `CardEvent`;
+/// `CardEventsList` does not, so it is not in Flutter's event classes).
+fn continues_with_word(rest: &str) -> bool {
+    rest.chars().next().is_some_and(|first| !first.is_ascii_lowercase())
+}
+
+/// No file claims anything beyond its root (every backend but XAML).
+fn no_further_claim(_owner: &str, _name: &str) -> Option<NameClaim> {
+    None
+}
+
+const SWIFTUI_NAMESPACE: LayoutNamespace = LayoutNamespace {
+    holder: "the Swift module",
+    shell: "the SwiftUI shell",
+    // Every variant root ends in `View`, and no type the SwiftUI shell
+    // declares does (`MosaicApp`, `MosaicRuntimeHost`, ...): pinned by
+    // `no_swiftui_shell_type_can_be_a_variant_root`, so the list is empty
+    // rather than a list no variant could ever match.
+    shell_names: &[],
+    variant_type: mosaic_emit_swiftui::pipeline::variant_view_type,
+    export_claim: |component, name| {
+        (name == format!("{component}View") || name == format!("{component}Event"))
+            .then_some(NameClaim::Name)
+    },
+    variant_claim: no_further_claim,
+};
+
+/// The public names a Compose project shell declares in the root Kotlin
+/// package, beside the components (UI48 §7.5):
+///
+/// | file                              | names                                   |
+/// |-----------------------------------|-----------------------------------------|
+/// | `MosaicAppShell.kt`               | `MosaicApp`, `MosaicComposeHost`, `MosaicComposeHostBridge`, and a native-complete shell's `MosaicStartup` |
+/// | `MosaicRuntimeHost.kt`            | `MosaicRuntimeHost`, `MosaicRuntimeException`, `MosaicNativeApi`, `MosaicSizeT`, `MosaicBuffer`, `MosaicBytes` |
+/// | `MosaicPlatformEffects.kt`        | `MosaicPlatformRouter`, `MosaicFileDialogs`, `AwtMosaicFileDialogs` |
+///
+/// `Main.kt`, both halves of `MosaicPlatform.kt` and the rest declare only
+/// `main`, camelCase helpers or `private` names; `MosaicActivity` lives in
+/// its own package (`mosaic.android`). A variant composable may not take
+/// one (`Mosaic` + `app` would be a second `MosaicApp`). Pinned by
+/// `every_public_name_the_compose_shell_declares_is_reserved` against
+/// every source the shell is generated from, so a new public declaration
+/// there fails a test until it is listed.
+const COMPOSE_SHELL_RESERVED_NAMES: &[&str] = &[
+    "MosaicApp",
+    "MosaicComposeHost",
+    "MosaicComposeHostBridge",
+    "MosaicStartup",
+    "MosaicRuntimeHost",
+    "MosaicRuntimeException",
+    "MosaicNativeApi",
+    "MosaicSizeT",
+    "MosaicBuffer",
+    "MosaicBytes",
+    "MosaicPlatformRouter",
+    "MosaicFileDialogs",
+    "AwtMosaicFileDialogs",
+];
+
+const COMPOSE_NAMESPACE: LayoutNamespace = LayoutNamespace {
+    holder: "the Kotlin package",
+    shell: "the Compose shell",
+    shell_names: COMPOSE_SHELL_RESERVED_NAMES,
+    variant_type: mosaic_emit_compose::pipeline::variant_composable_name,
+    // The composable, its event sealed class (whose cases are nested), and
+    // its props: `YProps`, or `YProps0`, `YProps1`, ... when the slots are
+    // split into groups.
+    export_claim: |component, name| {
+        let rest = name.strip_prefix(component)?;
+        let props = rest
+            .strip_prefix("Props")
+            .is_some_and(|index| index.chars().all(|c| c.is_ascii_digit()));
+        (rest.is_empty() || rest == "Event" || props).then_some(NameClaim::Name)
+    },
+    variant_claim: no_further_claim,
+};
+
+const FLUTTER_NAMESPACE: LayoutNamespace = LayoutNamespace {
+    holder: "the Dart package",
+    shell: "the Flutter shell",
+    shell_names: mosaic_emit_flutter::pipeline::SHELL_RESERVED_NAMES,
+    variant_type: mosaic_emit_flutter::pipeline::variant_widget_name,
+    // The widget, its sealed `YEvent`, and one top-level `YEvent<Case>`
+    // class per emit -- claimed as a prefix (see above).
+    export_claim: |component, name| {
+        let event = format!("{component}Event");
+        if name == component || name == event {
+            Some(NameClaim::Name)
+        } else if name.strip_prefix(event.as_str()).is_some_and(continues_with_word) {
+            Some(NameClaim::Prefix(event))
+        } else {
+            None
+        }
+    },
+    variant_claim: no_further_claim,
+};
+
+const QT_NAMESPACE: LayoutNamespace = LayoutNamespace {
+    holder: "the Qt module",
+    shell: "the Qt shell",
+    shell_names: mosaic_emit_qt::pipeline::SHELL_RESERVED_NAMES,
+    variant_type: mosaic_emit_qt::pipeline::variant_type_name,
+    // A QML file's declarations are members of its own type (§7.10).
+    export_claim: |component, name| (name == component).then_some(NameClaim::Name),
+    variant_claim: no_further_claim,
+};
+
+/// XAML's support namespace, `<owner>Mosaic...`, as a claim.
+fn xaml_support_claim(owner: &str, name: &str) -> Option<NameClaim> {
+    mosaic_emit_xaml::pipeline::in_support_namespace(owner, name)
+        .then(|| NameClaim::Prefix(format!("{owner}Mosaic")))
+}
+
+const XAML_NAMESPACE: LayoutNamespace = LayoutNamespace {
+    holder: "the WinUI project",
+    shell: "the WinUI shell",
+    shell_names: mosaic_emit_xaml::pipeline::SHELL_RESERVED_NAMES,
+    variant_type: mosaic_emit_xaml::pipeline::variant_type_name,
+    // The control, its event union, and its support types. (The emitter
+    // checks the same against `EmitOptions::package_exports`, for callers
+    // that are not this builder.)
+    export_claim: |component, name| {
+        if name == component || name == format!("{component}Event") {
+            Some(NameClaim::Name)
+        } else {
+            xaml_support_claim(component, name)
+        }
+    },
+    variant_claim: xaml_support_claim,
+};
+
+/// Refuse a layout variant -- of ANY export, not only the root -- whose
+/// root would take a name already claimed in `namespace` (see the table
+/// above): a name the shell declares, a name an export's default layout
+/// declares (its own component's included), another variant's root, or a
+/// name another variant's file claims. The message names the variant's
+/// `.mll` and the other claimant. Variants are visited in export order and,
+/// within one export, in `discover_variants` order, so the first collision
+/// reported is deterministic.
+fn check_layout_namespace(
+    namespace: &LayoutNamespace,
+    components: &[String],
+    src_dir: &Path,
+) -> Result<(), BuildError> {
+    let holder = namespace.holder;
+    // (root, `<C>.<variant>.mll`) for every variant that can name a root.
+    let mut roots: Vec<(String, String)> = Vec::new();
+    for component in components {
+        for variant in discover_variants(src_dir, component)?.into_iter().flatten() {
+            if let Some(root) = (namespace.variant_type)(component, &variant) {
+                roots.push((root, format!("{component}.{variant}.mll")));
             }
         }
     }
-    // Every pair, in either order: a type inside another's support names.
-    for (type_name, file) in &owners {
-        for (other, other_file) in &owners {
-            if other != type_name
-                && mosaic_emit_xaml::pipeline::in_support_namespace(other, type_name)
-            {
+    let twice = |root: &str, file: &str, owner: &str| {
+        BuildError::Io(format!(
+            "{holder} would declare `{root}` twice: for the layout variant {file} and for \
+             {owner}; rename the variant"
+        ))
+    };
+    let within = |root: &str, file: &str, prefix: &str, owner: &str| {
+        BuildError::Io(format!(
+            "the layout variant {file} would declare `{root}`, a name in `{prefix}...`, which \
+             {owner} uses in {holder}; rename the variant"
+        ))
+    };
+    for (index, (root, file)) in roots.iter().enumerate() {
+        if namespace.shell_names.contains(&root.as_str()) {
+            return Err(twice(root, file, namespace.shell));
+        }
+        for export in components {
+            let owner = format!("the export {export} ({export}.mll)");
+            match (namespace.export_claim)(export, root) {
+                Some(NameClaim::Name) => return Err(twice(root, file, &owner)),
+                Some(NameClaim::Prefix(prefix)) => {
+                    return Err(within(root, file, &prefix, &owner))
+                }
+                None => {}
+            }
+        }
+        for (other_index, (other, other_file)) in roots.iter().enumerate() {
+            if other_index == index {
+                continue;
+            }
+            // Equal roots are reported once, at the later of the two.
+            if other == root && other_index < index {
                 return Err(BuildError::Io(format!(
-                    "the layout variant {file} would declare `{type_name}`, a name in \
-                     `{other}Mosaic...`, which the generated support types of {other_file} \
-                     use; rename one"
+                    "{holder} would declare `{root}` twice: for the layout variants \
+                     {other_file} and {file}; rename one"
                 )));
+            }
+            if let Some(NameClaim::Prefix(prefix)) = (namespace.variant_claim)(other, root) {
+                let owner = format!("the layout variant {other_file}");
+                return Err(within(root, file, &prefix, &owner));
             }
         }
     }
@@ -13038,16 +13278,18 @@ layout NativeEvents {
     }
 
     /// One WinUI namespace holds every export and every variant: a variant
-    /// may not take another export's name (the emitter's check, given the
-    /// exports), and two exports' variants may not spell one type (the
-    /// builder's, which sees them all).
+    /// may not take another export's name, and two exports' variants may
+    /// not spell one type. The builder, which sees them all, refuses both
+    /// before the emitter (which checks the first, given the exports) runs.
     #[test]
     fn a_xaml_variant_type_that_another_export_or_variant_owns_is_refused() {
         let pkg = make_package("mosaic-pkg-card", &["Card", "CardTouch"]);
         fs::write(pkg.path().join("src/Card.touch.mll"), minimal_mll("Card")).unwrap();
         let out = TempDir::new().unwrap();
         let error = build_package(&swiftui_options(&pkg, &out, Backend::Xaml)).unwrap_err();
-        assert!(error.to_string().contains("the component CardTouch"), "{error}");
+        assert!(error.to_string().contains("`CardTouch` twice"), "{error}");
+        assert!(error.to_string().contains("Card.touch.mll"), "{error}");
+        assert!(error.to_string().contains("the export CardTouch (CardTouch.mll)"), "{error}");
 
         let pkg = make_package("mosaic-pkg-card", &["Card", "CardTouch"]);
         fs::write(pkg.path().join("src/Card.touch-bar.mll"), minimal_mll("Card")).unwrap();
@@ -13068,10 +13310,14 @@ layout NativeEvents {
         let error = xaml_check_variant_types(
             &["Card".to_string(), "CardTouch".to_string()],
             &pkg.path().join("src"),
-        );
-        // (That name is in the EXPORT CardTouch's own support names, which
-        // the emitter refuses; this pass compares variants with variants.)
-        assert!(error.is_ok(), "{error:?}");
+        )
+        .unwrap_err()
+        .to_string();
+        // (That name is in the EXPORT CardTouch's own support names: the
+        // emitter refuses it too, but the builder now sees it first.)
+        assert!(error.contains("`CardTouchMosaicSlider`"), "{error}");
+        assert!(error.contains("`CardTouchMosaic...`"), "{error}");
+        assert!(error.contains("the export CardTouch (CardTouch.mll)"), "{error}");
         let pkg = make_package("mosaic-pkg-card", &["Card"]);
         fs::write(pkg.path().join("src/Card.touch.mll"), minimal_mll("Card")).unwrap();
         fs::write(pkg.path().join("src/Card.touch-mosaic-slider.mll"), minimal_mll("Card")).unwrap();
@@ -13086,7 +13332,325 @@ layout NativeEvents {
         fs::write(pkg.path().join("src/Mosaic.host.mll"), minimal_mll("Mosaic")).unwrap();
         let out = TempDir::new().unwrap();
         let error = build_package(&swiftui_options(&pkg, &out, Backend::Xaml)).unwrap_err();
-        assert!(error.to_string().contains("`MosaicHost` is a type the WinUI shell declares"), "{error}");
+        assert!(error.to_string().contains("`MosaicHost` twice"), "{error}");
+        assert!(error.to_string().contains("the WinUI shell"), "{error}");
+    }
+
+    // UI48 ENV2 on SwiftUI, Compose and Flutter: one namespace per package,
+    // so a variant root may not take a name another export or variant
+    // claims -- the check Qt and XAML already made, now shared by all five
+    // (`check_layout_namespace`). Each case runs flat and as a project,
+    // because the flat artifacts are what a consumer compiles together.
+
+    /// The root a variant of `component` takes on `backend`: SwiftUI adds
+    /// `View`, the others do not.
+    fn variant_root(backend: Backend, component: &str, variant: &str) -> String {
+        match backend {
+            Backend::SwiftUI => {
+                mosaic_emit_swiftui::pipeline::variant_view_type(component, variant).unwrap()
+            }
+            Backend::Compose => {
+                mosaic_emit_compose::pipeline::variant_composable_name(component, variant).unwrap()
+            }
+            Backend::Flutter => {
+                mosaic_emit_flutter::pipeline::variant_widget_name(component, variant).unwrap()
+            }
+            other => panic!("no variant roots checked here for {other:?}"),
+        }
+    }
+
+    /// Build `pkg` on `backend`, flat and as a project, and return both
+    /// errors (the builder refuses before writing, so both must fail).
+    fn build_errors(pkg: &TempDir, backend: Backend) -> Vec<String> {
+        [false, true]
+            .into_iter()
+            .map(|emit_project| {
+                let out = TempDir::new().unwrap();
+                let error = build_package(&BuildOptions {
+                    emit_project,
+                    ..swiftui_options(pkg, &out, backend)
+                })
+                .expect_err("the collision is refused")
+                .to_string();
+                // Refused before anything is written.
+                let dir = out.path().join(backend.dir_name());
+                assert!(
+                    fs::read_dir(&dir).map_or(true, |mut entries| entries.next().is_none()),
+                    "{backend:?} wrote artifacts before refusing: {error}"
+                );
+                error
+            })
+            .collect()
+    }
+
+    const VARIANT_ROOT_BACKENDS: [Backend; 3] = [Backend::SwiftUI, Backend::Compose, Backend::Flutter];
+
+    /// `Card.touch.mll` beside an exported `CardTouch` would declare the
+    /// export's root again: `CardTouch` (`CardTouchView` on SwiftUI).
+    #[test]
+    fn a_variant_root_named_like_another_export_is_refused() {
+        for backend in VARIANT_ROOT_BACKENDS {
+            let pkg = make_package("mosaic-pkg-card", &["Card", "CardTouch"]);
+            fs::write(pkg.path().join("src/Card.touch.mll"), minimal_mll("Card")).unwrap();
+            let root = variant_root(backend, "Card", "touch");
+            for error in build_errors(&pkg, backend) {
+                assert!(error.contains(&format!("`{root}` twice")), "{backend:?}: {error}");
+                assert!(error.contains("the layout variant Card.touch.mll"), "{backend:?}: {error}");
+                assert!(
+                    error.contains("the export CardTouch (CardTouch.mll)"),
+                    "{backend:?}: {error}"
+                );
+            }
+        }
+    }
+
+    /// `Card` + `touch-bar` and `CardTouch` + `bar` are two files but one
+    /// root, `CardTouchBar`. Only the builder sees both exports.
+    #[test]
+    fn two_exports_variants_that_spell_one_root_are_refused() {
+        for backend in VARIANT_ROOT_BACKENDS {
+            let pkg = make_package("mosaic-pkg-card", &["Card", "CardTouch"]);
+            fs::write(pkg.path().join("src/Card.touch-bar.mll"), minimal_mll("Card")).unwrap();
+            fs::write(pkg.path().join("src/CardTouch.bar.mll"), minimal_mll("CardTouch")).unwrap();
+            let root = variant_root(backend, "Card", "touch-bar");
+            assert_eq!(root, variant_root(backend, "CardTouch", "bar"));
+            for error in build_errors(&pkg, backend) {
+                assert!(error.contains(&format!("`{root}` twice")), "{backend:?}: {error}");
+                assert!(error.contains("Card.touch-bar.mll"), "{backend:?}: {error}");
+                assert!(error.contains("CardTouch.bar.mll"), "{backend:?}: {error}");
+            }
+        }
+    }
+
+    /// The same package with roots that do not collide builds on every
+    /// backend, flat and as a project, and every variant is emitted.
+    #[test]
+    fn a_multi_export_package_whose_variant_roots_are_distinct_builds() {
+        for backend in VARIANT_ROOT_BACKENDS {
+            let pkg = make_package("mosaic-pkg-card", &["Card", "CardTouch"]);
+            fs::write(pkg.path().join("src/Card.compact.mll"), minimal_mll("Card")).unwrap();
+            fs::write(pkg.path().join("src/CardTouch.compact.mll"), minimal_mll("CardTouch")).unwrap();
+            fs::write(pkg.path().join("src/CardTouch.bar.mll"), minimal_mll("CardTouch")).unwrap();
+            for emit_project in [false, true] {
+                let out = TempDir::new().unwrap();
+                build_package(&BuildOptions {
+                    emit_project,
+                    ..swiftui_options(&pkg, &out, backend)
+                })
+                .unwrap_or_else(|error| panic!("{backend:?} (project: {emit_project}): {error}"));
+                let ext = backend.component_extension().unwrap();
+                for file in ["Card", "Card.compact", "CardTouch", "CardTouch.compact", "CardTouch.bar"] {
+                    let path = out.path().join(backend.dir_name()).join(format!("{file}.{ext}"));
+                    assert!(path.is_file(), "{backend:?}: {}", path.display());
+                }
+            }
+        }
+    }
+
+    /// Each backend's own claims, for a variant of any export: Compose's
+    /// props classes and shell composable, Flutter's event classes and
+    /// shell names (for a NON-root export too), SwiftUI's views.
+    #[test]
+    fn a_variant_root_may_not_take_a_name_the_backend_declares() {
+        for (backend, exports, file, owned, owner) in [
+            // `Card`'s props data class.
+            (Backend::Compose, &["Card"][..], "Card.props.mll", "`CardProps` twice", "the export Card (Card.mll)"),
+            // Or one of its grouped props classes.
+            (Backend::Compose, &["Card"][..], "Card.props-2.mll", "`CardProps2` twice", "the export Card (Card.mll)"),
+            // A name the Compose shell declares, here by a non-root export.
+            (Backend::Compose, &["Card", "Mosaic"][..], "Mosaic.app.mll", "`MosaicApp` twice", "the Compose shell"),
+            // Another export's event union.
+            (Backend::Compose, &["Card", "CardTouch"][..], "Card.touch-event.mll", "`CardTouchEvent` twice", "the export CardTouch (CardTouch.mll)"),
+            // Flutter: another export's event classes, a whole prefix.
+            (Backend::Flutter, &["Card", "CardTouch"][..], "Card.touch-event-tap.mll", "a name in `CardTouchEvent...`", "the export CardTouch (CardTouch.mll)"),
+            // Flutter: a shell name, by a variant of a NON-root export.
+            (Backend::Flutter, &["Card", "Mosaic"][..], "Mosaic.host.mll", "`MosaicHost` twice", "the Flutter shell"),
+            // SwiftUI: another export's view.
+            (Backend::SwiftUI, &["Card", "CardTouch"][..], "Card.touch.mll", "`CardTouchView` twice", "the export CardTouch (CardTouch.mll)"),
+        ] {
+            let pkg = make_package("mosaic-pkg-card", exports);
+            let component = file.split('.').next().unwrap();
+            fs::write(pkg.path().join("src").join(file), minimal_mll(component)).unwrap();
+            for error in build_errors(&pkg, backend) {
+                assert!(error.contains(owned), "{backend:?} {file}: {error}");
+                assert!(error.contains(owner), "{backend:?} {file}: {error}");
+                assert!(error.contains(file), "{backend:?} {file}: {error}");
+            }
+        }
+        // Not every name that merely starts like a claim is one: `Card`'s
+        // `events-list` is `CardEventsList`, not an event class, and
+        // `CardPropsPanel` is not a props class.
+        for (backend, file) in [
+            (Backend::Flutter, "Card.events-list.mll"),
+            (Backend::Compose, "Card.props-panel.mll"),
+        ] {
+            let pkg = make_package("mosaic-pkg-card", &["Card"]);
+            fs::write(pkg.path().join("src").join(file), minimal_mll("Card")).unwrap();
+            let out = TempDir::new().unwrap();
+            build_package(&swiftui_options(&pkg, &out, backend))
+                .unwrap_or_else(|error| panic!("{backend:?} {file}: {error}"));
+        }
+    }
+
+    /// The top-level names a source declares outside any type, for the
+    /// shell pins below: one per line that starts in column 0, after its
+    /// modifiers, whose keyword is in `keywords`. `private` and
+    /// `fileprivate` declarations are file-scoped, so they are left out.
+    fn top_level_declarations(source: &str, keywords: &[&str]) -> Vec<String> {
+        const MODIFIERS: &[&str] = &[
+            "public", "internal", "open", "final", "abstract", "data", "sealed", "inline",
+            "value", "indirect", "nonisolated",
+        ];
+        let mut names = Vec::new();
+        for line in source.lines() {
+            if line.starts_with(char::is_whitespace) {
+                continue;
+            }
+            // Attributes and annotations first (`@main struct App`).
+            let mut words = line
+                .split_whitespace()
+                .skip_while(|word| word.starts_with('@'))
+                .peekable();
+            if matches!(words.peek(), Some(&("private" | "fileprivate"))) {
+                continue;
+            }
+            while words.peek().is_some_and(|word| MODIFIERS.contains(word)) {
+                words.next();
+            }
+            let Some(mut keyword) = words.next() else { continue };
+            // Kotlin's `enum class X` and `annotation class X` are classes;
+            // Swift's `enum X` is its own keyword.
+            if matches!(keyword, "enum" | "annotation") && words.peek() == Some(&"class") {
+                keyword = words.next().unwrap();
+            }
+            if !keywords.contains(&keyword) {
+                continue;
+            }
+            // `fun interface X` is an interface.
+            let mut name = words.next().unwrap_or_default();
+            if keyword == "fun" && name == "interface" {
+                name = words.next().unwrap_or_default();
+            }
+            // An extension (`fun MosaicHost.install()`) declares nothing new.
+            if name.split('(').next().is_some_and(|head| head.contains('.')) {
+                continue;
+            }
+            let name: String = name
+                .chars()
+                .take_while(|c| c.is_ascii_alphanumeric() || *c == '_')
+                .collect();
+            if !name.is_empty() {
+                names.push(name);
+            }
+        }
+        names
+    }
+
+    /// Every `.ext` file under `dir`, recursively.
+    fn sources_under(dir: &Path, ext: &str, found: &mut Vec<PathBuf>) {
+        for entry in fs::read_dir(dir).unwrap() {
+            let path = entry.unwrap().path();
+            if path.is_dir() {
+                sources_under(&path, ext, found);
+            } else if path.extension().is_some_and(|e| e == ext) {
+                found.push(path);
+            }
+        }
+    }
+
+    /// Generate `pkg`'s project on `backend`, permissive and native-complete
+    /// (with a runtime, so the strict shell is the one written), and return
+    /// every `.ext` source the shell put beside the components -- not the
+    /// components' own files, which `check_layout_namespace` claims for.
+    fn shell_sources(pkg: &TempDir, backend: Backend, ext: &str) -> Vec<(PathBuf, String)> {
+        // SwiftUI bundles a `.dylib`; the JVM loads a `.so` on Linux.
+        let library = if backend == Backend::SwiftUI { "libcard_app.dylib" } else { "libcard_app.so" };
+        let runtime = pkg.path().join(library);
+        fs::write(&runtime, b"runtime").unwrap();
+        let mut sources = Vec::new();
+        for (profile, runtime) in [
+            (BuildProfile::Permissive, None),
+            (BuildProfile::NativeComplete, Some(runtime.as_path())),
+        ] {
+            let out = TempDir::new().unwrap();
+            build_package_with_profile_and_runtime(&swiftui_options(pkg, &out, backend), profile, runtime)
+                .unwrap_or_else(|error| panic!("{backend:?} {profile:?}: {error}"));
+            let mut files = Vec::new();
+            sources_under(&out.path().join(backend.dir_name()), ext, &mut files);
+            for file in files {
+                let name = file.file_name().unwrap().to_string_lossy().into_owned();
+                if name.starts_with("Card.") {
+                    continue;
+                }
+                let source = fs::read_to_string(&file).unwrap();
+                sources.push((file, source));
+            }
+        }
+        assert!(!sources.is_empty(), "{backend:?} wrote no shell sources");
+        sources
+    }
+
+    /// Every public PascalCase name a Compose project declares in the root
+    /// Kotlin package beside the components is one a variant composable may
+    /// not take (UI48 §7.5), so a new public declaration in the shell, the
+    /// runtime binding or the platform library fails this test until
+    /// `COMPOSE_SHELL_RESERVED_NAMES` lists it. Files in another package
+    /// (`mosaic.android`'s `MosaicActivity`) cannot collide and are skipped.
+    #[test]
+    fn every_public_name_the_compose_shell_declares_is_reserved() {
+        let pkg = card_package_with_touch_variant();
+        let mut sources = shell_sources(&pkg, Backend::Compose, "kt");
+        // Both halves of `MosaicPlatform.kt`, whichever one a build wrote.
+        for platform in [
+            mosaic_emit_compose::pipeline::DESKTOP_PLATFORM_KT,
+            mosaic_emit_compose::pipeline::ANDROID_PLATFORM_KT,
+        ] {
+            sources.push((PathBuf::from("MosaicPlatform.kt"), platform.to_string()));
+        }
+        let mut seen = HashSet::new();
+        for (file, source) in &sources {
+            if source.lines().any(|line| line.starts_with("package ")) {
+                continue;
+            }
+            for name in top_level_declarations(source, &["fun", "class", "object", "interface", "typealias"]) {
+                if name.starts_with(|c: char| c.is_ascii_uppercase()) {
+                    assert!(
+                        COMPOSE_SHELL_RESERVED_NAMES.contains(&name.as_str()),
+                        "{name} ({}) is public in the Compose shell but a variant may take it",
+                        file.display()
+                    );
+                    seen.insert(name);
+                }
+            }
+        }
+        // And the list holds nothing the shell no longer declares.
+        for name in COMPOSE_SHELL_RESERVED_NAMES {
+            assert!(seen.contains(*name), "{name} is reserved but no Compose shell declares it");
+        }
+    }
+
+    /// A SwiftUI variant root is `<C><Variant>View`, so the shell's names
+    /// can only collide with one that ends in `View`, and none does (UI48
+    /// §7.2). That is why `SWIFTUI_NAMESPACE` has no shell list; a shell type
+    /// ending in `View` fails this test until it has one.
+    #[test]
+    fn no_swiftui_shell_type_can_be_a_variant_root() {
+        let pkg = card_package_with_touch_variant();
+        let mut types = 0;
+        for (file, source) in shell_sources(&pkg, Backend::SwiftUI, "swift") {
+            for name in top_level_declarations(
+                &source,
+                &["struct", "class", "enum", "protocol", "actor", "typealias"],
+            ) {
+                types += 1;
+                assert!(
+                    !name.ends_with("View"),
+                    "{name} ({}) is a SwiftUI shell type a variant root could spell",
+                    file.display()
+                );
+            }
+        }
+        assert!(types > 0, "the scan found the shell's types");
     }
 
     /// A variant raises `<C>Event`, which only the default layout declares,
