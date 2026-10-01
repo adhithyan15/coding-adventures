@@ -11,3 +11,5 @@
   cancellation channel, and a native wall-clock watchdog.
 - Made the environment isolation probe clean under current MSVC secure-CRT
   warnings-as-errors builds.
+- Preserved the native `CreateProcessAsUserW` error in trusted-launcher stderr
+  when process creation fails before readiness attestation.

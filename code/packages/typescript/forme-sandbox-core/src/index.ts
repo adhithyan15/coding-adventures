@@ -277,12 +277,17 @@ export async function launchWithNativeHelper(
     );
     assertAttestation(record, policy, staged);
   } catch (error) {
+    const launcherDiagnostic = readLauncherDiagnostic(child.stderr);
     signalProcessTree(child, "SIGKILL", control as Writable, policy.supervisorControl);
-    const launcherExit = await exited.catch(() => null);
+    const [launcherExit, launcherStderr] = await Promise.all([
+      exited.catch(() => null),
+      launcherDiagnostic,
+    ]);
     if (error instanceof SandboxLaunchError) {
       throw new SandboxLaunchError(error.code, error.message, {
         ...error.details,
         launcherExit,
+        ...(launcherStderr.length > 0 ? { launcherStderr } : {}),
       });
     }
     throw error;
@@ -301,6 +306,20 @@ export async function launchWithNativeHelper(
       signalProcessTree(child, signal, control as Writable, policy.supervisorControl);
     },
   });
+}
+
+async function readLauncherDiagnostic(stream: Readable): Promise<string> {
+  const chunks: Buffer[] = [];
+  let bytes = 0;
+  for await (const value of stream) {
+    const chunk = Buffer.isBuffer(value) ? value : Buffer.from(value as Uint8Array);
+    if (bytes < MAX_READINESS_BYTES) {
+      const remaining = MAX_READINESS_BYTES - bytes;
+      chunks.push(chunk.subarray(0, remaining));
+      bytes += Math.min(chunk.length, remaining);
+    }
+  }
+  return Buffer.concat(chunks).toString("utf8").trim();
 }
 
 function signalProcessTree(

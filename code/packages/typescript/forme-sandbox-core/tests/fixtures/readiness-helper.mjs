@@ -16,6 +16,10 @@ if (values["--mode"] === "silent") {
 } else if (values["--mode"] === "eof") {
   fs.closeSync(3);
   process.exit(92);
+} else if (values["--mode"] === "stderr-eof") {
+  process.stderr.write("native launcher diagnostic\n");
+  fs.closeSync(3);
+  process.exit(93);
 } else if (values["--mode"] === "oversized") {
   fs.writeSync(3, "x".repeat(4097));
 } else if (values["--mode"] === "trailing") {

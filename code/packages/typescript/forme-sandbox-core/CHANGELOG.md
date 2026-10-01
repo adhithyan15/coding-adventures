@@ -18,3 +18,5 @@
   root validation and delegating POSIX cleanup paths to native platform gates.
 - Added the trusted native launcher's bounded exit result to attestation-failure
   diagnostics without exposing plugin-controlled output.
+- Added bounded trusted-launcher stderr to failed pre-attestation diagnostics
+  so unavailable OS primitives retain their actionable native error.

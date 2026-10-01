@@ -233,4 +233,16 @@ describe("launchWithNativeHelper", () => {
       details: { launcherExit: { code: 92, signal: null } },
     });
   });
+
+  it("reports bounded trusted-launcher diagnostics when attestation fails", async () => {
+    await expect(launchWithNativeHelper(await request(), {
+      ...policy(), launcherPrefixArguments: [helper, "--mode=stderr-eof"],
+    }, { readinessTimeoutMs: 1_000 })).rejects.toMatchObject({
+      code: "ATTESTATION_MISMATCH",
+      details: {
+        launcherExit: { code: 93, signal: null },
+        launcherStderr: "native launcher diagnostic",
+      },
+    });
+  });
 });
