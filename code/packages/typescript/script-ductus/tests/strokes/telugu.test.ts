@@ -38,6 +38,7 @@ const TELUGU_NA = DUCTUS[ductusKey("telugu", "న")];
 const TELUGU_PA = DUCTUS[ductusKey("telugu", "ప")];
 const TELUGU_PHA = DUCTUS[ductusKey("telugu", "ఫ")];
 const TELUGU_BA = DUCTUS[ductusKey("telugu", "బ")];
+const TELUGU_BHA = DUCTUS[ductusKey("telugu", "భ")];
 const TELUGU_AA = DUCTUS[ductusKey("telugu", "ఆ")];
 const TELUGU_I = DUCTUS[ductusKey("telugu", "ఇ")];
 const TELUGU_U = DUCTUS[ductusKey("telugu", "ఉ")];
@@ -161,6 +162,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("బ", TELUGU_BA.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("భ", TELUGU_BHA.source.url)).toBe(
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("అ", TELUGU_A.source.url)).toBe(
@@ -542,6 +546,21 @@ describe("handwriting ductus", () => {
       "turn right around the lower-left bowl",
       "sweep right and upward around the lower-right bowl",
       "curve left around the upper-right shoulder",
+    ]);
+  });
+
+  it("Telugu భ preserves all six source-verified pen-down runs", () => {
+    expect(penLifts(TELUGU_BHA)).toBe(5);
+    expect(TELUGU_BHA.strokes).toHaveLength(6);
+    expect(
+      TELUGU_BHA.strokes.map((stroke) => stroke.segments[0]!.label),
+    ).toEqual([
+      "sweep right around the upper-left curve",
+      "curve down and left through the inner shoulder",
+      "turn right around the lower-left bowl",
+      "sweep right and upward around the lower-right bowl",
+      "curl upward through the separate top flourish",
+      "draw the lower stem downward",
     ]);
   });
 

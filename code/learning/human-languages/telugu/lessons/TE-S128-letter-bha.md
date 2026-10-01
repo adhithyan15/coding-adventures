@@ -57,17 +57,19 @@ You already say these, and every one of them has భ somewhere inside it:
 - **భాద్రపదం** *Bhādrapadaṁ* — the sixth of the twelve months
 - **ప్రారంభించు** *prārambhin̄cu* — to begin
 
-## Writing: భ — copy what you see
+## Writing: భ — six calm movements
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-128] -->
+<!-- hl-writing-stage: observe-trace -->
 
-Put your pen on భ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+Watch the numbered filmstrip once before your pen moves. Movement 1 rises around
+the upper-left curve; movement 2 comes down and left through its inner shoulder.
+Movement 3 turns around the lower-left bowl. Movement 4 rises around the broad
+lower-right bowl. Lift for movement 5, the separate flourish above, then draw
+movement 6, the short straight stem below.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+Trace the same route slowly. This is one attested school-style order fitted to
+the printed shape here; Telugu handwriting varies, so keep the six clear
+movements instead of rushing their joins.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-128] -->

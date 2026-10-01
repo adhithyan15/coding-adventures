@@ -108,6 +108,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TE-S128-letter-bha",
+      "sourceHash": "fnv1a64:fa1e10fdf1482c65",
+      "svgHash": "fnv1a64:8c7a234c147d1082",
+      "svg": "telugu/book/figures/TE-S128-letter-bha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TE-S129-letter-vocalic-r",
       "sourceHash": "fnv1a64:0509a703050de2ae",
       "svgHash": "fnv1a64:08fb5cacf36f46dc",
