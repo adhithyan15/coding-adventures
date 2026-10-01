@@ -13,7 +13,9 @@
 - A variant type that would take a name already in the namespace is refused
   (`PipelineEmitError::InvalidLayoutVariant`): the component, its `…Event`
   union or `…Mosaic…` support types, the same for every export in the new
-  `EmitOptions::package_exports`, and `SHELL_RESERVED_NAMES` -- the shell's
+  `EmitOptions::package_exports`, another layout choice's type or its
+  `…Mosaic…` support types (`in_support_namespace`), and
+  `SHELL_RESERVED_NAMES` -- the shell's
   `App`, `MainWindow`, WinUI's `Program`, the binding's and platform
   library's public types, a package's `MosaicHost` and the three converters.
 - `EmitOptions::layout_variants` (`LayoutChoice { variant, conditions }`,
@@ -27,6 +29,9 @@
   The switch is queued on the `DispatcherQueue` from the ENV4 handlers (one at
   a time), re-checks `MosaicRuntimeHost.IsSettling` when it runs (retrying in
   100 ms), and a failed mount keeps the layout showing and throws nothing.
+  After the window's `Closed` nothing is queued or switched, the retry timer
+  stops and its tick throws nothing; a root leaving the tree is unsubscribed
+  from the window's handler.
   Choices are validated before any C# is written. A dialog-root window does
   not select (`layout_root_is_dialog`).
 - Without `layout_variants` every generated file is byte-for-byte what it

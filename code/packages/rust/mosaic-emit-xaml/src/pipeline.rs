@@ -638,10 +638,16 @@ fn emit_component(
 //   |-------------------------------|----------------------------------------|
 //   | each export X (the root too)  | `X`, `XEvent`, `XMosaic...` (support)  |
 //   | the WinUI shell               | [`SHELL_RESERVED_NAMES`]               |
-//   | another choice of this shell  | refused when two choices name one type |
+//   | another choice of this shell  | its type, and its `VMosaic...` support |
+//   | (and, in the package builder, |   types (`CardTouchMosaicSlider` is    |
+//   |  every export's variants)     |   `Card.touch`'s, not a variant's)     |
 //
 // Row view models are `X_<Alias>Vm`; a variant type has no `_`, so it can
-// never spell one.
+// never spell one. A dependency package's components add no names: the
+// package builder composes them into the layout that mounts them (no
+// registry, no `<pkg:X/>` reference). Known gap: a caller that passes a
+// `ComponentRegistry` (`mosaic-compile`'s single-file mode) references
+// controls declared elsewhere, whose names are not checked here.
 
 /// The C# type of a layout variant's control: the component name followed
 /// by the variant in PascalCase, `-` and `_` both separating words --
@@ -726,18 +732,26 @@ fn reserved_variant_type(component: &str, type_name: &str, exports: &[String]) -
         if type_name == format!("{owner}Event") {
             return Some(format!("`{type_name}` is {owner}'s event union"));
         }
-        // `<X>MosaicFontSize`, `<X>MosaicSlider`, `<X>MosaicTable`, ...: the
-        // support types a layout of X may declare are all prefixed this way.
-        if type_name
-            .strip_prefix(owner)
-            .is_some_and(|rest| rest.starts_with("Mosaic"))
-        {
+        if in_support_namespace(owner, type_name) {
             return Some(format!(
                 "`{type_name}` starts with `{owner}Mosaic`, which {owner}'s generated support types use"
             ));
         }
     }
     None
+}
+
+/// Whether `type_name` is spelled inside `owner`'s support namespace,
+/// `<owner>Mosaic...`: every support type a layout of the control `owner`
+/// may declare is named that way (`<X>MosaicFontSize`, `<X>MosaicSlider`,
+/// `<X>MosaicTable`, ...), so a type there can collide with one of them.
+/// `owner` is any control in the project: an export's default layout, or
+/// another variant -- `Card.touch` declares `CardTouchMosaicSlider`, which a
+/// `Card.touch-mosaic-slider` variant would declare again.
+pub fn in_support_namespace(owner: &str, type_name: &str) -> bool {
+    type_name
+        .strip_prefix(owner)
+        .is_some_and(|rest| rest.starts_with("Mosaic"))
 }
 
 /// Emit one layout **variant** so it can share a WinUI project with the
@@ -838,6 +852,17 @@ fn validate_layout_choices(
         if !seen.insert(type_name.clone()) {
             return Err(refuse(format!(
                 "another layout choice already names `{type_name}`"
+            )));
+        }
+        // Another layout's support types, in either order of the rules.
+        if let Some(other) = choices
+            .iter()
+            .filter(|other| other.variant != choice.variant)
+            .filter_map(|other| variant_type_name(component, &other.variant))
+            .find(|other| in_support_namespace(other, &type_name))
+        {
+            return Err(refuse(format!(
+                "`{type_name}` starts with `{other}Mosaic`, which {other}'s generated support types use"
             )));
         }
         if !choice
@@ -7530,6 +7555,7 @@ fn main_window_cs_with_layout_variants(
                 "            // UI48 ENV3 (§7.11): the same changes may select another layout.\n",
                 "            root.SizeChanged += (_, _) => QueueLayoutSwitch();\n",
                 "            root.ActualThemeChanged += (_, _) => QueueLayoutSwitch();\n",
+                "            this.Closed += OnLayoutWindowClosed;\n",
                 "            this.environmentWired = true;\n",
             ),
         );
@@ -7638,6 +7664,7 @@ fn main_window_cs_with_layout_variants(
 fn layout_switch_section(name: &str, slots: &[SlotDecl], options: &EmitOptions) -> String {
     let mut rules = String::new();
     let mut cases = String::new();
+    let mut unwire = String::new();
     for choice in &options.layout_variants {
         let conditions = if choice.conditions.is_empty() {
             "System.Array.Empty<(string Axis, string Value)>()".to_string()
@@ -7653,6 +7680,11 @@ fn layout_switch_section(name: &str, slots: &[SlotDecl], options: &EmitOptions) 
         writeln!(rules, "        (\"{}\", {conditions}),", choice.variant).unwrap();
         let type_name = variant_type_name(name, &choice.variant)
             .expect("layout choices are validated before the shell is built");
+        writeln!(
+            unwire,
+            "            case {type_name} control:\n                control.Dispatch -= OnComponentDispatch;\n                break;"
+        )
+        .unwrap();
         write!(
             cases,
             concat!(
@@ -7742,6 +7774,7 @@ fn layout_switch_section(name: &str, slots: &[SlotDecl], options: &EmitOptions) 
         if (this.Content is not FrameworkElement root) return;
         root.SizeChanged += (_, _) => QueueLayoutSwitch();
         root.ActualThemeChanged += (_, _) => QueueLayoutSwitch();
+        this.Closed += OnLayoutWindowClosed;
     }}
 "#
             ),
@@ -7766,6 +7799,7 @@ __RULES__    };
     private string? layoutVariant;
     private string? layoutRefused;
     private bool layoutSwitchQueued;
+    private bool layoutClosed;
     private Microsoft.UI.Dispatching.DispatcherQueueTimer? layoutSwitchRetry;
 
     /// <summary>
@@ -7820,11 +7854,27 @@ __CASES__            default:
 __MOUNT__
     private void ShowLayoutRoot(FrameworkElement root, string? variant)
     {
+        // The old root leaves the tree for good: unsubscribe it, so it can
+        // no longer reach the window's handler.
+        if (this.layoutRoot is { } previous && !ReferenceEquals(previous, root))
+        {
+            UnwireLayoutRoot(previous);
+        }
         this.LayoutHost.Children.Clear();
         this.LayoutHost.Children.Add(root);
         this.layoutRoot = root;
         this.layoutVariant = variant;
         this.layoutRefused = null;
+    }
+
+    private void UnwireLayoutRoot(FrameworkElement root)
+    {
+        switch (root)
+        {
+__UNWIRE__            case __NAME__ control:
+                control.Dispatch -= OnComponentDispatch;
+                break;
+        }
     }
 
     // A change of size or theme never swaps roots inside the handler that
@@ -7835,7 +7885,7 @@ __MOUNT__
     // ticks costs one -- and reads the window afresh when it runs.
     private void QueueLayoutSwitch()
     {
-        if (this.layoutSwitchQueued) return;
+        if (this.layoutClosed || this.layoutSwitchQueued) return;
         this.layoutSwitchQueued = this.DispatcherQueue.TryEnqueue(SwitchLayout);
     }
 
@@ -7845,6 +7895,8 @@ __MOUNT__
         string? variant = null;
         try
         {
+            // The window closed while this was queued: nothing to show it in.
+            if (this.layoutClosed) return;
 __GUARD__            // A backstop: queued work does not run inside a settle on this
             // thread, but if one is running, wait for it rather than swap the
             // root it may be applying props to.
@@ -7882,13 +7934,36 @@ __GUARD__            // A backstop: queued work does not run inside a settle on 
             this.layoutSwitchRetry = this.DispatcherQueue.CreateTimer();
             this.layoutSwitchRetry.Interval = System.TimeSpan.FromMilliseconds(100);
             this.layoutSwitchRetry.IsRepeating = false;
-            this.layoutSwitchRetry.Tick += (_, _) => QueueLayoutSwitch();
+            this.layoutSwitchRetry.Tick += OnLayoutSwitchRetry;
         }
         this.layoutSwitchRetry.Start();
+    }
+
+    // The timer's tick is a dispatcher callback too: nothing is thrown from
+    // it, and nothing is queued once the window has closed.
+    private void OnLayoutSwitchRetry(Microsoft.UI.Dispatching.DispatcherQueueTimer timer, object args)
+    {
+        try
+        {
+            if (!this.layoutClosed) QueueLayoutSwitch();
+        }
+        catch (System.Exception error)
+        {
+            System.Diagnostics.Debug.WriteLine($"Mosaic layout switch retry failed: {error}");
+        }
+    }
+
+    // A closed window switches nothing: no queued switch runs, the retry
+    // timer stops, and a tick already on its way does nothing.
+    private void OnLayoutWindowClosed(object sender, WindowEventArgs args)
+    {
+        this.layoutClosed = true;
+        this.layoutSwitchRetry?.Stop();
     }
 "#
     .replace("__RULES__", &rules)
     .replace("__CASES__", &cases)
+    .replace("__UNWIRE__", &unwire)
     .replace("__MOUNT__", &mount)
     .replace("__GUARD__", startup_guard)
     .replace("__NAME__", name)
@@ -19944,10 +20019,10 @@ mod tests {
         let switch = source.find("            root.SizeChanged += (_, _) => QueueLayoutSwitch();").unwrap();
         assert!(report < switch);
         assert_eq!(source.matches("root.SizeChanged += ").count(), 2);
-        assert!(source.contains("            root.ActualThemeChanged += (_, _) => QueueLayoutSwitch();\n            this.environmentWired = true;"));
+        assert!(source.contains("            root.ActualThemeChanged += (_, _) => QueueLayoutSwitch();\n            this.Closed += OnLayoutWindowClosed;\n            this.environmentWired = true;"));
         // Never swapped inside the handler: queued, one at a time, and the
         // settle state checked again when it runs.
-        assert!(source.contains("        if (this.layoutSwitchQueued) return;\n        this.layoutSwitchQueued = this.DispatcherQueue.TryEnqueue(SwitchLayout);"));
+        assert!(source.contains("        if (this.layoutClosed || this.layoutSwitchQueued) return;\n        this.layoutSwitchQueued = this.DispatcherQueue.TryEnqueue(SwitchLayout);"));
         let body = &source[source.find("    private void SwitchLayout()").unwrap()..];
         let visible = body.find("if (this.RuntimeContent.Visibility != Visibility.Visible) return;").unwrap();
         let settling = body.find("if (MosaicRuntimeHost.IsSettling)").unwrap();
@@ -19960,6 +20035,38 @@ mod tests {
         assert!(body.contains("        catch (System.Exception error)\n"));
         assert!(body.contains("this.layoutRefused = variant ?? \"\";"));
         assert!(body.contains("if (this.layoutRefused == (variant ?? \"\")) return;"));
+    }
+
+    /// A closed window switches nothing, and a root that leaves the tree is
+    /// unsubscribed from the window's handler -- in both windows.
+    #[test]
+    fn a_closed_window_switches_nothing_and_old_roots_are_unwired() {
+        for require_runtime in [false, true] {
+            let source = card_shell(require_runtime, vec![choice("touch", &[("pointer", "coarse")])])
+                .main_window_cs;
+            // Wired once, beside the switch's own handlers.
+            assert_eq!(source.matches("this.Closed += OnLayoutWindowClosed;").count(), 1, "{source}");
+            let wired = source.find("root.SizeChanged += (_, _) => QueueLayoutSwitch();").unwrap();
+            assert!(wired < source.find("this.Closed += OnLayoutWindowClosed;").unwrap());
+            assert!(source.contains(
+                "    private void OnLayoutWindowClosed(object sender, WindowEventArgs args)\n    {\n        this.layoutClosed = true;\n        this.layoutSwitchRetry?.Stop();\n    }"
+            ));
+            // Neither a queued switch nor a retry tick runs after close, and
+            // the tick throws nothing into the dispatcher.
+            assert!(source.contains("        if (this.layoutClosed || this.layoutSwitchQueued) return;\n"));
+            let body = &source[source.find("    private void SwitchLayout()").unwrap()..];
+            let closed = body.find("if (this.layoutClosed) return;").unwrap();
+            assert!(closed < body.find("MountLayout(variant);").unwrap());
+            assert!(source.contains("this.layoutSwitchRetry.Tick += OnLayoutSwitchRetry;"));
+            let tick = &source[source.find("    private void OnLayoutSwitchRetry(").unwrap()..];
+            assert!(tick.contains("        try\n        {\n            if (!this.layoutClosed) QueueLayoutSwitch();\n        }\n        catch (System.Exception error)"));
+            // The old root is unsubscribed when the new one is shown.
+            let show = &source[source.find("    private void ShowLayoutRoot(").unwrap()..];
+            let unwire = show.find("UnwireLayoutRoot(previous);").unwrap();
+            assert!(unwire < show.find("this.LayoutHost.Children.Clear();").unwrap());
+            assert!(source.contains("            case CardTouch control:\n                control.Dispatch -= OnComponentDispatch;\n                break;\n"));
+            assert!(source.contains("            case Card control:\n                control.Dispatch -= OnComponentDispatch;\n                break;\n"));
+        }
     }
 
     /// ENV3 on the sample window: it selects too (reporting to nobody), and
@@ -20027,6 +20134,16 @@ mod tests {
             (vec![choice("touch", &[]), choice("Touch", &[])], "already names `CardTouch`"),
             (vec![choice("task-list", &[]), choice("task_list", &[])], "already names `CardTaskList`"),
             (vec![choice("event", &[])], "event union"),
+            // Another layout's support types, whichever rule comes first:
+            // `touch`'s control declares `CardTouchMosaicSlider`.
+            (
+                vec![choice("touch", &[]), choice("touch-mosaic-slider", &[])],
+                "`CardTouchMosaicSlider` starts with `CardTouchMosaic`",
+            ),
+            (
+                vec![choice("touch-mosaic-slider", &[]), choice("touch", &[])],
+                "`CardTouchMosaicSlider` starts with `CardTouchMosaic`",
+            ),
         ] {
             let mut o = opts();
             o.emit_project = true;

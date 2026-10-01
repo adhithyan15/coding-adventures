@@ -197,8 +197,13 @@ let touch = from_pipeline_variant(
 A variant whose type would take a name already in the namespace is refused
 with `PipelineEmitError::InvalidLayoutVariant`: the component itself, its
 `…Event` union or its `…Mosaic…` support types; the same for every export
-in `EmitOptions::package_exports`; and the shell's own types,
+in `EmitOptions::package_exports`; another layout choice's type or its
+`…Mosaic…` support types (`touch` declares `CardTouchMosaicSlider`, so
+`touch-mosaic-slider` is refused); and the shell's own types,
 `SHELL_RESERVED_NAMES` (`MainWindow`, `MosaicRuntimeHost`, `MosaicHost`, …).
+The package builder adds the checks it alone can make: every export's
+variants against each other, and a component with variants but no default
+layout, whose union nothing would declare.
 
 **The window selects.** Give the default's `from_pipeline` the rules as
 `EmitOptions::layout_variants` — one `LayoutChoice { variant, conditions }`
@@ -215,6 +220,8 @@ switches roots:
 | `CreateLayoutRoot(variant)`   | `new EngramAppTouch()`, wired to the one dispatch handler |
 | `MountLayout(variant)`        | props first (strict in native-complete), then swap       |
 | `QueueLayoutSwitch` / `SwitchLayout` | deferred to the dispatcher, one at a time; checks `MosaicRuntimeHost.IsSettling`; a failed mount keeps the old root |
+| `OnLayoutWindowClosed`        | after `Closed`, nothing is queued or switched and the retry timer stops |
+| `UnwireLayoutRoot`            | the root leaving the tree is unsubscribed from the window's handler |
 
 The environment is `MosaicRuntimeHost.EnvironmentReport` of the window — the
 same reducer the ENV4 report uses — so a shell that selects needs the

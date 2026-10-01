@@ -49,16 +49,33 @@ if (-not (Test-Path -LiteralPath $ExePath -PathType Leaf)) {
 $defaultMarker = 'Layout: default'
 $compactMarker = 'Layout: compact'
 
+# The window's visible text, read while the app may be swapping one root for
+# another: an element found a moment ago can leave the tree before its
+# properties are read (ElementNotAvailableException, which PowerShell may
+# hand over wrapped), and the search itself can race a removal. Either is a
+# reading taken mid-swap, not a failure, so it is skipped and the caller
+# polls again; only the caller's deadline fails, with what it last saw.
 function Get-VisibleText($root) {
     $textCondition = New-Object System.Windows.Automation.PropertyCondition(
         [System.Windows.Automation.AutomationElement]::ControlTypeProperty,
         [System.Windows.Automation.ControlType]::Text)
     $values = @()
-    foreach ($element in $root.FindAll(
+    try {
+        $elements = $root.FindAll(
             [System.Windows.Automation.TreeScope]::Descendants,
-            $textCondition)) {
-        if (-not $element.Current.IsOffscreen -and $element.Current.Name) {
-            $values += $element.Current.Name
+            $textCondition)
+    }
+    catch {
+        return $values
+    }
+    foreach ($element in $elements) {
+        try {
+            if (-not $element.Current.IsOffscreen -and $element.Current.Name) {
+                $values += $element.Current.Name
+            }
+        }
+        catch {
+            continue
         }
     }
     return $values

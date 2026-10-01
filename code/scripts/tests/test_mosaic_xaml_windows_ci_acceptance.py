@@ -7,6 +7,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 
 SCRIPT = Path(__file__).resolve().parents[1] / "mosaic_xaml_windows_ci_acceptance.py"
@@ -94,6 +95,27 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
                 {"affected_packages": []}, workflow_changed=True
             )
         )
+
+    def test_lane_scripts_trigger_the_lane(self) -> None:
+        # The smokes belong to no build package, so a change to one is seen
+        # through the same diff as a workflow change.
+        repo = WORKFLOW.parents[2]
+        self.assertIn(
+            "code/scripts/mosaic-xaml-layout-variants-smoke.ps1", MODULE.LANE_SCRIPT_PATHS
+        )
+        for path in MODULE.LANE_SCRIPT_PATHS:
+            self.assertTrue((repo / path).is_file(), path)
+        calls = []
+
+        def fake_run(command, **kwargs):
+            calls.append(command)
+            return subprocess.CompletedProcess(command, 1)
+
+        with mock.patch.object(MODULE.subprocess, "run", fake_run):
+            self.assertTrue(MODULE.workflow_changed(repo, "origin/main"))
+        (command,) = calls
+        paths = command[command.index("--") + 1 :]
+        self.assertEqual(paths, [MODULE.CI_WORKFLOW_PATH, *MODULE.LANE_SCRIPT_PATHS])
 
     def test_invalid_affected_packages_is_rejected(self) -> None:
         with self.assertRaisesRegex(ValueError, "array or null"):

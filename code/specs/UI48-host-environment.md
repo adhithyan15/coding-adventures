@@ -1051,11 +1051,25 @@ holding both, and a window choosing between them.
   every type the generated `App.xaml.cs`, both `MainWindow.xaml.cs` shapes
   and the converters declare, and by a builder test against
   `mosaic-app-bindings`' XAML templates. Row view models are `<X>_<Alias>Vm`,
-  which a variant type, having no `_`, can never spell. Two exports'
-  variants that spell one type (`Card` + `touch-bar` and `CardTouch` +
-  `bar`) are refused by the builder, which sees them all, naming both files.
-  This closes, for XAML, the gap §7.9 records for Compose, Flutter and
-  SwiftUI.
+  which a variant type, having no `_`, can never spell. Every variant is an
+  owner too: its own support types are `<Variant type>Mosaic…`
+  (`Card.touch` declares `CardTouchMosaicSlider`), so a variant type inside
+  another variant's support names (`Card.touch-mosaic-slider`) is refused --
+  by the emitter among the shell's choices, by the builder among every
+  export's variants. Two exports' variants that spell one type (`Card` +
+  `touch-bar` and `CardTouch` + `bar`) are refused by the builder, which
+  sees them all, naming both files. This closes, for XAML, the gap §7.9
+  records for Compose, Flutter and SwiftUI. A dependency package's
+  components add no names: the builder composes them into the layout that
+  mounts them. Known gap: a caller that passes the emitter a
+  `ComponentRegistry` (`mosaic-compile`'s single-file mode) references
+  controls declared elsewhere, whose names are not checked.
+- **A component with variants needs its default layout.** The variants
+  raise `<C>Event`, which only the default declares, so a XAML build of a
+  component with `<C>.<variant>.mll` files and no `<C>.mll` fails, saying so,
+  rather than emitting controls that name an undeclared union. No backend
+  supports that shape (each variant takes its interface from the default's
+  file); XAML is where the build would otherwise succeed.
 - The project compiles every export's variants already: the WinUI SDK globs
   every `.xaml` and `.cs` beside the `.csproj`, where the builder writes the
   flat artifacts. `MosaicPackage.props`, the fragment a host imports, now
@@ -1115,7 +1129,11 @@ holding both, and a window choosing between them.
   writes why on the status line, and does not retry that same choice until
   the environment selects something else. Nothing is thrown into the
   dispatcher. In the native-complete window the switch runs only while the
-  runtime's content is showing.
+  runtime's content is showing. Once the window closes (`Closed`, wired once
+  beside the switch's own handlers) nothing switches: the flag stops a
+  queued switch and the retry timer, a tick already on its way does
+  nothing, and the tick handler throws nothing. A root that leaves the tree
+  is unsubscribed from the window's handler.
 - The first root: the native-complete window mounts the one the window
   selects in `StartRuntime` (after `LoadRequired` and the platform
   library's install), or the default when the window has not been laid out
@@ -1145,7 +1163,10 @@ queued switch and settle check), builds the WinUI project, and runs
 `code/scripts/mosaic-xaml-layout-variants-smoke.ps1`, which resizes the real
 window to 1300, 420, 1300 and 420 device-independent pixels and requires,
 each time, the matching layout's marker, the other's absence, and the
-runtime's props on screen. Rust tests pin the emitter's naming, refusals,
+runtime's props on screen. A UI Automation read that races a swap (an
+element gone before its name is read) is skipped and polled again; only the
+deadline fails. The lane runs whenever the workflow or one of its own smoke
+scripts changes, as well as for its packages. Rust tests pin the emitter's naming, refusals,
 interface reuse and both windows; builder tests mirror the other backends'
 (convention, declared rules under wire names, missing variant refused, no
 variants → no selector) plus the strict mount, the reserved names, the

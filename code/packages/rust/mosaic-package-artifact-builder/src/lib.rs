@@ -5707,13 +5707,30 @@ fn xaml_layout_choices(
 /// `MosaicPackage.props` lists them all. Two variants of different exports
 /// may spell one type -- `Card` + `touch-bar` and `CardTouch` + `bar` are
 /// both `CardTouchBar` -- which the emitter, seeing one component at a time,
-/// cannot know. Refused here, naming both files, before anything is
-/// written. (A variant against an export's own names, or the shell's, is the
-/// emitter's check: `EmitOptions::package_exports`.)
+/// cannot know. So may one variant's type and another's generated support
+/// types: `Card.touch` declares `CardTouchMosaicSlider`, which a
+/// `Card.touch-mosaic-slider` variant would declare again. Both are refused
+/// here, naming both files, before anything is written. (A variant against
+/// an export's own names, or the shell's, is the emitter's check:
+/// `EmitOptions::package_exports`.)
+///
+/// A component with variants but no default `<C>.mll` is refused too: the
+/// variants raise `<C>Event`, which only the default layout declares, so
+/// they could not compile. No backend supports that shape -- every variant
+/// takes the interface from its default's file -- but only here would the
+/// build otherwise succeed and the WinUI compile fail.
 fn xaml_check_variant_types(components: &[String], src_dir: &Path) -> Result<(), BuildError> {
     let mut owners: HashMap<String, String> = HashMap::new();
     for component in components {
-        for variant in discover_variants(src_dir, component)?.into_iter().flatten() {
+        let variants = discover_variants(src_dir, component)?;
+        if !variants.is_empty() && !variants.contains(&None) {
+            return Err(BuildError::Io(format!(
+                "{component} has layout variants but no default {component}.mll; on XAML each \
+                 variant raises {component}Event, which only the default layout declares, so \
+                 add {component}.mll"
+            )));
+        }
+        for variant in variants.into_iter().flatten() {
             // A variant that cannot name a type at all is the emitter's to
             // refuse, with its own message.
             let Some(type_name) = mosaic_emit_xaml::pipeline::variant_type_name(component, &variant)
@@ -5725,6 +5742,20 @@ fn xaml_check_variant_types(components: &[String], src_dir: &Path) -> Result<(),
                 return Err(BuildError::Io(format!(
                     "the WinUI project would declare `{type_name}` twice: for the layout \
                      variants {owner} and {file}; rename one"
+                )));
+            }
+        }
+    }
+    // Every pair, in either order: a type inside another's support names.
+    for (type_name, file) in &owners {
+        for (other, other_file) in &owners {
+            if other != type_name
+                && mosaic_emit_xaml::pipeline::in_support_namespace(other, type_name)
+            {
+                return Err(BuildError::Io(format!(
+                    "the layout variant {file} would declare `{type_name}`, a name in \
+                     `{other}Mosaic...`, which the generated support types of {other_file} \
+                     use; rename one"
                 )));
             }
         }
@@ -13027,12 +13058,57 @@ layout NativeEvents {
         assert!(error.to_string().contains("Card.touch-bar.mll"), "{error}");
         assert!(error.to_string().contains("CardTouch.bar.mll"), "{error}");
 
+        // Nor a name in another variant's support types: `Card.touch`
+        // declares `CardTouchMosaicSlider`, and so would this variant --
+        // here of another export, which only the builder sees.
+        let pkg = make_package("mosaic-pkg-card", &["Card", "CardTouch"]);
+        fs::write(pkg.path().join("src/Card.touch-face.mll"), minimal_mll("Card")).unwrap();
+        fs::write(pkg.path().join("src/CardTouch.mosaic-slider.mll"), minimal_mll("CardTouch"))
+            .unwrap();
+        let error = xaml_check_variant_types(
+            &["Card".to_string(), "CardTouch".to_string()],
+            &pkg.path().join("src"),
+        );
+        // (That name is in the EXPORT CardTouch's own support names, which
+        // the emitter refuses; this pass compares variants with variants.)
+        assert!(error.is_ok(), "{error:?}");
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        fs::write(pkg.path().join("src/Card.touch.mll"), minimal_mll("Card")).unwrap();
+        fs::write(pkg.path().join("src/Card.touch-mosaic-slider.mll"), minimal_mll("Card")).unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package(&swiftui_options(&pkg, &out, Backend::Xaml)).unwrap_err();
+        assert!(error.to_string().contains("`CardTouchMosaicSlider`"), "{error}");
+        assert!(error.to_string().contains("`CardTouchMosaic...`"), "{error}");
+        assert!(error.to_string().contains("Card.touch.mll"), "{error}");
+
         // A variant of ANY export may not take a shell name either.
         let pkg = make_package("mosaic-pkg-card", &["Card", "Mosaic"]);
         fs::write(pkg.path().join("src/Mosaic.host.mll"), minimal_mll("Mosaic")).unwrap();
         let out = TempDir::new().unwrap();
         let error = build_package(&swiftui_options(&pkg, &out, Backend::Xaml)).unwrap_err();
         assert!(error.to_string().contains("`MosaicHost` is a type the WinUI shell declares"), "{error}");
+    }
+
+    /// A variant raises `<C>Event`, which only the default layout declares,
+    /// so a component with variants and no `<C>.mll` is refused on XAML --
+    /// in the flat package build too -- rather than emitting controls that
+    /// name an undeclared union.
+    #[test]
+    fn a_xaml_component_with_variants_but_no_default_is_refused() {
+        let pkg = card_package_with_touch_variant();
+        fs::remove_file(pkg.path().join("src/Card.mll")).unwrap();
+        for emit_project in [false, true] {
+            let out = TempDir::new().unwrap();
+            let error = build_package(&BuildOptions {
+                emit_project,
+                ..swiftui_options(&pkg, &out, Backend::Xaml)
+            })
+            .unwrap_err()
+            .to_string();
+            assert!(error.contains("Card has layout variants but no default Card.mll"), "{error}");
+            assert!(error.contains("CardEvent"), "{error}");
+            assert!(!out.path().join("xaml/Card.touch.xaml.cs").exists());
+        }
     }
 
     /// A ContentDialog cannot stand in the window's tree in place of a

@@ -8,7 +8,11 @@
 - Every XAML compile passes the package's exports
   (`EmitOptions::package_exports`), so a variant type another export owns is
   refused; `xaml_check_variant_types` refuses two exports' variants that spell
-  one type (`Card` + `touch-bar` and `CardTouch` + `bar`), naming both files.
+  one type (`Card` + `touch-bar` and `CardTouch` + `bar`), or one inside
+  another's `…Mosaic…` support names (`Card.touch` and
+  `Card.touch-mosaic-slider`), naming both files, and refuses a component
+  with variants but no default `<C>.mll` (its variants would raise a
+  `<C>Event` nothing declares).
 - `xaml_layout_choices` uses the same `effective_layout_rules` as SwiftUI,
   Compose and Flutter, refuses a rule for a missing variant or one that cannot
   name a C# type, keys conditions by `EnvironmentAxis::wire_name`, refuses a
