@@ -416,6 +416,10 @@ the default is compiled into `Sources/App`.
   variant name in PascalCase: `touch` → `EngramAppTouchView`), and each
   backend's equivalent (a `@Composable` function, a Dart widget class, a QML
   component, a XAML user control — XAML already suffixes its type).
+- A variant's root may not take a name another export, another export's
+  variant or the shell already declares (`Card.touch` beside an exported
+  `CardTouch` would be a second `CardTouchView`): the builder refuses it,
+  naming both, for every export's variants on every backend (§7.9).
 - A variant file carries only what differs: its view. The component's
   interface — its event type, prop accessors — is the same for every variant
   (UI30 §2.2 puts the variant on the layout, never the interface) and is
@@ -592,6 +596,9 @@ reacts (ENV-last).
   the variants are discovered, for every backend: they would name one
   generated view twice, and a case-insensitive filesystem keeps only one of
   their files.
+- A variant composable named like another export (`Card.touch` beside an
+  exported `CardTouch`), like another export's variant, or like a name the
+  shell declares is refused by the builder, as on Qt and XAML (§7.9).
 
 **Acceptance.** Emitter tests pin the variant composable (its name, the
 default's event and props types, no redeclaration); builder tests mirror
@@ -784,10 +791,23 @@ the other hosts, the resize-and-assert gate lands with ENV-last.
   files, which `main.dart` imports beside it (`Mosaic.host.mll` →
   `MosaicHost`; the list, `SHELL_RESERVED_NAMES`, is pinned by tests against
   the generated `main.dart` and the binding templates).
-- Known gap, shared with Compose and SwiftUI: a variant widget can still
-  collide with *another exported component* of the same package (`Card`'s
-  `touch` variant and an exported `CardTouch`). Neither backend checks this
-  yet.
+- A variant widget named like *another exported component* (`Card`'s
+  `touch` variant and an exported `CardTouch`) or like another export's
+  variant (`Card` + `touch-bar` and `CardTouch` + `bar`) is refused by the
+  builder, naming both `.mll` files, as on Qt and XAML -- for every export's
+  variants, and on Compose and SwiftUI too. One check serves all five
+  backends (`check_layout_namespace`), each describing what its default
+  files and its shell declare: on Flutter `<X>`, `<X>Event` and every
+  `<X>Event<Case>` (claimed as a prefix, so adding an emit never breaks a
+  build), on Compose `<X>`, `<X>Event` and `<X>Props` (`<X>Props<n>`) plus the
+  Compose shell's public names (pinned by a builder test against every
+  generated shell source), on SwiftUI `<X>View` and `<X>Event` (no SwiftUI
+  shell type ends in `View`, also pinned). It runs before anything is
+  written, flat builds included, since the flat artifacts are what a
+  consumer compiles together. File names need no check: Kotlin's per-file
+  class (`Card.touch.kt` → `Card_touchKt`) could only meet an export named
+  `Card_touch`, which the manifest's `[A-Z][a-zA-Z0-9]*` rule refuses (a test
+  pins it).
 - A variant file carries only what differs: its widget and the private
   helpers its own tree uses. A leading `_` makes a Dart name private to its
   file, so those may repeat. The interface — the `<C>Event` sealed class and
@@ -914,8 +934,10 @@ the pointer is `fine`, so Engram's touch layout is compiled but not shown.
   -- a variant named like another export (`Card` + `touch` beside an exported
   `CardTouch`) or like another variant -- fails the build, and so does a
   variant of ANY export named like something the shell owns (`Mosaic` +
-  `host`), not only the root's. (Compose, Flutter and SwiftUI do not check a
-  variant against another export's name yet.)
+  `host`), not only the root's. The check is the one every backend shares
+  (§7.9), run for a Qt project before anything is written, so a refused
+  build leaves no partial project. A flat Qt build is not checked: it has
+  no module, and a flat `Card.touch.qml` registers no type.
 - A native-complete shell mounts every root strictly, so it re-emits the
   root's variants under that policy (`required property var mosaicHost`,
   events through `handleRequiredEvent`) as it re-emits the default. The flat
@@ -1058,8 +1080,13 @@ holding both, and a window choosing between them.
   by the emitter among the shell's choices, by the builder among every
   export's variants. Two exports' variants that spell one type (`Card` +
   `touch-bar` and `CardTouch` + `bar`) are refused by the builder, which
-  sees them all, naming both files. This closes, for XAML, the gap §7.9
-  records for Compose, Flutter and SwiftUI. A dependency package's
+  sees them all, naming both files, and so is the reverse, an export named
+  inside a variant's support names (`CardTouchMosaicSlider` beside
+  `Card.touch`). The builder now makes every one of these
+  checks for the whole package before the emitter runs -- the same check as
+  on the other four backends (§7.9) -- so its message, naming both `.mll`
+  files or the export, is the one a package build reports; the emitter's
+  remains for callers that are not the builder. A dependency package's
   components add no names: the builder composes them into the layout that
   mounts them. Known gap: a caller that passes the emitter a
   `ComponentRegistry` (`mosaic-compile`'s single-file mode) references
