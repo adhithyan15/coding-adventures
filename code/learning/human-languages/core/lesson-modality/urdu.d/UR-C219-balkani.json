@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C219-balkani",
+    "language": "urdu",
+    "chapter": 219,
+    "sequence": 12890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:de81350d5ded3dd2"
+  },
+  "findings": []
+}

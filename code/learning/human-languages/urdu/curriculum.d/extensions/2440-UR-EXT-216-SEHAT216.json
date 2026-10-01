@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-216-SEHAT216",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a pulse, breath, sleep, a dream and weakness.",
+  "prerequisites": []
+}

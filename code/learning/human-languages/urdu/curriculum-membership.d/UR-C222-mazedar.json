@@ -1,0 +1,11 @@
+{
+  "id": "UR-C222-mazedar",
+  "pathSegment": "UR-PATH-222-SIFAT222",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-222-SIFAT222",
+      "order": 0
+    }
+  ]
+}

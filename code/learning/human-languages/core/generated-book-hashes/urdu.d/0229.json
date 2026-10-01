@@ -1,0 +1,15 @@
+{
+  "language": "urdu",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:06233d3c4f08f9fc",
+  "lessonIds": [
+    "UR-C229-motar-saikil",
+    "UR-C229-trak",
+    "UR-C229-petrol",
+    "UR-C229-petrol-pamp",
+    "UR-C229-sit",
+    "UR-R229-first-pass-words-from-chapters-221-224",
+    "UR-R229-second-pass-words-from-chapters-225-229"
+  ],
+  "tex": "urdu/book/chapters/ch229-motorbike-lorry-petrol-petrol-station-seat.tex"
+}

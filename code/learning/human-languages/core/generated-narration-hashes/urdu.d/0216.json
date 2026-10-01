@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:877e992393f6c3fd",
+  "lessonIds": [
+    "UR-C216-nabz",
+    "UR-C216-sans",
+    "UR-C216-nind",
+    "UR-C216-khvab",
+    "UR-C216-kamzori"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch216.txt",
+  "json": "urdu/narration/ch216.json",
+  "textHash": "fnv1a64:2ecfa13d00d49ffa",
+  "jsonHash": "fnv1a64:234ff452a0a0c43a",
+  "findings": []
+}

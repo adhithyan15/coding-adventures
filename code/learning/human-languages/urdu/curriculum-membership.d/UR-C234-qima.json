@@ -1,0 +1,11 @@
+{
+  "id": "UR-C234-qima",
+  "pathSegment": "UR-PATH-234-CHIZ234",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-234-CHIZ234",
+      "order": 4
+    }
+  ]
+}

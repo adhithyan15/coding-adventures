@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C226-baingan",
+    "language": "urdu",
+    "chapter": 226,
+    "sequence": 13410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e49612b4ec63d83e"
+  },
+  "findings": []
+}

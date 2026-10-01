@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:0463a4fd0d523e76",
+  "lessonIds": [
+    "UR-C227-janvar",
+    "UR-C227-bhains",
+    "UR-C227-chita",
+    "UR-C227-bheriya",
+    "UR-C227-gilahri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch227.txt",
+  "json": "urdu/narration/ch227.json",
+  "textHash": "fnv1a64:a8466fbd1d51b15f",
+  "jsonHash": "fnv1a64:01e5eb82afed4505",
+  "findings": []
+}

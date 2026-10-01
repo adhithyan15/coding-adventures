@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:be40beeed60390a1",
+  "lessonIds": [
+    "UR-C223-chalak",
+    "UR-C223-sharif",
+    "UR-C223-badtamiz",
+    "UR-C223-tamizdar",
+    "UR-C223-hasin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch223.txt",
+  "json": "urdu/narration/ch223.json",
+  "textHash": "fnv1a64:f212e1fe1f4fb32f",
+  "jsonHash": "fnv1a64:336da6155d9038d3",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "urdu",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:b3033e53408d4d1a",
+  "lessonIds": [
+    "UR-C220-khush-qismati-se",
+    "UR-C220-bad-qismati-se",
+    "UR-C220-vajah",
+    "UR-C220-natija",
+    "UR-C220-halanki",
+    "UR-R220-first-pass-words-from-chapters-212-215",
+    "UR-R220-second-pass-words-from-chapters-216-220"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "urdu/narration/ch220.txt",
+  "json": "urdu/narration/ch220.json",
+  "textHash": "fnv1a64:bd01d524e1094e09",
+  "jsonHash": "fnv1a64:537c763f1b7b0fe1",
+  "findings": []
+}

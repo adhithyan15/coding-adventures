@@ -1,0 +1,11 @@
+{
+  "id": "UR-C216-kamzori",
+  "pathSegment": "UR-PATH-216-SEHAT216",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-216-SEHAT216",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C238-fankar",
+    "language": "urdu",
+    "chapter": 238,
+    "sequence": 14190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f32aab393028a8c0"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R238-second-pass-words-from-chapters-234-238",
+    "language": "urdu",
+    "chapter": 238,
+    "sequence": 14240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d6f73ca49ec6187"
+  },
+  "findings": []
+}

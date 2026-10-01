@@ -1,0 +1,19 @@
+{
+  "chapter": 231,
+  "title": "Opinion, Lie, Secret, Joke, Laughter",
+  "label": "ch:ur-opinion-lie-secret-joke-laughter",
+  "canDo": "I can say an opinion, a lie, a secret, a joke and laughter.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C231-hasi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 231: I can say an opinion, a lie, a secret, a joke and laughter.",
+    "assesses": [
+      "UR-LEX-C231-CHIZ231-03",
+      "UR-LEX-C231-CHIZ231-04",
+      "UR-LEX-C231-CHIZ231-05"
+    ]
+  }
+}

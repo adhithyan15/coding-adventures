@@ -1,0 +1,11 @@
+{
+  "id": "UR-C238-karigar",
+  "pathSegment": "UR-PATH-238-KAM238",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-238-KAM238",
+      "order": 2
+    }
+  ]
+}

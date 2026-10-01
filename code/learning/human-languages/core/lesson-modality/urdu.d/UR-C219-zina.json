@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C219-zina",
+    "language": "urdu",
+    "chapter": 219,
+    "sequence": 12870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:04b78860a219cc76"
+  },
+  "findings": []
+}

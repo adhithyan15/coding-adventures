@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:04d442d5377f138f",
+  "lessonIds": [
+    "UR-C225-lifafa",
+    "UR-C225-parsal",
+    "UR-C225-risala",
+    "UR-C225-rabar",
+    "UR-C225-fail"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch225.txt",
+  "json": "urdu/narration/ch225.json",
+  "textHash": "fnv1a64:ed7790ec32b42890",
+  "jsonHash": "fnv1a64:1932ccaac1dabb22",
+  "findings": []
+}

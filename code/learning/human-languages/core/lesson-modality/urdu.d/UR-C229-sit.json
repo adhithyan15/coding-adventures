@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C229-sit",
+    "language": "urdu",
+    "chapter": 229,
+    "sequence": 13580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0790698522a8c2eb"
+  },
+  "findings": []
+}

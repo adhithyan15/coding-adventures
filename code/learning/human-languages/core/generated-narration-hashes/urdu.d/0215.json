@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:804368abf82404de",
+  "lessonIds": [
+    "UR-C215-kam-karna",
+    "UR-C215-pichha-karna",
+    "UR-C215-bharosa-karna",
+    "UR-C215-shak-karna",
+    "UR-C215-nafrat-karna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch215.txt",
+  "json": "urdu/narration/ch215.json",
+  "textHash": "fnv1a64:36de49823965152f",
+  "jsonHash": "fnv1a64:c9eff2da2747cfe3",
+  "findings": []
+}

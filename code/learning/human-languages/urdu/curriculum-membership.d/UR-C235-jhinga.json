@@ -1,0 +1,11 @@
+{
+  "id": "UR-C235-jhinga",
+  "pathSegment": "UR-PATH-235-CHIZ235",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-235-CHIZ235",
+      "order": 4
+    }
+  ]
+}

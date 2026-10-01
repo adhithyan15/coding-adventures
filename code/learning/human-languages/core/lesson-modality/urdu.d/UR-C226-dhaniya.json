@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C226-dhaniya",
+    "language": "urdu",
+    "chapter": 226,
+    "sequence": 13390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:71bceca1f3f3cb8d"
+  },
+  "findings": []
+}

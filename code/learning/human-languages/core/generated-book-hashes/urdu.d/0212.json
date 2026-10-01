@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:b682ab59c14a1bd8",
+  "lessonIds": [
+    "UR-C212-istri-karna",
+    "UR-C212-pisna",
+    "UR-C212-talna",
+    "UR-C212-ubalna",
+    "UR-C212-chakhna"
+  ],
+  "tex": "urdu/book/chapters/ch212-to-iron-to-grind-to-fry-to-boil-to-taste.tex"
+}

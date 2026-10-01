@@ -1,0 +1,11 @@
+{
+  "id": "UR-C235-jugnu",
+  "pathSegment": "UR-PATH-235-CHIZ235",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-235-CHIZ235",
+      "order": 1
+    }
+  ]
+}

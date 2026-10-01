@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-238-KAM238",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an expert, an artist, a craftsman, a goldsmith and a potter.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 227,
+  "title": "Animal, Buffalo, Leopard, Wolf, Squirrel",
+  "label": "ch:ur-animal-buffalo-leopard-wolf-squirrel",
+  "canDo": "I can say an animal, a buffalo, a leopard, a wolf and a squirrel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C227-gilahri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 227: I can say an animal, a buffalo, a leopard, a wolf and a squirrel.",
+    "assesses": [
+      "UR-LEX-C227-CHIZ227-03",
+      "UR-LEX-C227-CHIZ227-04",
+      "UR-LEX-C227-CHIZ227-05"
+    ]
+  }
+}

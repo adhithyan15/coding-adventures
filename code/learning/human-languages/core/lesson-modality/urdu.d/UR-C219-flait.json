@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C219-flait",
+    "language": "urdu",
+    "chapter": 219,
+    "sequence": 12850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ebd459a480274473"
+  },
+  "findings": []
+}

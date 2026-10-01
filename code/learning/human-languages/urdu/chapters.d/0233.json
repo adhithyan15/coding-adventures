@@ -1,0 +1,19 @@
+{
+  "chapter": 233,
+  "title": "Fog, Dew, Hail, Earthquake, Flood",
+  "label": "ch:ur-fog-dew-hail-earthquake-flood",
+  "canDo": "I can say fog, dew, hail, an earthquake and a flood.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C233-sailab",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 233: I can say fog, dew, hail, an earthquake and a flood.",
+    "assesses": [
+      "UR-LEX-C233-CHIZ233-03",
+      "UR-LEX-C233-CHIZ233-04",
+      "UR-LEX-C233-CHIZ233-05"
+    ]
+  }
+}

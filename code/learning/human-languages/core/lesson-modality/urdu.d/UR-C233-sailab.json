@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C233-sailab",
+    "language": "urdu",
+    "chapter": 233,
+    "sequence": 13970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9dc04d0e4dafc9c"
+  },
+  "findings": []
+}

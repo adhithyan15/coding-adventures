@@ -1,0 +1,19 @@
+{
+  "chapter": 215,
+  "title": "To reduce, To chase, To trust, To doubt, To hate",
+  "label": "ch:ur-to-reduce-to-chase-to-trust-to-doubt-to-hate",
+  "canDo": "I can say to reduce, to chase, to trust, to doubt and to hate.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C215-nafrat-karna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 215: I can say to reduce, to chase, to trust, to doubt and to hate.",
+    "assesses": [
+      "UR-LEX-C215-ACT215-03",
+      "UR-LEX-C215-ACT215-04",
+      "UR-LEX-C215-ACT215-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C236-dukandar",
+    "language": "urdu",
+    "chapter": 236,
+    "sequence": 14100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:95355360e7531cd1"
+  },
+  "findings": []
+}

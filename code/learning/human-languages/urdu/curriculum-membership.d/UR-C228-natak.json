@@ -1,0 +1,11 @@
+{
+  "id": "UR-C228-natak",
+  "pathSegment": "UR-PATH-228-CHIZ228",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-228-CHIZ228",
+      "order": 4
+    }
+  ]
+}

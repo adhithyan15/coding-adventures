@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 220,
+  "title": "Fortunately, Unfortunately, Reason, Result, Although",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:b3033e53408d4d1a",
+  "lessons": [
+    {
+      "id": "UR-C220-khush-qismati-se",
+      "sequence": 12900,
+      "title": "خوش قسمتی سے (khush qismatī se) — fortunately",
+      "headword": "خوش قسمتی سے",
+      "romanization": "khush qismatī se",
+      "gloss": "fortunately",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de8727a57756bf33",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a courtyard, then the Urdu for a balcony."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: خوش قسمتی سے",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خوش قسمتی سے — khush qismatī se — \"fortunately\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khush qismatī se",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khush qismatī se*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khush qismatī se, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khush qismatī se*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say khush qismatī se",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *khush qismatī se*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a courtyard, then the Urdu for a balcony, then say khush qismatī se again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a courtyard, then the Urdu for a balcony, then say *khush qismatī se* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does خوش قسمتی سے (khush qismatī se) mean? (\"Fortunately\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C220-bad-qismati-se",
+      "sequence": 12910,
+      "title": "بد قسمتی سے (bad qismatī se) — unfortunately",
+      "headword": "بد قسمتی سے",
+      "romanization": "bad qismatī se",
+      "gloss": "unfortunately",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45265a24a59ef060",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a balcony, then the Urdu for fortunately."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بد قسمتی سے",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بد قسمتی سے — bad qismatī se — \"unfortunately\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bad qismatī se",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bad qismatī se*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bad qismatī se, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bad qismatī se*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say bad qismatī se",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *bad qismatī se*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a balcony, then the Urdu for fortunately, then say bad qismatī se again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a balcony, then the Urdu for fortunately, then say *bad qismatī se* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بد قسمتی سے (bad qismatī se) mean? (\"Unfortunately\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C220-vajah",
+      "sequence": 12920,
+      "title": "وجہ (vajah) — a reason",
+      "headword": "وجہ",
+      "romanization": "vajah",
+      "gloss": "a reason",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:57339e82993a19cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for fortunately, then the Urdu for unfortunately."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: وجہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وجہ — vajah — \"a reason\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vajah",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vajah*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vajah, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vajah*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say vajah",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *vajah*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for fortunately, then the Urdu for unfortunately, then say vajah again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for fortunately, then the Urdu for unfortunately, then say *vajah* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does وجہ (vajah) mean? (\"A reason\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C220-natija",
+      "sequence": 12930,
+      "title": "نتیجہ (natījā) — a result",
+      "headword": "نتیجہ",
+      "romanization": "natījā",
+      "gloss": "a result",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f698dd347919a63",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for unfortunately, then the Urdu for a reason."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نتیجہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نتیجہ — natījā — \"a result\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "natījā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *natījā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "natījā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *natījā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say natījā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *natījā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for unfortunately, then the Urdu for a reason, then say natījā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for unfortunately, then the Urdu for a reason, then say *natījā* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نتیجہ (natījā) mean? (\"A result\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C220-halanki",
+      "sequence": 12940,
+      "title": "حالانکہ (hālāṅki) — although",
+      "headword": "حالانکہ",
+      "romanization": "hālāṅki",
+      "gloss": "although",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:20b9d84530c251f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a reason, then the Urdu for a result."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حالانکہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حالانکہ — hālāṅki — \"although\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hālāṅki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hālāṅki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hālāṅki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hālāṅki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say hālāṅki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *hālāṅki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a reason, then the Urdu for a result, then say hālāṅki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a reason, then the Urdu for a result, then say *hālāṅki* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حالانکہ (hālāṅki) mean? (\"Although\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R220-first-pass-words-from-chapters-212-215",
+      "sequence": 12950,
+      "title": "Words from chapters 212-215 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 212-215",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7eb2d648198d3172",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a result and although."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to iron, to grind, to fry, to boil, to taste",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to iron, to grind, to fry, to boil, to taste]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to deliver, to lift, to drop, to throw, to pull",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to deliver, to lift, to drop, to throw, to pull]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to hurry, to be late, to conceal, to earn, to look after",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to hurry, to be late, to conceal, to earn, to look after]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to reduce, to chase, to trust, to doubt, to hate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to reduce, to chase, to trust, to doubt, to hate]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To iron? (استری کرنا, istrī karnā.) To grind? (پیسنا, pīsnā.) To fry? (تلنا, talnā.) To boil? (ابالنا, ubālnā.) To taste? (چکھنا, chakhnā.) To deliver? (پہنچانا, pahuṅchānā.) To lift? (اٹھانا, uṭhānā.) To drop? (گرانا, girānā.) To throw? (پھینکنا, pheṅknā.) To pull? (کھینچنا, khīṅchnā.) To hurry? (جلدی کرنا, jaldī karnā.) To be late? (دیر کرنا, der karnā.) To conceal? (چھپانا, chhupānā.) To earn? (کمانا, kamānā.) To look after? (سنبھالنا, sambhālnā.) To reduce? (کم کرنا, kam karnā.) To chase? (پیچھا کرنا, pīchhā karnā.) To trust? (بھروسا کرنا, bharosā karnā.) To doubt? (شک کرنا, shak karnā.) To hate? (نفرت کرنا, nafrat karnā.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R220-second-pass-words-from-chapters-216-220",
+      "sequence": 12960,
+      "title": "Words from chapters 216-220 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 216-220",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9e5c4888a3cdb53",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a pulse and breath."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a pulse, breath, sleep, a dream, weakness",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a pulse, breath, sleep, a dream, weakness]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a beard, a moustache, good health, a toothache, an itch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a beard, a moustache, good health, a toothache, an itch]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "September, October, November, December, Monday",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: September, October, November, December, Monday]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a flat, a storey; a destination, a staircase, a courtyard, a balcony",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a flat, a storey; a destination, a staircase, a courtyard, a balcony]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fortunately, unfortunately, a reason, a result, although",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: fortunately, unfortunately, a reason, a result, although]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A pulse? (نبض, nabz.) Breath? (سانس, sāṅs.) Sleep? (نیند, nīṅd.) A dream? (خواب, khvāb.) Weakness? (کمزوری, kamzorī.) A beard? (داڑھی, dāṛhī.) A moustache? (مونچھ, mūṅchh.) Good health? (تندرستی, tandurustī.) A toothache? (دانت درد, dāṅt dard.) An itch? (کھجلی, khujlī.) September? (ستمبر, sitambar.) October? (اکتوبر, aktūbar.) November? (نومبر, navambar.) December? (دسمبر, disambar.) Monday? (سوموار, somvār.) A flat? (فلیٹ, flaiṭ.) A storey; a destination? (منزل, manzil.) A staircase? (زینہ, zīnā.) A courtyard? (آنگن, āṅgan.) A balcony? (بالکنی, bālkanī.) Fortunately? (خوش قسمتی سے, khush qismatī se.) Unfortunately? (بد قسمتی سے, bad qismatī se.) A reason? (وجہ, vajah.) A result? (نتیجہ, natījā.) Although? (حالانکہ, hālāṅki.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

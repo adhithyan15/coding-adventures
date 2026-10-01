@@ -1,0 +1,11 @@
+{
+  "id": "UR-C225-fail",
+  "pathSegment": "UR-PATH-225-CHIZ225",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-225-CHIZ225",
+      "order": 4
+    }
+  ]
+}

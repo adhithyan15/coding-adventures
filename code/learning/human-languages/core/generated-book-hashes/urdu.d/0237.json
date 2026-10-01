@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:47ce3d28e7af9dd2",
+  "lessonIds": [
+    "UR-C237-mistri",
+    "UR-C237-bera",
+    "UR-C237-chaukidar",
+    "UR-C237-sipahi",
+    "UR-C237-fauj"
+  ],
+  "tex": "urdu/book/chapters/ch237-mechanic-waiter-watchman-soldier-army.tex"
+}

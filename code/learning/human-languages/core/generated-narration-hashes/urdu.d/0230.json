@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:22f12ad8a22ffe47",
+  "lessonIds": [
+    "UR-C230-poti",
+    "UR-C230-sasur",
+    "UR-C230-sas",
+    "UR-C230-dulha",
+    "UR-C230-dulhan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch230.txt",
+  "json": "urdu/narration/ch230.json",
+  "textHash": "fnv1a64:a5187eb19a858186",
+  "jsonHash": "fnv1a64:ea61a34aaf145eb8",
+  "findings": []
+}

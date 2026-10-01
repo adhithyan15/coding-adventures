@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:c74794b1fe750f76",
+  "lessonIds": [
+    "UR-C224-istri",
+    "UR-C224-jharu",
+    "UR-C224-jag",
+    "UR-C224-plet",
+    "UR-C224-katori"
+  ],
+  "tex": "urdu/book/chapters/ch224-iron-broom-jug-dinner-plate-small-bowl.tex"
+}

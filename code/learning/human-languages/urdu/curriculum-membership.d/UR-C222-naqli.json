@@ -1,0 +1,11 @@
+{
+  "id": "UR-C222-naqli",
+  "pathSegment": "UR-PATH-222-SIFAT222",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-222-SIFAT222",
+      "order": 3
+    }
+  ]
+}

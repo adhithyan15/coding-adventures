@@ -1,0 +1,11 @@
+{
+  "id": "UR-C220-natija",
+  "pathSegment": "UR-PATH-220-VAJAH220",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-220-VAJAH220",
+      "order": 3
+    }
+  ]
+}

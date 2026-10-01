@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:39f6334b7e9ae085",
+  "lessonIds": [
+    "UR-C232-nakami",
+    "UR-C232-tarch",
+    "UR-C232-baitri",
+    "UR-C232-zanjir",
+    "UR-C232-pech"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch232.txt",
+  "json": "urdu/narration/ch232.json",
+  "textHash": "fnv1a64:9d357a963e3a38f2",
+  "jsonHash": "fnv1a64:231c7a4e92b02417",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:036a5cee0845dac4",
+  "lessonIds": [
+    "UR-C232-nakami",
+    "UR-C232-tarch",
+    "UR-C232-baitri",
+    "UR-C232-zanjir",
+    "UR-C232-pech"
+  ],
+  "tex": "urdu/book/chapters/ch232-failure-torch-battery-chain-screw.tex"
+}

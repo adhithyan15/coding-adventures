@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C223-sharif",
+    "language": "urdu",
+    "chapter": 223,
+    "sequence": 13250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f1cb081b8a39c5e"
+  },
+  "findings": []
+}

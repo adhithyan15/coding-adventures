@@ -1,0 +1,15 @@
+{
+  "language": "urdu",
+  "chapter": 238,
+  "sourceHash": "fnv1a64:1063cf89ea8b4c20",
+  "lessonIds": [
+    "UR-C238-mahir",
+    "UR-C238-fankar",
+    "UR-C238-karigar",
+    "UR-C238-sunar",
+    "UR-C238-kumhar",
+    "UR-R238-first-pass-words-from-chapters-230-233",
+    "UR-R238-second-pass-words-from-chapters-234-238"
+  ],
+  "tex": "urdu/book/chapters/ch238-expert-artist-craftsman-goldsmith-potter.tex"
+}

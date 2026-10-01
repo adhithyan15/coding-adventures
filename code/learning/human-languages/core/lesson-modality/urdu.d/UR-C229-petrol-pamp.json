@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C229-petrol-pamp",
+    "language": "urdu",
+    "chapter": 229,
+    "sequence": 13570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01372807851114ce"
+  },
+  "findings": []
+}

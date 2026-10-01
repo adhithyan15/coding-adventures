@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:087accb2858ee022",
+  "lessonIds": [
+    "UR-C236-bachat",
+    "UR-C236-qimat",
+    "UR-C236-dukandar",
+    "UR-C236-gahak",
+    "UR-C236-karobar"
+  ],
+  "tex": "urdu/book/chapters/ch236-savings-price-shopkeeper-customer-business.tex"
+}

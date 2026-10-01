@@ -1,0 +1,11 @@
+{
+  "id": "UR-C224-plet",
+  "pathSegment": "UR-PATH-224-CHIZ224",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-224-CHIZ224",
+      "order": 3
+    }
+  ]
+}

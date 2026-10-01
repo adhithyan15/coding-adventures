@@ -1,0 +1,11 @@
+{
+  "id": "UR-C220-halanki",
+  "pathSegment": "UR-PATH-220-VAJAH220",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-220-VAJAH220",
+      "order": 4
+    }
+  ]
+}

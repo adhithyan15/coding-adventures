@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C227-janvar",
+    "language": "urdu",
+    "chapter": 227,
+    "sequence": 13440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6dcfd52c1b2f61ea"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 226,
+  "title": "Coriander, Mint, Aubergine, Pumpkin, Spinach",
+  "label": "ch:ur-coriander-mint-aubergine-pumpkin-spinach",
+  "canDo": "I can say coriander, mint, an aubergine, a pumpkin and spinach.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C226-palak2",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 226: I can say coriander, mint, an aubergine, a pumpkin and spinach.",
+    "assesses": [
+      "UR-LEX-C226-CHIZ226-03",
+      "UR-LEX-C226-CHIZ226-04",
+      "UR-LEX-C226-CHIZ226-05"
+    ]
+  }
+}

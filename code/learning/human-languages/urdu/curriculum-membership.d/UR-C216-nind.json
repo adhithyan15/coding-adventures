@@ -1,0 +1,11 @@
+{
+  "id": "UR-C216-nind",
+  "pathSegment": "UR-PATH-216-SEHAT216",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-216-SEHAT216",
+      "order": 2
+    }
+  ]
+}

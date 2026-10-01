@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C213-khinchna",
+    "language": "urdu",
+    "chapter": 213,
+    "sequence": 12590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:864dfb4e8a1a37a9"
+  },
+  "findings": []
+}

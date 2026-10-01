@@ -1,0 +1,19 @@
+{
+  "chapter": 219,
+  "title": "Flat, Storey, Staircase, Courtyard, Balcony",
+  "label": "ch:ur-flat-storey-staircase-courtyard-balcony",
+  "canDo": "I can say a flat, a storey, a staircase, a courtyard and a balcony.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "UR-C219-balkani",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 219: I can say a flat, a storey, a staircase, a courtyard and a balcony.",
+    "assesses": [
+      "UR-LEX-C219-JAGAH219-03",
+      "UR-LEX-C219-JAGAH219-04",
+      "UR-LEX-C219-JAGAH219-05"
+    ]
+  }
+}

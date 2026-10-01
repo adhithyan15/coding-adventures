@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C220-khush-qismati-se",
+    "language": "urdu",
+    "chapter": 220,
+    "sequence": 12900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:de8727a57756bf33"
+  },
+  "findings": []
+}
