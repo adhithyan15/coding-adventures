@@ -178,6 +178,22 @@ public static class MosaicRuntimeHost
     }
 
     /// <summary>
+    /// True while the loaded runtime is settling effects -- a dispatch, a
+    /// report or an effect answer is still running its effect loop (UI48
+    /// §7.11). False with no runtime.
+    /// </summary>
+    /// <remarks>
+    /// A window that switches layout roots checks this before swapping one
+    /// root for another, so a root is never taken out of the tree while an
+    /// effect handler may still be applying props to it. The window queues
+    /// the switch on the dispatcher, which does not run inside a settle on
+    /// its own thread, so this is a backstop. Read without the lock: taking
+    /// it from the UI thread while another thread settles would stall the
+    /// window for the whole settle, only to learn it had ended.
+    /// </remarks>
+    public static bool IsSettling => State?.IsSettling ?? false;
+
+    /// <summary>
     /// Called once per effect the runtime asks for. See the runtime's own
     /// documentation; setting it with no runtime loaded is a no-op, matching
     /// every other accessor here.
@@ -384,6 +400,9 @@ public static class MosaicRuntimeHost
         private bool answered;
         private int settling;
         private string? effectWarning;
+
+        /// <summary>See <see cref="MosaicRuntimeHost.IsSettling"/>.</summary>
+        public bool IsSettling => System.Threading.Volatile.Read(ref settling) > 0;
 
         /// <summary>
         /// Why the last settle gave up, if it did.

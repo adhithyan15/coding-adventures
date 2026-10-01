@@ -1,6 +1,6 @@
 # UI48 — Host environment: runtime viewport, input modality, and variant selection
 
-**Status:** In progress — ENV1's runtime half implemented in `mosaic-app-runtime` (§7.1); ENV2 and ENV3 on SwiftUI (§7.2), Compose (§7.5), Flutter (§7.9) and Qt (§7.10); ENV4 on SwiftUI (§7.3), Compose (§7.4), Qt (§7.6), XAML (§7.7) and Flutter (§7.8)
+**Status:** In progress — ENV1's runtime half implemented in `mosaic-app-runtime` (§7.1); ENV2 and ENV3 on SwiftUI (§7.2), Compose (§7.5), Flutter (§7.9), Qt (§7.10) and XAML (§7.11); ENV4 on SwiftUI (§7.3), Compose (§7.4), Qt (§7.6), XAML (§7.7) and Flutter (§7.8)
 **Layer:** UI / standard Mosaic app ABI
 **Depends on:** UI29 (primitive kernel), UI30 (multi-layout pipelines), UI38
 (native application runtime), `mosaic-app-runtime`, `mosaic-app-capi`
@@ -1006,6 +1006,176 @@ removed, Engram's native-complete project builds, and with a declared
 Engram runtime, swaps to the touch root at 400 pixels and back with
 `appTitle` carried. Both runs were repeated after the switch was deferred to
 the event loop, and the fixture gate fails when the switch is never queued.
+
+### 7.11 ENV2 and ENV3 on XAML, as built
+
+§7.5 on the WinUI shell, reusing what §7.7 already observes. §7.2 noted that
+XAML already gave a variant a type of its own; what it lacked was one app
+holding both, and a window choosing between them.
+
+**ENV2 — one project carries every variant.**
+
+- A variant's root is a WinUI control of its own, `<Component><Variant>` in
+  PascalCase, named by `mosaic-emit-xaml`'s `variant_type_name` with the
+  same rule as every other backend (`EngramApp.touch.mll` →
+  `x:Class="Mosaic.Generated.EngramAppTouch"`, `partial class EngramAppTouch
+  : UserControl`), emitted by `from_pipeline_variant`. Every type its layout
+  needs is named after it, as the default's are named after the component
+  (`EngramAppTouch_DeckVm`, `EngramAppTouchMosaicSlider`). The files keep the
+  artifact name every backend writes a variant under (`EngramApp.touch.xaml`,
+  `.xaml.cs`).
+- **The interface is the default's.** A WinUI project compiles every `.cs`
+  under it into one C# namespace, so -- as on Compose and Flutter -- the
+  variant declares no union of its own: its `Dispatch` is
+  `EventHandler<EngramAppEvent>` and its handlers construct the default's
+  cases. The builder no longer writes `<C>.<variant>.Event.cs`. Before, the
+  variant declared `EngramAppTouchEvent`, so the window would have needed one
+  handler per layout. The control takes the same slots as the default and
+  does not depend on the shell's policy (a test pins it identical under
+  either), so nothing is re-emitted for native-complete: the strict policy
+  lives in `MainWindow`, which applies props to every root the same way
+  (below). Qt, whose QML roots carry the policy themselves, has to re-emit
+  its variants; XAML does not.
+- **A variant's type may not take a name already in the namespace**, and
+  the emitter refuses it (`PipelineEmitError::InvalidLayoutVariant`): the
+  component's own name, `<X>Event` or a `<X>Mosaic…` support-type name for
+  the component and for every export `EmitOptions::package_exports` lists
+  (`Card` + `touch` beside an exported `CardTouch` is refused), and the
+  names the WinUI shell owns (`SHELL_RESERVED_NAMES`: `App`, `MainWindow`,
+  WinUI's generated `Program`, the binding's `MosaicRuntimeHost`,
+  `MosaicRuntimeResult`, `MosaicRuntimeException`, the platform library's
+  `MosaicPlatformEffects`, `MosaicPlatformRouter`, `MosaicRuntimeHostEffects`,
+  `WinUIMosaicFileDialogs`, `IMosaicFileDialogs`,
+  `IMosaicPlatformEffectHost`, a package host's `MosaicHost`, and the
+  emitter's three converters). The list is pinned by an emitter test against
+  every type the generated `App.xaml.cs`, both `MainWindow.xaml.cs` shapes
+  and the converters declare, and by a builder test against
+  `mosaic-app-bindings`' XAML templates. Row view models are `<X>_<Alias>Vm`,
+  which a variant type, having no `_`, can never spell. Every variant is an
+  owner too: its own support types are `<Variant type>Mosaic…`
+  (`Card.touch` declares `CardTouchMosaicSlider`), so a variant type inside
+  another variant's support names (`Card.touch-mosaic-slider`) is refused --
+  by the emitter among the shell's choices, by the builder among every
+  export's variants. Two exports' variants that spell one type (`Card` +
+  `touch-bar` and `CardTouch` + `bar`) are refused by the builder, which
+  sees them all, naming both files. This closes, for XAML, the gap §7.9
+  records for Compose, Flutter and SwiftUI. A dependency package's
+  components add no names: the builder composes them into the layout that
+  mounts them. Known gap: a caller that passes the emitter a
+  `ComponentRegistry` (`mosaic-compile`'s single-file mode) references
+  controls declared elsewhere, whose names are not checked.
+- **A component with variants needs its default layout.** The variants
+  raise `<C>Event`, which only the default declares, so a XAML build of a
+  component with `<C>.<variant>.mll` files and no `<C>.mll` fails, saying so,
+  rather than emitting controls that name an undeclared union. No backend
+  supports that shape (each variant takes its interface from the default's
+  file); XAML is where the build would otherwise succeed.
+- The project compiles every export's variants already: the WinUI SDK globs
+  every `.xaml` and `.cs` beside the `.csproj`, where the builder writes the
+  flat artifacts. `MosaicPackage.props`, the fragment a host imports, now
+  lists each variant's `Page` and code-behind too -- it already listed their
+  row view models, which named a control the fragment never compiled.
+
+**ENV3 — the selector.**
+
+- The rules are the package's `[[app.layouts]]` (or the conventions),
+  computed by the same `effective_layout_rules` as the other backends and
+  passed as `EmitOptions::layout_variants`: one `LayoutChoice` per rule, in
+  rule order, keyed by `EnvironmentAxis::wire_name`. The emitter checks them
+  again before writing C#: a type `variant_type_name` accepts, not reserved,
+  chosen once (keyed on the type, so `touch` and `Touch` are refused
+  together), ASCII-letter axes and lowercase values. A rule for a variant
+  with no `.mll` fails the build. A test pins every rule axis's wire name as
+  a key of `MosaicRuntimeHost.EnvironmentReport` (or the
+  `InitialEnvironment` it starts from).
+- `MainWindow.xaml.cs` carries them as data -- `MosaicLayoutRules`, an array
+  of `(Variant, Conditions)` tuples -- with a public static
+  `MosaicLayoutVariant(environment)`: the first rule whose conditions all
+  hold, else null for the default (`select_variant`'s semantics). The
+  environment is the ENV4 reducer's, `MosaicRuntimeHost.EnvironmentReport`
+  of the window content's effective size and rendered theme, so the rules
+  and the report agree on every threshold.
+- **The window holds whichever root is showing.** `MainWindow.xaml` no
+  longer declares the component (`<gen:EngramApp x:Name="Component"/>`); an
+  empty single-cell `Grid`, `LayoutHost`, takes its place and its sizing.
+  `CreateLayoutRoot(variant)` constructs the control and wires its
+  `Dispatch` to the window's one `OnComponentDispatch`; every use of the old
+  fixed `this.Component` -- events, the ENV4 report -- goes to the root
+  showing. Otherwise the window is the plain one: a test pins that, minus
+  the edited lines and the appended switch, it is byte-for-byte the window
+  a package without variants gets.
+- **Props reach a new root the way they reach the first.** In the
+  native-complete window `MountLayout` applies the runtime's props with
+  `MosaicRuntimeHost.ApplyRequiredProps(next, RequiredProps)` -- the one
+  strict path, also used for the first root at startup -- *before* the new
+  root replaces the old, so a root that cannot get its props throws with the
+  old one still showing. The app's state lives in the runtime, so nothing is
+  lost but the old control's own state (a caret, a scroll offset). A sample
+  window's props live in the root it shows (stubs, or whatever a host
+  applied), so each slot's value is carried across from the old root by
+  name. A package's own XAML host typed on the default control (Engram's
+  `HandleEvent(EngramApp, …)`) is looked up by the root's type, so it serves
+  the default only; the standard runtime host takes any control.
+- **The switch is deferred, never made inside the handler that noticed the
+  change** (the lesson from the Qt shell). `SizeChanged` and
+  `ActualThemeChanged` -- the same handlers §7.7 wired, after the report, so
+  the runtime's answer is applied to the root showing first -- only queue
+  one `SwitchLayout` on the `DispatcherQueue`; a burst of resize ticks costs
+  one, and it reads the window afresh when it runs. There it checks the new
+  `MosaicRuntimeHost.IsSettling` (the binding's settle counter, read without
+  the lock) and, if a settle is somehow running, retries in 100 ms; queued
+  work does not run inside a settle on the UI thread, so this is a backstop.
+  A mount that throws is caught: the window keeps the layout it was showing,
+  writes why on the status line, and does not retry that same choice until
+  the environment selects something else. Nothing is thrown into the
+  dispatcher. In the native-complete window the switch runs only while the
+  runtime's content is showing. Once the window closes (`Closed`, wired once
+  beside the switch's own handlers) nothing switches: the flag stops a
+  queued switch and the retry timer, a tick already on its way does
+  nothing, and the tick handler throws nothing. A root that leaves the tree
+  is unsubscribed from the window's handler.
+- The first root: the native-complete window mounts the one the window
+  selects in `StartRuntime` (after `LoadRequired` and the platform
+  library's install), or the default when the window has not been laid out
+  yet, in which case the first `SizeChanged` switches it. A sample window
+  mounts the default in its constructor and switches the same way. Unlike
+  Flutter and Qt, a window that opens already narrow can therefore show the
+  default for one frame before switching.
+- **A dialog-root window does not select.** It shows only the button that
+  opens its dialog, so it ignores the choices; its variants still compile.
+  A `ContentDialog` cannot stand in the window's tree in place of a control,
+  so a selectable variant rooted in a `HostDialog` under a control-rooted
+  default fails the build.
+- A package without variants gets byte-identical generated output: TaskApp
+  and RatingControls were emitted before and after (flat, sample and
+  native-complete) and differ only in the standard binding
+  `MosaicRuntimeHost.cs`, which every WinUI project shares and which gained
+  the read-only `IsSettling`.
+
+**Acceptance — the resize gate.** WinUI cannot run on Linux, so the gate §7
+asks for runs in CI's Windows lane. A fixture package,
+`mosaic-emit-xaml/fixtures/layout-variants`, has a default layout and a
+`compact` one selected by convention; its two slots are the conformance
+runtime's `platform` and `status`, so it is built native-complete against
+that runtime and every root is mounted strictly. The lane checks the
+generated source (one event union, the selector, the strict mount, the
+queued switch and settle check), builds the WinUI project, and runs
+`code/scripts/mosaic-xaml-layout-variants-smoke.ps1`, which resizes the real
+window to 1300, 420, 1300 and 420 device-independent pixels and requires,
+each time, the matching layout's marker, the other's absence, and the
+runtime's props on screen. A UI Automation read that races a swap (an
+element gone before its name is read) is skipped and polled again; only the
+deadline fails. The lane runs whenever the workflow or one of its own smoke
+scripts changes, as well as for its packages. Rust tests pin the emitter's naming, refusals,
+interface reuse and both windows; builder tests mirror the other backends'
+(convention, declared rules under wire names, missing variant refused, no
+variants → no selector) plus the strict mount, the reserved names, the
+cross-export refusals and dialog roots; Engram's own suite checks its
+native-complete WinUI project carries both roots and the selector. The
+binding's effect driver checks `IsSettling` is true inside an effect handler
+and false around a dispatch. Engram's WinUI project is not built in CI (it
+never has been); on a Windows desktop the pointer is `fine`, so its touch
+layout would be compiled but not shown.
 
 ## 8. Open questions
 

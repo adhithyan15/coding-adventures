@@ -577,7 +577,6 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
     let xaml_touch = read_artifact(tmp.path(), "xaml/EngramApp.touch.xaml");
     let xaml_default_code = read_artifact(tmp.path(), "xaml/EngramApp.xaml.cs");
     let xaml_touch_code = read_artifact(tmp.path(), "xaml/EngramApp.touch.xaml.cs");
-    let xaml_touch_events = read_artifact(tmp.path(), "xaml/EngramApp.touch.Event.cs");
     assert_contains(&xaml_default, "x:Class=\"Mosaic.Generated.EngramApp\"");
     assert_contains(&xaml_touch, "x:Class=\"Mosaic.Generated.EngramAppTouch\"");
     assert_contains(&xaml_default_code, "partial class EngramApp : UserControl");
@@ -585,11 +584,14 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
         &xaml_touch_code,
         "partial class EngramAppTouch : UserControl",
     );
-    assert_contains(
-        &xaml_touch_code,
-        "EventHandler<EngramAppTouchEvent>? Dispatch",
+    // UI48 §7.11: the touch control raises the default's union, which only
+    // `EngramApp.Event.cs` declares, so both can share one WinUI project.
+    assert_contains(&xaml_touch_code, "EventHandler<EngramAppEvent>? Dispatch");
+    assert!(
+        !xaml_touch_code.contains("EngramAppTouchEvent"),
+        "the touch layout declares no event union of its own"
     );
-    assert_contains(&xaml_touch_events, "record EngramAppTouchEvent");
+    assert!(!tmp.path().join("xaml/EngramApp.touch.Event.cs").exists());
 
     let html = read_artifact(tmp.path(), "html/EngramApp.html");
     assert_contains(&html, "data-on-click=\"onImportAnki\"");
@@ -2606,9 +2608,12 @@ fn native_project_shells_expose_engram_host_contract() {
         &xaml_main_window,
         "FindMosaicHostMethod(\"ApplyProps\", typeof(EngramApp))",
     );
+    // Engram has a touch layout, so the window switches roots (UI48 §7.11)
+    // and looks the host up by the type of the root that raised the event.
+    // Its own host is typed on `EngramApp`, so it serves the default layout.
     assert_contains(
         &xaml_main_window,
-        "FindMosaicHostMethod(\"HandleEvent\", typeof(EngramApp), typeof(EngramAppEvent))",
+        "FindMosaicHostMethod(\"HandleEvent\", component.GetType(), typeof(EngramAppEvent))",
     );
     assert_contains(
         &xaml_main_window,
@@ -3270,4 +3275,60 @@ fn source_tree_has_expected_shape() {
         !build_script.contains("Add-EngramXamlNativeContent"),
         "XAML native library copying should be owned by the generated project"
     );
+}
+
+/// UI48 §7.11 (ENV2/ENV3 on XAML): Engram's native-complete WinUI project
+/// carries both layouts as controls of their own -- `EngramApp` and
+/// `EngramAppTouch`, one event union between them -- and a window that
+/// selects between them by the conventional rule (`touch` for a coarse
+/// pointer), mounting each root strictly. On a Windows desktop the pointer
+/// is fine, so the touch layout is compiled but not shown.
+#[test]
+fn the_winui_project_carries_both_engram_layouts_and_selects_between_them() {
+    let tmp = tempfile::tempdir().expect("temp dist root");
+    let runtime = tmp.path().join("engram_mosaic_app.dll");
+    fs::write(&runtime, b"runtime").expect("stand-in runtime library");
+    mosaic_package_artifact_builder::build_package_with_profile_and_runtime(
+        &BuildOptions {
+            package_root: package_root(),
+            output_root: tmp.path().join("dist"),
+            backend: Backend::Xaml,
+            emit_project: true,
+            theme: None,
+        },
+        mosaic_package_artifact_builder::BuildProfile::NativeComplete,
+        Some(&runtime),
+    )
+    .expect("native-complete Engram WinUI project");
+    let dist = tmp.path().join("dist");
+
+    let touch_code = read_artifact(&dist, "xaml/EngramApp.touch.xaml.cs");
+    assert_contains(&touch_code, "public sealed partial class EngramAppTouch : UserControl");
+    assert_contains(&touch_code, "public event EventHandler<EngramAppEvent>? Dispatch;");
+    assert_contains(
+        &read_artifact(&dist, "xaml/EngramApp.touch.xaml"),
+        "x:Class=\"Mosaic.Generated.EngramAppTouch\"",
+    );
+    assert!(!dist.join("xaml/EngramApp.touch.Event.cs").exists());
+
+    let window = read_artifact(&dist, "xaml/MainWindow.xaml");
+    assert_contains(&window, "<Grid Grid.Row=\"0\" x:Name=\"LayoutHost\"/>");
+    let main = read_artifact(&dist, "xaml/MainWindow.xaml.cs");
+    assert_contains(&main, "        (\"touch\", new[] { (\"pointer\", \"coarse\") }),\n");
+    assert_contains(&main, "                var root = new EngramAppTouch();\n");
+    assert_contains(&main, "                var root = new EngramApp();\n");
+    assert_contains(&main, "        MosaicRuntimeHost.ApplyRequiredProps(next, RequiredProps);\n");
+    assert_contains(
+        &main,
+        "private async void OnComponentDispatch(object? sender, EngramAppEvent mosaicEvent)",
+    );
+    assert_contains(
+        &main,
+        "this.layoutSwitchQueued = this.DispatcherQueue.TryEnqueue(SwitchLayout);",
+    );
+    assert!(!main.contains("this.Component"), "no fixed root remains");
+
+    let props = read_artifact(&dist, "xaml/MosaicPackage.props");
+    assert_contains(&props, "<Page Include=\"EngramApp.touch.xaml\">");
+    assert_contains(&props, "<Compile Include=\"EngramApp.touch.xaml.cs\">");
 }

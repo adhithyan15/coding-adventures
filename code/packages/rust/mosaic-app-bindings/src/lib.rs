@@ -548,6 +548,21 @@ mod tests {
         assert!(host.contains("foreach (var (axis, value) in InitialEnvironment()) start[axis] = value;"));
     }
 
+    /// UI48 ENV3 on XAML (§7.11): a window that switches layout roots asks
+    /// whether the runtime is settling before it swaps one root for another.
+    /// The flag is the loop's own counter, read without the lock (a UI
+    /// thread waiting on another thread's settle would stall for nothing),
+    /// and false with no runtime. `xaml_effect_completion` proves it true
+    /// inside an effect handler and false around a dispatch.
+    #[test]
+    fn xaml_host_says_when_it_is_settling() {
+        let host = xaml_runtime_binding_for_application("Acme.App", "probe");
+        assert!(host.contains("    public static bool IsSettling => State?.IsSettling ?? false;\n"));
+        assert!(host.contains(
+            "        public bool IsSettling => System.Threading.Volatile.Read(ref settling) > 0;\n"
+        ));
+    }
+
     /// UI48 ENV4 on Flutter (§7.8): the XAML contract in Dart. The reducer
     /// lives in the host beside the wire names; the shell only observes.
     #[test]

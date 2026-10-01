@@ -3833,6 +3833,74 @@ jobs:
             throw "Complete Mosaic toolkit XAML build failed with exit code $toolkitBuildExitCode"
           }
 
+      # UI48 ENV2/ENV3 on XAML (§7.11) -- the resize gate. The fixture has a
+      # default layout and a `compact` one selected by convention (under 600
+      # effective pixels); its interface is two of the conformance runtime's
+      # props, so the native-complete window runs against that runtime and
+      # mounts every root strictly. The source contract below checks both
+      # controls share one event union and the window carries the selector;
+      # the WinUI build compiles both roots; the smoke resizes the real window
+      # across the threshold both ways and requires the root to swap with the
+      # runtime's props on it. Linux cannot run WinUI, so this lane is where
+      # the switch is exercised.
+      - name: Resize the WinUI layout-variants fixture (UI48 §7.11)
+        if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
+        shell: pwsh
+        timeout-minutes: 15
+        run: |
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
+          if ($LASTEXITCODE -ne 0) {
+            throw "Mosaic Rust conformance app build failed with exit code $LASTEXITCODE"
+          }
+          $library = Resolve-Path 'code/packages/rust/target/debug/mosaic_app_conformance.dll'
+          $output = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-layout-variants'
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-xaml/fixtures/layout-variants --backend xaml --output $output --emit-project --profile native-complete --runtime-library $library.Path
+          if ($LASTEXITCODE -ne 0) {
+            throw "XAML layout-variants generation failed with exit code $LASTEXITCODE"
+          }
+          $report = Get-Content (Join-Path $output 'xaml/mosaic-degradations.json') -Raw | ConvertFrom-Json
+          if (!$report.nativeComplete -or $report.degradations.Count -ne 0) {
+            throw 'XAML layout-variants generation reported degradations'
+          }
+          if (Test-Path (Join-Path $output 'xaml/LayoutProbe.compact.Event.cs')) {
+            throw 'The compact layout declared an event union of its own'
+          }
+          $compactCode = Get-Content (Join-Path $output 'xaml/LayoutProbe.compact.xaml.cs') -Raw
+          if (-not $compactCode.Contains('public event EventHandler<LayoutProbeEvent>? Dispatch;')) {
+            throw 'The compact control does not raise the default layout''s LayoutProbeEvent'
+          }
+          $window = Get-Content (Join-Path $output 'xaml/MainWindow.xaml.cs') -Raw
+          foreach ($marker in @(
+              '("compact", new[] { ("sizeClass", "compact") }),',
+              'var root = new LayoutProbeCompact();',
+              'MosaicRuntimeHost.ApplyRequiredProps(next, RequiredProps);',
+              'this.layoutSwitchQueued = this.DispatcherQueue.TryEnqueue(SwitchLayout);',
+              'if (MosaicRuntimeHost.IsSettling)')) {
+            if (-not $window.Contains($marker)) {
+              throw "MainWindow.xaml.cs is missing the layout switch: $marker"
+            }
+          }
+          $project = Join-Path $output 'xaml/LayoutProbe.csproj'
+          Push-Location (Split-Path -Parent $project)
+          dotnet build (Split-Path -Leaf $project) -c Debug -p:Platform=x64 --nologo
+          $buildExitCode = $LASTEXITCODE
+          Pop-Location
+          if ($buildExitCode -ne 0) {
+            throw "XAML layout-variants WinUI build failed with exit code $buildExitCode"
+          }
+          $executable = Get-ChildItem -Path (Join-Path $output 'xaml/bin') -Filter 'LayoutProbe.exe' -Recurse -File | Select-Object -First 1
+          if ($null -eq $executable) {
+            throw 'XAML layout-variants WinUI build did not produce LayoutProbe.exe'
+          }
+          Remove-Item Env:MOSAIC_APP_LIBRARY -ErrorAction SilentlyContinue
+          $env:MOSAIC_APP_STATE_PATH = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-layout-variants-state.json'
+          Remove-Item $env:MOSAIC_APP_STATE_PATH, "$($env:MOSAIC_APP_STATE_PATH).corrupt", "$($env:MOSAIC_APP_STATE_PATH).tmp" -Force -ErrorAction SilentlyContinue
+          pwsh -NoProfile -ExecutionPolicy Bypass -File code/scripts/mosaic-xaml-layout-variants-smoke.ps1 -ExePath $executable.FullName
+          if ($LASTEXITCODE -ne 0) {
+            throw "XAML layout-variants resize smoke failed with exit code $LASTEXITCODE"
+          }
+          Remove-Item Env:MOSAIC_APP_STATE_PATH -ErrorAction SilentlyContinue
+
       - name: Round-trip Rust engine through standard XAML binding
         if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
         shell: pwsh

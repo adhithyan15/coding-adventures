@@ -198,6 +198,10 @@ fn the_emitted_xaml_host_answers_effects() {
         "a failed completion does not advance the app",
         "an answered await is settled",
         "the handler's value reached the app",
+        // UI48 §7.11: what a layout-switching window asks before a swap.
+        "nothing is settling before a dispatch",
+        "an effect handler runs inside a settle (IsSettling)",
+        "the settle is over once the dispatch returns",
         "the handler answered both effects of the batch",
         "a fully-answered chaining batch leaves nothing outstanding",
         "state still persists after a fully-answered chaining batch",

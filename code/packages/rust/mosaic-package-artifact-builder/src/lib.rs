@@ -2823,6 +2823,10 @@ fn build_package_inner(
     let mut artifacts = Vec::new();
     let mut components_built = Vec::new();
 
+    if opts.backend == Backend::Xaml {
+        xaml_check_variant_types(&manifest.components.exports, &src_dir)?;
+    }
+
     for component in &manifest.components.exports {
         let variants = discover_variants(&src_dir, component)?;
         for variant in &variants {
@@ -2834,6 +2838,7 @@ fn build_package_inner(
                 &backend_dir,
                 opts.backend,
                 &package_search_paths,
+                &manifest.components.exports,
             )?;
             // Deduped across variants, not inside the call: each variant gets
             // its own artifact vector, so a component-scoped file emitted by
@@ -4938,9 +4943,40 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             }
         }
         Backend::Xaml => {
+            // UI48 §7.11 (ENV2/ENV3): the root's layout variants, composed the
+            // way its default is above -- only to learn each one's kind of
+            // root -- and the rules the window switches between them by, the
+            // same as every other backend's. The variants' controls are the
+            // flat artifacts already beside this project, which the WinUI SDK
+            // compiles with everything else under it; a native-complete
+            // window applies props to each strictly, from MainWindow, so no
+            // control is re-emitted per profile.
+            let mut root_variants = Vec::new();
+            for variant in discover_variants(src_dir, component)?.into_iter().flatten() {
+                let variant_mll =
+                    read_to_string(&src_dir.join(format!("{component}.{variant}.mll")))?;
+                let composed = compose_component_with_backend_tokens(
+                    component,
+                    &mil_src,
+                    &variant_mll,
+                    &msl_src,
+                    package_search_paths,
+                    &shell_style_options,
+                )?;
+                let is_dialog = mosaic_emit_xaml::pipeline::layout_root_is_dialog(&composed.layout.def);
+                root_variants.push((variant, is_dialog));
+            }
+            let layout_variants = xaml_layout_choices(
+                component,
+                layouts,
+                mosaic_emit_xaml::pipeline::layout_root_is_dialog(&layout_out.def),
+                &root_variants,
+            )?;
             let xaml_opts = mosaic_emit_xaml::pipeline::EmitOptions {
                 emit_project: true,
                 require_runtime: project_shell_requires_runtime(profile, runtime_library),
+                layout_variants,
+                package_exports: components.to_vec(),
                 ..Default::default()
             };
             let r = mosaic_emit_xaml::pipeline::from_pipeline(
@@ -5601,6 +5637,130 @@ fn flutter_layout_choices(
             })
         })
         .collect()
+}
+
+/// The layout variants a WinUI window switches between (UI48 §7.11): the
+/// same rules as every other backend's (`[[app.layouts]]`, or the
+/// conventions), each keyed by the wire names
+/// `MosaicRuntimeHost.EnvironmentReport` answers.
+///
+/// `root_variants` pairs each of the root's variants with whether its root
+/// is a `HostDialog`. A rule for a variant with no `.mll`, one whose name
+/// cannot become a C# type, or one whose root is a dialog -- WinUI lowers it
+/// to a `ContentDialog`, which cannot be placed in the window's tree in
+/// place of a control -- fails the build. A window whose OWN root is a
+/// dialog shows only the button that opens it, so it does not select: it
+/// gets no choices (its variants still compile, as every export's do).
+fn xaml_layout_choices(
+    component: &str,
+    declared: &[mosaic_package_manifest::layouts::LayoutRule],
+    default_is_dialog: bool,
+    root_variants: &[(String, bool)],
+) -> Result<Vec<mosaic_emit_xaml::pipeline::LayoutChoice>, BuildError> {
+    let variants: Vec<String> = root_variants
+        .iter()
+        .map(|(variant, _)| variant.clone())
+        .collect();
+    let rules = mosaic_package_manifest::layouts::effective_layout_rules(declared, &variants);
+    let mut choices = Vec::with_capacity(rules.len());
+    for rule in rules {
+        let Some((_, variant_is_dialog)) = root_variants
+            .iter()
+            .find(|(variant, _)| *variant == rule.variant)
+        else {
+            return Err(BuildError::Io(format!(
+                "`[[app.layouts]]` selects variant `{}`, but {component} has no {component}.{}.mll",
+                rule.variant, rule.variant
+            )));
+        };
+        if mosaic_emit_xaml::pipeline::variant_type_name(component, &rule.variant).is_none() {
+            return Err(BuildError::Io(format!(
+                "layout variant `{}` of {component} cannot name a C# type",
+                rule.variant
+            )));
+        }
+        if *variant_is_dialog && !default_is_dialog {
+            return Err(BuildError::Io(format!(
+                "layout variant `{}` of {component} is rooted in a HostDialog, so the WinUI \
+                 window cannot show it in place of {component}'s layout; give it the default's \
+                 kind of root, or no `[[app.layouts]]` rule",
+                rule.variant
+            )));
+        }
+        choices.push(mosaic_emit_xaml::pipeline::LayoutChoice {
+            conditions: rule
+                .conditions
+                .into_iter()
+                .map(|(axis, value)| (axis.wire_name().to_string(), value))
+                .collect(),
+            variant: rule.variant,
+        });
+    }
+    if default_is_dialog {
+        return Ok(Vec::new());
+    }
+    Ok(choices)
+}
+
+/// Every export's layout variants compile into ONE WinUI namespace (UI48
+/// §7.11): the project globs every `.xaml` and `.cs` beside it, and
+/// `MosaicPackage.props` lists them all. Two variants of different exports
+/// may spell one type -- `Card` + `touch-bar` and `CardTouch` + `bar` are
+/// both `CardTouchBar` -- which the emitter, seeing one component at a time,
+/// cannot know. So may one variant's type and another's generated support
+/// types: `Card.touch` declares `CardTouchMosaicSlider`, which a
+/// `Card.touch-mosaic-slider` variant would declare again. Both are refused
+/// here, naming both files, before anything is written. (A variant against
+/// an export's own names, or the shell's, is the emitter's check:
+/// `EmitOptions::package_exports`.)
+///
+/// A component with variants but no default `<C>.mll` is refused too: the
+/// variants raise `<C>Event`, which only the default layout declares, so
+/// they could not compile. No backend supports that shape -- every variant
+/// takes the interface from its default's file -- but only here would the
+/// build otherwise succeed and the WinUI compile fail.
+fn xaml_check_variant_types(components: &[String], src_dir: &Path) -> Result<(), BuildError> {
+    let mut owners: HashMap<String, String> = HashMap::new();
+    for component in components {
+        let variants = discover_variants(src_dir, component)?;
+        if !variants.is_empty() && !variants.contains(&None) {
+            return Err(BuildError::Io(format!(
+                "{component} has layout variants but no default {component}.mll; on XAML each \
+                 variant raises {component}Event, which only the default layout declares, so \
+                 add {component}.mll"
+            )));
+        }
+        for variant in variants.into_iter().flatten() {
+            // A variant that cannot name a type at all is the emitter's to
+            // refuse, with its own message.
+            let Some(type_name) = mosaic_emit_xaml::pipeline::variant_type_name(component, &variant)
+            else {
+                continue;
+            };
+            let file = format!("{component}.{variant}.mll");
+            if let Some(owner) = owners.insert(type_name.clone(), file.clone()) {
+                return Err(BuildError::Io(format!(
+                    "the WinUI project would declare `{type_name}` twice: for the layout \
+                     variants {owner} and {file}; rename one"
+                )));
+            }
+        }
+    }
+    // Every pair, in either order: a type inside another's support names.
+    for (type_name, file) in &owners {
+        for (other, other_file) in &owners {
+            if other != type_name
+                && mosaic_emit_xaml::pipeline::in_support_namespace(other, type_name)
+            {
+                return Err(BuildError::Io(format!(
+                    "the layout variant {file} would declare `{type_name}`, a name in \
+                     `{other}Mosaic...`, which the generated support types of {other_file} \
+                     use; rename one"
+                )));
+            }
+        }
+    }
+    Ok(())
 }
 
 /// The color scheme a stylesheet was written for, from its file name:
@@ -7704,6 +7864,10 @@ fn build_electron_readme(npm_name: &str, component_name: &str) -> String {
 /// Returns the paths of the written component artifacts, or a [`BuildError`] tagged
 /// with the component name so a CLI can render
 /// `mosaic-compile pkg: error compiling Grid: …`.
+// `package_exports` is the eighth: the XAML emitter needs every export's name
+// to refuse a variant type another export owns (UI48 §7.11), and the other
+// seven are each a different input to the one compile.
+#[allow(clippy::too_many_arguments)]
 fn compile_one_component(
     component: &str,
     variant: Option<&str>,
@@ -7712,6 +7876,7 @@ fn compile_one_component(
     out_dir: &Path,
     backend: Backend,
     package_search_paths: &[PathBuf],
+    package_exports: &[String],
 ) -> Result<Vec<PathBuf>, BuildError> {
     // ----- 1. Locate the three source files --------------------------------
     //
@@ -7868,49 +8033,59 @@ fn compile_one_component(
             // mode treats every component as a stand-alone UserControl
             // (registry=None) and never emits the project shell
             // (EmitOptions::default()).
-            let opts = mosaic_emit_xaml::pipeline::EmitOptions::default();
+            //
+            // `package_exports` lets the emitter refuse a variant type that
+            // another export already names: every export lands in one C#
+            // namespace (UI48 §7.11).
+            let opts = mosaic_emit_xaml::pipeline::EmitOptions {
+                package_exports: package_exports.to_vec(),
+                ..Default::default()
+            };
 
             // A XAML layout and its code-behind are two halves of one C#
             // type. Filenames alone do not distinguish that type: emitting
             // `Grid.xaml(.cs)` and `Grid.touch.xaml(.cs)` with the same
             // `Mosaic.Generated.Grid` identity makes the C# compiler merge
             // both partial classes, where every property and handler then
-            // collides. Give each named layout variant its own generated type
-            // while preserving the historical name for the default layout.
-            let mut xaml_component = mosmodel_out.component.clone();
-            let mut xaml_layout = layout_out.def.clone();
-            if let Some(variant) = variant {
-                let emitted_name = format!("{component}{}", xaml_variant_type_suffix(variant));
-                xaml_component.component = emitted_name.clone();
-                xaml_layout.component_name = emitted_name;
+            // collides. A named layout variant is therefore its own type,
+            // `<Component><Variant>` (UI48 §7.11), which raises the DEFAULT's
+            // event union rather than declaring one -- so one window handler
+            // serves every layout -- while the default keeps its historical
+            // name.
+            let result = match variant {
+                None => mosaic_emit_xaml::pipeline::from_pipeline(
+                    &mosmodel_out.component,
+                    &layout_out.def,
+                    &style_def,
+                    None,
+                    &opts,
+                ),
+                Some(variant) => mosaic_emit_xaml::pipeline::from_pipeline_variant(
+                    &mosmodel_out.component,
+                    &layout_out.def,
+                    &style_def,
+                    None,
+                    variant,
+                    &opts,
+                ),
             }
-            let result = mosaic_emit_xaml::pipeline::from_pipeline(
-                &xaml_component,
-                &xaml_layout,
-                &style_def,
-                None,
-                &opts,
-            )
             .map_err(|e| pipeline_emit_err(component, e))?;
 
-            // Write the secondaries alongside the primary `.xaml`.
-            //
-            // Both the code-behind and event union are variant-scoped because
-            // the code-behind's Dispatch signature names its generated event
-            // type. The filename infix keeps the distinct sources side by side
-            // and the generated type suffix keeps the CLR identities distinct.
+            // Write the secondaries alongside the primary `.xaml`: the
+            // code-behind for every layout (the filename infix keeps the
+            // sources side by side, the type name keeps the CLR identities
+            // distinct), and the event union for the default only.
             let code_behind_path = match variant {
                 Some(v) => out_dir.join(format!("{component}.{v}.xaml.cs")),
                 None => out_dir.join(format!("{component}.xaml.cs")),
             };
-            let events_path = match variant {
-                Some(v) => out_dir.join(format!("{component}.{v}.Event.cs")),
-                None => out_dir.join(format!("{component}.Event.cs")),
-            };
             write_file(&code_behind_path, result.code_behind.as_bytes())?;
-            write_file(&events_path, result.events.as_bytes())?;
             backend_artifacts.push(code_behind_path);
-            backend_artifacts.push(events_path);
+            if variant.is_none() {
+                let events_path = out_dir.join(format!("{component}.Event.cs"));
+                write_file(&events_path, result.events.as_bytes())?;
+                backend_artifacts.push(events_path);
+            }
 
             // XAML can reference generated C# support files from its markup
             // (for example a ViewModel or an IValueConverter). Package mode
@@ -7979,27 +8154,6 @@ fn compile_one_component(
         artifacts.push(lattice_path);
     }
     Ok(artifacts)
-}
-
-/// Turn a validated UI30 layout-variant name into a C# type suffix.
-///
-/// Variant names are restricted by `discover_variants` to ASCII letters,
-/// digits, `_`, and `-`. Separators start a new PascalCase word; the component
-/// prefix guarantees the resulting full identifier never starts with a digit.
-fn xaml_variant_type_suffix(variant: &str) -> String {
-    let mut suffix = String::with_capacity(variant.len());
-    let mut uppercase_next = true;
-    for ch in variant.chars() {
-        if ch == '-' || ch == '_' {
-            uppercase_next = true;
-        } else if uppercase_next {
-            suffix.push(ch.to_ascii_uppercase());
-            uppercase_next = false;
-        } else {
-            suffix.push(ch);
-        }
-    }
-    suffix
 }
 
 /// UI30 multi-layout — discover the layout variants present for one
@@ -8820,6 +8974,34 @@ fn emit_index_file(
                     "    <Compile Include=\"{c}.xaml.cs\"><DependentUpon>{c}.xaml</DependentUpon></Compile>\n"
                 ));
                 body.push_str(&format!("    <Compile Include=\"{c}.Event.cs\"/>\n"));
+                // Each layout variant is a control of its own (UI48 §7.11),
+                // `{c}.{variant}.xaml(.cs)`, raising `{c}Event` from the line
+                // above. Its row view models are already among the support
+                // files below, so without these lines they would name a type
+                // the fragment never compiled. Taken from what this build
+                // wrote, in a stable order, and spliced into the XML only
+                // when the variant is one `variant_type_name` accepts (ASCII
+                // letters, digits, `-` and `_`): nothing that could close the
+                // attribute or the element.
+                let prefix = format!("{c}.");
+                let mut variant_pages = component_artifacts
+                    .iter()
+                    .filter_map(|artifact| artifact.file_name().and_then(|name| name.to_str()))
+                    .filter_map(|name| name.strip_prefix(&prefix)?.strip_suffix(".xaml"))
+                    .filter(|variant| {
+                        mosaic_emit_xaml::pipeline::variant_type_name(c, variant).is_some()
+                    })
+                    .collect::<Vec<_>>();
+                variant_pages.sort_unstable();
+                variant_pages.dedup();
+                for variant in variant_pages {
+                    body.push_str(&format!(
+                        "    <Page Include=\"{c}.{variant}.xaml\"><Generator>MSBuild:Compile</Generator><SubType>Designer</SubType></Page>\n"
+                    ));
+                    body.push_str(&format!(
+                        "    <Compile Include=\"{c}.{variant}.xaml.cs\"><DependentUpon>{c}.{variant}.xaml</DependentUpon></Compile>\n"
+                    ));
+                }
             }
             let mut support_files = component_artifacts
                 .iter()
@@ -12665,6 +12847,291 @@ layout NativeEvents {
                 }
             }
         }
+    }
+
+    // UI48 §7.11: the same on XAML -- every variant a control of its own in
+    // the WinUI project, and a selector in `MainWindow.xaml.cs` generated
+    // from the same rules.
+
+    #[test]
+    fn a_xaml_app_carries_its_touch_variant_and_selects_it_by_convention() {
+        let pkg = card_package_with_touch_variant();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Xaml)).expect("XAML shell");
+        let xaml = out.path().join("xaml");
+        // Both roots sit in the project directory, which the WinUI SDK
+        // compiles whole; the variant raises the default's union.
+        let variant = fs::read_to_string(xaml.join("Card.touch.xaml.cs")).unwrap();
+        assert!(variant.contains("public sealed partial class CardTouch : UserControl"), "{variant}");
+        assert!(variant.contains("public event EventHandler<CardEvent>? Dispatch;"), "{variant}");
+        assert!(!xaml.join("Card.touch.Event.cs").exists());
+        let window = fs::read_to_string(xaml.join("MainWindow.xaml")).unwrap();
+        assert!(window.contains("<Grid Grid.Row=\"0\" x:Name=\"LayoutHost\"/>"), "{window}");
+        let main = fs::read_to_string(xaml.join("MainWindow.xaml.cs")).unwrap();
+        // Keyed by the wire name the environment report uses.
+        assert!(main.contains("        (\"touch\", new[] { (\"pointer\", \"coarse\") }),\n"), "{main}");
+        assert!(main.contains("                var root = new CardTouch();\n"), "{main}");
+        assert!(main.contains("                var root = new Card();\n"), "{main}");
+        assert!(main.contains("this.layoutSwitchQueued = this.DispatcherQueue.TryEnqueue(SwitchLayout);"));
+        // A sample shell selects and carries its slots, but reports to nobody.
+        assert!(main.contains("CarryMosaicSlots(current, next);"), "{main}");
+        assert!(!main.contains("ReportEnvironment"), "{main}");
+        // And the standard binding it reads the window through is beside it.
+        let host = fs::read_to_string(xaml.join("MosaicRuntimeHost.cs")).unwrap();
+        assert!(host.contains("public static bool IsSettling =>"), "the switch's settle check");
+    }
+
+    #[test]
+    fn declared_layout_rules_reach_the_xaml_selector_under_wire_names() {
+        let pkg = card_package_with_touch_variant();
+        let manifest = pkg.path().join("mosaic-package.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str("\n[[app.layouts]]\nvariant = \"touch\"\nsize-class = \"compact\"\n");
+        fs::write(&manifest, text).unwrap();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Xaml)).expect("XAML shell");
+        let main = fs::read_to_string(out.path().join("xaml/MainWindow.xaml.cs")).unwrap();
+        // `size-class` in the manifest, `sizeClass` in the report.
+        assert!(main.contains("        (\"touch\", new[] { (\"sizeClass\", \"compact\") }),\n"), "{main}");
+        assert!(!main.contains("(\"pointer\", \"coarse\")"), "the declared rule replaces the convention");
+    }
+
+    #[test]
+    fn a_xaml_layout_rule_for_a_missing_variant_is_refused() {
+        let pkg = card_package();
+        let manifest = pkg.path().join("mosaic-package.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str("\n[[app.layouts]]\nvariant = \"compact\"\nsize-class = \"compact\"\n");
+        fs::write(&manifest, text).unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package(&swiftui_options(&pkg, &out, Backend::Xaml)).unwrap_err();
+        assert!(error.to_string().contains("Card.compact.mll"), "{error}");
+    }
+
+    #[test]
+    fn a_xaml_app_without_variants_has_no_selector() {
+        let pkg = card_package();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Xaml)).expect("XAML shell");
+        let xaml = out.path().join("xaml");
+        let main = fs::read_to_string(xaml.join("MainWindow.xaml.cs")).unwrap();
+        assert!(!main.contains("Layout"), "{main}");
+        assert!(main.contains("TryApplyMosaicHostProps(this.Component)"), "{main}");
+        let window = fs::read_to_string(xaml.join("MainWindow.xaml")).unwrap();
+        assert!(window.contains("<gen:Card Grid.Row=\"0\" x:Name=\"Component\"/>"), "{window}");
+        let props = fs::read_to_string(xaml.join("MosaicPackage.props")).unwrap();
+        assert_eq!(props.matches("<Page Include=").count(), 1, "{props}");
+    }
+
+    /// The native-complete window mounts every root strictly -- the same
+    /// `ApplyRequiredProps` with the same required props as the first --
+    /// and switches from the observer ENV4 already wired, after the report.
+    /// No control is re-emitted for the policy: it lives in the window.
+    #[test]
+    fn a_native_complete_xaml_app_mounts_its_variants_strictly() {
+        let pkg = card_package_with_touch_variant();
+        let flat = TempDir::new().unwrap();
+        build_package(&BuildOptions { emit_project: false, ..swiftui_options(&pkg, &flat, Backend::Xaml) })
+            .expect("flat XAML package");
+        let runtime = pkg.path().join("mosaic_app.dll");
+        fs::write(&runtime, b"runtime").unwrap();
+        let out = TempDir::new().unwrap();
+        build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &out, Backend::Xaml),
+            BuildProfile::NativeComplete,
+            Some(&runtime),
+        )
+        .expect("native-complete XAML shell");
+        let xaml = out.path().join("xaml");
+        for file in ["Card.xaml", "Card.xaml.cs", "Card.touch.xaml", "Card.touch.xaml.cs"] {
+            assert_eq!(
+                fs::read_to_string(xaml.join(file)).unwrap(),
+                fs::read_to_string(flat.path().join("xaml").join(file)).unwrap(),
+                "{file} is the same control under either policy"
+            );
+        }
+        let main = fs::read_to_string(xaml.join("MainWindow.xaml.cs")).unwrap();
+        assert!(main.contains("private static readonly string[] RequiredProps = new[] { \"label\" };"), "{main}");
+        assert!(main.contains("        MosaicRuntimeHost.ApplyRequiredProps(next, RequiredProps);\n"), "{main}");
+        assert_eq!(main.matches("ApplyRequiredProps(").count(), 1, "{main}");
+        let install = main.find("MosaicPlatformEffects.Install(this").expect("platform library");
+        let first = main.find("            MountLayout(WindowEnvironment() is { } environment\n").unwrap();
+        assert!(install < first, "effects are installed before the first root is mounted");
+        let report = main.find("root.SizeChanged += (_, _) => QueueEnvironmentReport();").unwrap();
+        let switch = main.find("root.SizeChanged += (_, _) => QueueLayoutSwitch();").unwrap();
+        assert!(report < switch, "{main}");
+    }
+
+    /// Every axis a rule can test is a key the XAML binding's
+    /// `EnvironmentReport` answers (or the `InitialEnvironment` it starts
+    /// from), under the same wire name. The manifest crate pins `wire_name`
+    /// to `mosaic-app-runtime`; this pins the C# report to `wire_name`, so a
+    /// generated rule can never test a key the report does not carry.
+    #[test]
+    fn the_xaml_environment_report_carries_every_rule_axis() {
+        let binding = mosaic_app_bindings::xaml_runtime_binding_for_application("Mosaic.Generated", "card");
+        let body = |signature: &str| {
+            let start = binding.find(signature).expect(signature);
+            let body = &binding[start..];
+            body[..body.find("};").expect("one dictionary initializer")].to_string()
+        };
+        let report = body("public static IReadOnlyDictionary<string, string> EnvironmentReport(");
+        let initial = body("public static IReadOnlyDictionary<string, string> InitialEnvironment()");
+        assert!(report.contains("new Dictionary<string, string>(InitialEnvironment())"), "{report}");
+        for axis in mosaic_package_manifest::layouts::EnvironmentAxis::ALL {
+            let key = format!("[\"{}\"] =", axis.wire_name());
+            assert!(
+                report.contains(&key) || initial.contains(&key),
+                "{key} is not in the XAML environment report"
+            );
+        }
+    }
+
+    /// Every type the XAML runtime binding and platform library declare in
+    /// the project's namespace is a name a variant's control may not take
+    /// (UI48 §7.11), so a new public type there fails this test until the
+    /// emitter reserves it.
+    #[test]
+    fn every_type_the_xaml_binding_declares_is_reserved() {
+        let mut declared = Vec::new();
+        for source in [
+            mosaic_app_bindings::xaml_runtime_binding_for_application("Mosaic.Generated", "card"),
+            mosaic_app_bindings::xaml_platform_effects("Mosaic.Generated"),
+        ] {
+            // A namespace-level declaration: unindented, and not a comment.
+            for line in source
+                .lines()
+                .filter(|line| !line.starts_with(char::is_whitespace) && !line.starts_with("//"))
+            {
+                let words: Vec<&str> = line.split_whitespace().collect();
+                let Some(at) = words.iter().position(|word| {
+                    matches!(*word, "class" | "record" | "struct" | "interface" | "enum" | "delegate")
+                }) else {
+                    continue;
+                };
+                let name: String = words[at + 1]
+                    .chars()
+                    .take_while(|c| c.is_ascii_alphanumeric() || *c == '_')
+                    .collect();
+                assert!(
+                    mosaic_emit_xaml::pipeline::SHELL_RESERVED_NAMES.contains(&name.as_str()),
+                    "{name} is public in the WinUI project but a variant's control may take it"
+                );
+                declared.push(name);
+            }
+        }
+        declared.sort();
+        assert_eq!(
+            declared,
+            [
+                "IMosaicFileDialogs",
+                "IMosaicPlatformEffectHost",
+                "MosaicPlatformEffects",
+                "MosaicPlatformRouter",
+                "MosaicRuntimeException",
+                "MosaicRuntimeHost",
+                "MosaicRuntimeHostEffects",
+                "MosaicRuntimeResult",
+                "WinUIMosaicFileDialogs",
+            ]
+        );
+    }
+
+    /// One WinUI namespace holds every export and every variant: a variant
+    /// may not take another export's name (the emitter's check, given the
+    /// exports), and two exports' variants may not spell one type (the
+    /// builder's, which sees them all).
+    #[test]
+    fn a_xaml_variant_type_that_another_export_or_variant_owns_is_refused() {
+        let pkg = make_package("mosaic-pkg-card", &["Card", "CardTouch"]);
+        fs::write(pkg.path().join("src/Card.touch.mll"), minimal_mll("Card")).unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package(&swiftui_options(&pkg, &out, Backend::Xaml)).unwrap_err();
+        assert!(error.to_string().contains("the component CardTouch"), "{error}");
+
+        let pkg = make_package("mosaic-pkg-card", &["Card", "CardTouch"]);
+        fs::write(pkg.path().join("src/Card.touch-bar.mll"), minimal_mll("Card")).unwrap();
+        fs::write(pkg.path().join("src/CardTouch.bar.mll"), minimal_mll("CardTouch")).unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package(&swiftui_options(&pkg, &out, Backend::Xaml)).unwrap_err();
+        assert!(error.to_string().contains("`CardTouchBar` twice"), "{error}");
+        assert!(error.to_string().contains("Card.touch-bar.mll"), "{error}");
+        assert!(error.to_string().contains("CardTouch.bar.mll"), "{error}");
+
+        // Nor a name in another variant's support types: `Card.touch`
+        // declares `CardTouchMosaicSlider`, and so would this variant --
+        // here of another export, which only the builder sees.
+        let pkg = make_package("mosaic-pkg-card", &["Card", "CardTouch"]);
+        fs::write(pkg.path().join("src/Card.touch-face.mll"), minimal_mll("Card")).unwrap();
+        fs::write(pkg.path().join("src/CardTouch.mosaic-slider.mll"), minimal_mll("CardTouch"))
+            .unwrap();
+        let error = xaml_check_variant_types(
+            &["Card".to_string(), "CardTouch".to_string()],
+            &pkg.path().join("src"),
+        );
+        // (That name is in the EXPORT CardTouch's own support names, which
+        // the emitter refuses; this pass compares variants with variants.)
+        assert!(error.is_ok(), "{error:?}");
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        fs::write(pkg.path().join("src/Card.touch.mll"), minimal_mll("Card")).unwrap();
+        fs::write(pkg.path().join("src/Card.touch-mosaic-slider.mll"), minimal_mll("Card")).unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package(&swiftui_options(&pkg, &out, Backend::Xaml)).unwrap_err();
+        assert!(error.to_string().contains("`CardTouchMosaicSlider`"), "{error}");
+        assert!(error.to_string().contains("`CardTouchMosaic...`"), "{error}");
+        assert!(error.to_string().contains("Card.touch.mll"), "{error}");
+
+        // A variant of ANY export may not take a shell name either.
+        let pkg = make_package("mosaic-pkg-card", &["Card", "Mosaic"]);
+        fs::write(pkg.path().join("src/Mosaic.host.mll"), minimal_mll("Mosaic")).unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package(&swiftui_options(&pkg, &out, Backend::Xaml)).unwrap_err();
+        assert!(error.to_string().contains("`MosaicHost` is a type the WinUI shell declares"), "{error}");
+    }
+
+    /// A variant raises `<C>Event`, which only the default layout declares,
+    /// so a component with variants and no `<C>.mll` is refused on XAML --
+    /// in the flat package build too -- rather than emitting controls that
+    /// name an undeclared union.
+    #[test]
+    fn a_xaml_component_with_variants_but_no_default_is_refused() {
+        let pkg = card_package_with_touch_variant();
+        fs::remove_file(pkg.path().join("src/Card.mll")).unwrap();
+        for emit_project in [false, true] {
+            let out = TempDir::new().unwrap();
+            let error = build_package(&BuildOptions {
+                emit_project,
+                ..swiftui_options(&pkg, &out, Backend::Xaml)
+            })
+            .unwrap_err()
+            .to_string();
+            assert!(error.contains("Card has layout variants but no default Card.mll"), "{error}");
+            assert!(error.contains("CardEvent"), "{error}");
+            assert!(!out.path().join("xaml/Card.touch.xaml.cs").exists());
+        }
+    }
+
+    /// A ContentDialog cannot stand in the window's tree in place of a
+    /// control, so a selectable variant rooted in a HostDialog is refused;
+    /// a window whose own root is a dialog does not select at all.
+    #[test]
+    fn a_xaml_window_switches_only_between_control_roots() {
+        let dialog = "layout Card { HostDialog [ root ] ( title : slot: label ) { Text ( content: slot: label ) } }\n";
+        let pkg = card_package();
+        fs::write(pkg.path().join("src/Card.touch.mll"), dialog).unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package(&swiftui_options(&pkg, &out, Backend::Xaml)).unwrap_err();
+        assert!(error.to_string().contains("rooted in a HostDialog"), "{error}");
+
+        let pkg = card_package();
+        fs::write(pkg.path().join("src/Card.mll"), dialog).unwrap();
+        fs::write(pkg.path().join("src/Card.touch.mll"), dialog).unwrap();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Xaml)).expect("dialog-root shell");
+        let main = fs::read_to_string(out.path().join("xaml/MainWindow.xaml.cs")).unwrap();
+        assert!(main.contains("OnOpenButtonClick"), "{main}");
+        assert!(!main.contains("MosaicLayoutVariant"), "{main}");
+        assert!(out.path().join("xaml/Card.touch.xaml.cs").exists(), "still compiled");
     }
 
     /// The native-complete shell with a variant both reports (ENV4) and
@@ -16905,8 +17372,8 @@ version = "1"
     /// The emitted csproj compiles every `.xaml.cs` file. A filename infix is
     /// therefore insufficient: if both files declare `partial class Grid`, C#
     /// merges them and every generated property and handler collides. The
-    /// variant also gets a matching event-union identity because Dispatch in
-    /// that code-behind names the event type.
+    /// variant's `Dispatch` carries the DEFAULT's event union (UI48 §7.11),
+    /// which only the default declares, so one window handler serves both.
     #[test]
     fn a_xaml_layout_variant_has_distinct_generated_types() {
         let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
@@ -16932,11 +17399,8 @@ version = "1"
         events.sort();
         assert_eq!(
             events,
-            vec![
-                "Grid.Event.cs".to_string(),
-                "Grid.touch.Event.cs".to_string()
-            ],
-            "each generated component type needs its matching event union"
+            vec!["Grid.Event.cs".to_string()],
+            "the component's one event union, declared by the default"
         );
 
         let default_xaml = fs::read_to_string(dir.join("Grid.xaml")).unwrap();
@@ -16944,16 +17408,15 @@ version = "1"
         let default_code = fs::read_to_string(dir.join("Grid.xaml.cs")).unwrap();
         let touch_code = fs::read_to_string(dir.join("Grid.touch.xaml.cs")).unwrap();
         let default_events = fs::read_to_string(dir.join("Grid.Event.cs")).unwrap();
-        let touch_events = fs::read_to_string(dir.join("Grid.touch.Event.cs")).unwrap();
 
         assert!(default_xaml.contains("x:Class=\"Mosaic.Generated.Grid\""));
         assert!(touch_xaml.contains("x:Class=\"Mosaic.Generated.GridTouch\""));
         assert!(default_code.contains("partial class Grid : UserControl"));
         assert!(touch_code.contains("partial class GridTouch : UserControl"));
         assert!(default_code.contains("EventHandler<GridEvent>"));
-        assert!(touch_code.contains("EventHandler<GridTouchEvent>"));
+        assert!(touch_code.contains("EventHandler<GridEvent>"));
+        assert!(!touch_code.contains("GridTouchEvent"), "{touch_code}");
         assert!(default_events.contains("record GridEvent"));
-        assert!(touch_events.contains("record GridTouchEvent"));
 
         for expected in [
             "Grid.xaml",
@@ -16961,13 +17424,25 @@ version = "1"
             "Grid.Event.cs",
             "Grid.touch.xaml",
             "Grid.touch.xaml.cs",
-            "Grid.touch.Event.cs",
         ] {
             assert!(
                 result.artifacts.iter().any(|path| path.ends_with(expected)),
                 "missing {expected} from the build manifest"
             );
         }
+        assert!(!result
+            .artifacts
+            .iter()
+            .any(|path| path.ends_with("Grid.touch.Event.cs")));
+
+        // A host importing the package fragment compiles every layout: the
+        // variant's view models are listed, so its control must be too.
+        let props = fs::read_to_string(dir.join("MosaicPackage.props")).unwrap();
+        assert!(props.contains(concat!(
+            "    <Page Include=\"Grid.touch.xaml\"><Generator>MSBuild:Compile</Generator><SubType>Designer</SubType></Page>\n",
+            "    <Compile Include=\"Grid.touch.xaml.cs\"><DependentUpon>Grid.touch.xaml</DependentUpon></Compile>\n",
+        )), "{props}");
+        assert!(!props.contains("Grid.touch.Event.cs"), "{props}");
     }
 
     #[test]
