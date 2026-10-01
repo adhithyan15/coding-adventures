@@ -413,8 +413,12 @@ int wmain(int argc, wchar_t **argv) {
     PROCESS_INFORMATION process;
     ZeroMemory(&process, sizeof(process));
     DWORD flags = CREATE_SUSPENDED | CREATE_NO_WINDOW | EXTENDED_STARTUPINFO_PRESENT | CREATE_UNICODE_ENVIRONMENT;
+    /* The trusted host already started this supervisor in working_directory.
+     * Inherit that cwd instead of asking CreateProcessAsUserW to reselect a
+     * drive whose hidden `=X:` environment entry was deliberately removed by
+     * the host's minimal environment. */
     BOOL created = CreateProcessAsUserW(token, runtime, command, NULL, NULL, TRUE, flags, NULL,
-        working_directory, &startup.StartupInfo, &process);
+        NULL, &startup.StartupInfo, &process);
     DWORD create_error = created ? ERROR_SUCCESS : GetLastError();
     free(quoted_runtime); free(quoted_entry); free(quoted_stage); free(quoted_schema); free(command);
     if (!created) {
