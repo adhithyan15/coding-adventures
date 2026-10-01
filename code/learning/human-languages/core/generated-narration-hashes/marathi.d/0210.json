@@ -1,0 +1,21 @@
+{
+  "language": "marathi",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:229744340ef54bfb",
+  "lessonIds": [
+    "MR-C210-dantavaidya",
+    "MR-C210-khatik",
+    "MR-C210-karagir",
+    "MR-C210-kamgar",
+    "MR-C210-karmacari",
+    "MR-R210-first-pass-words-from-chapters-202-205",
+    "MR-R210-second-pass-words-from-chapters-206-210"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marathi/narration/ch210.txt",
+  "json": "marathi/narration/ch210.json",
+  "textHash": "fnv1a64:2dfb764240b867ea",
+  "jsonHash": "fnv1a64:b144a843676f40e4",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C208-baksis",
+  "pathSegment": "MR-PATH-208-VASTU208",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-208-VASTU208",
+      "order": 3
+    }
+  ]
+}

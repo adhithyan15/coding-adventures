@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-207-GUN207",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say bold, careful, careless, busy and free.",
+  "prerequisites": []
+}

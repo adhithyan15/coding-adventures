@@ -1,0 +1,11 @@
+{
+  "id": "MR-C196-tayari-karne",
+  "pathSegment": "MR-PATH-196-ACT196",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-196-ACT196",
+      "order": 2
+    }
+  ]
+}

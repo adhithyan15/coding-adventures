@@ -1,0 +1,11 @@
+{
+  "id": "MR-C203-javaljaval",
+  "pathSegment": "MR-PATH-203-KARAN203",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-203-KARAN203",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:02a5428d40cb86bd",
+  "lessonIds": [
+    "MR-C203-nakki",
+    "MR-C203-kharokhar",
+    "MR-C203-javaljaval",
+    "MR-C203-sumare",
+    "MR-C203-phakta"
+  ],
+  "tex": "marathi/book/chapters/ch203-certainly-really-almost-about-only.tex"
+}

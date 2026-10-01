@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:35ee6cee1de8aefd",
+  "lessonIds": [
+    "MR-C194-phon-karne",
+    "MR-C194-carca-karne",
+    "MR-C194-manai-karne",
+    "MR-C194-raksan-karne",
+    "MR-C194-marne2"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch194.txt",
+  "json": "marathi/narration/ch194.json",
+  "textHash": "fnv1a64:c2d4db552f4ac425",
+  "jsonHash": "fnv1a64:c291791826f0b64f",
+  "findings": []
+}

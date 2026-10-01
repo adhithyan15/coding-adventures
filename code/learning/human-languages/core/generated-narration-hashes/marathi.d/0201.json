@@ -1,0 +1,21 @@
+{
+  "language": "marathi",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:906c4b673feb594d",
+  "lessonIds": [
+    "MR-C201-paryant",
+    "MR-C201-dasak",
+    "MR-C201-suryasta",
+    "MR-C201-suryoday",
+    "MR-C201-sevat",
+    "MR-R201-first-pass-words-from-chapters-193-196",
+    "MR-R201-second-pass-words-from-chapters-197-201"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marathi/narration/ch201.txt",
+  "json": "marathi/narration/ch201.json",
+  "textHash": "fnv1a64:49eac4c7eb648695",
+  "jsonHash": "fnv1a64:4cdcf9c5bedaa8da",
+  "findings": []
+}

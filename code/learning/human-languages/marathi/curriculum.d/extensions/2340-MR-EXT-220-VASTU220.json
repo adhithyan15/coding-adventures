@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-220-VASTU220",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a heel, an eyelid, an eyebrow, sweat and a tear.",
+  "prerequisites": []
+}

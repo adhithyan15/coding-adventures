@@ -1,0 +1,11 @@
+{
+  "id": "MR-R210-first-pass-words-from-chapters-202-205",
+  "pathSegment": "MR-PATH-210-VASTU210",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "MR-EXT-210-VASTU210",
+      "order": 5
+    }
+  ]
+}

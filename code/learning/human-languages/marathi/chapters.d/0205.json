@@ -1,0 +1,19 @@
+{
+  "chapter": 205,
+  "title": "Free of charge, Modern, Ancient, Cooked, Ripe",
+  "label": "ch:mr-free-of-charge-modern-ancient-cooked-ripe",
+  "canDo": "I can say free of charge, modern, ancient, cooked and ripe.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MR-C205-piklela",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 205: I can say free of charge, modern, ancient, cooked and ripe.",
+    "assesses": [
+      "MR-LEX-C205-GUN205-03",
+      "MR-LEX-C205-GUN205-04",
+      "MR-LEX-C205-GUN205-05"
+    ]
+  }
+}

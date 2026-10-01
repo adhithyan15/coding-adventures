@@ -1,0 +1,11 @@
+{
+  "id": "MR-C219-vyapar",
+  "pathSegment": "MR-PATH-219-VASTU219",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-219-VASTU219",
+      "order": 2
+    }
+  ]
+}

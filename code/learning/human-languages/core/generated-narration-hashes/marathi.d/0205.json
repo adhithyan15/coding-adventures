@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:1fb35c6ba415bc6a",
+  "lessonIds": [
+    "MR-C205-mophat",
+    "MR-C205-adhunik",
+    "MR-C205-pracin",
+    "MR-C205-sijlela",
+    "MR-C205-piklela"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch205.txt",
+  "json": "marathi/narration/ch205.json",
+  "textHash": "fnv1a64:debdb88b0fe7012d",
+  "jsonHash": "fnv1a64:9e5b9914d651ac77",
+  "findings": []
+}

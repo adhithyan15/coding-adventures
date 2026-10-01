@@ -1,0 +1,19 @@
+{
+  "chapter": 210,
+  "title": "Dentist, Butcher, Craftsman, Worker, Employee",
+  "label": "ch:mr-dentist-butcher-craftsman-worker-employee",
+  "canDo": "I can say a dentist, a butcher, a craftsman, a worker and an employee.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-R210-second-pass-words-from-chapters-206-210",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 210: I can say a dentist, a butcher, a craftsman, a worker and an employee.",
+    "assesses": [
+      "MR-LEX-C210-VASTU210-03",
+      "MR-LEX-C210-VASTU210-04",
+      "MR-LEX-C210-VASTU210-05"
+    ]
+  }
+}

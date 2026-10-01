@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C219-utpanna",
+    "language": "marathi",
+    "chapter": 219,
+    "sequence": 11850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ae57d8aa25b87705"
+  },
+  "findings": []
+}

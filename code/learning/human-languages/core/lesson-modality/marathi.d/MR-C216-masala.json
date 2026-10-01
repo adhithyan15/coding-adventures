@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C216-masala",
+    "language": "marathi",
+    "chapter": 216,
+    "sequence": 11550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a935bba3112d908d"
+  },
+  "findings": []
+}

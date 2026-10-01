@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C216-halad",
+    "language": "marathi",
+    "chapter": 216,
+    "sequence": 11560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d644815f53842a2f"
+  },
+  "findings": []
+}

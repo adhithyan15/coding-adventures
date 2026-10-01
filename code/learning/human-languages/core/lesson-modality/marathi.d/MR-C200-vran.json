@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C200-vran",
+    "language": "marathi",
+    "chapter": 200,
+    "sequence": 10370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8a38f1f0d376c16"
+  },
+  "findings": []
+}

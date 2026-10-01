@@ -1,0 +1,19 @@
+{
+  "chapter": 217,
+  "title": "Necklace, Earrings, Market quarter, Harbour, Well",
+  "label": "ch:mr-necklace-earrings-market-quarter-harbour-well",
+  "canDo": "I can say a necklace, earrings, a market quarter, a harbour and a well.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C217-vihir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 217: I can say a necklace, earrings, a market quarter, a harbour and a well.",
+    "assesses": [
+      "MR-LEX-C217-VASTU217-03",
+      "MR-LEX-C217-VASTU217-04",
+      "MR-LEX-C217-VASTU217-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C222-sabdakos",
+    "language": "marathi",
+    "chapter": 222,
+    "sequence": 12010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5887287d3ec181cb"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C202-prades",
+  "pathSegment": "MR-PATH-202-JAGA202",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-202-JAGA202",
+      "order": 1
+    }
+  ]
+}

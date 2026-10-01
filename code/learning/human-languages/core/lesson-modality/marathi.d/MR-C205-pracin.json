@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C205-pracin",
+    "language": "marathi",
+    "chapter": 205,
+    "sequence": 10810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b545e17d8b26bb1"
+  },
+  "findings": []
+}

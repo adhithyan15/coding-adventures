@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:22e49caef42b63ae",
+  "lessonIds": [
+    "MR-C219-dar",
+    "MR-C219-utpanna",
+    "MR-C219-vyapar",
+    "MR-C219-dukandar",
+    "MR-C219-grahak"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch219.txt",
+  "json": "marathi/narration/ch219.json",
+  "textHash": "fnv1a64:e807436eafb71917",
+  "jsonHash": "fnv1a64:0e0060ca8bd37365",
+  "findings": []
+}

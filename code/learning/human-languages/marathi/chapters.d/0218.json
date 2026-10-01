@@ -1,0 +1,19 @@
+{
+  "chapter": 218,
+  "title": "Spider, Buffalo, She-goat, Fog, Dew",
+  "label": "ch:mr-spider-buffalo-she-goat-fog-dew",
+  "canDo": "I can say a spider, a buffalo, a she-goat, fog and dew.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C218-dav",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 218: I can say a spider, a buffalo, a she-goat, fog and dew.",
+    "assesses": [
+      "MR-LEX-C218-VASTU218-03",
+      "MR-LEX-C218-VASTU218-04",
+      "MR-LEX-C218-VASTU218-05"
+    ]
+  }
+}

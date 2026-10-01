@@ -1,0 +1,19 @@
+{
+  "chapter": 209,
+  "title": "Economy, War, Peace, Army, Soldier",
+  "label": "ch:mr-economy-war-peace-army-soldier",
+  "canDo": "I can say the economy, war, peace, an army and a soldier.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C209-sainik",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 209: I can say the economy, war, peace, an army and a soldier.",
+    "assesses": [
+      "MR-LEX-C209-VASTU209-03",
+      "MR-LEX-C209-VASTU209-04",
+      "MR-LEX-C209-VASTU209-05"
+    ]
+  }
+}

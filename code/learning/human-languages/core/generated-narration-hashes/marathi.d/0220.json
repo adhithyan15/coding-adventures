@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:c377a3a04d6132e1",
+  "lessonIds": [
+    "MR-C220-tac",
+    "MR-C220-papni",
+    "MR-C220-bhuvai",
+    "MR-C220-gham",
+    "MR-C220-asru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch220.txt",
+  "json": "marathi/narration/ch220.json",
+  "textHash": "fnv1a64:e731bcfc95fa6d32",
+  "jsonHash": "fnv1a64:760c80d53a2d71b3",
+  "findings": []
+}

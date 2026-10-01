@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:9fe795417a6d026e",
+  "lessonIds": [
+    "MR-C217-har",
+    "MR-C217-kanatle",
+    "MR-C217-bajarpeth",
+    "MR-C217-bandar",
+    "MR-C217-vihir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch217.txt",
+  "json": "marathi/narration/ch217.json",
+  "textHash": "fnv1a64:f0a4fa2fe24bdaa0",
+  "jsonHash": "fnv1a64:ef6c7342a4278ab0",
+  "findings": []
+}

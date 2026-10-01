@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:dae4a42848975869",
+  "lessonIds": [
+    "MR-C198-dabne",
+    "MR-C198-khokne",
+    "MR-C198-thartharne",
+    "MR-C198-mat-dene",
+    "MR-C198-svagat-karne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch198.txt",
+  "json": "marathi/narration/ch198.json",
+  "textHash": "fnv1a64:a611adeb4a64796a",
+  "jsonHash": "fnv1a64:8e781424a0a6df2c",
+  "findings": []
+}

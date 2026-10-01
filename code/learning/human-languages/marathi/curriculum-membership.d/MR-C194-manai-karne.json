@@ -1,0 +1,11 @@
+{
+  "id": "MR-C194-manai-karne",
+  "pathSegment": "MR-PATH-194-ACT194",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-194-ACT194",
+      "order": 2
+    }
+  ]
+}

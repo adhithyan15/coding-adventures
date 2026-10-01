@@ -1,0 +1,11 @@
+{
+  "id": "MR-C197-gappa-marne",
+  "pathSegment": "MR-PATH-197-ACT197",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-197-ACT197",
+      "order": 3
+    }
+  ]
+}

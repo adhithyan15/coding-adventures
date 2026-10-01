@@ -1,0 +1,19 @@
+{
+  "chapter": 207,
+  "title": "Bold, Careful, Careless, Busy, Free",
+  "label": "ch:mr-bold-careful-careless-busy-free",
+  "canDo": "I can say bold, careful, careless, busy and free.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MR-C207-mokla",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 207: I can say bold, careful, careless, busy and free.",
+    "assesses": [
+      "MR-LEX-C207-GUN207-03",
+      "MR-LEX-C207-GUN207-04",
+      "MR-LEX-C207-GUN207-05"
+    ]
+  }
+}

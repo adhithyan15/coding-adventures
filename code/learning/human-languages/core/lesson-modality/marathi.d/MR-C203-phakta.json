@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C203-phakta",
+    "language": "marathi",
+    "chapter": 203,
+    "sequence": 10730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:777005dcacd515a8"
+  },
+  "findings": []
+}

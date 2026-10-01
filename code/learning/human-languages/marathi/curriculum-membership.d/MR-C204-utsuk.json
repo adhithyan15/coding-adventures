@@ -1,0 +1,11 @@
+{
+  "id": "MR-C204-utsuk",
+  "pathSegment": "MR-PATH-204-GUN204",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-204-GUN204",
+      "order": 4
+    }
+  ]
+}

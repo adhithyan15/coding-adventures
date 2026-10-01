@@ -1,0 +1,19 @@
+{
+  "chapter": 198,
+  "title": "To press, To cough, To tremble, To vote, To welcome",
+  "label": "ch:mr-to-press-to-cough-to-tremble-to-vote-to-welcome",
+  "canDo": "I can say to press, to cough, to tremble, to vote and to welcome.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C198-svagat-karne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 198: I can say to press, to cough, to tremble, to vote and to welcome.",
+    "assesses": [
+      "MR-LEX-C198-ACT198-03",
+      "MR-LEX-C198-ACT198-04",
+      "MR-LEX-C198-ACT198-05"
+    ]
+  }
+}

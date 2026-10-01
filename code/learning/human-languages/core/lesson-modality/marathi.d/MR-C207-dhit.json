@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C207-dhit",
+    "language": "marathi",
+    "chapter": 207,
+    "sequence": 10890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:05270e7938b0729a"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C204-lajalu",
+    "language": "marathi",
+    "chapter": 204,
+    "sequence": 10750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a59a3aacc31cda91"
+  },
+  "findings": []
+}

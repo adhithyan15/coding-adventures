@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:a84671e471ee559d",
+  "lessonIds": [
+    "MR-C215-kheladu",
+    "MR-C215-prasiksak",
+    "MR-C215-cahta",
+    "MR-C215-agaman",
+    "MR-C215-prasthan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch215.txt",
+  "json": "marathi/narration/ch215.json",
+  "textHash": "fnv1a64:274d40eb236dcfd0",
+  "jsonHash": "fnv1a64:252dbec928c7ce0a",
+  "findings": []
+}

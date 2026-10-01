@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:2690ca9f066810d2",
+  "lessonIds": [
+    "MR-C208-aramkhurci",
+    "MR-C208-batan",
+    "MR-C208-khau",
+    "MR-C208-baksis",
+    "MR-C208-thamba"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch208.txt",
+  "json": "marathi/narration/ch208.json",
+  "textHash": "fnv1a64:97bd1336b93c77fb",
+  "jsonHash": "fnv1a64:b5f59171c844f8ad",
+  "findings": []
+}

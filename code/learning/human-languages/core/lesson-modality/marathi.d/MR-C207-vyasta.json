@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C207-vyasta",
+    "language": "marathi",
+    "chapter": 207,
+    "sequence": 10920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7dfe604995970b1a"
+  },
+  "findings": []
+}

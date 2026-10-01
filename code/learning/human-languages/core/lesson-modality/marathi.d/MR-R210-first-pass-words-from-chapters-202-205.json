@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R210-first-pass-words-from-chapters-202-205",
+    "language": "marathi",
+    "chapter": 210,
+    "sequence": 11090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ac423e79e7b6ece"
+  },
+  "findings": []
+}

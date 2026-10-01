@@ -1,0 +1,19 @@
+{
+  "chapter": 204,
+  "title": "Serious, Shy, Valiant, Fearful, Curious",
+  "label": "ch:mr-serious-shy-valiant-fearful-curious",
+  "canDo": "I can say serious, shy, valiant, fearful and curious.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MR-C204-utsuk",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 204: I can say serious, shy, valiant, fearful and curious.",
+    "assesses": [
+      "MR-LEX-C204-GUN204-03",
+      "MR-LEX-C204-GUN204-04",
+      "MR-LEX-C204-GUN204-05"
+    ]
+  }
+}

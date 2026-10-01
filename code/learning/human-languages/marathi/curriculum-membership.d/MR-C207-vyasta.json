@@ -1,0 +1,11 @@
+{
+  "id": "MR-C207-vyasta",
+  "pathSegment": "MR-PATH-207-GUN207",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-207-GUN207",
+      "order": 3
+    }
+  ]
+}

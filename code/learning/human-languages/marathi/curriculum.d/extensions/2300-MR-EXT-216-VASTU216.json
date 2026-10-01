@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-216-VASTU216",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say shrikhand, buttermilk, a spice mix, turmeric and cumin.",
+  "prerequisites": []
+}

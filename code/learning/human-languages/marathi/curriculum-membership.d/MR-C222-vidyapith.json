@@ -1,0 +1,11 @@
+{
+  "id": "MR-C222-vidyapith",
+  "pathSegment": "MR-PATH-222-KAAM222",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-222-KAAM222",
+      "order": 3
+    }
+  ]
+}
