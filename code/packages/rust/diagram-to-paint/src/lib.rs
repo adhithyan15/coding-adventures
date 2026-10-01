@@ -6851,7 +6851,7 @@ mod tests {
                     node: diagram_ir::DiagramStyle {
                         fill: Some("#fef3c7".into()), stroke: Some("#b45309".into()), stroke_width: Some(3.0),
                         stroke_dash: Some(vec![5.0, 2.0]), text_color: Some("#78350f".into()), font_size: Some(17.0),
-                        font_weight: Some(700), font_italic: Some(true), font_family: Some("Avenir".into()), corner_radius: None,
+                        font_weight: Some(700), font_italic: Some(true), font_family: Some("Avenir".into()), corner_radius: Some(9.0),
                     },
                     opacity: Some(0.8), fill_opacity: Some(0.5), stroke_opacity: Some(0.5), stroke_dash_offset: Some(-1.0),
                     text_align: Some(diagram_ir::TreemapTextAlign::End),
@@ -6894,6 +6894,7 @@ mod tests {
             PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("rgba(254,243,199,0.4)")
                 && rect.stroke.as_deref() == Some("rgba(180,83,9,0.4)")
                 && rect.stroke_width == Some(3.0)
+                && rect.corner_radius == Some(9.0)
                 && rect.stroke_dash.as_deref() == Some(&[5.0, 2.0][..])
                 && rect.stroke_dash_offset == Some(-1.0))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,

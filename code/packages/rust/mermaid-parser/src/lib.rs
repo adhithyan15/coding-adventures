@@ -4562,6 +4562,7 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                     .filter(|value| value.is_finite())
                     .ok_or_else(|| token_error(token, "invalid treemap stroke dash offset"))?);
             }
+            "border-radius" => style.node.corner_radius = Some(parse_block_style_number(token, value)?),
             "text-align" => style.text_align = Some(match value.to_ascii_lowercase().as_str() {
                 "left" | "start" => diagram_ir::TreemapTextAlign::Start,
                 "center" => diagram_ir::TreemapTextAlign::Center,
@@ -14149,7 +14150,7 @@ B//-A: reverse stick top
     #[test]
     fn treemap_resolves_class_definitions_declared_after_nodes() {
         let diagram = parse_treemap(
-            "treemap\n\"Root\"\n  \"Styled node\": 5:::accent\nclassDef accent fill:#fef3c7,fill-opacity:0.7,stroke:#b45309,stroke-opacity:0.5,opacity:0.8,stroke-width:3px,stroke-dasharray:5 2,stroke-dashoffset:-1px,color:#78350f,font-size:16px,font-weight:bold,font-style:italic,font-family:Avenir,text-align:right,text-transform:uppercase,text-decoration:underline overline line-through,text-decoration-color:#2563eb,text-decoration-style:wavy,line-height:150%",
+            "treemap\n\"Root\"\n  \"Styled node\": 5:::accent\nclassDef accent fill:#fef3c7,fill-opacity:0.7,stroke:#b45309,stroke-opacity:0.5,opacity:0.8,stroke-width:3px,stroke-dasharray:5 2,stroke-dashoffset:-1px,border-radius:9px,color:#78350f,font-size:16px,font-weight:bold,font-style:italic,font-family:Avenir,text-align:right,text-transform:uppercase,text-decoration:underline overline line-through,text-decoration-color:#2563eb,text-decoration-style:wavy,line-height:150%",
         ).unwrap();
         let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
         assert_eq!(style.node.fill.as_deref(), Some("#fef3c7"));
@@ -14161,6 +14162,7 @@ B//-A: reverse stick top
         assert_eq!(style.node.font_weight, Some(700));
         assert_eq!(style.node.font_italic, Some(true));
         assert_eq!(style.node.font_family.as_deref(), Some("Avenir"));
+        assert_eq!(style.node.corner_radius, Some(9.0));
         assert_eq!((style.opacity, style.fill_opacity, style.stroke_opacity), (Some(0.8), Some(0.7), Some(0.5)));
         assert_eq!(style.stroke_dash_offset, Some(-1.0));
         assert_eq!(style.text_align, Some(diagram_ir::TreemapTextAlign::End));
