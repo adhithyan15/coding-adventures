@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C226-jorimana",
+    "language": "bengali",
+    "chapter": 226,
+    "sequence": 13760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f207b2062b3581b"
+  },
+  "findings": []
+}

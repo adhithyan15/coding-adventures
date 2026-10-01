@@ -1,0 +1,19 @@
+{
+  "chapter": 235,
+  "title": "Meeting, Employee, Colleague, Cobbler, Carpenter",
+  "label": "ch:bn-meeting-employee-colleague-cobbler-carpenter",
+  "canDo": "I can say a meeting, an employee, a colleague, a cobbler and a carpenter.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C235-chhutor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 235: I can say a meeting, an employee, a colleague, a cobbler and a carpenter.",
+    "assesses": [
+      "BN-LEX-C235-KAJ235-03",
+      "BN-LEX-C235-KAJ235-04",
+      "BN-LEX-C235-KAJ235-05"
+    ]
+  }
+}

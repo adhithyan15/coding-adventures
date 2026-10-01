@@ -1,0 +1,19 @@
+{
+  "chapter": 231,
+  "title": "Hassle, Solution, Wholemeal flour, Fine flour, Semolina",
+  "label": "ch:bn-hassle-solution-wholemeal-flour-fine-flour-semolina",
+  "canDo": "I can say a hassle, a solution, wholemeal flour, fine flour and semolina.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-R231-second-pass-words-from-chapters-229-231",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 231: I can say a hassle, a solution, wholemeal flour, fine flour and semolina.",
+    "assesses": [
+      "BN-LEX-C231-JINIS231-03",
+      "BN-LEX-C231-JINIS231-04",
+      "BN-LEX-C231-JINIS231-05"
+    ]
+  }
+}

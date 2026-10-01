@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C227-boyos",
+    "language": "bengali",
+    "chapter": 227,
+    "sequence": 14000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a1174005f3b28e4"
+  },
+  "findings": []
+}

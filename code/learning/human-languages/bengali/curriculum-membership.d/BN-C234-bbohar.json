@@ -1,0 +1,11 @@
+{
+  "id": "BN-C234-bbohar",
+  "pathSegment": "BN-PATH-234-JINIS234",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-234-JINIS234",
+      "order": 4
+    }
+  ]
+}

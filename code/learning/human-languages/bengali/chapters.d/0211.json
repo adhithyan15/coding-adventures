@@ -1,0 +1,19 @@
+{
+  "chapter": 211,
+  "title": "To shout, To get angry, To feel shy, To quarrel, To hug",
+  "label": "ch:bn-to-shout-to-get-angry-to-feel-shy-to-quarrel-to-hug",
+  "canDo": "I can say to shout, to get angry, to feel shy, to quarrel and to hug.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C211-joriye-dhora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 211: I can say to shout, to get angry, to feel shy, to quarrel and to hug.",
+    "assesses": [
+      "BN-LEX-C211-ACT211-03",
+      "BN-LEX-C211-ACT211-04",
+      "BN-LEX-C211-ACT211-05"
+    ]
+  }
+}

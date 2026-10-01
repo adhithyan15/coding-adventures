@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:4c3c32331a73fa51",
+  "lessonIds": [
+    "BN-C212-tulona-kora",
+    "BN-C212-bhara-neoya",
+    "BN-C212-paltano",
+    "BN-C212-lora",
+    "BN-C212-palano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch212.txt",
+  "json": "bengali/narration/ch212.json",
+  "textHash": "fnv1a64:6d3fe53281a60afb",
+  "jsonHash": "fnv1a64:00d3f92e038d1209",
+  "findings": []
+}

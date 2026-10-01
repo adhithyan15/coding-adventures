@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:77096018284c9663",
+  "lessonIds": [
+    "BN-C232-shosa",
+    "BN-C232-mashrum",
+    "BN-C232-bhutta",
+    "BN-C232-chhola",
+    "BN-C232-intarnet"
+  ],
+  "tex": "bengali/book/chapters/ch232-cucumber-mushroom-maize-chickpeas-internet.tex"
+}

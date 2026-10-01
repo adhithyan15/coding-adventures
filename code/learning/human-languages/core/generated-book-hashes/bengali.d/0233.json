@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:635843cac5524cb2",
+  "lessonIds": [
+    "BN-C233-mitar",
+    "BN-C233-pket",
+    "BN-C233-tin",
+    "BN-C233-bosta",
+    "BN-C233-khuchro"
+  ],
+  "tex": "bengali/book/chapters/ch233-metre-packet-tin-sack-small-change.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C213-chora",
+    "language": "bengali",
+    "chapter": 213,
+    "sequence": 12950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:710f5bd467312bc5"
+  },
+  "findings": []
+}

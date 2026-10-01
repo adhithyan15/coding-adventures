@@ -1,0 +1,11 @@
+{
+  "id": "BN-C235-kormochari",
+  "pathSegment": "BN-PATH-235-KAJ235",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-235-KAJ235",
+      "order": 1
+    }
+  ]
+}

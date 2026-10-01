@@ -1,0 +1,19 @@
+{
+  "chapter": 213,
+  "title": "To have a haircut, To dress up, To get ready, To set off, To ride",
+  "label": "ch:bn-to-have-a-haircut-to-dress-up-to-get-ready-to-set-off-to-ride",
+  "canDo": "I can say to have a haircut, to dress up, to get ready, to set off and to ride.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C213-chora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 213: I can say to have a haircut, to dress up, to get ready, to set off and to ride.",
+    "assesses": [
+      "BN-LEX-C213-ACT213-03",
+      "BN-LEX-C213-ACT213-04",
+      "BN-LEX-C213-ACT213-05"
+    ]
+  }
+}

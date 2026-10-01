@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:8994f09a0f2962dc",
+  "lessonIds": [
+    "BN-C225-dol",
+    "BN-C225-kheloyar",
+    "BN-C225-sinema",
+    "BN-C225-natok",
+    "BN-C225-kobita"
+  ],
+  "tex": "bengali/book/chapters/ch225-team-player-film-play-poem.tex"
+}

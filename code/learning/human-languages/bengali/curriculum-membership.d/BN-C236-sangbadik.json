@@ -1,0 +1,11 @@
+{
+  "id": "BN-C236-sangbadik",
+  "pathSegment": "BN-PATH-236-KAJ236",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-236-KAJ236",
+      "order": 4
+    }
+  ]
+}

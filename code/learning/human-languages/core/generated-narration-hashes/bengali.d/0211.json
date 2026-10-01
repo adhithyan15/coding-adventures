@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:dadadb77456b556f",
+  "lessonIds": [
+    "BN-C211-chechano",
+    "BN-C211-rag-kora",
+    "BN-C211-lojja-paoya",
+    "BN-C211-jhogra-kora",
+    "BN-C211-joriye-dhora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch211.txt",
+  "json": "bengali/narration/ch211.json",
+  "textHash": "fnv1a64:5967ad286dfc01a0",
+  "jsonHash": "fnv1a64:fc6f2cd1f3006207",
+  "findings": []
+}

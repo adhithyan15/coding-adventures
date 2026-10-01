@@ -1,0 +1,19 @@
+{
+  "chapter": 216,
+  "title": "Garage, Beside, All around, Above, Somewhere",
+  "label": "ch:bn-garage-beside-all-around-above-somewhere",
+  "canDo": "I can say a garage, beside, all around, above and somewhere.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "BN-C216-kothao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 216: I can say a garage, beside, all around, above and somewhere.",
+    "assesses": [
+      "BN-LEX-C216-JAYGA216-03",
+      "BN-LEX-C216-JAYGA216-04",
+      "BN-LEX-C216-JAYGA216-05"
+    ]
+  }
+}

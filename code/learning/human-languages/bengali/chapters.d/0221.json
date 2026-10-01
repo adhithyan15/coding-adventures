@@ -1,0 +1,19 @@
+{
+  "chapter": 221,
+  "title": "Private, National, International, Urban, Regular",
+  "label": "ch:bn-private-national-international-urban-regular",
+  "canDo": "I can say private, national, international, urban and regular.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "BN-C221-niyomito",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 221: I can say private, national, international, urban and regular.",
+    "assesses": [
+      "BN-LEX-C221-GUN221-03",
+      "BN-LEX-C221-GUN221-04",
+      "BN-LEX-C221-GUN221-05"
+    ]
+  }
+}

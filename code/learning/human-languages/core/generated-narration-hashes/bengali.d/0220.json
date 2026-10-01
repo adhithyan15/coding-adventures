@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:b76f658e94972ca8",
+  "lessonIds": [
+    "BN-C220-soman",
+    "BN-C220-prodhan",
+    "BN-C220-bhoyongkor",
+    "BN-C220-durdanto",
+    "BN-C220-ager"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch220.txt",
+  "json": "bengali/narration/ch220.json",
+  "textHash": "fnv1a64:8f437143b67f808a",
+  "jsonHash": "fnv1a64:6a4984481b85a44c",
+  "findings": []
+}

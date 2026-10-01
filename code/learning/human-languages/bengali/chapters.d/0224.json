@@ -1,0 +1,19 @@
+{
+  "chapter": 224,
+  "title": "Salad, Animal, Leopard, Fox, Wolf",
+  "label": "ch:bn-salad-animal-leopard-fox-wolf",
+  "canDo": "I can say a salad, an animal, a leopard, a fox and a wolf.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C224-nekre",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 224: I can say a salad, an animal, a leopard, a fox and a wolf.",
+    "assesses": [
+      "BN-LEX-C224-JINIS224-03",
+      "BN-LEX-C224-JINIS224-04",
+      "BN-LEX-C224-JINIS224-05"
+    ]
+  }
+}

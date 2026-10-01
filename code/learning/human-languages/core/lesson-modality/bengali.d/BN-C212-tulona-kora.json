@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C212-tulona-kora",
+    "language": "bengali",
+    "chapter": 212,
+    "sequence": 12860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c404e41833c48c1"
+  },
+  "findings": []
+}

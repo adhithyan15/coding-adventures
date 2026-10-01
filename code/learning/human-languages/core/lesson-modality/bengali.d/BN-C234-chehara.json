@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C234-chehara",
+    "language": "bengali",
+    "chapter": 234,
+    "sequence": 14520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:799581a8fa2207e9"
+  },
+  "findings": []
+}

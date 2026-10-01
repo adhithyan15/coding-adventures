@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C233-pket",
+    "language": "bengali",
+    "chapter": 233,
+    "sequence": 14450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:49aa8a96cad8b0b6"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C230-dhormo",
+  "pathSegment": "BN-PATH-230-JINIS230",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-230-JINIS230",
+      "order": 4
+    }
+  ]
+}

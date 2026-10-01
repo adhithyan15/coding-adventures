@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C234-shishi",
+    "language": "bengali",
+    "chapter": 234,
+    "sequence": 14490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:691ab43384f202ef"
+  },
+  "findings": []
+}

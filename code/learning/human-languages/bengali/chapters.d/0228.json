@@ -1,0 +1,19 @@
+{
+  "chapter": 228,
+  "title": "Failure, Life, Death, Luck, Decision",
+  "label": "ch:bn-failure-life-death-luck-decision",
+  "canDo": "I can say failure, life, death, luck and a decision.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C228-siddhanto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 228: I can say failure, life, death, luck and a decision.",
+    "assesses": [
+      "BN-LEX-C228-JINIS228-03",
+      "BN-LEX-C228-JINIS228-04",
+      "BN-LEX-C228-JINIS228-05"
+    ]
+  }
+}

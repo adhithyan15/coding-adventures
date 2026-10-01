@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C235-kormochari",
+    "language": "bengali",
+    "chapter": 235,
+    "sequence": 14550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e4f08be9fe108a0f"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C230-dhormo",
+    "language": "bengali",
+    "chapter": 230,
+    "sequence": 14180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e01ed924064ddf2"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C210-biye-kora",
+    "language": "bengali",
+    "chapter": 210,
+    "sequence": 12790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8206c6dba808b7c"
+  },
+  "findings": []
+}

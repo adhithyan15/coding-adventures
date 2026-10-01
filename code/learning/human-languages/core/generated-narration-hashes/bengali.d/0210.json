@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:1b24722fb36e75df",
+  "lessonIds": [
+    "BN-C210-soi-kora",
+    "BN-C210-phon-kora",
+    "BN-C210-dkha-kora",
+    "BN-C210-biye-kora",
+    "BN-C210-bacha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch210.txt",
+  "json": "bengali/narration/ch210.json",
+  "textHash": "fnv1a64:625737434648c2ab",
+  "jsonHash": "fnv1a64:dfeb94c5d0d095d8",
+  "findings": []
+}

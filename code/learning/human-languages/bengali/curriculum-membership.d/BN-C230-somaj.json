@@ -1,0 +1,11 @@
+{
+  "id": "BN-C230-somaj",
+  "pathSegment": "BN-PATH-230-JINIS230",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-230-JINIS230",
+      "order": 3
+    }
+  ]
+}

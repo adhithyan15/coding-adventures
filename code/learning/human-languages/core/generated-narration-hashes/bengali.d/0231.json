@@ -1,0 +1,21 @@
+{
+  "language": "bengali",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:be5b278b7efa56e7",
+  "lessonIds": [
+    "BN-C231-jhamela",
+    "BN-C231-somadhan",
+    "BN-C231-ata2",
+    "BN-C231-moyda",
+    "BN-C231-suji",
+    "BN-R231-first-pass-words-from-chapters-227-228",
+    "BN-R231-second-pass-words-from-chapters-229-231"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "bengali/narration/ch231.txt",
+  "json": "bengali/narration/ch231.json",
+  "textHash": "fnv1a64:40c8fe9829fd2838",
+  "jsonHash": "fnv1a64:2b89d1142fcc40d3",
+  "findings": []
+}

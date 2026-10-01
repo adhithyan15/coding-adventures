@@ -1,0 +1,11 @@
+{
+  "id": "BN-C225-sinema",
+  "pathSegment": "BN-PATH-225-JINIS225",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-225-JINIS225",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C220-durdanto",
+  "pathSegment": "BN-PATH-220-GUN220",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-220-GUN220",
+      "order": 3
+    }
+  ]
+}

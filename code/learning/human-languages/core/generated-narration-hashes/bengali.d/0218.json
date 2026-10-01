@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:aec033dc22cbcd53",
+  "lessonIds": [
+    "BN-C218-jodio",
+    "BN-C218-jmon",
+    "BN-C218-jate",
+    "BN-C218-tahole",
+    "BN-C218-mane"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch218.txt",
+  "json": "bengali/narration/ch218.json",
+  "textHash": "fnv1a64:57ca8c05f43c4cfc",
+  "jsonHash": "fnv1a64:a9c7c8c5544f0756",
+  "findings": []
+}

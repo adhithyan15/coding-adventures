@@ -1,0 +1,11 @@
+{
+  "id": "BN-C227-poramorsho",
+  "pathSegment": "BN-PATH-227-JINIS227",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-227-JINIS227",
+      "order": 3
+    }
+  ]
+}

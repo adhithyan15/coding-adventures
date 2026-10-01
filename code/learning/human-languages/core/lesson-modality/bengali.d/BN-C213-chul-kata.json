@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C213-chul-kata",
+    "language": "bengali",
+    "chapter": 213,
+    "sequence": 12910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:93720eff9571a2b0"
+  },
+  "findings": []
+}

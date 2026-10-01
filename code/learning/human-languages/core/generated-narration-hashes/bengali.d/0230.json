@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:98ba130060245ae3",
+  "lessonIds": [
+    "BN-C230-neta",
+    "BN-C230-montri",
+    "BN-C230-rajkumar",
+    "BN-C230-somaj",
+    "BN-C230-dhormo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch230.txt",
+  "json": "bengali/narration/ch230.json",
+  "textHash": "fnv1a64:585e52a76288f834",
+  "jsonHash": "fnv1a64:33e2cd47323220de",
+  "findings": []
+}

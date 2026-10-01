@@ -1,0 +1,15 @@
+{
+  "language": "bengali",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:815f8fe9dbd631e5",
+  "lessonIds": [
+    "BN-C226-janjot",
+    "BN-C226-jorimana",
+    "BN-C226-laisens",
+    "BN-C226-parking",
+    "BN-C226-lokjon",
+    "BN-R226-first-pass-words-from-chapters-218-221",
+    "BN-R226-second-pass-words-from-chapters-222-226"
+  ],
+  "tex": "bengali/book/chapters/ch226-traffic-jam-penalty-licence-parking-people.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:5e5ff9d1da271d44",
+  "lessonIds": [
+    "BN-C213-chul-kata",
+    "BN-C213-saja",
+    "BN-C213-prostut-hooya",
+    "BN-C213-roona-deoya",
+    "BN-C213-chora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch213.txt",
+  "json": "bengali/narration/ch213.json",
+  "textHash": "fnv1a64:d47497f8115c1ec8",
+  "jsonHash": "fnv1a64:0ec94959133fe4c6",
+  "findings": []
+}

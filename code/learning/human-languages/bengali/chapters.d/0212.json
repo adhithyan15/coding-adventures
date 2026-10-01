@@ -1,0 +1,19 @@
+{
+  "chapter": 212,
+  "title": "To compare, To rent, To swap, To fight, To run away",
+  "label": "ch:bn-to-compare-to-rent-to-swap-to-fight-to-run-away",
+  "canDo": "I can say to compare, to rent, to swap, to fight and to run away.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C212-palano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 212: I can say to compare, to rent, to swap, to fight and to run away.",
+    "assesses": [
+      "BN-LEX-C212-ACT212-03",
+      "BN-LEX-C212-ACT212-04",
+      "BN-LEX-C212-ACT212-05"
+    ]
+  }
+}

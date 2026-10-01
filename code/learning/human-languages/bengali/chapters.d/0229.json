@@ -1,0 +1,19 @@
+{
+  "chapter": 229,
+  "title": "Torch, Chain, Saw, Ribbon, Weather",
+  "label": "ch:bn-torch-chain-saw-ribbon-weather",
+  "canDo": "I can say a torch, a chain, a saw, a ribbon and the weather.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C229-abohaoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 229: I can say a torch, a chain, a saw, a ribbon and the weather.",
+    "assesses": [
+      "BN-LEX-C229-JINIS229-03",
+      "BN-LEX-C229-JINIS229-04",
+      "BN-LEX-C229-JINIS229-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:12551aa403aea983",
+  "lessonIds": [
+    "BN-C227-podobi",
+    "BN-C227-boyos",
+    "BN-C227-nombor",
+    "BN-C227-poramorsho",
+    "BN-C227-sotyo"
+  ],
+  "tex": "bengali/book/chapters/ch227-surname-age-number-advice-truth.tex"
+}

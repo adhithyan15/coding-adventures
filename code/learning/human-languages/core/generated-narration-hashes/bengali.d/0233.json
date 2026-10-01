@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:a5f5da6e363eacf3",
+  "lessonIds": [
+    "BN-C233-mitar",
+    "BN-C233-pket",
+    "BN-C233-tin",
+    "BN-C233-bosta",
+    "BN-C233-khuchro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch233.txt",
+  "json": "bengali/narration/ch233.json",
+  "textHash": "fnv1a64:37f8333466f79f78",
+  "jsonHash": "fnv1a64:dcbdbd794dd3c420",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C214-chhobi-tola",
+    "language": "bengali",
+    "chapter": 214,
+    "sequence": 12960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a520747f4cba67f2"
+  },
+  "findings": []
+}

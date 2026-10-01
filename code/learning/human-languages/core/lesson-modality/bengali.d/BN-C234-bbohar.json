@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C234-bbohar",
+    "language": "bengali",
+    "chapter": 234,
+    "sequence": 14530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:362c18d5a0f364c4"
+  },
+  "findings": []
+}

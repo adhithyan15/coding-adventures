@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C236-sangbadik",
+    "language": "bengali",
+    "chapter": 236,
+    "sequence": 14630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9667113fb6ab7bdf"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C213-saja",
+    "language": "bengali",
+    "chapter": 213,
+    "sequence": 12920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e950dffa25d8964"
+  },
+  "findings": []
+}

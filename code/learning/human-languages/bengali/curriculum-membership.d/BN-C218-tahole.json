@@ -1,0 +1,11 @@
+{
+  "id": "BN-C218-tahole",
+  "pathSegment": "BN-PATH-218-KARON218",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-218-KARON218",
+      "order": 3
+    }
+  ]
+}

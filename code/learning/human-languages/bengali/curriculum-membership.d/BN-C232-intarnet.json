@@ -1,0 +1,11 @@
+{
+  "id": "BN-C232-intarnet",
+  "pathSegment": "BN-PATH-232-JINIS232",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-232-JINIS232",
+      "order": 4
+    }
+  ]
+}

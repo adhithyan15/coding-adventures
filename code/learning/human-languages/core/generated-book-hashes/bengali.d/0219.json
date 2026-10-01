@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:6ea4e4d03883d820",
+  "lessonIds": [
+    "BN-C219-nokol",
+    "BN-C219-jibonto",
+    "BN-C219-mrito",
+    "BN-C219-phaka",
+    "BN-C219-sthaniyo"
+  ],
+  "tex": "bengali/book/chapters/ch219-fake-alive-dead-deserted-local.tex"
+}

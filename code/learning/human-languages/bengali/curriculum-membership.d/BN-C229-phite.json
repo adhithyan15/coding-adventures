@@ -1,0 +1,11 @@
+{
+  "id": "BN-C229-phite",
+  "pathSegment": "BN-PATH-229-JINIS229",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-229-JINIS229",
+      "order": 3
+    }
+  ]
+}
