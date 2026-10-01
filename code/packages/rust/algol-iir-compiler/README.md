@@ -259,7 +259,8 @@ may instead be the selector itself, yielding a one-sided guarded projection.
 Literal-only boolean combinations may supply projection constants and neutral
 identity operands. Literal integer predicates, including checked literal
 arithmetic operands, finite binary64 literal predicates, and literal string
-predicates may also supply boolean identity operands.
+predicates may also supply boolean identity operands. Variable-free literal
+string predicates may select statement branches in bounded recurrence bodies.
 Unknown selectors, unsupported selector or dependency writes, string targets, overflow,
 non-finite values, and loops that do not reach false within 4,096 evaluations
 fail closed.

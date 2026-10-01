@@ -15757,6 +15757,22 @@ mod tests {
     }
 
     #[test]
+    fn al4_literal_string_predicate_selects_recurrence_cycle_statement() {
+        let module = compile_source(
+            "begin integer i, n, delta; i := 0; n := 4; delta := 2; for i := i + 1 while i <= n do begin n := n - delta; if 'ALPHA' < 'BETA' then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("a literal string predicate may select a recurrence-cycle statement");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "0.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
     fn al4_unbalanced_complemented_projection_selector_copy_stays_conservative() {
         let err = compile_source(
             "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := if not flag then true else false; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
