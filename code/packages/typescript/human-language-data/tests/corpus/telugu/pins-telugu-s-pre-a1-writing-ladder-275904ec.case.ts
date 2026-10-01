@@ -55,6 +55,7 @@ it("pins Telugu's pre-A1 writing ladder", () => {
     ["TE-S109-letter-na", "observe-trace"],
     ["TE-S152-letter-tta", "observe-trace"],
     ["TE-S157-letter-ba", "observe-trace"],
+    ["TE-S06-letter-ra", "observe-trace"],
     ["TE-S123-letter-dda", "observe-trace"],
     ["TE-S113-letter-pa", "observe-trace"],
     ["TE-S01-letter-ta", "observe-trace"],

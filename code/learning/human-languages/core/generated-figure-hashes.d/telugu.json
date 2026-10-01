@@ -38,6 +38,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TE-S06-letter-ra",
+      "sourceHash": "fnv1a64:bf44434b8f021b0f",
+      "svgHash": "fnv1a64:aaa00b45eea846d5",
+      "svg": "telugu/book/figures/TE-S06-letter-ra-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TE-S109-letter-na",
       "sourceHash": "fnv1a64:8ce5082ffef9a478",
       "svgHash": "fnv1a64:8eae0a31f5b30cc7",

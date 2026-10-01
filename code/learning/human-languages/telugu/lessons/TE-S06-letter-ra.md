@@ -52,17 +52,17 @@ You already say these, and every one of them has ర somewhere inside it:
 - **పేరు** *pēru* — name
 - **నువ్వు / మీరు** *nuvvu / mīru* — you (familiar / respectful)
 
-## Writing: ర — copy what you see
+## Writing: ర — two calm movements
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-06] -->
+<!-- hl-writing-stage: observe-trace -->
 
-Put your pen on ర and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+Watch the numbered filmstrip once before your pen moves. Movement 1 loops
+counterclockwise around the main bowl. Lift; movement 2 travels down and up
+through the separate upper chevron, from left to right.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+Trace the same route slowly. This is one attested school-style order fitted to
+the printed shape here; Telugu handwriting varies, so keep the two movements
+clear and make the short lift between them.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-06] -->
