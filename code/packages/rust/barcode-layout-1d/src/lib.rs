@@ -26,8 +26,8 @@ use paint_instructions::{
 };
 use std::collections::HashMap;
 use text_interfaces::{
-    FontMetrics, FontQuery, FontResolver, FontStretch, FontStyle, FontWeight, ShapeOptions,
-    TextShaper,
+    FontMetrics, FontQuery, FontResolutionError, FontResolver, FontStretch, FontStyle, FontWeight,
+    ShapeOptions, TextShaper,
 };
 use text_native::{NativeMetrics, NativeResolver, NativeShaper};
 
@@ -482,10 +482,26 @@ fn strict_render_dimension(value: f64) -> Option<u32> {
     }
 }
 
-/// Strict portable-v1 rectangle-scene adapter.
-pub fn project_scene_v1(
+struct ForbiddenPortableResolver;
+
+impl FontResolver for ForbiddenPortableResolver {
+    type Handle = ();
+
+    fn resolve(&self, _query: &FontQuery) -> Result<Self::Handle, FontResolutionError> {
+        panic!("portable barcode projection must not exercise native font resolution")
+    }
+}
+
+/// Test seam proving that portable-v1 text rejection precedes resolver authority.
+///
+/// This is deliberately hidden from the rendered API documentation. Portable
+/// callers should use [`project_scene_v1`]; conformance tests inject a resolver
+/// whose calls are counted so the pre-backend contract is observable.
+#[doc(hidden)]
+pub fn project_scene_v1_with_resolver_probe<R: FontResolver>(
     runs: &[Barcode1DRun],
     options: &PaintBarcode1DOptions,
+    _resolver: &R,
 ) -> Result<PaintScene, String> {
     if options.render_config.include_human_readable_text || options.human_readable_text.is_some() {
         return Err("human-readable-text-unsupported".to_string());
@@ -591,6 +607,14 @@ pub fn project_scene_v1(
     scene.instructions = instructions;
     scene.metadata = Some(metadata);
     Ok(scene)
+}
+
+/// Strict portable-v1 rectangle-scene adapter.
+pub fn project_scene_v1(
+    runs: &[Barcode1DRun],
+    options: &PaintBarcode1DOptions,
+) -> Result<PaintScene, String> {
+    project_scene_v1_with_resolver_probe(runs, options, &ForbiddenPortableResolver)
 }
 
 impl RunsFromWidthPatternOptions {

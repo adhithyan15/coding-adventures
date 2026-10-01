@@ -8,6 +8,8 @@ import Control.Exception (IOException, evaluate, try)
 import Data.Aeson
 import qualified Data.Aeson.Key as Key
 import qualified Data.Aeson.KeyMap as KeyMap
+import qualified Data.ByteString as BS
+import qualified Data.ByteString.Lazy as LBS
 import qualified Data.ByteString.Lazy.Char8 as LBS8
 import Data.Either (isLeft)
 import Data.Foldable (toList)
@@ -16,9 +18,10 @@ import Data.Maybe (fromMaybe)
 import Data.Scientific (floatingOrInteger)
 import qualified Data.Set as Set
 import qualified Data.Text as Text
-import System.Directory (doesFileExist, findExecutable, getCurrentDirectory, getFileSize)
+import System.Directory (doesFileExist, findExecutable, getCurrentDirectory, getTemporaryDirectory, removeFile)
 import System.Exit (ExitCode (..))
 import System.FilePath ((</>), takeDirectory)
+import System.IO (IOMode (ReadMode), hClose, openBinaryTempFile, withBinaryFile)
 import System.Process (readProcessWithExitCode)
 import Test.Hspec
 
@@ -34,6 +37,17 @@ spec = describe "barcode-layout-1d v1 conformance" $ do
     counts "compute-layout" `shouldBe` 19
     counts "project-scene" `shouldBe` 13
     mapM_ runCase cases
+
+  it "rejects an on-disk fixture larger than the byte ceiling" $ do
+    temporaryDirectory <- getTemporaryDirectory
+    (path, handle) <- openBinaryTempFile temporaryDirectory "barcode-layout-1d-oversized.json"
+    BS.hPut handle (BS.replicate (maxFixtureBytes + 1) 0x20)
+    hClose handle
+    result <- try (readFixtureFile path) :: IO (Either IOException LBS.ByteString)
+    removeFile path
+    case result of
+      Left exception -> show exception `shouldContain` "fixture-size-limit"
+      Right _ -> expectationFailure "oversized fixture was accepted"
 
   it "text-value-fails-before-native-resolution" $ do
     let options = defaultV1Options { v1HumanReadableText = Just "123" }
@@ -399,20 +413,25 @@ symbolRoleName value = case value of
 
 data JsonFrame = JsonObject (Set.Set String) Bool | JsonArray
 
+maxFixtureBytes :: Int
+maxFixtureBytes = 131072
+
+readFixtureFile :: FilePath -> IO LBS.ByteString
+readFixtureFile path = withBinaryFile path ReadMode $ \handle -> do
+  encoded <- BS.hGet handle (maxFixtureBytes + 1)
+  if BS.length encoded > maxFixtureBytes
+    then fail "fixture-size-limit"
+    else pure (LBS.fromStrict encoded)
+
 loadFixture :: IO (Value, LBS8.ByteString, LBS8.ByteString)
 loadFixture = do
   cwd <- getCurrentDirectory
   path <- findFixture cwd 8
   let schemaPath = takeDirectory path </> "schema.json"
-  documentSize <- getFileSize path
-  schemaSize <- getFileSize schemaPath
-  if max documentSize schemaSize > 131072
-    then fail "fixture-size-limit"
-    else do
-      documentEncoded <- LBS8.readFile path
-      schemaEncoded <- LBS8.readFile schemaPath
-      document <- either fail pure (loadFixtureDocument schemaEncoded documentEncoded)
-      pure (document, schemaEncoded, documentEncoded)
+  documentEncoded <- readFixtureFile path
+  schemaEncoded <- readFixtureFile schemaPath
+  document <- either fail pure (loadFixtureDocument schemaEncoded documentEncoded)
+  pure (document, schemaEncoded, documentEncoded)
 
 loadFixtureDocument :: LBS8.ByteString -> LBS8.ByteString -> Either String Value
 loadFixtureDocument schemaEncoded documentEncoded = do

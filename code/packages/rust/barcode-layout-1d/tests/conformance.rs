@@ -1,16 +1,248 @@
 use barcode_layout_1d::{
-    compute_layout_v1, expand_binary_v1, expand_width_v1, project_scene_v1, Barcode1DRun,
-    Barcode1DRunColor, Barcode1DRunRole, Barcode1DSymbolDescriptor, Barcode1DSymbolRole,
-    PaintBarcode1DOptions, RunsFromBinaryPatternOptions, RunsFromWidthPatternOptions,
+    compute_layout_v1, expand_binary_v1, expand_width_v1, project_scene_v1,
+    project_scene_v1_with_resolver_probe, Barcode1DRun, Barcode1DRunColor, Barcode1DRunRole,
+    Barcode1DSymbolDescriptor, Barcode1DSymbolRole, PaintBarcode1DOptions,
+    RunsFromBinaryPatternOptions, RunsFromWidthPatternOptions,
 };
 use coding_adventures_sha256::sha256_hex;
 use paint_instructions::PaintInstruction;
 use serde_json::{json, Map, Value};
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
+use std::fs::{self, File};
+use std::io::{Read, Write};
+use std::path::{Path, PathBuf};
+use std::sync::atomic::{AtomicUsize, Ordering};
+use text_interfaces::{FontQuery, FontResolutionError, FontResolver};
 
-const RAW_CASES: &[u8] =
-    include_bytes!("../../../../specs/fixtures/barcode-layout-1d-v1/cases.json");
 const CORPUS_SHA256: &str = "be95aa0381041ef3bd729b36bb4292f7a20692e139b53adca97af4e157cb7388";
+const MAX_FIXTURE_BYTES: usize = 131_072;
+const MAX_FIXTURE_DEPTH: usize = 8;
+const MAX_FIXTURE_CASES: usize = 64;
+
+#[derive(Debug)]
+enum JsonFrame {
+    Object {
+        keys: HashSet<String>,
+        expect_key: bool,
+    },
+    Array,
+}
+
+fn fixture_path() -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../../../specs/fixtures/barcode-layout-1d-v1/cases.json")
+}
+
+fn read_bounded_fixture(path: &Path) -> Result<Vec<u8>, String> {
+    let file = File::open(path).map_err(|_| "fixture-invalid-json".to_string())?;
+    if file
+        .metadata()
+        .map_err(|_| "fixture-invalid-json".to_string())?
+        .len()
+        > MAX_FIXTURE_BYTES as u64
+    {
+        return Err("fixture-size-limit".to_string());
+    }
+    let mut encoded = Vec::new();
+    file.take((MAX_FIXTURE_BYTES + 1) as u64)
+        .read_to_end(&mut encoded)
+        .map_err(|_| "fixture-invalid-json".to_string())?;
+    if encoded.len() > MAX_FIXTURE_BYTES {
+        return Err("fixture-size-limit".to_string());
+    }
+    if encoded.is_empty() {
+        return Err("fixture-invalid-json".to_string());
+    }
+    Ok(encoded)
+}
+
+fn preflight_json(encoded: &[u8], depth_limit: usize) -> Result<(), String> {
+    std::str::from_utf8(encoded).map_err(|_| "fixture-invalid-scalar".to_string())?;
+    let mut frames = Vec::<JsonFrame>::new();
+    let mut index = 0usize;
+    while index < encoded.len() {
+        match encoded[index] {
+            b'"' => {
+                let start = index;
+                index += 1;
+                let mut escaped = false;
+                let mut closed = false;
+                while index < encoded.len() {
+                    let byte = encoded[index];
+                    index += 1;
+                    if escaped {
+                        escaped = false;
+                    } else if byte == b'\\' {
+                        escaped = true;
+                    } else if byte == b'"' {
+                        closed = true;
+                        break;
+                    }
+                }
+                if !closed {
+                    return Err("fixture-invalid-json".to_string());
+                }
+                if let Some(JsonFrame::Object { keys, expect_key }) = frames.last_mut() {
+                    if *expect_key {
+                        let key: String = serde_json::from_slice(&encoded[start..index])
+                            .map_err(|_| "fixture-invalid-scalar".to_string())?;
+                        if !keys.insert(key) {
+                            return Err("fixture-duplicate-key".to_string());
+                        }
+                        *expect_key = false;
+                    }
+                }
+                continue;
+            }
+            b'{' => frames.push(JsonFrame::Object {
+                keys: HashSet::new(),
+                expect_key: true,
+            }),
+            b'[' => frames.push(JsonFrame::Array),
+            b',' => {
+                if let Some(JsonFrame::Object { expect_key, .. }) = frames.last_mut() {
+                    *expect_key = true;
+                }
+            }
+            b'}' | b']' => {
+                frames.pop();
+            }
+            _ => {}
+        }
+        if frames.len() > depth_limit {
+            return Err("fixture-depth-limit".to_string());
+        }
+        index += 1;
+    }
+    Ok(())
+}
+
+fn validate_json_tree(value: &Value, depth: usize) -> Result<(), String> {
+    match value {
+        Value::Array(values) => {
+            let next_depth = depth + 1;
+            if next_depth > MAX_FIXTURE_DEPTH {
+                return Err("fixture-depth-limit".to_string());
+            }
+            for item in values {
+                validate_json_tree(item, next_depth)?;
+            }
+        }
+        Value::Object(values) => {
+            let next_depth = depth + 1;
+            if next_depth > MAX_FIXTURE_DEPTH {
+                return Err("fixture-depth-limit".to_string());
+            }
+            for item in values.values() {
+                validate_json_tree(item, next_depth)?;
+            }
+        }
+        Value::Number(number) if number.as_i64().is_none() && number.as_u64().is_none() => {
+            return Err("fixture-invalid-type".to_string());
+        }
+        _ => {}
+    }
+    Ok(())
+}
+
+fn validate_corpus(document: &Value) -> Result<(), String> {
+    let root = document
+        .as_object()
+        .ok_or_else(|| "fixture-schema-invalid".to_string())?;
+    let required = ["schema_version", "profile", "limits", "error_ids", "cases"];
+    if root.len() != required.len() || required.iter().any(|key| !root.contains_key(*key)) {
+        return Err("fixture-schema-invalid".to_string());
+    }
+    if root["schema_version"] != json!(1) || root["profile"] != json!("barcode-layout-1d-v1") {
+        return Err("fixture-schema-invalid".to_string());
+    }
+    let limits = root["limits"]
+        .as_object()
+        .ok_or_else(|| "fixture-schema-invalid".to_string())?;
+    for (key, expected) in [
+        ("max_cases", MAX_FIXTURE_CASES as u64),
+        ("max_fixture_bytes", MAX_FIXTURE_BYTES as u64),
+        ("max_fixture_depth", MAX_FIXTURE_DEPTH as u64),
+    ] {
+        if limits.get(key).and_then(Value::as_u64) != Some(expected) {
+            return Err("fixture-schema-invalid".to_string());
+        }
+    }
+    let errors = root["error_ids"]
+        .as_array()
+        .ok_or_else(|| "fixture-schema-invalid".to_string())?;
+    let expected_errors = [
+        "pattern-too-long",
+        "empty-pattern",
+        "invalid-binary-token",
+        "invalid-width-token",
+        "invalid-marker-configuration",
+        "invalid-module-count",
+        "too-many-runs",
+        "content-too-wide",
+        "non-alternating-runs",
+        "invalid-quiet-zone",
+        "too-many-symbols",
+        "symbol-width-mismatch",
+        "invalid-render-config",
+        "metadata-too-large",
+        "human-readable-text-unsupported",
+        "invalid-source-attribution",
+    ];
+    if errors.len() != expected_errors.len()
+        || errors
+            .iter()
+            .zip(expected_errors)
+            .any(|(actual, expected)| actual.as_str() != Some(expected))
+    {
+        return Err("fixture-schema-invalid".to_string());
+    }
+    let cases = root["cases"]
+        .as_array()
+        .ok_or_else(|| "fixture-schema-invalid".to_string())?;
+    if cases.len() > MAX_FIXTURE_CASES {
+        return Err("fixture-schema-invalid".to_string());
+    }
+    let operations = [
+        "expand-binary",
+        "expand-width",
+        "compute-layout",
+        "project-scene",
+    ];
+    let mut ids = HashSet::new();
+    for test_case in cases {
+        let case = test_case
+            .as_object()
+            .ok_or_else(|| "fixture-schema-invalid".to_string())?;
+        let id = case
+            .get("id")
+            .and_then(Value::as_str)
+            .ok_or_else(|| "fixture-schema-invalid".to_string())?;
+        let operation = case
+            .get("operation")
+            .and_then(Value::as_str)
+            .ok_or_else(|| "fixture-schema-invalid".to_string())?;
+        if !ids.insert(id) || !operations.contains(&operation) {
+            return Err("fixture-schema-invalid".to_string());
+        }
+        if !case.contains_key("input") || !case.contains_key("expected") {
+            return Err("fixture-schema-invalid".to_string());
+        }
+    }
+    Ok(())
+}
+
+fn load_corpus(encoded: &[u8]) -> Result<Value, String> {
+    if encoded.len() > MAX_FIXTURE_BYTES {
+        return Err("fixture-size-limit".to_string());
+    }
+    preflight_json(encoded, MAX_FIXTURE_DEPTH)?;
+    let document: Value =
+        serde_json::from_slice(encoded).map_err(|_| "fixture-invalid-json".to_string())?;
+    validate_json_tree(&document, 0)?;
+    validate_corpus(&document)?;
+    Ok(document)
+}
 
 fn run_role(value: &str) -> Barcode1DRunRole {
     match value {
@@ -311,8 +543,9 @@ fn execute(test_case: &Value) -> Result<Value, String> {
 
 #[test]
 fn executes_all_56_portable_v1_cases() {
-    assert_eq!(sha256_hex(RAW_CASES), CORPUS_SHA256);
-    let document: Value = serde_json::from_slice(RAW_CASES).unwrap();
+    let encoded = read_bounded_fixture(&fixture_path()).unwrap();
+    assert_eq!(sha256_hex(&encoded), CORPUS_SHA256);
+    let document = load_corpus(&encoded).unwrap();
     let cases = document["cases"].as_array().unwrap();
     assert_eq!(cases.len(), 56);
     let mut counts = HashMap::new();
@@ -347,28 +580,131 @@ fn executes_all_56_portable_v1_cases() {
     );
 }
 
+struct CountingResolver {
+    calls: AtomicUsize,
+}
+
+impl CountingResolver {
+    fn new() -> Self {
+        Self {
+            calls: AtomicUsize::new(0),
+        }
+    }
+}
+
+impl FontResolver for CountingResolver {
+    type Handle = ();
+
+    fn resolve(&self, _query: &FontQuery) -> Result<Self::Handle, FontResolutionError> {
+        self.calls.fetch_add(1, Ordering::SeqCst);
+        Err(FontResolutionError::NoFamilyFound)
+    }
+}
+
 #[test]
-fn rejects_both_text_forms_before_native_dispatch() {
+fn text_value_fails_before_native_resolution() {
     let runs = vec![Barcode1DRun {
         color: Barcode1DRunColor::Bar,
-        modules: 0,
+        modules: 1,
         source_label: "A".to_string(),
         source_index: 0,
         role: Barcode1DRunRole::Data,
     }];
-    let mut enabled = PaintBarcode1DOptions::default();
-    enabled.render_config.include_human_readable_text = true;
-    assert_eq!(
-        project_scene_v1(&runs, &enabled).unwrap_err(),
-        "human-readable-text-unsupported"
-    );
+    let resolver = CountingResolver::new();
     let supplied = PaintBarcode1DOptions {
         human_readable_text: Some("A".to_string()),
         ..PaintBarcode1DOptions::default()
     };
     assert_eq!(
-        project_scene_v1(&runs, &supplied).unwrap_err(),
+        project_scene_v1_with_resolver_probe(&runs, &supplied, &resolver).unwrap_err(),
         "human-readable-text-unsupported"
+    );
+    assert_eq!(resolver.calls.load(Ordering::SeqCst), 0);
+}
+
+#[test]
+fn text_enabled_fails_before_native_resolution() {
+    let runs = vec![Barcode1DRun {
+        color: Barcode1DRunColor::Bar,
+        modules: 1,
+        source_label: "A".to_string(),
+        source_index: 0,
+        role: Barcode1DRunRole::Data,
+    }];
+    let resolver = CountingResolver::new();
+    let mut enabled = PaintBarcode1DOptions::default();
+    enabled.render_config.include_human_readable_text = true;
+    enabled.render_config.module_width = 0.0;
+    assert_eq!(
+        project_scene_v1_with_resolver_probe(&runs, &enabled, &resolver).unwrap_err(),
+        "human-readable-text-unsupported"
+    );
+    assert_eq!(resolver.calls.load(Ordering::SeqCst), 0);
+}
+
+fn write_temp_fixture(name: &str, encoded: &[u8]) -> PathBuf {
+    let path = std::env::temp_dir().join(format!(
+        "barcode-layout-1d-{name}-{}-{}.json",
+        std::process::id(),
+        encoded.len()
+    ));
+    let mut file = File::create(&path).unwrap();
+    file.write_all(encoded).unwrap();
+    path
+}
+
+#[test]
+fn bounded_fixture_loader_rejects_hostile_documents_before_dispatch() {
+    let canonical = read_bounded_fixture(&fixture_path()).unwrap();
+
+    let mut exact_max = canonical.clone();
+    exact_max.resize(MAX_FIXTURE_BYTES, b' ');
+    let exact_path = write_temp_fixture("exact-max", &exact_max);
+    assert_eq!(
+        read_bounded_fixture(&exact_path).unwrap().len(),
+        MAX_FIXTURE_BYTES
+    );
+    assert!(load_corpus(&read_bounded_fixture(&exact_path).unwrap()).is_ok());
+    fs::remove_file(exact_path).unwrap();
+
+    let oversized_path = write_temp_fixture("oversized", &vec![b' '; MAX_FIXTURE_BYTES + 1]);
+    assert_eq!(
+        read_bounded_fixture(&oversized_path).unwrap_err(),
+        "fixture-size-limit"
+    );
+    fs::remove_file(oversized_path).unwrap();
+
+    assert_eq!(
+        load_corpus(br#"{"a":1,"\u0061":2}"#).unwrap_err(),
+        "fixture-duplicate-key"
+    );
+    let deep = format!(
+        "{}0{}",
+        "[".repeat(MAX_FIXTURE_DEPTH + 1),
+        "]".repeat(MAX_FIXTURE_DEPTH + 1)
+    );
+    assert_eq!(
+        load_corpus(deep.as_bytes()).unwrap_err(),
+        "fixture-depth-limit"
+    );
+    assert_eq!(
+        load_corpus(&[canonical.as_slice(), b"{}"].concat()).unwrap_err(),
+        "fixture-invalid-json"
+    );
+    let scalar_error = load_corpus(br#"{"schema_version":1,"profile":"\ud800"}"#).unwrap_err();
+    assert!(matches!(
+        scalar_error.as_str(),
+        "fixture-invalid-json" | "fixture-invalid-scalar"
+    ));
+    assert_eq!(load_corpus(b"[]").unwrap_err(), "fixture-schema-invalid");
+
+    let mut too_many = load_corpus(&canonical).unwrap();
+    let first = too_many["cases"][0].clone();
+    too_many["cases"] = Value::Array(vec![first; MAX_FIXTURE_CASES + 1]);
+    let too_many_encoded = serde_json::to_vec(&too_many).unwrap();
+    assert_eq!(
+        load_corpus(&too_many_encoded).unwrap_err(),
+        "fixture-schema-invalid"
     );
 }
 

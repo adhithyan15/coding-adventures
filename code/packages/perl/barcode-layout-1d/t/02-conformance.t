@@ -6,6 +6,7 @@ use Digest::SHA qw(sha256_hex);
 use FindBin;
 use JSON::PP;
 use File::Spec;
+use File::Temp qw(tempfile);
 
 use lib '../paint-instructions/lib';
 require CodingAdventures::BarcodeLayout1D;
@@ -14,6 +15,23 @@ my $pkg = 'CodingAdventures::BarcodeLayout1D';
 my $MAX_FIXTURE_BYTES = 131_072;
 
 sub fixture_fail { die "fixture-load-error: $_[0]\n"; }
+
+sub read_fixture_file {
+    my ($path) = @_;
+    open my $handle, '<:raw', $path or die "cannot open fixture: $!";
+    my $encoded = q{};
+    while (length($encoded) <= $MAX_FIXTURE_BYTES) {
+        my $remaining = ($MAX_FIXTURE_BYTES + 1) - length($encoded);
+        last if $remaining <= 0;
+        my $count = read($handle, my $chunk, $remaining);
+        die "cannot read fixture: $!" unless defined $count;
+        last if $count == 0;
+        $encoded .= $chunk;
+    }
+    close $handle or die "cannot close fixture: $!";
+    fixture_fail('fixture-size-limit') if length($encoded) > $MAX_FIXTURE_BYTES;
+    return $encoded;
+}
 
 sub fixture_preflight {
     my ($encoded, $limit) = @_;
@@ -207,13 +225,8 @@ my $schema_path = File::Spec->catfile(
     $FindBin::Bin, '..', '..', '..', '..', 'specs', 'fixtures',
     'barcode-layout-1d-v1', 'schema.json',
 );
-open my $handle, '<:raw', $fixture_path or die "cannot open fixture: $!";
-local $/;
-my $encoded = <$handle>;
-close $handle;
-open my $schema_handle, '<:raw', $schema_path or die "cannot open schema: $!";
-my $schema_encoded = <$schema_handle>;
-close $schema_handle;
+my $encoded = read_fixture_file($fixture_path);
+my $schema_encoded = read_fixture_file($schema_path);
 my $document = load_fixture_document($schema_encoded, $encoded);
 ok(length($encoded) <= $MAX_FIXTURE_BYTES, 'fixture byte limit');
 is(scalar @{$document->{cases}}, 56, 'all 56 cases loaded');
@@ -374,6 +387,26 @@ subtest 'bounded loader rejects hostile envelopes before dispatch' => sub {
     $bad_scalar =~ s/"layout-v1-binary-basic"/"\\ud800"/;
     like(dies { load_fixture_document($schema_encoded, $bad_scalar) },
         qr/fixture-(?:invalid-scalar|invalid-json)/);
+};
+
+subtest 'on-disk fixture reads stop at the byte ceiling' => sub {
+    my ($exact_handle, $exact_path) = tempfile();
+    binmode $exact_handle, ':raw';
+    print {$exact_handle} $encoded;
+    print {$exact_handle} ' ' x ($MAX_FIXTURE_BYTES - length($encoded));
+    close $exact_handle;
+    my $exact = read_fixture_file($exact_path);
+    is(length($exact), $MAX_FIXTURE_BYTES, 'exact byte ceiling is accepted');
+    is(load_fixture_document($schema_encoded, $exact)->{profile},
+        'barcode-layout-1d-v1', 'exact byte ceiling remains parseable');
+    unlink $exact_path;
+
+    my ($oversized_handle, $oversized_path) = tempfile();
+    binmode $oversized_handle, ':raw';
+    print {$oversized_handle} ' ' x ($MAX_FIXTURE_BYTES + 1);
+    close $oversized_handle;
+    like(dies { read_fixture_file($oversized_path) }, qr/fixture-size-limit/);
+    unlink $oversized_path;
 };
 
 subtest 'repeat forms are bounded before materialization' => sub {

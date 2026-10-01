@@ -98,8 +98,11 @@ export const DEFAULT_BARCODE_1D_RENDER_CONFIG: Barcode1DRenderConfig = {
 };
 
 export class Barcode1DError extends Error {
-  constructor(public readonly errorId: string) {
+  public readonly errorId: string;
+
+  constructor(errorId: string) {
     super(errorId);
+    this.errorId = errorId;
     this.name = "Barcode1DError";
   }
 }
