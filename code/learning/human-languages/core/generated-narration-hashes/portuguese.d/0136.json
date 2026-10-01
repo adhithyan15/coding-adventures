@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:51b29de6e4bbfe75",
+  "lessonIds": [
+    "PT-C136-o-futuro",
+    "PT-C136-daqui-a",
+    "PT-C136-o-plano",
+    "PT-C136-planear",
+    "PT-C136-organizar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch136.txt",
+  "json": "portuguese/narration/ch136.json",
+  "textHash": "fnv1a64:e3eb6e3131435a72",
+  "jsonHash": "fnv1a64:bb3751f48f5a3d0c",
+  "findings": []
+}
