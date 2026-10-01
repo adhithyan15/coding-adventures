@@ -10873,13 +10873,23 @@ fn literal_boolean_value(node: &GrammarASTNode) -> Option<bool> {
     let [Piece::Node(lhs), Piece::Op(op), Piece::Node(rhs)] = sequence.as_slice() else {
         return None;
     };
-    let lhs = literal_boolean_value(lhs)?;
-    let rhs = literal_boolean_value(rhs)?;
     match op.as_str() {
-        "and" => Some(lhs && rhs),
-        "or" => Some(lhs || rhs),
-        "impl" => Some(!lhs || rhs),
-        "eqv" => Some(lhs == rhs),
+        "and" | "or" | "impl" | "eqv" => {
+            let lhs = literal_boolean_value(lhs)?;
+            let rhs = literal_boolean_value(rhs)?;
+            Some(match op.as_str() {
+                "and" => lhs && rhs,
+                "or" => lhs || rhs,
+                "impl" => !lhs || rhs,
+                "eqv" => lhs == rhs,
+                _ => unreachable!(),
+            })
+        }
+        "=" | "!=" | "<>" | "<" | "<=" | ">" | ">=" => Some(compare_static_values(
+            op,
+            literal_integer_value(lhs)?,
+            literal_integer_value(rhs)?,
+        )),
         _ => None,
     }
 }
@@ -15614,6 +15624,32 @@ mod tests {
             "test",
         )
         .expect_err("an inverted literal-only projection must remain conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_literal_integer_predicate_selector_copy_tracks_partial_self_recursion() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and (1 < 2); choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("literal integer predicates may supply neutral selector identity operands");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_false_literal_integer_predicate_selector_copy_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and (2 < 1); choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("a false literal-predicate operand must remain conservative");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
