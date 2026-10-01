@@ -1078,7 +1078,9 @@ backend immediately) come before the enabler-dependent items.
   projection of the form `if selector then true else false` is also an exact
   selector copy, as is its complemented form
   `if not selector then false else true`. Either literal branch may instead be
-  the selector itself, yielding a one-sided guarded projection.
+  the selector itself, yielding a one-sided guarded projection. Literal-only
+  boolean combinations may supply projection constants and neutral identity
+  operands.
   The recurrence assignment may instead occur in one or both branches of a
   conditional statement selected by those exact snapshots. A branch without
   the assignment preserves the dependency for that pass; unknown selectors
