@@ -1,8 +1,8 @@
 //! Real Rust application fixture shared by Mosaic native binding acceptance.
 
 use mosaic_app_runtime::{
-    AppUpdate, Delivery, Effect, EffectCompletionError, EffectId, EffectResult, Event, MosaicApp,
-    Platform, Snapshot, StartContext, EFFECT_PROTOCOL_VERSION,
+    AppUpdate, Delivery, Effect, EffectCompletionError, EffectId, EffectResult, Environment, Event,
+    MosaicApp, Platform, Snapshot, StartContext, EFFECT_PROTOCOL_VERSION,
 };
 use serde_json::{json, Value};
 use std::error::Error;
@@ -31,6 +31,21 @@ pub struct ConformanceApp {
     /// an acceptance run asserts it returns to zero, and a host that never
     /// completes fails visibly instead of passing quietly.
     awaited_effects: u32,
+    /// Set by `failEnvironment` (`{"fail": true}`): every `environmentChanged`
+    /// that reaches the app is then an application error, until
+    /// `{"fail": false}`.
+    ///
+    /// A switch rather than a one-shot failure, because an error must leave
+    /// the app as it was (`MosaicApp::environment_changed`), and a one-shot
+    /// would have to disarm itself while failing. It gives a harness two
+    /// things no ignored report can (UI48 §7.6-§7.8):
+    ///
+    /// - a failure that is not the report's fault, which a host must send
+    ///   again rather than hold back as it holds back an invalid one; and
+    /// - proof of delivery: while it is on, a report the host sent answers an
+    ///   error and one it held back answers nothing, without reading the
+    ///   state file, which an ignored report no longer rewrites.
+    environment_fails: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -39,6 +54,8 @@ pub enum ConformanceError {
     InvalidAmount,
     InvalidSnapshot,
     EffectsUnavailable,
+    InvalidSwitch,
+    EnvironmentFailing,
 }
 
 impl fmt::Display for ConformanceError {
@@ -49,6 +66,10 @@ impl fmt::Display for ConformanceError {
             Self::InvalidSnapshot => formatter.write_str("invalid conformance snapshot"),
             Self::EffectsUnavailable => {
                 formatter.write_str("effect completion requires protocol 2")
+            }
+            Self::InvalidSwitch => formatter.write_str("failEnvironment needs a boolean `fail`"),
+            Self::EnvironmentFailing => {
+                formatter.write_str("conformance environment change failed: failEnvironment is on")
             }
         }
     }
@@ -140,6 +161,14 @@ impl MosaicApp for ConformanceApp {
                     .unwrap_or(false),
             ));
         }
+        if event.name == "failEnvironment" {
+            self.environment_fails = event
+                .payload
+                .get("fail")
+                .and_then(Value::as_bool)
+                .ok_or(ConformanceError::InvalidSwitch)?;
+            return Ok(self.update("dispatched"));
+        }
         if event.name != "increment" {
             return Err(ConformanceError::UnknownEvent(event.name));
         }
@@ -180,6 +209,18 @@ impl MosaicApp for ConformanceApp {
                 Ok(self.update(&format!("failed: {}", failure.message)))
             }
         }
+    }
+
+    /// Ignored -- the runtime answers at the revision showing with no props --
+    /// unless `failEnvironment` is on, when it fails and changes nothing.
+    fn environment_changed(
+        &mut self,
+        _environment: Environment,
+    ) -> Result<Option<AppUpdate>, Self::Error> {
+        if self.environment_fails {
+            return Err(ConformanceError::EnvironmentFailing);
+        }
+        Ok(None)
     }
 
     fn snapshot(&self) -> Result<Option<Snapshot>, Self::Error> {
@@ -568,6 +609,56 @@ mod tests {
         restored.start(context()).unwrap();
         let update = restored.restore(snapshot).unwrap();
         assert_eq!(update.props["count"], 3);
+    }
+
+    /// `failEnvironment` turns environment changes into application errors
+    /// that change nothing, and back; an ignored change keeps the revision.
+    #[test]
+    fn fail_environment_switches_environment_changes_between_failing_and_ignored() {
+        use mosaic_app_runtime::{RuntimeError, ENVIRONMENT_CHANGED};
+        let phone = json!({
+            "colorScheme": "light", "sizeClass": "compact", "pointer": "coarse",
+            "hover": "none", "orientation": "portrait", "reducedMotion": "no-preference",
+        });
+        let mut runtime = MosaicRuntime::new(ConformanceApp::default());
+        runtime.start(context()).unwrap();
+        let ignored = runtime
+            .dispatch(Event::new(1, ENVIRONMENT_CHANGED, phone.clone()))
+            .unwrap();
+        assert_eq!((ignored.revision, ignored.props), (1, Value::Null));
+
+        let on = runtime
+            .dispatch(Event::new(2, "failEnvironment", json!({ "fail": true })))
+            .unwrap();
+        assert_eq!(on.revision, 2);
+        assert_eq!(on.props["status"], "dispatched");
+        let failed = runtime
+            .dispatch(Event::new(3, ENVIRONMENT_CHANGED, phone.clone()))
+            .unwrap_err();
+        assert!(matches!(
+            failed,
+            RuntimeError::Application(ConformanceError::EnvironmentFailing)
+        ));
+        assert!(
+            failed.to_string().starts_with("Mosaic application error: "),
+            "{failed}"
+        );
+        // Nothing consumed: the same sequence fails again while it is on.
+        assert!(runtime
+            .dispatch(Event::new(3, ENVIRONMENT_CHANGED, phone.clone()))
+            .is_err());
+        assert_eq!(runtime.current_revision(), Some(2));
+
+        runtime
+            .dispatch(Event::new(3, "failEnvironment", json!({ "fail": false })))
+            .unwrap();
+        let retried = runtime
+            .dispatch(Event::new(4, ENVIRONMENT_CHANGED, phone))
+            .unwrap();
+        assert_eq!((retried.revision, retried.props), (3, Value::Null));
+        assert!(runtime
+            .dispatch(Event::new(5, "failEnvironment", json!({})))
+            .is_err());
     }
 
     #[test]
