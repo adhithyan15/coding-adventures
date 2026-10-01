@@ -1,0 +1,11 @@
+{
+  "id": "RU-C137-davno",
+  "pathSegment": "RU-PATH-137-PAS137",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-137-PAS137",
+      "order": 1
+    }
+  ]
+}

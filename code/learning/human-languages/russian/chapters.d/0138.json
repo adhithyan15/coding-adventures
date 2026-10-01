@@ -1,0 +1,19 @@
+{
+  "chapter": 138,
+  "title": "Future, in a Week, a Plan, To Plan, To Hope",
+  "label": "ch:ru-future-in-a-week-a-plan-to-plan-to-hope",
+  "canDo": "I can say what will happen, and when: next year, in a week, and what I plan.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "RU-C138-nadeyatsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 138: I can say what will happen, and when: next year, in a week, and what I plan.",
+    "assesses": [
+      "RU-LEX-C138-FUT138-03",
+      "RU-LEX-C138-FUT138-04",
+      "RU-LEX-C138-FUT138-05"
+    ]
+  }
+}

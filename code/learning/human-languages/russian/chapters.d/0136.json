@@ -1,0 +1,19 @@
+{
+  "chapter": 136,
+  "title": "Nobody, Nothing, Nowhere, To Nowhere, What For",
+  "label": "ch:ru-nobody-nothing-nowhere-to-nowhere-what-for",
+  "canDo": "I can say that there is nobody and nothing, and ask what something is for.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "RU-C136-zachem",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 136: I can say that there is nobody and nothing, and ask what something is for.",
+    "assesses": [
+      "RU-LEX-C136-NEG136-03",
+      "RU-LEX-C136-NEG136-04",
+      "RU-LEX-C136-NEG136-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C138-budushchiy",
+    "language": "russian",
+    "chapter": 138,
+    "sequence": 7220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7807012f12c8af76"
+  },
+  "findings": []
+}

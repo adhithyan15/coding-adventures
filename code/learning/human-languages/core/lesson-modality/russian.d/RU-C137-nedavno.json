@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C137-nedavno",
+    "language": "russian",
+    "chapter": 137,
+    "sequence": 7170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9274a66fc9909521"
+  },
+  "findings": []
+}

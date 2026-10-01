@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-137-PAS137",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what happened, and when: recently, last week, a long time ago.",
+  "prerequisites": []
+}
