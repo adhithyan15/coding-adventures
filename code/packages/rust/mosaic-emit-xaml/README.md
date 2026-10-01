@@ -166,6 +166,62 @@ routes all generated events back through the Rust engine. This shell contains no
 reflection-host or sample-prop fallback. The default `false` setting retains the
 permissive preview and compatibility behavior.
 
+## Layout variants
+
+A component may have more than one layout (UI30): `EngramApp.mll` and
+`EngramApp.touch.mll` share `EngramApp.mil`. One WinUI app carries all of
+them and the window switches between them as its environment changes (UI48
+ENV2/ENV3, §7.11).
+
+**Each layout is a control of its own.** `from_pipeline_variant` emits a
+variant as `<Component><Variant>` — `variant_type_name("EngramApp", "touch")`
+is `EngramAppTouch`, with `-` and `_` separating words as on every other
+backend — and names every type its layout needs after it
+(`EngramAppTouch_DeckVm`, `EngramAppTouchMosaicSlider`). The interface is the
+default's: a WinUI project compiles all of its C# into one namespace, so the
+variant declares no event union (`events` is empty) and its `Dispatch` is
+`EventHandler<EngramAppEvent>`.
+
+```rust
+use mosaic_emit_xaml::pipeline::{from_pipeline_variant, EmitOptions};
+
+let touch = from_pipeline_variant(
+    &interface, &touch_layout, &style, None, "touch",
+    &EmitOptions { package_exports: vec!["EngramApp".into()], ..Default::default() },
+)?;
+// touch.xaml        → EngramApp.touch.xaml     (x:Class="…EngramAppTouch")
+// touch.code_behind → EngramApp.touch.xaml.cs  (raises EngramAppEvent)
+// touch.events      → empty: EngramApp.Event.cs declares the union once
+```
+
+A variant whose type would take a name already in the namespace is refused
+with `PipelineEmitError::InvalidLayoutVariant`: the component itself, its
+`…Event` union or its `…Mosaic…` support types; the same for every export
+in `EmitOptions::package_exports`; and the shell's own types,
+`SHELL_RESERVED_NAMES` (`MainWindow`, `MosaicRuntimeHost`, `MosaicHost`, …).
+
+**The window selects.** Give the default's `from_pipeline` the rules as
+`EmitOptions::layout_variants` — one `LayoutChoice { variant, conditions }`
+per rule, in order, conditions keyed by `mosaic-app-runtime`'s wire names
+(`sizeClass`, `pointer`, …); the package builder computes them from
+`[[app.layouts]]` or the conventions — and a control-rooted project shell
+switches roots:
+
+| piece                         | what it does                                             |
+|-------------------------------|----------------------------------------------------------|
+| `MainWindow.xaml`             | an empty `Grid x:Name="LayoutHost"` where the component was |
+| `MosaicLayoutRules`           | the rules as data, under wire names                      |
+| `MosaicLayoutVariant(env)`    | first rule whose conditions all hold, else null (default) |
+| `CreateLayoutRoot(variant)`   | `new EngramAppTouch()`, wired to the one dispatch handler |
+| `MountLayout(variant)`        | props first (strict in native-complete), then swap       |
+| `QueueLayoutSwitch` / `SwitchLayout` | deferred to the dispatcher, one at a time; checks `MosaicRuntimeHost.IsSettling`; a failed mount keeps the old root |
+
+The environment is `MosaicRuntimeHost.EnvironmentReport` of the window — the
+same reducer the ENV4 report uses — so a shell that selects needs the
+standard binding beside it, which the package builder always writes. A
+`HostDialog`-rooted window does not select (`layout_root_is_dialog`). Without
+`layout_variants` every project file is exactly what it was.
+
 ## Tests
 
 `cargo test -p mosaic-emit-xaml` runs the per-primitive unit tests, plus
@@ -173,6 +229,12 @@ end-to-end smoke tests that build a small `MosmodelComponent` + `LayoutDef`
 + `StyleDef`, run `from_pipeline`, and assert structural properties of the
 generated XAML and C# (presence of the right tags, attributes, and slot
 properties).
+
+`fixtures/layout-variants` is the layout-switching gate (UI48 §7.11): CI's
+Windows lane builds it native-complete against the conformance runtime and
+`code/scripts/mosaic-xaml-layout-variants-smoke.ps1` resizes the real window
+across 600 effective pixels, both ways, asserting which root is mounted and
+that the runtime's props are on it.
 
 GitHub-hosted Windows CI is the final compiler gate for generated WinUI project
 shells. A local or self-hosted Windows runner with an interactive desktop remains
