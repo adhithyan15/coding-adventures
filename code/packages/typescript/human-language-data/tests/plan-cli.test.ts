@@ -11,10 +11,18 @@ import { EXAM_INVENTORY_META_OWNER } from "../src/exam-inventory-shards.js";
 // presence list, the coverage measurement, and what happens when they disagree.
 
 const roots: string[] = [];
+// The cleanup states its own budget, as every case below does. Each full-corpus
+// copy is about 100,000 files, and deleting one is real filesystem work that grows
+// with every content PR. The package-wide 30s `hookTimeout` covered it until the
+// Sanskrit, Italian and French A2 tranches added some 6,000 files between them.
+// After that, the delete overran 30s on a loaded CI runner while the test it
+// followed had passed, so the hook failed even though nothing asserted wrongly.
+// The hook gets the same 120s as the cases it cleans up after. Making the cases
+// stop copying the whole corpus remains the durable fix (see vitest.config.ts).
 afterEach(() => {
   for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true });
   vi.restoreAllMocks();
-});
+}, 120_000);
 
 function corpus(inventoriesOnly = false): string {
   const root = mkdtempSync(join(tmpdir(), "hl-plan-"));
