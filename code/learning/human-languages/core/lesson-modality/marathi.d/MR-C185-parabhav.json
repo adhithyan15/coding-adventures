@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C185-parabhav",
+    "language": "marathi",
+    "chapter": 185,
+    "sequence": 9300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08013a87d39ba244"
+  },
+  "findings": []
+}

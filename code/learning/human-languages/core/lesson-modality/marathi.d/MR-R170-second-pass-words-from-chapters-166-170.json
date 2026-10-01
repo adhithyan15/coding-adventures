@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R170-second-pass-words-from-chapters-166-170",
+    "language": "marathi",
+    "chapter": 170,
+    "sequence": 8200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5abef006a818e6c"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "marathi",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:257cdcabcd208aa8",
+  "lessonIds": [
+    "MR-C188-dindarsika",
+    "MR-C188-khekda",
+    "MR-C188-garud",
+    "MR-C188-kokila",
+    "MR-C188-madhmasi",
+    "MR-R188-first-pass-words-from-chapters-180-183",
+    "MR-R188-second-pass-words-from-chapters-184-188"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marathi/narration/ch188.txt",
+  "json": "marathi/narration/ch188.json",
+  "textHash": "fnv1a64:a152c5357a1f227e",
+  "jsonHash": "fnv1a64:2c47c3165fed588f",
+  "findings": []
+}

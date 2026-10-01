@@ -1,0 +1,19 @@
+{
+  "chapter": 187,
+  "title": "Trousers, Socks, Handkerchief, Piece of jewellery, Bangle",
+  "label": "ch:mr-trousers-socks-handkerchief-piece-of-jewellery-bangle",
+  "canDo": "I can say trousers, socks, a handkerchief, a piece of jewellery and a bangle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C187-bangdi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 187: I can say trousers, socks, a handkerchief, a piece of jewellery and a bangle.",
+    "assesses": [
+      "MR-LEX-C187-VASTU187-03",
+      "MR-LEX-C187-VASTU187-04",
+      "MR-LEX-C187-VASTU187-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C170-matsar",
+  "pathSegment": "MR-PATH-170-AAROGYA170",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-170-AAROGYA170",
+      "order": 1
+    }
+  ]
+}

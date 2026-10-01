@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C178-sadnika",
+    "language": "marathi",
+    "chapter": 178,
+    "sequence": 8730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d529b1cd340a6f5"
+  },
+  "findings": []
+}

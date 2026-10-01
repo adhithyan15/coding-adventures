@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 181,
+  "sourceHash": "fnv1a64:5ecfac5fddf5d989",
+  "lessonIds": [
+    "MR-C181-sun",
+    "MR-C181-navardev",
+    "MR-C181-navri",
+    "MR-C181-vidhva",
+    "MR-C181-yas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch181.txt",
+  "json": "marathi/narration/ch181.json",
+  "textHash": "fnv1a64:dff806d5f3ddc839",
+  "jsonHash": "fnv1a64:4257cb8b32913e5f",
+  "findings": []
+}

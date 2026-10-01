@@ -1,0 +1,21 @@
+{
+  "language": "marathi",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:006a8ca142ea04b7",
+  "lessonIds": [
+    "MR-C170-laj",
+    "MR-C170-matsar",
+    "MR-C170-kantala",
+    "MR-C170-samyam",
+    "MR-C170-nasib",
+    "MR-R170-first-pass-words-from-chapters-162-165",
+    "MR-R170-second-pass-words-from-chapters-166-170"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marathi/narration/ch170.txt",
+  "json": "marathi/narration/ch170.json",
+  "textHash": "fnv1a64:291d5b247d9ad801",
+  "jsonHash": "fnv1a64:d961cb98e2766636",
+  "findings": []
+}

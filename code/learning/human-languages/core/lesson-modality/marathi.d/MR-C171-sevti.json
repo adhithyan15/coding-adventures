@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C171-sevti",
+    "language": "marathi",
+    "chapter": 171,
+    "sequence": 8400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd5df0353fd8d7c8"
+  },
+  "findings": []
+}

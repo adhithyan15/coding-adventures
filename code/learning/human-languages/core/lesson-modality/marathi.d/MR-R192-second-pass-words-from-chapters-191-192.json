@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R192-second-pass-words-from-chapters-191-192",
+    "language": "marathi",
+    "chapter": 192,
+    "sequence": 9870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a8d87174d50d057"
+  },
+  "findings": []
+}

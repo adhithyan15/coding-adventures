@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C162-abhar-manne",
+    "language": "marathi",
+    "chapter": 162,
+    "sequence": 7780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0269a9b4c40c185b"
+  },
+  "findings": []
+}

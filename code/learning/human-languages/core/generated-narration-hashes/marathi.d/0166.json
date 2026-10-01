@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:1ea7729ccbb5431d",
+  "lessonIds": [
+    "MR-C166-vaya-ghalavne",
+    "MR-C166-gappa-basne",
+    "MR-C166-ghabarne",
+    "MR-C166-vahun-nene",
+    "MR-C166-marne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch166.txt",
+  "json": "marathi/narration/ch166.json",
+  "textHash": "fnv1a64:2e5c58fbe5afe3ba",
+  "jsonHash": "fnv1a64:83a578e3014d4a42",
+  "findings": []
+}

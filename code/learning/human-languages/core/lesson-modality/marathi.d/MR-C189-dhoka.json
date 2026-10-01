@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C189-dhoka",
+    "language": "marathi",
+    "chapter": 189,
+    "sequence": 9660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:165a1fd5144ea6b2"
+  },
+  "findings": []
+}

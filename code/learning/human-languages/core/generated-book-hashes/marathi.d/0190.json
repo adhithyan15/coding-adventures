@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:0f125cc067608d66",
+  "lessonIds": [
+    "MR-C190-sejar",
+    "MR-C190-vahtuk",
+    "MR-C190-pravasi",
+    "MR-C190-rang",
+    "MR-C190-gardi"
+  ],
+  "tex": "marathi/book/chapters/ch190-neighbourhood-traffic-passenger-queue-crowd.tex"
+}

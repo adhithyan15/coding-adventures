@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C175-vicitra",
+    "language": "marathi",
+    "chapter": 175,
+    "sequence": 8580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b3650f1a2b4520d"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R170-first-pass-words-from-chapters-162-165",
+    "language": "marathi",
+    "chapter": 170,
+    "sequence": 8190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f5d825f5b6915550"
+  },
+  "findings": []
+}

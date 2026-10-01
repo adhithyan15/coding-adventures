@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C163-thand-karne",
+    "language": "marathi",
+    "chapter": 163,
+    "sequence": 7790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:433c763c1ccfe88a"
+  },
+  "findings": []
+}

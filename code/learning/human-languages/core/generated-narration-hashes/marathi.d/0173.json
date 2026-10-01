@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:e79de06984c64ae0",
+  "lessonIds": [
+    "MR-C173-tarihi",
+    "MR-C173-jari",
+    "MR-C173-asunhi",
+    "MR-C173-durdaivane",
+    "MR-C173-sudaivane"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch173.txt",
+  "json": "marathi/narration/ch173.json",
+  "textHash": "fnv1a64:95d0b7b5a165426c",
+  "jsonHash": "fnv1a64:cf9734be6c6386e6",
+  "findings": []
+}

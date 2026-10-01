@@ -1,0 +1,11 @@
+{
+  "id": "MR-C190-gardi",
+  "pathSegment": "MR-PATH-190-VASTU190",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-190-VASTU190",
+      "order": 4
+    }
+  ]
+}

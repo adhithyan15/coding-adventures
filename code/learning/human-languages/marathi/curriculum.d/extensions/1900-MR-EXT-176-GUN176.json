@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-176-GUN176",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say cloudy, rainy, possible, impossible and main.",
+  "prerequisites": []
+}

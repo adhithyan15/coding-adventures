@@ -1,0 +1,11 @@
+{
+  "id": "MR-C180-chayacitrakar",
+  "pathSegment": "MR-PATH-180-VASTU180",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-180-VASTU180",
+      "order": 2
+    }
+  ]
+}

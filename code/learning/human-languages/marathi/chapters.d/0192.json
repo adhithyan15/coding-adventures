@@ -1,0 +1,19 @@
+{
+  "chapter": 192,
+  "title": "Company, Colleague, Meeting, Contract, Interview",
+  "label": "ch:mr-company-colleague-meeting-contract-interview",
+  "canDo": "I can say a company, a colleague, a meeting, a contract and an interview.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-R192-second-pass-words-from-chapters-191-192",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 192: I can say a company, a colleague, a meeting, a contract and an interview.",
+    "assesses": [
+      "MR-LEX-C192-KAAM192-03",
+      "MR-LEX-C192-KAAM192-04",
+      "MR-LEX-C192-KAAM192-05"
+    ]
+  }
+}

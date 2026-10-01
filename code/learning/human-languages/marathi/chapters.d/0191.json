@@ -1,0 +1,19 @@
+{
+  "chapter": 191,
+  "title": "Manager, Secretary, Accounts, Details, Information",
+  "label": "ch:mr-manager-secretary-accounts-details-information",
+  "canDo": "I can say a manager, a secretary, accounts, details and information.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C191-mahiti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 191: I can say a manager, a secretary, accounts, details and information.",
+    "assesses": [
+      "MR-LEX-C191-VASTU191-03",
+      "MR-LEX-C191-VASTU191-04",
+      "MR-LEX-C191-VASTU191-05"
+    ]
+  }
+}

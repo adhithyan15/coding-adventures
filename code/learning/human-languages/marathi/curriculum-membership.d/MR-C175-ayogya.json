@@ -1,0 +1,11 @@
+{
+  "id": "MR-C175-ayogya",
+  "pathSegment": "MR-PATH-175-GUN175",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-175-GUN175",
+      "order": 4
+    }
+  ]
+}

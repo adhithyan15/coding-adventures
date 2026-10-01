@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:2e01c91836f60fab",
+  "lessonIds": [
+    "MR-C176-dhagal",
+    "MR-C176-pavsali",
+    "MR-C176-sakya",
+    "MR-C176-asakya",
+    "MR-C176-mukhya"
+  ],
+  "tex": "marathi/book/chapters/ch176-cloudy-rainy-possible-impossible-main.tex"
+}

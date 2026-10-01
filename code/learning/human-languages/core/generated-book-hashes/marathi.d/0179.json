@@ -1,0 +1,15 @@
+{
+  "language": "marathi",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:eeb355393a367524",
+  "lessonIds": [
+    "MR-C179-nyayalay",
+    "MR-C179-nyayadhis",
+    "MR-C179-mahapaur",
+    "MR-C179-nivadnuk",
+    "MR-C179-rajkaran",
+    "MR-R179-first-pass-words-from-chapters-171-174",
+    "MR-R179-second-pass-words-from-chapters-175-179"
+  ],
+  "tex": "marathi/book/chapters/ch179-court-judge-mayor-election-politics.tex"
+}

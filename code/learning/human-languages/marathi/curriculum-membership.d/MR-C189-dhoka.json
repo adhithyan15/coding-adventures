@@ -1,0 +1,11 @@
+{
+  "id": "MR-C189-dhoka",
+  "pathSegment": "MR-PATH-189-VASTU189",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MR-EXT-189-VASTU189",
+      "order": 0
+    }
+  ]
+}

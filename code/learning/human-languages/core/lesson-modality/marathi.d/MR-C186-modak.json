@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C186-modak",
+    "language": "marathi",
+    "chapter": 186,
+    "sequence": 9360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:123c951415f6c5b1"
+  },
+  "findings": []
+}

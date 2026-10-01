@@ -1,0 +1,11 @@
+{
+  "id": "MR-C178-kappa",
+  "pathSegment": "MR-PATH-178-VASTU178",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-178-VASTU178",
+      "order": 4
+    }
+  ]
+}

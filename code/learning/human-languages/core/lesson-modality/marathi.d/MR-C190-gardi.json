@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C190-gardi",
+    "language": "marathi",
+    "chapter": 190,
+    "sequence": 9750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7b222737f7114787"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 182,
+  "title": "Discount, Coin, Banknote, Loan, Tax",
+  "label": "ch:mr-discount-coin-banknote-loan-tax",
+  "canDo": "I can say a discount, a coin, a banknote, a loan and a tax.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C182-kar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 182: I can say a discount, a coin, a banknote, a loan and a tax.",
+    "assesses": [
+      "MR-LEX-C182-VASTU182-03",
+      "MR-LEX-C182-VASTU182-04",
+      "MR-LEX-C182-VASTU182-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 175,
+  "title": "Strange, Different, Similar, Proper, Wrong",
+  "label": "ch:mr-strange-different-similar-proper-wrong",
+  "canDo": "I can say strange, different, similar, proper and wrong.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MR-C175-ayogya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 175: I can say strange, different, similar, proper and wrong.",
+    "assesses": [
+      "MR-LEX-C175-GUN175-03",
+      "MR-LEX-C175-GUN175-04",
+      "MR-LEX-C175-GUN175-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:769bbe753a4f90e9",
+  "lessonIds": [
+    "MR-C175-vicitra",
+    "MR-C175-vegla",
+    "MR-C175-sarkha",
+    "MR-C175-yogya",
+    "MR-C175-ayogya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch175.txt",
+  "json": "marathi/narration/ch175.json",
+  "textHash": "fnv1a64:317e8a7bda9659c1",
+  "jsonHash": "fnv1a64:a1efb31548375d26",
+  "findings": []
+}

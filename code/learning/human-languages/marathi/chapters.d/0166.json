@@ -1,0 +1,19 @@
+{
+  "chapter": 166,
+  "title": "To waste, To keep quiet, To be afraid, To carry, To hit",
+  "label": "ch:mr-to-waste-to-keep-quiet-to-be-afraid-to-carry-to-hit",
+  "canDo": "I can say to waste, to keep quiet, to be afraid, to carry and to hit.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C166-marne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 166: I can say to waste, to keep quiet, to be afraid, to carry and to hit.",
+    "assesses": [
+      "MR-LEX-C166-ACT166-03",
+      "MR-LEX-C166-ACT166-04",
+      "MR-LEX-C166-ACT166-05"
+    ]
+  }
+}

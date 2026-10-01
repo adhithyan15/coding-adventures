@@ -1,0 +1,11 @@
+{
+  "id": "MR-C164-kami-karne",
+  "pathSegment": "MR-PATH-164-ACT164",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-164-ACT164",
+      "order": 4
+    }
+  ]
+}

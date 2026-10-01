@@ -1,0 +1,19 @@
+{
+  "chapter": 172,
+  "title": "Around, Everywhere, Elsewhere, Over there, In the middle",
+  "label": "ch:mr-around-everywhere-elsewhere-over-there-in-the-middle",
+  "canDo": "I can say around, everywhere, elsewhere, over there and in the middle.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "MR-C172-madhyabhagi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 172: I can say around, everywhere, elsewhere, over there and in the middle.",
+    "assesses": [
+      "MR-LEX-C172-JAGA172-03",
+      "MR-LEX-C172-JAGA172-04",
+      "MR-LEX-C172-JAGA172-05"
+    ]
+  }
+}

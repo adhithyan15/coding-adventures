@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C178-jevanghar",
+    "language": "marathi",
+    "chapter": 178,
+    "sequence": 8740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a8f19c47ae5dc14"
+  },
+  "findings": []
+}

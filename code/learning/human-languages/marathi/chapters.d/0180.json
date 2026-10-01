@@ -1,0 +1,19 @@
+{
+  "chapter": 180,
+  "title": "Writer, Painter, Photographer, Journalist, Architect",
+  "label": "ch:mr-writer-painter-photographer-journalist-architect",
+  "canDo": "I can say a writer, a painter, a photographer, a journalist and an architect.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C180-vastuvisarad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 180: I can say a writer, a painter, a photographer, a journalist and an architect.",
+    "assesses": [
+      "MR-LEX-C180-VASTU180-03",
+      "MR-LEX-C180-VASTU180-04",
+      "MR-LEX-C180-VASTU180-05"
+    ]
+  }
+}

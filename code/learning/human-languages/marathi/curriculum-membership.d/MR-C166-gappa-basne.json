@@ -1,0 +1,11 @@
+{
+  "id": "MR-C166-gappa-basne",
+  "pathSegment": "MR-PATH-166-ACT166",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-166-ACT166",
+      "order": 1
+    }
+  ]
+}

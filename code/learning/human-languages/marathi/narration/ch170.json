@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 170,
+  "title": "Shame, Jealousy, Boredom, Patience, Luck",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:006a8ca142ea04b7",
+  "lessons": [
+    {
+      "id": "MR-C170-laj",
+      "sequence": 8140,
+      "title": "लाज (lāj) — shame",
+      "headword": "लाज",
+      "romanization": "lāj",
+      "gloss": "shame",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ddc961b814b35546",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for the liver, then the Marathi for a kidney."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लाज",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लाज — lāj — \"shame\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say lāj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *lāj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for the liver, then the Marathi for a kidney, then say lāj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for the liver, then the Marathi for a kidney, then say *lāj* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लाज (lāj) mean? (\"Shame\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C170-matsar",
+      "sequence": 8150,
+      "title": "मत्सर (matsar) — jealousy",
+      "headword": "मत्सर",
+      "romanization": "matsar",
+      "gloss": "jealousy",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51d2aaed3341ab65",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a kidney, then the Marathi for shame."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मत्सर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मत्सर — matsar — \"jealousy\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "matsar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *matsar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "matsar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *matsar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say matsar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *matsar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a kidney, then the Marathi for shame, then say matsar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a kidney, then the Marathi for shame, then say *matsar* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मत्सर (matsar) mean? (\"Jealousy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C170-kantala",
+      "sequence": 8160,
+      "title": "कंटाळा (kaṇṭāḷā) — boredom",
+      "headword": "कंटाळा",
+      "romanization": "kaṇṭāḷā",
+      "gloss": "boredom",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9cd03b17710b7ef4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for shame, then the Marathi for jealousy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कंटाळा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कंटाळा — kaṇṭāḷā — \"boredom\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇṭāḷā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇṭāḷā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇṭāḷā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇṭāḷā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kaṇṭāḷā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kaṇṭāḷā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for shame, then the Marathi for jealousy, then say kaṇṭāḷā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for shame, then the Marathi for jealousy, then say *kaṇṭāḷā* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कंटाळा (kaṇṭāḷā) mean? (\"Boredom\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C170-samyam",
+      "sequence": 8170,
+      "title": "संयम (saṁyam) — patience, restraint",
+      "headword": "संयम",
+      "romanization": "saṁyam",
+      "gloss": "patience, restraint",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:978201a31c888217",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for jealousy, then the Marathi for boredom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: संयम",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संयम — saṁyam — \"patience, restraint\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁyam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁyam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say saṁyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *saṁyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for jealousy, then the Marathi for boredom, then say saṁyam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for jealousy, then the Marathi for boredom, then say *saṁyam* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does संयम (saṁyam) mean? (\"Patience, restraint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C170-nasib",
+      "sequence": 8180,
+      "title": "नशीब (naśīb) — luck, fate",
+      "headword": "नशीब",
+      "romanization": "naśīb",
+      "gloss": "luck, fate",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f11fba1b8ae9bcc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for boredom, then the Marathi for patience."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नशीब",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नशीब — naśīb — \"luck, fate\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naśīb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naśīb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naśīb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naśīb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say naśīb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *naśīb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for boredom, then the Marathi for patience, then say naśīb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for boredom, then the Marathi for patience, then say *naśīb* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नशीब (naśīb) mean? (\"Luck, fate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R170-first-pass-words-from-chapters-162-165",
+      "sequence": 8190,
+      "title": "Words from chapters 162-165 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 162-165",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f5d825f5b6915550",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for patience and luck."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to light, to put out, to jump, to call over, to thank",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to light, to put out, to jump, to call over, to thank]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to cool, to empty, to weigh, to check, to sign",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to cool, to empty, to weigh, to check, to sign]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to announce, to clap, to cross, to increase, to reduce",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to announce, to clap, to cross, to increase, to reduce]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to miss; to go wrong, to improve, to get worse, to observe, to take part",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to miss; to go wrong, to improve, to get worse, to observe, to take part]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To light? (पेटवणे, petavṇe.) To put out? (विझवणे, vijhavṇe.) To jump? (उडी मारणे, uḍī mārṇe.) To call over? (बोलावणे, bolāvṇe.) To thank? (आभार मानणे, ābhār mānṇe.) To cool? (थंड करणे, thaṇḍ karṇe.) To empty? (रिकामे करणे, rikāme karṇe.) To weigh? (वजन करणे, vajan karṇe.) To check? (तपासणे, tapāsṇe.) To sign? (सही करणे, sahī karṇe.) To announce? (जाहीर करणे, jāhīr karṇe.) To clap? (टाळ्या वाजवणे, ṭāḷyā vājavṇe.) To cross? (ओलांडणे, olāṇḍṇe.) To increase? (वाढवणे, vāḍhavṇe.) To reduce? (कमी करणे, kamī karṇe.) To miss; to go wrong? (चुकणे, cukṇe.) To improve? (सुधारणे, sudhārṇe.) To get worse? (बिघडणे, bighaḍṇe.) To observe? (निरीक्षण करणे, nirīkṣaṇ karṇe.) To take part? (भाग घेणे, bhāg gheṇe.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R170-second-pass-words-from-chapters-166-170",
+      "sequence": 8200,
+      "title": "Words from chapters 166-170 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 166-170",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5abef006a818e6c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to waste and to keep quiet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to waste, to keep quiet, to be afraid, to carry, to hit; to kill",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to waste, to keep quiet, to be afraid, to carry, to hit; to kill]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to breathe, to give up, to exchange, to slip, to suspect",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to breathe, to give up, to exchange, to slip, to suspect]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to tidy up, to notice, to be shy, to be defeated, to take cover",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to tidy up, to notice, to be shy, to be defeated, to take cover]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "health, the brain, a lung, the liver, a kidney",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: health, the brain, a lung, the liver, a kidney]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shame, jealousy, boredom, patience, luck",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: shame, jealousy, boredom, patience, luck]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To waste? (वाया घालवणे, vāyā ghālavṇe.) To keep quiet? (गप्प बसणे, gappa basṇe.) To be afraid? (घाबरणे, ghābarṇe.) To carry? (वाहून नेणे, vāhūn neṇe.) To hit; to kill? (मारणे, mārṇe.) To breathe? (श्वास घेणे, śvās gheṇe.) To give up? (सोडून देणे, soḍūn deṇe.) To exchange? (अदलाबदल करणे, adlābadal karṇe.) To slip? (घसरणे, ghasarṇe.) To suspect? (संशय घेणे, saṁśay gheṇe.) To tidy up? (आवरणे, āvarṇe.) To notice? (लक्षात येणे, lakṣāt yeṇe.) To be shy? (लाजणे, lājṇe.) To be defeated? (हरणे, harṇe.) To take cover? (लपणे, lapṇe.) Health? (आरोग्य, ārogya.) The brain? (मेंदू, mendū.) A lung? (फुफ्फुस, phuphphus.) The liver? (यकृत, yakṛt.) A kidney? (मूत्रपिंड, mūtrapiṇḍ.) Shame? (लाज, lāj.) Jealousy? (मत्सर, matsar.) Boredom? (कंटाळा, kaṇṭāḷā.) Patience? (संयम, saṁyam.) Luck? (नशीब, naśīb.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

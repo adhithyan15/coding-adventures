@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:62665802c8ff215b",
+  "lessonIds": [
+    "MR-C173-tarihi",
+    "MR-C173-jari",
+    "MR-C173-asunhi",
+    "MR-C173-durdaivane",
+    "MR-C173-sudaivane"
+  ],
+  "tex": "marathi/book/chapters/ch173-even-so-although-despite-unfortunately-luckily.tex"
+}

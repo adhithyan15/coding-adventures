@@ -1,0 +1,19 @@
+{
+  "chapter": 168,
+  "title": "To tidy up, To notice, To be shy, To be defeated, To take cover",
+  "label": "ch:mr-to-tidy-up-to-notice-to-be-shy-to-be-defeated-to-take-cover",
+  "canDo": "I can say to tidy up, to notice, to be shy, to be defeated and to take cover.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C168-lapne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 168: I can say to tidy up, to notice, to be shy, to be defeated and to take cover.",
+    "assesses": [
+      "MR-LEX-C168-ACT168-03",
+      "MR-LEX-C168-ACT168-04",
+      "MR-LEX-C168-ACT168-05"
+    ]
+  }
+}

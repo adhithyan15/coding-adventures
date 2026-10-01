@@ -1,0 +1,19 @@
+{
+  "chapter": 173,
+  "title": "Even so, Although, Despite, Unfortunately, Luckily",
+  "label": "ch:mr-even-so-although-despite-unfortunately-luckily",
+  "canDo": "I can say even so, although, despite, unfortunately and luckily.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "MR-C173-sudaivane",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 173: I can say even so, although, despite, unfortunately and luckily.",
+    "assesses": [
+      "MR-LEX-C173-KARAN173-03",
+      "MR-LEX-C173-KARAN173-04",
+      "MR-LEX-C173-KARAN173-05"
+    ]
+  }
+}

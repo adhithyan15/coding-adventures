@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C191-vyavasthapak",
+    "language": "marathi",
+    "chapter": 191,
+    "sequence": 9760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e324cc2a79fbbe8"
+  },
+  "findings": []
+}

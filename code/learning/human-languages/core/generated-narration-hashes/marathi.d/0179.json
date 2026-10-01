@@ -1,0 +1,21 @@
+{
+  "language": "marathi",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:9b21cb0058aa224b",
+  "lessonIds": [
+    "MR-C179-nyayalay",
+    "MR-C179-nyayadhis",
+    "MR-C179-mahapaur",
+    "MR-C179-nivadnuk",
+    "MR-C179-rajkaran",
+    "MR-R179-first-pass-words-from-chapters-171-174",
+    "MR-R179-second-pass-words-from-chapters-175-179"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marathi/narration/ch179.txt",
+  "json": "marathi/narration/ch179.json",
+  "textHash": "fnv1a64:ab5066f1a70002ab",
+  "jsonHash": "fnv1a64:5594a4695cc96045",
+  "findings": []
+}

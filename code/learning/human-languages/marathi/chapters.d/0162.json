@@ -1,0 +1,19 @@
+{
+  "chapter": 162,
+  "title": "To light, To put out, To jump, To call over, To thank",
+  "label": "ch:mr-to-light-to-put-out-to-jump-to-call-over-to-thank",
+  "canDo": "I can say to light, to put out, to jump, to call over and to thank.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C162-abhar-manne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 162: I can say to light, to put out, to jump, to call over and to thank.",
+    "assesses": [
+      "MR-LEX-C162-ACT162-03",
+      "MR-LEX-C162-ACT162-04",
+      "MR-LEX-C162-ACT162-05"
+    ]
+  }
+}

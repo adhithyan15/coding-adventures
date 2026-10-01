@@ -1,0 +1,19 @@
+{
+  "chapter": 174,
+  "title": "Comfortable, Polite, Rude, Unpleasant, Enthusiastic",
+  "label": "ch:mr-comfortable-polite-rude-unpleasant-enthusiastic",
+  "canDo": "I can say comfortable, polite, rude, unpleasant and enthusiastic.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MR-C174-utsahi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 174: I can say comfortable, polite, rude, unpleasant and enthusiastic.",
+    "assesses": [
+      "MR-LEX-C174-GUN174-03",
+      "MR-LEX-C174-GUN174-04",
+      "MR-LEX-C174-GUN174-05"
+    ]
+  }
+}

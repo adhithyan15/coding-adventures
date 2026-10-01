@@ -1,0 +1,19 @@
+{
+  "chapter": 169,
+  "title": "Health, Brain, Lung, Liver, Kidney",
+  "label": "ch:mr-health-brain-lung-liver-kidney",
+  "canDo": "I can say health, the brain, a lung, the liver and a kidney.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MR-C169-mutrapind",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 169: I can say health, the brain, a lung, the liver and a kidney.",
+    "assesses": [
+      "MR-LEX-C169-AAROGYA169-03",
+      "MR-LEX-C169-AAROGYA169-04",
+      "MR-LEX-C169-AAROGYA169-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C164-vadhavne",
+    "language": "marathi",
+    "chapter": 164,
+    "sequence": 7870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca087c19f42eef3d"
+  },
+  "findings": []
+}
