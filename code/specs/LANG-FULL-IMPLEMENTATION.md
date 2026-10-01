@@ -1084,7 +1084,8 @@ backend immediately) come before the enabler-dependent items.
   operands, finite binary64 literal predicates, and literal string predicates
   may also supply boolean identity operands. Variable-free literal string
   predicates may select statement or expression branches in bounded recurrence
-  bodies, including the preserving leaf of a conditional selector assignment.
+  bodies, including preserving leaves of conditional dependency or selector
+  assignments.
   The recurrence assignment may instead occur in one or both branches of a
   conditional statement selected by those exact snapshots. A branch without
   the assignment preserves the dependency for that pass; unknown selectors
