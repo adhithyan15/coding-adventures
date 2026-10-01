@@ -1,0 +1,19 @@
+{
+  "chapter": 235,
+  "title": "To shout, To whisper, To be silent, To smile, To be angry",
+  "label": "ch:ru-to-shout-to-whisper-to-be-silent-to-smile-to-be-angry",
+  "canDo": "I can say to shout, to whisper, to be silent, to smile and to be angry.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C235-serditsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 235: I can say to shout, to whisper, to be silent, to smile and to be angry.",
+    "assesses": [
+      "RU-LEX-C235-ACT235-03",
+      "RU-LEX-C235-ACT235-04",
+      "RU-LEX-C235-ACT235-05"
+    ]
+  }
+}

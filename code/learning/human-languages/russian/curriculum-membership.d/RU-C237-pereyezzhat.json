@@ -1,0 +1,11 @@
+{
+  "id": "RU-C237-pereyezzhat",
+  "pathSegment": "RU-PATH-237-ACT237",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-237-ACT237",
+      "order": 3
+    }
+  ]
+}

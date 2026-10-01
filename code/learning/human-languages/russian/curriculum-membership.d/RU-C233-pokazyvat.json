@@ -1,0 +1,11 @@
+{
+  "id": "RU-C233-pokazyvat",
+  "pathSegment": "RU-PATH-233-ACT233",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-233-ACT233",
+      "order": 3
+    }
+  ]
+}

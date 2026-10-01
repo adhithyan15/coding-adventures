@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-241-MESTO241",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a basement, a balcony, a yard, opposite and between.",
+  "prerequisites": []
+}

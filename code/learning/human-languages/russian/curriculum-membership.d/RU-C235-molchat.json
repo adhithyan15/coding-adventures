@@ -1,0 +1,11 @@
+{
+  "id": "RU-C235-molchat",
+  "pathSegment": "RU-PATH-235-ACT235",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-235-ACT235",
+      "order": 2
+    }
+  ]
+}

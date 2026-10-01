@@ -1,0 +1,19 @@
+{
+  "chapter": 250,
+  "title": "Watermelon, Plum, Pasta, Cake, Sweet",
+  "label": "ch:ru-watermelon-plum-pasta-cake-sweet",
+  "canDo": "I can say a watermelon, a plum, pasta, a cake and a sweet.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C250-konfeta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 250: I can say a watermelon, a plum, pasta, a cake and a sweet.",
+    "assesses": [
+      "RU-LEX-C250-VESHCH250-03",
+      "RU-LEX-C250-VESHCH250-04",
+      "RU-LEX-C250-VESHCH250-05"
+    ]
+  }
+}

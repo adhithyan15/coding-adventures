@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:90cbd5fdcef73f48",
+  "lessonIds": [
+    "RU-C241-podval",
+    "RU-C241-balkon",
+    "RU-C241-dvor",
+    "RU-C241-naprotiv",
+    "RU-C241-mezhdu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch241.txt",
+  "json": "russian/narration/ch241.json",
+  "textHash": "fnv1a64:51992b2686285f95",
+  "jsonHash": "fnv1a64:501ccc654cd1f247",
+  "findings": []
+}

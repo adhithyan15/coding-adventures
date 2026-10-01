@@ -1,0 +1,11 @@
+{
+  "id": "RU-C236-izmeryat",
+  "pathSegment": "RU-PATH-236-ACT236",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-236-ACT236",
+      "order": 1
+    }
+  ]
+}

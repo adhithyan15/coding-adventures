@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C240-obychno",
+    "language": "russian",
+    "chapter": 240,
+    "sequence": 14620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1ba346f87f6cf47"
+  },
+  "findings": []
+}

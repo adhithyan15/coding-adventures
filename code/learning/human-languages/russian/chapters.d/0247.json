@@ -1,0 +1,19 @@
+{
+  "chapter": 247,
+  "title": "Radio, Headphones, Passport, Visa, Document",
+  "label": "ch:ru-radio-headphones-passport-visa-document",
+  "canDo": "I can say a radio, headphones, a passport, a visa and a document.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C247-dokument",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 247: I can say a radio, headphones, a passport, a visa and a document.",
+    "assesses": [
+      "RU-LEX-C247-VESHCH247-03",
+      "RU-LEX-C247-VESHCH247-04",
+      "RU-LEX-C247-VESHCH247-05"
+    ]
+  }
+}

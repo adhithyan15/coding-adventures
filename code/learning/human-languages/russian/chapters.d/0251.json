@@ -1,0 +1,19 @@
+{
+  "chapter": 251,
+  "title": "Bull, Cockerel, Goose, Pigeon, Sparrow",
+  "label": "ch:ru-bull-cockerel-goose-pigeon-sparrow",
+  "canDo": "I can say a bull, a cockerel, a goose, a pigeon and a sparrow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C251-vorobey",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 251: I can say a bull, a cockerel, a goose, a pigeon and a sparrow.",
+    "assesses": [
+      "RU-LEX-C251-VESHCH251-03",
+      "RU-LEX-C251-VESHCH251-04",
+      "RU-LEX-C251-VESHCH251-05"
+    ]
+  }
+}

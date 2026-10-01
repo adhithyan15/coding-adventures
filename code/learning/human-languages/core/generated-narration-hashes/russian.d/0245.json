@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:feb419db6b082ce6",
+  "lessonIds": [
+    "RU-C245-strannyy",
+    "RU-C245-smeshnoy",
+    "RU-C245-prekrasnyy",
+    "RU-C245-uzhasnyy",
+    "RU-C245-otlichnyy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch245.txt",
+  "json": "russian/narration/ch245.json",
+  "textHash": "fnv1a64:99f193629bab8aaf",
+  "jsonHash": "fnv1a64:acb94226afdc9b36",
+  "findings": []
+}

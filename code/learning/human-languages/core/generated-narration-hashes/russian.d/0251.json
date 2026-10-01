@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:2d9de0dcac4eafd6",
+  "lessonIds": [
+    "RU-C251-byk",
+    "RU-C251-petukh",
+    "RU-C251-gus",
+    "RU-C251-golub",
+    "RU-C251-vorobey"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch251.txt",
+  "json": "russian/narration/ch251.json",
+  "textHash": "fnv1a64:ff4635b2ba364a61",
+  "jsonHash": "fnv1a64:c78ddeb760bcbb38",
+  "findings": []
+}

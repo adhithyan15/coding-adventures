@@ -1,0 +1,11 @@
+{
+  "id": "RU-C256-muzykant",
+  "pathSegment": "RU-PATH-256-RABOTA256",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-256-RABOTA256",
+      "order": 3
+    }
+  ]
+}

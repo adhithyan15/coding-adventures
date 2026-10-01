@@ -1,0 +1,19 @@
+{
+  "chapter": 239,
+  "title": "Weight, Height, Eyebrow, Eyelash, Forehead",
+  "label": "ch:ru-weight-height-eyebrow-eyelash-forehead",
+  "canDo": "I can say weight, height, an eyebrow, an eyelash and a forehead.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "RU-C239-lob",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 239: I can say weight, height, an eyebrow, an eyelash and a forehead.",
+    "assesses": [
+      "RU-LEX-C239-ZDOROV239-03",
+      "RU-LEX-C239-ZDOROV239-04",
+      "RU-LEX-C239-ZDOROV239-05"
+    ]
+  }
+}

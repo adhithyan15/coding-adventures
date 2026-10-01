@@ -1,0 +1,19 @@
+{
+  "chapter": 241,
+  "title": "Basement, Balcony, Yard, Opposite, Between",
+  "label": "ch:ru-basement-balcony-yard-opposite-between",
+  "canDo": "I can say a basement, a balcony, a yard, opposite and between.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "RU-C241-mezhdu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 241: I can say a basement, a balcony, a yard, opposite and between.",
+    "assesses": [
+      "RU-LEX-C241-MESTO241-03",
+      "RU-LEX-C241-MESTO241-04",
+      "RU-LEX-C241-MESTO241-05"
+    ]
+  }
+}

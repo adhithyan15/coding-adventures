@@ -1,0 +1,21 @@
+{
+  "language": "russian",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:1f484a0e24d508ce",
+  "lessonIds": [
+    "RU-C240-noyabr",
+    "RU-C240-dekabr",
+    "RU-C240-sezon",
+    "RU-C240-srazu",
+    "RU-C240-obychno",
+    "RU-R240-first-pass-words-from-chapters-232-235",
+    "RU-R240-second-pass-words-from-chapters-236-240"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "russian/narration/ch240.txt",
+  "json": "russian/narration/ch240.json",
+  "textHash": "fnv1a64:1440e4f89872376b",
+  "jsonHash": "fnv1a64:798a38289c1d25ca",
+  "findings": []
+}

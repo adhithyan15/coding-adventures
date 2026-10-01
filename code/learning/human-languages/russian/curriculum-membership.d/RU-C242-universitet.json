@@ -1,0 +1,11 @@
+{
+  "id": "RU-C242-universitet",
+  "pathSegment": "RU-PATH-242-MESTO242",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-242-MESTO242",
+      "order": 1
+    }
+  ]
+}

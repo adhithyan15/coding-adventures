@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C249-vetchina",
+    "language": "russian",
+    "chapter": 249,
+    "sequence": 15260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c58e2e848b468e73"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C240-sezon",
+    "language": "russian",
+    "chapter": 240,
+    "sequence": 14600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8fd05a1399c3d1a"
+  },
+  "findings": []
+}

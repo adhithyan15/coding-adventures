@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 257,
+  "sourceHash": "fnv1a64:f26b97f3a499663f",
+  "lessonIds": [
+    "RU-C257-kompaniya",
+    "RU-C257-firma",
+    "RU-C257-proyekt",
+    "RU-C257-zadacha",
+    "RU-C257-opyt",
+    "RU-R257-first-pass-words-from-chapters-250-253",
+    "RU-R257-second-pass-words-from-chapters-254-257"
+  ],
+  "tex": "russian/book/chapters/ch257-company-firm-project-task-experience.tex"
+}

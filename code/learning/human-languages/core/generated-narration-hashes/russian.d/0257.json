@@ -1,0 +1,21 @@
+{
+  "language": "russian",
+  "chapter": 257,
+  "sourceHash": "fnv1a64:95a6279cc6b5e065",
+  "lessonIds": [
+    "RU-C257-kompaniya",
+    "RU-C257-firma",
+    "RU-C257-proyekt",
+    "RU-C257-zadacha",
+    "RU-C257-opyt",
+    "RU-R257-first-pass-words-from-chapters-250-253",
+    "RU-R257-second-pass-words-from-chapters-254-257"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "russian/narration/ch257.txt",
+  "json": "russian/narration/ch257.json",
+  "textHash": "fnv1a64:68d685dfe75fb6e1",
+  "jsonHash": "fnv1a64:4393a7e0063cc394",
+  "findings": []
+}

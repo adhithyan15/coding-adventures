@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C255-familiya",
+    "language": "russian",
+    "chapter": 255,
+    "sequence": 15710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:131f1efb4bd93ddf"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 243,
+  "title": "Young, Elderly, Tall, Low, Ugly",
+  "label": "ch:ru-young-elderly-tall-low-ugly",
+  "canDo": "I can say young, elderly, tall, low and ugly.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "RU-C243-nekrasivyy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 243: I can say young, elderly, tall, low and ugly.",
+    "assesses": [
+      "RU-LEX-C243-KACH243-03",
+      "RU-LEX-C243-KACH243-04",
+      "RU-LEX-C243-KACH243-05"
+    ]
+  }
+}

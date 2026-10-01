@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-242-MESTO242",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a library, a university, a café, a zoo and a circus.",
+  "prerequisites": []
+}

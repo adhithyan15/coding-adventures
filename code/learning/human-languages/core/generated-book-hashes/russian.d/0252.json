@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:8ad8c0b7a368f8f3",
+  "lessonIds": [
+    "RU-C252-khokkey",
+    "RU-C252-tennis",
+    "RU-C252-basketbol",
+    "RU-C252-beg",
+    "RU-C252-plavaniye"
+  ],
+  "tex": "russian/book/chapters/ch252-hockey-tennis-basketball-running-swimming.tex"
+}

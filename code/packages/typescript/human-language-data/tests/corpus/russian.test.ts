@@ -54,7 +54,9 @@ it("pins Russian lesson-content budgets", () =>
     // 1054 -> 1202: the third A2 vocabulary tranche, chapters 204-231: 140 word
     // lessons (thirty verbs) and eight reviews. No idiom, sense or culture
     // claim.
-    lessons: 1202,
+    // 1202 -> 1338: the fourth A2 vocabulary tranche, chapters 232-257: 130 word
+    // lessons (thirty verbs) and six reviews. No idiom, sense or culture claim.
+    lessons: 1338,
     idioms: 0,
     senses: 4,
     cultureClaims: 10,

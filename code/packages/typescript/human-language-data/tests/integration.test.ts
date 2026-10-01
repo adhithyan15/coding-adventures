@@ -362,7 +362,9 @@ describe("real curriculum", () => {
       // of them verbs.
       // 172 -> 203: the second A2 vocabulary tranche, 155 headwords.
       // 203 -> 231: the third A2 vocabulary tranche, 140 headwords.
-    ).toEqual(Array.from({ length: 231 }, (_, index) => index + 1));
+      // 231 -> 257: the last A2 vocabulary tranche, 130 headwords; Russian
+      // attains A2.
+    ).toEqual(Array.from({ length: 257 }, (_, index) => index + 1));
     expect(
       books.books.every((book) =>
         book.chapters.every((chapter) => chapter.tex.length > 100),

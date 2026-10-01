@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:00f7b55d066fd358",
+  "lessonIds": [
+    "RU-C253-skazka",
+    "RU-C253-istoriya",
+    "RU-C253-shakhmaty",
+    "RU-C253-transport",
+    "RU-C253-trolleybus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch253.txt",
+  "json": "russian/narration/ch253.json",
+  "textHash": "fnv1a64:2db3420232f706b9",
+  "jsonHash": "fnv1a64:62fd3201c250fe82",
+  "findings": []
+}

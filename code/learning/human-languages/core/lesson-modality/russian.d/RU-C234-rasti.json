@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C234-rasti",
+    "language": "russian",
+    "chapter": 234,
+    "sequence": 14310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:940b5be03285783c"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C247-viza",
+    "language": "russian",
+    "chapter": 247,
+    "sequence": 15150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b66138d96e71e46b"
+  },
+  "findings": []
+}

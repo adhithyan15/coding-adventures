@@ -1,0 +1,11 @@
+{
+  "id": "RU-C252-basketbol",
+  "pathSegment": "RU-PATH-252-VESHCH252",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-252-VESHCH252",
+      "order": 2
+    }
+  ]
+}

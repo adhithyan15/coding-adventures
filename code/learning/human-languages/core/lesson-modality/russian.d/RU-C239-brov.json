@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C239-brov",
+    "language": "russian",
+    "chapter": 239,
+    "sequence": 14550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d08b6de5ebcd9a34"
+  },
+  "findings": []
+}

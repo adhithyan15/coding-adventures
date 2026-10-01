@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C243-molodoy",
+    "language": "russian",
+    "chapter": 243,
+    "sequence": 14920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f1cce869ee88b21c"
+  },
+  "findings": []
+}

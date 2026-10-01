@@ -1,0 +1,11 @@
+{
+  "id": "RU-C238-skoraya-pomoshch",
+  "pathSegment": "RU-PATH-238-ZDOROV238",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-238-ZDOROV238",
+      "order": 4
+    }
+  ]
+}

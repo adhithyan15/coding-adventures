@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:adcc3b17457dad4d",
+  "lessonIds": [
+    "RU-C243-molodoy",
+    "RU-C243-pozhiloy",
+    "RU-C243-vysokiy",
+    "RU-C243-nizkiy",
+    "RU-C243-nekrasivyy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch243.txt",
+  "json": "russian/narration/ch243.json",
+  "textHash": "fnv1a64:67fea4d3b8640b97",
+  "jsonHash": "fnv1a64:ed6e17b312388589",
+  "findings": []
+}

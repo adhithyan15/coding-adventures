@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C233-pokazyvat",
+    "language": "russian",
+    "chapter": 233,
+    "sequence": 14260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a172257e85526943"
+  },
+  "findings": []
+}

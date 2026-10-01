@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C252-basketbol",
+    "language": "russian",
+    "chapter": 252,
+    "sequence": 15580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c497fa45d1333ae"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 233,
+  "title": "To decide, To choose, To change, To show, To bring",
+  "label": "ch:ru-to-decide-to-choose-to-change-to-show-to-bring",
+  "canDo": "I can say to decide, to choose, to change, to show and to bring.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C233-prinosit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 233: I can say to decide, to choose, to change, to show and to bring.",
+    "assesses": [
+      "RU-LEX-C233-ACT233-03",
+      "RU-LEX-C233-ACT233-04",
+      "RU-LEX-C233-ACT233-05"
+    ]
+  }
+}

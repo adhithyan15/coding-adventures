@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C256-professor",
+    "language": "russian",
+    "chapter": 256,
+    "sequence": 15760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01464d3e6f704311"
+  },
+  "findings": []
+}

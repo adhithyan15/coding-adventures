@@ -1,0 +1,11 @@
+{
+  "id": "RU-C255-razgovor",
+  "pathSegment": "RU-PATH-255-VESHCH255",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-255-VESHCH255",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:33a91364c507c486",
+  "lessonIds": [
+    "RU-C251-byk",
+    "RU-C251-petukh",
+    "RU-C251-gus",
+    "RU-C251-golub",
+    "RU-C251-vorobey"
+  ],
+  "tex": "russian/book/chapters/ch251-bull-cockerel-goose-pigeon-sparrow.tex"
+}

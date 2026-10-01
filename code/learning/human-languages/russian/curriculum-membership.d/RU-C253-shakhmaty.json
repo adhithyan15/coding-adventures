@@ -1,0 +1,11 @@
+{
+  "id": "RU-C253-shakhmaty",
+  "pathSegment": "RU-PATH-253-VESHCH253",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-253-VESHCH253",
+      "order": 2
+    }
+  ]
+}

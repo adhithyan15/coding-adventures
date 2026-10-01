@@ -1,0 +1,11 @@
+{
+  "id": "RU-C257-zadacha",
+  "pathSegment": "RU-PATH-257-RABOTA257",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-257-RABOTA257",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:4149974d37996e95",
+  "lessonIds": [
+    "RU-C250-arbuz",
+    "RU-C250-sliva",
+    "RU-C250-makarony",
+    "RU-C250-tort",
+    "RU-C250-konfeta"
+  ],
+  "tex": "russian/book/chapters/ch250-watermelon-plum-pasta-cake-sweet.tex"
+}

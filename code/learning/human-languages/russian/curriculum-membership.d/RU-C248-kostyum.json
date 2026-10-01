@@ -1,0 +1,11 @@
+{
+  "id": "RU-C248-kostyum",
+  "pathSegment": "RU-PATH-248-VESHCH248",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-248-VESHCH248",
+      "order": 2
+    }
+  ]
+}

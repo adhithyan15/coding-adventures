@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C232-zvonit",
+    "language": "russian",
+    "chapter": 232,
+    "sequence": 14200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3bb6a7fa1ec216db"
+  },
+  "findings": []
+}

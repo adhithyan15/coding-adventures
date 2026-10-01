@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:969779cb37e8c644",
+  "lessonIds": [
+    "RU-C242-biblioteka",
+    "RU-C242-universitet",
+    "RU-C242-kafe",
+    "RU-C242-zoopark",
+    "RU-C242-tsirk"
+  ],
+  "tex": "russian/book/chapters/ch242-library-university-cafe-zoo-circus.tex"
+}

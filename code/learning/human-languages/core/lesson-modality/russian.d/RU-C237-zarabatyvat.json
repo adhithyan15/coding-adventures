@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C237-zarabatyvat",
+    "language": "russian",
+    "chapter": 237,
+    "sequence": 14470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8dd02c460b98acea"
+  },
+  "findings": []
+}

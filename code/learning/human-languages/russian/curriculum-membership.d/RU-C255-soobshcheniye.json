@@ -1,0 +1,11 @@
+{
+  "id": "RU-C255-soobshcheniye",
+  "pathSegment": "RU-PATH-255-VESHCH255",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-255-VESHCH255",
+      "order": 3
+    }
+  ]
+}

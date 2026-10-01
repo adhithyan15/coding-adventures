@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 255,
+  "output": "russian/book/chapters/ch255-surname-age-number-message-conversation.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

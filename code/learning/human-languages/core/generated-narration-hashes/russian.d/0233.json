@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:0d3973970637de86",
+  "lessonIds": [
+    "RU-C233-reshat",
+    "RU-C233-vybirat",
+    "RU-C233-menyat",
+    "RU-C233-pokazyvat",
+    "RU-C233-prinosit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch233.txt",
+  "json": "russian/narration/ch233.json",
+  "textHash": "fnv1a64:9f625861e19bced6",
+  "jsonHash": "fnv1a64:e9005f0f1064f08c",
+  "findings": []
+}

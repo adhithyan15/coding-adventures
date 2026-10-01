@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C246-blyudtse",
+    "language": "russian",
+    "chapter": 246,
+    "sequence": 15100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0302c3187408fcd0"
+  },
+  "findings": []
+}

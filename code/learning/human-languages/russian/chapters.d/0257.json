@@ -1,0 +1,19 @@
+{
+  "chapter": 257,
+  "title": "Company, Firm, Project, Task, Experience",
+  "label": "ch:ru-company-firm-project-task-experience",
+  "canDo": "I can say a company, a firm, a project, a task and experience.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-R257-second-pass-words-from-chapters-254-257",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 257: I can say a company, a firm, a project, a task and experience.",
+    "assesses": [
+      "RU-LEX-C257-RABOTA257-03",
+      "RU-LEX-C257-RABOTA257-04",
+      "RU-LEX-C257-RABOTA257-05"
+    ]
+  }
+}

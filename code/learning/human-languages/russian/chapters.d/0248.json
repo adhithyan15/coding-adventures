@@ -1,0 +1,19 @@
+{
+  "chapter": 248,
+  "title": "Clothes, Raincoat, Suit, Jeans, Shorts",
+  "label": "ch:ru-clothes-raincoat-suit-jeans-shorts",
+  "canDo": "I can say clothes, a raincoat, a suit, jeans and shorts.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C248-shorty",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 248: I can say clothes, a raincoat, a suit, jeans and shorts.",
+    "assesses": [
+      "RU-LEX-C248-VESHCH248-03",
+      "RU-LEX-C248-VESHCH248-04",
+      "RU-LEX-C248-VESHCH248-05"
+    ]
+  }
+}

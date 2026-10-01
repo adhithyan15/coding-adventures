@@ -1,0 +1,21 @@
+{
+  "language": "russian",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:351359dcc5bfc0fb",
+  "lessonIds": [
+    "RU-C249-smetana",
+    "RU-C249-tvorog",
+    "RU-C249-svinina",
+    "RU-C249-baranina",
+    "RU-C249-vetchina",
+    "RU-R249-first-pass-words-from-chapters-241-244",
+    "RU-R249-second-pass-words-from-chapters-245-249"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "russian/narration/ch249.txt",
+  "json": "russian/narration/ch249.json",
+  "textHash": "fnv1a64:1ac6d7594edaf65b",
+  "jsonHash": "fnv1a64:3f42885c0ad81fbd",
+  "findings": []
+}

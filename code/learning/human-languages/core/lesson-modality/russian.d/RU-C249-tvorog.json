@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C249-tvorog",
+    "language": "russian",
+    "chapter": 249,
+    "sequence": 15230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5cc62dc8ff8349d9"
+  },
+  "findings": []
+}

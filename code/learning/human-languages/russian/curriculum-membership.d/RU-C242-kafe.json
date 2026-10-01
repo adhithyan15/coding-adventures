@@ -1,0 +1,11 @@
+{
+  "id": "RU-C242-kafe",
+  "pathSegment": "RU-PATH-242-MESTO242",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-242-MESTO242",
+      "order": 2
+    }
+  ]
+}

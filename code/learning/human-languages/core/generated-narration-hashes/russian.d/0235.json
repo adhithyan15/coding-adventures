@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:44f940fb61038b50",
+  "lessonIds": [
+    "RU-C235-krichat",
+    "RU-C235-sheptat",
+    "RU-C235-molchat",
+    "RU-C235-ulybatsya",
+    "RU-C235-serditsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch235.txt",
+  "json": "russian/narration/ch235.json",
+  "textHash": "fnv1a64:a35d6c38401a842d",
+  "jsonHash": "fnv1a64:7ade3eb712551674",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:0c0811c6a55a0749",
+  "lessonIds": [
+    "RU-C244-drevniy",
+    "RU-C244-gromkiy",
+    "RU-C244-yarkiy",
+    "RU-C244-tyomnyy",
+    "RU-C244-svetlyy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch244.txt",
+  "json": "russian/narration/ch244.json",
+  "textHash": "fnv1a64:1ac312283a4e6b66",
+  "jsonHash": "fnv1a64:506ced58b91a6dc4",
+  "findings": []
+}

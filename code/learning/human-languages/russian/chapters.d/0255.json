@@ -1,0 +1,19 @@
+{
+  "chapter": 255,
+  "title": "Surname, Age, Number, Message, Conversation",
+  "label": "ch:ru-surname-age-number-message-conversation",
+  "canDo": "I can say a surname, an age, a number, a message and a conversation.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C255-razgovor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 255: I can say a surname, an age, a number, a message and a conversation.",
+    "assesses": [
+      "RU-LEX-C255-VESHCH255-03",
+      "RU-LEX-C255-VESHCH255-04",
+      "RU-LEX-C255-VESHCH255-05"
+    ]
+  }
+}

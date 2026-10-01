@@ -1,0 +1,11 @@
+{
+  "id": "RU-C236-zapolnyat",
+  "pathSegment": "RU-PATH-236-ACT236",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-236-ACT236",
+      "order": 4
+    }
+  ]
+}

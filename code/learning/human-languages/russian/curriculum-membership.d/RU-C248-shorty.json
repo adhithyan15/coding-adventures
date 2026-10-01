@@ -1,0 +1,11 @@
+{
+  "id": "RU-C248-shorty",
+  "pathSegment": "RU-PATH-248-VESHCH248",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-248-VESHCH248",
+      "order": 4
+    }
+  ]
+}

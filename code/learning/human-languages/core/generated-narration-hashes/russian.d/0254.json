@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:47b4b935d514cc36",
+  "lessonIds": [
+    "RU-C254-devochka",
+    "RU-C254-paren",
+    "RU-C254-devushka",
+    "RU-C254-roditeli",
+    "RU-C254-plemyannik"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch254.txt",
+  "json": "russian/narration/ch254.json",
+  "textHash": "fnv1a64:761f74fc2b5c2c29",
+  "jsonHash": "fnv1a64:3bef9c57dfb54c1b",
+  "findings": []
+}

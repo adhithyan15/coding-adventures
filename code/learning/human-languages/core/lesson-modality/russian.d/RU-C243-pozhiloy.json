@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C243-pozhiloy",
+    "language": "russian",
+    "chapter": 243,
+    "sequence": 14930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e64c857e69edef71"
+  },
+  "findings": []
+}
