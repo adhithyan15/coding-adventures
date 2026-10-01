@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 19675,
+    "totalLessons": 19986,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -40,7 +40,7 @@
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 231,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 17894,
+    "drivableLessons": 18205,
     "drivablePercent": 91,
     "chaptersWithoutDrivablePrefix": 275,
     "unexplainedModalityOverrides": 0
@@ -5160,7 +5160,66 @@
           170,
           171,
           172,
-          173
+          173,
+          174,
+          175,
+          176,
+          177,
+          178,
+          179,
+          180,
+          181,
+          182,
+          183,
+          184,
+          185,
+          186,
+          187,
+          188,
+          189,
+          190,
+          191,
+          192,
+          193,
+          194,
+          195,
+          196,
+          197,
+          198,
+          199,
+          200,
+          201,
+          202,
+          203,
+          204,
+          205,
+          206,
+          207,
+          208,
+          209,
+          210,
+          211,
+          212,
+          213,
+          214,
+          215,
+          216,
+          217,
+          218,
+          219,
+          220,
+          221,
+          222,
+          223,
+          224,
+          225,
+          226,
+          227,
+          228,
+          229,
+          230,
+          231,
+          232
         ],
         "bookChapters": [
           1,
@@ -5335,7 +5394,66 @@
           170,
           171,
           172,
-          173
+          173,
+          174,
+          175,
+          176,
+          177,
+          178,
+          179,
+          180,
+          181,
+          182,
+          183,
+          184,
+          185,
+          186,
+          187,
+          188,
+          189,
+          190,
+          191,
+          192,
+          193,
+          194,
+          195,
+          196,
+          197,
+          198,
+          199,
+          200,
+          201,
+          202,
+          203,
+          204,
+          205,
+          206,
+          207,
+          208,
+          209,
+          210,
+          211,
+          212,
+          213,
+          214,
+          215,
+          216,
+          217,
+          218,
+          219,
+          220,
+          221,
+          222,
+          223,
+          224,
+          225,
+          226,
+          227,
+          228,
+          229,
+          230,
+          231,
+          232
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -8974,9 +9092,9 @@
       {
         "language": "italian",
         "status": "version-2",
-        "lessonCount": 860,
+        "lessonCount": 1171,
         "versions": {
-          "2": 860
+          "2": 1171
         }
       },
       {
@@ -9797,8 +9915,8 @@
       },
       {
         "language": "italian",
-        "bookChapters": 173,
-        "declaredChapters": 173,
+        "bookChapters": 232,
+        "declaredChapters": 232,
         "missingCapability": 0,
         "findings": 1,
         "clean": false
@@ -9925,8 +10043,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 3971,
-      "declaredChapters": 3971,
+      "bookChapters": 4030,
+      "declaredChapters": 4030,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 94,
@@ -9938,10 +10056,10 @@
     }
   },
   "levels": {
-    "totalLessons": 19675,
+    "totalLessons": 19986,
     "byLevel": {
-      "pre-A1": 8875,
-      "A1": 9704,
+      "pre-A1": 8895,
+      "A1": 9995,
       "A2": 1012,
       "B1": 39,
       "B2": 17,
@@ -10058,10 +10176,10 @@
       },
       {
         "language": "italian",
-        "lessonCount": 860,
+        "lessonCount": 1171,
         "byLevel": {
-          "pre-A1": 329,
-          "A1": 493,
+          "pre-A1": 349,
+          "A1": 784,
           "A2": 38,
           "B1": 0,
           "B2": 0,
@@ -10799,8 +10917,8 @@
       },
       {
         "language": "italian",
-        "lessonCount": 860,
-        "measurable": 860,
+        "lessonCount": 1171,
+        "measurable": 1171,
         "unmeasurable": 0,
         "lessonViolations": 0,
         "chapterViolations": 3
@@ -11339,7 +11457,7 @@
           "language": "italian",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 860,
+          "lessonCount": 1171,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -47616,6 +47734,618 @@
         "language": "italian",
         "introducedBy": "IT-C157-necessario",
         "introducedAt": 773,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "IT-LEX-C163-COSE163-03",
+        "language": "italian",
+        "introducedBy": "IT-C163-idraulico",
+        "introducedAt": 803,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C163-COSE163-04",
+        "language": "italian",
+        "introducedBy": "IT-C163-operaio",
+        "introducedAt": 804,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C163-COSE163-05",
+        "language": "italian",
+        "introducedBy": "IT-C163-impiegato",
+        "introducedAt": 805,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C164-COSE164-01",
+        "language": "italian",
+        "introducedBy": "IT-C164-fidanzata",
+        "introducedAt": 806,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C166-COSE166-03",
+        "language": "italian",
+        "introducedBy": "IT-C166-francobollo",
+        "introducedAt": 818,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C166-COSE166-04",
+        "language": "italian",
+        "introducedBy": "IT-C166-pacco",
+        "introducedAt": 819,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "IT-LEX-C166-COSE166-05",
+        "language": "italian",
+        "introducedBy": "IT-C166-cartolina",
+        "introducedAt": 820,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "IT-LEX-C170-COSE170-03",
+        "language": "italian",
+        "introducedBy": "IT-C170-violino",
+        "introducedAt": 840,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C170-COSE170-04",
+        "language": "italian",
+        "introducedBy": "IT-C170-tamburo",
+        "introducedAt": 841,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C170-COSE170-05",
+        "language": "italian",
+        "introducedBy": "IT-C170-pallone",
+        "introducedAt": 842,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C171-COSE171-01",
+        "language": "italian",
+        "introducedBy": "IT-C171-arrivo",
+        "introducedAt": 843,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C173-LAV173-03",
+        "language": "italian",
+        "introducedBy": "IT-C173-scienza",
+        "introducedAt": 855,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C173-LAV173-04",
+        "language": "italian",
+        "introducedBy": "IT-C173-arte",
+        "introducedAt": 856,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "IT-LEX-C173-LAV173-05",
+        "language": "italian",
+        "introducedBy": "IT-C173-partita",
+        "introducedAt": 857,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "IT-LEX-C179-VERBI179-03",
+        "language": "italian",
+        "introducedBy": "IT-C179-dividere",
+        "introducedAt": 887,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C179-VERBI179-04",
+        "language": "italian",
+        "introducedBy": "IT-C179-evitare",
+        "introducedAt": 888,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C179-VERBI179-05",
+        "language": "italian",
+        "introducedBy": "IT-C179-fidarsi",
+        "introducedAt": 889,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C180-VERBI180-01",
+        "language": "italian",
+        "introducedBy": "IT-C180-osservare",
+        "introducedAt": 890,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C182-VERBI182-03",
+        "language": "italian",
+        "introducedBy": "IT-C182-volare",
+        "introducedAt": 902,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C182-VERBI182-04",
+        "language": "italian",
+        "introducedBy": "IT-C182-abituarsi",
+        "introducedAt": 903,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "IT-LEX-C182-VERBI182-05",
+        "language": "italian",
+        "introducedBy": "IT-C182-accorgersi",
+        "introducedAt": 904,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "IT-LEX-C188-PERCHE188-03",
+        "language": "italian",
+        "introducedBy": "IT-C188-cioe",
+        "introducedAt": 934,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C188-PERCHE188-04",
+        "language": "italian",
+        "introducedBy": "IT-C188-sebbene",
+        "introducedAt": 935,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C188-PERCHE188-05",
+        "language": "italian",
+        "introducedBy": "IT-C188-nonostante",
+        "introducedAt": 936,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C189-QUAL189-01",
+        "language": "italian",
+        "introducedBy": "IT-C189-allegro",
+        "introducedAt": 937,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C191-COSE191-03",
+        "language": "italian",
+        "introducedBy": "IT-C191-campanello",
+        "introducedAt": 949,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C191-COSE191-04",
+        "language": "italian",
+        "introducedBy": "IT-C191-lenzuolo",
+        "introducedAt": 950,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "IT-LEX-C191-COSE191-05",
+        "language": "italian",
+        "introducedBy": "IT-C191-cassetto",
+        "introducedAt": 951,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "IT-LEX-C194-COSE194-02",
+        "language": "italian",
+        "introducedBy": "IT-C194-spettacolo",
+        "introducedAt": 965,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C194-COSE194-03",
+        "language": "italian",
+        "introducedBy": "IT-C194-attore",
+        "introducedAt": 966,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C194-COSE194-04",
+        "language": "italian",
+        "introducedBy": "IT-C194-attrice",
+        "introducedAt": 967,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C194-COSE194-05",
+        "language": "italian",
+        "introducedBy": "IT-C194-romanzo",
+        "introducedAt": 968,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C195-COSE195-01",
+        "language": "italian",
+        "introducedBy": "IT-C195-pilota",
+        "introducedAt": 969,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C197-COSE197-03",
+        "language": "italian",
+        "introducedBy": "IT-C197-sconto",
+        "introducedAt": 981,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C197-COSE197-04",
+        "language": "italian",
+        "introducedBy": "IT-C197-saldi",
+        "introducedAt": 982,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "IT-LEX-C197-COSE197-05",
+        "language": "italian",
+        "introducedBy": "IT-C197-fila",
+        "introducedAt": 983,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "IT-LEX-C200-COSE200-02",
+        "language": "italian",
+        "introducedBy": "IT-C200-tronco",
+        "introducedAt": 997,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C200-COSE200-03",
+        "language": "italian",
+        "introducedBy": "IT-C200-spina",
+        "introducedAt": 998,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C200-COSE200-04",
+        "language": "italian",
+        "introducedBy": "IT-C200-prato",
+        "introducedAt": 999,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C200-COSE200-05",
+        "language": "italian",
+        "introducedBy": "IT-C200-sentiero",
+        "introducedAt": 1000,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C201-COSE201-01",
+        "language": "italian",
+        "introducedBy": "IT-C201-elettricita",
+        "introducedAt": 1001,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C203-LAV203-03",
+        "language": "italian",
+        "introducedBy": "IT-C203-carriera",
+        "introducedAt": 1013,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C203-LAV203-04",
+        "language": "italian",
+        "introducedBy": "IT-C203-stampante",
+        "introducedAt": 1014,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "IT-LEX-C203-LAV203-05",
+        "language": "italian",
+        "introducedBy": "IT-C203-indirizzo",
+        "introducedAt": 1015,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "IT-LEX-C209-VERBI209-03",
+        "language": "italian",
+        "introducedBy": "IT-C209-girare",
+        "introducedAt": 1045,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C209-VERBI209-04",
+        "language": "italian",
+        "introducedBy": "IT-C209-godere",
+        "introducedAt": 1046,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C209-VERBI209-05",
+        "language": "italian",
+        "introducedBy": "IT-C209-immaginare",
+        "introducedAt": 1047,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C210-VERBI210-01",
+        "language": "italian",
+        "introducedBy": "IT-C210-preparare",
+        "introducedAt": 1048,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C212-VERBI212-03",
+        "language": "italian",
+        "introducedBy": "IT-C212-avvicinarsi",
+        "introducedAt": 1060,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C212-VERBI212-04",
+        "language": "italian",
+        "introducedBy": "IT-C212-chiacchierare",
+        "introducedAt": 1061,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "IT-LEX-C212-VERBI212-05",
+        "language": "italian",
+        "introducedBy": "IT-C212-collegare",
+        "introducedAt": 1062,
         "missed": [
           "R2",
           "R3",
@@ -127643,10 +128373,2716 @@
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C163-COSE163-03",
+        "atom": "IT-LEX-C158-QUAL158-05",
         "language": "italian",
-        "introducedBy": "IT-C163-idraulico",
-        "introducedAt": 803,
+        "introducedBy": "IT-C158-puntuale",
+        "introducedAt": 780,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C159-COSE159-01",
+        "language": "italian",
+        "introducedBy": "IT-C159-appartamento",
+        "introducedAt": 781,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C159-COSE159-02",
+        "language": "italian",
+        "introducedBy": "IT-C159-soggiorno",
+        "introducedAt": 782,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C159-COSE159-03",
+        "language": "italian",
+        "introducedBy": "IT-C159-corridoio",
+        "introducedAt": 783,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C159-COSE159-04",
+        "language": "italian",
+        "introducedBy": "IT-C159-balcone",
+        "introducedAt": 784,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C159-COSE159-05",
+        "language": "italian",
+        "introducedBy": "IT-C159-parete",
+        "introducedAt": 785,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C160-COSE160-01",
+        "language": "italian",
+        "introducedBy": "IT-C160-conto",
+        "introducedAt": 786,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C160-COSE160-02",
+        "language": "italian",
+        "introducedBy": "IT-C160-mancia",
+        "introducedAt": 787,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C160-COSE160-03",
+        "language": "italian",
+        "introducedBy": "IT-C160-pizzeria",
+        "introducedAt": 788,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C160-COSE160-04",
+        "language": "italian",
+        "introducedBy": "IT-C160-villaggio",
+        "introducedAt": 789,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C160-COSE160-05",
+        "language": "italian",
+        "introducedBy": "IT-C160-marciapiede",
+        "introducedAt": 790,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C161-COSE161-01",
+        "language": "italian",
+        "introducedBy": "IT-C161-tribunale",
+        "introducedAt": 791,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C161-COSE161-02",
+        "language": "italian",
+        "introducedBy": "IT-C161-giudice",
+        "introducedAt": 792,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C161-COSE161-03",
+        "language": "italian",
+        "introducedBy": "IT-C161-sindaco",
+        "introducedAt": 793,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C161-COSE161-04",
+        "language": "italian",
+        "introducedBy": "IT-C161-comune",
+        "introducedAt": 794,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C161-COSE161-05",
+        "language": "italian",
+        "introducedBy": "IT-C161-elezioni",
+        "introducedAt": 795,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C162-COSE162-01",
+        "language": "italian",
+        "introducedBy": "IT-C162-sito",
+        "introducedAt": 796,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C162-COSE162-02",
+        "language": "italian",
+        "introducedBy": "IT-C162-schermo",
+        "introducedAt": 797,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C162-COSE162-03",
+        "language": "italian",
+        "introducedBy": "IT-C162-tastiera",
+        "introducedAt": 798,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C162-COSE162-04",
+        "language": "italian",
+        "introducedBy": "IT-C162-batteria",
+        "introducedAt": 799,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C162-COSE162-05",
+        "language": "italian",
+        "introducedBy": "IT-C162-caricabatterie",
+        "introducedAt": 800,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C163-COSE163-01",
+        "language": "italian",
+        "introducedBy": "IT-C163-meccanico",
+        "introducedAt": 801,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C163-COSE163-02",
+        "language": "italian",
+        "introducedBy": "IT-C163-elettricista",
+        "introducedAt": 802,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C164-COSE164-02",
+        "language": "italian",
+        "introducedBy": "IT-C164-sposo",
+        "introducedAt": 807,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C164-COSE164-03",
+        "language": "italian",
+        "introducedBy": "IT-C164-sposa",
+        "introducedAt": 808,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C164-COSE164-04",
+        "language": "italian",
+        "introducedBy": "IT-C164-vedovo",
+        "introducedAt": 809,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C164-COSE164-05",
+        "language": "italian",
+        "introducedBy": "IT-C164-fallimento",
+        "introducedAt": 810,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C165-COSE165-01",
+        "language": "italian",
+        "introducedBy": "IT-C165-regola",
+        "introducedAt": 811,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C165-COSE165-02",
+        "language": "italian",
+        "introducedBy": "IT-C165-permesso",
+        "introducedAt": 812,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C165-COSE165-03",
+        "language": "italian",
+        "introducedBy": "IT-C165-divieto",
+        "introducedAt": 813,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C165-COSE165-04",
+        "language": "italian",
+        "introducedBy": "IT-C165-pericolo",
+        "introducedAt": 814,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C165-COSE165-05",
+        "language": "italian",
+        "introducedBy": "IT-C165-sicurezza",
+        "introducedAt": 815,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C166-COSE166-01",
+        "language": "italian",
+        "introducedBy": "IT-C166-firma",
+        "introducedAt": 816,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C166-COSE166-02",
+        "language": "italian",
+        "introducedBy": "IT-C166-busta",
+        "introducedAt": 817,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C167-COSE167-01",
+        "language": "italian",
+        "introducedBy": "IT-C167-pedaggio",
+        "introducedAt": 823,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C167-COSE167-02",
+        "language": "italian",
+        "introducedBy": "IT-C167-autostrada",
+        "introducedAt": 824,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C167-COSE167-03",
+        "language": "italian",
+        "introducedBy": "IT-C167-traffico",
+        "introducedAt": 825,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C167-COSE167-04",
+        "language": "italian",
+        "introducedBy": "IT-C167-multa",
+        "introducedAt": 826,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C167-COSE167-05",
+        "language": "italian",
+        "introducedBy": "IT-C167-patente",
+        "introducedAt": 827,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C168-COSE168-01",
+        "language": "italian",
+        "introducedBy": "IT-C168-soffitta",
+        "introducedAt": 828,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C168-COSE168-02",
+        "language": "italian",
+        "introducedBy": "IT-C168-orto",
+        "introducedAt": 829,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C168-COSE168-03",
+        "language": "italian",
+        "introducedBy": "IT-C168-pianta",
+        "introducedAt": 830,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C168-COSE168-04",
+        "language": "italian",
+        "introducedBy": "IT-C168-seme",
+        "introducedAt": 831,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C168-COSE168-05",
+        "language": "italian",
+        "introducedBy": "IT-C168-radice",
+        "introducedAt": 832,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C169-COSE169-01",
+        "language": "italian",
+        "introducedBy": "IT-C169-ambiente",
+        "introducedAt": 833,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C169-COSE169-02",
+        "language": "italian",
+        "introducedBy": "IT-C169-inquinamento",
+        "introducedAt": 834,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C169-COSE169-03",
+        "language": "italian",
+        "introducedBy": "IT-C169-rifiuto",
+        "introducedAt": 835,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C169-COSE169-04",
+        "language": "italian",
+        "introducedBy": "IT-C169-riciclaggio",
+        "introducedAt": 836,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C169-COSE169-05",
+        "language": "italian",
+        "introducedBy": "IT-C169-energia",
+        "introducedAt": 837,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C170-COSE170-01",
+        "language": "italian",
+        "introducedBy": "IT-C170-chitarra",
+        "introducedAt": 838,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C170-COSE170-02",
+        "language": "italian",
+        "introducedBy": "IT-C170-pianoforte",
+        "introducedAt": 839,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C171-COSE171-02",
+        "language": "italian",
+        "introducedBy": "IT-C171-partenza",
+        "introducedAt": 844,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C171-COSE171-03",
+        "language": "italian",
+        "introducedBy": "IT-C171-destinazione",
+        "introducedAt": 845,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C171-COSE171-04",
+        "language": "italian",
+        "introducedBy": "IT-C171-paesaggio",
+        "introducedAt": 846,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C171-COSE171-05",
+        "language": "italian",
+        "introducedBy": "IT-C171-vista",
+        "introducedAt": 847,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C172-LAV172-01",
+        "language": "italian",
+        "introducedBy": "IT-C172-ditta",
+        "introducedAt": 848,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C172-LAV172-02",
+        "language": "italian",
+        "introducedBy": "IT-C172-azienda",
+        "introducedAt": 849,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C172-LAV172-03",
+        "language": "italian",
+        "introducedBy": "IT-C172-collega",
+        "introducedAt": 850,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C172-LAV172-04",
+        "language": "italian",
+        "introducedBy": "IT-C172-stipendio",
+        "introducedAt": 851,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C172-LAV172-05",
+        "language": "italian",
+        "introducedBy": "IT-C172-riunione",
+        "introducedAt": 852,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C173-LAV173-01",
+        "language": "italian",
+        "introducedBy": "IT-C173-geografia",
+        "introducedAt": 853,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C173-LAV173-02",
+        "language": "italian",
+        "introducedBy": "IT-C173-matematica",
+        "introducedAt": 854,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C174-VERBI174-01",
+        "language": "italian",
+        "introducedBy": "IT-C174-baciare",
+        "introducedAt": 860,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C174-VERBI174-02",
+        "language": "italian",
+        "introducedBy": "IT-C174-abbracciare",
+        "introducedAt": 861,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C174-VERBI174-03",
+        "language": "italian",
+        "introducedBy": "IT-C174-salutare",
+        "introducedAt": 862,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C174-VERBI174-04",
+        "language": "italian",
+        "introducedBy": "IT-C174-ringraziare",
+        "introducedAt": 863,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C174-VERBI174-05",
+        "language": "italian",
+        "introducedBy": "IT-C174-invitare",
+        "introducedAt": 864,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C175-VERBI175-01",
+        "language": "italian",
+        "introducedBy": "IT-C175-tradurre",
+        "introducedAt": 865,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C175-VERBI175-02",
+        "language": "italian",
+        "introducedBy": "IT-C175-dimenticare",
+        "introducedAt": 866,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C175-VERBI175-03",
+        "language": "italian",
+        "introducedBy": "IT-C175-ricordare",
+        "introducedAt": 867,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C175-VERBI175-04",
+        "language": "italian",
+        "introducedBy": "IT-C175-decidere",
+        "introducedAt": 868,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C175-VERBI175-05",
+        "language": "italian",
+        "introducedBy": "IT-C175-scegliere",
+        "introducedAt": 869,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C176-VERBI176-01",
+        "language": "italian",
+        "introducedBy": "IT-C176-ascoltare",
+        "introducedAt": 870,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C176-VERBI176-02",
+        "language": "italian",
+        "introducedBy": "IT-C176-toccare",
+        "introducedAt": 871,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C176-VERBI176-03",
+        "language": "italian",
+        "introducedBy": "IT-C176-odorare",
+        "introducedAt": 872,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C176-VERBI176-04",
+        "language": "italian",
+        "introducedBy": "IT-C176-assaggiare",
+        "introducedAt": 873,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C176-VERBI176-05",
+        "language": "italian",
+        "introducedBy": "IT-C176-scaldare",
+        "introducedAt": 874,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C177-VERBI177-01",
+        "language": "italian",
+        "introducedBy": "IT-C177-promettere",
+        "introducedAt": 875,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C177-VERBI177-02",
+        "language": "italian",
+        "introducedBy": "IT-C177-permettere",
+        "introducedAt": 876,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C177-VERBI177-03",
+        "language": "italian",
+        "introducedBy": "IT-C177-vietare",
+        "introducedAt": 877,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C177-VERBI177-04",
+        "language": "italian",
+        "introducedBy": "IT-C177-proteggere",
+        "introducedAt": 878,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C177-VERBI177-05",
+        "language": "italian",
+        "introducedBy": "IT-C177-salvare",
+        "introducedAt": 879,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C178-VERBI178-01",
+        "language": "italian",
+        "introducedBy": "IT-C178-piovere",
+        "introducedAt": 880,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C178-VERBI178-02",
+        "language": "italian",
+        "introducedBy": "IT-C178-accompagnare",
+        "introducedAt": 881,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C178-VERBI178-03",
+        "language": "italian",
+        "introducedBy": "IT-C178-aggiungere",
+        "introducedAt": 882,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C178-VERBI178-04",
+        "language": "italian",
+        "introducedBy": "IT-C178-annunciare",
+        "introducedAt": 883,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C178-VERBI178-05",
+        "language": "italian",
+        "introducedBy": "IT-C178-apparire",
+        "introducedAt": 884,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C179-VERBI179-01",
+        "language": "italian",
+        "introducedBy": "IT-C179-dimostrare",
+        "introducedAt": 885,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C179-VERBI179-02",
+        "language": "italian",
+        "introducedBy": "IT-C179-dipendere",
+        "introducedAt": 886,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C180-VERBI180-02",
+        "language": "italian",
+        "introducedBy": "IT-C180-partecipare",
+        "introducedAt": 891,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C180-VERBI180-03",
+        "language": "italian",
+        "introducedBy": "IT-C180-passeggiare",
+        "introducedAt": 892,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C180-VERBI180-04",
+        "language": "italian",
+        "introducedBy": "IT-C180-piegare",
+        "introducedAt": 893,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C180-VERBI180-05",
+        "language": "italian",
+        "introducedBy": "IT-C180-possedere",
+        "introducedAt": 894,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C181-VERBI181-01",
+        "language": "italian",
+        "introducedBy": "IT-C181-rischiare",
+        "introducedAt": 895,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C181-VERBI181-02",
+        "language": "italian",
+        "introducedBy": "IT-C181-risolvere",
+        "introducedAt": 896,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C181-VERBI181-03",
+        "language": "italian",
+        "introducedBy": "IT-C181-rubare",
+        "introducedAt": 897,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C181-VERBI181-04",
+        "language": "italian",
+        "introducedBy": "IT-C181-scappare",
+        "introducedAt": 898,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C181-VERBI181-05",
+        "language": "italian",
+        "introducedBy": "IT-C181-scoprire",
+        "introducedAt": 899,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C182-VERBI182-01",
+        "language": "italian",
+        "introducedBy": "IT-C182-uccidere",
+        "introducedAt": 900,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C182-VERBI182-02",
+        "language": "italian",
+        "introducedBy": "IT-C182-valere",
+        "introducedAt": 901,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C183-VERBI183-01",
+        "language": "italian",
+        "introducedBy": "IT-C183-inseguire",
+        "introducedAt": 907,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C183-VERBI183-02",
+        "language": "italian",
+        "introducedBy": "IT-C183-insistere",
+        "introducedAt": 908,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C183-VERBI183-03",
+        "language": "italian",
+        "introducedBy": "IT-C183-interrompere",
+        "introducedAt": 909,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C183-VERBI183-04",
+        "language": "italian",
+        "introducedBy": "IT-C183-lanciare",
+        "introducedAt": 910,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C183-VERBI183-05",
+        "language": "italian",
+        "introducedBy": "IT-C183-legare",
+        "introducedAt": 911,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C184-VERBI184-01",
+        "language": "italian",
+        "introducedBy": "IT-C184-scivolare",
+        "introducedAt": 912,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C184-VERBI184-02",
+        "language": "italian",
+        "introducedBy": "IT-C184-sollevare",
+        "introducedAt": 913,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C184-VERBI184-03",
+        "language": "italian",
+        "introducedBy": "IT-C184-sorprendere",
+        "introducedAt": 914,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C184-VERBI184-04",
+        "language": "italian",
+        "introducedBy": "IT-C184-sospettare",
+        "introducedAt": 915,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C184-VERBI184-05",
+        "language": "italian",
+        "introducedBy": "IT-C184-stringere",
+        "introducedAt": 916,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C185-SAL185-01",
+        "language": "italian",
+        "introducedBy": "IT-C185-muscolo",
+        "introducedAt": 917,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C185-SAL185-02",
+        "language": "italian",
+        "introducedBy": "IT-C185-pollice",
+        "introducedAt": 918,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C185-SAL185-03",
+        "language": "italian",
+        "introducedBy": "IT-C185-ferita",
+        "introducedAt": 919,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C185-SAL185-04",
+        "language": "italian",
+        "introducedBy": "IT-C185-cicatrice",
+        "introducedAt": 920,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C185-SAL185-05",
+        "language": "italian",
+        "introducedBy": "IT-C185-raffreddore",
+        "introducedAt": 921,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C186-SAL186-01",
+        "language": "italian",
+        "introducedBy": "IT-C186-ansia",
+        "introducedAt": 922,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C186-SAL186-02",
+        "language": "italian",
+        "introducedBy": "IT-C186-calma",
+        "introducedAt": 923,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C186-SAL186-03",
+        "language": "italian",
+        "introducedBy": "IT-C186-amore",
+        "introducedAt": 924,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C186-SAL186-04",
+        "language": "italian",
+        "introducedBy": "IT-C186-amicizia",
+        "introducedAt": 925,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C186-SAL186-05",
+        "language": "italian",
+        "introducedBy": "IT-C186-speranza",
+        "introducedAt": 926,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C187-TEMPO187-01",
+        "language": "italian",
+        "introducedBy": "IT-C187-ancora",
+        "introducedAt": 927,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C187-TEMPO187-02",
+        "language": "italian",
+        "introducedBy": "IT-C187-allora",
+        "introducedAt": 928,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C187-TEMPO187-03",
+        "language": "italian",
+        "introducedBy": "IT-C187-durante",
+        "introducedAt": 929,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C187-TEMPO187-04",
+        "language": "italian",
+        "introducedBy": "IT-C187-mentre",
+        "introducedAt": 930,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C187-TEMPO187-05",
+        "language": "italian",
+        "introducedBy": "IT-C187-decennio",
+        "introducedAt": 931,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C188-PERCHE188-01",
+        "language": "italian",
+        "introducedBy": "IT-C188-anzi",
+        "introducedAt": 932,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C188-PERCHE188-02",
+        "language": "italian",
+        "introducedBy": "IT-C188-infatti",
+        "introducedAt": 933,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C189-QUAL189-02",
+        "language": "italian",
+        "introducedBy": "IT-C189-timido",
+        "introducedAt": 938,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C189-QUAL189-03",
+        "language": "italian",
+        "introducedBy": "IT-C189-coraggioso",
+        "introducedAt": 939,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C189-QUAL189-04",
+        "language": "italian",
+        "introducedBy": "IT-C189-pauroso",
+        "introducedAt": 940,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C189-QUAL189-05",
+        "language": "italian",
+        "introducedBy": "IT-C189-curioso",
+        "introducedAt": 941,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C190-QUAL190-01",
+        "language": "italian",
+        "introducedBy": "IT-C190-utile",
+        "introducedAt": 942,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C190-QUAL190-02",
+        "language": "italian",
+        "introducedBy": "IT-C190-inutile",
+        "introducedAt": 943,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C190-QUAL190-03",
+        "language": "italian",
+        "introducedBy": "IT-C190-strano",
+        "introducedAt": 944,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C190-QUAL190-04",
+        "language": "italian",
+        "introducedBy": "IT-C190-normale",
+        "introducedAt": 945,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C190-QUAL190-05",
+        "language": "italian",
+        "introducedBy": "IT-C190-diverso",
+        "introducedAt": 946,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C191-COSE191-01",
+        "language": "italian",
+        "introducedBy": "IT-C191-soffitto",
+        "introducedAt": 947,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C191-COSE191-02",
+        "language": "italian",
+        "introducedBy": "IT-C191-serratura",
+        "introducedAt": 948,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C192-COSE192-01",
+        "language": "italian",
+        "introducedBy": "IT-C192-binario",
+        "introducedAt": 954,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C192-COSE192-02",
+        "language": "italian",
+        "introducedBy": "IT-C192-passaporto",
+        "introducedAt": 955,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C192-COSE192-03",
+        "language": "italian",
+        "introducedBy": "IT-C192-frontiera",
+        "introducedAt": 956,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C192-COSE192-04",
+        "language": "italian",
+        "introducedBy": "IT-C192-dogana",
+        "introducedAt": 957,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C192-COSE192-05",
+        "language": "italian",
+        "introducedBy": "IT-C192-prenotazione",
+        "introducedAt": 958,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C193-COSE193-01",
+        "language": "italian",
+        "introducedBy": "IT-C193-politica",
+        "introducedAt": 959,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C193-COSE193-02",
+        "language": "italian",
+        "introducedBy": "IT-C193-economia",
+        "introducedAt": 960,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C193-COSE193-03",
+        "language": "italian",
+        "introducedBy": "IT-C193-guerra",
+        "introducedAt": 961,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C193-COSE193-04",
+        "language": "italian",
+        "introducedBy": "IT-C193-pace",
+        "introducedAt": 962,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C193-COSE193-05",
+        "language": "italian",
+        "introducedBy": "IT-C193-esercito",
+        "introducedAt": 963,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C194-COSE194-01",
+        "language": "italian",
+        "introducedBy": "IT-C194-cantante",
+        "introducedAt": 964,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C195-COSE195-02",
+        "language": "italian",
+        "introducedBy": "IT-C195-commercialista",
+        "introducedAt": 970,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C195-COSE195-03",
+        "language": "italian",
+        "introducedBy": "IT-C195-scienziato",
+        "introducedAt": 971,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C195-COSE195-04",
+        "language": "italian",
+        "introducedBy": "IT-C195-ricercatore",
+        "introducedAt": 972,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C195-COSE195-05",
+        "language": "italian",
+        "introducedBy": "IT-C195-turista",
+        "introducedAt": 973,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C196-COSE196-01",
+        "language": "italian",
+        "introducedBy": "IT-C196-esperienza",
+        "introducedAt": 974,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C196-COSE196-02",
+        "language": "italian",
+        "introducedBy": "IT-C196-pensiero",
+        "introducedAt": 975,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C196-COSE196-03",
+        "language": "italian",
+        "introducedBy": "IT-C196-ricordo",
+        "introducedAt": 976,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C196-COSE196-04",
+        "language": "italian",
+        "introducedBy": "IT-C196-soluzione",
+        "introducedAt": 977,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C196-COSE196-05",
+        "language": "italian",
+        "introducedBy": "IT-C196-scelta",
+        "introducedAt": 978,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C197-COSE197-01",
+        "language": "italian",
+        "introducedBy": "IT-C197-consiglio",
+        "introducedAt": 979,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C197-COSE197-02",
+        "language": "italian",
+        "introducedBy": "IT-C197-promessa",
+        "introducedAt": 980,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C198-COSE198-01",
+        "language": "italian",
+        "introducedBy": "IT-C198-cartella",
+        "introducedAt": 986,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C198-COSE198-02",
+        "language": "italian",
+        "introducedBy": "IT-C198-busta-paga",
+        "introducedAt": 987,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C198-COSE198-03",
+        "language": "italian",
+        "introducedBy": "IT-C198-etichetta",
+        "introducedAt": 988,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C198-COSE198-04",
+        "language": "italian",
+        "introducedBy": "IT-C198-cartello",
+        "introducedAt": 989,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C198-COSE198-05",
+        "language": "italian",
+        "introducedBy": "IT-C198-mappa",
+        "introducedAt": 990,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C199-COSE199-01",
+        "language": "italian",
+        "introducedBy": "IT-C199-casco",
+        "introducedAt": 991,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C199-COSE199-02",
+        "language": "italian",
+        "introducedBy": "IT-C199-galleria",
+        "introducedAt": 992,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C199-COSE199-03",
+        "language": "italian",
+        "introducedBy": "IT-C199-rotonda",
+        "introducedAt": 993,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C199-COSE199-04",
+        "language": "italian",
+        "introducedBy": "IT-C199-cantiere",
+        "introducedAt": 994,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C199-COSE199-05",
+        "language": "italian",
+        "introducedBy": "IT-C199-palazzo",
+        "introducedAt": 995,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C200-COSE200-01",
+        "language": "italian",
+        "introducedBy": "IT-C200-ramo",
+        "introducedAt": 996,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C201-COSE201-02",
+        "language": "italian",
+        "introducedBy": "IT-C201-legno",
+        "introducedAt": 1002,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C201-COSE201-03",
+        "language": "italian",
+        "introducedBy": "IT-C201-ferro",
+        "introducedAt": 1003,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C201-COSE201-04",
+        "language": "italian",
+        "introducedBy": "IT-C201-oro",
+        "introducedAt": 1004,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C201-COSE201-05",
+        "language": "italian",
+        "introducedBy": "IT-C201-argento",
+        "introducedAt": 1005,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C202-COSE202-01",
+        "language": "italian",
+        "introducedBy": "IT-C202-racchetta",
+        "introducedAt": 1006,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C202-COSE202-02",
+        "language": "italian",
+        "introducedBy": "IT-C202-palestra",
+        "introducedAt": 1007,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C202-COSE202-03",
+        "language": "italian",
+        "introducedBy": "IT-C202-corsa",
+        "introducedAt": 1008,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C202-COSE202-04",
+        "language": "italian",
+        "introducedBy": "IT-C202-nuoto",
+        "introducedAt": 1009,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C202-COSE202-05",
+        "language": "italian",
+        "introducedBy": "IT-C202-sci",
+        "introducedAt": 1010,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C203-LAV203-01",
+        "language": "italian",
+        "introducedBy": "IT-C203-contratto",
+        "introducedAt": 1011,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C203-LAV203-02",
+        "language": "italian",
+        "introducedBy": "IT-C203-colloquio",
+        "introducedAt": 1012,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C204-VERBI204-01",
+        "language": "italian",
+        "introducedBy": "IT-C204-parcheggiare",
+        "introducedAt": 1018,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C204-VERBI204-02",
+        "language": "italian",
+        "introducedBy": "IT-C204-prenotare",
+        "introducedAt": 1019,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C204-VERBI204-03",
+        "language": "italian",
+        "introducedBy": "IT-C204-spendere",
+        "introducedAt": 1020,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C204-VERBI204-04",
+        "language": "italian",
+        "introducedBy": "IT-C204-risparmiare",
+        "introducedAt": 1021,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C204-VERBI204-05",
+        "language": "italian",
+        "introducedBy": "IT-C204-costare",
+        "introducedAt": 1022,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C205-VERBI205-01",
+        "language": "italian",
+        "introducedBy": "IT-C205-provare",
+        "introducedAt": 1023,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C205-VERBI205-02",
+        "language": "italian",
+        "introducedBy": "IT-C205-finire",
+        "introducedAt": 1024,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C205-VERBI205-03",
+        "language": "italian",
+        "introducedBy": "IT-C205-continuare",
+        "introducedAt": 1025,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C205-VERBI205-04",
+        "language": "italian",
+        "introducedBy": "IT-C205-smettere",
+        "introducedAt": 1026,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C205-VERBI205-05",
+        "language": "italian",
+        "introducedBy": "IT-C205-fermare",
+        "introducedAt": 1027,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C206-VERBI206-01",
+        "language": "italian",
+        "introducedBy": "IT-C206-raffreddare",
+        "introducedAt": 1028,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C206-VERBI206-02",
+        "language": "italian",
+        "introducedBy": "IT-C206-riempire",
+        "introducedAt": 1029,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C206-VERBI206-03",
+        "language": "italian",
+        "introducedBy": "IT-C206-svuotare",
+        "introducedAt": 1030,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C206-VERBI206-04",
+        "language": "italian",
+        "introducedBy": "IT-C206-contare",
+        "introducedAt": 1031,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C206-VERBI206-05",
+        "language": "italian",
+        "introducedBy": "IT-C206-misurare",
+        "introducedAt": 1032,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C207-VERBI207-01",
+        "language": "italian",
+        "introducedBy": "IT-C207-crescere",
+        "introducedAt": 1033,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C207-VERBI207-02",
+        "language": "italian",
+        "introducedBy": "IT-C207-invecchiare",
+        "introducedAt": 1034,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C207-VERBI207-03",
+        "language": "italian",
+        "introducedBy": "IT-C207-sposare",
+        "introducedAt": 1035,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C207-VERBI207-04",
+        "language": "italian",
+        "introducedBy": "IT-C207-divorziare",
+        "introducedAt": 1036,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C207-VERBI207-05",
+        "language": "italian",
+        "introducedBy": "IT-C207-traslocare",
+        "introducedAt": 1037,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C208-VERBI208-01",
+        "language": "italian",
+        "introducedBy": "IT-C208-applaudire",
+        "introducedAt": 1038,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C208-VERBI208-02",
+        "language": "italian",
+        "introducedBy": "IT-C208-approfittare",
+        "introducedAt": 1039,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C208-VERBI208-03",
+        "language": "italian",
+        "introducedBy": "IT-C208-attraversare",
+        "introducedAt": 1040,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C208-VERBI208-04",
+        "language": "italian",
+        "introducedBy": "IT-C208-aumentare",
+        "introducedAt": 1041,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C208-VERBI208-05",
+        "language": "italian",
+        "introducedBy": "IT-C208-diminuire",
+        "introducedAt": 1042,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C209-VERBI209-01",
+        "language": "italian",
+        "introducedBy": "IT-C209-fingere",
+        "introducedAt": 1043,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C209-VERBI209-02",
+        "language": "italian",
+        "introducedBy": "IT-C209-gettare",
+        "introducedAt": 1044,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C210-VERBI210-02",
+        "language": "italian",
+        "introducedBy": "IT-C210-prestare",
+        "introducedAt": 1049,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C210-VERBI210-03",
+        "language": "italian",
+        "introducedBy": "IT-C210-produrre",
+        "introducedAt": 1050,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C210-VERBI210-04",
+        "language": "italian",
+        "introducedBy": "IT-C210-proporre",
+        "introducedAt": 1051,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C210-VERBI210-05",
+        "language": "italian",
+        "introducedBy": "IT-C210-raccogliere",
+        "introducedAt": 1052,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C211-VERBI211-01",
+        "language": "italian",
+        "introducedBy": "IT-C211-sembrare",
+        "introducedAt": 1053,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C211-VERBI211-02",
+        "language": "italian",
+        "introducedBy": "IT-C211-servire",
+        "introducedAt": 1054,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C211-VERBI211-03",
+        "language": "italian",
+        "introducedBy": "IT-C211-soffrire",
+        "introducedAt": 1055,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C211-VERBI211-04",
+        "language": "italian",
+        "introducedBy": "IT-C211-sognare",
+        "introducedAt": 1056,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C211-VERBI211-05",
+        "language": "italian",
+        "introducedBy": "IT-C211-somigliare",
+        "introducedAt": 1057,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C212-VERBI212-01",
+        "language": "italian",
+        "introducedBy": "IT-C212-affrettarsi",
+        "introducedAt": 1058,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C212-VERBI212-02",
+        "language": "italian",
+        "introducedBy": "IT-C212-allontanarsi",
+        "introducedAt": 1059,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C213-VERBI213-01",
+        "language": "italian",
+        "introducedBy": "IT-C213-mescolare",
+        "introducedAt": 1065,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C213-VERBI213-02",
+        "language": "italian",
+        "introducedBy": "IT-C213-nascondersi",
+        "introducedAt": 1066,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C213-VERBI213-03",
+        "language": "italian",
+        "introducedBy": "IT-C213-obbedire",
+        "introducedAt": 1067,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C213-VERBI213-04",
+        "language": "italian",
+        "introducedBy": "IT-C213-ospitare",
+        "introducedAt": 1068,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C213-VERBI213-05",
+        "language": "italian",
+        "introducedBy": "IT-C213-raccomandare",
+        "introducedAt": 1069,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C214-VERBI214-01",
+        "language": "italian",
+        "introducedBy": "IT-C214-suggerire",
+        "introducedAt": 1070,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C214-VERBI214-02",
+        "language": "italian",
+        "introducedBy": "IT-C214-tossire",
+        "introducedAt": 1071,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C214-VERBI214-03",
+        "language": "italian",
+        "introducedBy": "IT-C214-tremare",
+        "introducedAt": 1072,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C214-VERBI214-04",
+        "language": "italian",
+        "introducedBy": "IT-C214-urlare",
+        "introducedAt": 1073,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C214-VERBI214-05",
+        "language": "italian",
+        "introducedBy": "IT-C214-votare",
+        "introducedAt": 1074,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C215-SAL215-01",
+        "language": "italian",
+        "introducedBy": "IT-C215-influenza",
+        "introducedAt": 1075,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C215-SAL215-02",
+        "language": "italian",
+        "introducedBy": "IT-C215-ricetta",
+        "introducedAt": 1076,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C215-SAL215-03",
+        "language": "italian",
+        "introducedBy": "IT-C215-pillola",
+        "introducedAt": 1077,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C215-SAL215-04",
+        "language": "italian",
+        "introducedBy": "IT-C215-sciroppo",
+        "introducedAt": 1078,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C215-SAL215-05",
+        "language": "italian",
+        "introducedBy": "IT-C215-pomata",
+        "introducedAt": 1079,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C216-SAL216-01",
+        "language": "italian",
+        "introducedBy": "IT-C216-fiducia",
+        "introducedAt": 1080,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C216-SAL216-02",
+        "language": "italian",
+        "introducedBy": "IT-C216-coraggio",
+        "introducedAt": 1081,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C216-SAL216-03",
+        "language": "italian",
+        "introducedBy": "IT-C216-vergogna",
+        "introducedAt": 1082,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C216-SAL216-04",
+        "language": "italian",
+        "introducedBy": "IT-C216-gelosia",
+        "introducedAt": 1083,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C216-SAL216-05",
+        "language": "italian",
+        "introducedBy": "IT-C216-sorpresa",
+        "introducedAt": 1084,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C217-PERCHE217-01",
+        "language": "italian",
+        "introducedBy": "IT-C217-purtroppo",
+        "introducedAt": 1085,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C217-PERCHE217-02",
+        "language": "italian",
+        "introducedBy": "IT-C217-forse",
+        "introducedAt": 1086,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C217-PERCHE217-03",
+        "language": "italian",
+        "introducedBy": "IT-C217-magari",
+        "introducedAt": 1087,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C217-PERCHE217-04",
+        "language": "italian",
+        "introducedBy": "IT-C217-certo",
+        "introducedAt": 1088,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C217-PERCHE217-05",
+        "language": "italian",
+        "introducedBy": "IT-C217-davvero",
+        "introducedAt": 1089,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C218-QUAL218-01",
+        "language": "italian",
+        "introducedBy": "IT-C218-geloso",
+        "introducedAt": 1090,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C218-QUAL218-03",
+        "language": "italian",
+        "introducedBy": "IT-C218-nervoso",
+        "introducedAt": 1092,
         "missed": [
           "R2",
           "R3"
@@ -127654,10 +131090,10 @@
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C163-COSE163-04",
+        "atom": "IT-LEX-C218-QUAL218-04",
         "language": "italian",
-        "introducedBy": "IT-C163-operaio",
-        "introducedAt": 804,
+        "introducedBy": "IT-C218-calmo",
+        "introducedAt": 1093,
         "missed": [
           "R2",
           "R3"
@@ -127665,10 +131101,10 @@
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C163-COSE163-05",
+        "atom": "IT-LEX-C218-QUAL218-05",
         "language": "italian",
-        "introducedBy": "IT-C163-impiegato",
-        "introducedAt": 805,
+        "introducedBy": "IT-C218-silenzioso",
+        "introducedAt": 1094,
         "missed": [
           "R2",
           "R3"
@@ -127676,10 +131112,10 @@
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C164-COSE164-01",
+        "atom": "IT-LEX-C219-QUAL219-01",
         "language": "italian",
-        "introducedBy": "IT-C164-fidanzata",
-        "introducedAt": 806,
+        "introducedBy": "IT-C219-uguale",
+        "introducedAt": 1095,
         "missed": [
           "R2",
           "R3"
@@ -127687,10 +131123,10 @@
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C166-COSE166-03",
+        "atom": "IT-LEX-C221-COSE221-03",
         "language": "italian",
-        "introducedBy": "IT-C166-francobollo",
-        "introducedAt": 818,
+        "introducedBy": "IT-C221-foresta",
+        "introducedAt": 1107,
         "missed": [
           "R2",
           "R3"
@@ -127698,10 +131134,10 @@
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C166-COSE166-04",
+        "atom": "IT-LEX-C221-COSE221-04",
         "language": "italian",
-        "introducedBy": "IT-C166-pacco",
-        "introducedAt": 819,
+        "introducedBy": "IT-C221-costa",
+        "introducedAt": 1108,
         "missed": [
           "R2",
           "R3"
@@ -127709,15 +131145,114 @@
         "revisits": 4
       },
       {
-        "atom": "IT-LEX-C166-COSE166-05",
+        "atom": "IT-LEX-C221-COSE221-05",
         "language": "italian",
-        "introducedBy": "IT-C166-cartolina",
-        "introducedAt": 820,
+        "introducedBy": "IT-C221-valle",
+        "introducedAt": 1109,
         "missed": [
           "R2",
           "R3"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "IT-LEX-C224-COSE224-02",
+        "language": "italian",
+        "introducedBy": "IT-C224-anziano",
+        "introducedAt": 1123,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C224-COSE224-03",
+        "language": "italian",
+        "introducedBy": "IT-C224-neonato",
+        "introducedAt": 1124,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C224-COSE224-04",
+        "language": "italian",
+        "introducedBy": "IT-C224-gemello",
+        "introducedAt": 1125,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C224-COSE224-05",
+        "language": "italian",
+        "introducedBy": "IT-C224-nipote",
+        "introducedAt": 1126,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C225-COSE225-01",
+        "language": "italian",
+        "introducedBy": "IT-C225-decisione",
+        "introducedAt": 1127,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C227-COSE227-03",
+        "language": "italian",
+        "introducedBy": "IT-C227-uscita",
+        "introducedAt": 1139,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C227-COSE227-04",
+        "language": "italian",
+        "introducedBy": "IT-C227-bagaglio",
+        "introducedAt": 1140,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "IT-LEX-C227-COSE227-05",
+        "language": "italian",
+        "introducedBy": "IT-C227-posto",
+        "introducedAt": 1141,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "IT-LEX-C229-COSE229-02",
+        "language": "italian",
+        "introducedBy": "IT-C229-sasso",
+        "introducedAt": 1150,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
       },
       {
         "atom": "IT-LEX-C37-CORPO1-01",
@@ -210861,550 +214396,440 @@
         "revisits": 4
       },
       {
-        "atom": "IT-LEX-C158-QUAL158-05",
+        "atom": "IT-LEX-C218-QUAL218-02",
         "language": "italian",
-        "introducedBy": "IT-C158-puntuale",
-        "introducedAt": 780,
+        "introducedBy": "IT-C218-orgoglioso",
+        "introducedAt": 1091,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C159-COSE159-01",
+        "atom": "IT-LEX-C219-QUAL219-02",
         "language": "italian",
-        "introducedBy": "IT-C159-appartamento",
-        "introducedAt": 781,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C159-COSE159-02",
-        "language": "italian",
-        "introducedBy": "IT-C159-soggiorno",
-        "introducedAt": 782,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C159-COSE159-03",
-        "language": "italian",
-        "introducedBy": "IT-C159-corridoio",
-        "introducedAt": 783,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C159-COSE159-04",
-        "language": "italian",
-        "introducedBy": "IT-C159-balcone",
-        "introducedAt": 784,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C159-COSE159-05",
-        "language": "italian",
-        "introducedBy": "IT-C159-parete",
-        "introducedAt": 785,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C160-COSE160-01",
-        "language": "italian",
-        "introducedBy": "IT-C160-conto",
-        "introducedAt": 786,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C160-COSE160-02",
-        "language": "italian",
-        "introducedBy": "IT-C160-mancia",
-        "introducedAt": 787,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C160-COSE160-03",
-        "language": "italian",
-        "introducedBy": "IT-C160-pizzeria",
-        "introducedAt": 788,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C160-COSE160-04",
-        "language": "italian",
-        "introducedBy": "IT-C160-villaggio",
-        "introducedAt": 789,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C160-COSE160-05",
-        "language": "italian",
-        "introducedBy": "IT-C160-marciapiede",
-        "introducedAt": 790,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C161-COSE161-01",
-        "language": "italian",
-        "introducedBy": "IT-C161-tribunale",
-        "introducedAt": 791,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C161-COSE161-02",
-        "language": "italian",
-        "introducedBy": "IT-C161-giudice",
-        "introducedAt": 792,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C161-COSE161-03",
-        "language": "italian",
-        "introducedBy": "IT-C161-sindaco",
-        "introducedAt": 793,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C161-COSE161-04",
-        "language": "italian",
-        "introducedBy": "IT-C161-comune",
-        "introducedAt": 794,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C161-COSE161-05",
-        "language": "italian",
-        "introducedBy": "IT-C161-elezioni",
-        "introducedAt": 795,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C162-COSE162-01",
-        "language": "italian",
-        "introducedBy": "IT-C162-sito",
-        "introducedAt": 796,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C162-COSE162-02",
-        "language": "italian",
-        "introducedBy": "IT-C162-schermo",
-        "introducedAt": 797,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C162-COSE162-03",
-        "language": "italian",
-        "introducedBy": "IT-C162-tastiera",
-        "introducedAt": 798,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C162-COSE162-04",
-        "language": "italian",
-        "introducedBy": "IT-C162-batteria",
-        "introducedAt": 799,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C162-COSE162-05",
-        "language": "italian",
-        "introducedBy": "IT-C162-caricabatterie",
-        "introducedAt": 800,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C163-COSE163-01",
-        "language": "italian",
-        "introducedBy": "IT-C163-meccanico",
-        "introducedAt": 801,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C163-COSE163-02",
-        "language": "italian",
-        "introducedBy": "IT-C163-elettricista",
-        "introducedAt": 802,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "IT-LEX-C164-COSE164-02",
-        "language": "italian",
-        "introducedBy": "IT-C164-sposo",
-        "introducedAt": 807,
+        "introducedBy": "IT-C219-simile",
+        "introducedAt": 1096,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C164-COSE164-03",
+        "atom": "IT-LEX-C219-QUAL219-03",
         "language": "italian",
-        "introducedBy": "IT-C164-sposa",
-        "introducedAt": 808,
+        "introducedBy": "IT-C219-falso",
+        "introducedAt": 1097,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C164-COSE164-04",
+        "atom": "IT-LEX-C219-QUAL219-04",
         "language": "italian",
-        "introducedBy": "IT-C164-vedovo",
-        "introducedAt": 809,
+        "introducedBy": "IT-C219-gratuito",
+        "introducedAt": 1098,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C164-COSE164-05",
+        "atom": "IT-LEX-C219-QUAL219-05",
         "language": "italian",
-        "introducedBy": "IT-C164-fallimento",
-        "introducedAt": 810,
+        "introducedBy": "IT-C219-moderno",
+        "introducedAt": 1099,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C165-COSE165-01",
+        "atom": "IT-LEX-C220-COSE220-01",
         "language": "italian",
-        "introducedBy": "IT-C165-regola",
-        "introducedAt": 811,
+        "introducedBy": "IT-C220-maglietta",
+        "introducedAt": 1100,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C165-COSE165-02",
+        "atom": "IT-LEX-C220-COSE220-02",
         "language": "italian",
-        "introducedBy": "IT-C165-permesso",
-        "introducedAt": 812,
+        "introducedBy": "IT-C220-calze",
+        "introducedAt": 1101,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C165-COSE165-03",
+        "atom": "IT-LEX-C220-COSE220-03",
         "language": "italian",
-        "introducedBy": "IT-C165-divieto",
-        "introducedAt": 813,
+        "introducedBy": "IT-C220-cintura",
+        "introducedAt": 1102,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C165-COSE165-04",
+        "atom": "IT-LEX-C220-COSE220-04",
         "language": "italian",
-        "introducedBy": "IT-C165-pericolo",
-        "introducedAt": 814,
+        "introducedBy": "IT-C220-pigiama",
+        "introducedAt": 1103,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C165-COSE165-05",
+        "atom": "IT-LEX-C220-COSE220-05",
         "language": "italian",
-        "introducedBy": "IT-C165-sicurezza",
-        "introducedAt": 815,
+        "introducedBy": "IT-C220-tasca",
+        "introducedAt": 1104,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C166-COSE166-01",
+        "atom": "IT-LEX-C221-COSE221-01",
         "language": "italian",
-        "introducedBy": "IT-C166-firma",
-        "introducedAt": 816,
+        "introducedBy": "IT-C221-panetteria",
+        "introducedAt": 1105,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C166-COSE166-02",
+        "atom": "IT-LEX-C221-COSE221-02",
         "language": "italian",
-        "introducedBy": "IT-C166-busta",
-        "introducedAt": 817,
+        "introducedBy": "IT-C221-macelleria",
+        "introducedAt": 1106,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C167-COSE167-01",
+        "atom": "IT-LEX-C222-COSE222-01",
         "language": "italian",
-        "introducedBy": "IT-C167-pedaggio",
-        "introducedAt": 823,
+        "introducedBy": "IT-C222-soldato",
+        "introducedAt": 1112,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C167-COSE167-02",
+        "atom": "IT-LEX-C222-COSE222-02",
         "language": "italian",
-        "introducedBy": "IT-C167-autostrada",
-        "introducedAt": 824,
+        "introducedBy": "IT-C222-bandiera",
+        "introducedAt": 1113,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C167-COSE167-03",
+        "atom": "IT-LEX-C222-COSE222-03",
         "language": "italian",
-        "introducedBy": "IT-C167-traffico",
-        "introducedAt": 825,
+        "introducedBy": "IT-C222-religione",
+        "introducedAt": 1114,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C167-COSE167-04",
+        "atom": "IT-LEX-C222-COSE222-04",
         "language": "italian",
-        "introducedBy": "IT-C167-multa",
-        "introducedAt": 826,
+        "introducedBy": "IT-C222-cultura",
+        "introducedAt": 1115,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C167-COSE167-05",
+        "atom": "IT-LEX-C222-COSE222-05",
         "language": "italian",
-        "introducedBy": "IT-C167-patente",
-        "introducedAt": 827,
+        "introducedBy": "IT-C222-tradizione",
+        "introducedAt": 1116,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C168-COSE168-01",
+        "atom": "IT-LEX-C223-COSE223-01",
         "language": "italian",
-        "introducedBy": "IT-C168-soffitta",
-        "introducedAt": 828,
+        "introducedBy": "IT-C223-poesia",
+        "introducedAt": 1117,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C168-COSE168-02",
+        "atom": "IT-LEX-C223-COSE223-02",
         "language": "italian",
-        "introducedBy": "IT-C168-orto",
-        "introducedAt": 829,
+        "introducedBy": "IT-C223-quadro",
+        "introducedAt": 1118,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C168-COSE168-03",
+        "atom": "IT-LEX-C223-COSE223-03",
         "language": "italian",
-        "introducedBy": "IT-C168-pianta",
-        "introducedAt": 830,
+        "introducedBy": "IT-C223-scrittore",
+        "introducedAt": 1119,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C168-COSE168-04",
+        "atom": "IT-LEX-C223-COSE223-04",
         "language": "italian",
-        "introducedBy": "IT-C168-seme",
-        "introducedAt": 831,
+        "introducedBy": "IT-C223-pittore",
+        "introducedAt": 1120,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C168-COSE168-05",
+        "atom": "IT-LEX-C223-COSE223-05",
         "language": "italian",
-        "introducedBy": "IT-C168-radice",
-        "introducedAt": 832,
+        "introducedBy": "IT-C223-fotografo",
+        "introducedAt": 1121,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C169-COSE169-01",
+        "atom": "IT-LEX-C224-COSE224-01",
         "language": "italian",
-        "introducedBy": "IT-C169-ambiente",
-        "introducedAt": 833,
+        "introducedBy": "IT-C224-adulto",
+        "introducedAt": 1122,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C169-COSE169-02",
+        "atom": "IT-LEX-C225-COSE225-02",
         "language": "italian",
-        "introducedBy": "IT-C169-inquinamento",
-        "introducedAt": 834,
+        "introducedBy": "IT-C225-possibilita",
+        "introducedAt": 1128,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C225-COSE225-03",
+        "language": "italian",
+        "introducedBy": "IT-C225-occasione",
+        "introducedAt": 1129,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C225-COSE225-04",
+        "language": "italian",
+        "introducedBy": "IT-C225-motivo",
+        "introducedAt": 1130,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C225-COSE225-05",
+        "language": "italian",
+        "introducedBy": "IT-C225-risultato",
+        "introducedAt": 1131,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C226-COSE226-01",
+        "language": "italian",
+        "introducedBy": "IT-C226-scontrino",
+        "introducedAt": 1132,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C226-COSE226-02",
+        "language": "italian",
+        "introducedBy": "IT-C226-resto",
+        "introducedAt": 1133,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C226-COSE226-03",
+        "language": "italian",
+        "introducedBy": "IT-C226-moneta",
+        "introducedAt": 1134,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C226-COSE226-04",
+        "language": "italian",
+        "introducedBy": "IT-C226-banconota",
+        "introducedAt": 1135,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C226-COSE226-05",
+        "language": "italian",
+        "introducedBy": "IT-C226-bancomat",
+        "introducedAt": 1136,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C227-COSE227-01",
+        "language": "italian",
+        "introducedBy": "IT-C227-guida",
+        "introducedAt": 1137,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C227-COSE227-02",
+        "language": "italian",
+        "introducedBy": "IT-C227-ingresso",
+        "introducedAt": 1138,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "IT-LEX-C228-COSE228-01",
+        "language": "italian",
+        "introducedBy": "IT-C228-grattacielo",
+        "introducedAt": 1144,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C169-COSE169-03",
+        "atom": "IT-LEX-C228-COSE228-02",
         "language": "italian",
-        "introducedBy": "IT-C169-rifiuto",
-        "introducedAt": 835,
+        "introducedBy": "IT-C228-castello",
+        "introducedAt": 1145,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C169-COSE169-04",
+        "atom": "IT-LEX-C228-COSE228-03",
         "language": "italian",
-        "introducedBy": "IT-C169-riciclaggio",
-        "introducedAt": 836,
+        "introducedBy": "IT-C228-torre",
+        "introducedAt": 1146,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C169-COSE169-05",
+        "atom": "IT-LEX-C228-COSE228-04",
         "language": "italian",
-        "introducedBy": "IT-C169-energia",
-        "introducedAt": 837,
+        "introducedBy": "IT-C228-monumento",
+        "introducedAt": 1147,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C170-COSE170-01",
+        "atom": "IT-LEX-C228-COSE228-05",
         "language": "italian",
-        "introducedBy": "IT-C170-chitarra",
-        "introducedAt": 838,
+        "introducedBy": "IT-C228-statua",
+        "introducedAt": 1148,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C170-COSE170-02",
+        "atom": "IT-LEX-C229-COSE229-01",
         "language": "italian",
-        "introducedBy": "IT-C170-pianoforte",
-        "introducedAt": 839,
+        "introducedBy": "IT-C229-pianura",
+        "introducedAt": 1149,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C170-COSE170-03",
+        "atom": "IT-LEX-C229-COSE229-03",
         "language": "italian",
-        "introducedBy": "IT-C170-violino",
-        "introducedAt": 840,
+        "introducedBy": "IT-C229-fango",
+        "introducedAt": 1151,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C170-COSE170-04",
+        "atom": "IT-LEX-C229-COSE229-04",
         "language": "italian",
-        "introducedBy": "IT-C170-tamburo",
-        "introducedAt": 841,
+        "introducedBy": "IT-C229-polvere",
+        "introducedAt": 1152,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C170-COSE170-05",
+        "atom": "IT-LEX-C229-COSE229-05",
         "language": "italian",
-        "introducedBy": "IT-C170-pallone",
-        "introducedAt": 842,
+        "introducedBy": "IT-C229-fumo",
+        "introducedAt": 1153,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "IT-LEX-C171-COSE171-01",
+        "atom": "IT-LEX-C230-COSE230-01",
         "language": "italian",
-        "introducedBy": "IT-C171-arrivo",
-        "introducedAt": 843,
+        "introducedBy": "IT-C230-plastica",
+        "introducedAt": 1154,
         "missed": [
           "R2"
         ],
@@ -237650,11 +241075,11 @@
       },
       {
         "language": "italian",
-        "lessonCount": 860,
+        "lessonCount": 1171,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 996,
+        "atomsTaught": 1291,
         "atomsNeverRevisited": 1,
         "forwardReferences": 34
       },
@@ -237814,14 +241239,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 20656,
+      "atomsTaught": 20951,
       "atomsNeverRevisited": 156,
       "neverRevisitedPercent": 1,
       "missedByWindow": {
         "R1": 1745,
-        "R2": 13436,
-        "R3": 11649,
-        "R4": 15157
+        "R2": 13643,
+        "R3": 11797,
+        "R4": 15454
       },
       "forwardReferences": 968
     }
@@ -256925,6 +260350,15 @@
         "evidence": [
           {
             "language": "telugu",
+            "lessonId": "TE-S151-letter-dha",
+            "blockIndex": 2,
+            "blockTitle": "Writing: ధ — six deliberate movements",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 22
+          },
+          {
+            "language": "telugu",
             "lessonId": "TE-S152-letter-tta",
             "blockIndex": 2,
             "blockTitle": "Writing: ట — six deliberate movements",
@@ -256976,6 +260410,15 @@
             "stage": "dictation-transcription",
             "level": "pre-A1",
             "sequence": 258
+          },
+          {
+            "language": "telugu",
+            "lessonId": "TE-S116-letter-da",
+            "blockIndex": 2,
+            "blockTitle": "Writing: ద — five deliberate movements",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 395
           },
           {
             "language": "telugu",
@@ -257080,6 +260523,15 @@
         "validEvidence": [
           {
             "language": "telugu",
+            "lessonId": "TE-S151-letter-dha",
+            "blockIndex": 2,
+            "blockTitle": "Writing: ధ — six deliberate movements",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 22
+          },
+          {
+            "language": "telugu",
             "lessonId": "TE-S152-letter-tta",
             "blockIndex": 2,
             "blockTitle": "Writing: ట — six deliberate movements",
@@ -257131,6 +260583,15 @@
             "stage": "dictation-transcription",
             "level": "pre-A1",
             "sequence": 258
+          },
+          {
+            "language": "telugu",
+            "lessonId": "TE-S116-letter-da",
+            "blockIndex": 2,
+            "blockTitle": "Writing: ద — five deliberate movements",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 395
           },
           {
             "language": "telugu",
@@ -257748,7 +261209,7 @@
       "tracks": 23,
       "tracksWithAnyEvidence": 23,
       "tracksCompleteAtPreA1": 23,
-      "evidenceBlocks": 806,
+      "evidenceBlocks": 808,
       "invalidEvidenceBlocks": 0,
       "missingTrackLevelStages": 231
     }
@@ -258282,8 +261743,8 @@
       },
       {
         "language": "italian",
-        "lessonCount": 860,
-        "atomMeasurableLessons": 860,
+        "lessonCount": 1171,
+        "atomMeasurableLessons": 1171,
         "atomMeasurementBlindLessons": 0,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -258298,14 +261759,14 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 34,
-        "atomsTaught": 996,
+        "atomsTaught": 1291,
         "atomsNeverRevisited": 1,
-        "reinforcementWindowMisses": 1827,
+        "reinforcementWindowMisses": 2479,
         "reinforcementMissesByWindow": {
           "R1": 40,
-          "R2": 671,
-          "R3": 411,
-          "R4": 705
+          "R2": 878,
+          "R3": 559,
+          "R4": 1002
         },
         "payoffSurprises": 1,
         "writingPracticeLessons": 4,
@@ -258329,7 +261790,7 @@
           {
             "language": "italian",
             "kind": "reinforcement",
-            "count": 1827,
+            "count": 2479,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -259912,6 +263373,13 @@
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
+        "language": "italian",
+        "kind": "reinforcement",
+        "count": 2479,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
         "language": "tamil",
         "kind": "reinforcement",
         "count": 1882,
@@ -259922,13 +263390,6 @@
         "language": "malayalam",
         "kind": "reinforcement",
         "count": 1834,
-        "unit": "missed window(s)",
-        "detail": "add retrieval at the expanding R1-R4 intervals"
-      },
-      {
-        "language": "italian",
-        "kind": "reinforcement",
-        "count": 1827,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -260437,7 +263898,7 @@
             "shortfall": 2
           }
         ],
-        "vocabulary": 814
+        "vocabulary": 1109
       },
       {
         "language": "japanese",
@@ -260731,11 +264192,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 19675,
-    "voice": 17317,
+    "totalLessons": 19986,
+    "voice": 17628,
     "sight": 995,
     "pen": 1363,
-    "coreVoice": 17894,
+    "coreVoice": 18205,
     "lessonsWithWritingSegments": 880,
     "drivablePercent": 91,
     "tracks": [
@@ -277010,13 +280471,13 @@
       },
       {
         "language": "italian",
-        "lessonCount": 860,
-        "voice": 834,
+        "lessonCount": 1171,
+        "voice": 1145,
         "sight": 22,
         "pen": 4,
-        "coreVoice": 835,
-        "drivablePercent": 97,
-        "drivablePrefixTotal": 802,
+        "coreVoice": 1146,
+        "drivablePercent": 98,
+        "drivablePrefixTotal": 1113,
         "chapters": [
           {
             "language": "italian",
@@ -279444,6 +282905,832 @@
           {
             "language": "italian",
             "chapter": 173,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 174,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 175,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 176,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 177,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 178,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 179,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 180,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 181,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 182,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 183,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 184,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 185,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 186,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 187,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 188,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 189,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 190,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 191,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 192,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 193,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 194,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 195,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 196,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 197,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 198,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 199,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 200,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 201,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 202,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 203,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 204,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 205,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 206,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 207,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 208,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 209,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 210,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 211,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 212,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 213,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 214,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 215,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 216,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 217,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 218,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 219,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 220,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 221,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 222,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 223,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 224,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 225,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 226,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 227,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 228,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 229,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 230,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 231,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "italian",
+            "chapter": 232,
             "lessonCount": 7,
             "voice": 7,
             "sight": 0,
@@ -318124,7 +322411,7 @@
     "underspentPercent": 89
   },
   "infoDump": {
-    "lessons": 19675,
+    "lessons": 19986,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -318132,11 +322419,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 19675,
-    "measuredLessons": 15502,
-    "idiomMeasuredLessons": 15502,
-    "senseMeasuredLessons": 15503,
-    "cultureClaimMeasuredLessons": 15502,
+    "lessons": 19986,
+    "measuredLessons": 15813,
+    "idiomMeasuredLessons": 15813,
+    "senseMeasuredLessons": 15814,
+    "cultureClaimMeasuredLessons": 15813,
     "idioms": 101,
     "senses": 103,
     "cultureClaims": 208,
@@ -318145,8 +322432,8 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 18763,
-    "usesBeforeIntroduction": 36386,
+    "lessonsUsingTerms": 19074,
+    "usesBeforeIntroduction": 36702,
     "technicalUsesBeforeIntroduction": 6368,
     "technicalLessons": 3586,
     "worstTerms": [
@@ -318177,12 +322464,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 19675,
+    "lessonsScanned": 19986,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 4040,
+    "filesScanned": 4099,
     "mainCharacters": 135,
     "scriptCharacters": 802,
     "gaps": 0
