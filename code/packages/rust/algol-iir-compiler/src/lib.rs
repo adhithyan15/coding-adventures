@@ -14448,6 +14448,25 @@ mod tests {
     }
 
     #[test]
+    fn al4_literal_string_predicate_selects_preserving_transitive_dependency_branch() {
+        compile_source(
+            "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if 'ALPHA' < 'BETA' then limit else limit + 1 end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("a literal string predicate may choose a preserving transitive dependency leaf");
+    }
+
+    #[test]
+    fn al4_false_literal_string_predicate_transitive_dependency_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if 'BETA' < 'ALPHA' then limit else limit + 1 end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a literal string predicate that selects a changing dependency leaf must stay conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
     fn al4_stable_assignment_selector_preserves_transitive_dependency() {
         compile_source(
             "begin integer i, n, limit; boolean choose; n := 3; limit := 3; choose := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else n end; print(i + 0.25) end",
