@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:f9b896d9fe595b85",
+  "lessonIds": [
+    "RU-C167-elektrichka",
+    "RU-C167-mototsikl",
+    "RU-C167-gruzovik",
+    "RU-C167-benzin",
+    "RU-C167-zapravka"
+  ],
+  "tex": "russian/book/chapters/ch167-suburban-train-motorbike-lorry-petrol-petrol-station.tex"
+}

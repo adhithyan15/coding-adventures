@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 171,
+  "sourceHash": "fnv1a64:44437103e4b39b32",
+  "lessonIds": [
+    "RU-C171-pevets",
+    "RU-C171-veterinar",
+    "RU-C171-sudya",
+    "RU-C171-soldat",
+    "RU-C171-stroitel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch171.txt",
+  "json": "russian/narration/ch171.json",
+  "textHash": "fnv1a64:32012a7e70461f6c",
+  "jsonHash": "fnv1a64:a171f83b1405b836",
+  "findings": []
+}

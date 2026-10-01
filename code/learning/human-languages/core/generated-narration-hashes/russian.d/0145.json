@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:03d7f36c60b19491",
+  "lessonIds": [
+    "RU-C145-podpisyvat",
+    "RU-C145-pechatat",
+    "RU-C145-sokhranyat",
+    "RU-C145-skachivat",
+    "RU-C145-proigryvat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch145.txt",
+  "json": "russian/narration/ch145.json",
+  "textHash": "fnv1a64:d99a5ae44b37bf16",
+  "jsonHash": "fnv1a64:68c36ca9907083f5",
+  "findings": []
+}

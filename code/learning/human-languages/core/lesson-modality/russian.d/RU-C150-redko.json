@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C150-redko",
+    "language": "russian",
+    "chapter": 150,
+    "sequence": 8150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:079ebab7a4d135e4"
+  },
+  "findings": []
+}

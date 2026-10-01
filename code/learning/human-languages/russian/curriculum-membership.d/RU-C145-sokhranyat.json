@@ -1,0 +1,11 @@
+{
+  "id": "RU-C145-sokhranyat",
+  "pathSegment": "RU-PATH-145-ACT145",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-145-ACT145",
+      "order": 2
+    }
+  ]
+}

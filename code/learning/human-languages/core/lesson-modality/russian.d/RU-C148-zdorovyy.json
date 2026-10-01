@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C148-zdorovyy",
+    "language": "russian",
+    "chapter": 148,
+    "sequence": 7860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe163aae59468a95"
+  },
+  "findings": []
+}

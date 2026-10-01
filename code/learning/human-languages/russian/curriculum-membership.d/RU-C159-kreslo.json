@@ -1,0 +1,11 @@
+{
+  "id": "RU-C159-kreslo",
+  "pathSegment": "RU-PATH-159-VESHCH159",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-159-VESHCH159",
+      "order": 3
+    }
+  ]
+}

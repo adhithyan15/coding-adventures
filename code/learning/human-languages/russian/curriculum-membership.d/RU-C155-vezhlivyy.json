@@ -1,0 +1,11 @@
+{
+  "id": "RU-C155-vezhlivyy",
+  "pathSegment": "RU-PATH-155-KACH155",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-155-KACH155",
+      "order": 4
+    }
+  ]
+}

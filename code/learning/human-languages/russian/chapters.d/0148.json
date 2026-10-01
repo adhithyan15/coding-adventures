@@ -1,0 +1,19 @@
+{
+  "chapter": 148,
+  "title": "Healthy, Weak, Strong, Pale, Tired",
+  "label": "ch:ru-healthy-weak-strong-pale-tired",
+  "canDo": "I can say healthy, weak, strong, pale and tired.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "RU-R148-second-pass-words-from-chapters-144-148",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 148: I can say healthy, weak, strong, pale and tired.",
+    "assesses": [
+      "RU-LEX-C148-ZDOROV148-03",
+      "RU-LEX-C148-ZDOROV148-04",
+      "RU-LEX-C148-ZDOROV148-05"
+    ]
+  }
+}

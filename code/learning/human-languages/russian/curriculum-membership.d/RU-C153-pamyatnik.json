@@ -1,0 +1,11 @@
+{
+  "id": "RU-C153-pamyatnik",
+  "pathSegment": "RU-PATH-153-MESTO153",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-153-MESTO153",
+      "order": 3
+    }
+  ]
+}

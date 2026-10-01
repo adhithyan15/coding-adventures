@@ -1,0 +1,11 @@
+{
+  "id": "RU-C146-parkovat",
+  "pathSegment": "RU-PATH-146-ACT146",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-146-ACT146",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 169,
+  "title": "Request, Help, Opinion, Truth, Lie",
+  "label": "ch:ru-request-help-opinion-truth-lie",
+  "canDo": "I can say a request, help, an opinion, the truth and a lie.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C169-lozh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 169: I can say a request, help, an opinion, the truth and a lie.",
+    "assesses": [
+      "RU-LEX-C169-VESHCH169-03",
+      "RU-LEX-C169-VESHCH169-04",
+      "RU-LEX-C169-VESHCH169-05"
+    ]
+  }
+}

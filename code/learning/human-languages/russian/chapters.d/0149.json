@@ -1,0 +1,19 @@
+{
+  "chapter": 149,
+  "title": "Half an hour, Quarter, Day and a night, Dawn, Sunset",
+  "label": "ch:ru-half-an-hour-quarter-day-and-a-night-dawn-sunset",
+  "canDo": "I can say half an hour, a quarter, a day and a night, dawn and sunset.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "RU-C149-zakat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 149: I can say half an hour, a quarter, a day and a night, dawn and sunset.",
+    "assesses": [
+      "RU-LEX-C149-VREMYA149-03",
+      "RU-LEX-C149-VREMYA149-04",
+      "RU-LEX-C149-VREMYA149-05"
+    ]
+  }
+}

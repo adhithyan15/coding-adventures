@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:bd7ac1647223798e",
+  "lessonIds": [
+    "RU-C146-bronirovat",
+    "RU-C146-povorachivat",
+    "RU-C146-peresekat",
+    "RU-C146-ostanavlivatsya",
+    "RU-C146-parkovat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch146.txt",
+  "json": "russian/narration/ch146.json",
+  "textHash": "fnv1a64:72ade664d6b8c9c7",
+  "jsonHash": "fnv1a64:ea2a997a269390ce",
+  "findings": []
+}

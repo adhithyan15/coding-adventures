@@ -1,0 +1,19 @@
+{
+  "chapter": 170,
+  "title": "Post, Salary, Tax, Bill, Cash",
+  "label": "ch:ru-post-salary-tax-bill-cash",
+  "canDo": "I can say a post, a salary, a tax, a bill and cash.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C170-nalichnyye",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 170: I can say a post, a salary, a tax, a bill and cash.",
+    "assesses": [
+      "RU-LEX-C170-RABOTA170-03",
+      "RU-LEX-C170-RABOTA170-04",
+      "RU-LEX-C170-RABOTA170-05"
+    ]
+  }
+}

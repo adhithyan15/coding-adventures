@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-165-VESHCH165",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a crow, an eagle, a parrot, a hamster and a hedgehog.",
+  "prerequisites": []
+}

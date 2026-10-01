@@ -1,0 +1,19 @@
+{
+  "chapter": 172,
+  "title": "CV, Career, Pension, Business trip, Contract",
+  "label": "ch:ru-cv-career-pension-business-trip-contract",
+  "canDo": "I can say a CV, a career, a pension, a business trip and a contract.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-R172-second-pass-words-from-chapters-170-172",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 172: I can say a CV, a career, a pension, a business trip and a contract.",
+    "assesses": [
+      "RU-LEX-C172-RABOTA172-03",
+      "RU-LEX-C172-RABOTA172-04",
+      "RU-LEX-C172-RABOTA172-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 147,
+  "sourceHash": "fnv1a64:6822ebc8e9b7e3bb",
+  "lessonIds": [
+    "RU-C147-bolnoy",
+    "RU-C147-prostuda",
+    "RU-C147-gripp",
+    "RU-C147-nasmork",
+    "RU-C147-tabletka"
+  ],
+  "tex": "russian/book/chapters/ch147-ill-cold-flu-runny-nose-pill.tex"
+}

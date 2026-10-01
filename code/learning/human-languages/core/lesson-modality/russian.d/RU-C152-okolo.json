@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C152-okolo",
+    "language": "russian",
+    "chapter": 152,
+    "sequence": 8250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:88107706afd45a13"
+  },
+  "findings": []
+}

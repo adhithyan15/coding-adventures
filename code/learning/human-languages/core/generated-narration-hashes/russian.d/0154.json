@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:5410b2aa5c7428c7",
+  "lessonIds": [
+    "RU-C154-poetomu",
+    "RU-C154-tak-kak",
+    "RU-C154-yesli",
+    "RU-C154-khotya",
+    "RU-C154-inache"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch154.txt",
+  "json": "russian/narration/ch154.json",
+  "textHash": "fnv1a64:1ca052569b0c11a9",
+  "jsonHash": "fnv1a64:a94c763d7b9dbf6e",
+  "findings": []
+}

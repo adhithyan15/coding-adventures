@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:22e9a8f3f3c9c376",
+  "lessonIds": [
+    "RU-C153-sportzal",
+    "RU-C153-mechet",
+    "RU-C153-khram",
+    "RU-C153-pamyatnik",
+    "RU-C153-fontan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch153.txt",
+  "json": "russian/narration/ch153.json",
+  "textHash": "fnv1a64:e7e42a9535215fdd",
+  "jsonHash": "fnv1a64:167b13fa43e8c359",
+  "findings": []
+}

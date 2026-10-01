@@ -1,0 +1,11 @@
+{
+  "id": "RU-C141-znakomitsya",
+  "pathSegment": "RU-PATH-141-ACT141",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-141-ACT141",
+      "order": 1
+    }
+  ]
+}

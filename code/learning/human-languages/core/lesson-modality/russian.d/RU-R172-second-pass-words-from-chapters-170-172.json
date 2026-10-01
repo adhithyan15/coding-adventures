@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-R172-second-pass-words-from-chapters-170-172",
+    "language": "russian",
+    "chapter": 172,
+    "sequence": 9690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c077f6d295ca145"
+  },
+  "findings": []
+}

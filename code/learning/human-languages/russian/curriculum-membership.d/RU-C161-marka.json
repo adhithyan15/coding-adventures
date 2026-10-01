@@ -1,0 +1,11 @@
+{
+  "id": "RU-C161-marka",
+  "pathSegment": "RU-PATH-161-VESHCH161",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-161-VESHCH161",
+      "order": 2
+    }
+  ]
+}

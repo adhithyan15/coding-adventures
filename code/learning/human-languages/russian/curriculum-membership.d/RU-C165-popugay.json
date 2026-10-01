@@ -1,0 +1,11 @@
+{
+  "id": "RU-C165-popugay",
+  "pathSegment": "RU-PATH-165-VESHCH165",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-165-VESHCH165",
+      "order": 2
+    }
+  ]
+}

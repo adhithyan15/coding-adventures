@@ -1,0 +1,11 @@
+{
+  "id": "RU-C165-oryol",
+  "pathSegment": "RU-PATH-165-VESHCH165",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-165-VESHCH165",
+      "order": 1
+    }
+  ]
+}

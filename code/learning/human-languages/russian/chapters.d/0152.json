@@ -1,0 +1,19 @@
+{
+  "chapter": 152,
+  "title": "Beside, Around, Inside, Outside, Behind",
+  "label": "ch:ru-beside-around-inside-outside-behind",
+  "canDo": "I can say beside, around, inside, outside and behind.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "RU-C152-szadi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 152: I can say beside, around, inside, outside and behind.",
+    "assesses": [
+      "RU-LEX-C152-MESTO152-03",
+      "RU-LEX-C152-MESTO152-04",
+      "RU-LEX-C152-MESTO152-05"
+    ]
+  }
+}

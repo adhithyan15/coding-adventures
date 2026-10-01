@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C146-parkovat",
+    "language": "russian",
+    "chapter": 146,
+    "sequence": 7800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:591923f00dd520f7"
+  },
+  "findings": []
+}

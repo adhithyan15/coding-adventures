@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C147-gripp",
+    "language": "russian",
+    "chapter": 147,
+    "sequence": 7830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b187aec974cd488d"
+  },
+  "findings": []
+}

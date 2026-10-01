@@ -1,0 +1,11 @@
+{
+  "id": "RU-C161-otkrytka",
+  "pathSegment": "RU-PATH-161-VESHCH161",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-161-VESHCH161",
+      "order": 3
+    }
+  ]
+}

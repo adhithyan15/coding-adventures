@@ -1,0 +1,19 @@
+{
+  "chapter": 155,
+  "title": "Nice, Clever, Silly, Lazy, Polite",
+  "label": "ch:ru-nice-clever-silly-lazy-polite",
+  "canDo": "I can say nice, clever, silly, lazy and polite.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "RU-C155-vezhlivyy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 155: I can say nice, clever, silly, lazy and polite.",
+    "assesses": [
+      "RU-LEX-C155-KACH155-03",
+      "RU-LEX-C155-KACH155-04",
+      "RU-LEX-C155-KACH155-05"
+    ]
+  }
+}

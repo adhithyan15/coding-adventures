@@ -1,0 +1,11 @@
+{
+  "id": "RU-C152-vnutri",
+  "pathSegment": "RU-PATH-152-MESTO152",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-152-MESTO152",
+      "order": 2
+    }
+  ]
+}

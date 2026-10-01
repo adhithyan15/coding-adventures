@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:6e5662290d828fb8",
+  "lessonIds": [
+    "RU-C162-bluzka",
+    "RU-C162-futbolka",
+    "RU-C162-kolgotki",
+    "RU-C162-krossovki",
+    "RU-C162-tapochki"
+  ],
+  "tex": "russian/book/chapters/ch162-blouse-t-shirt-tights-trainers-slippers.tex"
+}

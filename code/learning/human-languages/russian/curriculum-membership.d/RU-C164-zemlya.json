@@ -1,0 +1,11 @@
+{
+  "id": "RU-C164-zemlya",
+  "pathSegment": "RU-PATH-164-VESHCH164",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-164-VESHCH164",
+      "order": 4
+    }
+  ]
+}

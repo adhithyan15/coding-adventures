@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:14a3be711296b557",
+  "lessonIds": [
+    "RU-C150-redko",
+    "RU-C150-kazhdyy",
+    "RU-C150-snachala",
+    "RU-C150-nakonets",
+    "RU-C150-yeshchyo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch150.txt",
+  "json": "russian/narration/ch150.json",
+  "textHash": "fnv1a64:931f370b0050dcc5",
+  "jsonHash": "fnv1a64:6d172cba064890ee",
+  "findings": []
+}

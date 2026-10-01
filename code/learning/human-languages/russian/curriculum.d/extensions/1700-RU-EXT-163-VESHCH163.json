@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-163-VESHCH163",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a frankfurter, a prawn, borscht, cabbage soup and a pancake.",
+  "prerequisites": []
+}

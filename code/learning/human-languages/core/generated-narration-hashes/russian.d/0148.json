@@ -1,0 +1,21 @@
+{
+  "language": "russian",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:32aedcfae17d09c3",
+  "lessonIds": [
+    "RU-C148-zdorovyy",
+    "RU-C148-slabyy",
+    "RU-C148-silnyy",
+    "RU-C148-blednyy",
+    "RU-C148-ustalyy",
+    "RU-R148-first-pass-words-from-chapters-140-143",
+    "RU-R148-second-pass-words-from-chapters-144-148"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "russian/narration/ch148.txt",
+  "json": "russian/narration/ch148.json",
+  "textHash": "fnv1a64:9e08e5bce5d21b16",
+  "jsonHash": "fnv1a64:ba658ba070025437",
+  "findings": []
+}

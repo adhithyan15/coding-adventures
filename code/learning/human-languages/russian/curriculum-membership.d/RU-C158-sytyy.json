@@ -1,0 +1,11 @@
+{
+  "id": "RU-C158-sytyy",
+  "pathSegment": "RU-PATH-158-KACH158",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-158-KACH158",
+      "order": 3
+    }
+  ]
+}

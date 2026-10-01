@@ -1,0 +1,19 @@
+{
+  "chapter": 160,
+  "title": "Wine glass, Bag, Box, Drawer, Light bulb",
+  "label": "ch:ru-wine-glass-bag-box-drawer-light-bulb",
+  "canDo": "I can say a wine glass, a bag, a box, a drawer and a light bulb.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C160-lampochka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 160: I can say a wine glass, a bag, a box, a drawer and a light bulb.",
+    "assesses": [
+      "RU-LEX-C160-VESHCH160-03",
+      "RU-LEX-C160-VESHCH160-04",
+      "RU-LEX-C160-VESHCH160-05"
+    ]
+  }
+}

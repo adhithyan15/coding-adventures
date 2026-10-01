@@ -1,0 +1,19 @@
+{
+  "chapter": 166,
+  "title": "Skis, Skates, Team, Match, Training session",
+  "label": "ch:ru-skis-skates-team-match-training-session",
+  "canDo": "I can say skis, skates, a team, a match and a training session.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-R166-second-pass-words-from-chapters-162-166",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 166: I can say skis, skates, a team, a match and a training session.",
+    "assesses": [
+      "RU-LEX-C166-VESHCH166-03",
+      "RU-LEX-C166-VESHCH166-04",
+      "RU-LEX-C166-VESHCH166-05"
+    ]
+  }
+}

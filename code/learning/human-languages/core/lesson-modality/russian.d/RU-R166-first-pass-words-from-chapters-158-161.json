@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-R166-first-pass-words-from-chapters-158-161",
+    "language": "russian",
+    "chapter": 166,
+    "sequence": 9190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6d9f011ab0735a4"
+  },
+  "findings": []
+}

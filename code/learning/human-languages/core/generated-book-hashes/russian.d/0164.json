@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:5bb0b758bbf012ec",
+  "lessonIds": [
+    "RU-C164-pivo",
+    "RU-C164-vino",
+    "RU-C164-klimat",
+    "RU-C164-vozdukh",
+    "RU-C164-zemlya"
+  ],
+  "tex": "russian/book/chapters/ch164-beer-wine-climate-air-earth.tex"
+}

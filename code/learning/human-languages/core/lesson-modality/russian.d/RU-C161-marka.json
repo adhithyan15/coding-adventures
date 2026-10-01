@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C161-marka",
+    "language": "russian",
+    "chapter": 161,
+    "sequence": 8910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:04a270373a661987"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C169-mneniye",
+  "pathSegment": "RU-PATH-169-VESHCH169",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-169-VESHCH169",
+      "order": 2
+    }
+  ]
+}

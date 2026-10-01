@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 143,
+  "sourceHash": "fnv1a64:80e7ab583a90eede",
+  "lessonIds": [
+    "RU-C143-letat",
+    "RU-C143-yezdit",
+    "RU-C143-khodit",
+    "RU-C143-prikhodit",
+    "RU-C143-ukhodit"
+  ],
+  "tex": "russian/book/chapters/ch143-to-fly-to-ride-to-walk-to-come-to-leave.tex"
+}

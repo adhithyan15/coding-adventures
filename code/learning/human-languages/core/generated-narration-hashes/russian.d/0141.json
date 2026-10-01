@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:ab06c25a3def4eb5",
+  "lessonIds": [
+    "RU-C141-vstrechat",
+    "RU-C141-znakomitsya",
+    "RU-C141-priglashat",
+    "RU-C141-blagodarit",
+    "RU-C141-izvinyatsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch141.txt",
+  "json": "russian/narration/ch141.json",
+  "textHash": "fnv1a64:b2ef56014798a6d1",
+  "jsonHash": "fnv1a64:a500736413357b4c",
+  "findings": []
+}

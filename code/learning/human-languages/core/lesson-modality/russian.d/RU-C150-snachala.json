@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C150-snachala",
+    "language": "russian",
+    "chapter": 150,
+    "sequence": 8170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:92977d7f09724b37"
+  },
+  "findings": []
+}

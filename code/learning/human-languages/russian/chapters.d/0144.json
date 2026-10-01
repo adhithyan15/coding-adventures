@@ -1,0 +1,19 @@
+{
+  "chapter": 144,
+  "title": "To be afraid, To please, To hate, To praise, To scold",
+  "label": "ch:ru-to-be-afraid-to-please-to-hate-to-praise-to-scold",
+  "canDo": "I can say to be afraid, to please, to hate, to praise and to scold.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C144-rugat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 144: I can say to be afraid, to please, to hate, to praise and to scold.",
+    "assesses": [
+      "RU-LEX-C144-ACT144-03",
+      "RU-LEX-C144-ACT144-04",
+      "RU-LEX-C144-ACT144-05"
+    ]
+  }
+}

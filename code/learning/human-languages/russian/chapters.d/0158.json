@@ -1,0 +1,19 @@
+{
+  "chapter": 158,
+  "title": "Alive, Dead, Hungry, Well-fed, Familiar",
+  "label": "ch:ru-alive-dead-hungry-well-fed-familiar",
+  "canDo": "I can say alive, dead, hungry, well-fed and familiar.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "RU-C158-znakomyy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 158: I can say alive, dead, hungry, well-fed and familiar.",
+    "assesses": [
+      "RU-LEX-C158-KACH158-03",
+      "RU-LEX-C158-KACH158-04",
+      "RU-LEX-C158-KACH158-05"
+    ]
+  }
+}

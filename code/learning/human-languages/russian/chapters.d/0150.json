@@ -1,0 +1,19 @@
+{
+  "chapter": 150,
+  "title": "Rarely, Every, At first, At last, Still",
+  "label": "ch:ru-rarely-every-at-first-at-last-still",
+  "canDo": "I can say rarely, every, at first, at last and still.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "RU-C150-yeshchyo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 150: I can say rarely, every, at first, at last and still.",
+    "assesses": [
+      "RU-LEX-C150-VREMYA150-03",
+      "RU-LEX-C150-VREMYA150-04",
+      "RU-LEX-C150-VREMYA150-05"
+    ]
+  }
+}

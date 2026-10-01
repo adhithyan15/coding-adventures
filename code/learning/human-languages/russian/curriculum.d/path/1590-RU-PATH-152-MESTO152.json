@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-152-MESTO152",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "RU-EXT-152-MESTO152"
+  ],
+  "after": []
+}

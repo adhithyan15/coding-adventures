@@ -1,0 +1,19 @@
+{
+  "chapter": 171,
+  "title": "Singer, Vet, Judge, Soldier, Builder",
+  "label": "ch:ru-singer-vet-judge-soldier-builder",
+  "canDo": "I can say a singer, a vet, a judge, a soldier and a builder.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C171-stroitel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 171: I can say a singer, a vet, a judge, a soldier and a builder.",
+    "assesses": [
+      "RU-LEX-C171-RABOTA171-03",
+      "RU-LEX-C171-RABOTA171-04",
+      "RU-LEX-C171-RABOTA171-05"
+    ]
+  }
+}

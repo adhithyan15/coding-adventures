@@ -1,0 +1,11 @@
+{
+  "id": "RU-C151-rayon",
+  "pathSegment": "RU-PATH-151-MESTO151",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-151-MESTO151",
+      "order": 3
+    }
+  ]
+}

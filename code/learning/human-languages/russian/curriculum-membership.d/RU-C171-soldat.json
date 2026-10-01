@@ -1,0 +1,11 @@
+{
+  "id": "RU-C171-soldat",
+  "pathSegment": "RU-PATH-171-RABOTA171",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-171-RABOTA171",
+      "order": 3
+    }
+  ]
+}

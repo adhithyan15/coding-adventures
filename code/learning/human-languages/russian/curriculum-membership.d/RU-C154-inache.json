@@ -1,0 +1,11 @@
+{
+  "id": "RU-C154-inache",
+  "pathSegment": "RU-PATH-154-PRICH154",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-154-PRICH154",
+      "order": 4
+    }
+  ]
+}

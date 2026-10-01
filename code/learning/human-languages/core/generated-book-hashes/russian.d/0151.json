@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:3f2d8bbbe48efff1",
+  "lessonIds": [
+    "RU-C151-mesto",
+    "RU-C151-tsentr",
+    "RU-C151-okraina",
+    "RU-C151-rayon",
+    "RU-C151-prospekt"
+  ],
+  "tex": "russian/book/chapters/ch151-place-centre-outskirts-district-avenue.tex"
+}

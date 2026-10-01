@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:d868c3762662e76f",
+  "lessonIds": [
+    "RU-C160-bokal",
+    "RU-C160-paket",
+    "RU-C160-korobka",
+    "RU-C160-yashchik",
+    "RU-C160-lampochka"
+  ],
+  "tex": "russian/book/chapters/ch160-wine-glass-bag-box-drawer-light-bulb.tex"
+}

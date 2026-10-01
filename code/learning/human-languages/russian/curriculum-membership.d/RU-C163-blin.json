@@ -1,0 +1,11 @@
+{
+  "id": "RU-C163-blin",
+  "pathSegment": "RU-PATH-163-VESHCH163",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-163-VESHCH163",
+      "order": 4
+    }
+  ]
+}

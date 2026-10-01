@@ -1,0 +1,11 @@
+{
+  "id": "RU-C168-nevesta",
+  "pathSegment": "RU-PATH-168-VESHCH168",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-168-VESHCH168",
+      "order": 2
+    }
+  ]
+}

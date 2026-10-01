@@ -1,0 +1,11 @@
+{
+  "id": "RU-C161-posylka",
+  "pathSegment": "RU-PATH-161-VESHCH161",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-161-VESHCH161",
+      "order": 4
+    }
+  ]
+}

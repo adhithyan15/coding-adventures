@@ -1,0 +1,11 @@
+{
+  "id": "RU-C166-komanda",
+  "pathSegment": "RU-PATH-166-VESHCH166",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-166-VESHCH166",
+      "order": 2
+    }
+  ]
+}

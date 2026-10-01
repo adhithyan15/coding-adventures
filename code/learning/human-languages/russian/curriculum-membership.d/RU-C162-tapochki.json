@@ -1,0 +1,11 @@
+{
+  "id": "RU-C162-tapochki",
+  "pathSegment": "RU-PATH-162-VESHCH162",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-162-VESHCH162",
+      "order": 4
+    }
+  ]
+}

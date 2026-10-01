@@ -1,0 +1,11 @@
+{
+  "id": "RU-C142-brosat",
+  "pathSegment": "RU-PATH-142-ACT142",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-142-ACT142",
+      "order": 2
+    }
+  ]
+}

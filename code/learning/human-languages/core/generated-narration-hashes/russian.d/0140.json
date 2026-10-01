@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:e5f807d3e6b8af79",
+  "lessonIds": [
+    "RU-C140-obedat",
+    "RU-C140-zavtrakat",
+    "RU-C140-uzhinat",
+    "RU-C140-stirat",
+    "RU-C140-gladit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch140.txt",
+  "json": "russian/narration/ch140.json",
+  "textHash": "fnv1a64:5bb4ed85e2d965e5",
+  "jsonHash": "fnv1a64:55b9939fd4350193",
+  "findings": []
+}
