@@ -19,20 +19,20 @@
     "notes": "All 50 final-head checks reached terminal acceptable conclusions: 43 successes and seven expected skips. GitHub reported the reviewed head MERGEABLE and CLEAN; guarded squash auto-merge was enabled only then, and GitHub merged PR #16327 automatically as 6bcec12e1559f0944005f10570a2771e617e4d7f without a plain manual merge command."
   },
   "last_inventory": {
-    "revision": "6bcec12e1559f0944005f10570a2771e617e4d7f",
+    "revision": "a960adc4734c03909692a6adc7f3c5ce41b983f0",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1473,
-    "implementation_package_slots": 4740,
-    "all_reported_identities": 1515,
+    "implementation_identities": 1474,
+    "implementation_package_slots": 4741,
+    "all_reported_identities": 1516,
     "high_consensus_packages": 178,
     "high_consensus_missing_slots": 265,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 181,
     "two_to_four_missing_slots": 2282,
-    "singleton_packages": 991,
-    "singleton_missing_slots": 13874,
+    "singleton_packages": 992,
+    "singleton_missing_slots": 13888,
     "rust_singletons": 805,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
@@ -3995,7 +3995,14 @@
         "swift-hash-map-lane-parity",
         "swift-hash-set-lane-parity",
         "swift-hyperloglog-lane-parity",
-        "swift-bloom-filter-lane-parity"
+        "swift-bloom-filter-lane-parity",
+        "swift-skip-list-lane-parity",
+        "swift-resp-protocol-lane-parity",
+        "swift-in-memory-data-store-protocol-lane-parity",
+        "swift-in-memory-data-store-engine-lane-parity",
+        "swift-in-memory-data-store-lane-parity",
+        "swift-tree-set-lane-parity",
+        "swift-radix-tree-lane-parity"
       ],
       "branch": null,
       "pr_number": null,
@@ -9849,7 +9856,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "First exact Swift high-consensus child materialized by the post-#14615 lane audit. Implement the existing deterministic hash-functions contract with package-native tests, empty capabilities, and no host authority. This dependency-shaped root unlocks the explicit Swift bloom-filter, hash-map, hash-set, and hyperloglog children; hyperloglog then unlocks the in-memory-data-store engine and facade. The remaining non-CT Swift high-consensus gaps stay owned by the selection-blocked classifier until decomposed into exact children."
+      "notes": "First exact Swift high-consensus child materialized by the post-#14615 lane audit. Implement the existing deterministic hash-functions contract with package-native tests, empty capabilities, and no host authority. This dependency-shaped root unlocks the explicit Swift bloom-filter, hash-map, hash-set, and HyperLogLog children. The store engine remains separately gated on hash-map, hash-set, HyperLogLog, skip-list, protocol IR, and the neutral injected-clock contract. The remaining non-CT Swift high-consensus gaps stay owned by the selection-blocked classifier until decomposed into exact children."
     },
     {
       "id": "build-tool-jvm-process-free-graph-diff-core",
@@ -11484,11 +11491,81 @@
       "id": "forme-plugin-runner-wire-lifecycle-portable-conformance",
       "title": "Classify and fixture the portable Forme plugin-runner wire lifecycle",
       "status": "pending",
-      "selection_blocked": true,
+      "selection_blocked": false,
       "depends_on": ["forme-portable-core-family-classification"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered from non-parity PR #16296, which merged as 222ce7975e and added the TypeScript-only forme-plugin-runner-ts identity. The exact-main c6685aa8 schema-3 refresh inventories that singleton without collision or unowned debt. Inventory the runner with the existing Forme family and freeze only its process-free wire codec and framing, JSON-RPC identifier, bounded lifecycle/state-transition, stream-envelope, cancellation-projection, and pure SDK projection behavior. Keep stdin/stdout, argv, signals, timers, filesystem, network, storage, shell execution, native limits, sandbox, trust, and installation authority outside this owner. Selection is temporarily blocked while open PR #16323 overlaps the runner lifecycle and adds the unique TypeScript forme-plugin-runner-conformance identity; after it closes, absorb or split that conformance-harness identity explicitly while preserving the subprocess and host-authority exclusions."
+      "notes": "Discovered from non-parity PR #16296, which merged as 222ce7975e and added the TypeScript-only forme-plugin-runner-ts identity. PR #16323 later merged as f8494ae9bcd798b827c3096f4f6565ab1be567b0 and added the collision-free TypeScript forme-plugin-runner-conformance identity. The exact-main a960adc4 schema-3 refresh absorbs both singletons into this owner without collision or unowned debt. Inventory the runner with the existing Forme family and freeze only its process-free wire codec and framing, JSON-RPC identifier, bounded lifecycle/state-transition, stream-envelope, cancellation-projection, and pure SDK projection behavior. Keep stdin/stdout, argv, signals, timers, filesystem, network, storage, shell execution, native limits, sandbox, trust, and installation authority outside this owner. The overlap block is now cleared; normal dependencies and the one-active-PR rule still govern selection."
+    },
+    {
+      "id": "swift-skip-list-lane-parity",
+      "title": "Implement DT20 skip-list in Swift",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": false,
+      "notes": "Implement the dependency-free span-augmented ordered map with insert, update, delete, rank, selection, range behavior, comparator semantics, caller-controlled level generation, package-native tests, and empty capabilities. This is a direct prerequisite of the Swift data-store engine."
+    },
+    {
+      "id": "swift-resp-protocol-lane-parity",
+      "title": "Implement DT23 RESP protocol in Swift",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": false,
+      "notes": "Implement the pure typed RESP2 codec with binary-safe bulk strings, distinct null bulk and null array values, incremental decoding across arbitrary fragmentation, stable failures, explicit resource ceilings, package-native tests, and empty capabilities."
+    },
+    {
+      "id": "swift-in-memory-data-store-protocol-lane-parity",
+      "title": "Implement the in-memory data-store protocol IR in Swift",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": false,
+      "notes": "Implement the dependency-free command-frame and engine-response IR with ASCII command normalization, binary-safe arguments, immutable value ownership, deterministic ordering, stable errors, package-native tests, and empty capabilities. Keep RESP conversion in the facade rather than coupling this IR owner to the wire codec."
+    },
+    {
+      "id": "swift-in-memory-data-store-engine-lane-parity",
+      "title": "Implement the DT25 in-memory data-store engine in Swift",
+      "status": "pending",
+      "depends_on": ["swift-hash-map-lane-parity", "swift-hash-set-lane-parity", "swift-hyperloglog-lane-parity", "swift-skip-list-lane-parity", "swift-in-memory-data-store-protocol-lane-parity", "in-memory-data-store-clock-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": false,
+      "notes": "Consume the existing Swift heap plus the reviewed hash-map, hash-set, skip-list, HyperLogLog, protocol-IR, and injected-clock contracts. Preserve binary-safe strings, typed collections, sorted sets, expiry, 16 logical databases, deterministic response ordering, and the complete 57-command execution surface. Require caller-controlled time and empty capabilities; exclude ambient clock access, AOF/filesystem persistence, sockets, processes, and credentials."
+    },
+    {
+      "id": "swift-in-memory-data-store-lane-parity",
+      "title": "Implement the DT25 in-memory data-store facade in Swift",
+      "status": "pending",
+      "depends_on": ["swift-resp-protocol-lane-parity", "swift-in-memory-data-store-protocol-lane-parity", "swift-in-memory-data-store-engine-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": false,
+      "notes": "Compose the RESP2 streaming decoder, command protocol IR, and execution engine into incremental and pipelined byte-stream entry points with binary-safe response conversion. Preserve empty capabilities and exclude TCP listening, AOF persistence, background expiry loops, ambient time, and other host authority."
+    },
+    {
+      "id": "swift-tree-set-lane-parity",
+      "title": "Implement the AVL-backed tree-set package in Swift",
+      "status": "pending",
+      "depends_on": ["avl-tree-swift-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": false,
+      "notes": "Compose the reviewed Swift AVL-tree contract into an ordered persistent set with rank, range, set algebra, deterministic iteration, immutable ownership, package-native tests, and empty capabilities."
+    },
+    {
+      "id": "swift-radix-tree-lane-parity",
+      "title": "Implement DT14 radix-tree in Swift",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": false,
+      "notes": "Implement the compressed-trie contract over Swift's already present DT13 semantics, including Unicode-safe edge splits, prefix scans, longest-prefix matching, deletion compaction, deterministic ordering, stable errors, package-native tests, and empty capabilities."
     },
     {
       "id": "assembler-lua-arm-prerequisite-classification",

@@ -15373,6 +15373,35 @@ revision. It will first make adoption evidence mechanically truthful, then run
 the complete neutral corpus through every existing lane and reconcile source,
 tests, build fronts, capability manifests, and affected barcode downstreams.
 
+### Post-#16323 inventory and Swift store-chain audit
+
+Before publication of the existing-lane barcode adoption, PR #16323 merged as
+`f8494ae9bcd798b827c3096f4f6565ab1be567b0`. Its new TypeScript
+`forme-plugin-runner-conformance` root is collision-free and is now absorbed by
+the existing Forme runner wire/lifecycle owner alongside
+`forme-plugin-runner-ts`. The temporary live-PR selection block is cleared;
+the owner still excludes subprocess, filesystem, network, storage, shell,
+signal, timer, native-limit, sandbox, trust, and installation authority.
+
+The exact-main schema-3 inventory at
+`a960adc4734c03909692a6adc7f3c5ce41b983f0` is collision-clean at 15
+established lanes, 1,474 implementation identities, 4,741 package slots, 1,516
+all-reported identities, completion bands 178/265, 123/934, 181/2,282, and
+992/13,888, 805 Rust singletons, five emerging OCaml packages, zero canonical
+collisions, and zero unknown buckets. The only identity delta from the
+post-#16327 snapshot is the now-merged Forme conformance root.
+
+The follow-up Swift dependency audit also materializes seven previously
+implicit collision-free successors. Dependency-free skip-list, RESP2, and
+data-store protocol-IR children feed a bounded data-store engine that also
+depends on hash-map, hash-set, HyperLogLog, and the neutral injected-clock
+contract. A separate facade composes the engine, protocol IR, and streaming
+RESP2 codec without TCP, persistence, background loops, or ambient time.
+AVL-backed tree-set and compressed radix-tree remain independent exact
+children. The selection-blocked Swift/Dart umbrella now names all seven, while
+each bounded leaf remains selectable subject to its explicit dependencies and
+the one-active-PR rule.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
