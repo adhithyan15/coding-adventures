@@ -4676,9 +4676,26 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         }
         Backend::Qt => {
             let require_runtime = project_shell_requires_runtime(profile, runtime_library);
+            // UI48 §7.10 (ENV2/ENV3): the root's layout variants, composed the
+            // way its default is just above, and the rules the shell switches
+            // between them by -- the same rules as SwiftUI, Compose and Flutter.
+            let mut root_variants = Vec::new();
+            for variant in discover_variants(src_dir, component)?.into_iter().flatten() {
+                let variant_mll = read_to_string(&src_dir.join(format!("{component}.{variant}.mll")))?;
+                let composed = compose_component_with_backend_tokens(
+                    component,
+                    &mil_src,
+                    &variant_mll,
+                    &msl_src,
+                    package_search_paths,
+                    &shell_style_options,
+                )?;
+                root_variants.push((variant, composed));
+            }
             let qt_opts = mosaic_emit_qt::pipeline::EmitOptions {
                 emit_project: true,
                 require_runtime,
+                layout_variants: qt_layout_choices(component, layouts, &root_variants)?,
                 ..Default::default()
             };
             let r = mosaic_emit_qt::pipeline::from_pipeline_with_options(
@@ -4693,17 +4710,39 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     &backend_dir.join(format!("{component}.qml")),
                     r.output.as_bytes(),
                 )?;
+                // A native-complete shell mounts every root strictly, so the
+                // root's variants are re-emitted under the same policy as its
+                // default (the flat artifacts were emitted permissively).
+                for (variant, composed) in &root_variants {
+                    let strict = mosaic_emit_qt::pipeline::from_pipeline_variant_with_options(
+                        &composed.model.component,
+                        &composed.layout.def,
+                        &composed.style,
+                        variant,
+                        &qt_opts,
+                    )
+                    .map_err(|e| pipeline_emit_err(component, e))?;
+                    write_file(
+                        &backend_dir.join(format!("{component}.{variant}.qml")),
+                        strict.output.as_bytes(),
+                    )?;
+                }
             }
             if let Some(proj) = r.project {
                 let bundled_runtime = runtime_library.map(runtime_file_name).transpose()?;
                 let platform_effects = !replaces_qt_host;
                 let cmake_lists = qt_cmake_with_host_effects(
-                    &qt_cmake_with_package_exports(
-                        &proj.cmake_lists,
+                    &qt_cmake_with_layout_variants(
+                        &qt_cmake_with_package_exports(
+                            &proj.cmake_lists,
+                            component,
+                            components,
+                            bundled_runtime,
+                        ),
                         component,
                         components,
-                        bundled_runtime,
-                    ),
+                        src_dir,
+                    )?,
                     component,
                     host_effects,
                 );
@@ -5004,6 +5043,110 @@ fn qt_cmake_with_package_exports(
         .expect("write Qt runtime packaging CMake");
     }
     cmake
+}
+
+/// The layout variants a Qt shell switches between (UI48 §7.10): the same
+/// rules as SwiftUI's, Compose's and Flutter's (`[[app.layouts]]`, or the
+/// conventions), each keyed by the wire names `MosaicHost::environmentReport`
+/// answers, with the native table models its root takes. A rule for a
+/// variant with no `.mll`, or one whose name cannot become a QML type, fails
+/// the build.
+fn qt_layout_choices(
+    component: &str,
+    declared: &[mosaic_package_manifest::layouts::LayoutRule],
+    root_variants: &[(String, ComposedComponent)],
+) -> Result<Vec<mosaic_emit_qt::pipeline::LayoutChoice>, BuildError> {
+    let variants: Vec<String> = root_variants
+        .iter()
+        .map(|(variant, _)| variant.clone())
+        .collect();
+    let rules = mosaic_package_manifest::layouts::effective_layout_rules(declared, &variants);
+    rules
+        .into_iter()
+        .map(|rule| {
+            let Some((_, composed)) = root_variants
+                .iter()
+                .find(|(variant, _)| *variant == rule.variant)
+            else {
+                return Err(BuildError::Io(format!(
+                    "`[[app.layouts]]` selects variant `{}`, but {component} has no {component}.{}.mll",
+                    rule.variant, rule.variant
+                )));
+            };
+            if mosaic_emit_qt::pipeline::variant_type_name(component, &rule.variant).is_none() {
+                return Err(BuildError::Io(format!(
+                    "layout variant `{}` of {component} cannot name a QML type",
+                    rule.variant
+                )));
+            }
+            Ok(mosaic_emit_qt::pipeline::LayoutChoice {
+                native_table_models: mosaic_emit_qt::pipeline::native_table_model_count(
+                    &composed.layout.def,
+                ),
+                conditions: rule
+                    .conditions
+                    .into_iter()
+                    .map(|(axis, value)| (axis.wire_name().to_string(), value))
+                    .collect(),
+                variant: rule.variant,
+            })
+        })
+        .collect()
+}
+
+/// Compile every export's layout variants into the Qt project's QML module
+/// (UI48 §7.10), as [`qt_cmake_with_package_exports`] does every export's
+/// default: the package shell is the package's native compile boundary, so a
+/// variant that does not compile must fail here rather than ship. The root's
+/// selectable variants are already listed by the emitter (main.cpp mounts
+/// them); the rest are added after.
+///
+/// Every QML type in one module must be unique, and a variant's
+/// `<Component><Variant>` could be another export's name (`Card` + `touch`
+/// beside an exported `CardTouch`) or another variant's (`Card` + `touch-bar`
+/// and `CardTouch` + `bar`). Both are refused here, naming the two, rather
+/// than registering one type twice.
+fn qt_cmake_with_layout_variants(
+    generated: &str,
+    mounted_component: &str,
+    components: &[String],
+    src_dir: &Path,
+) -> Result<String, BuildError> {
+    let mut owners: HashMap<String, String> = components
+        .iter()
+        .map(|component| (component.clone(), format!("the export {component}")))
+        .collect();
+    let mut added = String::new();
+    for component in components {
+        for variant in discover_variants(src_dir, component)?.into_iter().flatten() {
+            let file = format!("{component}.{variant}.qml");
+            let type_name = mosaic_emit_qt::pipeline::variant_type_name(component, &variant)
+                .ok_or_else(|| {
+                    BuildError::Io(format!(
+                        "layout variant `{variant}` of {component} cannot name a QML type"
+                    ))
+                })?;
+            if let Some(owner) = owners.insert(type_name.clone(), format!("the variant {file}")) {
+                return Err(BuildError::Io(format!(
+                    "the Qt module would register `{type_name}` twice: for the variant {file} \
+                     and for {owner}"
+                )));
+            }
+            if generated.contains(&format!("qt_target_qml_sources({mounted_component} QML_FILES {file})\n")) {
+                continue;
+            }
+            added.push_str(
+                &mosaic_emit_qt::pipeline::layout_variant_cmake(mounted_component, component, &variant)
+                    .expect("the type name was just checked"),
+            );
+        }
+    }
+    if added.is_empty() {
+        return Ok(generated.to_string());
+    }
+    Ok(format!(
+        "{generated}\n# UI48 §7.10: every other layout variant of every export, compiled into the\n# module as its own QML type, so a variant that does not compile fails the build.\n{added}"
+    ))
 }
 
 fn initial_window_anchor_error(
@@ -7671,11 +7814,22 @@ fn compile_one_component(
         }
         .map(|r| r.output)
         .map_err(|e| pipeline_emit_err(component, e))?,
-        Backend::Qt => mosaic_emit_qt::pipeline::from_pipeline(
-            &mosmodel_out.component,
-            &layout_out.def,
-            &style_def,
-        )
+        // A named variant is a root of its own (UI48 §7.10): the QML type
+        // `<Component><Variant>`, which a Qt project shell compiles beside
+        // the default and mounts when the window's environment selects it.
+        Backend::Qt => match variant {
+            Some(variant) => mosaic_emit_qt::pipeline::from_pipeline_variant(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_def,
+                variant,
+            ),
+            None => mosaic_emit_qt::pipeline::from_pipeline(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_def,
+            ),
+        }
         .map(|r| r.output)
         .map_err(|e| pipeline_emit_err(component, e))?,
         Backend::Html => mosaic_emit_html::pipeline::from_pipeline_with_sample_slot_values(
@@ -16308,6 +16462,237 @@ version = "1"
                 "{component} must participate in qt_add_qml_module:\n{cmake}"
             );
         }
+    }
+
+    // UI48 §7.10: the same on Qt -- every variant a QML type in the module,
+    // and a selector in `main.cpp` generated from the same rules as SwiftUI,
+    // Compose and Flutter.
+
+    #[test]
+    fn a_qt_app_carries_its_touch_variant_and_selects_it_by_convention() {
+        let pkg = card_package_with_touch_variant();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Qt)).expect("Qt shell");
+        let qt = out.path().join("qt");
+        let variant = fs::read_to_string(qt.join("Card.touch.qml")).unwrap();
+        assert!(
+            variant.contains("    // Layout variant: touch, the QML type CardTouch (UI48 §7.10)\n"),
+            "{variant}"
+        );
+        // The same interface as the default (a QML root declares its own).
+        assert!(variant.contains("    property string label: \"\"\n"), "{variant}");
+        let cmake = fs::read_to_string(qt.join("CMakeLists.txt")).unwrap();
+        assert!(
+            cmake.contains(concat!(
+                "set_source_files_properties(Card.touch.qml PROPERTIES QT_QML_SOURCE_TYPENAME CardTouch)\n",
+                "qt_target_qml_sources(Card QML_FILES Card.touch.qml)\n",
+            )),
+            "{cmake}"
+        );
+        // Listed once: the builder adds no second entry for what the emitter
+        // already put in the module.
+        assert_eq!(cmake.matches("QML_FILES Card.touch.qml").count(), 1, "{cmake}");
+        let qmldir = fs::read_to_string(qt.join("qmldir")).unwrap();
+        assert!(qmldir.contains("CardTouch 1.0 Card.touch.qml\n"), "{qmldir}");
+        let main = fs::read_to_string(qt.join("main.cpp")).unwrap();
+        // Keyed by the wire name the environment report uses.
+        assert!(
+            main.contains(
+                "      {\"touch\", \"qrc:/qt/qml/Mosaic/Card/Card.touch.qml\", {{\"pointer\", \"coarse\"}}},\n"
+            ),
+            "{main}"
+        );
+        assert!(main.contains("    mosaicSwitchLayout(view, host, environment);\n"), "{main}");
+        // A sample shell chooses from the window, carrying what it shows.
+        assert!(main.contains("const QStringList slotProperties{"), "{main}");
+    }
+
+    #[test]
+    fn declared_layout_rules_reach_the_qt_selector_under_wire_names() {
+        let pkg = card_package_with_touch_variant();
+        let manifest = pkg.path().join("mosaic-package.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str("\n[[app.layouts]]\nvariant = \"touch\"\nsize-class = \"compact\"\n");
+        fs::write(&manifest, text).unwrap();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Qt)).expect("Qt shell");
+        let main = fs::read_to_string(out.path().join("qt/main.cpp")).unwrap();
+        // `size-class` in the manifest, `sizeClass` in the report.
+        assert!(
+            main.contains(
+                "      {\"touch\", \"qrc:/qt/qml/Mosaic/Card/Card.touch.qml\", {{\"sizeClass\", \"compact\"}}},\n"
+            ),
+            "{main}"
+        );
+        assert!(!main.contains("{\"pointer\", \"coarse\"}"), "the declared rule replaces the convention");
+    }
+
+    #[test]
+    fn a_qt_layout_rule_for_a_missing_variant_is_refused() {
+        let pkg = card_package();
+        let manifest = pkg.path().join("mosaic-package.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str("\n[[app.layouts]]\nvariant = \"compact\"\nsize-class = \"compact\"\n");
+        fs::write(&manifest, text).unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package(&swiftui_options(&pkg, &out, Backend::Qt)).unwrap_err();
+        assert!(error.to_string().contains("Card.compact.mll"), "{error}");
+    }
+
+    #[test]
+    fn a_qt_app_without_variants_has_no_selector() {
+        let pkg = card_package();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Qt)).expect("Qt shell");
+        let qt = out.path().join("qt");
+        let main = fs::read_to_string(qt.join("main.cpp")).unwrap();
+        assert!(!main.contains("Layout"), "{main}");
+        assert!(
+            main.contains("  const QUrl url(QStringLiteral(\"qrc:/qt/qml/Mosaic/Card/Card.qml\"));\n"),
+            "{main}"
+        );
+        let cmake = fs::read_to_string(qt.join("CMakeLists.txt")).unwrap();
+        assert!(!cmake.contains("UI48"), "{cmake}");
+        assert!(!cmake.contains("qt_target_qml_sources"), "{cmake}");
+    }
+
+    /// The native-complete shell mounts every root strictly, so the root's
+    /// variant is re-emitted under that policy, as its default is; and the
+    /// first root is mounted through the same function as every later one.
+    #[test]
+    fn a_native_complete_qt_app_mounts_its_variants_strictly() {
+        let pkg = card_package_with_touch_variant();
+        let runtime = pkg.path().join("libcard_app.so");
+        fs::write(&runtime, b"runtime").unwrap();
+        let out = TempDir::new().unwrap();
+        build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &out, Backend::Qt),
+            BuildProfile::NativeComplete,
+            Some(&runtime),
+        )
+        .expect("native-complete Qt shell");
+        let qt = out.path().join("qt");
+        for file in ["Card.qml", "Card.touch.qml"] {
+            let root = fs::read_to_string(qt.join(file)).unwrap();
+            assert!(root.contains("    required property var mosaicHost\n"), "{file}:\n{root}");
+        }
+        let main = fs::read_to_string(qt.join("main.cpp")).unwrap();
+        assert!(main.contains("  auto properties = host.propsRequired();\n"), "{main}");
+        assert!(main.contains("        mosaicObserveEnvironment(view, mosaicHost);\n"), "{main}");
+        assert!(
+            main.contains("    mosaicMountLayout(view, mosaicLayoutUrl(MosaicHost::environmentReport("),
+            "{main}"
+        );
+    }
+
+    /// Every axis a rule can test is a key the Qt binding's
+    /// `environmentReport` answers, under the same wire name. The manifest
+    /// crate pins `wire_name` to `mosaic-app-runtime`; this pins the C++
+    /// report to `wire_name`, so a generated rule can never test a key the
+    /// report does not carry (and so never silently match nothing).
+    #[test]
+    fn the_qt_environment_report_carries_every_rule_axis() {
+        let binding = mosaic_app_bindings::qt_runtime_binding_for_application("card").source;
+        let body = |signature: &str| {
+            let start = binding.find(signature).expect(signature);
+            let body = &binding[start..];
+            body[..body.find("\n}\n").expect("one function body")].to_string()
+        };
+        let report = body("QVariantMap MosaicHost::environmentReport(");
+        let initial = body("QVariantMap MosaicHost::initialEnvironment()");
+        assert!(report.contains("auto report = initialEnvironment();"), "{report}");
+        for axis in mosaic_package_manifest::layouts::EnvironmentAxis::ALL {
+            let key = format!("QStringLiteral(\"{}\")", axis.wire_name());
+            assert!(
+                report.contains(&key) || initial.contains(&key),
+                "{key} is not in the Qt environment report"
+            );
+        }
+    }
+
+    /// Every class declared at file scope in the headers the Qt shell
+    /// includes beside its roots is a name a variant's QML type may not
+    /// take (UI48 §7.10), so a new public class there fails this test
+    /// until the emitter reserves it.
+    #[test]
+    fn every_public_class_the_qt_shell_includes_is_reserved() {
+        let binding = mosaic_app_bindings::qt_runtime_binding_for_application("card");
+        let platform = mosaic_app_bindings::qt_platform_effects();
+        let mut declared = Vec::new();
+        for header in [binding.header, platform.header] {
+            for line in header.lines() {
+                let Some(rest) = ["class ", "struct "]
+                    .iter()
+                    .find_map(|keyword| line.strip_prefix(keyword))
+                else {
+                    continue;
+                };
+                // A forward declaration (`class MosaicHost;`) declares nothing new.
+                if rest.trim_end().ends_with(';') {
+                    continue;
+                }
+                let name: String = rest
+                    .chars()
+                    .take_while(|c| c.is_ascii_alphanumeric() || *c == '_')
+                    .collect();
+                assert!(
+                    mosaic_emit_qt::pipeline::SHELL_RESERVED_NAMES.contains(&name.as_str()),
+                    "{name} is public in the Qt shell but a variant's QML type may take it"
+                );
+                declared.push(name);
+            }
+        }
+        assert_eq!(declared, ["MosaicHost", "MosaicFileDialogs"]);
+    }
+
+    /// One QML module holds every export and every variant, so no two may
+    /// register one type name -- a variant's `<Component><Variant>` beside an
+    /// export of that name, or beside another variant's.
+    #[test]
+    fn a_qt_variant_type_that_another_export_owns_is_refused() {
+        let pkg = make_package("mosaic-pkg-card", &["Card", "CardTouch"]);
+        fs::write(
+            pkg.path().join("src/Card.touch.mll"),
+            fs::read_to_string(pkg.path().join("src/Card.mll")).unwrap(),
+        )
+        .unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package(&swiftui_options(&pkg, &out, Backend::Qt)).unwrap_err();
+        assert!(error.to_string().contains("`CardTouch` twice"), "{error}");
+        assert!(error.to_string().contains("the export CardTouch"), "{error}");
+    }
+
+    /// Every export's variants are compiled, not only the root's: a variant
+    /// of another export joins the module as its own type, beside the root's
+    /// (which the emitter already listed, and which is not listed again).
+    #[test]
+    fn every_exports_qt_variants_join_the_module() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid", "Cell"]);
+        for component in ["Grid", "Cell"] {
+            fs::write(
+                pkg.path().join(format!("src/{component}.touch.mll")),
+                fs::read_to_string(pkg.path().join(format!("src/{component}.mll"))).unwrap(),
+            )
+            .unwrap();
+        }
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Qt)).expect("Qt shell");
+        let cmake = fs::read_to_string(out.path().join("qt/CMakeLists.txt")).unwrap();
+        for (file, type_name) in [("Grid.touch.qml", "GridTouch"), ("Cell.touch.qml", "CellTouch")] {
+            assert_eq!(
+                cmake
+                    .matches(&format!(
+                        "set_source_files_properties({file} PROPERTIES QT_QML_SOURCE_TYPENAME {type_name})\nqt_target_qml_sources(Grid QML_FILES {file})\n"
+                    ))
+                    .count(),
+                1,
+                "{file}:\n{cmake}"
+            );
+        }
+        // Only the root's variants are mounted.
+        let main = fs::read_to_string(out.path().join("qt/main.cpp")).unwrap();
+        assert!(main.contains("Grid.touch.qml"), "{main}");
+        assert!(!main.contains("Cell.touch.qml"), "{main}");
     }
 
     #[test]
