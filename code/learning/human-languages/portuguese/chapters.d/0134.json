@@ -1,0 +1,19 @@
+{
+  "chapter": 134,
+  "title": "Nothing, None, Nobody, Which One, Not Even",
+  "label": "ch:pt-nothing-none-nobody-which-one-not-even",
+  "canDo": "I can say that there is nothing, nobody and none, ask which one, and answer \"me neither\".",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "PT-C134-nem",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 134: I can say that there is nothing, nobody and none, ask which one, and answer \"me neither\".",
+    "assesses": [
+      "PT-LEX-C134-NEG134-03",
+      "PT-LEX-C134-NEG134-04",
+      "PT-LEX-C134-NEG134-05"
+    ]
+  }
+}

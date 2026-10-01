@@ -1,0 +1,11 @@
+{
+  "id": "PT-C137-o-aviso",
+  "pathSegment": "PT-PATH-137-LER137",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-137-LER137",
+      "order": 1
+    }
+  ]
+}

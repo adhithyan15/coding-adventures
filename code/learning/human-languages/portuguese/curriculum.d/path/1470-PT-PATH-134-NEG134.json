@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-134-NEG134",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "PT-EXT-134-NEG134"
+  ],
+  "after": []
+}

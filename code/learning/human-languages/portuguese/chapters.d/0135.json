@@ -1,0 +1,19 @@
+{
+  "chapter": 135,
+  "title": "Recently, the Day before Yesterday, in the Old Days, the Past, To Happen",
+  "label": "ch:pt-recently-the-day-before-yesterday-in-the-old-days-the-past-to-happen",
+  "canDo": "I can say what happened, and when: recently, the day before yesterday, in the old days.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "PT-C135-acontecer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 135: I can say what happened, and when: recently, the day before yesterday, in the old days.",
+    "assesses": [
+      "PT-LEX-C135-PAS135-03",
+      "PT-LEX-C135-PAS135-04",
+      "PT-LEX-C135-PAS135-05"
+    ]
+  }
+}
