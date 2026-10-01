@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C184-defendre",
+    "language": "french",
+    "chapter": 184,
+    "sequence": 9770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b6a97f7deaa58dc"
+  },
+  "findings": []
+}

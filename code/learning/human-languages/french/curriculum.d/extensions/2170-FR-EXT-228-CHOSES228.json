@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-228-CHOSES228",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a vase, a plant, a seed, a root and a branch.",
+  "prerequisites": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:2ee835211a0216f8",
+  "lessonIds": [
+    "FR-C205-reserver",
+    "FR-C205-depenser",
+    "FR-C205-economiser",
+    "FR-C205-commander",
+    "FR-C205-secher"
+  ],
+  "tex": "french/book/chapters/ch205-to-book-to-spend-to-save-to-order-to-dry.tex"
+}

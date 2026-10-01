@@ -1,0 +1,19 @@
+{
+  "chapter": 144,
+  "title": "To explain, To translate, To decide, To try, To continue",
+  "label": "ch:fr-to-explain-to-translate-to-decide-to-try-to-continue",
+  "canDo": "I can say to explain, to translate, to decide, to try and to continue.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C144-continuer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 144: I can say to explain, to translate, to decide, to try and to continue.",
+    "assesses": [
+      "FR-LEX-C144-VERBES144-03",
+      "FR-LEX-C144-VERBES144-04",
+      "FR-LEX-C144-VERBES144-05"
+    ]
+  }
+}

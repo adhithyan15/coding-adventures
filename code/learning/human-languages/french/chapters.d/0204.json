@@ -1,0 +1,19 @@
+{
+  "chapter": 204,
+  "title": "Interview, Career, Printer, Mobile phone, Sheet of paper",
+  "label": "ch:fr-interview-career-printer-mobile-phone-sheet-of-paper",
+  "canDo": "I can say an interview, a career, a printer, a mobile phone and a sheet of paper.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-R204-second-pass-words-from-chapters-202-204",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 204: I can say an interview, a career, a printer, a mobile phone and a sheet of paper.",
+    "assesses": [
+      "FR-LEX-C204-TRAV204-03",
+      "FR-LEX-C204-TRAV204-04",
+      "FR-LEX-C204-TRAV204-05"
+    ]
+  }
+}

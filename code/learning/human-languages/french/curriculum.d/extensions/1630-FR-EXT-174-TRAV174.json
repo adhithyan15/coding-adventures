@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-174-TRAV174",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a company, a colleague, a salary, a meeting and a contract.",
+  "prerequisites": []
+}

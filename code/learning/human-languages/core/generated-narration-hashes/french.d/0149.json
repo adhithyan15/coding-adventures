@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:fd3d355999922d6b",
+  "lessonIds": [
+    "FR-C149-decouvrir",
+    "FR-C149-sembler",
+    "FR-C149-servir",
+    "FR-C149-souffrir",
+    "FR-C149-rever"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch149.txt",
+  "json": "french/narration/ch149.json",
+  "textHash": "fnv1a64:cca086a639a19f3b",
+  "jsonHash": "fnv1a64:9d58fd669bc06866",
+  "findings": []
+}

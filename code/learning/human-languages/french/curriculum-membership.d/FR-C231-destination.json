@@ -1,0 +1,11 @@
+{
+  "id": "FR-C231-destination",
+  "pathSegment": "FR-PATH-231-CHOSES231",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-231-CHOSES231",
+      "order": 3
+    }
+  ]
+}

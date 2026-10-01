@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C152-admirer",
+    "language": "french",
+    "chapter": 152,
+    "sequence": 7430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:92cc5bf0069b63d2"
+  },
+  "findings": []
+}

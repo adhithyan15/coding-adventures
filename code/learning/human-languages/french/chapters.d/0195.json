@@ -1,0 +1,19 @@
+{
+  "chapter": 195,
+  "title": "Dialect, Piece of news, Advertising, Screen, Keyboard",
+  "label": "ch:fr-dialect-piece-of-news-advertising-screen-keyboard",
+  "canDo": "I can say a dialect, a piece of news, advertising, a screen and a keyboard.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C195-clavier",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 195: I can say a dialect, a piece of news, advertising, a screen and a keyboard.",
+    "assesses": [
+      "FR-LEX-C195-CHOSES195-03",
+      "FR-LEX-C195-CHOSES195-04",
+      "FR-LEX-C195-CHOSES195-05"
+    ]
+  }
+}

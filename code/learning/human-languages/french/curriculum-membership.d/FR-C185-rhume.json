@@ -1,0 +1,11 @@
+{
+  "id": "FR-C185-rhume",
+  "pathSegment": "FR-PATH-185-SANTE185",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-185-SANTE185",
+      "order": 4
+    }
+  ]
+}

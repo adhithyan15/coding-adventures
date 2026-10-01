@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C173-raquette",
+    "language": "french",
+    "chapter": 173,
+    "sequence": 8870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8cb4cbe1514aeb91"
+  },
+  "findings": []
+}

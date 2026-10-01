@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 157,
+  "sourceHash": "fnv1a64:2417ec481b3c2bf9",
+  "lessonIds": [
+    "FR-C157-au-dessus",
+    "FR-C157-au-dessous",
+    "FR-C157-devant",
+    "FR-C157-derriere",
+    "FR-C157-a-cote"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch157.txt",
+  "json": "french/narration/ch157.json",
+  "textHash": "fnv1a64:bee025906abfd1a0",
+  "jsonHash": "fnv1a64:f670f11703062fbd",
+  "findings": []
+}

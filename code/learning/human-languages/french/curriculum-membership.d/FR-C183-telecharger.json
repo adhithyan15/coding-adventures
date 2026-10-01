@@ -1,0 +1,11 @@
+{
+  "id": "FR-C183-telecharger",
+  "pathSegment": "FR-PATH-183-VERBES183",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-183-VERBES183",
+      "order": 2
+    }
+  ]
+}

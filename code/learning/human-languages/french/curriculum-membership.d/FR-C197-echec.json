@@ -1,0 +1,11 @@
+{
+  "id": "FR-C197-echec",
+  "pathSegment": "FR-PATH-197-CHOSES197",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-197-CHOSES197",
+      "order": 4
+    }
+  ]
+}

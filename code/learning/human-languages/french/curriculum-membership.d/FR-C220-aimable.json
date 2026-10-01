@@ -1,0 +1,11 @@
+{
+  "id": "FR-C220-aimable",
+  "pathSegment": "FR-PATH-220-QUAL220",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-220-QUAL220",
+      "order": 2
+    }
+  ]
+}

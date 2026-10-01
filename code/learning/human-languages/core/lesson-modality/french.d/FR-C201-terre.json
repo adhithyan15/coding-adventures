@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C201-terre",
+    "language": "french",
+    "chapter": 201,
+    "sequence": 10950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7006d774e67914d1"
+  },
+  "findings": []
+}

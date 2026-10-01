@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:24cae86808b5b78d",
+  "lessonIds": [
+    "FR-C175-embrasser",
+    "FR-C175-saluer",
+    "FR-C175-remercier",
+    "FR-C175-inviter",
+    "FR-C175-garer"
+  ],
+  "tex": "french/book/chapters/ch175-to-kiss-to-greet-to-thank-to-invite-to-park.tex"
+}

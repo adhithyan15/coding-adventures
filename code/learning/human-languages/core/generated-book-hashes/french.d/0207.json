@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:bd3d2e048e52aa5d",
+  "lessonIds": [
+    "FR-C207-naitre",
+    "FR-C207-mourir",
+    "FR-C207-vieillir",
+    "FR-C207-epouser",
+    "FR-C207-divorcer"
+  ],
+  "tex": "french/book/chapters/ch207-to-be-born-to-die-to-grow-old-to-marry-to-divorce.tex"
+}

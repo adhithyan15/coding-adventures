@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:baab52926da56750",
+  "lessonIds": [
+    "FR-C208-applaudir",
+    "FR-C208-traverser",
+    "FR-C208-augmenter",
+    "FR-C208-diminuer",
+    "FR-C208-prevenir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch208.txt",
+  "json": "french/narration/ch208.json",
+  "textHash": "fnv1a64:5f92d82e734d1bd7",
+  "jsonHash": "fnv1a64:fb6ddd5347e6bf35",
+  "findings": []
+}

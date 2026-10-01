@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C222-societe",
+    "language": "french",
+    "chapter": 222,
+    "sequence": 12350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d38c93cf1633297"
+  },
+  "findings": []
+}

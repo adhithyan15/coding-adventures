@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:97a71b8972da80f8",
+  "lessonIds": [
+    "FR-C174-entreprise",
+    "FR-C174-collegue",
+    "FR-C174-salaire",
+    "FR-C174-reunion",
+    "FR-C174-contrat",
+    "FR-R174-first-pass-words-from-chapters-170-171",
+    "FR-R174-second-pass-words-from-chapters-172-174"
+  ],
+  "tex": "french/book/chapters/ch174-company-colleague-salary-meeting-contract.tex"
+}

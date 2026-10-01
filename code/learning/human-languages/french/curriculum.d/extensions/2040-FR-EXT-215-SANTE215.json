@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-215-SANTE215",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say flu, a prescription, a tablet, a syrup and an ointment.",
+  "prerequisites": []
+}

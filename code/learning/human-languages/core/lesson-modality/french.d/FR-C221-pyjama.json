@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C221-pyjama",
+    "language": "french",
+    "chapter": 221,
+    "sequence": 12320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9423a7dd4778d86d"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C179-dependre",
+    "language": "french",
+    "chapter": 179,
+    "sequence": 9310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:86755b5a0f92b225"
+  },
+  "findings": []
+}

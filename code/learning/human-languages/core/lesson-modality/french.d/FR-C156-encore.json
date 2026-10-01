@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C156-encore",
+    "language": "french",
+    "chapter": 156,
+    "sequence": 7670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0892fd62e42742a"
+  },
+  "findings": []
+}

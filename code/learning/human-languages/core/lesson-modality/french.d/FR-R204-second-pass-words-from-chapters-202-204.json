@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R204-second-pass-words-from-chapters-202-204",
+    "language": "french",
+    "chapter": 204,
+    "sequence": 11160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0818362d21c19967"
+  },
+  "findings": []
+}

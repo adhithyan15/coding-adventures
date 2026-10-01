@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:62ced376e6ff528b",
+  "lessonIds": [
+    "FR-C230-fil",
+    "FR-C230-aiguille",
+    "FR-C230-clou",
+    "FR-C230-marteau",
+    "FR-C230-echelle"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch230.txt",
+  "json": "french/narration/ch230.json",
+  "textHash": "fnv1a64:b6e78546b8111f01",
+  "jsonHash": "fnv1a64:b4313899ae37c7b7",
+  "findings": []
+}

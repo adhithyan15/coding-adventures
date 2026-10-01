@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C225-experience",
+    "language": "french",
+    "chapter": 225,
+    "sequence": 12690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b636b3ce48fafbfd"
+  },
+  "findings": []
+}

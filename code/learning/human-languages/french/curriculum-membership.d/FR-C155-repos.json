@@ -1,0 +1,11 @@
+{
+  "id": "FR-C155-repos",
+  "pathSegment": "FR-PATH-155-SANTE155",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-155-SANTE155",
+      "order": 0
+    }
+  ]
+}

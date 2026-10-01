@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R169-first-pass-words-from-chapters-161-164",
+    "language": "french",
+    "chapter": 169,
+    "sequence": 8520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aa70538c53e94971"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C213-serrer",
+  "pathSegment": "FR-PATH-213-VERBES213",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-213-VERBES213",
+      "order": 3
+    }
+  ]
+}

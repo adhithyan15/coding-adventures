@@ -1,0 +1,11 @@
+{
+  "id": "FR-C166-pharmacien",
+  "pathSegment": "FR-PATH-166-CHOSES166",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-166-CHOSES166",
+      "order": 4
+    }
+  ]
+}

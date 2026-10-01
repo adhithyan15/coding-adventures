@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C221-bouton",
+    "language": "french",
+    "chapter": 221,
+    "sequence": 12330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8d06469ca0a31a0"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 150,
+  "title": "To move away, To come near, To chat, To plug in, To deliver",
+  "label": "ch:fr-to-move-away-to-come-near-to-chat-to-plug-in-to-deliver",
+  "canDo": "I can say to move away, to come near, to chat, to plug in and to deliver.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C150-livrer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 150: I can say to move away, to come near, to chat, to plug in and to deliver.",
+    "assesses": [
+      "FR-LEX-C150-VERBES150-03",
+      "FR-LEX-C150-VERBES150-04",
+      "FR-LEX-C150-VERBES150-05"
+    ]
+  }
+}

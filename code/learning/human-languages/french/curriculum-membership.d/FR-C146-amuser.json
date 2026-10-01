@@ -1,0 +1,11 @@
+{
+  "id": "FR-C146-amuser",
+  "pathSegment": "FR-PATH-146-VERBES146",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-146-VERBES146",
+      "order": 1
+    }
+  ]
+}

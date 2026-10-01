@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C173-natation",
+    "language": "french",
+    "chapter": 173,
+    "sequence": 8890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e0ae1bd5f62f261f"
+  },
+  "findings": []
+}

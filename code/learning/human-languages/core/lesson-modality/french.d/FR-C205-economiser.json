@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C205-economiser",
+    "language": "french",
+    "chapter": 205,
+    "sequence": 11330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:33a3b59b43524cfc"
+  },
+  "findings": []
+}

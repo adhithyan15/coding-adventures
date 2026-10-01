@@ -1,0 +1,19 @@
+{
+  "chapter": 201,
+  "title": "Earth, Mud, Dust, Smoke, Flame",
+  "label": "ch:fr-earth-mud-dust-smoke-flame",
+  "canDo": "I can say earth, mud, dust, smoke and a flame.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C201-flamme",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 201: I can say earth, mud, dust, smoke and a flame.",
+    "assesses": [
+      "FR-LEX-C201-CHOSES201-03",
+      "FR-LEX-C201-CHOSES201-04",
+      "FR-LEX-C201-CHOSES201-05"
+    ]
+  }
+}

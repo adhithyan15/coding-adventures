@@ -1,0 +1,11 @@
+{
+  "id": "FR-C201-flamme",
+  "pathSegment": "FR-PATH-201-CHOSES201",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-201-CHOSES201",
+      "order": 4
+    }
+  ]
+}

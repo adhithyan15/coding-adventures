@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:aa8d07ed2c8bfb3b",
+  "lessonIds": [
+    "FR-C168-regle",
+    "FR-C168-permission",
+    "FR-C168-interdiction",
+    "FR-C168-securite",
+    "FR-C168-conseil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch168.txt",
+  "json": "french/narration/ch168.json",
+  "textHash": "fnv1a64:56302a11d49d53fa",
+  "jsonHash": "fnv1a64:9472aa5acbe64510",
+  "findings": []
+}

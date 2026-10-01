@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:d55a7370af26b4bf",
+  "lessonIds": [
+    "FR-C216-autour",
+    "FR-C216-partout",
+    "FR-C216-ailleurs",
+    "FR-C216-la-haut",
+    "FR-C216-banlieue"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch216.txt",
+  "json": "french/narration/ch216.json",
+  "textHash": "fnv1a64:88839aa6baa9f581",
+  "jsonHash": "fnv1a64:cd96f85451934350",
+  "findings": []
+}

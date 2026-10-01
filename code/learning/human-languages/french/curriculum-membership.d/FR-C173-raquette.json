@@ -1,0 +1,11 @@
+{
+  "id": "FR-C173-raquette",
+  "pathSegment": "FR-PATH-173-CHOSES173",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-173-CHOSES173",
+      "order": 1
+    }
+  ]
+}

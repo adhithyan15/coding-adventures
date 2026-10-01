@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-215-SANTE215",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "FR-EXT-215-SANTE215"
+  ],
+  "after": []
+}

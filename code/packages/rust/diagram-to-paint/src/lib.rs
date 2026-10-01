@@ -44,7 +44,10 @@ use diagram_ir::{
     GanttTaskTags, SequenceProperty, SwimlaneEdgeKind, TextAlign as GeoTextAlign, TreeViewNodeKind,
     RailroadElementKind, StructuralNodeKind,
 };
-use layout_ir::{Color, Content, FontSpec, PositionedNode, TextAlign, TextContent};
+use layout_ir::{
+    Color, Content, FontSpec, PositionedNode, TextAlign, TextContent, TextDecoration,
+    TextDecorationLines, TextDecorationStyle,
+};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
 use paint_instructions::{
     GlyphPosition, PaintBase, PaintEllipse, PaintGlyphRun, PaintGroup, PaintInstruction, PaintPath,
@@ -109,7 +112,10 @@ where
     let text_color = Color { r: 15, g: 23, b: 42, a: 255 };
 
     if let Some(title) = &diagram.title {
-        text_children.push(text_node(title, 8.0, 6.0, diagram.width - 16.0, 30.0, options.title_font.clone(), text_color));
+        let mut title_font = options.title_font.clone();
+        title_font.size = diagram.config.title_font_size.unwrap_or(title_font.size);
+        let title_color = diagram.config.title_color.as_deref().map(css_to_color).unwrap_or(text_color);
+        text_children.push(text_node(title, 8.0, 6.0, diagram.width - 16.0, 30.0, title_font, title_color));
     }
     for node in &diagram.nodes {
         if node.width <= 0.0 || node.height <= 0.0 {
@@ -119,10 +125,22 @@ where
             continue;
         }
         let palette_index = node.palette_index;
-        let fill = node.style.as_ref().and_then(|style| style.fill.clone())
+        let configured_fill = if node.has_children { &diagram.config.section_fill_color } else { &diagram.config.leaf_fill_color };
+        let configured_stroke = if node.has_children { &diagram.config.section_stroke_color } else { &diagram.config.leaf_stroke_color };
+        let configured_stroke_width = if node.has_children { diagram.config.section_stroke_width } else { diagram.config.leaf_stroke_width };
+        let fill = node.style.as_ref().and_then(|style| style.node.fill.clone())
+            .or_else(|| configured_fill.clone())
             .unwrap_or_else(|| palette_index.map_or_else(|| "transparent".into(), |index| diagram.config.theme.fills[index].clone()));
-        let stroke = node.style.as_ref().and_then(|style| style.stroke.clone())
+        let stroke = node.style.as_ref().and_then(|style| style.node.stroke.clone())
+            .or_else(|| configured_stroke.clone())
             .unwrap_or_else(|| palette_index.map_or_else(|| "transparent".into(), |index| diagram.config.theme.strokes[index].clone()));
+        let opacity = node.style.as_ref().and_then(|style| style.opacity).unwrap_or(1.0);
+        let fill = if node.style.as_ref().is_some_and(|style| style.opacity.is_some() || style.fill_opacity.is_some()) {
+            with_opacity(&fill, node.style.as_ref().and_then(|style| style.fill_opacity).unwrap_or(1.0) * opacity)
+        } else { fill };
+        let stroke = if node.style.as_ref().is_some_and(|style| style.opacity.is_some() || style.stroke_opacity.is_some()) {
+            with_opacity(&stroke, node.style.as_ref().and_then(|style| style.stroke_opacity).unwrap_or(1.0) * opacity)
+        } else { stroke };
         instructions.push(PaintInstruction::Rect(PaintRect {
             base: PaintBase::default(),
             x: node.x,
@@ -131,53 +149,61 @@ where
             height: node.height,
             fill: Some(fill),
             stroke: Some(stroke),
-            stroke_width: Some(node.style.as_ref().and_then(|style| style.stroke_width).unwrap_or(diagram.config.border_width)),
-            corner_radius: Some(node.style.as_ref().and_then(|style| style.corner_radius).unwrap_or(3.0)),
-            stroke_dash: node.style.as_ref().and_then(|style| style.stroke_dash.clone()),
-            stroke_dash_offset: None,
+            stroke_width: Some(node.style.as_ref().and_then(|style| style.node.stroke_width)
+                .or(configured_stroke_width).unwrap_or(diagram.config.border_width)),
+            corner_radius: Some(node.style.as_ref().and_then(|style| style.node.corner_radius).unwrap_or(3.0)),
+            stroke_dash: node.style.as_ref().and_then(|style| style.node.stroke_dash.clone()),
+            stroke_dash_offset: node.style.as_ref().and_then(|style| style.stroke_dash_offset),
         }));
         if node.width >= 44.0 && node.height >= 22.0 {
             let mut label_font = options.label_font.clone();
-            label_font.size = node.style.as_ref().and_then(|style| style.font_size).unwrap_or(diagram.config.label_font_size);
+            label_font.size = node.style.as_ref().and_then(|style| style.node.font_size).unwrap_or(diagram.config.label_font_size);
             if let Some(style) = &node.style {
-                label_font.weight = style.font_weight.unwrap_or(label_font.weight);
-                label_font.italic = style.font_italic.unwrap_or(label_font.italic);
-                if let Some(family) = &style.font_family { label_font.family.clone_from(family); }
+                label_font.weight = style.node.font_weight.unwrap_or(label_font.weight);
+                label_font.italic = style.node.font_italic.unwrap_or(label_font.italic);
+                if let Some(family) = &style.node.font_family { label_font.family.clone_from(family); }
             }
-            let node_text_color = node.style.as_ref().and_then(|style| style.text_color.as_deref())
-                .map(css_to_color).unwrap_or_else(|| palette_index
+            let palette_text_color = || palette_index
                     .map(|index| css_to_color(&diagram.config.theme.labels[index]))
-                    .unwrap_or(text_color));
-            text_children.push(text_node(
+                    .unwrap_or(text_color);
+            let label_text_color = node.style.as_ref().and_then(|style| style.node.text_color.as_deref())
+                .or(diagram.config.label_color.as_deref()).map(css_to_color).unwrap_or_else(palette_text_color);
+            let label_text_color = color_with_opacity(label_text_color, opacity);
+            text_children.push(treemap_text_node(
                 &node.label,
                 node.x + 6.0,
                 node.y + 4.0,
                 (node.width * if node.has_children { 0.68 } else { 1.0 } - 12.0).max(0.0),
                 diagram.config.label_font_size * 1.4,
                 label_font,
-                node_text_color,
+                label_text_color,
+                node.style.as_ref(),
             ));
             if diagram.config.show_values && node.height >= 42.0 {
                 let mut value_font = options.label_font.clone();
-                value_font.size = node.style.as_ref().and_then(|style| style.font_size).unwrap_or(diagram.config.value_font_size);
+                value_font.size = node.style.as_ref().and_then(|style| style.node.font_size).unwrap_or(diagram.config.value_font_size);
                 if let Some(style) = &node.style {
-                    value_font.weight = style.font_weight.unwrap_or(value_font.weight);
-                    value_font.italic = style.font_italic.unwrap_or(value_font.italic);
-                    if let Some(family) = &style.font_family { value_font.family.clone_from(family); }
+                    value_font.weight = style.node.font_weight.unwrap_or(value_font.weight);
+                    value_font.italic = style.node.font_italic.unwrap_or(value_font.italic);
+                    if let Some(family) = &style.node.font_family { value_font.family.clone_from(family); }
                 }
                 let (value_x, value_y, value_width) = if node.has_children {
                     (node.x + node.width * 0.68, node.y + 4.0, node.width * 0.32 - 6.0)
                 } else {
                     (node.x + 6.0, node.y + 8.0 + diagram.config.label_font_size * 1.2, node.width - 12.0)
                 };
-                text_children.push(text_node(
+                let value_text_color = node.style.as_ref().and_then(|style| style.node.text_color.as_deref())
+                    .or(diagram.config.value_color.as_deref()).map(css_to_color).unwrap_or_else(palette_text_color);
+                let value_text_color = color_with_opacity(value_text_color, opacity);
+                text_children.push(treemap_text_node(
                     &format_treemap_value(node.value, &diagram.config.value_format),
                     value_x,
                     value_y,
                     value_width.max(0.0),
                     diagram.config.value_font_size * 1.4,
                     value_font,
-                    node_text_color,
+                    value_text_color,
+                    node.style.as_ref(),
                 ));
             }
         }
@@ -223,50 +249,142 @@ where
 }
 
 fn format_treemap_value(value: f64, format: &str) -> String {
-    let kind = format.chars().last().filter(|kind| "bdeEfFgGoprs%xX".contains(*kind));
-    let precision = format.split_once('.').and_then(|(_, tail)| {
-        let digits = tail.chars().take_while(|character| character.is_ascii_digit()).collect::<String>();
-        (!digits.is_empty()).then(|| {
-            if digits.chars().all(|digit| digit == '0') { Some(digits.len()) } else { digits.parse::<usize>().ok() }
-        }).flatten()
-    });
-    let mut rendered = match kind {
-        Some('b') => format!("{:b}", value.round() as i128),
-        Some('d') => format!("{:.0}", value),
+    let spec = parse_treemap_number_format(format).unwrap_or_else(|| parse_treemap_number_format(",").unwrap());
+    let magnitude = value.abs();
+    let mut rendered = match spec.kind {
+        Some('b') => format!("{:b}", magnitude.round() as i128),
+        Some('d') => format!("{magnitude:.0}"),
         Some('e' | 'E') => {
-            let precision = precision.unwrap_or(6);
-            let result = format!("{value:.precision$e}");
-            if kind == Some('E') { result.to_ascii_uppercase() } else { result }
+            let precision = spec.precision.unwrap_or(6);
+            let result = format!("{magnitude:.precision$e}");
+            if spec.kind == Some('E') { result.to_ascii_uppercase() } else { result }
         }
-        Some('f' | 'F') => format!("{value:.precision$}", precision = precision.unwrap_or(6)),
-        Some('g' | 'G' | 'r') => format_significant(value, precision.unwrap_or(6)),
-        Some('o') => format!("{:o}", value.round() as i128),
-        Some('p') => format_significant(value * 100.0, precision.unwrap_or(6)) + "%",
-        Some('%') => format!("{:.precision$}%", value * 100.0, precision = precision.unwrap_or(6)),
-        Some('s') => format_si(value, precision.unwrap_or(6)),
-        Some('x') => format!("{:x}", value.round() as i128),
-        Some('X') => format!("{:X}", value.round() as i128),
-        _ if precision.is_some() => format!("{value:.precision$}", precision = precision.unwrap_or(0)),
-        _ if value.fract() == 0.0 => format!("{value:.0}"),
+        Some('f' | 'F') => format!("{magnitude:.precision$}", precision = spec.precision.unwrap_or(6)),
+        Some('g' | 'G' | 'r') => format_significant(magnitude, spec.precision.unwrap_or(6)),
+        Some('o') => format!("{:o}", magnitude.round() as i128),
+        Some('p') => format_significant(magnitude * 100.0, spec.precision.unwrap_or(6)) + "%",
+        Some('%') => format!("{:.precision$}%", magnitude * 100.0, precision = spec.precision.unwrap_or(6)),
+        Some('s') => format_si(magnitude, spec.precision.unwrap_or(6)),
+        Some('x') => format!("{:x}", magnitude.round() as i128),
+        Some('X') => format!("{:X}", magnitude.round() as i128),
+        _ if spec.precision.is_some() => format!("{magnitude:.precision$}", precision = spec.precision.unwrap_or(0)),
+        _ if magnitude.fract() == 0.0 => format!("{magnitude:.0}"),
+        _ => magnitude.to_string(),
+    };
+    if spec.trim { rendered = trim_decimal_zeroes(rendered); }
+    if spec.grouped { rendered = group_decimal_thousands(&rendered); }
+    let mut prefix = match (value.is_sign_negative(), spec.sign) {
+        (true, '(') => "(".into(),
+        (true, _) => "-".into(),
+        (false, '+') => "+".into(),
+        (false, ' ') => " ".into(),
+        _ => String::new(),
+    };
+    match spec.symbol {
+        Some('$') => prefix.push('$'),
+        Some('#') if matches!(spec.kind, Some('b')) => prefix.push_str("0b"),
+        Some('#') if matches!(spec.kind, Some('o')) => prefix.push_str("0o"),
+        Some('#') if matches!(spec.kind, Some('x')) => prefix.push_str("0x"),
+        Some('#') if matches!(spec.kind, Some('X')) => prefix.push_str("0X"),
+        _ => {}
+    }
+    let suffix = if value.is_sign_negative() && spec.sign == '(' { ")" } else { "" };
+    align_treemap_number(prefix, rendered, suffix, &spec)
+}
+
+#[allow(clippy::too_many_arguments)]
+fn treemap_text_node(
+    value: &str,
+    x: f64,
+    y: f64,
+    width: f64,
+    height: f64,
+    font: FontSpec,
+    color: Color,
+    style: Option<&diagram_ir::TreemapStyle>,
+) -> PositionedNode {
+    let value = match style.and_then(|style| style.text_transform) {
+        Some(diagram_ir::TreemapTextTransform::Uppercase) => value.to_uppercase(),
+        Some(diagram_ir::TreemapTextTransform::Lowercase) => value.to_lowercase(),
+        Some(diagram_ir::TreemapTextTransform::Capitalize) => value.split_whitespace()
+            .map(capitalize).collect::<Vec<_>>().join(" "),
         _ => value.to_string(),
     };
-    if format.contains('~') {
-        rendered = trim_decimal_zeroes(rendered);
+    let mut node = text_node(&value, x, y, width, height, font, color);
+    if let Some(Content::Text(content)) = &mut node.content {
+        content.text_align = match style.and_then(|style| style.text_align) {
+            Some(diagram_ir::TreemapTextAlign::Start) => TextAlign::Start,
+            Some(diagram_ir::TreemapTextAlign::End) => TextAlign::End,
+            _ => TextAlign::Center,
+        };
+        content.decoration = style.and_then(|style| style.text_decoration).and_then(|decoration| {
+            let mut lines = TextDecorationLines::NONE;
+            if decoration.underline { lines = lines.union(TextDecorationLines::UNDERLINE); }
+            if decoration.overline { lines = lines.union(TextDecorationLines::OVERLINE); }
+            if decoration.line_through { lines = lines.union(TextDecorationLines::LINE_THROUGH); }
+            (lines != TextDecorationLines::NONE).then_some(TextDecoration {
+                lines, style: TextDecorationStyle::Solid, color: None,
+            })
+        });
     }
-    if format.contains(',') {
-        rendered = group_decimal_thousands(&rendered);
-    }
-    if format.starts_with('$') {
-        if let Some(rest) = rendered.strip_prefix('-') {
-            rendered = format!("-${rest}");
-        } else {
-            rendered.insert(0, '$');
+    node
+}
+
+struct TreemapNumberFormat {
+    fill: char, align: char, sign: char, symbol: Option<char>, width: Option<usize>, grouped: bool,
+    precision: Option<usize>, trim: bool, kind: Option<char>,
+}
+
+fn parse_treemap_number_format(source: &str) -> Option<TreemapNumberFormat> {
+    let characters = source.chars().collect::<Vec<_>>();
+    let mut index = 0;
+    let (fill, mut align) = if characters.get(1).is_some_and(|value| "<>=^".contains(*value)) {
+        index = 2; (characters[0], characters[1])
+    } else if characters.first().is_some_and(|value| "<>=^".contains(*value)) {
+        index = 1; (' ', characters[0])
+    } else { (' ', '>') };
+    let sign = characters.get(index).copied().filter(|value| "+-( ".contains(*value)).map_or('-', |value| { index += 1; value });
+    let symbol = characters.get(index).copied().filter(|value| matches!(value, '$' | '#'));
+    if symbol.is_some() { index += 1; }
+    let zero = characters.get(index) == Some(&'0');
+    if zero { index += 1; align = '='; }
+    let width_start = index;
+    while characters.get(index).is_some_and(char::is_ascii_digit) { index += 1; }
+    let width = (index > width_start).then(|| characters[width_start..index].iter().collect::<String>().parse().ok()).flatten();
+    let grouped = characters.get(index) == Some(&',');
+    if grouped { index += 1; }
+    if grouped && characters.get(index) == Some(&'0') { index += 1; }
+    let precision = if characters.get(index) == Some(&'.') {
+        index += 1;
+        let start = index;
+        while characters.get(index).is_some_and(char::is_ascii_digit) { index += 1; }
+        if start == index { return None; }
+        let digits = characters[start..index].iter().collect::<String>();
+        Some(if digits.chars().all(|digit| digit == '0') { digits.len() } else { digits.parse().ok()? })
+    } else { None };
+    let trim = characters.get(index) == Some(&'~');
+    if trim { index += 1; }
+    let kind = characters.get(index).copied().filter(|value| "bdeEfFgGoprs%xX".contains(*value));
+    if kind.is_some() { index += 1; }
+    (index == characters.len()).then_some(TreemapNumberFormat {
+        fill: if zero { '0' } else { fill }, align, sign, symbol, width, grouped, precision, trim, kind,
+    })
+}
+
+fn align_treemap_number(prefix: String, rendered: String, suffix: &str, spec: &TreemapNumberFormat) -> String {
+    let content_width = prefix.chars().count() + rendered.chars().count() + suffix.chars().count();
+    let padding = spec.width.unwrap_or(0).saturating_sub(content_width);
+    let fill = spec.fill.to_string().repeat(padding);
+    match spec.align {
+        '<' => format!("{prefix}{rendered}{suffix}{fill}"),
+        '^' => {
+            let left = spec.fill.to_string().repeat(padding / 2);
+            let right = spec.fill.to_string().repeat(padding - padding / 2);
+            format!("{left}{prefix}{rendered}{suffix}{right}")
         }
+        '=' => format!("{prefix}{fill}{rendered}{suffix}"),
+        _ => format!("{fill}{prefix}{rendered}{suffix}"),
     }
-    if format.contains('+') && value >= 0.0 {
-        rendered.insert(0, '+');
-    }
-    rendered
 }
 
 fn format_significant(value: f64, precision: usize) -> String {
@@ -779,6 +897,11 @@ fn with_opacity(color: &str, opacity: f64) -> String {
         }
     }
     color.to_string()
+}
+
+fn color_with_opacity(mut color: Color, opacity: f64) -> Color {
+    color.a = (f64::from(color.a) * opacity.clamp(0.0, 1.0)).round() as u8;
+    color
 }
 
 fn event_model_kind_name(kind: &EventModelEntityKind) -> &'static str {
@@ -6702,20 +6825,33 @@ mod tests {
                 width: 304.0,
                 height: 184.0,
                 class_selector: None,
-                style: Some(diagram_ir::DiagramStyle {
-                    fill: Some("#fef3c7".into()),
-                    stroke: Some("#b45309".into()),
-                    stroke_width: Some(3.0),
-                    stroke_dash: Some(vec![5.0, 2.0]),
-                    text_color: Some("#78350f".into()),
-                    font_size: Some(17.0),
-                    font_weight: Some(700),
-                    font_italic: Some(true),
-                    font_family: Some("Avenir".into()),
-                    corner_radius: None,
+                style: Some(diagram_ir::TreemapStyle {
+                    node: diagram_ir::DiagramStyle {
+                        fill: Some("#fef3c7".into()), stroke: Some("#b45309".into()), stroke_width: Some(3.0),
+                        stroke_dash: Some(vec![5.0, 2.0]), text_color: Some("#78350f".into()), font_size: Some(17.0),
+                        font_weight: Some(700), font_italic: Some(true), font_family: Some("Avenir".into()), corner_radius: None,
+                    },
+                    opacity: Some(0.8), fill_opacity: Some(0.5), stroke_opacity: Some(0.5), stroke_dash_offset: Some(-1.0),
+                    text_align: Some(diagram_ir::TreemapTextAlign::End),
+                    text_transform: Some(diagram_ir::TreemapTextTransform::Uppercase),
+                    text_decoration: Some(diagram_ir::TreemapTextDecoration {
+                        underline: true, overline: true, line_through: true,
+                    }),
                 }),
             }],
         };
+
+        let styled_text = treemap_text_node(
+            "Styled node", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            Color { r: 0, g: 0, b: 0, a: 255 }, layout.nodes[0].style.as_ref(),
+        );
+        assert!(matches!(styled_text.content,
+            Some(Content::Text(TextContent { value, text_align: TextAlign::End,
+                decoration: Some(TextDecoration { lines, .. }), .. }))
+                if value == "STYLED NODE"
+                    && lines.contains(TextDecorationLines::UNDERLINE)
+                    && lines.contains(TextDecorationLines::OVERLINE)
+                    && lines.contains(TextDecorationLines::LINE_THROUGH)));
 
         let scene = diagram_to_paint_treemap(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
@@ -6724,10 +6860,11 @@ mod tests {
             Some(&"Allocation treemap".to_string())
         );
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
-            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#fef3c7")
-                && rect.stroke.as_deref() == Some("#b45309")
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("rgba(254,243,199,0.4)")
+                && rect.stroke.as_deref() == Some("rgba(180,83,9,0.4)")
                 && rect.stroke_width == Some(3.0)
-                && rect.stroke_dash.as_deref() == Some(&[5.0, 2.0][..]))));
+                && rect.stroke_dash.as_deref() == Some(&[5.0, 2.0][..])
+                && rect.stroke_dash_offset == Some(-1.0))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::GlyphRun(run) if run.font_size == 17.0)));
         assert_eq!(format_treemap_value(12345.0, "$0,0"), "$12,345");
@@ -6738,6 +6875,13 @@ mod tests {
         assert_eq!(format_treemap_value(255.0, "x"), "ff");
         assert_eq!(format_treemap_value(12.0, "+d"), "+12");
         assert_eq!(format_treemap_value(12.5, ".3~f"), "12.5");
+        assert_eq!(format_treemap_value(1234.5, "*>10,.2f"), "**1,234.50");
+        assert_eq!(format_treemap_value(12.5, "*^12.1f"), "****12.5****");
+        assert_eq!(format_treemap_value(12.5, "=+10.2f"), "+    12.50");
+        assert_eq!(format_treemap_value(12345.0, "08,d"), "0012,345");
+        assert_eq!(format_treemap_value(255.0, "#x"), "0xff");
+        assert_eq!(format_treemap_value(-12.0, "(10.1f"), "    (12.0)");
+        assert_eq!(format_treemap_value(12345.0, "invalid"), "12,345");
     }
 
     #[test]

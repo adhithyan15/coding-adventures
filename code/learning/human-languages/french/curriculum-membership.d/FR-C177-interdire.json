@@ -1,0 +1,11 @@
+{
+  "id": "FR-C177-interdire",
+  "pathSegment": "FR-PATH-177-VERBES177",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-177-VERBES177",
+      "order": 2
+    }
+  ]
+}

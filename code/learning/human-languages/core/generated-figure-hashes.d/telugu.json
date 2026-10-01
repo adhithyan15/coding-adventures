@@ -108,6 +108,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TE-S128-letter-bha",
+      "sourceHash": "fnv1a64:fa1e10fdf1482c65",
+      "svgHash": "fnv1a64:8c7a234c147d1082",
+      "svg": "telugu/book/figures/TE-S128-letter-bha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TE-S129-letter-vocalic-r",
       "sourceHash": "fnv1a64:0509a703050de2ae",
       "svgHash": "fnv1a64:08fb5cacf36f46dc",
@@ -157,6 +164,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TE-S150-letter-ma",
+      "sourceHash": "fnv1a64:7117314627c6edc3",
+      "svgHash": "fnv1a64:d1fd84fd80dffb00",
+      "svg": "telugu/book/figures/TE-S150-letter-ma-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TE-S151-letter-dha",
       "sourceHash": "fnv1a64:1ffa754e653da17f",
       "svgHash": "fnv1a64:5c7a5738e6738585",
@@ -175,6 +189,13 @@
       "sourceHash": "fnv1a64:502e9f01021fb134",
       "svgHash": "fnv1a64:37f6be95b3867aa4",
       "svg": "telugu/book/figures/TE-S155-letter-ttha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TE-S157-letter-ba",
+      "sourceHash": "fnv1a64:c8ff99557a617a10",
+      "svgHash": "fnv1a64:2c0813c7b95a59f6",
+      "svg": "telugu/book/figures/TE-S157-letter-ba-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",

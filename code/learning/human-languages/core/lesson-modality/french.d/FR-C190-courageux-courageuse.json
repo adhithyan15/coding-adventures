@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C190-courageux-courageuse",
+    "language": "french",
+    "chapter": 190,
+    "sequence": 10080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8d640da859c6706"
+  },
+  "findings": []
+}

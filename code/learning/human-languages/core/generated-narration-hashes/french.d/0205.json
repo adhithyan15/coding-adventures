@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:fed7fcf443c6218d",
+  "lessonIds": [
+    "FR-C205-reserver",
+    "FR-C205-depenser",
+    "FR-C205-economiser",
+    "FR-C205-commander",
+    "FR-C205-secher"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch205.txt",
+  "json": "french/narration/ch205.json",
+  "textHash": "fnv1a64:fd00fc75a8a35d84",
+  "jsonHash": "fnv1a64:41c48c7d970faafe",
+  "findings": []
+}

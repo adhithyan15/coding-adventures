@@ -1,0 +1,11 @@
+{
+  "id": "FR-C195-publicite",
+  "pathSegment": "FR-PATH-195-CHOSES195",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-195-CHOSES195",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:3fb446382112568b",
+  "lessonIds": [
+    "FR-C173-ballon",
+    "FR-C173-raquette",
+    "FR-C173-salle-de-sport",
+    "FR-C173-natation",
+    "FR-C173-victoire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch173.txt",
+  "json": "french/narration/ch173.json",
+  "textHash": "fnv1a64:3882ccd9b6a2f636",
+  "jsonHash": "fnv1a64:71be608950259a18",
+  "findings": []
+}

@@ -527,16 +527,24 @@ grammar, while semantic validation rejects a second unindented root with the
 pinned Mermaid diagnostic. Deterministic alternating partitions
 lower through backend-neutral rectangles and glyph runs, with native
 Metal-to-PNG validation. Named `classDef` declarations resolve fill, stroke,
-dash, text color, and font styling through semantic IR and backend-neutral
-paint. All twelve `cScale`, `cScalePeer`, and `cScaleLabel` theme-variable slots
+dash, dash offset, fill/stroke/overall opacity, text color, and font styling
+through semantic IR and backend-neutral paint. Class text alignment and
+none/upper/lower/capitalize transforms and none/underline/overline/line-through
+decoration combinations also survive into shaped glyph runs.
+All twelve `cScale`,
+`cScalePeer`, and `cScaleLabel` theme-variable slots
 also flow from init directives or YAML front matter through category-aware
 layout into paint, with the hidden root and inherited leaf category behavior of
 the upstream renderer. Common D3 value-format families lower natively, including
 grouped and fixed decimals, currency, significant digits, scientific notation,
-percentages, SI prefixes, radix output, signs, and trimmed zeroes. Exact D3
-alignment/localization semantics and the broader CSS property surface remain
+percentages, SI prefixes, radix output, signs, trimmed zeroes, alternate radix
+prefixes, width, fill, and left/right/center/sign-aware alignment. Exact D3
+locale-specific separators and the broader CSS property surface remain
 unsupported at the partial level. Treemap layout, value visibility, font, and
 border configuration also flow through semantic IR, hierarchy layout, and paint.
+Explicit section and leaf fill, stroke, and stroke-width options, independent
+label/value colors, and title color/size follow the same backend-neutral path;
+named class styles retain precedence over those diagram-wide node options.
 
 ### Venn Native Slice
 

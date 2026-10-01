@@ -1,0 +1,11 @@
+{
+  "id": "FR-C205-depenser",
+  "pathSegment": "FR-PATH-205-VERBES205",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-205-VERBES205",
+      "order": 1
+    }
+  ]
+}

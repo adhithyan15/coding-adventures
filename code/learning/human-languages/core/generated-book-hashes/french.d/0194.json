@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:03792bacef542337",
+  "lessonIds": [
+    "FR-C194-vallee",
+    "FR-C194-temperature",
+    "FR-C194-papillon",
+    "FR-C194-mouche",
+    "FR-C194-moustique"
+  ],
+  "tex": "french/book/chapters/ch194-valley-temperature-butterfly-fly-mosquito.tex"
+}

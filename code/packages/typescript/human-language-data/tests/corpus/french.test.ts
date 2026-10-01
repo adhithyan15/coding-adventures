@@ -196,7 +196,14 @@ it("pins French lesson-content budgets", () =>
     // nodes: saying no and asking which, the past, the future and reading
     // practical texts. Twenty word lessons and two reviews, with no idiom,
     // sense or culture claim.
-    lessons: 771,
+    // 771 -> 939: the first French A2 vocabulary tranche, chapters 143-174.
+    // 160 word lessons (fifty-five verbs) and two reviews per run of at most
+    // nine chapters. No idiom, sense or culture claim.
+    // 939 -> 1097: the second tranche, chapters 175-204: 150 word lessons and
+    // two reviews per run.
+    // 1097 -> 1245: the third tranche, chapters 205-232: 140 word lessons and
+    // two reviews per run.
+    lessons: 1245,
     idioms: 3,
     senses: 7,
     cultureClaims: 27,

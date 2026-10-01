@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-158-POURQUOI158",
+  "spine_node": "SPINE-SAY-WHY",
+  "before": [],
+  "inline": [
+    "FR-EXT-158-POURQUOI158"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:51c9de43576d3ea9",
+  "lessonIds": [
+    "FR-C166-photographe",
+    "FR-C166-journaliste",
+    "FR-C166-architecte",
+    "FR-C166-dentiste",
+    "FR-C166-pharmacien"
+  ],
+  "tex": "french/book/chapters/ch166-photographer-journalist-architect-dentist-pharmacist.tex"
+}

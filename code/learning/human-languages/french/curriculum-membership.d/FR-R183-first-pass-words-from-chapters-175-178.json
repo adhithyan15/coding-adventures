@@ -1,0 +1,11 @@
+{
+  "id": "FR-R183-first-pass-words-from-chapters-175-178",
+  "pathSegment": "FR-PATH-183-VERBES183",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-183-VERBES183",
+      "order": 5
+    }
+  ]
+}

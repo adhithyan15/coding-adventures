@@ -1,0 +1,11 @@
+{
+  "id": "FR-C190-timide",
+  "pathSegment": "FR-PATH-190-QUAL190",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-190-QUAL190",
+      "order": 2
+    }
+  ]
+}

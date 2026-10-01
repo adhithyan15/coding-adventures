@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:92db06635e40f14b",
+  "lessonIds": [
+    "FR-C151-heberger",
+    "FR-C151-prier",
+    "FR-C151-recommander",
+    "FR-C151-ralentir",
+    "FR-C151-respirer",
+    "FR-R151-first-pass-words-from-chapters-143-146",
+    "FR-R151-second-pass-words-from-chapters-147-151"
+  ],
+  "tex": "french/book/chapters/ch151-to-put-up-to-pray-to-recommend-to-slow-down-to-breathe.tex"
+}

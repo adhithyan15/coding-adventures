@@ -1,0 +1,19 @@
+{
+  "chapter": 220,
+  "title": "Punctual, Foreign, Friendly, Honest, Patient",
+  "label": "ch:fr-punctual-foreign-friendly-honest-patient",
+  "canDo": "I can say punctual, foreign, friendly, honest and patient.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FR-C220-patient-patiente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 220: I can say punctual, foreign, friendly, honest and patient.",
+    "assesses": [
+      "FR-LEX-C220-QUAL220-03",
+      "FR-LEX-C220-QUAL220-04",
+      "FR-LEX-C220-QUAL220-05"
+    ]
+  }
+}

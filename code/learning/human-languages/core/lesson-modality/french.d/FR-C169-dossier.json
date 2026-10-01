@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C169-dossier",
+    "language": "french",
+    "chapter": 169,
+    "sequence": 8480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b0d66e0f5e2b23d"
+  },
+  "findings": []
+}

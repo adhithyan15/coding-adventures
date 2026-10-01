@@ -1,0 +1,11 @@
+{
+  "id": "FR-C222-gouvernement",
+  "pathSegment": "FR-PATH-222-CHOSES222",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-222-CHOSES222",
+      "order": 1
+    }
+  ]
+}

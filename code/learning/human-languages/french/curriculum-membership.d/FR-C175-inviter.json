@@ -1,0 +1,11 @@
+{
+  "id": "FR-C175-inviter",
+  "pathSegment": "FR-PATH-175-VERBES175",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-175-VERBES175",
+      "order": 3
+    }
+  ]
+}

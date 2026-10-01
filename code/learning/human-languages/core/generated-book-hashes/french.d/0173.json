@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:e2d18cc25934f27c",
+  "lessonIds": [
+    "FR-C173-ballon",
+    "FR-C173-raquette",
+    "FR-C173-salle-de-sport",
+    "FR-C173-natation",
+    "FR-C173-victoire"
+  ],
+  "tex": "french/book/chapters/ch173-ball-racket-gym-swimming-victory.tex"
+}

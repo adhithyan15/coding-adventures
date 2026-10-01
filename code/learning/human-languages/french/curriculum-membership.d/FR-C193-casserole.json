@@ -1,0 +1,11 @@
+{
+  "id": "FR-C193-casserole",
+  "pathSegment": "FR-PATH-193-CHOSES193",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-193-CHOSES193",
+      "order": 3
+    }
+  ]
+}

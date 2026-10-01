@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:fd8d3e2c03652882",
+  "lessonIds": [
+    "FR-C229-eclair",
+    "FR-C229-tonnerre",
+    "FR-C229-climat",
+    "FR-C229-environnement",
+    "FR-C229-pollution"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch229.txt",
+  "json": "french/narration/ch229.json",
+  "textHash": "fnv1a64:45ceb464ee0f737e",
+  "jsonHash": "fnv1a64:cf5c33d77a51a35b",
+  "findings": []
+}

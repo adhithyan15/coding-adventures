@@ -1,0 +1,11 @@
+{
+  "id": "FR-C216-partout",
+  "pathSegment": "FR-PATH-216-LIEU216",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-216-LIEU216",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:36abaf9ba86f5476",
+  "lessonIds": [
+    "FR-C165-guerre",
+    "FR-C165-paix",
+    "FR-C165-armee",
+    "FR-C165-soldat",
+    "FR-C165-tradition"
+  ],
+  "tex": "french/book/chapters/ch165-war-peace-army-soldier-tradition.tex"
+}

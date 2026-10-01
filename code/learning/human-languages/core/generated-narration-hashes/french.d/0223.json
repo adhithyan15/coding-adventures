@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:233e37e20a5d551d",
+  "lessonIds": [
+    "FR-C223-batterie",
+    "FR-C223-chargeur",
+    "FR-C223-chanteur",
+    "FR-C223-concert",
+    "FR-C223-spectacle"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch223.txt",
+  "json": "french/narration/ch223.json",
+  "textHash": "fnv1a64:be9889b77a578663",
+  "jsonHash": "fnv1a64:c2ce048e77293c4c",
+  "findings": []
+}

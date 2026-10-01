@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C186-honte",
+    "language": "french",
+    "chapter": 186,
+    "sequence": 9890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d09b627d8cfec0f"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C204-telephone-portable",
+  "pathSegment": "FR-PATH-204-TRAV204",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-204-TRAV204",
+      "order": 3
+    }
+  ]
+}

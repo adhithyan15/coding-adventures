@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C226-compte-bancaire",
+    "language": "french",
+    "chapter": 226,
+    "sequence": 12760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:86565fcfcbf2392e"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C146-fumer",
+  "pathSegment": "FR-PATH-146-VERBES146",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-146-VERBES146",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-R232-second-pass-words-from-chapters-230-232",
+  "pathSegment": "FR-PATH-232-TRAV232",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "FR-EXT-232-TRAV232",
+      "order": 6
+    }
+  ]
+}

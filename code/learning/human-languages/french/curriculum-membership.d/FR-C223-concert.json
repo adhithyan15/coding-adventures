@@ -1,0 +1,11 @@
+{
+  "id": "FR-C223-concert",
+  "pathSegment": "FR-PATH-223-CHOSES223",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-223-CHOSES223",
+      "order": 3
+    }
+  ]
+}

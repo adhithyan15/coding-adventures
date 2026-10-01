@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:f5a6e89f6ab7e1b1",
+  "lessonIds": [
+    "FR-C148-observer",
+    "FR-C148-participer",
+    "FR-C148-promener",
+    "FR-C148-plier",
+    "FR-C148-posseder"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch148.txt",
+  "json": "french/narration/ch148.json",
+  "textHash": "fnv1a64:a20f3340b55ca0b0",
+  "jsonHash": "fnv1a64:403baba2d2cd71aa",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C198-soldes",
+  "pathSegment": "FR-PATH-198-CHOSES198",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-198-CHOSES198",
+      "order": 2
+    }
+  ]
+}

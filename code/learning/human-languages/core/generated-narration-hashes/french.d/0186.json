@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 186,
+  "sourceHash": "fnv1a64:275ac5e7723e2ad2",
+  "lessonIds": [
+    "FR-C186-amitie",
+    "FR-C186-espoir",
+    "FR-C186-confiance",
+    "FR-C186-courage",
+    "FR-C186-honte"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch186.txt",
+  "json": "french/narration/ch186.json",
+  "textHash": "fnv1a64:24a9268360ce466e",
+  "jsonHash": "fnv1a64:763aeff7d4c62bc2",
+  "findings": []
+}

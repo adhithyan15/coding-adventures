@@ -1,0 +1,19 @@
+{
+  "chapter": 181,
+  "title": "To look like, To push, To pull, To waste, To overtake",
+  "label": "ch:fr-to-look-like-to-push-to-pull-to-waste-to-overtake",
+  "canDo": "I can say to look like, to push, to pull, to waste and to overtake.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C181-depasser",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 181: I can say to look like, to push, to pull, to waste and to overtake.",
+    "assesses": [
+      "FR-LEX-C181-VERBES181-03",
+      "FR-LEX-C181-VERBES181-04",
+      "FR-LEX-C181-VERBES181-05"
+    ]
+  }
+}

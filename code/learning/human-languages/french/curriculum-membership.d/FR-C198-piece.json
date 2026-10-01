@@ -1,0 +1,11 @@
+{
+  "id": "FR-C198-piece",
+  "pathSegment": "FR-PATH-198-CHOSES198",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-198-CHOSES198",
+      "order": 3
+    }
+  ]
+}

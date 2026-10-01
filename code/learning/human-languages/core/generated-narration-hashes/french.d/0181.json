@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 181,
+  "sourceHash": "fnv1a64:d1d03f40b98aa560",
+  "lessonIds": [
+    "FR-C181-ressembler",
+    "FR-C181-pousser",
+    "FR-C181-tirer",
+    "FR-C181-gaspiller",
+    "FR-C181-depasser"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch181.txt",
+  "json": "french/narration/ch181.json",
+  "textHash": "fnv1a64:f55ae8451514fff3",
+  "jsonHash": "fnv1a64:e6f7cd75f74ba6b9",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 167,
+  "title": "Mother-in-law, Son-in-law, Daughter-in-law, Fiancé, Fiancée",
+  "label": "ch:fr-mother-in-law-son-in-law-daughter-in-law-fiance-fiancee",
+  "canDo": "I can say a mother-in-law, a son-in-law, a daughter-in-law, a fiancé and a fiancée.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C167-fiancee",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 167: I can say a mother-in-law, a son-in-law, a daughter-in-law, a fiancé and a fiancée.",
+    "assesses": [
+      "FR-LEX-C167-CHOSES167-03",
+      "FR-LEX-C167-CHOSES167-04",
+      "FR-LEX-C167-CHOSES167-05"
+    ]
+  }
+}

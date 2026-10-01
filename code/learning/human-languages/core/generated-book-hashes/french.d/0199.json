@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:c5191c6d7e1b11a9",
+  "lessonIds": [
+    "FR-C199-entree",
+    "FR-C199-sortie",
+    "FR-C199-bagages",
+    "FR-C199-siege",
+    "FR-C199-volant"
+  ],
+  "tex": "french/book/chapters/ch199-entrance-exit-luggage-seat-steering-wheel.tex"
+}

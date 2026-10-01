@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R192-first-pass-words-from-chapters-184-187",
+    "language": "french",
+    "chapter": 192,
+    "sequence": 10200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0071be6ae3124bf3"
+  },
+  "findings": []
+}

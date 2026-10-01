@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:8c7c8c6bd9d565b1",
+  "lessonIds": [
+    "FR-C203-defaite",
+    "FR-C203-championnat",
+    "FR-C203-joueur",
+    "FR-C203-entraineur",
+    "FR-C203-correspondance"
+  ],
+  "tex": "french/book/chapters/ch203-defeat-championship-player-coach-connection.tex"
+}

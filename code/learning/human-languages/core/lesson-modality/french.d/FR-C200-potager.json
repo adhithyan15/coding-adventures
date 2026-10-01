@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C200-potager",
+    "language": "french",
+    "chapter": 200,
+    "sequence": 10940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a00921cb9bf18f66"
+  },
+  "findings": []
+}

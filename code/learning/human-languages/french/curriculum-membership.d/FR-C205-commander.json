@@ -1,0 +1,11 @@
+{
+  "id": "FR-C205-commander",
+  "pathSegment": "FR-PATH-205-VERBES205",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-205-VERBES205",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C153-rencontrer",
+  "pathSegment": "FR-PATH-153-VERBES153",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-153-VERBES153",
+      "order": 2
+    }
+  ]
+}

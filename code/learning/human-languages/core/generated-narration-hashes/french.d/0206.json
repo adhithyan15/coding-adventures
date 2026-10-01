@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:8e4e5fc6c53ece0c",
+  "lessonIds": [
+    "FR-C206-casser",
+    "FR-C206-toucher",
+    "FR-C206-gouter",
+    "FR-C206-chauffer",
+    "FR-C206-refroidir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch206.txt",
+  "json": "french/narration/ch206.json",
+  "textHash": "fnv1a64:4bd3c23587c1d99d",
+  "jsonHash": "fnv1a64:a9d4218ccab3039a",
+  "findings": []
+}

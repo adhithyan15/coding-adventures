@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:342d71e621c4865b",
+  "lessonIds": [
+    "FR-C218-curieux-curieuse",
+    "FR-C218-jaloux-jalouse",
+    "FR-C218-fier-fiere",
+    "FR-C218-nerveux-nerveuse",
+    "FR-C218-tranquille"
+  ],
+  "tex": "french/book/chapters/ch218-curious-jealous-proud-nervous-quiet.tex"
+}

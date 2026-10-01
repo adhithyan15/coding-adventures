@@ -1,0 +1,11 @@
+{
+  "id": "FR-C207-mourir",
+  "pathSegment": "FR-PATH-207-VERBES207",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-207-VERBES207",
+      "order": 1
+    }
+  ]
+}

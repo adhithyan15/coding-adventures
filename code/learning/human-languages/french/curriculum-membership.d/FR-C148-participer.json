@@ -1,0 +1,11 @@
+{
+  "id": "FR-C148-participer",
+  "pathSegment": "FR-PATH-148-VERBES148",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-148-VERBES148",
+      "order": 1
+    }
+  ]
+}

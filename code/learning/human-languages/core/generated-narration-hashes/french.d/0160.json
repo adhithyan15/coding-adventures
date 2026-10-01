@@ -1,0 +1,21 @@
+{
+  "language": "french",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:b6566efd05d8d5b7",
+  "lessonIds": [
+    "FR-C160-profond-profonde",
+    "FR-C160-bas-basse",
+    "FR-C160-inconnu-inconnue",
+    "FR-C160-dangereux-dangereuse",
+    "FR-C160-sur-sure",
+    "FR-R160-first-pass-words-from-chapters-152-155",
+    "FR-R160-second-pass-words-from-chapters-156-160"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "french/narration/ch160.txt",
+  "json": "french/narration/ch160.json",
+  "textHash": "fnv1a64:b8b6d52460bc198f",
+  "jsonHash": "fnv1a64:0be251d1bf666096",
+  "findings": []
+}

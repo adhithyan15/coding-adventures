@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-227-CHOSES227",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a wheel, an engine, a toll, a motorway and a fine.",
+  "prerequisites": []
+}

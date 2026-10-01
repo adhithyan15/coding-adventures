@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 171,
+  "sourceHash": "fnv1a64:23b81239483c4571",
+  "lessonIds": [
+    "FR-C171-volcan",
+    "FR-C171-plaine",
+    "FR-C171-cascade",
+    "FR-C171-rocher",
+    "FR-C171-caillou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch171.txt",
+  "json": "french/narration/ch171.json",
+  "textHash": "fnv1a64:f69b49f76f5d6b23",
+  "jsonHash": "fnv1a64:350827446c15438d",
+  "findings": []
+}

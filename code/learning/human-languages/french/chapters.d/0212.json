@@ -1,0 +1,19 @@
+{
+  "chapter": 212,
+  "title": "To fix, To brake, To function, To float, To chase",
+  "label": "ch:fr-to-fix-to-brake-to-function-to-float-to-chase",
+  "canDo": "I can say to fix, to brake, to function, to float and to chase.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C212-poursuivre",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 212: I can say to fix, to brake, to function, to float and to chase.",
+    "assesses": [
+      "FR-LEX-C212-VERBES212-03",
+      "FR-LEX-C212-VERBES212-04",
+      "FR-LEX-C212-VERBES212-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 188,
+  "title": "Near to, Far from, At the bottom, On the right, On the left",
+  "label": "ch:fr-near-to-far-from-at-the-bottom-on-the-right-on-the-left",
+  "canDo": "I can say near to, far from, at the bottom, on the right and on the left.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "FR-C188-a-gauche",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 188: I can say near to, far from, at the bottom, on the right and on the left.",
+    "assesses": [
+      "FR-LEX-C188-LIEU188-03",
+      "FR-LEX-C188-LIEU188-04",
+      "FR-LEX-C188-LIEU188-05"
+    ]
+  }
+}

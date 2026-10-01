@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-232-TRAV232",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "FR-EXT-232-TRAV232"
+  ],
+  "after": []
+}

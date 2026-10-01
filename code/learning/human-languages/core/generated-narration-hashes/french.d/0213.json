@@ -1,0 +1,21 @@
+{
+  "language": "french",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:3f317e2b052d3690",
+  "lessonIds": [
+    "FR-C213-soulever",
+    "FR-C213-surprendre",
+    "FR-C213-soupconner",
+    "FR-C213-serrer",
+    "FR-C213-suggerer",
+    "FR-R213-first-pass-words-from-chapters-205-208",
+    "FR-R213-second-pass-words-from-chapters-209-213"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "french/narration/ch213.txt",
+  "json": "french/narration/ch213.json",
+  "textHash": "fnv1a64:24f6dc176ee846ff",
+  "jsonHash": "fnv1a64:c4995a0a03124038",
+  "findings": []
+}

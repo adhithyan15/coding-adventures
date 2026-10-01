@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 155,
+  "sourceHash": "fnv1a64:775aeda279f2eeeb",
+  "lessonIds": [
+    "FR-C155-repos",
+    "FR-C155-sommeil",
+    "FR-C155-reve",
+    "FR-C155-angoisse",
+    "FR-C155-amour"
+  ],
+  "tex": "french/book/chapters/ch155-rest-sleep-dream-anxiety-love.tex"
+}

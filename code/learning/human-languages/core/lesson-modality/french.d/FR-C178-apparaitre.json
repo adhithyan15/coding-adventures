@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C178-apparaitre",
+    "language": "french",
+    "chapter": 178,
+    "sequence": 9300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cfc706103e7950be"
+  },
+  "findings": []
+}

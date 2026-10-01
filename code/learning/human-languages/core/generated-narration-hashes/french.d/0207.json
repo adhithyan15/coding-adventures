@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:c069a9270bf3c080",
+  "lessonIds": [
+    "FR-C207-naitre",
+    "FR-C207-mourir",
+    "FR-C207-vieillir",
+    "FR-C207-epouser",
+    "FR-C207-divorcer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch207.txt",
+  "json": "french/narration/ch207.json",
+  "textHash": "fnv1a64:8e24d4c662241fa6",
+  "jsonHash": "fnv1a64:507257dce002586d",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C172-laine",
+    "language": "french",
+    "chapter": 172,
+    "sequence": 8830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4684c12709af3f19"
+  },
+  "findings": []
+}

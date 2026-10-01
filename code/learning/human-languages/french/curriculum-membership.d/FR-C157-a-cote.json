@@ -1,0 +1,11 @@
+{
+  "id": "FR-C157-a-cote",
+  "pathSegment": "FR-PATH-157-LIEU157",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-157-LIEU157",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:785e9f1b1d78c992",
+  "lessonIds": [
+    "FR-C159-confortable",
+    "FR-C159-inconfortable",
+    "FR-C159-poli-polie",
+    "FR-C159-impoli-impolie",
+    "FR-C159-desagreable"
+  ],
+  "tex": "french/book/chapters/ch159-comfortable-uncomfortable-polite-rude-unpleasant.tex"
+}

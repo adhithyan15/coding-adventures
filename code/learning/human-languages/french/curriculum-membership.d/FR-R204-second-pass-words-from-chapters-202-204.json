@@ -1,0 +1,11 @@
+{
+  "id": "FR-R204-second-pass-words-from-chapters-202-204",
+  "pathSegment": "FR-PATH-204-TRAV204",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "FR-EXT-204-TRAV204",
+      "order": 6
+    }
+  ]
+}

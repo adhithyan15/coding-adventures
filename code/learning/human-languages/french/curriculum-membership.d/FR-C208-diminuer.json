@@ -1,0 +1,11 @@
+{
+  "id": "FR-C208-diminuer",
+  "pathSegment": "FR-PATH-208-VERBES208",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-208-VERBES208",
+      "order": 3
+    }
+  ]
+}

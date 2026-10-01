@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:b8695707acf0847a",
+  "lessonIds": [
+    "FR-C226-carte-bancaire",
+    "FR-C226-distributeur",
+    "FR-C226-compte-bancaire",
+    "FR-C226-pret",
+    "FR-C226-dette"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch226.txt",
+  "json": "french/narration/ch226.json",
+  "textHash": "fnv1a64:b42cae48ad224ba8",
+  "jsonHash": "fnv1a64:0041f933131d0663",
+  "findings": []
+}

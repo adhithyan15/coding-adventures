@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:414591836631cd74",
+  "lessonIds": [
+    "FR-C196-boucher",
+    "FR-C196-mecanicien",
+    "FR-C196-electricien",
+    "FR-C196-plombier",
+    "FR-C196-ouvrier"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch196.txt",
+  "json": "french/narration/ch196.json",
+  "textHash": "fnv1a64:786377668a64ceda",
+  "jsonHash": "fnv1a64:87716762be42d553",
+  "findings": []
+}

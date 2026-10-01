@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C161-ancien-ancienne",
+    "language": "french",
+    "chapter": 161,
+    "sequence": 8080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76bb6f204fff0e13"
+  },
+  "findings": []
+}

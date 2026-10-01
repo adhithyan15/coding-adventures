@@ -1,0 +1,11 @@
+{
+  "id": "FR-C154-sante",
+  "pathSegment": "FR-PATH-154-SANTE154",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-154-SANTE154",
+      "order": 0
+    }
+  ]
+}

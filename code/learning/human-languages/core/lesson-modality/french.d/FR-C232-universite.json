@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C232-universite",
+    "language": "french",
+    "chapter": 232,
+    "sequence": 13210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e2ef39b1d9022429"
+  },
+  "findings": []
+}

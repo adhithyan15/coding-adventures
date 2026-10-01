@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C193-drap",
+    "language": "french",
+    "chapter": 193,
+    "sequence": 10390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e2e843bda8fff1a5"
+  },
+  "findings": []
+}

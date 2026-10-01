@@ -1,0 +1,11 @@
+{
+  "id": "FR-C148-posseder",
+  "pathSegment": "FR-PATH-148-VERBES148",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-148-VERBES148",
+      "order": 4
+    }
+  ]
+}

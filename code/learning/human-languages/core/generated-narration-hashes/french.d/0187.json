@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:f49c5f29b05e1731",
+  "lessonIds": [
+    "FR-C187-alors",
+    "FR-C187-tard",
+    "FR-C187-soudain",
+    "FR-C187-jusqua",
+    "FR-C187-depuis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch187.txt",
+  "json": "french/narration/ch187.json",
+  "textHash": "fnv1a64:efb98e925dfb1e92",
+  "jsonHash": "fnv1a64:be917cf7f9818123",
+  "findings": []
+}

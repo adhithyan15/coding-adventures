@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C215-pommade",
+    "language": "french",
+    "chapter": 215,
+    "sequence": 12040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f0f2a4f8f09a272"
+  },
+  "findings": []
+}

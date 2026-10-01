@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-155-SANTE155",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say rest, sleep, a dream, anxiety and love.",
+  "prerequisites": []
+}

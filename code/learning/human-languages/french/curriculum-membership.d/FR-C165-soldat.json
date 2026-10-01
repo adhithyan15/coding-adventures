@@ -1,0 +1,11 @@
+{
+  "id": "FR-C165-soldat",
+  "pathSegment": "FR-PATH-165-CHOSES165",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-165-CHOSES165",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 191,
+  "title": "Simple, Complicated, Necessary, Useful, Useless",
+  "label": "ch:fr-simple-complicated-necessary-useful-useless",
+  "canDo": "I can say simple, complicated, necessary, useful and useless.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FR-C191-inutile",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 191: I can say simple, complicated, necessary, useful and useless.",
+    "assesses": [
+      "FR-LEX-C191-QUAL191-03",
+      "FR-LEX-C191-QUAL191-04",
+      "FR-LEX-C191-QUAL191-05"
+    ]
+  }
+}

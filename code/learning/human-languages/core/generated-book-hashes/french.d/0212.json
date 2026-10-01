@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:56558599a5d72279",
+  "lessonIds": [
+    "FR-C212-fixer",
+    "FR-C212-freiner",
+    "FR-C212-fonctionner",
+    "FR-C212-flotter",
+    "FR-C212-poursuivre"
+  ],
+  "tex": "french/book/chapters/ch212-to-fix-to-brake-to-function-to-float-to-chase.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "language": "french",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:06bd732c1ecc1f2e",
+  "lessonIds": [
+    "FR-C198-promesse",
+    "FR-C198-reduction",
+    "FR-C198-soldes",
+    "FR-C198-piece",
+    "FR-C198-billet-de-banque",
+    "FR-R198-first-pass-words-from-chapters-193-195",
+    "FR-R198-second-pass-words-from-chapters-196-198"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "french/narration/ch198.txt",
+  "json": "french/narration/ch198.json",
+  "textHash": "fnv1a64:c8c5ace9cd2897d9",
+  "jsonHash": "fnv1a64:f1f4531508b804af",
+  "findings": []
+}

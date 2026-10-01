@@ -1430,6 +1430,16 @@ pub struct TreemapConfig {
     pub border_width: f64,
     pub value_font_size: f64,
     pub label_font_size: f64,
+    pub section_stroke_color: Option<String>,
+    pub section_stroke_width: Option<f64>,
+    pub section_fill_color: Option<String>,
+    pub leaf_stroke_color: Option<String>,
+    pub leaf_stroke_width: Option<f64>,
+    pub leaf_fill_color: Option<String>,
+    pub label_color: Option<String>,
+    pub value_color: Option<String>,
+    pub title_color: Option<String>,
+    pub title_font_size: Option<f64>,
     pub value_format: String,
     pub theme: TreemapTheme,
 }
@@ -1446,10 +1456,45 @@ impl Default for TreemapConfig {
             border_width: 1.0,
             value_font_size: 12.0,
             label_font_size: 14.0,
+            section_stroke_color: None,
+            section_stroke_width: None,
+            section_fill_color: None,
+            leaf_stroke_color: None,
+            leaf_stroke_width: None,
+            leaf_fill_color: None,
+            label_color: None,
+            value_color: None,
+            title_color: None,
+            title_font_size: None,
             value_format: ",".into(),
             theme: TreemapTheme::default(),
         }
     }
+}
+
+#[derive(Clone, Debug, PartialEq, Default)]
+pub struct TreemapStyle {
+    pub node: DiagramStyle,
+    pub opacity: Option<f64>,
+    pub fill_opacity: Option<f64>,
+    pub stroke_opacity: Option<f64>,
+    pub stroke_dash_offset: Option<f64>,
+    pub text_align: Option<TreemapTextAlign>,
+    pub text_transform: Option<TreemapTextTransform>,
+    pub text_decoration: Option<TreemapTextDecoration>,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TreemapTextAlign { Start, Center, End }
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TreemapTextTransform { None, Uppercase, Lowercase, Capitalize }
+
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct TreemapTextDecoration {
+    pub underline: bool,
+    pub overline: bool,
+    pub line_through: bool,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -1458,7 +1503,7 @@ pub struct TreemapNode {
     pub label: String,
     pub value: Option<f64>,
     pub class_selector: Option<String>,
-    pub style: Option<DiagramStyle>,
+    pub style: Option<TreemapStyle>,
     pub parent_id: Option<String>,
 }
 
@@ -1484,7 +1529,7 @@ pub struct LayoutedTreemapNode {
     pub width: f64,
     pub height: f64,
     pub class_selector: Option<String>,
-    pub style: Option<DiagramStyle>,
+    pub style: Option<TreemapStyle>,
 }
 
 #[derive(Clone, Debug, PartialEq)]

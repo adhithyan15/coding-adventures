@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C162-inquiet-inquiete",
+    "language": "french",
+    "chapter": 162,
+    "sequence": 8120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:536d8c5e162b8a05"
+  },
+  "findings": []
+}

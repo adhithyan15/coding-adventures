@@ -29,14 +29,16 @@ it("pins Telugu's pre-A1 writing ladder", () => {
   // earlier IN SEQUENCE, so a set-equality assertion would pass on a ladder
   // whose rungs are in the wrong order and therefore prove nothing.
   //
-  // TE-S151 now opens the source-backed ladder with the thank-you word's dha.
-  // TE-S109 follows with familiar-word na. TE-S152 then adds tta, followed by
-  // TE-S123 with dda, another vocabulary-first retroflex letter. TE-S113 adds
+  // TE-S150 now opens the source-backed ladder with the greeting word's ma;
+  // TE-S151 follows with the thank-you word's dha. TE-S109 then adds
+  // familiar-word na. TE-S152 adds tta, followed by
+  // TE-S157 with familiar-word ba and TE-S123 with dda, another
+  // vocabulary-first retroflex letter. TE-S113 adds
   // familiar-word pa before the first complete ladder. TE-S116 gives
   // familiar-word da the same source-backed
   // rung. TE-S155 revisits the stage for the aspirated partner ttha after the
-  // first complete ladder. TE-S130 and TE-S132 later revisit it for newly
-  // introduced tha and nya.
+  // first complete ladder. TE-S128 then adds familiar-word bha; TE-S130 and
+  // TE-S132 later revisit the stage for newly introduced tha and nya.
   // The next rung is a SECOND dictation, roughly 1,150 sequence steps after the
   // first. It is here because the ladder proves the stages are reachable, not
   // that each is practised once: `TE-S170` asks the hand to turn *gau* and
@@ -47,9 +49,11 @@ it("pins Telugu's pre-A1 writing ladder", () => {
   // a timed production check. A rung may repeat; the ORDER assertion below
   // still forbids one arriving before its prerequisite stages.
   expect(track.validEvidence.map((entry) => [entry.lessonId, entry.stage])).toEqual([
+    ["TE-S150-letter-ma", "observe-trace"],
     ["TE-S151-letter-dha", "observe-trace"],
     ["TE-S109-letter-na", "observe-trace"],
     ["TE-S152-letter-tta", "observe-trace"],
+    ["TE-S157-letter-ba", "observe-trace"],
     ["TE-S123-letter-dda", "observe-trace"],
     ["TE-S113-letter-pa", "observe-trace"],
     ["TE-S01-letter-ta", "observe-trace"],
@@ -61,6 +65,7 @@ it("pins Telugu's pre-A1 writing ladder", () => {
     ["TE-S160-letter-pha", "observe-trace"],
     ["TE-S139-letter-ddha", "observe-trace"],
     ["TE-S126-letter-nna", "observe-trace"],
+    ["TE-S128-letter-bha", "observe-trace"],
     ["TE-S130-letter-tha", "observe-trace"],
     ["TE-S132-letter-nya", "observe-trace"],
     ["TE-S170-script-dictation-courtesy-letters", "dictation-transcription"],

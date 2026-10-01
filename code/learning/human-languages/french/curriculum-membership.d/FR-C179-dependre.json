@@ -1,0 +1,11 @@
+{
+  "id": "FR-C179-dependre",
+  "pathSegment": "FR-PATH-179-VERBES179",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-179-VERBES179",
+      "order": 0
+    }
+  ]
+}

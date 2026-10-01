@@ -1,0 +1,21 @@
+{
+  "language": "french",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:59601e716ec96baa",
+  "lessonIds": [
+    "FR-C192-cuit-cuite",
+    "FR-C192-mur-mure",
+    "FR-C192-sombre",
+    "FR-C192-clair-claire",
+    "FR-C192-lointain-lointaine",
+    "FR-R192-first-pass-words-from-chapters-184-187",
+    "FR-R192-second-pass-words-from-chapters-188-192"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "french/narration/ch192.txt",
+  "json": "french/narration/ch192.json",
+  "textHash": "fnv1a64:d3923ea166b68d16",
+  "jsonHash": "fnv1a64:2c047dbf86d2f298",
+  "findings": []
+}

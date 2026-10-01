@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:544d180e2b813e57",
+  "lessonIds": [
+    "FR-C227-roue",
+    "FR-C227-moteur",
+    "FR-C227-peage",
+    "FR-C227-autoroute",
+    "FR-C227-amende",
+    "FR-R227-first-pass-words-from-chapters-223-224",
+    "FR-R227-second-pass-words-from-chapters-225-227"
+  ],
+  "tex": "french/book/chapters/ch227-wheel-engine-toll-motorway-fine.tex"
+}

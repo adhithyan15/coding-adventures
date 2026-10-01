@@ -1,0 +1,19 @@
+{
+  "chapter": 214,
+  "title": "To record, To maintain, To exist, To express, To put on weight",
+  "label": "ch:fr-to-record-to-maintain-to-exist-to-express-to-put-on-weight",
+  "canDo": "I can say to record, to maintain, to exist, to express and to put on weight.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C214-grossir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 214: I can say to record, to maintain, to exist, to express and to put on weight.",
+    "assesses": [
+      "FR-LEX-C214-VERBES214-03",
+      "FR-LEX-C214-VERBES214-04",
+      "FR-LEX-C214-VERBES214-05"
+    ]
+  }
+}

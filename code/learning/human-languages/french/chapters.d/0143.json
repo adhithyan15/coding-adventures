@@ -1,0 +1,19 @@
+{
+  "chapter": 143,
+  "title": "To switch on, To switch off, To jump, To smile, To shout",
+  "label": "ch:fr-to-switch-on-to-switch-off-to-jump-to-smile-to-shout",
+  "canDo": "I can say to switch on, to switch off, to jump, to smile and to shout.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C143-crier",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 143: I can say to switch on, to switch off, to jump, to smile and to shout.",
+    "assesses": [
+      "FR-LEX-C143-VERBES143-03",
+      "FR-LEX-C143-VERBES143-04",
+      "FR-LEX-C143-VERBES143-05"
+    ]
+  }
+}

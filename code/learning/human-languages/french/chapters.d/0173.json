@@ -1,0 +1,19 @@
+{
+  "chapter": 173,
+  "title": "Ball, Racket, Gym, Swimming, Victory",
+  "label": "ch:fr-ball-racket-gym-swimming-victory",
+  "canDo": "I can say a ball, a racket, a gym, swimming and a victory.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C173-victoire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 173: I can say a ball, a racket, a gym, swimming and a victory.",
+    "assesses": [
+      "FR-LEX-C173-CHOSES173-03",
+      "FR-LEX-C173-CHOSES173-04",
+      "FR-LEX-C173-CHOSES173-05"
+    ]
+  }
+}

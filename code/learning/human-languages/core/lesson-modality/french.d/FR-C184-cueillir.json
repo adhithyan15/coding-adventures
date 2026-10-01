@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C184-cueillir",
+    "language": "french",
+    "chapter": 184,
+    "sequence": 9760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32974b1ca2d19446"
+  },
+  "findings": []
+}

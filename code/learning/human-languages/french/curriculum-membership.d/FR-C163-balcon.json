@@ -1,0 +1,11 @@
+{
+  "id": "FR-C163-balcon",
+  "pathSegment": "FR-PATH-163-CHOSES163",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-163-CHOSES163",
+      "order": 2
+    }
+  ]
+}

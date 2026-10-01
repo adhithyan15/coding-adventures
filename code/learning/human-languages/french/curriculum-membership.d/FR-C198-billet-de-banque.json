@@ -1,0 +1,11 @@
+{
+  "id": "FR-C198-billet-de-banque",
+  "pathSegment": "FR-PATH-198-CHOSES198",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-198-CHOSES198",
+      "order": 4
+    }
+  ]
+}

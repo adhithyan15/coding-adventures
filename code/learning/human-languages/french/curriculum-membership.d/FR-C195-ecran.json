@@ -1,0 +1,11 @@
+{
+  "id": "FR-C195-ecran",
+  "pathSegment": "FR-PATH-195-CHOSES195",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-195-CHOSES195",
+      "order": 3
+    }
+  ]
+}

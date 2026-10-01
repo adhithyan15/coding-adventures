@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 147,
+  "sourceHash": "fnv1a64:665017b9b8abbb00",
+  "lessonIds": [
+    "FR-C147-comparer",
+    "FR-C147-conseiller",
+    "FR-C147-convaincre",
+    "FR-C147-critiquer",
+    "FR-C147-demontrer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch147.txt",
+  "json": "french/narration/ch147.json",
+  "textHash": "fnv1a64:6e2df3441a097701",
+  "jsonHash": "fnv1a64:5591eed89c75891d",
+  "findings": []
+}

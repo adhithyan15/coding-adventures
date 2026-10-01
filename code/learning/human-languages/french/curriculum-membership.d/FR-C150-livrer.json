@@ -1,0 +1,11 @@
+{
+  "id": "FR-C150-livrer",
+  "pathSegment": "FR-PATH-150-VERBES150",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-150-VERBES150",
+      "order": 4
+    }
+  ]
+}

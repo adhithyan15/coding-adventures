@@ -1,0 +1,11 @@
+{
+  "id": "FR-C202-metal",
+  "pathSegment": "FR-PATH-202-CHOSES202",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-202-CHOSES202",
+      "order": 1
+    }
+  ]
+}

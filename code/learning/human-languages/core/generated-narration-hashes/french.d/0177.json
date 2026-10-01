@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:1f40aa40caba0b27",
+  "lessonIds": [
+    "FR-C177-promettre",
+    "FR-C177-permettre",
+    "FR-C177-interdire",
+    "FR-C177-proteger",
+    "FR-C177-sauver"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch177.txt",
+  "json": "french/narration/ch177.json",
+  "textHash": "fnv1a64:dc73c31bbeae1208",
+  "jsonHash": "fnv1a64:afaa8cc98da9df03",
+  "findings": []
+}

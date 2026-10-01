@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:e0fc8e7ca855e607",
+  "lessonIds": [
+    "FR-C153-remarquer",
+    "FR-C153-remplacer",
+    "FR-C153-rencontrer",
+    "FR-C153-rougir",
+    "FR-C153-saigner"
+  ],
+  "tex": "french/book/chapters/ch153-to-notice-to-replace-to-meet-to-blush-to-bleed.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C230-fil",
+  "pathSegment": "FR-PATH-230-CHOSES230",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-230-CHOSES230",
+      "order": 0
+    }
+  ]
+}

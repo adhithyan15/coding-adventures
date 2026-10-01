@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:7b4eaafac2fec096",
+  "lessonIds": [
+    "FR-C219-ennuyeux-ennuyeuse",
+    "FR-C219-amusant-amusante",
+    "FR-C219-etrange",
+    "FR-C219-different-differente",
+    "FR-C219-pareil-pareille"
+  ],
+  "tex": "french/book/chapters/ch219-boring-fun-strange-different-same.tex"
+}

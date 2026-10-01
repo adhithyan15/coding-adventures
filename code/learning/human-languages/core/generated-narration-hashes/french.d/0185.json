@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:1d1d58af3074fa46",
+  "lessonIds": [
+    "FR-C185-muscle",
+    "FR-C185-pouce",
+    "FR-C185-blessure",
+    "FR-C185-cicatrice",
+    "FR-C185-rhume"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch185.txt",
+  "json": "french/narration/ch185.json",
+  "textHash": "fnv1a64:7a7cf27c51b2ff56",
+  "jsonHash": "fnv1a64:e0b2e9f701238588",
+  "findings": []
+}

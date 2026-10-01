@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:3296efd0a3a40524",
+  "lessonIds": [
+    "FR-C145-signer",
+    "FR-C145-remplir-un-formulaire",
+    "FR-C145-telephoner",
+    "FR-C145-discuter",
+    "FR-C145-disputer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch145.txt",
+  "json": "french/narration/ch145.json",
+  "textHash": "fnv1a64:4c2e7748aaa76ac1",
+  "jsonHash": "fnv1a64:45b11000f6a1dbd9",
+  "findings": []
+}

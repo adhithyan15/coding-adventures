@@ -1,0 +1,11 @@
+{
+  "id": "FR-C186-espoir",
+  "pathSegment": "FR-PATH-186-SANTE186",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-186-SANTE186",
+      "order": 1
+    }
+  ]
+}

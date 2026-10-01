@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:2d761539f6eec9d6",
+  "lessonIds": [
+    "FR-C224-employe",
+    "FR-C224-pilote",
+    "FR-C224-comptable",
+    "FR-C224-scientifique",
+    "FR-C224-chercheur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch224.txt",
+  "json": "french/narration/ch224.json",
+  "textHash": "fnv1a64:aa508d88640440ba",
+  "jsonHash": "fnv1a64:747b123e7d7d5155",
+  "findings": []
+}

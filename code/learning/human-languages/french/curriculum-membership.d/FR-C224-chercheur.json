@@ -1,0 +1,11 @@
+{
+  "id": "FR-C224-chercheur",
+  "pathSegment": "FR-PATH-224-CHOSES224",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-224-CHOSES224",
+      "order": 4
+    }
+  ]
+}

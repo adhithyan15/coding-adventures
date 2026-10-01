@@ -1,0 +1,11 @@
+{
+  "id": "FR-C210-reconnaitre",
+  "pathSegment": "FR-PATH-210-VERBES210",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-210-VERBES210",
+      "order": 4
+    }
+  ]
+}

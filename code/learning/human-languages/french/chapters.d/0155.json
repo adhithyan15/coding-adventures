@@ -1,0 +1,19 @@
+{
+  "chapter": 155,
+  "title": "Rest, Sleep, Dream, Anxiety, Love",
+  "label": "ch:fr-rest-sleep-dream-anxiety-love",
+  "canDo": "I can say rest, sleep, a dream, anxiety and love.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FR-C155-amour",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 155: I can say rest, sleep, a dream, anxiety and love.",
+    "assesses": [
+      "FR-LEX-C155-SANTE155-03",
+      "FR-LEX-C155-SANTE155-04",
+      "FR-LEX-C155-SANTE155-05"
+    ]
+  }
+}

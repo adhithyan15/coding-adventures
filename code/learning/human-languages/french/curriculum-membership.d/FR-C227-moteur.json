@@ -1,0 +1,11 @@
+{
+  "id": "FR-C227-moteur",
+  "pathSegment": "FR-PATH-227-CHOSES227",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-227-CHOSES227",
+      "order": 1
+    }
+  ]
+}

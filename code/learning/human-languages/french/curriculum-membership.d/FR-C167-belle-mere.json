@@ -1,0 +1,11 @@
+{
+  "id": "FR-C167-belle-mere",
+  "pathSegment": "FR-PATH-167-CHOSES167",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-167-CHOSES167",
+      "order": 0
+    }
+  ]
+}

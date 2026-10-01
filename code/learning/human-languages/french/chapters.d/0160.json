@@ -1,0 +1,19 @@
+{
+  "chapter": 160,
+  "title": "Deep, Low, Unknown, Dangerous, Safe",
+  "label": "ch:fr-deep-low-unknown-dangerous-safe",
+  "canDo": "I can say deep, low, unknown, dangerous and safe.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FR-R160-second-pass-words-from-chapters-156-160",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 160: I can say deep, low, unknown, dangerous and safe.",
+    "assesses": [
+      "FR-LEX-C160-QUAL160-03",
+      "FR-LEX-C160-QUAL160-04",
+      "FR-LEX-C160-QUAL160-05"
+    ]
+  }
+}

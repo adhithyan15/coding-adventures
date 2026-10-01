@@ -1,0 +1,21 @@
+{
+  "language": "french",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:8843efa55118f5e6",
+  "lessonIds": [
+    "FR-C151-heberger",
+    "FR-C151-prier",
+    "FR-C151-recommander",
+    "FR-C151-ralentir",
+    "FR-C151-respirer",
+    "FR-R151-first-pass-words-from-chapters-143-146",
+    "FR-R151-second-pass-words-from-chapters-147-151"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "french/narration/ch151.txt",
+  "json": "french/narration/ch151.json",
+  "textHash": "fnv1a64:93ec3824cf16246c",
+  "jsonHash": "fnv1a64:916e8860e5fb0e2d",
+  "findings": []
+}

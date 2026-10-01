@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:647b036084a1aad2",
+  "lessonIds": [
+    "FR-C160-profond-profonde",
+    "FR-C160-bas-basse",
+    "FR-C160-inconnu-inconnue",
+    "FR-C160-dangereux-dangereuse",
+    "FR-C160-sur-sure",
+    "FR-R160-first-pass-words-from-chapters-152-155",
+    "FR-R160-second-pass-words-from-chapters-156-160"
+  ],
+  "tex": "french/book/chapters/ch160-deep-low-unknown-dangerous-safe.tex"
+}

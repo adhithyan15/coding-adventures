@@ -1,0 +1,11 @@
+{
+  "id": "FR-C167-fiance",
+  "pathSegment": "FR-PATH-167-CHOSES167",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-167-CHOSES167",
+      "order": 3
+    }
+  ]
+}

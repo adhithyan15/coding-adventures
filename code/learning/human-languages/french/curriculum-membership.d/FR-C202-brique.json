@@ -1,0 +1,11 @@
+{
+  "id": "FR-C202-brique",
+  "pathSegment": "FR-PATH-202-CHOSES202",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-202-CHOSES202",
+      "order": 2
+    }
+  ]
+}

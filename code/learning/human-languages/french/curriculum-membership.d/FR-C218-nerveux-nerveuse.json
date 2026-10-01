@@ -1,0 +1,11 @@
+{
+  "id": "FR-C218-nerveux-nerveuse",
+  "pathSegment": "FR-PATH-218-QUAL218",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-218-QUAL218",
+      "order": 3
+    }
+  ]
+}

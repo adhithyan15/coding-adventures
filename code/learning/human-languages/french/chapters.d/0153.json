@@ -1,0 +1,19 @@
+{
+  "chapter": 153,
+  "title": "To notice, To replace, To meet, To blush, To bleed",
+  "label": "ch:fr-to-notice-to-replace-to-meet-to-blush-to-bleed",
+  "canDo": "I can say to notice, to replace, to meet, to blush and to bleed.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C153-saigner",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 153: I can say to notice, to replace, to meet, to blush and to bleed.",
+    "assesses": [
+      "FR-LEX-C153-VERBES153-03",
+      "FR-LEX-C153-VERBES153-04",
+      "FR-LEX-C153-VERBES153-05"
+    ]
+  }
+}

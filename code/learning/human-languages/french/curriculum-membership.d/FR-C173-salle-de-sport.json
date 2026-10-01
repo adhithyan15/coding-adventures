@@ -1,0 +1,11 @@
+{
+  "id": "FR-C173-salle-de-sport",
+  "pathSegment": "FR-PATH-173-CHOSES173",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-173-CHOSES173",
+      "order": 2
+    }
+  ]
+}
