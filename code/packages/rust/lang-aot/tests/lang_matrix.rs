@@ -4095,6 +4095,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("6.253.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — true and false literal string predicates may select distinct
+    // controlled expressions while bounded predicates terminate each loop.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, j; real x, y; i := 0; x := 0.25; for i := if 'ALPHA' < 'BETA' then i + 1 else i + 2 while i <= 3 do x := x + i; print(x); j := 0; y := 0.25; for j := if 'BETA' < 'ALPHA' then j + 2 else j + 1 while j <= 2 do y := y + j; print(y) end",
+        expect: Expect::Stdout("6.253.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — an exact control recurrence remains analyzable when every
     // additional compound-body statement is an inert local scalar assignment.
     Prog {
@@ -14317,6 +14326,31 @@ fn algol_literal_string_selected_while_predicates_run_on_every_available_standar
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the literal-string-selected while predicates did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_while_values_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("for i := if 'ALPHA' < 'BETA' then i + 1 else i + 2 while")
+        })
+        .expect("the literal-string-selected while values must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected while values did not run"
             );
             continue;
         };

@@ -16986,6 +16986,22 @@ mod tests {
     }
 
     #[test]
+    fn al4_while_loop_tracks_literal_string_selected_values() {
+        let module = compile_source(
+            "begin integer i, j; real x, y; i := 0; x := 0.25; for i := if 'ALPHA' < 'BETA' then i + 1 else i + 2 while i <= 3 do x := x + i; print(x); j := 0; y := 0.25; for j := if 'BETA' < 'ALPHA' then j + 2 else j + 1 while j <= 2 do y := y + j; print(y) end",
+            "test",
+        )
+        .expect("literal string predicates may select bounded while values");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["6.25", "3.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
     fn al4_control_recurrence_rejects_dynamic_statement_selector() {
         let err = compile_source(
             "begin integer i; boolean take; for i := 1 step 1 until 10 do if take then i := i * 2 else i := i + 3; print(i + 0.25) end",
