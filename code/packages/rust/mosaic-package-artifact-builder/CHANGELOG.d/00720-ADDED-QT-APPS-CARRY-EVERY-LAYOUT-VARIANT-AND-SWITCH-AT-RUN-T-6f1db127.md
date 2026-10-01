@@ -16,10 +16,13 @@
   QML module, each as its own type, beside the root's (which the emitter
   already lists), and refuses a type the module would register twice: a
   variant named like another export (`Card` + `touch` beside an exported
-  `CardTouch`) or like another variant.
+  `CardTouch`), like another variant, or like a name the Qt shell owns
+  (`SHELL_RESERVED_NAMES`) -- for every export's variants, not only the
+  root's.
 - Tests mirror the other backends' four (convention, declared rules under wire
   names, a rule for a missing variant refused, no variants → no selector),
   plus the native-complete shell mounting its variants strictly, every rule
   axis being a key of the Qt binding's `environmentReport`, every public class
-  of the binding's headers being reserved, export collisions refused, and
-  every export's variants joining the module.
+  of the binding's headers being reserved, export collisions refused, a
+  non-root export's variant refused a shell name, and every export's variants
+  joining the module.

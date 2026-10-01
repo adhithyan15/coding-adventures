@@ -308,7 +308,7 @@ class MosaicQtRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("qt_target_qml_sources(EngramApp QML_FILES EngramApp.touch.qml)", block)
         self.assertIn("required property var mosaicHost", block)
         self.assertIn('{{"pointer", "coarse"}}', block)
-        self.assertIn("mosaicSwitchLayout(view, host, environment);", block)
+        self.assertIn("if (!layoutSwitch->isActive()) layoutSwitch->start(0);", block)
         # The negative check exits explicitly: a bare `! grep` never fails a
         # `set -e` step.
         self.assertIn("then\n            echo \"::error::Qt layout variants: main.cpp still mounts", block)

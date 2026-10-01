@@ -2813,7 +2813,7 @@ jobs:
           qt_layout_expect "$engram_output/qt/CMakeLists.txt" 'qt_target_qml_sources(EngramApp QML_FILES EngramApp.touch.qml)' "the touch root in the module"
           qt_layout_expect "$engram_output/qt/EngramApp.touch.qml" 'required property var mosaicHost' "a strict touch root"
           qt_layout_expect "$engram_output/qt/main.cpp" '{"touch", "qrc:/qt/qml/Mosaic/EngramApp/EngramApp.touch.qml", {{"pointer", "coarse"}}},' "the conventional touch rule"
-          qt_layout_expect "$engram_output/qt/main.cpp" 'mosaicSwitchLayout(view, host, environment);' "the observer switching roots"
+          qt_layout_expect "$engram_output/qt/main.cpp" 'if (!layoutSwitch->isActive()) layoutSwitch->start(0);' "the observer queueing the root switch"
           if grep -qF 'const QUrl url(QStringLiteral("qrc:/qt/qml/Mosaic/EngramApp/EngramApp.qml"));' "$engram_output/qt/main.cpp"; then
             echo "::error::Qt layout variants: main.cpp still mounts EngramApp.qml unconditionally"
             exit 1

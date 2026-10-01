@@ -369,9 +369,12 @@ static const std::vector<MosaicLayoutRule> rules{
 ```
 
 The first root is the one `MosaicHost::environmentReport` of the window
-selects, and the environment observer (UI48 §7.6) calls `mosaicSwitchLayout`
-with every report before sending it, so a resize across a threshold mounts
-the other root. The new root starts with the props the old one showed (the
+selects. Each report the environment observer (UI48 §7.6) builds also starts
+one zero-interval timer, which calls `mosaicSwitchLayout` once the event loop
+is back, so a resize across a threshold mounts the other root. The switch is
+deferred because swapping the view's source deletes the old root, which must
+never happen inside the window signal that noticed the change, and the timer
+coalesces a burst of resize ticks into one switch. The new root starts with the props the old one showed (the
 runtime's checked props in a native-complete shell, each slot's value carried
 across in a sample shell); the app's state lives in the runtime, so nothing is
 lost but the old root's own QML state. A root that cannot be mounted leaves

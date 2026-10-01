@@ -912,8 +912,10 @@ the pointer is `fine`, so Engram's touch layout is compiled but not shown.
 - The project shell compiles every export's variants into the QML module, as
   it compiles every export's default. A type the module would register twice
   -- a variant named like another export (`Card` + `touch` beside an exported
-  `CardTouch`) or like another variant -- fails the build. (Compose, Flutter
-  and SwiftUI do not check a variant against another export's name yet.)
+  `CardTouch`) or like another variant -- fails the build, and so does a
+  variant of ANY export named like something the shell owns (`Mosaic` +
+  `host`), not only the root's. (Compose, Flutter and SwiftUI do not check a
+  variant against another export's name yet.)
 - A native-complete shell mounts every root strictly, so it re-emits the
   root's variants under that policy (`required property var mosaicHost`,
   events through `handleRequiredEvent`) as it re-emits the default. The flat
@@ -940,9 +942,19 @@ the pointer is `fine`, so Engram's touch layout is compiled but not shown.
   `applyMosaicResponse` -- so a QML wrapper choosing between roots would have
   to redeclare and forward every slot. Instead the shell swaps the view's
   source. The first root is the one `MosaicHost::environmentReport` of the
-  window selects; the §7.6 observer calls `mosaicSwitchLayout` with each report
-  it builds, after its settle check and before sending the report, so the
-  runtime's answer is applied to the root the window now shows.
+  window selects.
+- **The switch is deferred, never made inside the signal that noticed the
+  change.** Swapping the view's source deletes the old root, and the §7.6
+  observer runs from `QWindow::widthChanged` / `heightChanged` and the
+  colour-scheme signal; if QML ever resized its own window, the root being
+  deleted would be on the stack. So each report, after its settle check,
+  only starts one zero-interval single-shot timer owned by the host
+  (`if (!layoutSwitch->isActive()) layoutSwitch->start(0);`), which coalesces
+  a burst of resize ticks into one switch. When it fires it checks
+  `isSettling()` again (and waits 100 ms if so), re-reads the window, and
+  calls `mosaicSwitchLayout`. The report is therefore answered on the root
+  that was showing; nothing is lost, because the new root starts from the
+  props the old one shows, which by then include that answer.
 - The new root starts with the props the old one showed: in a native-complete
   shell the runtime's, checked and mapped exactly as at startup
   (`propsRequired`); in a sample shell each slot's value is carried across
@@ -950,13 +962,20 @@ the pointer is `fine`, so Engram's touch layout is compiled but not shown.
   props and the shell's own samples alike. The app's state lives in the
   runtime, so nothing is lost but the old root's own QML state. A root that
   cannot get its props or cannot load leaves the window on the layout it was
-  showing, and the reason is logged; nothing is thrown from inside the signal.
+  showing, and the reason is logged; nothing is thrown into the event loop.
   Only a layout root is ever swapped for another (never, say, the strict
   shell's startup surface).
 - Table models are allocated once, for the largest count any root takes, and
   handed only to the roots that declare them: a QML root refuses an initial
   property it does not declare (checked on Qt 6.4: `setInitialProperties`
-  with an unknown name leaves the view in `Error`).
+  with an unknown name leaves the view in `Error`). The strict shell's
+  retrying startup still allocates a fresh set per attempt, owned by that
+  attempt's host, because the packaged shell ties them to the candidate host
+  so a failed attempt releases the whole partial graph; each attempt keeps
+  its set on the view before mounting, and the previous host's observer
+  (the only reader) goes with that host, so the stale set is never read.
+  Reusing one set across retries was left as is: it saves a few objects per
+  failed start and would undo that ownership.
 - A sample shell selects too, and reports to nobody. Without the standard
   host (`MOSAIC_HAS_HOST` 0) it has no environment to read and opens the
   default layout.
@@ -985,7 +1004,8 @@ fixture gate passes and fails when the switch or the carried props are
 removed, Engram's native-complete project builds, and with a declared
 `touch <- size-class = compact` rule the strict shell, running the real
 Engram runtime, swaps to the touch root at 400 pixels and back with
-`appTitle` carried.
+`appTitle` carried. Both runs were repeated after the switch was deferred to
+the event loop, and the fixture gate fails when the switch is never queued.
 
 ## 8. Open questions
 

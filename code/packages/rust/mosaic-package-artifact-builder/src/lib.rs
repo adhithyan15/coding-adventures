@@ -5105,16 +5105,28 @@ fn qt_layout_choices(
 /// `<Component><Variant>` could be another export's name (`Card` + `touch`
 /// beside an exported `CardTouch`) or another variant's (`Card` + `touch-bar`
 /// and `CardTouch` + `bar`). Both are refused here, naming the two, rather
-/// than registering one type twice.
+/// than registering one type twice. So is a variant of any export named like
+/// something the Qt shell owns (`SHELL_RESERVED_NAMES`: `Mosaic` + `host`
+/// is `MosaicHost`): the emitter refuses that for every variant it emits,
+/// and this keeps the module's own list from relying on it.
 fn qt_cmake_with_layout_variants(
     generated: &str,
     mounted_component: &str,
     components: &[String],
     src_dir: &Path,
 ) -> Result<String, BuildError> {
+    // The names the module already holds before any variant: every export,
+    // and every name the Qt shell owns (`MosaicHost`, ...), which a variant
+    // of ANY export may not take -- `Mosaic` + `host` is refused for a
+    // non-root export exactly as the emitter refuses it for the root.
     let mut owners: HashMap<String, String> = components
         .iter()
         .map(|component| (component.clone(), format!("the export {component}")))
+        .chain(
+            mosaic_emit_qt::pipeline::SHELL_RESERVED_NAMES
+                .iter()
+                .map(|name| (name.to_string(), "the Qt shell".to_string())),
+        )
         .collect();
     let mut added = String::new();
     for component in components {
@@ -16502,7 +16514,7 @@ version = "1"
             ),
             "{main}"
         );
-        assert!(main.contains("    mosaicSwitchLayout(view, host, environment);\n"), "{main}");
+        assert!(main.contains("    if (!layoutSwitch->isActive()) layoutSwitch->start(0);\n"), "{main}");
         // A sample shell chooses from the window, carrying what it shows.
         assert!(main.contains("const QStringList slotProperties{"), "{main}");
     }
@@ -16660,6 +16672,48 @@ version = "1"
         let error = build_package(&swiftui_options(&pkg, &out, Backend::Qt)).unwrap_err();
         assert!(error.to_string().contains("`CardTouch` twice"), "{error}");
         assert!(error.to_string().contains("the export CardTouch"), "{error}");
+    }
+
+    /// A variant of ANY export -- not only the root, whose choices the
+    /// emitter checks -- may not register a name the Qt shell owns:
+    /// `Mosaic` + `host` would be the module type `MosaicHost`.
+    #[test]
+    fn a_qt_variant_of_any_export_may_not_take_a_shell_name() {
+        let src = TempDir::new().unwrap();
+        for file in ["Card.mll", "Mosaic.mll"] {
+            fs::write(src.path().join(file), "layout X { }\n").unwrap();
+        }
+        let components = ["Card".to_string(), "Mosaic".to_string()];
+        for (variant, owned) in [
+            ("host", "MosaicHost"),
+            ("table-model", "MosaicTableModel"),
+            ("layout_rule", "MosaicLayoutRule"),
+            ("file-dialogs", "MosaicFileDialogs"),
+        ] {
+            let file = src.path().join(format!("Mosaic.{variant}.mll"));
+            fs::write(&file, "layout X { }\n").unwrap();
+            let error = qt_cmake_with_layout_variants("", "Card", &components, src.path())
+                .unwrap_err()
+                .to_string();
+            assert!(error.contains(&format!("`{owned}` twice")), "{error}");
+            assert!(error.contains("the Qt shell"), "{error}");
+            fs::remove_file(&file).unwrap();
+        }
+        // An ordinary variant of the same export joins the module.
+        fs::write(src.path().join("Mosaic.touch.mll"), "layout X { }\n").unwrap();
+        let cmake = qt_cmake_with_layout_variants("", "Card", &components, src.path()).unwrap();
+        assert!(cmake.contains("QT_QML_SOURCE_TYPENAME MosaicTouch"), "{cmake}");
+
+        // And the whole build refuses it too.
+        let pkg = make_package("mosaic-pkg-card", &["Card", "Mosaic"]);
+        fs::write(
+            pkg.path().join("src/Mosaic.host.mll"),
+            fs::read_to_string(pkg.path().join("src/Mosaic.mll")).unwrap(),
+        )
+        .unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package(&swiftui_options(&pkg, &out, Backend::Qt)).unwrap_err();
+        assert!(error.to_string().contains("MosaicHost"), "{error}");
     }
 
     /// Every export's variants are compiled, not only the root's: a variant

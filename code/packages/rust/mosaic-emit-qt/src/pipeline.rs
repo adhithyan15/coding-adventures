@@ -673,9 +673,10 @@ static void mosaicObserveEnvironment(QQuickView &view, MosaicHost &host)
 //   mosaicMountLayout(...)       create a root (setInitialProperties + setSource)
 //   mosaicSwitchLayout(...)      mount another root when the selection changes
 //
-// and the observer calls `mosaicSwitchLayout` with each report it builds,
-// before sending that report to the runtime -- so the runtime's answer is
-// applied to the root the window now shows.
+// and each report the observer builds also starts a zero-interval timer
+// that calls `mosaicSwitchLayout` once the event loop is back -- deferred,
+// because swapping the view's source deletes the old root, and coalesced, so
+// a burst of resize ticks switches once (see `environment_observer_cpp`).
 //
 // Why the C++ shell, not QML: a `QQuickView`'s root IS the component (the
 // host sets its properties and calls its `applyMosaicResponse`), so a QML
@@ -904,7 +905,8 @@ fn layout_mount_cpp(slots: &[SlotDecl], require_runtime: bool, shell_tables: usi
         "//\n",
         "// The new root is created afresh with the props the old one showed; the\n",
         "// app's state lives in the runtime, so nothing is lost but the old root's\n",
-        "// own QML state. This runs inside a Qt signal, so nothing here throws: a\n",
+        "// own QML state. It runs from a timer the observer starts (never inside\n",
+        "// the signal that noticed the change), and nothing here throws: a\n",
         "// root that cannot get its props (a required prop the runtime no longer\n",
         "// provides) or cannot load leaves the window on the layout it was showing,\n",
         "// and the reason is logged.\n",
@@ -933,34 +935,73 @@ fn layout_mount_cpp(slots: &[SlotDecl], require_runtime: bool, shell_tables: usi
 }
 
 /// The ENV4 observer (§7.6), and with layout variants the selector between
-/// its colour-scheme helper and the observer itself, whose report also
-/// switches the root (§7.10). `layout_block` empty gives exactly
+/// its colour-scheme helper and the observer itself, whose reports also
+/// switch the root (§7.10). `layout_block` empty gives exactly
 /// [`ENVIRONMENT_OBSERVER_CPP`].
+///
+/// The switch is **deferred**, never made inside the signal that noticed the
+/// change. Swapping the view's source deletes the old root, and the
+/// observer runs from `QWindow::widthChanged` / `heightChanged` and the
+/// colour-scheme signal: if QML ever resized its own window, the root being
+/// deleted would still be on the stack. So each report only starts one
+/// zero-interval timer owned by the host:
+///
+/// ```text
+///   resize ─► report ─► reportEnvironment (answer applied to the root shown)
+///               └─► layoutSwitch->start(0)  (already pending? nothing more)
+///   event loop ─► layoutSwitch fires ─► settling? wait 100 ms and retry
+///                                    └─► re-read the window ─► mosaicSwitchLayout
+/// ```
+///
+/// A burst of resize ticks coalesces into one switch, which reads the window
+/// as it is when it fires rather than as it was at the first tick. Nothing is
+/// lost by switching after the report: the new root starts from the props
+/// the old one shows, which by then include the report's answer.
 fn environment_observer_cpp(layout_block: &str) -> String {
     if layout_block.is_empty() {
         return ENVIRONMENT_OBSERVER_CPP.to_string();
     }
     const OBSERVER: &str = "// UI48 ENV4 (§7.6): report the window's environment now";
+    const LAMBDA: &str = "  const auto report = [&view, &host, retry]() {\n";
+    const SWITCHING_LAMBDA: &str = concat!(
+        "  // UI48 ENV3 (§7.10): the layout switch, deferred to the event loop and\n",
+        "  // coalesced -- never inside the signal that noticed the change, because\n",
+        "  // swapping the view's source deletes the root that may be on the stack.\n",
+        "  auto *layoutSwitch = new QTimer(&host);\n",
+        "  layoutSwitch->setSingleShot(true);\n",
+        "  QObject::connect(layoutSwitch, &QTimer::timeout, &host, [&view, &host, layoutSwitch]() {\n",
+        "    if (host.isSettling()) {\n",
+        "      layoutSwitch->start(100);\n",
+        "      return;\n",
+        "    }\n",
+        "    mosaicSwitchLayout(\n",
+        "        view, host,\n",
+        "        MosaicHost::environmentReport(view.width(), view.height(), mosaicPrefersDark()));\n",
+        "  });\n",
+        "  const auto report = [&view, &host, retry, layoutSwitch]() {\n",
+    );
     const REPORT: &str = concat!(
         "    const auto response = host.reportEnvironment(\n",
         "        MosaicHost::environmentReport(view.width(), view.height(), mosaicPrefersDark()));\n",
     );
     const SWITCHING_REPORT: &str = concat!(
-        "    const auto environment =\n",
-        "        MosaicHost::environmentReport(view.width(), view.height(), mosaicPrefersDark());\n",
-        "    // UI48 ENV3 (§7.10): mount the layout this environment selects first, so\n",
-        "    // the runtime's answer below lands on the root the window now shows.\n",
-        "    mosaicSwitchLayout(view, host, environment);\n",
-        "    const auto response = host.reportEnvironment(environment);\n",
+        "    // UI48 ENV3 (§7.10): show the layout this environment selects, once the\n",
+        "    // event loop is back.\n",
+        "    if (!layoutSwitch->isActive()) layoutSwitch->start(0);\n",
+        "    const auto response = host.reportEnvironment(\n",
+        "        MosaicHost::environmentReport(view.width(), view.height(), mosaicPrefersDark()));\n",
     );
     let at = ENVIRONMENT_OBSERVER_CPP
         .find(OBSERVER)
         .expect("the observer follows its colour-scheme helper");
     let (head, observer) = ENVIRONMENT_OBSERVER_CPP.split_at(at);
+    assert_eq!(observer.matches(LAMBDA).count(), 1, "one report lambda in the observer");
     assert_eq!(observer.matches(REPORT).count(), 1, "one report in the observer");
     format!(
         "{head}{layout_block}{}",
-        observer.replacen(REPORT, SWITCHING_REPORT, 1)
+        observer
+            .replacen(LAMBDA, SWITCHING_LAMBDA, 1)
+            .replacen(REPORT, SWITCHING_REPORT, 1)
     )
 }
 
@@ -18810,15 +18851,44 @@ mod layout_variant_tests {
             ] {
                 assert!(main.contains(piece), "{piece}\n{main}");
             }
-            // The observer switches before it reports, so the runtime's answer
-            // lands on the root the window now shows -- and only once a
-            // settle is over.
-            let settling = main.find("if (host.isSettling()) {").unwrap();
-            let switch = main
-                .find("    mosaicSwitchLayout(view, host, environment);\n")
+            // The observer never switches inside the signal that noticed the
+            // change: each report, after its settle check, starts one
+            // zero-interval timer (coalescing a burst of ticks), and the
+            // timer re-reads the window and checks for a settle again when it
+            // fires.
+            for piece in [
+                "  auto *layoutSwitch = new QTimer(&host);\n  layoutSwitch->setSingleShot(true);\n",
+                "  const auto report = [&view, &host, retry, layoutSwitch]() {\n",
+                "    if (!layoutSwitch->isActive()) layoutSwitch->start(0);\n",
+            ] {
+                assert!(main.contains(piece), "{piece}\n{main}");
+            }
+            let timer = main
+                .find("QObject::connect(layoutSwitch, &QTimer::timeout")
                 .unwrap();
-            let report = main.find("host.reportEnvironment(environment)").unwrap();
-            assert!(settling < switch && switch < report, "{main}");
+            let fire_settling = main[timer..]
+                .find("    if (host.isSettling()) {\n      layoutSwitch->start(100);")
+                .unwrap()
+                + timer;
+            let fire_switch = main[timer..]
+                .find("    mosaicSwitchLayout(\n        view, host,\n        MosaicHost::environmentReport(view.width(), view.height(), mosaicPrefersDark()));\n")
+                .unwrap()
+                + timer;
+            assert!(fire_settling < fire_switch, "{main}");
+            let report = main
+                .find("  const auto report = [&view, &host, retry, layoutSwitch]")
+                .unwrap();
+            let settling = report + main[report..].find("if (host.isSettling()) {").unwrap();
+            let queue = main
+                .find("    if (!layoutSwitch->isActive()) layoutSwitch->start(0);\n")
+                .unwrap();
+            assert!(fire_switch < report && settling < queue, "{main}");
+            // No call to the switch is left inside the report itself.
+            assert_eq!(
+                main.matches("mosaicSwitchLayout(").count(),
+                2,
+                "definition and timer:\n{main}"
+            );
             // The first root is the one the window's environment selects.
             assert!(main.contains(LAYOUT_STARTUP_URL), "{main}");
             // Its definitions precede the observer, which precedes `main`.
@@ -19027,21 +19097,37 @@ mod layout_variant_tests {
     /// Undo the observer's switch and the first mount: what remains of a
     /// variant shell once its selector and mount block are cut out.
     fn restore_plain_startup(stripped: &str, require_runtime: bool) -> String {
-        let observer = stripped.replacen(
-            concat!(
-                "    const auto environment =\n",
-                "        MosaicHost::environmentReport(view.width(), view.height(), mosaicPrefersDark());\n",
-                "    // UI48 ENV3 (§7.10): mount the layout this environment selects first, so\n",
-                "    // the runtime's answer below lands on the root the window now shows.\n",
-                "    mosaicSwitchLayout(view, host, environment);\n",
-                "    const auto response = host.reportEnvironment(environment);\n",
-            ),
-            concat!(
-                "    const auto response = host.reportEnvironment(\n",
-                "        MosaicHost::environmentReport(view.width(), view.height(), mosaicPrefersDark()));\n",
-            ),
-            1,
-        );
+        let observer = stripped
+            .replacen(
+                concat!(
+                    "  // UI48 ENV3 (§7.10): the layout switch, deferred to the event loop and\n",
+                    "  // coalesced -- never inside the signal that noticed the change, because\n",
+                    "  // swapping the view's source deletes the root that may be on the stack.\n",
+                    "  auto *layoutSwitch = new QTimer(&host);\n",
+                    "  layoutSwitch->setSingleShot(true);\n",
+                    "  QObject::connect(layoutSwitch, &QTimer::timeout, &host, [&view, &host, layoutSwitch]() {\n",
+                    "    if (host.isSettling()) {\n",
+                    "      layoutSwitch->start(100);\n",
+                    "      return;\n",
+                    "    }\n",
+                    "    mosaicSwitchLayout(\n",
+                    "        view, host,\n",
+                    "        MosaicHost::environmentReport(view.width(), view.height(), mosaicPrefersDark()));\n",
+                    "  });\n",
+                    "  const auto report = [&view, &host, retry, layoutSwitch]() {\n",
+                ),
+                "  const auto report = [&view, &host, retry]() {\n",
+                1,
+            )
+            .replacen(
+                concat!(
+                    "    // UI48 ENV3 (§7.10): show the layout this environment selects, once the\n",
+                    "    // event loop is back.\n",
+                    "    if (!layoutSwitch->isActive()) layoutSwitch->start(0);\n",
+                ),
+                "",
+                1,
+            );
         if require_runtime {
             observer.replacen(
                 concat!(
