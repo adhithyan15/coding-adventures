@@ -226,6 +226,50 @@ if let host = makeHost("MOSAIC_PROBE_STATE_G") {
   let refused = host.reportEnvironment(bad) as? [String: Any]
   check(refused?["error"] != nil, "a malformed environment is refused, not applied")
   check(!props(host.applyProps()).isEmpty, "a refused environment leaves the props showing")
+  check(host.reportEnvironment(bad) == nil, "the same refused report is not resent")
+
+  // Only an invalid report is held back. While failEnvironment is on, every
+  // report that reaches the app is an app error -- a failure that is not the
+  // report's fault -- so an error answer proves a report was sent and nil
+  // that it was held back.
+  func failure(_ answer: NSDictionary?) -> String? {
+    (answer as? [String: Any])?["error"] as? String
+  }
+  // True when the app took the switch.
+  func failEnvironment(_ fail: Bool) -> Bool {
+    let envelope: NSDictionary = ["payload": ["fail": fail] as NSDictionary]
+    let answer = host.handleEvent(envelope, name: "failEnvironment")
+    return answer != nil && failure(answer) == nil
+  }
+  check(failEnvironment(true), "the app is told to fail environment changes")
+  check(host.reportEnvironment(tablet) == nil, "the report last taken is still held back")
+  let landscape = NSMutableDictionary(dictionary: tablet)
+  landscape["orientation"] = "landscape"
+  check(failure(host.reportEnvironment(landscape))?.contains("Mosaic application error") == true,
+        "an app's failure on a report is an error answer")
+  check(failure(host.reportEnvironment(landscape)) != nil,
+        "a report that failed transiently is sent again")
+  check(host.reportEnvironment(bad) == nil, "an invalid report is still held back")
+  check(failure(host.reportEnvironment(landscape)) != nil,
+        "holding back an invalid report holds back nothing else")
+  check(failEnvironment(false), "the app is told to take environment changes again")
+
+  // An ignored report writes no state: nothing the app saves changed.
+  if let path = ProcessInfo.processInfo.environment["MOSAIC_PROBE_STATE_G"] {
+    check(FileManager.default.fileExists(atPath: path), "the environment host persists")
+    try? FileManager.default.removeItem(atPath: path)
+    let retried = host.reportEnvironment(landscape)
+    check(retried != nil && failure(retried) == nil,
+          "once the failure passes, the same report is taken")
+    check(!FileManager.default.fileExists(atPath: path),
+          "an ignored report does not rewrite the state file")
+    check(failEnvironment(true) && FileManager.default.fileExists(atPath: path),
+          "an event still persists")
+    check(host.reportEnvironment(landscape) == nil, "the report taken is held back")
+    check(failEnvironment(false), "the app is left taking environment changes")
+  } else {
+    check(false, "MOSAIC_PROBE_STATE_G names the environment host's state file")
+  }
   let start = MosaicRuntimeHost.initialEnvironment()
   check(start["pointer"] == "fine" && start["hover"] == "hover",
         "a macOS app starts with a fine, hovering pointer")

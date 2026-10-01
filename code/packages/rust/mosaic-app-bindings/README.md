@@ -66,8 +66,11 @@ Android and iOS each request fails with a message until UI89.
 ## Persistence
 
 Emitted applications also persist the runtime's opaque snapshot after every
-successful dispatch and supply it as `restoredSnapshot` before the first visible
-render. Writes use a same-directory temporary file plus the platform's atomic
+successful dispatch that moved the revision, and supply it as
+`restoredSnapshot` before the first visible render. An environment report the
+app ignored (UI48 §7.1: an answer at the revision already showing) changed
+nothing the app saves, so it writes nothing -- a window drag costs no disk
+writes. Writes use a same-directory temporary file plus the platform's atomic
 replacement facility. Invalid JSON and runtime-incompatible snapshots are moved
 to `mosaic-state.v1.json.corrupt`; the app starts clean and exposes a
 `persistenceWarning` (or native status warning) instead of becoming unusable.

@@ -218,9 +218,15 @@ QVariantMap MosaicHost::handleEvent(const QVariantMap &event)
         // cross the call boundary, not stop inside it: settleEffects returning
         // an empty map is not enough, because everything below touches members.
         const QPointer<MosaicHost> self(this);
+        const auto shownRevision = latestUpdate_.value(QStringLiteral("revision"));
         const auto settled = keepShowingProps(settleEffects(update));
         if (!self) return {};
-        persistSnapshot();
+        // An answer at the revision already showing -- an environment the app
+        // ignored (UI48 §7.1) -- changed nothing the app would save, so the
+        // state file is not rewritten: a resize storm costs no disk writes.
+        // So no persistence warning can arise from one either; a warning
+        // already showing stays, as it is folded in below.
+        if (!sameRevision(settled, shownRevision)) persistSnapshot();
         showUpdate(settled);
         if (deferredAnswered_) {
             deferredAnswered_ = false;
@@ -260,6 +266,17 @@ QVariantMap MosaicHost::keepShowingProps(const QVariantMap &update) const
     return kept;
 }
 
+// Whether `update` answers at `shown`, the revision showing before it. Either
+// unreadable reads as "moved": when in doubt, persist.
+bool MosaicHost::sameRevision(const QVariantMap &update, const QVariant &shown)
+{
+    bool revisionOk = false;
+    bool shownOk = false;
+    const auto revision = update.value(QStringLiteral("revision")).toLongLong(&revisionOk);
+    const auto before = shown.toLongLong(&shownOk);
+    return revisionOk && shownOk && revision == before;
+}
+
 QVariantMap MosaicHost::reportEnvironment(const QVariantMap &environment)
 {
     if (!app_ || environment == lastReportedEnvironment_ || environment == lastRefusedEnvironment_) {
@@ -272,11 +289,18 @@ QVariantMap MosaicHost::reportEnvironment(const QVariantMap &environment)
         {QStringLiteral("payload"), environment},
     });
     if (!self) return {};
-    // Remembered only once the runtime took it, so a refused report does not
-    // stand in for the environment the runtime has; but the same refused
-    // report is not sent again on every pixel of a window drag.
+    // Remembered only once the runtime took it, so a failed report does not
+    // stand in for the environment the runtime has. A report refused as
+    // invalid is not sent again on every pixel of a window drag -- it would
+    // be refused every time. Any other failure (an app error, which may be
+    // transient) says nothing about the report, so the same report is sent
+    // again: holding it back would leave the app on a stale environment
+    // until the window changed to a third one.
     if (response.contains(QStringLiteral("error"))) {
-        lastRefusedEnvironment_ = environment;
+        if (response.value(QStringLiteral("error")).toString().startsWith(
+                QLatin1String(InvalidEnvironmentDiagnostic))) {
+            lastRefusedEnvironment_ = environment;
+        }
         return response;
     }
     lastReportedEnvironment_ = environment;

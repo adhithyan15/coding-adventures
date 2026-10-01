@@ -12,6 +12,10 @@ private let mosaicStatusOK: mosaic_binding_status = 0
 private let mosaicPersistenceEnabled = __MOSAIC_PERSISTENCE_ENABLED__
 private let mosaicApplicationID = "__MOSAIC_APPLICATION_ID__"
 private let mosaicStateFileName = "mosaic-state.v1.json"
+/// How the runtime's refusal of an invalid environment begins
+/// (`mosaic-app-runtime`'s `INVALID_ENVIRONMENT_DIAGNOSTIC`). No other failure
+/// begins this way: an app error begins "Mosaic application error".
+private let mosaicInvalidEnvironment = "__MOSAIC_INVALID_ENVIRONMENT__"
 
 private enum MosaicRuntimeError: LocalizedError {
   case unavailable(String)
@@ -36,6 +40,9 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
   /// The last environment reported to the runtime (UI48 ENV4), so an
   /// unchanged report is not sent twice.
   private var lastReportedEnvironment: NSDictionary?
+  /// The last report the runtime refused as invalid, not re-sent until it
+  /// changes. Any other failure leaves it alone.
+  private var lastRefusedEnvironment: NSDictionary?
   private var propsChangedHandler: (() -> Void)?
   private var persistenceWarning: String?
   private let lock = NSRecursiveLock()
@@ -213,20 +220,36 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
   }
 
   /// Report the window's environment (UI48 ENV4): `environmentChanged`, with
-  /// the whole environment as its payload. A report equal to the last one is
-  /// dropped and answers nil. An app that does not react answers with the
-  /// props already showing (see `handleEvent`).
+  /// the whole environment as its payload.
+  ///
+  /// - A report equal to the last one taken, or to the last one refused as
+  ///   invalid, is dropped and answers nil: a drag across a threshold would
+  ///   otherwise re-send a refused one on every frame.
+  /// - An app that does not react answers with the props already showing
+  ///   (see `dispatchEvent`), and writes no state.
+  /// - A failure answers `["error": ...]` and does not replace the last report
+  ///   taken. Only a refusal of the report itself (an invalid environment) is
+  ///   remembered as refused; any other failure -- an app error, which may be
+  ///   transient -- lets the same report be sent again, rather than leaving
+  ///   the app on a stale environment until the window changes to a third.
   func reportEnvironment(_ environment: NSDictionary) -> NSDictionary? {
     lock.withLock {
       if let last = lastReportedEnvironment, last.isEqual(environment) { return nil }
-      let response = handleEvent(["payload": environment] as NSDictionary,
-                                 name: "environmentChanged")
-      // Remembered only once the runtime took it, so a refused report is
-      // tried again with the next one.
-      if (response as? [String: Any])?["error"] == nil {
-        lastReportedEnvironment = environment.copy() as? NSDictionary
+      if let refused = lastRefusedEnvironment, refused.isEqual(environment) { return nil }
+      let report = environment.copy() as? NSDictionary
+      do {
+        let response = try dispatchEvent(environment, name: "environmentChanged")
+        lastReportedEnvironment = report
+        lastRefusedEnvironment = nil
+        return response
+      } catch {
+        if let failure = error as? MosaicRuntimeError,
+           case .protocolFailure(_, let diagnostic) = failure,
+           diagnostic.hasPrefix(mosaicInvalidEnvironment) {
+          lastRefusedEnvironment = report
+        }
+        return ["error": error.localizedDescription] as NSDictionary
       }
-      return response
     }
   }
 
@@ -276,47 +299,62 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
 
   func handleEvent(_ envelope: NSDictionary, name: NSString) -> NSDictionary? {
     lock.withLock {
-      guard let runtime, let app else {
-        return ["error": "Mosaic runtime is closed"] as NSDictionary
-      }
-      let (nextSequence, overflow) = sequence.addingReportingOverflow(1)
-      guard !overflow else {
-        return ["error": "Mosaic event sequence overflow"] as NSDictionary
-      }
-      let event: [String: Any] = [
-        "protocolVersion": mosaicProtocolVersion,
-        "sequence": nextSequence,
-        "name": name,
-        "payload": envelope["payload"] ?? NSNull(),
-      ]
       do {
-        let update = try Self.invoke(runtime: runtime, value: event) { bytes, output in
-          mosaic_binding_dispatch(runtime, app, bytes, output)
-        }
-        sequence = nextSequence
-        // Settle BEFORE persisting: the runtime refuses to snapshot while an
-        // effect is outstanding, so persisting first warns on every effect.
-        var settled = settleEffects(update)
-        // An update without props AT THE REVISION ALREADY SHOWING (an
-        // environment the app did not react to, UI48 §7.1) carries nothing to
-        // render: keep the props showing rather than handing the view nothing.
-        // Only then -- a props-less update that moves the revision is a
-        // defect, and is left as it is so it surfaces instead of being hidden.
-        if settled["props"] is NSNull,
-           let showing = latestUpdate["props"],
-           let revision = settled["revision"] as? NSNumber,
-           let shownRevision = latestUpdate["revision"] as? NSNumber,
-           revision == shownRevision {
-          settled["props"] = showing
-        }
-        persistSnapshot()
-        latestUpdate = Self.withPersistenceWarning(settled, effectWarning ?? persistenceWarning)
-        schedulePropsChanged()
-        return latestUpdate as NSDictionary
+        return try dispatchEvent(envelope["payload"] ?? NSNull(), name: name)
       } catch {
         return ["error": error.localizedDescription] as NSDictionary
       }
     }
+  }
+
+  /// Dispatch one event, settle its effects and persist; throws what failed,
+  /// so `reportEnvironment` can tell a refused environment from the rest.
+  /// Called with `lock` held.
+  private func dispatchEvent(_ payload: Any, name: NSString) throws -> NSDictionary {
+    guard let runtime, let app else {
+      throw MosaicRuntimeError.unavailable("Mosaic runtime is closed")
+    }
+    let (nextSequence, overflow) = sequence.addingReportingOverflow(1)
+    guard !overflow else {
+      throw MosaicRuntimeError.unavailable("Mosaic event sequence overflow")
+    }
+    let event: [String: Any] = [
+      "protocolVersion": mosaicProtocolVersion,
+      "sequence": nextSequence,
+      "name": name,
+      "payload": payload,
+    ]
+    let update = try Self.invoke(runtime: runtime, value: event) { bytes, output in
+      mosaic_binding_dispatch(runtime, app, bytes, output)
+    }
+    sequence = nextSequence
+    let shownRevision = latestUpdate["revision"] as? NSNumber
+    // Settle BEFORE persisting: the runtime refuses to snapshot while an
+    // effect is outstanding, so persisting first warns on every effect.
+    var settled = settleEffects(update)
+    // An update without props AT THE REVISION ALREADY SHOWING (an
+    // environment the app did not react to, UI48 §7.1) carries nothing to
+    // render: keep the props showing rather than handing the view nothing.
+    // Only then -- a props-less update that moves the revision is a
+    // defect, and is left as it is so it surfaces instead of being hidden.
+    if settled["props"] is NSNull,
+       let showing = latestUpdate["props"],
+       let revision = settled["revision"] as? NSNumber,
+       let showingRevision = latestUpdate["revision"] as? NSNumber,
+       revision == showingRevision {
+      settled["props"] = showing
+    }
+    // An answer at the revision already showing -- that same ignored
+    // environment -- changed nothing the app would save, so the state file
+    // is not rewritten: a resize storm costs no disk writes. So no
+    // persistence warning can arise from one either. Unreadable revisions
+    // persist.
+    if shownRevision == nil || (settled["revision"] as? NSNumber) != shownRevision {
+      persistSnapshot()
+    }
+    latestUpdate = Self.withPersistenceWarning(settled, effectWarning ?? persistenceWarning)
+    schedulePropsChanged()
+    return latestUpdate as NSDictionary
   }
 
   /// Answer an effect the app is waiting on.

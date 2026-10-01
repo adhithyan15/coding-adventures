@@ -30,6 +30,12 @@ private const val MOSAIC_STATUS_OK = 0
 private const val MOSAIC_PERSISTENCE_ENABLED = __MOSAIC_PERSISTENCE_ENABLED__
 private const val MOSAIC_APPLICATION_ID = "__MOSAIC_APPLICATION_ID__"
 private const val MOSAIC_STATE_FILE = "mosaic-state.v1.json"
+/**
+ * How the runtime's refusal of an invalid environment begins
+ * (`mosaic-app-runtime`'s `INVALID_ENVIRONMENT_DIAGNOSTIC`). No other failure
+ * begins this way: an app error begins "Mosaic application error".
+ */
+private const val MOSAIC_INVALID_ENVIRONMENT = "__MOSAIC_INVALID_ENVIRONMENT__"
 
 class MosaicRuntimeException(val status: Int, message: String) : RuntimeException(message)
 
@@ -168,6 +174,11 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
      * report is not sent twice.
      */
     private var lastReportedEnvironment: Map<String, String>? = null
+    /**
+     * The last report the runtime refused as invalid, not re-sent until it
+     * changes. Any other failure leaves it alone.
+     */
+    private var lastRefusedEnvironment: Map<String, String>? = null
 
     init {
         val app = PointerByReference()
@@ -233,10 +244,20 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
             invoke { output -> api.mosaic_app_dispatch(app, input, output) }
         }.jsonObject
         sequence = nextSequence
+        val shownRevision = (latestUpdate["revision"] as? JsonPrimitive)?.longOrNull
         // Settle BEFORE persisting: the runtime refuses to snapshot while an
         // effect is outstanding, so persisting first warns on every effect.
         val settled = keepShowingProps(settleEffects(update))
-        persistSnapshot()
+        // An answer at the revision already showing -- an environment the app
+        // ignored (UI48 §7.1) -- changed nothing the app would save, so the
+        // state file is not rewritten: a resize storm costs no disk writes.
+        // So no persistence warning can arise from one either. Unreadable
+        // revisions persist.
+        if (shownRevision == null ||
+            (settled["revision"] as? JsonPrimitive)?.longOrNull != shownRevision
+        ) {
+            persistSnapshot()
+        }
         latestUpdate = withPersistenceWarning(settled)
         propsChangedHandler?.invoke()
         return latestUpdate.toKotlinMap()
@@ -263,21 +284,33 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
      * the whole environment as its payload -- the six UI48 §4 values under
      * `mosaic-app-runtime`'s wire names.
      *
-     * - A report equal to the last accepted one is dropped and answers null.
+     * - A report equal to the last accepted one, or to the last one refused
+     *   as invalid, is dropped and answers null: a drag across a threshold
+     *   would otherwise re-send a refused one on every frame.
      * - An app that does not react answers with the props already showing
-     *   (see [keepShowingProps]).
-     * - A refusal (an invalid environment) answers `{"error": ...}` instead of
-     *   throwing, and is not remembered, so the next report is sent.
+     *   (see [keepShowingProps]), and writes no state.
+     * - A runtime failure answers `{"error": ...}` instead of throwing, and
+     *   does not replace the last report accepted. Only a refusal of the
+     *   report itself (an invalid environment) is remembered as refused; any
+     *   other failure -- an app error, which may be transient -- lets the same
+     *   report be sent again, rather than leaving the app on a stale
+     *   environment until the window changes to a third one.
      */
     @Synchronized
     fun reportEnvironment(environment: Map<String, String>): Map<String, Any?>? {
-        if (environment == lastReportedEnvironment) return null
+        if (environment == lastReportedEnvironment || environment == lastRefusedEnvironment) {
+            return null
+        }
         val response = try {
             handleEvent(mapOf("name" to "environmentChanged", "payload" to environment))
         } catch (error: MosaicRuntimeException) {
+            if (error.message.orEmpty().startsWith(MOSAIC_INVALID_ENVIRONMENT)) {
+                lastRefusedEnvironment = environment.toMap()
+            }
             return mapOf("error" to (error.message ?: "Mosaic runtime refused the environment"))
         }
         lastReportedEnvironment = environment.toMap()
+        lastRefusedEnvironment = null
         return response
     }
 

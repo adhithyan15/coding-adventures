@@ -20,6 +20,17 @@ internal sealed class IncrementEvent
         new Dictionary<string, object?> { ["amount"] = 4L };
 }
 
+/// <summary>
+/// Switches the conformance app's environment failure (UI48 §7.7): while on,
+/// every <c>environmentChanged</c> that reaches the app is an app error.
+/// </summary>
+internal sealed class FailEnvironmentEvent(bool fail)
+{
+    public string MosaicName => "failEnvironment";
+    public IReadOnlyDictionary<string, object?> MosaicPayload { get; } =
+        new Dictionary<string, object?> { ["fail"] = fail };
+}
+
 internal static class Program
 {
     private static async Task Main(string[] args)
@@ -94,7 +105,7 @@ internal static class Program
             Require(component.Count == initialCount + 4, "dispatched count");
             Require(component.Status == "dispatched", "dispatched props");
 
-            CheckEnvironmentReport(component, initialCount + 4);
+            await CheckEnvironmentReport(component, initialCount + 4);
         }
         finally
         {
@@ -109,7 +120,7 @@ internal static class Program
     /// <c>environmentChanged</c>: the runtime answers at the revision showing
     /// with no props.
     /// </summary>
-    private static void CheckEnvironmentReport(ConformanceComponent component, long count)
+    private static async Task CheckEnvironmentReport(ConformanceComponent component, long count)
     {
         string[] required = { "count", "platform", "status" };
 
@@ -145,27 +156,56 @@ internal static class Program
         // The identical refused report is held back, not refused again.
         Require(MosaicRuntimeHost.ReportEnvironment(component, invalid, required) is null, "a refused report is not re-sent");
 
-        // Sent or not: every dispatch persists, so with a state file the
-        // file's reappearance shows whether a report reached the runtime.
+        // Sent or not. While failEnvironment is on, every report that reaches
+        // the app is an app error -- a failure that is not the report's
+        // fault -- so a failure status proves a report was sent and null that
+        // it was held back.
+        async Task FailEnvironment(bool fail, string assertion)
+        {
+            var result = await MosaicRuntimeHost.HandleRequiredEvent(
+                component, new FailEnvironmentEvent(fail), required);
+            Require(result.Status.StartsWith("Status: Mosaic runtime handled failEnvironment", StringComparison.Ordinal), assertion);
+        }
+        bool Failed(string? status) =>
+            status?.StartsWith("Status: Mosaic environment report failed", StringComparison.Ordinal) == true;
+        await FailEnvironment(true, "the app is told to fail environment changes");
+        Require(MosaicRuntimeHost.ReportEnvironment(component, invalid, required) is null, "the refused report is not re-sent");
+        // The refusal did not replace the last report taken: that one is
+        // still unchanged, so still not sent.
+        Require(MosaicRuntimeHost.ReportEnvironment(component, compact, required) is null, "an unchanged report is not sent");
+        var failure = MosaicRuntimeHost.ReportEnvironment(component, regular, required);
+        Require(Failed(failure) && failure!.Contains("Mosaic application error", StringComparison.Ordinal), "a changed report is sent, and the app's failure reported");
+        Require(Failed(MosaicRuntimeHost.ReportEnvironment(component, regular, required)), "a report that failed transiently is sent again");
+        await FailEnvironment(false, "the app is told to take environment changes again");
+
+        // An ignored report writes no state: nothing the app saves changed.
         var statePath = Environment.GetEnvironmentVariable("MOSAIC_APP_STATE_PATH");
         if (string.IsNullOrWhiteSpace(statePath))
         {
-            Console.WriteLine("MOSAIC_APP_STATE_PATH unset: skipped the checks that a report is or is not sent");
+            Console.WriteLine("MOSAIC_APP_STATE_PATH unset: skipped the checks that an ignored report writes no state");
             return;
         }
         Require(File.Exists(statePath), "state persisted");
         File.Delete(statePath);
-        Require(MosaicRuntimeHost.ReportEnvironment(component, invalid, required) is null, "held-back report");
-        Require(!File.Exists(statePath), "the refused report is not re-sent");
-        // The refusal did not replace the last report taken: that one is
-        // still unchanged, so still not sent.
-        Require(MosaicRuntimeHost.ReportEnvironment(component, compact, required) is null, "unchanged report");
-        Require(!File.Exists(statePath), "an unchanged report is not sent");
-        Require(MosaicRuntimeHost.ReportEnvironment(component, regular, required) is null, "changed report accepted");
-        Require(File.Exists(statePath), "a changed report is sent");
         component.Status = "sentinel";
-        Require(MosaicRuntimeHost.ReportEnvironment(component, compact, required) is null, "changed back");
+        Require(MosaicRuntimeHost.ReportEnvironment(component, regular, required) is null, "once the failure passes, the same report is taken");
         Require(component.Status == "sentinel", "an ignored changed report re-applies nothing");
+        Require(!File.Exists(statePath), "an ignored report does not rewrite the state file");
+        // With the state path a directory, any write fails and says so. An
+        // ignored report attempts none, so it raises no warning to surface;
+        // an event still does, in its own status.
+        Directory.CreateDirectory(statePath);
+        Require(MosaicRuntimeHost.ReportEnvironment(component, compact, required) is null, "a changed report accepted");
+        Require(MosaicRuntimeHost.ApplyRequiredProps(component, required) == "Status: Mosaic runtime props loaded", "an ignored report raises no persistence warning");
+        var warned = await MosaicRuntimeHost.HandleRequiredEvent(component, new FailEnvironmentEvent(true), required);
+        Require(warned.Status.Contains("Could not persist Mosaic state", StringComparison.Ordinal), "an event that cannot persist surfaces the warning at once");
+        Directory.Delete(statePath);
+        await FailEnvironment(false, "the state path writable again");
+        Require(File.Exists(statePath), "the next event persists");
+        Require(MosaicRuntimeHost.ApplyRequiredProps(component, required) == "Status: Mosaic runtime props loaded", "a persisted event clears the warning");
+        await FailEnvironment(true, "the app is told to fail environment changes once more");
+        Require(MosaicRuntimeHost.ReportEnvironment(component, compact, required) is null, "the report taken while saving failed is held back");
+        await FailEnvironment(false, "the app is left taking environment changes");
     }
 
     private static void Require(bool condition, string assertion)

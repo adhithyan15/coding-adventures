@@ -473,6 +473,14 @@ fn bind_application(template: &str, application_id: Option<&str>) -> String {
             },
         )
         .replace("__MOSAIC_APPLICATION_ID__", &escaped)
+        // How the runtime's refusal of an invalid environment begins (UI48
+        // §7.6-§7.8): each host holds back that refusal, and only that one,
+        // so a transient failure is sent again. Written in from the runtime's
+        // constant, so the hosts cannot drift from the text it produces.
+        .replace(
+            "__MOSAIC_INVALID_ENVIRONMENT__",
+            mosaic_app_runtime::INVALID_ENVIRONMENT_DIAGNOSTIC,
+        )
 }
 
 #[cfg(test)]
@@ -486,12 +494,18 @@ mod tests {
     fn compose_host_reports_the_environment() {
         let host = compose_jna_binding_for_application("probe");
         assert!(host.contains("fun reportEnvironment(environment: Map<String, String>): Map<String, Any?>?"));
-        assert!(host.contains("if (environment == lastReportedEnvironment) return null"));
+        assert!(host.contains(
+            "if (environment == lastReportedEnvironment || environment == lastRefusedEnvironment) {"
+        ));
         assert!(host.contains("mapOf(\"name\" to \"environmentChanged\", \"payload\" to environment)"));
-        // Remembered only after the runtime took it: the catch returns first.
+        // Remembered only after the runtime took it: the catch returns first,
+        // recording the report as refused only when it was invalid.
         let refused = host.find("} catch (error: MosaicRuntimeException) {").expect("refusal");
+        let invalid = host
+            .find("if (error.message.orEmpty().startsWith(MOSAIC_INVALID_ENVIRONMENT)) {\n                lastRefusedEnvironment = environment.toMap()")
+            .expect("only an invalid report is held back");
         let remembered = host.find("lastReportedEnvironment = environment.toMap()").expect("remember");
-        assert!(refused < remembered);
+        assert!(refused < invalid && invalid < remembered);
         // Props kept only at the revision already showing.
         assert!(host.contains("if (revision != shownRevision) return update"));
         assert!(host.contains("val settled = keepShowingProps(settleEffects(update))"));
@@ -525,6 +539,11 @@ mod tests {
             .expect("apply");
         assert!(held_back < sent && sent < refused && refused < remembered);
         assert!(remembered < guard && guard < applied);
+        // Only a refusal of the report itself is held back.
+        let filter = host
+            .find("catch (MosaicRuntimeException error) when (\n                    error.Message.StartsWith(InvalidEnvironmentDiagnostic, StringComparison.Ordinal))")
+            .expect("only an invalid report is held back");
+        assert!(sent < filter && filter < refused);
         assert!(host.contains("if (settling > 0) return null;"));
         // Re-applied only when something newer than the last apply is showing.
         assert!(host.contains("if (Revision(latestUpdate) != appliedRevision)"));
@@ -546,6 +565,72 @@ mod tests {
         assert!(host.contains("[\"reducedMotion\"] = \"no-preference\","));
         // The start context carries them too.
         assert!(host.contains("foreach (var (axis, value) in InitialEnvironment()) start[axis] = value;"));
+    }
+
+    /// UI48 ENV4 hardening, on every host that reports its environment:
+    ///
+    /// 1. Only a refusal of the report itself -- the runtime's
+    ///    `InvalidEnvironment`, recognised by `INVALID_ENVIRONMENT_DIAGNOSTIC`
+    ///    written in from the runtime, never a copy -- holds an identical
+    ///    report back. Any other failure (an app error, which may be
+    ///    transient) lets it be sent again.
+    /// 2. An answer at the revision showing (the app ignored the report)
+    ///    rewrites no state file, so a resize storm costs no disk writes;
+    /// 3. and so no persistence warning can arise from one. The harnesses and
+    ///    drivers prove all three by running each host.
+    #[test]
+    fn every_host_holds_back_only_an_invalid_environment_and_saves_only_news() {
+        let diagnostic = mosaic_app_runtime::INVALID_ENVIRONMENT_DIAGNOSTIC;
+        let qt = qt_runtime_binding_for_application("probe");
+        let hosts = [
+            ("qt", qt.header.clone() + &qt.source),
+            ("xaml", xaml_runtime_binding_for_application("Acme.App", "probe")),
+            ("flutter", flutter_runtime_binding_for_application("probe", false)),
+            ("compose", compose_jna_binding_for_application("probe")),
+            ("swiftui", swift_runtime_binding_for_application("probe").host_swift),
+        ];
+        for (name, host) in &hosts {
+            assert!(!host.contains("__MOSAIC_INVALID_ENVIRONMENT__"), "{name}");
+            assert_eq!(
+                host.matches(&format!("\"{diagnostic}\"")).count()
+                    + host.matches(&format!("'{diagnostic}'")).count(),
+                1,
+                "{name} carries the runtime's diagnostic once"
+            );
+        }
+        let [(_, qt), (_, xaml), (_, flutter), (_, compose), (_, swift)] = hosts;
+        // (1) The refusal memory is set only behind the diagnostic test.
+        assert!(qt.contains(
+            "        if (response.value(QStringLiteral(\"error\")).toString().startsWith(\n                QLatin1String(InvalidEnvironmentDiagnostic))) {\n            lastRefusedEnvironment_ = environment;\n        }"
+        ));
+        assert_eq!(qt.matches("lastRefusedEnvironment_ = environment;").count(), 1);
+        assert_eq!(xaml.matches("lastRefusedEnvironment = report;").count(), 1);
+        assert_eq!(flutter.matches("_lastRefusedEnvironment = report;").count(), 1);
+        assert_eq!(compose.matches("lastRefusedEnvironment = environment.toMap()").count(), 1);
+        assert!(swift.contains(
+            "        if let failure = error as? MosaicRuntimeError,\n           case .protocolFailure(_, let diagnostic) = failure,\n           diagnostic.hasPrefix(mosaicInvalidEnvironment) {\n          lastRefusedEnvironment = report\n        }"
+        ));
+        assert_eq!(swift.matches("lastRefusedEnvironment = report").count(), 1);
+        assert!(swift.contains("if let refused = lastRefusedEnvironment, refused.isEqual(environment) { return nil }"));
+        // (2) The dispatch path persists only when the revision moved.
+        assert!(qt.contains(
+            "        if (!sameRevision(settled, shownRevision)) persistSnapshot();\n        showUpdate(settled);"
+        ));
+        assert!(xaml.contains(
+            "                if (shownRevision is null || Revision(latestUpdate) != shownRevision)\n                    PersistSnapshot();"
+        ));
+        assert!(flutter.contains(
+            "    if (shownRevision == null || _revision(settled) != shownRevision) {\n      _persistSnapshot();\n    }\n    latestUpdate = _withPersistenceWarning(settled);\n    return latestUpdate;"
+        ));
+        assert!(compose.contains(
+            "        if (shownRevision == null ||\n            (settled[\"revision\"] as? JsonPrimitive)?.longOrNull != shownRevision\n        ) {\n            persistSnapshot()\n        }"
+        ));
+        assert!(swift.contains(
+            "    if shownRevision == nil || (settled[\"revision\"] as? NSNumber) != shownRevision {\n      persistSnapshot()\n    }"
+        ));
+        // Swift's events and reports share one dispatch, so both skip alike.
+        assert!(swift.contains("return try dispatchEvent(envelope[\"payload\"] ?? NSNull(), name: name)"));
+        assert!(swift.contains("let response = try dispatchEvent(environment, name: \"environmentChanged\")"));
     }
 
     /// UI48 ENV3 on XAML (§7.11): a window that switches layout roots asks
@@ -590,7 +675,11 @@ mod tests {
         let remembered = host.find("_lastReportedEnvironment = report;").expect("remember");
         assert!(runtime_half < settling && settling < taken && taken < held_back);
         assert!(held_back < sent && sent < remembered);
-        assert!(host.contains("    } on Object {\n      _lastRefusedEnvironment = report;\n      rethrow;\n    }"));
+        // Only a refusal of the report itself is held back.
+        assert!(host.contains(
+            "    } on MosaicRuntimeException catch (error) {\n      if (error.message.startsWith(_invalidEnvironment)) {\n        _lastRefusedEnvironment = report;\n      }\n      rethrow;\n    }"
+        ));
+        assert!(!host.contains("    } on Object {\n      _lastRefusedEnvironment = report;"));
         // An ignored report has nothing to show; a tripped guard does.
         assert!(host.contains("if (answer['error'] != null) return answer;"));
         assert!(host.contains("return _revision(answer) == shownRevision ? null : answer;"));

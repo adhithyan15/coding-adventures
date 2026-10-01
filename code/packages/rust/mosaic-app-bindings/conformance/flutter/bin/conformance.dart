@@ -103,31 +103,98 @@ Future<void> _checkEnvironmentReport(MosaicHost host, int count) async {
     'a refused report is not re-sent',
   );
 
-  // Sent or not: every dispatch persists, so with a state file the file's
-  // reappearance shows whether a report reached the runtime.
+  // Sent or not. While failEnvironment is on, every report that reaches the
+  // app is an app error -- a failure that is not the report's fault -- so an
+  // `error` answer proves a report was sent and null that it was held back.
+  Future<Map<String, Object?>> failEnvironment(
+    bool fail,
+    String assertion,
+  ) async => _object(
+    await host.handleEvent(<String, Object?>{
+      'name': 'failEnvironment',
+      'payload': <String, Object?>{'fail': fail},
+    }),
+    assertion,
+  );
+  String? failure(Map<String, Object?>? answer) {
+    final error = answer == null ? null : answer['error'];
+    return error is String && error.startsWith('Mosaic environment report failed')
+        ? error
+        : null;
+  }
+
+  await failEnvironment(true, 'the app is told to fail environment changes');
+  _require(
+    host.reportEnvironment(invalid) == null,
+    'the refused report is not re-sent',
+  );
+  // The refusal did not replace the last report taken: that one is still
+  // unchanged, so still not sent.
+  _require(
+    host.reportEnvironment(compact) == null,
+    'an unchanged report is not sent',
+  );
+  final appFailure = failure(host.reportEnvironment(regular));
+  _require(
+    appFailure != null && appFailure.contains('Mosaic application error'),
+    "a changed report is sent, and the app's failure reported",
+  );
+  _require(
+    failure(host.reportEnvironment(regular)) != null,
+    'a report that failed transiently is sent again',
+  );
+  await failEnvironment(false, 'the app is told to take environment changes again');
+
+  // An ignored report writes no state: nothing the app saves changed.
   final statePath = Platform.environment['MOSAIC_APP_STATE_PATH'];
   if (statePath == null || statePath.trim().isEmpty) {
     stdout.writeln(
-      'MOSAIC_APP_STATE_PATH unset: skipped the checks that a report is or '
-      'is not sent',
+      'MOSAIC_APP_STATE_PATH unset: skipped the checks that an ignored report '
+      'writes no state',
     );
     return;
   }
   final state = File(statePath);
   _require(state.existsSync(), 'state persisted');
   state.deleteSync();
-  _require(host.reportEnvironment(invalid) == null, 'held-back report');
-  _require(!state.existsSync(), 'the refused report is not re-sent');
-  // The refusal did not replace the last report taken: that one is still
-  // unchanged, so still not sent.
-  _require(host.reportEnvironment(compact) == null, 'unchanged report');
-  _require(!state.existsSync(), 'an unchanged report is not sent');
   _require(
     host.reportEnvironment(regular) == null,
+    'once the failure passes, the same report is taken',
+  );
+  _require(
+    !state.existsSync(),
+    'an ignored report does not rewrite the state file',
+  );
+  // With the state path a directory, any write fails and says so. An ignored
+  // report attempts none, so it raises no warning to surface; an event still
+  // does, on its own answer.
+  final blocked = Directory(statePath)..createSync();
+  _require(
+    host.reportEnvironment(compact) == null,
     'a changed, ignored report has nothing to show',
   );
-  _require(state.existsSync(), 'a changed report is sent');
-  await requireProps('a changed, ignored report keeps the props');
+  _require(
+    !_object(await host.props(), 'props after an ignored report')
+        .containsKey('persistenceWarning'),
+    'an ignored report raises no persistence warning',
+  );
+  _require(
+    (await failEnvironment(true, 'an event while saving fails'))
+        .containsKey('persistenceWarning'),
+    'an event that cannot persist surfaces the warning at once',
+  );
+  blocked.deleteSync();
+  final cleared = await failEnvironment(false, 'the state path writable again');
+  _require(
+    state.existsSync() && !cleared.containsKey('persistenceWarning'),
+    'the next event persists and clears the warning',
+  );
+  await failEnvironment(true, 'the app is told to fail environment changes once more');
+  _require(
+    host.reportEnvironment(compact) == null,
+    'the report taken while saving failed is held back',
+  );
+  await failEnvironment(false, 'the app is left taking environment changes');
 }
 
 Future<void> main() async {
