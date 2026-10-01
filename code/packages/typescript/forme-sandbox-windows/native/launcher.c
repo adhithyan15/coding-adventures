@@ -22,6 +22,24 @@
 
 #define READY_FD 3
 
+static int revoke_appcontainer_acl(const wchar_t *path, PSID sid);
+
+static HANDLE acquire_acl_mutex(void) {
+    HANDLE mutex = CreateMutexW(NULL, FALSE, L"Local\\Forme.SandboxAcl.v1");
+    if (mutex == NULL) return NULL;
+    DWORD wait = WaitForSingleObject(mutex, 5000);
+    if (wait != WAIT_OBJECT_0 && wait != WAIT_ABANDONED) {
+        CloseHandle(mutex);
+        return NULL;
+    }
+    return mutex;
+}
+
+static void release_acl_mutex(HANDLE mutex) {
+    ReleaseMutex(mutex);
+    CloseHandle(mutex);
+}
+
 static HANDLE verify_and_pin_sha256_file(const wchar_t *path, const wchar_t *expected) {
     if (expected == NULL || wcsncmp(expected, L"sha256:", 7) != 0 || wcslen(expected) != 71) return INVALID_HANDLE_VALUE;
     DWORD attributes = GetFileAttributesW(path);
@@ -108,7 +126,11 @@ static wchar_t *quote(const wchar_t *value) {
     return result;
 }
 
-static int start_profile_janitor(const wchar_t *profile_name) {
+static int start_profile_janitor(
+    const wchar_t *profile_name,
+    const wchar_t *runtime,
+    const wchar_t *entry
+) {
     wchar_t executable[MAX_PATH];
     wchar_t safe_cwd[MAX_PATH];
     DWORD executable_length = GetModuleFileNameW(NULL, executable, MAX_PATH);
@@ -119,19 +141,25 @@ static int start_profile_janitor(const wchar_t *profile_name) {
     if (!DuplicateHandle(GetCurrentProcess(), GetCurrentProcess(), GetCurrentProcess(),
             &supervisor, SYNCHRONIZE, TRUE, 0)) return -1;
     wchar_t *quoted_executable = quote(executable);
-    if (quoted_executable == NULL) {
+    wchar_t *quoted_runtime = quote(wcscmp(runtime, entry) == 0 ? L"-" : runtime);
+    if (quoted_executable == NULL || quoted_runtime == NULL) {
         CloseHandle(supervisor);
-        return -1;
-    }
-    size_t size = wcslen(quoted_executable) + wcslen(profile_name) + 96;
-    wchar_t *command = calloc(size, sizeof(wchar_t));
-    if (command == NULL) {
-        CloseHandle(supervisor);
+        free(quoted_runtime);
         free(quoted_executable);
         return -1;
     }
-    swprintf(command, size, L"%s --cleanup-profile=%s --supervisor-handle=%llu",
-        quoted_executable, profile_name, (unsigned long long)(ULONG_PTR)supervisor);
+    size_t size = wcslen(quoted_executable) + wcslen(profile_name) + wcslen(quoted_runtime) + 128;
+    wchar_t *command = calloc(size, sizeof(wchar_t));
+    if (command == NULL) {
+        CloseHandle(supervisor);
+        free(quoted_runtime);
+        free(quoted_executable);
+        return -1;
+    }
+    swprintf(command, size,
+        L"%s --cleanup-profile=%s --cleanup-runtime=%s --supervisor-handle=%llu",
+        quoted_executable, profile_name, quoted_runtime,
+        (unsigned long long)(ULONG_PTR)supervisor);
     SIZE_T attribute_size = 0;
     InitializeProcThreadAttributeList(NULL, 1, 0, &attribute_size);
     LPPROC_THREAD_ATTRIBUTE_LIST attributes = HeapAlloc(
@@ -148,6 +176,7 @@ static int start_profile_janitor(const wchar_t *profile_name) {
         if (attributes != NULL) HeapFree(GetProcessHeap(), 0, attributes);
         CloseHandle(supervisor);
         free(command);
+        free(quoted_runtime);
         free(quoted_executable);
         return -1;
     }
@@ -159,6 +188,7 @@ static int start_profile_janitor(const wchar_t *profile_name) {
     HeapFree(GetProcessHeap(), 0, attributes);
     CloseHandle(supervisor);
     free(command);
+    free(quoted_runtime);
     free(quoted_executable);
     if (!created) return -1;
     CloseHandle(process.hThread);
@@ -180,11 +210,16 @@ static int add_appcontainer_acl(
     DWORD permissions,
     DWORD inheritance
 ) {
+    HANDLE mutex = acquire_acl_mutex();
+    if (mutex == NULL) return -1;
     PACL old_acl = NULL;
     PSECURITY_DESCRIPTOR descriptor = NULL;
     DWORD result = GetNamedSecurityInfoW((LPWSTR)path, SE_FILE_OBJECT, DACL_SECURITY_INFORMATION,
         NULL, NULL, &old_acl, NULL, &descriptor);
-    if (result != ERROR_SUCCESS) return -1;
+    if (result != ERROR_SUCCESS) {
+        release_acl_mutex(mutex);
+        return -1;
+    }
     EXPLICIT_ACCESSW access;
     ZeroMemory(&access, sizeof(access));
     access.grfAccessPermissions = permissions;
@@ -201,7 +236,59 @@ static int add_appcontainer_acl(
     }
     if (new_acl != NULL) LocalFree(new_acl);
     if (descriptor != NULL) LocalFree(descriptor);
+    release_acl_mutex(mutex);
     return result == ERROR_SUCCESS ? 0 : -1;
+}
+
+static int revoke_appcontainer_acl(const wchar_t *path, PSID sid) {
+    HANDLE mutex = acquire_acl_mutex();
+    if (mutex == NULL) return -1;
+    PACL old_acl = NULL;
+    PSECURITY_DESCRIPTOR descriptor = NULL;
+    DWORD result = GetNamedSecurityInfoW((LPWSTR)path, SE_FILE_OBJECT, DACL_SECURITY_INFORMATION,
+        NULL, NULL, &old_acl, NULL, &descriptor);
+    if (result != ERROR_SUCCESS) {
+        release_acl_mutex(mutex);
+        return -1;
+    }
+    EXPLICIT_ACCESSW access;
+    ZeroMemory(&access, sizeof(access));
+    access.grfAccessMode = REVOKE_ACCESS;
+    access.Trustee.TrusteeForm = TRUSTEE_IS_SID;
+    access.Trustee.TrusteeType = TRUSTEE_IS_USER;
+    access.Trustee.ptstrName = sid;
+    PACL new_acl = NULL;
+    result = SetEntriesInAclW(1, &access, old_acl, &new_acl);
+    if (result == ERROR_SUCCESS) {
+        result = SetNamedSecurityInfoW((LPWSTR)path, SE_FILE_OBJECT, DACL_SECURITY_INFORMATION,
+            NULL, NULL, new_acl, NULL);
+    }
+    if (new_acl != NULL) LocalFree(new_acl);
+    LocalFree(descriptor);
+    release_acl_mutex(mutex);
+    return result == ERROR_SUCCESS ? 0 : -1;
+}
+
+static int cleanup_appcontainer(
+    const wchar_t *profile_name,
+    PSID sid,
+    const wchar_t *runtime,
+    const wchar_t *entry
+) {
+    if (sid == NULL) return -1;
+    int revoked = wcscmp(runtime, entry) == 0;
+    for (int attempt = 0; !revoked && attempt < 100; attempt++) {
+        revoked = revoke_appcontainer_acl(runtime, sid) == 0;
+        if (!revoked) Sleep(50);
+    }
+    int deleted = 0;
+    for (int attempt = 0; revoked && !deleted && attempt < 100; attempt++) {
+        HRESULT result = DeleteAppContainerProfile(profile_name);
+        deleted = SUCCEEDED(result) || result == HRESULT_FROM_WIN32(ERROR_NOT_FOUND);
+        if (!deleted) Sleep(50);
+    }
+    FreeSid(sid);
+    return revoked && deleted ? 0 : -1;
 }
 
 static int protect_dacl(const wchar_t *path) {
@@ -269,20 +356,35 @@ static int write_readiness(const wchar_t *manifest, const wchar_t *schema, const
 
 int wmain(int argc, wchar_t **argv) {
     const wchar_t *cleanup_profile = argument(argc, argv, L"--cleanup-profile");
+    const wchar_t *cleanup_runtime = argument(argc, argv, L"--cleanup-runtime");
     const wchar_t *supervisor_handle_text = argument(argc, argv, L"--supervisor-handle");
-    if (cleanup_profile != NULL || supervisor_handle_text != NULL) {
+    if (cleanup_profile != NULL || cleanup_runtime != NULL || supervisor_handle_text != NULL) {
         wchar_t *end = NULL;
         unsigned long long inherited = _wcstoui64(
             supervisor_handle_text == NULL ? L"" : supervisor_handle_text, &end, 10);
-        if (cleanup_profile == NULL || end == supervisor_handle_text || *end != L'\0' || inherited == 0) return 63;
+        if (cleanup_profile == NULL || cleanup_runtime == NULL
+                || end == supervisor_handle_text || *end != L'\0' || inherited == 0) return 63;
         HANDLE supervisor = (HANDLE)(ULONG_PTR)inherited;
         WaitForSingleObject(supervisor, INFINITE);
         CloseHandle(supervisor);
+        PSID cleanup_sid = NULL;
+        HRESULT derived = DeriveAppContainerSidFromAppContainerName(cleanup_profile, &cleanup_sid);
+        int revoked = wcscmp(cleanup_runtime, L"-") == 0;
         for (int attempt = 0; attempt < 100; attempt++) {
-            HRESULT deleted = DeleteAppContainerProfile(cleanup_profile);
-            if (SUCCEEDED(deleted) || deleted == HRESULT_FROM_WIN32(ERROR_NOT_FOUND)) return 0;
+            if (!revoked && SUCCEEDED(derived) && cleanup_sid != NULL) {
+                revoked = revoke_appcontainer_acl(cleanup_runtime, cleanup_sid) == 0;
+            }
+            HRESULT deleted = revoked
+                ? DeleteAppContainerProfile(cleanup_profile)
+                : E_ACCESSDENIED;
+            if (revoked && (SUCCEEDED(deleted)
+                    || deleted == HRESULT_FROM_WIN32(ERROR_NOT_FOUND))) {
+                if (cleanup_sid != NULL) FreeSid(cleanup_sid);
+                return 0;
+            }
             Sleep(50);
         }
+        if (cleanup_sid != NULL) FreeSid(cleanup_sid);
         return 63;
     }
     const wchar_t *provider = argument(argc, argv, L"--provider");
@@ -349,20 +451,21 @@ int wmain(int argc, wchar_t **argv) {
             GENERIC_READ | GENERIC_EXECUTE, NO_INHERITANCE) != 0
         || (wcscmp(schema_hash, L"-") != 0
             && add_appcontainer_acl(schema, app_sid, GENERIC_READ, NO_INHERITANCE) != 0)
+        || (wcscmp(runtime, entry) != 0
+            && add_appcontainer_acl(runtime, app_sid,
+                GENERIC_READ | GENERIC_EXECUTE, NO_INHERITANCE) != 0)
         || add_appcontainer_acl(working_directory, app_sid,
             GENERIC_READ | GENERIC_WRITE | GENERIC_EXECUTE | DELETE,
             SUB_CONTAINERS_AND_OBJECTS_INHERIT) != 0;
     free(snapshot_directory);
     if (FAILED(profile) || acl_failed) {
-        if (app_sid != NULL) FreeSid(app_sid);
-        if (SUCCEEDED(profile)) DeleteAppContainerProfile(profile_name);
+        if (SUCCEEDED(profile)) cleanup_appcontainer(profile_name, app_sid, runtime, entry);
         CloseHandle(pinned_entry);
         if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 66;
     }
-    if (start_profile_janitor(profile_name) != 0) {
-        FreeSid(app_sid);
-        DeleteAppContainerProfile(profile_name);
+    if (start_profile_janitor(profile_name, runtime, entry) != 0) {
+        cleanup_appcontainer(profile_name, app_sid, runtime, entry);
         CloseHandle(pinned_entry);
         if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 66;
@@ -370,8 +473,7 @@ int wmain(int argc, wchar_t **argv) {
 
     HANDLE job = configured_job(memory, cpu_ms);
     if (job == NULL) {
-        FreeSid(app_sid);
-        DeleteAppContainerProfile(profile_name);
+        cleanup_appcontainer(profile_name, app_sid, runtime, entry);
         CloseHandle(pinned_entry);
         if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 67;
@@ -406,8 +508,7 @@ int wmain(int argc, wchar_t **argv) {
                 inherited, sizeof(inherited), NULL, NULL)) {
         if (attributes != NULL) HeapFree(GetProcessHeap(), 0, attributes);
         CloseHandle(job);
-        FreeSid(app_sid);
-        DeleteAppContainerProfile(profile_name);
+        cleanup_appcontainer(profile_name, app_sid, runtime, entry);
         CloseHandle(pinned_entry);
         if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 68;
@@ -418,7 +519,7 @@ int wmain(int argc, wchar_t **argv) {
     if (quoted_runtime == NULL || quoted_entry == NULL || quoted_stage == NULL || quoted_schema == NULL) {
         free(quoted_runtime); free(quoted_entry); free(quoted_stage); free(quoted_schema);
         DeleteProcThreadAttributeList(attributes); HeapFree(GetProcessHeap(), 0, attributes);
-        CloseHandle(job); FreeSid(app_sid); DeleteAppContainerProfile(profile_name);
+        CloseHandle(job); cleanup_appcontainer(profile_name, app_sid, runtime, entry);
         CloseHandle(pinned_entry); if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 69;
     }
@@ -427,7 +528,7 @@ int wmain(int argc, wchar_t **argv) {
     if (command == NULL) {
         free(quoted_runtime); free(quoted_entry); free(quoted_stage); free(quoted_schema);
         DeleteProcThreadAttributeList(attributes); HeapFree(GetProcessHeap(), 0, attributes);
-        CloseHandle(job); FreeSid(app_sid); DeleteAppContainerProfile(profile_name);
+        CloseHandle(job); cleanup_appcontainer(profile_name, app_sid, runtime, entry);
         CloseHandle(pinned_entry); if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 69;
     }
@@ -447,7 +548,7 @@ int wmain(int argc, wchar_t **argv) {
     if (!created) {
         fwprintf(stderr, L"CreateProcessAsUserW failed: %lu\n", (unsigned long)create_error);
         DeleteProcThreadAttributeList(attributes); HeapFree(GetProcessHeap(), 0, attributes);
-        CloseHandle(job); FreeSid(app_sid); DeleteAppContainerProfile(profile_name);
+        CloseHandle(job); cleanup_appcontainer(profile_name, app_sid, runtime, entry);
         CloseHandle(pinned_entry); if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 70;
     }
@@ -458,7 +559,7 @@ int wmain(int argc, wchar_t **argv) {
         TerminateProcess(process.hProcess, 71);
         CloseHandle(process.hThread); CloseHandle(process.hProcess);
         DeleteProcThreadAttributeList(attributes); HeapFree(GetProcessHeap(), 0, attributes);
-        CloseHandle(job); FreeSid(app_sid); DeleteAppContainerProfile(profile_name);
+        CloseHandle(job); cleanup_appcontainer(profile_name, app_sid, runtime, entry);
         CloseHandle(pinned_entry); if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 71;
     }
@@ -467,7 +568,7 @@ int wmain(int argc, wchar_t **argv) {
         TerminateJobObject(job, 71);
         CloseHandle(process.hProcess);
         DeleteProcThreadAttributeList(attributes); HeapFree(GetProcessHeap(), 0, attributes);
-        CloseHandle(job); FreeSid(app_sid); DeleteAppContainerProfile(profile_name);
+        CloseHandle(job); cleanup_appcontainer(profile_name, app_sid, runtime, entry);
         CloseHandle(pinned_entry); if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 71;
     }
@@ -511,7 +612,6 @@ int wmain(int argc, wchar_t **argv) {
     CloseHandle(job);
     DeleteProcThreadAttributeList(attributes);
     HeapFree(GetProcessHeap(), 0, attributes);
-    FreeSid(app_sid);
-    DeleteAppContainerProfile(profile_name);
-    return (int)exit_code;
+    int cleanup_result = cleanup_appcontainer(profile_name, app_sid, runtime, entry);
+    return cleanup_result == 0 ? (int)exit_code : 73;
 }

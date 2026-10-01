@@ -1579,7 +1579,12 @@ the supervisor exits unexpectedly; it exits when the plugin does.
   blocks network and most filesystem access at the kernel. The launcher grants
   the unique AppContainer SID write access only to plugin scratch, while the
   pre-existing snapshot directory uses a protected DACL and the directory,
-  entry, and schema receive explicit read/traverse ACLs without write authority.
+  entry, schema, and exact trusted runtime executable receive explicit
+  read/traverse ACLs without write authority. The runtime ACE MUST be revoked
+  before the ephemeral AppContainer profile is deleted, including by the
+  asynchronous janitor if the supervisor exits unexpectedly. Runtime DACL
+  grant/revoke operations MUST use a cross-process lock so overlapping plugin
+  launches cannot lose or resurrect another sandbox's ACE.
 - **Process Mitigations**: ASLR, DEP, CFG, and no remote images. JIT runtimes
   require dynamic code, so a blanket dynamic-code prohibition is not applied;
   the capability-free AppContainer and Job boundary remain authoritative.

@@ -44,7 +44,7 @@ async function request(probe: string): Promise<SandboxLaunchRequest> {
 async function nodeRequest(): Promise<SandboxLaunchRequest> {
   const workingDirectory = await mkdtemp(join(tmpdir(), "forme-windows-node-"));
   roots.push(workingDirectory);
-  const entryBytes = new TextEncoder().encode("process.exit(0);\n");
+  const entryBytes = new TextEncoder().encode("setTimeout(() => process.exit(0), 250);\n");
   const manifest: Manifest = {
     manifestVersion: 1,
     plugin: { name: "@example/windows-node", version: "1.0.0", apiVersion: 1 },
@@ -65,6 +65,17 @@ describe.skipIf(process.platform !== "win32")("Windows native sandbox", () => {
     const child = await createWindowsSandboxFactory({ launcherPath, readinessTimeoutMs: 2_000 })
       .launch(await nodeRequest());
     expect(await child.exited).toEqual({ code: 0, signal: null });
+  });
+
+  it("serializes overlapping trusted-runtime ACL grants and revocations", async () => {
+    const [first, second] = await Promise.all([
+      createWindowsSandboxFactory({ launcherPath, readinessTimeoutMs: 2_000 }).launch(await nodeRequest()),
+      createWindowsSandboxFactory({ launcherPath, readinessTimeoutMs: 2_000 }).launch(await nodeRequest()),
+    ]);
+    expect(await Promise.all([first.exited, second.exited])).toEqual([
+      { code: 0, signal: null },
+      { code: 0, signal: null },
+    ]);
   });
 
   it.each(["filesystem", "network", "process", "snapshot", "memory", "descriptors", "environment", "cpu", "wall-clock"])(

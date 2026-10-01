@@ -23,3 +23,8 @@
 - Moved the asynchronous profile janitor's cwd outside plugin scratch.
 - Raised the integration fixture's process-handle budget so Node and Winsock
   startup are tested independently from the descriptor-exhaustion probe.
+- Granted the ephemeral AppContainer SID read/execute access to the exact
+  trusted runtime executable and revoked that ACE during launcher cleanup or
+  asynchronous crash cleanup before deleting the profile.
+- Serialized shared runtime DACL mutations across concurrent launchers and
+  added an overlapping-launch integration test.
