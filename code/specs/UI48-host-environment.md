@@ -384,7 +384,9 @@ Decisions taken while implementing ENV1 in `mosaic-app-runtime`:
   consumes the next sequence number.
 - **The runtime intercepts it; apps opt in.** The runtime decodes the payload
   (an invalid one is refused as `InvalidEnvironment` before the app sees
-  anything, consuming nothing) and calls a new trait method,
+  anything, consuming nothing; its message begins with the exported
+  `INVALID_ENVIRONMENT_DIAGNOSTIC`, which is how a native host tells it from
+  other failures, §7.12) and calls a new trait method,
   `MosaicApp::environment_changed`, instead of `dispatch`. Its default answers
   "no reaction", so every existing app — each of which rejects event names it
   does not know — keeps working when a host starts sending the event.
@@ -486,7 +488,9 @@ runtime's `environment()` is the one the user is looking at.
   `orientation`, `reducedMotion`) and reports them with `.task(id:)` keyed on
   those values: once when the window first appears, then only when one of
   them flips. Dragging a window's edge sends nothing until a threshold is
-  crossed. The host also drops a report equal to the last one it sent.
+  crossed. The host also drops a report equal to the last one the runtime
+  took, or the last one it refused as invalid; any other failure is sent
+  again (§7.12).
 - **The start context carries what is known before the first frame.** The
   host starts the app with the platform's pointer and hover (`coarse`/`none`
   on iOS, `fine`/`hover` on macOS), reduced motion from the system setting,
@@ -533,8 +537,9 @@ by desktop and Android since UI89 §3.4). Compose has no layout variants yet
 - **Reported on bucket change only.** `LaunchedEffect(report)` is keyed on
   the six values, so it runs once when the window is first measured and again
   only when a bucket flips. The host also drops a report equal to the last
-  one it accepted, and remembers a report only once the runtime took it, so a
-  refused one is tried again with the next.
+  one it accepted, and remembers a report only once the runtime took it. An
+  identical report the runtime refused as invalid is held back; any other
+  failure is sent again (§7.12).
 - **Through the concrete host.** `MosaicComposeHost` is an interface shared
   with test harnesses and the legacy bridge, and knows nothing about the
   environment; the shell reaches `reportEnvironment` through
@@ -553,8 +558,8 @@ shell) and the host template. The Compose conformance harness, run in CI's
 Linux lane against the conformance runtime (which ignores the event), checks
 that a report keeps the props and revision, an unchanged report is not
 resent, a changed one is, and an invalid one is refused, leaves the props and
-is not remembered. The resize-and-assert gate lands with the first app that
-reacts (ENV-last).
+is held back -- plus the §7.12 cases. The resize-and-assert gate lands with
+the first app that reacts (ENV-last).
 
 ### 7.5 ENV2 and ENV3 on Compose, designed
 
@@ -631,7 +636,8 @@ the report alone.
 - **Deduplicated in the host.** `reportEnvironment` sends nothing without a
   runtime or when the report equals the last one the runtime took; it
   remembers a report only once taken, so a refusal is retried with the next
-  change (only the identical refused report is not resent).
+  change. Only an identical report the runtime refused as invalid is not
+  resent; any other failure is sent again (§7.12).
 - **Strict shells get strict answers.** In a native-complete shell
   (`configureRequiredProps`) the answer is checked for required props and
   mapped to QML property names, exactly as `handleRequiredEvent`'s is; a
@@ -651,7 +657,8 @@ the report alone.
 ignores the event), checks the six values and thresholds, that an ignored
 report keeps the props and revision, that an unchanged report is not resent,
 that an invalid one is refused, leaves the props and is not remembered, and
-that a changed one is sent. Emitter tests pin the observer in both
+that a changed one is sent -- plus the §7.12 cases. Emitter tests pin the
+observer in both
 `main.cpp` shapes. As on the other hosts, the resize-and-assert gate lands
 with ENV-last.
 
@@ -680,9 +687,10 @@ this is the report alone.
   shows only the button that opens its dialog, so neither observes.
 - **Deduplicated in the host, per runtime.** `ReportEnvironment` sends nothing
   without a runtime, when the report equals the last one the runtime took, or
-  when it equals the last one the runtime refused (a drag across a threshold
-  would otherwise re-send a refused report on every tick). A refusal does
-  not replace the last report taken. A report the runtime took is remembered
+  when it equals the last one the runtime refused as invalid (a drag across
+  a threshold would otherwise re-send a refused report on every tick); any
+  other failure is sent again (§7.12). A refusal does not replace the last
+  report taken. A report the runtime took is remembered
   at once, even if showing its answer then fails. A new runtime (after a
   retry) starts with nothing remembered.
 - **"No reaction" keeps the current props, and re-applies nothing.** Every
@@ -707,9 +715,11 @@ this is the report alone.
 the conformance runtime (which ignores the event), checks the six values and
 thresholds, that an ignored report re-applies nothing and keeps the props for
 the next strict apply, that an invalid report is refused and keeps the props,
-and -- through the state file every dispatch rewrites -- that the refused
-report is not re-sent, that it did not replace the last report taken, that an
-unchanged report is not sent and a changed one is. Rust tests pin the host
+and -- with the conformance app failing every change that reaches it, so a
+failure proves a report was sent (§7.12) -- that the refused report is not
+re-sent, that it did not replace the last report taken, that an unchanged
+report is not sent and a changed one is, plus the other §7.12 cases. Rust
+tests pin the host
 template and the shell (the observer after start, wired once, queued, strict,
 only failures shown; none in a sample or dialog shell). The TaskApp WinUI
 build compiles the observer. As on the other hosts, the resize-and-assert
@@ -746,8 +756,9 @@ so this is the report alone.
 - **Deduplicated in the host, per runtime.** `reportEnvironment` sends nothing
   without a runtime, inside a settle (a backstop; not remembered), when the
   report equals the last one the runtime took, or when it equals the last one
-  the runtime refused. A refusal does not replace the last report taken; a
-  report the runtime took is remembered at once.
+  the runtime refused as invalid; any other failure is sent again (§7.12). A
+  refusal does not replace the last report taken; a report the runtime took
+  is remembered at once.
 - **"No reaction" keeps the current props, and rebuilds nothing.** Every
   dispatch and effect completion keeps the props showing when its update
   carries `props: null` at the revision showing -- the runtime's own props,
@@ -767,9 +778,11 @@ so this is the report alone.
 conformance runtime (which ignores the event), checks the six values and
 thresholds, that an ignored report has nothing to show and keeps the props and
 revision, that an invalid report is refused as an `error` answer and keeps the
-props, and -- through the state file every dispatch rewrites -- that the
-refused report is not re-sent, that it did not replace the last report taken,
-that an unchanged report is not sent and a changed one is. Rust tests pin the
+props, and -- with the conformance app failing every change that reaches it,
+so an `error` answer proves a report was sent (§7.12) -- that the refused
+report is not re-sent, that it did not replace the last report taken, that an
+unchanged report is not sent and a changed one is, plus the other §7.12
+cases. Rust tests pin the
 host template and the shell (the builder, the aspect reads, the post-frame
 queue, nothing before the host is ready, failures only logged; none in a
 sample shell). The same lane runs `flutter analyze`, a launch and the TaskApp
@@ -1203,6 +1216,60 @@ binding's effect driver checks `IsSettling` is true inside an effect handler
 and false around a dispatch. Engram's WinUI project is not built in CI (it
 never has been); on a Windows desktop the pointer is `fine`, so its touch
 layout would be compiled but not shown.
+
+### 7.12 ENV4 hardening on every host, as built
+
+Three findings from the security reviews of §7.6-§7.8, fixed identically on
+every host that reports its environment (Qt, XAML, Flutter, Compose,
+SwiftUI). Where this section and an earlier one differ, this one is current.
+
+- **Only an invalid environment is held back.** A host remembers a report as
+  refused -- and drops an identical one until the report changes -- only when
+  the runtime refused the report itself (§7.1's `InvalidEnvironment`). Every
+  other failure (an app error, which may be transient; a closed runtime) is
+  answered as before but not remembered, so the same report is sent again
+  with the next report rather than leaving the app on a stale environment
+  until the window changes to a third one. The C ABI's status cannot tell
+  them apart -- an invalid payload is a `ProtocolError`, like a sequence
+  mismatch -- so a host reads the diagnostic: it begins with
+  `mosaic-app-runtime`'s `INVALID_ENVIRONMENT_DIAGNOSTIC` (`invalid Mosaic
+  environmentChanged payload`), which no other failure begins with (an app
+  error begins `Mosaic application error:`, a test pins the rest), and which
+  `mosaic-app-bindings` writes into each host rather than a copy. Compose and
+  SwiftUI previously held nothing back, so they now also drop a repeated
+  invalid report. A shell asks again only when it observes again: Qt and
+  XAML on the next resize event, Flutter on the next frame whose size or
+  scheme changed, Compose and SwiftUI on the next bucket change. No host
+  retries on a timer.
+- **An ignored report writes no state.** A dispatch persists only when its
+  answer moved the revision (an unreadable revision persists, to be safe).
+  An environment the app ignored answers at the revision showing and changed
+  nothing the app saves, so a window drag costs no disk writes. Ordinary
+  events and effect answers always move the revision, so they persist as
+  before. An app that records its environment silently and answers "no
+  reaction" has that state saved with its next event.
+- **So no persistence warning arises from an ignored report.** The warning
+  comes only from a write, and an ignored report makes none -- which is why
+  nothing needs surfacing for one (Flutter's null answer and XAML's null
+  status could otherwise have hidden a fresh warning until the next event). A
+  warning already showing stays until the next successful write, and an
+  event's warning is surfaced with that event's answer, as before.
+
+**Acceptance.** The conformance app gained `failEnvironment` (`{"fail":
+true}` / `false`): while on, every `environmentChanged` that reaches it is an
+app error that changes nothing. That gives the harnesses a failure that is not
+the report's fault, and, since an ignored report no longer rewrites the state
+file they used to watch, their proof of delivery: a sent report answers an
+error, a held-back one nothing. The Qt driver and the XAML, Flutter and
+Compose conformance harnesses check that a report that failed transiently is
+sent again and, once the failure passes, taken; that an invalid one is still
+held back and holds back nothing else; that an ignored report does not
+rewrite the state file and, with the state path made a directory so any write
+would fail, raises no persistence warning, while an event that cannot persist
+surfaces one at once. The Swift driver checks the same except the warning
+case (it runs only on macOS). A Rust test pins, in all five hosts, the
+diagnostic written in once from the runtime, the refusal memory behind it,
+and the revision-gated persist.
 
 ## 8. Open questions
 
