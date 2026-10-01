@@ -7845,7 +7845,7 @@ impl Compiler {
             }
         }
         if node.rule_name == "for_stmt"
-            && first_direct_node(node, "variable").is_some_and(&targets_name)
+            && first_direct_node(node, "variable").is_some_and(targets_name)
         {
             return true;
         }
@@ -7885,7 +7885,7 @@ impl Compiler {
             }
         }
         if node.rule_name == "for_stmt"
-            && first_direct_node(node, "variable").is_some_and(&targets_name)
+            && first_direct_node(node, "variable").is_some_and(targets_name)
         {
             return true;
         }
@@ -16935,6 +16935,22 @@ mod tests {
             instr.op == "str_const"
                 && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "12.5")
         }));
+    }
+
+    #[test]
+    fn al4_step_loop_tracks_literal_string_selected_control_recurrences() {
+        let module = compile_source(
+            "begin integer i, j; for i := 1 step 1 until 10 do if 'ALPHA' < 'BETA' then i := i * 2 else i := i + 3; print(i + 0.25); for j := 1 step 1 until 10 do if 'BETA' < 'ALPHA' then j := j * 2 else j := j + 3; print(j + 0.25) end",
+            "test",
+        )
+        .expect("literal string predicates may select bounded control recurrences");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["15.25", "13.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
     }
 
     #[test]

@@ -4068,6 +4068,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("11.2512.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — true and false literal string predicates may select distinct
+    // bounded controlled-scalar recurrences.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, j; for i := 1 step 1 until 10 do if 'ALPHA' < 'BETA' then i := i * 2 else i := i + 3; print(i + 0.25); for j := 1 step 1 until 10 do if 'BETA' < 'ALPHA' then j := j * 2 else j := j + 3; print(j + 0.25) end",
+        expect: Expect::Stdout("15.2513.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — an exact control recurrence remains analyzable when every
     // additional compound-body statement is an inert local scalar assignment.
     Prog {
@@ -14215,6 +14224,31 @@ fn algol_static_conditional_control_recurrences_run_on_every_available_standard_
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the static conditional control recurrences did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_predicate_control_recurrences_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("if 'ALPHA' < 'BETA' then i := i * 2 else i := i + 3")
+        })
+        .expect("the literal-string-predicate control recurrences must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-predicate control recurrences did not run"
             );
             continue;
         };
