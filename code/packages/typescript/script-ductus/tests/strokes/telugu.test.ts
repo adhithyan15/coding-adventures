@@ -520,7 +520,7 @@ describe("handwriting ductus", () => {
       "turn right around the lower-left bowl",
       "sweep upward around the broad right bowl",
       "curl upward through the separate top flourish",
-      "draw the short separate stem downward",
+      "draw the lower stem downward",
     ]);
   });
 
