@@ -4370,6 +4370,24 @@ fn parse_treemap_config(source: &str) -> diagram_ir::TreemapConfig {
     let boolean = |key, fallback| value(key).and_then(|value| match value.to_ascii_lowercase().as_str() {
         "true" => Some(true), "false" => Some(false), _ => None,
     }).unwrap_or(fallback);
+    let theme_front = mermaid_front_matter_section(source, &["themeVariables"]);
+    let theme_source = mermaid_directive_object(source, "themeVariables")
+        .or(theme_front.as_deref())
+        .unwrap_or("");
+    let theme_value = |key: &str| {
+        quadrant_directive_value(theme_source, key).or_else(|| {
+            theme_source.lines().find_map(|line| {
+                let (name, value) = line.trim().split_once(':')?;
+                (name.trim() == key).then(|| value.trim().trim_matches(['\"', '\'']).to_string())
+            })
+        }).filter(|value| !value.is_empty())
+    };
+    let mut theme = defaults.theme.clone();
+    for index in 0..12 {
+        if let Some(value) = theme_value(&format!("cScale{index}")) { theme.fills[index] = value; }
+        if let Some(value) = theme_value(&format!("cScalePeer{index}")) { theme.strokes[index] = value; }
+        if let Some(value) = theme_value(&format!("cScaleLabel{index}")) { theme.labels[index] = value; }
+    }
     diagram_ir::TreemapConfig {
         use_max_width: boolean("useMaxWidth", defaults.use_max_width),
         padding: non_negative("padding", defaults.padding),
@@ -4381,6 +4399,7 @@ fn parse_treemap_config(source: &str) -> diagram_ir::TreemapConfig {
         value_font_size: positive("valueFontSize", defaults.value_font_size),
         label_font_size: positive("labelFontSize", defaults.label_font_size),
         value_format: value("valueFormat").filter(|value| !value.is_empty()).unwrap_or(defaults.value_format),
+        theme,
     }
 }
 
@@ -13977,7 +13996,7 @@ B//-A: reverse stick top
     #[test]
     fn treemap_parses_init_configuration_into_semantic_ir() {
         let diagram = parse_treemap(
-            "%%{init: {\"treemap\": {\"padding\": 4, \"diagramPadding\": 12, \"showValues\": false, \"nodeWidth\": 64, \"nodeHeight\": 48, \"borderWidth\": 2, \"valueFontSize\": 10, \"labelFontSize\": 16, \"valueFormat\": \"$0,0\", \"useMaxWidth\": false}}}%%\ntreemap\n\"Root\": 1200",
+            "%%{init: {\"treemap\": {\"padding\": 4, \"diagramPadding\": 12, \"showValues\": false, \"nodeWidth\": 64, \"nodeHeight\": 48, \"borderWidth\": 2, \"valueFontSize\": 10, \"labelFontSize\": 16, \"valueFormat\": \"$0,0\", \"useMaxWidth\": false}, \"themeVariables\": {\"cScale0\": \"#123456\", \"cScalePeer0\": \"#654321\", \"cScaleLabel0\": \"#abcdef\"}}}%%\ntreemap\n\"Root\": 1200",
         ).unwrap();
         assert_eq!(diagram.config.padding, 4.0);
         assert_eq!(diagram.config.diagram_padding, 12.0);
@@ -13986,17 +14005,23 @@ B//-A: reverse stick top
         assert_eq!((diagram.config.value_font_size, diagram.config.label_font_size), (10.0, 16.0));
         assert_eq!(diagram.config.value_format, "$0,0");
         assert!(!diagram.config.use_max_width);
+        assert_eq!(diagram.config.theme.fills[0], "#123456");
+        assert_eq!(diagram.config.theme.strokes[0], "#654321");
+        assert_eq!(diagram.config.theme.labels[0], "#abcdef");
     }
 
     #[test]
     fn treemap_parses_yaml_configuration_and_uses_defaults_for_invalid_values() {
         let diagram = parse_treemap(
-            "---\nconfig:\n  treemap:\n    padding: -1\n    nodeWidth: 72\n    showValues: false\n    valueFormat: '.2f'\n---\ntreemap\n\"Root\": 5",
+            "---\nconfig:\n  treemap:\n    padding: -1\n    nodeWidth: 72\n    showValues: false\n    valueFormat: '.2f'\nthemeVariables:\n  cScale11: '#102030'\n  cScalePeer11: '#405060'\n  cScaleLabel11: '#708090'\n---\ntreemap\n\"Root\": 5",
         ).unwrap();
         assert_eq!(diagram.config.padding, 10.0);
         assert_eq!(diagram.config.node_width, 72.0);
         assert!(!diagram.config.show_values);
         assert_eq!(diagram.config.value_format, ".2f");
+        assert_eq!(diagram.config.theme.fills[11], "#102030");
+        assert_eq!(diagram.config.theme.strokes[11], "#405060");
+        assert_eq!(diagram.config.theme.labels[11], "#708090");
     }
 
     #[test]

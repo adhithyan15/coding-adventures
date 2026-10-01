@@ -528,11 +528,13 @@ pinned Mermaid diagnostic. Deterministic alternating partitions
 lower through backend-neutral rectangles and glyph runs, with native
 Metal-to-PNG validation. Named `classDef` declarations resolve fill, stroke,
 dash, text color, and font styling through semantic IR and backend-neutral
-paint. The broader CSS property surface, full D3 value-format language, and
-theme-exact color matching remain unsupported at the partial level. Treemap
-layout, value visibility, font, border, and basic grouped/currency value-format
-configuration also flow through the semantic IR, hierarchy layout, and paint
-scene.
+paint. All twelve `cScale`, `cScalePeer`, and `cScaleLabel` theme-variable slots
+also flow from init directives or YAML front matter through category-aware
+layout into paint, with the hidden root and inherited leaf category behavior of
+the upstream renderer. The broader CSS property surface and full D3
+value-format language remain unsupported at the partial level. Treemap layout,
+value visibility, font, border, and basic grouped/currency value-format
+configuration also flow through the semantic IR, hierarchy layout, and paint scene.
 
 ### Venn Native Slice
 

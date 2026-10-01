@@ -104,7 +104,6 @@ where
     M: FontMetrics<Handle = S::Handle>,
     R: FontResolver<Handle = S::Handle>,
 {
-    const FILLS: &[&str] = &["#dbeafe", "#dcfce7", "#fef3c7", "#fee2e2", "#e0e7ff"];
     let mut instructions = Vec::new();
     let mut text_children = Vec::new();
     let text_color = Color { r: 15, g: 23, b: 42, a: 255 };
@@ -116,13 +115,14 @@ where
         if node.width <= 0.0 || node.height <= 0.0 {
             continue;
         }
-        let color_index = node.class_selector.as_ref().map_or(node.depth, |class| {
-            class.bytes().fold(node.depth, |hash, byte| hash.wrapping_mul(31).wrapping_add(byte as usize))
-        });
+        if node.depth == 0 && node.has_children {
+            continue;
+        }
+        let palette_index = node.palette_index;
         let fill = node.style.as_ref().and_then(|style| style.fill.clone())
-            .unwrap_or_else(|| FILLS[color_index % FILLS.len()].into());
+            .unwrap_or_else(|| palette_index.map_or_else(|| "transparent".into(), |index| diagram.config.theme.fills[index].clone()));
         let stroke = node.style.as_ref().and_then(|style| style.stroke.clone())
-            .unwrap_or_else(|| "#475569".into());
+            .unwrap_or_else(|| palette_index.map_or_else(|| "transparent".into(), |index| diagram.config.theme.strokes[index].clone()));
         instructions.push(PaintInstruction::Rect(PaintRect {
             base: PaintBase::default(),
             x: node.x,
@@ -132,7 +132,7 @@ where
             fill: Some(fill),
             stroke: Some(stroke),
             stroke_width: Some(node.style.as_ref().and_then(|style| style.stroke_width).unwrap_or(diagram.config.border_width)),
-            corner_radius: Some(3.0),
+            corner_radius: Some(node.style.as_ref().and_then(|style| style.corner_radius).unwrap_or(3.0)),
             stroke_dash: node.style.as_ref().and_then(|style| style.stroke_dash.clone()),
             stroke_dash_offset: None,
         }));
@@ -145,7 +145,9 @@ where
                 if let Some(family) = &style.font_family { label_font.family.clone_from(family); }
             }
             let node_text_color = node.style.as_ref().and_then(|style| style.text_color.as_deref())
-                .map(css_to_color).unwrap_or(text_color);
+                .map(css_to_color).unwrap_or_else(|| palette_index
+                    .map(|index| css_to_color(&diagram.config.theme.labels[index]))
+                    .unwrap_or(text_color));
             text_children.push(text_node(
                 &node.label,
                 node.x + 6.0,
@@ -6627,6 +6629,7 @@ mod tests {
                 value: 10.0,
                 depth: 0,
                 has_children: false,
+                palette_index: Some(0),
                 x: 8.0,
                 y: 48.0,
                 width: 304.0,
