@@ -15461,6 +15461,26 @@ eight-lane registry cannot become its oracle. A live open-PR audit found zero
 overlap with the selected package, fixture, validator, state, roadmap, and
 changelog paths.
 
+### Ruby and Swift barcode-layout v1 adoption PR
+
+Draft PR #16361 records the complete Ruby and Swift adoption without changing
+either legacy API. Implementation revision
+`e13495e70a96f67d99261060fe394ec002183304` binds Ruby package tree
+`aafff095367353ae3da9738dfd82198c63b7913f` and Swift package tree
+`f14c0704d63084a8e63c1b821436d642df90c68b`; the evidence-only follow-up
+commit leaves both package roots untouched. The registry now reports both
+lanes conformant while keeping Elixir and Lua explicitly pending adoption.
+
+Ruby completed 64 native and conformance runs with 122 assertions. Swift
+completed seven native and conformance tests with coverage and release builds.
+The shared registry validator completed nine tests, and all six portable
+symbology downstream packages passed in both lanes. Ruby's aggregate passed
+with one expected platform-native skip. Swift's aggregate compiled the full
+package graph before the pre-existing absent `paint_vm_direct2d_c.lib` linker
+artifact prevented the final Windows executable link. Both Windows build
+fronts fail closed. Two read-only security-review rounds completed; the second
+reported no vulnerabilities after bounded Unicode-scalar ingress fixes.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
