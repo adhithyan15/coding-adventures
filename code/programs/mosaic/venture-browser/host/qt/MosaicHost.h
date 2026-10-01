@@ -44,6 +44,9 @@ public:
   void attach(QObject *root);
   Q_INVOKABLE QVariantMap props();
   Q_INVOKABLE QVariantMap handleEvent(const QVariantMap &event);
+  Q_INVOKABLE QVariantMap reportEnvironment(const QVariantMap &environment);
+  static QVariantMap environmentReport(double width, double height, bool dark);
+  bool isSettling() const { return false; }
 
   bool render(QImage *image);
   bool resize(double width, double height);
