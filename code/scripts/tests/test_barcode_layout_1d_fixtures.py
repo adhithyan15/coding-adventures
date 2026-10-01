@@ -319,16 +319,20 @@ class BarcodeLayoutFixtureTests(unittest.TestCase):
             {entry["language"] for entry in entries},
             {
                 "csharp",
+                "elixir",
                 "fsharp",
                 "go",
                 "haskell",
+                "lua",
                 "perl",
                 "python",
+                "ruby",
                 "rust",
+                "swift",
                 "typescript",
             },
         )
-        self.assertEqual(len(entries), 8)
+        self.assertEqual(len(entries), 12)
         corpus_digest = hashlib.sha256(self.document_encoded).hexdigest()
         self.assertEqual(
             corpus_digest,
@@ -344,18 +348,31 @@ class BarcodeLayoutFixtureTests(unittest.TestCase):
                 encoding="utf-8"
             )
         )
-        adoption_item = next(
-            item
-            for item in state["items"]
-            if item["id"] == "barcode-layout-existing-lanes-v1-conformance"
-        )
+        package_roots = {
+            "csharp": "code/packages/csharp/barcode-layout-1d",
+            "elixir": "code/packages/elixir/barcode_layout_1d",
+            "fsharp": "code/packages/fsharp/barcode-layout-1d",
+            "go": "code/packages/go/barcode-layout-1d",
+            "haskell": "code/packages/haskell/barcode-layout-1d",
+            "lua": "code/packages/lua/barcode_layout_1d",
+            "perl": "code/packages/perl/barcode-layout-1d",
+            "python": "code/packages/python/barcode-layout-1d",
+            "ruby": "code/packages/ruby/barcode_layout_1d",
+            "rust": "code/packages/rust/barcode-layout-1d",
+            "swift": "code/packages/swift/BarcodeLayout1D",
+            "typescript": "code/packages/typescript/barcode-layout-1d",
+        }
+        owner_ids = {
+            "ruby": "barcode-layout-1d-ruby-swift-v1-conformance",
+            "swift": "barcode-layout-1d-ruby-swift-v1-conformance",
+        }
         for entry in entries:
             package_root = REPO_ROOT / entry["package_root"]
             self.assertTrue(package_root.is_dir())
             self.assertTrue(_target_package_path(entry, "native_test_path").is_file())
             self.assertEqual(
                 entry["package_root"],
-                f"code/packages/{entry['language']}/barcode-layout-1d",
+                package_roots[entry["language"]],
             )
             if entry["status"] == "pending-adoption":
                 self.assertTrue(entry["known_divergences"])
@@ -386,6 +403,12 @@ class BarcodeLayoutFixtureTests(unittest.TestCase):
                     "text-value-fails-before-native-resolution",
                     "text-enabled-fails-before-native-resolution",
                 },
+            )
+            owner_id = owner_ids.get(
+                entry["language"], "barcode-layout-existing-lanes-v1-conformance"
+            )
+            adoption_item = next(
+                item for item in state["items"] if item["id"] == owner_id
             )
             self.assertIn(adoption_item["status"], {"pr-open", "merged"})
             self.assertEqual(entry["adoption_pr"], adoption_item["pr_number"])

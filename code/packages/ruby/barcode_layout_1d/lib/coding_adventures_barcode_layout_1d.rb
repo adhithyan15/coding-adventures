@@ -10,13 +10,13 @@ module CodingAdventures
     DEFAULT_BARCODE_1D_LAYOUT_CONFIG = {
       module_unit: 4,
       bar_height: 120,
-      quiet_zone_modules: 10,
+      quiet_zone_modules: 10
     }.freeze
 
     DEFAULT_PAINT_BARCODE_1D_OPTIONS = {
       fill: "#000000",
       background: "#ffffff",
-      metadata: {},
+      metadata: {}
     }.freeze
 
     class BarcodeError < StandardError; end
@@ -45,7 +45,7 @@ module CodingAdventures
           source_char: source_char,
           source_index: source_index,
           role: "data",
-          metadata: metadata.dup,
+          metadata: metadata.dup
         }
       end
 
@@ -72,11 +72,11 @@ module CodingAdventures
 
         {
           color: colors[index],
-          modules: element == "W" ? wide_modules : narrow_modules,
+          modules: (element == "W") ? wide_modules : narrow_modules,
           source_char: source_char,
           source_index: source_index,
           role: role,
-          metadata: metadata.dup,
+          metadata: metadata.dup
         }
       end
     end
@@ -102,8 +102,8 @@ module CodingAdventures
               source_char: run[:source_char],
               source_index: run[:source_index],
               modules: run[:modules],
-              role: run[:role],
-            }.merge(run.fetch(:metadata, {})),
+              role: run[:role]
+            }.merge(run.fetch(:metadata, {}))
           )
         end
         cursor_x += width
@@ -119,8 +119,8 @@ module CodingAdventures
           content_width: content_width,
           quiet_zone_width: quiet_zone_width,
           module_unit: config[:module_unit],
-          bar_height: config[:bar_height],
-        }.merge(options.fetch(:metadata, {})),
+          bar_height: config[:bar_height]
+        }.merge(options.fetch(:metadata, {}))
       )
     end
 
@@ -172,7 +172,7 @@ module CodingAdventures
 
       def initialize(error_id)
         @error_id = error_id
-        super(error_id)
+        super
       end
     end
 
@@ -193,8 +193,8 @@ module CodingAdventures
     def validate_v1_source!(label, index)
       v1_fail!("invalid-source-attribution") if
         v1_scalar_length(label, "invalid-source-attribution") > MAX_LABEL_SCALARS ||
-        !v1_integer?(index) ||
-        !index.between?(-(2**31), (2**31) - 1)
+          !v1_integer?(index) ||
+          !index.between?(-(2**31), (2**31) - 1)
     end
 
     def v1_value(hash, key, default = :__missing__)
@@ -224,12 +224,12 @@ module CodingAdventures
           next
         end
         v1_fail!("too-many-runs") if result.length >= MAX_RUNS
-        result << v1_run(current == "1" ? "bar" : "space", count, source_label, source_index, role)
+        result << v1_run((current == "1") ? "bar" : "space", count, source_label, source_index, role)
         current = token
         count = 1
       end
       v1_fail!("too-many-runs") if result.length >= MAX_RUNS
-      result << v1_run(current == "1" ? "bar" : "space", count, source_label, source_index, role)
+      result << v1_run((current == "1") ? "bar" : "space", count, source_label, source_index, role)
       result
     end
 
@@ -265,13 +265,13 @@ module CodingAdventures
 
       content = 0
       pattern.each_char.with_index.map do |token, index|
-        modules = token == wide_marker ? wide_modules : narrow_modules
+        modules = (token == wide_marker) ? wide_modules : narrow_modules
         v1_fail!("content-too-wide") if modules > MAX_CONTENT_MODULES - content
         content += modules
         color = if index.even?
           starting_color
         else
-          starting_color == "bar" ? "space" : "bar"
+          (starting_color == "bar") ? "space" : "bar"
         end
         v1_run(color, modules, source_label, source_index, role)
       end
@@ -312,7 +312,7 @@ module CodingAdventures
         "rightQuietZoneModules" => quiet_zone_modules,
         "contentModules" => content,
         "totalModules" => total,
-        "symbolLayouts" => symbol_layouts,
+        "symbolLayouts" => symbol_layouts
       }
     end
 
@@ -356,8 +356,8 @@ module CodingAdventures
               "sourceIndex" => v1_value(run, :source_index).to_s,
               "role" => v1_value(run, :role).dup,
               "moduleStart" => cursor.to_s,
-              "moduleEnd" => ending.to_s,
-            },
+              "moduleEnd" => ending.to_s
+            }
           )
         end
         cursor = ending
@@ -373,14 +373,14 @@ module CodingAdventures
         "barHeightPx" => bar_height.to_s,
         "sceneWidthPx" => scene_width.to_s,
         "sceneHeightPx" => bar_height.to_s,
-        "symbolCount" => layout.fetch("symbolLayouts").length.to_s,
+        "symbolCount" => layout.fetch("symbolLayouts").length.to_s
       }
       CodingAdventures::PaintInstructions.paint_scene(
         width: scene_width,
         height: bar_height,
         instructions: instructions,
         background: background.dup,
-        metadata: metadata.merge(canonical),
+        metadata: metadata.merge(canonical)
       )
     end
 
@@ -390,7 +390,7 @@ module CodingAdventures
         modules: modules,
         source_label: label.dup,
         source_index: index,
-        role: role.dup,
+        role: role.dup
       }
     end
 
@@ -443,7 +443,7 @@ module CodingAdventures
         "startModule" => start_module,
         "endModule" => end_module,
         "sourceIndex" => tuple[1],
-        "role" => tuple[2].dup,
+        "role" => tuple[2].dup
       }
     end
 

@@ -14,7 +14,7 @@ class TestBarcodeLayout1DConformance < Minitest::Test
   MAX_SCHEMA_DEPTH = 24
   FIXTURE_ROOT = File.expand_path(
     "../../../../specs/fixtures/barcode-layout-1d-v1",
-    __dir__,
+    __dir__
   )
 
   class UniqueObject < Hash
@@ -48,11 +48,11 @@ class TestBarcodeLayout1DConformance < Minitest::Test
         object_class: UniqueObject,
         array_class: Array,
         allow_nan: false,
-        max_nesting: false,
+        max_nesting: false
       )
       validate_tree(value, depth_limit)
       value
-    rescue JSON::ParserError, JSON::NestingError
+    rescue JSON::ParserError
       raise FixtureError, "fixture-invalid-json"
     end
 
@@ -148,11 +148,15 @@ class TestBarcodeLayout1DConformance < Minitest::Test
         Array.new(count) do |index|
           first = repeated.fetch("firstColor")
           {
-            "color" => (index.even? ? first : (first == "bar" ? "space" : "bar")),
+            "color" => (if index.even?
+                          first
+                        else
+                          ((first == "bar") ? "space" : "bar")
+                        end),
             "modules" => repeated.fetch("modules"),
             "sourceLabel" => repeated.fetch("sourceLabel"),
             "sourceIndex" => repeated.fetch("sourceIndex"),
-            "role" => repeated.fetch("role"),
+            "role" => repeated.fetch("role")
           }
         end
       end
@@ -162,7 +166,7 @@ class TestBarcodeLayout1DConformance < Minitest::Test
           modules: row.fetch("modules"),
           source_label: row.fetch("sourceLabel"),
           source_index: row.fetch("sourceIndex"),
-          role: row.fetch("role"),
+          role: row.fetch("role")
         }
       end
     end
@@ -180,7 +184,7 @@ class TestBarcodeLayout1DConformance < Minitest::Test
           "label" => repeated.fetch("label"),
           "modules" => repeated.fetch("modules"),
           "sourceIndex" => index,
-          "role" => repeated.fetch("role"),
+          "role" => repeated.fetch("role")
         }
       end
     end
@@ -193,7 +197,7 @@ class TestBarcodeLayout1DConformance < Minitest::Test
           pattern(value),
           source_label: value.fetch("sourceLabel"),
           source_index: value.fetch("sourceIndex"),
-          role: value.fetch("role"),
+          role: value.fetch("role")
         )
       when "expand-width"
         Implementation.expand_width_v1(
@@ -205,7 +209,7 @@ class TestBarcodeLayout1DConformance < Minitest::Test
           wide_marker: value.fetch("wideMarker", "W"),
           narrow_modules: value.fetch("narrowModules", 1),
           wide_modules: value.fetch("wideModules", 3),
-          starting_color: value.fetch("startingColor", "bar"),
+          starting_color: value.fetch("startingColor", "bar")
         )
       when "compute-layout"
         Implementation.compute_layout_v1(runs(value), value.fetch("quietZoneModules"), symbols(value))
@@ -220,13 +224,13 @@ class TestBarcodeLayout1DConformance < Minitest::Test
               bar_height: render.fetch("barHeight", 120),
               foreground: render.fetch("foreground", "#000000"),
               background: render.fetch("background", "#ffffff"),
-              include_human_readable_text: render.fetch("includeHumanReadableText", false),
+              include_human_readable_text: render.fetch("includeHumanReadableText", false)
             },
             label: value.fetch("label", "1D barcode"),
             metadata: value.fetch("metadata", {}).dup,
             human_readable_text: value["humanReadableText"],
-            symbols: symbols(value),
-          },
+            symbols: symbols(value)
+          }
         )
       else
         raise "unknown operation"
@@ -239,7 +243,7 @@ class TestBarcodeLayout1DConformance < Minitest::Test
         "modules" => run.fetch(:modules),
         "sourceLabel" => run.fetch(:source_label),
         "sourceIndex" => run.fetch(:source_index),
-        "role" => run.fetch(:role),
+        "role" => run.fetch(:role)
       }
     end
 
@@ -255,10 +259,10 @@ class TestBarcodeLayout1DConformance < Minitest::Test
             "width" => rect.width,
             "height" => rect.height,
             "fill" => rect.fill,
-            "metadata" => rect.metadata,
+            "metadata" => rect.metadata
           }
         end,
-        "metadata" => scene.metadata,
+        "metadata" => scene.metadata
       }
     end
 
@@ -280,7 +284,7 @@ class TestBarcodeLayout1DConformance < Minitest::Test
   DOCUMENT = load_document(SCHEMA_BYTES, CASE_BYTES)
 
   DOCUMENT.fetch("cases").each do |test_case|
-    define_method("test_#{test_case.fetch('id').tr('-', '_')}") do
+    define_method("test_#{test_case.fetch("id").tr("-", "_")}") do
       expected = test_case.fetch("expected")
       if expected.key?("error")
         error = assert_raises(Implementation::BarcodeV1Error) { self.class.execute(test_case) }
@@ -319,7 +323,7 @@ class TestBarcodeLayout1DConformance < Minitest::Test
       "\xff".b,
       CASE_BYTES.sub('"layout-v1-binary-basic"'.b, '"\\ud800"'.b),
       "[]".b,
-      "{}".b,
+      "{}".b
     ]
     hostile.each { |bytes| assert_raises(FixtureError) { self.class.load_document(SCHEMA_BYTES, bytes) } }
   end
@@ -344,7 +348,7 @@ class TestBarcodeLayout1DConformance < Minitest::Test
       Implementation.project_scene_v1(
         [{color: "bar", modules: 0, source_label: "A", source_index: 0, role: "data"}],
         0,
-        {human_readable_text: "123", native_resolver: -> { calls += 1 }},
+        {human_readable_text: "123", native_resolver: -> { calls += 1 }}
       )
     end
     assert_equal "human-readable-text-unsupported", error.error_id
@@ -357,7 +361,7 @@ class TestBarcodeLayout1DConformance < Minitest::Test
       Implementation.project_scene_v1(
         [{color: "bar", modules: 0, source_label: "A", source_index: 0, role: "data"}],
         0,
-        {render_config: {module_width: 0, include_human_readable_text: true}, native_resolver: -> { calls += 1 }},
+        {render_config: {module_width: 0, include_human_readable_text: true}, native_resolver: -> { calls += 1 }}
       )
     end
     assert_equal "human-readable-text-unsupported", error.error_id
@@ -375,7 +379,7 @@ class TestBarcodeLayout1DConformance < Minitest::Test
     second = Implementation.project_scene_v1(
       [{color: "bar", modules: 1, source_label: "A", source_index: 0, role: "data"}],
       1,
-      {metadata: {"caller" => "value"}},
+      {metadata: {"caller" => "value"}}
     )
     assert_equal "value", second.metadata.fetch("caller")
     assert_equal "A", second.instructions.first.metadata.fetch("sourceLabel")
