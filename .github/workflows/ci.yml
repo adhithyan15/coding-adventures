@@ -120,6 +120,7 @@ jobs:
       run_contracts_build_tool_conformance: ${{ steps.detect.outputs.run_contracts_build_tool_conformance }}
       run_contracts_capability_cage: ${{ steps.detect.outputs.run_contracts_capability_cage }}
       run_ocaml_capability_gate: ${{ steps.detect.outputs.run_ocaml_capability_gate }}
+      run_build_linux_os_suites: ${{ steps.detect.outputs.run_build_linux_os_suites }}
       run_build_macos_os_suites: ${{ steps.detect.outputs.run_build_macos_os_suites }}
       run_build_windows_os_suites: ${{ steps.detect.outputs.run_build_windows_os_suites }}
     steps:
@@ -1481,7 +1482,7 @@ jobs:
         run: python -m unittest discover -s code/scripts/tests -p 'test_setup_msvc_dev_cmd.py'
 
       - name: Set up MSVC (Lua + C/C++ + Venture + LANG)
-        if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.needs_cpp == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_lang_windows == 'true') && runner.os == 'Windows'
+        if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.needs_cpp == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_lang_windows == 'true' || needs.detect.outputs.run_build_windows_os_suites == 'true') && runner.os == 'Windows'
         shell: pwsh
         run: python code/scripts/setup_msvc_dev_cmd.py --arch x64
 
@@ -1588,6 +1589,32 @@ jobs:
       - name: Set up npm
         if: needs.detect.outputs.needs_typescript == 'true'
         run: npm install --global npm@11.13.0
+
+      - name: Delegate Forme sandbox cgroup v2 root
+        if: runner.os == 'Linux' && needs.detect.outputs.run_build_linux_os_suites == 'true'
+        run: |
+          test -f /sys/fs/cgroup/cgroup.controllers
+          if [ -f /proc/sys/kernel/apparmor_restrict_unprivileged_userns ]; then
+            sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          fi
+          sudo mkdir -p \
+            /sys/fs/cgroup/forme-sandbox \
+            /sys/fs/cgroup/forme-sandbox/runner
+          sudo chown "$(id -u):$(id -g)" \
+            /sys/fs/cgroup/forme-sandbox \
+            /sys/fs/cgroup/forme-sandbox/cgroup.procs \
+            /sys/fs/cgroup/forme-sandbox/cgroup.threads \
+            /sys/fs/cgroup/forme-sandbox/cgroup.subtree_control \
+            /sys/fs/cgroup/forme-sandbox/runner \
+            /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs \
+            /sys/fs/cgroup/forme-sandbox/runner/cgroup.threads
+          test -w /sys/fs/cgroup/forme-sandbox
+          test -w /sys/fs/cgroup/forme-sandbox/cgroup.procs
+          test -w /sys/fs/cgroup/forme-sandbox/cgroup.subtree_control
+          for controller in cpu memory pids; do
+            grep -qw "$controller" /sys/fs/cgroup/forme-sandbox/cgroup.controllers
+            echo "+$controller" >> /sys/fs/cgroup/forme-sandbox/cgroup.subtree_control
+          done
 
       # ── C/C++ compilers (pure-ISO multi-compiler lane) ──────────
       #
@@ -4107,10 +4134,13 @@ jobs:
       # well inside the 360-minute job limit, with room for the ~25 minutes
       # of Windows setup before this step, so a real hang still fails.
       - name: Build and test affected packages
-        if: needs.detect.outputs.is_main != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true' || needs.detect.outputs.needs_elixir == 'true' || needs.detect.outputs.needs_dotnet == 'true' || needs.detect.outputs.needs_ocaml == 'true')
+        if: needs.detect.outputs.is_main != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true' || needs.detect.outputs.needs_elixir == 'true' || needs.detect.outputs.needs_dotnet == 'true' || needs.detect.outputs.needs_ocaml == 'true' || needs.detect.outputs.run_build_windows_os_suites == 'true')
         timeout-minutes: 300
         shell: bash
         run: |
+          if [ "$RUNNER_OS" = "Linux" ] && [ -w /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs ]; then
+            printf '%s\n' "$$" | sudo tee /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs >/dev/null
+          fi
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
           job_flags=()
           if [ "${{ steps.setup-ocaml.outcome }}" = "success" ]; then
@@ -4138,6 +4168,9 @@ jobs:
         timeout-minutes: 150
         shell: bash
         run: |
+          if [ "$RUNNER_OS" = "Linux" ] && [ -w /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs ]; then
+            printf '%s\n' "$$" | sudo tee /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs >/dev/null
+          fi
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
           job_flags=()
           if [ "${{ steps.setup-ocaml.outcome }}" = "success" ]; then

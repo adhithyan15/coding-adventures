@@ -425,14 +425,16 @@ console.log(prose, nested);
         # +1: forme-plugin-installer-core, the FM02 atomic install boundary.
         # +1: forme-plugin-runner-ts, the FM02 TypeScript SDK boundary.
         # +1: forme-plugin-runner-conformance, the reusable FM02 runner suite.
+        # +4: forme-sandbox-core plus the Linux, macOS, and Windows native
+        # launcher packages that close FM02's operating-system boundary.
         # -1: the standalone checklist-app was retired; checklists live in
         # Trestle (mosaic-pkg-checklist).
-        self.assertEqual(summary.total_projects, 480)
+        self.assertEqual(summary.total_projects, 484)
         self.assertEqual(summary.shared_projects, 300)
         self.assertEqual(summary.inherited_root_dir, 130)
         self.assertEqual(summary.inherited_out_dir, 133)
-        self.assertEqual(summary.standalone_emit_projects, 151)
-        self.assertEqual(summary.isolated_standalone_projects, 151)
+        self.assertEqual(summary.standalone_emit_projects, 155)
+        self.assertEqual(summary.isolated_standalone_projects, 155)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
         # 94: +1 for script-ductus. Nothing the package SHIPS touches a Node
@@ -474,8 +476,10 @@ console.log(prose, nested);
         # +1: forme-plugin-installer-core owns its atomic filesystem transaction.
         # +1: forme-plugin-runner-ts owns bounded Node stream and Buffer framing.
         # +1: forme-plugin-runner-conformance owns subprocess test fixtures.
+        # +4: the sandbox core and OS packages own Node process, stream, path,
+        # filesystem, platform, and native-build orchestration APIs.
         # -1: the retired checklist-app (its Electron shell used Node APIs).
-        self.assertEqual(summary.node_api_projects, 77)
+        self.assertEqual(summary.node_api_projects, 81)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
         # +1: chief-of-staff-channel-store owns the test-only Node provider.
@@ -500,8 +504,9 @@ console.log(prose, nested);
         # +1: forme-plugin-installer-core owns its Node filesystem provider.
         # +1: forme-plugin-runner-ts owns its Node stream and Buffer provider.
         # +1: forme-plugin-runner-conformance owns its Node process provider.
+        # +4: each sandbox package directly owns its Node type provider.
         # -1: the retired checklist-app (its Electron shell used Node APIs).
-        self.assertEqual(summary.node_provider_projects, 77)
+        self.assertEqual(summary.node_provider_projects, 81)
         self.assertEqual(summary.missing_node_provider_projects, 0)
         self.assertEqual(summary.stale_node_provider_locks, 0)
         self.assertEqual(summary.node_lock_exemptions, 1)
@@ -537,8 +542,9 @@ console.log(prose, nested);
         # +1: forme-plugin-installer-core locks its compiler and test graph.
         # +1: forme-plugin-runner-ts locks its compiler and conformance graph.
         # +1: forme-plugin-runner-conformance locks its compiler and test graph.
+        # +4: the sandbox core and OS packages lock their compiler/test graphs.
         # -1: the retired checklist-app took its lockfile with it.
-        self.assertEqual(summary.locked_compilers, 479)
+        self.assertEqual(summary.locked_compilers, 483)
 
 
 if __name__ == "__main__":

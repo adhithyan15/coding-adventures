@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "typescript/forme-sandbox-linux",
+  "capabilities": [
+    { "category": "fs", "action": "read", "target": "$trustedRuntimeAndSystemLibraries", "justification": "Constructs a read-only private runtime view for the selected trusted interpreter or binary." },
+    { "category": "fs", "action": "write", "target": "$pluginWorkingDirectoryAndDelegatedCgroup", "justification": "Stages the verified snapshot and configures a unique delegated cgroup-v2 leaf." },
+    { "category": "proc", "action": "exec", "target": "$trustedNativeLauncher", "justification": "Starts the checked-in native launcher that installs Linux isolation before executing the plugin runtime." },
+    { "category": "proc", "action": "fork", "target": "$singleSandboxChild", "justification": "Creates exactly one PID-namespace child before seccomp permanently blocks further process creation." },
+    { "category": "proc", "action": "signal", "target": "$singleSandboxChild", "justification": "Forwards host cancellation and kills a child that exceeds a resource boundary." }
+  ],
+  "justification": "Applies the explicit Linux kernel isolation boundary around an exact host-verified plugin snapshot."
+}
