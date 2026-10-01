@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C168-conseil",
+    "language": "french",
+    "chapter": 168,
+    "sequence": 8460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7b2a8e0755d85eb7"
+  },
+  "findings": []
+}

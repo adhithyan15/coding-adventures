@@ -1,0 +1,19 @@
+{
+  "chapter": 171,
+  "title": "Volcano, Plain, Waterfall, Rock, Pebble",
+  "label": "ch:fr-volcano-plain-waterfall-rock-pebble",
+  "canDo": "I can say a volcano, a plain, a waterfall, a rock and a pebble.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C171-caillou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 171: I can say a volcano, a plain, a waterfall, a rock and a pebble.",
+    "assesses": [
+      "FR-LEX-C171-CHOSES171-03",
+      "FR-LEX-C171-CHOSES171-04",
+      "FR-LEX-C171-CHOSES171-05"
+    ]
+  }
+}

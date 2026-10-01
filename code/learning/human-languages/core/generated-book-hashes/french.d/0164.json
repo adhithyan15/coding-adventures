@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:d438c14597e5dfe1",
+  "lessonIds": [
+    "FR-C164-passeport",
+    "FR-C164-douane",
+    "FR-C164-reservation",
+    "FR-C164-boucherie",
+    "FR-C164-fleuve"
+  ],
+  "tex": "french/book/chapters/ch164-passport-customs-booking-butcher-s-large-river.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C149-souffrir",
+  "pathSegment": "FR-PATH-149-VERBES149",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-149-VERBES149",
+      "order": 3
+    }
+  ]
+}

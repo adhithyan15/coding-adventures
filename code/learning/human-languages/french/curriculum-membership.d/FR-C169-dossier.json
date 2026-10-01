@@ -1,0 +1,11 @@
+{
+  "id": "FR-C169-dossier",
+  "pathSegment": "FR-PATH-169-CHOSES169",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-169-CHOSES169",
+      "order": 1
+    }
+  ]
+}

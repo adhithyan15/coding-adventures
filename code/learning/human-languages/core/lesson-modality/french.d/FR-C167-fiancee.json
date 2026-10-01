@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C167-fiancee",
+    "language": "french",
+    "chapter": 167,
+    "sequence": 8410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e811cab1f0790b31"
+  },
+  "findings": []
+}

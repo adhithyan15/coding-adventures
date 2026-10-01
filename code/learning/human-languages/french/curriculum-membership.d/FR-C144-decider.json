@@ -1,0 +1,11 @@
+{
+  "id": "FR-C144-decider",
+  "pathSegment": "FR-PATH-144-VERBES144",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-144-VERBES144",
+      "order": 2
+    }
+  ]
+}

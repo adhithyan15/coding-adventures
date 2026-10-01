@@ -1,0 +1,11 @@
+{
+  "id": "FR-C173-natation",
+  "pathSegment": "FR-PATH-173-CHOSES173",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-173-CHOSES173",
+      "order": 3
+    }
+  ]
+}

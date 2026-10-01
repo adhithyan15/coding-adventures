@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:cf69ab1bb36a4773",
+  "lessonIds": [
+    "FR-C152-admirer",
+    "FR-C152-agir",
+    "FR-C152-avancer",
+    "FR-C152-reculer",
+    "FR-C152-baisser"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch152.txt",
+  "json": "french/narration/ch152.json",
+  "textHash": "fnv1a64:de6759a2e07f9203",
+  "jsonHash": "fnv1a64:47433960c482b3f9",
+  "findings": []
+}

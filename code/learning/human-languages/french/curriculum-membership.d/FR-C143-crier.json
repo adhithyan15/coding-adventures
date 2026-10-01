@@ -1,0 +1,11 @@
+{
+  "id": "FR-C143-crier",
+  "pathSegment": "FR-PATH-143-VERBES143",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-143-VERBES143",
+      "order": 4
+    }
+  ]
+}

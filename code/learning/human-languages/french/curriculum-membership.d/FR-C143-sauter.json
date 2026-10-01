@@ -1,0 +1,11 @@
+{
+  "id": "FR-C143-sauter",
+  "pathSegment": "FR-PATH-143-VERBES143",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-143-VERBES143",
+      "order": 2
+    }
+  ]
+}

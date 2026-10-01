@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C145-discuter",
+    "language": "french",
+    "chapter": 145,
+    "sequence": 6920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b47243b804897a4c"
+  },
+  "findings": []
+}

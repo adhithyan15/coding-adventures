@@ -1,0 +1,11 @@
+{
+  "id": "FR-C172-cuir",
+  "pathSegment": "FR-PATH-172-CHOSES172",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-172-CHOSES172",
+      "order": 4
+    }
+  ]
+}

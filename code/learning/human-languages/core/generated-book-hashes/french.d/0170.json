@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:ca2f32059e173cdd",
+  "lessonIds": [
+    "FR-C170-chateau",
+    "FR-C170-tour",
+    "FR-C170-monument",
+    "FR-C170-statue",
+    "FR-C170-fontaine"
+  ],
+  "tex": "french/book/chapters/ch170-castle-tower-monument-statue-fountain.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C150-brancher",
+  "pathSegment": "FR-PATH-150-VERBES150",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-150-VERBES150",
+      "order": 3
+    }
+  ]
+}

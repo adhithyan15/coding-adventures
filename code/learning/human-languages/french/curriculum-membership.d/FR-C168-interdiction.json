@@ -1,0 +1,11 @@
+{
+  "id": "FR-C168-interdiction",
+  "pathSegment": "FR-PATH-168-CHOSES168",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-168-CHOSES168",
+      "order": 2
+    }
+  ]
+}

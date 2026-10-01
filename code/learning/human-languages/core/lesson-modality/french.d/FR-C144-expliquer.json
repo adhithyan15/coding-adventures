@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C144-expliquer",
+    "language": "french",
+    "chapter": 144,
+    "sequence": 6840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0cae3ae4dedb9415"
+  },
+  "findings": []
+}

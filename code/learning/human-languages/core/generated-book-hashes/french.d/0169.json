@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:3ef85e171731c2df",
+  "lessonIds": [
+    "FR-C169-carte-postale",
+    "FR-C169-dossier",
+    "FR-C169-fiche-de-paie",
+    "FR-C169-etiquette",
+    "FR-C169-guide",
+    "FR-R169-first-pass-words-from-chapters-161-164",
+    "FR-R169-second-pass-words-from-chapters-165-169"
+  ],
+  "tex": "french/book/chapters/ch169-postcard-folder-pay-slip-label-guide.tex"
+}

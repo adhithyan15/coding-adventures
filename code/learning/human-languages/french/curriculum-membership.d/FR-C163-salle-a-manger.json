@@ -1,0 +1,11 @@
+{
+  "id": "FR-C163-salle-a-manger",
+  "pathSegment": "FR-PATH-163-CHOSES163",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-163-CHOSES163",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C166-pharmacien",
+    "language": "french",
+    "chapter": 166,
+    "sequence": 8360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f76e41e922a2c600"
+  },
+  "findings": []
+}

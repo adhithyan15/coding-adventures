@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:373018e611813953",
+  "lessonIds": [
+    "FR-C149-decouvrir",
+    "FR-C149-sembler",
+    "FR-C149-servir",
+    "FR-C149-souffrir",
+    "FR-C149-rever"
+  ],
+  "tex": "french/book/chapters/ch149-to-discover-to-seem-to-serve-to-suffer-to-dream.tex"
+}

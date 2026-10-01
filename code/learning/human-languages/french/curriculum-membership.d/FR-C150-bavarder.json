@@ -1,0 +1,11 @@
+{
+  "id": "FR-C150-bavarder",
+  "pathSegment": "FR-PATH-150-VERBES150",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-150-VERBES150",
+      "order": 2
+    }
+  ]
+}

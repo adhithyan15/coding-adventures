@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C159-poli-polie",
+    "language": "french",
+    "chapter": 159,
+    "sequence": 7800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8441a0994cd414f0"
+  },
+  "findings": []
+}

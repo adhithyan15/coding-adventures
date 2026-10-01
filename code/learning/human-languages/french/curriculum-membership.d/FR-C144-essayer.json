@@ -1,0 +1,11 @@
+{
+  "id": "FR-C144-essayer",
+  "pathSegment": "FR-PATH-144-VERBES144",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-144-VERBES144",
+      "order": 3
+    }
+  ]
+}

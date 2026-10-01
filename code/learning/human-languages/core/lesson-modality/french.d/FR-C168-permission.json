@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C168-permission",
+    "language": "french",
+    "chapter": 168,
+    "sequence": 8430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b10172e3ba6fba23"
+  },
+  "findings": []
+}

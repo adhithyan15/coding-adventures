@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C172-plastique",
+    "language": "french",
+    "chapter": 172,
+    "sequence": 8810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:501202d5efb6818b"
+  },
+  "findings": []
+}

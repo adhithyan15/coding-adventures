@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C147-conseiller",
+    "language": "french",
+    "chapter": 147,
+    "sequence": 7000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b19ff6b03fc21255"
+  },
+  "findings": []
+}

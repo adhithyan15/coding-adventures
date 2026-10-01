@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C150-approcher",
+    "language": "french",
+    "chapter": 150,
+    "sequence": 7150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5f0e0523d62d7bf"
+  },
+  "findings": []
+}

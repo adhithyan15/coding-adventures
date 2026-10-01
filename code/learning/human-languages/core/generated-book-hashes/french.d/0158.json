@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:2278d7802afaa13c",
+  "lessonIds": [
+    "FR-C158-donc",
+    "FR-C158-pourtant",
+    "FR-C158-de-toute-facon",
+    "FR-C158-au-contraire",
+    "FR-C158-bien-que"
+  ],
+  "tex": "french/book/chapters/ch158-so-however-anyway-on-the-contrary-although.tex"
+}

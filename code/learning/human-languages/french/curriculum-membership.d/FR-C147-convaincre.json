@@ -1,0 +1,11 @@
+{
+  "id": "FR-C147-convaincre",
+  "pathSegment": "FR-PATH-147-VERBES147",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-147-VERBES147",
+      "order": 2
+    }
+  ]
+}

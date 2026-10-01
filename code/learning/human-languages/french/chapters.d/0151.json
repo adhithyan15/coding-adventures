@@ -1,0 +1,19 @@
+{
+  "chapter": 151,
+  "title": "To put up, To pray, To recommend, To slow down, To breathe",
+  "label": "ch:fr-to-put-up-to-pray-to-recommend-to-slow-down-to-breathe",
+  "canDo": "I can say to put up, to pray, to recommend, to slow down and to breathe.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-R151-second-pass-words-from-chapters-147-151",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 151: I can say to put up, to pray, to recommend, to slow down and to breathe.",
+    "assesses": [
+      "FR-LEX-C151-VERBES151-03",
+      "FR-LEX-C151-VERBES151-04",
+      "FR-LEX-C151-VERBES151-05"
+    ]
+  }
+}

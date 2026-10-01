@@ -1,0 +1,19 @@
+{
+  "chapter": 159,
+  "title": "Comfortable, Uncomfortable, Polite, Rude, Unpleasant",
+  "label": "ch:fr-comfortable-uncomfortable-polite-rude-unpleasant",
+  "canDo": "I can say comfortable, uncomfortable, polite, rude and unpleasant.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FR-C159-desagreable",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 159: I can say comfortable, uncomfortable, polite, rude and unpleasant.",
+    "assesses": [
+      "FR-LEX-C159-QUAL159-03",
+      "FR-LEX-C159-QUAL159-04",
+      "FR-LEX-C159-QUAL159-05"
+    ]
+  }
+}

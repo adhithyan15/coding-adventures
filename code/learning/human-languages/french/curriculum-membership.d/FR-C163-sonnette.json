@@ -1,0 +1,11 @@
+{
+  "id": "FR-C163-sonnette",
+  "pathSegment": "FR-PATH-163-CHOSES163",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-163-CHOSES163",
+      "order": 4
+    }
+  ]
+}

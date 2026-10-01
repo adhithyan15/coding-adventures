@@ -1,0 +1,11 @@
+{
+  "id": "FR-C154-cerveau",
+  "pathSegment": "FR-PATH-154-SANTE154",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-154-SANTE154",
+      "order": 1
+    }
+  ]
+}

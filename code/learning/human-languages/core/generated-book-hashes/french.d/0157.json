@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 157,
+  "sourceHash": "fnv1a64:7d84a12729d60adc",
+  "lessonIds": [
+    "FR-C157-au-dessus",
+    "FR-C157-au-dessous",
+    "FR-C157-devant",
+    "FR-C157-derriere",
+    "FR-C157-a-cote"
+  ],
+  "tex": "french/book/chapters/ch157-above-below-in-front-behind-beside.tex"
+}

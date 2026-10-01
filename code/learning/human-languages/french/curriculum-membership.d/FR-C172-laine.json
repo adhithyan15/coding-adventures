@@ -1,0 +1,11 @@
+{
+  "id": "FR-C172-laine",
+  "pathSegment": "FR-PATH-172-CHOSES172",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-172-CHOSES172",
+      "order": 2
+    }
+  ]
+}

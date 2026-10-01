@@ -1,0 +1,11 @@
+{
+  "id": "FR-C164-fleuve",
+  "pathSegment": "FR-PATH-164-CHOSES164",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-164-CHOSES164",
+      "order": 4
+    }
+  ]
+}

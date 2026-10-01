@@ -1,0 +1,11 @@
+{
+  "id": "FR-R151-first-pass-words-from-chapters-143-146",
+  "pathSegment": "FR-PATH-151-VERBES151",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-151-VERBES151",
+      "order": 5
+    }
+  ]
+}

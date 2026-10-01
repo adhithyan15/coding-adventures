@@ -1,0 +1,11 @@
+{
+  "id": "FR-C161-ancien-ancienne",
+  "pathSegment": "FR-PATH-161-QUAL161",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-161-QUAL161",
+      "order": 1
+    }
+  ]
+}

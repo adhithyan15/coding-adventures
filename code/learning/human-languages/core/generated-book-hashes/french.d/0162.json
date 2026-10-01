@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:ddcfc69daa296cc3",
+  "lessonIds": [
+    "FR-C162-inquiet-inquiete",
+    "FR-C162-enrhume-enrhumee",
+    "FR-C162-celibataire",
+    "FR-C162-marie-mariee",
+    "FR-C162-divorce-divorcee"
+  ],
+  "tex": "french/book/chapters/ch162-worried-with-a-cold-single-married-divorced.tex"
+}

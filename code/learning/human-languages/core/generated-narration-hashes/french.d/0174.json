@@ -1,0 +1,21 @@
+{
+  "language": "french",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:ae2902ffb1fd7b4e",
+  "lessonIds": [
+    "FR-C174-entreprise",
+    "FR-C174-collegue",
+    "FR-C174-salaire",
+    "FR-C174-reunion",
+    "FR-C174-contrat",
+    "FR-R174-first-pass-words-from-chapters-170-171",
+    "FR-R174-second-pass-words-from-chapters-172-174"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "french/narration/ch174.txt",
+  "json": "french/narration/ch174.json",
+  "textHash": "fnv1a64:d51e4e95381b43a6",
+  "jsonHash": "fnv1a64:16a4c558c5702c31",
+  "findings": []
+}

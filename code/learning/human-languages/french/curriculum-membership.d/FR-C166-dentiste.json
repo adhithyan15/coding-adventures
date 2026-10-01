@@ -1,0 +1,11 @@
+{
+  "id": "FR-C166-dentiste",
+  "pathSegment": "FR-PATH-166-CHOSES166",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-166-CHOSES166",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C152-reculer",
+  "pathSegment": "FR-PATH-152-VERBES152",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-152-VERBES152",
+      "order": 3
+    }
+  ]
+}

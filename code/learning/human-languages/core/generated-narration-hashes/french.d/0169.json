@@ -1,0 +1,21 @@
+{
+  "language": "french",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:e506cd315540525e",
+  "lessonIds": [
+    "FR-C169-carte-postale",
+    "FR-C169-dossier",
+    "FR-C169-fiche-de-paie",
+    "FR-C169-etiquette",
+    "FR-C169-guide",
+    "FR-R169-first-pass-words-from-chapters-161-164",
+    "FR-R169-second-pass-words-from-chapters-165-169"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "french/narration/ch169.txt",
+  "json": "french/narration/ch169.json",
+  "textHash": "fnv1a64:066f76d0728a9120",
+  "jsonHash": "fnv1a64:a3b87777f3c27eab",
+  "findings": []
+}

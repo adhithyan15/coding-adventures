@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:92d21cb496b5bb74",
+  "lessonIds": [
+    "FR-C162-inquiet-inquiete",
+    "FR-C162-enrhume-enrhumee",
+    "FR-C162-celibataire",
+    "FR-C162-marie-mariee",
+    "FR-C162-divorce-divorcee"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch162.txt",
+  "json": "french/narration/ch162.json",
+  "textHash": "fnv1a64:8920fa7ccc4d177a",
+  "jsonHash": "fnv1a64:6fc8e2ee8b44d114",
+  "findings": []
+}

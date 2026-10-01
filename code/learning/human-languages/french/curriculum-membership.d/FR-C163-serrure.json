@@ -1,0 +1,11 @@
+{
+  "id": "FR-C163-serrure",
+  "pathSegment": "FR-PATH-163-CHOSES163",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-163-CHOSES163",
+      "order": 3
+    }
+  ]
+}

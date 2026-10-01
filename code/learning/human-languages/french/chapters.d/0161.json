@@ -1,0 +1,19 @@
+{
+  "chapter": 161,
+  "title": "Modern, Former, Fresh, Spicy, Raw",
+  "label": "ch:fr-modern-former-fresh-spicy-raw",
+  "canDo": "I can say modern, former, fresh, spicy and raw.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FR-C161-cru-crue",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 161: I can say modern, former, fresh, spicy and raw.",
+    "assesses": [
+      "FR-LEX-C161-QUAL161-03",
+      "FR-LEX-C161-QUAL161-04",
+      "FR-LEX-C161-QUAL161-05"
+    ]
+  }
+}
