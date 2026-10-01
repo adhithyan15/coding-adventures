@@ -698,6 +698,108 @@ export const entries: DuctusEntry[] = [
     },
   ],
   [
+    "telugu:మ",
+    {
+      script: "telugu",
+      glyph: "మ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "sweep left around the upper-left arch",
+              path: [
+                { x: 300, y: 220 }, { x: 275, y: 240 },
+                { x: 240, y: 260 }, { x: 200, y: 270 },
+                { x: 155, y: 270 }, { x: 115, y: 255 },
+                { x: 80, y: 225 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "turn right around the lower-left bowl",
+              path: [
+                { x: 70, y: 180 }, { x: 80, y: 120 },
+                { x: 115, y: 70 }, { x: 165, y: 40 },
+                { x: 220, y: 35 }, { x: 270, y: 55 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "turn right around the lower-middle bowl",
+              path: [
+                { x: 290, y: 150 }, { x: 300, y: 110 },
+                { x: 330, y: 75 }, { x: 380, y: 45 },
+                { x: 440, y: 30 }, { x: 500, y: 30 },
+                { x: 555, y: 50 }, { x: 600, y: 85 },
+                { x: 625, y: 125 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "curve upward and left around the central shoulder",
+              path: [
+                { x: 635, y: 200 }, { x: 630, y: 250 },
+                { x: 610, y: 300 }, { x: 580, y: 350 },
+                { x: 530, y: 400 }, { x: 480, y: 435 },
+                { x: 430, y: 455 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "sweep right and upward through the separate top flourish",
+              path: [
+                { x: 135, y: 555 }, { x: 145, y: 515 },
+                { x: 165, y: 480 }, { x: 195, y: 465 },
+                { x: 230, y: 470 }, { x: 270, y: 495 },
+                { x: 315, y: 540 }, { x: 360, y: 595 },
+                { x: 410, y: 645 }, { x: 465, y: 680 },
+                { x: 520, y: 692 }, { x: 555, y: 688 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "sweep right and upward around the lower-right bowl",
+              path: [
+                { x: 680, y: 105 }, { x: 720, y: 65 },
+                { x: 775, y: 40 }, { x: 835, y: 28 },
+                { x: 890, y: 40 }, { x: 930, y: 75 },
+                { x: 955, y: 120 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "curve upward and left around the outer-right shoulder",
+              path: [
+                { x: 980, y: 220 }, { x: 970, y: 290 },
+                { x: 945, y: 355 }, { x: 910, y: 405 },
+                { x: 865, y: 445 }, { x: 815, y: 470 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguLetterSource("మ"),
+    },
+  ],
+  [
     "telugu:ణ",
     {
       script: "telugu",
