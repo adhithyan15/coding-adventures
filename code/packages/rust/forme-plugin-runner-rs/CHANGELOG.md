@@ -8,3 +8,5 @@
   identity mismatches, and resource bounds.
 - Bound frames, work, pending calls, writes, stream values, and retained stream
   bytes; reject non-canonical envelopes and redact internal failures.
+- Preserve request/notification wire ordering while keeping active runs
+  concurrent, so immediate stream values cannot race stream registration.

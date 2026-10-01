@@ -7,7 +7,7 @@ use crate::{
 use std::collections::{BTreeMap, HashMap};
 use std::sync::Arc;
 use tokio::io::AsyncReadExt;
-use tokio::sync::{mpsc, Mutex, Semaphore};
+use tokio::sync::{mpsc, oneshot, Mutex, Semaphore};
 use tokio::time::{timeout, Duration};
 
 pub const PROTOCOL_VERSION: i64 = 1;
@@ -145,19 +145,36 @@ struct Outcome {
     stop: bool,
 }
 
+struct DispatchReady(Option<oneshot::Sender<()>>);
+
+impl DispatchReady {
+    fn signal(&mut self) {
+        if let Some(sender) = self.0.take() {
+            let _ = sender.send(());
+        }
+    }
+}
+
+impl Drop for DispatchReady {
+    fn drop(&mut self) {
+        self.signal();
+    }
+}
+
 impl<S: Stage> Runtime<S> {
     async fn request(
         self: &Arc<Self>,
         id: i64,
         method: &str,
         raw_params: WireValue,
+        ready: Option<oneshot::Sender<()>>,
     ) -> Result<Outcome, RpcFault> {
         let params = params(raw_params, method)?;
         match method {
             "handshake" => self.handshake(params).await,
             "announce" => self.announce().await,
             "stage.init" => self.init(params).await,
-            "stage.run" => self.run(id, params).await,
+            "stage.run" => self.run(id, params, ready).await,
             "stage.dispose" => self.dispose().await,
             _ => Err(RpcFault::new(
                 -32601,
@@ -371,6 +388,7 @@ impl<S: Stage> Runtime<S> {
         self: &Arc<Self>,
         id: i64,
         params: BTreeMap<String, WireValue>,
+        ready: Option<oneshot::Sender<()>>,
     ) -> Result<Outcome, RpcFault> {
         let control = self.control.lock().await;
         if *self.phase.lock().await != Phase::Initialized {
@@ -397,7 +415,7 @@ impl<S: Stage> Runtime<S> {
         let body_cancellation = cancellation.clone();
         let body = tokio::spawn(async move {
             runtime
-                .run_active(params, stream_id, body_cancellation)
+                .run_active(params, stream_id, body_cancellation, ready)
                 .await
         });
         let response = body
@@ -416,7 +434,9 @@ impl<S: Stage> Runtime<S> {
         params: BTreeMap<String, WireValue>,
         stream_id: i64,
         cancellation: CancellationToken,
+        ready: Option<oneshot::Sender<()>>,
     ) -> Result<WireValue, RpcFault> {
+        let mut ready = DispatchReady(ready);
         let config = params.get("config").cloned().unwrap_or(WireValue::Null);
         *self.last_config.lock().await = config.clone();
         let input = if self.metadata.consumes.starts_with("Stream<") {
@@ -451,6 +471,9 @@ impl<S: Stage> Runtime<S> {
             let value = params.get("input").cloned().unwrap_or(WireValue::Null);
             StageInput::Single(S::Input::from_wire(value).map_err(stage_fault)?)
         };
+        // Preserve wire ordering: the reader may dispatch stream notifications
+        // only after this run has installed its input stream (or failed setup).
+        ready.signal();
         let context = StageContext::new(
             self.peer.clone(),
             stream_id,
@@ -653,9 +676,15 @@ async fn receive<S: Stage>(
             ProtocolError::ResourceLimit("too many concurrent host requests".into())
         })?;
         let method = method.to_owned();
+        let (ready_sender, ready_receiver) = if method == "stage.run" {
+            let (sender, receiver) = oneshot::channel();
+            (Some(sender), Some(receiver))
+        } else {
+            (None, None)
+        };
         tokio::spawn(async move {
             let _permit = permit;
-            let result = runtime.request(id, &method, params).await;
+            let result = runtime.request(id, &method, params, ready_sender).await;
             let stop = result.as_ref().map(|outcome| outcome.stop).unwrap_or(false);
             let response = result.map(|outcome| outcome.value);
             let _ = peer.response(id, response).await;
@@ -663,6 +692,9 @@ async fn receive<S: Stage>(
                 peer.stop();
             }
         });
+        if let Some(receiver) = ready_receiver {
+            let _ = receiver.await;
+        }
         Ok(())
     } else {
         peer.complete_response(&message).await
