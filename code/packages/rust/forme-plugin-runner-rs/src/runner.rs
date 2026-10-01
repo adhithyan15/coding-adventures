@@ -107,14 +107,14 @@ struct Active {
     cancellation: CancellationToken,
 }
 
-struct InputSender<T> {
-    sender: mpsc::Sender<StreamItem<T>>,
+struct InputSender {
+    sender: mpsc::Sender<StreamItem>,
     bytes: Arc<Semaphore>,
     max_bytes: usize,
     terminal: Arc<StreamTerminal>,
 }
 
-impl<T> Clone for InputSender<T> {
+impl Clone for InputSender {
     fn clone(&self) -> Self {
         Self {
             sender: self.sender.clone(),
@@ -125,7 +125,7 @@ impl<T> Clone for InputSender<T> {
     }
 }
 
-type InputSenders<T> = HashMap<i64, InputSender<T>>;
+type InputSenders = HashMap<i64, InputSender>;
 
 struct Runtime<S: Stage> {
     stage: Arc<S>,
@@ -136,7 +136,7 @@ struct Runtime<S: Stage> {
     control: Mutex<()>,
     active: Mutex<Option<Active>>,
     active_done: tokio::sync::Notify,
-    inputs: Mutex<InputSenders<S::Input>>,
+    inputs: Mutex<InputSenders>,
     last_config: Mutex<WireValue>,
 }
 
@@ -239,13 +239,10 @@ impl<S: Stage> Runtime<S> {
                             ProtocolError::Closed("stream is already complete".into())
                         }
                     })?;
-                let input = S::Input::from_wire(value).map_err(|_| {
-                    ProtocolError::InvalidMessage("stream value is malformed".into())
-                })?;
                 sender
                     .sender
                     .try_send(StreamItem {
-                        value: Ok(input),
+                        value: Ok(value),
                         _bytes: Some(byte_permit),
                     })
                     .map_err(|error| match error {

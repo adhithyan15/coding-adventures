@@ -2,6 +2,7 @@ use crate::wire::WireValue;
 use async_trait::async_trait;
 use std::collections::BTreeMap;
 use std::fmt;
+use std::marker::PhantomData;
 use std::sync::{Arc, Mutex};
 use tokio::sync::{mpsc, Notify, OwnedSemaphorePermit};
 
@@ -179,21 +180,20 @@ impl CancellationToken {
     }
 }
 
-pub struct InputStream<T> {
-    receiver: mpsc::Receiver<StreamItem<T>>,
+pub struct InputStream<T: FromWire> {
+    receiver: mpsc::Receiver<StreamItem>,
     terminal: Arc<StreamTerminal>,
     terminal_delivered: bool,
+    marker: PhantomData<T>,
 }
 
-impl<T> InputStream<T> {
-    pub(crate) fn new(
-        receiver: mpsc::Receiver<StreamItem<T>>,
-        terminal: Arc<StreamTerminal>,
-    ) -> Self {
+impl<T: FromWire> InputStream<T> {
+    pub(crate) fn new(receiver: mpsc::Receiver<StreamItem>, terminal: Arc<StreamTerminal>) -> Self {
         Self {
             receiver,
             terminal,
             terminal_delivered: false,
+            marker: PhantomData,
         }
     }
 
@@ -208,7 +208,7 @@ impl<T> InputStream<T> {
                 if let Some(error) = self.terminal_error() {
                     Some(Err(error))
                 } else {
-                    item.map(|item| item.value)
+                    item.map(|item| item.value.and_then(T::from_wire))
                 }
             }
         }
@@ -257,12 +257,12 @@ impl StreamTerminal {
     }
 }
 
-pub(crate) struct StreamItem<T> {
-    pub value: Result<T, StageError>,
+pub(crate) struct StreamItem {
+    pub value: Result<WireValue, StageError>,
     pub _bytes: Option<OwnedSemaphorePermit>,
 }
 
-pub enum StageInput<T> {
+pub enum StageInput<T: FromWire> {
     Single(T),
     Stream(InputStream<T>),
 }
@@ -319,14 +319,14 @@ mod tests {
         let terminal = Arc::new(StreamTerminal::new());
         sender
             .send(StreamItem {
-                value: Ok(7_u8),
+                value: Ok(7_i64.into()),
                 _bytes: None,
             })
             .await
             .unwrap();
         terminal.fail(StageError::new("UPSTREAM_STREAM_ERROR", "failed"));
 
-        let mut stream = InputStream::new(receiver, terminal);
+        let mut stream = InputStream::<WireValue>::new(receiver, terminal);
         let error = stream.next().await.unwrap().unwrap_err();
         assert_eq!(error.code, "UPSTREAM_STREAM_ERROR");
         assert!(stream.next().await.is_none());
