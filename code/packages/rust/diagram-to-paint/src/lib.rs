@@ -326,8 +326,11 @@ fn treemap_text_node(
             if decoration.underline { lines = lines.union(TextDecorationLines::UNDERLINE); }
             if decoration.overline { lines = lines.union(TextDecorationLines::OVERLINE); }
             if decoration.line_through { lines = lines.union(TextDecorationLines::LINE_THROUGH); }
+            let decoration_color = style.and_then(|style| style.text_decoration_color.as_deref())
+                .map(css_to_color)
+                .map(|color| color_with_opacity(color, style.and_then(|style| style.opacity).unwrap_or(1.0)));
             (lines != TextDecorationLines::NONE).then_some(TextDecoration {
-                lines, style: TextDecorationStyle::Solid, color: None,
+                lines, style: TextDecorationStyle::Solid, color: decoration_color,
             })
         });
     }
@@ -6849,6 +6852,7 @@ mod tests {
                     text_decoration: Some(diagram_ir::TreemapTextDecoration {
                         underline: true, overline: true, line_through: true,
                     }),
+                    text_decoration_color: Some("#2563eb".into()),
                     line_height: Some(diagram_ir::TreemapLineHeight::Pixels(24.0)),
                 }),
             }],
@@ -6860,11 +6864,12 @@ mod tests {
         );
         assert!(matches!(styled_text.content,
             Some(Content::Text(TextContent { value, text_align: TextAlign::End,
-                decoration: Some(TextDecoration { lines, .. }), .. }))
+                decoration: Some(TextDecoration { lines, color: Some(decoration_color), .. }), .. }))
                 if value == "STYLED NODE"
                     && lines.contains(TextDecorationLines::UNDERLINE)
                     && lines.contains(TextDecorationLines::OVERLINE)
-                    && lines.contains(TextDecorationLines::LINE_THROUGH)));
+                    && lines.contains(TextDecorationLines::LINE_THROUGH)
+                    && decoration_color == (Color { r: 37, g: 99, b: 235, a: 204 })));
         let mut styled_font = opts.label_font.clone();
         styled_font.size = 16.0;
         apply_treemap_line_height(&mut styled_font, layout.nodes[0].style.as_ref());

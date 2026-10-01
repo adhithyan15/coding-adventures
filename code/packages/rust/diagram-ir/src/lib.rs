@@ -1482,6 +1482,7 @@ pub struct TreemapStyle {
     pub text_align: Option<TreemapTextAlign>,
     pub text_transform: Option<TreemapTextTransform>,
     pub text_decoration: Option<TreemapTextDecoration>,
+    pub text_decoration_color: Option<String>,
     pub line_height: Option<TreemapLineHeight>,
 }
 
