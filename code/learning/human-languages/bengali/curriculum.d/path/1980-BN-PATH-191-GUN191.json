@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-191-GUN191",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "BN-EXT-191-GUN191"
+  ],
+  "after": []
+}

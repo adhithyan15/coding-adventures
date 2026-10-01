@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:9e00ad08db452521",
+  "lessonIds": [
+    "BN-C204-ata",
+    "BN-C204-bedana",
+    "BN-C204-peyara",
+    "BN-C204-khejur",
+    "BN-C204-badam"
+  ],
+  "tex": "bengali/book/chapters/ch204-custard-apple-pomegranate-guava-date-nut.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:0c90fafea7e01b85",
+  "lessonIds": [
+    "BN-C193-bishal",
+    "BN-C193-majhari",
+    "BN-C193-kachher",
+    "BN-C193-bktigoto",
+    "BN-C193-sorkari"
+  ],
+  "tex": "bengali/book/chapters/ch193-huge-medium-nearby-personal-public.tex"
+}

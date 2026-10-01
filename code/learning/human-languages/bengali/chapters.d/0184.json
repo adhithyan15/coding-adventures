@@ -1,0 +1,19 @@
+{
+  "chapter": 184,
+  "title": "To accept, To agree, To force, To obstruct, To take a risk",
+  "label": "ch:bn-to-accept-to-agree-to-force-to-obstruct-to-take-a-risk",
+  "canDo": "I can say to accept, to agree, to force, to obstruct and to take a risk.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C184-jhuki-neoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 184: I can say to accept, to agree, to force, to obstruct and to take a risk.",
+    "assesses": [
+      "BN-LEX-C184-ACT184-03",
+      "BN-LEX-C184-ACT184-04",
+      "BN-LEX-C184-ACT184-05"
+    ]
+  }
+}

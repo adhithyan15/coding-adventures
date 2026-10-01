@@ -1,0 +1,19 @@
+{
+  "chapter": 195,
+  "title": "Jacket, Raincoat, Belt, Button, Earring",
+  "label": "ch:bn-jacket-raincoat-belt-button-earring",
+  "canDo": "I can say a jacket, a raincoat, a belt, a button and an earring.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C195-dul",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 195: I can say a jacket, a raincoat, a belt, a button and an earring.",
+    "assesses": [
+      "BN-LEX-C195-JINIS195-03",
+      "BN-LEX-C195-JINIS195-04",
+      "BN-LEX-C195-JINIS195-05"
+    ]
+  }
+}

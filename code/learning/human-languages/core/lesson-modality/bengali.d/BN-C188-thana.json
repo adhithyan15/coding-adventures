@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C188-thana",
+    "language": "bengali",
+    "chapter": 188,
+    "sequence": 11170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a94bf7d7e200782d"
+  },
+  "findings": []
+}

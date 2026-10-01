@@ -1,0 +1,19 @@
+{
+  "chapter": 192,
+  "title": "Disappointed, Simple, Complicated, Separate, Same",
+  "label": "ch:bn-disappointed-simple-complicated-separate-same",
+  "canDo": "I can say disappointed, simple, complicated, separate and the same.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "BN-C192-eki",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 192: I can say disappointed, simple, complicated, separate and the same.",
+    "assesses": [
+      "BN-LEX-C192-GUN192-03",
+      "BN-LEX-C192-GUN192-04",
+      "BN-LEX-C192-GUN192-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C182-jog-kora",
+  "pathSegment": "BN-PATH-182-ACT182",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-182-ACT182",
+      "order": 4
+    }
+  ]
+}

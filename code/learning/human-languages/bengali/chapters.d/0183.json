@@ -1,0 +1,19 @@
+{
+  "chapter": 183,
+  "title": "To scratch, To yawn, To snore, To wake up, To bathe",
+  "label": "ch:bn-to-scratch-to-yawn-to-snore-to-wake-up-to-bathe",
+  "canDo": "I can say to scratch, to yawn, to snore, to wake up and to bathe.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C183-snan-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 183: I can say to scratch, to yawn, to snore, to wake up and to bathe.",
+    "assesses": [
+      "BN-LEX-C183-ACT183-03",
+      "BN-LEX-C183-ACT183-04",
+      "BN-LEX-C183-ACT183-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C180-dkhashona-kora",
+    "language": "bengali",
+    "chapter": 180,
+    "sequence": 10570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0b7c557437a1fa3"
+  },
+  "findings": []
+}

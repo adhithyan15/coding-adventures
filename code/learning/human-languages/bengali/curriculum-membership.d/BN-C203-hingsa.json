@@ -1,0 +1,11 @@
+{
+  "id": "BN-C203-hingsa",
+  "pathSegment": "BN-PATH-203-JINIS203",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-203-JINIS203",
+      "order": 3
+    }
+  ]
+}

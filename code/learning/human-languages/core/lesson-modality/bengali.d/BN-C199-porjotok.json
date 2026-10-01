@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C199-porjotok",
+    "language": "bengali",
+    "chapter": 199,
+    "sequence": 11900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cbf9c3fd313624c7"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C192-jotil",
+    "language": "bengali",
+    "chapter": 192,
+    "sequence": 11370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e0d3105e9f041cf8"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:fba545e2f512a066",
+  "lessonIds": [
+    "BN-C191-dorkari",
+    "BN-C191-sombhob",
+    "BN-C191-adhunik",
+    "BN-C191-prachin",
+    "BN-C191-asol"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch191.txt",
+  "json": "bengali/narration/ch191.json",
+  "textHash": "fnv1a64:931377a6abe75ee9",
+  "jsonHash": "fnv1a64:d8c15e69bd1ed7fc",
+  "findings": []
+}

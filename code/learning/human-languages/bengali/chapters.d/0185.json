@@ -1,0 +1,19 @@
+{
+  "chapter": 185,
+  "title": "Pill, Injection, Injury, Blister, Bandage",
+  "label": "ch:bn-pill-injection-injury-blister-bandage",
+  "canDo": "I can say a pill, an injection, an injury, a blister and a bandage.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "BN-C185-bndej",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 185: I can say a pill, an injection, an injury, a blister and a bandage.",
+    "assesses": [
+      "BN-LEX-C185-SVASTHYO185-03",
+      "BN-LEX-C185-SVASTHYO185-04",
+      "BN-LEX-C185-SVASTHYO185-05"
+    ]
+  }
+}

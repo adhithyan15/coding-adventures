@@ -1,0 +1,19 @@
+{
+  "chapter": 187,
+  "title": "On time, Century, Era, Decade, Weekend",
+  "label": "ch:bn-on-time-century-era-decade-weekend",
+  "canDo": "I can say on time, a century, an era, a decade and a weekend.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "BN-R187-second-pass-words-from-chapters-183-187",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 187: I can say on time, a century, an era, a decade and a weekend.",
+    "assesses": [
+      "BN-LEX-C187-SOMOY187-03",
+      "BN-LEX-C187-SOMOY187-04",
+      "BN-LEX-C187-SOMOY187-05"
+    ]
+  }
+}

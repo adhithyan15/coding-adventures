@@ -1,0 +1,11 @@
+{
+  "id": "BN-C181-mukhostho-kora",
+  "pathSegment": "BN-PATH-181-ACT181",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-181-ACT181",
+      "order": 3
+    }
+  ]
+}

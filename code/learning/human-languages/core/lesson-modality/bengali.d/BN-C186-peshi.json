@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C186-peshi",
+    "language": "bengali",
+    "chapter": 186,
+    "sequence": 10900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7b793450af8368c3"
+  },
+  "findings": []
+}

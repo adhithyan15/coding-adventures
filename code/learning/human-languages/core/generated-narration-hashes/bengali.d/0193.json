@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:ae412a59e332a42b",
+  "lessonIds": [
+    "BN-C193-bishal",
+    "BN-C193-majhari",
+    "BN-C193-kachher",
+    "BN-C193-bktigoto",
+    "BN-C193-sorkari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch193.txt",
+  "json": "bengali/narration/ch193.json",
+  "textHash": "fnv1a64:822e93dbfe1fcf1e",
+  "jsonHash": "fnv1a64:8cf37797211a4fa0",
+  "findings": []
+}

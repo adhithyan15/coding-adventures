@@ -1,0 +1,11 @@
+{
+  "id": "BN-C207-bbsa",
+  "pathSegment": "BN-PATH-207-KAJ207",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-207-KAJ207",
+      "order": 3
+    }
+  ]
+}

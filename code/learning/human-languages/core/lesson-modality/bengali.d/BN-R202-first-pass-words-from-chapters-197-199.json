@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R202-first-pass-words-from-chapters-197-199",
+    "language": "bengali",
+    "chapter": 202,
+    "sequence": 12090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b1459ec482ac71e"
+  },
+  "findings": []
+}

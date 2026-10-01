@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:027982cfa567755a",
+  "lessonIds": [
+    "BN-C182-chhera",
+    "BN-C182-bhaj-kora",
+    "BN-C182-joro-kora",
+    "BN-C182-bhag-kora",
+    "BN-C182-jog-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch182.txt",
+  "json": "bengali/narration/ch182.json",
+  "textHash": "fnv1a64:85270335be154988",
+  "jsonHash": "fnv1a64:3a8fbac9cc709ba6",
+  "findings": []
+}

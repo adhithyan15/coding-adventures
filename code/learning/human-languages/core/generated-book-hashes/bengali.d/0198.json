@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:5dd18398e4bc1e58",
+  "lessonIds": [
+    "BN-C198-biman",
+    "BN-C198-petrol",
+    "BN-C198-petrol-pamp",
+    "BN-C198-ason",
+    "BN-C198-pltphorm"
+  ],
+  "tex": "bengali/book/chapters/ch198-aeroplane-petrol-petrol-station-seat-platform.tex"
+}

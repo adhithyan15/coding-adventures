@@ -1,0 +1,11 @@
+{
+  "id": "BN-C199-porjotok",
+  "pathSegment": "BN-PATH-199-JINIS199",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-199-JINIS199",
+      "order": 1
+    }
+  ]
+}

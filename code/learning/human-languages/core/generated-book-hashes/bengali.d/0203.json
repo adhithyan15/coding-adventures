@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:314673bdfba58b15",
+  "lessonIds": [
+    "BN-C203-svobhab",
+    "BN-C203-mejaj",
+    "BN-C203-gorbo",
+    "BN-C203-hingsa",
+    "BN-C203-somman"
+  ],
+  "tex": "bengali/book/chapters/ch203-nature-mood-pride-envy-respect.tex"
+}

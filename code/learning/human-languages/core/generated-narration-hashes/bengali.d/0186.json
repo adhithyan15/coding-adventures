@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 186,
+  "sourceHash": "fnv1a64:771262e1aea35875",
+  "lessonIds": [
+    "BN-C186-pajor",
+    "BN-C186-nabhi",
+    "BN-C186-talu",
+    "BN-C186-mogoj",
+    "BN-C186-peshi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch186.txt",
+  "json": "bengali/narration/ch186.json",
+  "textHash": "fnv1a64:65f28ef3de512570",
+  "jsonHash": "fnv1a64:c15e41db49daf6ac",
+  "findings": []
+}

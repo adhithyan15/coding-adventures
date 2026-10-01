@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 196,
+  "title": "Biryani, Khichuri, Croquette, Pickle, Chutney",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:75d010f14fe04fa1",
+  "lessons": [
+    {
+      "id": "BN-C196-biriyani",
+      "sequence": 11550,
+      "title": "বিরিয়ানি (biriyāni) — biryani",
+      "headword": "বিরিয়ানি",
+      "romanization": "biriyāni",
+      "gloss": "biryani",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:41a075cf8eba3479",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a button, then the Bengali for an earring."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বিরিয়ানি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিরিয়ানি — biriyāni — \"biryani\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "biriyāni",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *biriyāni*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "biriyāni, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *biriyāni*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say biriyāni",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *biriyāni*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a button, then the Bengali for an earring, then say biriyāni again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a button, then the Bengali for an earring, then say *biriyāni* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বিরিয়ানি (biriyāni) mean? (\"Biryani\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C196-khichuri",
+      "sequence": 11560,
+      "title": "খিচুড়ি (khichuṛi) — khichuri",
+      "headword": "খিচুড়ি",
+      "romanization": "khichuṛi",
+      "gloss": "khichuri",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae6143c1c51bf14f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an earring, then the Bengali for biryani."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: খিচুড়ি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "খিচুড়ি — khichuṛi — \"khichuri\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khichuṛi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khichuṛi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khichuṛi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khichuṛi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say khichuṛi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *khichuṛi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an earring, then the Bengali for biryani, then say khichuṛi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an earring, then the Bengali for biryani, then say *khichuṛi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does খিচুড়ি (khichuṛi) mean? (\"Khichuri\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C196-chop",
+      "sequence": 11570,
+      "title": "চপ (chôp) — a croquette",
+      "headword": "চপ",
+      "romanization": "chôp",
+      "gloss": "a croquette",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2c6b373383a1dadc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for biryani, then the Bengali for khichuri."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: চপ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চপ — chôp — \"a croquette\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chôp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chôp*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chôp, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chôp*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say chôp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *chôp*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for biryani, then the Bengali for khichuri, then say chôp again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for biryani, then the Bengali for khichuri, then say *chôp* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does চপ (chôp) mean? (\"A croquette\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C196-achar",
+      "sequence": 11580,
+      "title": "আচার (āchār) — pickle",
+      "headword": "আচার",
+      "romanization": "āchār",
+      "gloss": "pickle",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66af0fe338b5fe3f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for khichuri, then the Bengali for a croquette."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আচার",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আচার — āchār — \"pickle\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āchār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āchār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āchār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āchār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say āchār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *āchār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for khichuri, then the Bengali for a croquette, then say āchār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for khichuri, then the Bengali for a croquette, then say *āchār* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does আচার (āchār) mean? (\"Pickle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C196-chatni",
+      "sequence": 11590,
+      "title": "চাটনি (chāṭni) — chutney",
+      "headword": "চাটনি",
+      "romanization": "chāṭni",
+      "gloss": "chutney",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:24ffcb75b8392d9e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a croquette, then the Bengali for pickle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: চাটনি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চাটনি — chāṭni — \"chutney\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāṭni",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāṭni*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāṭni, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāṭni*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say chāṭni",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *chāṭni*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a croquette, then the Bengali for pickle, then say chāṭni again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a croquette, then the Bengali for pickle, then say *chāṭni* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does চাটনি (chāṭni) mean? (\"Chutney\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R196-first-pass-words-from-chapters-188-191",
+      "sequence": 11600,
+      "title": "Words from chapters 188-191 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 188-191",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a668a358653daf30",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for pickle and chutney."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a university, a college, a police station, a flat, a storey",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a university, a college, a police station, a flat, a storey]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a court of law, a prison, a cave, a ravine, a waterfall",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a court of law, a prison, a cave, a ravine, a waterfall]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rather, perhaps, certainly, unfortunately, a result",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: rather, perhaps, certainly, unfortunately, a result]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "necessary, possible, modern, ancient, real",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: necessary, possible, modern, ancient, real]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A university? (বিশ্ববিদ্যালয়, bishvôbidyālôy.) A college? (কলেজ, kôlej.) A police station? (থানা, thānā.) A flat? (ফ্ল্যাট, phlæṭ.) A storey? (তলা, tôlā.) A court of law? (আদালত, ādālôt.) A prison? (জেল, jel.) A cave? (গুহা, guhā.) A ravine? (খাদ, khād.) A waterfall? (ঝরনা, jhôrnā.) Rather? (বরং, bôrông.) Perhaps? (হয়তো, hôyto.) Certainly? (নিশ্চয়ই, nishchôyi.) Unfortunately? (দুর্ভাগ্যবশত, durbhāgyôbôshôtô.) A result? (ফলাফল, phôlāphôl.) Necessary? (দরকারি, dôrkāri.) Possible? (সম্ভব, sômbhôb.) Modern? (আধুনিক, ādhunik.) Ancient? (প্রাচীন, prāchīn.) Real? (আসল, āsôl.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R196-second-pass-words-from-chapters-192-196",
+      "sequence": 11610,
+      "title": "Words from chapters 192-196 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 192-196",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c4487f860958fe3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for disappointed and simple."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disappointed, simple, complicated, separate, the same",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: disappointed, simple, complicated, separate, the same]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huge, medium, nearby, personal, public",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: huge, medium, nearby, personal, public]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a brush, an iron, a jug, a kettle, a basket",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a brush, an iron, a jug, a kettle, a basket]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a jacket, a raincoat, a belt, a button, an earring",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a jacket, a raincoat, a belt, a button, an earring]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "biryani, khichuri, a croquette, pickle, chutney",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: biryani, khichuri, a croquette, pickle, chutney]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Disappointed? (হতাশ, hôtāsh.) Simple? (সরল, sôrôl.) Complicated? (জটিল, jôṭil.) Separate? (আলাদা, ālādā.) The same? (একই, eki.) Huge? (বিশাল, bishāl.) Medium? (মাঝারি, mājhāri.) Nearby? (কাছের, kāchher.) Personal? (ব্যক্তিগত, bæktigôtô.) Public? (সরকারি, sôrkāri.) A brush? (ব্রাশ, brāsh.) An iron? (ইস্ত্রি, istri.) A jug? (জগ, jôg.) A kettle? (কেটলি, keṭli.) A basket? (ঝুড়ি, jhuṛi.) A jacket? (জ্যাকেট, jækeṭ.) A raincoat? (রেনকোট, renkoṭ.) A belt? (বেল্ট, belṭ.) A button? (বোতাম, botām.) An earring? (দুল, dul.) Biryani? (বিরিয়ানি, biriyāni.) Khichuri? (খিচুড়ি, khichuṛi.) A croquette? (চপ, chôp.) Pickle? (আচার, āchār.) Chutney? (চাটনি, chāṭni.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

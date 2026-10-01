@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C201-thole",
+    "language": "bengali",
+    "chapter": 201,
+    "sequence": 12020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ba2d6aec684c692"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:28f8bb659ddb8168",
+  "lessonIds": [
+    "BN-C192-hotash",
+    "BN-C192-sorol",
+    "BN-C192-jotil",
+    "BN-C192-alada",
+    "BN-C192-eki"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch192.txt",
+  "json": "bengali/narration/ch192.json",
+  "textHash": "fnv1a64:4aceef4c3780a038",
+  "jsonHash": "fnv1a64:6b2b806978123ce6",
+  "findings": []
+}

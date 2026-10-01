@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:ebb8839e19cc37ca",
+  "lessonIds": [
+    "BN-C204-ata",
+    "BN-C204-bedana",
+    "BN-C204-peyara",
+    "BN-C204-khejur",
+    "BN-C204-badam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch204.txt",
+  "json": "bengali/narration/ch204.json",
+  "textHash": "fnv1a64:374a6f92db83de3e",
+  "jsonHash": "fnv1a64:d0eb11c46e88c57a",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C182-bhag-kora",
+    "language": "bengali",
+    "chapter": 182,
+    "sequence": 10690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bbc339ec9d22eac2"
+  },
+  "findings": []
+}

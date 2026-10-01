@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:ef6072501f2380fa",
+  "lessonIds": [
+    "BN-C207-dam",
+    "BN-C207-dokandar",
+    "BN-C207-khodder",
+    "BN-C207-bbsa",
+    "BN-C207-kompani"
+  ],
+  "tex": "bengali/book/chapters/ch207-price-shopkeeper-customer-business-company.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 208,
+  "title": "Pilot, Sailor, Gardener, Secretary, Manager",
+  "label": "ch:bn-pilot-sailor-gardener-secretary-manager",
+  "canDo": "I can say a pilot, a sailor, a gardener, a secretary and a manager.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-R208-second-pass-words-from-chapters-206-208",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 208: I can say a pilot, a sailor, a gardener, a secretary and a manager.",
+    "assesses": [
+      "BN-LEX-C208-KAJ208-03",
+      "BN-LEX-C208-KAJ208-04",
+      "BN-LEX-C208-KAJ208-05"
+    ]
+  }
+}

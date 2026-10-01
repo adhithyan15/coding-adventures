@@ -1,0 +1,19 @@
+{
+  "chapter": 182,
+  "title": "To tear, To fold, To gather, To share, To add",
+  "label": "ch:bn-to-tear-to-fold-to-gather-to-share-to-add",
+  "canDo": "I can say to tear, to fold, to gather, to share and to add.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C182-jog-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 182: I can say to tear, to fold, to gather, to share and to add.",
+    "assesses": [
+      "BN-LEX-C182-ACT182-03",
+      "BN-LEX-C182-ACT182-04",
+      "BN-LEX-C182-ACT182-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C198-petrol-pamp",
+  "pathSegment": "BN-PATH-198-JINIS198",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-198-JINIS198",
+      "order": 2
+    }
+  ]
+}

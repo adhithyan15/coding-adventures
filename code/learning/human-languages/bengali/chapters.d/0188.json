@@ -1,0 +1,19 @@
+{
+  "chapter": 188,
+  "title": "University, College, Police station, Flat, Storey",
+  "label": "ch:bn-university-college-police-station-flat-storey",
+  "canDo": "I can say a university, a college, a police station, a flat and a storey.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "BN-C188-tola",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 188: I can say a university, a college, a police station, a flat and a storey.",
+    "assesses": [
+      "BN-LEX-C188-JAYGA188-03",
+      "BN-LEX-C188-JAYGA188-04",
+      "BN-LEX-C188-JAYGA188-05"
+    ]
+  }
+}

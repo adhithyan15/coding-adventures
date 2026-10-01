@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C182-jog-kora",
+    "language": "bengali",
+    "chapter": 182,
+    "sequence": 10700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80be199a9f23b125"
+  },
+  "findings": []
+}

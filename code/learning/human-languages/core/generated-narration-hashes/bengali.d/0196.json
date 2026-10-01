@@ -1,0 +1,21 @@
+{
+  "language": "bengali",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:75d010f14fe04fa1",
+  "lessonIds": [
+    "BN-C196-biriyani",
+    "BN-C196-khichuri",
+    "BN-C196-chop",
+    "BN-C196-achar",
+    "BN-C196-chatni",
+    "BN-R196-first-pass-words-from-chapters-188-191",
+    "BN-R196-second-pass-words-from-chapters-192-196"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "bengali/narration/ch196.txt",
+  "json": "bengali/narration/ch196.json",
+  "textHash": "fnv1a64:b3d124bbbe7788f6",
+  "jsonHash": "fnv1a64:95f0c72f8196a34b",
+  "findings": []
+}

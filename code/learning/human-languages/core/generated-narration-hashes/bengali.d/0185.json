@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:525084512e53ec88",
+  "lessonIds": [
+    "BN-C185-bori",
+    "BN-C185-injekshon",
+    "BN-C185-chot",
+    "BN-C185-phoska",
+    "BN-C185-bndej"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch185.txt",
+  "json": "bengali/narration/ch185.json",
+  "textHash": "fnv1a64:06ef8eda8ba53dad",
+  "jsonHash": "fnv1a64:03c55d336ae16381",
+  "findings": []
+}

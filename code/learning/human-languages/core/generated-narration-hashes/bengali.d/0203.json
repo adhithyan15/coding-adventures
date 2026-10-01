@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:41f19edf5201c35a",
+  "lessonIds": [
+    "BN-C203-svobhab",
+    "BN-C203-mejaj",
+    "BN-C203-gorbo",
+    "BN-C203-hingsa",
+    "BN-C203-somman"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch203.txt",
+  "json": "bengali/narration/ch203.json",
+  "textHash": "fnv1a64:dd389a031c59eb7b",
+  "jsonHash": "fnv1a64:46ec3b655e10fbd7",
+  "findings": []
+}

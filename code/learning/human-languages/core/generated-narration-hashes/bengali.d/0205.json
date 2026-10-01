@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:af4c701c9ac45130",
+  "lessonIds": [
+    "BN-C205-horn",
+    "BN-C205-signl",
+    "BN-C205-mp",
+    "BN-C205-keji",
+    "BN-C205-litar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch205.txt",
+  "json": "bengali/narration/ch205.json",
+  "textHash": "fnv1a64:b7c379c8a79d4a86",
+  "jsonHash": "fnv1a64:b516fe1bd940780a",
+  "findings": []
+}

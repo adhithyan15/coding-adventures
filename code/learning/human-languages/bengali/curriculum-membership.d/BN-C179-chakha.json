@@ -1,0 +1,11 @@
+{
+  "id": "BN-C179-chakha",
+  "pathSegment": "BN-PATH-179-ACT179",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "BN-EXT-179-ACT179",
+      "order": 0
+    }
+  ]
+}

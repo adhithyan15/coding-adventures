@@ -1,0 +1,19 @@
+{
+  "chapter": 202,
+  "title": "Low tide, Thief, Robber, Lawsuit, Vote",
+  "label": "ch:bn-low-tide-thief-robber-lawsuit-vote",
+  "canDo": "I can say low tide, a thief, a robber, a lawsuit and a vote.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-R202-second-pass-words-from-chapters-200-202",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 202: I can say low tide, a thief, a robber, a lawsuit and a vote.",
+    "assesses": [
+      "BN-LEX-C202-JINIS202-03",
+      "BN-LEX-C202-JINIS202-04",
+      "BN-LEX-C202-JINIS202-05"
+    ]
+  }
+}

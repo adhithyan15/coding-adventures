@@ -1,0 +1,19 @@
+{
+  "chapter": 191,
+  "title": "Necessary, Possible, Modern, Ancient, Real",
+  "label": "ch:bn-necessary-possible-modern-ancient-real",
+  "canDo": "I can say necessary, possible, modern, ancient and real.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "BN-C191-asol",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 191: I can say necessary, possible, modern, ancient and real.",
+    "assesses": [
+      "BN-LEX-C191-GUN191-03",
+      "BN-LEX-C191-GUN191-04",
+      "BN-LEX-C191-GUN191-05"
+    ]
+  }
+}

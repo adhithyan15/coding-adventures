@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C195-botam",
+    "language": "bengali",
+    "chapter": 195,
+    "sequence": 11530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41d1ad2d8dc033dd"
+  },
+  "findings": []
+}

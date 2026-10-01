@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-188-JAYGA188",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "BN-EXT-188-JAYGA188"
+  ],
+  "after": []
+}

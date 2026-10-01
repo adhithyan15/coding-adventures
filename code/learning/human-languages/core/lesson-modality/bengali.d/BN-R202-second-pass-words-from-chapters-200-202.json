@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R202-second-pass-words-from-chapters-200-202",
+    "language": "bengali",
+    "chapter": 202,
+    "sequence": 12100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d11d8b5c9f296c4"
+  },
+  "findings": []
+}

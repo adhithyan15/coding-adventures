@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C202-bhot",
+    "language": "bengali",
+    "chapter": 202,
+    "sequence": 12080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a463cc0f4574d993"
+  },
+  "findings": []
+}

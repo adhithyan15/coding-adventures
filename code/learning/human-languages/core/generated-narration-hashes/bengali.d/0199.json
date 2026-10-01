@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:e8b2659fd5e6e10b",
+  "lessonIds": [
+    "BN-C199-nagorik",
+    "BN-C199-porjotok",
+    "BN-C199-bakyo",
+    "BN-C199-bhul",
+    "BN-C199-niyom"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch199.txt",
+  "json": "bengali/narration/ch199.json",
+  "textHash": "fnv1a64:01831baf1877cb30",
+  "jsonHash": "fnv1a64:b37aaa36fb4bb15c",
+  "findings": []
+}

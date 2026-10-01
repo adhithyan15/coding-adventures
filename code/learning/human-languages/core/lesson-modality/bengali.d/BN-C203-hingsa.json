@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C203-hingsa",
+    "language": "bengali",
+    "chapter": 203,
+    "sequence": 12280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c564446ff1eb9cc"
+  },
+  "findings": []
+}
