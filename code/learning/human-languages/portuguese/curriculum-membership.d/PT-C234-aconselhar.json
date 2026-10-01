@@ -1,0 +1,11 @@
+{
+  "id": "PT-C234-aconselhar",
+  "pathSegment": "PT-PATH-234-VERBOS234",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-234-VERBOS234",
+      "order": 0
+    }
+  ]
+}

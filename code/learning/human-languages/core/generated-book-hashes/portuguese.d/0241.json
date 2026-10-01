@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:492323908a8b7fd9",
+  "lessonIds": [
+    "PT-C241-liso-lisa",
+    "PT-C241-aspero-aspera",
+    "PT-C241-profundo-profunda",
+    "PT-C241-desconhecido-desconhecida",
+    "PT-C241-simples"
+  ],
+  "tex": "portuguese/book/chapters/ch241-smooth-rough-deep-unknown-simple.tex"
+}

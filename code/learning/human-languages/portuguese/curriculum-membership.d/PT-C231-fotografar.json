@@ -1,0 +1,11 @@
+{
+  "id": "PT-C231-fotografar",
+  "pathSegment": "PT-PATH-231-VERBOS231",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-231-VERBOS231",
+      "order": 1
+    }
+  ]
+}

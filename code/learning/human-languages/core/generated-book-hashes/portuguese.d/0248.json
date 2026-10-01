@@ -1,0 +1,15 @@
+{
+  "language": "portuguese",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:feb31662859d1b62",
+  "lessonIds": [
+    "PT-C248-nota",
+    "PT-C248-cartao-bancario",
+    "PT-C248-multibanco",
+    "PT-C248-conta-bancaria",
+    "PT-C248-emprestimo",
+    "PT-R248-first-pass-words-from-chapters-240-243",
+    "PT-R248-second-pass-words-from-chapters-244-248"
+  ],
+  "tex": "portuguese/book/chapters/ch248-banknote-bank-card-cash-machine-bank-account-loan.tex"
+}

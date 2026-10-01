@@ -1,0 +1,21 @@
+{
+  "language": "portuguese",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:7b6855deaf37a5fe",
+  "lessonIds": [
+    "PT-C239-engordar",
+    "PT-C239-emagrecer",
+    "PT-C239-alimentar",
+    "PT-C239-arrumar",
+    "PT-C239-notar",
+    "PT-R239-first-pass-words-from-chapters-231-234",
+    "PT-R239-second-pass-words-from-chapters-235-239"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "portuguese/narration/ch239.txt",
+  "json": "portuguese/narration/ch239.json",
+  "textHash": "fnv1a64:4e40cd34722e4cf8",
+  "jsonHash": "fnv1a64:441a8d466a097013",
+  "findings": []
+}

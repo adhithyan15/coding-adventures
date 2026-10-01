@@ -1,0 +1,19 @@
+{
+  "chapter": 248,
+  "title": "Banknote, Bank card, Cash machine, Bank account, Loan",
+  "label": "ch:pt-banknote-bank-card-cash-machine-bank-account-loan",
+  "canDo": "I can say a banknote, a bank card, a cash machine, a bank account and a loan.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-R248-second-pass-words-from-chapters-244-248",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 248: I can say a banknote, a bank card, a cash machine, a bank account and a loan.",
+    "assesses": [
+      "PT-LEX-C248-COISAS248-03",
+      "PT-LEX-C248-COISAS248-04",
+      "PT-LEX-C248-COISAS248-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:392ebb1bd32eda10",
+  "lessonIds": [
+    "PT-C250-semente",
+    "PT-C250-raiz",
+    "PT-C250-ramo",
+    "PT-C250-tronco",
+    "PT-C250-espinho"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch250.txt",
+  "json": "portuguese/narration/ch250.json",
+  "textHash": "fnv1a64:fbd01825fc6a8e19",
+  "jsonHash": "fnv1a64:674e4da7f799b154",
+  "findings": []
+}

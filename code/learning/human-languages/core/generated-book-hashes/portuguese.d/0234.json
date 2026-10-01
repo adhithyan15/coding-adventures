@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:c7342c39c7b3cf7d",
+  "lessonIds": [
+    "PT-C234-aconselhar",
+    "PT-C234-convencer",
+    "PT-C234-criticar",
+    "PT-C234-depender",
+    "PT-C234-partilhar"
+  ],
+  "tex": "portuguese/book/chapters/ch234-to-advise-to-convince-to-criticise-to-depend-to-share.tex"
+}

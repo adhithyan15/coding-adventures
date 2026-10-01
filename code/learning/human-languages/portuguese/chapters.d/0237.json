@@ -1,0 +1,19 @@
+{
+  "chapter": 237,
+  "title": "To destroy, To exaggerate, To celebrate, To brake, To function",
+  "label": "ch:pt-to-destroy-to-exaggerate-to-celebrate-to-brake-to-function",
+  "canDo": "I can say to destroy, to exaggerate, to celebrate, to brake and to function.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C237-funcionar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 237: I can say to destroy, to exaggerate, to celebrate, to brake and to function.",
+    "assesses": [
+      "PT-LEX-C237-VERBOS237-03",
+      "PT-LEX-C237-VERBOS237-04",
+      "PT-LEX-C237-VERBOS237-05"
+    ]
+  }
+}

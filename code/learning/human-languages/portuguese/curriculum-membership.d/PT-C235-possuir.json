@@ -1,0 +1,11 @@
+{
+  "id": "PT-C235-possuir",
+  "pathSegment": "PT-PATH-235-VERBOS235",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-235-VERBOS235",
+      "order": 1
+    }
+  ]
+}

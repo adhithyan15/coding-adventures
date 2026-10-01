@@ -1,0 +1,11 @@
+{
+  "id": "PT-C238-apertar",
+  "pathSegment": "PT-PATH-238-VERBOS238",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-238-VERBOS238",
+      "order": 3
+    }
+  ]
+}

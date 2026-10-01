@@ -1,0 +1,19 @@
+{
+  "chapter": 254,
+  "title": "Seafood, Prawn, Tuna, Salt cod, Sausage",
+  "label": "ch:pt-seafood-prawn-tuna-salt-cod-sausage",
+  "canDo": "I can say seafood, a prawn, tuna, salt cod and a sausage.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C254-salsicha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 254: I can say seafood, a prawn, tuna, salt cod and a sausage.",
+    "assesses": [
+      "PT-LEX-C254-COISAS254-03",
+      "PT-LEX-C254-COISAS254-04",
+      "PT-LEX-C254-COISAS254-05"
+    ]
+  }
+}

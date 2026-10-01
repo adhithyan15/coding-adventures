@@ -1,0 +1,11 @@
+{
+  "id": "PT-C241-profundo-profunda",
+  "pathSegment": "PT-PATH-241-QUAL241",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-241-QUAL241",
+      "order": 2
+    }
+  ]
+}

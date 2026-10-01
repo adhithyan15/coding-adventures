@@ -1,0 +1,11 @@
+{
+  "id": "PT-C253-tamanho",
+  "pathSegment": "PT-PATH-253-COISAS253",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-253-COISAS253",
+      "order": 1
+    }
+  ]
+}

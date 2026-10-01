@@ -1,0 +1,11 @@
+{
+  "id": "PT-C245-noticia",
+  "pathSegment": "PT-PATH-245-COISAS245",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-245-COISAS245",
+      "order": 1
+    }
+  ]
+}

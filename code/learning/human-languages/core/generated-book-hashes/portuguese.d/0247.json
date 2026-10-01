@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:d05e2f43cd7c7617",
+  "lessonIds": [
+    "PT-C247-sucesso",
+    "PT-C247-fracasso",
+    "PT-C247-experiencia",
+    "PT-C247-escolha",
+    "PT-C247-decisao"
+  ],
+  "tex": "portuguese/book/chapters/ch247-success-failure-experience-choice-decision.tex"
+}

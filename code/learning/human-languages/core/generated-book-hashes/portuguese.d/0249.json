@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:a84e77ab7aa31901",
+  "lessonIds": [
+    "PT-C249-motor",
+    "PT-C249-portagem",
+    "PT-C249-autoestrada",
+    "PT-C249-multa",
+    "PT-C249-capacete"
+  ],
+  "tex": "portuguese/book/chapters/ch249-engine-toll-motorway-fine-helmet.tex"
+}

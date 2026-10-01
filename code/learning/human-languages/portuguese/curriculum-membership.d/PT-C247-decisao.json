@@ -1,0 +1,11 @@
+{
+  "id": "PT-C247-decisao",
+  "pathSegment": "PT-PATH-247-COISAS247",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-247-COISAS247",
+      "order": 4
+    }
+  ]
+}

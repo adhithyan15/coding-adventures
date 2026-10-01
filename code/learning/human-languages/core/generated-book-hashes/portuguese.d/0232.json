@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:b9ffc765bb87e290",
+  "lessonIds": [
+    "PT-C232-pesar",
+    "PT-C232-verificar",
+    "PT-C232-assinar",
+    "PT-C232-preencher",
+    "PT-C232-telefonar"
+  ],
+  "tex": "portuguese/book/chapters/ch232-to-weigh-to-check-to-sign-to-fill-in-to-phone.tex"
+}

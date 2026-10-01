@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C248-conta-bancaria",
+    "language": "portuguese",
+    "chapter": 248,
+    "sequence": 14790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1b04d0bdc074ac2"
+  },
+  "findings": []
+}

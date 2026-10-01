@@ -1,0 +1,11 @@
+{
+  "id": "PT-C248-multibanco",
+  "pathSegment": "PT-PATH-248-COISAS248",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-248-COISAS248",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 231,
+  "title": "To build, To photograph, To repeat, To explain, To translate",
+  "label": "ch:pt-to-build-to-photograph-to-repeat-to-explain-to-translate",
+  "canDo": "I can say to build, to photograph, to repeat, to explain and to translate.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C231-traduzir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 231: I can say to build, to photograph, to repeat, to explain and to translate.",
+    "assesses": [
+      "PT-LEX-C231-VERBOS231-03",
+      "PT-LEX-C231-VERBOS231-04",
+      "PT-LEX-C231-VERBOS231-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C240-dieta",
+  "pathSegment": "PT-PATH-240-SAUDE240",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-240-SAUDE240",
+      "order": 3
+    }
+  ]
+}

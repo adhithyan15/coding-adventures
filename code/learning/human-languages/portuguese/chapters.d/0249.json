@@ -1,0 +1,19 @@
+{
+  "chapter": 249,
+  "title": "Engine, Toll, Motorway, Fine, Helmet",
+  "label": "ch:pt-engine-toll-motorway-fine-helmet",
+  "canDo": "I can say an engine, a toll, a motorway, a fine and a helmet.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C249-capacete",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 249: I can say an engine, a toll, a motorway, a fine and a helmet.",
+    "assesses": [
+      "PT-LEX-C249-COISAS249-03",
+      "PT-LEX-C249-COISAS249-04",
+      "PT-LEX-C249-COISAS249-05"
+    ]
+  }
+}

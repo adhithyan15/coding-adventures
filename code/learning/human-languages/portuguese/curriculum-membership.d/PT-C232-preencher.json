@@ -1,0 +1,11 @@
+{
+  "id": "PT-C232-preencher",
+  "pathSegment": "PT-PATH-232-VERBOS232",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-232-VERBOS232",
+      "order": 3
+    }
+  ]
+}

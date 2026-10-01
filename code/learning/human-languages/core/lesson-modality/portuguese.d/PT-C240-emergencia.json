@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C240-emergencia",
+    "language": "portuguese",
+    "chapter": 240,
+    "sequence": 14370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f4135a189f422970"
+  },
+  "findings": []
+}

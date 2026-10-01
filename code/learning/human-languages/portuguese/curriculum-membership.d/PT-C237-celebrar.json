@@ -1,0 +1,11 @@
+{
+  "id": "PT-C237-celebrar",
+  "pathSegment": "PT-PATH-237-VERBOS237",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-237-VERBOS237",
+      "order": 2
+    }
+  ]
+}

@@ -40,7 +40,11 @@ it("pins Portuguese lesson-content budgets", () =>
     // 1007 -> 1165: the third Portuguese A2 vocabulary tranche, chapters
     // 201-230. 150 word lessons (forty-five verbs) and two reviews per run of
     // at most nine chapters. No idiom, sense or culture claim.
-    lessons: 1165,
+    // 1165 -> 1296: the last Portuguese A2 vocabulary tranche, chapters
+    // 231-255. 125 word lessons (forty-five verbs) and two reviews per run of
+    // at most nine chapters. No idiom, sense or culture claim. Portuguese
+    // attains A2 here.
+    lessons: 1296,
     idioms: 7,
     senses: 7,
     cultureClaims: 11,

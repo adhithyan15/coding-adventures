@@ -1,0 +1,11 @@
+{
+  "id": "PT-C244-mosca",
+  "pathSegment": "PT-PATH-244-COISAS244",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-244-COISAS244",
+      "order": 4
+    }
+  ]
+}

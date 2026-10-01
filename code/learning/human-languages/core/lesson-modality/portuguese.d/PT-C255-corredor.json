@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C255-corredor",
+    "language": "portuguese",
+    "chapter": 255,
+    "sequence": 15300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:604f31329239d32e"
+  },
+  "findings": []
+}

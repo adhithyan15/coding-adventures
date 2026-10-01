@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C243-impossivel",
+    "language": "portuguese",
+    "chapter": 243,
+    "sequence": 14540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca6f196cca9f7dc3"
+  },
+  "findings": []
+}

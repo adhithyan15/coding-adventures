@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C237-travar",
+    "language": "portuguese",
+    "chapter": 237,
+    "sequence": 14050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3bfe87c999587c2d"
+  },
+  "findings": []
+}

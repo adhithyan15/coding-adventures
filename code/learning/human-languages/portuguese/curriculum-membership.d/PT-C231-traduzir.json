@@ -1,0 +1,11 @@
+{
+  "id": "PT-C231-traduzir",
+  "pathSegment": "PT-PATH-231-VERBOS231",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-231-VERBOS231",
+      "order": 4
+    }
+  ]
+}

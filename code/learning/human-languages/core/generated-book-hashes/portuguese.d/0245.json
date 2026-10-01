@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:79f70f1c28daf06f",
+  "lessonIds": [
+    "PT-C245-dialeto",
+    "PT-C245-noticia",
+    "PT-C245-publicidade",
+    "PT-C245-ecra",
+    "PT-C245-teclado"
+  ],
+  "tex": "portuguese/book/chapters/ch245-dialect-piece-of-news-advertising-screen-keyboard.tex"
+}

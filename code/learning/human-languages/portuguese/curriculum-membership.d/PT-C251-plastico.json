@@ -1,0 +1,11 @@
+{
+  "id": "PT-C251-plastico",
+  "pathSegment": "PT-PATH-251-COISAS251",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-251-COISAS251",
+      "order": 1
+    }
+  ]
+}
