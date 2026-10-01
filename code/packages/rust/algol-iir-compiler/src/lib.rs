@@ -17002,6 +17002,20 @@ mod tests {
     }
 
     #[test]
+    fn al4_for_list_sequences_literal_string_selected_values() {
+        let module = compile_source(
+            "begin integer i; real total; total := 0.25; for i := if 'ALPHA' < 'BETA' then 1 else 9, if 'BETA' < 'ALPHA' then 8 else 2, if 'ALPHA' < 'BETA' then i + 1 else i + 3 while i <= 4 do total := total + i; print(total) end",
+            "test",
+        )
+        .expect("literal string predicates may select values across a bounded for list");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "10.25")
+        }));
+    }
+
+    #[test]
     fn al4_control_recurrence_rejects_dynamic_statement_selector() {
         let err = compile_source(
             "begin integer i; boolean take; for i := 1 step 1 until 10 do if take then i := i * 2 else i := i + 3; print(i + 0.25) end",

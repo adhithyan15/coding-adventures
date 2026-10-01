@@ -1086,8 +1086,9 @@ backend immediately) come before the enabler-dependent items.
   predicates may select statement or expression branches in bounded recurrence
   bodies, including preserving leaves of conditional dependency or selector
   assignments, bounded controlled-scalar recurrences, conditional value
-  expressions and predicates of bounded `while` elements, and finite step-loop
-  header expressions.
+  expressions and predicates of bounded `while` elements, finite step-loop
+  header expressions, and values sequenced across bounded multi-element `for`
+  lists.
   The recurrence assignment may instead occur in one or both branches of a
   conditional statement selected by those exact snapshots. A branch without
   the assignment preserves the dependency for that pass; unknown selectors
