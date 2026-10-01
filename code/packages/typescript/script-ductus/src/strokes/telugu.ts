@@ -987,6 +987,64 @@ export const entries: DuctusEntry[] = [
     },
   ],
   [
+    "telugu:వ",
+    {
+      script: "telugu",
+      glyph: "వ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "loop counterclockwise around the small lower-left bowl",
+              path: [
+                { x: 290, y: 140 }, { x: 285, y: 185 },
+                { x: 255, y: 225 }, { x: 210, y: 245 },
+                { x: 165, y: 245 }, { x: 120, y: 225 },
+                { x: 85, y: 190 }, { x: 68, y: 150 },
+                { x: 70, y: 110 }, { x: 95, y: 70 },
+                { x: 135, y: 35 }, { x: 180, y: 25 },
+                { x: 225, y: 40 }, { x: 265, y: 75 },
+                { x: 290, y: 115 }, { x: 290, y: 140 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "sweep around the broad lower and right body",
+              path: [
+                { x: 300, y: 140 }, { x: 340, y: 100 },
+                { x: 390, y: 65 }, { x: 445, y: 40 },
+                { x: 500, y: 30 }, { x: 555, y: 55 },
+                { x: 605, y: 110 }, { x: 635, y: 180 },
+                { x: 630, y: 245 }, { x: 600, y: 315 },
+                { x: 550, y: 370 }, { x: 490, y: 410 },
+                { x: 420, y: 435 }, { x: 350, y: 450 },
+                { x: 285, y: 460 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "draw down and up through the separate upper chevron",
+              path: [
+                { x: 140, y: 565 }, { x: 170, y: 530 },
+                { x: 210, y: 485 }, { x: 245, y: 465 },
+                { x: 280, y: 485 }, { x: 320, y: 530 },
+                { x: 360, y: 580 }, { x: 410, y: 630 },
+                { x: 465, y: 670 }, { x: 525, y: 690 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguLetterSource("వ"),
+    },
+  ],
+  [
     "telugu:ణ",
     {
       script: "telugu",

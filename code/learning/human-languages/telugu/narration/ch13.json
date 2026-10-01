@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Head and Hand",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f9b281592d71bc1f",
+  "sourceHash": "fnv1a64:2fa471d3356ba135",
   "lessons": [
     {
       "id": "TE-C13-sharira-bhagalu",
@@ -132,7 +132,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3c2045c9fa7d629b",
+      "sourceHash": "fnv1a64:da997c3ef1ac4f1c",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -211,15 +211,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: వ — copy what you see",
+          "title": "Writing: వ — three calm movements",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on వ (va) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Watch the numbered filmstrip once before your pen moves. Movement 1 loops counterclockwise around the small lower-left bowl. Lift, then movement 2 sweeps around the broad lower and right body. Lift once more for movement 3, the separate chevron above."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "Trace the same route slowly. This is one attested school-style order fitted to the printed shape here; Telugu handwriting varies, so keep the three movements clear instead of closing the two pen lifts."
             }
           ]
         },
