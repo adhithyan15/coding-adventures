@@ -1,6 +1,6 @@
 # @coding-adventures/forme-cli
 
-The headless product driver for Forme. It loads a TypeScript or JavaScript
+The product command driver for Forme. It loads a TypeScript or JavaScript
 project config, validates the typed DAG, runs the orchestrator, formats stable
 diagnostics, and returns documented process exit codes.
 
@@ -19,6 +19,7 @@ forme build --report dist/.forme-build-report.json
 forme build --deploy-input .forme/deploy-input
 forme deploy --manifest .forme/deploy-input/deploy-manifest.json \
   --content-dir .forme/deploy-input/content --target fs --target-config deploy.fs.json --dry-run
+forme install ../my-forme-plugin
 forme clean
 forme watch
 forme watch --port 4321 --debounce 100
@@ -58,6 +59,19 @@ project.
   one-time ownership bootstrap for legacy Pages content. Once that deployment
   owner exists, retaining the bootstrap flag is a validated no-op even after
   later publications legitimately change its owned path or digest set.
+- `install <PACKAGE>` loads the selected project config, snapshots one bounded
+  local plugin directory, loads the user trust store, and requires an
+  interactive grant-or-deny decision for every declared capability. A complete
+  side-effect-free preflight runs before prompting; capability templates use
+  the runtime's configured storage/cache roots. The escaped prompt includes the
+  plugin identity, trust tier, each manifest reason, and a sensitive marker for
+  broad authority. Required grants have no default;
+  optional grants default to deny. The reviewed snapshot and manifest-bound
+  grants are atomically published beneath the current project's
+  `forme-plugins/` root. Package-supplied `grants.toml`, links, special files,
+  oversized trees, changing file identities, and unsafe install roots are
+  rejected. Windows remains fail-closed until the runtime-composition milestone
+  supplies its native install-root ACL verifier.
 - `check` performs config-schema, capability, wiring, kind, and output
   validation without invoking a stage or writing output.
 - `clean` validates the pipeline, then removes its configured cache directory
@@ -88,8 +102,9 @@ on exception stacks for expected failures.
 
 TypeScript and JavaScript configs are executable modules. The CLI treats the
 selected project config as trusted code, matching FM03's direct-import host; it
-does not claim to sandbox config evaluation. Plugin isolation remains a later
-Forme milestone.
+does not claim to sandbox config evaluation. Installed-plugin execution remains
+the next Forme milestone; this command does not imply that the project runtime
+has loaded the plugin yet.
 
 ## Repository bootstrap helper
 

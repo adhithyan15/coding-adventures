@@ -32,6 +32,12 @@ import {
 } from "@coding-adventures/forme-stage";
 import { watchProject } from "./project-watcher.js";
 import { executeDeploy, materializeDeployInput, type DeployInvocation } from "./deploy.js";
+import {
+  executePluginInstall,
+  type CapabilityReview,
+  type PluginInstallInvocation,
+  type ProductPluginInstallResult,
+} from "./install.js";
 
 export const EXIT_OK = 0;
 export const EXIT_BUILD_FAILED = 1;
@@ -62,10 +68,12 @@ export interface CliServices {
   createOrchestrator(cacheRoot: string | null): Orchestrator;
   startDevServer(options: { readonly port: number }): Promise<DevServer>;
   watchProject(root: string, ignoredPaths: readonly string[]): AsyncIterable<unknown>;
+  installPlugin(invocation: PluginInstallInvocation): Promise<ProductPluginInstallResult>;
 }
 
 export interface RunCliOptions {
   readonly cancellation?: CancellationToken;
+  readonly reviewCapability?: (review: CapabilityReview) => Promise<boolean>;
 }
 
 interface ParsedArgs {
@@ -99,6 +107,7 @@ const defaultServices: CliServices = {
   }),
   startDevServer: options => startDevServer(options),
   watchProject: (root, ignoredPaths) => watchProject(root, ignoredPaths),
+  installPlugin: invocation => executePluginInstall(invocation),
 };
 
 export async function run(
@@ -153,6 +162,44 @@ export async function run(
       }
       diagnostic(io, "E_DEPLOY", message(error));
       return EXIT_USAGE_OR_CONFIG;
+    }
+  }
+
+  if (parsed.commandPath[1] === "install") {
+    const originalCwd = io.cwd();
+    try {
+      const packageArgument = parsed.arguments["package"];
+      if (typeof packageArgument !== "string") throw new Error("a local plugin package directory is required");
+      const configFlag = parsed.flags["config"];
+      const configPath = await resolveConfigPath(
+        typeof configFlag === "string" ? configFlag : null,
+        originalCwd,
+        io,
+      );
+      const projectRoot = dirname(configPath);
+      io.chdir(projectRoot);
+      const config = await services.loadConfig(configPath);
+      const result = await services.installPlugin({
+        packagePath: isAbsolute(packageArgument) ? packageArgument : resolve(originalCwd, packageArgument),
+        projectRoot,
+        storageRoot: resolve(projectRoot, config.settings.storageRoot),
+        cacheDir: config.settings.cacheDir === null ? null : resolve(projectRoot, config.settings.cacheDir),
+        cancellation: options.cancellation,
+        reviewCapability: options.reviewCapability,
+      });
+      io.stdout.write(
+        `forme install: ${result.pluginName}@${result.pluginVersion} ${result.status} (${result.trustTier}; ${result.grantedCapabilities.length} grant${result.grantedCapabilities.length === 1 ? "" : "s"})\n`,
+      );
+      return EXIT_OK;
+    } catch (error) {
+      if (options.cancellation?.cancelled === true) {
+        diagnostic(io, "E_CANCELLED", options.cancellation.reason ?? "plugin installation cancelled");
+        return EXIT_CANCELLED;
+      }
+      diagnostic(io, "E_INSTALL", message(error));
+      return EXIT_USAGE_OR_CONFIG;
+    } finally {
+      io.chdir(originalCwd);
     }
   }
 

@@ -17,6 +17,7 @@ cd ../ed25519 && npm install --silent
 cd ../forme-manifest && npm install --silent
 cd ../forme-plugin-runner-ts && npm install --silent
 cd ../forme-plugin-host && npm install --silent
+cd ../forme-plugin-installer-core && npm install --silent
 cd ../forme-identity && npm install --silent
 cd ../forme-cache && npm install --silent
 cd ../forme-orchestrator && npm install --silent

@@ -20,6 +20,7 @@ import {
   run,
   type CliIO,
   type CliServices,
+  type PluginInstallInvocation,
 } from "../src/index.js";
 
 interface MockIO extends CliIO {
@@ -106,6 +107,7 @@ function services(
     },
     startDevServer: async () => { throw new Error("dev server not expected"); },
     watchProject: () => { throw new Error("project watcher not expected"); },
+    installPlugin: async () => { throw new Error("plugin install not expected"); },
   };
 }
 
@@ -140,6 +142,10 @@ describe("argument and diagnostic contracts", () => {
     expect(deployHelp.stdoutText).toContain("forme deploy [OPTIONS]");
     expect(deployHelp.stdoutText).toContain("--content-dir <DIR>");
     expect(deployHelp.stdoutText).toContain("--target-config <PATH>");
+
+    const installHelp = makeIO();
+    expect(await run(["install", "--help"], installHelp)).toBe(EXIT_OK);
+    expect(installHelp.stdoutText).toContain("forme install [OPTIONS] <PACKAGE>");
 
     const watchHelp = makeIO();
     expect(await run(["watch", "--help"], watchHelp)).toBe(EXIT_OK);
@@ -184,6 +190,50 @@ describe("argument and diagnostic contracts", () => {
     const flagTypo = makeIO();
     expect(await run(["build", "--reproducibl"], flagTypo)).toBe(EXIT_USAGE_OR_CONFIG);
     expect(flagTypo.stderrText).toContain("Did you mean '--reproducible'");
+  });
+
+  it("dispatches a local package install with the configured runtime roots", async () => {
+    const io = makeIO();
+    let invocation: PluginInstallInvocation | undefined;
+    const custom: CliServices = {
+      ...services(config({
+        settings: {
+          storageRoot: "content",
+          cacheDir: ".forme/cache",
+          reproducibleBuild: false,
+          maxConcurrency: null,
+          logLevel: "info",
+          bestEffort: false,
+          deadlineMs: null,
+        },
+      })),
+      installPlugin: async value => {
+        invocation = value;
+        return {
+          status: "installed",
+          pluginName: "@example/plugin",
+          pluginVersion: "1.0.0",
+          manifestHash: "blake2b:fixture",
+          destinationPath: join(PROJECT_ROOT, "forme-plugins", "plugin-fixture"),
+          trustTier: "unverified-third-party",
+          grantedCapabilities: ["storage:read"],
+          fileCount: 3,
+          totalSizeBytes: 100,
+        } as never;
+      },
+    };
+    const reviewCapability = async () => true;
+    expect(await run(["install", "./plugin"], io, { reviewCapability }, custom)).toBe(EXIT_OK);
+    expect(invocation).toMatchObject({
+      packagePath: join(PROJECT_ROOT, "plugin"),
+      projectRoot: PROJECT_ROOT,
+      storageRoot: join(PROJECT_ROOT, "content"),
+      cacheDir: join(PROJECT_ROOT, ".forme/cache"),
+      reviewCapability,
+    });
+    expect(io.stdoutText).toBe(
+      "forme install: @example/plugin@1.0.0 installed (unverified-third-party; 1 grant)\n",
+    );
   });
 
   it("formats every ConfigError entry with its machine-readable code", async () => {

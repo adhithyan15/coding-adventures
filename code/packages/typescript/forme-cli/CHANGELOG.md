@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Added `forme install <PACKAGE>` for bounded local plugin directories with
+  preflighted identity/trust classification, control-safe cancellable
+  per-capability review against the configured runtime roots, user trust-store
+  loading, manifest-bound grants, and atomic immutable discovery-root
+  publication. Linked, special, oversized, changing, or package-authority
+  inputs fail closed; Windows awaits the explicit native ACL verifier in the
+  runtime-composition milestone.
 - Let the GET-only GitHub Pages dry-run boundary use the fixed `GITHUB_TOKEN`
   when available, avoiding shared anonymous API limits while preserving
   tokenless local inspection.
