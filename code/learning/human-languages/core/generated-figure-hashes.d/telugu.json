@@ -87,6 +87,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TE-S117-letter-va",
+      "sourceHash": "fnv1a64:9c7300c1c961383b",
+      "svgHash": "fnv1a64:26c3cad2c6d80e66",
+      "svg": "telugu/book/figures/TE-S117-letter-va-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TE-S118-letter-ga",
       "sourceHash": "fnv1a64:422e82bc6d2c02c4",
       "svgHash": "fnv1a64:68b5131b9911da59",

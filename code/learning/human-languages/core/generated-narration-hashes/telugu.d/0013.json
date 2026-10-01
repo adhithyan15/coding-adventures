@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 13,
-  "sourceHash": "fnv1a64:f9b281592d71bc1f",
+  "sourceHash": "fnv1a64:2fa471d3356ba135",
   "lessonIds": [
     "TE-C13-sharira-bhagalu",
     "TE-S117-letter-va"
@@ -10,7 +10,7 @@
   "drivablePrefix": 1,
   "text": "telugu/narration/ch13.txt",
   "json": "telugu/narration/ch13.json",
-  "textHash": "fnv1a64:d496f869b109e425",
-  "jsonHash": "fnv1a64:ec56b3fb2802ac77",
+  "textHash": "fnv1a64:2bd6c71fd0942d08",
+  "jsonHash": "fnv1a64:916865126bd5da14",
   "findings": []
 }

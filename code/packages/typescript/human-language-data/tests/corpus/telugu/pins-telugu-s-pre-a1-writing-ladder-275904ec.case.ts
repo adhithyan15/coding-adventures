@@ -36,9 +36,9 @@ it("pins Telugu's pre-A1 writing ladder", () => {
   // vocabulary-first retroflex letter. TE-S113 adds familiar-word pa before
   // the first complete ladder. TE-S110 then revisits observe-and-trace with
   // familiar-word ya after that ladder, and TE-S114 follows with familiar-word
-  // la. TE-S116 gives
-  // familiar-word da the same source-backed
-  // rung. TE-S155 revisits the stage for the aspirated partner ttha after the
+  // la. TE-S116 gives familiar-word da the same source-backed rung, and
+  // TE-S117 follows with familiar-word va. TE-S155 revisits the stage for the
+  // aspirated partner ttha after the
   // first complete ladder. TE-S128 then adds familiar-word bha; TE-S130 and
   // TE-S132 later revisit the stage for newly introduced tha and nya.
   // The next rung is a SECOND dictation, roughly 1,150 sequence steps after the
@@ -66,6 +66,7 @@ it("pins Telugu's pre-A1 writing ladder", () => {
     ["TE-S110-letter-ya", "observe-trace"],
     ["TE-S114-letter-la", "observe-trace"],
     ["TE-S116-letter-da", "observe-trace"],
+    ["TE-S117-letter-va", "observe-trace"],
     ["TE-S155-letter-ttha", "observe-trace"],
     ["TE-S160-letter-pha", "observe-trace"],
     ["TE-S139-letter-ddha", "observe-trace"],
