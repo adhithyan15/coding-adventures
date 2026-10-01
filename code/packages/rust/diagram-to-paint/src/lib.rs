@@ -312,6 +312,11 @@ fn treemap_text_node(
         Some(diagram_ir::TreemapTextTransform::Lowercase) => value.to_lowercase(),
         Some(diagram_ir::TreemapTextTransform::Capitalize) => value.split_whitespace()
             .map(capitalize).collect::<Vec<_>>().join(" "),
+        Some(diagram_ir::TreemapTextTransform::FullWidth) => value.chars().map(|character| match character {
+            ' ' => '\u{3000}',
+            '!'..='~' => char::from_u32(character as u32 + 0xfee0).expect("ASCII full-width mapping is valid"),
+            _ => character,
+        }).collect(),
         _ => value.to_string(),
     };
     let mut node = text_node(&value, x, y, width, height, font, color);
@@ -6855,7 +6860,7 @@ mod tests {
                     },
                     opacity: Some(0.8), fill_opacity: Some(0.5), stroke_opacity: Some(0.5), stroke_dash_offset: Some(-1.0),
                     text_align: Some(diagram_ir::TreemapTextAlign::End),
-                    text_transform: Some(diagram_ir::TreemapTextTransform::Uppercase),
+                    text_transform: Some(diagram_ir::TreemapTextTransform::FullWidth),
                     text_decoration: Some(diagram_ir::TreemapTextDecoration {
                         underline: true, overline: true, line_through: true,
                     }),
@@ -6874,7 +6879,7 @@ mod tests {
             Some(Content::Text(TextContent { value, text_align: TextAlign::End,
                 decoration: Some(TextDecoration { lines, color: Some(decoration_color),
                     style: TextDecorationStyle::Wavy }), .. }))
-                if value == "STYLED NODE"
+                if value == "\u{ff33}\u{ff54}\u{ff59}\u{ff4c}\u{ff45}\u{ff44}\u{3000}\u{ff4e}\u{ff4f}\u{ff44}\u{ff45}"
                     && lines.contains(TextDecorationLines::UNDERLINE)
                     && lines.contains(TextDecorationLines::OVERLINE)
                     && lines.contains(TextDecorationLines::LINE_THROUGH)
