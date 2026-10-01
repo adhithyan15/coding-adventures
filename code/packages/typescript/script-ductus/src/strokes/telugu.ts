@@ -800,6 +800,73 @@ export const entries: DuctusEntry[] = [
     },
   ],
   [
+    "telugu:య",
+    {
+      script: "telugu",
+      glyph: "య",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "loop counterclockwise around the left bowl",
+              path: [
+                { x: 542, y: 217 }, { x: 510, y: 370 },
+                { x: 395, y: 476 }, { x: 240, y: 493 },
+                { x: 102, y: 416 }, { x: 36, y: 275 },
+                { x: 69, y: 122 }, { x: 183, y: 15 },
+                { x: 338, y: -2 }, { x: 476, y: 73 },
+                { x: 537, y: 174 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "loop counterclockwise around the centre bowl",
+              path: [
+                { x: 543, y: 162 }, { x: 595, y: 56 },
+                { x: 690, y: -9 }, { x: 804, y: 19 },
+                { x: 876, y: 110 }, { x: 881, y: 228 },
+                { x: 847, y: 342 }, { x: 772, y: 434 },
+                { x: 672, y: 496 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "draw down and up through the lower angled join",
+              path: [
+                { x: 520, y: 550 }, { x: 560, y: 520 },
+                { x: 600, y: 470 }, { x: 640, y: 460 },
+                { x: 680, y: 480 }, { x: 730, y: 530 },
+                { x: 780, y: 590 }, { x: 840, y: 650 },
+                { x: 900, y: 685 }, { x: 950, y: 680 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "loop counterclockwise around the right bowl",
+              path: [
+                { x: 895, y: 113 }, { x: 973, y: 23 },
+                { x: 1083, y: -10 }, { x: 1185, y: 47 },
+                { x: 1228, y: 155 }, { x: 1218, y: 273 },
+                { x: 1169, y: 382 }, { x: 1083, y: 463 },
+                { x: 1047, y: 480 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguLetterSource("య"),
+    },
+  ],
+  [
     "telugu:ణ",
     {
       script: "telugu",

@@ -50,17 +50,18 @@ You already say these, and every one of them has య somewhere inside it:
 - **ధన్యవాదములు** *dhanyavādamulu* — thank you (dhanyavādamulu — "utterances of 'worthy'")
 - **పని చేయు** *pani cēyu* — to work (lit. "work-do")
 
-## Writing: య — copy what you see
+## Writing: య — four calm movements
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-110] -->
+<!-- hl-writing-stage: observe-trace -->
 
-Put your pen on య and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+Watch the numbered filmstrip once before your pen moves. Movement 1 loops
+counterclockwise around the left bowl. Movement 2 makes the centre bowl in the
+same direction. Movement 3 travels down and up through the lower angled join.
+Lift between movements; movement 4 loops around the right bowl.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+Trace the same route slowly. This is one attested school-style order fitted to
+the printed shape here; Telugu handwriting varies, so keep the four clear
+movements instead of rushing their joins.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-110] -->

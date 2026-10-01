@@ -45,6 +45,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TE-S110-letter-ya",
+      "sourceHash": "fnv1a64:98546431f7f78d3a",
+      "svgHash": "fnv1a64:d85079b1a9b08b18",
+      "svg": "telugu/book/figures/TE-S110-letter-ya-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TE-S112-letter-ca",
       "sourceHash": "fnv1a64:dff6199e5c93a675",
       "svgHash": "fnv1a64:0eb40006b20d1501",
