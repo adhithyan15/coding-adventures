@@ -15413,8 +15413,10 @@ tool installation. Focused repair `0fc147e227f883afa294b0bed31e95391df875c7`
 uses strip-only-compatible TypeScript syntax and restores the missing Windows
 test dependency. The same bounded repair replaces compile-time and unbounded
 fixture reads in Rust, Haskell, and Perl, and adds real Rust resolver probes for
-both fail-closed text forms. Replacement checks remain required before guarded
-auto-merge can be enabled.
+both fail-closed text forms. Every final-head check subsequently passed and PR
+#16343 squash-merged as `2a75d68df071c01cbe9cd76d791904afb19819a5`;
+the durable evidence registry now names that reachable merge revision while
+retaining the verified package-tree identities from the reviewed head.
 
 Parallel collision-checked audits also found four established implementations
 that the eight-target registry did not materialize: Elixir and Lua use

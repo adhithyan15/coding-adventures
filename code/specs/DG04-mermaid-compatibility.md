@@ -537,6 +537,9 @@ percentages, SI prefixes, radix output, signs, and trimmed zeroes. Exact D3
 alignment/localization semantics and the broader CSS property surface remain
 unsupported at the partial level. Treemap layout, value visibility, font, and
 border configuration also flow through semantic IR, hierarchy layout, and paint.
+Explicit section and leaf fill, stroke, and stroke-width options, independent
+label/value colors, and title color/size follow the same backend-neutral path;
+named class styles retain precedence over those diagram-wide node options.
 
 ### Venn Native Slice
 

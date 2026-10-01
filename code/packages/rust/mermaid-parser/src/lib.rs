@@ -4367,6 +4367,9 @@ fn parse_treemap_config(source: &str) -> diagram_ir::TreemapConfig {
         .filter(|value| value.is_finite() && *value >= 0.0).unwrap_or(fallback);
     let positive = |key, fallback| value(key).and_then(|value| value.parse::<f64>().ok())
         .filter(|value| value.is_finite() && *value > 0.0).unwrap_or(fallback);
+    let optional_positive = |key| value(key).and_then(parse_mermaid_font_size)
+        .filter(|value| value.is_finite() && *value > 0.0);
+    let optional_color = |key| value(key).filter(|value| !value.is_empty());
     let boolean = |key, fallback| value(key).and_then(|value| match value.to_ascii_lowercase().as_str() {
         "true" => Some(true), "false" => Some(false), _ => None,
     }).unwrap_or(fallback);
@@ -4398,6 +4401,16 @@ fn parse_treemap_config(source: &str) -> diagram_ir::TreemapConfig {
         border_width: non_negative("borderWidth", defaults.border_width),
         value_font_size: positive("valueFontSize", defaults.value_font_size),
         label_font_size: positive("labelFontSize", defaults.label_font_size),
+        section_stroke_color: optional_color("sectionStrokeColor"),
+        section_stroke_width: optional_positive("sectionStrokeWidth"),
+        section_fill_color: optional_color("sectionFillColor"),
+        leaf_stroke_color: optional_color("leafStrokeColor"),
+        leaf_stroke_width: optional_positive("leafStrokeWidth"),
+        leaf_fill_color: optional_color("leafFillColor"),
+        label_color: optional_color("labelColor"),
+        value_color: optional_color("valueColor"),
+        title_color: optional_color("titleColor"),
+        title_font_size: optional_positive("titleFontSize"),
         value_format: value("valueFormat").filter(|value| !value.is_empty()).unwrap_or(defaults.value_format),
         theme,
     }
@@ -13996,13 +14009,23 @@ B//-A: reverse stick top
     #[test]
     fn treemap_parses_init_configuration_into_semantic_ir() {
         let diagram = parse_treemap(
-            "%%{init: {\"treemap\": {\"padding\": 4, \"diagramPadding\": 12, \"showValues\": false, \"nodeWidth\": 64, \"nodeHeight\": 48, \"borderWidth\": 2, \"valueFontSize\": 10, \"labelFontSize\": 16, \"valueFormat\": \"$0,0\", \"useMaxWidth\": false}, \"themeVariables\": {\"cScale0\": \"#123456\", \"cScalePeer0\": \"#654321\", \"cScaleLabel0\": \"#abcdef\"}}}%%\ntreemap\n\"Root\": 1200",
+            "%%{init: {\"treemap\": {\"padding\": 4, \"diagramPadding\": 12, \"showValues\": false, \"nodeWidth\": 64, \"nodeHeight\": 48, \"borderWidth\": 2, \"valueFontSize\": 10, \"labelFontSize\": 16, \"sectionStrokeColor\": \"#111111\", \"sectionStrokeWidth\": \"2px\", \"sectionFillColor\": \"#222222\", \"leafStrokeColor\": \"#333333\", \"leafStrokeWidth\": 3, \"leafFillColor\": \"#444444\", \"labelColor\": \"#555555\", \"valueColor\": \"#666666\", \"titleColor\": \"#777777\", \"titleFontSize\": \"18px\", \"valueFormat\": \"$0,0\", \"useMaxWidth\": false}, \"themeVariables\": {\"cScale0\": \"#123456\", \"cScalePeer0\": \"#654321\", \"cScaleLabel0\": \"#abcdef\"}}}%%\ntreemap\n\"Root\": 1200",
         ).unwrap();
         assert_eq!(diagram.config.padding, 4.0);
         assert_eq!(diagram.config.diagram_padding, 12.0);
         assert!(!diagram.config.show_values);
         assert_eq!((diagram.config.node_width, diagram.config.node_height), (64.0, 48.0));
         assert_eq!((diagram.config.value_font_size, diagram.config.label_font_size), (10.0, 16.0));
+        assert_eq!(diagram.config.section_stroke_color.as_deref(), Some("#111111"));
+        assert_eq!(diagram.config.section_stroke_width, Some(2.0));
+        assert_eq!(diagram.config.section_fill_color.as_deref(), Some("#222222"));
+        assert_eq!(diagram.config.leaf_stroke_color.as_deref(), Some("#333333"));
+        assert_eq!(diagram.config.leaf_stroke_width, Some(3.0));
+        assert_eq!(diagram.config.leaf_fill_color.as_deref(), Some("#444444"));
+        assert_eq!(diagram.config.label_color.as_deref(), Some("#555555"));
+        assert_eq!(diagram.config.value_color.as_deref(), Some("#666666"));
+        assert_eq!(diagram.config.title_color.as_deref(), Some("#777777"));
+        assert_eq!(diagram.config.title_font_size, Some(18.0));
         assert_eq!(diagram.config.value_format, "$0,0");
         assert!(!diagram.config.use_max_width);
         assert_eq!(diagram.config.theme.fills[0], "#123456");
