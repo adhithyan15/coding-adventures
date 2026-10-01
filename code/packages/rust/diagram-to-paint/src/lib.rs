@@ -343,6 +343,7 @@ fn treemap_text_node(
             };
             (lines != TextDecorationLines::NONE).then_some(TextDecoration {
                 lines, style: decoration_style, color: decoration_color,
+                thickness: style.and_then(|style| style.text_decoration_thickness),
             })
         });
     }
@@ -6866,6 +6867,7 @@ mod tests {
                     }),
                     text_decoration_color: Some("#2563eb".into()),
                     text_decoration_style: Some(diagram_ir::TreemapTextDecorationStyle::Wavy),
+                    text_decoration_thickness: Some(3.0),
                     line_height: Some(diagram_ir::TreemapLineHeight::Pixels(24.0)),
                 }),
             }],
@@ -6878,7 +6880,7 @@ mod tests {
         assert!(matches!(styled_text.content,
             Some(Content::Text(TextContent { value, text_align: TextAlign::End,
                 decoration: Some(TextDecoration { lines, color: Some(decoration_color),
-                    style: TextDecorationStyle::Wavy }), .. }))
+                    style: TextDecorationStyle::Wavy, thickness: Some(3.0) }), .. }))
                 if value == "\u{ff33}\u{ff54}\u{ff59}\u{ff4c}\u{ff45}\u{ff44}\u{3000}\u{ff4e}\u{ff4f}\u{ff44}\u{ff45}"
                     && lines.contains(TextDecorationLines::UNDERLINE)
                     && lines.contains(TextDecorationLines::OVERLINE)

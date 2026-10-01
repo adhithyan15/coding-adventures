@@ -1358,10 +1358,11 @@ fn emit_text_decorations<M>(
 
     let units_per_em = f64::from(metrics.units_per_em(handle).max(1));
     let scale = f64::from(size) / units_per_em;
-    let thickness = metrics
-        .underline_thickness(handle)
-        .map(|value| f64::from(value.max(1)) * scale)
-        .unwrap_or_else(|| (f64::from(size) * 0.05).max(dpr));
+    let thickness = decoration.thickness.filter(|value| value.is_finite() && *value > 0.0)
+        .unwrap_or_else(|| metrics
+            .underline_thickness(handle)
+            .map(|value| f64::from(value.max(1)) * scale)
+            .unwrap_or_else(|| (f64::from(size) * 0.05).max(dpr)));
     let color = color_to_css(decoration.color.unwrap_or(tc.color));
     let mut emit_line = |y: f64| match decoration.style {
         TextDecorationStyle::Solid => emit_decoration_rect(out, x, y, width, thickness, &color),
@@ -2003,6 +2004,7 @@ mod tests {
                 lines: TextDecorationLines::UNDERLINE,
                 style,
                 color: Some(rgb(37, 99, 235)),
+                thickness: Some(3.0),
             });
             let root = positioned_leaf(text, 0.0, 0.0, 200.0, 30.0);
             let shaper = FakeShaper;
@@ -2015,6 +2017,24 @@ mod tests {
                 PaintInstruction::Path(path) if path.stroke.as_deref() == Some("rgb(37, 99, 235)")));
             assert!(has_rect || has_path);
         }
+    }
+
+    #[test]
+    fn authored_underline_thickness_overrides_font_metrics() {
+        let mut text = text_content("thick");
+        text.decoration = Some(layout_ir::TextDecoration {
+            lines: TextDecorationLines::UNDERLINE,
+            style: TextDecorationStyle::Solid,
+            color: None,
+            thickness: Some(3.5),
+        });
+        let root = positioned_leaf(text, 0.0, 0.0, 200.0, 30.0);
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let scene = layout_to_paint(&root, &make_options(&shaper, &metrics, &resolver));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.height == 3.5)));
     }
 
     #[test]
