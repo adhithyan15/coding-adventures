@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 33,
-  "sourceHash": "fnv1a64:38798cc5ed406637",
+  "sourceHash": "fnv1a64:154e3eecd7ee6801",
   "lessonIds": [
     "TE-C33-anuko",
     "TE-C33-artham-cesuko",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "telugu/narration/ch33.txt",
   "json": "telugu/narration/ch33.json",
-  "textHash": "fnv1a64:8f168473905640db",
-  "jsonHash": "fnv1a64:bfc97a9df79b0f74",
+  "textHash": "fnv1a64:ce3478de4583679d",
+  "jsonHash": "fnv1a64:6324fa2add9cbd16",
   "findings": []
 }

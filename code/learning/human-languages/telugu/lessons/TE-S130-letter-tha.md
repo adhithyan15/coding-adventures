@@ -60,17 +60,17 @@ You already say these, and both have థ inside them:
 In both, థ carries **ర** stacked on top of it — the **ర్థ** block you met when
 you learned to understand things.
 
-## Writing: థ — copy what you see
+## Writing: థ — observe, then trace
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-130] -->
 
-Put your pen on థ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+Watch the numbered filmstrip once before your pen moves. Four short curves build
+the broad body: down around the upper left, right around the lower left, up
+around the lower right, then left around the upper right. The last three moves
+add the top flourish, the lower stem and the inner dot.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+Lift after every numbered move. Trace the same seven-move route slowly; the
+source model rounds the last two marks, while this book's typeface gives the
+lower one a small teardrop shape.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-130] -->

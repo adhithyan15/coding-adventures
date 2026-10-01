@@ -2706,8 +2706,23 @@
       "components": [
         "థ  tha — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "curve downward around the upper-left shoulder",
+        "sweep right around the lower-left bowl",
+        "curve upward around the lower-right bowl",
+        "sweep left around the upper-right shoulder",
+        "cup upward through the separate top flourish",
+        "draw the separate downward stem",
+        "place the separate inner dot"
+      ],
+      "strokeOrderNote": "Seven numbered movements in seven pen-down runs: four separately started curves build the broad paired-bowl body, movement 5 restarts for the top flourish, movement 6 draws the lower stem, and movement 7 places the inner dot.",
+      "penLifts": 6,
+      "strokeOrderSource": {
+        "url": "https://play.google.com/store/apps/details?id=com.sathishshanmugam.writetelugualphabets",
+        "citation": "Sathish Shanmugam, Write Telugu Alphabets, consonant థ packaged tracing guides res/drawable/dot_stroke_c_4_2_tha.png and res/drawable/line_stroke_c_4_2_tha.png, movements 1–7 (version 2.6)",
+        "accessed": "2026-09-30",
+        "variation": "The packaged guide numbers four separately started curves around the broad body, then a top flourish, a lower stem and an inner dot. The final two marks are round in the source model but teardrop-like in bundled Noto Sans Telugu, so the filmstrip preserves the attested order while fitting their centerlines to the bundled outline. Telugu letter direction is not uniform across the script, so this is one attested pedagogical order."
+      }
     },
     {
       "glyph": "థా",

@@ -22,6 +22,116 @@ const teluguIndependentVowelSource = teluguLetterSource;
 
 export const entries: DuctusEntry[] = [
   [
+    "telugu:థ",
+    {
+      script: "telugu",
+      glyph: "థ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "curve downward around the upper-left shoulder",
+              path: [
+                { x: 330, y: 500 },
+                { x: 285, y: 480 },
+                { x: 225, y: 435 },
+                { x: 170, y: 375 },
+                { x: 125, y: 300 },
+                { x: 110, y: 225 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "sweep right around the lower-left bowl",
+              path: [
+                { x: 110, y: 160 },
+                { x: 125, y: 100 },
+                { x: 170, y: 55 },
+                { x: 230, y: 25 },
+                { x: 300, y: 15 },
+                { x: 370, y: 30 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "curve upward around the lower-right bowl",
+              path: [
+                { x: 505, y: 30 },
+                { x: 555, y: 30 },
+                { x: 600, y: 60 },
+                { x: 625, y: 110 },
+                { x: 635, y: 175 },
+                { x: 630, y: 245 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "sweep left around the upper-right shoulder",
+              path: [
+                { x: 610, y: 315 },
+                { x: 575, y: 370 },
+                { x: 525, y: 410 },
+                { x: 470, y: 440 },
+                { x: 410, y: 455 },
+                { x: 355, y: 460 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "cup upward through the separate top flourish",
+              path: [
+                { x: 365, y: 610 },
+                { x: 390, y: 580 },
+                { x: 425, y: 565 },
+                { x: 465, y: 575 },
+                { x: 505, y: 610 },
+                { x: 550, y: 665 },
+                { x: 600, y: 710 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "draw the separate downward stem",
+              path: [
+                { x: 353, y: 18 },
+                { x: 353, y: -25 },
+                { x: 353, y: -70 },
+                { x: 353, y: -115 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "place the separate inner dot",
+              path: [
+                { x: 325, y: 268 },
+                { x: 382, y: 268 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguLetterSource("థ"),
+    },
+  ],
+  [
     "telugu:త",
     {
       script: "telugu",
