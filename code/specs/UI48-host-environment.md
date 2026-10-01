@@ -1,6 +1,6 @@
 # UI48 — Host environment: runtime viewport, input modality, and variant selection
 
-**Status:** In progress — ENV1's runtime half implemented in `mosaic-app-runtime` (§7.1); ENV2 and ENV3 on SwiftUI (§7.2), Compose (§7.5) and Flutter (§7.9); ENV4 on SwiftUI (§7.3), Compose (§7.4), Qt (§7.6), XAML (§7.7) and Flutter (§7.8)
+**Status:** In progress — ENV1's runtime half implemented in `mosaic-app-runtime` (§7.1); ENV2 and ENV3 on SwiftUI (§7.2), Compose (§7.5), Flutter (§7.9) and Qt (§7.10); ENV4 on SwiftUI (§7.3), Compose (§7.4), Qt (§7.6), XAML (§7.7) and Flutter (§7.8)
 **Layer:** UI / standard Mosaic app ABI
 **Depends on:** UI29 (primitive kernel), UI30 (multi-layout pipelines), UI38
 (native application runtime), `mosaic-app-runtime`, `mosaic-app-capi`
@@ -864,6 +864,148 @@ Engram — the one package with a variant — whose generated native-complete
 project the same lane analyzes and builds with both roots, after checking
 that `EngramAppTouch`, its import and the `switch` are in `lib/`. On Linux
 the pointer is `fine`, so Engram's touch layout is compiled but not shown.
+
+### 7.10 ENV2 and ENV3 on Qt, as built
+
+§7.5 on the Qt shell, reusing what §7.6 already observes.
+
+**ENV2 — one app carries every variant.**
+
+- A variant's root is a QML type of its own, `<Component><Variant>` in
+  PascalCase, named by `mosaic-emit-qt`'s `variant_type_name` with the same
+  rule as Compose, Flutter and SwiftUI. The file keeps the artifact name every
+  backend writes a variant under (`EngramApp.touch.qml`); its type
+  (`EngramAppTouch`) is declared in the generated `CMakeLists.txt`, because
+  `qt_add_qml_module` otherwise names a file after the text before its first
+  dot -- a second `EngramApp`:
+
+  ```cmake
+  set_source_files_properties(EngramApp.touch.qml PROPERTIES QT_QML_SOURCE_TYPENAME EngramAppTouch)
+  qt_target_qml_sources(EngramApp QML_FILES EngramApp.touch.qml)
+  ```
+
+  The project's `qmldir` lists it the same way. A variant whose type would be
+  the component's own name, or a name the Qt shell owns
+  (`SHELL_RESERVED_NAMES`: `main.cpp`'s `MosaicTableModel` and
+  `MosaicLayoutRule`, the binding's `MosaicHost` and `MosaicFileDialogs`,
+  pinned by tests against both `main.cpp` shapes and the binding's headers),
+  is refused. They are C++ names, which a QML type does not enter today, but
+  `MosaicHost::registerTypes()` is where the shell would register its classes
+  with QML.
+- **Diverges from §7.5: a variant's file declares the interface again.** Its
+  slot `property`s, signals, `mosaicEvent` routing and `applyMosaicResponse`
+  are the default's, emitted by the same functions from the same `.mil`, and
+  the variant's root is exactly the default's root for that tree plus one
+  comment line naming it (a test pins this). Compose, Flutter and SwiftUI emit
+  the interface once because their files share one namespace, where a second
+  `<C>Event` is a redeclaration. QML has neither the problem nor the remedy: a
+  file's declarations are members of its own type, so nothing collides, and
+  nothing in QML can be imported in their place -- sharing them would mean
+  inheriting the default type, whose whole visual tree would be instantiated
+  under the variant's. Part of that surface also depends on the layout:
+  signal names are allocated against the controls that call them (a `toggle`
+  called from a Button becomes `mosaicEmitToggle`), and table models, the
+  icon helper and the drag scope exist only when the layout uses them. The one name a variant
+  adds to the module is its type, and that is what is checked. The interface
+  knowledge the shell needs -- the strict shell's slot names and required
+  props -- is emitted once, in `main.cpp`.
+- The project shell compiles every export's variants into the QML module, as
+  it compiles every export's default. A type the module would register twice
+  -- a variant named like another export (`Card` + `touch` beside an exported
+  `CardTouch`) or like another variant -- fails the build, and so does a
+  variant of ANY export named like something the shell owns (`Mosaic` +
+  `host`), not only the root's. (Compose, Flutter and SwiftUI do not check a
+  variant against another export's name yet.)
+- A native-complete shell mounts every root strictly, so it re-emits the
+  root's variants under that policy (`required property var mosaicHost`,
+  events through `handleRequiredEvent`) as it re-emits the default. The flat
+  artifacts stay permissive.
+
+**ENV3 — the selector.**
+
+- The rules are the package's `[[app.layouts]]` (or the conventions),
+  computed by the same `effective_layout_rules` as the other backends, and
+  passed to the emitter as `EmitOptions::layout_variants`: one `LayoutChoice`
+  per rule, in rule order, conditions keyed by `EnvironmentAxis::wire_name`,
+  plus the native table models that variant's root takes. The emitter checks
+  them again before writing C++, CMake or `qmldir`: a usable type chosen once
+  (keyed on the type, so `touch` and `Touch` are refused together), camelCase
+  axis names, lowercase values. A rule for a variant with no `.mll` fails the
+  build. A test pins every rule axis's wire name as a key of the Qt binding's
+  `environmentReport` (or the `initialEnvironment` it starts from).
+- `main.cpp` carries them as data -- `mosaicLayoutRules()`, a list of
+  `{variant, source, conditions}` -- with `mosaicLayoutVariant(environment)`
+  (the first rule whose conditions all hold, else the default:
+  `select_variant`'s semantics) and `mosaicLayoutUrl(environment)`.
+- **Selection is in the C++ shell, not in QML.** A `QQuickView`'s root is the
+  component itself -- the host sets its properties and calls its
+  `applyMosaicResponse` -- so a QML wrapper choosing between roots would have
+  to redeclare and forward every slot. Instead the shell swaps the view's
+  source. The first root is the one `MosaicHost::environmentReport` of the
+  window selects.
+- **The switch is deferred, never made inside the signal that noticed the
+  change.** Swapping the view's source deletes the old root, and the §7.6
+  observer runs from `QWindow::widthChanged` / `heightChanged` and the
+  colour-scheme signal; if QML ever resized its own window, the root being
+  deleted would be on the stack. So each report, after its settle check,
+  only starts one zero-interval single-shot timer owned by the host
+  (`if (!layoutSwitch->isActive()) layoutSwitch->start(0);`), which coalesces
+  a burst of resize ticks into one switch. When it fires it checks
+  `isSettling()` again (and waits 100 ms if so), re-reads the window, and
+  calls `mosaicSwitchLayout`. The report is therefore answered on the root
+  that was showing; nothing is lost, because the new root starts from the
+  props the old one shows, which by then include that answer.
+- The new root starts with the props the old one showed: in a native-complete
+  shell the runtime's, checked and mapped exactly as at startup
+  (`propsRequired`); in a sample shell each slot's value is carried across
+  from the old root (every layout has the same slots), which covers a runtime's
+  props and the shell's own samples alike. The app's state lives in the
+  runtime, so nothing is lost but the old root's own QML state. A root that
+  cannot get its props or cannot load leaves the window on the layout it was
+  showing, and the reason is logged; nothing is thrown into the event loop.
+  Only a layout root is ever swapped for another (never, say, the strict
+  shell's startup surface).
+- Table models are allocated once, for the largest count any root takes, and
+  handed only to the roots that declare them: a QML root refuses an initial
+  property it does not declare (checked on Qt 6.4: `setInitialProperties`
+  with an unknown name leaves the view in `Error`). The strict shell's
+  retrying startup still allocates a fresh set per attempt, owned by that
+  attempt's host, because the packaged shell ties them to the candidate host
+  so a failed attempt releases the whole partial graph; each attempt keeps
+  its set on the view before mounting, and the previous host's observer
+  (the only reader) goes with that host, so the stale set is never read.
+  Reusing one set across retries was left as is: it saves a few objects per
+  failed start and would undo that ownership.
+- A sample shell selects too, and reports to nobody. Without the standard
+  host (`MOSAIC_HAS_HOST` 0) it has no environment to read and opens the
+  default layout.
+- A package without variants gets byte-identical output: TaskApp and
+  RatingControls were emitted before and after, both profiles, with no
+  difference (Engram's changes are exactly the ones above), and a test pins
+  the variant project, minus what ENV2/ENV3 add, as the plain one.
+
+**Acceptance — the resize gate.** Qt can resize a window offscreen, so the
+gate §7 asks for lands here. A fixture package,
+`mosaic-emit-qt/fixtures/layout-variants`, has a default layout (a
+`RowLayout`) and a `compact` one (a `ColumnLayout`) selected by convention.
+Its harness, `fixtures/layout-variants-test/main.cpp`, compiles the generated
+sample `main.cpp` verbatim with its `main` renamed, runs it offscreen, and from
+inside its event loop resizes the window to 400, 599, 600, 400 and 1200
+logical pixels, asserting each time which root is mounted (by source and by
+the layout it built), that the title the first root showed reached it, and
+that the host is attached. CI's Linux Qt lane runs it, and before building
+Engram -- the one package with a variant -- checks that `EngramApp.touch.qml`
+is a strict root and its own type in the module and that `main.cpp` selects
+and switches; then it builds the native-complete project with both roots. On
+Linux the pointer is `fine`, so Engram's touch layout is compiled but not
+shown. Verified locally on Qt 6.4 (the CI lane uses 6.8.3), with the project's
+version floor lowered and `RESOURCE_PREFIX /qt/qml` added for 6.4: the
+fixture gate passes and fails when the switch or the carried props are
+removed, Engram's native-complete project builds, and with a declared
+`touch <- size-class = compact` rule the strict shell, running the real
+Engram runtime, swaps to the touch root at 400 pixels and back with
+`appTitle` carried. Both runs were repeated after the switch was deferred to
+the event loop, and the fixture gate fails when the switch is never queued.
 
 ## 8. Open questions
 

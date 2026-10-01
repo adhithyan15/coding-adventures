@@ -325,6 +325,67 @@ work: `Button.qml` contains a `Button { … }` element that is *intended* to be
 `QtQuick.Controls.Button`, and it resolves that way rather than recursing into
 itself.
 
+## Layout variants (UI48 §7.10)
+
+A component can have several layouts over one interface (`EngramApp.mll` and
+`EngramApp.touch.mll`). On Qt each is a **root QML type of its own**, which the
+generated project's `QQuickView` can mount:
+
+| layout file           | QML file              | QML type         |
+|-----------------------|-----------------------|------------------|
+| `EngramApp.mll`       | `EngramApp.qml`       | `EngramApp`      |
+| `EngramApp.touch.mll` | `EngramApp.touch.qml` | `EngramAppTouch` |
+
+`from_pipeline_variant` emits a variant's root. Its type is named by
+`variant_type_name` -- the same `<Component><Variant>` rule as Compose,
+Flutter and SwiftUI -- and declared in `CMakeLists.txt`, because Qt would
+otherwise name the file after the text before its first dot:
+
+```cmake
+set_source_files_properties(EngramApp.touch.qml PROPERTIES QT_QML_SOURCE_TYPENAME EngramAppTouch)
+qt_target_qml_sources(EngramApp QML_FILES EngramApp.touch.qml)
+```
+
+Unlike those backends, a variant's file declares the component's interface
+again (its slot properties, signals, `mosaicEvent` routing and
+`applyMosaicResponse`). QML has nothing a second file could import instead --
+sharing them would mean inheriting the default type, visual tree and all --
+and nothing collides: a QML file's declarations are members of its own type.
+The variant's root is exactly the default's root for the same tree plus one
+comment line naming it, so the interface the host sees is identical by
+construction. A variant whose type would be the component's own name or one
+the shell owns (`SHELL_RESERVED_NAMES`: `MosaicHost`, `MosaicTableModel`, ...)
+is refused.
+
+`EmitOptions::layout_variants` (one `LayoutChoice` per rule, in rule order,
+conditions keyed by `mosaic-app-runtime`'s wire names) makes `main.cpp` choose
+its root at run time. It carries the rules as data and applies them with
+`select_variant`'s semantics:
+
+```cpp
+static const std::vector<MosaicLayoutRule> rules{
+    {"touch", "qrc:/qt/qml/Mosaic/EngramApp/EngramApp.touch.qml", {{"pointer", "coarse"}}},
+};
+```
+
+The first root is the one `MosaicHost::environmentReport` of the window
+selects. Each report the environment observer (UI48 §7.6) builds also starts
+one zero-interval timer, which calls `mosaicSwitchLayout` once the event loop
+is back, so a resize across a threshold mounts the other root. The switch is
+deferred because swapping the view's source deletes the old root, which must
+never happen inside the window signal that noticed the change, and the timer
+coalesces a burst of resize ticks into one switch. The new root starts with the props the old one showed (the
+runtime's checked props in a native-complete shell, each slot's value carried
+across in a sample shell); the app's state lives in the runtime, so nothing is
+lost but the old root's own QML state. A root that cannot be mounted leaves
+the window on the layout it was showing and is logged. With no layout variants
+every generated file is byte-for-byte what it was before.
+
+`fixtures/layout-variants` and its harness, `fixtures/layout-variants-test/main.cpp`,
+are the resize gate: CI's Qt lane compiles the generated `main.cpp` verbatim
+inside the harness, runs it offscreen, resizes the window across 600 logical
+pixels and asserts the root swaps and keeps its props.
+
 ## What is NOT in this PR (deferred follow-ups)
 
 Several Mosaic features remain intentionally conservative:

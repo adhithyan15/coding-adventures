@@ -2798,9 +2798,55 @@ jobs:
           grep -q 'installMosaicPlatformEffects(mosaicHost, std::nullopt);' "$engram_output/qt/main.cpp"
           grep -q 'MosaicHost.h MosaicPlatformEffects.cpp MosaicPlatformEffects.h)' "$engram_output/qt/CMakeLists.txt"
 
+          # UI48 §7.10 (ENV2/ENV3): Engram is the one package with a layout
+          # variant (EngramApp.touch.mll). Both roots must be in the QML
+          # module, each its own type, and main.cpp must carry the selector, so
+          # the build below proves they compile together. Each check names
+          # itself when it fails.
+          qt_layout_expect() {
+            if ! grep -qF -- "$2" "$1"; then
+              echo "::error::Qt layout variants: expected $3 -- '$2' is not in $1"
+              exit 1
+            fi
+          }
+          qt_layout_expect "$engram_output/qt/CMakeLists.txt" 'set_source_files_properties(EngramApp.touch.qml PROPERTIES QT_QML_SOURCE_TYPENAME EngramAppTouch)' "the touch root's QML type"
+          qt_layout_expect "$engram_output/qt/CMakeLists.txt" 'qt_target_qml_sources(EngramApp QML_FILES EngramApp.touch.qml)' "the touch root in the module"
+          qt_layout_expect "$engram_output/qt/EngramApp.touch.qml" 'required property var mosaicHost' "a strict touch root"
+          qt_layout_expect "$engram_output/qt/main.cpp" '{"touch", "qrc:/qt/qml/Mosaic/EngramApp/EngramApp.touch.qml", {{"pointer", "coarse"}}},' "the conventional touch rule"
+          qt_layout_expect "$engram_output/qt/main.cpp" 'if (!layoutSwitch->isActive()) layoutSwitch->start(0);' "the observer queueing the root switch"
+          if grep -qF 'const QUrl url(QStringLiteral("qrc:/qt/qml/Mosaic/EngramApp/EngramApp.qml"));' "$engram_output/qt/main.cpp"; then
+            echo "::error::Qt layout variants: main.cpp still mounts EngramApp.qml unconditionally"
+            exit 1
+          fi
+
           # The gate: it builds.
           cmake -S "$engram_output/qt" -B "$engram_output/qt/build" -DCMAKE_BUILD_TYPE=Release
           cmake --build "$engram_output/qt/build" --config Release --parallel
+
+          # UI48 §7.10: the resize gate §7 asks for. The fixture has a default
+          # and a `compact` layout; its harness compiles the generated main.cpp
+          # verbatim, runs it offscreen, resizes the window across 600 logical
+          # pixels and asserts the root swaps and keeps its props, so a shell
+          # frozen on one layout fails here. No runtime: the sample shell's
+          # host reports to nobody.
+          layout_variants_output="$RUNNER_TEMP/mosaic-qt-layout-variants"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-qt/fixtures/layout-variants --backend qt --output "$layout_variants_output" --emit-project
+          mv "$layout_variants_output/qt/main.cpp" "$layout_variants_output/qt/generated_main.cpp"
+          cp code/packages/rust/mosaic-emit-qt/fixtures/layout-variants-test/main.cpp "$layout_variants_output/qt/main.cpp"
+          cmake -S "$layout_variants_output/qt" -B "$layout_variants_output/qt/build" -DCMAKE_BUILD_TYPE=Release
+          cmake --build "$layout_variants_output/qt/build" --config Release --parallel
+          layout_variants_log="$RUNNER_TEMP/mosaic-qt-layout-variants.log"
+          set +e
+          env -u MOSAIC_APP_LIBRARY QT_QPA_PLATFORM=offscreen \
+            timeout 60s "$layout_variants_output/qt/build/LayoutProbe" >"$layout_variants_log" 2>&1
+          layout_variants_status=$?
+          set -e
+          cat "$layout_variants_log"
+          if [ "$layout_variants_status" -ne 0 ]; then
+            echo "::error::Qt layout-variant resize gate exited $layout_variants_status"
+            exit 1
+          fi
+          qt_layout_expect "$layout_variants_log" 'Qt layout-variant resize gate passed' "the resize gate to pass"
 
           # Engram's own suite, which the parent workspace cannot reach: the
           # package opts OUT of it (`[workspace]` empty in its Cargo.toml), so

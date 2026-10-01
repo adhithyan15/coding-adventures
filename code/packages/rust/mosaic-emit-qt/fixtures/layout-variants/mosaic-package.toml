@@ -1,0 +1,19 @@
+[package]
+name = "mosaic-pkg-qt-layout-variants-fixture"
+version = "0.1.0"
+description = "Qt layout-variant (UI48 ENV2/ENV3) resize acceptance fixture"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["LayoutProbe"]
+
+[dependencies]
+
+[kernel]
+version = "1"
+
+# No `[[app.layouts]]`: `LayoutProbe.compact.mll` is selected by the
+# conventional rule (`compact` for `size-class = compact`), so the shell's
+# rules come from the same `effective_layout_rules` fallback every backend
+# uses. `layout-variants-test/main.cpp` runs the generated `main.cpp`,
+# resizes its window across 600 logical pixels and asserts the root swaps.

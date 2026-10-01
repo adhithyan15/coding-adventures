@@ -285,6 +285,72 @@ class MosaicQtRuntimeCIAcceptanceTests(unittest.TestCase):
             workflow,
         )
 
+    def test_layout_rules_require_acceptance(self) -> None:
+        """UI48 §7.10: the rules a Qt shell selects by come from the manifest
+        crate, so changing it runs the lane that compiles and resizes them."""
+
+        self.assertTrue(
+            MODULE.requires_mosaic_qt_runtime(
+                {"affected_packages": ["rust/mosaic-package-manifest"]}
+            )
+        )
+
+    def test_engram_layout_variant_is_compiled_beside_the_default(self) -> None:
+        """UI48 §7.10: the Qt lane checks Engram's touch root is its own QML
+        type in the module and main.cpp selects it, before building it."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index(
+            "# UI48 §7.10 (ENV2/ENV3): Engram is the one package with a layout"
+        )
+        block = workflow[start : workflow.index("\n\n", start)]
+        self.assertIn("QT_QML_SOURCE_TYPENAME EngramAppTouch", block)
+        self.assertIn("qt_target_qml_sources(EngramApp QML_FILES EngramApp.touch.qml)", block)
+        self.assertIn("required property var mosaicHost", block)
+        self.assertIn('{{"pointer", "coarse"}}', block)
+        self.assertIn("if (!layoutSwitch->isActive()) layoutSwitch->start(0);", block)
+        # The negative check exits explicitly: a bare `! grep` never fails a
+        # `set -e` step.
+        self.assertIn("then\n            echo \"::error::Qt layout variants: main.cpp still mounts", block)
+        self.assertFalse(
+            [line for line in block.splitlines() if line.strip().startswith("! grep")]
+        )
+        # Every check says which one failed.
+        self.assertIn('echo "::error::Qt layout variants: expected $3', block)
+        # The checks run before the project is built.
+        self.assertLess(start, workflow.index('cmake --build "$engram_output/qt/build"'))
+
+    def test_layout_variants_fixture_is_resized_in_the_lane(self) -> None:
+        """UI48 §7 wants a gate that changes the environment: the lane runs
+        the generated layout-variants shell under a harness that resizes the
+        window across the compact threshold and asserts the root swaps."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("# UI48 §7.10: the resize gate §7 asks for.")
+        end = workflow.index("toolkit_output=", start)
+        block = workflow[start:end]
+        self.assertIn("fixtures/layout-variants --backend qt", block)
+        self.assertIn('main.cpp" "$layout_variants_output/qt/generated_main.cpp"', block)
+        self.assertIn("fixtures/layout-variants-test/main.cpp", block)
+        self.assertIn('cmake --build "$layout_variants_output/qt/build"', block)
+        self.assertIn("env -u MOSAIC_APP_LIBRARY QT_QPA_PLATFORM=offscreen", block)
+        self.assertIn('"$layout_variants_status" -ne 0', block)
+        self.assertIn("Qt layout-variant resize gate passed", block)
+        harness = (
+            Path(__file__).resolve().parents[2]
+            / "packages"
+            / "rust"
+            / "mosaic-emit-qt"
+            / "fixtures"
+            / "layout-variants-test"
+            / "main.cpp"
+        ).read_text(encoding="utf-8")
+        # The harness runs the generated shell itself, not a copy of it.
+        self.assertIn('#define main mosaicGeneratedMain\n#include "generated_main.cpp"', harness)
+        self.assertIn('resizeTo(*view, 400, "/LayoutProbe.compact.qml", "ColumnLayout")', harness)
+        self.assertIn('resizeTo(*view, 600, "/LayoutProbe.qml", "RowLayout")', harness)
+        self.assertIn("Qt layout-variant resize gate passed", harness)
+
     def test_harness_does_not_duplicate_the_generated_binding(self) -> None:
         self.assertTrue((QT_CONFORMANCE / "main.cpp").is_file())
         self.assertFalse((QT_CONFORMANCE / "MosaicHost.cpp").exists())
