@@ -1482,6 +1482,7 @@ pub struct TreemapStyle {
     pub text_align: Option<TreemapTextAlign>,
     pub text_transform: Option<TreemapTextTransform>,
     pub text_decoration: Option<TreemapTextDecoration>,
+    pub line_height: Option<TreemapLineHeight>,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -1495,6 +1496,12 @@ pub struct TreemapTextDecoration {
     pub underline: bool,
     pub overline: bool,
     pub line_through: bool,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum TreemapLineHeight {
+    Factor(f64),
+    Pixels(f64),
 }
 
 #[derive(Clone, Debug, PartialEq)]

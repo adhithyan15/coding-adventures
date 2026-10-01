@@ -163,18 +163,20 @@ where
                 label_font.italic = style.node.font_italic.unwrap_or(label_font.italic);
                 if let Some(family) = &style.node.font_family { label_font.family.clone_from(family); }
             }
+            apply_treemap_line_height(&mut label_font, node.style.as_ref());
             let palette_text_color = || palette_index
                     .map(|index| css_to_color(&diagram.config.theme.labels[index]))
                     .unwrap_or(text_color);
             let label_text_color = node.style.as_ref().and_then(|style| style.node.text_color.as_deref())
                 .or(diagram.config.label_color.as_deref()).map(css_to_color).unwrap_or_else(palette_text_color);
             let label_text_color = color_with_opacity(label_text_color, opacity);
+            let label_height = label_font.size * label_font.line_height;
             text_children.push(treemap_text_node(
                 &node.label,
                 node.x + 6.0,
                 node.y + 4.0,
                 (node.width * if node.has_children { 0.68 } else { 1.0 } - 12.0).max(0.0),
-                diagram.config.label_font_size * 1.4,
+                label_height,
                 label_font,
                 label_text_color,
                 node.style.as_ref(),
@@ -187,6 +189,7 @@ where
                     value_font.italic = style.node.font_italic.unwrap_or(value_font.italic);
                     if let Some(family) = &style.node.font_family { value_font.family.clone_from(family); }
                 }
+                apply_treemap_line_height(&mut value_font, node.style.as_ref());
                 let (value_x, value_y, value_width) = if node.has_children {
                     (node.x + node.width * 0.68, node.y + 4.0, node.width * 0.32 - 6.0)
                 } else {
@@ -195,12 +198,13 @@ where
                 let value_text_color = node.style.as_ref().and_then(|style| style.node.text_color.as_deref())
                     .or(diagram.config.value_color.as_deref()).map(css_to_color).unwrap_or_else(palette_text_color);
                 let value_text_color = color_with_opacity(value_text_color, opacity);
+                let value_height = value_font.size * value_font.line_height;
                 text_children.push(treemap_text_node(
                     &format_treemap_value(node.value, &diagram.config.value_format),
                     value_x,
                     value_y,
                     value_width.max(0.0),
-                    diagram.config.value_font_size * 1.4,
+                    value_height,
                     value_font,
                     value_text_color,
                     node.style.as_ref(),
@@ -328,6 +332,14 @@ fn treemap_text_node(
         });
     }
     node
+}
+
+fn apply_treemap_line_height(font: &mut FontSpec, style: Option<&diagram_ir::TreemapStyle>) {
+    font.line_height = match style.and_then(|style| style.line_height) {
+        Some(diagram_ir::TreemapLineHeight::Factor(value)) => value,
+        Some(diagram_ir::TreemapLineHeight::Pixels(value)) => value / font.size.max(1.0),
+        None => font.line_height,
+    };
 }
 
 struct TreemapNumberFormat {
@@ -6837,6 +6849,7 @@ mod tests {
                     text_decoration: Some(diagram_ir::TreemapTextDecoration {
                         underline: true, overline: true, line_through: true,
                     }),
+                    line_height: Some(diagram_ir::TreemapLineHeight::Pixels(24.0)),
                 }),
             }],
         };
@@ -6852,6 +6865,10 @@ mod tests {
                     && lines.contains(TextDecorationLines::UNDERLINE)
                     && lines.contains(TextDecorationLines::OVERLINE)
                     && lines.contains(TextDecorationLines::LINE_THROUGH)));
+        let mut styled_font = opts.label_font.clone();
+        styled_font.size = 16.0;
+        apply_treemap_line_height(&mut styled_font, layout.nodes[0].style.as_ref());
+        assert_eq!(styled_font.line_height, 1.5);
 
         let scene = diagram_to_paint_treemap(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
