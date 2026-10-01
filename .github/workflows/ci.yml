@@ -1597,12 +1597,17 @@ jobs:
           if [ -f /proc/sys/kernel/apparmor_restrict_unprivileged_userns ]; then
             sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
           fi
-          sudo mkdir -p /sys/fs/cgroup/forme-sandbox
+          sudo mkdir -p \
+            /sys/fs/cgroup/forme-sandbox \
+            /sys/fs/cgroup/forme-sandbox/runner
           sudo chown "$(id -u):$(id -g)" \
             /sys/fs/cgroup/forme-sandbox \
             /sys/fs/cgroup/forme-sandbox/cgroup.procs \
             /sys/fs/cgroup/forme-sandbox/cgroup.threads \
-            /sys/fs/cgroup/forme-sandbox/cgroup.subtree_control
+            /sys/fs/cgroup/forme-sandbox/cgroup.subtree_control \
+            /sys/fs/cgroup/forme-sandbox/runner \
+            /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs \
+            /sys/fs/cgroup/forme-sandbox/runner/cgroup.threads
           test -w /sys/fs/cgroup/forme-sandbox
           test -w /sys/fs/cgroup/forme-sandbox/cgroup.procs
           test -w /sys/fs/cgroup/forme-sandbox/cgroup.subtree_control
@@ -4133,6 +4138,9 @@ jobs:
         timeout-minutes: 300
         shell: bash
         run: |
+          if [ "$RUNNER_OS" = "Linux" ] && [ -w /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs ]; then
+            echo "$$" > /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs
+          fi
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
           job_flags=()
           if [ "${{ steps.setup-ocaml.outcome }}" = "success" ]; then
@@ -4160,6 +4168,9 @@ jobs:
         timeout-minutes: 150
         shell: bash
         run: |
+          if [ "$RUNNER_OS" = "Linux" ] && [ -w /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs ]; then
+            echo "$$" > /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs
+          fi
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
           job_flags=()
           if [ "${{ steps.setup-ocaml.outcome }}" = "success" ]; then

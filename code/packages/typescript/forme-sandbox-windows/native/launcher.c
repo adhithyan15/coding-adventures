@@ -195,29 +195,6 @@ static int add_appcontainer_acl(const wchar_t *path, PSID sid) {
     return result == ERROR_SUCCESS ? 0 : -1;
 }
 
-static HANDLE restricted_low_token(void) {
-    HANDLE process_token = NULL;
-    HANDLE restricted = NULL;
-    PSID low_sid = NULL;
-    if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ALL_ACCESS, &process_token)
-            || !CreateRestrictedToken(process_token, DISABLE_MAX_PRIVILEGE, 0, NULL, 0, NULL, 0, NULL, &restricted)
-            || !ConvertStringSidToSidW(L"S-1-16-4096", &low_sid)) goto fail;
-    TOKEN_MANDATORY_LABEL label;
-    ZeroMemory(&label, sizeof(label));
-    label.Label.Attributes = SE_GROUP_INTEGRITY;
-    label.Label.Sid = low_sid;
-    DWORD length = sizeof(label) + GetLengthSid(low_sid);
-    if (!SetTokenInformation(restricted, TokenIntegrityLevel, &label, length)) goto fail;
-    CloseHandle(process_token);
-    LocalFree(low_sid);
-    return restricted;
-fail:
-    if (process_token != NULL) CloseHandle(process_token);
-    if (restricted != NULL) CloseHandle(restricted);
-    if (low_sid != NULL) LocalFree(low_sid);
-    return NULL;
-}
-
 static HANDLE configured_job(unsigned long long memory, unsigned long long cpu_ms) {
     HANDLE job = CreateJobObjectW(NULL, NULL);
     if (job == NULL) return NULL;
@@ -341,11 +318,8 @@ int wmain(int argc, wchar_t **argv) {
         return 66;
     }
 
-    HANDLE token = restricted_low_token();
     HANDLE job = configured_job(memory, cpu_ms);
-    if (token == NULL || job == NULL) {
-        if (job != NULL) CloseHandle(job);
-        if (token != NULL) CloseHandle(token);
+    if (job == NULL) {
         FreeSid(app_sid);
         DeleteAppContainerProfile(profile_name);
         CloseHandle(pinned_entry);
@@ -382,7 +356,6 @@ int wmain(int argc, wchar_t **argv) {
                 inherited, sizeof(inherited), NULL, NULL)) {
         if (attributes != NULL) HeapFree(GetProcessHeap(), 0, attributes);
         CloseHandle(job);
-        CloseHandle(token);
         FreeSid(app_sid);
         DeleteAppContainerProfile(profile_name);
         CloseHandle(pinned_entry);
@@ -395,7 +368,7 @@ int wmain(int argc, wchar_t **argv) {
     if (quoted_runtime == NULL || quoted_entry == NULL || quoted_stage == NULL || quoted_schema == NULL) {
         free(quoted_runtime); free(quoted_entry); free(quoted_stage); free(quoted_schema);
         DeleteProcThreadAttributeList(attributes); HeapFree(GetProcessHeap(), 0, attributes);
-        CloseHandle(job); CloseHandle(token); FreeSid(app_sid); DeleteAppContainerProfile(profile_name);
+        CloseHandle(job); FreeSid(app_sid); DeleteAppContainerProfile(profile_name);
         CloseHandle(pinned_entry); if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 69;
     }
@@ -404,7 +377,7 @@ int wmain(int argc, wchar_t **argv) {
     if (command == NULL) {
         free(quoted_runtime); free(quoted_entry); free(quoted_stage); free(quoted_schema);
         DeleteProcThreadAttributeList(attributes); HeapFree(GetProcessHeap(), 0, attributes);
-        CloseHandle(job); CloseHandle(token); FreeSid(app_sid); DeleteAppContainerProfile(profile_name);
+        CloseHandle(job); FreeSid(app_sid); DeleteAppContainerProfile(profile_name);
         CloseHandle(pinned_entry); if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 69;
     }
@@ -413,18 +386,18 @@ int wmain(int argc, wchar_t **argv) {
     PROCESS_INFORMATION process;
     ZeroMemory(&process, sizeof(process));
     DWORD flags = CREATE_SUSPENDED | CREATE_NO_WINDOW | EXTENDED_STARTUPINFO_PRESENT | CREATE_UNICODE_ENVIRONMENT;
-    /* The trusted host already started this supervisor in working_directory.
-     * Inherit that cwd instead of asking CreateProcessAsUserW to reselect a
-     * drive whose hidden `=X:` environment entry was deliberately removed by
-     * the host's minimal environment. */
-    BOOL created = CreateProcessAsUserW(token, runtime, command, NULL, NULL, TRUE, flags, NULL,
+    /* PROC_THREAD_ATTRIBUTE_SECURITY_CAPABILITIES asks Windows to derive the
+     * capability-free, low-integrity AppContainer token and object namespace.
+     * Supplying a second primary token makes that environment construction
+     * fail on current Windows workers. */
+    BOOL created = CreateProcessW(runtime, command, NULL, NULL, TRUE, flags, NULL,
         NULL, &startup.StartupInfo, &process);
     DWORD create_error = created ? ERROR_SUCCESS : GetLastError();
     free(quoted_runtime); free(quoted_entry); free(quoted_stage); free(quoted_schema); free(command);
     if (!created) {
-        fwprintf(stderr, L"CreateProcessAsUserW failed: %lu\n", (unsigned long)create_error);
+        fwprintf(stderr, L"CreateProcessW failed: %lu\n", (unsigned long)create_error);
         DeleteProcThreadAttributeList(attributes); HeapFree(GetProcessHeap(), 0, attributes);
-        CloseHandle(job); CloseHandle(token); FreeSid(app_sid); DeleteAppContainerProfile(profile_name);
+        CloseHandle(job); FreeSid(app_sid); DeleteAppContainerProfile(profile_name);
         CloseHandle(pinned_entry); if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 70;
     }
@@ -435,7 +408,7 @@ int wmain(int argc, wchar_t **argv) {
         TerminateProcess(process.hProcess, 71);
         CloseHandle(process.hThread); CloseHandle(process.hProcess);
         DeleteProcThreadAttributeList(attributes); HeapFree(GetProcessHeap(), 0, attributes);
-        CloseHandle(job); CloseHandle(token); FreeSid(app_sid); DeleteAppContainerProfile(profile_name);
+        CloseHandle(job); FreeSid(app_sid); DeleteAppContainerProfile(profile_name);
         CloseHandle(pinned_entry); if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 71;
     }
@@ -444,7 +417,7 @@ int wmain(int argc, wchar_t **argv) {
         TerminateJobObject(job, 71);
         CloseHandle(process.hProcess);
         DeleteProcThreadAttributeList(attributes); HeapFree(GetProcessHeap(), 0, attributes);
-        CloseHandle(job); CloseHandle(token); FreeSid(app_sid); DeleteAppContainerProfile(profile_name);
+        CloseHandle(job); FreeSid(app_sid); DeleteAppContainerProfile(profile_name);
         CloseHandle(pinned_entry); if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 71;
     }
@@ -486,7 +459,6 @@ int wmain(int argc, wchar_t **argv) {
     CloseHandle(pinned_entry);
     if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
     CloseHandle(job);
-    CloseHandle(token);
     DeleteProcThreadAttributeList(attributes);
     HeapFree(GetProcessHeap(), 0, attributes);
     FreeSid(app_sid);

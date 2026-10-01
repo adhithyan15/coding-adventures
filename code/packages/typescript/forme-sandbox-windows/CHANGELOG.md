@@ -11,7 +11,8 @@
   cancellation channel, and a native wall-clock watchdog.
 - Made the environment isolation probe clean under current MSVC secure-CRT
   warnings-as-errors builds.
-- Preserved the native `CreateProcessAsUserW` error in trusted-launcher stderr
+- Preserved the native process-creation error in trusted-launcher stderr
   when process creation fails before readiness attestation.
-- Inherited the supervisor's already-pinned working directory when creating
-  the sandbox process, avoiding dependence on stripped Windows drive variables.
+- Switched process creation to the documented AppContainer security-
+  capabilities flow so Windows derives the capability-free low-integrity token
+  and namespace without a conflicting separately supplied primary token.

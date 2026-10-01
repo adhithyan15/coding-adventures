@@ -1520,8 +1520,11 @@ the OS sandbox before the plugin's user code begins executing.
 - **PID namespace** so the plugin can't see other host processes.
 - **`no_new_privs`** to prevent setuid escape paths.
 - **cgroups v2** for memory and CPU limits.
-  The host runner MUST delegate a private writable subtree to the launcher;
-  inability to configure the per-plugin cgroup fails launch.
+  The host runner MUST delegate a private writable subtree to the launcher and
+  start the launcher from a writable child of that subtree, leaving the
+  delegated root free of processes. The launcher creates a sibling per-plugin
+  leaf and restores itself to its original child before removing that leaf;
+  inability to configure or restore the per-plugin cgroup fails launch.
 
 This is bubblewrap / nsjail-style isolation. The implementation
 SHOULD use `libseccomp` and the `unshare` syscall directly rather
@@ -1566,8 +1569,10 @@ the supervisor exits unexpectedly; it exits when the plugin does.
   - `JOB_OBJECT_LIMIT_ACTIVE_PROCESS = 1` (no child processes)
   - `JOB_OBJECT_LIMIT_BREAKAWAY_OK = 0`
   - `JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE`
-- **Restricted token**: plugin process runs as a restricted user
-  with `SECURITY_MANDATORY_LOW_RID` integrity level.
+- **Restricted token**: plugin process runs with the capability-free,
+  low-integrity token that Windows derives from the AppContainer security
+  capabilities process attribute. The launcher MUST NOT combine a separately
+  created primary token with that attribute.
 - **AppContainer** (Windows 8+) with no capabilities granted —
   blocks network and most filesystem access at the kernel.
 - **Process Mitigations**: ASLR, DEP, CFG, and no remote images. JIT runtimes
@@ -1903,9 +1908,8 @@ macOS-only sandbox primitives.
 Windows-only sandbox primitives.
 
 - `src/job-object.ts` — Job Object creation and assignment
-- `src/appcontainer.ts` — AppContainer setup
-- `src/restricted-token.ts` — token creation
-- `native/launcher.c` — checked-in Win32 helper for restricted-token,
+- `src/appcontainer.ts` — AppContainer setup and token policy
+- `native/launcher.c` — checked-in Win32 helper for AppContainer-derived token,
   AppContainer, mitigation-policy, Job Object, resource, and inherited-handle
   setup, compiled locally with MSVC.
 

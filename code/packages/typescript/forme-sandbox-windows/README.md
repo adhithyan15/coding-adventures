@@ -2,7 +2,7 @@
 
 Production Windows process isolation for third-party Forme plugins.
 
-The checked-in native launcher creates a capability-free AppContainer and
+The checked-in native launcher creates a capability-free AppContainer-derived
 low-integrity restricted token, applies process mitigations, starts the plugin
 suspended, assigns it to a single-process memory/CPU Job Object, restricts
 inherited handles to protocol stdio, and monitors the process handle count.

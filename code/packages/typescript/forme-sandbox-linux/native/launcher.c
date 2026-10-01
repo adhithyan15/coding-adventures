@@ -29,6 +29,7 @@
 #define DENIED (SECCOMP_RET_ERRNO | (EPERM & SECCOMP_RET_DATA))
 
 static volatile sig_atomic_t sandbox_child = -1;
+static char original_cgroup_procs[PATH_MAX];
 
 static void forward_signal(int signal_number) {
     if (sandbox_child > 0) {
@@ -125,12 +126,51 @@ static int write_text(const char *path, const char *text) {
     return result;
 }
 
+static int capture_original_cgroup(const char *canonical_base) {
+    FILE *memberships = fopen("/proc/self/cgroup", "r");
+    if (memberships == NULL) return -1;
+    char line[PATH_MAX];
+    char relative[PATH_MAX] = {0};
+    while (fgets(line, sizeof(line), memberships) != NULL) {
+        if (strncmp(line, "0::", 3) != 0) continue;
+        char *newline = strchr(line + 3, '\n');
+        if (newline != NULL) *newline = '\0';
+        if (line[3] != '/' || strstr(line + 3, "..") != NULL
+                || strlen(line + 3) >= sizeof(relative)) break;
+        strcpy(relative, line + 3);
+        break;
+    }
+    int saved = errno;
+    fclose(memberships);
+    errno = saved;
+    if (relative[0] == '\0') {
+        errno = EINVAL;
+        return -1;
+    }
+
+    char current[PATH_MAX];
+    char canonical_current[PATH_MAX];
+    if (snprintf(current, sizeof(current), "/sys/fs/cgroup%s", relative) >= (int)sizeof(current)
+            || realpath(current, canonical_current) == NULL) return -1;
+    size_t base_length = strlen(canonical_base);
+    if (strncmp(canonical_current, canonical_base, base_length) != 0
+            || canonical_current[base_length] != '/') {
+        errno = EPERM;
+        return -1;
+    }
+    if (snprintf(original_cgroup_procs, sizeof(original_cgroup_procs),
+            "%s/cgroup.procs", canonical_current) >= (int)sizeof(original_cgroup_procs)
+            || access(original_cgroup_procs, W_OK) != 0) return -1;
+    return 0;
+}
+
 static int setup_cgroup(const char *base, rlim_t memory, char *group, size_t group_size) {
     char canonical[PATH_MAX];
     if (base == NULL || base[0] != '/' || strstr(base, "..") != NULL || realpath(base, canonical) == NULL) {
         errno = EINVAL;
         return -1;
     }
+    if (capture_original_cgroup(canonical) != 0) return -1;
     if (snprintf(group, group_size, "%s/plugin-%ld", canonical, (long)getpid()) >= (int)group_size
             || mkdir(group, 0700) != 0) return -1;
     char path[PATH_MAX];
@@ -150,21 +190,15 @@ static int setup_cgroup(const char *base, rlim_t memory, char *group, size_t gro
     return write_text(path, value);
 }
 
-static void cleanup_cgroup(const char *group) {
-    if (group == NULL || *group == '\0') return;
-    char base[PATH_MAX];
-    if (strlen(group) < sizeof(base)) {
-        strcpy(base, group);
-        char *slash = strrchr(base, '/');
-        if (slash != NULL) {
-            *slash = '\0';
-            char path[PATH_MAX], value[64];
-            snprintf(path, sizeof(path), "%s/cgroup.procs", base);
-            snprintf(value, sizeof(value), "%ld", (long)getpid());
-            write_text(path, value);
-        }
-    }
-    rmdir(group);
+static int cleanup_cgroup(const char *group) {
+    if (group == NULL || *group == '\0') return 0;
+    char value[64];
+    snprintf(value, sizeof(value), "%ld", (long)getpid());
+    int result = original_cgroup_procs[0] == '\0'
+        ? -1
+        : write_text(original_cgroup_procs, value);
+    if (rmdir(group) != 0) result = -1;
+    return result;
 }
 
 static int write_id_map(const char *name, unsigned long outside) {
@@ -866,7 +900,7 @@ int main(int argc, char **argv) {
     }
     umount2(root, MNT_DETACH);
     rmdir(root);
-    cleanup_cgroup(cgroup);
+    if (cleanup_cgroup(cgroup) != 0) return 82;
     if (WIFEXITED(status)) return WEXITSTATUS(status);
     if (WIFSIGNALED(status)) return 128 + WTERMSIG(status);
     return 77;

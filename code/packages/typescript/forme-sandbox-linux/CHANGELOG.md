@@ -14,3 +14,5 @@
   portable SHA-256 implementation derived from the repository's
   FIPS-vector-tested C package, without adding cross-platform build edges.
 - Preserved bounded child setup exit codes for host-side attestation diagnostics.
+- Required the host build process to begin in a delegated child cgroup and
+  restored launcher membership there before removing each plugin leaf.
