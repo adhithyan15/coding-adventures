@@ -1,0 +1,19 @@
+{
+  "chapter": 192,
+  "title": "Cooked, Ripe, Dark, Clear, Distant",
+  "label": "ch:fr-cooked-ripe-dark-clear-distant",
+  "canDo": "I can say cooked, ripe, dark, clear and distant.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FR-R192-second-pass-words-from-chapters-188-192",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 192: I can say cooked, ripe, dark, clear and distant.",
+    "assesses": [
+      "FR-LEX-C192-QUAL192-03",
+      "FR-LEX-C192-QUAL192-04",
+      "FR-LEX-C192-QUAL192-05"
+    ]
+  }
+}

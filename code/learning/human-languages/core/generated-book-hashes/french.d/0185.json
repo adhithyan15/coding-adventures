@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:5f9ae3c8f43347b3",
+  "lessonIds": [
+    "FR-C185-muscle",
+    "FR-C185-pouce",
+    "FR-C185-blessure",
+    "FR-C185-cicatrice",
+    "FR-C185-rhume"
+  ],
+  "tex": "french/book/chapters/ch185-muscle-thumb-wound-scar-cold.tex"
+}

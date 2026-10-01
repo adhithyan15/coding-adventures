@@ -1,0 +1,19 @@
+{
+  "chapter": 203,
+  "title": "Defeat, Championship, Player, Coach, Connection",
+  "label": "ch:fr-defeat-championship-player-coach-connection",
+  "canDo": "I can say a defeat, a championship, a player, a coach and a connection.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C203-correspondance",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 203: I can say a defeat, a championship, a player, a coach and a connection.",
+    "assesses": [
+      "FR-LEX-C203-CHOSES203-03",
+      "FR-LEX-C203-CHOSES203-04",
+      "FR-LEX-C203-CHOSES203-05"
+    ]
+  }
+}

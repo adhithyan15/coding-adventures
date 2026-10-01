@@ -1,0 +1,19 @@
+{
+  "chapter": 184,
+  "title": "To stir, To pick, To defend, To disappear, To borrow",
+  "label": "ch:fr-to-stir-to-pick-to-defend-to-disappear-to-borrow",
+  "canDo": "I can say to stir, to pick, to defend, to disappear and to borrow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C184-emprunter",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 184: I can say to stir, to pick, to defend, to disappear and to borrow.",
+    "assesses": [
+      "FR-LEX-C184-VERBES184-03",
+      "FR-LEX-C184-VERBES184-04",
+      "FR-LEX-C184-VERBES184-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:7e1ee5c4c17599ea",
+  "lessonIds": [
+    "FR-C195-dialecte",
+    "FR-C195-nouvelle",
+    "FR-C195-publicite",
+    "FR-C195-ecran",
+    "FR-C195-clavier"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch195.txt",
+  "json": "french/narration/ch195.json",
+  "textHash": "fnv1a64:ab3d578e23800c90",
+  "jsonHash": "fnv1a64:ff0dc6cc97701f7e",
+  "findings": []
+}

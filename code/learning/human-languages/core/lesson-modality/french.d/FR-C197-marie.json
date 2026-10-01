@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C197-marie",
+    "language": "french",
+    "chapter": 197,
+    "sequence": 10590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b174ca2e6c6b22c"
+  },
+  "findings": []
+}

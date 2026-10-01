@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R183-second-pass-words-from-chapters-179-183",
+    "language": "french",
+    "chapter": 183,
+    "sequence": 9570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b4ea8181c49ac4c7"
+  },
+  "findings": []
+}

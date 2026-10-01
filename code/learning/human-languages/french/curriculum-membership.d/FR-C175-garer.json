@@ -1,0 +1,11 @@
+{
+  "id": "FR-C175-garer",
+  "pathSegment": "FR-PATH-175-VERBES175",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-175-VERBES175",
+      "order": 4
+    }
+  ]
+}

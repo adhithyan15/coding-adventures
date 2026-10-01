@@ -1,0 +1,11 @@
+{
+  "id": "FR-C196-plombier",
+  "pathSegment": "FR-PATH-196-CHOSES196",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-196-CHOSES196",
+      "order": 3
+    }
+  ]
+}

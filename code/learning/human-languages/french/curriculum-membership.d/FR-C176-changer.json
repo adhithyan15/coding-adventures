@@ -1,0 +1,11 @@
+{
+  "id": "FR-C176-changer",
+  "pathSegment": "FR-PATH-176-VERBES176",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-176-VERBES176",
+      "order": 1
+    }
+  ]
+}

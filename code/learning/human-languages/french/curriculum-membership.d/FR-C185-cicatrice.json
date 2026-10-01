@@ -1,0 +1,11 @@
+{
+  "id": "FR-C185-cicatrice",
+  "pathSegment": "FR-PATH-185-SANTE185",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-185-SANTE185",
+      "order": 3
+    }
+  ]
+}

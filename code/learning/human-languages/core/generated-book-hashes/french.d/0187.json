@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:7d1083e65d75c07a",
+  "lessonIds": [
+    "FR-C187-alors",
+    "FR-C187-tard",
+    "FR-C187-soudain",
+    "FR-C187-jusqua",
+    "FR-C187-depuis"
+  ],
+  "tex": "french/book/chapters/ch187-in-that-case-late-suddenly-until-since.tex"
+}

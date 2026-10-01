@@ -1,0 +1,19 @@
+{
+  "chapter": 176,
+  "title": "To stop, To change, To move, To take off, To hold",
+  "label": "ch:fr-to-stop-to-change-to-move-to-take-off-to-hold",
+  "canDo": "I can say to stop, to change, to move, to take off and to hold.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C176-tenir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 176: I can say to stop, to change, to move, to take off and to hold.",
+    "assesses": [
+      "FR-LEX-C176-VERBES176-03",
+      "FR-LEX-C176-VERBES176-04",
+      "FR-LEX-C176-VERBES176-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C186-courage",
+  "pathSegment": "FR-PATH-186-SANTE186",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-186-SANTE186",
+      "order": 3
+    }
+  ]
+}

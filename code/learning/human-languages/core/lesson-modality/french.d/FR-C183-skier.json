@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C183-skier",
+    "language": "french",
+    "chapter": 183,
+    "sequence": 9540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d41ac5454ae46d6c"
+  },
+  "findings": []
+}

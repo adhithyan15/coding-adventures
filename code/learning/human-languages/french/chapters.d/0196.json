@@ -1,0 +1,19 @@
+{
+  "chapter": 196,
+  "title": "Butcher, Mechanic, Electrician, Plumber, Worker",
+  "label": "ch:fr-butcher-mechanic-electrician-plumber-worker",
+  "canDo": "I can say a butcher, a mechanic, an electrician, a plumber and a worker.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C196-ouvrier",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 196: I can say a butcher, a mechanic, an electrician, a plumber and a worker.",
+    "assesses": [
+      "FR-LEX-C196-CHOSES196-03",
+      "FR-LEX-C196-CHOSES196-04",
+      "FR-LEX-C196-CHOSES196-05"
+    ]
+  }
+}

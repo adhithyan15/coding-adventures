@@ -1,0 +1,11 @@
+{
+  "id": "FR-C196-ouvrier",
+  "pathSegment": "FR-PATH-196-CHOSES196",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-196-CHOSES196",
+      "order": 4
+    }
+  ]
+}

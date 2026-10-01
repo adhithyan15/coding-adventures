@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C184-bouger",
+    "language": "french",
+    "chapter": 184,
+    "sequence": 9750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec3d966c3953155d"
+  },
+  "findings": []
+}

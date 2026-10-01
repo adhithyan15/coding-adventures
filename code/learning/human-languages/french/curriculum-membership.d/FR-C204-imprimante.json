@@ -1,0 +1,11 @@
+{
+  "id": "FR-C204-imprimante",
+  "pathSegment": "FR-PATH-204-TRAV204",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-204-TRAV204",
+      "order": 2
+    }
+  ]
+}

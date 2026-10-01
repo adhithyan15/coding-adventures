@@ -1,0 +1,19 @@
+{
+  "chapter": 190,
+  "title": "Cheerful, Serious, Shy, Brave, Fearful",
+  "label": "ch:fr-cheerful-serious-shy-brave-fearful",
+  "canDo": "I can say cheerful, serious, shy, brave and fearful.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FR-C190-peureux-peureuse",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 190: I can say cheerful, serious, shy, brave and fearful.",
+    "assesses": [
+      "FR-LEX-C190-QUAL190-03",
+      "FR-LEX-C190-QUAL190-04",
+      "FR-LEX-C190-QUAL190-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:45f9308f164a0a46",
+  "lessonIds": [
+    "FR-C191-simple",
+    "FR-C191-complique-compliquee",
+    "FR-C191-necessaire",
+    "FR-C191-utile",
+    "FR-C191-inutile"
+  ],
+  "tex": "french/book/chapters/ch191-simple-complicated-necessary-useful-useless.tex"
+}

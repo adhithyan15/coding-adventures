@@ -1,0 +1,19 @@
+{
+  "chapter": 178,
+  "title": "To snow, To go with, To add, To announce, To appear",
+  "label": "ch:fr-to-snow-to-go-with-to-add-to-announce-to-appear",
+  "canDo": "I can say to snow, to go with, to add, to announce and to appear.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C178-apparaitre",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 178: I can say to snow, to go with, to add, to announce and to appear.",
+    "assesses": [
+      "FR-LEX-C178-VERBES178-03",
+      "FR-LEX-C178-VERBES178-04",
+      "FR-LEX-C178-VERBES178-05"
+    ]
+  }
+}

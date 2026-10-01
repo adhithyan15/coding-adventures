@@ -1,0 +1,11 @@
+{
+  "id": "FR-C181-gaspiller",
+  "pathSegment": "FR-PATH-181-VERBES181",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-181-VERBES181",
+      "order": 3
+    }
+  ]
+}

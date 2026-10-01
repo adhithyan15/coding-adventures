@@ -1,0 +1,19 @@
+{
+  "chapter": 182,
+  "title": "To correct, To direct, To destroy, To exaggerate, To celebrate",
+  "label": "ch:fr-to-correct-to-direct-to-destroy-to-exaggerate-to-celebrate",
+  "canDo": "I can say to correct, to direct, to destroy, to exaggerate and to celebrate.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C182-feter",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 182: I can say to correct, to direct, to destroy, to exaggerate and to celebrate.",
+    "assesses": [
+      "FR-LEX-C182-VERBES182-03",
+      "FR-LEX-C182-VERBES182-04",
+      "FR-LEX-C182-VERBES182-05"
+    ]
+  }
+}

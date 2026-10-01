@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:2d6dee508159c131",
+  "lessonIds": [
+    "FR-C177-promettre",
+    "FR-C177-permettre",
+    "FR-C177-interdire",
+    "FR-C177-proteger",
+    "FR-C177-sauver"
+  ],
+  "tex": "french/book/chapters/ch177-to-promise-to-allow-to-forbid-to-protect-to-rescue.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C185-blessure",
+    "language": "french",
+    "chapter": 185,
+    "sequence": 9820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:34aa7c3fee0e6156"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C182-exagerer",
+  "pathSegment": "FR-PATH-182-VERBES182",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-182-VERBES182",
+      "order": 3
+    }
+  ]
+}

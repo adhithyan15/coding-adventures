@@ -1,0 +1,11 @@
+{
+  "id": "FR-C181-tirer",
+  "pathSegment": "FR-PATH-181-VERBES181",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-181-VERBES181",
+      "order": 2
+    }
+  ]
+}

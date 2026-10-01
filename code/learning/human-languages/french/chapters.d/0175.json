@@ -1,0 +1,19 @@
+{
+  "chapter": 175,
+  "title": "To kiss, To greet, To thank, To invite, To park",
+  "label": "ch:fr-to-kiss-to-greet-to-thank-to-invite-to-park",
+  "canDo": "I can say to kiss, to greet, to thank, to invite and to park.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C175-garer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 175: I can say to kiss, to greet, to thank, to invite and to park.",
+    "assesses": [
+      "FR-LEX-C175-VERBES175-03",
+      "FR-LEX-C175-VERBES175-04",
+      "FR-LEX-C175-VERBES175-05"
+    ]
+  }
+}

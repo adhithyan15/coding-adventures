@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C196-mecanicien",
+    "language": "french",
+    "chapter": 196,
+    "sequence": 10550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9df0af01e31e206c"
+  },
+  "findings": []
+}

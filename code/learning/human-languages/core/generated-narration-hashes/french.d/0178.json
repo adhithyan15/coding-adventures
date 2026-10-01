@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:a2d25de490a208d2",
+  "lessonIds": [
+    "FR-C178-neiger",
+    "FR-C178-accompagner",
+    "FR-C178-ajouter",
+    "FR-C178-annoncer",
+    "FR-C178-apparaitre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch178.txt",
+  "json": "french/narration/ch178.json",
+  "textHash": "fnv1a64:2e64e531473c3a7b",
+  "jsonHash": "fnv1a64:bde78457b2acb6be",
+  "findings": []
+}

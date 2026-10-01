@@ -1,0 +1,19 @@
+{
+  "chapter": 197,
+  "title": "Bridegroom, Bride, Widower, Success, Failure",
+  "label": "ch:fr-bridegroom-bride-widower-success-failure",
+  "canDo": "I can say a bridegroom, a bride, a widower, success and failure.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C197-echec",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 197: I can say a bridegroom, a bride, a widower, success and failure.",
+    "assesses": [
+      "FR-LEX-C197-CHOSES197-03",
+      "FR-LEX-C197-CHOSES197-04",
+      "FR-LEX-C197-CHOSES197-05"
+    ]
+  }
+}

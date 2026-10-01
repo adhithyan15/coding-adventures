@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C190-joyeux-joyeuse",
+    "language": "french",
+    "chapter": 190,
+    "sequence": 10050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:021a58e1ebf4f5a5"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C177-permettre",
+  "pathSegment": "FR-PATH-177-VERBES177",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-177-VERBES177",
+      "order": 1
+    }
+  ]
+}

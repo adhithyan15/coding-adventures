@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C179-eviter",
+    "language": "french",
+    "chapter": 179,
+    "sequence": 9330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c830ce54ec42468"
+  },
+  "findings": []
+}

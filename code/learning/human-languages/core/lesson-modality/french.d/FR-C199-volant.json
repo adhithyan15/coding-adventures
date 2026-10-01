@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C199-volant",
+    "language": "french",
+    "chapter": 199,
+    "sequence": 10890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1fa2b1f0578ba939"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C190-peureux-peureuse",
+  "pathSegment": "FR-PATH-190-QUAL190",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-190-QUAL190",
+      "order": 4
+    }
+  ]
+}

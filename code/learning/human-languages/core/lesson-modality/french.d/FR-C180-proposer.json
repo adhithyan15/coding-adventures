@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C180-proposer",
+    "language": "french",
+    "chapter": 180,
+    "sequence": 9390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57dd18d8ac71ed98"
+  },
+  "findings": []
+}

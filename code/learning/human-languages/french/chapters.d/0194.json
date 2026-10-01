@@ -1,0 +1,19 @@
+{
+  "chapter": 194,
+  "title": "Valley, Temperature, Butterfly, Fly, Mosquito",
+  "label": "ch:fr-valley-temperature-butterfly-fly-mosquito",
+  "canDo": "I can say a valley, temperature, a butterfly, a fly and a mosquito.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C194-moustique",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 194: I can say a valley, temperature, a butterfly, a fly and a mosquito.",
+    "assesses": [
+      "FR-LEX-C194-CHOSES194-03",
+      "FR-LEX-C194-CHOSES194-04",
+      "FR-LEX-C194-CHOSES194-05"
+    ]
+  }
+}

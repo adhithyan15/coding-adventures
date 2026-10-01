@@ -1,0 +1,11 @@
+{
+  "id": "FR-C192-sombre",
+  "pathSegment": "FR-PATH-192-QUAL192",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-192-QUAL192",
+      "order": 2
+    }
+  ]
+}

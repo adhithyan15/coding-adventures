@@ -1,0 +1,19 @@
+{
+  "chapter": 186,
+  "title": "Friendship, Hope, Trust, Courage, Shame",
+  "label": "ch:fr-friendship-hope-trust-courage-shame",
+  "canDo": "I can say friendship, hope, trust, courage and shame.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FR-C186-honte",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 186: I can say friendship, hope, trust, courage and shame.",
+    "assesses": [
+      "FR-LEX-C186-SANTE186-03",
+      "FR-LEX-C186-SANTE186-04",
+      "FR-LEX-C186-SANTE186-05"
+    ]
+  }
+}

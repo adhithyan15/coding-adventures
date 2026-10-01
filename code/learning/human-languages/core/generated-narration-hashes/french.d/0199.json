@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:7b2ce55e6daedf98",
+  "lessonIds": [
+    "FR-C199-entree",
+    "FR-C199-sortie",
+    "FR-C199-bagages",
+    "FR-C199-siege",
+    "FR-C199-volant"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch199.txt",
+  "json": "french/narration/ch199.json",
+  "textHash": "fnv1a64:cdf2fcdf992a13ca",
+  "jsonHash": "fnv1a64:522ffd37fe0b0155",
+  "findings": []
+}

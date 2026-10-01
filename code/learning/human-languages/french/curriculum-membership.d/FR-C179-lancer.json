@@ -1,0 +1,11 @@
+{
+  "id": "FR-C179-lancer",
+  "pathSegment": "FR-PATH-179-VERBES179",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-179-VERBES179",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:6eeb93b968318eb2",
+  "lessonIds": [
+    "FR-C190-joyeux-joyeuse",
+    "FR-C190-serieux-serieuse",
+    "FR-C190-timide",
+    "FR-C190-courageux-courageuse",
+    "FR-C190-peureux-peureuse"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch190.txt",
+  "json": "french/narration/ch190.json",
+  "textHash": "fnv1a64:99b0348fde7bd195",
+  "jsonHash": "fnv1a64:3c1918aa427a9cd2",
+  "findings": []
+}

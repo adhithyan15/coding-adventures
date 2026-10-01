@@ -1,0 +1,11 @@
+{
+  "id": "FR-C189-vraiment",
+  "pathSegment": "FR-PATH-189-POURQUOI189",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-189-POURQUOI189",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C190-serieux-serieuse",
+  "pathSegment": "FR-PATH-190-QUAL190",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-190-QUAL190",
+      "order": 1
+    }
+  ]
+}

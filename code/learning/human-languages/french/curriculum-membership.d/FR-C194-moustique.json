@@ -1,0 +1,11 @@
+{
+  "id": "FR-C194-moustique",
+  "pathSegment": "FR-PATH-194-CHOSES194",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-194-CHOSES194",
+      "order": 4
+    }
+  ]
+}

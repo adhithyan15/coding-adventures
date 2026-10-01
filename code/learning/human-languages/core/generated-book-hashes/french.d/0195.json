@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:389b101b2f394b0e",
+  "lessonIds": [
+    "FR-C195-dialecte",
+    "FR-C195-nouvelle",
+    "FR-C195-publicite",
+    "FR-C195-ecran",
+    "FR-C195-clavier"
+  ],
+  "tex": "french/book/chapters/ch195-dialect-piece-of-news-advertising-screen-keyboard.tex"
+}

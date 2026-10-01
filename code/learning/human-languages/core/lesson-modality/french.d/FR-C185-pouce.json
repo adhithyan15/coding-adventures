@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C185-pouce",
+    "language": "french",
+    "chapter": 185,
+    "sequence": 9810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0c4eef239161181"
+  },
+  "findings": []
+}

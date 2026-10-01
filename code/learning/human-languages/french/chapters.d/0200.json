@@ -1,0 +1,19 @@
+{
+  "chapter": 200,
+  "title": "Gate, Fence, Cellar, Attic, Vegetable garden",
+  "label": "ch:fr-gate-fence-cellar-attic-vegetable-garden",
+  "canDo": "I can say a gate, a fence, a cellar, an attic and a vegetable garden.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C200-potager",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 200: I can say a gate, a fence, a cellar, an attic and a vegetable garden.",
+    "assesses": [
+      "FR-LEX-C200-CHOSES200-03",
+      "FR-LEX-C200-CHOSES200-04",
+      "FR-LEX-C200-CHOSES200-05"
+    ]
+  }
+}

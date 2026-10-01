@@ -1,0 +1,11 @@
+{
+  "id": "FR-C199-volant",
+  "pathSegment": "FR-PATH-199-CHOSES199",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-199-CHOSES199",
+      "order": 4
+    }
+  ]
+}

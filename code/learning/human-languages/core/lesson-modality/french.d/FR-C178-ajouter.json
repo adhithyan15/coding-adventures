@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C178-ajouter",
+    "language": "french",
+    "chapter": 178,
+    "sequence": 9280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ffc9da93b1b036e"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C178-accompagner",
+  "pathSegment": "FR-PATH-178-VERBES178",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-178-VERBES178",
+      "order": 1
+    }
+  ]
+}

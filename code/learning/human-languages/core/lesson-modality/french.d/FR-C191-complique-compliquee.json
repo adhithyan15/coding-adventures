@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C191-complique-compliquee",
+    "language": "french",
+    "chapter": 191,
+    "sequence": 10110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe9212e6a7b42957"
+  },
+  "findings": []
+}

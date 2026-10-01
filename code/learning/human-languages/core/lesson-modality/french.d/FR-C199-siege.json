@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C199-siege",
+    "language": "french",
+    "chapter": 199,
+    "sequence": 10880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0f7cbc3ed2c16d6"
+  },
+  "findings": []
+}

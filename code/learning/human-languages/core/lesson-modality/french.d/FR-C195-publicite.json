@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C195-publicite",
+    "language": "french",
+    "chapter": 195,
+    "sequence": 10510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bef8450c6dd4d4c2"
+  },
+  "findings": []
+}
