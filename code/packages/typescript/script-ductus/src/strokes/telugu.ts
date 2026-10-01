@@ -1109,6 +1109,83 @@ export const entries: DuctusEntry[] = [
     },
   ],
   [
+    "telugu:ష",
+    {
+      script: "telugu",
+      glyph: "ష",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "loop around the lower-left bowl",
+              path: [
+                { x: 333, y: 168 }, { x: 311, y: 204 },
+                { x: 285, y: 236 }, { x: 251, y: 256 },
+                { x: 212, y: 262 }, { x: 174, y: 253 },
+                { x: 140, y: 231 }, { x: 115, y: 199 },
+                { x: 102, y: 159 }, { x: 104, y: 117 },
+                { x: 120, y: 78 }, { x: 147, y: 47 },
+                { x: 182, y: 28 }, { x: 220, y: 22 },
+                { x: 259, y: 33 }, { x: 291, y: 57 },
+                { x: 317, y: 89 }, { x: 334, y: 127 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "sweep around the broad lower and right body",
+              path: [
+                { x: 334, y: 123 }, { x: 356, y: 88 },
+                { x: 381, y: 55 }, { x: 410, y: 26 },
+                { x: 444, y: 5 }, { x: 482, y: -5 },
+                { x: 521, y: -4 }, { x: 559, y: 8 },
+                { x: 592, y: 31 }, { x: 619, y: 62 },
+                { x: 639, y: 94 }, { x: 653, y: 118 },
+                { x: 660, y: 140 }, { x: 662, y: 162 },
+                { x: 659, y: 165 }, { x: 646, y: 206 },
+                { x: 629, y: 246 }, { x: 608, y: 283 },
+                { x: 582, y: 318 }, { x: 552, y: 350 },
+                { x: 518, y: 378 }, { x: 480, y: 399 },
+                { x: 439, y: 417 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "add the short lower-right tail",
+              path: [
+                { x: 615, y: 61 }, { x: 585, y: 5 },
+                { x: 600, y: -65 }, { x: 660, y: -105 },
+                { x: 736, y: -63 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "draw down and up through the separate upper chevron",
+              path: [
+                { x: 99, y: 579 }, { x: 126, y: 548 },
+                { x: 152, y: 516 }, { x: 178, y: 484 },
+                { x: 205, y: 453 }, { x: 231, y: 433 },
+                { x: 258, y: 464 }, { x: 283, y: 497 },
+                { x: 309, y: 529 }, { x: 336, y: 560 },
+                { x: 362, y: 592 }, { x: 389, y: 623 },
+                { x: 416, y: 654 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguLetterSource("ష"),
+    },
+  ],
+  [
     "telugu:ణ",
     {
       script: "telugu",
