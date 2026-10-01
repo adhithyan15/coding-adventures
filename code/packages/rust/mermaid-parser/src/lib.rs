@@ -4595,6 +4595,14 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
             }
             "text-decoration-color" if !value.is_empty() => style.text_decoration_color = Some(value.into()),
             "text-decoration-color" => return Err(token_error(token, "treemap text-decoration-color cannot be empty")),
+            "text-decoration-style" => style.text_decoration_style = Some(match value.to_ascii_lowercase().as_str() {
+                "solid" => diagram_ir::TreemapTextDecorationStyle::Solid,
+                "double" => diagram_ir::TreemapTextDecorationStyle::Double,
+                "dotted" => diagram_ir::TreemapTextDecorationStyle::Dotted,
+                "dashed" => diagram_ir::TreemapTextDecorationStyle::Dashed,
+                "wavy" => diagram_ir::TreemapTextDecorationStyle::Wavy,
+                _ => return Err(token_error(token, "unsupported treemap text-decoration-style")),
+            }),
             "line-height" => style.line_height = Some(parse_treemap_line_height(token, value)?),
             _ => merge_treemap_node_style(&mut style.node, &parse_block_style(token, declaration)?),
         }
@@ -14141,7 +14149,7 @@ B//-A: reverse stick top
     #[test]
     fn treemap_resolves_class_definitions_declared_after_nodes() {
         let diagram = parse_treemap(
-            "treemap\n\"Root\"\n  \"Styled node\": 5:::accent\nclassDef accent fill:#fef3c7,fill-opacity:0.7,stroke:#b45309,stroke-opacity:0.5,opacity:0.8,stroke-width:3px,stroke-dasharray:5 2,stroke-dashoffset:-1px,color:#78350f,font-size:16px,font-weight:bold,font-style:italic,font-family:Avenir,text-align:right,text-transform:uppercase,text-decoration:underline overline line-through,text-decoration-color:#2563eb,line-height:150%",
+            "treemap\n\"Root\"\n  \"Styled node\": 5:::accent\nclassDef accent fill:#fef3c7,fill-opacity:0.7,stroke:#b45309,stroke-opacity:0.5,opacity:0.8,stroke-width:3px,stroke-dasharray:5 2,stroke-dashoffset:-1px,color:#78350f,font-size:16px,font-weight:bold,font-style:italic,font-family:Avenir,text-align:right,text-transform:uppercase,text-decoration:underline overline line-through,text-decoration-color:#2563eb,text-decoration-style:wavy,line-height:150%",
         ).unwrap();
         let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
         assert_eq!(style.node.fill.as_deref(), Some("#fef3c7"));
@@ -14161,6 +14169,7 @@ B//-A: reverse stick top
             underline: true, overline: true, line_through: true,
         }));
         assert_eq!(style.text_decoration_color.as_deref(), Some("#2563eb"));
+        assert_eq!(style.text_decoration_style, Some(diagram_ir::TreemapTextDecorationStyle::Wavy));
         assert_eq!(style.line_height, Some(diagram_ir::TreemapLineHeight::Factor(1.5)));
     }
 
