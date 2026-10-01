@@ -1403,10 +1403,10 @@ fn emit_text_decorations<M>(
     };
 
     if decoration.lines.contains(TextDecorationLines::UNDERLINE) {
-        let position = metrics
+        let position = decoration.underline_offset.unwrap_or_else(|| metrics
             .underline_position(handle)
             .map(|value| f64::from(value) * scale)
-            .unwrap_or_else(|| f64::from(size) * 0.08);
+            .unwrap_or_else(|| f64::from(size) * 0.08));
         emit_line(baseline_y + position);
     }
     if decoration.lines.contains(TextDecorationLines::OVERLINE) {
@@ -2005,6 +2005,7 @@ mod tests {
                 style,
                 color: Some(rgb(37, 99, 235)),
                 thickness: Some(3.0),
+                underline_offset: None,
             });
             let root = positioned_leaf(text, 0.0, 0.0, 200.0, 30.0);
             let shaper = FakeShaper;
@@ -2020,21 +2021,29 @@ mod tests {
     }
 
     #[test]
-    fn authored_underline_thickness_overrides_font_metrics() {
+    fn authored_underline_geometry_overrides_font_metrics() {
         let mut text = text_content("thick");
         text.decoration = Some(layout_ir::TextDecoration {
             lines: TextDecorationLines::UNDERLINE,
             style: TextDecorationStyle::Solid,
             color: None,
             thickness: Some(3.5),
+            underline_offset: Some(5.0),
         });
         let root = positioned_leaf(text, 0.0, 0.0, 200.0, 30.0);
         let shaper = FakeShaper;
         let metrics = FakeMetrics;
         let resolver = FakeResolver;
         let scene = layout_to_paint(&root, &make_options(&shaper, &metrics, &resolver));
-        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
-            PaintInstruction::Rect(rect) if rect.height == 3.5)));
+        let baseline = scene.instructions.iter().find_map(|instruction| match instruction {
+            PaintInstruction::GlyphRun(run) => run.glyphs.first().map(|glyph| glyph.y),
+            _ => None,
+        }).expect("decorated text should emit glyphs");
+        let underline = scene.instructions.iter().find_map(|instruction| match instruction {
+            PaintInstruction::Rect(rect) if rect.height == 3.5 => Some(rect),
+            _ => None,
+        }).expect("authored underline should emit a rectangle");
+        assert_eq!(underline.y - baseline, 5.0);
     }
 
     #[test]

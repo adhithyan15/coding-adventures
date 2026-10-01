@@ -312,6 +312,11 @@ fn treemap_text_node(
         diagram_ir::TreemapTextDecorationThickness::Factor(value) => Some(font.size * value),
         diagram_ir::TreemapTextDecorationThickness::Auto | diagram_ir::TreemapTextDecorationThickness::FromFont => None,
     });
+    let underline_offset = style.and_then(|style| style.text_underline_offset).and_then(|offset| match offset {
+        diagram_ir::TreemapTextUnderlineOffset::Pixels(value) => Some(value),
+        diagram_ir::TreemapTextUnderlineOffset::Factor(value) => Some(font.size * value),
+        diagram_ir::TreemapTextUnderlineOffset::Auto => None,
+    });
     let value = match style.and_then(|style| style.text_transform) {
         Some(diagram_ir::TreemapTextTransform::Uppercase) => value.to_uppercase(),
         Some(diagram_ir::TreemapTextTransform::Lowercase) => value.to_lowercase(),
@@ -349,6 +354,7 @@ fn treemap_text_node(
             (lines != TextDecorationLines::NONE).then_some(TextDecoration {
                 lines, style: decoration_style, color: decoration_color,
                 thickness: decoration_thickness,
+                underline_offset,
             })
         });
     }
@@ -6873,6 +6879,7 @@ mod tests {
                     text_decoration_color: Some("#2563eb".into()),
                     text_decoration_style: Some(diagram_ir::TreemapTextDecorationStyle::Wavy),
                     text_decoration_thickness: Some(diagram_ir::TreemapTextDecorationThickness::Factor(0.25)),
+                    text_underline_offset: Some(diagram_ir::TreemapTextUnderlineOffset::Factor(0.25)),
                     line_height: Some(diagram_ir::TreemapLineHeight::Pixels(24.0)),
                 }),
             }],
@@ -6885,7 +6892,7 @@ mod tests {
         assert!(matches!(styled_text.content,
             Some(Content::Text(TextContent { value, text_align: TextAlign::End,
                 decoration: Some(TextDecoration { lines, color: Some(decoration_color),
-                    style: TextDecorationStyle::Wavy, thickness: Some(3.5) }), .. }))
+                    style: TextDecorationStyle::Wavy, thickness: Some(3.5), underline_offset: Some(3.5) }), .. }))
                 if value == "\u{ff33}\u{ff54}\u{ff59}\u{ff4c}\u{ff45}\u{ff44}\u{3000}\u{ff4e}\u{ff4f}\u{ff44}\u{ff45}"
                     && lines.contains(TextDecorationLines::UNDERLINE)
                     && lines.contains(TextDecorationLines::OVERLINE)
