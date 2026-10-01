@@ -4139,7 +4139,7 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Linux" ] && [ -w /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs ]; then
-            echo "$$" > /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs
+            printf '%s\n' "$$" | sudo tee /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs >/dev/null
           fi
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
           job_flags=()
@@ -4169,7 +4169,7 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Linux" ] && [ -w /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs ]; then
-            echo "$$" > /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs
+            printf '%s\n' "$$" | sudo tee /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs >/dev/null
           fi
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
           job_flags=()

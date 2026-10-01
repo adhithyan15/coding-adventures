@@ -16,3 +16,5 @@
 - Switched process creation to the documented AppContainer security-
   capabilities flow so Windows derives the capability-free low-integrity token
   and namespace without a conflicting separately supplied primary token.
+- Added the required validated `LOCALAPPDATA` environment bootstrap and used
+  the documented null-token `CreateProcessAsUserW` AppContainer launch path.

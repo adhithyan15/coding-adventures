@@ -165,9 +165,12 @@ describe("launchWithNativeHelper", () => {
     })).rejects.toMatchObject({ code: "SANDBOX_UNAVAILABLE" });
   });
 
-  it.runIf(process.platform === "win32")("requires an absolute Windows system root", async () => {
+  it.runIf(process.platform === "win32")("requires absolute Windows bootstrap paths", async () => {
     await expect(launchWithNativeHelper(await request(), policy(), {
       systemRoot: "relative",
+    })).rejects.toMatchObject({ code: "SANDBOX_UNAVAILABLE" });
+    await expect(launchWithNativeHelper(await request(), policy(), {
+      localAppData: "relative",
     })).rejects.toMatchObject({ code: "SANDBOX_UNAVAILABLE" });
   });
 

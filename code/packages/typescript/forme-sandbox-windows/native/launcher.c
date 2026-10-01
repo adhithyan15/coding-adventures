@@ -388,14 +388,14 @@ int wmain(int argc, wchar_t **argv) {
     DWORD flags = CREATE_SUSPENDED | CREATE_NO_WINDOW | EXTENDED_STARTUPINFO_PRESENT | CREATE_UNICODE_ENVIRONMENT;
     /* PROC_THREAD_ATTRIBUTE_SECURITY_CAPABILITIES asks Windows to derive the
      * capability-free, low-integrity AppContainer token and object namespace.
-     * Supplying a second primary token makes that environment construction
-     * fail on current Windows workers. */
-    BOOL created = CreateProcessW(runtime, command, NULL, NULL, TRUE, flags, NULL,
+     * The documented unpackaged-AppContainer flow supplies no alternate
+     * primary token; Windows uses the caller while deriving the lowbox token. */
+    BOOL created = CreateProcessAsUserW(NULL, runtime, command, NULL, NULL, TRUE, flags, NULL,
         NULL, &startup.StartupInfo, &process);
     DWORD create_error = created ? ERROR_SUCCESS : GetLastError();
     free(quoted_runtime); free(quoted_entry); free(quoted_stage); free(quoted_schema); free(command);
     if (!created) {
-        fwprintf(stderr, L"CreateProcessW failed: %lu\n", (unsigned long)create_error);
+        fwprintf(stderr, L"CreateProcessAsUserW failed: %lu\n", (unsigned long)create_error);
         DeleteProcThreadAttributeList(attributes); HeapFree(GetProcessHeap(), 0, attributes);
         CloseHandle(job); FreeSid(app_sid); DeleteAppContainerProfile(profile_name);
         CloseHandle(pinned_entry); if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);

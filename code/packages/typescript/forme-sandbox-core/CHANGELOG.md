@@ -20,3 +20,6 @@
   diagnostics without exposing plugin-controlled output.
 - Added bounded trusted-launcher stderr to failed pre-attestation diagnostics
   so unavailable OS primitives retain their actionable native error.
+- Supplied the validated `LOCALAPPDATA` bootstrap required for Windows to
+  construct and rewrite an AppContainer environment without copying ambient
+  application variables.

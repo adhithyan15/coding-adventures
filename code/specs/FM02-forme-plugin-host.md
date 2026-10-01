@@ -1613,7 +1613,10 @@ following sequence before it returns a process to the host:
 4. Resolve the runtime from a host-owned allow-list.  Plugin-controlled
    `PATH`, shell lookup, command strings, and interpreter flags are forbidden.
 5. Construct a minimal environment containing only launcher-owned runtime and
-   temporary-directory values.  The ambient host environment is not copied.
+   temporary-directory values. Windows additionally supplies the absolute
+   `LOCALAPPDATA` bootstrap path required for AppContainer environment
+   construction; Windows rewrites it to the ephemeral profile before plugin
+   code runs. The ambient host environment is not copied.
 6. Start the checked-in native launcher with only stdin/stdout/stderr
    inherited.  The native launcher installs resource limits and the complete
    OS sandbox before it executes the language runtime or binary entry.
@@ -2010,8 +2013,9 @@ forme-plugin-runner-conformance → each language fixture
 - Snapshot races are covered: mutation between verification and staging,
   symbolic-link substitution, a non-empty work directory, and staged-file
   replacement all fail before readiness.
-- The child sees no ambient environment variables and inherits only the three
-  protocol descriptors.
+- The child sees no ambient application variables and inherits only the three
+  protocol descriptors. Windows' AppContainer-owned profile variables are
+  allowed only after the OS rewrites their trusted bootstrap values.
 - A missing native primitive, helper build, readiness record, or resource
   limit fails closed with `SANDBOX_UNAVAILABLE`; no test-only attestation can
   be selected by a production constructor.

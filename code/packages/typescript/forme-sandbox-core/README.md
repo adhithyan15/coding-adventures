@@ -9,7 +9,10 @@ the plugin host in a host-owned snapshot subdirectory, selects only trusted
 absolute runtime distribution roots, constructs a
 minimal environment, starts a platform-owned native helper, and accepts the
 process only after a bounded readiness attestation arrives on a private file
-descriptor.
+descriptor. On Windows, that environment includes only the validated
+`SystemRoot` and `LOCALAPPDATA` bootstrap paths required for AppContainer
+construction in addition to scratch-directory values; Windows rewrites the
+profile path before plugin code runs.
 
 On POSIX, normal termination targets the isolated process group. Forced
 termination uses a reserved control signal so the trusted native supervisor

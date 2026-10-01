@@ -79,6 +79,7 @@ export interface NativeLauncherOptions {
   readonly runtimeExecutables?: Partial<Readonly<Record<Exclude<RuntimeKind, "binary">, string>>>;
   readonly runtimeRoots?: Partial<Readonly<Record<Exclude<RuntimeKind, "binary">, string>>>;
   readonly systemRoot?: string;
+  readonly localAppData?: string;
   /** Trusted-host diagnostic hook invoked after the supervisor is spawned. */
   readonly onLauncherSpawn?: (pid: number) => void;
 }
@@ -247,7 +248,7 @@ export async function launchWithNativeHelper(
   const child = spawn(launcher, argumentsList, {
     cwd: staged.workingDirectory,
     detached: process.platform !== "win32",
-    env: minimalEnvironment(staged.workingDirectory, options.systemRoot),
+    env: minimalEnvironment(staged.workingDirectory, options.systemRoot, options.localAppData),
     stdio: ["pipe", "pipe", "pipe", "pipe", "pipe"],
     windowsHide: true,
   });
@@ -522,7 +523,11 @@ function positiveInteger(value: number, label: string): number {
   return value;
 }
 
-function minimalEnvironment(workingDirectory: string, configuredSystemRoot?: string): NodeJS.ProcessEnv {
+function minimalEnvironment(
+  workingDirectory: string,
+  configuredSystemRoot?: string,
+  configuredLocalAppData?: string,
+): NodeJS.ProcessEnv {
   const environment: NodeJS.ProcessEnv = {
     HOME: workingDirectory,
     TMPDIR: workingDirectory,
@@ -534,8 +539,15 @@ function minimalEnvironment(workingDirectory: string, configuredSystemRoot?: str
     if (!systemRoot || !isAbsolute(systemRoot)) {
       throw new SandboxLaunchError("SANDBOX_UNAVAILABLE", "Windows SystemRoot is unavailable");
     }
+    /* v8 ignore start -- exercised by the Windows native integration gate */
+    const localAppData = configuredLocalAppData ?? process.env.LOCALAPPDATA;
+    if (!localAppData || !isAbsolute(localAppData)) {
+      throw new SandboxLaunchError("SANDBOX_UNAVAILABLE", "Windows LOCALAPPDATA is unavailable");
+    }
     environment.SystemRoot = systemRoot;
     environment.WINDIR = systemRoot;
+    environment.LOCALAPPDATA = localAppData;
+    /* v8 ignore stop */
   }
   return environment;
 }
