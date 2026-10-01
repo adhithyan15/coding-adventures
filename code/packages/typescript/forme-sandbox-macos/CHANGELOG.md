@@ -10,3 +10,5 @@
   trusted runtime dependency roots, RSS/wall-clock watchdogs, and a stable
   `kqueue` parent-death watcher.
 - Added deterministic Homebrew runtime-root derivation coverage.
+- Limited loaded-image discovery to macOS so cross-platform policy validation
+  does not collect an unused, slow host diagnostic report.

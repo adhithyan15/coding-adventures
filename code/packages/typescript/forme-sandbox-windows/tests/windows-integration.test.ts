@@ -60,11 +60,22 @@ async function nodeRequest(): Promise<SandboxLaunchRequest> {
   };
 }
 
+async function exitWithStderr(child: Awaited<ReturnType<ReturnType<typeof createWindowsSandboxFactory>["launch"]>>): Promise<{
+  readonly exit: Awaited<typeof child.exited>;
+  readonly stderr: string;
+}> {
+  const chunks: Buffer[] = [];
+  child.stderr.on("data", chunk => chunks.push(Buffer.from(chunk)));
+  const exit = await child.exited;
+  return { exit, stderr: Buffer.concat(chunks).toString("utf8") };
+}
+
 describe.skipIf(process.platform !== "win32")("Windows native sandbox", () => {
   it("boots the trusted Node runtime after installing the sandbox", async () => {
     const child = await createWindowsSandboxFactory({ launcherPath, readinessTimeoutMs: 2_000 })
       .launch(await nodeRequest());
-    expect(await child.exited).toEqual({ code: 0, signal: null });
+    const result = await exitWithStderr(child);
+    expect(result.exit, result.stderr).toEqual({ code: 0, signal: null });
   });
 
   it("serializes overlapping trusted-runtime ACL grants and revocations", async () => {
@@ -72,7 +83,8 @@ describe.skipIf(process.platform !== "win32")("Windows native sandbox", () => {
       createWindowsSandboxFactory({ launcherPath, readinessTimeoutMs: 2_000 }).launch(await nodeRequest()),
       createWindowsSandboxFactory({ launcherPath, readinessTimeoutMs: 2_000 }).launch(await nodeRequest()),
     ]);
-    expect(await Promise.all([first.exited, second.exited])).toEqual([
+    const results = await Promise.all([exitWithStderr(first), exitWithStderr(second)]);
+    expect(results.map(result => result.exit), results.map(result => result.stderr).join("\n")).toEqual([
       { code: 0, signal: null },
       { code: 0, signal: null },
     ]);

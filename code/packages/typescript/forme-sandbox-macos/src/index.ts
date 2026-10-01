@@ -68,6 +68,11 @@ function defaultLauncherPath(): string {
 }
 
 function defaultRuntimeReadPaths(): readonly string[] {
+  // This package's policy unit tests run on every CI platform. Collecting a
+  // Windows diagnostic report can take several seconds even though a macOS
+  // factory created there can never launch, so only inspect loaded images on
+  // the platform where the paths are consumed.
+  if (process.platform !== "darwin") return Object.freeze([]);
   const report = process.report?.getReport() as { readonly sharedObjects?: readonly string[] } | undefined;
   return macosRuntimeReadPaths(report?.sharedObjects ?? []);
 }

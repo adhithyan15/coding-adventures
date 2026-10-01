@@ -28,3 +28,5 @@
   asynchronous crash cleanup before deleting the profile.
 - Serialized shared runtime DACL mutations across concurrent launchers and
   added an overlapping-launch integration test.
+- Captured trusted-runtime stderr in integration assertions so native CI
+  reports the reason for an early runtime exit.
