@@ -1,0 +1,19 @@
+{
+  "chapter": 174,
+  "title": "Maize, Wheat, Chickpeas, Kidney beans, Fig",
+  "label": "ch:ur-maize-wheat-chickpeas-kidney-beans-fig",
+  "canDo": "I can say maize, wheat, chickpeas, kidney beans and a fig.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C174-anjir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 174: I can say maize, wheat, chickpeas, kidney beans and a fig.",
+    "assesses": [
+      "UR-LEX-C174-CHIZ174-03",
+      "UR-LEX-C174-CHIZ174-04",
+      "UR-LEX-C174-CHIZ174-05"
+    ]
+  }
+}

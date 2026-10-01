@@ -1,0 +1,19 @@
+{
+  "chapter": 175,
+  "title": "Rasmalai, Falooda, Kulfi, Quail, Dove",
+  "label": "ch:ur-rasmalai-falooda-kulfi-quail-dove",
+  "canDo": "I can say rasmalai, falooda, kulfi, a quail and a dove.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C175-fakhta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 175: I can say rasmalai, falooda, kulfi, a quail and a dove.",
+    "assesses": [
+      "UR-LEX-C175-CHIZ175-03",
+      "UR-LEX-C175-CHIZ175-04",
+      "UR-LEX-C175-CHIZ175-05"
+    ]
+  }
+}

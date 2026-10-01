@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 171,
+  "sourceHash": "fnv1a64:ecb7faee45ba4d2e",
+  "lessonIds": [
+    "UR-C171-shahri",
+    "UR-C171-sayyah",
+    "UR-C171-jumla",
+    "UR-C171-harf",
+    "UR-C171-matlab"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch171.txt",
+  "json": "urdu/narration/ch171.json",
+  "textHash": "fnv1a64:4e15c166d2740102",
+  "jsonHash": "fnv1a64:9166bc79f5e36b2c",
+  "findings": []
+}

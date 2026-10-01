@@ -1,0 +1,11 @@
+{
+  "id": "UR-C165-rimot",
+  "pathSegment": "UR-PATH-165-CHIZ165",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-165-CHIZ165",
+      "order": 1
+    }
+  ]
+}

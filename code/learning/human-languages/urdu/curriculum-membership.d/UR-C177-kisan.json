@@ -1,0 +1,11 @@
+{
+  "id": "UR-C177-kisan",
+  "pathSegment": "UR-PATH-177-KAM177",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-177-KAM177",
+      "order": 3
+    }
+  ]
+}

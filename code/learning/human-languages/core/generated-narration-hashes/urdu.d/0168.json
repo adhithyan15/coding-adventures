@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:b69e8ed3bb5921ab",
+  "lessonIds": [
+    "UR-C168-batakh",
+    "UR-C168-ullu",
+    "UR-C168-vhel",
+    "UR-C168-kriket",
+    "UR-C168-futbal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch168.txt",
+  "json": "urdu/narration/ch168.json",
+  "textHash": "fnv1a64:c0035ceb82e06c34",
+  "jsonHash": "fnv1a64:a9639925726c4088",
+  "findings": []
+}

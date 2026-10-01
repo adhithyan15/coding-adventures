@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:f35f977728b7d5bd",
+  "lessonIds": [
+    "UR-C161-mahfuz",
+    "UR-C161-nazuk",
+    "UR-C161-chikna",
+    "UR-C161-khurdura",
+    "UR-C161-gol"
+  ],
+  "tex": "urdu/book/chapters/ch161-safe-delicate-smooth-rough-round.tex"
+}

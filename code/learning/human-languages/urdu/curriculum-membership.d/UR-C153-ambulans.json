@@ -1,0 +1,11 @@
+{
+  "id": "UR-C153-ambulans",
+  "pathSegment": "UR-PATH-153-SEHAT153",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-153-SEHAT153",
+      "order": 2
+    }
+  ]
+}

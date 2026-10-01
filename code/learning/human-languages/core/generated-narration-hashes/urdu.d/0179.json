@@ -1,0 +1,21 @@
+{
+  "language": "urdu",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:adfcf0a7668d0d9f",
+  "lessonIds": [
+    "UR-C179-dai",
+    "UR-C179-khazanchi",
+    "UR-C179-munshi",
+    "UR-C179-vazir",
+    "UR-C179-badshah",
+    "UR-R179-first-pass-words-from-chapters-174-176",
+    "UR-R179-second-pass-words-from-chapters-177-179"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "urdu/narration/ch179.txt",
+  "json": "urdu/narration/ch179.json",
+  "textHash": "fnv1a64:4d67ad6540e8da11",
+  "jsonHash": "fnv1a64:6c23bff3041a9b1e",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C176-naukri",
+    "language": "urdu",
+    "chapter": 176,
+    "sequence": 9820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:95e1550352301991"
+  },
+  "findings": []
+}

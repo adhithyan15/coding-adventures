@@ -1,0 +1,11 @@
+{
+  "id": "UR-C167-kishmish",
+  "pathSegment": "UR-PATH-167-CHIZ167",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-167-CHIZ167",
+      "order": 1
+    }
+  ]
+}

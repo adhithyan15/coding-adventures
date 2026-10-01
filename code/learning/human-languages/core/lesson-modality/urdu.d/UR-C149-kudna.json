@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C149-kudna",
+    "language": "urdu",
+    "chapter": 149,
+    "sequence": 7930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:709be03ba3bf4f13"
+  },
+  "findings": []
+}

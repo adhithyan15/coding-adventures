@@ -1,0 +1,11 @@
+{
+  "id": "UR-C170-validain",
+  "pathSegment": "UR-PATH-170-CHIZ170",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-170-CHIZ170",
+      "order": 2
+    }
+  ]
+}

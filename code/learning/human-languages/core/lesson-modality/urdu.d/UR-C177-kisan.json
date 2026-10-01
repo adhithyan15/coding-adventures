@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C177-kisan",
+    "language": "urdu",
+    "chapter": 177,
+    "sequence": 9900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d09f56ccd0fbd217"
+  },
+  "findings": []
+}

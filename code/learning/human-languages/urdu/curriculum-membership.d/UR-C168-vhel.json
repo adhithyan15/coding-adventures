@@ -1,0 +1,11 @@
+{
+  "id": "UR-C168-vhel",
+  "pathSegment": "UR-PATH-168-CHIZ168",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-168-CHIZ168",
+      "order": 2
+    }
+  ]
+}

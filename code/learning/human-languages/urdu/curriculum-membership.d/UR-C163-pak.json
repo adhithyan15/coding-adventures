@@ -1,0 +1,11 @@
+{
+  "id": "UR-C163-pak",
+  "pathSegment": "UR-PATH-163-SIFAT163",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-163-SIFAT163",
+      "order": 3
+    }
+  ]
+}

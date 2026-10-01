@@ -1,0 +1,19 @@
+{
+  "chapter": 149,
+  "title": "To cross, To wander, To go for a stroll, To jump, To slip",
+  "label": "ch:ur-to-cross-to-wander-to-go-for-a-stroll-to-jump-to-slip",
+  "canDo": "I can say to cross, to wander, to go for a stroll, to jump and to slip.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C149-phisalna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 149: I can say to cross, to wander, to go for a stroll, to jump and to slip.",
+    "assesses": [
+      "UR-LEX-C149-ACT149-03",
+      "UR-LEX-C149-ACT149-04",
+      "UR-LEX-C149-ACT149-05"
+    ]
+  }
+}

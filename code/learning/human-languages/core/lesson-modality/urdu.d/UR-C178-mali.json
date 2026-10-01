@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C178-mali",
+    "language": "urdu",
+    "chapter": 178,
+    "sequence": 9960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23e5d462d85fb2b4"
+  },
+  "findings": []
+}

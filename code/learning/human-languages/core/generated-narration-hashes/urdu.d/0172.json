@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:218ffad809b1bad3",
+  "lessonIds": [
+    "UR-C172-hairat",
+    "UR-C172-sukun",
+    "UR-C172-aman",
+    "UR-C172-jang",
+    "UR-C172-azadi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch172.txt",
+  "json": "urdu/narration/ch172.json",
+  "textHash": "fnv1a64:b9b762852934b2e5",
+  "jsonHash": "fnv1a64:b1d6298e9fe584d0",
+  "findings": []
+}

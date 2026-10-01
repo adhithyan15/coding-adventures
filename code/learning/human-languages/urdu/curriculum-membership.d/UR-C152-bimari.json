@@ -1,0 +1,11 @@
+{
+  "id": "UR-C152-bimari",
+  "pathSegment": "UR-PATH-152-SEHAT152",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-152-SEHAT152",
+      "order": 0
+    }
+  ]
+}

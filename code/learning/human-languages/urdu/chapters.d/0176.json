@@ -1,0 +1,19 @@
+{
+  "chapter": 176,
+  "title": "Job, Profession, Salary, Rupee, Coin",
+  "label": "ch:ur-job-profession-salary-rupee-coin",
+  "canDo": "I can say a job, a profession, a salary, a rupee and a coin.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C176-sikka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 176: I can say a job, a profession, a salary, a rupee and a coin.",
+    "assesses": [
+      "UR-LEX-C176-KAM176-03",
+      "UR-LEX-C176-KAM176-04",
+      "UR-LEX-C176-KAM176-05"
+    ]
+  }
+}

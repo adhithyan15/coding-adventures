@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:19523ea55b0be258",
+  "lessonIds": [
+    "UR-C176-naukri",
+    "UR-C176-pesha",
+    "UR-C176-tankhvah",
+    "UR-C176-rupaya",
+    "UR-C176-sikka"
+  ],
+  "tex": "urdu/book/chapters/ch176-job-profession-salary-rupee-coin.tex"
+}

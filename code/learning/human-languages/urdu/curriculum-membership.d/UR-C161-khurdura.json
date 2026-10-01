@@ -1,0 +1,11 @@
+{
+  "id": "UR-C161-khurdura",
+  "pathSegment": "UR-PATH-161-SIFAT161",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-161-SIFAT161",
+      "order": 3
+    }
+  ]
+}

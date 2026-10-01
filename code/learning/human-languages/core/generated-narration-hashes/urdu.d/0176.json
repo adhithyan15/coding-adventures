@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:a1b59a48c76b5869",
+  "lessonIds": [
+    "UR-C176-naukri",
+    "UR-C176-pesha",
+    "UR-C176-tankhvah",
+    "UR-C176-rupaya",
+    "UR-C176-sikka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch176.txt",
+  "json": "urdu/narration/ch176.json",
+  "textHash": "fnv1a64:58cead7ca8643f6d",
+  "jsonHash": "fnv1a64:9a50d753591c5b0e",
+  "findings": []
+}

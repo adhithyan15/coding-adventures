@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:ee1678bdeaed24c1",
+  "lessonIds": [
+    "UR-C150-rangna",
+    "UR-C150-mitana",
+    "UR-C150-chhapna",
+    "UR-C150-dastkhat-karna",
+    "UR-C150-fon-karna"
+  ],
+  "tex": "urdu/book/chapters/ch150-to-dye-to-rub-out-to-print-to-sign-to-phone.tex"
+}

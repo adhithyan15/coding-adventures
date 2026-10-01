@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C161-nazuk",
+    "language": "urdu",
+    "chapter": 161,
+    "sequence": 8700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db13fcf44aa410e1"
+  },
+  "findings": []
+}

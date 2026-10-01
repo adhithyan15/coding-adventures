@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:f56fa85485b05dd9",
+  "lessonIds": [
+    "UR-C170-insan",
+    "UR-C170-buzurg",
+    "UR-C170-validain",
+    "UR-C170-chacha",
+    "UR-C170-chachi"
+  ],
+  "tex": "urdu/book/chapters/ch170-human-being-elder-parents-uncle-aunt.tex"
+}

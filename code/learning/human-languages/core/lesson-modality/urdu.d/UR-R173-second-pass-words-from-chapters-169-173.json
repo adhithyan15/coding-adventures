@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R173-second-pass-words-from-chapters-169-173",
+    "language": "urdu",
+    "chapter": 173,
+    "sequence": 9540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69ace343c6b0122c"
+  },
+  "findings": []
+}

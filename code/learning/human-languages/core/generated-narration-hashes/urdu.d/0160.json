@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:d83b763c63cade12",
+  "lessonIds": [
+    "UR-C160-mehrban",
+    "UR-C160-samajhdar",
+    "UR-C160-bevaquf",
+    "UR-C160-sust",
+    "UR-C160-mehnati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch160.txt",
+  "json": "urdu/narration/ch160.json",
+  "textHash": "fnv1a64:24a14e591a3c3d38",
+  "jsonHash": "fnv1a64:d9e0268d98a69855",
+  "findings": []
+}

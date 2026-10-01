@@ -1,0 +1,19 @@
+{
+  "chapter": 166,
+  "title": "Sari, Belt, Earring, Necklace, Bangle",
+  "label": "ch:ur-sari-belt-earring-necklace-bangle",
+  "canDo": "I can say a sari, a belt, an earring, a necklace and a bangle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C166-churi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 166: I can say a sari, a belt, an earring, a necklace and a bangle.",
+    "assesses": [
+      "UR-LEX-C166-CHIZ166-03",
+      "UR-LEX-C166-CHIZ166-04",
+      "UR-LEX-C166-CHIZ166-05"
+    ]
+  }
+}

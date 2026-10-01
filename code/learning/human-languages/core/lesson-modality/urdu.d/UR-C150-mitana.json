@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C150-mitana",
+    "language": "urdu",
+    "chapter": 150,
+    "sequence": 7960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb71c3c7f0481523"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:cf77962bf05982ce",
+  "lessonIds": [
+    "UR-C151-tayyar-karna",
+    "UR-C151-sajana",
+    "UR-C151-chhinkna",
+    "UR-C151-khansna",
+    "UR-C151-sans-lena"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch151.txt",
+  "json": "urdu/narration/ch151.json",
+  "textHash": "fnv1a64:ba8f14c6398b018f",
+  "jsonHash": "fnv1a64:2a4e08d17017a748",
+  "findings": []
+}

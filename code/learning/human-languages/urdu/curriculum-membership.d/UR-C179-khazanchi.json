@@ -1,0 +1,11 @@
+{
+  "id": "UR-C179-khazanchi",
+  "pathSegment": "UR-PATH-179-KAM179",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-179-KAM179",
+      "order": 1
+    }
+  ]
+}

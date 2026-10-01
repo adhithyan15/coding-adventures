@@ -1,0 +1,19 @@
+{
+  "chapter": 160,
+  "title": "Kind, Sensible, Foolish, Lazy, Hardworking",
+  "label": "ch:ur-kind-sensible-foolish-lazy-hardworking",
+  "canDo": "I can say kind, sensible, foolish, lazy and hardworking.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "UR-C160-mehnati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 160: I can say kind, sensible, foolish, lazy and hardworking.",
+    "assesses": [
+      "UR-LEX-C160-SIFAT160-03",
+      "UR-LEX-C160-SIFAT160-04",
+      "UR-LEX-C160-SIFAT160-05"
+    ]
+  }
+}

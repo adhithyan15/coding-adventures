@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C152-khansi",
+    "language": "urdu",
+    "chapter": 152,
+    "sequence": 8070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b25973ed4f6856b"
+  },
+  "findings": []
+}

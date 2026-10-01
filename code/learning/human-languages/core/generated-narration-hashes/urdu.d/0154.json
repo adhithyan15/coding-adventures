@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:c3f09cef31de4e58",
+  "lessonIds": [
+    "UR-C154-tika",
+    "UR-C154-dharkan",
+    "UR-C154-pasina",
+    "UR-C154-ulti",
+    "UR-C154-chakkar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch154.txt",
+  "json": "urdu/narration/ch154.json",
+  "textHash": "fnv1a64:c79de232debf4783",
+  "jsonHash": "fnv1a64:d89f784ba2a85539",
+  "findings": []
+}

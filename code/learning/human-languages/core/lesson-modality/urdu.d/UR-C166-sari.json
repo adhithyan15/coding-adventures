@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C166-sari",
+    "language": "urdu",
+    "chapter": 166,
+    "sequence": 9130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:04ae381f81db2341"
+  },
+  "findings": []
+}

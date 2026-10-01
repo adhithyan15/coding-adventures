@@ -1,0 +1,19 @@
+{
+  "chapter": 173,
+  "title": "Wall clock, Flowerpot, Plant, Tree trunk, Mud",
+  "label": "ch:ur-wall-clock-flowerpot-plant-tree-trunk-mud",
+  "canDo": "I can say a wall clock, a flowerpot, a plant, a tree trunk and mud.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-R173-second-pass-words-from-chapters-169-173",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 173: I can say a wall clock, a flowerpot, a plant, a tree trunk and mud.",
+    "assesses": [
+      "UR-LEX-C173-CHIZ173-03",
+      "UR-LEX-C173-CHIZ173-04",
+      "UR-LEX-C173-CHIZ173-05"
+    ]
+  }
+}

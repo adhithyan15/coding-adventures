@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C175-faluda",
+    "language": "urdu",
+    "chapter": 175,
+    "sequence": 9780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e425aa812d2f670"
+  },
+  "findings": []
+}

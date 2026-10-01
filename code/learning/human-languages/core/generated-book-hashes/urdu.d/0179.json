@@ -1,0 +1,15 @@
+{
+  "language": "urdu",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:eafc72fbdb782e77",
+  "lessonIds": [
+    "UR-C179-dai",
+    "UR-C179-khazanchi",
+    "UR-C179-munshi",
+    "UR-C179-vazir",
+    "UR-C179-badshah",
+    "UR-R179-first-pass-words-from-chapters-174-176",
+    "UR-R179-second-pass-words-from-chapters-177-179"
+  ],
+  "tex": "urdu/book/chapters/ch179-midwife-treasurer-clerk-minister-king.tex"
+}

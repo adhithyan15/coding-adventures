@@ -1,0 +1,19 @@
+{
+  "chapter": 164,
+  "title": "Luggage, Thing, Furniture, Quilt, Carpet",
+  "label": "ch:ur-luggage-thing-furniture-quilt-carpet",
+  "canDo": "I can say luggage, a thing, furniture, a quilt and a carpet.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-R164-second-pass-words-from-chapters-160-164",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 164: I can say luggage, a thing, furniture, a quilt and a carpet.",
+    "assesses": [
+      "UR-LEX-C164-CHIZ164-03",
+      "UR-LEX-C164-CHIZ164-04",
+      "UR-LEX-C164-CHIZ164-05"
+    ]
+  }
+}

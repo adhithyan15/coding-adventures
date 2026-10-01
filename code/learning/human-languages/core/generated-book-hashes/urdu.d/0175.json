@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:e5f7108a5f7ad42f",
+  "lessonIds": [
+    "UR-C175-ras-malai",
+    "UR-C175-faluda",
+    "UR-C175-qulfi",
+    "UR-C175-bater",
+    "UR-C175-fakhta"
+  ],
+  "tex": "urdu/book/chapters/ch175-rasmalai-falooda-kulfi-quail-dove.tex"
+}

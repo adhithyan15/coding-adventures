@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C157-mohalla",
+    "language": "urdu",
+    "chapter": 157,
+    "sequence": 8500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69bde306425133da"
+  },
+  "findings": []
+}

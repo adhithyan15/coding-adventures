@@ -1,0 +1,21 @@
+{
+  "language": "urdu",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:751503d8af87ca97",
+  "lessonIds": [
+    "UR-C164-saman",
+    "UR-C164-chiz",
+    "UR-C164-farnichar",
+    "UR-C164-razai",
+    "UR-C164-qalin",
+    "UR-R164-first-pass-words-from-chapters-156-159",
+    "UR-R164-second-pass-words-from-chapters-160-164"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "urdu/narration/ch164.txt",
+  "json": "urdu/narration/ch164.json",
+  "textHash": "fnv1a64:cb1422eeaf5e2b97",
+  "jsonHash": "fnv1a64:7b8b959ca1ff82cb",
+  "findings": []
+}

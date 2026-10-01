@@ -1,0 +1,11 @@
+{
+  "id": "UR-C160-samajhdar",
+  "pathSegment": "UR-PATH-160-SIFAT160",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-160-SIFAT160",
+      "order": 1
+    }
+  ]
+}

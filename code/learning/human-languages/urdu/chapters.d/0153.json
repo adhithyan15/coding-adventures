@@ -1,0 +1,19 @@
+{
+  "chapter": 153,
+  "title": "Nurse, Patient, Ambulance, Eyelid, Eyebrow",
+  "label": "ch:ur-nurse-patient-ambulance-eyelid-eyebrow",
+  "canDo": "I can say a nurse, a patient, an ambulance, an eyelid and an eyebrow.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "UR-C153-bhau",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 153: I can say a nurse, a patient, an ambulance, an eyelid and an eyebrow.",
+    "assesses": [
+      "UR-LEX-C153-SEHAT153-03",
+      "UR-LEX-C153-SEHAT153-04",
+      "UR-LEX-C153-SEHAT153-05"
+    ]
+  }
+}

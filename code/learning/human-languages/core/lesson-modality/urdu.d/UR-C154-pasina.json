@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C154-pasina",
+    "language": "urdu",
+    "chapter": 154,
+    "sequence": 8170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:daee0205d3b2403a"
+  },
+  "findings": []
+}

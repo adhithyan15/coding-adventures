@@ -1,0 +1,11 @@
+{
+  "id": "UR-C173-pauda",
+  "pathSegment": "UR-PATH-173-CHIZ173",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-173-CHIZ173",
+      "order": 2
+    }
+  ]
+}

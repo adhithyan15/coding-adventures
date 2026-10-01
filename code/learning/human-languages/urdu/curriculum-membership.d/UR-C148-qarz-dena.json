@@ -1,0 +1,11 @@
+{
+  "id": "UR-C148-qarz-dena",
+  "pathSegment": "UR-PATH-148-ACT148",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-148-ACT148",
+      "order": 3
+    }
+  ]
+}

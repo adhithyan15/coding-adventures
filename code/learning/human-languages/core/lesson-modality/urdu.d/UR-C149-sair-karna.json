@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C149-sair-karna",
+    "language": "urdu",
+    "chapter": 149,
+    "sequence": 7920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:215bce8b7a930c51"
+  },
+  "findings": []
+}

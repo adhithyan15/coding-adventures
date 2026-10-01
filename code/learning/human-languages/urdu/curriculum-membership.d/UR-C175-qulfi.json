@@ -1,0 +1,11 @@
+{
+  "id": "UR-C175-qulfi",
+  "pathSegment": "UR-PATH-175-CHIZ175",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-175-CHIZ175",
+      "order": 2
+    }
+  ]
+}

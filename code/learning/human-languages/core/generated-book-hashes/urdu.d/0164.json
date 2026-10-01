@@ -1,0 +1,15 @@
+{
+  "language": "urdu",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:a1c3917f55c45eb5",
+  "lessonIds": [
+    "UR-C164-saman",
+    "UR-C164-chiz",
+    "UR-C164-farnichar",
+    "UR-C164-razai",
+    "UR-C164-qalin",
+    "UR-R164-first-pass-words-from-chapters-156-159",
+    "UR-R164-second-pass-words-from-chapters-160-164"
+  ],
+  "tex": "urdu/book/chapters/ch164-luggage-thing-furniture-quilt-carpet.tex"
+}

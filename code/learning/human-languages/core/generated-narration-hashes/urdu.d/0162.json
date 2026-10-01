@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:f85b1f2909f17fd7",
+  "lessonIds": [
+    "UR-C162-maqami",
+    "UR-C162-angrezi",
+    "UR-C162-pakistani",
+    "UR-C162-hindustani",
+    "UR-C162-surmai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch162.txt",
+  "json": "urdu/narration/ch162.json",
+  "textHash": "fnv1a64:d357d2aaefe8256a",
+  "jsonHash": "fnv1a64:63453fd51e67cb96",
+  "findings": []
+}

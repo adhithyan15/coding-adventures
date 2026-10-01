@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:82a099857525f36a",
+  "lessonIds": [
+    "UR-C152-bimari",
+    "UR-C152-zukam",
+    "UR-C152-khansi",
+    "UR-C152-sar-dard",
+    "UR-C152-pet-dard"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch152.txt",
+  "json": "urdu/narration/ch152.json",
+  "textHash": "fnv1a64:754c66013c48e33d",
+  "jsonHash": "fnv1a64:63c4ffc39277e8c0",
+  "findings": []
+}

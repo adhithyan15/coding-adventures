@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C160-bevaquf",
+    "language": "urdu",
+    "chapter": 160,
+    "sequence": 8660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f54b7985af7dbe8e"
+  },
+  "findings": []
+}
