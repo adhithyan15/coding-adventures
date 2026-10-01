@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:51de9ea728079af9",
+  "lessonIds": [
+    "PT-C176-reduzir",
+    "PT-C176-recusar",
+    "PT-C176-arriscar",
+    "PT-C176-resolver",
+    "PT-C176-voar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch176.txt",
+  "json": "portuguese/narration/ch176.json",
+  "textHash": "fnv1a64:40c4683d44ee999e",
+  "jsonHash": "fnv1a64:993e98d7e2229606",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C192-proibicao",
+  "pathSegment": "PT-PATH-192-COISAS192",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-192-COISAS192",
+      "order": 3
+    }
+  ]
+}

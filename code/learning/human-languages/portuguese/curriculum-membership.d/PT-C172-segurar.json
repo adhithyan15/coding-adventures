@@ -1,0 +1,11 @@
+{
+  "id": "PT-C172-segurar",
+  "pathSegment": "PT-PATH-172-VERBOS172",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-172-VERBOS172",
+      "order": 2
+    }
+  ]
+}

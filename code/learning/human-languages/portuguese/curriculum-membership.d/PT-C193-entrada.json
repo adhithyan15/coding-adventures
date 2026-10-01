@@ -1,0 +1,11 @@
+{
+  "id": "PT-C193-entrada",
+  "pathSegment": "PT-PATH-193-COISAS193",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-193-COISAS193",
+      "order": 4
+    }
+  ]
+}

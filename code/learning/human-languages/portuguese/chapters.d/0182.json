@@ -1,0 +1,19 @@
+{
+  "chapter": 182,
+  "title": "Suddenly, Until, Since, Decade, Small hours",
+  "label": "ch:pt-suddenly-until-since-decade-small-hours",
+  "canDo": "I can say suddenly, until, since, a decade and the small hours.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "PT-C182-madrugada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 182: I can say suddenly, until, since, a decade and the small hours.",
+    "assesses": [
+      "PT-LEX-C182-TEMPO182-03",
+      "PT-LEX-C182-TEMPO182-04",
+      "PT-LEX-C182-TEMPO182-05"
+    ]
+  }
+}

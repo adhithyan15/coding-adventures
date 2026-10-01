@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C190-atriz",
+    "language": "portuguese",
+    "chapter": 190,
+    "sequence": 10650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:137fa5a84325b0c1"
+  },
+  "findings": []
+}

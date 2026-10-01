@@ -1,0 +1,11 @@
+{
+  "id": "PT-C182-decada",
+  "pathSegment": "PT-PATH-182-TEMPO182",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-182-TEMPO182",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 181,
+  "sourceHash": "fnv1a64:06014ea76daa8c5e",
+  "lessonIds": [
+    "PT-C181-confianca",
+    "PT-C181-coragem",
+    "PT-C181-vergonha",
+    "PT-C181-ciume",
+    "PT-C181-tedio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch181.txt",
+  "json": "portuguese/narration/ch181.json",
+  "textHash": "fnv1a64:528a796ac1cc61d8",
+  "jsonHash": "fnv1a64:8512896e761f102c",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 178,
+  "title": "To mix, To obey, To pray, To recommend, To breathe",
+  "label": "ch:pt-to-mix-to-obey-to-pray-to-recommend-to-breathe",
+  "canDo": "I can say to mix, to obey, to pray, to recommend and to breathe.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C178-respirar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 178: I can say to mix, to obey, to pray, to recommend and to breathe.",
+    "assesses": [
+      "PT-LEX-C178-VERBOS178-03",
+      "PT-LEX-C178-VERBOS178-04",
+      "PT-LEX-C178-VERBOS178-05"
+    ]
+  }
+}

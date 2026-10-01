@@ -1,0 +1,11 @@
+{
+  "id": "PT-C172-provar",
+  "pathSegment": "PT-PATH-172-VERBOS172",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-172-VERBOS172",
+      "order": 4
+    }
+  ]
+}

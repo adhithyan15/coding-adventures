@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:c42cd7056cf9f15e",
+  "lessonIds": [
+    "PT-C182-de-repente",
+    "PT-C182-ate",
+    "PT-C182-desde",
+    "PT-C182-decada",
+    "PT-C182-madrugada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch182.txt",
+  "json": "portuguese/narration/ch182.json",
+  "textHash": "fnv1a64:2cf8d33cd6278a82",
+  "jsonHash": "fnv1a64:9c95bfe1253709ec",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 199,
+  "title": "Maize, Cinnamon, Menu, Heating, Tap",
+  "label": "ch:pt-maize-cinnamon-menu-heating-tap",
+  "canDo": "I can say maize, cinnamon, a menu, heating and a tap.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C199-torneira",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 199: I can say maize, cinnamon, a menu, heating and a tap.",
+    "assesses": [
+      "PT-LEX-C199-COISAS199-03",
+      "PT-LEX-C199-COISAS199-04",
+      "PT-LEX-C199-COISAS199-05"
+    ]
+  }
+}

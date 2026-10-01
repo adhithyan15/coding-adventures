@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:8abc5809266bc377",
+  "lessonIds": [
+    "PT-C196-agulha",
+    "PT-C196-ferramenta",
+    "PT-C196-guitarra",
+    "PT-C196-violino",
+    "PT-C196-tambor"
+  ],
+  "tex": "portuguese/book/chapters/ch196-needle-tool-guitar-violin-drum.tex"
+}

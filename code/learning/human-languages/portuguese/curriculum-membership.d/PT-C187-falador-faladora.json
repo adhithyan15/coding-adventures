@@ -1,0 +1,11 @@
+{
+  "id": "PT-C187-falador-faladora",
+  "pathSegment": "PT-PATH-187-QUAL187",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-187-QUAL187",
+      "order": 1
+    }
+  ]
+}

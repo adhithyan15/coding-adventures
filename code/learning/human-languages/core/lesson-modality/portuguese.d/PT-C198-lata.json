@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C198-lata",
+    "language": "portuguese",
+    "chapter": 198,
+    "sequence": 11250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fdd50b40ed5405a8"
+  },
+  "findings": []
+}

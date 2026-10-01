@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C173-nascer",
+    "language": "portuguese",
+    "chapter": 173,
+    "sequence": 9430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0401d97e0945c3d9"
+  },
+  "findings": []
+}

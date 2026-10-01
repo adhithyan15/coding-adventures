@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:29ffd486d5f63e8f",
+  "lessonIds": [
+    "PT-C195-lama",
+    "PT-C195-po",
+    "PT-C195-fumo",
+    "PT-C195-chama",
+    "PT-C195-clima"
+  ],
+  "tex": "portuguese/book/chapters/ch195-mud-dust-smoke-flame-climate.tex"
+}

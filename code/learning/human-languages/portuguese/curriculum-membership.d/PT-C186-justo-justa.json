@@ -1,0 +1,11 @@
+{
+  "id": "PT-C186-justo-justa",
+  "pathSegment": "PT-PATH-186-QUAL186",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-186-QUAL186",
+      "order": 3
+    }
+  ]
+}

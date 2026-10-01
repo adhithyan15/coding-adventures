@@ -1,0 +1,11 @@
+{
+  "id": "PT-C196-tambor",
+  "pathSegment": "PT-PATH-196-COISAS196",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-196-COISAS196",
+      "order": 4
+    }
+  ]
+}

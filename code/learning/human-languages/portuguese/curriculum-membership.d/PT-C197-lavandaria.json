@@ -1,0 +1,11 @@
+{
+  "id": "PT-C197-lavandaria",
+  "pathSegment": "PT-PATH-197-COISAS197",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-197-COISAS197",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C178-rezar",
+  "pathSegment": "PT-PATH-178-VERBOS178",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-178-VERBOS178",
+      "order": 2
+    }
+  ]
+}

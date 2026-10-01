@@ -1,0 +1,11 @@
+{
+  "id": "PT-C195-chama",
+  "pathSegment": "PT-PATH-195-COISAS195",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-195-COISAS195",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C182-madrugada",
+  "pathSegment": "PT-PATH-182-TEMPO182",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-182-TEMPO182",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 175,
+  "title": "To inform, To complain, To be missing, To deserve, To improve",
+  "label": "ch:pt-to-inform-to-complain-to-be-missing-to-deserve-to-improve",
+  "canDo": "I can say to inform, to complain, to be missing, to deserve and to improve.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C175-melhorar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 175: I can say to inform, to complain, to be missing, to deserve and to improve.",
+    "assesses": [
+      "PT-LEX-C175-VERBOS175-03",
+      "PT-LEX-C175-VERBOS175-04",
+      "PT-LEX-C175-VERBOS175-05"
+    ]
+  }
+}

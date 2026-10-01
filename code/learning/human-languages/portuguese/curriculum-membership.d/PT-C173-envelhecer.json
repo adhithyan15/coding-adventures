@@ -1,0 +1,11 @@
+{
+  "id": "PT-C173-envelhecer",
+  "pathSegment": "PT-PATH-173-VERBOS173",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-173-VERBOS173",
+      "order": 3
+    }
+  ]
+}

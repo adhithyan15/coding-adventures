@@ -1,0 +1,19 @@
+{
+  "chapter": 189,
+  "title": "Judge, Elections, Vote, Politics, Economy",
+  "label": "ch:pt-judge-elections-vote-politics-economy",
+  "canDo": "I can say a judge, elections, a vote, politics and the economy.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C189-economia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 189: I can say a judge, elections, a vote, politics and the economy.",
+    "assesses": [
+      "PT-LEX-C189-COISAS189-03",
+      "PT-LEX-C189-COISAS189-04",
+      "PT-LEX-C189-COISAS189-05"
+    ]
+  }
+}

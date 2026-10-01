@@ -1,0 +1,11 @@
+{
+  "id": "PT-C178-recomendar",
+  "pathSegment": "PT-PATH-178-VERBOS178",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-178-VERBOS178",
+      "order": 3
+    }
+  ]
+}

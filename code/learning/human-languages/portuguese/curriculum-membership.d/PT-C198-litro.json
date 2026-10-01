@@ -1,0 +1,11 @@
+{
+  "id": "PT-C198-litro",
+  "pathSegment": "PT-PATH-198-COISAS198",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-198-COISAS198",
+      "order": 2
+    }
+  ]
+}

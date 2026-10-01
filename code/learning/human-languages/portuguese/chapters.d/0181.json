@@ -1,0 +1,19 @@
+{
+  "chapter": 181,
+  "title": "Trust, Courage, Shame, Jealousy, Boredom",
+  "label": "ch:pt-trust-courage-shame-jealousy-boredom",
+  "canDo": "I can say trust, courage, shame, jealousy and boredom.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PT-C181-tedio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 181: I can say trust, courage, shame, jealousy and boredom.",
+    "assesses": [
+      "PT-LEX-C181-SAUDE181-03",
+      "PT-LEX-C181-SAUDE181-04",
+      "PT-LEX-C181-SAUDE181-05"
+    ]
+  }
+}
