@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C177-foris",
+    "language": "latin",
+    "chapter": 177,
+    "sequence": 7970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ac5a718814670fbe"
+  },
+  "findings": []
+}

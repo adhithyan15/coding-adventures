@@ -1,0 +1,11 @@
+{
+  "id": "LA-C189-cognatus",
+  "pathSegment": "LA-PATH-189-RES189",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-189-RES189",
+      "order": 0
+    }
+  ]
+}

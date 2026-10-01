@@ -1,0 +1,11 @@
+{
+  "id": "LA-C180-rusticus",
+  "pathSegment": "LA-PATH-180-QUAL180",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-180-QUAL180",
+      "order": 2
+    }
+  ]
+}

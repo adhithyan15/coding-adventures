@@ -1,0 +1,11 @@
+{
+  "id": "LA-C184-modestus",
+  "pathSegment": "LA-PATH-184-QUAL184",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-184-QUAL184",
+      "order": 1
+    }
+  ]
+}

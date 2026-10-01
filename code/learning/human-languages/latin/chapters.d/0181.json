@@ -1,0 +1,19 @@
+{
+  "chapter": 181,
+  "title": "Free of charge, Fresh, Raw, Cooked, Distant",
+  "label": "ch:la-free-of-charge-fresh-raw-cooked-distant",
+  "canDo": "I can say free of charge, fresh, raw, cooked and distant.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-C181-longinquus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 181: I can say free of charge, fresh, raw, cooked and distant.",
+    "assesses": [
+      "LA-LEX-C181-QUAL181-03",
+      "LA-LEX-C181-QUAL181-04",
+      "LA-LEX-C181-QUAL181-05"
+    ]
+  }
+}

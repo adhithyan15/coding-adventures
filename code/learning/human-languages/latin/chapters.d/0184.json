@@ -1,0 +1,19 @@
+{
+  "chapter": 184,
+  "title": "Wasteful, Moderate, Eloquent, Mute, Lame",
+  "label": "ch:la-wasteful-moderate-eloquent-mute-lame",
+  "canDo": "I can say wasteful, moderate, eloquent, mute and lame.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-C184-claudus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 184: I can say wasteful, moderate, eloquent, mute and lame.",
+    "assesses": [
+      "LA-LEX-C184-QUAL184-03",
+      "LA-LEX-C184-QUAL184-04",
+      "LA-LEX-C184-QUAL184-05"
+    ]
+  }
+}

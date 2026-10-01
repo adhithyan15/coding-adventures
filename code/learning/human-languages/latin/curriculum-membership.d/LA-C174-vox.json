@@ -1,0 +1,11 @@
+{
+  "id": "LA-C174-vox",
+  "pathSegment": "LA-PATH-174-VALE174",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-174-VALE174",
+      "order": 3
+    }
+  ]
+}

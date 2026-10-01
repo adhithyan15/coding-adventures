@@ -1,0 +1,11 @@
+{
+  "id": "LA-C175-posthac",
+  "pathSegment": "LA-PATH-175-TEMP175",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-175-TEMP175",
+      "order": 1
+    }
+  ]
+}

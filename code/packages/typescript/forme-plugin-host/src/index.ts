@@ -54,6 +54,7 @@ export type {
   PluginLaunchRequest,
   PluginProcessExit,
   PluginProcessFactory,
+  VerifiedConfigSchemaSnapshot,
   VerifiedPluginSnapshot,
   PluginStageLoader,
 } from "./types.js";

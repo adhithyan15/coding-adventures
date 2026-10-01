@@ -1,0 +1,11 @@
+{
+  "id": "LA-C195-perna",
+  "pathSegment": "LA-PATH-195-RES195",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-195-RES195",
+      "order": 3
+    }
+  ]
+}

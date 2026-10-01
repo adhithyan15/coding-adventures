@@ -1,0 +1,19 @@
+{
+  "chapter": 194,
+  "title": "Opinion, Conversation, Speech, Rumour, History",
+  "label": "ch:la-opinion-conversation-speech-rumour-history",
+  "canDo": "I can say an opinion, conversation, a speech, a rumour and history.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C194-historia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 194: I can say an opinion, conversation, a speech, a rumour and history.",
+    "assesses": [
+      "LA-LEX-C194-RES194-03",
+      "LA-LEX-C194-RES194-04",
+      "LA-LEX-C194-RES194-05"
+    ]
+  }
+}

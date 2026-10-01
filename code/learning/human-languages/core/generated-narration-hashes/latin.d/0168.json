@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:3b83b427d798780d",
+  "lessonIds": [
+    "LA-C168-plico",
+    "LA-C168-possideo",
+    "LA-C168-praeparo",
+    "LA-C168-commodo",
+    "LA-C168-propono"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch168.txt",
+  "json": "latin/narration/ch168.json",
+  "textHash": "fnv1a64:05df77db67399c12",
+  "jsonHash": "fnv1a64:5d4db94e97a086fe",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C167-computo",
+    "language": "latin",
+    "chapter": 167,
+    "sequence": 7270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f14db3bf35da2069"
+  },
+  "findings": []
+}

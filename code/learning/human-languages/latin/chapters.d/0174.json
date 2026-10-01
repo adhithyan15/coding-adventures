@@ -1,0 +1,19 @@
+{
+  "chapter": 174,
+  "title": "Patience, Tear, Laugh, Voice, Mind",
+  "label": "ch:la-patience-tear-laugh-voice-mind",
+  "canDo": "I can say patience, a tear, a laugh, a voice and mind.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "LA-C174-animus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 174: I can say patience, a tear, a laugh, a voice and mind.",
+    "assesses": [
+      "LA-LEX-C174-VALE174-03",
+      "LA-LEX-C174-VALE174-04",
+      "LA-LEX-C174-VALE174-05"
+    ]
+  }
+}

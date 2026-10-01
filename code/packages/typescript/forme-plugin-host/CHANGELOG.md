@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Exported the verified config-schema snapshot type used by production sandbox
+  process factories.
+
 - Add strict bounded codecs and fail-closed filesystem persistence for the
   user trust store and manifest-bound per-plugin capability grants.
 - Publish authority files through restrictive same-directory temporary files

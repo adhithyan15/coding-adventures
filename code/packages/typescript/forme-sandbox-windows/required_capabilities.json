@@ -1,0 +1,12 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "typescript/forme-sandbox-windows",
+  "capabilities": [
+    { "category": "fs", "action": "write", "target": "$pluginWorkingDirectoryAcl", "justification": "Stages the exact snapshot and grants its ephemeral AppContainer access only to that private directory." },
+    { "category": "proc", "action": "exec", "target": "$trustedNativeLauncher", "justification": "Starts the checked-in launcher that creates the restricted token, AppContainer, mitigations, and Job Object." },
+    { "category": "proc", "action": "fork", "target": "$singleSuspendedSandboxChild", "justification": "Creates one suspended child and assigns it to the single-process Job Object before any plugin code runs." },
+    { "category": "proc", "action": "signal", "target": "$singleSandboxChild", "justification": "Terminates the Job Object when cancellation or a resource boundary requires retirement." }
+  ],
+  "justification": "Applies the explicit Windows AppContainer, restricted-token, mitigation, and Job Object boundary around an exact host-verified plugin snapshot."
+}

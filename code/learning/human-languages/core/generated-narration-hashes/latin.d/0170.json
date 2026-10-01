@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:1d0540030820cd3b",
+  "lessonIds": [
+    "LA-C170-labor",
+    "LA-C170-levo",
+    "LA-C170-admiror",
+    "LA-C170-suspicor",
+    "LA-C170-premo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch170.txt",
+  "json": "latin/narration/ch170.json",
+  "textHash": "fnv1a64:1c72fdcb800b533a",
+  "jsonHash": "fnv1a64:571dfca0f7cf9f09",
+  "findings": []
+}

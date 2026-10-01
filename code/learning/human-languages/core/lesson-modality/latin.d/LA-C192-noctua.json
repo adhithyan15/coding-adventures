@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C192-noctua",
+    "language": "latin",
+    "chapter": 192,
+    "sequence": 9090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0682d058aa7001f3"
+  },
+  "findings": []
+}

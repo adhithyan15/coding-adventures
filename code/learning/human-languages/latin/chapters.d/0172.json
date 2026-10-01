@@ -1,0 +1,19 @@
+{
+  "chapter": 172,
+  "title": "To sow, To reap, To hunt, To go fishing, To deny",
+  "label": "ch:la-to-sow-to-reap-to-hunt-to-go-fishing-to-deny",
+  "canDo": "I can say to sow, to reap, to hunt, to go fishing and to deny.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C172-nego",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 172: I can say to sow, to reap, to hunt, to go fishing and to deny.",
+    "assesses": [
+      "LA-LEX-C172-ACT172-03",
+      "LA-LEX-C172-ACT172-04",
+      "LA-LEX-C172-ACT172-05"
+    ]
+  }
+}

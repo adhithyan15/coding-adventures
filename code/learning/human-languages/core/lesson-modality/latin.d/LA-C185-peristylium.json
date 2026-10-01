@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C185-peristylium",
+    "language": "latin",
+    "chapter": 185,
+    "sequence": 8540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d62e18f2d14f3f75"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C195-garum",
+  "pathSegment": "LA-PATH-195-RES195",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-195-RES195",
+      "order": 2
+    }
+  ]
+}

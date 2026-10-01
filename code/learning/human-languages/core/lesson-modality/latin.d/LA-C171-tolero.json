@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C171-tolero",
+    "language": "latin",
+    "chapter": 171,
+    "sequence": 7450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb8b00dafad88974"
+  },
+  "findings": []
+}

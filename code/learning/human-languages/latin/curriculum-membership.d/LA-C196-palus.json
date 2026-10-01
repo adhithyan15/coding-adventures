@@ -1,0 +1,11 @@
+{
+  "id": "LA-C196-palus",
+  "pathSegment": "LA-PATH-196-RES196",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-196-RES196",
+      "order": 1
+    }
+  ]
+}

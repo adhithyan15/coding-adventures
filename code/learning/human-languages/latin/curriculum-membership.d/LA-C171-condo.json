@@ -1,0 +1,11 @@
+{
+  "id": "LA-C171-condo",
+  "pathSegment": "LA-PATH-171-ACT171",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-171-ACT171",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C170-suspicor",
+  "pathSegment": "LA-PATH-170-ACT170",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-170-ACT170",
+      "order": 3
+    }
+  ]
+}

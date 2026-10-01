@@ -1,0 +1,11 @@
+{
+  "id": "LA-C196-pratum",
+  "pathSegment": "LA-PATH-196-RES196",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-196-RES196",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 165,
+  "title": "To light, To put out, To jump, To smile, To shout",
+  "label": "ch:la-to-light-to-put-out-to-jump-to-smile-to-shout",
+  "canDo": "I can say to light, to put out, to jump, to smile and to shout.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C165-clamo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 165: I can say to light, to put out, to jump, to smile and to shout.",
+    "assesses": [
+      "LA-LEX-C165-ACT165-03",
+      "LA-LEX-C165-ACT165-04",
+      "LA-LEX-C165-ACT165-05"
+    ]
+  }
+}

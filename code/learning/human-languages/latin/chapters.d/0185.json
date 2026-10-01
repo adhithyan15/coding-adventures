@@ -1,0 +1,19 @@
+{
+  "chapter": 185,
+  "title": "Storeroom, Study, Colonnaded garden, Rain basin, Foundation",
+  "label": "ch:la-storeroom-study-colonnaded-garden-rain-basin-foundation",
+  "canDo": "I can say a storeroom, a study, a colonnaded garden, a rain basin and a foundation.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C185-fundamentum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 185: I can say a storeroom, a study, a colonnaded garden, a rain basin and a foundation.",
+    "assesses": [
+      "LA-LEX-C185-RES185-03",
+      "LA-LEX-C185-RES185-04",
+      "LA-LEX-C185-RES185-05"
+    ]
+  }
+}

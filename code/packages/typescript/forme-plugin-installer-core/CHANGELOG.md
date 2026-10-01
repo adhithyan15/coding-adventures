@@ -22,3 +22,5 @@
   the root owner and filesystem.
 - Detect exact and case-folded file/ancestor collisions independent of input
   order before any filesystem operation.
+- Allow the bounded 8,195-entry defensive scan test sufficient time on Windows
+  hosted runners.

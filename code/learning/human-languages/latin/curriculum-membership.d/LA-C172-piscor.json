@@ -1,0 +1,11 @@
+{
+  "id": "LA-C172-piscor",
+  "pathSegment": "LA-PATH-172-ACT172",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-172-ACT172",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C183-medius",
+  "pathSegment": "LA-PATH-183-QUAL183",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-183-QUAL183",
+      "order": 3
+    }
+  ]
+}

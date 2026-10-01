@@ -1,0 +1,11 @@
+{
+  "id": "LA-C169-recedo",
+  "pathSegment": "LA-PATH-169-ACT169",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-169-ACT169",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C174-animus",
+  "pathSegment": "LA-PATH-174-VALE174",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-174-VALE174",
+      "order": 4
+    }
+  ]
+}

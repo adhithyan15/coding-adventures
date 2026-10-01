@@ -1,0 +1,12 @@
+{
+  "name": "@coding-adventures/forme-sandbox-linux",
+  "version": "0.1.0",
+  "description": "Linux namespace, seccomp, cgroup, rlimit, and exact-snapshot launcher for Forme plugins (FM02).",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": { "build:native": "node scripts/build-native.mjs", "build": "npm run build:native && tsc", "test": "npm run build:native && vitest run", "test:coverage": "npm run build:native && vitest run --coverage" },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": { "@coding-adventures/forme-sandbox-core": "file:../forme-sandbox-core" },
+  "devDependencies": { "@coding-adventures/forme-manifest": "file:../forme-manifest", "@types/node": "^22.20.1", "@vitest/coverage-v8": "^4.1.11", "typescript": "^5.0.0", "vitest": "^4.1.11" }
+}

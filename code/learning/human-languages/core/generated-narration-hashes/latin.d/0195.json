@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:dacb78949da0ad13",
+  "lessonIds": [
+    "LA-C195-libum",
+    "LA-C195-acetum",
+    "LA-C195-garum",
+    "LA-C195-perna",
+    "LA-C195-dies-natalis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch195.txt",
+  "json": "latin/narration/ch195.json",
+  "textHash": "fnv1a64:05f549856fa05fa7",
+  "jsonHash": "fnv1a64:2489ca60376d4c55",
+  "findings": []
+}

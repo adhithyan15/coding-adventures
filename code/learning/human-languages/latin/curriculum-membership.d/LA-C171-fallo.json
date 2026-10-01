@@ -1,0 +1,11 @@
+{
+  "id": "LA-C171-fallo",
+  "pathSegment": "LA-PATH-171-ACT171",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-171-ACT171",
+      "order": 0
+    }
+  ]
+}

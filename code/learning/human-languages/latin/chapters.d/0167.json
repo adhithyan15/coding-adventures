@@ -1,0 +1,19 @@
+{
+  "chapter": 167,
+  "title": "To burn, To set on fire, To throw away, To calculate, To knock",
+  "label": "ch:la-to-burn-to-set-on-fire-to-throw-away-to-calculate-to-knock",
+  "canDo": "I can say to burn, to set on fire, to throw away, to calculate and to knock.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C167-pulso",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 167: I can say to burn, to set on fire, to throw away, to calculate and to knock.",
+    "assesses": [
+      "LA-LEX-C167-ACT167-03",
+      "LA-LEX-C167-ACT167-04",
+      "LA-LEX-C167-ACT167-05"
+    ]
+  }
+}
