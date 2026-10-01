@@ -532,7 +532,7 @@ through semantic IR and backend-neutral paint. Class border radii likewise
 reach backend-neutral rectangle geometry, while relative `bolder` and `lighter`
 font weights resolve against the default weight and `oblique` font style lowers
 through the existing backend-neutral italic face selection. Class text alignment and
-none/upper/lower/capitalize transforms and none/underline/overline/line-through
+none/upper/lower/capitalize/full-width transforms and none/underline/overline/line-through
 decoration combinations, including independently authored decoration colors,
 and solid/double/dotted/dashed/wavy decoration styles also survive into shaped
 glyph runs. Normal, unitless,

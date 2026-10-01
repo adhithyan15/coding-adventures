@@ -1491,7 +1491,7 @@ pub struct TreemapStyle {
 pub enum TreemapTextAlign { Start, Center, End }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum TreemapTextTransform { None, Uppercase, Lowercase, Capitalize }
+pub enum TreemapTextTransform { None, Uppercase, Lowercase, Capitalize, FullWidth }
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub struct TreemapTextDecoration {
