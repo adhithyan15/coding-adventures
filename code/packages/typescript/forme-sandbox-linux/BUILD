@@ -1,4 +1,7 @@
 # build-tool: deps=typescript/forme-sandbox-core,c/sha256
+cd ../../c/iso-harness && sh tools/selftest.sh
+cd ../../c/sha256 && sh tools/run.sh
+cd ../../typescript/forme-sandbox-linux
 cd ../document-ast && npm install --silent
 cd ../blake2b && npm install --silent
 cd ../sha512 && npm install --silent
