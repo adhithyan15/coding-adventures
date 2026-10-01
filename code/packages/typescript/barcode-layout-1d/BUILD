@@ -1,4 +1,5 @@
-cd ../pixel-container && npm ci --quiet
-cd ../paint-instructions && npm ci --quiet
+npm --prefix ../pixel-container ci --quiet
+npm --prefix ../paint-instructions ci --quiet
 npm ci --quiet
-npx vitest run --coverage
+npm run build
+npm run test:coverage

@@ -50,6 +50,7 @@
               "anyOf": [
                 { "required": ["conformance_test_path"] },
                 { "required": ["verified_revision"] },
+                { "required": ["package_tree"] },
                 { "required": ["corpus_sha256"] },
                 { "required": ["adoption_pr"] },
                 { "required": ["zero_authority_evidence"] }
@@ -57,7 +58,7 @@
             }
           },
           "else": {
-            "required": ["conformance_test_path", "verified_revision", "corpus_sha256", "adoption_pr", "zero_authority_evidence"],
+            "required": ["conformance_test_path", "verified_revision", "package_tree", "corpus_sha256", "adoption_pr", "zero_authority_evidence"],
             "properties": {
               "capability_manifest": { "type": "string" },
               "known_divergences": { "maxItems": 0 }
@@ -116,6 +117,7 @@
         "copy_semantics_hook": { "type": "string", "minLength": 1, "maxLength": 256 },
         "known_divergences": { "type": "array", "minItems": 0, "maxItems": 16, "uniqueItems": true, "items": { "type": "string", "minLength": 1, "maxLength": 256 } },
         "verified_revision": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "package_tree": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
         "corpus_sha256": { "const": "be95aa0381041ef3bd729b36bb4292f7a20692e139b53adca97af4e157cb7388" },
         "adoption_pr": { "type": "integer", "minimum": 1 },
         "zero_authority_evidence": { "$ref": "#/$defs/zeroAuthorityEvidence" }

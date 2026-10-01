@@ -12,5 +12,6 @@
   <ItemGroup>
     <ProjectReference Include="..\paint-instructions\CodingAdventures.PaintInstructions.fsproj" />
     <Compile Include="BarcodeLayout1D.fs" />
+    <Compile Include="BarcodeLayout1DV1.fs" />
   </ItemGroup>
 </Project>

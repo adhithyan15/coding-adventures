@@ -205,11 +205,16 @@ no known divergence and must carry all of those promotion fields.
 
 The corpus digest is SHA-256 over the raw checked-in `cases.json` bytes. The
 verified revision is the pre-publication commit whose package source and
-conformance test were executed. The adoption PR is the one that carries those
-exact bytes and the registry transition. The executed test path must exist
-inside the target package, consume every corpus case dynamically, and remain
-byte-identical at the verified revision. The package root must be the canonical
-root for the declared language.
+conformance test were executed. `package_tree` is that commit's Git tree ID for
+the canonical package root and must equal the package tree in the checked-out
+adoption commit. This binds the tested package bytes; the repository contract
+job fetches history so it can resolve the exact implementation revision rather
+than trusting the registry claim. Both the revision and adoption PR are checked
+against the durable backlog owner rather than the mutable active-PR pointer.
+The adoption PR carries those exact bytes and the registry transition. The
+executed test path must exist inside the target package, consume every corpus
+case dynamically, and be tracked in the checked-out adoption commit. The
+package root must be the canonical root for the declared language.
 
 The capability manifest must exist, validate against the repository schema,
 name the same language and package, and contain an empty `capabilities` array.

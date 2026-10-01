@@ -2,6 +2,17 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+- Added strict portable-v1 expansion, layout, and rectangle-scene entry points
+  with dynamic coverage of all 56 language-neutral fixture cases.
+- Added stable error IDs, bounded Unicode-scalar and metadata handling,
+  checked integer projection, canonical string metadata, and deep-copy tests.
+- Added runtime closed-enum guards and a bounded, digest-first conformance
+  loader that rejects deep, duplicate-key, malformed-scalar, and mistyped data.
+- Repaired `BUILD` so dependency setup does not change away from the package
+  and so TypeScript compilation runs before coverage.
+
 ## [0.1.0] - 2026-03-25
 
 ### Added

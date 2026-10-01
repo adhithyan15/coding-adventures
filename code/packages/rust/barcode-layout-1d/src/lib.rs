@@ -182,8 +182,7 @@ impl Default for Barcode1DRenderConfig {
     }
 }
 
-#[derive(Clone, Debug, PartialEq)]
-#[derive(Default)]
+#[derive(Clone, Debug, PartialEq, Default)]
 pub struct PaintBarcode1DOptions {
     pub render_config: Barcode1DRenderConfig,
     pub human_readable_text: Option<String>,
@@ -191,7 +190,6 @@ pub struct PaintBarcode1DOptions {
     pub label: Option<String>,
     pub symbols: Option<Vec<Barcode1DSymbolDescriptor>>,
 }
-
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RunsFromBinaryPatternOptions {
@@ -210,6 +208,389 @@ pub struct RunsFromWidthPatternOptions {
     pub narrow_marker: char,
     pub wide_marker: char,
     pub starting_color: Barcode1DRunColor,
+}
+
+const MAX_PATTERN_SCALARS: usize = 65_567;
+const MAX_RUNS: usize = 40_979;
+const MAX_CONTENT_MODULES: u32 = 65_567;
+const MAX_QUIET_ZONE_MODULES: u32 = 4_096;
+const MAX_SYMBOLS: usize = 40_979;
+const MAX_LABEL_SCALARS: usize = 4_096;
+const MAX_METADATA_ENTRIES: usize = 64;
+const MAX_METADATA_KEY_SCALARS: usize = 128;
+const MAX_METADATA_VALUE_SCALARS: usize = 4_096;
+const MAX_METADATA_UTF8_BYTES: usize = 65_536;
+const MAX_RENDER_DIMENSION: u32 = 8_192;
+const MAX_COLOR_SCALARS: usize = 128;
+
+fn validate_source_v1(label: &str, source_index: isize) -> Result<(), String> {
+    if label.chars().count() > MAX_LABEL_SCALARS
+        || source_index < i32::MIN as isize
+        || source_index > i32::MAX as isize
+    {
+        return Err("invalid-source-attribution".to_string());
+    }
+    Ok(())
+}
+
+fn validate_runs_v1(runs: &[Barcode1DRun]) -> Result<u32, String> {
+    if runs.len() > MAX_RUNS {
+        return Err("too-many-runs".to_string());
+    }
+    let mut content = 0u32;
+    for (index, run) in runs.iter().enumerate() {
+        validate_source_v1(&run.source_label, run.source_index)?;
+        if run.modules == 0 {
+            return Err("invalid-module-count".to_string());
+        }
+        if index > 0 && runs[index - 1].color == run.color {
+            return Err("non-alternating-runs".to_string());
+        }
+        content = content
+            .checked_add(run.modules)
+            .ok_or_else(|| "content-too-wide".to_string())?;
+        if content > MAX_CONTENT_MODULES {
+            return Err("content-too-wide".to_string());
+        }
+    }
+    Ok(content)
+}
+
+/// Strict portable-v1 binary-pattern adapter.
+pub fn expand_binary_v1(
+    pattern: &str,
+    options: &RunsFromBinaryPatternOptions,
+) -> Result<Vec<Barcode1DRun>, String> {
+    let scalar_count = pattern.chars().count();
+    if scalar_count > MAX_PATTERN_SCALARS {
+        return Err("pattern-too-long".to_string());
+    }
+    if pattern.is_empty() {
+        return Err("empty-pattern".to_string());
+    }
+    validate_source_v1(&options.source_label, options.source_index)?;
+
+    let mut tokens = pattern.chars();
+    let mut current = tokens.next().expect("nonempty pattern");
+    let mut width = 1u32;
+    let mut runs = Vec::new();
+    for token in tokens {
+        if token == current {
+            width = width
+                .checked_add(1)
+                .ok_or_else(|| "content-too-wide".to_string())?;
+            continue;
+        }
+        if current != '0' && current != '1' {
+            return Err("invalid-binary-token".to_string());
+        }
+        if runs.len() >= MAX_RUNS {
+            return Err("too-many-runs".to_string());
+        }
+        runs.push(Barcode1DRun {
+            color: if current == '1' {
+                Barcode1DRunColor::Bar
+            } else {
+                Barcode1DRunColor::Space
+            },
+            modules: width,
+            source_label: options.source_label.clone(),
+            source_index: options.source_index,
+            role: options.role.clone(),
+        });
+        current = token;
+        width = 1;
+    }
+    if current != '0' && current != '1' {
+        return Err("invalid-binary-token".to_string());
+    }
+    if runs.len() >= MAX_RUNS {
+        return Err("too-many-runs".to_string());
+    }
+    runs.push(Barcode1DRun {
+        color: if current == '1' {
+            Barcode1DRunColor::Bar
+        } else {
+            Barcode1DRunColor::Space
+        },
+        modules: width,
+        source_label: options.source_label.clone(),
+        source_index: options.source_index,
+        role: options.role.clone(),
+    });
+    validate_runs_v1(&runs)?;
+    Ok(runs)
+}
+
+/// Strict portable-v1 width-pattern adapter.
+pub fn expand_width_v1(
+    pattern: &str,
+    options: &RunsFromWidthPatternOptions,
+) -> Result<Vec<Barcode1DRun>, String> {
+    let scalar_count = pattern.chars().count();
+    if scalar_count > MAX_PATTERN_SCALARS {
+        return Err("pattern-too-long".to_string());
+    }
+    if pattern.is_empty() {
+        return Err("empty-pattern".to_string());
+    }
+    if options.narrow_marker == options.wide_marker {
+        return Err("invalid-marker-configuration".to_string());
+    }
+    if options.narrow_modules == 0 || options.wide_modules == 0 {
+        return Err("invalid-module-count".to_string());
+    }
+    validate_source_v1(&options.source_label, options.source_index)?;
+
+    let mut runs = Vec::new();
+    let mut color = options.starting_color.clone();
+    let mut content = 0u32;
+    for marker in pattern.chars() {
+        let modules = if marker == options.narrow_marker {
+            options.narrow_modules
+        } else if marker == options.wide_marker {
+            options.wide_modules
+        } else {
+            return Err("invalid-width-token".to_string());
+        };
+        if runs.len() >= MAX_RUNS {
+            return Err("too-many-runs".to_string());
+        }
+        runs.push(Barcode1DRun {
+            color: color.clone(),
+            modules,
+            source_label: options.source_label.clone(),
+            source_index: options.source_index,
+            role: options.role.clone(),
+        });
+        content = content
+            .checked_add(modules)
+            .ok_or_else(|| "content-too-wide".to_string())?;
+        if content > MAX_CONTENT_MODULES {
+            return Err("content-too-wide".to_string());
+        }
+        color = match color {
+            Barcode1DRunColor::Bar => Barcode1DRunColor::Space,
+            Barcode1DRunColor::Space => Barcode1DRunColor::Bar,
+        };
+    }
+    Ok(runs)
+}
+
+/// Strict portable-v1 module-space layout adapter.
+pub fn compute_layout_v1(
+    runs: &[Barcode1DRun],
+    quiet_zone_modules: u32,
+    descriptors: Option<&[Barcode1DSymbolDescriptor]>,
+) -> Result<Barcode1DLayout, String> {
+    let content_modules = validate_runs_v1(runs)?;
+    if quiet_zone_modules == 0 || quiet_zone_modules > MAX_QUIET_ZONE_MODULES {
+        return Err("invalid-quiet-zone".to_string());
+    }
+    let total_modules = quiet_zone_modules
+        .checked_add(content_modules)
+        .and_then(|value| value.checked_add(quiet_zone_modules))
+        .ok_or_else(|| "content-too-wide".to_string())?;
+    let mut symbol_layouts = Vec::new();
+
+    if let Some(symbols) = descriptors {
+        if symbols.len() > MAX_SYMBOLS {
+            return Err("too-many-symbols".to_string());
+        }
+        let mut cursor = 0u32;
+        for symbol in symbols {
+            if symbol.modules == 0 {
+                return Err("invalid-module-count".to_string());
+            }
+            validate_source_v1(&symbol.label, symbol.source_index)?;
+            let end = cursor
+                .checked_add(symbol.modules)
+                .ok_or_else(|| "symbol-width-mismatch".to_string())?;
+            symbol_layouts.push(Barcode1DSymbolLayout {
+                label: symbol.label.clone(),
+                start_module: cursor,
+                end_module: end,
+                source_index: symbol.source_index,
+                role: symbol.role.clone(),
+            });
+            cursor = end;
+        }
+        if cursor != content_modules {
+            return Err("symbol-width-mismatch".to_string());
+        }
+    } else {
+        let mut cursor = 0u32;
+        let mut current: Option<(String, isize, Barcode1DSymbolRole, u32)> = None;
+        for run in runs {
+            if let Some(role) = run.role.symbol_role() {
+                let same = current
+                    .as_ref()
+                    .is_some_and(|(label, index, current_role, _)| {
+                        label == &run.source_label
+                            && *index == run.source_index
+                            && current_role == &role
+                    });
+                if !same {
+                    if let Some((label, source_index, old_role, start)) = current.take() {
+                        symbol_layouts.push(Barcode1DSymbolLayout {
+                            label,
+                            start_module: start,
+                            end_module: cursor,
+                            source_index,
+                            role: old_role,
+                        });
+                    }
+                    current = Some((run.source_label.clone(), run.source_index, role, cursor));
+                }
+            }
+            cursor = cursor
+                .checked_add(run.modules)
+                .ok_or_else(|| "content-too-wide".to_string())?;
+        }
+        if let Some((label, source_index, role, start)) = current {
+            symbol_layouts.push(Barcode1DSymbolLayout {
+                label,
+                start_module: start,
+                end_module: cursor,
+                source_index,
+                role,
+            });
+        }
+        if symbol_layouts.len() > MAX_SYMBOLS {
+            return Err("too-many-symbols".to_string());
+        }
+    }
+
+    Ok(Barcode1DLayout {
+        left_quiet_zone_modules: quiet_zone_modules,
+        right_quiet_zone_modules: quiet_zone_modules,
+        content_modules,
+        total_modules,
+        symbol_layouts,
+    })
+}
+
+fn strict_render_dimension(value: f64) -> Option<u32> {
+    if value.is_finite()
+        && value.fract() == 0.0
+        && value >= 1.0
+        && value <= MAX_RENDER_DIMENSION as f64
+    {
+        Some(value as u32)
+    } else {
+        None
+    }
+}
+
+/// Strict portable-v1 rectangle-scene adapter.
+pub fn project_scene_v1(
+    runs: &[Barcode1DRun],
+    options: &PaintBarcode1DOptions,
+) -> Result<PaintScene, String> {
+    if options.render_config.include_human_readable_text || options.human_readable_text.is_some() {
+        return Err("human-readable-text-unsupported".to_string());
+    }
+    let module_width = strict_render_dimension(options.render_config.module_width)
+        .ok_or_else(|| "invalid-render-config".to_string())?;
+    let bar_height = strict_render_dimension(options.render_config.bar_height)
+        .ok_or_else(|| "invalid-render-config".to_string())?;
+    if options.render_config.foreground.chars().count() > MAX_COLOR_SCALARS
+        || options.render_config.background.chars().count() > MAX_COLOR_SCALARS
+    {
+        return Err("invalid-render-config".to_string());
+    }
+    let layout = compute_layout_v1(
+        runs,
+        options.render_config.quiet_zone_modules,
+        options.symbols.as_deref(),
+    )?;
+    if options.metadata.len() > MAX_METADATA_ENTRIES {
+        return Err("metadata-too-large".to_string());
+    }
+    let label = options.label.as_deref().unwrap_or("1D barcode");
+    if label.chars().count() > MAX_LABEL_SCALARS {
+        return Err("metadata-too-large".to_string());
+    }
+    let mut metadata_bytes = 0usize;
+    for (key, value) in &options.metadata {
+        if key.chars().count() > MAX_METADATA_KEY_SCALARS
+            || value.chars().count() > MAX_METADATA_VALUE_SCALARS
+        {
+            return Err("metadata-too-large".to_string());
+        }
+        metadata_bytes = metadata_bytes
+            .checked_add(key.len())
+            .and_then(|size| size.checked_add(value.len()))
+            .ok_or_else(|| "metadata-too-large".to_string())?;
+        if metadata_bytes > MAX_METADATA_UTF8_BYTES {
+            return Err("metadata-too-large".to_string());
+        }
+    }
+    let scene_width = layout
+        .total_modules
+        .checked_mul(module_width)
+        .ok_or_else(|| "invalid-render-config".to_string())?;
+    let mut instructions = Vec::new();
+    let mut cursor = layout.left_quiet_zone_modules;
+    for run in runs {
+        let end = cursor
+            .checked_add(run.modules)
+            .ok_or_else(|| "content-too-wide".to_string())?;
+        if run.color == Barcode1DRunColor::Bar {
+            let x = cursor
+                .checked_mul(module_width)
+                .ok_or_else(|| "invalid-render-config".to_string())?;
+            let width = run
+                .modules
+                .checked_mul(module_width)
+                .ok_or_else(|| "invalid-render-config".to_string())?;
+            let mut rectangle = PaintRect::filled(
+                x as f64,
+                0.0,
+                width as f64,
+                bar_height as f64,
+                &options.render_config.foreground,
+            );
+            rectangle.base.metadata = Some(HashMap::from([
+                ("sourceLabel".to_string(), run.source_label.clone()),
+                ("sourceIndex".to_string(), run.source_index.to_string()),
+                ("role".to_string(), run.role.as_str().to_string()),
+                ("moduleStart".to_string(), cursor.to_string()),
+                ("moduleEnd".to_string(), end.to_string()),
+            ]));
+            instructions.push(PaintInstruction::Rect(rectangle));
+        }
+        cursor = end;
+    }
+    let mut metadata = options.metadata.clone();
+    metadata.insert("label".to_string(), label.to_string());
+    metadata.insert(
+        "leftQuietZoneModules".to_string(),
+        layout.left_quiet_zone_modules.to_string(),
+    );
+    metadata.insert(
+        "rightQuietZoneModules".to_string(),
+        layout.right_quiet_zone_modules.to_string(),
+    );
+    metadata.insert(
+        "contentModules".to_string(),
+        layout.content_modules.to_string(),
+    );
+    metadata.insert("totalModules".to_string(), layout.total_modules.to_string());
+    metadata.insert("moduleWidthPx".to_string(), module_width.to_string());
+    metadata.insert("barHeightPx".to_string(), bar_height.to_string());
+    metadata.insert("sceneWidthPx".to_string(), scene_width.to_string());
+    metadata.insert("sceneHeightPx".to_string(), bar_height.to_string());
+    metadata.insert(
+        "symbolCount".to_string(),
+        layout.symbol_layouts.len().to_string(),
+    );
+
+    let mut scene = PaintScene::new(scene_width as f64, bar_height as f64);
+    scene.background = options.render_config.background.clone();
+    scene.instructions = instructions;
+    scene.metadata = Some(metadata);
+    Ok(scene)
 }
 
 impl RunsFromWidthPatternOptions {

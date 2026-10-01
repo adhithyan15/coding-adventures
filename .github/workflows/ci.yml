@@ -521,6 +521,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          # Barcode adoption evidence binds the checked-out package tree to the
+          # exact pre-publication implementation commit.
+          fetch-depth: 0
 
       - name: Set up Go
         uses: actions/setup-go@v7

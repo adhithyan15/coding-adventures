@@ -35,7 +35,9 @@ def test_layout_barcode_1d() -> None:
             source_index=0,
         )
     )
-    assert scene.width == (10 + 3 + 1 + 3 + 10) * DEFAULT_BARCODE_1D_LAYOUT_CONFIG.module_unit
+    assert scene.width == (
+        (10 + 3 + 1 + 3 + 10) * DEFAULT_BARCODE_1D_LAYOUT_CONFIG.module_unit
+    )
     assert scene.height == DEFAULT_BARCODE_1D_LAYOUT_CONFIG.bar_height
     assert len(scene.instructions) == 2
 
