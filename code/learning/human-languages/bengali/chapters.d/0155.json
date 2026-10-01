@@ -1,0 +1,19 @@
+{
+  "chapter": 155,
+  "title": "Wrist, Lung, Kidney, Exercise, Health",
+  "label": "ch:bn-wrist-lung-kidney-exercise-health",
+  "canDo": "I can say a wrist, a lung, a kidney, exercise and health.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "BN-C155-svasthyo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 155: I can say a wrist, a lung, a kidney, exercise and health.",
+    "assesses": [
+      "BN-LEX-C155-SVASTHYO155-03",
+      "BN-LEX-C155-SVASTHYO155-04",
+      "BN-LEX-C155-SVASTHYO155-05"
+    ]
+  }
+}

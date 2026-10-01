@@ -1,0 +1,11 @@
+{
+  "id": "BN-C158-durgo",
+  "pathSegment": "BN-PATH-158-JAYGA158",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-158-JAYGA158",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C168-shashuri",
+    "language": "bengali",
+    "chapter": 168,
+    "sequence": 9630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c15f9f94242d704"
+  },
+  "findings": []
+}

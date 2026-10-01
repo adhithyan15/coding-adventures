@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:6029d5bcce8d8302",
+  "lessonIds": [
+    "BN-C152-shukano",
+    "BN-C152-bhejano",
+    "BN-C152-kacha",
+    "BN-C152-achrano",
+    "BN-C152-kamrano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch152.txt",
+  "json": "bengali/narration/ch152.json",
+  "textHash": "fnv1a64:772260273a7d2928",
+  "jsonHash": "fnv1a64:a33b73be4e1ab97e",
+  "findings": []
+}

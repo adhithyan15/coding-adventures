@@ -1,0 +1,19 @@
+{
+  "chapter": 173,
+  "title": "Jalebi, Laddu, Jaggery, Black plum, Lychee",
+  "label": "ch:bn-jalebi-laddu-jaggery-black-plum-lychee",
+  "canDo": "I can say a jalebi, a laddu, jaggery, a black plum and a lychee.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C173-lichu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 173: I can say a jalebi, a laddu, jaggery, a black plum and a lychee.",
+    "assesses": [
+      "BN-LEX-C173-JINIS173-03",
+      "BN-LEX-C173-JINIS173-04",
+      "BN-LEX-C173-JINIS173-05"
+    ]
+  }
+}

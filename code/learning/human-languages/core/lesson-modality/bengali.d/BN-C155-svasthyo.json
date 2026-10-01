@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C155-svasthyo",
+    "language": "bengali",
+    "chapter": 155,
+    "sequence": 8640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8fa55ec0d192fad3"
+  },
+  "findings": []
+}

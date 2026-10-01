@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R156-second-pass-words-from-chapters-152-156",
+    "language": "bengali",
+    "chapter": 156,
+    "sequence": 8710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:59894f1bcabde59b"
+  },
+  "findings": []
+}

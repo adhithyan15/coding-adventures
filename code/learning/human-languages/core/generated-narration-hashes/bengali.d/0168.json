@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:1e4022764991ccdd",
+  "lessonIds": [
+    "BN-C168-shashuri",
+    "BN-C168-bor",
+    "BN-C168-kone",
+    "BN-C168-biye",
+    "BN-C168-atmiyo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch168.txt",
+  "json": "bengali/narration/ch168.json",
+  "textHash": "fnv1a64:adf8e7fff312e187",
+  "jsonHash": "fnv1a64:18475b626c6faffb",
+  "findings": []
+}

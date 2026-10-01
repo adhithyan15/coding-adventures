@@ -1,0 +1,19 @@
+{
+  "chapter": 167,
+  "title": "Passenger, Taxi, Rickshaw, Motorbike, Lorry",
+  "label": "ch:bn-passenger-taxi-rickshaw-motorbike-lorry",
+  "canDo": "I can say a passenger, a taxi, a rickshaw, a motorbike and a lorry.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C167-trak",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 167: I can say a passenger, a taxi, a rickshaw, a motorbike and a lorry.",
+    "assesses": [
+      "BN-LEX-C167-JINIS167-03",
+      "BN-LEX-C167-JINIS167-04",
+      "BN-LEX-C167-JINIS167-05"
+    ]
+  }
+}

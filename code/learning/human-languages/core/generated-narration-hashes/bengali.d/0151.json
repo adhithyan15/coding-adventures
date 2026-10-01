@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:278ea3e9071fee11",
+  "lessonIds": [
+    "BN-C151-bondho-kora",
+    "BN-C151-gora",
+    "BN-C151-sarano",
+    "BN-C151-jholano",
+    "BN-C151-badha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch151.txt",
+  "json": "bengali/narration/ch151.json",
+  "textHash": "fnv1a64:3db5e74b218d4dc1",
+  "jsonHash": "fnv1a64:3c3341a5812f75b1",
+  "findings": []
+}

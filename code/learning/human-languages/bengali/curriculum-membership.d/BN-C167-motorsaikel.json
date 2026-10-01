@@ -1,0 +1,11 @@
+{
+  "id": "BN-C167-motorsaikel",
+  "pathSegment": "BN-PATH-167-JINIS167",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-167-JINIS167",
+      "order": 3
+    }
+  ]
+}

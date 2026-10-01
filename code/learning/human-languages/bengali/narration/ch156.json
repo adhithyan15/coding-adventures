@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 156,
+  "title": "Sometimes, At first, Calendar date, Birthday, Late",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:e256c1d5d73b26ef",
+  "lessons": [
+    {
+      "id": "BN-C156-majhe-majhe",
+      "sequence": 8650,
+      "title": "মাঝে মাঝে (mājhe mājhe) — sometimes",
+      "headword": "মাঝে মাঝে",
+      "romanization": "mājhe mājhe",
+      "gloss": "sometimes",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:93c57740d8ad651a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for exercise, then the Bengali for health."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: মাঝে মাঝে",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মাঝে মাঝে — mājhe mājhe — \"sometimes\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājhe mājhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājhe mājhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mājhe mājhe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mājhe mājhe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say mājhe mājhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *mājhe mājhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for exercise, then the Bengali for health, then say mājhe mājhe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for exercise, then the Bengali for health, then say *mājhe mājhe* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does মাঝে মাঝে (mājhe mājhe) mean? (\"Sometimes\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C156-prothome",
+      "sequence": 8660,
+      "title": "প্রথমে (prôthôme) — at first",
+      "headword": "প্রথমে",
+      "romanization": "prôthôme",
+      "gloss": "at first",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:135de53d752ad2a1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for health, then the Bengali for sometimes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: প্রথমে",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রথমে — prôthôme — \"at first\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôthôme",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôthôme*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôthôme, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôthôme*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say prôthôme",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *prôthôme*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for health, then the Bengali for sometimes, then say prôthôme again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for health, then the Bengali for sometimes, then say *prôthôme* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does প্রথমে (prôthôme) mean? (\"At first\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C156-tarikh",
+      "sequence": 8670,
+      "title": "তারিখ (tārikh) — a calendar date",
+      "headword": "তারিখ",
+      "romanization": "tārikh",
+      "gloss": "a calendar date",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:23d30abfdf50b4cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for sometimes, then the Bengali for at first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: তারিখ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তারিখ — tārikh — \"a calendar date\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tārikh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tārikh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tārikh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tārikh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tārikh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tārikh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for sometimes, then the Bengali for at first, then say tārikh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for sometimes, then the Bengali for at first, then say *tārikh* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does তারিখ (tārikh) mean? (\"A calendar date\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C156-jonmodin",
+      "sequence": 8680,
+      "title": "জন্মদিন (jônmôdin) — a birthday",
+      "headword": "জন্মদিন",
+      "romanization": "jônmôdin",
+      "gloss": "a birthday",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:72d297ea665ecb54",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for at first, then the Bengali for a calendar date."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: জন্মদিন",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জন্মদিন — jônmôdin — \"a birthday\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jônmôdin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jônmôdin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jônmôdin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jônmôdin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say jônmôdin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *jônmôdin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for at first, then the Bengali for a calendar date, then say jônmôdin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for at first, then the Bengali for a calendar date, then say *jônmôdin* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does জন্মদিন (jônmôdin) mean? (\"A birthday\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C156-derite",
+      "sequence": 8690,
+      "title": "দেরিতে (derite) — late",
+      "headword": "দেরিতে",
+      "romanization": "derite",
+      "gloss": "late",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9772670f60882fcf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a calendar date, then the Bengali for a birthday."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: দেরিতে",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দেরিতে — derite — \"late\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "derite",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *derite*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "derite, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *derite*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say derite",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *derite*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a calendar date, then the Bengali for a birthday, then say derite again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a calendar date, then the Bengali for a birthday, then say *derite* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does দেরিতে (derite) mean? (\"Late\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R156-first-pass-words-from-chapters-148-151",
+      "sequence": 8700,
+      "title": "Words from chapters 148-151 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 148-151",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9e074d3d79cb166",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a birthday and late."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to cook, to sew, to iron, to sweep, to boil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to cook, to sew, to iron, to sweep, to boil]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to swim, to slip, to rest, to hurry, to delay",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to swim, to slip, to rest, to hurry, to delay]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to doubt, to argue, to carry on, to sneeze, to cough",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to doubt, to argue, to carry on, to sneeze, to cough]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to close, to build, to repair, to hang, to tie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to close, to build, to repair, to hang, to tie]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To cook? (রান্না করা, rānnā kôrā.) To sew? (সেলাই করা, selāi kôrā.) To iron? (ইস্ত্রি করা, istri kôrā.) To sweep? (ঝাঁট দেওয়া, jhā̃ṭ deoyā.) To boil? (সেদ্ধ করা, seddhô kôrā.) To swim? (সাঁতার কাটা, sā̃tār kāṭā.) To slip? (পিছলে পড়া, pichhle pôṛā.) To rest? (বিশ্রাম নেওয়া, bishrām neoyā.) To hurry? (তাড়াতাড়ি করা, tāṛātāṛi kôrā.) To delay? (দেরি করা, deri kôrā.) To doubt? (সন্দেহ করা, sôndeh kôrā.) To argue? (তর্ক করা, tôrkô kôrā.) To carry on? (চালিয়ে যাওয়া, chāliye jāoyā.) To sneeze? (হাঁচা, hā̃chā.) To cough? (কাশা, kāshā.) To close? (বন্ধ করা, bôndhô kôrā.) To build? (গড়া, gôṛā.) To repair? (সারানো, sārāno.) To hang? (ঝোলানো, jholāno.) To tie? (বাঁধা, bā̃dhā.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R156-second-pass-words-from-chapters-152-156",
+      "sequence": 8710,
+      "title": "Words from chapters 152-156 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 152-156",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:59894f1bcabde59b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to dry and to soak."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to dry, to soak, to launder, to comb, to bite",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to dry, to soak, to launder, to comb, to bite]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to discuss, to praise, to scold, to thank, to put up with",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to discuss, to praise, to scold, to thank, to put up with]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a disease, a cold, a cough, a headache, a stomach ache",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a disease, a cold, a cough, a headache, a stomach ache]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wrist, a lung, a kidney, exercise, health",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wrist, a lung, a kidney, exercise, health]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sometimes, at first, a calendar date, a birthday, late",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sometimes, at first, a calendar date, a birthday, late]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To dry? (শুকানো, shukāno.) To soak? (ভেজানো, bhejāno.) To launder? (কাচা, kāchā.) To comb? (আঁচড়ানো, ā̃chṛāno.) To bite? (কামড়ানো, kāmṛāno.) To discuss? (আলোচনা করা, ālochônā kôrā.) To praise? (প্রশংসা করা, prôshôngsā kôrā.) To scold? (বকা, bôkā.) To thank? (ধন্যবাদ দেওয়া, dhônyôbād deoyā.) To put up with? (সহ্য করা, sôhyô kôrā.) A disease? (রোগ, rog.) A cold? (সর্দি, sôrdi.) A cough? (কাশি, kāshi.) A headache? (মাথাব্যথা, māthābæthā.) A stomach ache? (পেটব্যথা, peṭbæthā.) A wrist? (কবজি, kôbji.) A lung? (ফুসফুস, phusphus.) A kidney? (কিডনি, kiḍni.) Exercise? (ব্যায়াম, bæyām.) Health? (স্বাস্থ্য, svāsthyô.) Sometimes? (মাঝে মাঝে, mājhe mājhe.) At first? (প্রথমে, prôthôme.) A calendar date? (তারিখ, tārikh.) A birthday? (জন্মদিন, jônmôdin.) Late? (দেরিতে, derite.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

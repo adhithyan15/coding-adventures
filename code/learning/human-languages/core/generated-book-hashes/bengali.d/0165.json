@@ -1,0 +1,15 @@
+{
+  "language": "bengali",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:bc3328a31cc95647",
+  "lessonIds": [
+    "BN-C165-kishmish",
+    "BN-C165-jm",
+    "BN-C165-kek",
+    "BN-C165-sondesh",
+    "BN-C165-porota",
+    "BN-R165-first-pass-words-from-chapters-157-160",
+    "BN-R165-second-pass-words-from-chapters-161-165"
+  ],
+  "tex": "bengali/book/chapters/ch165-raisin-jam-cake-sandesh-paratha.tex"
+}

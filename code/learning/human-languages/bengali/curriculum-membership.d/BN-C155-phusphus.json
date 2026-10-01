@@ -1,0 +1,11 @@
+{
+  "id": "BN-C155-phusphus",
+  "pathSegment": "BN-PATH-155-SVASTHYO155",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-155-SVASTHYO155",
+      "order": 1
+    }
+  ]
+}

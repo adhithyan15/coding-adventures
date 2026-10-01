@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:dd4ef72b62349844",
+  "lessonIds": [
+    "BN-C160-buddhiman",
+    "BN-C160-porishromi",
+    "BN-C160-lobhi",
+    "BN-C160-chintito",
+    "BN-C160-buro"
+  ],
+  "tex": "bengali/book/chapters/ch160-intelligent-hardworking-greedy-worried-elderly.tex"
+}

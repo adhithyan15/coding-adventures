@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C157-jayga",
+    "language": "bengali",
+    "chapter": 157,
+    "sequence": 8890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21e5b1ab813cfe3f"
+  },
+  "findings": []
+}

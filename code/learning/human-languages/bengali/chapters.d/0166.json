@@ -1,0 +1,19 @@
+{
+  "chapter": 166,
+  "title": "Vulture, Whale, Crab, Snail, Cricket",
+  "label": "ch:bn-vulture-whale-crab-snail-cricket",
+  "canDo": "I can say a vulture, a whale, a crab, a snail and cricket.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C166-kriket",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 166: I can say a vulture, a whale, a crab, a snail and cricket.",
+    "assesses": [
+      "BN-LEX-C166-JINIS166-03",
+      "BN-LEX-C166-JINIS166-04",
+      "BN-LEX-C166-JINIS166-05"
+    ]
+  }
+}

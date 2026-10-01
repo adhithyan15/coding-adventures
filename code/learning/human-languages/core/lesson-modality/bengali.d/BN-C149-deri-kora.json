@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C149-deri-kora",
+    "language": "bengali",
+    "chapter": 149,
+    "sequence": 8340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18a01d549ed5d513"
+  },
+  "findings": []
+}

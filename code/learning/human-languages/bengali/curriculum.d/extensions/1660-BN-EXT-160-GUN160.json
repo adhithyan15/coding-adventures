@@ -1,0 +1,8 @@
+{
+  "id": "BN-EXT-160-GUN160",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say intelligent, hardworking, greedy, worried and elderly.",
+  "prerequisites": []
+}

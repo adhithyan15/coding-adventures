@@ -1,0 +1,21 @@
+{
+  "language": "bengali",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:7b779afb302dc7fc",
+  "lessonIds": [
+    "BN-C165-kishmish",
+    "BN-C165-jm",
+    "BN-C165-kek",
+    "BN-C165-sondesh",
+    "BN-C165-porota",
+    "BN-R165-first-pass-words-from-chapters-157-160",
+    "BN-R165-second-pass-words-from-chapters-161-165"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "bengali/narration/ch165.txt",
+  "json": "bengali/narration/ch165.json",
+  "textHash": "fnv1a64:75ca84bca2e45760",
+  "jsonHash": "fnv1a64:bda77b7202e057ca",
+  "findings": []
+}

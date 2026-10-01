@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:810ccf94f69812ee",
+  "lessonIds": [
+    "BN-C150-sondeh-kora",
+    "BN-C150-torko-kora",
+    "BN-C150-chaliye-jaoya",
+    "BN-C150-hacha",
+    "BN-C150-kasha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch150.txt",
+  "json": "bengali/narration/ch150.json",
+  "textHash": "fnv1a64:07decf4989b647e2",
+  "jsonHash": "fnv1a64:3144b747b9282639",
+  "findings": []
+}

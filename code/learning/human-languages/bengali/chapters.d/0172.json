@@ -1,0 +1,19 @@
+{
+  "chapter": 172,
+  "title": "Sports, Female student, Board, Chalk, Scholarship",
+  "label": "ch:bn-sports-female-student-board-chalk-scholarship",
+  "canDo": "I can say sports, a female student, a board, chalk and a scholarship.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C172-britti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 172: I can say sports, a female student, a board, chalk and a scholarship.",
+    "assesses": [
+      "BN-LEX-C172-JINIS172-03",
+      "BN-LEX-C172-JINIS172-04",
+      "BN-LEX-C172-JINIS172-05"
+    ]
+  }
+}

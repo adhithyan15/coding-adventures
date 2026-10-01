@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 155,
+  "sourceHash": "fnv1a64:bc56c991bde2a670",
+  "lessonIds": [
+    "BN-C155-kobji",
+    "BN-C155-phusphus",
+    "BN-C155-kidni",
+    "BN-C155-byam",
+    "BN-C155-svasthyo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch155.txt",
+  "json": "bengali/narration/ch155.json",
+  "textHash": "fnv1a64:eca87e5fd55d192c",
+  "jsonHash": "fnv1a64:bb7caf991c4a447b",
+  "findings": []
+}

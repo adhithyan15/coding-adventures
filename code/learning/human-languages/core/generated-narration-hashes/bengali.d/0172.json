@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:afb5ea5fbfb036cd",
+  "lessonIds": [
+    "BN-C172-kheladhula",
+    "BN-C172-chhatri",
+    "BN-C172-bord",
+    "BN-C172-chok",
+    "BN-C172-britti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch172.txt",
+  "json": "bengali/narration/ch172.json",
+  "textHash": "fnv1a64:75866b084d00ebfc",
+  "jsonHash": "fnv1a64:8716d42728685534",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C168-biye",
+    "language": "bengali",
+    "chapter": 168,
+    "sequence": 9660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa009f1ac21e9636"
+  },
+  "findings": []
+}

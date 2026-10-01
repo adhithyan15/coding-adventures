@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C150-sondeh-kora",
+    "language": "bengali",
+    "chapter": 150,
+    "sequence": 8350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:96105df54e6ac23d"
+  },
+  "findings": []
+}

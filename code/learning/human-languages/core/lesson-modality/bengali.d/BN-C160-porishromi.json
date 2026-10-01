@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C160-porishromi",
+    "language": "bengali",
+    "chapter": 160,
+    "sequence": 9050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4426a0c5b1378064"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 175,
+  "title": "Stench, Duster, Bonti, Grinding stone, Gas",
+  "label": "ch:bn-stench-duster-bonti-grinding-stone-gas",
+  "canDo": "I can say a stench, a duster, a bonti, a grinding stone and gas.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C175-gs",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 175: I can say a stench, a duster, a bonti, a grinding stone and gas.",
+    "assesses": [
+      "BN-LEX-C175-JINIS175-03",
+      "BN-LEX-C175-JINIS175-04",
+      "BN-LEX-C175-JINIS175-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C173-laddu",
+    "language": "bengali",
+    "chapter": 173,
+    "sequence": 9890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:266c5591019e8eae"
+  },
+  "findings": []
+}

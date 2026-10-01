@@ -1,0 +1,11 @@
+{
+  "id": "BN-C173-laddu",
+  "pathSegment": "BN-PATH-173-JINIS173",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-173-JINIS173",
+      "order": 1
+    }
+  ]
+}

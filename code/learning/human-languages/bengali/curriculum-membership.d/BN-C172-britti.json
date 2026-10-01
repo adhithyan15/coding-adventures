@@ -1,0 +1,11 @@
+{
+  "id": "BN-C172-britti",
+  "pathSegment": "BN-PATH-172-JINIS172",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-172-JINIS172",
+      "order": 4
+    }
+  ]
+}

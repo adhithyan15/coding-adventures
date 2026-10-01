@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:7bc2fd2c8902c5d5",
+  "lessonIds": [
+    "BN-C161-bhodro",
+    "BN-C161-komol",
+    "BN-C161-kora",
+    "BN-C161-sukhi",
+    "BN-C161-birokto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch161.txt",
+  "json": "bengali/narration/ch161.json",
+  "textHash": "fnv1a64:7947b06350aaa023",
+  "jsonHash": "fnv1a64:17d9a37770293778",
+  "findings": []
+}

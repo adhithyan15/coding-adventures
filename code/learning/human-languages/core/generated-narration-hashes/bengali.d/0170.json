@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:b1598433d08c12b4",
+  "lessonIds": [
+    "BN-C170-akar",
+    "BN-C170-tukro",
+    "BN-C170-lain",
+    "BN-C170-michhil",
+    "BN-C170-kol"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch170.txt",
+  "json": "bengali/narration/ch170.json",
+  "textHash": "fnv1a64:eb01138cce5ce2f8",
+  "jsonHash": "fnv1a64:7b194f30ab869340",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C158-minar",
+    "language": "bengali",
+    "chapter": 158,
+    "sequence": 8970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a73149f54c4db5c9"
+  },
+  "findings": []
+}

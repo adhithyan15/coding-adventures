@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:b10bec61d129ee99",
+  "lessonIds": [
+    "BN-C149-satar-kata",
+    "BN-C149-pichhle-pora",
+    "BN-C149-bishram-neoya",
+    "BN-C149-taratari-kora",
+    "BN-C149-deri-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch149.txt",
+  "json": "bengali/narration/ch149.json",
+  "textHash": "fnv1a64:4d93633c573112bb",
+  "jsonHash": "fnv1a64:669b1bc81370914c",
+  "findings": []
+}

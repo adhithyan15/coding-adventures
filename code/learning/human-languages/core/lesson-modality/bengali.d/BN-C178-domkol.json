@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C178-domkol",
+    "language": "bengali",
+    "chapter": 178,
+    "sequence": 10330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9dbe0e27d42c2eca"
+  },
+  "findings": []
+}

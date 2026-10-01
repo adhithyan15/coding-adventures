@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:865d9f348d378199",
+  "lessonIds": [
+    "BN-C166-shokun",
+    "BN-C166-timi",
+    "BN-C166-kakra",
+    "BN-C166-shamuk",
+    "BN-C166-kriket"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch166.txt",
+  "json": "bengali/narration/ch166.json",
+  "textHash": "fnv1a64:03fc0f111dc49127",
+  "jsonHash": "fnv1a64:23383fea019688f2",
+  "findings": []
+}

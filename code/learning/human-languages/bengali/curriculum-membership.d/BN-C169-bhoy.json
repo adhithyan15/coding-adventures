@@ -1,0 +1,11 @@
+{
+  "id": "BN-C169-bhoy",
+  "pathSegment": "BN-PATH-169-JINIS169",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-169-JINIS169",
+      "order": 2
+    }
+  ]
+}

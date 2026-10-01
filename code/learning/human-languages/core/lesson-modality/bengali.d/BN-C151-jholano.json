@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C151-jholano",
+    "language": "bengali",
+    "chapter": 151,
+    "sequence": 8430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:428e4d89a51cc5f6"
+  },
+  "findings": []
+}

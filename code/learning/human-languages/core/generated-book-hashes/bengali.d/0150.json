@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:d0c0aebdf24c0828",
+  "lessonIds": [
+    "BN-C150-sondeh-kora",
+    "BN-C150-torko-kora",
+    "BN-C150-chaliye-jaoya",
+    "BN-C150-hacha",
+    "BN-C150-kasha"
+  ],
+  "tex": "bengali/book/chapters/ch150-to-doubt-to-argue-to-carry-on-to-sneeze-to-cough.tex"
+}
