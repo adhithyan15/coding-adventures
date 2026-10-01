@@ -7845,7 +7845,7 @@ impl Compiler {
             }
         }
         if node.rule_name == "for_stmt"
-            && first_direct_node(node, "variable").is_some_and(&targets_name)
+            && first_direct_node(node, "variable").is_some_and(targets_name)
         {
             return true;
         }
