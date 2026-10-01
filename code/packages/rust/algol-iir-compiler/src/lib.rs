@@ -8342,6 +8342,9 @@ impl Compiler {
                 return self.static_boolean_slots.get(&binding.slot).copied();
             }
         }
+        if let Some(value) = literal_boolean_value(node) {
+            return Some(value);
+        }
         let tokens = direct_tokens(node);
         if tokens.len() == 1 && tokens[0].effective_type_name() == "KEYWORD" {
             match tokens[0].value.as_str() {
@@ -10603,7 +10606,7 @@ fn compare_static_values<T: PartialEq + PartialOrd>(op: &str, lhs: T, rhs: T) ->
     }
 }
 
-fn compare_literal_numeric_values(
+fn compare_literal_values(
     op: &str,
     lhs: &GrammarASTNode,
     rhs: &GrammarASTNode,
@@ -10614,10 +10617,16 @@ fn compare_literal_numeric_values(
     ) {
         return Some(compare_static_values(op, lhs, rhs));
     }
+    if let (Some(lhs), Some(rhs)) = (
+        expr_static_real_arithmetic_value_with(lhs, &|_| None),
+        expr_static_real_arithmetic_value_with(rhs, &|_| None),
+    ) {
+        return Some(compare_static_values(op, lhs, rhs));
+    }
     Some(compare_static_values(
         op,
-        expr_static_real_arithmetic_value_with(lhs, &|_| None)?,
-        expr_static_real_arithmetic_value_with(rhs, &|_| None)?,
+        expr_string_literal(lhs)?,
+        expr_string_literal(rhs)?,
     ))
 }
 
@@ -10904,7 +10913,7 @@ fn literal_boolean_value(node: &GrammarASTNode) -> Option<bool> {
             })
         }
         "=" | "!=" | "<>" | "<" | "<=" | ">" | ">=" => {
-            compare_literal_numeric_values(op, lhs, rhs)
+            compare_literal_values(op, lhs, rhs)
         }
         _ => None,
     }
@@ -15718,6 +15727,32 @@ mod tests {
             "test",
         )
         .expect_err("a false literal-real predicate operand must remain conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_literal_string_predicate_selector_copy_tracks_partial_self_recursion() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and ('ALPHA' < 'BETA'); choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("literal string predicates may supply neutral selector identity operands");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_false_literal_string_predicate_selector_copy_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and ('BETA' < 'ALPHA'); choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("a false literal-string predicate operand must remain conservative");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 

@@ -1081,8 +1081,8 @@ backend immediately) come before the enabler-dependent items.
   the selector itself, yielding a one-sided guarded projection. Literal-only
   boolean combinations may supply projection constants and neutral identity
   operands. Literal integer predicates, including checked literal arithmetic
-  operands, and finite binary64 literal predicates may also supply boolean
-  identity operands.
+  operands, finite binary64 literal predicates, and literal string predicates
+  may also supply boolean identity operands.
   The recurrence assignment may instead occur in one or both branches of a
   conditional statement selected by those exact snapshots. A branch without
   the assignment preserves the dependency for that pass; unknown selectors

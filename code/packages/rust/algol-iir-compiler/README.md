@@ -258,8 +258,8 @@ complemented form `if not selector then false else true`. Either literal branch
 may instead be the selector itself, yielding a one-sided guarded projection.
 Literal-only boolean combinations may supply projection constants and neutral
 identity operands. Literal integer predicates, including checked literal
-arithmetic operands, and finite binary64 literal predicates may also supply
-boolean identity operands.
+arithmetic operands, finite binary64 literal predicates, and literal string
+predicates may also supply boolean identity operands.
 Unknown selectors, unsupported selector or dependency writes, string targets, overflow,
 non-finite values, and loops that do not reach false within 4,096 evaluations
 fail closed.
