@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 20623,
+    "totalLessons": 20754,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -33,14 +33,14 @@
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 156,
-    "forwardReferences": 993,
+    "forwardReferences": 1001,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 94,
     "chapterGateCleanTracks": 10,
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 231,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 18842,
+    "drivableLessons": 18973,
     "drivablePercent": 91,
     "chaptersWithoutDrivablePrefix": 275,
     "unexplainedModalityOverrides": 0
@@ -2217,7 +2217,32 @@
           229,
           230,
           231,
-          232
+          232,
+          233,
+          234,
+          235,
+          236,
+          237,
+          238,
+          239,
+          240,
+          241,
+          242,
+          243,
+          244,
+          245,
+          246,
+          247,
+          248,
+          249,
+          250,
+          251,
+          252,
+          253,
+          254,
+          255,
+          256,
+          257
         ],
         "bookChapters": [
           1,
@@ -2451,7 +2476,32 @@
           229,
           230,
           231,
-          232
+          232,
+          233,
+          234,
+          235,
+          236,
+          237,
+          238,
+          239,
+          240,
+          241,
+          242,
+          243,
+          244,
+          245,
+          246,
+          247,
+          248,
+          249,
+          250,
+          251,
+          252,
+          253,
+          254,
+          255,
+          256,
+          257
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -9270,9 +9320,9 @@
       {
         "language": "french",
         "status": "version-2",
-        "lessonCount": 1245,
+        "lessonCount": 1376,
         "versions": {
-          "2": 1245
+          "2": 1376
         }
       },
       {
@@ -10125,8 +10175,8 @@
       },
       {
         "language": "french",
-        "bookChapters": 232,
-        "declaredChapters": 232,
+        "bookChapters": 257,
+        "declaredChapters": 257,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -10285,8 +10335,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 4151,
-      "declaredChapters": 4151,
+      "bookChapters": 4176,
+      "declaredChapters": 4176,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 94,
@@ -10298,10 +10348,10 @@
     }
   },
   "levels": {
-    "totalLessons": 20623,
+    "totalLessons": 20754,
     "byLevel": {
-      "pre-A1": 8925,
-      "A1": 10580,
+      "pre-A1": 8930,
+      "A1": 10706,
       "A2": 1034,
       "B1": 39,
       "B2": 17,
@@ -10358,10 +10408,10 @@
       },
       {
         "language": "french",
-        "lessonCount": 1245,
+        "lessonCount": 1376,
         "byLevel": {
-          "pre-A1": 380,
-          "A1": 784,
+          "pre-A1": 385,
+          "A1": 910,
           "A2": 81,
           "B1": 0,
           "B2": 0,
@@ -11127,8 +11177,8 @@
       },
       {
         "language": "french",
-        "lessonCount": 1245,
-        "measurable": 1238,
+        "lessonCount": 1376,
+        "measurable": 1369,
         "unmeasurable": 7,
         "lessonViolations": 0,
         "chapterViolations": 0
@@ -11659,7 +11709,7 @@
           "language": "french",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 1245,
+          "lessonCount": 1376,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -37716,6 +37766,366 @@
         "language": "french",
         "introducedBy": "FR-C213-suggerer",
         "introducedAt": 1141,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "FR-LEX-C219-QUAL219-03",
+        "language": "french",
+        "introducedBy": "FR-C219-etrange",
+        "introducedAt": 1171,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C219-QUAL219-04",
+        "language": "french",
+        "introducedBy": "FR-C219-different-differente",
+        "introducedAt": 1172,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C219-QUAL219-05",
+        "language": "french",
+        "introducedBy": "FR-C219-pareil-pareille",
+        "introducedAt": 1173,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C220-QUAL220-01",
+        "language": "french",
+        "introducedBy": "FR-C220-ponctuel-ponctuelle",
+        "introducedAt": 1174,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C222-CHOSES222-03",
+        "language": "french",
+        "introducedBy": "FR-C222-loi",
+        "introducedAt": 1186,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C222-CHOSES222-04",
+        "language": "french",
+        "introducedBy": "FR-C222-tribunal",
+        "introducedAt": 1187,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "FR-LEX-C222-CHOSES222-05",
+        "language": "french",
+        "introducedBy": "FR-C222-juge",
+        "introducedAt": 1188,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "FR-LEX-C224-CHOSES224-02",
+        "language": "french",
+        "introducedBy": "FR-C224-pilote",
+        "introducedAt": 1197,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C224-CHOSES224-03",
+        "language": "french",
+        "introducedBy": "FR-C224-comptable",
+        "introducedAt": 1198,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C224-CHOSES224-04",
+        "language": "french",
+        "introducedBy": "FR-C224-scientifique",
+        "introducedAt": 1199,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C224-CHOSES224-05",
+        "language": "french",
+        "introducedBy": "FR-C224-chercheur",
+        "introducedAt": 1200,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C225-CHOSES225-01",
+        "language": "french",
+        "introducedBy": "FR-C225-experience",
+        "introducedAt": 1201,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C227-CHOSES227-03",
+        "language": "french",
+        "introducedBy": "FR-C227-peage",
+        "introducedAt": 1213,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C227-CHOSES227-04",
+        "language": "french",
+        "introducedBy": "FR-C227-autoroute",
+        "introducedAt": 1214,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "FR-LEX-C227-CHOSES227-05",
+        "language": "french",
+        "introducedBy": "FR-C227-amende",
+        "introducedAt": 1215,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "FR-LEX-C229-CHOSES229-02",
+        "language": "french",
+        "introducedBy": "FR-C229-tonnerre",
+        "introducedAt": 1224,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C229-CHOSES229-03",
+        "language": "french",
+        "introducedBy": "FR-C229-climat",
+        "introducedAt": 1225,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C229-CHOSES229-04",
+        "language": "french",
+        "introducedBy": "FR-C229-environnement",
+        "introducedAt": 1226,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C229-CHOSES229-05",
+        "language": "french",
+        "introducedBy": "FR-C229-pollution",
+        "introducedAt": 1227,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C230-CHOSES230-01",
+        "language": "french",
+        "introducedBy": "FR-C230-fil",
+        "introducedAt": 1228,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C232-TRAV232-03",
+        "language": "french",
+        "introducedBy": "FR-C232-universite",
+        "introducedAt": 1240,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C232-TRAV232-04",
+        "language": "french",
+        "introducedBy": "FR-C232-erreur",
+        "introducedAt": 1241,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "FR-LEX-C232-TRAV232-05",
+        "language": "french",
+        "introducedBy": "FR-C232-histoire",
+        "introducedAt": 1242,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "FR-LEX-C238-VERBES238-03",
+        "language": "french",
+        "introducedBy": "FR-C238-risquer",
+        "introducedAt": 1272,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C238-VERBES238-04",
+        "language": "french",
+        "introducedBy": "FR-C238-resoudre",
+        "introducedAt": 1273,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C238-VERBES238-05",
+        "language": "french",
+        "introducedBy": "FR-C238-voler",
+        "introducedAt": 1274,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C239-VERBES239-01",
+        "language": "french",
+        "introducedBy": "FR-C239-unir",
+        "introducedAt": 1275,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C241-VERBES241-03",
+        "language": "french",
+        "introducedBy": "FR-C241-hurler",
+        "introducedAt": 1287,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C241-VERBES241-04",
+        "language": "french",
+        "introducedBy": "FR-C241-voter",
+        "introducedAt": 1288,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "FR-LEX-C241-VERBES241-05",
+        "language": "french",
+        "introducedBy": "FR-C241-accueillir",
+        "introducedAt": 1289,
         "missed": [
           "R2",
           "R3",
@@ -102717,10 +103127,1033 @@
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C219-QUAL219-03",
+        "atom": "FR-LEX-C218-QUAL218-02",
         "language": "french",
-        "introducedBy": "FR-C219-etrange",
-        "introducedAt": 1171,
+        "introducedBy": "FR-C218-jaloux-jalouse",
+        "introducedAt": 1165,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C218-QUAL218-03",
+        "language": "french",
+        "introducedBy": "FR-C218-fier-fiere",
+        "introducedAt": 1166,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C218-QUAL218-04",
+        "language": "french",
+        "introducedBy": "FR-C218-nerveux-nerveuse",
+        "introducedAt": 1167,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C218-QUAL218-05",
+        "language": "french",
+        "introducedBy": "FR-C218-tranquille",
+        "introducedAt": 1168,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C219-QUAL219-01",
+        "language": "french",
+        "introducedBy": "FR-C219-ennuyeux-ennuyeuse",
+        "introducedAt": 1169,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C219-QUAL219-02",
+        "language": "french",
+        "introducedBy": "FR-C219-amusant-amusante",
+        "introducedAt": 1170,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C220-QUAL220-02",
+        "language": "french",
+        "introducedBy": "FR-C220-etranger-etrangere",
+        "introducedAt": 1175,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C220-QUAL220-03",
+        "language": "french",
+        "introducedBy": "FR-C220-aimable",
+        "introducedAt": 1176,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C220-QUAL220-04",
+        "language": "french",
+        "introducedBy": "FR-C220-honnete",
+        "introducedAt": 1177,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C220-QUAL220-05",
+        "language": "french",
+        "introducedBy": "FR-C220-patient-patiente",
+        "introducedAt": 1178,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C221-CHOSES221-01",
+        "language": "french",
+        "introducedBy": "FR-C221-ciseaux",
+        "introducedAt": 1179,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C221-CHOSES221-02",
+        "language": "french",
+        "introducedBy": "FR-C221-montre",
+        "introducedAt": 1180,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C221-CHOSES221-03",
+        "language": "french",
+        "introducedBy": "FR-C221-pyjama",
+        "introducedAt": 1181,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C221-CHOSES221-04",
+        "language": "french",
+        "introducedBy": "FR-C221-bouton",
+        "introducedAt": 1182,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C221-CHOSES221-05",
+        "language": "french",
+        "introducedBy": "FR-C221-peche",
+        "introducedAt": 1183,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C222-CHOSES222-01",
+        "language": "french",
+        "introducedBy": "FR-C222-societe",
+        "introducedAt": 1184,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C222-CHOSES222-02",
+        "language": "french",
+        "introducedBy": "FR-C222-gouvernement",
+        "introducedAt": 1185,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C223-CHOSES223-01",
+        "language": "french",
+        "introducedBy": "FR-C223-batterie",
+        "introducedAt": 1191,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C223-CHOSES223-02",
+        "language": "french",
+        "introducedBy": "FR-C223-chargeur",
+        "introducedAt": 1192,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C223-CHOSES223-03",
+        "language": "french",
+        "introducedBy": "FR-C223-chanteur",
+        "introducedAt": 1193,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C223-CHOSES223-04",
+        "language": "french",
+        "introducedBy": "FR-C223-concert",
+        "introducedAt": 1194,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C223-CHOSES223-05",
+        "language": "french",
+        "introducedBy": "FR-C223-spectacle",
+        "introducedAt": 1195,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C224-CHOSES224-01",
+        "language": "french",
+        "introducedBy": "FR-C224-employe",
+        "introducedAt": 1196,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C225-CHOSES225-02",
+        "language": "french",
+        "introducedBy": "FR-C225-choix",
+        "introducedAt": 1202,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C225-CHOSES225-03",
+        "language": "french",
+        "introducedBy": "FR-C225-decision",
+        "introducedAt": 1203,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C225-CHOSES225-04",
+        "language": "french",
+        "introducedBy": "FR-C225-possibilite",
+        "introducedAt": 1204,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C225-CHOSES225-05",
+        "language": "french",
+        "introducedBy": "FR-C225-raison",
+        "introducedAt": 1205,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C226-CHOSES226-01",
+        "language": "french",
+        "introducedBy": "FR-C226-carte-bancaire",
+        "introducedAt": 1206,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C226-CHOSES226-02",
+        "language": "french",
+        "introducedBy": "FR-C226-distributeur",
+        "introducedAt": 1207,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C226-CHOSES226-03",
+        "language": "french",
+        "introducedBy": "FR-C226-compte-bancaire",
+        "introducedAt": 1208,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C226-CHOSES226-04",
+        "language": "french",
+        "introducedBy": "FR-C226-pret",
+        "introducedAt": 1209,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C226-CHOSES226-05",
+        "language": "french",
+        "introducedBy": "FR-C226-dette",
+        "introducedAt": 1210,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C227-CHOSES227-01",
+        "language": "french",
+        "introducedBy": "FR-C227-roue",
+        "introducedAt": 1211,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C227-CHOSES227-02",
+        "language": "french",
+        "introducedBy": "FR-C227-moteur",
+        "introducedAt": 1212,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C228-CHOSES228-01",
+        "language": "french",
+        "introducedBy": "FR-C228-vase",
+        "introducedAt": 1218,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C228-CHOSES228-02",
+        "language": "french",
+        "introducedBy": "FR-C228-plante",
+        "introducedAt": 1219,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C228-CHOSES228-03",
+        "language": "french",
+        "introducedBy": "FR-C228-graine",
+        "introducedAt": 1220,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C228-CHOSES228-04",
+        "language": "french",
+        "introducedBy": "FR-C228-racine",
+        "introducedAt": 1221,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C228-CHOSES228-05",
+        "language": "french",
+        "introducedBy": "FR-C228-branche",
+        "introducedAt": 1222,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C229-CHOSES229-01",
+        "language": "french",
+        "introducedBy": "FR-C229-eclair",
+        "introducedAt": 1223,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C230-CHOSES230-02",
+        "language": "french",
+        "introducedBy": "FR-C230-aiguille",
+        "introducedAt": 1229,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C230-CHOSES230-03",
+        "language": "french",
+        "introducedBy": "FR-C230-clou",
+        "introducedAt": 1230,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C230-CHOSES230-04",
+        "language": "french",
+        "introducedBy": "FR-C230-marteau",
+        "introducedAt": 1231,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C230-CHOSES230-05",
+        "language": "french",
+        "introducedBy": "FR-C230-echelle",
+        "introducedAt": 1232,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C231-CHOSES231-01",
+        "language": "french",
+        "introducedBy": "FR-C231-retour",
+        "introducedAt": 1233,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C231-CHOSES231-02",
+        "language": "french",
+        "introducedBy": "FR-C231-arrivee",
+        "introducedAt": 1234,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C231-CHOSES231-03",
+        "language": "french",
+        "introducedBy": "FR-C231-depart",
+        "introducedAt": 1235,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C231-CHOSES231-04",
+        "language": "french",
+        "introducedBy": "FR-C231-destination",
+        "introducedAt": 1236,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C231-CHOSES231-05",
+        "language": "french",
+        "introducedBy": "FR-C231-paysage",
+        "introducedAt": 1237,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C232-TRAV232-01",
+        "language": "french",
+        "introducedBy": "FR-C232-magazine",
+        "introducedAt": 1238,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C232-TRAV232-02",
+        "language": "french",
+        "introducedBy": "FR-C232-dictionnaire",
+        "introducedAt": 1239,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C233-VERBES233-01",
+        "language": "french",
+        "introducedBy": "FR-C233-repasser",
+        "introducedAt": 1245,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C233-VERBES233-02",
+        "language": "french",
+        "introducedBy": "FR-C233-reparer",
+        "introducedAt": 1246,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C233-VERBES233-03",
+        "language": "french",
+        "introducedBy": "FR-C233-construire",
+        "introducedAt": 1247,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C233-VERBES233-04",
+        "language": "french",
+        "introducedBy": "FR-C233-photographier",
+        "introducedAt": 1248,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C233-VERBES233-05",
+        "language": "french",
+        "introducedBy": "FR-C233-repeter",
+        "introducedAt": 1249,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C234-VERBES234-01",
+        "language": "french",
+        "introducedBy": "FR-C234-remplir",
+        "introducedAt": 1250,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C234-VERBES234-02",
+        "language": "french",
+        "introducedBy": "FR-C234-vider",
+        "introducedAt": 1251,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C234-VERBES234-03",
+        "language": "french",
+        "introducedBy": "FR-C234-mesurer",
+        "introducedAt": 1252,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C234-VERBES234-04",
+        "language": "french",
+        "introducedBy": "FR-C234-peser",
+        "introducedAt": 1253,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C234-VERBES234-05",
+        "language": "french",
+        "introducedBy": "FR-C234-verifier",
+        "introducedAt": 1254,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C235-VERBES235-01",
+        "language": "french",
+        "introducedBy": "FR-C235-demenager",
+        "introducedAt": 1255,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C235-VERBES235-02",
+        "language": "french",
+        "introducedBy": "FR-C235-louer",
+        "introducedAt": 1256,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C235-VERBES235-03",
+        "language": "french",
+        "introducedBy": "FR-C235-reposer",
+        "introducedAt": 1257,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C235-VERBES235-04",
+        "language": "french",
+        "introducedBy": "FR-C235-reveiller",
+        "introducedAt": 1258,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C235-VERBES235-05",
+        "language": "french",
+        "introducedBy": "FR-C235-coiffer",
+        "introducedAt": 1259,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C236-VERBES236-01",
+        "language": "french",
+        "introducedBy": "FR-C236-suffire",
+        "introducedAt": 1260,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C236-VERBES236-02",
+        "language": "french",
+        "introducedBy": "FR-C236-bruler",
+        "introducedAt": 1261,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C236-VERBES236-03",
+        "language": "french",
+        "introducedBy": "FR-C236-jeter",
+        "introducedAt": 1262,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C236-VERBES236-04",
+        "language": "french",
+        "introducedBy": "FR-C236-calculer",
+        "introducedAt": 1263,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C236-VERBES236-05",
+        "language": "french",
+        "introducedBy": "FR-C236-frapper",
+        "introducedAt": 1264,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C237-VERBES237-01",
+        "language": "french",
+        "introducedBy": "FR-C237-manquer",
+        "introducedAt": 1265,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C237-VERBES237-02",
+        "language": "french",
+        "introducedBy": "FR-C237-meriter",
+        "introducedAt": 1266,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C237-VERBES237-03",
+        "language": "french",
+        "introducedBy": "FR-C237-ameliorer",
+        "introducedAt": 1267,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C237-VERBES237-04",
+        "language": "french",
+        "introducedBy": "FR-C237-empirer",
+        "introducedAt": 1268,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C237-VERBES237-05",
+        "language": "french",
+        "introducedBy": "FR-C237-offrir",
+        "introducedAt": 1269,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C238-VERBES238-01",
+        "language": "french",
+        "introducedBy": "FR-C238-reduire",
+        "introducedAt": 1270,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C238-VERBES238-02",
+        "language": "french",
+        "introducedBy": "FR-C238-refuser",
+        "introducedAt": 1271,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C239-VERBES239-02",
+        "language": "french",
+        "introducedBy": "FR-C239-valoir",
+        "introducedAt": 1276,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C239-VERBES239-03",
+        "language": "french",
+        "introducedBy": "FR-C239-habituer",
+        "introducedAt": 1277,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C239-VERBES239-04",
+        "language": "french",
+        "introducedBy": "FR-C239-rendre-compte",
+        "introducedAt": 1278,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C239-VERBES239-05",
+        "language": "french",
+        "introducedBy": "FR-C239-depecher",
+        "introducedAt": 1279,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C240-VERBES240-01",
+        "language": "french",
+        "introducedBy": "FR-C240-insister",
+        "introducedAt": 1280,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C240-VERBES240-02",
+        "language": "french",
+        "introducedBy": "FR-C240-interrompre",
+        "introducedAt": 1281,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C240-VERBES240-03",
+        "language": "french",
+        "introducedBy": "FR-C240-attacher",
+        "introducedAt": 1282,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C240-VERBES240-04",
+        "language": "french",
+        "introducedBy": "FR-C240-melanger",
+        "introducedAt": 1283,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C240-VERBES240-05",
+        "language": "french",
+        "introducedBy": "FR-C240-obeir",
+        "introducedAt": 1284,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C241-VERBES241-01",
+        "language": "french",
+        "introducedBy": "FR-C241-tousser",
+        "introducedAt": 1285,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C241-VERBES241-02",
+        "language": "french",
+        "introducedBy": "FR-C241-trembler",
+        "introducedAt": 1286,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C242-VERBES242-01",
+        "language": "french",
+        "introducedBy": "FR-C242-maigrir",
+        "introducedAt": 1292,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C242-VERBES242-02",
+        "language": "french",
+        "introducedBy": "FR-C242-nourrir",
+        "introducedAt": 1293,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C242-VERBES242-03",
+        "language": "french",
+        "introducedBy": "FR-C242-partir-en-vacances",
+        "introducedAt": 1294,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C242-VERBES242-04",
+        "language": "french",
+        "introducedBy": "FR-C242-plaisanter",
+        "introducedAt": 1295,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C247-CHOSES247-03",
+        "language": "french",
+        "introducedBy": "FR-C247-arret",
+        "introducedAt": 1319,
         "missed": [
           "R2",
           "R3"
@@ -102728,10 +104161,10 @@
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C219-QUAL219-04",
+        "atom": "FR-LEX-C247-CHOSES247-04",
         "language": "french",
-        "introducedBy": "FR-C219-different-differente",
-        "introducedAt": 1172,
+        "introducedBy": "FR-C247-moto",
+        "introducedAt": 1320,
         "missed": [
           "R2",
           "R3"
@@ -102739,10 +104172,10 @@
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C219-QUAL219-05",
+        "atom": "FR-LEX-C247-CHOSES247-05",
         "language": "french",
-        "introducedBy": "FR-C219-pareil-pareille",
-        "introducedAt": 1173,
+        "introducedBy": "FR-C247-quai",
+        "introducedAt": 1321,
         "missed": [
           "R2",
           "R3"
@@ -102750,10 +104183,10 @@
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C220-QUAL220-01",
+        "atom": "FR-LEX-C248-CHOSES248-01",
         "language": "french",
-        "introducedBy": "FR-C220-ponctuel-ponctuelle",
-        "introducedAt": 1174,
+        "introducedBy": "FR-C248-maire",
+        "introducedAt": 1322,
         "missed": [
           "R2",
           "R3"
@@ -102761,10 +104194,10 @@
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C222-CHOSES222-03",
+        "atom": "FR-LEX-C250-CHOSES250-03",
         "language": "french",
-        "introducedBy": "FR-C222-loi",
-        "introducedAt": 1186,
+        "introducedBy": "FR-C250-adulte",
+        "introducedAt": 1334,
         "missed": [
           "R2",
           "R3"
@@ -102772,10 +104205,10 @@
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C222-CHOSES222-04",
+        "atom": "FR-LEX-C250-CHOSES250-04",
         "language": "french",
-        "introducedBy": "FR-C222-tribunal",
-        "introducedAt": 1187,
+        "introducedBy": "FR-C250-personne-agee",
+        "introducedAt": 1335,
         "missed": [
           "R2",
           "R3"
@@ -102783,114 +104216,15 @@
         "revisits": 4
       },
       {
-        "atom": "FR-LEX-C222-CHOSES222-05",
+        "atom": "FR-LEX-C250-CHOSES250-05",
         "language": "french",
-        "introducedBy": "FR-C222-juge",
-        "introducedAt": 1188,
+        "introducedBy": "FR-C250-jumeau",
+        "introducedAt": 1336,
         "missed": [
           "R2",
           "R3"
         ],
         "revisits": 4
-      },
-      {
-        "atom": "FR-LEX-C224-CHOSES224-02",
-        "language": "french",
-        "introducedBy": "FR-C224-pilote",
-        "introducedAt": 1197,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "FR-LEX-C224-CHOSES224-03",
-        "language": "french",
-        "introducedBy": "FR-C224-comptable",
-        "introducedAt": 1198,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "FR-LEX-C224-CHOSES224-04",
-        "language": "french",
-        "introducedBy": "FR-C224-scientifique",
-        "introducedAt": 1199,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "FR-LEX-C224-CHOSES224-05",
-        "language": "french",
-        "introducedBy": "FR-C224-chercheur",
-        "introducedAt": 1200,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "FR-LEX-C225-CHOSES225-01",
-        "language": "french",
-        "introducedBy": "FR-C225-experience",
-        "introducedAt": 1201,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "FR-LEX-C227-CHOSES227-03",
-        "language": "french",
-        "introducedBy": "FR-C227-peage",
-        "introducedAt": 1213,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "FR-LEX-C227-CHOSES227-04",
-        "language": "french",
-        "introducedBy": "FR-C227-autoroute",
-        "introducedAt": 1214,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 4
-      },
-      {
-        "atom": "FR-LEX-C227-CHOSES227-05",
-        "language": "french",
-        "introducedBy": "FR-C227-amende",
-        "introducedAt": 1215,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 4
-      },
-      {
-        "atom": "FR-LEX-C229-CHOSES229-02",
-        "language": "french",
-        "introducedBy": "FR-C229-tonnerre",
-        "introducedAt": 1224,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
       },
       {
         "atom": "FR-LEX-C49-CORPS1-01",
@@ -215600,440 +216934,550 @@
         "revisits": 8
       },
       {
-        "atom": "FR-LEX-C218-QUAL218-02",
+        "atom": "FR-LEX-C242-VERBES242-05",
         "language": "french",
-        "introducedBy": "FR-C218-jaloux-jalouse",
-        "introducedAt": 1165,
+        "introducedBy": "FR-C242-ranger",
+        "introducedAt": 1296,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C218-QUAL218-03",
+        "atom": "FR-LEX-C243-SANTE243-01",
         "language": "french",
-        "introducedBy": "FR-C218-fier-fiere",
-        "introducedAt": 1166,
+        "introducedBy": "FR-C243-pansement",
+        "introducedAt": 1297,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C218-QUAL218-04",
+        "atom": "FR-LEX-C243-SANTE243-02",
         "language": "french",
-        "introducedBy": "FR-C218-nerveux-nerveuse",
-        "introducedAt": 1167,
+        "introducedBy": "FR-C243-urgences",
+        "introducedAt": 1298,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C218-QUAL218-05",
+        "atom": "FR-LEX-C243-SANTE243-03",
         "language": "french",
-        "introducedBy": "FR-C218-tranquille",
-        "introducedAt": 1168,
+        "introducedBy": "FR-C243-urgence",
+        "introducedAt": 1299,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C219-QUAL219-01",
+        "atom": "FR-LEX-C243-SANTE243-04",
         "language": "french",
-        "introducedBy": "FR-C219-ennuyeux-ennuyeuse",
-        "introducedAt": 1169,
+        "introducedBy": "FR-C243-consultation",
+        "introducedAt": 1300,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C219-QUAL219-02",
+        "atom": "FR-LEX-C243-SANTE243-05",
         "language": "french",
-        "introducedBy": "FR-C219-amusant-amusante",
-        "introducedAt": 1170,
+        "introducedBy": "FR-C243-regime",
+        "introducedAt": 1301,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C220-QUAL220-02",
+        "atom": "FR-LEX-C244-QUAL244-01",
         "language": "french",
-        "introducedBy": "FR-C220-etranger-etrangere",
-        "introducedAt": 1175,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "FR-LEX-C220-QUAL220-03",
-        "language": "french",
-        "introducedBy": "FR-C220-aimable",
-        "introducedAt": 1176,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "FR-LEX-C220-QUAL220-04",
-        "language": "french",
-        "introducedBy": "FR-C220-honnete",
-        "introducedAt": 1177,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "FR-LEX-C220-QUAL220-05",
-        "language": "french",
-        "introducedBy": "FR-C220-patient-patiente",
-        "introducedAt": 1178,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "FR-LEX-C221-CHOSES221-01",
-        "language": "french",
-        "introducedBy": "FR-C221-ciseaux",
-        "introducedAt": 1179,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "FR-LEX-C221-CHOSES221-02",
-        "language": "french",
-        "introducedBy": "FR-C221-montre",
-        "introducedAt": 1180,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "FR-LEX-C221-CHOSES221-03",
-        "language": "french",
-        "introducedBy": "FR-C221-pyjama",
-        "introducedAt": 1181,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "FR-LEX-C221-CHOSES221-04",
-        "language": "french",
-        "introducedBy": "FR-C221-bouton",
-        "introducedAt": 1182,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "FR-LEX-C221-CHOSES221-05",
-        "language": "french",
-        "introducedBy": "FR-C221-peche",
-        "introducedAt": 1183,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "FR-LEX-C222-CHOSES222-01",
-        "language": "french",
-        "introducedBy": "FR-C222-societe",
-        "introducedAt": 1184,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "FR-LEX-C222-CHOSES222-02",
-        "language": "french",
-        "introducedBy": "FR-C222-gouvernement",
-        "introducedAt": 1185,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "FR-LEX-C223-CHOSES223-01",
-        "language": "french",
-        "introducedBy": "FR-C223-batterie",
-        "introducedAt": 1191,
+        "introducedBy": "FR-C244-silencieux-silencieuse",
+        "introducedAt": 1302,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C223-CHOSES223-02",
+        "atom": "FR-LEX-C244-QUAL244-02",
         "language": "french",
-        "introducedBy": "FR-C223-chargeur",
-        "introducedAt": 1192,
+        "introducedBy": "FR-C244-propre",
+        "introducedAt": 1303,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C223-CHOSES223-03",
+        "atom": "FR-LEX-C244-QUAL244-03",
         "language": "french",
-        "introducedBy": "FR-C223-chanteur",
-        "introducedAt": 1193,
+        "introducedBy": "FR-C244-dur-dure",
+        "introducedAt": 1304,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C223-CHOSES223-04",
+        "atom": "FR-LEX-C244-QUAL244-04",
         "language": "french",
-        "introducedBy": "FR-C223-concert",
-        "introducedAt": 1194,
+        "introducedBy": "FR-C244-lisse",
+        "introducedAt": 1305,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C223-CHOSES223-05",
+        "atom": "FR-LEX-C244-QUAL244-05",
         "language": "french",
-        "introducedBy": "FR-C223-spectacle",
-        "introducedAt": 1195,
+        "introducedBy": "FR-C244-rugueux-rugueuse",
+        "introducedAt": 1306,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C224-CHOSES224-01",
+        "atom": "FR-LEX-C245-QUAL245-01",
         "language": "french",
-        "introducedBy": "FR-C224-employe",
-        "introducedAt": 1196,
+        "introducedBy": "FR-C245-semblable",
+        "introducedAt": 1307,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C225-CHOSES225-02",
+        "atom": "FR-LEX-C245-QUAL245-02",
         "language": "french",
-        "introducedBy": "FR-C225-choix",
-        "introducedAt": 1202,
+        "introducedBy": "FR-C245-juste",
+        "introducedAt": 1308,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C245-QUAL245-03",
+        "language": "french",
+        "introducedBy": "FR-C245-faux-fausse",
+        "introducedAt": 1309,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C245-QUAL245-04",
+        "language": "french",
+        "introducedBy": "FR-C245-pret-prete",
+        "introducedAt": 1310,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C245-QUAL245-05",
+        "language": "french",
+        "introducedBy": "FR-C245-gratuit-gratuite",
+        "introducedAt": 1311,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C246-QUAL246-01",
+        "language": "french",
+        "introducedBy": "FR-C246-genereux-genereuse",
+        "introducedAt": 1312,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C246-QUAL246-02",
+        "language": "french",
+        "introducedBy": "FR-C246-paresseux-paresseuse",
+        "introducedAt": 1313,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C246-QUAL246-03",
+        "language": "french",
+        "introducedBy": "FR-C246-travailleur-travailleuse",
+        "introducedAt": 1314,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C246-QUAL246-04",
+        "language": "french",
+        "introducedBy": "FR-C246-bavard-bavarde",
+        "introducedAt": 1315,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C246-QUAL246-05",
+        "language": "french",
+        "introducedBy": "FR-C246-fache-fachee",
+        "introducedAt": 1316,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C247-CHOSES247-01",
+        "language": "french",
+        "introducedBy": "FR-C247-addition",
+        "introducedAt": 1317,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C247-CHOSES247-02",
+        "language": "french",
+        "introducedBy": "FR-C247-pourboire",
+        "introducedAt": 1318,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C248-CHOSES248-02",
+        "language": "french",
+        "introducedBy": "FR-C248-elections",
+        "introducedAt": 1323,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C225-CHOSES225-03",
+        "atom": "FR-LEX-C248-CHOSES248-03",
         "language": "french",
-        "introducedBy": "FR-C225-decision",
-        "introducedAt": 1203,
+        "introducedBy": "FR-C248-vote",
+        "introducedAt": 1324,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C225-CHOSES225-04",
+        "atom": "FR-LEX-C248-CHOSES248-04",
         "language": "french",
-        "introducedBy": "FR-C225-possibilite",
-        "introducedAt": 1204,
+        "introducedBy": "FR-C248-politique",
+        "introducedAt": 1325,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C225-CHOSES225-05",
+        "atom": "FR-LEX-C248-CHOSES248-05",
         "language": "french",
-        "introducedBy": "FR-C225-raison",
-        "introducedAt": 1205,
+        "introducedBy": "FR-C248-economie",
+        "introducedAt": 1326,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C226-CHOSES226-01",
+        "atom": "FR-LEX-C249-CHOSES249-01",
         "language": "french",
-        "introducedBy": "FR-C226-carte-bancaire",
-        "introducedAt": 1206,
+        "introducedBy": "FR-C249-acteur",
+        "introducedAt": 1327,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C226-CHOSES226-02",
+        "atom": "FR-LEX-C249-CHOSES249-02",
         "language": "french",
-        "introducedBy": "FR-C226-distributeur",
-        "introducedAt": 1207,
+        "introducedBy": "FR-C249-actrice",
+        "introducedAt": 1328,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C226-CHOSES226-03",
+        "atom": "FR-LEX-C249-CHOSES249-03",
         "language": "french",
-        "introducedBy": "FR-C226-compte-bancaire",
-        "introducedAt": 1208,
+        "introducedBy": "FR-C249-poeme",
+        "introducedAt": 1329,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C226-CHOSES226-04",
+        "atom": "FR-LEX-C249-CHOSES249-04",
         "language": "french",
-        "introducedBy": "FR-C226-pret",
-        "introducedAt": 1209,
+        "introducedBy": "FR-C249-ecrivain",
+        "introducedAt": 1330,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C226-CHOSES226-05",
+        "atom": "FR-LEX-C249-CHOSES249-05",
         "language": "french",
-        "introducedBy": "FR-C226-dette",
-        "introducedAt": 1210,
+        "introducedBy": "FR-C249-peintre",
+        "introducedAt": 1331,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C227-CHOSES227-01",
+        "atom": "FR-LEX-C250-CHOSES250-01",
         "language": "french",
-        "introducedBy": "FR-C227-roue",
-        "introducedAt": 1211,
+        "introducedBy": "FR-C250-etranger",
+        "introducedAt": 1332,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C227-CHOSES227-02",
+        "atom": "FR-LEX-C250-CHOSES250-02",
         "language": "french",
-        "introducedBy": "FR-C227-moteur",
-        "introducedAt": 1212,
+        "introducedBy": "FR-C250-touriste",
+        "introducedAt": 1333,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C228-CHOSES228-01",
+        "atom": "FR-LEX-C251-CHOSES251-01",
         "language": "french",
-        "introducedBy": "FR-C228-vase",
-        "introducedAt": 1218,
+        "introducedBy": "FR-C251-resultat",
+        "introducedAt": 1339,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C228-CHOSES228-02",
+        "atom": "FR-LEX-C251-CHOSES251-02",
         "language": "french",
-        "introducedBy": "FR-C228-plante",
-        "introducedAt": 1219,
+        "introducedBy": "FR-C251-difference",
+        "introducedAt": 1340,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C228-CHOSES228-03",
+        "atom": "FR-LEX-C251-CHOSES251-03",
         "language": "french",
-        "introducedBy": "FR-C228-graine",
-        "introducedAt": 1220,
+        "introducedBy": "FR-C251-exemple",
+        "introducedAt": 1341,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C228-CHOSES228-04",
+        "atom": "FR-LEX-C251-CHOSES251-04",
         "language": "french",
-        "introducedBy": "FR-C228-racine",
-        "introducedAt": 1221,
+        "introducedBy": "FR-C251-verite",
+        "introducedAt": 1342,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C228-CHOSES228-05",
+        "atom": "FR-LEX-C251-CHOSES251-05",
         "language": "french",
-        "introducedBy": "FR-C228-branche",
-        "introducedAt": 1222,
+        "introducedBy": "FR-C251-mensonge",
+        "introducedAt": 1343,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C229-CHOSES229-01",
+        "atom": "FR-LEX-C252-CHOSES252-01",
         "language": "french",
-        "introducedBy": "FR-C229-eclair",
-        "introducedAt": 1223,
+        "introducedBy": "FR-C252-impot",
+        "introducedAt": 1344,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C229-CHOSES229-03",
+        "atom": "FR-LEX-C252-CHOSES252-02",
         "language": "french",
-        "introducedBy": "FR-C229-climat",
-        "introducedAt": 1225,
+        "introducedBy": "FR-C252-formulaire",
+        "introducedAt": 1345,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C229-CHOSES229-04",
+        "atom": "FR-LEX-C252-CHOSES252-03",
         "language": "french",
-        "introducedBy": "FR-C229-environnement",
-        "introducedAt": 1226,
+        "introducedBy": "FR-C252-enveloppe",
+        "introducedAt": 1346,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C229-CHOSES229-05",
+        "atom": "FR-LEX-C252-CHOSES252-04",
         "language": "french",
-        "introducedBy": "FR-C229-pollution",
-        "introducedAt": 1227,
+        "introducedBy": "FR-C252-timbre",
+        "introducedAt": 1347,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C230-CHOSES230-01",
+        "atom": "FR-LEX-C252-CHOSES252-05",
         "language": "french",
-        "introducedBy": "FR-C230-fil",
-        "introducedAt": 1228,
+        "introducedBy": "FR-C252-colis",
+        "introducedAt": 1348,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C253-CHOSES253-01",
+        "language": "french",
+        "introducedBy": "FR-C253-permis-de-conduire",
+        "introducedAt": 1349,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C253-CHOSES253-02",
+        "language": "french",
+        "introducedBy": "FR-C253-casque",
+        "introducedAt": 1350,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C253-CHOSES253-03",
+        "language": "french",
+        "introducedBy": "FR-C253-tunnel",
+        "introducedAt": 1351,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C253-CHOSES253-04",
+        "language": "french",
+        "introducedBy": "FR-C253-chantier",
+        "introducedAt": 1352,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C253-CHOSES253-05",
+        "language": "french",
+        "introducedBy": "FR-C253-immeuble",
+        "introducedAt": 1353,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C254-CHOSES254-01",
+        "language": "french",
+        "introducedBy": "FR-C254-tronc",
+        "introducedAt": 1354,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C254-CHOSES254-02",
+        "language": "french",
+        "introducedBy": "FR-C254-epine",
+        "introducedAt": 1355,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C254-CHOSES254-03",
+        "language": "french",
+        "introducedBy": "FR-C254-pelouse",
+        "introducedAt": 1356,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C254-CHOSES254-04",
+        "language": "french",
+        "introducedBy": "FR-C254-sentier",
+        "introducedAt": 1357,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C254-CHOSES254-05",
+        "language": "french",
+        "introducedBy": "FR-C254-grotte",
+        "introducedAt": 1358,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C255-CHOSES255-01",
+        "language": "french",
+        "introducedBy": "FR-C255-dechets",
+        "introducedAt": 1359,
         "missed": [
           "R2"
         ],
@@ -241984,6 +243428,14 @@
         "lessonsEarly": 529
       },
       {
+        "lessonId": "FR-R151-first-pass-words-from-chapters-143-146",
+        "language": "french",
+        "position": 816,
+        "word": "formulaire",
+        "taughtBy": "FR-C252-formulaire",
+        "lessonsEarly": 529
+      },
+      {
         "lessonId": "HI-C83-sharmeela",
         "language": "hindi",
         "position": 408,
@@ -242230,6 +243682,14 @@
         "word": "frío",
         "taughtBy": "ES-C334-frio",
         "lessonsEarly": 435
+      },
+      {
+        "lessonId": "FR-R151-first-pass-words-from-chapters-143-146",
+        "language": "french",
+        "position": 816,
+        "word": "remplir",
+        "taughtBy": "FR-C234-remplir",
+        "lessonsEarly": 434
       },
       {
         "lessonId": "ES-C390-planta",
@@ -244048,6 +245508,14 @@
         "lessonsEarly": 126
       },
       {
+        "lessonId": "FR-R213-second-pass-words-from-chapters-209-213",
+        "language": "french",
+        "position": 1143,
+        "word": "offrir",
+        "taughtBy": "FR-C237-offrir",
+        "lessonsEarly": 126
+      },
+      {
         "lessonId": "GE-W01-eszett",
         "language": "german",
         "position": 56,
@@ -245480,11 +246948,27 @@
         "lessonsEarly": 36
       },
       {
+        "lessonId": "FR-C241-voter",
+        "language": "french",
+        "position": 1288,
+        "word": "vote",
+        "taughtBy": "FR-C248-vote",
+        "lessonsEarly": 36
+      },
+      {
         "lessonId": "ES-C313-moneda",
         "language": "spanish",
         "position": 663,
         "word": "favor",
         "taughtBy": "ES-C320-favor",
+        "lessonsEarly": 35
+      },
+      {
+        "lessonId": "FR-C241-accueillir",
+        "language": "french",
+        "position": 1289,
+        "word": "vote",
+        "taughtBy": "FR-C248-vote",
         "lessonsEarly": 35
       },
       {
@@ -245528,6 +247012,14 @@
         "lessonsEarly": 34
       },
       {
+        "lessonId": "FR-R241-first-pass-words-from-chapters-233-236",
+        "language": "french",
+        "position": 1290,
+        "word": "vote",
+        "taughtBy": "FR-C248-vote",
+        "lessonsEarly": 34
+      },
+      {
         "lessonId": "ES-C313-entrada",
         "language": "spanish",
         "position": 665,
@@ -245568,11 +247060,27 @@
         "lessonsEarly": 33
       },
       {
+        "lessonId": "FR-R241-second-pass-words-from-chapters-237-241",
+        "language": "french",
+        "position": 1291,
+        "word": "vote",
+        "taughtBy": "FR-C248-vote",
+        "lessonsEarly": 33
+      },
+      {
         "lessonId": "ES-C313-cambio",
         "language": "spanish",
         "position": 666,
         "word": "favor",
         "taughtBy": "ES-C320-favor",
+        "lessonsEarly": 32
+      },
+      {
+        "lessonId": "FR-C242-maigrir",
+        "language": "french",
+        "position": 1292,
+        "word": "vote",
+        "taughtBy": "FR-C248-vote",
         "lessonsEarly": 32
       },
       {
@@ -248249,13 +249757,13 @@
       },
       {
         "language": "french",
-        "lessonCount": 1245,
+        "lessonCount": 1376,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 1276,
+        "atomsTaught": 1401,
         "atomsNeverRevisited": 7,
-        "forwardReferences": 148
+        "forwardReferences": 156
       },
       {
         "language": "german",
@@ -248453,16 +249961,16 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 21556,
+      "atomsTaught": 21681,
       "atomsNeverRevisited": 156,
       "neverRevisitedPercent": 1,
       "missedByWindow": {
         "R1": 1745,
-        "R2": 14071,
-        "R3": 12091,
-        "R4": 16059
+        "R2": 14163,
+        "R3": 12145,
+        "R4": 16182
       },
-      "forwardReferences": 993
+      "forwardReferences": 1001
     }
   },
   "scriptClosure": {
@@ -267663,6 +269171,15 @@
           },
           {
             "language": "telugu",
+            "lessonId": "TE-S110-letter-ya",
+            "blockIndex": 2,
+            "blockTitle": "Writing: య — four calm movements",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 315
+          },
+          {
+            "language": "telugu",
             "lessonId": "TE-S116-letter-da",
             "blockIndex": 2,
             "blockTitle": "Writing: ద — five deliberate movements",
@@ -267887,6 +269404,15 @@
             "stage": "dictation-transcription",
             "level": "pre-A1",
             "sequence": 258
+          },
+          {
+            "language": "telugu",
+            "lessonId": "TE-S110-letter-ya",
+            "blockIndex": 2,
+            "blockTitle": "Writing: య — four calm movements",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 315
           },
           {
             "language": "telugu",
@@ -268531,7 +270057,7 @@
       "tracks": 23,
       "tracksWithAnyEvidence": 23,
       "tracksCompleteAtPreA1": 23,
-      "evidenceBlocks": 814,
+      "evidenceBlocks": 815,
       "invalidEvidenceBlocks": 0,
       "missingTrackLevelStages": 231
     }
@@ -268761,8 +270287,8 @@
       },
       {
         "language": "french",
-        "lessonCount": 1245,
-        "atomMeasurableLessons": 1238,
+        "lessonCount": 1376,
+        "atomMeasurableLessons": 1369,
         "atomMeasurementBlindLessons": 7,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -268776,15 +270302,15 @@
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 148,
-        "atomsTaught": 1276,
+        "forwardReferences": 156,
+        "atomsTaught": 1401,
         "atomsNeverRevisited": 7,
-        "reinforcementWindowMisses": 2708,
+        "reinforcementWindowMisses": 2977,
         "reinforcementMissesByWindow": {
           "R1": 96,
-          "R2": 900,
-          "R3": 721,
-          "R4": 991
+          "R2": 992,
+          "R3": 775,
+          "R4": 1114
         },
         "payoffSurprises": 0,
         "writingPracticeLessons": 14,
@@ -268794,7 +270320,7 @@
           {
             "language": "french",
             "kind": "forward-language",
-            "count": 148,
+            "count": 156,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
           },
@@ -268808,7 +270334,7 @@
           {
             "language": "french",
             "kind": "reinforcement",
-            "count": 2708,
+            "count": 2977,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -268823,7 +270349,7 @@
         "next": {
           "language": "french",
           "kind": "forward-language",
-          "count": 148,
+          "count": 156,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
@@ -270270,7 +271796,7 @@
       {
         "language": "french",
         "kind": "forward-language",
-        "count": 148,
+        "count": 156,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
@@ -270688,6 +272214,13 @@
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
+        "language": "french",
+        "kind": "reinforcement",
+        "count": 2977,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
         "language": "sanskrit",
         "kind": "reinforcement",
         "count": 2922,
@@ -270698,13 +272231,6 @@
         "language": "italian",
         "kind": "reinforcement",
         "count": 2768,
-        "unit": "missed window(s)",
-        "detail": "add retrieval at the expanding R1-R4 intervals"
-      },
-      {
-        "language": "french",
-        "kind": "reinforcement",
-        "count": 2708,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -271125,16 +272651,21 @@
       {
         "language": "french",
         "touches": "A2",
-        "attained": "A1",
-        "inProgressAt": "A2",
+        "attained": "A2",
+        "inProgressAt": "B1",
         "blockers": [
           {
+            "criterion": "spine-nodes",
+            "detail": "5 of 5 B1 spine node(s) unrealized: SPINE-NARRATE-EVENTS, SPINE-GIVE-REASONS, SPINE-HANDLE-TRAVEL, SPINE-DESCRIBE-EXPERIENCE…",
+            "shortfall": 5
+          },
+          {
             "criterion": "vocabulary",
-            "detail": "teaches 1101 distinct headwords at or below A2, against 1200",
-            "shortfall": 99
+            "detail": "teaches 1226 distinct headwords at or below B1, against 2500",
+            "shortfall": 1274
           }
         ],
-        "vocabulary": 1101
+        "vocabulary": 1226
       },
       {
         "language": "german",
@@ -271489,12 +273020,12 @@
       }
     ],
     "summary": {
-      "tracksOverstating": 20,
+      "tracksOverstating": 19,
       "tracksWithAnyLevel": 22,
       "attainedByLevel": {
         "pre-A1": 12,
-        "A1": 8,
-        "A2": 2,
+        "A1": 7,
+        "A2": 3,
         "B1": 0,
         "B2": 0,
         "C1": 0,
@@ -271504,11 +273035,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 20623,
-    "voice": 18265,
+    "totalLessons": 20754,
+    "voice": 18396,
     "sight": 995,
     "pen": 1363,
-    "coreVoice": 18842,
+    "coreVoice": 18973,
     "lessonsWithWritingSegments": 880,
     "drivablePercent": 91,
     "tracks": [
@@ -276250,13 +277781,13 @@
       },
       {
         "language": "french",
-        "lessonCount": 1245,
-        "voice": 1217,
+        "lessonCount": 1376,
+        "voice": 1348,
         "sight": 16,
         "pen": 12,
-        "coreVoice": 1220,
+        "coreVoice": 1351,
         "drivablePercent": 98,
-        "drivablePrefixTotal": 1185,
+        "drivablePrefixTotal": 1316,
         "chapters": [
           {
             "language": "french",
@@ -279515,6 +281046,356 @@
           {
             "language": "french",
             "chapter": 232,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 233,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 234,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 235,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 236,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 237,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 238,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 239,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 240,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 241,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 242,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 243,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 244,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 245,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 246,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 247,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 248,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 249,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 250,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 251,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 252,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 253,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 254,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 255,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 256,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 257,
             "lessonCount": 7,
             "voice": 7,
             "sight": 0,
@@ -331417,7 +333298,7 @@
     "underspentPercent": 89
   },
   "infoDump": {
-    "lessons": 20623,
+    "lessons": 20754,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -331425,11 +333306,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 20623,
-    "measuredLessons": 16450,
-    "idiomMeasuredLessons": 16450,
-    "senseMeasuredLessons": 16451,
-    "cultureClaimMeasuredLessons": 16450,
+    "lessons": 20754,
+    "measuredLessons": 16581,
+    "idiomMeasuredLessons": 16581,
+    "senseMeasuredLessons": 16582,
+    "cultureClaimMeasuredLessons": 16581,
     "idioms": 101,
     "senses": 103,
     "cultureClaims": 208,
@@ -331438,8 +333319,8 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 19711,
-    "usesBeforeIntroduction": 37367,
+    "lessonsUsingTerms": 19842,
+    "usesBeforeIntroduction": 37503,
     "technicalUsesBeforeIntroduction": 6379,
     "technicalLessons": 3596,
     "worstTerms": [
@@ -331470,12 +333351,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 20623,
+    "lessonsScanned": 20754,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 4220,
+    "filesScanned": 4245,
     "mainCharacters": 135,
     "scriptCharacters": 802,
     "gaps": 0
