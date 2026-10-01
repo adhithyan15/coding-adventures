@@ -1,0 +1,1 @@
+var e=``+new URL(`TE-S160-letter-pha-filmstrip-FRcdKnAR.svg`,import.meta.url).href;export{e as default};
