@@ -1,0 +1,11 @@
+{
+  "id": "MR-C160-bhavishya",
+  "pathSegment": "MR-PATH-160-BHAV160",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MR-EXT-160-BHAV160",
+      "order": 0
+    }
+  ]
+}

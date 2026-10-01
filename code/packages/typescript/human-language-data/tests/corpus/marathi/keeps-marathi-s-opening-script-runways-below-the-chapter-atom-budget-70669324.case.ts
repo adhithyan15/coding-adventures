@@ -307,5 +307,11 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
       String(121 + i),
       [130, 140, 149, 158].includes(121 + i) ? 7 : 5,
     ]),
+    // Chapters 159-161: the A2 spine chapters (the past, the future, practical
+    // texts), five word lessons each. Chapter 161 also carries their two
+    // reviews.
+    ["159", 5],
+    ["160", 5],
+    ["161", 7],
   ]);
 });
