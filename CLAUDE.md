@@ -52,6 +52,13 @@
 - **Before pushing code, always run `/security-review` to have a sub-agent perform a security code review. Do not push until the review passes.**
 - **For changes that touch `twig-vm` or its deps**, also run `code/scripts/miri-twig-vm.sh` locally before pushing.  Per-PR CI runs Miri on `lang-runtime-core` + `dynval-runtime` (where the unsafe lives) as a blocking check; twig-vm Miri is informational on PRs and runs nightly, so the local script is the canonical verification.  Wallclock ~30-90 min; run in a separate terminal during code review.
 - **After creating or pushing to a PR, always run `/babysit-pr` to monitor CI status and merge conflicts until the PR is green**
+- **Clean up your worktree once its PR merges (or is closed).** A worktree plus its build output is 1-20 GB, and unreaped worktrees have repeatedly filled the disk. Removing the worktree is the last step of finishing a PR, not an optional extra:
+  1. Confirm nothing is lost: `git status --porcelain` is empty and every commit is on a remote branch. Commit-and-push or deliberately discard anything left over first.
+  2. From the *main checkout* (not from inside the worktree): `git worktree remove <path>`, then `git worktree prune`, then `git branch -d <branch>`.
+  3. Do not use `--force` unless the only dirt is untracked build output you have confirmed is regenerable.
+  4. Never remove a worktree whose PR is still open, that is `locked`, or that another session is using.
+  5. Keep worktrees under `.claude/worktrees/` or `.codex/worktrees/`; do not scatter them elsewhere on disk.
+  6. If you must leave a worktree behind with unmerged work, say why in the PR or hand-off.
 
 ## Build System
 
