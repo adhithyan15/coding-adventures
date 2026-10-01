@@ -4552,8 +4552,18 @@
       "components": [
         "ల  la — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "loop counterclockwise around the small upper bowl",
+        "sweep down and around the broad lower bowl"
+      ],
+      "strokeOrderNote": "Two numbered movements in two pen-down runs: movement 1 loops counterclockwise around the small upper bowl, and movement 2 sweeps down the left side and around the broad lower bowl.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "url": "https://play.google.com/store/apps/details?id=com.banuchanderjj.tracer.telugu",
+        "citation": "AppChant, Telugu Alphabets Writing, consonant ల animated path guide encoded by LettersPointsTelugu::getAllPointsArrayForLetterTelugu_ల in version 3.8.05 (3805)",
+        "accessed": "2026-10-01",
+        "variation": "The packaged auto-trace data gives two ordered starts, paths, and ends. Its ల.png atlas mapping and pictured glyph independently identify U+0C32 ల. The bundled Noto Sans Telugu outline rounds the printed joins differently, so the filmstrip preserves the two attested movement boundaries and directions while fitting their centre lines to that outline. Inspected XAPK SHA-256: 30c6e520a5b469cbe8d17568718bf75796987ea9596f69850eb921db2fe7bd57; libTracer.so SHA-256: 444511c98b69ada4de57900776945837c013da6a4fbfb21833c180d06f9c3ac5."
+      }
     },
     {
       "glyph": "లా",
