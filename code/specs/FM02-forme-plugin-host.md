@@ -1585,6 +1585,11 @@ the supervisor exits unexpectedly; it exits when the plugin does.
   asynchronous janitor if the supervisor exits unexpectedly. Runtime DACL
   grant/revoke operations MUST use a cross-process lock so overlapping plugin
   launches cannot lose or resurrect another sandbox's ACE.
+  The host passes the validated manifest runtime kind to the launcher. For a Node runtime,
+  the launcher supplies `--preserve-symlinks-main`, allowing Node to load the
+  exact, already verified and symlink-free staged entry without canonicalizing
+  every inaccessible ancestor back to the volume root. No equivalent flag is
+  added for other runtime kinds.
 - **Process Mitigations**: ASLR, DEP, CFG, and no remote images. JIT runtimes
   require dynamic code, so a blanket dynamic-code prohibition is not applied;
   the capability-free AppContainer and Job boundary remain authoritative.

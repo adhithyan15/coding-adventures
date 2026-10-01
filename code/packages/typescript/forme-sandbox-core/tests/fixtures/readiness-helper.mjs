@@ -11,6 +11,7 @@ const values = Object.fromEntries(process.argv.slice(2).map(argument => {
 }));
 
 if (process.env.FORME_SANDBOX_AMBIENT_SENTINEL !== undefined) process.exit(90);
+if (values["--runtime-kind"] !== "node") process.exit(94);
 if (values["--mode"] === "silent") {
   setTimeout(() => process.exit(91), 10_000);
 } else if (values["--mode"] === "eof") {

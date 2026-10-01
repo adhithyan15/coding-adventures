@@ -238,6 +238,7 @@ export async function launchWithNativeHelper(
     `--wall-clock-ms=${limits.wallClockMs}`,
     `--fd-limit=${limits.fileDescriptors}`,
     `--working-directory=${staged.workingDirectory}`,
+    `--runtime-kind=${request.plugin.manifest.runtime.kind}`,
     `--runtime=${runtime}`,
     `--runtime-root=${runtimeRoot}`,
     `--entry=${staged.entryPath}`,

@@ -396,6 +396,7 @@ int wmain(int argc, wchar_t **argv) {
     const wchar_t *wall_text = argument(argc, argv, L"--wall-clock-ms");
     const wchar_t *fd_text = argument(argc, argv, L"--fd-limit");
     const wchar_t *working_directory = argument(argc, argv, L"--working-directory");
+    const wchar_t *runtime_kind = argument(argc, argv, L"--runtime-kind");
     const wchar_t *runtime = argument(argc, argv, L"--runtime");
     const wchar_t *runtime_root = argument(argc, argv, L"--runtime-root");
     const wchar_t *entry = argument(argc, argv, L"--entry");
@@ -403,8 +404,11 @@ int wmain(int argc, wchar_t **argv) {
     const wchar_t *stage = argument(argc, argv, L"--stage");
     if (provider == NULL || wcscmp(provider, L"forme-windows-v1") != 0 || manifest_hash == NULL
             || schema_hash == NULL || entry_hash == NULL || working_directory == NULL
-            || runtime == NULL || runtime_root == NULL || entry == NULL || schema == NULL
+            || runtime_kind == NULL || runtime == NULL || runtime_root == NULL || entry == NULL || schema == NULL
             || stage == NULL) return 64;
+    if (wcscmp(runtime_kind, L"node") != 0 && wcscmp(runtime_kind, L"deno") != 0
+            && wcscmp(runtime_kind, L"bun") != 0 && wcscmp(runtime_kind, L"python") != 0
+            && wcscmp(runtime_kind, L"binary") != 0) return 64;
     unsigned long long memory = 0, cpu_ms = 0, wall_ms = 0, descriptor_limit = 0;
     if (parse_limit(memory_text, &memory) != 0 || parse_limit(cpu_text, &cpu_ms) != 0
             || parse_limit(wall_text, &wall_ms) != 0
@@ -523,7 +527,11 @@ int wmain(int argc, wchar_t **argv) {
         CloseHandle(pinned_entry); if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 69;
     }
-    size_t command_size = wcslen(quoted_runtime) + wcslen(quoted_entry) + wcslen(quoted_stage) + wcslen(quoted_schema) + 8;
+    const wchar_t *runtime_arguments = wcscmp(runtime_kind, L"node") == 0
+        ? L"--preserve-symlinks-main "
+        : L"";
+    size_t command_size = wcslen(quoted_runtime) + wcslen(runtime_arguments)
+        + wcslen(quoted_entry) + wcslen(quoted_stage) + wcslen(quoted_schema) + 8;
     wchar_t *command = calloc(command_size, sizeof(wchar_t));
     if (command == NULL) {
         free(quoted_runtime); free(quoted_entry); free(quoted_stage); free(quoted_schema);
@@ -532,7 +540,8 @@ int wmain(int argc, wchar_t **argv) {
         CloseHandle(pinned_entry); if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 69;
     }
-    swprintf(command, command_size, L"%s %s %s %s", quoted_runtime, quoted_entry, quoted_stage, quoted_schema);
+    swprintf(command, command_size, L"%s %s%s %s %s",
+        quoted_runtime, runtime_arguments, quoted_entry, quoted_stage, quoted_schema);
 
     PROCESS_INFORMATION process;
     ZeroMemory(&process, sizeof(process));

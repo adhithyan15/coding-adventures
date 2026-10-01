@@ -23,3 +23,5 @@
 - Supplied the validated `LOCALAPPDATA` bootstrap required for Windows to
   construct and rewrite an AppContainer environment without copying ambient
   application variables.
+- Passed the validated manifest runtime kind to native launchers for
+  runtime-specific, fail-closed bootstrap behavior.

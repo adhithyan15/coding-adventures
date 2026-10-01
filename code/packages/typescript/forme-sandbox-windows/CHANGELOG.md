@@ -30,3 +30,5 @@
   added an overlapping-launch integration test.
 - Captured trusted-runtime stderr in integration assertions so native CI
   reports the reason for an early runtime exit.
+- Passed the attested runtime kind into native launchers and used Node's
+  main-path preservation for the verified symlink-free snapshot entry.

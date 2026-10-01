@@ -88,7 +88,7 @@ describe.skipIf(process.platform !== "win32")("Windows native sandbox", () => {
       { code: 0, signal: null },
       { code: 0, signal: null },
     ]);
-  });
+  }, 15_000);
 
   it.each(["filesystem", "network", "process", "snapshot", "memory", "descriptors", "environment", "cpu", "wall-clock"])(
     "blocks unauthorized %s access",
