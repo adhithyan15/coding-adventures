@@ -223,25 +223,92 @@ where
 }
 
 fn format_treemap_value(value: f64, format: &str) -> String {
-    let currency = format.contains('$');
-    let grouped = format.contains(',');
-    let decimals = format.rsplit_once('.').map_or(0, |(_, tail)| {
-        tail.strip_suffix('f').and_then(|precision| precision.parse::<usize>().ok())
-            .unwrap_or_else(|| tail.chars().take_while(|character| *character == '0').count())
+    let kind = format.chars().last().filter(|kind| "bdeEfFgGoprs%xX".contains(*kind));
+    let precision = format.split_once('.').and_then(|(_, tail)| {
+        let digits = tail.chars().take_while(|character| character.is_ascii_digit()).collect::<String>();
+        (!digits.is_empty()).then(|| {
+            if digits.chars().all(|digit| digit == '0') { Some(digits.len()) } else { digits.parse::<usize>().ok() }
+        }).flatten()
     });
-    let mut rendered = format!("{value:.decimals$}");
-    if grouped {
-        let (integer, fraction) = rendered.split_once('.').map_or((rendered.as_str(), None), |(integer, fraction)| (integer, Some(fraction)));
-        let fraction = fraction.map(str::to_string);
-        let mut digits = integer.chars().rev().enumerate().fold(String::new(), |mut output, (index, digit)| {
-            if index > 0 && index % 3 == 0 { output.push(','); }
-            output.push(digit); output
-        });
-        rendered = digits.drain(..).rev().collect();
-        if let Some(fraction) = fraction { rendered.push('.'); rendered.push_str(&fraction); }
+    let mut rendered = match kind {
+        Some('b') => format!("{:b}", value.round() as i128),
+        Some('d') => format!("{:.0}", value),
+        Some('e' | 'E') => {
+            let precision = precision.unwrap_or(6);
+            let result = format!("{value:.precision$e}");
+            if kind == Some('E') { result.to_ascii_uppercase() } else { result }
+        }
+        Some('f' | 'F') => format!("{value:.precision$}", precision = precision.unwrap_or(6)),
+        Some('g' | 'G' | 'r') => format_significant(value, precision.unwrap_or(6)),
+        Some('o') => format!("{:o}", value.round() as i128),
+        Some('p') => format_significant(value * 100.0, precision.unwrap_or(6)) + "%",
+        Some('%') => format!("{:.precision$}%", value * 100.0, precision = precision.unwrap_or(6)),
+        Some('s') => format_si(value, precision.unwrap_or(6)),
+        Some('x') => format!("{:x}", value.round() as i128),
+        Some('X') => format!("{:X}", value.round() as i128),
+        _ if precision.is_some() => format!("{value:.precision$}", precision = precision.unwrap_or(0)),
+        _ if value.fract() == 0.0 => format!("{value:.0}"),
+        _ => value.to_string(),
+    };
+    if format.contains('~') {
+        rendered = trim_decimal_zeroes(rendered);
     }
-    if currency { rendered.insert(0, '$'); }
+    if format.contains(',') {
+        rendered = group_decimal_thousands(&rendered);
+    }
+    if format.starts_with('$') {
+        if let Some(rest) = rendered.strip_prefix('-') {
+            rendered = format!("-${rest}");
+        } else {
+            rendered.insert(0, '$');
+        }
+    }
+    if format.contains('+') && value >= 0.0 {
+        rendered.insert(0, '+');
+    }
     rendered
+}
+
+fn format_significant(value: f64, precision: usize) -> String {
+    if value == 0.0 { return "0".into(); }
+    let exponent = value.abs().log10().floor() as i32;
+    let decimals = (precision as i32 - exponent - 1).max(0) as usize;
+    trim_decimal_zeroes(format!("{value:.decimals$}"))
+}
+
+fn format_si(value: f64, precision: usize) -> String {
+    const PREFIXES: [&str; 17] = ["y", "z", "a", "f", "p", "n", "µ", "m", "", "k", "M", "G", "T", "P", "E", "Z", "Y"];
+    if value == 0.0 { return "0".into(); }
+    let group = ((value.abs().log10().floor() / 3.0).floor() as i32).clamp(-8, 8);
+    let scaled = value / 1000_f64.powi(group);
+    format!("{}{}", format_significant(scaled, precision), PREFIXES[(group + 8) as usize])
+}
+
+fn trim_decimal_zeroes(mut value: String) -> String {
+    let exponent = value.find(['e', 'E']).map(|index| value.split_off(index));
+    if value.contains('.') {
+        while value.ends_with('0') { value.pop(); }
+        if value.ends_with('.') { value.pop(); }
+    }
+    if let Some(exponent) = exponent { value.push_str(&exponent); }
+    value
+}
+
+fn group_decimal_thousands(value: &str) -> String {
+    let suffix_start = value.find(|character: char| !character.is_ascii_digit() && !matches!(character, '-' | '+' | '.'))
+        .unwrap_or(value.len());
+    let (number, suffix) = value.split_at(suffix_start);
+    let (integer, fraction) = number.split_once('.').map_or((number, None), |(integer, fraction)| (integer, Some(fraction)));
+    let sign_length = usize::from(integer.starts_with(['-', '+']));
+    let (sign, digits) = integer.split_at(sign_length);
+    let mut grouped = String::from(sign);
+    for (index, digit) in digits.chars().enumerate() {
+        if index > 0 && (digits.len() - index).is_multiple_of(3) { grouped.push(','); }
+        grouped.push(digit);
+    }
+    if let Some(fraction) = fraction { grouped.push('.'); grouped.push_str(fraction); }
+    grouped.push_str(suffix);
+    grouped
 }
 
 /// Lower a layouted TreeView into backend-neutral connectors, markers, and glyphs.
@@ -6665,6 +6732,12 @@ mod tests {
             PaintInstruction::GlyphRun(run) if run.font_size == 17.0)));
         assert_eq!(format_treemap_value(12345.0, "$0,0"), "$12,345");
         assert_eq!(format_treemap_value(12.5, ".2f"), "12.50");
+        assert_eq!(format_treemap_value(12345.0, "$0,0.00"), "$12,345.00");
+        assert_eq!(format_treemap_value(0.125, ".1%"), "12.5%");
+        assert_eq!(format_treemap_value(4500.0, ".2s"), "4.5k");
+        assert_eq!(format_treemap_value(255.0, "x"), "ff");
+        assert_eq!(format_treemap_value(12.0, "+d"), "+12");
+        assert_eq!(format_treemap_value(12.5, ".3~f"), "12.5");
     }
 
     #[test]

@@ -1,7 +1,7 @@
 {
   "upstream": "mermaid@11.16.1",
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
-  "scope": "Native partial hierarchy slice with empty documents, upstream single-root validation, layout/value-display configuration, resolved classDef paint styles, and cScale theme-variable lowering.",
+  "scope": "Native partial hierarchy slice with empty documents, upstream single-root validation, layout/value-display configuration, resolved classDef paint styles, cScale theme-variable lowering, and common D3 numeric value-format families.",
   "fixtures": [
     {
       "name": "empty",
@@ -21,7 +21,7 @@
     },
     {
       "name": "init-configuration",
-      "source": "%%{init: {\"treemap\": {\"padding\": 4, \"showValues\": false, \"nodeWidth\": 64, \"nodeHeight\": 48}, \"themeVariables\": {\"cScale0\": \"#cffafe\", \"cScalePeer0\": \"#0e7490\", \"cScaleLabel0\": \"#164e63\"}}}%%\ntreemap\n\"Root\"\n  \"Child\": 1200"
+      "source": "%%{init: {\"treemap\": {\"padding\": 4, \"showValues\": false, \"nodeWidth\": 64, \"nodeHeight\": 48, \"valueFormat\": \".2s\"}, \"themeVariables\": {\"cScale0\": \"#cffafe\", \"cScalePeer0\": \"#0e7490\", \"cScaleLabel0\": \"#164e63\"}}}%%\ntreemap\n\"Root\"\n  \"Child\": 1200"
     }
   ],
   "invalid": [

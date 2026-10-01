@@ -531,10 +531,12 @@ dash, text color, and font styling through semantic IR and backend-neutral
 paint. All twelve `cScale`, `cScalePeer`, and `cScaleLabel` theme-variable slots
 also flow from init directives or YAML front matter through category-aware
 layout into paint, with the hidden root and inherited leaf category behavior of
-the upstream renderer. The broader CSS property surface and full D3
-value-format language remain unsupported at the partial level. Treemap layout,
-value visibility, font, border, and basic grouped/currency value-format
-configuration also flow through the semantic IR, hierarchy layout, and paint scene.
+the upstream renderer. Common D3 value-format families lower natively, including
+grouped and fixed decimals, currency, significant digits, scientific notation,
+percentages, SI prefixes, radix output, signs, and trimmed zeroes. Exact D3
+alignment/localization semantics and the broader CSS property surface remain
+unsupported at the partial level. Treemap layout, value visibility, font, and
+border configuration also flow through semantic IR, hierarchy layout, and paint.
 
 ### Venn Native Slice
 
