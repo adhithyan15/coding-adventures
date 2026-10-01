@@ -185,6 +185,29 @@ pub enum Platform {
 /// [`MosaicApp::environment_changed`], never a `dispatch` of this name.
 pub const ENVIRONMENT_CHANGED: &str = "environmentChanged";
 
+/// How every refusal of an invalid `environmentChanged` payload begins
+/// ([`RuntimeError::InvalidEnvironment`]'s message, which is what a native
+/// host reads across the C ABI as the failure's diagnostic).
+///
+/// A host keeps a report the runtime refused *for this reason* from being
+/// sent again until it changes -- the same invalid report would be refused
+/// on every tick of a window drag. Every other failure (an app error, a
+/// closed runtime) says nothing about the report itself, so the host sends
+/// it again with the next report (UI48 §7.6-§7.8). The ABI status alone
+/// cannot tell them apart: an invalid payload shares `ProtocolError` with a
+/// sequence mismatch. The text can, because no other failure begins this
+/// way -- an app error begins `Mosaic application error:`, a panic `Rust
+/// panic:` -- and `mosaic-app-bindings` writes this constant into each host
+/// rather than a copy of it.
+///
+/// ```text
+///   failure                        diagnostic begins          held back?
+///   invalid payload (refused)      INVALID_ENVIRONMENT_...    yes, until it changes
+///   app error (maybe transient)    "Mosaic application error" no, sent again
+///   closed / poisoned / sequence   something else             no, sent again
+/// ```
+pub const INVALID_ENVIRONMENT_DIAGNOSTIC: &str = "invalid Mosaic environmentChanged payload";
+
 /// Available width, as a bucket rather than pixels (UI48 §4). Each backend
 /// maps its native notion (SwiftUI `horizontalSizeClass`, Compose
 /// `WindowSizeClass`, a width observer on the web) onto these three.
@@ -804,7 +827,7 @@ impl<E: fmt::Display> fmt::Display for RuntimeError<E> {
             }
             Self::Poisoned => f.write_str("Mosaic instance produced invalid effects; recreate it"),
             Self::InvalidEnvironment(detail) => {
-                write!(f, "invalid Mosaic environmentChanged payload: {detail}")
+                write!(f, "{INVALID_ENVIRONMENT_DIAGNOSTIC}: {detail}")
             }
         }
     }
@@ -1050,6 +1073,50 @@ mod tests {
         assert_eq!(runtime.environment(), before);
         // Sequence 1 is still next.
         assert_eq!(runtime.dispatch(phone().into_event(1)).unwrap().revision, 2);
+    }
+
+    /// Hosts hold back an invalid report, and only that, by the start of
+    /// the diagnostic (UI48 §7.6-§7.8), so no other failure may begin the
+    /// same way -- in particular not an app error, which may be transient.
+    #[test]
+    fn only_an_invalid_environment_reads_as_one() {
+        let mut runtime = MosaicRuntime::new(AdaptiveApp::default());
+        runtime.start(start_context()).unwrap();
+        let refused = runtime
+            .dispatch(Event::new(1, ENVIRONMENT_CHANGED, json!({ "sizeClass": "compact" })))
+            .unwrap_err()
+            .to_string();
+        assert!(
+            refused.starts_with(&format!("{INVALID_ENVIRONMENT_DIAGNOSTIC}: ")),
+            "{refused}"
+        );
+        let others: Vec<RuntimeError<TestError>> = vec![
+            RuntimeError::ProtocolVersionMismatch {
+                expected: 2,
+                received: 1,
+            },
+            RuntimeError::InvalidTextScale,
+            RuntimeError::InvalidUtcOffset,
+            RuntimeError::AlreadyStarted,
+            RuntimeError::NotStarted,
+            RuntimeError::UnexpectedSequence {
+                expected: 2,
+                received: 3,
+            },
+            RuntimeError::SequenceOverflow,
+            RuntimeError::RevisionOverflow,
+            RuntimeError::Application(TestError),
+            RuntimeError::PendingEffects(vec![1]),
+            RuntimeError::UnknownEffect(1),
+            RuntimeError::InvalidEffectId(1),
+            RuntimeError::EffectsRequireV2,
+            RuntimeError::CompletionUnsupported,
+            RuntimeError::Poisoned,
+        ];
+        for other in others {
+            let text = other.to_string();
+            assert!(!text.starts_with(INVALID_ENVIRONMENT_DIAGNOSTIC), "{text}");
+        }
     }
 
     #[test]
