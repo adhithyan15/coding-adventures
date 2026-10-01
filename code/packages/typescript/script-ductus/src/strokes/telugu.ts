@@ -552,6 +552,65 @@ export const entries: DuctusEntry[] = [
     },
   ],
   [
+    "telugu:బ",
+    {
+      script: "telugu",
+      glyph: "బ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "sweep right around the upper-left curve",
+              path: [
+                { x: 85, y: 312 }, { x: 75, y: 380 },
+                { x: 110, y: 440 }, { x: 170, y: 465 },
+                { x: 235, y: 465 }, { x: 295, y: 430 },
+                { x: 319, y: 370 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "turn right around the lower-left bowl",
+              path: [
+                { x: 65, y: 180 }, { x: 75, y: 110 },
+                { x: 115, y: 50 }, { x: 180, y: 15 },
+                { x: 245, y: 15 }, { x: 300, y: 70 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "sweep right and upward around the lower-right bowl",
+              path: [
+                { x: 410, y: 70 }, { x: 465, y: 15 },
+                { x: 530, y: 15 }, { x: 590, y: 50 },
+                { x: 630, y: 115 }, { x: 645, y: 185 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "curve left around the upper-right shoulder",
+              path: [
+                { x: 670, y: 220 }, { x: 655, y: 290 },
+                { x: 625, y: 350 }, { x: 590, y: 400 },
+                { x: 535, y: 440 }, { x: 480, y: 460 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguLetterSource("బ"),
+    },
+  ],
+  [
     "telugu:ణ",
     {
       script: "telugu",

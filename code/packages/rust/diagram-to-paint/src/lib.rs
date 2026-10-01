@@ -109,7 +109,10 @@ where
     let text_color = Color { r: 15, g: 23, b: 42, a: 255 };
 
     if let Some(title) = &diagram.title {
-        text_children.push(text_node(title, 8.0, 6.0, diagram.width - 16.0, 30.0, options.title_font.clone(), text_color));
+        let mut title_font = options.title_font.clone();
+        title_font.size = diagram.config.title_font_size.unwrap_or(title_font.size);
+        let title_color = diagram.config.title_color.as_deref().map(css_to_color).unwrap_or(text_color);
+        text_children.push(text_node(title, 8.0, 6.0, diagram.width - 16.0, 30.0, title_font, title_color));
     }
     for node in &diagram.nodes {
         if node.width <= 0.0 || node.height <= 0.0 {
@@ -119,9 +122,14 @@ where
             continue;
         }
         let palette_index = node.palette_index;
+        let configured_fill = if node.has_children { &diagram.config.section_fill_color } else { &diagram.config.leaf_fill_color };
+        let configured_stroke = if node.has_children { &diagram.config.section_stroke_color } else { &diagram.config.leaf_stroke_color };
+        let configured_stroke_width = if node.has_children { diagram.config.section_stroke_width } else { diagram.config.leaf_stroke_width };
         let fill = node.style.as_ref().and_then(|style| style.fill.clone())
+            .or_else(|| configured_fill.clone())
             .unwrap_or_else(|| palette_index.map_or_else(|| "transparent".into(), |index| diagram.config.theme.fills[index].clone()));
         let stroke = node.style.as_ref().and_then(|style| style.stroke.clone())
+            .or_else(|| configured_stroke.clone())
             .unwrap_or_else(|| palette_index.map_or_else(|| "transparent".into(), |index| diagram.config.theme.strokes[index].clone()));
         instructions.push(PaintInstruction::Rect(PaintRect {
             base: PaintBase::default(),
@@ -131,7 +139,8 @@ where
             height: node.height,
             fill: Some(fill),
             stroke: Some(stroke),
-            stroke_width: Some(node.style.as_ref().and_then(|style| style.stroke_width).unwrap_or(diagram.config.border_width)),
+            stroke_width: Some(node.style.as_ref().and_then(|style| style.stroke_width)
+                .or(configured_stroke_width).unwrap_or(diagram.config.border_width)),
             corner_radius: Some(node.style.as_ref().and_then(|style| style.corner_radius).unwrap_or(3.0)),
             stroke_dash: node.style.as_ref().and_then(|style| style.stroke_dash.clone()),
             stroke_dash_offset: None,
@@ -144,10 +153,11 @@ where
                 label_font.italic = style.font_italic.unwrap_or(label_font.italic);
                 if let Some(family) = &style.font_family { label_font.family.clone_from(family); }
             }
-            let node_text_color = node.style.as_ref().and_then(|style| style.text_color.as_deref())
-                .map(css_to_color).unwrap_or_else(|| palette_index
+            let palette_text_color = || palette_index
                     .map(|index| css_to_color(&diagram.config.theme.labels[index]))
-                    .unwrap_or(text_color));
+                    .unwrap_or(text_color);
+            let label_text_color = node.style.as_ref().and_then(|style| style.text_color.as_deref())
+                .or(diagram.config.label_color.as_deref()).map(css_to_color).unwrap_or_else(palette_text_color);
             text_children.push(text_node(
                 &node.label,
                 node.x + 6.0,
@@ -155,7 +165,7 @@ where
                 (node.width * if node.has_children { 0.68 } else { 1.0 } - 12.0).max(0.0),
                 diagram.config.label_font_size * 1.4,
                 label_font,
-                node_text_color,
+                label_text_color,
             ));
             if diagram.config.show_values && node.height >= 42.0 {
                 let mut value_font = options.label_font.clone();
@@ -170,6 +180,8 @@ where
                 } else {
                     (node.x + 6.0, node.y + 8.0 + diagram.config.label_font_size * 1.2, node.width - 12.0)
                 };
+                let value_text_color = node.style.as_ref().and_then(|style| style.text_color.as_deref())
+                    .or(diagram.config.value_color.as_deref()).map(css_to_color).unwrap_or_else(palette_text_color);
                 text_children.push(text_node(
                     &format_treemap_value(node.value, &diagram.config.value_format),
                     value_x,
@@ -177,7 +189,7 @@ where
                     value_width.max(0.0),
                     diagram.config.value_font_size * 1.4,
                     value_font,
-                    node_text_color,
+                    value_text_color,
                 ));
             }
         }

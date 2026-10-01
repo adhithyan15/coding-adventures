@@ -59,17 +59,18 @@ and Hindi each keep బ / ಬ / ब apart from their *p* letter and spell the
 difference out. That is one of the sharpest splits between the two halves of
 this family, and you are meeting it on a page from chapter three.
 
-## Writing: బ — copy what you see
+## Writing: బ — four calm movements
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-157] -->
+<!-- hl-writing-stage: observe-trace -->
 
-Put your pen on బ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+Watch the numbered filmstrip once before your pen moves. Movement 1 rises around
+the upper-left curve. Lift, then movement 2 turns around the lower-left bowl.
+Movement 3 sweeps right and rises around the lower-right bowl. Lift once more;
+movement 4 curves left around the upper-right shoulder.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+Trace the same route slowly. This is one attested school-style order fitted to
+the printed shape here; Telugu handwriting varies, so keep the four calm
+movements and the small spaces between them.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-157] -->
