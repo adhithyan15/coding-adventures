@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:398e14eede68c90d",
+  "lessonIds": [
+    "LA-C274-otium",
+    "LA-C274-negotium",
+    "LA-C274-lucrum",
+    "LA-C274-damnum",
+    "LA-C274-debitum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch274.txt",
+  "json": "latin/narration/ch274.json",
+  "textHash": "fnv1a64:1099d6900300000a",
+  "jsonHash": "fnv1a64:ae3a65e767c9ab08",
+  "findings": []
+}

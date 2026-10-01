@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C267-pristinus",
+    "language": "latin",
+    "chapter": 267,
+    "sequence": 14460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25faa16168f1fd2f"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:87102f375dd052d3",
+  "lessonIds": [
+    "LA-C278-volumen",
+    "LA-C278-pagina",
+    "LA-C278-littera",
+    "LA-C278-verbum",
+    "LA-C278-nomen"
+  ],
+  "tex": "latin/book/chapters/ch278-book-roll-page-letter-of-the-alphabet-word-name.tex"
+}

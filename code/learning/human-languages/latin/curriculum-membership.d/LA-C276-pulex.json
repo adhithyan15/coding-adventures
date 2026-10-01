@@ -1,0 +1,11 @@
+{
+  "id": "LA-C276-pulex",
+  "pathSegment": "LA-PATH-276-RES276",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-276-RES276",
+      "order": 2
+    }
+  ]
+}

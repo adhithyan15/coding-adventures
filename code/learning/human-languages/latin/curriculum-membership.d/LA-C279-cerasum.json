@@ -1,0 +1,11 @@
+{
+  "id": "LA-C279-cerasum",
+  "pathSegment": "LA-PATH-279-RES279",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-279-RES279",
+      "order": 0
+    }
+  ]
+}

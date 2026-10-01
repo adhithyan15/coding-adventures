@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-256-ACT256",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say to clap, to cross, to increase, to lessen and to warn.",
+  "prerequisites": []
+}

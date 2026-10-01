@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C256-minuo",
+    "language": "latin",
+    "chapter": 256,
+    "sequence": 13720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:918d8d7d06e79298"
+  },
+  "findings": []
+}

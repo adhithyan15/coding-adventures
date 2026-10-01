@@ -1,0 +1,11 @@
+{
+  "id": "LA-C267-proximus",
+  "pathSegment": "LA-PATH-267-QUAL267",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-267-QUAL267",
+      "order": 4
+    }
+  ]
+}

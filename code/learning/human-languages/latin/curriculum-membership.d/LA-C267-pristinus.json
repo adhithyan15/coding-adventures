@@ -1,0 +1,11 @@
+{
+  "id": "LA-C267-pristinus",
+  "pathSegment": "LA-PATH-267-QUAL267",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-267-QUAL267",
+      "order": 3
+    }
+  ]
+}

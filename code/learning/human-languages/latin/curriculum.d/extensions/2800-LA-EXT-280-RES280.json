@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-280-RES280",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a tower, a column, city walls, a ditch and a rampart.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:c5af2db5ed24ead8",
+  "lessonIds": [
+    "LA-C277-galea",
+    "LA-C277-hasta",
+    "LA-C277-arcus",
+    "LA-C277-sagitta",
+    "LA-C277-tuba"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch277.txt",
+  "json": "latin/narration/ch277.json",
+  "textHash": "fnv1a64:45890f042dc10176",
+  "jsonHash": "fnv1a64:39d54d086dec393b",
+  "findings": []
+}

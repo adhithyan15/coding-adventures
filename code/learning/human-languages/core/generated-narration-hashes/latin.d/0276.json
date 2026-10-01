@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:c4212c6d5145e37c",
+  "lessonIds": [
+    "LA-C276-vespa",
+    "LA-C276-culex",
+    "LA-C276-pulex",
+    "LA-C276-vermis",
+    "LA-C276-testudo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch276.txt",
+  "json": "latin/narration/ch276.json",
+  "textHash": "fnv1a64:9a61941ed4e47999",
+  "jsonHash": "fnv1a64:1aa76cf49a85c64b",
+  "findings": []
+}

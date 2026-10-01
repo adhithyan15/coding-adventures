@@ -1,0 +1,11 @@
+{
+  "id": "LA-C274-negotium",
+  "pathSegment": "LA-PATH-274-RES274",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-274-RES274",
+      "order": 1
+    }
+  ]
+}

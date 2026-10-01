@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C280-columna",
+    "language": "latin",
+    "chapter": 280,
+    "sequence": 15280,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c01ced0d21c2041f"
+  },
+  "findings": []
+}

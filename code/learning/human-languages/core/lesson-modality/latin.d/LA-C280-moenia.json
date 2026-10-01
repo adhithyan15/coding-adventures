@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C280-moenia",
+    "language": "latin",
+    "chapter": 280,
+    "sequence": 15290,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:af2800a29756614e"
+  },
+  "findings": []
+}

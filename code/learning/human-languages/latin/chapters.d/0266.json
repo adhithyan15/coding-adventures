@@ -1,0 +1,19 @@
+{
+  "chapter": 266,
+  "title": "Wonderful, Different, Similar, Fair, Unjust",
+  "label": "ch:la-wonderful-different-similar-fair-unjust",
+  "canDo": "I can say wonderful, different, similar, fair and unjust.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-C266-iniustus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 266: I can say wonderful, different, similar, fair and unjust.",
+    "assesses": [
+      "LA-LEX-C266-QUAL266-03",
+      "LA-LEX-C266-QUAL266-04",
+      "LA-LEX-C266-QUAL266-05"
+    ]
+  }
+}

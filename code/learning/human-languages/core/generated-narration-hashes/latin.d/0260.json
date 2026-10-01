@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:67ee49c661acae53",
+  "lessonIds": [
+    "LA-C260-exprimo",
+    "LA-C260-alo",
+    "LA-C260-compono",
+    "LA-C260-animadverto",
+    "LA-C260-erubesco"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch260.txt",
+  "json": "latin/narration/ch260.json",
+  "textHash": "fnv1a64:1a458073cbd84002",
+  "jsonHash": "fnv1a64:75cb75cc2edd1098",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:72793e7551e4da07",
+  "lessonIds": [
+    "LA-C269-maestus",
+    "LA-C269-ebrius",
+    "LA-C269-sobrius",
+    "LA-C269-avarus",
+    "LA-C269-parcus"
+  ],
+  "tex": "latin/book/chapters/ch269-gloomy-drunk-sober-greedy-thrifty.tex"
+}

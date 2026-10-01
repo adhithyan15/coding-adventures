@@ -1,0 +1,19 @@
+{
+  "chapter": 258,
+  "title": "To dream, To push, To go past, To make no sound, To dread",
+  "label": "ch:la-to-dream-to-push-to-go-past-to-make-no-sound-to-dread",
+  "canDo": "I can say to dream, to push, to go past, to make no sound and to dread.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C258-metuo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 258: I can say to dream, to push, to go past, to make no sound and to dread.",
+    "assesses": [
+      "LA-LEX-C258-ACT258-03",
+      "LA-LEX-C258-ACT258-04",
+      "LA-LEX-C258-ACT258-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C256-augeo",
+    "language": "latin",
+    "chapter": 256,
+    "sequence": 13710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f7244caf43d9a7c"
+  },
+  "findings": []
+}

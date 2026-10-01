@@ -1,0 +1,19 @@
+{
+  "chapter": 257,
+  "title": "To deserve, To correct, To offer, To watch, To stroll",
+  "label": "ch:la-to-deserve-to-correct-to-offer-to-watch-to-stroll",
+  "canDo": "I can say to deserve, to correct, to offer, to watch and to stroll.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C257-spatior",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 257: I can say to deserve, to correct, to offer, to watch and to stroll.",
+    "assesses": [
+      "LA-LEX-C257-ACT257-03",
+      "LA-LEX-C257-ACT257-04",
+      "LA-LEX-C257-ACT257-05"
+    ]
+  }
+}

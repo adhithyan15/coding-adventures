@@ -1,0 +1,19 @@
+{
+  "chapter": 270,
+  "title": "Racecourse, Hall of justice, Senate house, Anchor, Oar",
+  "label": "ch:la-racecourse-hall-of-justice-senate-house-anchor-oar",
+  "canDo": "I can say a racecourse, a hall of justice, the senate house, an anchor and an oar.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C270-remus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 270: I can say a racecourse, a hall of justice, the senate house, an anchor and an oar.",
+    "assesses": [
+      "LA-LEX-C270-RES270-03",
+      "LA-LEX-C270-RES270-04",
+      "LA-LEX-C270-RES270-05"
+    ]
+  }
+}

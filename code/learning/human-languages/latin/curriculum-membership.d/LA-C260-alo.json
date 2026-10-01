@@ -1,0 +1,11 @@
+{
+  "id": "LA-C260-alo",
+  "pathSegment": "LA-PATH-260-ACT260",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-260-ACT260",
+      "order": 1
+    }
+  ]
+}

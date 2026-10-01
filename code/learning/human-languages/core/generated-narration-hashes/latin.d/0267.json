@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:d6a2c94e7b88f77a",
+  "lessonIds": [
+    "LA-C267-pinguis",
+    "LA-C267-callidus",
+    "LA-C267-praecipuus",
+    "LA-C267-pristinus",
+    "LA-C267-proximus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch267.txt",
+  "json": "latin/narration/ch267.json",
+  "textHash": "fnv1a64:cadec334270d47ac",
+  "jsonHash": "fnv1a64:7ad2e14003652554",
+  "findings": []
+}

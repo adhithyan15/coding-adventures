@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C267-praecipuus",
+    "language": "latin",
+    "chapter": 267,
+    "sequence": 14450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb4ab49772340b55"
+  },
+  "findings": []
+}

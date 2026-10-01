@@ -1,0 +1,19 @@
+{
+  "chapter": 261,
+  "title": "To give birth to, To order, To force, To mourn, To dig",
+  "label": "ch:la-to-give-birth-to-to-order-to-force-to-mourn-to-dig",
+  "canDo": "I can say to give birth to, to order, to force, to mourn and to dig.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C261-fodio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 261: I can say to give birth to, to order, to force, to mourn and to dig.",
+    "assesses": [
+      "LA-LEX-C261-ACT261-03",
+      "LA-LEX-C261-ACT261-04",
+      "LA-LEX-C261-ACT261-05"
+    ]
+  }
+}

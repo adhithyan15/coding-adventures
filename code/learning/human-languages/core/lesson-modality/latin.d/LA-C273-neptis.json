@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C273-neptis",
+    "language": "latin",
+    "chapter": 273,
+    "sequence": 14960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9cb2469adc8f421f"
+  },
+  "findings": []
+}

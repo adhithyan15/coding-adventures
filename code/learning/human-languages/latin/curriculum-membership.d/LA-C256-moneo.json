@@ -1,0 +1,11 @@
+{
+  "id": "LA-C256-moneo",
+  "pathSegment": "LA-PATH-256-ACT256",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-256-ACT256",
+      "order": 4
+    }
+  ]
+}

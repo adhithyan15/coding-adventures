@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:62f35bad03db966b",
+  "lessonIds": [
+    "LA-C273-nuptiae",
+    "LA-C273-coniunx",
+    "LA-C273-parens",
+    "LA-C273-nepos",
+    "LA-C273-neptis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch273.txt",
+  "json": "latin/narration/ch273.json",
+  "textHash": "fnv1a64:69e2af5e22c3a5b6",
+  "jsonHash": "fnv1a64:2f8ab8c7a305d9ca",
+  "findings": []
+}

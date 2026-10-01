@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:c34df0cba6eea404",
+  "lessonIds": [
+    "LA-C271-populus",
+    "LA-C271-civitas",
+    "LA-C271-patria",
+    "LA-C271-hostis",
+    "LA-C271-bellum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch271.txt",
+  "json": "latin/narration/ch271.json",
+  "textHash": "fnv1a64:271b0c849af25012",
+  "jsonHash": "fnv1a64:a1e896c96fd8ac80",
+  "findings": []
+}

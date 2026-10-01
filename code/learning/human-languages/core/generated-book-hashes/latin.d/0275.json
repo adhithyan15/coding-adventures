@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:addf53ff39984739",
+  "lessonIds": [
+    "LA-C275-sericum",
+    "LA-C275-lutum",
+    "LA-C275-pulvis",
+    "LA-C275-fumus",
+    "LA-C275-cinis"
+  ],
+  "tex": "latin/book/chapters/ch275-silk-mud-dust-smoke-ash.tex"
+}

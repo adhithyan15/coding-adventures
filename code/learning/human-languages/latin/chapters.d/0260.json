@@ -1,0 +1,19 @@
+{
+  "chapter": 260,
+  "title": "To press out, To feed, To put together, To notice, To blush",
+  "label": "ch:la-to-press-out-to-feed-to-put-together-to-notice-to-blush",
+  "canDo": "I can say to press out, to feed, to put together, to notice and to blush.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C260-erubesco",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 260: I can say to press out, to feed, to put together, to notice and to blush.",
+    "assesses": [
+      "LA-LEX-C260-ACT260-03",
+      "LA-LEX-C260-ACT260-04",
+      "LA-LEX-C260-ACT260-05"
+    ]
+  }
+}

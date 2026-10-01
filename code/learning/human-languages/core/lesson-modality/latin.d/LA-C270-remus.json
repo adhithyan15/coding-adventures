@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C270-remus",
+    "language": "latin",
+    "chapter": 270,
+    "sequence": 14620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:779e6d7a8e2c1ad2"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "latin",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:6d5496d3206dfa8d",
+  "lessonIds": [
+    "LA-C280-turris",
+    "LA-C280-columna",
+    "LA-C280-moenia",
+    "LA-C280-fossa",
+    "LA-C280-vallum",
+    "LA-R280-first-pass-words-from-chapters-273-276",
+    "LA-R280-second-pass-words-from-chapters-277-280"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 1,
+  "text": "latin/narration/ch280.txt",
+  "json": "latin/narration/ch280.json",
+  "textHash": "fnv1a64:67410b2c3c147154",
+  "jsonHash": "fnv1a64:a6ebd4dddb28e1b3",
+  "findings": []
+}

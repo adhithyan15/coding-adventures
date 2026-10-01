@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:38fc2bf77ecab946",
+  "lessonIds": [
+    "LA-C272-lanius",
+    "LA-C272-caupo",
+    "LA-C272-argentarius",
+    "LA-C272-legatus",
+    "LA-C272-scriba",
+    "LA-R272-first-pass-words-from-chapters-264-267",
+    "LA-R272-second-pass-words-from-chapters-268-272"
+  ],
+  "tex": "latin/book/chapters/ch272-butcher-innkeeper-banker-envoy-clerk.tex"
+}

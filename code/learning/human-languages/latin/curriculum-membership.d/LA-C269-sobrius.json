@@ -1,0 +1,11 @@
+{
+  "id": "LA-C269-sobrius",
+  "pathSegment": "LA-PATH-269-QUAL269",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-269-QUAL269",
+      "order": 2
+    }
+  ]
+}

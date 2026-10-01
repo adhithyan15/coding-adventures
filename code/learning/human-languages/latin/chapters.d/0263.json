@@ -1,0 +1,19 @@
+{
+  "chapter": 263,
+  "title": "Next day, Meanwhile, At some time, For a long time, Shortly",
+  "label": "ch:la-next-day-meanwhile-at-some-time-for-a-long-time-shortly",
+  "canDo": "I can say the next day, meanwhile, at some time, for a long time and shortly.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "LA-R263-second-pass-words-from-chapters-259-263",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 263: I can say the next day, meanwhile, at some time, for a long time and shortly.",
+    "assesses": [
+      "LA-LEX-C263-TEMP263-03",
+      "LA-LEX-C263-TEMP263-04",
+      "LA-LEX-C263-TEMP263-05"
+    ]
+  }
+}

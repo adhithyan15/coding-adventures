@@ -1,0 +1,11 @@
+{
+  "id": "LA-C268-alter",
+  "pathSegment": "LA-PATH-268-QUAL268",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-268-QUAL268",
+      "order": 0
+    }
+  ]
+}
