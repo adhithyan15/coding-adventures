@@ -292,13 +292,6 @@ static int setup_root(
     snprintf(target, sizeof(target), "%s/dev", root);
     root_setup_stage = "create-device-mountpoint";
     if (make_directory(target, 0555) != 0) return -1;
-    const char *devices[] = { "/dev/null", "/dev/urandom", "/dev/random", NULL };
-    for (size_t index = 0; devices[index] != NULL; index++) {
-        const char *name = strrchr(devices[index], '/');
-        snprintf(target, sizeof(target), "%s/dev/%s", root, name + 1);
-        root_setup_stage = "bind-device-read-only";
-        if (bind_read_only(devices[index], target) != 0) return -1;
-    }
     const char *libraries[] = { "/lib", "/lib64", "/usr/lib", "/usr/lib64", NULL };
     for (size_t index = 0; libraries[index] != NULL; index++) {
         snprintf(target, sizeof(target), "%s%s", root, libraries[index]);

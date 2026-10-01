@@ -17,3 +17,5 @@
 - Required the host build process to begin in a delegated child cgroup and
   restored launcher membership there before removing each plugin leaf.
 - Preserved the exact private-root mount stage in pre-attestation diagnostics.
+- Kept the private root's `/dev` empty instead of importing host device nodes;
+  runtimes retain inherited standard handles and the allowed `getrandom` syscall.

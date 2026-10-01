@@ -1514,7 +1514,9 @@ the OS sandbox before the plugin's user code begins executing.
 - **User namespace** (`CLONE_NEWUSER`) so the plugin process
   appears as root inside its own namespace and as a non-
   privileged user outside; combined with **mount namespace**
-  (`CLONE_NEWNS`) to give the plugin a private rootfs.
+  (`CLONE_NEWNS`) to give the plugin a private rootfs. The private root exposes
+  an empty `/dev`; runtimes use inherited standard handles and the allowed
+  `getrandom` syscall rather than host device nodes.
 - **Network namespace** (`CLONE_NEWNET`) with no interfaces,
   defeating any DNS/socket attempts at the kernel level.
 - **PID namespace** so the plugin can't see other host processes.

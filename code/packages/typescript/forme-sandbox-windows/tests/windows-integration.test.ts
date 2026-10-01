@@ -24,7 +24,7 @@ async function request(probe: string): Promise<SandboxLaunchRequest> {
     runtime: { kind: "binary", entry: "probe.exe" },
     capabilities: { required: [], optional: [] },
     contributes: { stages: [{ id: probe, consumes: "ContentSource", produces: "ContentNode" }], kinds: [] },
-    resources: { maxMemoryMb: 64, maxWallClockMs: 2_000, maxFileDescriptors: 32 },
+    resources: { maxMemoryMb: 64, maxWallClockMs: 2_000, maxFileDescriptors: 256 },
   };
   const schemaBytes = new TextEncoder().encode('{"type":"object"}\n');
   return {
@@ -51,7 +51,7 @@ async function nodeRequest(): Promise<SandboxLaunchRequest> {
     runtime: { kind: "node", entry: "entry.mjs" },
     capabilities: { required: [], optional: [] },
     contributes: { stages: [{ id: "main", consumes: "ContentSource", produces: "ContentNode" }], kinds: [] },
-    resources: { maxMemoryMb: 64, maxWallClockMs: 2_000, maxFileDescriptors: 32 },
+    resources: { maxMemoryMb: 64, maxWallClockMs: 2_000, maxFileDescriptors: 256 },
   };
   return {
     plugin: { manifest, manifestHash: computeManifestHash(manifest, entryBytes), entryBytes },

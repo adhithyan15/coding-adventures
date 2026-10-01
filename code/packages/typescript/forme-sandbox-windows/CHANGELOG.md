@@ -21,3 +21,5 @@
 - Protected the pre-existing staged snapshot from scratch ACL inheritance,
   applied explicit read/traverse ACLs, and added mutation probes.
 - Moved the asynchronous profile janitor's cwd outside plugin scratch.
+- Raised the integration fixture's process-handle budget so Node and Winsock
+  startup are tested independently from the descriptor-exhaustion probe.
