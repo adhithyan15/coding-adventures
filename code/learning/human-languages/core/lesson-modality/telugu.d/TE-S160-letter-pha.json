@@ -10,18 +10,17 @@
     "reasons": [
       "writing-type",
       "writing-block",
-      "script-block",
-      "sight-cue"
+      "script-block"
     ],
     "coreModality": "pen",
     "coreReasons": [
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:5cae7956983e9dae",
+    "sourceHash": "fnv1a64:17ae4f70a70d2199",
     "detachableSegments": [
       "Script you'll notice: ఫ",
-      "Writing: ఫ — copy what you see"
+      "Writing: ఫ — five calm movements"
     ],
     "delivery": "script"
   },

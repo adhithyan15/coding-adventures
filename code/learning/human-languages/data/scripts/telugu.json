@@ -3546,8 +3546,21 @@
       "components": [
         "ఫ  pha — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "sweep left across the upper-left curve",
+        "turn right around the lower-left bowl",
+        "sweep upward around the broad right bowl",
+        "curl upward through the separate top flourish",
+        "draw the short separate stem downward"
+      ],
+      "strokeOrderNote": "Five numbered movements in five pen-down runs: movements 1 and 2 build the left bowl, movement 3 forms the broad right bowl, movement 4 adds the separate top flourish, and movement 5 draws the short lower stem.",
+      "penLifts": 4,
+      "strokeOrderSource": {
+        "url": "https://play.google.com/store/apps/details?id=com.sathishshanmugam.writetelugualphabets",
+        "citation": "Sathish Shanmugam, Write Telugu Alphabets, consonant ఫ packaged tracing guides res/drawable/dot_stroke_c_5_2_pha.png and res/drawable/line_stroke_c_5_2_pha.png, movements 1–5 (version 2.6)",
+        "accessed": "2026-10-01",
+        "variation": "The packaged guide gives the paired left curves, broad right bowl, separate top flourish, and short lower stem five distinct numbered starts. The c_5_2 filename, its position after c_5_1 ప, and the pictured glyph agree that this guide teaches ఫ. The bundled Noto Sans Telugu outline tightens the printed joins and places the lower stem close to the bowls, so the filmstrip preserves the five attested school-style movement boundaries while fitting their centre lines to that outline."
+      }
     },
     {
       "glyph": "ఫా",

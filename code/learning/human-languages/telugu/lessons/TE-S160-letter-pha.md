@@ -65,17 +65,19 @@ the twelve months needs it, and an unfamiliar shape inside a list you already
 know by heart leaves a reader unable to tell whether the word or the printing
 is at fault.
 
-## Writing: ఫ — copy what you see
+## Writing: ఫ — five calm movements
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-160] -->
+<!-- hl-writing-stage: observe-trace -->
 
-Put your pen on ఫ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed. Then write ప beside it and look at the two.
+Watch the numbered filmstrip once before your pen moves. Movement 1 sweeps left
+across the upper part of the small bowl. Lift, then movement 2 turns around its
+lower half. Movement 3 makes the broad bowl on the right. Lift for movement 4,
+the small rising flourish above, then lift once more and draw movement 5, the
+short straight stem below.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+Trace the same route slowly. This is one attested school-style order fitted to
+the printed shape here; Telugu handwriting varies, so keep the five clear
+movements instead of closing the small gaps.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-160, TE-SCRIPT-RECOG-113] -->
