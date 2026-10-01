@@ -350,6 +350,14 @@ public static class MosaicRuntimeHost
         private JsonElement latestUpdate;
         private string? persistenceWarning;
         /// <summary>
+        /// The revision the state file was last saved at by an answer, so an
+        /// answer at that same revision skips the write. Null until the first
+        /// save: the first answer after launch always writes, so a fresh
+        /// install has its state on disk even when the app ignored that first
+        /// answer.
+        /// </summary>
+        private ulong? savedRevision;
+        /// <summary>
         /// The last environment the runtime took (UI48 ENV4), so an unchanged
         /// report is not sent twice. Per runtime: a retried start reports
         /// afresh.
@@ -554,22 +562,28 @@ public static class MosaicRuntimeHost
                     return dispatch(app, input, out output);
                 });
                 sequence = nextSequence;
-                var shownRevision = Revision(latestUpdate);
                 // Settle BEFORE persisting: the runtime refuses to snapshot
                 // while an effect is outstanding, so persisting first warns on
                 // every effect.
                 latestUpdate = KeepShowingProps(SettleEffects(update));
-                // An answer at the revision already showing -- an environment
-                // the app ignored (UI48 §7.1) -- changed nothing the app would
-                // save, so the state file is not rewritten: a resize storm
-                // costs no disk writes. Unless an earlier save failed (a
-                // warning is pending): then it retries that save, so a kill
-                // before the next event does not lose that revision.
-                // Unreadable revisions persist.
-                if (shownRevision is null
-                    || Revision(latestUpdate) != shownRevision
+                // An answer at the revision the state file already holds --
+                // an environment the app ignored (UI48 §7.1) -- changed
+                // nothing the app would save, so the file is not rewritten: a
+                // resize storm costs no disk writes. Compared with the
+                // revision SAVED, not the one showing: a fresh install's first
+                // answer is often an ignored environment, and must still write
+                // the state. Unless an earlier save failed (a warning is
+                // pending): then it retries that save, so a kill before the
+                // next event does not lose that revision. Unreadable revisions
+                // persist.
+                var revision = Revision(latestUpdate);
+                if (revision is null
+                    || revision != savedRevision
                     || persistenceWarning is not null)
+                {
                     PersistSnapshot();
+                    savedRevision = persistenceWarning is null ? revision : null;
+                }
             }
         }
 

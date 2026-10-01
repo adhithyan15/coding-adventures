@@ -21,10 +21,12 @@ XAML, Flutter, Compose, SwiftUI):
   runtime's diagnostic.
 - **An ignored report no longer rewrites the state file.** Every host's
   dispatch persisted unconditionally, so a resize storm fsynced the state
-  file per report. The dispatch now persists only when the answer moved the
-  revision (an unreadable revision persists) or an earlier save failed (a
-  persistence warning is pending): an environment the app ignored changed
-  nothing the app saves, but a failed save at revision N is retried by the
+  file per report. The dispatch now persists unless the state file already
+  holds the answer's revision -- each host remembers the revision of its
+  last successful save, so the first answer after launch always writes, even
+  an ignored environment on a fresh install -- or an earlier save failed (a
+  persistence warning is pending); an unreadable revision persists. An
+  environment the app ignored changed nothing the app saves, but a failed save at revision N is retried by the
   next ignored report, so a kill before the next event does not lose N.
   Ordinary events and effect answers always move the revision, so they
   persist as before.
@@ -48,3 +50,6 @@ XAML, Flutter, Compose, SwiftUI):
   the failed save and shows the warning cleared.
   The harnesses no longer read the state file to see whether a report was
   sent; with the switch on, a sent report answers an error.
+  The Qt driver also checks that a fresh host whose first answer is an
+  ignored report still writes its state file -- the case the Android
+  emulator gate caught, where TaskApp's fresh install never saved.

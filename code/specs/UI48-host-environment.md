@@ -1242,11 +1242,17 @@ SwiftUI). Where this section and an earlier one differ, this one is current.
   scheme changed, Compose and SwiftUI on the next bucket change. No host
   retries on a timer.
 - **An ignored report writes no state -- unless a save is owed.** A
-  dispatch persists when its answer moved the revision (an unreadable
-  revision persists, to be safe) or when an earlier save failed (a
-  persistence warning is pending). An environment the app ignored answers at
-  the revision showing and changed nothing the app saves, so with saving
-  healthy a window drag costs no disk writes. But a save that failed at
+  dispatch persists unless the state file already holds its answer's
+  revision: each host remembers the revision its last successful save was
+  at, and an answer at that revision, with no earlier save failed (no
+  persistence warning pending), writes nothing. An unreadable revision
+  persists, to be safe. The comparison is with the revision SAVED, not the
+  one showing: before the first save there is none, so the first answer
+  after launch always writes -- on a fresh install that answer is often an
+  ignored environment, and the state must still reach the disk (the Android
+  emulator gate checks it after launch 1). An environment the app ignored
+  answers at the revision already saved and changed nothing the app saves,
+  so with saving healthy a window drag costs no disk writes. But a save that failed at
   revision N would otherwise wait for the next event, and a kill before it
   would lose N; so while a warning is pending each ignored report retries
   the save. Ordinary events and effect answers always move the revision, so

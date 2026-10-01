@@ -218,18 +218,23 @@ QVariantMap MosaicHost::handleEvent(const QVariantMap &event)
         // cross the call boundary, not stop inside it: settleEffects returning
         // an empty map is not enough, because everything below touches members.
         const QPointer<MosaicHost> self(this);
-        const auto shownRevision = latestUpdate_.value(QStringLiteral("revision"));
         const auto settled = keepShowingProps(settleEffects(update));
         if (!self) return {};
-        // An answer at the revision already showing -- an environment the app
-        // ignored (UI48 §7.1) -- changed nothing the app would save, so the
-        // state file is not rewritten: a resize storm costs no disk writes.
-        // Unless an earlier save failed (a warning is pending): then the
-        // ignored report retries it, so a kill before the next event does
-        // not lose that revision. Either way the warning, set or cleared, is
-        // folded into the answer below, as an event's is.
-        if (!sameRevision(settled, shownRevision) || !persistenceWarning_.isEmpty()) {
+        // An answer at the revision the state file already holds -- an
+        // environment the app ignored (UI48 §7.1) -- changed nothing the app
+        // would save, so the file is not rewritten: a resize storm costs no
+        // disk writes. Compared with the revision SAVED, not the one showing:
+        // a fresh install's first answer is often an ignored environment, and
+        // must still write the state. Unless an earlier save failed (a
+        // warning is pending): then the ignored report retries it, so a kill
+        // before the next event does not lose that revision. Either way the
+        // warning, set or cleared, is folded into the answer below, as an
+        // event's is. Unreadable revisions persist.
+        if (!sameRevision(settled, savedRevision_) || !persistenceWarning_.isEmpty()) {
             persistSnapshot();
+            savedRevision_ = persistenceWarning_.isEmpty()
+                ? settled.value(QStringLiteral("revision"))
+                : QVariant();
         }
         showUpdate(settled);
         if (deferredAnswered_) {
@@ -272,13 +277,13 @@ QVariantMap MosaicHost::keepShowingProps(const QVariantMap &update) const
 
 // Whether `update` answers at `shown`, the revision showing before it. Either
 // unreadable reads as "moved": when in doubt, persist.
-bool MosaicHost::sameRevision(const QVariantMap &update, const QVariant &shown)
+bool MosaicHost::sameRevision(const QVariantMap &update, const QVariant &saved)
 {
     bool revisionOk = false;
-    bool shownOk = false;
+    bool savedOk = false;
     const auto revision = update.value(QStringLiteral("revision")).toLongLong(&revisionOk);
-    const auto before = shown.toLongLong(&shownOk);
-    return revisionOk && shownOk && revision == before;
+    const auto before = saved.toLongLong(&savedOk);
+    return revisionOk && savedOk && revision == before;
 }
 
 QVariantMap MosaicHost::reportEnvironment(const QVariantMap &environment)

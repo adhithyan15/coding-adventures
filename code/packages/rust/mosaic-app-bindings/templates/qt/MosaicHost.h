@@ -188,7 +188,7 @@ private:
     QVariantMap requireAndMapUpdate(const QVariantMap &update, const char *kind) const;
     QVariantMap failure(const QString &message) const;
     QVariantMap keepShowingProps(const QVariantMap &update) const;
-    static bool sameRevision(const QVariantMap &update, const QVariant &shown);
+    static bool sameRevision(const QVariantMap &update, const QVariant &saved);
     QVariant loadPersistedSnapshot();
     void quarantinePersistedState(const QString &reason);
     void persistSnapshot();
@@ -227,6 +227,11 @@ private:
     QStringList requiredProps_;
     QString error_;
     QString persistenceWarning_;
+    // The revision the state file was last saved at by an answer, so an
+    // answer at that same revision skips the write. Invalid until the first
+    // save: the first answer after launch always writes, so a fresh install
+    // has its state on disk even when the app ignored that first answer.
+    QVariant savedRevision_;
     // Effect ids the runtime is waiting on and nothing has answered yet.
     QSet<quint64> awaiting_;
     // Effects a handler has taken ownership of. Kept OUT of the fail sweep --

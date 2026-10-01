@@ -616,23 +616,35 @@ mod tests {
         ));
         assert_eq!(swift.matches("lastRefusedEnvironment = report").count(), 1);
         assert!(swift.contains("if let refused = lastRefusedEnvironment, refused.isEqual(environment) { return nil }"));
-        // (2) The dispatch path persists only when the revision moved or an
-        // earlier save failed.
+        // (2) The dispatch path skips the save only when the state file
+        // already holds the settled revision (recorded after a SUCCESSFUL
+        // save, never before the first) and no earlier save failed: a fresh
+        // install's first answer -- an ignored environment -- still writes.
         assert!(qt.contains(
-            "        if (!sameRevision(settled, shownRevision) || !persistenceWarning_.isEmpty()) {\n            persistSnapshot();\n        }\n        showUpdate(settled);"
+            "        if (!sameRevision(settled, savedRevision_) || !persistenceWarning_.isEmpty()) {\n            persistSnapshot();\n            savedRevision_ = persistenceWarning_.isEmpty()\n                ? settled.value(QStringLiteral(\"revision\"))\n                : QVariant();\n        }\n        showUpdate(settled);"
         ));
         assert!(xaml.contains(
-            "                if (shownRevision is null\n                    || Revision(latestUpdate) != shownRevision\n                    || persistenceWarning is not null)\n                    PersistSnapshot();"
+            "                var revision = Revision(latestUpdate);\n                if (revision is null\n                    || revision != savedRevision\n                    || persistenceWarning is not null)\n                {\n                    PersistSnapshot();\n                    savedRevision = persistenceWarning is null ? revision : null;\n                }"
         ));
         assert!(flutter.contains(
-            "    if (shownRevision == null ||\n        _revision(settled) != shownRevision ||\n        _persistenceWarning != null) {\n      _persistSnapshot();\n    }\n    latestUpdate = _withPersistenceWarning(settled);\n    return latestUpdate;"
+            "    final revision = _revision(settled);\n    if (revision == null ||\n        revision != _savedRevision ||\n        _persistenceWarning != null) {\n      _persistSnapshot();\n      _savedRevision = _persistenceWarning == null ? revision : null;\n    }\n    latestUpdate = _withPersistenceWarning(settled);\n    return latestUpdate;"
         ));
         assert!(compose.contains(
-            "        if (shownRevision == null ||\n            (settled[\"revision\"] as? JsonPrimitive)?.longOrNull != shownRevision ||\n            persistenceWarning != null\n        ) {\n            persistSnapshot()\n        }"
+            "        val revision = (settled[\"revision\"] as? JsonPrimitive)?.longOrNull\n        if (revision == null || revision != savedRevision || persistenceWarning != null) {\n            persistSnapshot()\n            savedRevision = if (persistenceWarning == null) revision else null\n        }"
         ));
         assert!(swift.contains(
-            "    if shownRevision == nil\n      || (settled[\"revision\"] as? NSNumber) != shownRevision\n      || persistenceWarning != nil {\n      persistSnapshot()\n    }"
+            "    let revision = settled[\"revision\"] as? NSNumber\n    if revision == nil || revision != savedRevision || persistenceWarning != nil {\n      persistSnapshot()\n      savedRevision = persistenceWarning == nil ? revision : nil\n    }"
         ));
+        // Nothing else sets the saved revision, and nothing compares the save
+        // with the revision showing any more.
+        assert_eq!(qt.matches("savedRevision_ = ").count(), 1);
+        assert_eq!(xaml.matches("savedRevision = ").count(), 1);
+        assert_eq!(flutter.matches("_savedRevision = ").count(), 1);
+        assert_eq!(compose.matches("savedRevision = ").count(), 1);
+        assert_eq!(swift.matches("savedRevision = ").count(), 1);
+        for host in [&qt, &xaml, &compose, &swift] {
+            assert!(!host.contains("shownRevision ||") && !host.contains("!= shownRevision\n"));
+        }
         // (3) Where an ignored report's answer is otherwise not shown, a
         // warning the retry set or cleared still is. Qt, Compose and SwiftUI
         // hand back (or push) the kept props with the warning folded in.

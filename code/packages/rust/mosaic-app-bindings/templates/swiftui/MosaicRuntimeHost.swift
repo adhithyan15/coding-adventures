@@ -45,6 +45,11 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
   private var lastRefusedEnvironment: NSDictionary?
   private var propsChangedHandler: (() -> Void)?
   private var persistenceWarning: String?
+  /// The revision the state file was last saved at by an answer, so an answer
+  /// at that same revision skips the write. Nil until the first save: the
+  /// first answer after launch always writes, so a fresh install has its
+  /// state on disk even when the app ignored that first answer.
+  private var savedRevision: NSNumber?
   private let lock = NSRecursiveLock()
 
   /// Called once per effect the runtime asks for, before the host decides what
@@ -329,7 +334,6 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
       mosaic_binding_dispatch(runtime, app, bytes, output)
     }
     sequence = nextSequence
-    let shownRevision = latestUpdate["revision"] as? NSNumber
     // Settle BEFORE persisting: the runtime refuses to snapshot while an
     // effect is outstanding, so persisting first warns on every effect.
     var settled = settleEffects(update)
@@ -345,17 +349,19 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
        revision == showingRevision {
       settled["props"] = showing
     }
-    // An answer at the revision already showing -- that same ignored
-    // environment -- changed nothing the app would save, so the state file
-    // is not rewritten: a resize storm costs no disk writes. Unless an
-    // earlier save failed (a warning is pending): then it retries that save,
-    // so a kill before the next event does not lose that revision; the
-    // update below carries the warning or its clearing, as an event's does.
-    // Unreadable revisions persist.
-    if shownRevision == nil
-      || (settled["revision"] as? NSNumber) != shownRevision
-      || persistenceWarning != nil {
+    // An answer at the revision the state file already holds -- that same
+    // ignored environment -- changed nothing the app would save, so the file
+    // is not rewritten: a resize storm costs no disk writes. Compared with
+    // the revision SAVED, not the one showing: a fresh install's first answer
+    // is often an ignored environment, and must still write the state.
+    // Unless an earlier save failed (a warning is pending): then it retries
+    // that save, so a kill before the next event does not lose that revision;
+    // the update below carries the warning or its clearing, as an event's
+    // does. Unreadable revisions persist.
+    let revision = settled["revision"] as? NSNumber
+    if revision == nil || revision != savedRevision || persistenceWarning != nil {
       persistSnapshot()
+      savedRevision = persistenceWarning == nil ? revision : nil
     }
     latestUpdate = Self.withPersistenceWarning(settled, effectWarning ?? persistenceWarning)
     schedulePropsChanged()

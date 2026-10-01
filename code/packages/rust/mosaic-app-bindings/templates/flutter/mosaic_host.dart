@@ -405,6 +405,12 @@ final class _MosaicRuntime {
   /// changes. Any other failure leaves it alone.
   Map<String, String>? _lastRefusedEnvironment;
   String? _persistenceWarning;
+
+  /// The revision the state file was last saved at by an answer, so an answer
+  /// at that same revision skips the write. Null until the first save: the
+  /// first answer after launch always writes, so a fresh install has its
+  /// state on disk even when the app ignored that first answer.
+  int? _savedRevision;
   void Function()? propsChangedHandler;
 
   /// Called once per effect the runtime asks for.
@@ -497,22 +503,25 @@ final class _MosaicRuntime {
       'event update',
     );
     _sequence = nextSequence;
-    final shownRevision = _revision(_runtimeUpdate);
     // Settle BEFORE persisting: the runtime refuses to snapshot while an effect
     // is outstanding, so persisting first warns on every effect.
     final settled = _keepShowingProps(_settleEffects(update));
     _runtimeUpdate = settled;
-    // An answer at the revision already showing -- an environment the app
-    // ignored (UI48 §7.1) -- changed nothing the app would save, so the state
-    // file is not rewritten: a resize storm costs no disk writes. Unless an
-    // earlier save failed (a warning is pending): then it retries that save,
-    // so a kill before the next event does not lose that revision, and
-    // [reportEnvironment] shows the warning it sets or clears. Unreadable
-    // revisions persist.
-    if (shownRevision == null ||
-        _revision(settled) != shownRevision ||
+    // An answer at the revision the state file already holds -- an
+    // environment the app ignored (UI48 §7.1) -- changed nothing the app would
+    // save, so the file is not rewritten: a resize storm costs no disk writes.
+    // Compared with the revision SAVED, not the one showing: a fresh install's
+    // first answer is often an ignored environment, and must still write the
+    // state. Unless an earlier save failed (a warning is pending): then it
+    // retries that save, so a kill before the next event does not lose that
+    // revision, and [reportEnvironment] shows the warning it sets or clears.
+    // Unreadable revisions persist.
+    final revision = _revision(settled);
+    if (revision == null ||
+        revision != _savedRevision ||
         _persistenceWarning != null) {
       _persistSnapshot();
+      _savedRevision = _persistenceWarning == null ? revision : null;
     }
     latestUpdate = _withPersistenceWarning(settled);
     return latestUpdate;

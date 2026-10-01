@@ -170,6 +170,13 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
     private var effectWarning: String? = null
     private var persistenceWarning: String? = null
     /**
+     * The revision the state file was last saved at by an answer, so an answer
+     * at that same revision skips the write. Null until the first save: the
+     * first answer after launch always writes, so a fresh install has its
+     * state on disk even when the app ignored that first answer.
+     */
+    private var savedRevision: Long? = null
+    /**
      * The last environment the runtime accepted (UI48 ENV4), so an unchanged
      * report is not sent twice.
      */
@@ -244,22 +251,23 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
             invoke { output -> api.mosaic_app_dispatch(app, input, output) }
         }.jsonObject
         sequence = nextSequence
-        val shownRevision = (latestUpdate["revision"] as? JsonPrimitive)?.longOrNull
         // Settle BEFORE persisting: the runtime refuses to snapshot while an
         // effect is outstanding, so persisting first warns on every effect.
         val settled = keepShowingProps(settleEffects(update))
-        // An answer at the revision already showing -- an environment the app
-        // ignored (UI48 §7.1) -- changed nothing the app would save, so the
-        // state file is not rewritten: a resize storm costs no disk writes.
-        // Unless an earlier save failed (a warning is pending): then it
-        // retries that save, so a kill before the next event does not lose
-        // that revision; the answer carries the warning or its clearing, as
-        // an event's does. Unreadable revisions persist.
-        if (shownRevision == null ||
-            (settled["revision"] as? JsonPrimitive)?.longOrNull != shownRevision ||
-            persistenceWarning != null
-        ) {
+        // An answer at the revision the state file already holds -- an
+        // environment the app ignored (UI48 §7.1) -- changed nothing the app
+        // would save, so the file is not rewritten: a resize storm costs no
+        // disk writes. Compared with the revision SAVED, not the one showing:
+        // a fresh install's first answer is often an ignored environment, and
+        // must still write the state. Unless an earlier save failed (a
+        // warning is pending): then it retries that save, so a kill before
+        // the next event does not lose that revision; the answer carries the
+        // warning or its clearing, as an event's does. Unreadable revisions
+        // persist.
+        val revision = (settled["revision"] as? JsonPrimitive)?.longOrNull
+        if (revision == null || revision != savedRevision || persistenceWarning != null) {
             persistSnapshot()
+            savedRevision = if (persistenceWarning == null) revision else null
         }
         latestUpdate = withPersistenceWarning(settled)
         propsChangedHandler?.invoke()

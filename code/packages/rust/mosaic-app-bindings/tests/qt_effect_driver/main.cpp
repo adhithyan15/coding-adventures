@@ -352,8 +352,17 @@ int main(int argc, char **argv) {
                   MosaicHost::environmentReport(800, 800, true).value(QStringLiteral("colorScheme")) == QStringLiteral("dark"),
               "size classes split at 600 and 1024, and a square window is landscape");
 
+        // A fresh host's first answer saves its state even when the app
+        // ignored it: nothing is on disk yet, so the skip -- "the file already
+        // holds this revision" -- cannot apply (an Android fresh install
+        // answers an ignored report first, and its gate expects the file).
+        const auto freshStatePath = qEnvironmentVariable("MOSAIC_APP_STATE_PATH");
+        check(!freshStatePath.isEmpty() && !QFile::exists(freshStatePath),
+              "the environment host starts with no state file");
         const auto reported = host.reportEnvironment(compact);
         check(!reported.contains(QStringLiteral("error")), "an ignored environment is accepted");
+        check(QFile::exists(freshStatePath),
+              "a fresh host's first answer writes its state, even an ignored report's");
         check(reported.value(QStringLiteral("revision")).toLongLong() == shownRevision,
               "an ignored environment keeps the revision");
         check(reported.value(QStringLiteral("props")).toMap() == shownProps,
