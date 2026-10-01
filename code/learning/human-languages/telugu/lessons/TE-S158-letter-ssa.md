@@ -58,17 +58,20 @@ backward curl you already make for ట. The romanization marks the difference
 with one dot under the letter — *s* against *ṣ* — which is easy to miss in
 print and impossible to miss on the page, where they are two unlike shapes.
 
-## Writing: ష — copy what you see
+## Writing: ష — four calm movements
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-158] -->
+<!-- hl-writing-stage: observe-trace -->
 
-Put your pen on ష and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed. Then write స beside it and look at the two.
+Watch the guide once before your hand moves. ష arrives in **four calm
+movements**, with a small lift between each one:
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+1. Loop around the small bowl at the lower left.
+2. Sweep around the broad lower and right body.
+3. Add the short tail at the lower right.
+4. Lift once more, then draw down and up through the separate chevron above.
+
+Trace the filmstrip slowly. Let each movement finish before you lift. Then
+write స beside ష and notice how different the two silhouettes feel.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-158, TE-SCRIPT-RECOG-111, TE-SCRIPT-RECOG-152] -->

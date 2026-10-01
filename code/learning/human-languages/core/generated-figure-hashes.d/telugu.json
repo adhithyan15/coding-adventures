@@ -227,6 +227,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TE-S158-letter-ssa",
+      "sourceHash": "fnv1a64:c88d16c997086e2c",
+      "svgHash": "fnv1a64:ecfdd926d343cdda",
+      "svg": "telugu/book/figures/TE-S158-letter-ssa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TE-S159-letter-sha",
       "sourceHash": "fnv1a64:8d5f871b82a60cc4",
       "svgHash": "fnv1a64:ce785ef016230ec6",
