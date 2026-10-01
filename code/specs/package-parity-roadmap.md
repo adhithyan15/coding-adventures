@@ -15330,6 +15330,49 @@ mergeable but blocked while initial CI, CodeQL, and human-language detection
 are queued or in progress. Guarded auto-merge remains disabled until every
 required check is terminal and acceptable and the branch remains conflict-free.
 
+### PR #16327 merge, post-merge audit, and existing-lane adoption selection
+
+All 50 final-head checks completed acceptably: 43 succeeded and seven were
+expected skips. GitHub reported the reviewed head mergeable and clean, guarded
+squash auto-merge was enabled only then, and PR #16327 merged automatically at
+`2026-09-30T23:50:38Z` as
+`6bcec12e1559f0944005f10570a2771e617e4d7f`; no plain manual merge command was
+used.
+
+The collision-checked exact-main inventory remains unchanged at 15 established
+lanes, 1,473 implementation identities, 4,740 package slots, 1,515 all-reported
+identities, completion bands 178/265, 123/934, 181/2,282, and 991/13,874, 805
+Rust singletons, five emerging OCaml packages, zero canonical collisions, and
+zero unknown buckets. A projected open PR #16323 would add exactly one unique
+TypeScript `forme-plugin-runner-conformance` identity without collision; its
+existing lifecycle owner is selection-blocked until that PR closes and the new
+identity can be absorbed or split explicitly.
+
+The parallel package and lane audit added 22 exact owners rather than leaving
+newly measured gaps under historical umbrellas. Compiler source maps and the
+type-checker protocol each receive a neutral contract plus Java/Kotlin, Dart,
+and Swift children. The current WebAssembly module encoder receives a baseline
+existing-lane contract plus JVM and Swift children. X25519 receives a repaired
+neutral contract and one Java/Kotlin/Dart child. DT03 binary-tree receives its
+exact Dart/Swift port, while DT08 AVL-tree receives a neutral contract and
+separate Dart and Swift children. Four previously implicit Swift hash-family
+children now depend explicitly on hash-functions. The OCaml CI chain now owns
+checksum-backed opam archive-mirror coverage across every setup path and blocks
+three-platform build-tool qualification until it is reviewed. Canonical
+underscore spellings were collision-checked so no duplicate Elixir, Lua, or
+Ruby owner was created.
+
+After those discoveries were recorded, dependency/leverage ranking selected
+`barcode-layout-existing-lanes-v1-conformance`. The newly ready adoption owner
+has two direct and thirteen total unfinished descendants, ahead of the neutral
+facade alternative at one direct and five total. No open PR exactly overlaps
+the eight C#, F#, Go, Haskell, Perl, Python, Rust, or TypeScript package roots.
+The fresh clean sparse branch
+`codex/parity-barcode-layout-existing-lanes-20260930` starts from the exact merge
+revision. It will first make adoption evidence mechanically truthful, then run
+the complete neutral corpus through every existing lane and reconcile source,
+tests, build fronts, capability manifests, and affected barcode downstreams.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
