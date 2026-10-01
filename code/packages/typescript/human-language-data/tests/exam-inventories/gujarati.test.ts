@@ -57,18 +57,16 @@ describe("the committed Gujarati A1 inventory", () => {
     expect(specific.map((point) => point.id)).toEqual([]);
   });
 
-  it("says an A1 task shape does NOT exist, unlike Punjabi's", () => {
-    // The three inventories in this series have three different envelopes and
-    // each `about` has to state its own. Malayalam: nothing at all. Punjabi: a
-    // checked-in A1 paper and no mocks. Gujarati: a pre-A1 paper only, with
-    // `assessment.json` pointing at an `a1.json` and fourteen mocks that are not
-    // on disk. Copying a sibling's sentence here would have claimed an envelope
-    // this track does not have.
+  it("states that its pre-A1 and A1 task shapes exist without implying external authority", () => {
+    // Gujarati now has both project-defined envelopes. The explicit qualifier
+    // matters: making the A1 task shape executable does not turn the editorial
+    // proxy into a Gujarati examining body's syllabus or produce any mock.
     expect(inventory.about).toMatch(/PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS/);
     expect(inventory.about).toMatch(
-      /EXAM ENVELOPE: A PRE-A1 TASK SHAPE EXISTS AND AN A1 ONE DOES NOT/,
+      /EXAM ENVELOPE: PRE-A1 AND A1 TASK SHAPES EXIST/,
     );
-    expect(inventory.about).toMatch(/task-shapes\/a1\.json does not exist/);
+    expect(inventory.about).toMatch(/a1\.json.*A1 envelope is now executable and source-linked/);
+    expect(inventory.about).toMatch(/gujarati\/mocks\/ does not exist/);
     expect(inventory.about).toMatch(/NOT SEARCHED, BY INSTRUCTION/);
     expect(inventory.source).toMatch(/^PROJECT-DEFINED\./);
     expect(isExamInventoryComplete(inventory)).toBe(false);
