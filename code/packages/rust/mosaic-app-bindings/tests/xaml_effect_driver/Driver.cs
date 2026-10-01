@@ -117,8 +117,14 @@ internal static class Driver
     /// A handler that answers properly settles the effect and moves the app.
     private static async Task CaseAnswered()
     {
+        // UI48 §7.11: a layout-switching window asks IsSettling before it
+        // swaps roots, so it must be true exactly while the effect loop runs
+        // -- which is when the handler is called -- and false around it.
+        var settlingInHandler = false;
+        Check(!MosaicRuntimeHost.IsSettling, "nothing is settling before a dispatch");
         MosaicRuntimeHost.EffectHandler = (id, kind, payload, delivery) =>
         {
+            settlingInHandler = MosaicRuntimeHost.IsSettling;
             if (!IsAwait(delivery)) return;
             MosaicRuntimeHost.CompleteEffect(id, new Dictionary<string, object?>
             {
@@ -128,6 +134,8 @@ internal static class Driver
         var (component, _) = await Request();
         Check(Awaited(component, "handled") == 0, "an answered await is settled");
         Check(Counted(component, "handled") == 5, "the handler's value reached the app");
+        Check(settlingInHandler, "an effect handler runs inside a settle (IsSettling)");
+        Check(!MosaicRuntimeHost.IsSettling, "the settle is over once the dispatch returns");
     }
 
     /// A batch where the handler answers BOTH, each chaining.
