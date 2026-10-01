@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C163-postea",
+    "language": "latin",
+    "chapter": 163,
+    "sequence": 7030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30cf034503b79c8a"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:e4d83e47f7103751",
+  "lessonIds": [
+    "LA-C163-perendie",
+    "LA-C163-postea",
+    "LA-C163-consilium",
+    "LA-C163-constituo",
+    "LA-C163-provideo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch163.txt",
+  "json": "latin/narration/ch163.json",
+  "textHash": "fnv1a64:cd8fa91b6ad71f9c",
+  "jsonHash": "fnv1a64:991b19ddb69f1e0e",
+  "findings": []
+}

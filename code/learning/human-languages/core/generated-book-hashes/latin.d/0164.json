@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:e1f10f187b44882c",
+  "lessonIds": [
+    "LA-C164-titulus",
+    "LA-C164-inscriptio",
+    "LA-C164-pretium",
+    "LA-C164-venalis",
+    "LA-C164-merx",
+    "LA-R164-first-pass-saying-no-and-looking-back",
+    "LA-R164-second-pass-looking-ahead-and-reading-signs"
+  ],
+  "tex": "latin/book/chapters/ch164-a-notice-an-inscription-a-price-for-sale-goods.tex"
+}

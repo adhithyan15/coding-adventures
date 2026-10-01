@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:99d24414c61cc397",
+  "lessonIds": [
+    "LA-C162-nuper",
+    "LA-C162-nudiustertius",
+    "LA-C162-olim",
+    "LA-C162-antea",
+    "LA-C162-accido"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch162.txt",
+  "json": "latin/narration/ch162.json",
+  "textHash": "fnv1a64:b2fc982437b17eec",
+  "jsonHash": "fnv1a64:875daae88b7266a9",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C164-inscriptio",
+  "pathSegment": "LA-PATH-164-LEG164",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-164-LEG164",
+      "order": 1
+    }
+  ]
+}
