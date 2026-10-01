@@ -1,0 +1,19 @@
+{
+  "chapter": 168,
+  "title": "To fold, To own, To make ready in advance, To lend, To propose",
+  "label": "ch:la-to-fold-to-own-to-make-ready-in-advance-to-lend-to-propose",
+  "canDo": "I can say to fold, to own, to make ready in advance, to lend and to propose.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C168-propono",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 168: I can say to fold, to own, to make ready in advance, to lend and to propose.",
+    "assesses": [
+      "LA-LEX-C168-ACT168-03",
+      "LA-LEX-C168-ACT168-04",
+      "LA-LEX-C168-ACT168-05"
+    ]
+  }
+}

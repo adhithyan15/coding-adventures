@@ -1,0 +1,19 @@
+{
+  "chapter": 166,
+  "title": "To approve, To mark, To discuss, To promise, To allow",
+  "label": "ch:la-to-approve-to-mark-to-discuss-to-promise-to-allow",
+  "canDo": "I can say to approve, to mark, to discuss, to promise and to allow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C166-permitto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 166: I can say to approve, to mark, to discuss, to promise and to allow.",
+    "assesses": [
+      "LA-LEX-C166-ACT166-03",
+      "LA-LEX-C166-ACT166-04",
+      "LA-LEX-C166-ACT166-05"
+    ]
+  }
+}

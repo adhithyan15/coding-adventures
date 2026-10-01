@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:964a9114d4ef0ae1",
+  "lessonIds": [
+    "LA-C175-tandem",
+    "LA-C175-posthac",
+    "LA-C175-adhuc",
+    "LA-C175-subito",
+    "LA-C175-donec"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch175.txt",
+  "json": "latin/narration/ch175.json",
+  "textHash": "fnv1a64:318a5fcdd7a7f22a",
+  "jsonHash": "fnv1a64:0e7f5307f55bea42",
+  "findings": []
+}

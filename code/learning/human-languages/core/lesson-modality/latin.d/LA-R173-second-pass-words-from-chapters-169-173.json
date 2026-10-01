@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R173-second-pass-words-from-chapters-169-173",
+    "language": "latin",
+    "chapter": 173,
+    "sequence": 7600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:338e1c2d69b80ed3"
+  },
+  "findings": []
+}

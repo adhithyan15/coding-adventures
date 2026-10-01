@@ -1,0 +1,19 @@
+{
+  "chapter": 180,
+  "title": "Convenient, Polite, Of the country, Cheerful, Shy",
+  "label": "ch:la-convenient-polite-of-the-country-cheerful-shy",
+  "canDo": "I can say convenient, polite, of the country, cheerful and shy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-C180-verecundus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 180: I can say convenient, polite, of the country, cheerful and shy.",
+    "assesses": [
+      "LA-LEX-C180-QUAL180-03",
+      "LA-LEX-C180-QUAL180-04",
+      "LA-LEX-C180-QUAL180-05"
+    ]
+  }
+}

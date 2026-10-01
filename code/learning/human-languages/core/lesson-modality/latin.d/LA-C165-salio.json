@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C165-salio",
+    "language": "latin",
+    "chapter": 165,
+    "sequence": 7160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a42cc372d6889151"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C166-permitto",
+  "pathSegment": "LA-PATH-166-ACT166",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-166-ACT166",
+      "order": 4
+    }
+  ]
+}

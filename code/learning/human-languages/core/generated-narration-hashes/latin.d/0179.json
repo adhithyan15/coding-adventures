@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:a49e431499921689",
+  "lessonIds": [
+    "LA-C179-praesertim",
+    "LA-C179-potius",
+    "LA-C179-maxime",
+    "LA-C179-valde",
+    "LA-C179-admodum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch179.txt",
+  "json": "latin/narration/ch179.json",
+  "textHash": "fnv1a64:d3bdd72fde5a3001",
+  "jsonHash": "fnv1a64:7e85599d89323627",
+  "findings": []
+}

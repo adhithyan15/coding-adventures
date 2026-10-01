@@ -1,0 +1,11 @@
+{
+  "id": "LA-C179-admodum",
+  "pathSegment": "LA-PATH-179-CAUSA179",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-179-CAUSA179",
+      "order": 4
+    }
+  ]
+}

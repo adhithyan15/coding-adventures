@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C188-textor",
+    "language": "latin",
+    "chapter": 188,
+    "sequence": 8680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e897097d884ed22"
+  },
+  "findings": []
+}

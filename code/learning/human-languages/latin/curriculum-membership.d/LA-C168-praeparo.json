@@ -1,0 +1,11 @@
+{
+  "id": "LA-C168-praeparo",
+  "pathSegment": "LA-PATH-168-ACT168",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-168-ACT168",
+      "order": 2
+    }
+  ]
+}

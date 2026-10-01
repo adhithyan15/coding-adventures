@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-192-RES192",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a crab, a sparrow, a stork, an owl and a peacock.",
+  "prerequisites": []
+}

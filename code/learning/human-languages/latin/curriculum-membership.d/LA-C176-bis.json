@@ -1,0 +1,11 @@
+{
+  "id": "LA-C176-bis",
+  "pathSegment": "LA-PATH-176-TEMP176",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-176-TEMP176",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C196-fluvius",
+    "language": "latin",
+    "chapter": 196,
+    "sequence": 9260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0f3f6f175255357"
+  },
+  "findings": []
+}

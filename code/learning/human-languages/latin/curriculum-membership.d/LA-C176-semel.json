@@ -1,0 +1,11 @@
+{
+  "id": "LA-C176-semel",
+  "pathSegment": "LA-PATH-176-TEMP176",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-176-TEMP176",
+      "order": 3
+    }
+  ]
+}

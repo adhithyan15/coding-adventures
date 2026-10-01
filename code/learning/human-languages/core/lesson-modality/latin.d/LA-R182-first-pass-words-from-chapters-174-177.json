@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R182-first-pass-words-from-chapters-174-177",
+    "language": "latin",
+    "chapter": 182,
+    "sequence": 8230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5174b5cf76dc8d84"
+  },
+  "findings": []
+}

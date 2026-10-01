@@ -1,0 +1,19 @@
+{
+  "chapter": 193,
+  "title": "Drum, Knucklebone, Gaming die, Bracelet, Necklace",
+  "label": "ch:la-drum-knucklebone-gaming-die-bracelet-necklace",
+  "canDo": "I can say a drum, a knucklebone, a gaming die, a bracelet and a necklace.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C193-monile",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 193: I can say a drum, a knucklebone, a gaming die, a bracelet and a necklace.",
+    "assesses": [
+      "LA-LEX-C193-RES193-03",
+      "LA-LEX-C193-RES193-04",
+      "LA-LEX-C193-RES193-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-177-LOC177",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "LA-EXT-177-LOC177"
+  ],
+  "after": []
+}

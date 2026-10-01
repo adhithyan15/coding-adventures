@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:8033f54eef576234",
+  "lessonIds": [
+    "LA-C165-accendo",
+    "LA-C165-exstinguo",
+    "LA-C165-salio",
+    "LA-C165-subrideo",
+    "LA-C165-clamo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch165.txt",
+  "json": "latin/narration/ch165.json",
+  "textHash": "fnv1a64:d98757396cd50269",
+  "jsonHash": "fnv1a64:9a6f2b4b3856a1ba",
+  "findings": []
+}

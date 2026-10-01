@@ -1,0 +1,19 @@
+{
+  "chapter": 187,
+  "title": "Peace, Leader, Victory, Freedom, Glory",
+  "label": "ch:la-peace-leader-victory-freedom-glory",
+  "canDo": "I can say peace, a leader, victory, freedom and glory.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C187-gloria",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 187: I can say peace, a leader, victory, freedom and glory.",
+    "assesses": [
+      "LA-LEX-C187-RES187-03",
+      "LA-LEX-C187-RES187-04",
+      "LA-LEX-C187-RES187-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:ccecb31878050c1b",
+  "lessonIds": [
+    "LA-C188-architectus",
+    "LA-C188-textor",
+    "LA-C188-figulus",
+    "LA-C188-vilicus",
+    "LA-C188-colonus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch188.txt",
+  "json": "latin/narration/ch188.json",
+  "textHash": "fnv1a64:084813b0510971a7",
+  "jsonHash": "fnv1a64:91735ee29bdb8099",
+  "findings": []
+}

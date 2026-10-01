@@ -1,0 +1,11 @@
+{
+  "id": "LA-C170-levo",
+  "pathSegment": "LA-PATH-170-ACT170",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-170-ACT170",
+      "order": 1
+    }
+  ]
+}

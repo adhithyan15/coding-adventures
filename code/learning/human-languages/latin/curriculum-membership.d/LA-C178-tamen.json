@@ -1,0 +1,11 @@
+{
+  "id": "LA-C178-tamen",
+  "pathSegment": "LA-PATH-178-CAUSA178",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-178-CAUSA178",
+      "order": 1
+    }
+  ]
+}

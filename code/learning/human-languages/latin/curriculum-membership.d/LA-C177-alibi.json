@@ -1,0 +1,11 @@
+{
+  "id": "LA-C177-alibi",
+  "pathSegment": "LA-PATH-177-LOC177",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-177-LOC177",
+      "order": 1
+    }
+  ]
+}

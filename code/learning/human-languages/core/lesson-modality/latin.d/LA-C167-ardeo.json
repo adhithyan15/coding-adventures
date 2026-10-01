@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C167-ardeo",
+    "language": "latin",
+    "chapter": 167,
+    "sequence": 7240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43ea87f6dd7303e4"
+  },
+  "findings": []
+}

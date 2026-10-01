@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C171-fallo",
+    "language": "latin",
+    "chapter": 171,
+    "sequence": 7440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69b27a01e16b30a3"
+  },
+  "findings": []
+}

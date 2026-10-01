@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C196-pratum",
+    "language": "latin",
+    "chapter": 196,
+    "sequence": 9280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82a2cfaa95c7f673"
+  },
+  "findings": []
+}

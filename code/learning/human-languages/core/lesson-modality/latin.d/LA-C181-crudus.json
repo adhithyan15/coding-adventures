@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C181-crudus",
+    "language": "latin",
+    "chapter": 181,
+    "sequence": 8150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6696746639e7299c"
+  },
+  "findings": []
+}

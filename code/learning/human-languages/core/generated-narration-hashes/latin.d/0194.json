@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:df65631751397a7d",
+  "lessonIds": [
+    "LA-C194-sententia",
+    "LA-C194-sermo",
+    "LA-C194-oratio",
+    "LA-C194-rumor",
+    "LA-C194-historia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch194.txt",
+  "json": "latin/narration/ch194.json",
+  "textHash": "fnv1a64:538e68dec205800d",
+  "jsonHash": "fnv1a64:a727198fc028b5ff",
+  "findings": []
+}

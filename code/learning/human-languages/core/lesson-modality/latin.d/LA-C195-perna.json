@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C195-perna",
+    "language": "latin",
+    "chapter": 195,
+    "sequence": 9240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c0d475e4cfb6227"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C195-dies-natalis",
+  "pathSegment": "LA-PATH-195-RES195",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-195-RES195",
+      "order": 4
+    }
+  ]
+}

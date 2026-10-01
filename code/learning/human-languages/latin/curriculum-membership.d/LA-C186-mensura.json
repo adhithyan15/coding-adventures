@@ -1,0 +1,11 @@
+{
+  "id": "LA-C186-mensura",
+  "pathSegment": "LA-PATH-186-RES186",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-186-RES186",
+      "order": 3
+    }
+  ]
+}

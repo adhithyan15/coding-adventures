@@ -1,0 +1,19 @@
+{
+  "chapter": 195,
+  "title": "Cake, Vinegar, Fish sauce, Ham, Birthday",
+  "label": "ch:la-cake-vinegar-fish-sauce-ham-birthday",
+  "canDo": "I can say a cake, vinegar, fish sauce, a ham and a birthday.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C195-dies-natalis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 195: I can say a cake, vinegar, fish sauce, a ham and a birthday.",
+    "assesses": [
+      "LA-LEX-C195-RES195-03",
+      "LA-LEX-C195-RES195-04",
+      "LA-LEX-C195-RES195-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C165-subrideo",
+  "pathSegment": "LA-PATH-165-ACT165",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-165-ACT165",
+      "order": 3
+    }
+  ]
+}

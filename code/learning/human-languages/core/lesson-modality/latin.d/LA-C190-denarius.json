@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C190-denarius",
+    "language": "latin",
+    "chapter": 190,
+    "sequence": 8800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:29e959fc52d790f3"
+  },
+  "findings": []
+}
