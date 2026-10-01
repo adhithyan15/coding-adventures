@@ -1,0 +1,19 @@
+{
+  "chapter": 254,
+  "title": "To steal, To discover, To serve, To bear, To dream",
+  "label": "ch:mr-to-steal-to-discover-to-serve-to-bear-to-dream",
+  "canDo": "I can say to steal, to discover, to serve, to bear and to dream.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C254-svapna-pahne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 254: I can say to steal, to discover, to serve, to bear and to dream.",
+    "assesses": [
+      "MR-LEX-C254-ACT254-03",
+      "MR-LEX-C254-ACT254-04",
+      "MR-LEX-C254-ACT254-05"
+    ]
+  }
+}

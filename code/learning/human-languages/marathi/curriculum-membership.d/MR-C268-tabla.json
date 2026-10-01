@@ -1,0 +1,11 @@
+{
+  "id": "MR-C268-tabla",
+  "pathSegment": "MR-PATH-268-VASTU268",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-268-VASTU268",
+      "order": 1
+    }
+  ]
+}

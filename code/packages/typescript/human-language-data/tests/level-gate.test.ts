@@ -283,6 +283,9 @@ describe("the gate that would have caught the A2 claim", () => {
     // Latin followed as the seventh, with chapters 161-280 (the negation, past,
     // future and practical-reading nodes, 600 headwords, 153 verbs), which moved
     // it from the A1 row of HELD to the A2 row.
+    // Marathi followed as the eighth, with chapters 159-275 (the past, future
+    // and practical-reading nodes, 585 headwords, 132 verbs), which moved it from
+    // the A1 row of HELD to the A2 row.
     expect(gate.summary.tracksWithAnyLevel).toBe(Object.values(ATTAINMENT).filter(Boolean).length);
     // Which rungs, and only those. Checking every level is the point: pinning one
     // level's count alone would pass on a gate that had also handed out a spurious

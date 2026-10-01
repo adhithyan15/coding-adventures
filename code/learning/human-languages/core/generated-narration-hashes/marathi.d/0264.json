@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:65d0f7eebb3f84c2",
+  "lessonIds": [
+    "MR-C264-vrddha",
+    "MR-C264-jule",
+    "MR-C264-sasu",
+    "MR-C264-sasre",
+    "MR-C264-javai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch264.txt",
+  "json": "marathi/narration/ch264.json",
+  "textHash": "fnv1a64:e134b55e35521ee9",
+  "jsonHash": "fnv1a64:a075e54012bf9020",
+  "findings": []
+}

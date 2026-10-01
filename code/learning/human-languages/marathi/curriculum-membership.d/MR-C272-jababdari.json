@@ -1,0 +1,11 @@
+{
+  "id": "MR-C272-jababdari",
+  "pathSegment": "MR-PATH-272-VASTU272",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-272-VASTU272",
+      "order": 3
+    }
+  ]
+}

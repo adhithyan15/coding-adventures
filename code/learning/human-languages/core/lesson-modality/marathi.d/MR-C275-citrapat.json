@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C275-citrapat",
+    "language": "marathi",
+    "chapter": 275,
+    "sequence": 15880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b406c43ca9406eaa"
+  },
+  "findings": []
+}

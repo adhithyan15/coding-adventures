@@ -1,0 +1,19 @@
+{
+  "chapter": 260,
+  "title": "Generous, Talkative, Worried, Unmarried, Married",
+  "label": "ch:mr-generous-talkative-worried-unmarried-married",
+  "canDo": "I can say generous, talkative, worried, unmarried and married.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MR-C260-vivahit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 260: I can say generous, talkative, worried, unmarried and married.",
+    "assesses": [
+      "MR-LEX-C260-GUN260-03",
+      "MR-LEX-C260-GUN260-04",
+      "MR-LEX-C260-GUN260-05"
+    ]
+  }
+}

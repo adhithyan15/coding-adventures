@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:94fe17d4dc26aa7f",
+  "lessonIds": [
+    "MR-C258-halli",
+    "MR-C258-satak",
+    "MR-C258-yug",
+    "MR-C258-ratrabhar",
+    "MR-C258-divasbhar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch258.txt",
+  "json": "marathi/narration/ch258.json",
+  "textHash": "fnv1a64:3b166f335334efa7",
+  "jsonHash": "fnv1a64:6dfcbcd973dd2ce6",
+  "findings": []
+}

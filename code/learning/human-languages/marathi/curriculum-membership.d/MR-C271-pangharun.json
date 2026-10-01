@@ -1,0 +1,11 @@
+{
+  "id": "MR-C271-pangharun",
+  "pathSegment": "MR-PATH-271-VASTU271",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-271-VASTU271",
+      "order": 2
+    }
+  ]
+}

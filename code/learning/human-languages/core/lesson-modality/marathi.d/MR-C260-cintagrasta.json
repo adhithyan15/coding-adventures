@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C260-cintagrasta",
+    "language": "marathi",
+    "chapter": 260,
+    "sequence": 14940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8394f7e3d43e8cbb"
+  },
+  "findings": []
+}

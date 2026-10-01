@@ -1,0 +1,11 @@
+{
+  "id": "MR-C271-osri",
+  "pathSegment": "MR-PATH-271-VASTU271",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-271-VASTU271",
+      "order": 3
+    }
+  ]
+}

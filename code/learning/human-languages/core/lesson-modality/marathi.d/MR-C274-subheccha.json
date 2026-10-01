@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C274-subheccha",
+    "language": "marathi",
+    "chapter": 274,
+    "sequence": 15810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d23ec90a486265c"
+  },
+  "findings": []
+}

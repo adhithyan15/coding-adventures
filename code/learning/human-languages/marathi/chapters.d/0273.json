@@ -1,0 +1,19 @@
+{
+  "chapter": 273,
+  "title": "Memory, Temperament, Behaviour, Respect, Pity",
+  "label": "ch:mr-memory-temperament-behaviour-respect-pity",
+  "canDo": "I can say a memory, temperament, behaviour, respect and pity.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C273-daya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 273: I can say a memory, temperament, behaviour, respect and pity.",
+    "assesses": [
+      "MR-LEX-C273-VASTU273-03",
+      "MR-LEX-C273-VASTU273-04",
+      "MR-LEX-C273-VASTU273-05"
+    ]
+  }
+}

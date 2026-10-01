@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C271-pangharun",
+    "language": "marathi",
+    "chapter": 271,
+    "sequence": 15680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:97d6799f6379f211"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 263,
+  "title": "Singer, Programme, Actor, Actress, Poem",
+  "label": "ch:mr-singer-programme-actor-actress-poem",
+  "canDo": "I can say a singer, a programme, an actor, an actress and a poem.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C263-kavita",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 263: I can say a singer, a programme, an actor, an actress and a poem.",
+    "assesses": [
+      "MR-LEX-C263-VASTU263-03",
+      "MR-LEX-C263-VASTU263-04",
+      "MR-LEX-C263-VASTU263-05"
+    ]
+  }
+}

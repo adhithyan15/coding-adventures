@@ -1,0 +1,19 @@
+{
+  "chapter": 264,
+  "title": "Elderly person, Twins, Mother-in-law, Father-in-law, Son-in-law",
+  "label": "ch:mr-elderly-person-twins-mother-in-law-father-in-law-son-in-law",
+  "canDo": "I can say an elderly person, twins, a mother-in-law, a father-in-law and a son-in-law.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C264-javai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 264: I can say an elderly person, twins, a mother-in-law, a father-in-law and a son-in-law.",
+    "assesses": [
+      "MR-LEX-C264-VASTU264-03",
+      "MR-LEX-C264-VASTU264-04",
+      "MR-LEX-C264-VASTU264-05"
+    ]
+  }
+}
