@@ -2341,8 +2341,8 @@ fn parse_block_style(token: &Token, source: &str) -> Result<DiagramStyle, ParseE
             }),
             "font-style" => style.font_italic = Some(match value.to_ascii_lowercase().as_str() {
                 "normal" => false,
-                "italic" => true,
-                _ => return Err(token_error(token, "block font style must be normal or italic")),
+                "italic" | "oblique" => true,
+                _ => return Err(token_error(token, "block font style must be normal, italic, or oblique")),
             }),
             "font-family" => style.font_family = Some(value.into()),
             property => return Err(token_error(token, format!("unsupported block style property {property:?}"))),
@@ -14152,7 +14152,7 @@ B//-A: reverse stick top
     #[test]
     fn treemap_resolves_class_definitions_declared_after_nodes() {
         let diagram = parse_treemap(
-            "treemap\n\"Root\"\n  \"Styled node\": 5:::accent\nclassDef accent fill:#fef3c7,fill-opacity:0.7,stroke:#b45309,stroke-opacity:0.5,opacity:0.8,stroke-width:3px,stroke-dasharray:5 2,stroke-dashoffset:-1px,border-radius:9px,color:#78350f,font-size:16px,font-weight:bolder,font-style:italic,font-family:Avenir,text-align:right,text-transform:uppercase,text-decoration:underline overline line-through,text-decoration-color:#2563eb,text-decoration-style:wavy,line-height:150%",
+            "treemap\n\"Root\"\n  \"Styled node\": 5:::accent\nclassDef accent fill:#fef3c7,fill-opacity:0.7,stroke:#b45309,stroke-opacity:0.5,opacity:0.8,stroke-width:3px,stroke-dasharray:5 2,stroke-dashoffset:-1px,border-radius:9px,color:#78350f,font-size:16px,font-weight:bolder,font-style:oblique,font-family:Avenir,text-align:right,text-transform:uppercase,text-decoration:underline overline line-through,text-decoration-color:#2563eb,text-decoration-style:wavy,line-height:150%",
         ).unwrap();
         let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
         assert_eq!(style.node.fill.as_deref(), Some("#fef3c7"));
@@ -14209,6 +14209,14 @@ B//-A: reverse stick top
         ).expect("relative font weights must parse");
         assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.node.font_weight), Some(700));
         assert_eq!(diagram.nodes[2].style.as_ref().and_then(|style| style.node.font_weight), Some(300));
+    }
+
+    #[test]
+    fn treemap_rejects_unsupported_font_style() {
+        let error = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-style:slanted",
+        ).expect_err("unsupported font style must fail");
+        assert!(error.message.contains("normal, italic, or oblique"));
     }
 }
 #[cfg(test)]
