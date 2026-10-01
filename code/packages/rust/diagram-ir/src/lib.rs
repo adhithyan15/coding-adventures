@@ -1484,7 +1484,7 @@ pub struct TreemapStyle {
     pub text_decoration: Option<TreemapTextDecoration>,
     pub text_decoration_color: Option<String>,
     pub text_decoration_style: Option<TreemapTextDecorationStyle>,
-    pub text_decoration_thickness: Option<f64>,
+    pub text_decoration_thickness: Option<TreemapTextDecorationThickness>,
     pub line_height: Option<TreemapLineHeight>,
 }
 
@@ -1503,6 +1503,9 @@ pub struct TreemapTextDecoration {
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum TreemapTextDecorationStyle { Solid, Double, Dotted, Dashed, Wavy }
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum TreemapTextDecorationThickness { Auto, FromFont, Pixels(f64), Factor(f64) }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum TreemapLineHeight {
