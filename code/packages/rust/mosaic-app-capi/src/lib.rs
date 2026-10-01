@@ -677,23 +677,17 @@ pub mod bridge {
                     Failure::panic(Box::new(String::from("boom"))).diagnostic,
                     Failure::panic(Box::new(7_u8)).diagnostic,
                 ];
-                texts.push(
-                    decode::<Value>(b"{")
-                        .err()
-                        .expect("decode fails")
-                        .diagnostic,
-                );
+                texts.push(decode::<Value>(b"{").expect_err("decode fails").diagnostic);
                 let unencodable = BTreeMap::from([(vec![1_u8], 1_u8)]);
-                texts.push(encode(&unencodable).err().expect("encode fails").diagnostic);
+                texts.push(encode(&unencodable).expect_err("encode fails").diagnostic);
                 let null_input = MosaicBytes {
                     ptr: ptr::null(),
                     len: 1,
                 };
-                texts.push(read_input(null_input).err().expect("null input").diagnostic);
+                texts.push(read_input(null_input).expect_err("null input").diagnostic);
                 texts.push(
                     prepare_output(ptr::null_mut())
-                        .err()
-                        .expect("null output")
+                        .expect_err("null output")
                         .diagnostic,
                 );
 

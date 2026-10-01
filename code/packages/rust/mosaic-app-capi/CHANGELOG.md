@@ -8,6 +8,8 @@
   of this layer's own diagnostics -- panics (string, `String` and opaque
   payloads), decode and encode failures, null input/output/handle pointers,
   and a poisoned handle -- begins that way. No behaviour change.
+  The test takes each failure with `expect_err`, which clippy's `err_expect`
+  (denied as a warning in CI) requires over `.err().expect()`.
 
 ## Unreleased
 
