@@ -1,7 +1,7 @@
 {
   "upstream": "mermaid@11.16.1",
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
-  "scope": "Native partial hierarchy slice with empty documents, upstream single-root validation, and layout/value-display configuration.",
+  "scope": "Native partial hierarchy slice with empty documents, upstream single-root validation, layout/value-display configuration, and resolved classDef paint styles.",
   "fixtures": [
     {
       "name": "empty",
@@ -17,7 +17,7 @@
     },
     {
       "name": "metadata-and-classes",
-      "source": "treemap\ntitle Allocation\naccTitle: Allocation treemap\naccDescr: Nested budget values\n\"Budget\":::primary\n  \"Engineering\": 60\n  \"Design\": 40:::accent\nclassDef accent fill:#f96"
+      "source": "treemap\ntitle Allocation\naccTitle: Allocation treemap\naccDescr: Nested budget values\n\"Budget\":::primary\n  \"Engineering\": 60\n  \"Design\": 40:::accent\nclassDef accent fill:#f96,stroke:#933,color:#311,stroke-width:3px,stroke-dasharray:5 2,font-size:16px,font-weight:bold,font-style:italic,font-family:Avenir"
     },
     {
       "name": "init-configuration",

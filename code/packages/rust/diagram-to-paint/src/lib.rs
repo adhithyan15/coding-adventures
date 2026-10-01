@@ -119,22 +119,33 @@ where
         let color_index = node.class_selector.as_ref().map_or(node.depth, |class| {
             class.bytes().fold(node.depth, |hash, byte| hash.wrapping_mul(31).wrapping_add(byte as usize))
         });
+        let fill = node.style.as_ref().and_then(|style| style.fill.clone())
+            .unwrap_or_else(|| FILLS[color_index % FILLS.len()].into());
+        let stroke = node.style.as_ref().and_then(|style| style.stroke.clone())
+            .unwrap_or_else(|| "#475569".into());
         instructions.push(PaintInstruction::Rect(PaintRect {
             base: PaintBase::default(),
             x: node.x,
             y: node.y,
             width: node.width,
             height: node.height,
-            fill: Some(FILLS[color_index % FILLS.len()].into()),
-            stroke: Some("#475569".into()),
-            stroke_width: Some(diagram.config.border_width),
+            fill: Some(fill),
+            stroke: Some(stroke),
+            stroke_width: Some(node.style.as_ref().and_then(|style| style.stroke_width).unwrap_or(diagram.config.border_width)),
             corner_radius: Some(3.0),
-            stroke_dash: None,
+            stroke_dash: node.style.as_ref().and_then(|style| style.stroke_dash.clone()),
             stroke_dash_offset: None,
         }));
         if node.width >= 44.0 && node.height >= 22.0 {
             let mut label_font = options.label_font.clone();
-            label_font.size = diagram.config.label_font_size;
+            label_font.size = node.style.as_ref().and_then(|style| style.font_size).unwrap_or(diagram.config.label_font_size);
+            if let Some(style) = &node.style {
+                label_font.weight = style.font_weight.unwrap_or(label_font.weight);
+                label_font.italic = style.font_italic.unwrap_or(label_font.italic);
+                if let Some(family) = &style.font_family { label_font.family.clone_from(family); }
+            }
+            let node_text_color = node.style.as_ref().and_then(|style| style.text_color.as_deref())
+                .map(css_to_color).unwrap_or(text_color);
             text_children.push(text_node(
                 &node.label,
                 node.x + 6.0,
@@ -142,11 +153,16 @@ where
                 (node.width * if node.has_children { 0.68 } else { 1.0 } - 12.0).max(0.0),
                 diagram.config.label_font_size * 1.4,
                 label_font,
-                text_color,
+                node_text_color,
             ));
             if diagram.config.show_values && node.height >= 42.0 {
                 let mut value_font = options.label_font.clone();
-                value_font.size = diagram.config.value_font_size;
+                value_font.size = node.style.as_ref().and_then(|style| style.font_size).unwrap_or(diagram.config.value_font_size);
+                if let Some(style) = &node.style {
+                    value_font.weight = style.font_weight.unwrap_or(value_font.weight);
+                    value_font.italic = style.font_italic.unwrap_or(value_font.italic);
+                    if let Some(family) = &style.font_family { value_font.family.clone_from(family); }
+                }
                 let (value_x, value_y, value_width) = if node.has_children {
                     (node.x + node.width * 0.68, node.y + 4.0, node.width * 0.32 - 6.0)
                 } else {
@@ -159,7 +175,7 @@ where
                     value_width.max(0.0),
                     diagram.config.value_font_size * 1.4,
                     value_font,
-                    text_color,
+                    node_text_color,
                 ));
             }
         }
@@ -6616,6 +6632,18 @@ mod tests {
                 width: 304.0,
                 height: 184.0,
                 class_selector: None,
+                style: Some(diagram_ir::DiagramStyle {
+                    fill: Some("#fef3c7".into()),
+                    stroke: Some("#b45309".into()),
+                    stroke_width: Some(3.0),
+                    stroke_dash: Some(vec![5.0, 2.0]),
+                    text_color: Some("#78350f".into()),
+                    font_size: Some(17.0),
+                    font_weight: Some(700),
+                    font_italic: Some(true),
+                    font_family: Some("Avenir".into()),
+                    corner_radius: None,
+                }),
             }],
         };
 
@@ -6626,7 +6654,12 @@ mod tests {
             Some(&"Allocation treemap".to_string())
         );
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
-            PaintInstruction::GlyphRun(run) if run.font_size == 12.0)));
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#fef3c7")
+                && rect.stroke.as_deref() == Some("#b45309")
+                && rect.stroke_width == Some(3.0)
+                && rect.stroke_dash.as_deref() == Some(&[5.0, 2.0][..]))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if run.font_size == 17.0)));
         assert_eq!(format_treemap_value(12345.0, "$0,0"), "$12,345");
         assert_eq!(format_treemap_value(12.5, ".2f"), "12.50");
     }

@@ -2289,7 +2289,7 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_treemap_to_png() {
         let diagram = parse_treemap(
-            "%%{init: {\"treemap\": {\"padding\": 4, \"nodeWidth\": 64, \"nodeHeight\": 48, \"labelFontSize\": 15, \"valueFontSize\": 11, \"valueFormat\": \"$0,0\"}}}%%\ntreemap-beta\ntitle Product Mix\naccTitle: Product allocation\n\"Products\"\n  \"Hardware\"\n    \"Laptops\": 4500\n    \"Phones\": 2500\n  \"Services\"\n    \"Support\": 2000\n    \"Training\": 1000",
+            "%%{init: {\"treemap\": {\"padding\": 4, \"nodeWidth\": 64, \"nodeHeight\": 48, \"labelFontSize\": 15, \"valueFontSize\": 11, \"valueFormat\": \"$0,0\"}}}%%\ntreemap-beta\ntitle Product Mix\naccTitle: Product allocation\n\"Products\"\n  \"Hardware\"\n    \"Laptops\": 4500\n    \"Phones\": 2500\n  \"Services\"\n    \"Support\": 2000\n    \"Training\": 1000:::accent\nclassDef accent fill:#fee2e2,stroke:#991b1b,color:#450a0a,stroke-width:3px",
         )
         .expect("treemap parse failed");
         let layout = layout_treemap(&diagram, 720.0);
@@ -2306,6 +2306,10 @@ line "Target" [35, 50, 68, 82]"##,
             resolver: &resolver,
         });
         assert_eq!((scene.width, scene.height), (640.0, 480.0));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            paint_instructions::PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some("#fee2e2")
+                    && rect.stroke.as_deref() == Some("#991b1b"))));
         assert_eq!(
             scene.metadata.as_ref().and_then(|metadata| metadata.get("treemap.valueFormat")),
             Some(&"$0,0".to_string())

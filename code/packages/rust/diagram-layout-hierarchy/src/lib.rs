@@ -10,7 +10,7 @@ use diagram_ir::{
     RailroadDiagram, RailroadElementKind, RailroadExpression,
 };
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.3.0";
 
 const PARENT_HEADER: f64 = 24.0;
 
@@ -344,6 +344,7 @@ fn layout_siblings(
             width: (node_width - node_gap * 2.0).max(0.0),
             height: (node_height - node_gap * 2.0).max(0.0),
             class_selector: node.class_selector.clone(),
+            style: node.style.clone(),
         });
         if let Some(child_indices) = child_indices {
             layout_siblings(
@@ -380,6 +381,7 @@ mod tests {
                     label: "Root".into(),
                     value: None,
                     class_selector: None,
+                    style: None,
                     parent_id: None,
                 },
                 TreemapNode {
@@ -387,6 +389,7 @@ mod tests {
                     label: "A".into(),
                     value: Some(1.0),
                     class_selector: None,
+                    style: None,
                     parent_id: Some("root".into()),
                 },
                 TreemapNode {
@@ -394,6 +397,7 @@ mod tests {
                     label: "B".into(),
                     value: Some(3.0),
                     class_selector: None,
+                    style: None,
                     parent_id: Some("root".into()),
                 },
             ],
@@ -413,7 +417,7 @@ mod tests {
         let diagram = TreemapDiagram {
             config: diagram_ir::TreemapConfig { node_width: 64.0, node_height: 48.0, diagram_padding: 20.0, padding: 4.0, ..Default::default() },
             title: None, accessibility_title: None, accessibility_description: None,
-            nodes: vec![TreemapNode { id: "root".into(), label: "Root".into(), value: Some(1.0), class_selector: None, parent_id: None }],
+            nodes: vec![TreemapNode { id: "root".into(), label: "Root".into(), value: Some(1.0), class_selector: None, style: None, parent_id: None }],
         };
         let layout = layout_treemap(&diagram, 999.0);
         assert_eq!((layout.width, layout.height), (640.0, 480.0));
