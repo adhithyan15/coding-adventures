@@ -159,11 +159,16 @@ final class BarcodeLayout1DConformanceTests: XCTestCase {
         let schema = try parseBounded(schemaData, depthLimit: 24)
         let document = try parseBounded(documentData)
         guard let schemaObject = schema as? [String: Any],
-              let object = document as? [String: Any],
-              (object["schemaVersion"] as? NSNumber)?.intValue == 1,
+              let object = document as? [String: Any]
+        else { throw FixtureError.invalid("fixture-schema-invalid-root") }
+        guard try int(object["schema_version"]) == 1,
+              object["profile"] as? String == "barcode-layout-1d-v1",
+              object["limits"] is [String: Any],
+              let errorIDs = object["error_ids"] as? [Any],
+              errorIDs.allSatisfy({ $0 is String }),
               let cases = object["cases"] as? [[String: Any]],
               (1...64).contains(cases.count)
-        else { throw FixtureError.invalid("fixture-schema-invalid") }
+        else { throw FixtureError.invalid("fixture-schema-invalid-envelope") }
         try validateLocalReferences(schemaObject)
         var identifiers = Set<String>()
         let operations = Set(["expand-binary", "expand-width", "compute-layout", "project-scene"])
@@ -200,7 +205,7 @@ final class BarcodeLayout1DConformanceTests: XCTestCase {
 
     private static func int(_ value: Any?) throws -> Int {
         guard let number = value as? NSNumber,
-              CFGetTypeID(number) != CFBooleanGetTypeID()
+              String(cString: number.objCType) != "c"
         else { throw FixtureError.invalid("fixture-schema-invalid") }
         return number.intValue
     }
@@ -208,14 +213,14 @@ final class BarcodeLayout1DConformanceTests: XCTestCase {
     private static func pattern(_ input: [String: Any]) throws -> String {
         if let value = input["pattern"] as? String { return value }
         guard let repeatValue = input["repeat"] as? [String: Any],
-              let token = repeatValue["token"] as? String,
-              let suffix = repeatValue["suffix"] as? String?
+              let token = repeatValue["token"] as? String
         else { throw FixtureError.invalid("fixture-schema-invalid") }
+        let suffix = repeatValue["suffix"] as? String ?? ""
         let count = try int(repeatValue["count"])
         guard (0...65_569).contains(count), (1...2).contains(token.unicodeScalars.count),
-              (suffix ?? "").unicodeScalars.count <= 1
+              suffix.unicodeScalars.count <= 1
         else { throw FixtureError.invalid("fixture-schema-invalid") }
-        return String(repeating: token, count: count) + (suffix ?? "")
+        return String(repeating: token, count: count) + suffix
     }
 
     private static func runs(_ input: [String: Any]) throws -> [Barcode1DRunV1] {
@@ -444,7 +449,7 @@ final class BarcodeLayout1DConformanceTests: XCTestCase {
         let prefix = Data(#"{"padding":""#.utf8)
         let suffix = Data(#""}"#.utf8)
         var exact = prefix
-        exact.append(Data(repeating: Character("x").asciiValue!, count: Self.maxFixtureBytes - prefix.count - suffix.count))
+        exact.append(Data(repeating: 0x78, count: Self.maxFixtureBytes - prefix.count - suffix.count))
         exact.append(suffix)
         XCTAssertNoThrow(try Self.parseBounded(exact))
         exact.append(0x20)

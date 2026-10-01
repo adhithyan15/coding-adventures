@@ -13,7 +13,7 @@ class TestBarcodeLayout1DConformance < Minitest::Test
   MAX_FIXTURE_DEPTH = 8
   MAX_SCHEMA_DEPTH = 24
   FIXTURE_ROOT = File.expand_path(
-    "../../../../../specs/fixtures/barcode-layout-1d-v1",
+    "../../../../specs/fixtures/barcode-layout-1d-v1",
     __dir__,
   )
 
@@ -100,7 +100,12 @@ class TestBarcodeLayout1DConformance < Minitest::Test
 
       validate_local_refs(schema)
       cases = document["cases"]
-      raise FixtureError, "fixture-schema-invalid" unless document["schemaVersion"] == 1 && cases.is_a?(Array)
+      raise FixtureError, "fixture-schema-invalid" unless document["schema_version"] == 1 &&
+        document["profile"] == "barcode-layout-1d-v1" &&
+        document["limits"].is_a?(Hash) &&
+        document["error_ids"].is_a?(Array) &&
+        document["error_ids"].all? { |item| item.is_a?(String) } &&
+        cases.is_a?(Array)
       raise FixtureError, "fixture-schema-invalid" unless cases.length.between?(1, 64)
       raise FixtureError, "fixture-schema-invalid" unless cases.all? { |item| valid_case_shape?(item) }
       raise FixtureError, "fixture-schema-invalid" unless cases.map { |item| item["id"] }.uniq.length == cases.length
@@ -258,11 +263,14 @@ class TestBarcodeLayout1DConformance < Minitest::Test
     end
 
     def canonical(value)
-      normalized = case value
-      when Array then value.map { |item| canonical(item) }
-      when Hash then value.keys.sort.to_h { |key| [key, canonical(value.fetch(key))] }
-      else value
+      normalize = lambda do |item|
+        case item
+        when Array then item.map { |child| normalize.call(child) }
+        when Hash then item.keys.sort.to_h { |key| [key, normalize.call(item.fetch(key))] }
+        else item
+        end
       end
+      normalized = normalize.call(value)
       JSON.generate(normalized, ascii_only: false)
     end
   end
@@ -300,7 +308,7 @@ class TestBarcodeLayout1DConformance < Minitest::Test
   end
 
   def test_operation_counts
-    counts = DOCUMENT.fetch("cases").tally { |test_case| test_case.fetch("operation") }
+    counts = DOCUMENT.fetch("cases").group_by { |test_case| test_case.fetch("operation") }.transform_values(&:length)
     assert_equal({"expand-binary" => 12, "expand-width" => 12, "compute-layout" => 19, "project-scene" => 13}, counts)
   end
 
