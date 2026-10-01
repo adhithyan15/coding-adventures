@@ -1,0 +1,19 @@
+{
+  "chapter": 261,
+  "title": "Company, Factory, Meeting, Officer, Owner",
+  "label": "ch:ur-company-factory-meeting-officer-owner",
+  "canDo": "I can say a company, a factory, a meeting, an officer and an owner.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C261-malik",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 261: I can say a company, a factory, a meeting, an officer and an owner.",
+    "assesses": [
+      "UR-LEX-C261-KAM261-03",
+      "UR-LEX-C261-KAM261-04",
+      "UR-LEX-C261-KAM261-05"
+    ]
+  }
+}

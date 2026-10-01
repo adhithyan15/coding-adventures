@@ -1,0 +1,11 @@
+{
+  "id": "UR-C245-barsat",
+  "pathSegment": "UR-PATH-245-VAQT245",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-245-VAQT245",
+      "order": 0
+    }
+  ]
+}

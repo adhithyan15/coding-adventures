@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:03fe938292e82ac9",
+  "lessonIds": [
+    "UR-C261-kampani",
+    "UR-C261-karkhana",
+    "UR-C261-miting",
+    "UR-C261-afsar",
+    "UR-C261-malik"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch261.txt",
+  "json": "urdu/narration/ch261.json",
+  "textHash": "fnv1a64:9688a6483f7d62bd",
+  "jsonHash": "fnv1a64:b997fab4ca4d291d",
+  "findings": []
+}

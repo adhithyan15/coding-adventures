@@ -1,0 +1,11 @@
+{
+  "id": "UR-C253-makri",
+  "pathSegment": "UR-PATH-253-CHIZ253",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-253-CHIZ253",
+      "order": 4
+    }
+  ]
+}

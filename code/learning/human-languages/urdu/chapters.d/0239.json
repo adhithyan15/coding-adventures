@@ -1,0 +1,19 @@
+{
+  "chapter": 239,
+  "title": "To swallow, To chew, To smell, To stare, To search",
+  "label": "ch:ur-to-swallow-to-chew-to-smell-to-stare-to-search",
+  "canDo": "I can say to swallow, to chew, to smell, to stare and to search.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C239-talash-karna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 239: I can say to swallow, to chew, to smell, to stare and to search.",
+    "assesses": [
+      "UR-LEX-C239-ACT239-03",
+      "UR-LEX-C239-ACT239-04",
+      "UR-LEX-C239-ACT239-05"
+    ]
+  }
+}

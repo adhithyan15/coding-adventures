@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-260-CHIZ260",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a meatball, a tikka, kadhi, a jalebi and a gulab jamun.",
+  "prerequisites": []
+}

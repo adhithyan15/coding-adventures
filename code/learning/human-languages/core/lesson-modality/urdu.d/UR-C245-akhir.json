@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C245-akhir",
+    "language": "urdu",
+    "chapter": 245,
+    "sequence": 14750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:33bd6f9e44f4782a"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C246-sarhad",
+    "language": "urdu",
+    "chapter": 246,
+    "sequence": 14800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80e579f04bfb9c8c"
+  },
+  "findings": []
+}

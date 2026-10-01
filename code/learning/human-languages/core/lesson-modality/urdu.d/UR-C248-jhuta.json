@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C248-jhuta",
+    "language": "urdu",
+    "chapter": 248,
+    "sequence": 15060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0950cfd021ba5d2"
+  },
+  "findings": []
+}

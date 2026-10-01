@@ -1,0 +1,11 @@
+{
+  "id": "UR-C250-tandur",
+  "pathSegment": "UR-PATH-250-CHIZ250",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-250-CHIZ250",
+      "order": 3
+    }
+  ]
+}

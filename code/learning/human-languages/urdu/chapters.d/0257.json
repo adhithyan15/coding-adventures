@@ -1,0 +1,19 @@
+{
+  "chapter": 257,
+  "title": "Tears, Smile, Affection, Friendship, Shame",
+  "label": "ch:ur-tears-smile-affection-friendship-shame",
+  "canDo": "I can say tears, a smile, affection, friendship and shame.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C257-sharm",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 257: I can say tears, a smile, affection, friendship and shame.",
+    "assesses": [
+      "UR-LEX-C257-CHIZ257-03",
+      "UR-LEX-C257-CHIZ257-04",
+      "UR-LEX-C257-CHIZ257-05"
+    ]
+  }
+}

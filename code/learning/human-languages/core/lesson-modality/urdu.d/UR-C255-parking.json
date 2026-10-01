@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C255-parking",
+    "language": "urdu",
+    "chapter": 255,
+    "sequence": 15450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9f17262a5dd95e4"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:3666178e0cca8dfe",
+  "lessonIds": [
+    "UR-C242-shikayat-karna",
+    "UR-C242-muqabala-karna",
+    "UR-C242-koshish-karna",
+    "UR-C242-khatm-karna",
+    "UR-C242-jari-rakhna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch242.txt",
+  "json": "urdu/narration/ch242.json",
+  "textHash": "fnv1a64:60bd91cd988e6eda",
+  "jsonHash": "fnv1a64:fe21b2d181efec4c",
+  "findings": []
+}

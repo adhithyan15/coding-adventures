@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C243-vazan",
+    "language": "urdu",
+    "chapter": 243,
+    "sequence": 14640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:555a8c16d0834a47"
+  },
+  "findings": []
+}

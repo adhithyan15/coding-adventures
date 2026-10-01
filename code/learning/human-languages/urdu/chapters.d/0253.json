@@ -1,0 +1,19 @@
+{
+  "chapter": 253,
+  "title": "Lizard, Tortoise, Crocodile, Giraffe, Spider",
+  "label": "ch:ur-lizard-tortoise-crocodile-giraffe-spider",
+  "canDo": "I can say a lizard, a tortoise, a crocodile, a giraffe and a spider.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C253-makri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 253: I can say a lizard, a tortoise, a crocodile, a giraffe and a spider.",
+    "assesses": [
+      "UR-LEX-C253-CHIZ253-03",
+      "UR-LEX-C253-CHIZ253-04",
+      "UR-LEX-C253-CHIZ253-05"
+    ]
+  }
+}

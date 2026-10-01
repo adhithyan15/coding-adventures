@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-247-SIFAT247",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "UR-EXT-247-SIFAT247"
+  ],
+  "after": []
+}

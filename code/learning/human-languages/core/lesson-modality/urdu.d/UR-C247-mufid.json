@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C247-mufid",
+    "language": "urdu",
+    "chapter": 247,
+    "sequence": 14850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e36a922c994ce482"
+  },
+  "findings": []
+}

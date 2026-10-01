@@ -1,0 +1,11 @@
+{
+  "id": "UR-C255-traifik",
+  "pathSegment": "UR-PATH-255-CHIZ255",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-255-CHIZ255",
+      "order": 1
+    }
+  ]
+}

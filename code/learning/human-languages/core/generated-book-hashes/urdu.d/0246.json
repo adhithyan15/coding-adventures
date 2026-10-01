@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:312dc80b412c9ec7",
+  "lessonIds": [
+    "UR-C246-garaj",
+    "UR-C246-har-jagah",
+    "UR-C246-age",
+    "UR-C246-sarhad",
+    "UR-C246-hukumat"
+  ],
+  "tex": "urdu/book/chapters/ch246-garage-everywhere-ahead-border-government.tex"
+}

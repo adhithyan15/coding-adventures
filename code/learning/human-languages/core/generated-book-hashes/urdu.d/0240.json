@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:3dcc76fd42f60cf8",
+  "lessonIds": [
+    "UR-C240-dhakelna",
+    "UR-C240-bujhana",
+    "UR-C240-chalana",
+    "UR-C240-rukna",
+    "UR-C240-murna"
+  ],
+  "tex": "urdu/book/chapters/ch240-to-push-to-put-out-to-drive-to-halt-to-turn.tex"
+}

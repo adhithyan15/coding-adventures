@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C256-mezban",
+    "language": "urdu",
+    "chapter": 256,
+    "sequence": 15490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01ae53e2c4f7fcf7"
+  },
+  "findings": []
+}

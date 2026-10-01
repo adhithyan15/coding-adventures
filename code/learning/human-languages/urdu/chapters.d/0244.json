@@ -1,0 +1,19 @@
+{
+  "chapter": 244,
+  "title": "Blister, Mark, Bandage, Ointment, Pharmacy",
+  "label": "ch:ur-blister-mark-bandage-ointment-pharmacy",
+  "canDo": "I can say a blister, a mark, a bandage, an ointment and a pharmacy.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "UR-C244-dava-khana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 244: I can say a blister, a mark, a bandage, an ointment and a pharmacy.",
+    "assesses": [
+      "UR-LEX-C244-SEHAT244-03",
+      "UR-LEX-C244-SEHAT244-04",
+      "UR-LEX-C244-SEHAT244-05"
+    ]
+  }
+}

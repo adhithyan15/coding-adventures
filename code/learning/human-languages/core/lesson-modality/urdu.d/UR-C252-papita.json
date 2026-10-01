@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C252-papita",
+    "language": "urdu",
+    "chapter": 252,
+    "sequence": 15260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24ffb723dbc815fb"
+  },
+  "findings": []
+}

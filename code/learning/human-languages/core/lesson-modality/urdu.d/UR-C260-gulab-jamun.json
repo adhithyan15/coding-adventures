@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C260-gulab-jamun",
+    "language": "urdu",
+    "chapter": 260,
+    "sequence": 15890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:04671c03ea5566bd"
+  },
+  "findings": []
+}

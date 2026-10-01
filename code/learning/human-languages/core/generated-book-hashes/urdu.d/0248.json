@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:05361f5ce9ecb7a1",
+  "lessonIds": [
+    "UR-C248-jhuta",
+    "UR-C248-zinda",
+    "UR-C248-murda",
+    "UR-C248-tandurust",
+    "UR-C248-maujud"
+  ],
+  "tex": "urdu/book/chapters/ch248-false-alive-dead-healthy-present.tex"
+}

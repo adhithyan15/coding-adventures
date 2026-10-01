@@ -1,0 +1,19 @@
+{
+  "chapter": 243,
+  "title": "Tiredness, Strength, Weight, Height, Clinic",
+  "label": "ch:ur-tiredness-strength-weight-height-clinic",
+  "canDo": "I can say tiredness, strength, weight, height and a clinic.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "UR-C243-klinik",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 243: I can say tiredness, strength, weight, height and a clinic.",
+    "assesses": [
+      "UR-LEX-C243-SEHAT243-03",
+      "UR-LEX-C243-SEHAT243-04",
+      "UR-LEX-C243-SEHAT243-05"
+    ]
+  }
+}

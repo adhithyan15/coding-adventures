@@ -1,0 +1,19 @@
+{
+  "chapter": 249,
+  "title": "Slim, Colourful, Peaceful, Comfortable, Precious",
+  "label": "ch:ur-slim-colourful-peaceful-comfortable-precious",
+  "canDo": "I can say slim, colourful, peaceful, comfortable and precious.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "UR-C249-qimti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 249: I can say slim, colourful, peaceful, comfortable and precious.",
+    "assesses": [
+      "UR-LEX-C249-SIFAT249-03",
+      "UR-LEX-C249-SIFAT249-04",
+      "UR-LEX-C249-SIFAT249-05"
+    ]
+  }
+}

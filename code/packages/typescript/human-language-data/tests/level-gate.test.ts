@@ -292,6 +292,9 @@ describe("the gate that would have caught the A2 claim", () => {
     // Bengali followed as the tenth, with chapters 145-262 (the past, future
     // and practical-reading nodes, 590 headwords, 123 verbs), which moved it from
     // the A1 row of HELD to the A2 row.
+    // Urdu followed as the eleventh, with chapters 144-263 (the past, future
+    // and practical-reading nodes, 600 headwords, 92 verbs), which moved it from
+    // the A1 row of HELD to the A2 row.
     expect(gate.summary.tracksWithAnyLevel).toBe(Object.values(ATTAINMENT).filter(Boolean).length);
     // Which rungs, and only those. Checking every level is the point: pinning one
     // level's count alone would pass on a gate that had also handed out a spurious

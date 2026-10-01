@@ -1,0 +1,11 @@
+{
+  "id": "UR-C262-adakar",
+  "pathSegment": "UR-PATH-262-KAM262",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-262-KAM262",
+      "order": 4
+    }
+  ]
+}

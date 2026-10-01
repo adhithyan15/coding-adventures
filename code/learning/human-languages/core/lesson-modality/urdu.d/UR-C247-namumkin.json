@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C247-namumkin",
+    "language": "urdu",
+    "chapter": 247,
+    "sequence": 14840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52ecde82473a25f6"
+  },
+  "findings": []
+}

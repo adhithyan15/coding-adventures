@@ -1,0 +1,15 @@
+{
+  "language": "urdu",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:63dae27b7a95e502",
+  "lessonIds": [
+    "UR-C247-nata",
+    "UR-C247-mumkin",
+    "UR-C247-namumkin",
+    "UR-C247-mufid",
+    "UR-C247-khatarnak",
+    "UR-R247-first-pass-words-from-chapters-239-242",
+    "UR-R247-second-pass-words-from-chapters-243-247"
+  ],
+  "tex": "urdu/book/chapters/ch247-short-possible-impossible-useful-dangerous.tex"
+}

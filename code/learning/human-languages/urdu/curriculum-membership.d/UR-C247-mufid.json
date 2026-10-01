@@ -1,0 +1,11 @@
+{
+  "id": "UR-C247-mufid",
+  "pathSegment": "UR-PATH-247-SIFAT247",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-247-SIFAT247",
+      "order": 3
+    }
+  ]
+}

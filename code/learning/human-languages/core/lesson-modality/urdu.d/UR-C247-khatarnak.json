@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C247-khatarnak",
+    "language": "urdu",
+    "chapter": 247,
+    "sequence": 14860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f35abcec9b5ae5bd"
+  },
+  "findings": []
+}

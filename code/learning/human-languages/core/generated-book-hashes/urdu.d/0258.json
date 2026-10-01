@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:03d9199e4996236f",
+  "lessonIds": [
+    "UR-C258-pechkas",
+    "UR-C258-auzar",
+    "UR-C258-paip",
+    "UR-C258-nal",
+    "UR-C258-shavar"
+  ],
+  "tex": "urdu/book/chapters/ch258-screwdriver-tool-pipe-tap-shower.tex"
+}

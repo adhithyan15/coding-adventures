@@ -1,0 +1,19 @@
+{
+  "chapter": 245,
+  "title": "Rainy season, Daily, Nowadays, At last, Birthday",
+  "label": "ch:ur-rainy-season-daily-nowadays-at-last-birthday",
+  "canDo": "I can say the rainy season, daily, nowadays, at last and a birthday.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "UR-C245-salgirah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 245: I can say the rainy season, daily, nowadays, at last and a birthday.",
+    "assesses": [
+      "UR-LEX-C245-VAQT245-03",
+      "UR-LEX-C245-VAQT245-04",
+      "UR-LEX-C245-VAQT245-05"
+    ]
+  }
+}

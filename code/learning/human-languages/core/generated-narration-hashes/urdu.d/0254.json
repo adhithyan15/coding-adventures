@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:3ae4aa3f7e496f0f",
+  "lessonIds": [
+    "UR-C254-navil",
+    "UR-C254-nazm",
+    "UR-C254-sitar",
+    "UR-C254-gitar",
+    "UR-C254-tabla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch254.txt",
+  "json": "urdu/narration/ch254.json",
+  "textHash": "fnv1a64:504a189167de91ba",
+  "jsonHash": "fnv1a64:0eac417ed6ddb188",
+  "findings": []
+}

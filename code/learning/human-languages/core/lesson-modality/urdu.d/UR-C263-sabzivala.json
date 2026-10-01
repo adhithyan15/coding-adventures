@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C263-sabzivala",
+    "language": "urdu",
+    "chapter": 263,
+    "sequence": 16040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:75b0d5231985716e"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 247,
+  "title": "Short, Possible, Impossible, Useful, Dangerous",
+  "label": "ch:ur-short-possible-impossible-useful-dangerous",
+  "canDo": "I can say short, possible, impossible, useful and dangerous.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "UR-R247-second-pass-words-from-chapters-243-247",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 247: I can say short, possible, impossible, useful and dangerous.",
+    "assesses": [
+      "UR-LEX-C247-SIFAT247-03",
+      "UR-LEX-C247-SIFAT247-04",
+      "UR-LEX-C247-SIFAT247-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C248-maujud",
+  "pathSegment": "UR-PATH-248-SIFAT248",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-248-SIFAT248",
+      "order": 4
+    }
+  ]
+}

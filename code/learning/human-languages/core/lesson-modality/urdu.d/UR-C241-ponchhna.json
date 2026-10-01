@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C241-ponchhna",
+    "language": "urdu",
+    "chapter": 241,
+    "sequence": 14560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:61200690536d0ad5"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C239-talash-karna",
+    "language": "urdu",
+    "chapter": 239,
+    "sequence": 14460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:27588057167ffe5a"
+  },
+  "findings": []
+}

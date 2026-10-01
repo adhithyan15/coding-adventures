@@ -1,0 +1,11 @@
+{
+  "id": "UR-C255-jurmana",
+  "pathSegment": "UR-PATH-255-CHIZ255",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-255-CHIZ255",
+      "order": 2
+    }
+  ]
+}

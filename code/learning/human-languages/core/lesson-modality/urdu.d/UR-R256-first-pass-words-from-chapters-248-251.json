@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R256-first-pass-words-from-chapters-248-251",
+    "language": "urdu",
+    "chapter": 256,
+    "sequence": 15510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d7745bb611cb574"
+  },
+  "findings": []
+}

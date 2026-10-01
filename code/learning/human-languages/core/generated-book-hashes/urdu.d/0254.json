@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:25b845b453876987",
+  "lessonIds": [
+    "UR-C254-navil",
+    "UR-C254-nazm",
+    "UR-C254-sitar",
+    "UR-C254-gitar",
+    "UR-C254-tabla"
+  ],
+  "tex": "urdu/book/chapters/ch254-novel-poem-sitar-guitar-tabla.tex"
+}

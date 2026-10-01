@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:9891aab2a8f45be4",
+  "lessonIds": [
+    "UR-C260-kofta",
+    "UR-C260-tikka",
+    "UR-C260-karhi",
+    "UR-C260-jalebi",
+    "UR-C260-gulab-jamun"
+  ],
+  "tex": "urdu/book/chapters/ch260-meatball-tikka-kadhi-jalebi-gulab-jamun.tex"
+}

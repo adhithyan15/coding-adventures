@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:1e0b5e69f384fdf3",
+  "lessonIds": [
+    "UR-C262-jaj",
+    "UR-C262-shagird",
+    "UR-C262-injiniyar",
+    "UR-C262-sainsdan",
+    "UR-C262-adakar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch262.txt",
+  "json": "urdu/narration/ch262.json",
+  "textHash": "fnv1a64:9ec5845e18d6de55",
+  "jsonHash": "fnv1a64:87b5ce1dc2b2c875",
+  "findings": []
+}

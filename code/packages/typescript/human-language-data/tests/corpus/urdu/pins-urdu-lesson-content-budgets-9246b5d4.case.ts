@@ -73,7 +73,10 @@ it("pins Urdu lesson-content budgets", () =>
     //
     // 1081 -> 1222: the third A2 vocabulary tranche, chapters 212-238: 135 word
     // lessons (twenty verbs) and six reviews. No idiom, sense or culture claim.
-    lessons: 1222,
+    //
+    // 1222 -> 1353: the fourth A2 vocabulary tranche, chapters 239-263: 125 word
+    // lessons (twenty verbs) and six reviews. No idiom, sense or culture claim.
+    lessons: 1353,
     idioms: 2,
     senses: 4,
     cultureClaims: 4,

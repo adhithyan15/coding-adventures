@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:f28d0a6dc9d75aca",
+  "lessonIds": [
+    "UR-C252-papita",
+    "UR-C252-khubani",
+    "UR-C252-anannas",
+    "UR-C252-nariyal",
+    "UR-C252-kaju"
+  ],
+  "tex": "urdu/book/chapters/ch252-papaya-apricot-pineapple-coconut-cashew.tex"
+}

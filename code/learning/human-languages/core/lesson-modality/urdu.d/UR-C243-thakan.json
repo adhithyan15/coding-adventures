@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C243-thakan",
+    "language": "urdu",
+    "chapter": 243,
+    "sequence": 14620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e49557c2eda08b8"
+  },
+  "findings": []
+}

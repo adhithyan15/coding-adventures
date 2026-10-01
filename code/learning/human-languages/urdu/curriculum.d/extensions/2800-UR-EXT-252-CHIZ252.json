@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-252-CHIZ252",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a papaya, an apricot, a pineapple, a coconut and a cashew.",
+  "prerequisites": []
+}

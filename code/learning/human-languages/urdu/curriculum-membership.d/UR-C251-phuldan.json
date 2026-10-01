@@ -1,0 +1,11 @@
+{
+  "id": "UR-C251-phuldan",
+  "pathSegment": "UR-PATH-251-CHIZ251",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-251-CHIZ251",
+      "order": 1
+    }
+  ]
+}

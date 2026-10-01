@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-263-KAM263",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a baker, a sweet-maker, a grocer, a fruit seller and a greengrocer.",
+  "prerequisites": []
+}

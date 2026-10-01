@@ -1,0 +1,19 @@
+{
+  "chapter": 250,
+  "title": "Cooking pot, Griddle, Wok, Clay oven, Kettle",
+  "label": "ch:ur-cooking-pot-griddle-wok-clay-oven-kettle",
+  "canDo": "I can say a cooking pot, a griddle, a wok, a clay oven and a kettle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C250-ketli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 250: I can say a cooking pot, a griddle, a wok, a clay oven and a kettle.",
+    "assesses": [
+      "UR-LEX-C250-CHIZ250-03",
+      "UR-LEX-C250-CHIZ250-04",
+      "UR-LEX-C250-CHIZ250-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 242,
+  "title": "To complain, To compete, To try, To finish, To continue",
+  "label": "ch:ur-to-complain-to-compete-to-try-to-finish-to-continue",
+  "canDo": "I can say to complain, to compete, to try, to finish and to continue.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C242-jari-rakhna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 242: I can say to complain, to compete, to try, to finish and to continue.",
+    "assesses": [
+      "UR-LEX-C242-ACT242-03",
+      "UR-LEX-C242-ACT242-04",
+      "UR-LEX-C242-ACT242-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C242-jari-rakhna",
+    "language": "urdu",
+    "chapter": 242,
+    "sequence": 14610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a2819894ad37589"
+  },
+  "findings": []
+}

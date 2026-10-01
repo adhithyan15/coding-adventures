@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C253-chhipkali",
+    "language": "urdu",
+    "chapter": 253,
+    "sequence": 15310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:defa9b006cdad3d8"
+  },
+  "findings": []
+}

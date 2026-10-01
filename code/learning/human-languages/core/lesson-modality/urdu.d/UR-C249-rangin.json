@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C249-rangin",
+    "language": "urdu",
+    "chapter": 249,
+    "sequence": 15120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3d87f8a8ee0b6beb"
+  },
+  "findings": []
+}
