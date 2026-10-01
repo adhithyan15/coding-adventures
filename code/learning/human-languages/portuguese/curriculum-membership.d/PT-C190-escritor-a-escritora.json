@@ -1,0 +1,11 @@
+{
+  "id": "PT-C190-escritor-a-escritora",
+  "pathSegment": "PT-PATH-190-COISAS190",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-190-COISAS190",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:09c7bf96dca5d7e2",
+  "lessonIds": [
+    "PT-C173-salvar",
+    "PT-C173-nascer",
+    "PT-C173-morrer",
+    "PT-C173-envelhecer",
+    "PT-C173-casar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch173.txt",
+  "json": "portuguese/narration/ch173.json",
+  "textHash": "fnv1a64:cc5da046940441cb",
+  "jsonHash": "fnv1a64:4b7351ec226ade92",
+  "findings": []
+}

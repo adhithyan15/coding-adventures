@@ -1,0 +1,11 @@
+{
+  "id": "PT-C181-vergonha",
+  "pathSegment": "PT-PATH-181-SAUDE181",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-181-SAUDE181",
+      "order": 2
+    }
+  ]
+}

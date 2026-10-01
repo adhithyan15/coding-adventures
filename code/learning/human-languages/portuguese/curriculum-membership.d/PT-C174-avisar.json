@@ -1,0 +1,11 @@
+{
+  "id": "PT-C174-avisar",
+  "pathSegment": "PT-PATH-174-VERBOS174",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-174-VERBOS174",
+      "order": 3
+    }
+  ]
+}

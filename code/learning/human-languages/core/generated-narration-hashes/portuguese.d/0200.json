@@ -1,0 +1,21 @@
+{
+  "language": "portuguese",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:edf949ba5645a4c6",
+  "lessonIds": [
+    "PT-C200-entrevista",
+    "PT-C200-carreira",
+    "PT-C200-impressora",
+    "PT-C200-revista",
+    "PT-C200-dicionario",
+    "PT-R200-first-pass-words-from-chapters-195-197",
+    "PT-R200-second-pass-words-from-chapters-198-200"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "portuguese/narration/ch200.txt",
+  "json": "portuguese/narration/ch200.json",
+  "textHash": "fnv1a64:1b591615e65e3e90",
+  "jsonHash": "fnv1a64:20a02ba1faef6eb8",
+  "findings": []
+}

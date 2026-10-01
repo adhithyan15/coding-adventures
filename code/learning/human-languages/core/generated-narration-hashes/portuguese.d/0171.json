@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 171,
+  "sourceHash": "fnv1a64:47662077576acca6",
+  "lessonIds": [
+    "PT-C171-beijar",
+    "PT-C171-cumprimentar",
+    "PT-C171-agradecer",
+    "PT-C171-convidar",
+    "PT-C171-estacionar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch171.txt",
+  "json": "portuguese/narration/ch171.json",
+  "textHash": "fnv1a64:0ac7b665ea355271",
+  "jsonHash": "fnv1a64:2e017cf01f8aa290",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:151f55141bf5457e",
+  "lessonIds": [
+    "PT-C190-atriz",
+    "PT-C190-poema",
+    "PT-C190-escritor-a-escritora",
+    "PT-C190-pintor-a-pintora",
+    "PT-C190-fotografo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch190.txt",
+  "json": "portuguese/narration/ch190.json",
+  "textHash": "fnv1a64:7dc2d6200ebdbf29",
+  "jsonHash": "fnv1a64:9503a36ebbedbc12",
+  "findings": []
+}

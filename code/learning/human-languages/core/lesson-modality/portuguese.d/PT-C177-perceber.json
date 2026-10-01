@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C177-perceber",
+    "language": "portuguese",
+    "chapter": 177,
+    "sequence": 9640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d444b7a192707f22"
+  },
+  "findings": []
+}

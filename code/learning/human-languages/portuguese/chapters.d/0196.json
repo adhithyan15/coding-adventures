@@ -1,0 +1,19 @@
+{
+  "chapter": 196,
+  "title": "Needle, Tool, Guitar, Violin, Drum",
+  "label": "ch:pt-needle-tool-guitar-violin-drum",
+  "canDo": "I can say a needle, a tool, a guitar, a violin and a drum.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C196-tambor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 196: I can say a needle, a tool, a guitar, a violin and a drum.",
+    "assesses": [
+      "PT-LEX-C196-COISAS196-03",
+      "PT-LEX-C196-COISAS196-04",
+      "PT-LEX-C196-COISAS196-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C181-ciume",
+  "pathSegment": "PT-PATH-181-SAUDE181",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-181-SAUDE181",
+      "order": 3
+    }
+  ]
+}

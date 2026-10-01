@@ -1,0 +1,11 @@
+{
+  "id": "PT-C182-de-repente",
+  "pathSegment": "PT-PATH-182-TEMPO182",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-182-TEMPO182",
+      "order": 0
+    }
+  ]
+}

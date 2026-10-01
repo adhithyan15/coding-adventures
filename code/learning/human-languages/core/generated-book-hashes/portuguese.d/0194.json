@@ -1,0 +1,15 @@
+{
+  "language": "portuguese",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:dfaf0762ffe86039",
+  "lessonIds": [
+    "PT-C194-monumento",
+    "PT-C194-estatua",
+    "PT-C194-fonte",
+    "PT-C194-portao",
+    "PT-C194-vedacao",
+    "PT-R194-first-pass-words-from-chapters-189-191",
+    "PT-R194-second-pass-words-from-chapters-192-194"
+  ],
+  "tex": "portuguese/book/chapters/ch194-monument-statue-fountain-gate-fence.tex"
+}

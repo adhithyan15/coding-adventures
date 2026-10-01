@@ -1,0 +1,11 @@
+{
+  "id": "PT-C188-pijama",
+  "pathSegment": "PT-PATH-188-COISAS188",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-188-COISAS188",
+      "order": 3
+    }
+  ]
+}

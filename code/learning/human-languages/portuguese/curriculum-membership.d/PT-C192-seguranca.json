@@ -1,0 +1,11 @@
+{
+  "id": "PT-C192-seguranca",
+  "pathSegment": "PT-PATH-192-COISAS192",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-192-COISAS192",
+      "order": 4
+    }
+  ]
+}

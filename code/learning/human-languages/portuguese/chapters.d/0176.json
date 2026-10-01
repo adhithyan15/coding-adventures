@@ -1,0 +1,19 @@
+{
+  "chapter": 176,
+  "title": "To reduce, To refuse, To risk, To solve, To fly",
+  "label": "ch:pt-to-reduce-to-refuse-to-risk-to-solve-to-fly",
+  "canDo": "I can say to reduce, to refuse, to risk, to solve and to fly.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C176-voar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 176: I can say to reduce, to refuse, to risk, to solve and to fly.",
+    "assesses": [
+      "PT-LEX-C176-VERBOS176-03",
+      "PT-LEX-C176-VERBOS176-04",
+      "PT-LEX-C176-VERBOS176-05"
+    ]
+  }
+}

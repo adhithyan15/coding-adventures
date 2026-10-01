@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:85e954a8bdffa77b",
+  "lessonIds": [
+    "PT-C180-musculo",
+    "PT-C180-polegar",
+    "PT-C180-ferida",
+    "PT-C180-cicatriz",
+    "PT-C180-constipacao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch180.txt",
+  "json": "portuguese/narration/ch180.json",
+  "textHash": "fnv1a64:cfad6d09866eb31c",
+  "jsonHash": "fnv1a64:5e827ffb48cb6680",
+  "findings": []
+}

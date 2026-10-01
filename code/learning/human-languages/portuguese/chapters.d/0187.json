@@ -1,0 +1,19 @@
+{
+  "chapter": 187,
+  "title": "Hard-working, Talkative, Worried, With a cold, Single",
+  "label": "ch:pt-hard-working-talkative-worried-with-a-cold-single",
+  "canDo": "I can say hard-working, talkative, worried, with a cold and single.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PT-C187-solteiro-solteira",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 187: I can say hard-working, talkative, worried, with a cold and single.",
+    "assesses": [
+      "PT-LEX-C187-QUAL187-03",
+      "PT-LEX-C187-QUAL187-04",
+      "PT-LEX-C187-QUAL187-05"
+    ]
+  }
+}

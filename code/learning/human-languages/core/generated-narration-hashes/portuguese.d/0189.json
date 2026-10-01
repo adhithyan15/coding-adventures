@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:75179d9f85090aae",
+  "lessonIds": [
+    "PT-C189-juiz-a-juiza",
+    "PT-C189-eleicoes",
+    "PT-C189-voto",
+    "PT-C189-politica",
+    "PT-C189-economia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch189.txt",
+  "json": "portuguese/narration/ch189.json",
+  "textHash": "fnv1a64:dda0ba396b45f0eb",
+  "jsonHash": "fnv1a64:2b0b269e274eeabc",
+  "findings": []
+}

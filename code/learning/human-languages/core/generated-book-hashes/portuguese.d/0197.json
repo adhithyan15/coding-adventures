@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:e9ba55e9c8c917ed",
+  "lessonIds": [
+    "PT-C197-paisagem",
+    "PT-C197-visita-guiada",
+    "PT-C197-rececao",
+    "PT-C197-lavandaria",
+    "PT-C197-cabeleireiro"
+  ],
+  "tex": "portuguese/book/chapters/ch197-landscape-guided-tour-reception-desk-laundry-hairdresser.tex"
+}

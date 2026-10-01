@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:b5066d6ad61aef17",
+  "lessonIds": [
+    "PT-C175-informar",
+    "PT-C175-queixar-se",
+    "PT-C175-faltar",
+    "PT-C175-merecer",
+    "PT-C175-melhorar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch175.txt",
+  "json": "portuguese/narration/ch175.json",
+  "textHash": "fnv1a64:db7e4e22d710ffd9",
+  "jsonHash": "fnv1a64:c255d8cc9c7b1cae",
+  "findings": []
+}

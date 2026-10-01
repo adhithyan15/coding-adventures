@@ -1,0 +1,19 @@
+{
+  "chapter": 173,
+  "title": "To rescue, To be born, To die, To grow old, To marry",
+  "label": "ch:pt-to-rescue-to-be-born-to-die-to-grow-old-to-marry",
+  "canDo": "I can say to rescue, to be born, to die, to grow old and to marry.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C173-casar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 173: I can say to rescue, to be born, to die, to grow old and to marry.",
+    "assesses": [
+      "PT-LEX-C173-VERBOS173-03",
+      "PT-LEX-C173-VERBOS173-04",
+      "PT-LEX-C173-VERBOS173-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C183-canto",
+    "language": "portuguese",
+    "chapter": 183,
+    "sequence": 10140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b36519bad0e2239"
+  },
+  "findings": []
+}

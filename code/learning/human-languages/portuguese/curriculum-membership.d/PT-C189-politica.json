@@ -1,0 +1,11 @@
+{
+  "id": "PT-C189-politica",
+  "pathSegment": "PT-PATH-189-COISAS189",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-189-COISAS189",
+      "order": 3
+    }
+  ]
+}

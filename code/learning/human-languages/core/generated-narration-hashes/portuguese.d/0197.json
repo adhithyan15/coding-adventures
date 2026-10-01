@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:d86b1767b5404a1f",
+  "lessonIds": [
+    "PT-C197-paisagem",
+    "PT-C197-visita-guiada",
+    "PT-C197-rececao",
+    "PT-C197-lavandaria",
+    "PT-C197-cabeleireiro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch197.txt",
+  "json": "portuguese/narration/ch197.json",
+  "textHash": "fnv1a64:d1b52244fc2c5864",
+  "jsonHash": "fnv1a64:3c7b58c27b256129",
+  "findings": []
+}

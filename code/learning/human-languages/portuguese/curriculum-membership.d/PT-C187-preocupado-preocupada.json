@@ -1,0 +1,11 @@
+{
+  "id": "PT-C187-preocupado-preocupada",
+  "pathSegment": "PT-PATH-187-QUAL187",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-187-QUAL187",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "language": "portuguese",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:7d8ddca53b7ee747",
+  "lessonIds": [
+    "PT-C188-lencol",
+    "PT-C188-gaveta",
+    "PT-C188-poltrona",
+    "PT-C188-pijama",
+    "PT-C188-botao",
+    "PT-R188-first-pass-words-from-chapters-180-183",
+    "PT-R188-second-pass-words-from-chapters-184-188"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "portuguese/narration/ch188.txt",
+  "json": "portuguese/narration/ch188.json",
+  "textHash": "fnv1a64:ea25bb30a50ee513",
+  "jsonHash": "fnv1a64:a16dfe1c6c7049d9",
+  "findings": []
+}

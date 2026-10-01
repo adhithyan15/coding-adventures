@@ -1,0 +1,19 @@
+{
+  "chapter": 191,
+  "title": "Adult, Elderly person, Twin, Mother-in-law, Father-in-law",
+  "label": "ch:pt-adult-elderly-person-twin-mother-in-law-father-in-law",
+  "canDo": "I can say an adult, an elderly person, a twin, a mother-in-law and a father-in-law.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C191-sogro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 191: I can say an adult, an elderly person, a twin, a mother-in-law and a father-in-law.",
+    "assesses": [
+      "PT-LEX-C191-COISAS191-03",
+      "PT-LEX-C191-COISAS191-04",
+      "PT-LEX-C191-COISAS191-05"
+    ]
+  }
+}

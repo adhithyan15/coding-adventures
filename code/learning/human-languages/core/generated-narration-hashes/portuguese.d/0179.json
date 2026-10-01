@@ -1,0 +1,21 @@
+{
+  "language": "portuguese",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:c93f9605dcab8f94",
+  "lessonIds": [
+    "PT-C179-agir",
+    "PT-C179-avancar",
+    "PT-C179-recuar",
+    "PT-C179-baixar",
+    "PT-C179-defender",
+    "PT-R179-first-pass-words-from-chapters-171-174",
+    "PT-R179-second-pass-words-from-chapters-175-179"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "portuguese/narration/ch179.txt",
+  "json": "portuguese/narration/ch179.json",
+  "textHash": "fnv1a64:8cb97ff8a24380a1",
+  "jsonHash": "fnv1a64:8f5a5eef6a7b7c83",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C176-recusar",
+  "pathSegment": "PT-PATH-176-VERBOS176",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-176-VERBOS176",
+      "order": 1
+    }
+  ]
+}

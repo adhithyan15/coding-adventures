@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:8d87b54aef9457e6",
+  "lessonIds": [
+    "PT-C177-valer",
+    "PT-C177-habituar-se",
+    "PT-C177-perceber",
+    "PT-C177-apressar-se",
+    "PT-C177-afastar-se"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch177.txt",
+  "json": "portuguese/narration/ch177.json",
+  "textHash": "fnv1a64:52790d58c6919fe7",
+  "jsonHash": "fnv1a64:3b7e455ac643a0d9",
+  "findings": []
+}

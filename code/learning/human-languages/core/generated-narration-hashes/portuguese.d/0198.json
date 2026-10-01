@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:b6578cf636576844",
+  "lessonIds": [
+    "PT-C198-quantidade",
+    "PT-C198-quilo",
+    "PT-C198-litro",
+    "PT-C198-pacote",
+    "PT-C198-lata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch198.txt",
+  "json": "portuguese/narration/ch198.json",
+  "textHash": "fnv1a64:d96533146d4cf38f",
+  "jsonHash": "fnv1a64:2fad8bce866e85d9",
+  "findings": []
+}

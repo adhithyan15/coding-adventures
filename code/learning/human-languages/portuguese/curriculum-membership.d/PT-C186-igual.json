@@ -1,0 +1,11 @@
+{
+  "id": "PT-C186-igual",
+  "pathSegment": "PT-PATH-186-QUAL186",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-186-QUAL186",
+      "order": 1
+    }
+  ]
+}

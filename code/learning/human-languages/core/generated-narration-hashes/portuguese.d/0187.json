@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:bf4e897a8acd5619",
+  "lessonIds": [
+    "PT-C187-trabalhador-trabalhadora",
+    "PT-C187-falador-faladora",
+    "PT-C187-preocupado-preocupada",
+    "PT-C187-constipado-constipada",
+    "PT-C187-solteiro-solteira"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch187.txt",
+  "json": "portuguese/narration/ch187.json",
+  "textHash": "fnv1a64:9f884fac7fc2faca",
+  "jsonHash": "fnv1a64:44afc24fcfc441e3",
+  "findings": []
+}

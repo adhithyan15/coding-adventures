@@ -1,0 +1,11 @@
+{
+  "id": "PT-C179-defender",
+  "pathSegment": "PT-PATH-179-VERBOS179",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-179-VERBOS179",
+      "order": 4
+    }
+  ]
+}

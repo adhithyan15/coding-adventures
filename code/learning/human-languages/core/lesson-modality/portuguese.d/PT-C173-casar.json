@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C173-casar",
+    "language": "portuguese",
+    "chapter": 173,
+    "sequence": 9460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d7fa0b57a6ff0c8d"
+  },
+  "findings": []
+}

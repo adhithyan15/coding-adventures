@@ -1,0 +1,19 @@
+{
+  "chapter": 174,
+  "title": "To cross, To increase, To decrease, To warn, To be enough",
+  "label": "ch:pt-to-cross-to-increase-to-decrease-to-warn-to-be-enough",
+  "canDo": "I can say to cross, to increase, to decrease, to warn and to be enough.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C174-bastar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 174: I can say to cross, to increase, to decrease, to warn and to be enough.",
+    "assesses": [
+      "PT-LEX-C174-VERBOS174-03",
+      "PT-LEX-C174-VERBOS174-04",
+      "PT-LEX-C174-VERBOS174-05"
+    ]
+  }
+}

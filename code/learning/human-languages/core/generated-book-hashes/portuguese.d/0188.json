@@ -1,0 +1,15 @@
+{
+  "language": "portuguese",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:c3d3e7dca7ec252a",
+  "lessonIds": [
+    "PT-C188-lencol",
+    "PT-C188-gaveta",
+    "PT-C188-poltrona",
+    "PT-C188-pijama",
+    "PT-C188-botao",
+    "PT-R188-first-pass-words-from-chapters-180-183",
+    "PT-R188-second-pass-words-from-chapters-184-188"
+  ],
+  "tex": "portuguese/book/chapters/ch188-bed-sheet-drawer-armchair-pyjamas-button.tex"
+}

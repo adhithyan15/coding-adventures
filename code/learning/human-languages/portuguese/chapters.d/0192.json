@@ -1,0 +1,19 @@
+{
+  "chapter": 192,
+  "title": "Lie, Rule, Permission, Ban, Safety",
+  "label": "ch:pt-lie-rule-permission-ban-safety",
+  "canDo": "I can say a lie, a rule, permission, a ban and safety.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C192-seguranca",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 192: I can say a lie, a rule, permission, a ban and safety.",
+    "assesses": [
+      "PT-LEX-C192-COISAS192-03",
+      "PT-LEX-C192-COISAS192-04",
+      "PT-LEX-C192-COISAS192-05"
+    ]
+  }
+}

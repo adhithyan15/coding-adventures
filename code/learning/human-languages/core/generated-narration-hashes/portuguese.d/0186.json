@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 186,
+  "sourceHash": "fnv1a64:93db45fe48f482ae",
+  "lessonIds": [
+    "PT-C186-diferente",
+    "PT-C186-igual",
+    "PT-C186-parecido-parecida",
+    "PT-C186-justo-justa",
+    "PT-C186-falso-falsa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch186.txt",
+  "json": "portuguese/narration/ch186.json",
+  "textHash": "fnv1a64:7a187f1f90188ca8",
+  "jsonHash": "fnv1a64:93e31efe01c5d836",
+  "findings": []
+}

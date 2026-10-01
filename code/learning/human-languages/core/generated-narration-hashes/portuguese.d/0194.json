@@ -1,0 +1,21 @@
+{
+  "language": "portuguese",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:9e89092e57d4c177",
+  "lessonIds": [
+    "PT-C194-monumento",
+    "PT-C194-estatua",
+    "PT-C194-fonte",
+    "PT-C194-portao",
+    "PT-C194-vedacao",
+    "PT-R194-first-pass-words-from-chapters-189-191",
+    "PT-R194-second-pass-words-from-chapters-192-194"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "portuguese/narration/ch194.txt",
+  "json": "portuguese/narration/ch194.json",
+  "textHash": "fnv1a64:10aa897a60880cb7",
+  "jsonHash": "fnv1a64:877bc3d8f601f28f",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C196-guitarra",
+    "language": "portuguese",
+    "chapter": 196,
+    "sequence": 11130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f443dc11468ae36"
+  },
+  "findings": []
+}
