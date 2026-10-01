@@ -43,6 +43,7 @@ const TELUGU_MA = DUCTUS[ductusKey("telugu", "మ")];
 const TELUGU_YA = DUCTUS[ductusKey("telugu", "య")];
 const TELUGU_RA = DUCTUS[ductusKey("telugu", "ర")];
 const TELUGU_LA = DUCTUS[ductusKey("telugu", "ల")];
+const TELUGU_LLA = DUCTUS[ductusKey("telugu", "ళ")];
 const TELUGU_VA = DUCTUS[ductusKey("telugu", "వ")];
 const TELUGU_SHA = DUCTUS[ductusKey("telugu", "శ")];
 const TELUGU_SSA = DUCTUS[ductusKey("telugu", "ష")];
@@ -104,6 +105,10 @@ describe("handwriting ductus", () => {
       // chevron and three-part lower body, while Noto's broad joins leave a
       // small font-only shoulder outside that teaching route.
       హ: 0.05,
+      // AppChant's four sourced centerlines preserve the two bowls, broad
+      // body, and separate chevron, while Noto's rounded joins leave a small
+      // font-only shoulder outside that teaching route.
+      ళ: 0.07,
     },
   );
 
@@ -190,6 +195,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("ల", TELUGU_LA.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("ళ", TELUGU_LLA.source.url)).toBe(
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("వ", TELUGU_VA.source.url)).toBe(
@@ -652,6 +660,19 @@ describe("handwriting ductus", () => {
     ).toEqual([
       "loop counterclockwise around the small upper bowl",
       "sweep down and around the broad lower bowl",
+    ]);
+  });
+
+  it("Telugu ళ preserves all four source-verified pen-down runs", () => {
+    expect(penLifts(TELUGU_LLA)).toBe(3);
+    expect(TELUGU_LLA.strokes).toHaveLength(4);
+    expect(
+      TELUGU_LLA.strokes.map((stroke) => stroke.segments[0]!.label),
+    ).toEqual([
+      "loop counterclockwise around the small inner bowl",
+      "sweep down around the broad left body and loop the lower bowl",
+      "sweep right and up around the broad outer body",
+      "draw down and up through the separate upper chevron",
     ]);
   });
 
