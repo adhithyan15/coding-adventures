@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/forme-plugin-runner-rs",
+  "capabilities": [
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "the package's compiled Rust conformance fixture",
+      "justification": "Invokes the shared FM02 harness against this package's exact compiled fixture through the public subprocess protocol."
+    },
+    {
+      "category": "proc",
+      "action": "signal",
+      "target": "the exact Rust fixture subprocess started by the shared harness",
+      "justification": "Allows the shared harness to retire only its exact fixture after malformed, flooding, timed-out, or completed protocol sessions."
+    }
+  ],
+  "justification": "The shipped runner owns no ambient process authority; only its cross-process conformance test executes and retires the package fixture."
+}

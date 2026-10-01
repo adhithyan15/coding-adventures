@@ -3,9 +3,9 @@
 > **Status:** Host/wire boundary implemented in FM-B014; bounded authority
 > persistence implemented in FM-B048; atomic installation implemented in FM-B049;
 > the TypeScript runtime adapter implemented in FM-B050; the reusable runner
-> conformance harness implemented in FM-B053; the Python runtime implemented in
-> FM-B054; and the remaining Rust runtime and OS sandboxes tracked in
-> FM-B055/FM-B051–FM-B052 and the FM-B015
+> conformance harness implemented in FM-B053; the Python and Rust runtimes
+> implemented in FM-B054/FM-B055 and closed by FM-B051; and the remaining OS
+> sandboxes tracked in FM-B052 and the FM-B015
 > completion milestone.
 > Read alongside FM00 (vision), FM01 (kernel), and FM03 (orchestrator).
 > **Scope:** Everything required to load third-party Forme plugins
@@ -31,8 +31,8 @@
 | TypeScript runner | Implemented | FM-B050 supplies the bounded reference SDK and host-launched end-to-end fixture. |
 | Shared runner conformance | Implemented | FM-B053 provides canonical vectors and a language-neutral subprocess driver, with the TypeScript runner passing the extracted suite. |
 | Python runner | Implemented | FM-B054 provides the first non-TypeScript SDK and passes the complete shared corpus without fixture changes. |
-| Rust runner | Active | FM-B055 follows FM-B054 and must pass the unchanged shared corpus. |
-| OS sandbox profiles | Blocked | FM-B052 follows atomic installation and runner conformance. |
+| Rust runner | Implemented | FM-B055 provides typed stage/context APIs, bounded protocol concurrency and streams, and passes the complete shared corpus without fixture changes. |
+| OS sandbox profiles | Active | FM-B052 follows completed atomic installation and runner conformance. |
 | Install/trust CLI | Blocked | FM-B049 owns the install core; FM07 exposes it after the FM-B015 milestone. |
 
 ---
@@ -1659,27 +1659,44 @@ if __name__ == "__main__":
 For `binary` runtime plugins:
 
 ```rust
-use forme_plugin_runner::{run_plugin, Stage, StageContext, Kinds};
+use async_trait::async_trait;
+use forme_plugin_runner_rs::{run_plugin, RunnerOptions, Stage, StageContext,
+    StageError, StageInput, StageMetadata, StageOutput, WireValue};
 
 struct MyStage;
+#[async_trait]
 impl Stage for MyStage {
-    const NAME: &str = "@me/my-plugin";
-    const VERSION: &str = "1.0.0";
-    const API_VERSION: u32 = 1;
-    const CONSUMES: &str = "ContentSource";
-    const PRODUCES: &str = "ContentNode";
+    type Input = ContentSource;
+    type Output = ContentNode;
 
-    async fn run(&self, input: ContentSource, _config: Config, ctx: &StageContext) -> Result<ContentNode, StageError> {
-        let bytes = ctx.storage().read_file(&input.path).await?;
-        // ...
+    fn metadata(&self) -> StageMetadata {
+        StageMetadata::new("@me/my-plugin", "1.0.0", 1,
+            "ContentSource", "ContentNode", ["storage:read"])
+    }
+
+    async fn run(&self, input: StageInput<ContentSource>, _config: WireValue,
+                 ctx: &StageContext) -> Result<StageOutput<ContentNode>, StageError> {
+        let StageInput::Single(input) = input else {
+            return Err(StageError::new("INVALID_INPUT_SHAPE", "expected one source"));
+        };
+        let bytes = ctx.storage().read(&input.path).await?;
+        Ok(StageOutput::Single(parse(bytes)?))
     }
 }
 
 #[tokio::main]
 async fn main() {
-    run_plugin(MyStage).await;
+    run_plugin(MyStage, RunnerOptions::from_args()).await.unwrap();
 }
 ```
+
+`StageInput<T>` and `StageOutput<T>` make all four single/stream shape
+combinations explicit without erasing the authored `T`. `StageContext` is a
+typed, asynchronous facade over the host-mediated capability methods; it owns
+no ambient filesystem, environment, network, clock, or process authority.
+The runner accepts only canonical bounded `Content-Length` JSON-RPC frames,
+keeps at most one active invocation, bounds every queue and retained stream,
+redacts internal failures, and terminates non-zero when the peer is malformed.
 
 ### 13.4 Conformance suite
 
