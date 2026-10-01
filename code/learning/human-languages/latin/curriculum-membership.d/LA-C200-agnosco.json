@@ -1,0 +1,11 @@
+{
+  "id": "LA-C200-agnosco",
+  "pathSegment": "LA-PATH-200-ACT200",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-200-ACT200",
+      "order": 2
+    }
+  ]
+}

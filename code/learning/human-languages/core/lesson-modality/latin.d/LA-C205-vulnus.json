@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C205-vulnus",
+    "language": "latin",
+    "chapter": 205,
+    "sequence": 9860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:872c7436967b4be7"
+  },
+  "findings": []
+}

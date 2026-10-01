@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C206-anima",
+    "language": "latin",
+    "chapter": 206,
+    "sequence": 10100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:79a91954218305a4"
+  },
+  "findings": []
+}

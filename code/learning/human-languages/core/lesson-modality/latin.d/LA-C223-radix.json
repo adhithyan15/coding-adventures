@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C223-radix",
+    "language": "latin",
+    "chapter": 223,
+    "sequence": 11160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16140aaac5ac91ff"
+  },
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:3c8d64321aa4d09e",
+  "lessonIds": [
+    "LA-C223-caligo",
+    "LA-C223-aura",
+    "LA-C223-radix",
+    "LA-C223-spina",
+    "LA-C223-seges",
+    "LA-R223-first-pass-words-from-chapters-215-218",
+    "LA-R223-second-pass-words-from-chapters-219-223"
+  ],
+  "tex": "latin/book/chapters/ch223-mist-breeze-root-thorn-crop.tex"
+}

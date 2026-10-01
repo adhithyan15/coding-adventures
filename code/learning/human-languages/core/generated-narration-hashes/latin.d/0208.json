@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:d087e8724f10f29d",
+  "lessonIds": [
+    "LA-C208-denique",
+    "LA-C208-postremo",
+    "LA-C208-illico",
+    "LA-C208-quondam",
+    "LA-C208-iamdudum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch208.txt",
+  "json": "latin/narration/ch208.json",
+  "textHash": "fnv1a64:befd00651c7af3bb",
+  "jsonHash": "fnv1a64:197b943c60717a4f",
+  "findings": []
+}

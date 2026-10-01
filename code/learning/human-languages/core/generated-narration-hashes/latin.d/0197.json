@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:5f65fb6cdf73c8a2",
+  "lessonIds": [
+    "LA-C197-osculor",
+    "LA-C197-saluto",
+    "LA-C197-invito",
+    "LA-C197-explico",
+    "LA-C197-interpretor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch197.txt",
+  "json": "latin/narration/ch197.json",
+  "textHash": "fnv1a64:7bfc8df975045ad6",
+  "jsonHash": "fnv1a64:b310838ec2ca6b9b",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C211-sponte",
+  "pathSegment": "LA-PATH-211-CAUSA211",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-211-CAUSA211",
+      "order": 2
+    }
+  ]
+}

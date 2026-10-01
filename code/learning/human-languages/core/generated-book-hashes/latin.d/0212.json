@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:ce8a0b43afbee73a",
+  "lessonIds": [
+    "LA-C212-curiosus",
+    "LA-C212-invidus",
+    "LA-C212-anxius",
+    "LA-C212-placidus",
+    "LA-C212-tacitus"
+  ],
+  "tex": "latin/book/chapters/ch212-inquisitive-envious-anxious-peaceful-silent.tex"
+}

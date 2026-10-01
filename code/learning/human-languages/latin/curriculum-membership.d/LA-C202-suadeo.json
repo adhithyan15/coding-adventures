@@ -1,0 +1,11 @@
+{
+  "id": "LA-C202-suadeo",
+  "pathSegment": "LA-PATH-202-ACT202",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-202-ACT202",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C202-tremo",
+  "pathSegment": "LA-PATH-202-ACT202",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-202-ACT202",
+      "order": 1
+    }
+  ]
+}

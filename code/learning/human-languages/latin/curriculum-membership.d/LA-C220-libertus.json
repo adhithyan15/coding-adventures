@@ -1,0 +1,11 @@
+{
+  "id": "LA-C220-libertus",
+  "pathSegment": "LA-PATH-220-RES220",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-220-RES220",
+      "order": 1
+    }
+  ]
+}

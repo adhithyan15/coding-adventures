@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C198-veto",
+    "language": "latin",
+    "chapter": 198,
+    "sequence": 9510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee91b6443248c4f7"
+  },
+  "findings": []
+}

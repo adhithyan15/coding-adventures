@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:2f60c60a04ae7bbe",
+  "lessonIds": [
+    "LA-C225-gemma",
+    "LA-C225-vestimentum",
+    "LA-C225-solea",
+    "LA-C225-sinus",
+    "LA-C225-culcita"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch225.txt",
+  "json": "latin/narration/ch225.json",
+  "textHash": "fnv1a64:0793120ba2482998",
+  "jsonHash": "fnv1a64:0822e18c35525414",
+  "findings": []
+}

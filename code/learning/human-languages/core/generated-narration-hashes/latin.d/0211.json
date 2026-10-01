@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:bfacf34188228421",
+  "lessonIds": [
+    "LA-C211-omnino",
+    "LA-C211-vix",
+    "LA-C211-sponte",
+    "LA-C211-frustra",
+    "LA-C211-rursus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch211.txt",
+  "json": "latin/narration/ch211.json",
+  "textHash": "fnv1a64:a8d2505dcb3a8b51",
+  "jsonHash": "fnv1a64:736db3a2eb080424",
+  "findings": []
+}

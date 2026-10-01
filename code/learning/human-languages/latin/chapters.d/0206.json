@@ -1,0 +1,19 @@
+{
+  "chapter": 206,
+  "title": "Breath, Memory, Wisdom, Talent, Habit",
+  "label": "ch:la-breath-memory-wisdom-talent-habit",
+  "canDo": "I can say breath, memory, wisdom, talent and a habit.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "LA-C206-consuetudo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 206: I can say breath, memory, wisdom, talent and a habit.",
+    "assesses": [
+      "LA-LEX-C206-VALE206-03",
+      "LA-LEX-C206-VALE206-04",
+      "LA-LEX-C206-VALE206-05"
+    ]
+  }
+}

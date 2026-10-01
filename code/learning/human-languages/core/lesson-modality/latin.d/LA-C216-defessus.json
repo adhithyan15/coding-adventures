@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C216-defessus",
+    "language": "latin",
+    "chapter": 216,
+    "sequence": 10820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0aa9e4a0117ce82"
+  },
+  "findings": []
+}

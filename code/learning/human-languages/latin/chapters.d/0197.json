@@ -1,0 +1,19 @@
+{
+  "chapter": 197,
+  "title": "To kiss, To greet, To invite, To explain, To interpret",
+  "label": "ch:la-to-kiss-to-greet-to-invite-to-explain-to-interpret",
+  "canDo": "I can say to kiss, to greet, to invite, to explain and to interpret.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C197-interpretor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 197: I can say to kiss, to greet, to invite, to explain and to interpret.",
+    "assesses": [
+      "LA-LEX-C197-ACT197-03",
+      "LA-LEX-C197-ACT197-04",
+      "LA-LEX-C197-ACT197-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 228,
+  "title": "Woodland pass, Peak, Yoke, Whirlpool, Order",
+  "label": "ch:la-woodland-pass-peak-yoke-whirlpool-order",
+  "canDo": "I can say a woodland pass, a peak, a yoke, a whirlpool and order.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-R228-second-pass-words-from-chapters-226-228",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 228: I can say a woodland pass, a peak, a yoke, a whirlpool and order.",
+    "assesses": [
+      "LA-LEX-C228-RES228-03",
+      "LA-LEX-C228-RES228-04",
+      "LA-LEX-C228-RES228-05"
+    ]
+  }
+}

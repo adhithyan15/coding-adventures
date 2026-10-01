@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C216-calvus",
+    "language": "latin",
+    "chapter": 216,
+    "sequence": 10790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d6840c8a185f1657"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C200-tollo",
+    "language": "latin",
+    "chapter": 200,
+    "sequence": 9610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:65842c59922d0651"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:d7c89889fcf15b0c",
+  "lessonIds": [
+    "LA-C222-aurum",
+    "LA-C222-argentum",
+    "LA-C222-aes",
+    "LA-C222-ferrum",
+    "LA-C222-plumbum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch222.txt",
+  "json": "latin/narration/ch222.json",
+  "textHash": "fnv1a64:3fcb53218e669501",
+  "jsonHash": "fnv1a64:b5fd498daea9e959",
+  "findings": []
+}

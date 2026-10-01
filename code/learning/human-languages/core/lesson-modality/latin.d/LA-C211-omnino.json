@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C211-omnino",
+    "language": "latin",
+    "chapter": 211,
+    "sequence": 10350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0abfc4b3695fec11"
+  },
+  "findings": []
+}

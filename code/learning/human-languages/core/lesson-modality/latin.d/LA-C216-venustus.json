@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C216-venustus",
+    "language": "latin",
+    "chapter": 216,
+    "sequence": 10810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea32d9b140d76939"
+  },
+  "findings": []
+}

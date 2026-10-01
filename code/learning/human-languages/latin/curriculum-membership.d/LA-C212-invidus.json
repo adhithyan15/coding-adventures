@@ -1,0 +1,11 @@
+{
+  "id": "LA-C212-invidus",
+  "pathSegment": "LA-PATH-212-QUAL212",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-212-QUAL212",
+      "order": 1
+    }
+  ]
+}

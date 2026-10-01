@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:730a07f8e3cb7b39",
+  "lessonIds": [
+    "LA-C218-passus",
+    "LA-C218-testis",
+    "LA-C218-reus",
+    "LA-C218-poena",
+    "LA-C218-crimen"
+  ],
+  "tex": "latin/book/chapters/ch218-pace-witness-defendant-punishment-charge.tex"
+}

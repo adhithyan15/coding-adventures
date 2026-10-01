@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:adc476368f1ffcf0",
+  "lessonIds": [
+    "LA-C199-comparo",
+    "LA-C199-persuadeo",
+    "LA-C199-reprehendo",
+    "LA-C199-partior",
+    "LA-C199-vito"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch199.txt",
+  "json": "latin/narration/ch199.json",
+  "textHash": "fnv1a64:21bd8cb42c03879b",
+  "jsonHash": "fnv1a64:4dcb0a2e13cbae67",
+  "findings": []
+}

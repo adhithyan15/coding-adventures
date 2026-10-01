@@ -1,0 +1,11 @@
+{
+  "id": "LA-C220-vidua",
+  "pathSegment": "LA-PATH-220-RES220",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-220-RES220",
+      "order": 4
+    }
+  ]
+}

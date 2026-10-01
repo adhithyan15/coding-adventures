@@ -1,0 +1,11 @@
+{
+  "id": "LA-C198-nubo",
+  "pathSegment": "LA-PATH-198-ACT198",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-198-ACT198",
+      "order": 3
+    }
+  ]
+}

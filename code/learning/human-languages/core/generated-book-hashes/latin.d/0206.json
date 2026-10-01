@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:2e3db3c465ecf3be",
+  "lessonIds": [
+    "LA-C206-anima",
+    "LA-C206-memoria",
+    "LA-C206-sapientia",
+    "LA-C206-ingenium",
+    "LA-C206-consuetudo"
+  ],
+  "tex": "latin/book/chapters/ch206-breath-memory-wisdom-talent-habit.tex"
+}

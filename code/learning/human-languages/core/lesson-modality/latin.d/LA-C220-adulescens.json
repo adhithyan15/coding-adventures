@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C220-adulescens",
+    "language": "latin",
+    "chapter": 220,
+    "sequence": 11020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8ca9f0808e60c52"
+  },
+  "findings": []
+}

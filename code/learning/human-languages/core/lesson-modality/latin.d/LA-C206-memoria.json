@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C206-memoria",
+    "language": "latin",
+    "chapter": 206,
+    "sequence": 10110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6177cdf1d45ab328"
+  },
+  "findings": []
+}

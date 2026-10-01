@@ -1,0 +1,11 @@
+{
+  "id": "LA-C218-reus",
+  "pathSegment": "LA-PATH-218-RES218",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-218-RES218",
+      "order": 2
+    }
+  ]
+}

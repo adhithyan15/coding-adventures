@@ -1,0 +1,19 @@
+{
+  "chapter": 220,
+  "title": "Maidservant, Freedman, Newcomer, Young person, Widow",
+  "label": "ch:la-maidservant-freedman-newcomer-young-person-widow",
+  "canDo": "I can say a maidservant, a freedman, a newcomer, a young person and a widow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C220-vidua",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 220: I can say a maidservant, a freedman, a newcomer, a young person and a widow.",
+    "assesses": [
+      "LA-LEX-C220-RES220-03",
+      "LA-LEX-C220-RES220-04",
+      "LA-LEX-C220-RES220-05"
+    ]
+  }
+}

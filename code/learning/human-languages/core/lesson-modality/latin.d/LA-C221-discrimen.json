@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C221-discrimen",
+    "language": "latin",
+    "chapter": 221,
+    "sequence": 11050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d815a4b05f20a513"
+  },
+  "findings": []
+}

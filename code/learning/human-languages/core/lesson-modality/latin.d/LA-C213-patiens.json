@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C213-patiens",
+    "language": "latin",
+    "chapter": 213,
+    "sequence": 10470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:980d77712430274e"
+  },
+  "findings": []
+}

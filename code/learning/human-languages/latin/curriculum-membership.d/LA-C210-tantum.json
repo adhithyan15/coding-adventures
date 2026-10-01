@@ -1,0 +1,11 @@
+{
+  "id": "LA-C210-tantum",
+  "pathSegment": "LA-PATH-210-CAUSA210",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-210-CAUSA210",
+      "order": 4
+    }
+  ]
+}

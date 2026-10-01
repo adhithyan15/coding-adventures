@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:73d6fafb36cb3cdd",
+  "lessonIds": [
+    "LA-C218-passus",
+    "LA-C218-testis",
+    "LA-C218-reus",
+    "LA-C218-poena",
+    "LA-C218-crimen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch218.txt",
+  "json": "latin/narration/ch218.json",
+  "textHash": "fnv1a64:e1adc3a711f8ff70",
+  "jsonHash": "fnv1a64:430f5113dbc0f952",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C209-provincia",
+  "pathSegment": "LA-PATH-209-LOC209",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-209-LOC209",
+      "order": 1
+    }
+  ]
+}

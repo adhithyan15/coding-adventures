@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:558d2aac1fc5cea0",
+  "lessonIds": [
+    "LA-C221-regula",
+    "LA-C221-discrimen",
+    "LA-C221-eventus",
+    "LA-C221-fortuna",
+    "LA-C221-casus"
+  ],
+  "tex": "latin/book/chapters/ch221-rule-difference-outcome-fortune-accident.tex"
+}

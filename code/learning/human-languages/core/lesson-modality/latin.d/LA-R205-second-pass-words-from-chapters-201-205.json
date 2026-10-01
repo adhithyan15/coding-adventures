@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R205-second-pass-words-from-chapters-201-205",
+    "language": "latin",
+    "chapter": 205,
+    "sequence": 9920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d32cb2523c5e21f6"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 214,
+  "title": "Savage, Wild, Of the home, Rare, Frequent",
+  "label": "ch:la-savage-wild-of-the-home-rare-frequent",
+  "canDo": "I can say savage, wild, of the home, rare and frequent.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-R214-second-pass-words-from-chapters-210-214",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 214: I can say savage, wild, of the home, rare and frequent.",
+    "assesses": [
+      "LA-LEX-C214-QUAL214-03",
+      "LA-LEX-C214-QUAL214-04",
+      "LA-LEX-C214-QUAL214-05"
+    ]
+  }
+}

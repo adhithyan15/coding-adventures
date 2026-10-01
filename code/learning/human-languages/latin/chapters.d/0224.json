@@ -1,0 +1,19 @@
+{
+  "chapter": 224,
+  "title": "Lizard, Wild boar, Billy goat, Lamb, Calf",
+  "label": "ch:la-lizard-wild-boar-billy-goat-lamb-calf",
+  "canDo": "I can say a lizard, a wild boar, a billy goat, a lamb and a calf.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C224-vitulus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 224: I can say a lizard, a wild boar, a billy goat, a lamb and a calf.",
+    "assesses": [
+      "LA-LEX-C224-RES224-03",
+      "LA-LEX-C224-RES224-04",
+      "LA-LEX-C224-RES224-05"
+    ]
+  }
+}

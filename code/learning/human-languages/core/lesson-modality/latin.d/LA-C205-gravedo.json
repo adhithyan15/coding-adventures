@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C205-gravedo",
+    "language": "latin",
+    "chapter": 205,
+    "sequence": 9880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b745e491ea083f6"
+  },
+  "findings": []
+}

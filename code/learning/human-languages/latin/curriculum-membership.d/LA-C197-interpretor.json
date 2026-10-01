@@ -1,0 +1,11 @@
+{
+  "id": "LA-C197-interpretor",
+  "pathSegment": "LA-PATH-197-ACT197",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-197-ACT197",
+      "order": 4
+    }
+  ]
+}

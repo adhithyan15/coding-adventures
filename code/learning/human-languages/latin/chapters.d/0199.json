@@ -1,0 +1,19 @@
+{
+  "chapter": 199,
+  "title": "To compare, To persuade, To blame, To share, To avoid",
+  "label": "ch:la-to-compare-to-persuade-to-blame-to-share-to-avoid",
+  "canDo": "I can say to compare, to persuade, to blame, to share and to avoid.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C199-vito",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 199: I can say to compare, to persuade, to blame, to share and to avoid.",
+    "assesses": [
+      "LA-LEX-C199-ACT199-03",
+      "LA-LEX-C199-ACT199-04",
+      "LA-LEX-C199-ACT199-05"
+    ]
+  }
+}

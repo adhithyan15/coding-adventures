@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C205-medicamentum",
+    "language": "latin",
+    "chapter": 205,
+    "sequence": 9890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0eee028b8653ecee"
+  },
+  "findings": []
+}

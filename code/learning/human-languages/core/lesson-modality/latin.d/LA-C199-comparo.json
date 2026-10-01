@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C199-comparo",
+    "language": "latin",
+    "chapter": 199,
+    "sequence": 9560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fecb9f9f0f827991"
+  },
+  "findings": []
+}

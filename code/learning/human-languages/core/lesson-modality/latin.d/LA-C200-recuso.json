@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C200-recuso",
+    "language": "latin",
+    "chapter": 200,
+    "sequence": 9640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01d6af498fc38862"
+  },
+  "findings": []
+}

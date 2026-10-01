@@ -1,0 +1,11 @@
+{
+  "id": "LA-C205-vulnus",
+  "pathSegment": "LA-PATH-205-VALE205",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-205-VALE205",
+      "order": 0
+    }
+  ]
+}

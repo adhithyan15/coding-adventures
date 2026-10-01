@@ -1,0 +1,11 @@
+{
+  "id": "LA-C226-quaestio",
+  "pathSegment": "LA-PATH-226-RES226",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-226-RES226",
+      "order": 3
+    }
+  ]
+}

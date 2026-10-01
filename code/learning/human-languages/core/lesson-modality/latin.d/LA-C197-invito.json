@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C197-invito",
+    "language": "latin",
+    "chapter": 197,
+    "sequence": 9480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d8c31565c1ac675"
+  },
+  "findings": []
+}

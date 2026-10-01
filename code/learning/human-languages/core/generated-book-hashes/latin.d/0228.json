@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:3ec450f70059b103",
+  "lessonIds": [
+    "LA-C228-saltus",
+    "LA-C228-cacumen",
+    "LA-C228-iugum",
+    "LA-C228-vertex",
+    "LA-C228-ordo",
+    "LA-R228-first-pass-words-from-chapters-224-225",
+    "LA-R228-second-pass-words-from-chapters-226-228"
+  ],
+  "tex": "latin/book/chapters/ch228-woodland-pass-peak-yoke-whirlpool-order.tex"
+}

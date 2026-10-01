@@ -1,0 +1,19 @@
+{
+  "chapter": 219,
+  "title": "Reputation, Messenger, Show, Actor, Story",
+  "label": "ch:la-reputation-messenger-show-actor-story",
+  "canDo": "I can say reputation, a messenger, a show, an actor and a story.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C219-fabula",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 219: I can say reputation, a messenger, a show, an actor and a story.",
+    "assesses": [
+      "LA-LEX-C219-RES219-03",
+      "LA-LEX-C219-RES219-04",
+      "LA-LEX-C219-RES219-05"
+    ]
+  }
+}
