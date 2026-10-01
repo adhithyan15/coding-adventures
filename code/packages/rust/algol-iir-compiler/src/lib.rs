@@ -14063,6 +14063,22 @@ mod tests {
     }
 
     #[test]
+    fn al4_literal_string_predicates_select_step_loop_bounds() {
+        let module = compile_source(
+            "begin integer i, total; total := 0; for i := if 'ALPHA' < 'BETA' then 1 else 4 step if 'ALPHA' < 'BETA' then 1 else 2 until if 'ALPHA' < 'BETA' then 3 else 4 do total := total + i; print(total + 0.25); total := 0; for i := if 'BETA' < 'ALPHA' then 1 else 2 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'BETA' < 'ALPHA' then 5 else 4 do total := total + i; print(total + 0.25) end",
+            "test",
+        )
+        .expect("literal string predicates may select exact finite step-loop bounds");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["6.25", "9.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
     fn al4_tracked_zero_trip_step_loop_does_not_initialize_string() {
         let err = compile_source(
             "begin integer i, first, last; string s; first := 2; last := 1; for i := first step 1 until last do s := 'OK'; print(s) end",

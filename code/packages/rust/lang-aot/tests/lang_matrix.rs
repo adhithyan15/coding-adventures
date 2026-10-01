@@ -2898,6 +2898,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — true and false literal string predicates may select exact
+    // initial, step, and limit expressions for finite step loops.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, total; total := 0; for i := if 'ALPHA' < 'BETA' then 1 else 4 step if 'ALPHA' < 'BETA' then 1 else 2 until if 'ALPHA' < 'BETA' then 3 else 4 do total := total + i; print(total + 0.25); total := 0; for i := if 'BETA' < 'ALPHA' then 1 else 2 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'BETA' < 'ALPHA' then 5 else 4 do total := total + i; print(total + 0.25) end",
+        expect: Expect::Stdout("6.259.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a straight-line boolean snapshot can select a statement
     // branch that establishes definite string initialization.
     Prog {
@@ -13765,6 +13774,31 @@ fn algol_tracked_step_bounds_run_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but tracked step bounds did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_step_bounds_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("for i := if 'ALPHA' < 'BETA' then 1 else 4 step")
+        })
+        .expect("the literal-string-selected step bounds must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected step bounds did not run"
             );
             continue;
         };
