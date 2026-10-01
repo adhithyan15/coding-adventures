@@ -9,8 +9,8 @@
     "profile": { "const": "barcode-layout-1d-v1-targets" },
     "targets": {
       "type": "array",
-      "minItems": 8,
-      "maxItems": 8,
+      "minItems": 12,
+      "maxItems": 12,
       "items": { "$ref": "#/$defs/target" }
     }
   },
@@ -71,6 +71,10 @@
           "then": { "properties": { "package_root": { "const": "code/packages/csharp/barcode-layout-1d" } } }
         },
         {
+          "if": { "properties": { "language": { "const": "elixir" } }, "required": ["language"] },
+          "then": { "properties": { "package_root": { "const": "code/packages/elixir/barcode_layout_1d" } } }
+        },
+        {
           "if": { "properties": { "language": { "const": "fsharp" } }, "required": ["language"] },
           "then": { "properties": { "package_root": { "const": "code/packages/fsharp/barcode-layout-1d" } } }
         },
@@ -83,6 +87,10 @@
           "then": { "properties": { "package_root": { "const": "code/packages/haskell/barcode-layout-1d" } } }
         },
         {
+          "if": { "properties": { "language": { "const": "lua" } }, "required": ["language"] },
+          "then": { "properties": { "package_root": { "const": "code/packages/lua/barcode_layout_1d" } } }
+        },
+        {
           "if": { "properties": { "language": { "const": "perl" } }, "required": ["language"] },
           "then": { "properties": { "package_root": { "const": "code/packages/perl/barcode-layout-1d" } } }
         },
@@ -91,8 +99,16 @@
           "then": { "properties": { "package_root": { "const": "code/packages/python/barcode-layout-1d" } } }
         },
         {
+          "if": { "properties": { "language": { "const": "ruby" } }, "required": ["language"] },
+          "then": { "properties": { "package_root": { "const": "code/packages/ruby/barcode_layout_1d" } } }
+        },
+        {
           "if": { "properties": { "language": { "const": "rust" } }, "required": ["language"] },
           "then": { "properties": { "package_root": { "const": "code/packages/rust/barcode-layout-1d" } } }
+        },
+        {
+          "if": { "properties": { "language": { "const": "swift" } }, "required": ["language"] },
+          "then": { "properties": { "package_root": { "const": "code/packages/swift/BarcodeLayout1D" } } }
         },
         {
           "if": { "properties": { "language": { "const": "typescript" } }, "required": ["language"] },
@@ -100,10 +116,10 @@
         }
       ],
       "properties": {
-        "language": { "enum": ["csharp", "fsharp", "go", "haskell", "perl", "python", "rust", "typescript"] },
+        "language": { "enum": ["csharp", "elixir", "fsharp", "go", "haskell", "lua", "perl", "python", "ruby", "rust", "swift", "typescript"] },
         "status": { "enum": ["pending-adoption", "conformant"] },
         "api_family": { "enum": ["modern", "legacy"] },
-        "package_root": { "type": "string", "pattern": "^code/packages/[^/]+/barcode-layout-1d$" },
+        "package_root": { "type": "string", "pattern": "^code/packages/[^/]+/[^/]+$" },
         "native_test_path": { "type": "string", "pattern": "^code/packages/" },
         "planned_conformance_test_path": { "type": "string", "pattern": "^code/packages/" },
         "conformance_test_path": { "type": "string", "pattern": "^code/packages/" },
