@@ -52,6 +52,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TE-S113-letter-pa",
+      "sourceHash": "fnv1a64:804828ceaa3627d0",
+      "svgHash": "fnv1a64:ec891ca4d8196ddf",
+      "svg": "telugu/book/figures/TE-S113-letter-pa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TE-S116-letter-da",
       "sourceHash": "fnv1a64:fd8869af6154bed3",
       "svgHash": "fnv1a64:2b9cd02039138166",
