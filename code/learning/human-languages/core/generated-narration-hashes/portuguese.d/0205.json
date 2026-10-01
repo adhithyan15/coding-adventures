@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:9eb0d62f67baafeb",
+  "lessonIds": [
+    "PT-C205-piorar",
+    "PT-C205-oferecer",
+    "PT-C205-observar",
+    "PT-C205-participar",
+    "PT-C205-passear"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch205.txt",
+  "json": "portuguese/narration/ch205.json",
+  "textHash": "fnv1a64:8acd4460ddc9dfb4",
+  "jsonHash": "fnv1a64:2282c0c02322d434",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 225,
+  "title": "Environment, Pollution, Recycling, Energy, Electricity",
+  "label": "ch:pt-environment-pollution-recycling-energy-electricity",
+  "canDo": "I can say the environment, pollution, recycling, energy and electricity.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C225-eletricidade",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 225: I can say the environment, pollution, recycling, energy and electricity.",
+    "assesses": [
+      "PT-LEX-C225-COISAS225-03",
+      "PT-LEX-C225-COISAS225-04",
+      "PT-LEX-C225-COISAS225-05"
+    ]
+  }
+}

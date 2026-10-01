@@ -1,0 +1,11 @@
+{
+  "id": "PT-C216-picante",
+  "pathSegment": "PT-PATH-216-QUAL216",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-216-QUAL216",
+      "order": 3
+    }
+  ]
+}

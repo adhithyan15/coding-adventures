@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:390c23c841a7f1d7",
+  "lessonIds": [
+    "PT-C210-gripe",
+    "PT-C210-receita",
+    "PT-C210-comprimido",
+    "PT-C210-xarope",
+    "PT-C210-pomada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch210.txt",
+  "json": "portuguese/narration/ch210.json",
+  "textHash": "fnv1a64:91638e155f49a6b8",
+  "jsonHash": "fnv1a64:ee10dd77bc7bf675",
+  "findings": []
+}

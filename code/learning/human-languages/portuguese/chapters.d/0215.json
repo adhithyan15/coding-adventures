@@ -1,0 +1,19 @@
+{
+  "chapter": 215,
+  "title": "Jealous, Proud, Nervous, Quiet, Silent",
+  "label": "ch:pt-jealous-proud-nervous-quiet-silent",
+  "canDo": "I can say jealous, proud, nervous, quiet and silent.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PT-C215-silencioso-silenciosa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 215: I can say jealous, proud, nervous, quiet and silent.",
+    "assesses": [
+      "PT-LEX-C215-QUAL215-03",
+      "PT-LEX-C215-QUAL215-04",
+      "PT-LEX-C215-QUAL215-05"
+    ]
+  }
+}

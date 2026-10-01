@@ -1,0 +1,19 @@
+{
+  "chapter": 214,
+  "title": "Only, Together, Nevertheless, Perhaps, Besides",
+  "label": "ch:pt-only-together-nevertheless-perhaps-besides",
+  "canDo": "I can say only, together, nevertheless, perhaps and besides.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "PT-C214-alias",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 214: I can say only, together, nevertheless, perhaps and besides.",
+    "assesses": [
+      "PT-LEX-C214-PORQUE214-03",
+      "PT-LEX-C214-PORQUE214-04",
+      "PT-LEX-C214-PORQUE214-05"
+    ]
+  }
+}

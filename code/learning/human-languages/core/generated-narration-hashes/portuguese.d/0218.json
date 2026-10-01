@@ -1,0 +1,21 @@
+{
+  "language": "portuguese",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:03361e554f5a319f",
+  "lessonIds": [
+    "PT-C218-pequeno-almoco",
+    "PT-C218-lanche",
+    "PT-C218-gorjeta",
+    "PT-C218-cais",
+    "PT-C218-passaporte",
+    "PT-R218-first-pass-words-from-chapters-210-213",
+    "PT-R218-second-pass-words-from-chapters-214-218"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "portuguese/narration/ch218.txt",
+  "json": "portuguese/narration/ch218.json",
+  "textHash": "fnv1a64:2751573a91ad42e6",
+  "jsonHash": "fnv1a64:9ae5487af2fa3662",
+  "findings": []
+}

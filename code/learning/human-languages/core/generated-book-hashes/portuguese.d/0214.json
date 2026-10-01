@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:428ea62834b52109",
+  "lessonIds": [
+    "PT-C214-apenas",
+    "PT-C214-juntos-juntas",
+    "PT-C214-contudo",
+    "PT-C214-talvez",
+    "PT-C214-alias"
+  ],
+  "tex": "portuguese/book/chapters/ch214-only-together-nevertheless-perhaps-besides.tex"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-213-LUGAR213",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "PT-EXT-213-LUGAR213"
+  ],
+  "after": []
+}

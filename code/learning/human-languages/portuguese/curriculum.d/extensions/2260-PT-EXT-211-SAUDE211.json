@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-211-SAUDE211",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say patience, luck, a bone, an allergy and a headache.",
+  "prerequisites": []
+}

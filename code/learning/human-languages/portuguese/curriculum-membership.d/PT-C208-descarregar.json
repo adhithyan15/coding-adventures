@@ -1,0 +1,11 @@
+{
+  "id": "PT-C208-descarregar",
+  "pathSegment": "PT-PATH-208-VERBOS208",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-208-VERBOS208",
+      "order": 2
+    }
+  ]
+}

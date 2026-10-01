@@ -1,0 +1,19 @@
+{
+  "chapter": 223,
+  "title": "Exit, Luggage, Seat, Steering wheel, Wheel",
+  "label": "ch:pt-exit-luggage-seat-steering-wheel-wheel",
+  "canDo": "I can say an exit, luggage, a seat, a steering wheel and a wheel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C223-roda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 223: I can say an exit, luggage, a seat, a steering wheel and a wheel.",
+    "assesses": [
+      "PT-LEX-C223-COISAS223-03",
+      "PT-LEX-C223-COISAS223-04",
+      "PT-LEX-C223-COISAS223-05"
+    ]
+  }
+}

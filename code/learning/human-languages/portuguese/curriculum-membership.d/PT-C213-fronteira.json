@@ -1,0 +1,11 @@
+{
+  "id": "PT-C213-fronteira",
+  "pathSegment": "PT-PATH-213-LUGAR213",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-213-LUGAR213",
+      "order": 3
+    }
+  ]
+}

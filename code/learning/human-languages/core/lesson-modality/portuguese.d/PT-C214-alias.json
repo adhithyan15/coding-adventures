@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C214-alias",
+    "language": "portuguese",
+    "chapter": 214,
+    "sequence": 12400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a114579c1931c90"
+  },
+  "findings": []
+}

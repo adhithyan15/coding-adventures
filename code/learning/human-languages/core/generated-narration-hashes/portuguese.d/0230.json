@@ -1,0 +1,21 @@
+{
+  "language": "portuguese",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:a44d799755076876",
+  "lessonIds": [
+    "PT-C230-universidade",
+    "PT-C230-erro",
+    "PT-C230-historia",
+    "PT-C230-geografia",
+    "PT-C230-matematica",
+    "PT-R230-first-pass-words-from-chapters-225-227",
+    "PT-R230-second-pass-words-from-chapters-228-230"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "portuguese/narration/ch230.txt",
+  "json": "portuguese/narration/ch230.json",
+  "textHash": "fnv1a64:c53c883deb140a06",
+  "jsonHash": "fnv1a64:be593b26ce13d6c2",
+  "findings": []
+}

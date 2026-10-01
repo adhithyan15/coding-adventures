@@ -1,0 +1,15 @@
+{
+  "language": "portuguese",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:33e416aa95c94453",
+  "lessonIds": [
+    "PT-C224-sotao",
+    "PT-C224-garagem",
+    "PT-C224-horta",
+    "PT-C224-jarra",
+    "PT-C224-planta",
+    "PT-R224-first-pass-words-from-chapters-219-221",
+    "PT-R224-second-pass-words-from-chapters-222-224"
+  ],
+  "tex": "portuguese/book/chapters/ch224-attic-garage-vegetable-garden-vase-plant.tex"
+}

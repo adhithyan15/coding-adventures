@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:ba09b8e0f757e6ec",
+  "lessonIds": [
+    "PT-C211-paciencia",
+    "PT-C211-sorte",
+    "PT-C211-osso",
+    "PT-C211-alergia",
+    "PT-C211-dor-de-cabeca"
+  ],
+  "tex": "portuguese/book/chapters/ch211-patience-luck-bone-allergy-headache.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C228-duzia",
+  "pathSegment": "PT-PATH-228-COISAS228",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-228-COISAS228",
+      "order": 3
+    }
+  ]
+}

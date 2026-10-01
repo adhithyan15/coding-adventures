@@ -1,0 +1,11 @@
+{
+  "id": "PT-C219-soldado",
+  "pathSegment": "PT-PATH-219-COISAS219",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-219-COISAS219",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C217-nublado-nublada",
+  "pathSegment": "PT-PATH-217-QUAL217",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-217-QUAL217",
+      "order": 1
+    }
+  ]
+}

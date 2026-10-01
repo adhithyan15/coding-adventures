@@ -1,0 +1,11 @@
+{
+  "id": "PT-C229-sanita",
+  "pathSegment": "PT-PATH-229-COISAS229",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-229-COISAS229",
+      "order": 1
+    }
+  ]
+}

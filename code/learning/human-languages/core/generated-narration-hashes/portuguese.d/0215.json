@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:68053bf5563239c3",
+  "lessonIds": [
+    "PT-C215-ciumento-ciumenta",
+    "PT-C215-orgulhoso-orgulhosa",
+    "PT-C215-nervoso-nervosa",
+    "PT-C215-tranquilo-tranquila",
+    "PT-C215-silencioso-silenciosa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch215.txt",
+  "json": "portuguese/narration/ch215.json",
+  "textHash": "fnv1a64:d14ee35269a6acbf",
+  "jsonHash": "fnv1a64:5d4ba7d988eefdac",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C208-esquiar",
+  "pathSegment": "PT-PATH-208-VERBOS208",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-208-VERBOS208",
+      "order": 3
+    }
+  ]
+}

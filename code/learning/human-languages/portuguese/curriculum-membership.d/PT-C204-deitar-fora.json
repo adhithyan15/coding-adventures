@@ -1,0 +1,11 @@
+{
+  "id": "PT-C204-deitar-fora",
+  "pathSegment": "PT-PATH-204-VERBOS204",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-204-VERBOS204",
+      "order": 1
+    }
+  ]
+}

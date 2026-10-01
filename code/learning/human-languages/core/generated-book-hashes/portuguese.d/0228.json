@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:c25d9940d60f2faf",
+  "lessonIds": [
+    "PT-C228-frasco",
+    "PT-C228-fatia",
+    "PT-C228-pedaco",
+    "PT-C228-duzia",
+    "PT-C228-metade"
+  ],
+  "tex": "portuguese/book/chapters/ch228-jar-slice-piece-dozen-half.tex"
+}

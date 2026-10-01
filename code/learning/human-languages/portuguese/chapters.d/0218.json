@@ -1,0 +1,19 @@
+{
+  "chapter": 218,
+  "title": "Breakfast, Snack, Tip, Platform, Passport",
+  "label": "ch:pt-breakfast-snack-tip-platform-passport",
+  "canDo": "I can say breakfast, a snack, a tip, a platform and a passport.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-R218-second-pass-words-from-chapters-214-218",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 218: I can say breakfast, a snack, a tip, a platform and a passport.",
+    "assesses": [
+      "PT-LEX-C218-COISAS218-03",
+      "PT-LEX-C218-COISAS218-04",
+      "PT-LEX-C218-COISAS218-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 224,
+  "title": "Attic, Garage, Vegetable garden, Vase, Plant",
+  "label": "ch:pt-attic-garage-vegetable-garden-vase-plant",
+  "canDo": "I can say an attic, a garage, a vegetable garden, a vase and a plant.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-R224-second-pass-words-from-chapters-222-224",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 224: I can say an attic, a garage, a vegetable garden, a vase and a plant.",
+    "assesses": [
+      "PT-LEX-C224-COISAS224-03",
+      "PT-LEX-C224-COISAS224-04",
+      "PT-LEX-C224-COISAS224-05"
+    ]
+  }
+}

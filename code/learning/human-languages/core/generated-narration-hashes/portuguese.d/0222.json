@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:839aff3f2c252f59",
+  "lessonIds": [
+    "PT-C222-conselho",
+    "PT-C222-promessa",
+    "PT-C222-desconto",
+    "PT-C222-saldos",
+    "PT-C222-moeda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch222.txt",
+  "json": "portuguese/narration/ch222.json",
+  "textHash": "fnv1a64:417e21c231c8e17a",
+  "jsonHash": "fnv1a64:0d6e47ce3c6d1262",
+  "findings": []
+}

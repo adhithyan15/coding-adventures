@@ -1,0 +1,11 @@
+{
+  "id": "PT-C219-tradicao",
+  "pathSegment": "PT-PATH-219-COISAS219",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-219-COISAS219",
+      "order": 4
+    }
+  ]
+}

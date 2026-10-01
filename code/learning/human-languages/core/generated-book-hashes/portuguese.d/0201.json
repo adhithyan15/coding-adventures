@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:531b66b442c3ef11",
+  "lessonIds": [
+    "PT-C201-reservar",
+    "PT-C201-gastar",
+    "PT-C201-poupar",
+    "PT-C201-encomendar",
+    "PT-C201-secar"
+  ],
+  "tex": "portuguese/book/chapters/ch201-to-book-to-spend-to-save-to-order-to-dry.tex"
+}

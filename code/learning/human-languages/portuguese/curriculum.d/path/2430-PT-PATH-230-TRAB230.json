@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-230-TRAB230",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "PT-EXT-230-TRAB230"
+  ],
+  "after": []
+}

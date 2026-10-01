@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:14276c6272a02dc7",
+  "lessonIds": [
+    "PT-C208-desistir",
+    "PT-C208-trocar",
+    "PT-C208-descarregar",
+    "PT-C208-esquiar",
+    "PT-C208-escorregar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch208.txt",
+  "json": "portuguese/narration/ch208.json",
+  "textHash": "fnv1a64:3deeccf0ae74eab3",
+  "jsonHash": "fnv1a64:c2dcbf0105b17e60",
+  "findings": []
+}

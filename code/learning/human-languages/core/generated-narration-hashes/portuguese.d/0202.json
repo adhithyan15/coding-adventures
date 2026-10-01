@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:8293aca5622fde57",
+  "lessonIds": [
+    "PT-C202-aquecer",
+    "PT-C202-arrefecer",
+    "PT-C202-encher",
+    "PT-C202-esvaziar",
+    "PT-C202-medir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch202.txt",
+  "json": "portuguese/narration/ch202.json",
+  "textHash": "fnv1a64:d5f4635d25fb5711",
+  "jsonHash": "fnv1a64:b96078bd44381cee",
+  "findings": []
+}
