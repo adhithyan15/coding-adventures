@@ -52,17 +52,19 @@ Both of the words you said a moment ago carry it:
 second syllable of the very first word you were taught, and it will be in front
 of you on nearly every page from here on.
 
-## Writing: మ — copy what you see
+## Writing: మ — seven calm movements
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-150] -->
+<!-- hl-writing-stage: observe-trace -->
 
-Put your pen on మ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+Watch the numbered filmstrip once before your pen moves. Movement 1 sweeps left
+around the upper-left arch. Movements 2 and 3 turn right around the two lower
+bowls. Movement 4 rises around the central shoulder. Lift for movement 5, the
+separate flourish above. Movement 6 turns around the lower-right bowl, and
+movement 7 rises around the outer-right shoulder.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+Trace the same route slowly. This is one attested school-style order fitted to
+the printed shape here; Telugu handwriting varies, so keep the seven clear
+movements instead of rushing their joins.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-150] -->
