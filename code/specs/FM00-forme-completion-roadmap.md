@@ -44,7 +44,7 @@ close the project early.
 
 The implementation now forms a complete headless v0 product:
 
-- 68 TypeScript `forme-*` packages and 208 package test files cover the kernel,
+- 70 TypeScript `forme-*` packages and 216 package test files cover the kernel,
   stage contracts, a bounded concurrent orchestrator, Style IR, AOT emitters, document
   transforms, collections, feeds, routing, and static output.
 - The blog proves a ten-stage routed DAG: source → parse → asset resolution →
@@ -156,15 +156,17 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 41 | FM-B048 | done | Persist bounded plugin trust and capability decisions | Depends on completed FM-B014. Strict trust-store and grants-file codecs reject unknown, duplicate, malformed, non-canonical, oversized, and over-count inputs; Ed25519 keys use the manifest's canonical raw-key encoding; grants bind exact manifest hashes; atomic restrictive writes reject linked targets and round-trip deterministic bytes. |
 | 42 | FM-B049 | done | Stage signed plugin installations atomically | Depends on completed FM-B048. A registry-independent install core validates a complete bounded package snapshot, assigns the trust tier, records reviewed grants, publishes an immutable host-owned directory by atomic rename, and never exposes a partial or mutable discovery root. |
 | 43 | FM-B050 | done | Implement the TypeScript plugin runner | Depends on completed FM-B014. The SDK mirrors the bounded wire protocol, exposes a wire-backed `StageContext`, passes its reference protocol tests including streaming and cancellation, and replaces the hand-written host fixture in an end-to-end test. |
-| 44 | FM-B053 | active | Extract the reusable plugin-runner conformance harness | Depends on completed FM-B050. A language-neutral subprocess driver and canonical bounded vectors cover handshake, value envelopes, every mediated capability, single/stream/hybrid shapes, cancellation, typed errors, malformed peers, and resource limits; the TypeScript runner passes the extracted suite. |
-| 45 | FM-B051 | blocked | Implement Python and Rust plugin runners | Depends on FM-B053's reusable conformance harness. Both SDKs pass the same handshake, value, capability, stream, cancellation, error, malformed-peer, and bounded-resource vectors as the TypeScript runner. |
-| 46 | FM-B052 | blocked | Implement production OS sandbox launchers | Depends on FM-B049–FM-B051. Linux, macOS, and Windows launchers stage exact verified snapshots, attest their identities, and block ungranted filesystem, network, environment, process, descriptor, memory, and CPU access in platform CI. |
-| 47 | FM-B015 | blocked | Complete plugin installation, runtimes, and sandboxes | Depends on FM-B048–FM-B053. `forme install`, persistent grants, all supported runners, production sandbox profiles, and mixed first-/third-party product integration close the Extensible v1 runtime path. |
-| 48 | FM-B013 | ready | Specify and implement Interactivity IR | Define the behavior/event/state schema and validator, integrate per-page island tracking, and prove a progressively enhanced interactive component with a no-JS fallback. |
-| 49 | FM-B016 | blocked | Build the authoring shell | Depends on FM-B009, FM-B013, and FM-B015. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
-| 50 | FM-B017 | blocked | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
-| 51 | FM-B018 | blocked | Close release-quality gates | Depends on the v1 product path. Add 1,000-page clean/incremental benchmarks, Lighthouse/accessibility budgets, package/API versioning, migration docs, security review, and supported-platform CI. |
-| 52 | FM-B029 | later | Make duplicate PR CI cancellation and merge state unambiguous | One commit has one authoritative required CI suite; branch updates cancel obsolete runs completely; cancelling a redundant push suite cannot leave a stale final gate or misleading failed rollup; babysitting tooling identifies required checks and the current head. |
+| 44 | FM-B053 | done | Extract the reusable plugin-runner conformance harness | Depends on completed FM-B050. A language-neutral subprocess driver and canonical bounded vectors cover handshake, value envelopes, every mediated capability, single/stream/hybrid shapes, cancellation, typed errors, malformed peers, and resource limits; the TypeScript runner passes the extracted suite. |
+| 45 | FM-B054 | done | Implement the Python plugin runner | Depends on completed FM-B053. An idiomatic Python SDK exposes authored stage metadata and a wire-backed asynchronous context, fails closed on malformed or oversized peers, and passes the complete canonical runner corpus as a real subprocess. |
+| 46 | FM-B055 | active | Implement the Rust plugin runner | Depends on completed FM-B054 so the first non-TypeScript SDK can settle any language-neutral fixture gaps before a compiled implementation repeats the same corpus. The Rust SDK exposes typed stage/context traits and passes the complete canonical runner corpus as a real subprocess. |
+| 47 | FM-B051 | blocked | Complete Python and Rust plugin runners | Depends on FM-B054 and FM-B055. Both SDKs pass the same handshake, value, capability, stream, cancellation, error, malformed-peer, and bounded-resource vectors as the TypeScript runner. |
+| 48 | FM-B052 | blocked | Implement production OS sandbox launchers | Depends on FM-B049–FM-B051. Linux, macOS, and Windows launchers stage exact verified snapshots, attest their identities, and block ungranted filesystem, network, environment, process, descriptor, memory, and CPU access in platform CI. |
+| 49 | FM-B015 | blocked | Complete plugin installation, runtimes, and sandboxes | Depends on FM-B048–FM-B055. `forme install`, persistent grants, all supported runners, production sandbox profiles, and mixed first-/third-party product integration close the Extensible v1 runtime path. |
+| 50 | FM-B013 | ready | Specify and implement Interactivity IR | Define the behavior/event/state schema and validator, integrate per-page island tracking, and prove a progressively enhanced interactive component with a no-JS fallback. |
+| 51 | FM-B016 | blocked | Build the authoring shell | Depends on FM-B009, FM-B013, and FM-B015. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
+| 52 | FM-B017 | blocked | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
+| 53 | FM-B018 | blocked | Close release-quality gates | Depends on the v1 product path. Add 1,000-page clean/incremental benchmarks, Lighthouse/accessibility budgets, package/API versioning, migration docs, security review, and supported-platform CI. |
+| 54 | FM-B029 | later | Make duplicate PR CI cancellation and merge state unambiguous | One commit has one authoritative required CI suite; branch updates cancel obsolete runs completely; cancelling a redundant push suite cannot leave a stale final gate or misleading failed rollup; babysitting tooling identifies required checks and the current head. |
 
 ## Dependency path
 
@@ -177,7 +179,8 @@ FM-B020 retires the temporary compatibility path after the routed product DAG
 is proven, but it does not block FM-B004.
 
 Headless v0 is complete. The shortest path to Extensible v1 is now FM-B048 →
-FM-B049/FM-B050 → FM-B053 → FM-B051 → FM-B052 → FM-B015. FM-B013 can proceed
+FM-B049/FM-B050 → FM-B053 → FM-B054 → FM-B055 → FM-B051 → FM-B052 →
+FM-B015. FM-B013 can proceed
 independently before joining the
 authoring path at FM-B016 and the backend proof at FM-B017.
 
@@ -265,6 +268,8 @@ work.
 | 2026-09-30 | FM-B048 landed strict bounded trust/grants persistence after adversarial review found and closed formatter amplification, inherited authority, Unicode ordering, TOML scalar, timestamp, and round-trip gaps. The existing manifest signature authenticates only `plugin.toml` plus one selected runtime entry, not arbitrary auxiliary files. | Close FM-B048 and activate FM-B049. The v1 installer may assign the verified tier only to a minimal package containing the manifest and selected signed entry; snapshots with auxiliary or alternate-platform files remain unverified until a future package-signature revision binds the complete file set. |
 | 2026-09-30 | FM-B049 landed the bounded atomic installer with owner/device checks, portable collision rejection, immutable publication, and manifest-bound grant persistence; both authoritative CI suites and the mandatory security review passed. The runner audit then found that FM01's synchronous wall-clock, environment, and directory getters cannot be implemented over an asynchronous subprocess wire without blocking the JavaScript event loop. | Close FM-B049 and activate FM-B050. Reconcile those host-mediated getters to promises before exposing the TypeScript runner context; retain local synchronous cancellation and monotonic observation only where the wire contract does not require authority. |
 | 2026-09-30 | FM-B050 landed the bounded TypeScript runner and replaced the host's hand-written cross-process fixture, but its protocol vectors remain embedded in TypeScript-only unit tests. The `forme-plugin-runner-conformance/` harness promised by FM02 does not exist, so Python and Rust cannot prove that they pass the same corpus without copying policy. | Close FM-B050, split FM-B053 ahead of FM-B051, and extract one language-neutral subprocess driver plus canonical bounded vectors before implementing either additional SDK. |
+| 2026-10-01 | FM-B053 landed the reusable subprocess driver and canonical corpus, including cross-platform resource and process-lifecycle hardening. Implementing two new public SDKs in one review would still combine separate packaging, concurrency, framing, and API-design risks. | Close FM-B053, split FM-B051 into FM-B054 (Python) and FM-B055 (Rust), and keep FM-B051 as their completion milestone. Settle any genuinely language-neutral fixture gaps with the smaller Python boundary before compiling the Rust SDK against the same corpus. |
+| 2026-10-01 | FM-B054 implemented the Python runner without requiring changes to the language-neutral corpus. The SDK passed the complete subprocess suite plus strict typing, lint, formatting, unit tests, and combined coverage while keeping all privileged operations host-mediated. | Close FM-B054 and activate FM-B055. Implement the Rust runner against the unchanged corpus, retaining the same bounded framing, single-active-run, cancellation, stream, error, and capability semantics. |
 
 ## Loop protocol
 

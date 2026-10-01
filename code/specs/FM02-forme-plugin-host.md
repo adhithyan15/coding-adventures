@@ -3,8 +3,9 @@
 > **Status:** Host/wire boundary implemented in FM-B014; bounded authority
 > persistence implemented in FM-B048; atomic installation implemented in FM-B049;
 > the TypeScript runtime adapter implemented in FM-B050; the reusable runner
-> conformance harness active in FM-B053; remaining runtimes and OS sandboxes
-> tracked in FM-B051–FM-B052 and the FM-B015
+> conformance harness implemented in FM-B053; the Python runtime implemented in
+> FM-B054; and the remaining Rust runtime and OS sandboxes tracked in
+> FM-B055/FM-B051–FM-B052 and the FM-B015
 > completion milestone.
 > Read alongside FM00 (vision), FM01 (kernel), and FM03 (orchestrator).
 > **Scope:** Everything required to load third-party Forme plugins
@@ -28,8 +29,9 @@
 | Trust and grant persistence | Implemented | FM-B048 provides bounded exact codecs, manifest-bound stale-grant denial, safe reads, and atomic restrictive writes. |
 | Atomic plugin installation | Implemented | FM-B049 consumes registry-independent immutable snapshots and publishes one complete host-owned plugin directory. |
 | TypeScript runner | Implemented | FM-B050 supplies the bounded reference SDK and host-launched end-to-end fixture. |
-| Shared runner conformance | Active | FM-B053 extracts canonical vectors and a language-neutral subprocess driver from the TypeScript-only reference tests. |
-| Python/Rust runners | Blocked | FM-B051 follows FM-B053's reusable conformance harness. |
+| Shared runner conformance | Implemented | FM-B053 provides canonical vectors and a language-neutral subprocess driver, with the TypeScript runner passing the extracted suite. |
+| Python runner | Implemented | FM-B054 provides the first non-TypeScript SDK and passes the complete shared corpus without fixture changes. |
+| Rust runner | Active | FM-B055 follows FM-B054 and must pass the unchanged shared corpus. |
 | OS sandbox profiles | Blocked | FM-B052 follows atomic installation and runner conformance. |
 | Install/trust CLI | Blocked | FM-B049 owns the install core; FM07 exposes it after the FM-B015 milestone. |
 
@@ -1645,7 +1647,7 @@ from forme_plugin_runner import run_plugin, define_stage
     capabilities=["storage:read"],
 )
 async def my_stage(source, config, ctx):
-    bytes = await ctx.storage.read_file(source["path"])
+    bytes = await ctx.storage.read(source["path"])
     return { "kind": "ContentNode", ... }
 
 if __name__ == "__main__":
