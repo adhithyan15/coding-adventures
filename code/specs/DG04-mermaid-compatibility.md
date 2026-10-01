@@ -529,7 +529,8 @@ lower through backend-neutral rectangles and glyph runs, with native
 Metal-to-PNG validation. Named `classDef` declarations resolve fill, stroke,
 dash, dash offset, fill/stroke/overall opacity, text color, and font styling
 through semantic IR and backend-neutral paint. Class text alignment and
-none/upper/lower/capitalize transforms also survive into shaped glyph runs.
+none/upper/lower/capitalize transforms and none/underline/overline/line-through
+decoration combinations also survive into shaped glyph runs.
 All twelve `cScale`,
 `cScalePeer`, and `cScaleLabel` theme-variable slots
 also flow from init directives or YAML front matter through category-aware
