@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 21396,
+    "totalLessons": 21586,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -33,14 +33,14 @@
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 156,
-    "forwardReferences": 1034,
+    "forwardReferences": 1047,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 94,
     "chapterGateCleanTracks": 10,
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 231,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 19615,
+    "drivableLessons": 19805,
     "drivablePercent": 92,
     "chaptersWithoutDrivablePrefix": 275,
     "unexplainedModalityOverrides": 0
@@ -1814,7 +1814,43 @@
           157,
           158,
           159,
-          160
+          160,
+          161,
+          162,
+          163,
+          164,
+          165,
+          166,
+          167,
+          168,
+          169,
+          170,
+          171,
+          172,
+          173,
+          174,
+          175,
+          176,
+          177,
+          178,
+          179,
+          180,
+          181,
+          182,
+          183,
+          184,
+          185,
+          186,
+          187,
+          188,
+          189,
+          190,
+          191,
+          192,
+          193,
+          194,
+          195,
+          196
         ],
         "bookChapters": [
           1,
@@ -1976,7 +2012,43 @@
           157,
           158,
           159,
-          160
+          160,
+          161,
+          162,
+          163,
+          164,
+          165,
+          166,
+          167,
+          168,
+          169,
+          170,
+          171,
+          172,
+          173,
+          174,
+          175,
+          176,
+          177,
+          178,
+          179,
+          180,
+          181,
+          182,
+          183,
+          184,
+          185,
+          186,
+          187,
+          188,
+          189,
+          190,
+          191,
+          192,
+          193,
+          194,
+          195,
+          196
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -9556,9 +9628,9 @@
       {
         "language": "latin",
         "status": "version-2",
-        "lessonCount": 677,
+        "lessonCount": 867,
         "versions": {
-          "2": 677
+          "2": 867
         }
       },
       {
@@ -10475,8 +10547,8 @@
       },
       {
         "language": "latin",
-        "bookChapters": 160,
-        "declaredChapters": 160,
+        "bookChapters": 196,
+        "declaredChapters": 196,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -10579,8 +10651,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 4298,
-      "declaredChapters": 4298,
+      "bookChapters": 4334,
+      "declaredChapters": 4334,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 94,
@@ -10592,11 +10664,11 @@
     }
   },
   "levels": {
-    "totalLessons": 21396,
+    "totalLessons": 21586,
     "byLevel": {
-      "pre-A1": 8965,
-      "A1": 11291,
-      "A2": 1056,
+      "pre-A1": 8977,
+      "A1": 11447,
+      "A2": 1078,
       "B1": 39,
       "B2": 17,
       "C1": 10,
@@ -10757,11 +10829,11 @@
       },
       {
         "language": "latin",
-        "lessonCount": 677,
+        "lessonCount": 867,
         "byLevel": {
-          "pre-A1": 324,
-          "A1": 331,
-          "A2": 22,
+          "pre-A1": 336,
+          "A1": 487,
+          "A2": 44,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -11477,8 +11549,8 @@
       },
       {
         "language": "latin",
-        "lessonCount": 677,
-        "measurable": 675,
+        "lessonCount": 867,
+        "measurable": 865,
         "unmeasurable": 2,
         "lessonViolations": 0,
         "chapterViolations": 2
@@ -12023,7 +12095,7 @@
           "language": "latin",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 677,
+          "lessonCount": 867,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -55620,6 +55692,390 @@
           "R4"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "LA-LEX-C147-QUAL147-03",
+        "language": "latin",
+        "introducedBy": "LA-C147-certus",
+        "introducedAt": 605,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C147-QUAL147-04",
+        "language": "latin",
+        "introducedBy": "LA-C147-tutus",
+        "introducedAt": 606,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C147-QUAL147-05",
+        "language": "latin",
+        "introducedBy": "LA-C147-periculosus",
+        "introducedAt": 607,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C148-QUAL148-01",
+        "language": "latin",
+        "introducedBy": "LA-C148-felix",
+        "introducedAt": 608,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C150-QUAL150-03",
+        "language": "latin",
+        "introducedBy": "LA-C150-diligens",
+        "introducedAt": 620,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C150-QUAL150-04",
+        "language": "latin",
+        "introducedBy": "LA-C150-timidus",
+        "introducedAt": 621,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "LA-LEX-C150-QUAL150-05",
+        "language": "latin",
+        "introducedBy": "LA-C150-audax",
+        "introducedAt": 622,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "LA-LEX-C157-ACT157-03",
+        "language": "latin",
+        "introducedBy": "LA-C157-luceo",
+        "introducedAt": 657,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C157-ACT157-04",
+        "language": "latin",
+        "introducedBy": "LA-C157-perdo",
+        "introducedAt": 658,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C157-ACT157-05",
+        "language": "latin",
+        "introducedBy": "LA-C157-vinco",
+        "introducedAt": 659,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C158-ACT158-01",
+        "language": "latin",
+        "introducedBy": "LA-C158-cresco",
+        "introducedAt": 660,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C160-ACT160-03",
+        "language": "latin",
+        "introducedBy": "LA-C160-discedo",
+        "introducedAt": 672,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C160-ACT160-04",
+        "language": "latin",
+        "introducedBy": "LA-C160-advenio",
+        "introducedAt": 673,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "LA-LEX-C160-ACT160-05",
+        "language": "latin",
+        "introducedBy": "LA-C160-habito",
+        "introducedAt": 674,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "LA-LEX-C161-NEG161-02",
+        "language": "latin",
+        "introducedBy": "LA-C161-nemo",
+        "introducedAt": 678,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C161-NEG161-03",
+        "language": "latin",
+        "introducedBy": "LA-C161-nullus",
+        "introducedAt": 679,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C161-NEG161-04",
+        "language": "latin",
+        "introducedBy": "LA-C161-uter",
+        "introducedAt": 680,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C161-NEG161-05",
+        "language": "latin",
+        "introducedBy": "LA-C161-neque",
+        "introducedAt": 681,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C164-LEG164-03",
+        "language": "latin",
+        "introducedBy": "LA-C164-pretium",
+        "introducedAt": 694,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C164-LEG164-04",
+        "language": "latin",
+        "introducedBy": "LA-C164-venalis",
+        "introducedAt": 695,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "LA-LEX-C164-LEG164-05",
+        "language": "latin",
+        "introducedBy": "LA-C164-merx",
+        "introducedAt": 696,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "LA-LEX-C170-ACT170-03",
+        "language": "latin",
+        "introducedBy": "LA-C170-admiror",
+        "introducedAt": 726,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C170-ACT170-04",
+        "language": "latin",
+        "introducedBy": "LA-C170-suspicor",
+        "introducedAt": 727,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C170-ACT170-05",
+        "language": "latin",
+        "introducedBy": "LA-C170-premo",
+        "introducedAt": 728,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C171-ACT171-01",
+        "language": "latin",
+        "introducedBy": "LA-C171-fallo",
+        "introducedAt": 729,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C173-VALE173-03",
+        "language": "latin",
+        "introducedBy": "LA-C173-pulmo",
+        "introducedAt": 741,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C173-VALE173-04",
+        "language": "latin",
+        "introducedBy": "LA-C173-iecur",
+        "introducedAt": 742,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "LA-LEX-C173-VALE173-05",
+        "language": "latin",
+        "introducedBy": "LA-C173-ren",
+        "introducedAt": 743,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "LA-LEX-C179-CAUSA179-03",
+        "language": "latin",
+        "introducedBy": "LA-C179-maxime",
+        "introducedAt": 773,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C179-CAUSA179-04",
+        "language": "latin",
+        "introducedBy": "LA-C179-valde",
+        "introducedAt": 774,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C179-CAUSA179-05",
+        "language": "latin",
+        "introducedBy": "LA-C179-admodum",
+        "introducedAt": 775,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C180-QUAL180-01",
+        "language": "latin",
+        "introducedBy": "LA-C180-commodus",
+        "introducedAt": 776,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
       },
       {
         "atom": "LA-LEX-C44-HOUSE-01",
@@ -156068,10 +156524,1660 @@
         "revisits": 3
       },
       {
-        "atom": "LA-LEX-C147-QUAL147-03",
+        "atom": "LA-LEX-C145-QUAL145-05",
         "language": "latin",
-        "introducedBy": "LA-C147-certus",
-        "introducedAt": 605,
+        "introducedBy": "LA-C145-iucundus",
+        "introducedAt": 597,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C146-QUAL146-01",
+        "language": "latin",
+        "introducedBy": "LA-C146-molestus",
+        "introducedAt": 598,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C146-QUAL146-02",
+        "language": "latin",
+        "introducedBy": "LA-C146-utilis",
+        "introducedAt": 599,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C146-QUAL146-03",
+        "language": "latin",
+        "introducedBy": "LA-C146-purus",
+        "introducedAt": 600,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C146-QUAL146-04",
+        "language": "latin",
+        "introducedBy": "LA-C146-sordidus",
+        "introducedAt": 601,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C146-QUAL146-05",
+        "language": "latin",
+        "introducedBy": "LA-C146-rectus",
+        "introducedAt": 602,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C147-QUAL147-01",
+        "language": "latin",
+        "introducedBy": "LA-C147-surdus",
+        "introducedAt": 603,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C147-QUAL147-02",
+        "language": "latin",
+        "introducedBy": "LA-C147-falsus",
+        "introducedAt": 604,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C148-QUAL148-02",
+        "language": "latin",
+        "introducedBy": "LA-C148-miser",
+        "introducedAt": 609,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C148-QUAL148-03",
+        "language": "latin",
+        "introducedBy": "LA-C148-iratus",
+        "introducedAt": 610,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C148-QUAL148-04",
+        "language": "latin",
+        "introducedBy": "LA-C148-quietus",
+        "introducedAt": 611,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C148-QUAL148-05",
+        "language": "latin",
+        "introducedBy": "LA-C148-purpureus",
+        "introducedAt": 612,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C149-QUAL149-01",
+        "language": "latin",
+        "introducedBy": "LA-C149-fuscus",
+        "introducedAt": 613,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C149-QUAL149-02",
+        "language": "latin",
+        "introducedBy": "LA-C149-canus",
+        "introducedAt": 614,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C149-QUAL149-03",
+        "language": "latin",
+        "introducedBy": "LA-C149-aureus",
+        "introducedAt": 615,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C149-QUAL149-04",
+        "language": "latin",
+        "introducedBy": "LA-C149-argenteus",
+        "introducedAt": 616,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C149-QUAL149-05",
+        "language": "latin",
+        "introducedBy": "LA-C149-prudens",
+        "introducedAt": 617,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C150-QUAL150-01",
+        "language": "latin",
+        "introducedBy": "LA-C150-cautus",
+        "introducedAt": 618,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C150-QUAL150-02",
+        "language": "latin",
+        "introducedBy": "LA-C150-piger",
+        "introducedAt": 619,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C151-QUAL151-01",
+        "language": "latin",
+        "introducedBy": "LA-C151-superbus",
+        "introducedAt": 625,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C151-QUAL151-02",
+        "language": "latin",
+        "introducedBy": "LA-C151-benignus",
+        "introducedAt": 626,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C151-QUAL151-03",
+        "language": "latin",
+        "introducedBy": "LA-C151-crudelis",
+        "introducedAt": 627,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C151-QUAL151-04",
+        "language": "latin",
+        "introducedBy": "LA-C151-turpis",
+        "introducedAt": 628,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C151-QUAL151-05",
+        "language": "latin",
+        "introducedBy": "LA-C151-formosus",
+        "introducedAt": 629,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C152-QUAL152-01",
+        "language": "latin",
+        "introducedBy": "LA-C152-validus",
+        "introducedAt": 630,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C152-QUAL152-02",
+        "language": "latin",
+        "introducedBy": "LA-C152-infirmus",
+        "introducedAt": 631,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C152-QUAL152-03",
+        "language": "latin",
+        "introducedBy": "LA-C152-solus",
+        "introducedAt": 632,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C152-QUAL152-04",
+        "language": "latin",
+        "introducedBy": "LA-C152-gelidus",
+        "introducedAt": 633,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C152-QUAL152-05",
+        "language": "latin",
+        "introducedBy": "LA-C152-serenus",
+        "introducedAt": 634,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C153-QUAL153-01",
+        "language": "latin",
+        "introducedBy": "LA-C153-nubilus",
+        "introducedAt": 635,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C153-QUAL153-02",
+        "language": "latin",
+        "introducedBy": "LA-C153-ventosus",
+        "introducedAt": 636,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C153-QUAL153-03",
+        "language": "latin",
+        "introducedBy": "LA-C153-aedifico",
+        "introducedAt": 637,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C153-QUAL153-04",
+        "language": "latin",
+        "introducedBy": "LA-C153-ascendo",
+        "introducedAt": 638,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C153-QUAL153-05",
+        "language": "latin",
+        "introducedBy": "LA-C153-descendo",
+        "introducedAt": 639,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C154-ACT154-01",
+        "language": "latin",
+        "introducedBy": "LA-C154-iungo",
+        "introducedAt": 640,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C154-ACT154-02",
+        "language": "latin",
+        "introducedBy": "LA-C154-visito",
+        "introducedAt": 641,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C154-ACT154-03",
+        "language": "latin",
+        "introducedBy": "LA-C154-canto",
+        "introducedAt": 642,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C154-ACT154-04",
+        "language": "latin",
+        "introducedBy": "LA-C154-pingo",
+        "introducedAt": 643,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C154-ACT154-05",
+        "language": "latin",
+        "introducedBy": "LA-C154-duco",
+        "introducedAt": 644,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C155-ACT155-01",
+        "language": "latin",
+        "introducedBy": "LA-C155-facio",
+        "introducedAt": 645,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C155-ACT155-02",
+        "language": "latin",
+        "introducedBy": "LA-C155-gero",
+        "introducedAt": 646,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C155-ACT155-03",
+        "language": "latin",
+        "introducedBy": "LA-C155-induo",
+        "introducedAt": 647,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C155-ACT155-04",
+        "language": "latin",
+        "introducedBy": "LA-C155-exuo",
+        "introducedAt": 648,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C155-ACT155-05",
+        "language": "latin",
+        "introducedBy": "LA-C155-purgo",
+        "introducedAt": 649,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C156-ACT156-01",
+        "language": "latin",
+        "introducedBy": "LA-C156-frango",
+        "introducedAt": 650,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C156-ACT156-02",
+        "language": "latin",
+        "introducedBy": "LA-C156-iacio",
+        "introducedAt": 651,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C156-ACT156-03",
+        "language": "latin",
+        "introducedBy": "LA-C156-veho",
+        "introducedAt": 652,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C156-ACT156-04",
+        "language": "latin",
+        "introducedBy": "LA-C156-porto",
+        "introducedAt": 653,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C156-ACT156-05",
+        "language": "latin",
+        "introducedBy": "LA-C156-solvo",
+        "introducedAt": 654,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C157-ACT157-01",
+        "language": "latin",
+        "introducedBy": "LA-C157-reddo",
+        "introducedAt": 655,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C157-ACT157-02",
+        "language": "latin",
+        "introducedBy": "LA-C157-ostendo",
+        "introducedAt": 656,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C158-ACT158-02",
+        "language": "latin",
+        "introducedBy": "LA-C158-festino",
+        "introducedAt": 661,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C158-ACT158-03",
+        "language": "latin",
+        "introducedBy": "LA-C158-vigilo",
+        "introducedAt": 662,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C158-ACT158-04",
+        "language": "latin",
+        "introducedBy": "LA-C158-ceno",
+        "introducedAt": 663,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C158-ACT158-05",
+        "language": "latin",
+        "introducedBy": "LA-C158-gusto",
+        "introducedAt": 664,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C159-ACT159-01",
+        "language": "latin",
+        "introducedBy": "LA-C159-sentio",
+        "introducedAt": 665,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C159-ACT159-02",
+        "language": "latin",
+        "introducedBy": "LA-C159-pendeo",
+        "introducedAt": 666,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C159-ACT159-03",
+        "language": "latin",
+        "introducedBy": "LA-C159-taceo",
+        "introducedAt": 667,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C159-ACT159-04",
+        "language": "latin",
+        "introducedBy": "LA-C159-servo",
+        "introducedAt": 668,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C159-ACT159-05",
+        "language": "latin",
+        "introducedBy": "LA-C159-muto",
+        "introducedAt": 669,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C160-ACT160-01",
+        "language": "latin",
+        "introducedBy": "LA-C160-numero",
+        "introducedAt": 670,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C160-ACT160-02",
+        "language": "latin",
+        "introducedBy": "LA-C160-deleo",
+        "introducedAt": 671,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C161-NEG161-01",
+        "language": "latin",
+        "introducedBy": "LA-C161-nihil",
+        "introducedAt": 677,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C162-PAS162-01",
+        "language": "latin",
+        "introducedBy": "LA-C162-nuper",
+        "introducedAt": 682,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C162-PAS162-02",
+        "language": "latin",
+        "introducedBy": "LA-C162-nudiustertius",
+        "introducedAt": 683,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C162-PAS162-03",
+        "language": "latin",
+        "introducedBy": "LA-C162-olim",
+        "introducedAt": 684,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C162-PAS162-04",
+        "language": "latin",
+        "introducedBy": "LA-C162-antea",
+        "introducedAt": 685,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C162-PAS162-05",
+        "language": "latin",
+        "introducedBy": "LA-C162-accido",
+        "introducedAt": 686,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C163-FUT163-01",
+        "language": "latin",
+        "introducedBy": "LA-C163-perendie",
+        "introducedAt": 687,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C163-FUT163-02",
+        "language": "latin",
+        "introducedBy": "LA-C163-postea",
+        "introducedAt": 688,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C163-FUT163-03",
+        "language": "latin",
+        "introducedBy": "LA-C163-consilium",
+        "introducedAt": 689,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C163-FUT163-04",
+        "language": "latin",
+        "introducedBy": "LA-C163-constituo",
+        "introducedAt": 690,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C163-FUT163-05",
+        "language": "latin",
+        "introducedBy": "LA-C163-provideo",
+        "introducedAt": 691,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C164-LEG164-01",
+        "language": "latin",
+        "introducedBy": "LA-C164-titulus",
+        "introducedAt": 692,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C164-LEG164-02",
+        "language": "latin",
+        "introducedBy": "LA-C164-inscriptio",
+        "introducedAt": 693,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C165-ACT165-01",
+        "language": "latin",
+        "introducedBy": "LA-C165-accendo",
+        "introducedAt": 699,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C165-ACT165-02",
+        "language": "latin",
+        "introducedBy": "LA-C165-exstinguo",
+        "introducedAt": 700,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C165-ACT165-03",
+        "language": "latin",
+        "introducedBy": "LA-C165-salio",
+        "introducedAt": 701,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C165-ACT165-04",
+        "language": "latin",
+        "introducedBy": "LA-C165-subrideo",
+        "introducedAt": 702,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C165-ACT165-05",
+        "language": "latin",
+        "introducedBy": "LA-C165-clamo",
+        "introducedAt": 703,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C166-ACT166-01",
+        "language": "latin",
+        "introducedBy": "LA-C166-probo",
+        "introducedAt": 704,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C166-ACT166-02",
+        "language": "latin",
+        "introducedBy": "LA-C166-signo",
+        "introducedAt": 705,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C166-ACT166-03",
+        "language": "latin",
+        "introducedBy": "LA-C166-disputo",
+        "introducedAt": 706,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C166-ACT166-04",
+        "language": "latin",
+        "introducedBy": "LA-C166-promitto",
+        "introducedAt": 707,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C166-ACT166-05",
+        "language": "latin",
+        "introducedBy": "LA-C166-permitto",
+        "introducedAt": 708,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C167-ACT167-01",
+        "language": "latin",
+        "introducedBy": "LA-C167-ardeo",
+        "introducedAt": 709,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C167-ACT167-02",
+        "language": "latin",
+        "introducedBy": "LA-C167-incendo",
+        "introducedAt": 710,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C167-ACT167-03",
+        "language": "latin",
+        "introducedBy": "LA-C167-abicio",
+        "introducedAt": 711,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C167-ACT167-04",
+        "language": "latin",
+        "introducedBy": "LA-C167-computo",
+        "introducedAt": 712,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C167-ACT167-05",
+        "language": "latin",
+        "introducedBy": "LA-C167-pulso",
+        "introducedAt": 713,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C168-ACT168-01",
+        "language": "latin",
+        "introducedBy": "LA-C168-plico",
+        "introducedAt": 714,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C168-ACT168-02",
+        "language": "latin",
+        "introducedBy": "LA-C168-possideo",
+        "introducedAt": 715,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C168-ACT168-03",
+        "language": "latin",
+        "introducedBy": "LA-C168-praeparo",
+        "introducedAt": 716,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C168-ACT168-04",
+        "language": "latin",
+        "introducedBy": "LA-C168-commodo",
+        "introducedAt": 717,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C168-ACT168-05",
+        "language": "latin",
+        "introducedBy": "LA-C168-propono",
+        "introducedAt": 718,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C169-ACT169-01",
+        "language": "latin",
+        "introducedBy": "LA-C169-interficio",
+        "introducedAt": 719,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C169-ACT169-02",
+        "language": "latin",
+        "introducedBy": "LA-C169-consuesco",
+        "introducedAt": 720,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C169-ACT169-03",
+        "language": "latin",
+        "introducedBy": "LA-C169-propero",
+        "introducedAt": 721,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C169-ACT169-04",
+        "language": "latin",
+        "introducedBy": "LA-C169-recedo",
+        "introducedAt": 722,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C169-ACT169-05",
+        "language": "latin",
+        "introducedBy": "LA-C169-appropinquo",
+        "introducedAt": 723,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C170-ACT170-01",
+        "language": "latin",
+        "introducedBy": "LA-C170-labor",
+        "introducedAt": 724,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C170-ACT170-02",
+        "language": "latin",
+        "introducedBy": "LA-C170-levo",
+        "introducedAt": 725,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C171-ACT171-02",
+        "language": "latin",
+        "introducedBy": "LA-C171-tolero",
+        "introducedAt": 730,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C171-ACT171-03",
+        "language": "latin",
+        "introducedBy": "LA-C171-condo",
+        "introducedAt": 731,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C171-ACT171-04",
+        "language": "latin",
+        "introducedBy": "LA-C171-creo",
+        "introducedAt": 732,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C171-ACT171-05",
+        "language": "latin",
+        "introducedBy": "LA-C171-credo",
+        "introducedAt": 733,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C172-ACT172-01",
+        "language": "latin",
+        "introducedBy": "LA-C172-sero",
+        "introducedAt": 734,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C172-ACT172-02",
+        "language": "latin",
+        "introducedBy": "LA-C172-meto",
+        "introducedAt": 735,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C172-ACT172-03",
+        "language": "latin",
+        "introducedBy": "LA-C172-venor",
+        "introducedAt": 736,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C172-ACT172-04",
+        "language": "latin",
+        "introducedBy": "LA-C172-piscor",
+        "introducedAt": 737,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C172-ACT172-05",
+        "language": "latin",
+        "introducedBy": "LA-C172-nego",
+        "introducedAt": 738,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C173-VALE173-01",
+        "language": "latin",
+        "introducedBy": "LA-C173-valetudo",
+        "introducedAt": 739,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C173-VALE173-02",
+        "language": "latin",
+        "introducedBy": "LA-C173-cerebrum",
+        "introducedAt": 740,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C174-VALE174-01",
+        "language": "latin",
+        "introducedBy": "LA-C174-patientia",
+        "introducedAt": 746,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C174-VALE174-02",
+        "language": "latin",
+        "introducedBy": "LA-C174-lacrima",
+        "introducedAt": 747,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C174-VALE174-03",
+        "language": "latin",
+        "introducedBy": "LA-C174-risus",
+        "introducedAt": 748,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C174-VALE174-04",
+        "language": "latin",
+        "introducedBy": "LA-C174-vox",
+        "introducedAt": 749,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C174-VALE174-05",
+        "language": "latin",
+        "introducedBy": "LA-C174-animus",
+        "introducedAt": 750,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C175-TEMP175-01",
+        "language": "latin",
+        "introducedBy": "LA-C175-tandem",
+        "introducedAt": 751,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C175-TEMP175-02",
+        "language": "latin",
+        "introducedBy": "LA-C175-posthac",
+        "introducedAt": 752,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C175-TEMP175-03",
+        "language": "latin",
+        "introducedBy": "LA-C175-adhuc",
+        "introducedAt": 753,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C175-TEMP175-04",
+        "language": "latin",
+        "introducedBy": "LA-C175-subito",
+        "introducedAt": 754,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C175-TEMP175-05",
+        "language": "latin",
+        "introducedBy": "LA-C175-donec",
+        "introducedAt": 755,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C176-TEMP176-01",
+        "language": "latin",
+        "introducedBy": "LA-C176-prius",
+        "introducedAt": 756,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C176-TEMP176-02",
+        "language": "latin",
+        "introducedBy": "LA-C176-quotannis",
+        "introducedAt": 757,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C176-TEMP176-03",
+        "language": "latin",
+        "introducedBy": "LA-C176-nonnumquam",
+        "introducedAt": 758,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C176-TEMP176-04",
+        "language": "latin",
+        "introducedBy": "LA-C176-semel",
+        "introducedAt": 759,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C176-TEMP176-05",
+        "language": "latin",
+        "introducedBy": "LA-C176-bis",
+        "introducedAt": 760,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C177-LOC177-01",
+        "language": "latin",
+        "introducedBy": "LA-C177-longe",
+        "introducedAt": 761,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C177-LOC177-02",
+        "language": "latin",
+        "introducedBy": "LA-C177-alibi",
+        "introducedAt": 762,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C177-LOC177-03",
+        "language": "latin",
+        "introducedBy": "LA-C177-illic",
+        "introducedAt": 763,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C177-LOC177-04",
+        "language": "latin",
+        "introducedBy": "LA-C177-intus",
+        "introducedAt": 764,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C177-LOC177-05",
+        "language": "latin",
+        "introducedBy": "LA-C177-foris",
+        "introducedAt": 765,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C178-CAUSA178-01",
+        "language": "latin",
+        "introducedBy": "LA-C178-igitur",
+        "introducedAt": 766,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C178-CAUSA178-02",
+        "language": "latin",
+        "introducedBy": "LA-C178-tamen",
+        "introducedAt": 767,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C178-CAUSA178-03",
+        "language": "latin",
+        "introducedBy": "LA-C178-quamquam",
+        "introducedAt": 768,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C178-CAUSA178-04",
+        "language": "latin",
+        "introducedBy": "LA-C178-etsi",
+        "introducedAt": 769,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C178-CAUSA178-05",
+        "language": "latin",
+        "introducedBy": "LA-C178-nisi",
+        "introducedAt": 770,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C179-CAUSA179-01",
+        "language": "latin",
+        "introducedBy": "LA-C179-praesertim",
+        "introducedAt": 771,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C179-CAUSA179-02",
+        "language": "latin",
+        "introducedBy": "LA-C179-potius",
+        "introducedAt": 772,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C180-QUAL180-02",
+        "language": "latin",
+        "introducedBy": "LA-C180-urbanus",
+        "introducedAt": 777,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C180-QUAL180-03",
+        "language": "latin",
+        "introducedBy": "LA-C180-rusticus",
+        "introducedAt": 778,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C180-QUAL180-04",
+        "language": "latin",
+        "introducedBy": "LA-C180-hilaris",
+        "introducedAt": 779,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C180-QUAL180-05",
+        "language": "latin",
+        "introducedBy": "LA-C180-verecundus",
+        "introducedAt": 780,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C181-QUAL181-01",
+        "language": "latin",
+        "introducedBy": "LA-C181-gratuitus",
+        "introducedAt": 781,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C181-QUAL181-02",
+        "language": "latin",
+        "introducedBy": "LA-C181-recens",
+        "introducedAt": 782,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C181-QUAL181-03",
+        "language": "latin",
+        "introducedBy": "LA-C181-crudus",
+        "introducedAt": 783,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C181-QUAL181-04",
+        "language": "latin",
+        "introducedBy": "LA-C181-coctus",
+        "introducedAt": 784,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C181-QUAL181-05",
+        "language": "latin",
+        "introducedBy": "LA-C181-longinquus",
+        "introducedAt": 785,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C182-QUAL182-01",
+        "language": "latin",
+        "introducedBy": "LA-C182-publicus",
+        "introducedAt": 786,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C182-QUAL182-03",
+        "language": "latin",
+        "introducedBy": "LA-C182-communis",
+        "introducedAt": 788,
         "missed": [
           "R2",
           "R3"
@@ -156079,54 +158185,10 @@
         "revisits": 3
       },
       {
-        "atom": "LA-LEX-C147-QUAL147-04",
+        "atom": "LA-LEX-C182-QUAL182-04",
         "language": "latin",
-        "introducedBy": "LA-C147-tutus",
-        "introducedAt": 606,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C147-QUAL147-05",
-        "language": "latin",
-        "introducedBy": "LA-C147-periculosus",
-        "introducedAt": 607,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C148-QUAL148-01",
-        "language": "latin",
-        "introducedBy": "LA-C148-felix",
-        "introducedAt": 608,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C150-QUAL150-03",
-        "language": "latin",
-        "introducedBy": "LA-C150-diligens",
-        "introducedAt": 620,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C150-QUAL150-04",
-        "language": "latin",
-        "introducedBy": "LA-C150-timidus",
-        "introducedAt": 621,
+        "introducedBy": "LA-C182-inanis",
+        "introducedAt": 789,
         "missed": [
           "R2",
           "R3"
@@ -156134,15 +158196,103 @@
         "revisits": 4
       },
       {
-        "atom": "LA-LEX-C150-QUAL150-05",
+        "atom": "LA-LEX-C182-QUAL182-05",
         "language": "latin",
-        "introducedBy": "LA-C150-audax",
-        "introducedAt": 622,
+        "introducedBy": "LA-C182-gravis",
+        "introducedAt": 790,
         "missed": [
           "R2",
           "R3"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "LA-LEX-C188-RES188-03",
+        "language": "latin",
+        "introducedBy": "LA-C188-figulus",
+        "introducedAt": 820,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C188-RES188-04",
+        "language": "latin",
+        "introducedBy": "LA-C188-vilicus",
+        "introducedAt": 821,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C188-RES188-05",
+        "language": "latin",
+        "introducedBy": "LA-C188-colonus",
+        "introducedAt": 822,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C189-RES189-01",
+        "language": "latin",
+        "introducedBy": "LA-C189-cognatus",
+        "introducedAt": 823,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C191-RES191-03",
+        "language": "latin",
+        "introducedBy": "LA-C191-sidus",
+        "introducedAt": 835,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C191-RES191-04",
+        "language": "latin",
+        "introducedBy": "LA-C191-procella",
+        "introducedAt": 836,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "LA-LEX-C191-RES191-05",
+        "language": "latin",
+        "introducedBy": "LA-C191-nimbus",
+        "introducedAt": 837,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "LA-LEX-C193-RES193-02",
+        "language": "latin",
+        "introducedBy": "LA-C193-talus",
+        "introducedAt": 846,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
       },
       {
         "atom": "LA-LEX-C45-WORLD-04",
@@ -234545,550 +236695,490 @@
         "revisits": 7
       },
       {
-        "atom": "LA-LEX-C145-QUAL145-05",
+        "atom": "LA-LEX-C182-QUAL182-02",
         "language": "latin",
-        "introducedBy": "LA-C145-iucundus",
-        "introducedAt": 597,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C146-QUAL146-01",
-        "language": "latin",
-        "introducedBy": "LA-C146-molestus",
-        "introducedAt": 598,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C146-QUAL146-02",
-        "language": "latin",
-        "introducedBy": "LA-C146-utilis",
-        "introducedAt": 599,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C146-QUAL146-03",
-        "language": "latin",
-        "introducedBy": "LA-C146-purus",
-        "introducedAt": 600,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C146-QUAL146-04",
-        "language": "latin",
-        "introducedBy": "LA-C146-sordidus",
-        "introducedAt": 601,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C146-QUAL146-05",
-        "language": "latin",
-        "introducedBy": "LA-C146-rectus",
-        "introducedAt": 602,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C147-QUAL147-01",
-        "language": "latin",
-        "introducedBy": "LA-C147-surdus",
-        "introducedAt": 603,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C147-QUAL147-02",
-        "language": "latin",
-        "introducedBy": "LA-C147-falsus",
-        "introducedAt": 604,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C148-QUAL148-02",
-        "language": "latin",
-        "introducedBy": "LA-C148-miser",
-        "introducedAt": 609,
+        "introducedBy": "LA-C182-privatus",
+        "introducedAt": 787,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "LA-LEX-C148-QUAL148-03",
+        "atom": "LA-LEX-C183-QUAL183-01",
         "language": "latin",
-        "introducedBy": "LA-C148-iratus",
-        "introducedAt": 610,
+        "introducedBy": "LA-C183-notus",
+        "introducedAt": 793,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C183-QUAL183-02",
+        "language": "latin",
+        "introducedBy": "LA-C183-celeber",
+        "introducedAt": 794,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C183-QUAL183-03",
+        "language": "latin",
+        "introducedBy": "LA-C183-honestus",
+        "introducedAt": 795,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C183-QUAL183-04",
+        "language": "latin",
+        "introducedBy": "LA-C183-medius",
+        "introducedAt": 796,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C183-QUAL183-05",
+        "language": "latin",
+        "introducedBy": "LA-C183-summus",
+        "introducedAt": 797,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C184-QUAL184-01",
+        "language": "latin",
+        "introducedBy": "LA-C184-prodigus",
+        "introducedAt": 798,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C184-QUAL184-02",
+        "language": "latin",
+        "introducedBy": "LA-C184-modestus",
+        "introducedAt": 799,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C184-QUAL184-03",
+        "language": "latin",
+        "introducedBy": "LA-C184-facundus",
+        "introducedAt": 800,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C184-QUAL184-04",
+        "language": "latin",
+        "introducedBy": "LA-C184-mutus",
+        "introducedAt": 801,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C184-QUAL184-05",
+        "language": "latin",
+        "introducedBy": "LA-C184-claudus",
+        "introducedAt": 802,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C185-RES185-01",
+        "language": "latin",
+        "introducedBy": "LA-C185-cella",
+        "introducedAt": 803,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C185-RES185-02",
+        "language": "latin",
+        "introducedBy": "LA-C185-tablinum",
+        "introducedAt": 804,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C185-RES185-03",
+        "language": "latin",
+        "introducedBy": "LA-C185-peristylium",
+        "introducedAt": 805,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C185-RES185-04",
+        "language": "latin",
+        "introducedBy": "LA-C185-impluvium",
+        "introducedAt": 806,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C185-RES185-05",
+        "language": "latin",
+        "introducedBy": "LA-C185-fundamentum",
+        "introducedAt": 807,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C186-RES186-01",
+        "language": "latin",
+        "introducedBy": "LA-C186-gubernator",
+        "introducedAt": 808,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C186-RES186-02",
+        "language": "latin",
+        "introducedBy": "LA-C186-mercatus",
+        "introducedAt": 809,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C186-RES186-03",
+        "language": "latin",
+        "introducedBy": "LA-C186-pondus",
+        "introducedAt": 810,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C186-RES186-04",
+        "language": "latin",
+        "introducedBy": "LA-C186-mensura",
+        "introducedAt": 811,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C186-RES186-05",
+        "language": "latin",
+        "introducedBy": "LA-C186-libra",
+        "introducedAt": 812,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C187-RES187-01",
+        "language": "latin",
+        "introducedBy": "LA-C187-pax",
+        "introducedAt": 813,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C187-RES187-02",
+        "language": "latin",
+        "introducedBy": "LA-C187-dux",
+        "introducedAt": 814,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C187-RES187-03",
+        "language": "latin",
+        "introducedBy": "LA-C187-victoria",
+        "introducedAt": 815,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C187-RES187-04",
+        "language": "latin",
+        "introducedBy": "LA-C187-libertas",
+        "introducedAt": 816,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C187-RES187-05",
+        "language": "latin",
+        "introducedBy": "LA-C187-gloria",
+        "introducedAt": 817,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C188-RES188-01",
+        "language": "latin",
+        "introducedBy": "LA-C188-architectus",
+        "introducedAt": 818,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C188-RES188-02",
+        "language": "latin",
+        "introducedBy": "LA-C188-textor",
+        "introducedAt": 819,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C189-RES189-02",
+        "language": "latin",
+        "introducedBy": "LA-C189-avunculus",
+        "introducedAt": 824,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "LA-LEX-C148-QUAL148-04",
+        "atom": "LA-LEX-C189-RES189-03",
         "language": "latin",
-        "introducedBy": "LA-C148-quietus",
-        "introducedAt": 611,
+        "introducedBy": "LA-C189-matertera",
+        "introducedAt": 825,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "LA-LEX-C148-QUAL148-05",
+        "atom": "LA-LEX-C189-RES189-04",
         "language": "latin",
-        "introducedBy": "LA-C148-purpureus",
-        "introducedAt": 612,
+        "introducedBy": "LA-C189-veritas",
+        "introducedAt": 826,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "LA-LEX-C149-QUAL149-01",
+        "atom": "LA-LEX-C189-RES189-05",
         "language": "latin",
-        "introducedBy": "LA-C149-fuscus",
-        "introducedAt": 613,
+        "introducedBy": "LA-C189-mendacium",
+        "introducedAt": 827,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "LA-LEX-C149-QUAL149-02",
+        "atom": "LA-LEX-C190-RES190-01",
         "language": "latin",
-        "introducedBy": "LA-C149-canus",
-        "introducedAt": 614,
+        "introducedBy": "LA-C190-vectigal",
+        "introducedAt": 828,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "LA-LEX-C149-QUAL149-03",
+        "atom": "LA-LEX-C190-RES190-02",
         "language": "latin",
-        "introducedBy": "LA-C149-aureus",
-        "introducedAt": 615,
+        "introducedBy": "LA-C190-tributum",
+        "introducedAt": 829,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "LA-LEX-C149-QUAL149-04",
+        "atom": "LA-LEX-C190-RES190-03",
         "language": "latin",
-        "introducedBy": "LA-C149-argenteus",
-        "introducedAt": 616,
+        "introducedBy": "LA-C190-merces",
+        "introducedAt": 830,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "LA-LEX-C149-QUAL149-05",
+        "atom": "LA-LEX-C190-RES190-04",
         "language": "latin",
-        "introducedBy": "LA-C149-prudens",
-        "introducedAt": 617,
+        "introducedBy": "LA-C190-denarius",
+        "introducedAt": 831,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "LA-LEX-C150-QUAL150-01",
+        "atom": "LA-LEX-C190-RES190-05",
         "language": "latin",
-        "introducedBy": "LA-C150-cautus",
-        "introducedAt": 618,
+        "introducedBy": "LA-C190-sestertius",
+        "introducedAt": 832,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "LA-LEX-C150-QUAL150-02",
+        "atom": "LA-LEX-C191-RES191-01",
         "language": "latin",
-        "introducedBy": "LA-C150-piger",
-        "introducedAt": 619,
+        "introducedBy": "LA-C191-carbo",
+        "introducedAt": 833,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "LA-LEX-C151-QUAL151-01",
+        "atom": "LA-LEX-C191-RES191-02",
         "language": "latin",
-        "introducedBy": "LA-C151-superbus",
-        "introducedAt": 625,
+        "introducedBy": "LA-C191-scopulus",
+        "introducedAt": 834,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "LA-LEX-C192-RES192-01",
+        "language": "latin",
+        "introducedBy": "LA-C192-cancer",
+        "introducedAt": 840,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "LA-LEX-C151-QUAL151-02",
+        "atom": "LA-LEX-C192-RES192-02",
         "language": "latin",
-        "introducedBy": "LA-C151-benignus",
-        "introducedAt": 626,
+        "introducedBy": "LA-C192-passer",
+        "introducedAt": 841,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "LA-LEX-C151-QUAL151-03",
+        "atom": "LA-LEX-C192-RES192-03",
         "language": "latin",
-        "introducedBy": "LA-C151-crudelis",
-        "introducedAt": 627,
+        "introducedBy": "LA-C192-ciconia",
+        "introducedAt": 842,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "LA-LEX-C151-QUAL151-04",
+        "atom": "LA-LEX-C192-RES192-04",
         "language": "latin",
-        "introducedBy": "LA-C151-turpis",
-        "introducedAt": 628,
+        "introducedBy": "LA-C192-noctua",
+        "introducedAt": 843,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "LA-LEX-C151-QUAL151-05",
+        "atom": "LA-LEX-C192-RES192-05",
         "language": "latin",
-        "introducedBy": "LA-C151-formosus",
-        "introducedAt": 629,
+        "introducedBy": "LA-C192-pavo",
+        "introducedAt": 844,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "LA-LEX-C152-QUAL152-01",
+        "atom": "LA-LEX-C193-RES193-01",
         "language": "latin",
-        "introducedBy": "LA-C152-validus",
-        "introducedAt": 630,
+        "introducedBy": "LA-C193-tympanum",
+        "introducedAt": 845,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "LA-LEX-C152-QUAL152-02",
+        "atom": "LA-LEX-C193-RES193-03",
         "language": "latin",
-        "introducedBy": "LA-C152-infirmus",
-        "introducedAt": 631,
+        "introducedBy": "LA-C193-tessera",
+        "introducedAt": 847,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "LA-LEX-C152-QUAL152-03",
+        "atom": "LA-LEX-C193-RES193-04",
         "language": "latin",
-        "introducedBy": "LA-C152-solus",
-        "introducedAt": 632,
+        "introducedBy": "LA-C193-armilla",
+        "introducedAt": 848,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "LA-LEX-C152-QUAL152-04",
+        "atom": "LA-LEX-C193-RES193-05",
         "language": "latin",
-        "introducedBy": "LA-C152-gelidus",
-        "introducedAt": 633,
+        "introducedBy": "LA-C193-monile",
+        "introducedAt": 849,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "LA-LEX-C152-QUAL152-05",
+        "atom": "LA-LEX-C194-RES194-01",
         "language": "latin",
-        "introducedBy": "LA-C152-serenus",
-        "introducedAt": 634,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C153-QUAL153-01",
-        "language": "latin",
-        "introducedBy": "LA-C153-nubilus",
-        "introducedAt": 635,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C153-QUAL153-02",
-        "language": "latin",
-        "introducedBy": "LA-C153-ventosus",
-        "introducedAt": 636,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C153-QUAL153-03",
-        "language": "latin",
-        "introducedBy": "LA-C153-aedifico",
-        "introducedAt": 637,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C153-QUAL153-04",
-        "language": "latin",
-        "introducedBy": "LA-C153-ascendo",
-        "introducedAt": 638,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C153-QUAL153-05",
-        "language": "latin",
-        "introducedBy": "LA-C153-descendo",
-        "introducedAt": 639,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C154-ACT154-01",
-        "language": "latin",
-        "introducedBy": "LA-C154-iungo",
-        "introducedAt": 640,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C154-ACT154-02",
-        "language": "latin",
-        "introducedBy": "LA-C154-visito",
-        "introducedAt": 641,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C154-ACT154-03",
-        "language": "latin",
-        "introducedBy": "LA-C154-canto",
-        "introducedAt": 642,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C154-ACT154-04",
-        "language": "latin",
-        "introducedBy": "LA-C154-pingo",
-        "introducedAt": 643,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C154-ACT154-05",
-        "language": "latin",
-        "introducedBy": "LA-C154-duco",
-        "introducedAt": 644,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C155-ACT155-01",
-        "language": "latin",
-        "introducedBy": "LA-C155-facio",
-        "introducedAt": 645,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C155-ACT155-02",
-        "language": "latin",
-        "introducedBy": "LA-C155-gero",
-        "introducedAt": 646,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C155-ACT155-03",
-        "language": "latin",
-        "introducedBy": "LA-C155-induo",
-        "introducedAt": 647,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C155-ACT155-04",
-        "language": "latin",
-        "introducedBy": "LA-C155-exuo",
-        "introducedAt": 648,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C155-ACT155-05",
-        "language": "latin",
-        "introducedBy": "LA-C155-purgo",
-        "introducedAt": 649,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C156-ACT156-01",
-        "language": "latin",
-        "introducedBy": "LA-C156-frango",
-        "introducedAt": 650,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C156-ACT156-02",
-        "language": "latin",
-        "introducedBy": "LA-C156-iacio",
-        "introducedAt": 651,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C156-ACT156-03",
-        "language": "latin",
-        "introducedBy": "LA-C156-veho",
-        "introducedAt": 652,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C156-ACT156-04",
-        "language": "latin",
-        "introducedBy": "LA-C156-porto",
-        "introducedAt": 653,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C156-ACT156-05",
-        "language": "latin",
-        "introducedBy": "LA-C156-solvo",
-        "introducedAt": 654,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C157-ACT157-01",
-        "language": "latin",
-        "introducedBy": "LA-C157-reddo",
-        "introducedAt": 655,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C157-ACT157-02",
-        "language": "latin",
-        "introducedBy": "LA-C157-ostendo",
-        "introducedAt": 656,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C157-ACT157-03",
-        "language": "latin",
-        "introducedBy": "LA-C157-luceo",
-        "introducedAt": 657,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C157-ACT157-04",
-        "language": "latin",
-        "introducedBy": "LA-C157-perdo",
-        "introducedAt": 658,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C157-ACT157-05",
-        "language": "latin",
-        "introducedBy": "LA-C157-vinco",
-        "introducedAt": 659,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "LA-LEX-C158-ACT158-01",
-        "language": "latin",
-        "introducedBy": "LA-C158-cresco",
-        "introducedAt": 660,
+        "introducedBy": "LA-C194-sententia",
+        "introducedAt": 850,
         "missed": [
           "R2"
         ],
@@ -249715,6 +251805,14 @@
         "lessonsEarly": 784
       },
       {
+        "lessonId": "LA-C01-practice",
+        "language": "latin",
+        "position": 8,
+        "word": "grave",
+        "taughtBy": "LA-C182-gravis",
+        "lessonsEarly": 782
+      },
+      {
         "lessonId": "HI-C93-repaso-sambandh",
         "language": "hindi",
         "position": 489,
@@ -249779,6 +251877,22 @@
         "lessonsEarly": 748
       },
       {
+        "lessonId": "LA-C28-dies",
+        "language": "latin",
+        "position": 48,
+        "word": "medius",
+        "taughtBy": "LA-C183-medius",
+        "lessonsEarly": 748
+      },
+      {
+        "lessonId": "LA-C29-nox",
+        "language": "latin",
+        "position": 49,
+        "word": "media",
+        "taughtBy": "LA-C183-medius",
+        "lessonsEarly": 747
+      },
+      {
         "lessonId": "ES-C55-sintesis-preterito-completo",
         "language": "spanish",
         "position": 365,
@@ -249809,6 +251923,14 @@
         "word": "fuera",
         "taughtBy": "ES-C407-fuera",
         "lessonsEarly": 740
+      },
+      {
+        "lessonId": "LA-C35-meridies",
+        "language": "latin",
+        "position": 57,
+        "word": "medius",
+        "taughtBy": "LA-C183-medius",
+        "lessonsEarly": 739
       },
       {
         "lessonId": "ES-C06-estudiar",
@@ -250017,6 +252139,30 @@
         "word": "कुछ",
         "taughtBy": "HI-C245-kuch",
         "lessonsEarly": 678
+      },
+      {
+        "lessonId": "LA-C49-volo",
+        "language": "latin",
+        "position": 120,
+        "word": "medius",
+        "taughtBy": "LA-C183-medius",
+        "lessonsEarly": 676
+      },
+      {
+        "lessonId": "LA-C49-qui",
+        "language": "latin",
+        "position": 121,
+        "word": "medius",
+        "taughtBy": "LA-C183-medius",
+        "lessonsEarly": 675
+      },
+      {
+        "lessonId": "LA-C15-weather-verbs",
+        "language": "latin",
+        "position": 29,
+        "word": "clāmāre",
+        "taughtBy": "LA-C165-clamo",
+        "lessonsEarly": 674
       },
       {
         "lessonId": "ES-C04-regular",
@@ -250240,6 +252386,14 @@
         "position": 71,
         "word": "favor",
         "taughtBy": "ES-C320-favor",
+        "lessonsEarly": 627
+      },
+      {
+        "lessonId": "LA-C30-bonam-noctem",
+        "language": "latin",
+        "position": 50,
+        "word": "nihil",
+        "taughtBy": "LA-C161-nihil",
         "lessonsEarly": 627
       },
       {
@@ -250571,6 +252725,14 @@
         "lessonsEarly": 542
       },
       {
+        "lessonId": "LA-C52-quia",
+        "language": "latin",
+        "position": 136,
+        "word": "nihil",
+        "taughtBy": "LA-C161-nihil",
+        "lessonsEarly": 541
+      },
+      {
         "lessonId": "HI-C62-needle",
         "language": "hindi",
         "position": 287,
@@ -250579,11 +252741,27 @@
         "lessonsEarly": 540
       },
       {
+        "lessonId": "LA-C52-meus",
+        "language": "latin",
+        "position": 137,
+        "word": "nihil",
+        "taughtBy": "LA-C161-nihil",
+        "lessonsEarly": 540
+      },
+      {
         "lessonId": "ES-C57-f-a-h",
         "language": "spanish",
         "position": 88,
         "word": "hijo",
         "taughtBy": "ES-C306-hijo",
+        "lessonsEarly": 539
+      },
+      {
+        "lessonId": "LA-C52-tuus",
+        "language": "latin",
+        "position": 138,
+        "word": "nihil",
+        "taughtBy": "LA-C161-nihil",
         "lessonsEarly": 539
       },
       {
@@ -252689,6 +254867,22 @@
         "word": "nadar",
         "taughtBy": "ES-C417-nadar",
         "lessonsEarly": 135
+      },
+      {
+        "lessonId": "LA-C164-merx",
+        "language": "latin",
+        "position": 696,
+        "word": "mercēs",
+        "taughtBy": "LA-C190-merces",
+        "lessonsEarly": 134
+      },
+      {
+        "lessonId": "LA-C164-merx",
+        "language": "latin",
+        "position": 696,
+        "word": "mercēdis",
+        "taughtBy": "LA-C190-merces",
+        "lessonsEarly": 134
       },
       {
         "lessonId": "HI-C71-kyonki",
@@ -257162,13 +259356,13 @@
       },
       {
         "language": "latin",
-        "lessonCount": 677,
+        "lessonCount": 867,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 760,
+        "atomsTaught": 940,
         "atomsNeverRevisited": 0,
-        "forwardReferences": 37
+        "forwardReferences": 50
       },
       {
         "language": "malayalam",
@@ -257296,16 +259490,16 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 22291,
+      "atomsTaught": 22471,
       "atomsNeverRevisited": 156,
       "neverRevisitedPercent": 1,
       "missedByWindow": {
         "R1": 1745,
-        "R2": 14596,
-        "R3": 12439,
-        "R4": 16792
+        "R2": 14720,
+        "R3": 12531,
+        "R4": 16974
       },
-      "forwardReferences": 1034
+      "forwardReferences": 1047
     }
   },
   "scriptClosure": {
@@ -276515,12 +278709,30 @@
           },
           {
             "language": "telugu",
+            "lessonId": "TE-S111-letter-sa",
+            "blockIndex": 2,
+            "blockTitle": "Writing: స — two calm movements",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 275
+          },
+          {
+            "language": "telugu",
             "lessonId": "TE-S158-letter-ssa",
             "blockIndex": 2,
             "blockTitle": "Writing: ష — four calm movements",
             "stage": "observe-trace",
             "level": "pre-A1",
             "sequence": 276
+          },
+          {
+            "language": "telugu",
+            "lessonId": "TE-S125-letter-ha",
+            "blockIndex": 2,
+            "blockTitle": "Writing: హ — four calm movements",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 285
           },
           {
             "language": "telugu",
@@ -276584,6 +278796,15 @@
             "stage": "observe-trace",
             "level": "pre-A1",
             "sequence": 445
+          },
+          {
+            "language": "telugu",
+            "lessonId": "TE-S121-letter-lla",
+            "blockIndex": 2,
+            "blockTitle": "Writing: ళ — four calm movements",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 451
           },
           {
             "language": "telugu",
@@ -276796,12 +279017,30 @@
           },
           {
             "language": "telugu",
+            "lessonId": "TE-S111-letter-sa",
+            "blockIndex": 2,
+            "blockTitle": "Writing: స — two calm movements",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 275
+          },
+          {
+            "language": "telugu",
             "lessonId": "TE-S158-letter-ssa",
             "blockIndex": 2,
             "blockTitle": "Writing: ష — four calm movements",
             "stage": "observe-trace",
             "level": "pre-A1",
             "sequence": 276
+          },
+          {
+            "language": "telugu",
+            "lessonId": "TE-S125-letter-ha",
+            "blockIndex": 2,
+            "blockTitle": "Writing: హ — four calm movements",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 285
           },
           {
             "language": "telugu",
@@ -276865,6 +279104,15 @@
             "stage": "observe-trace",
             "level": "pre-A1",
             "sequence": 445
+          },
+          {
+            "language": "telugu",
+            "lessonId": "TE-S121-letter-lla",
+            "blockIndex": 2,
+            "blockTitle": "Writing: ళ — four calm movements",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 451
           },
           {
             "language": "telugu",
@@ -277482,7 +279730,7 @@
       "tracks": 23,
       "tracksWithAnyEvidence": 23,
       "tracksCompleteAtPreA1": 23,
-      "evidenceBlocks": 820,
+      "evidenceBlocks": 823,
       "invalidEvidenceBlocks": 0,
       "missingTrackLevelStages": 231
     }
@@ -278209,8 +280457,8 @@
       },
       {
         "language": "latin",
-        "lessonCount": 677,
-        "atomMeasurableLessons": 675,
+        "lessonCount": 867,
+        "atomMeasurableLessons": 865,
         "atomMeasurementBlindLessons": 2,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -278224,15 +280472,15 @@
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 37,
-        "atomsTaught": 760,
+        "forwardReferences": 50,
+        "atomsTaught": 940,
         "atomsNeverRevisited": 0,
-        "reinforcementWindowMisses": 1527,
+        "reinforcementWindowMisses": 1925,
         "reinforcementMissesByWindow": {
           "R1": 52,
-          "R2": 584,
-          "R3": 397,
-          "R4": 494
+          "R2": 708,
+          "R3": 489,
+          "R4": 676
         },
         "payoffSurprises": 0,
         "writingPracticeLessons": 7,
@@ -278242,7 +280490,7 @@
           {
             "language": "latin",
             "kind": "forward-language",
-            "count": 37,
+            "count": 50,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
           },
@@ -278256,7 +280504,7 @@
           {
             "language": "latin",
             "kind": "reinforcement",
-            "count": 1527,
+            "count": 1925,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -278271,7 +280519,7 @@
         "next": {
           "language": "latin",
           "kind": "forward-language",
-          "count": 37,
+          "count": 50,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
@@ -279242,7 +281490,7 @@
       {
         "language": "latin",
         "kind": "forward-language",
-        "count": 37,
+        "count": 50,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
@@ -279667,6 +281915,13 @@
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
+        "language": "latin",
+        "kind": "reinforcement",
+        "count": 1925,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
         "language": "tamil",
         "kind": "reinforcement",
         "count": 1882,
@@ -279719,13 +281974,6 @@
         "language": "kannada",
         "kind": "reinforcement",
         "count": 1555,
-        "unit": "missed window(s)",
-        "detail": "add retrieval at the expanding R1-R4 intervals"
-      },
-      {
-        "language": "latin",
-        "kind": "reinforcement",
-        "count": 1527,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -280203,22 +282451,12 @@
         "inProgressAt": "A2",
         "blockers": [
           {
-            "criterion": "spine-nodes",
-            "detail": "4 of 5 A2 spine node(s) unrealized: SPINE-NEGATE-AND-ASK, SPINE-TALK-ABOUT-PAST, SPINE-TALK-ABOUT-FUTURE, SPINE-READ-PRACTICAL-TEXTS",
-            "shortfall": 4
-          },
-          {
             "criterion": "vocabulary",
-            "detail": "teaches 635 distinct headwords at or below A2, against 1200",
-            "shortfall": 565
-          },
-          {
-            "criterion": "verb-vocabulary",
-            "detail": "teaches 111 distinct verb headwords at or below A2, against 120",
-            "shortfall": 9
+            "detail": "teaches 815 distinct headwords at or below A2, against 1200",
+            "shortfall": 385
           }
         ],
-        "vocabulary": 635
+        "vocabulary": 815
       },
       {
         "language": "malayalam",
@@ -280460,11 +282698,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 21396,
-    "voice": 19038,
+    "totalLessons": 21586,
+    "voice": 19228,
     "sight": 995,
     "pen": 1363,
-    "coreVoice": 19615,
+    "coreVoice": 19805,
     "lessonsWithWritingSegments": 880,
     "drivablePercent": 92,
     "tracks": [
@@ -306138,13 +308376,13 @@
       },
       {
         "language": "latin",
-        "lessonCount": 677,
-        "voice": 663,
+        "lessonCount": 867,
+        "voice": 853,
         "sight": 7,
         "pen": 7,
-        "coreVoice": 664,
-        "drivablePercent": 98,
-        "drivablePrefixTotal": 649,
+        "coreVoice": 854,
+        "drivablePercent": 99,
+        "drivablePrefixTotal": 839,
         "chapters": [
           {
             "language": "latin",
@@ -308385,6 +310623,510 @@
           {
             "language": "latin",
             "chapter": 160,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 161,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 162,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 163,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 164,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 165,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 166,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 167,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 168,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 169,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 170,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 171,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 172,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 173,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 174,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 175,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 176,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 177,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 178,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 179,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 180,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 181,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 182,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 183,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 184,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 185,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 186,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 187,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 188,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 189,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 190,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 191,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 192,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 193,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 194,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 195,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "latin",
+            "chapter": 196,
             "lessonCount": 7,
             "voice": 7,
             "sight": 0,
@@ -342431,7 +345173,7 @@
     "underspentPercent": 89
   },
   "infoDump": {
-    "lessons": 21396,
+    "lessons": 21586,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -342439,11 +345181,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 21396,
-    "measuredLessons": 17223,
-    "idiomMeasuredLessons": 17223,
-    "senseMeasuredLessons": 17224,
-    "cultureClaimMeasuredLessons": 17223,
+    "lessons": 21586,
+    "measuredLessons": 17413,
+    "idiomMeasuredLessons": 17413,
+    "senseMeasuredLessons": 17414,
+    "cultureClaimMeasuredLessons": 17413,
     "idioms": 101,
     "senses": 103,
     "cultureClaims": 208,
@@ -342452,18 +345194,18 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 20484,
-    "usesBeforeIntroduction": 38174,
-    "technicalUsesBeforeIntroduction": 6386,
-    "technicalLessons": 3602,
+    "lessonsUsingTerms": 20674,
+    "usesBeforeIntroduction": 38384,
+    "technicalUsesBeforeIntroduction": 6394,
+    "technicalLessons": 3609,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 2060
+        "lessons": 2061
       },
       {
         "term": "noun",
-        "lessons": 1205
+        "lessons": 1206
       },
       {
         "term": "adjective",
@@ -342479,17 +345221,17 @@
       },
       {
         "term": "tense",
-        "lessons": 252
+        "lessons": 253
       }
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 21396,
+    "lessonsScanned": 21586,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 4367,
+    "filesScanned": 4403,
     "mainCharacters": 135,
     "scriptCharacters": 802,
     "gaps": 0
