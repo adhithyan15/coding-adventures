@@ -4220,8 +4220,20 @@
       "components": [
         "య  ya — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "loop counterclockwise around the left bowl",
+        "loop counterclockwise around the centre bowl",
+        "draw down and up through the lower angled join",
+        "loop counterclockwise around the right bowl"
+      ],
+      "strokeOrderNote": "Four numbered movements in four pen-down runs: movement 1 closes the left bowl, movement 2 closes the centre bowl, movement 3 draws the lower angled join from left to right, and movement 4 closes the right bowl.",
+      "penLifts": 3,
+      "strokeOrderSource": {
+        "url": "https://play.google.com/store/apps/details?id=com.banuchanderjj.tracer.telugu",
+        "citation": "AppChant, Telugu Alphabets Writing, consonant య animated path guide encoded by LettersPointsTelugu::getAllPointsArrayForLetterTelugu_య in version 3.8.05 (3805)",
+        "accessed": "2026-10-01",
+        "variation": "The packaged auto-trace data gives four ordered starts, paths, and ends. Its య.png atlas mapping and pictured glyph independently identify U+0C2F య. The bundled Noto Sans Telugu outline rounds the printed joins differently, so the filmstrip preserves the four attested movement boundaries and directions while fitting their centre lines to that outline. Inspected XAPK SHA-256: 30c6e520a5b469cbe8d17568718bf75796987ea9596f69850eb921db2fe7bd57; libTracer.so SHA-256: 444511c98b69ada4de57900776945837c013da6a4fbfb21833c180d06f9c3ac5."
+      }
     },
     {
       "glyph": "యా",
