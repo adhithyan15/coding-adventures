@@ -1472,13 +1472,22 @@ impl Default for TreemapConfig {
     }
 }
 
+#[derive(Clone, Debug, PartialEq, Default)]
+pub struct TreemapStyle {
+    pub node: DiagramStyle,
+    pub opacity: Option<f64>,
+    pub fill_opacity: Option<f64>,
+    pub stroke_opacity: Option<f64>,
+    pub stroke_dash_offset: Option<f64>,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct TreemapNode {
     pub id: String,
     pub label: String,
     pub value: Option<f64>,
     pub class_selector: Option<String>,
-    pub style: Option<DiagramStyle>,
+    pub style: Option<TreemapStyle>,
     pub parent_id: Option<String>,
 }
 
@@ -1504,7 +1513,7 @@ pub struct LayoutedTreemapNode {
     pub width: f64,
     pub height: f64,
     pub class_selector: Option<String>,
-    pub style: Option<DiagramStyle>,
+    pub style: Option<TreemapStyle>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
