@@ -31,7 +31,8 @@ it("pins Telugu's pre-A1 writing ladder", () => {
   //
   // TE-S151 now opens the source-backed ladder with the thank-you word's dha.
   // TE-S109 follows with familiar-word na. TE-S152 then adds tta, followed by
-  // TE-S123 with dda, another vocabulary-first retroflex letter. TE-S113 adds
+  // TE-S157 with familiar-word ba and TE-S123 with dda, another
+  // vocabulary-first retroflex letter. TE-S113 adds
   // familiar-word pa before the first complete ladder. TE-S116 gives
   // familiar-word da the same source-backed
   // rung. TE-S155 revisits the stage for the aspirated partner ttha after the
@@ -50,6 +51,7 @@ it("pins Telugu's pre-A1 writing ladder", () => {
     ["TE-S151-letter-dha", "observe-trace"],
     ["TE-S109-letter-na", "observe-trace"],
     ["TE-S152-letter-tta", "observe-trace"],
+    ["TE-S157-letter-ba", "observe-trace"],
     ["TE-S123-letter-dda", "observe-trace"],
     ["TE-S113-letter-pa", "observe-trace"],
     ["TE-S01-letter-ta", "observe-trace"],
