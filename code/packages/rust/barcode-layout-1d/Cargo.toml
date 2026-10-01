@@ -8,3 +8,7 @@ description = "Shared 1D barcode layout crate: barcode runs -> PaintScene"
 paint-instructions = { path = "../paint-instructions" }
 text-interfaces = { path = "../text-interfaces" }
 text-native = { path = "../text-native" }
+
+[dev-dependencies]
+coding_adventures_sha256 = { path = "../sha256" }
+serde_json = "1"

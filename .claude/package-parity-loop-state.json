@@ -12,34 +12,34 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16327,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16327",
-    "item_id": "barcode-layout-1d-language-neutral-conformance",
-    "branch": "codex/parity-barcode-layout-conformance-20260930",
-    "head_revision": "183cd17d2b3ebe4006d80820528f61ddad91dca9",
+    "number": 16343,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16343",
+    "item_id": "barcode-layout-existing-lanes-v1-conformance",
+    "branch": "codex/parity-barcode-layout-existing-lanes-20260930",
+    "head_revision": "0fc147e227f883afa294b0bed31e95391df875c7",
     "status": "pr-open"
   },
   "last_ci_action": {
-    "observed_at": "2026-09-30T23:00:46Z",
-    "pr_number": 16327,
-    "status": "checks-pending",
-    "notes": "Ready-for-review PR #16327 is open from validated head 183cd17d2b3ebe4006d80820528f61ddad91dca9. GitHub reports MERGEABLE and BLOCKED while CI detect, CodeQL language detection, and human-language change detection are queued or in progress. Auto-merge remains disabled until every required check is terminal and acceptable and the branch remains conflict-free."
+    "observed_at": "2026-10-01T02:15:32Z",
+    "pr_number": 16343,
+    "status": "ci-failures-repaired-replacement-pending",
+    "notes": "Initial head 9a650b988e6a6b01f45c6a0bb2641e8557b3c03f failed macOS job 110173556809 because Node 22 strip-only mode rejected the TypeScript parameter property, and Windows job 110173556795 because the Python BUILD_windows front omitted jsonschema from its explicit test-tool installation. Focused repair 0fc147e227f883afa294b0bed31e95391df875c7 fixes both failures and hardens the Rust resolver-precedence evidence plus bounded Haskell, Perl, and Rust fixture readers. Replacement checks are pending; auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no merge conflict."
   },
   "last_inventory": {
-    "revision": "e07375d500da64d31373ecf0c79e947a78609fcd",
+    "revision": "4d6f27159239d6d3f8d408a5a4c0ecb5ca8059f5",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1473,
-    "implementation_package_slots": 4740,
-    "all_reported_identities": 1515,
+    "implementation_identities": 1474,
+    "implementation_package_slots": 4741,
+    "all_reported_identities": 1516,
     "high_consensus_packages": 178,
     "high_consensus_missing_slots": 265,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 181,
     "two_to_four_missing_slots": 2282,
-    "singleton_packages": 991,
-    "singleton_missing_slots": 13874,
+    "singleton_packages": 992,
+    "singleton_missing_slots": 13888,
     "rust_singletons": 805,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
@@ -3943,7 +3943,11 @@
         "barcode-1d-java-kotlin-dart-lane-parity",
         "hkdf-java-kotlin-dart-lane-parity",
         "pbkdf2-java-kotlin-dart-lane-parity",
-        "font-parser-java-kotlin-dart-lane-parity"
+        "font-parser-java-kotlin-dart-lane-parity",
+        "compiler-source-map-java-kotlin-lane-parity",
+        "type-checker-protocol-java-kotlin-lane-parity",
+        "wasm-module-encoder-java-kotlin-lane-parity",
+        "x25519-java-kotlin-dart-lane-parity"
       ],
       "branch": null,
       "pr_number": null,
@@ -3984,7 +3988,28 @@
         "barcode-1d-java-kotlin-dart-lane-parity",
         "hkdf-java-kotlin-dart-lane-parity",
         "pbkdf2-java-kotlin-dart-lane-parity",
-        "font-parser-java-kotlin-dart-lane-parity"
+        "font-parser-java-kotlin-dart-lane-parity",
+        "compiler-source-map-dart-lane-parity",
+        "compiler-source-map-swift-lane-parity",
+        "type-checker-protocol-dart-lane-parity",
+        "type-checker-protocol-swift-lane-parity",
+        "wasm-module-encoder-swift-lane-parity",
+        "x25519-java-kotlin-dart-lane-parity",
+        "avl-tree-dart-lane-parity",
+        "avl-tree-swift-lane-parity",
+        "binary-tree-dart-swift-lane-parity",
+        "swift-hash-functions-lane-parity",
+        "swift-hash-map-lane-parity",
+        "swift-hash-set-lane-parity",
+        "swift-hyperloglog-lane-parity",
+        "swift-bloom-filter-lane-parity",
+        "swift-skip-list-lane-parity",
+        "swift-resp-protocol-lane-parity",
+        "swift-in-memory-data-store-protocol-lane-parity",
+        "swift-in-memory-data-store-engine-lane-parity",
+        "swift-in-memory-data-store-lane-parity",
+        "swift-tree-set-lane-parity",
+        "swift-radix-tree-lane-parity"
       ],
       "branch": null,
       "pr_number": null,
@@ -5190,7 +5215,7 @@
       "id": "dart-current-14-of-15-binary-search-tree",
       "title": "Port the DT07 binary search tree package to Dart",
       "status": "pending",
-      "depends_on": ["dart-scaffold-capability-schema"],
+      "depends_on": ["dart-scaffold-capability-schema", "binary-tree-dart-swift-lane-parity"],
       "branch": null,
       "pr_number": null,
       "notes": "Materialized from the remaining Dart-only 14-of-15 frontier after PR #9477. Reconcile the cross-lane empty min/max, invalid-rank, comparator, and conceptual tree/binary-tree prerequisite differences before implementation."
@@ -9724,7 +9749,7 @@
       "id": "ocaml-build-tool-three-platform-ci-execution",
       "title": "Execute the native OCaml build tool on Ubuntu, macOS, and Windows CI",
       "status": "pending",
-      "depends_on": ["ocaml-build-tool-current-contract-conformance", "ocaml-ci-toolchain", "ocaml-representative-package-ci-execution"],
+      "depends_on": ["ocaml-build-tool-current-contract-conformance", "ocaml-ci-toolchain", "ocaml-representative-package-ci-execution", "ocaml-opam-archive-mirror-all-ci-paths"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the parallel OCaml promotion-readiness audit after PR #14519. Own the real three-platform native-build-tool qualification separately from the atomic denominator switch: execute the current-contract OCaml build tool against the representative package chain on pinned Ubuntu, macOS, and Windows toolchains with no skips, deterministic two-way Go plan interchange, measured coverage, stable failure evidence, retained artifacts, and the same language-neutral corpora. Keep native execution, toolchain provisioning, and hosted-runner evidence in this CI owner; `ocaml-lane-promotion` remains blocked until it and the representative package execution owner are complete. No reviewed exception is currently justified."
@@ -9829,7 +9854,7 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "The historical 2026-07-29 audit at d3ff1ec2e recorded 278 high-consensus missing slots: 107 Dart, 58 Java, 58 Kotlin, 51 Swift, three Haskell, and one Python; its canonical sorted language-to-package list has SHA-256 b36dc2dac9cb7ace83fbaf568b7b020ddc5f8cccc8202c96cb135993ac1219c8. Current exact-main 9240d08f6c6af840e9378cdb90420c53b1821e2d instead records 265 missing slots: 97 Dart, 53 Java, 53 Kotlin, 51 Swift, four Haskell, two Perl, and one each Elixir, Lua, Python, Ruby, and Rust, with canonical list SHA-256 d7da6fff66017cf4e1de86f3ea95382d06f23d4ab725d16f22684271325dc7dc. Package-name presence remains structural evidence rather than a semantic owner: continue decomposing exact dependency-shaped families before implementation. Existing SHA-512, barcode, HMAC/HKDF/PBKDF2, font, and Swift hash owners remain authoritative; Point2d still requires contract repair and existing-lane conformance before Java/Kotlin/Dart expansion. Preserve verified spec or manifest edges only and do not encode priority-only sequencing as dependencies."
+      "notes": "The historical 2026-07-29 audit at d3ff1ec2e recorded 278 high-consensus missing slots: 107 Dart, 58 Java, 58 Kotlin, 51 Swift, three Haskell, and one Python; its canonical sorted language-to-package list has SHA-256 b36dc2dac9cb7ace83fbaf568b7b020ddc5f8cccc8202c96cb135993ac1219c8. Current exact-main 9240d08f6c6af840e9378cdb90420c53b1821e2d instead records 265 missing slots: 97 Dart, 53 Java, 53 Kotlin, 51 Swift, four Haskell, two Perl, and one each Elixir, Lua, Python, Ruby, and Rust, with canonical list SHA-256 d7da6fff66017cf4e1de86f3ea95382d06f23d4ab725d16f22684271325dc7dc. Package-name presence remains structural evidence rather than a semantic owner: continue decomposing exact dependency-shaped families before implementation. Existing SHA-512, barcode, HMAC/HKDF/PBKDF2, font, and Swift hash owners remain authoritative. The post-#16327 audit now exactly owns compiler-source-map, type-checker-protocol, wasm-module-encoder, X25519, AVL-tree, DT03 binary-tree, and the missing Swift hash-family children without duplicating underscore-spelled canonical roots. Point2d still requires contract repair and existing-lane conformance before Java/Kotlin/Dart expansion. Preserve verified spec or manifest edges only and do not encode priority-only sequencing as dependencies."
     },
     {
       "id": "swift-hash-functions-lane-parity",
@@ -9838,7 +9863,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "First exact Swift high-consensus child materialized by the post-#14615 lane audit. Implement the existing deterministic hash-functions contract with package-native tests, empty capabilities, and no host authority. This dependency-shaped root unlocks later Swift bloom-filter, hash-map, and hyperloglog children; hyperloglog then unlocks the in-memory-data-store engine and facade. The remaining 49 non-CT Swift high-consensus gaps stay owned by the selection-blocked classifier until decomposed into exact children."
+      "notes": "First exact Swift high-consensus child materialized by the post-#14615 lane audit. Implement the existing deterministic hash-functions contract with package-native tests, empty capabilities, and no host authority. This dependency-shaped root unlocks the explicit Swift bloom-filter, hash-map, hash-set, and HyperLogLog children. The store engine remains separately gated on hash-map, hash-set, HyperLogLog, skip-list, protocol IR, and the neutral injected-clock contract. The remaining non-CT Swift high-consensus gaps stay owned by the selection-blocked classifier until decomposed into exact children."
     },
     {
       "id": "build-tool-jvm-process-free-graph-diff-core",
@@ -10160,6 +10185,15 @@
       "notes": "Own deterministic treemap, tree-view, swimlane, and railroad typed-IR layout behavior, geometry and ordering, metadata, numeric validation, recursion ceilings, stable failures, and an empty capability profile. Keep parsing, fonts, themes, paint backends, interaction, and unsupported dialects outside this portable core."
     },
     {
+      "id": "mermaid-treemap-language-neutral-conformance",
+      "title": "Fixture the portable Mermaid treemap pipeline",
+      "status": "pending",
+      "depends_on": ["diagram-layout-hierarchy-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #16345 extended the existing Rust Mermaid parser, diagram IR, hierarchy layout, and paint projection with grammar-backed treemap class styling without adding a package identity. Define a language-neutral contract and adversarial fixture corpus for treemap declarations, indentation, stable node identity and ordering, classDef resolution before or after styled nodes, fill, stroke, dash, text color, typography, deterministic hierarchy geometry, backend-neutral paint projection, malformed inputs, numeric behavior, recursion and resource ceilings, and stable diagnostics. Keep fonts, native Metal or PNG capture, devices, filesystem, interaction, and unsupported Mermaid dialect behavior outside the portable contract."
+    },
+    {
       "id": "layout-backgrounds-portable-core-conformance",
       "title": "Define portable layout-backgrounds core conformance",
       "status": "pending",
@@ -10325,9 +10359,208 @@
       "notes": "Selection-blocked integration owner for the six collision-free existing-lane symbology children. After every child merges, validate the complete 72-root consumer registry, cross-symbology metadata and capability invariants, and downstream facade readiness without absorbing any child implementation. Clear selection_blocked only for that final bounded integration tranche; it must still follow pending -> in-progress -> pr-open -> merged."
     },
     {
+      "id": "compiler-source-map-language-neutral-conformance",
+      "title": "Define language-neutral compiler source-map conformance",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Freeze the four-stage SourceToAst, AstToIr, IrToIr, and IrToMachineCode model; forward and reverse lookup; interval boundaries and precedence; optimizer-pass composition; deterministic ordering; immutable ownership; stable errors; and resource ceilings in a versioned corpus. Reconcile the 11 canonical existing established lanes with an empty capability profile."
+    },
+    {
+      "id": "compiler-source-map-java-kotlin-lane-parity",
+      "title": "Complete compiler-source-map parity in Java and Kotlin",
+      "status": "pending",
+      "depends_on": ["compiler-source-map-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the full neutral corpus with package-native APIs and tests, checked integer ranges, copied immutable results, empty capabilities, and no filesystem or compiler-process authority."
+    },
+    {
+      "id": "compiler-source-map-dart-lane-parity",
+      "title": "Complete compiler-source-map parity in Dart",
+      "status": "pending",
+      "depends_on": ["compiler-source-map-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the full neutral corpus with VM- and web-safe checked offsets, immutable copied outputs, empty capabilities, and no host authority."
+    },
+    {
+      "id": "compiler-source-map-swift-lane-parity",
+      "title": "Complete compiler-source-map parity in Swift",
+      "status": "pending",
+      "depends_on": ["compiler-source-map-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the full neutral corpus with value-semantic copied results, checked ranges, empty capabilities, and no host authority."
+    },
+    {
+      "id": "type-checker-protocol-language-neutral-conformance",
+      "title": "Define language-neutral type-checker protocol conformance",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Freeze immutable 1-based diagnostics, typed result and error accumulation, exact ok behavior, traversal and handler contracts, deterministic diagnostic ordering, stable validation failures, generic AST ownership, and explicit ceilings without importing language-specific semantics or backend constraints. Reconcile all 11 canonical existing lanes."
+    },
+    {
+      "id": "type-checker-protocol-java-kotlin-lane-parity",
+      "title": "Complete type-checker-protocol parity in Java and Kotlin",
+      "status": "pending",
+      "depends_on": ["type-checker-protocol-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the neutral protocol and framework surface with typed immutable records, complete fixture consumption, empty capabilities, and no runtime reflection or process authority."
+    },
+    {
+      "id": "type-checker-protocol-dart-lane-parity",
+      "title": "Complete type-checker-protocol parity in Dart",
+      "status": "pending",
+      "depends_on": ["type-checker-protocol-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Preserve generic typed-AST and result behavior, immutable diagnostics, exact neutral errors, and an empty capability profile."
+    },
+    {
+      "id": "type-checker-protocol-swift-lane-parity",
+      "title": "Complete type-checker-protocol parity in Swift",
+      "status": "pending",
+      "depends_on": ["type-checker-protocol-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Preserve generic typed-AST and result behavior, deterministic immutable diagnostics, exact neutral errors, and an empty capability profile."
+    },
+    {
+      "id": "wasm-module-encoder-existing-lanes-baseline-conformance",
+      "title": "Reconcile existing wasm-module-encoder lanes with a neutral baseline",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Define one bounded WebAssembly core-module encoding corpus for magic and version, canonical section ordering and counts, canonical LEB128, supported core forms, deterministic bytes, parser round trips, malformed-model rejection, stable errors, and pre-allocation ceilings. Reconcile all 12 canonical existing lanes without absorbing later W21 or W25 proposal semantics."
+    },
+    {
+      "id": "wasm-module-encoder-java-kotlin-lane-parity",
+      "title": "Complete wasm-module-encoder parity in Java and Kotlin",
+      "status": "pending",
+      "depends_on": ["wasm-module-encoder-existing-lanes-baseline-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Reuse the existing JVM wasm-leb128 and wasm-types packages, consume the full neutral baseline, and add no host authority."
+    },
+    {
+      "id": "wasm-module-encoder-swift-lane-parity",
+      "title": "Complete wasm-module-encoder parity in Swift",
+      "status": "pending",
+      "depends_on": ["wasm-module-encoder-existing-lanes-baseline-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Reuse the existing Swift wasm-leb128 and wasm-types stack and consume the full baseline with deterministic byte ownership and no host authority."
+    },
+    {
+      "id": "x25519-language-neutral-conformance",
+      "title": "Define language-neutral X25519 conformance",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Repair and freeze RFC 7748 scalar clamping, u-coordinate high-bit masking, little-endian handling, exact 32-byte inputs and outputs, RFC and iterative vectors, all-zero shared-secret rejection, nonmutation, stable payload-blind errors, fixed ladder iteration and control-flow evidence, and bounded resources. Avoid universal wall-clock claims and host-crypto substitution."
+    },
+    {
+      "id": "x25519-java-kotlin-dart-lane-parity",
+      "title": "Complete X25519 parity in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["x25519-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Use repository-owned fixed-shape arithmetic with reviewed data-independent control flow, full neutral vectors, empty capabilities, and no JCA, WebCrypto, or platform-crypto shortcut."
+    },
+    {
+      "id": "binary-tree-dart-swift-lane-parity",
+      "title": "Complete DT03 binary-tree parity in Dart and Swift",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the existing DT03 node, traversal, shape-predicate, height and depth, array conversion, boundary and error, ownership, and empty-capability contract with package-native tests. These are the exact two canonical gaps; DT03 already provides the governing neutral contract."
+    },
+    {
+      "id": "avl-tree-language-neutral-conformance",
+      "title": "Define language-neutral DT08 AVL-tree conformance",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Freeze comparator behavior, duplicate policy, persistent ownership, cached size and height, empty min and max behavior, search, rank, kth, insert, delete, all four rotations, balance invariants, invalid-rank errors, deterministic traversals, and operation and resource ceilings; reconcile the 13 canonical existing lanes."
+    },
+    {
+      "id": "avl-tree-dart-lane-parity",
+      "title": "Complete AVL-tree parity in Dart",
+      "status": "pending",
+      "depends_on": ["avl-tree-language-neutral-conformance", "dart-current-14-of-15-binary-search-tree"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume DT08 only after the existing Dart DT07 child closes its reviewed comparator and order-statistic prerequisite. Preserve persistent ownership and empty capabilities."
+    },
+    {
+      "id": "avl-tree-swift-lane-parity",
+      "title": "Complete AVL-tree parity in Swift",
+      "status": "pending",
+      "depends_on": ["avl-tree-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Swift already has DT07; consume the DT08 corpus with persistent value semantics, exact invariants, stable errors, and empty capabilities."
+    },
+    {
+      "id": "swift-hash-map-lane-parity",
+      "title": "Implement DT18 hash-map in Swift",
+      "status": "pending",
+      "depends_on": ["swift-hash-functions-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Preserve both reviewed collision strategies, resizing and load-factor behavior, specified deterministic iteration guarantees, input ownership, empty capabilities, and exact DT17 hashing."
+    },
+    {
+      "id": "swift-hash-set-lane-parity",
+      "title": "Implement DT19 hash-set in Swift",
+      "status": "pending",
+      "depends_on": ["swift-hash-functions-lane-parity", "swift-hash-map-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Preserve set algebra and membership semantics using the reviewed DT18 and DT17 dependency chain, with empty capabilities."
+    },
+    {
+      "id": "swift-hyperloglog-lane-parity",
+      "title": "Implement DT21 HyperLogLog in Swift",
+      "status": "pending",
+      "depends_on": ["swift-hash-functions-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Preserve precision bounds, register, index and rank behavior, correction regimes, merge compatibility, stable errors, and deterministic hashing."
+    },
+    {
+      "id": "swift-bloom-filter-lane-parity",
+      "title": "Implement DT22 Bloom filter in Swift",
+      "status": "pending",
+      "depends_on": ["swift-hash-functions-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Preserve size and hash-count calculation, bit addressing, membership behavior, false-positive fixture bounds, stable validation errors, and deterministic hashing."
+    },
+    {
+      "id": "ocaml-opam-archive-mirror-all-ci-paths",
+      "title": "Apply the reviewed opam archive mirror to every OCaml CI path",
+      "status": "pending",
+      "depends_on": ["ocaml-ci-toolchain", "ocaml-capability-analyzer", "ocaml-representative-package-ci-execution"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Extend the exact checksum-backed https://opam.ocaml.org/cache archive mirror policy from the capability job to every setup-ocaml consumer: generic matrix bootstrap, fresh and locked OCAML03 jobs, OCAML06 capability gate, and OCAML07 representative execution. Configure it only after validating the commit-pinned repository, require checksums, reject duplicates or mismatched preconfiguration, and add an offline validator enumerating every setup path. This changes bootstrap availability only, not repository provenance, package versions, or network authority. Selection is temporarily blocked while open PR #15723 overlaps all three workflows."
+    },
+    {
       "id": "barcode-layout-1d-language-neutral-conformance",
       "title": "Define the neutral barcode-layout-1d geometry contract",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/parity-barcode-layout-conformance-20260930",
       "pr_number": 16327,
@@ -10341,16 +10574,48 @@
       "implementation_notes": "Defines the bounded barcode-layout-1d-v1 portable integer contract, 56 generated vectors, closed operation-specific schemas, canonical large-output digesting, exact eight-lane pending-adoption registry with immutable conformance-evidence gates, strict hostile-input loader coverage, and repo-wide metadata-contract CI registration. All current implementations remain pending adoption; this slice changes no package source, dependency metadata, build front, package identity, or runtime authority. Parallel read-only reviews drove metadata input/output separation, exact error precedence, Unicode-scalar markers, source-attribution failures, zero-authority evidence, lane-divergence records, and schema mutation tests. The branch rebased cleanly through exact main e07375d500da64d31373ecf0c79e947a78609fcd; intervening changes touched existing human-language and script-ductus source/test/documentation paths but no package-root or manifest identity, so inventory totals remain unchanged.",
       "validation_notes": "The strict corpus suite passes 8 tests, byte-for-byte generator drift is clean, Ruff check and format pass, and Bandit reports no findings. The package-parity reporter passes 10 tests. The existing Go barcode-layout-1d package passes two direct tests at 80% statement coverage, go vet, and its checked-in BUILD command. The TypeScript human-language-data package builds and the full doc-shard reconstruction gate passes. JSON/schema parsing, the 940-owner/1,811-edge acyclic state graph, changelog rank/heading digest, changed-line credential scan, file-mode review, git diff --check, and exact-diff package/build-metadata neutrality all pass.",
       "publication_notes": "Opened ready-for-review PR #16327 from clean validated head 183cd17d2b3ebe4006d80820528f61ddad91dca9 after confirming no other active parity PR and no origin/main drift. GitHub reports MERGEABLE and BLOCKED while initial CI, CodeQL, and human-language detection are queued or in progress; guarded auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
+      "merged_head_revision": "16fa65277fe967121815c325a68181ceeb33d51e",
+      "merged_at": "2026-09-30T23:50:38Z",
+      "merge_revision": "6bcec12e1559f0944005f10570a2771e617e4d7f",
+      "merge_notes": "All 50 final-head checks reached terminal acceptable conclusions: 43 successes and seven expected skips. GitHub reported the reviewed head MERGEABLE and CLEAN; guarded squash auto-merge was enabled only then, and GitHub merged PR #16327 automatically without a plain manual merge command.",
       "notes": "Freeze the portable integer geometry subset before adding Java, Kotlin, and Dart. Specify exact pattern expansion, quiet-zone and alternation rules, symbol inference, checked integer overflow and resource ceilings, string-only metadata projection, immutable copied outputs, and fail-closed text handling. Keep fractional/native paint, raster, font, shaping, device, filesystem, and process authority outside this contract."
     },
     {
       "id": "barcode-layout-existing-lanes-v1-conformance",
       "title": "Reconcile existing barcode-layout-1d lanes with the neutral contract",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["barcode-layout-1d-language-neutral-conformance"],
+      "branch": "codex/parity-barcode-layout-existing-lanes-20260930",
+      "pr_number": 16343,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16343",
+      "opened_at": "2026-10-01T01:07:59Z",
+      "opened_revision": "d9a613fa23e2d882f4ea649814942cc096d5c5dc",
+      "selected_at": "2026-09-30T23:52:54Z",
+      "selection_revision": "6bcec12e1559f0944005f10570a2771e617e4d7f",
+      "selection_notes": "Selected only after PR #16327 completed every final-head check acceptably and merged through guarded squash auto-merge as 6bcec12e1559f0944005f10570a2771e617e4d7f. The collision-checked package topology remains unchanged at 15 established lanes, 1,473 implementation identities, 4,740 slots, 1,515 all-reported identities, completion bands 178/265, 123/934, 181/2,282, and 991/13,874, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. This newly ready adoption owner has two direct and thirteen total unfinished descendants, ahead of the neutral facade alternative at one direct and five total, and no open PR exactly overlaps any of the eight barcode-layout-1d roots. The fresh clean sparse worktree starts from the exact merge revision.",
+      "notes": "Dynamically execute the neutral layout corpus in every current lane and reconcile observed divergence in empty patterns, zero quiet zones, run alternation, integer versus fractional geometry, text behavior, metadata projection, error precedence, overflow, and output mutability before those implementations become the oracle for missing lanes.",
+      "implementation_revision": "0fc147e227f883afa294b0bed31e95391df875c7",
+      "validation_revision": "0fc147e227f883afa294b0bed31e95391df875c7",
+      "validation_notes": "All eight strict facades dynamically execute the 56-case neutral corpus. Focused native suites pass with 11 C# tests, 13 F# tests, 87.0% Go statement coverage, 27 Haskell examples, 66 Perl tests, 71 Python tests at 90.27% coverage, 7 Rust unit plus 5 conformance tests and six direct barcode downstreams, and 76 TypeScript tests at 93.55% statement coverage. The TypeScript barcode-1d native downstream also builds and passes six Node tests on Windows. Ruff, mypy, Go vet/build, cabal check, cargo fmt/clippy/audit, TypeScript build/BUILD/audit, capability manifests, nine shared fixture tests plus five subtests, state DAG, collision inventory, and diff hygiene pass. Rust LLVM coverage test execution passed but Windows report generation hit the existing path-length error 206; the aggregate Rust barcode-1d downstream was blocked locally by Skia download DNS and Windows symlink privilege while the six pure direct downstream suites passed.",
+      "publication_notes": "Draft PR #16343 opened only to obtain the durable adoption PR number. The initial push was based on exact origin/main 3733335aa3c2faf845282bd0935349aa228809c6; before evidence publication the branch rebased cleanly again onto 4d6f27159239d6d3f8d408a5a4c0ecb5ca8059f5. No other parity PR was active, and the open-PR path audit found no barcode-layout overlap. The PR will be marked ready only after conformant evidence and this pr-open state are pushed."
+    },
+    {
+      "id": "barcode-layout-1d-elixir-lua-v1-conformance",
+      "title": "Reconcile Elixir and Lua barcode-layout-1d with the neutral contract",
+      "status": "pending",
+      "depends_on": ["barcode-layout-1d-language-neutral-conformance", "barcode-layout-existing-lanes-v1-conformance"],
       "branch": null,
       "pr_number": null,
-      "notes": "Dynamically execute the neutral layout corpus in every current lane and reconcile observed divergence in empty patterns, zero quiet zones, run alternation, integer versus fractional geometry, text behavior, metadata projection, error precedence, overflow, and output mutability before those implementations become the oracle for missing lanes."
+      "notes": "The collision-checked follow-up audit found established implementations at code/packages/elixir/barcode_layout_1d and code/packages/lua/barcode_layout_1d that were omitted from the eight-target adoption registry. Reconcile both legacy APIs with the complete barcode-layout-1d-v1 corpus, strict bounded fixture loading, exact error precedence, zero-authority text rejection, metadata projection, overflow behavior, immutability, native build fronts, capability evidence, and downstream consumers before either lane is reported conformant."
+    },
+    {
+      "id": "barcode-layout-1d-ruby-swift-v1-conformance",
+      "title": "Reconcile Ruby and Swift barcode-layout-1d with the neutral contract",
+      "status": "pending",
+      "depends_on": ["barcode-layout-1d-language-neutral-conformance", "barcode-layout-existing-lanes-v1-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The collision-checked follow-up audit found established implementations at code/packages/ruby/barcode_layout_1d and code/packages/swift/BarcodeLayout1D that were omitted from the eight-target adoption registry. Reconcile both legacy APIs with the complete barcode-layout-1d-v1 corpus, strict bounded fixture loading, exact error precedence, zero-authority text rejection, metadata projection, overflow behavior, immutability, native build fronts, capability evidence, and downstream consumers before either lane is reported conformant."
     },
     {
       "id": "barcode-layout-1d-java-kotlin-dart-lane-parity",
@@ -11271,7 +11536,77 @@
       "depends_on": ["forme-portable-core-family-classification"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered from non-parity PR #16296, which merged as 222ce7975e and added the TypeScript-only forme-plugin-runner-ts identity. The exact-main c6685aa8 schema-3 refresh inventories that singleton without collision or unowned debt. Inventory the runner with the existing Forme family and freeze only its process-free wire codec and framing, JSON-RPC identifier, bounded lifecycle/state-transition, stream-envelope, cancellation-projection, and pure SDK projection behavior. Keep stdin/stdout, argv, signals, timers, filesystem, network, storage, shell execution, native limits, sandbox, trust, and installation authority outside this owner. The item is no longer live-PR blocked but remains dependency-gated by forme-portable-core-family-classification."
+      "notes": "Discovered from non-parity PR #16296, which merged as 222ce7975e and added the TypeScript-only forme-plugin-runner-ts identity. PR #16323 later merged as f8494ae9bcd798b827c3096f4f6565ab1be567b0 and added the collision-free TypeScript forme-plugin-runner-conformance identity. The exact-main a960adc4 schema-3 refresh absorbs both singletons into this owner without collision or unowned debt. Inventory the runner with the existing Forme family and freeze only its process-free wire codec and framing, JSON-RPC identifier, bounded lifecycle/state-transition, stream-envelope, cancellation-projection, and pure SDK projection behavior. Keep stdin/stdout, argv, signals, timers, filesystem, network, storage, shell execution, native limits, sandbox, trust, and installation authority outside this owner. The overlap block is now cleared; normal dependencies and the one-active-PR rule still govern selection."
+    },
+    {
+      "id": "swift-skip-list-lane-parity",
+      "title": "Implement DT20 skip-list in Swift",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": false,
+      "notes": "Implement the dependency-free span-augmented ordered map with insert, update, delete, rank, selection, range behavior, comparator semantics, caller-controlled level generation, package-native tests, and empty capabilities. This is a direct prerequisite of the Swift data-store engine."
+    },
+    {
+      "id": "swift-resp-protocol-lane-parity",
+      "title": "Implement DT23 RESP protocol in Swift",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": false,
+      "notes": "Implement the pure typed RESP2 codec with binary-safe bulk strings, distinct null bulk and null array values, incremental decoding across arbitrary fragmentation, stable failures, explicit resource ceilings, package-native tests, and empty capabilities."
+    },
+    {
+      "id": "swift-in-memory-data-store-protocol-lane-parity",
+      "title": "Implement the in-memory data-store protocol IR in Swift",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": false,
+      "notes": "Implement the dependency-free command-frame and engine-response IR with ASCII command normalization, binary-safe arguments, immutable value ownership, deterministic ordering, stable errors, package-native tests, and empty capabilities. Keep RESP conversion in the facade rather than coupling this IR owner to the wire codec."
+    },
+    {
+      "id": "swift-in-memory-data-store-engine-lane-parity",
+      "title": "Implement the DT25 in-memory data-store engine in Swift",
+      "status": "pending",
+      "depends_on": ["swift-hash-map-lane-parity", "swift-hash-set-lane-parity", "swift-hyperloglog-lane-parity", "swift-skip-list-lane-parity", "swift-in-memory-data-store-protocol-lane-parity", "in-memory-data-store-clock-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": false,
+      "notes": "Consume the existing Swift heap plus the reviewed hash-map, hash-set, skip-list, HyperLogLog, protocol-IR, and injected-clock contracts. Preserve binary-safe strings, typed collections, sorted sets, expiry, 16 logical databases, deterministic response ordering, and the complete 57-command execution surface. Require caller-controlled time and empty capabilities; exclude ambient clock access, AOF/filesystem persistence, sockets, processes, and credentials."
+    },
+    {
+      "id": "swift-in-memory-data-store-lane-parity",
+      "title": "Implement the DT25 in-memory data-store facade in Swift",
+      "status": "pending",
+      "depends_on": ["swift-resp-protocol-lane-parity", "swift-in-memory-data-store-protocol-lane-parity", "swift-in-memory-data-store-engine-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": false,
+      "notes": "Compose the RESP2 streaming decoder, command protocol IR, and execution engine into incremental and pipelined byte-stream entry points with binary-safe response conversion. Preserve empty capabilities and exclude TCP listening, AOF persistence, background expiry loops, ambient time, and other host authority."
+    },
+    {
+      "id": "swift-tree-set-lane-parity",
+      "title": "Implement the AVL-backed tree-set package in Swift",
+      "status": "pending",
+      "depends_on": ["avl-tree-swift-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": false,
+      "notes": "Compose the reviewed Swift AVL-tree contract into an ordered persistent set with rank, range, set algebra, deterministic iteration, immutable ownership, package-native tests, and empty capabilities."
+    },
+    {
+      "id": "swift-radix-tree-lane-parity",
+      "title": "Implement DT14 radix-tree in Swift",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": false,
+      "notes": "Implement the compressed-trie contract over Swift's already present DT13 semantics, including Unicode-safe edge splits, prefix scans, longest-prefix matching, deletion compaction, deterministic ordering, stable errors, package-native tests, and empty capabilities."
     },
     {
       "id": "assembler-lua-arm-prerequisite-classification",

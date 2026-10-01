@@ -16,5 +16,6 @@
   <ItemGroup>
     <ProjectReference Include="../../CodingAdventures.BarcodeLayout1D.fsproj" />
     <Compile Include="BarcodeLayout1DTests.fs" />
+    <Compile Include="BarcodeLayout1DConformanceTests.fs" />
   </ItemGroup>
 </Project>

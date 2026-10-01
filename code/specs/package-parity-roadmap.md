@@ -15293,7 +15293,7 @@ canonical JSON digest recipe, while the strict fixture loader rejects oversized
 or deeply nested input, duplicate keys, invalid scalars, non-finite values, and
 external schema references.
 
-The target registry names exactly the existing C#, F#, Go, Haskell, Perl,
+The initial target registry names the eight scoped C#, F#, Go, Haskell, Perl,
 Python, Rust, and TypeScript implementations. Every target remains
 `pending-adoption`; none is credited with conformance from package prose or an
 empty capability manifest alone. The registry preserves the reviewed legacy,
@@ -15329,6 +15329,109 @@ Ready-for-review PR #16327 publishes the contract from validated head
 mergeable but blocked while initial CI, CodeQL, and human-language detection
 are queued or in progress. Guarded auto-merge remains disabled until every
 required check is terminal and acceptable and the branch remains conflict-free.
+
+### PR #16327 merge, post-merge audit, and existing-lane adoption selection
+
+All 50 final-head checks completed acceptably: 43 succeeded and seven were
+expected skips. GitHub reported the reviewed head mergeable and clean, guarded
+squash auto-merge was enabled only then, and PR #16327 merged automatically at
+`2026-09-30T23:50:38Z` as
+`6bcec12e1559f0944005f10570a2771e617e4d7f`; no plain manual merge command was
+used.
+
+The collision-checked exact-main inventory remains unchanged at 15 established
+lanes, 1,473 implementation identities, 4,740 package slots, 1,515 all-reported
+identities, completion bands 178/265, 123/934, 181/2,282, and 991/13,874, 805
+Rust singletons, five emerging OCaml packages, zero canonical collisions, and
+zero unknown buckets. A projected open PR #16323 would add exactly one unique
+TypeScript `forme-plugin-runner-conformance` identity without collision; its
+existing lifecycle owner is selection-blocked until that PR closes and the new
+identity can be absorbed or split explicitly.
+
+The parallel package and lane audit added 22 exact owners rather than leaving
+newly measured gaps under historical umbrellas. Compiler source maps and the
+type-checker protocol each receive a neutral contract plus Java/Kotlin, Dart,
+and Swift children. The current WebAssembly module encoder receives a baseline
+existing-lane contract plus JVM and Swift children. X25519 receives a repaired
+neutral contract and one Java/Kotlin/Dart child. DT03 binary-tree receives its
+exact Dart/Swift port, while DT08 AVL-tree receives a neutral contract and
+separate Dart and Swift children. Four previously implicit Swift hash-family
+children now depend explicitly on hash-functions. The OCaml CI chain now owns
+checksum-backed opam archive-mirror coverage across every setup path and blocks
+three-platform build-tool qualification until it is reviewed. Canonical
+underscore spellings were collision-checked so no duplicate Elixir, Lua, or
+Ruby owner was created.
+
+After those discoveries were recorded, dependency/leverage ranking selected
+`barcode-layout-existing-lanes-v1-conformance`. The newly ready adoption owner
+has two direct and thirteen total unfinished descendants, ahead of the neutral
+facade alternative at one direct and five total. No open PR exactly overlaps
+the eight C#, F#, Go, Haskell, Perl, Python, Rust, or TypeScript package roots.
+The fresh clean sparse branch
+`codex/parity-barcode-layout-existing-lanes-20260930` starts from the exact merge
+revision. It will first make adoption evidence mechanically truthful, then run
+the complete neutral corpus through each scoped lane and reconcile source,
+tests, build fronts, capability manifests, and affected barcode downstreams.
+
+### Post-#16323 inventory and Swift store-chain audit
+
+Before publication of the existing-lane barcode adoption, PR #16323 merged as
+`f8494ae9bcd798b827c3096f4f6565ab1be567b0`. Its new TypeScript
+`forme-plugin-runner-conformance` root is collision-free and is now absorbed by
+the existing Forme runner wire/lifecycle owner alongside
+`forme-plugin-runner-ts`. The temporary live-PR selection block is cleared;
+the owner still excludes subprocess, filesystem, network, storage, shell,
+signal, timer, native-limit, sandbox, trust, and installation authority.
+
+The exact-main schema-3 inventory at
+`4d6f27159239d6d3f8d408a5a4c0ecb5ca8059f5` is collision-clean at 15
+established lanes, 1,474 implementation identities, 4,741 package slots, 1,516
+all-reported identities, completion bands 178/265, 123/934, 181/2,282, and
+992/13,888, 805 Rust singletons, five emerging OCaml packages, zero canonical
+collisions, and zero unknown buckets. The only identity delta from the
+post-#16327 snapshot is the now-merged Forme conformance root.
+
+The follow-up Swift dependency audit also materializes seven previously
+implicit collision-free successors. Dependency-free skip-list, RESP2, and
+data-store protocol-IR children feed a bounded data-store engine that also
+depends on hash-map, hash-set, HyperLogLog, and the neutral injected-clock
+contract. A separate facade composes the engine, protocol IR, and streaming
+RESP2 codec without TCP, persistence, background loops, or ambient time.
+AVL-backed tree-set and compressed radix-tree remain independent exact
+children. The selection-blocked Swift/Dart umbrella now names all seven, while
+each bounded leaf remains selectable subject to its explicit dependencies and
+the one-active-PR rule.
+
+### PR #16343 CI repair and omitted-lane backlog
+
+The first reviewed head of PR #16343 exposed two exact build-front failures.
+Node 22 strip-only mode rejected a TypeScript parameter property in the shared
+layout error, blocking the native `barcode-1d` downstream on macOS and Windows.
+The Windows Python front also installed its development package with
+`--no-deps` but omitted the test-only `jsonschema` dependency from the explicit
+tool installation. Focused repair `0fc147e227f883afa294b0bed31e95391df875c7`
+uses strip-only-compatible TypeScript syntax and restores the missing Windows
+test dependency. The same bounded repair replaces compile-time and unbounded
+fixture reads in Rust, Haskell, and Perl, and adds real Rust resolver probes for
+both fail-closed text forms. Replacement checks remain required before guarded
+auto-merge can be enabled.
+
+Parallel collision-checked audits also found four established implementations
+that the eight-target registry did not materialize: Elixir and Lua use
+`barcode_layout_1d`, Ruby uses `barcode_layout_1d`, and Swift uses
+`BarcodeLayout1D`. Their legacy APIs diverge materially from the v1 contract,
+so two pending dependency-shaped owners now preserve that work without widening
+the active PR. A later registry revision must support their exact canonical
+roots and native package identities before reporting them conformant. The
+existing Java/Kotlin/Dart port remains a separate missing-lane owner.
+
+Merged PR #16345 independently added Rust Mermaid treemap class styling without
+a new package identity. A new pending neutral-treemap owner depends on the
+existing hierarchy-layout contract and owns parser, styling, deterministic
+geometry, backend-neutral projection, malformed-input, and resource-limit
+fixtures. These three discoveries leave the package inventory totals unchanged
+while increasing the durable state graph to 972 owners and 1,873 edges: 242
+merged, 729 pending, and one active PR.
 
 ## Autonomous Loop Protocol
 

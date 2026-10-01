@@ -16,17 +16,87 @@
   },
   "$defs": {
     "symbol": { "type": ["string", "null"], "minLength": 1, "maxLength": 256 },
+    "zeroAuthorityEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["test_path", "assertions"],
+      "properties": {
+        "test_path": { "type": "string", "pattern": "^code/packages/" },
+        "assertions": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "text-value-fails-before-native-resolution",
+              "text-enabled-fails-before-native-resolution"
+            ]
+          }
+        }
+      }
+    },
     "target": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["language", "status", "api_family", "package_root", "native_test_path", "planned_conformance_test_path", "capability_manifest", "binary_runs", "width_runs", "layout", "scene", "error_projection", "metadata_projection", "copy_semantics_hook", "known_divergences"],
+      "required": ["language", "status", "api_family", "package_root", "native_test_path", "capability_manifest", "binary_runs", "width_runs", "layout", "scene", "error_projection", "metadata_projection", "copy_semantics_hook", "known_divergences"],
       "allOf": [
         {
-          "if": { "properties": { "status": { "const": "conformant" } } },
+          "if": { "properties": { "status": { "const": "pending-adoption" } }, "required": ["status"] },
           "then": {
-            "required": ["verified_revision", "corpus_sha256", "adoption_pr", "zero_authority_evidence"],
-            "properties": { "capability_manifest": { "type": "string" } }
+            "required": ["planned_conformance_test_path"],
+            "properties": { "known_divergences": { "minItems": 1 } },
+            "not": {
+              "anyOf": [
+                { "required": ["conformance_test_path"] },
+                { "required": ["verified_revision"] },
+                { "required": ["package_tree"] },
+                { "required": ["corpus_sha256"] },
+                { "required": ["adoption_pr"] },
+                { "required": ["zero_authority_evidence"] }
+              ]
+            }
+          },
+          "else": {
+            "required": ["conformance_test_path", "verified_revision", "package_tree", "corpus_sha256", "adoption_pr", "zero_authority_evidence"],
+            "properties": {
+              "capability_manifest": { "type": "string" },
+              "known_divergences": { "maxItems": 0 }
+            },
+            "not": { "required": ["planned_conformance_test_path"] }
           }
+        },
+        {
+          "if": { "properties": { "language": { "const": "csharp" } }, "required": ["language"] },
+          "then": { "properties": { "package_root": { "const": "code/packages/csharp/barcode-layout-1d" } } }
+        },
+        {
+          "if": { "properties": { "language": { "const": "fsharp" } }, "required": ["language"] },
+          "then": { "properties": { "package_root": { "const": "code/packages/fsharp/barcode-layout-1d" } } }
+        },
+        {
+          "if": { "properties": { "language": { "const": "go" } }, "required": ["language"] },
+          "then": { "properties": { "package_root": { "const": "code/packages/go/barcode-layout-1d" } } }
+        },
+        {
+          "if": { "properties": { "language": { "const": "haskell" } }, "required": ["language"] },
+          "then": { "properties": { "package_root": { "const": "code/packages/haskell/barcode-layout-1d" } } }
+        },
+        {
+          "if": { "properties": { "language": { "const": "perl" } }, "required": ["language"] },
+          "then": { "properties": { "package_root": { "const": "code/packages/perl/barcode-layout-1d" } } }
+        },
+        {
+          "if": { "properties": { "language": { "const": "python" } }, "required": ["language"] },
+          "then": { "properties": { "package_root": { "const": "code/packages/python/barcode-layout-1d" } } }
+        },
+        {
+          "if": { "properties": { "language": { "const": "rust" } }, "required": ["language"] },
+          "then": { "properties": { "package_root": { "const": "code/packages/rust/barcode-layout-1d" } } }
+        },
+        {
+          "if": { "properties": { "language": { "const": "typescript" } }, "required": ["language"] },
+          "then": { "properties": { "package_root": { "const": "code/packages/typescript/barcode-layout-1d" } } }
         }
       ],
       "properties": {
@@ -36,6 +106,7 @@
         "package_root": { "type": "string", "pattern": "^code/packages/[^/]+/barcode-layout-1d$" },
         "native_test_path": { "type": "string", "pattern": "^code/packages/" },
         "planned_conformance_test_path": { "type": "string", "pattern": "^code/packages/" },
+        "conformance_test_path": { "type": "string", "pattern": "^code/packages/" },
         "capability_manifest": { "type": ["string", "null"], "pattern": "^code/packages/.+/required_capabilities\\.json$" },
         "binary_runs": { "$ref": "#/$defs/symbol" },
         "width_runs": { "$ref": "#/$defs/symbol" },
@@ -44,11 +115,12 @@
         "error_projection": { "type": "string", "minLength": 1, "maxLength": 256 },
         "metadata_projection": { "type": "string", "minLength": 1, "maxLength": 256 },
         "copy_semantics_hook": { "type": "string", "minLength": 1, "maxLength": 256 },
-        "known_divergences": { "type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true, "items": { "type": "string", "minLength": 1, "maxLength": 256 } },
+        "known_divergences": { "type": "array", "minItems": 0, "maxItems": 16, "uniqueItems": true, "items": { "type": "string", "minLength": 1, "maxLength": 256 } },
         "verified_revision": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
-        "corpus_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "package_tree": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "corpus_sha256": { "const": "be95aa0381041ef3bd729b36bb4292f7a20692e139b53adca97af4e157cb7388" },
         "adoption_pr": { "type": "integer", "minimum": 1 },
-        "zero_authority_evidence": { "type": "string", "minLength": 1, "maxLength": 512 }
+        "zero_authority_evidence": { "$ref": "#/$defs/zeroAuthorityEvidence" }
       }
     }
   }

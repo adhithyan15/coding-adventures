@@ -194,3 +194,32 @@ both text request forms fail before native font resolution or shaping; an empty
 package capability manifest alone is not sufficient evidence. Loading fixtures, parsing
 JSON, and hashing boundary projections are test-only operations and grant no
 production authority.
+
+## Adoption evidence
+
+`fixtures/barcode-layout-1d-v1/targets.json` is an evidence registry, not a
+planning checklist. A `pending-adoption` entry may name its intended test path
+and known divergences, but it must not carry a revision, corpus digest, pull
+request, executed-test path, or zero-authority proof. A `conformant` entry has
+no known divergence and must carry all of those promotion fields.
+
+The corpus digest is SHA-256 over the raw checked-in `cases.json` bytes. The
+verified revision is the pre-publication commit whose package source and
+conformance test were executed. `package_tree` is that commit's Git tree ID for
+the canonical package root and must equal the package tree in the checked-out
+adoption commit. This binds the tested package bytes; the repository contract
+job fetches history so it can resolve the exact implementation revision rather
+than trusting the registry claim. Both the revision and adoption PR are checked
+against the durable backlog owner rather than the mutable active-PR pointer.
+The adoption PR carries those exact bytes and the registry transition. The
+executed test path must exist inside the target package, consume every corpus
+case dynamically, and be tracked in the checked-out adoption commit. The
+package root must be the canonical root for the declared language.
+
+The capability manifest must exist, validate against the repository schema,
+name the same language and package, and contain an empty `capabilities` array.
+Zero-authority evidence is structured: it names the executed conformance test
+and both required assertions, `text-value-fails-before-native-resolution` and
+`text-enabled-fails-before-native-resolution`. The repository gate verifies
+the manifest and evidence; neither a free-form claim nor an empty manifest by
+itself promotes a target.

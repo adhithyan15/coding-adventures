@@ -28,13 +28,21 @@ Large expected run arrays use the digest encoding defined by the normative
 spec. Compact `repeat`, `repeatRuns`, and `repeatSymbols` inputs are fixture
 transport encodings; their limits are validated before expansion.
 
-`targets.json` records the eight current implementation lanes and their future
-adapter/test hooks. Every target intentionally remains `pending-adoption` in
-this contract-only slice. A lane may become conformant only after its real
-package tests consume this corpus and its required-capability declaration is
-explicitly empty. The registry also requires an adoption revision, corpus
-digest, PR number, and zero-authority call-graph evidence before a target may be
-marked `conformant`.
+`targets.json` records the eight current implementation lanes and their
+adapter/test hooks. A pending target may name only its planned conformance test
+and known divergences; promotion fields are rejected. A conformant target must
+name an executed package test, carry the exact raw `cases.json` SHA-256, bind a
+tested pre-publication revision, match the checked-out canonical package tree,
+and name the durable adoption PR. Revision and PR evidence are checked against
+the durable backlog owner. A conformant target must use the canonical
+language/package root and have no remaining divergence. Package evidence paths
+must remain inside that root and be tracked in the adoption commit.
+
+The repository gate also loads each promoted target's capability manifest,
+validates it against the shared schema, and requires an empty capability list.
+Structured zero-authority evidence must point at the executed conformance test
+and name both text-request precedence assertions. Free-form claims and empty
+manifests alone are not promotion evidence.
 
 The generator is the independent reference oracle for corpus construction; it
 is not production code and grants no runtime authority to package adapters.

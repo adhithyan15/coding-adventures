@@ -74,3 +74,15 @@ instead of black-box image generators.
 ```bash
 bash BUILD
 ```
+
+## Portable v1 API
+
+`expandBinaryV1`, `expandWidthV1`, `computeLayoutV1`, and `projectSceneV1`
+implement the bounded language-neutral contract in
+`code/specs/barcode-layout-1d-v1.md`. The adapter uses stable error IDs,
+Unicode-scalar validation, checked integer geometry, canonical string
+metadata, and fresh result objects. `projectSceneV1` is rectangle-only and
+rejects either human-readable text request form before layout or backend work.
+
+The older helpers remain available for existing callers. New portable code
+should use the v1 entry points.

@@ -7,9 +7,10 @@ import json
 import math
 import os
 import runpy
+import subprocess
 import unittest
 from itertools import pairwise
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any, ClassVar
 
 from jsonschema import Draft202012Validator  # type: ignore[import-untyped]
@@ -136,6 +137,27 @@ def _load(schema_encoded: bytes, document_encoded: bytes) -> dict[str, Any]:
     except Exception as error:
         raise FixtureLoadError("fixture-schema-invalid") from error
     return document
+
+
+def _target_package_path(entry: dict[str, Any], field: str) -> Path:
+    """Resolve one registry path only when it stays inside its package root."""
+
+    encoded_path = entry[field]
+    if "\\" in encoded_path or ":" in encoded_path:
+        raise FixtureLoadError("target-path-outside-package")
+    package_root = PurePosixPath(entry["package_root"])
+    relative_path = PurePosixPath(encoded_path)
+    if relative_path.is_absolute() or ".." in relative_path.parts:
+        raise FixtureLoadError("target-path-outside-package")
+    try:
+        relative_path.relative_to(package_root)
+    except ValueError as error:
+        raise FixtureLoadError("target-path-outside-package") from error
+    native_package_root = (REPO_ROOT / entry["package_root"]).resolve()
+    native_path = REPO_ROOT.joinpath(*relative_path.parts).resolve()
+    if not native_path.is_relative_to(native_package_root):
+        raise FixtureLoadError("target-path-outside-package")
+    return native_path
 
 
 class BarcodeLayoutFixtureTests(unittest.TestCase):
@@ -289,7 +311,7 @@ class BarcodeLayoutFixtureTests(unittest.TestCase):
         ]["metadata"]
         self.assertEqual(len(metadata_limit), 74)
 
-    def test_target_registry_is_complete_but_claims_no_conformance_yet(self) -> None:
+    def test_target_registry_lifecycle_and_repository_evidence(self) -> None:
         target_schema = _read_bounded(FIXTURE_ROOT / "targets.schema.json")
         targets = _load(target_schema, _read_bounded(FIXTURE_ROOT / "targets.json"))
         entries = targets["targets"]
@@ -307,16 +329,171 @@ class BarcodeLayoutFixtureTests(unittest.TestCase):
             },
         )
         self.assertEqual(len(entries), 8)
-        self.assertTrue(all(entry["status"] == "pending-adoption" for entry in entries))
+        corpus_digest = hashlib.sha256(self.document_encoded).hexdigest()
+        self.assertEqual(
+            corpus_digest,
+            "be95aa0381041ef3bd729b36bb4292f7a20692e139b53adca97af4e157cb7388",
+        )
+        capability_schema = json.loads(
+            (
+                REPO_ROOT / "code/specs/schemas/required_capabilities.schema.json"
+            ).read_text(encoding="utf-8")
+        )
+        state = json.loads(
+            (REPO_ROOT / ".claude/package-parity-loop-state.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        adoption_item = next(
+            item
+            for item in state["items"]
+            if item["id"] == "barcode-layout-existing-lanes-v1-conformance"
+        )
         for entry in entries:
-            self.assertTrue((REPO_ROOT / entry["package_root"]).is_dir())
-            self.assertTrue((REPO_ROOT / entry["native_test_path"]).is_file())
-            self.assertTrue(entry["known_divergences"])
+            package_root = REPO_ROOT / entry["package_root"]
+            self.assertTrue(package_root.is_dir())
+            self.assertTrue(_target_package_path(entry, "native_test_path").is_file())
+            self.assertEqual(
+                entry["package_root"],
+                f"code/packages/{entry['language']}/barcode-layout-1d",
+            )
+            if entry["status"] == "pending-adoption":
+                self.assertTrue(entry["known_divergences"])
+                self.assertIn("planned_conformance_test_path", entry)
+                _target_package_path(entry, "planned_conformance_test_path")
+                if entry["capability_manifest"] is not None:
+                    _target_package_path(entry, "capability_manifest")
+                continue
+
+            self.assertEqual(entry["status"], "conformant")
+            self.assertEqual(entry["known_divergences"], [])
+            self.assertEqual(entry["corpus_sha256"], corpus_digest)
+            conformance_path = _target_package_path(entry, "conformance_test_path")
+            self.assertTrue(conformance_path.is_file())
+            capability_path = _target_package_path(entry, "capability_manifest")
+            self.assertTrue(capability_path.is_file())
+            capability = json.loads(capability_path.read_text(encoding="utf-8"))
+            Draft202012Validator(capability_schema).validate(capability)
+            self.assertEqual(
+                capability["package"], f"{entry['language']}/barcode-layout-1d"
+            )
+            self.assertEqual(capability["capabilities"], [])
+            evidence = entry["zero_authority_evidence"]
+            self.assertEqual(evidence["test_path"], entry["conformance_test_path"])
+            self.assertEqual(
+                set(evidence["assertions"]),
+                {
+                    "text-value-fails-before-native-resolution",
+                    "text-enabled-fails-before-native-resolution",
+                },
+            )
+            self.assertIn(adoption_item["status"], {"pr-open", "merged"})
+            self.assertEqual(entry["adoption_pr"], adoption_item["pr_number"])
+            self.assertEqual(
+                entry["verified_revision"], adoption_item["implementation_revision"]
+            )
+            verified_package_tree = subprocess.run(
+                [
+                    "git",
+                    "rev-parse",
+                    f"{entry['verified_revision']}:{entry['package_root']}",
+                ],
+                cwd=REPO_ROOT,
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+            current_package_tree = subprocess.run(
+                ["git", "rev-parse", f"HEAD:{entry['package_root']}"],
+                cwd=REPO_ROOT,
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+            self.assertEqual(entry["package_tree"], verified_package_tree)
+            self.assertEqual(entry["package_tree"], current_package_tree)
+            for relative_path in (
+                entry["conformance_test_path"],
+                entry["capability_manifest"],
+            ):
+                subprocess.run(
+                    ["git", "cat-file", "-e", f"HEAD:{relative_path}"],
+                    cwd=REPO_ROOT,
+                    check=True,
+                    capture_output=True,
+                )
+
+    def test_target_registry_rejects_untruthful_lifecycle_evidence(self) -> None:
+        target_schema = _read_bounded(FIXTURE_ROOT / "targets.schema.json")
+        targets = _load(target_schema, _read_bounded(FIXTURE_ROOT / "targets.json"))
+
+        pending = json.loads(json.dumps(targets))
+        pending_target = pending["targets"][0]
+        pending_target["status"] = "pending-adoption"
+        pending_target["planned_conformance_test_path"] = pending_target.pop(
+            "conformance_test_path"
+        )
+        pending_target["known_divergences"] = ["not adopted"]
+        for field in (
+            "verified_revision",
+            "package_tree",
+            "corpus_sha256",
+            "adoption_pr",
+            "zero_authority_evidence",
+        ):
+            pending_target.pop(field)
+        _load(target_schema, json.dumps(pending).encode())
+
+        pending_with_evidence = json.loads(json.dumps(pending))
+        pending_with_evidence["targets"][0]["corpus_sha256"] = (
+            "be95aa0381041ef3bd729b36bb4292f7a20692e139b53adca97af4e157cb7388"
+        )
+        with self.assertRaisesRegex(FixtureLoadError, "fixture-schema-invalid"):
+            _load(target_schema, json.dumps(pending_with_evidence).encode())
 
         promoted = json.loads(json.dumps(targets))
-        promoted["targets"][0]["status"] = "conformant"
-        with self.assertRaisesRegex(FixtureLoadError, "fixture-schema-invalid"):
-            _load(target_schema, json.dumps(promoted).encode())
+        _load(target_schema, json.dumps(promoted).encode())
+
+        mutations = []
+        wrong_digest = json.loads(json.dumps(promoted))
+        wrong_digest["targets"][0]["corpus_sha256"] = "0" * 64
+        mutations.append(wrong_digest)
+        divergence = json.loads(json.dumps(promoted))
+        divergence["targets"][0]["known_divergences"] = ["still divergent"]
+        mutations.append(divergence)
+        wrong_root = json.loads(json.dumps(promoted))
+        wrong_root["targets"][0]["package_root"] = (
+            "code/packages/fsharp/barcode-layout-1d"
+        )
+        mutations.append(wrong_root)
+        free_text = json.loads(json.dumps(promoted))
+        free_text["targets"][0]["zero_authority_evidence"] = "trust me"
+        mutations.append(free_text)
+        planned = json.loads(json.dumps(promoted))
+        planned["targets"][0]["planned_conformance_test_path"] = planned["targets"][0][
+            "conformance_test_path"
+        ]
+        mutations.append(planned)
+        for mutation in mutations:
+            with (
+                self.subTest(mutation=mutation["targets"][0]),
+                self.assertRaisesRegex(FixtureLoadError, "fixture-schema-invalid"),
+            ):
+                _load(target_schema, json.dumps(mutation).encode())
+
+        cross_package_path = json.loads(json.dumps(promoted["targets"][0]))
+        cross_package_path["conformance_test_path"] = (
+            "code/packages/fsharp/barcode-layout-1d/test/Spec.fs"
+        )
+        with self.assertRaisesRegex(FixtureLoadError, "target-path-outside-package"):
+            _target_package_path(cross_package_path, "conformance_test_path")
+
+        windows_traversal = json.loads(json.dumps(promoted["targets"][0]))
+        windows_traversal["conformance_test_path"] = (
+            f"{windows_traversal['package_root']}/test\\..\\..\\..\\..\\CHANGELOG.md"
+        )
+        with self.assertRaisesRegex(FixtureLoadError, "target-path-outside-package"):
+            _target_package_path(windows_traversal, "conformance_test_path")
 
     def test_generator_is_byte_for_byte_clean(self) -> None:
         namespace = runpy.run_path(str(FIXTURE_ROOT / "generate_cases.py"))
