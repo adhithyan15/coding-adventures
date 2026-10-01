@@ -4077,6 +4077,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("15.2513.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — true and false literal string predicates may select distinct
+    // terminating conditions while bounded scalar recurrences advance.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, j; real x, y; i := 0; x := 0.25; for i := i + 1 while if 'ALPHA' < 'BETA' then i <= 3 else i <= 1 do x := x + i; print(x); j := 0; y := 0.25; for j := j + 1 while if 'BETA' < 'ALPHA' then j <= 1 else j <= 2 do y := y + j; print(y) end",
+        expect: Expect::Stdout("6.253.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — an exact control recurrence remains analyzable when every
     // additional compound-body statement is an inert local scalar assignment.
     Prog {
@@ -14249,6 +14258,31 @@ fn algol_literal_string_predicate_control_recurrences_run_on_every_available_sta
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the literal-string-predicate control recurrences did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_while_predicates_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("while if 'ALPHA' < 'BETA' then i <= 3 else i <= 1")
+        })
+        .expect("the literal-string-selected while predicates must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected while predicates did not run"
             );
             continue;
         };
