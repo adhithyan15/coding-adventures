@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:f6e15aafc5158e2b",
+  "lessonIds": [
+    "RU-C215-konechno",
+    "RU-C215-navernoye",
+    "RU-C215-mozhet-byt",
+    "RU-C215-k-sozhaleniyu",
+    "RU-C215-k-schastyu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch215.txt",
+  "json": "russian/narration/ch215.json",
+  "textHash": "fnv1a64:837b4585e82fac4d",
+  "jsonHash": "fnv1a64:39517e9006f9e48d",
+  "findings": []
+}

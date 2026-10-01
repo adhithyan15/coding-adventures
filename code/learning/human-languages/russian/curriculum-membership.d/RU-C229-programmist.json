@@ -1,0 +1,11 @@
+{
+  "id": "RU-C229-programmist",
+  "pathSegment": "RU-PATH-229-RABOTA229",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-229-RABOTA229",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C211-puls",
+  "pathSegment": "RU-PATH-211-ZDOROV211",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-211-ZDOROV211",
+      "order": 2
+    }
+  ]
+}

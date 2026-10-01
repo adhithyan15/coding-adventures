@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C210-stomatolog",
+    "language": "russian",
+    "chapter": 210,
+    "sequence": 12420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b656a7a1e741bbc9"
+  },
+  "findings": []
+}

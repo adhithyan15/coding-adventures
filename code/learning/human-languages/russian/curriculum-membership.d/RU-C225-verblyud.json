@@ -1,0 +1,11 @@
+{
+  "id": "RU-C225-verblyud",
+  "pathSegment": "RU-PATH-225-VESHCH225",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-225-VESHCH225",
+      "order": 3
+    }
+  ]
+}

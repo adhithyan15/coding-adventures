@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-212-VREMYA212",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "before": [],
+  "inline": [
+    "RU-EXT-212-VREMYA212"
+  ],
+  "after": []
+}

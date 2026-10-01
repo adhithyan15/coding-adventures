@@ -1,0 +1,19 @@
+{
+  "chapter": 218,
+  "title": "Different, Same, Similar, Main, Ordinary",
+  "label": "ch:ru-different-same-similar-main-ordinary",
+  "canDo": "I can say different, the same, similar, main and ordinary.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "RU-C218-obychnyy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 218: I can say different, the same, similar, main and ordinary.",
+    "assesses": [
+      "RU-LEX-C218-KACH218-03",
+      "RU-LEX-C218-KACH218-04",
+      "RU-LEX-C218-KACH218-05"
+    ]
+  }
+}

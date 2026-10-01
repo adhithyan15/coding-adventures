@@ -1,0 +1,19 @@
+{
+  "chapter": 230,
+  "title": "Gardener, Cashier, Hairdresser, Security guard, Nanny",
+  "label": "ch:ru-gardener-cashier-hairdresser-security-guard-nanny",
+  "canDo": "I can say a gardener, a cashier, a hairdresser, a security guard and a nanny.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C230-nyanya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 230: I can say a gardener, a cashier, a hairdresser, a security guard and a nanny.",
+    "assesses": [
+      "RU-LEX-C230-RABOTA230-03",
+      "RU-LEX-C230-RABOTA230-04",
+      "RU-LEX-C230-RABOTA230-05"
+    ]
+  }
+}

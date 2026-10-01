@@ -1,0 +1,11 @@
+{
+  "id": "RU-C226-tanets",
+  "pathSegment": "RU-PATH-226-VESHCH226",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-226-VESHCH226",
+      "order": 2
+    }
+  ]
+}

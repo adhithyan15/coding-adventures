@@ -1,0 +1,19 @@
+{
+  "chapter": 214,
+  "title": "From here, Back, Forward, Up, Down",
+  "label": "ch:ru-from-here-back-forward-up-down",
+  "canDo": "I can say from here, back, forward, up and down.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "RU-C214-vniz",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 214: I can say from here, back, forward, up and down.",
+    "assesses": [
+      "RU-LEX-C214-MESTO214-03",
+      "RU-LEX-C214-MESTO214-04",
+      "RU-LEX-C214-MESTO214-05"
+    ]
+  }
+}

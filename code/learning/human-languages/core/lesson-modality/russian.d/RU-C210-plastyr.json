@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C210-plastyr",
+    "language": "russian",
+    "chapter": 210,
+    "sequence": 12430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5afe85024792e0c6"
+  },
+  "findings": []
+}

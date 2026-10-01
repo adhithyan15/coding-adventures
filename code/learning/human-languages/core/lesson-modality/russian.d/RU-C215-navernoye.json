@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C215-navernoye",
+    "language": "russian",
+    "chapter": 215,
+    "sequence": 12850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0dbb000b05b11345"
+  },
+  "findings": []
+}

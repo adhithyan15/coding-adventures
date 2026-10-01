@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:9f909300457b3b48",
+  "lessonIds": [
+    "RU-C216-spokoynyy",
+    "RU-C216-nervnyy",
+    "RU-C216-schastlivyy",
+    "RU-C216-grustnyy",
+    "RU-C216-strogiy"
+  ],
+  "tex": "russian/book/chapters/ch216-calm-nervous-happy-sad-strict.tex"
+}

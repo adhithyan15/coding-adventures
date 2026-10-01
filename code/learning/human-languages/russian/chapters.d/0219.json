@@ -1,0 +1,19 @@
+{
+  "chapter": 219,
+  "title": "Toothpaste, Razor, Iron, Vacuum cleaner, Oven",
+  "label": "ch:ru-toothpaste-razor-iron-vacuum-cleaner-oven",
+  "canDo": "I can say toothpaste, a razor, an iron, a vacuum cleaner and an oven.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C219-dukhovka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 219: I can say toothpaste, a razor, an iron, a vacuum cleaner and an oven.",
+    "assesses": [
+      "RU-LEX-C219-VESHCH219-03",
+      "RU-LEX-C219-VESHCH219-04",
+      "RU-LEX-C219-VESHCH219-05"
+    ]
+  }
+}

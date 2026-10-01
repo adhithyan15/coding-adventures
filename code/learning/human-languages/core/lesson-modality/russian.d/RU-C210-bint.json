@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C210-bint",
+    "language": "russian",
+    "chapter": 210,
+    "sequence": 12440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:97b778a7071bd720"
+  },
+  "findings": []
+}

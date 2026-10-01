@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-225-VESHCH225",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a crocodile, a giraffe, a zebra, a camel and a deer.",
+  "prerequisites": []
+}

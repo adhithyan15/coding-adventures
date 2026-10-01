@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:8b2cdae25ac0b57a",
+  "lessonIds": [
+    "RU-C205-zabyvat",
+    "RU-C205-uchitsya",
+    "RU-C205-izuchat",
+    "RU-C205-prepodavat",
+    "RU-C205-sdavat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch205.txt",
+  "json": "russian/narration/ch205.json",
+  "textHash": "fnv1a64:0a7d5b3bd3ad0ebb",
+  "jsonHash": "fnv1a64:ca36163195c31169",
+  "findings": []
+}

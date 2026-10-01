@@ -1,0 +1,19 @@
+{
+  "chapter": 207,
+  "title": "To be ill, To treat, To breathe, To cough, To sneeze",
+  "label": "ch:ru-to-be-ill-to-treat-to-breathe-to-cough-to-sneeze",
+  "canDo": "I can say to be ill, to treat, to breathe, to cough and to sneeze.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C207-chikhat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 207: I can say to be ill, to treat, to breathe, to cough and to sneeze.",
+    "assesses": [
+      "RU-LEX-C207-ACT207-03",
+      "RU-LEX-C207-ACT207-04",
+      "RU-LEX-C207-ACT207-05"
+    ]
+  }
+}

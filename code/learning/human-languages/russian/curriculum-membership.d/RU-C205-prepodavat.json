@@ -1,0 +1,11 @@
+{
+  "id": "RU-C205-prepodavat",
+  "pathSegment": "RU-PATH-205-ACT205",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-205-ACT205",
+      "order": 3
+    }
+  ]
+}

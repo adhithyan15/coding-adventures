@@ -1,0 +1,11 @@
+{
+  "id": "RU-C229-menedzher",
+  "pathSegment": "RU-PATH-229-RABOTA229",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-229-RABOTA229",
+      "order": 2
+    }
+  ]
+}

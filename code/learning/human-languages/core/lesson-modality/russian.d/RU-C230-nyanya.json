@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C230-nyanya",
+    "language": "russian",
+    "chapter": 230,
+    "sequence": 13970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dec275e6be5907c2"
+  },
+  "findings": []
+}

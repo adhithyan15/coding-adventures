@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:914c56f50bc1a054",
+  "lessonIds": [
+    "RU-C219-zubnaya-pasta",
+    "RU-C219-britva",
+    "RU-C219-utyug",
+    "RU-C219-pylesos",
+    "RU-C219-dukhovka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch219.txt",
+  "json": "russian/narration/ch219.json",
+  "textHash": "fnv1a64:874518709fe8fbcf",
+  "jsonHash": "fnv1a64:c594f96ed7542367",
+  "findings": []
+}

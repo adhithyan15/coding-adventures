@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C207-lechit",
+    "language": "russian",
+    "chapter": 207,
+    "sequence": 12260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78dd8a3424593417"
+  },
+  "findings": []
+}

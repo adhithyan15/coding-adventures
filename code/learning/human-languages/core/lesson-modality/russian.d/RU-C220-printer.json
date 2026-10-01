@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C220-printer",
+    "language": "russian",
+    "chapter": 220,
+    "sequence": 13120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2752eecec2bd4a9"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:4490199c44219896",
+  "lessonIds": [
+    "RU-C217-tupoy",
+    "RU-C217-gladkiy",
+    "RU-C217-prokhladnyy",
+    "RU-C217-svezhiy",
+    "RU-C217-sovremennyy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch217.txt",
+  "json": "russian/narration/ch217.json",
+  "textHash": "fnv1a64:01b51b97bb627924",
+  "jsonHash": "fnv1a64:ff334f49404fa157",
+  "findings": []
+}

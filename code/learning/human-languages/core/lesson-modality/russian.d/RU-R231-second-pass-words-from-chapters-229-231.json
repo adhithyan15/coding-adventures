@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-R231-second-pass-words-from-chapters-229-231",
+    "language": "russian",
+    "chapter": 231,
+    "sequence": 14040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:42cd61ef60f9bac2"
+  },
+  "findings": []
+}

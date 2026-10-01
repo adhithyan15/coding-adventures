@@ -1,0 +1,11 @@
+{
+  "id": "RU-C225-zebra",
+  "pathSegment": "RU-PATH-225-VESHCH225",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-225-VESHCH225",
+      "order": 2
+    }
+  ]
+}

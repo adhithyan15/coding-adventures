@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:87f6bb0034d39472",
+  "lessonIds": [
+    "RU-C222-yeda",
+    "RU-C222-blyudo",
+    "RU-C222-menyu",
+    "RU-C222-bulka",
+    "RU-C222-kefir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch222.txt",
+  "json": "russian/narration/ch222.json",
+  "textHash": "fnv1a64:ece5aa59edc36510",
+  "jsonHash": "fnv1a64:8e1bdcb7f77d0997",
+  "findings": []
+}

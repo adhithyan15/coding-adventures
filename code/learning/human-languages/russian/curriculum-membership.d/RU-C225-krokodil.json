@@ -1,0 +1,11 @@
+{
+  "id": "RU-C225-krokodil",
+  "pathSegment": "RU-PATH-225-VESHCH225",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-225-VESHCH225",
+      "order": 0
+    }
+  ]
+}

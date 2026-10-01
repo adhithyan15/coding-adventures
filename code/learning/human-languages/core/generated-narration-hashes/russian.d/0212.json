@@ -1,0 +1,21 @@
+{
+  "language": "russian",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:17236e4d487cfdbc",
+  "lessonIds": [
+    "RU-C212-iyun",
+    "RU-C212-iyul",
+    "RU-C212-avgust",
+    "RU-C212-sentyabr",
+    "RU-C212-oktyabr",
+    "RU-R212-first-pass-words-from-chapters-204-207",
+    "RU-R212-second-pass-words-from-chapters-208-212"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "russian/narration/ch212.txt",
+  "json": "russian/narration/ch212.json",
+  "textHash": "fnv1a64:fe006d992209e51a",
+  "jsonHash": "fnv1a64:4a80b5487ddd618d",
+  "findings": []
+}

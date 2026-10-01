@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:50db4c2867ee4daf",
+  "lessonIds": [
+    "RU-C228-oshibka",
+    "RU-C228-pravilo",
+    "RU-C228-primer",
+    "RU-C228-znacheniye",
+    "RU-C228-imya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch228.txt",
+  "json": "russian/narration/ch228.json",
+  "textHash": "fnv1a64:3eb23a232f69226c",
+  "jsonHash": "fnv1a64:96380301d6c2c0ab",
+  "findings": []
+}

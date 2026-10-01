@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:03fcb86d27cb56cb",
+  "lessonIds": [
+    "RU-C212-iyun",
+    "RU-C212-iyul",
+    "RU-C212-avgust",
+    "RU-C212-sentyabr",
+    "RU-C212-oktyabr",
+    "RU-R212-first-pass-words-from-chapters-204-207",
+    "RU-R212-second-pass-words-from-chapters-208-212"
+  ],
+  "tex": "russian/book/chapters/ch212-june-july-august-september-october.tex"
+}

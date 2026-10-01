@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:96bb80efc3174ee7",
+  "lessonIds": [
+    "RU-C214-otsyuda",
+    "RU-C214-nazad",
+    "RU-C214-vperyod",
+    "RU-C214-vverkh",
+    "RU-C214-vniz"
+  ],
+  "tex": "russian/book/chapters/ch214-from-here-back-forward-up-down.tex"
+}

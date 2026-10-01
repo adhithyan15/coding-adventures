@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C207-chikhat",
+    "language": "russian",
+    "chapter": 207,
+    "sequence": 12290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e1dc9a50eca1f3f"
+  },
+  "findings": []
+}

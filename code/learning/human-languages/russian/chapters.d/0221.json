@@ -1,0 +1,19 @@
+{
+  "chapter": 221,
+  "title": "Toy, Ball, Doll, Vase, Painting",
+  "label": "ch:ru-toy-ball-doll-vase-painting",
+  "canDo": "I can say a toy, a ball, a doll, a vase and a painting.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-R221-second-pass-words-from-chapters-217-221",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 221: I can say a toy, a ball, a doll, a vase and a painting.",
+    "assesses": [
+      "RU-LEX-C221-VESHCH221-03",
+      "RU-LEX-C221-VESHCH221-04",
+      "RU-LEX-C221-VESHCH221-05"
+    ]
+  }
+}

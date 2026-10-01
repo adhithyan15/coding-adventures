@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:e273aa137b285f45",
+  "lessonIds": [
+    "RU-C231-kopeyka",
+    "RU-C231-rubl",
+    "RU-C231-lektsiya",
+    "RU-C231-zanyatiye",
+    "RU-C231-otsenka",
+    "RU-R231-first-pass-words-from-chapters-227-228",
+    "RU-R231-second-pass-words-from-chapters-229-231"
+  ],
+  "tex": "russian/book/chapters/ch231-kopeck-rouble-lecture-class-mark.tex"
+}

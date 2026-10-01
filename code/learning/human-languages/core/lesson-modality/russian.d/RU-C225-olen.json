@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C225-olen",
+    "language": "russian",
+    "chapter": 225,
+    "sequence": 13570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e234874a28d6a14b"
+  },
+  "findings": []
+}

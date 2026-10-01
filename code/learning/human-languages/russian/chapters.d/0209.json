@@ -1,0 +1,19 @@
+{
+  "chapter": 209,
+  "title": "To photograph, To gather, To promise, To joke, To get married",
+  "label": "ch:ru-to-photograph-to-gather-to-promise-to-joke-to-get-married",
+  "canDo": "I can say to photograph, to gather, to promise, to joke and to get married.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C209-zhenitsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 209: I can say to photograph, to gather, to promise, to joke and to get married.",
+    "assesses": [
+      "RU-LEX-C209-ACT209-03",
+      "RU-LEX-C209-ACT209-04",
+      "RU-LEX-C209-ACT209-05"
+    ]
+  }
+}

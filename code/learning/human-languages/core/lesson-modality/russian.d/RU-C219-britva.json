@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C219-britva",
+    "language": "russian",
+    "chapter": 219,
+    "sequence": 13050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa52fb188a11581f"
+  },
+  "findings": []
+}

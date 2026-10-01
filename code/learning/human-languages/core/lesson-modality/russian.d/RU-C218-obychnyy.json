@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C218-obychnyy",
+    "language": "russian",
+    "chapter": 218,
+    "sequence": 13030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d76ff851224abf9c"
+  },
+  "findings": []
+}

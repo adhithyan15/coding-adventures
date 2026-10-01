@@ -1,0 +1,19 @@
+{
+  "chapter": 222,
+  "title": "Food, Dish, Menu, Bun, Kefir",
+  "label": "ch:ru-food-dish-menu-bun-kefir",
+  "canDo": "I can say food, a dish, a menu, a bun and kefir.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C222-kefir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 222: I can say food, a dish, a menu, a bun and kefir.",
+    "assesses": [
+      "RU-LEX-C222-VESHCH222-03",
+      "RU-LEX-C222-VESHCH222-04",
+      "RU-LEX-C222-VESHCH222-05"
+    ]
+  }
+}

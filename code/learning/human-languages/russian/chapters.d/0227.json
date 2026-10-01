@@ -1,0 +1,19 @@
+{
+  "chapter": 227,
+  "title": "Fine, Person, Man, Woman, Boy",
+  "label": "ch:ru-fine-person-man-woman-boy",
+  "canDo": "I can say a fine, a person, a man, a woman and a boy.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C227-malchik",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 227: I can say a fine, a person, a man, a woman and a boy.",
+    "assesses": [
+      "RU-LEX-C227-VESHCH227-03",
+      "RU-LEX-C227-VESHCH227-04",
+      "RU-LEX-C227-VESHCH227-05"
+    ]
+  }
+}

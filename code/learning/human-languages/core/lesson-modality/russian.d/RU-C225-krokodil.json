@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C225-krokodil",
+    "language": "russian",
+    "chapter": 225,
+    "sequence": 13530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f000789775119e6c"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C227-shtraf",
+    "language": "russian",
+    "chapter": 227,
+    "sequence": 13780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bfd4197a5659c72d"
+  },
+  "findings": []
+}

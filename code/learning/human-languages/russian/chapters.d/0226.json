@@ -1,0 +1,19 @@
+{
+  "chapter": 226,
+  "title": "Violin, Drum, Dance, Novel, Poems",
+  "label": "ch:ru-violin-drum-dance-novel-poems",
+  "canDo": "I can say a violin, a drum, a dance, a novel and poems.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-R226-second-pass-words-from-chapters-224-226",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 226: I can say a violin, a drum, a dance, a novel and poems.",
+    "assesses": [
+      "RU-LEX-C226-VESHCH226-03",
+      "RU-LEX-C226-VESHCH226-04",
+      "RU-LEX-C226-VESHCH226-05"
+    ]
+  }
+}

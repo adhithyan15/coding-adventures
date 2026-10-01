@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C217-svezhiy",
+    "language": "russian",
+    "chapter": 217,
+    "sequence": 12970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43d9f6371e91d0fa"
+  },
+  "findings": []
+}

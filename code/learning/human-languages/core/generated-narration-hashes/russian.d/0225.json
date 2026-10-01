@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:068750d2c49d11b5",
+  "lessonIds": [
+    "RU-C225-krokodil",
+    "RU-C225-zhiraf",
+    "RU-C225-zebra",
+    "RU-C225-verblyud",
+    "RU-C225-olen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch225.txt",
+  "json": "russian/narration/ch225.json",
+  "textHash": "fnv1a64:401405b709678055",
+  "jsonHash": "fnv1a64:452963ccd31cc667",
+  "findings": []
+}

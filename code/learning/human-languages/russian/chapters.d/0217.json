@@ -1,0 +1,19 @@
+{
+  "chapter": 217,
+  "title": "Blunt, Smooth, Cool, Fresh, Modern",
+  "label": "ch:ru-blunt-smooth-cool-fresh-modern",
+  "canDo": "I can say blunt, smooth, cool, fresh and modern.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "RU-C217-sovremennyy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 217: I can say blunt, smooth, cool, fresh and modern.",
+    "assesses": [
+      "RU-LEX-C217-KACH217-03",
+      "RU-LEX-C217-KACH217-04",
+      "RU-LEX-C217-KACH217-05"
+    ]
+  }
+}
