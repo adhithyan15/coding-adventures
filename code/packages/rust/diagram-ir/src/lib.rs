@@ -1402,6 +1402,37 @@ pub struct LayoutedEventModelDiagram {
 
 // HIERARCHY FAMILY
 #[derive(Clone, Debug, PartialEq)]
+pub struct TreemapConfig {
+    pub use_max_width: bool,
+    pub padding: f64,
+    pub diagram_padding: f64,
+    pub show_values: bool,
+    pub node_width: f64,
+    pub node_height: f64,
+    pub border_width: f64,
+    pub value_font_size: f64,
+    pub label_font_size: f64,
+    pub value_format: String,
+}
+
+impl Default for TreemapConfig {
+    fn default() -> Self {
+        Self {
+            use_max_width: true,
+            padding: 10.0,
+            diagram_padding: 8.0,
+            show_values: true,
+            node_width: 100.0,
+            node_height: 40.0,
+            border_width: 1.0,
+            value_font_size: 12.0,
+            label_font_size: 14.0,
+            value_format: ",".into(),
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct TreemapNode {
     pub id: String,
     pub label: String,
@@ -1412,6 +1443,7 @@ pub struct TreemapNode {
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct TreemapDiagram {
+    pub config: TreemapConfig,
     pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
@@ -1424,6 +1456,7 @@ pub struct LayoutedTreemapNode {
     pub label: String,
     pub value: f64,
     pub depth: usize,
+    pub has_children: bool,
     pub x: f64,
     pub y: f64,
     pub width: f64,
@@ -1435,6 +1468,7 @@ pub struct LayoutedTreemapNode {
 pub struct LayoutedTreemapDiagram {
     pub width: f64,
     pub height: f64,
+    pub config: TreemapConfig,
     pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,

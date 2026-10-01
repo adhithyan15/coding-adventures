@@ -127,26 +127,41 @@ where
             height: node.height,
             fill: Some(FILLS[color_index % FILLS.len()].into()),
             stroke: Some("#475569".into()),
-            stroke_width: Some(1.0),
+            stroke_width: Some(diagram.config.border_width),
             corner_radius: Some(3.0),
             stroke_dash: None,
             stroke_dash_offset: None,
         }));
         if node.width >= 44.0 && node.height >= 22.0 {
-            let label = if node.height >= 42.0 {
-                format!("{}\n{}", node.label, format_treemap_value(node.value))
-            } else {
-                node.label.clone()
-            };
+            let mut label_font = options.label_font.clone();
+            label_font.size = diagram.config.label_font_size;
             text_children.push(text_node(
-                &label,
+                &node.label,
                 node.x + 6.0,
                 node.y + 4.0,
-                (node.width - 12.0).max(0.0),
-                node.height.min(42.0),
-                options.label_font.clone(),
+                (node.width * if node.has_children { 0.68 } else { 1.0 } - 12.0).max(0.0),
+                diagram.config.label_font_size * 1.4,
+                label_font,
                 text_color,
             ));
+            if diagram.config.show_values && node.height >= 42.0 {
+                let mut value_font = options.label_font.clone();
+                value_font.size = diagram.config.value_font_size;
+                let (value_x, value_y, value_width) = if node.has_children {
+                    (node.x + node.width * 0.68, node.y + 4.0, node.width * 0.32 - 6.0)
+                } else {
+                    (node.x + 6.0, node.y + 8.0 + diagram.config.label_font_size * 1.2, node.width - 12.0)
+                };
+                text_children.push(text_node(
+                    &format_treemap_value(node.value, &diagram.config.value_format),
+                    value_x,
+                    value_y,
+                    value_width.max(0.0),
+                    diagram.config.value_font_size * 1.4,
+                    value_font,
+                    text_color,
+                ));
+            }
         }
     }
     let text_root = PositionedNode {
@@ -177,6 +192,8 @@ where
     if let Some(description) = &diagram.accessibility_description {
         metadata.insert("accessibility.description".into(), description.clone());
     }
+    metadata.insert("treemap.useMaxWidth".into(), diagram.config.use_max_width.to_string());
+    metadata.insert("treemap.valueFormat".into(), diagram.config.value_format.clone());
     PaintScene {
         width: diagram.width,
         height: diagram.height,
@@ -187,8 +204,26 @@ where
     }
 }
 
-fn format_treemap_value(value: f64) -> String {
-    if value.fract() == 0.0 { format!("{value:.0}") } else { format!("{value:.2}") }
+fn format_treemap_value(value: f64, format: &str) -> String {
+    let currency = format.contains('$');
+    let grouped = format.contains(',');
+    let decimals = format.rsplit_once('.').map_or(0, |(_, tail)| {
+        tail.strip_suffix('f').and_then(|precision| precision.parse::<usize>().ok())
+            .unwrap_or_else(|| tail.chars().take_while(|character| *character == '0').count())
+    });
+    let mut rendered = format!("{value:.decimals$}");
+    if grouped {
+        let (integer, fraction) = rendered.split_once('.').map_or((rendered.as_str(), None), |(integer, fraction)| (integer, Some(fraction)));
+        let fraction = fraction.map(str::to_string);
+        let mut digits = integer.chars().rev().enumerate().fold(String::new(), |mut output, (index, digit)| {
+            if index > 0 && index % 3 == 0 { output.push(','); }
+            output.push(digit); output
+        });
+        rendered = digits.drain(..).rev().collect();
+        if let Some(fraction) = fraction { rendered.push('.'); rendered.push_str(&fraction); }
+    }
+    if currency { rendered.insert(0, '$'); }
+    rendered
 }
 
 /// Lower a layouted TreeView into backend-neutral connectors, markers, and glyphs.
@@ -6566,6 +6601,7 @@ mod tests {
         let layout = LayoutedTreemapDiagram {
             width: 320.0,
             height: 240.0,
+            config: Default::default(),
             title: Some("Allocation".into()),
             accessibility_title: Some("Allocation treemap".into()),
             accessibility_description: None,
@@ -6574,6 +6610,7 @@ mod tests {
                 label: "Root".into(),
                 value: 10.0,
                 depth: 0,
+                has_children: false,
                 x: 8.0,
                 y: 48.0,
                 width: 304.0,
@@ -6588,6 +6625,10 @@ mod tests {
             scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.title")),
             Some(&"Allocation treemap".to_string())
         );
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if run.font_size == 12.0)));
+        assert_eq!(format_treemap_value(12345.0, "$0,0"), "$12,345");
+        assert_eq!(format_treemap_value(12.5, ".2f"), "12.50");
     }
 
     #[test]
