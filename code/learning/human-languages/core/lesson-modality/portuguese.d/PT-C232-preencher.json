@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C232-preencher",
+    "language": "portuguese",
+    "chapter": 232,
+    "sequence": 13800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f9a3f720bc6dcfc7"
+  },
+  "findings": []
+}

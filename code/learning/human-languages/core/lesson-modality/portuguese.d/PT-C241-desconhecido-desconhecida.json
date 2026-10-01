@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C241-desconhecido-desconhecida",
+    "language": "portuguese",
+    "chapter": 241,
+    "sequence": 14440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8684161bffefb43"
+  },
+  "findings": []
+}

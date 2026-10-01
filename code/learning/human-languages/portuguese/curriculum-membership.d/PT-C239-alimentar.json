@@ -1,0 +1,11 @@
+{
+  "id": "PT-C239-alimentar",
+  "pathSegment": "PT-PATH-239-VERBOS239",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-239-VERBOS239",
+      "order": 2
+    }
+  ]
+}

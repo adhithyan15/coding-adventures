@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:7d35c70e4994dd12",
+  "lessonIds": [
+    "PT-C233-divertir-se",
+    "PT-C233-zangar-se",
+    "PT-C233-preocupar-se",
+    "PT-C233-fumar",
+    "PT-C233-nevar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch233.txt",
+  "json": "portuguese/narration/ch233.json",
+  "textHash": "fnv1a64:6f5bd8dc5ef5da08",
+  "jsonHash": "fnv1a64:8dffb72cd5a14229",
+  "findings": []
+}

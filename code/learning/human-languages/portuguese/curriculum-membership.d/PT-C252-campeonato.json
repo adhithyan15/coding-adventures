@@ -1,0 +1,11 @@
+{
+  "id": "PT-C252-campeonato",
+  "pathSegment": "PT-PATH-252-COISAS252",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-252-COISAS252",
+      "order": 1
+    }
+  ]
+}

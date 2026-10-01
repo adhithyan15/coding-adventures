@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:650f8586733182bd",
+  "lessonIds": [
+    "PT-C253-provador",
+    "PT-C253-tamanho",
+    "PT-C253-troco",
+    "PT-C253-recibo",
+    "PT-C253-fila"
+  ],
+  "tex": "portuguese/book/chapters/ch253-fitting-room-size-change-you-get-back-receipt-queue.tex"
+}

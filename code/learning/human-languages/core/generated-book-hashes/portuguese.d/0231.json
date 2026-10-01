@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:aff6172cbdc321c7",
+  "lessonIds": [
+    "PT-C231-construir",
+    "PT-C231-fotografar",
+    "PT-C231-repetir",
+    "PT-C231-explicar",
+    "PT-C231-traduzir"
+  ],
+  "tex": "portuguese/book/chapters/ch231-to-build-to-photograph-to-repeat-to-explain-to-translate.tex"
+}

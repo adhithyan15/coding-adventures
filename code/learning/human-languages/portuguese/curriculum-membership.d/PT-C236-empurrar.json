@@ -1,0 +1,11 @@
+{
+  "id": "PT-C236-empurrar",
+  "pathSegment": "PT-PATH-236-VERBOS236",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-236-VERBOS236",
+      "order": 1
+    }
+  ]
+}

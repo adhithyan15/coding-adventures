@@ -1,0 +1,11 @@
+{
+  "id": "PT-C246-eletricista",
+  "pathSegment": "PT-PATH-246-COISAS246",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-246-COISAS246",
+      "order": 1
+    }
+  ]
+}

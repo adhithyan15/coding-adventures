@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:89ed691437379d31",
+  "lessonIds": [
+    "PT-C250-semente",
+    "PT-C250-raiz",
+    "PT-C250-ramo",
+    "PT-C250-tronco",
+    "PT-C250-espinho"
+  ],
+  "tex": "portuguese/book/chapters/ch250-seed-root-branch-trunk-thorn.tex"
+}

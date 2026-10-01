@@ -1,0 +1,11 @@
+{
+  "id": "PT-C252-treinador",
+  "pathSegment": "PT-PATH-252-COISAS252",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-252-COISAS252",
+      "order": 3
+    }
+  ]
+}

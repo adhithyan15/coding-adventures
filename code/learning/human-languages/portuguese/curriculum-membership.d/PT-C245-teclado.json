@@ -1,0 +1,11 @@
+{
+  "id": "PT-C245-teclado",
+  "pathSegment": "PT-PATH-245-COISAS245",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-245-COISAS245",
+      "order": 4
+    }
+  ]
+}

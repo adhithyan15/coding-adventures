@@ -1,0 +1,11 @@
+{
+  "id": "PT-C233-fumar",
+  "pathSegment": "PT-PATH-233-VERBOS233",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-233-VERBOS233",
+      "order": 3
+    }
+  ]
+}

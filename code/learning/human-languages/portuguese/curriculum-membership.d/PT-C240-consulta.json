@@ -1,0 +1,11 @@
+{
+  "id": "PT-C240-consulta",
+  "pathSegment": "PT-PATH-240-SAUDE240",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-240-SAUDE240",
+      "order": 2
+    }
+  ]
+}

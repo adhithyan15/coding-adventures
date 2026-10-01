@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-248-COISAS248",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a banknote, a bank card, a cash machine, a bank account and a loan.",
+  "prerequisites": []
+}

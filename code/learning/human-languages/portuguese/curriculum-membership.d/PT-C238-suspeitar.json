@@ -1,0 +1,11 @@
+{
+  "id": "PT-C238-suspeitar",
+  "pathSegment": "PT-PATH-238-VERBOS238",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-238-VERBOS238",
+      "order": 2
+    }
+  ]
+}

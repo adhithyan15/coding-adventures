@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:855b22765ac6f218",
+  "lessonIds": [
+    "PT-C234-aconselhar",
+    "PT-C234-convencer",
+    "PT-C234-criticar",
+    "PT-C234-depender",
+    "PT-C234-partilhar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch234.txt",
+  "json": "portuguese/narration/ch234.json",
+  "textHash": "fnv1a64:90e2c5646c89df69",
+  "jsonHash": "fnv1a64:c270ca14b530114e",
+  "findings": []
+}

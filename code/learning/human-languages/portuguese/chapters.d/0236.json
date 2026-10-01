@@ -1,0 +1,19 @@
+{
+  "chapter": 236,
+  "title": "To dream, To push, To pull, To waste, To overtake",
+  "label": "ch:pt-to-dream-to-push-to-pull-to-waste-to-overtake",
+  "canDo": "I can say to dream, to push, to pull, to waste and to overtake.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C236-ultrapassar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 236: I can say to dream, to push, to pull, to waste and to overtake.",
+    "assesses": [
+      "PT-LEX-C236-VERBOS236-03",
+      "PT-LEX-C236-VERBOS236-04",
+      "PT-LEX-C236-VERBOS236-05"
+    ]
+  }
+}

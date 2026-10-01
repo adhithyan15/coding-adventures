@@ -1,0 +1,11 @@
+{
+  "id": "PT-C234-partilhar",
+  "pathSegment": "PT-PATH-234-VERBOS234",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-234-VERBOS234",
+      "order": 4
+    }
+  ]
+}

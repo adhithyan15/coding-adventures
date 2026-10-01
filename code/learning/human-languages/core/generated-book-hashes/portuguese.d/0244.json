@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:1236a42de5027e0e",
+  "lessonIds": [
+    "PT-C244-alfandega",
+    "PT-C244-reserva",
+    "PT-C244-vale",
+    "PT-C244-temperatura",
+    "PT-C244-mosca"
+  ],
+  "tex": "portuguese/book/chapters/ch244-customs-booking-valley-temperature-fly.tex"
+}

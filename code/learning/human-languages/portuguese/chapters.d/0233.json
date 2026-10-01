@@ -1,0 +1,19 @@
+{
+  "chapter": 233,
+  "title": "To have fun, To get angry, To worry, To smoke, To snow",
+  "label": "ch:pt-to-have-fun-to-get-angry-to-worry-to-smoke-to-snow",
+  "canDo": "I can say to have fun, to get angry, to worry, to smoke and to snow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C233-nevar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 233: I can say to have fun, to get angry, to worry, to smoke and to snow.",
+    "assesses": [
+      "PT-LEX-C233-VERBOS233-03",
+      "PT-LEX-C233-VERBOS233-04",
+      "PT-LEX-C233-VERBOS233-05"
+    ]
+  }
+}

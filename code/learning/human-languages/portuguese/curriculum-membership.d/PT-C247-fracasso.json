@@ -1,0 +1,11 @@
+{
+  "id": "PT-C247-fracasso",
+  "pathSegment": "PT-PATH-247-COISAS247",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-247-COISAS247",
+      "order": 1
+    }
+  ]
+}

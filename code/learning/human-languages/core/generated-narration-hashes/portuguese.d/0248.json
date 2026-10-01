@@ -1,0 +1,21 @@
+{
+  "language": "portuguese",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:afbc358331537997",
+  "lessonIds": [
+    "PT-C248-nota",
+    "PT-C248-cartao-bancario",
+    "PT-C248-multibanco",
+    "PT-C248-conta-bancaria",
+    "PT-C248-emprestimo",
+    "PT-R248-first-pass-words-from-chapters-240-243",
+    "PT-R248-second-pass-words-from-chapters-244-248"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "portuguese/narration/ch248.txt",
+  "json": "portuguese/narration/ch248.json",
+  "textHash": "fnv1a64:25f78047a4ad49ba",
+  "jsonHash": "fnv1a64:a0e4bfdd01e3623e",
+  "findings": []
+}

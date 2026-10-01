@@ -1,0 +1,11 @@
+{
+  "id": "PT-C250-tronco",
+  "pathSegment": "PT-PATH-250-COISAS250",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-250-COISAS250",
+      "order": 3
+    }
+  ]
+}

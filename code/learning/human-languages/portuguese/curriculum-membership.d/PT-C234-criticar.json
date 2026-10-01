@@ -1,0 +1,11 @@
+{
+  "id": "PT-C234-criticar",
+  "pathSegment": "PT-PATH-234-VERBOS234",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-234-VERBOS234",
+      "order": 2
+    }
+  ]
+}

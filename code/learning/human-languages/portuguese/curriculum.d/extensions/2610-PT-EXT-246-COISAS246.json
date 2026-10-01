@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-246-COISAS246",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a mechanic, an electrician, a plumber, a factory worker and a pilot.",
+  "prerequisites": []
+}

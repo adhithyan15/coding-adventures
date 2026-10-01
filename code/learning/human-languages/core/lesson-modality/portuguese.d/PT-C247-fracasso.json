@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C247-fracasso",
+    "language": "portuguese",
+    "chapter": 247,
+    "sequence": 14720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:299f1b5ce9313034"
+  },
+  "findings": []
+}

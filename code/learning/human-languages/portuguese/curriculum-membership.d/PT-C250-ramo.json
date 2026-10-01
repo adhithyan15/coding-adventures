@@ -1,0 +1,11 @@
+{
+  "id": "PT-C250-ramo",
+  "pathSegment": "PT-PATH-250-COISAS250",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-250-COISAS250",
+      "order": 2
+    }
+  ]
+}

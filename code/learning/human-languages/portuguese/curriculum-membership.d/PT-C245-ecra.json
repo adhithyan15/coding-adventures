@@ -1,0 +1,11 @@
+{
+  "id": "PT-C245-ecra",
+  "pathSegment": "PT-PATH-245-COISAS245",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-245-COISAS245",
+      "order": 3
+    }
+  ]
+}

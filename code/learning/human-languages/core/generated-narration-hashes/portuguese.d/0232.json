@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:7c846489190fb47e",
+  "lessonIds": [
+    "PT-C232-pesar",
+    "PT-C232-verificar",
+    "PT-C232-assinar",
+    "PT-C232-preencher",
+    "PT-C232-telefonar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch232.txt",
+  "json": "portuguese/narration/ch232.json",
+  "textHash": "fnv1a64:7aefdb3c63684f69",
+  "jsonHash": "fnv1a64:7235ede1ea27522a",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C249-portagem",
+  "pathSegment": "PT-PATH-249-COISAS249",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-249-COISAS249",
+      "order": 1
+    }
+  ]
+}

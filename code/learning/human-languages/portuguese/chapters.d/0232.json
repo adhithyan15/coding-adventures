@@ -1,0 +1,19 @@
+{
+  "chapter": 232,
+  "title": "To weigh, To check, To sign, To fill in, To phone",
+  "label": "ch:pt-to-weigh-to-check-to-sign-to-fill-in-to-phone",
+  "canDo": "I can say to weigh, to check, to sign, to fill in and to phone.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C232-telefonar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 232: I can say to weigh, to check, to sign, to fill in and to phone.",
+    "assesses": [
+      "PT-LEX-C232-VERBOS232-03",
+      "PT-LEX-C232-VERBOS232-04",
+      "PT-LEX-C232-VERBOS232-05"
+    ]
+  }
+}
