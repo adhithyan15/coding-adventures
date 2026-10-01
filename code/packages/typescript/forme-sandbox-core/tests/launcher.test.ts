@@ -165,6 +165,12 @@ describe("launchWithNativeHelper", () => {
     })).rejects.toMatchObject({ code: "SANDBOX_UNAVAILABLE" });
   });
 
+  it.runIf(process.platform === "win32")("requires an absolute Windows system root", async () => {
+    await expect(launchWithNativeHelper(await request(), policy(), {
+      systemRoot: "relative",
+    })).rejects.toMatchObject({ code: "SANDBOX_UNAVAILABLE" });
+  });
+
   it.each([0, -1, 1.5, Number.MAX_SAFE_INTEGER])(
     "rejects invalid resource limit %s",
     async limit => {
@@ -217,5 +223,14 @@ describe("launchWithNativeHelper", () => {
     await expect(launchWithNativeHelper(await request(), {
       ...policy(), launcherPrefixArguments: [helper, `--mode=${mode}`],
     }, { readinessTimeoutMs: mode === "silent" ? 10 : 1_000 })).rejects.toMatchObject({ code });
+  });
+
+  it("reports the trusted launcher exit when attestation fails", async () => {
+    await expect(launchWithNativeHelper(await request(), {
+      ...policy(), launcherPrefixArguments: [helper, "--mode=eof"],
+    }, { readinessTimeoutMs: 1_000 })).rejects.toMatchObject({
+      code: "ATTESTATION_MISMATCH",
+      details: { launcherExit: { code: 92, signal: null } },
+    });
   });
 });

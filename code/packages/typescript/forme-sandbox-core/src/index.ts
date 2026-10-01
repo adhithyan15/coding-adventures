@@ -278,7 +278,13 @@ export async function launchWithNativeHelper(
     assertAttestation(record, policy, staged);
   } catch (error) {
     signalProcessTree(child, "SIGKILL", control as Writable, policy.supervisorControl);
-    await exited.catch(() => undefined);
+    const launcherExit = await exited.catch(() => null);
+    if (error instanceof SandboxLaunchError) {
+      throw new SandboxLaunchError(error.code, error.message, {
+        ...error.details,
+        launcherExit,
+      });
+    }
     throw error;
   }
 
@@ -520,9 +526,11 @@ function processExit(child: ChildProcess): Promise<PluginProcessExit> {
     child.once("error", reject);
     child.once("exit", (code, signal) => {
       // A launcher exit must not strand descendants in its fresh process group.
+      /* v8 ignore start -- exercised by the Linux and macOS native integration gates */
       if (process.platform !== "win32" && child.pid !== undefined) {
         try { process.kill(-child.pid, "SIGKILL"); } catch { /* The group is already empty. */ }
       }
+      /* v8 ignore stop */
       resolveExit({ code, signal });
     });
   });

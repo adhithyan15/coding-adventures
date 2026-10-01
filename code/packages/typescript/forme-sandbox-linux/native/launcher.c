@@ -5,8 +5,8 @@
 #include <linux/audit.h>
 #include <linux/capability.h>
 #include <linux/filter.h>
-#include <linux/if_alg.h>
 #include <linux/seccomp.h>
+#include "sha256.h"
 #include <linux/securebits.h>
 #include <sched.h>
 #include <signal.h>
@@ -18,7 +18,6 @@
 #include <sys/mount.h>
 #include <sys/prctl.h>
 #include <sys/resource.h>
-#include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/syscall.h>
 #include <sys/types.h>
@@ -69,19 +68,6 @@ static int write_all(int fd, const char *bytes, size_t length) {
     return 0;
 }
 
-static int send_all(int fd, const unsigned char *bytes, size_t length, int flags) {
-    while (length > 0) {
-        ssize_t written = send(fd, bytes, length, flags);
-        if (written < 0) {
-            if (errno == EINTR) continue;
-            return -1;
-        }
-        bytes += written;
-        length -= (size_t)written;
-    }
-    return 0;
-}
-
 static uint64_t monotonic_milliseconds(void) {
     struct timespec now;
     if (clock_gettime(CLOCK_MONOTONIC, &now) != 0) return UINT64_MAX;
@@ -91,41 +77,27 @@ static uint64_t monotonic_milliseconds(void) {
 static int verify_sha256_file(const char *path, const char *expected) {
     if (expected == NULL || strncmp(expected, "sha256:", 7) != 0 || strlen(expected) != 71) return -1;
     int file = open(path, O_RDONLY | O_NOFOLLOW | O_CLOEXEC);
-    int algorithm = -1, operation = -1, result = -1;
+    int result = -1;
     struct stat status;
     if (file < 0 || fstat(file, &status) != 0 || !S_ISREG(status.st_mode)) goto done;
-    algorithm = socket(AF_ALG, SOCK_SEQPACKET | SOCK_CLOEXEC, 0);
-    if (algorithm < 0) goto done;
-    struct sockaddr_alg address;
-    memset(&address, 0, sizeof(address));
-    address.salg_family = AF_ALG;
-    strcpy((char *)address.salg_type, "hash");
-    strcpy((char *)address.salg_name, "sha256");
-    if (bind(algorithm, (struct sockaddr *)&address, sizeof(address)) != 0) goto done;
-    operation = accept4(algorithm, NULL, NULL, SOCK_CLOEXEC);
-    if (operation < 0) goto done;
-    unsigned char current[16384], next[16384];
+    sha256_ctx context;
+    sha256_init(&context);
+    unsigned char buffer[16384];
     ssize_t count;
-    do { count = read(file, current, sizeof(current)); } while (count < 0 && errno == EINTR);
-    while (count != 0) {
+    for (;;) {
+        do { count = read(file, buffer, sizeof(buffer)); } while (count < 0 && errno == EINTR);
         if (count < 0) goto done;
-        ssize_t following;
-        do { following = read(file, next, sizeof(next)); } while (following < 0 && errno == EINTR);
-        if (following < 0) goto done;
-        if (send_all(operation, current, (size_t)count, following == 0 ? 0 : MSG_MORE) != 0) goto done;
-        if (following > 0) memcpy(current, next, (size_t)following);
-        count = following;
+        if (count == 0) break;
+        sha256_update(&context, buffer, (size_t)count);
     }
     unsigned char digest[32];
-    if (read(operation, digest, sizeof(digest)) != (ssize_t)sizeof(digest)) goto done;
+    sha256_final(&context, digest);
     char actual[72] = "sha256:";
     for (size_t index = 0; index < sizeof(digest); index++) {
         snprintf(actual + 7 + index * 2, 3, "%02x", digest[index]);
     }
     result = strcmp(actual, expected) == 0 ? 0 : -1;
 done:
-    if (operation >= 0) close(operation);
-    if (algorithm >= 0) close(algorithm);
     if (file >= 0) close(file);
     return result;
 }
@@ -794,7 +766,7 @@ int main(int argc, char **argv) {
         if (setenv("HOME", "/work", 1) != 0
                 || setenv("TMPDIR", "/work", 1) != 0
                 || setenv("TMP", "/work", 1) != 0
-                || setenv("TEMP", "/work", 1) != 0) _exit(72);
+                || setenv("TEMP", "/work", 1) != 0) _exit(73);
         int closed_range = -1;
 #ifdef SYS_close_range
         closed_range = (int)syscall(SYS_close_range, 5U, ~0U, 0U);
@@ -802,16 +774,16 @@ int main(int argc, char **argv) {
         if (closed_range != 0) {
             for (int fd = 5; fd < close_max; fd++) close(fd);
         }
-        if (prctl(PR_SET_PDEATHSIG, SIGKILL, 0, 0, 0) != 0 || getppid() == 1
-                || verify_sha256_file(sandbox_entry, entry_hash) != 0
-                || (strcmp(schema_hash, "-") != 0
-                    && verify_sha256_file("/work/.forme-snapshot/plugin-config-schema.json", schema_hash) != 0)
-                || drop_namespace_root_authority() != 0
-                || install_seccomp() != 0
-                || write_all(installed[1], "1", 1) != 0) _exit(73);
+        if (prctl(PR_SET_PDEATHSIG, SIGKILL, 0, 0, 0) != 0 || getppid() == 1) _exit(74);
+        if (verify_sha256_file(sandbox_entry, entry_hash) != 0) _exit(75);
+        if (strcmp(schema_hash, "-") != 0
+                && verify_sha256_file("/work/.forme-snapshot/plugin-config-schema.json", schema_hash) != 0) _exit(76);
+        if (drop_namespace_root_authority() != 0) _exit(77);
+        if (install_seccomp() != 0) _exit(78);
+        if (write_all(installed[1], "1", 1) != 0) _exit(79);
         execl(sandbox_runtime, sandbox_runtime, sandbox_entry, stage, schema_hash, (char *)NULL);
         write_all(installed[1], "0", 1);
-        _exit(74);
+        _exit(80);
     }
 
     sandbox_child = child;
@@ -828,11 +800,12 @@ int main(int argc, char **argv) {
     char installed_byte = 0;
     if (read(installed[0], &installed_byte, 1) != 1 || installed_byte != '1'
             || read(installed[0], &installed_byte, 1) != 0) {
-        waitpid(child, NULL, 0);
+        int child_status = 0;
+        waitpid(child, &child_status, 0);
         umount2(root, MNT_DETACH);
         rmdir(root);
         cleanup_cgroup(cgroup);
-        return 75;
+        return WIFEXITED(child_status) ? WEXITSTATUS(child_status) : 81;
     }
     close(installed[0]);
     if (fcntl(READY_FD, F_SETFD, FD_CLOEXEC) != 0) {

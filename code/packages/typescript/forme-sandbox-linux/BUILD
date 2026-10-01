@@ -1,4 +1,4 @@
-# build-tool: deps=typescript/forme-sandbox-core
+# build-tool: deps=typescript/forme-sandbox-core,c/sha256
 cd ../document-ast && npm install --silent
 cd ../blake2b && npm install --silent
 cd ../sha512 && npm install --silent

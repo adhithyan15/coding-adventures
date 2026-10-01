@@ -14,3 +14,7 @@
   `forme-plugin-host` request and result types.
 - Made cross-platform staging and readiness fixtures honor native Windows path
   and executable-name semantics.
+- Kept per-platform coverage gates deterministic while testing Windows system
+  root validation and delegating POSIX cleanup paths to native platform gates.
+- Added the trusted native launcher's bounded exit result to attestation-failure
+  diagnostics without exposing plugin-controlled output.

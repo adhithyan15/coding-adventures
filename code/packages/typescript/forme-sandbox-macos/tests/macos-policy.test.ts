@@ -37,6 +37,7 @@ describe("macOS sandbox policy", () => {
   it("constructs only the versioned macOS factory", () => {
     const factory = createMacosSandboxFactory({ launcherPath: "/trusted/forme-sandbox-macos" });
     expect(typeof factory.launch).toBe("function");
+    expect(typeof createMacosSandboxFactory({ runtimeReadPaths: ["/usr/lib"] }).launch).toBe("function");
     expect(typeof createMacosSandboxFactory().launch).toBe("function");
     expect(() => createMacosSandboxFactory({ runtimeReadPaths: ["relative"] })).toThrow(/runtime read paths/);
     expect(() => createMacosSandboxFactory({ runtimeReadPaths: Array(33).fill("/trusted") })).toThrow(/runtime read paths/);
