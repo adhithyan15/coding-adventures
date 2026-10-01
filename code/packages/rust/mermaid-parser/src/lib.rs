@@ -4593,6 +4593,7 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                 }
                 style.text_decoration = Some(decoration);
             }
+            "line-height" => style.line_height = Some(parse_treemap_line_height(token, value)?),
             _ => merge_treemap_node_style(&mut style.node, &parse_block_style(token, declaration)?),
         }
     }
@@ -4602,6 +4603,24 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
 fn parse_treemap_opacity(token: &Token, source: &str) -> Result<f64, ParseError> {
     source.parse::<f64>().ok().filter(|value| value.is_finite() && (0.0..=1.0).contains(value))
         .ok_or_else(|| token_error(token, "treemap opacity must be between 0 and 1"))
+}
+
+fn parse_treemap_line_height(token: &Token, source: &str) -> Result<diagram_ir::TreemapLineHeight, ParseError> {
+    if source.eq_ignore_ascii_case("normal") {
+        return Ok(diagram_ir::TreemapLineHeight::Factor(1.2));
+    }
+    let (number, pixels, divisor) = if let Some(value) = source.strip_suffix("px") {
+        (value, true, 1.0)
+    } else if let Some(value) = source.strip_suffix('%') {
+        (value, false, 100.0)
+    } else {
+        (source, false, 1.0)
+    };
+    let value = number.trim().parse::<f64>().ok()
+        .filter(|value| value.is_finite() && *value > 0.0)
+        .ok_or_else(|| token_error(token, "treemap line-height must be normal or a positive number, percentage, or pixel length"))?
+        / divisor;
+    Ok(if pixels { diagram_ir::TreemapLineHeight::Pixels(value) } else { diagram_ir::TreemapLineHeight::Factor(value) })
 }
 
 fn merge_treemap_node_style(target: &mut DiagramStyle, source: &DiagramStyle) {
@@ -14120,7 +14139,7 @@ B//-A: reverse stick top
     #[test]
     fn treemap_resolves_class_definitions_declared_after_nodes() {
         let diagram = parse_treemap(
-            "treemap\n\"Root\"\n  \"Styled node\": 5:::accent\nclassDef accent fill:#fef3c7,fill-opacity:0.7,stroke:#b45309,stroke-opacity:0.5,opacity:0.8,stroke-width:3px,stroke-dasharray:5 2,stroke-dashoffset:-1px,color:#78350f,font-size:16px,font-weight:bold,font-style:italic,font-family:Avenir,text-align:right,text-transform:uppercase,text-decoration:underline overline line-through",
+            "treemap\n\"Root\"\n  \"Styled node\": 5:::accent\nclassDef accent fill:#fef3c7,fill-opacity:0.7,stroke:#b45309,stroke-opacity:0.5,opacity:0.8,stroke-width:3px,stroke-dasharray:5 2,stroke-dashoffset:-1px,color:#78350f,font-size:16px,font-weight:bold,font-style:italic,font-family:Avenir,text-align:right,text-transform:uppercase,text-decoration:underline overline line-through,line-height:150%",
         ).unwrap();
         let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
         assert_eq!(style.node.fill.as_deref(), Some("#fef3c7"));
@@ -14139,6 +14158,7 @@ B//-A: reverse stick top
         assert_eq!(style.text_decoration, Some(diagram_ir::TreemapTextDecoration {
             underline: true, overline: true, line_through: true,
         }));
+        assert_eq!(style.line_height, Some(diagram_ir::TreemapLineHeight::Factor(1.5)));
     }
 
     #[test]
@@ -14147,6 +14167,23 @@ B//-A: reverse stick top
             "treemap\n\"Root\"\n  \"Styled node\": 5:::accent\nclassDef accent text-decoration:blink",
         ).expect_err("unsupported text decoration must fail");
         assert!(error.message.contains("unsupported treemap text-decoration"));
+    }
+
+    #[test]
+    fn treemap_parses_line_height_forms_and_rejects_non_positive_values() {
+        for (value, expected) in [
+            ("normal", diagram_ir::TreemapLineHeight::Factor(1.2)),
+            ("1.5", diagram_ir::TreemapLineHeight::Factor(1.5)),
+            ("150%", diagram_ir::TreemapLineHeight::Factor(1.5)),
+            ("24px", diagram_ir::TreemapLineHeight::Pixels(24.0)),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent line-height:{value}");
+            let diagram = parse_treemap(&source).expect("supported line height must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.line_height), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent line-height:0",
+        ).is_err());
     }
 }
 #[cfg(test)]
