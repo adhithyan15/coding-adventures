@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "python/forme-plugin-runner-py",
+  "capabilities": [
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "the package's Python conformance fixture",
+      "justification": "Invokes the shared FM02 harness, which executes this package's exact Python fixture through the public subprocess protocol."
+    },
+    {
+      "category": "proc",
+      "action": "signal",
+      "target": "the exact Python fixture subprocess started by the shared harness",
+      "justification": "Allows the shared harness to retire only its exact fixture after malformed, flooding, timed-out, or completed protocol sessions."
+    }
+  ],
+  "justification": "The shipped runner owns no ambient process authority; only its cross-process conformance test executes and retires the package fixture."
+}
