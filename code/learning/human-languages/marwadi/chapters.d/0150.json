@@ -1,0 +1,21 @@
+{
+  "chapter": 150,
+  "title": "A connected A2 message",
+  "label": "ch:mw-a-connected-a2-message",
+  "canDo": "I can plan and write a connected 70–90 word Marwari message in Devanagari for a named reader and practical purpose.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "MW-W44-a2-connected-composition",
+    "kind": "production",
+    "summary": "Complete chapter 150 by writing a model-free 70–90 word connected Marwari message for a named reader and practical purpose.",
+    "assesses": [
+      "MW-LEX-C90-TIME90-01",
+      "MW-LEX-C90-TIME90-02",
+      "MW-LEX-C103-ACT103-01",
+      "MW-LEX-C113-LIKE113-02",
+      "MW-LEX-C117-WHY117-05"
+    ]
+  }
+}

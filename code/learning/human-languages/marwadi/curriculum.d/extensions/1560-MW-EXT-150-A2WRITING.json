@@ -1,0 +1,10 @@
+{
+  "id": "MW-EXT-150-A2WRITING",
+  "stage": "A2",
+  "kind": "required",
+  "category": "writing",
+  "canDo": "I can plan and independently write a connected 70–90 word Marwari message in Devanagari for a named reader and familiar purpose without a copyable answer model.",
+  "prerequisites": [
+    "MW-EXT-149-QUAL149"
+  ]
+}

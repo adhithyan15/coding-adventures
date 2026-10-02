@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MW-W44-a2-connected-composition",
+    "language": "marwadi",
+    "chapter": 150,
+    "sequence": 9420,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:fe8a8dea0dbc7c91",
+    "detachableSegments": [
+      "Writing — connected composition"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

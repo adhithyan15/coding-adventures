@@ -1,0 +1,15 @@
+{
+  "language": "marwadi",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:ed9f634545ba1581",
+  "lessonIds": [
+    "MW-W44-a2-connected-composition"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "marwadi/narration/ch150.txt",
+  "json": "marwadi/narration/ch150.json",
+  "textHash": "fnv1a64:0a89c8296a7f7a09",
+  "jsonHash": "fnv1a64:0a1b93226a66514b",
+  "findings": []
+}
