@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-R148-first-pass-words-from-chapters-140-143",
+    "language": "russian",
+    "chapter": 148,
+    "sequence": 7910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0112a72fb86a4ed1"
+  },
+  "findings": []
+}

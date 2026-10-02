@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C140-obedat",
+    "language": "russian",
+    "chapter": 140,
+    "sequence": 7460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d4220fe384b22c9"
+  },
+  "findings": []
+}

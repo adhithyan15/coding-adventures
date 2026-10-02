@@ -1,0 +1,19 @@
+{
+  "chapter": 163,
+  "title": "Frankfurter, Prawn, Borscht, Cabbage soup, Pancake",
+  "label": "ch:ru-frankfurter-prawn-borscht-cabbage-soup-pancake",
+  "canDo": "I can say a frankfurter, a prawn, borscht, cabbage soup and a pancake.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C163-blin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 163: I can say a frankfurter, a prawn, borscht, cabbage soup and a pancake.",
+    "assesses": [
+      "RU-LEX-C163-VESHCH163-03",
+      "RU-LEX-C163-VESHCH163-04",
+      "RU-LEX-C163-VESHCH163-05"
+    ]
+  }
+}

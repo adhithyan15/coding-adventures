@@ -358,7 +358,9 @@ describe("real curriculum", () => {
       // review prints them.
       // 135 -> 139: the A2 spine chapters -- saying no, the past, the future
       // and reading practical texts.
-    ).toEqual(Array.from({ length: 139 }, (_, index) => index + 1));
+      // 139 -> 172: the first A2 vocabulary tranche, 165 headwords, thirty-five
+      // of them verbs.
+    ).toEqual(Array.from({ length: 172 }, (_, index) => index + 1));
     expect(
       books.books.every((book) =>
         book.chapters.every((chapter) => chapter.tex.length > 100),

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 156,
+  "sourceHash": "fnv1a64:cd9cf2e3ffe660a9",
+  "lessonIds": [
+    "RU-C156-bogatyy",
+    "RU-C156-bednyy",
+    "RU-C156-chistyy",
+    "RU-C156-gryaznyy",
+    "RU-C156-pustoy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch156.txt",
+  "json": "russian/narration/ch156.json",
+  "textHash": "fnv1a64:cd84ccd7d6857d24",
+  "jsonHash": "fnv1a64:3ddbfd7538d417e6",
+  "findings": []
+}

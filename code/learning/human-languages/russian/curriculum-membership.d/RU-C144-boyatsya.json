@@ -1,0 +1,11 @@
+{
+  "id": "RU-C144-boyatsya",
+  "pathSegment": "RU-PATH-144-ACT144",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-144-ACT144",
+      "order": 0
+    }
+  ]
+}

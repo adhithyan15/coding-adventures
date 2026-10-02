@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:e939144a35c193f3",
+  "lessonIds": [
+    "RU-C158-zhivoy",
+    "RU-C158-myortvyy",
+    "RU-C158-golodnyy",
+    "RU-C158-sytyy",
+    "RU-C158-znakomyy"
+  ],
+  "tex": "russian/book/chapters/ch158-alive-dead-hungry-well-fed-familiar.tex"
+}

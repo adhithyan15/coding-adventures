@@ -1,0 +1,11 @@
+{
+  "id": "RU-C151-prospekt",
+  "pathSegment": "RU-PATH-151-MESTO151",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-151-MESTO151",
+      "order": 4
+    }
+  ]
+}

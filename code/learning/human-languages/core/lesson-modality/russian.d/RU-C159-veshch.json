@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C159-veshch",
+    "language": "russian",
+    "chapter": 159,
+    "sequence": 8790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b1ff86c9b875dde"
+  },
+  "findings": []
+}

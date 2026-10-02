@@ -1,0 +1,19 @@
+{
+  "chapter": 156,
+  "title": "Rich, Poor, Clean, Dirty, Empty",
+  "label": "ch:ru-rich-poor-clean-dirty-empty",
+  "canDo": "I can say rich, poor, clean, dirty and empty.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "RU-C156-pustoy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 156: I can say rich, poor, clean, dirty and empty.",
+    "assesses": [
+      "RU-LEX-C156-KACH156-03",
+      "RU-LEX-C156-KACH156-04",
+      "RU-LEX-C156-KACH156-05"
+    ]
+  }
+}

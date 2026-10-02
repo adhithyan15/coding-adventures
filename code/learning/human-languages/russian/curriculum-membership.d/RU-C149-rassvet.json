@@ -1,0 +1,11 @@
+{
+  "id": "RU-C149-rassvet",
+  "pathSegment": "RU-PATH-149-VREMYA149",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-149-VREMYA149",
+      "order": 3
+    }
+  ]
+}

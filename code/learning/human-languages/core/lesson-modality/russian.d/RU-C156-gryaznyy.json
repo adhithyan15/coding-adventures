@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C156-gryaznyy",
+    "language": "russian",
+    "chapter": 156,
+    "sequence": 8480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:427ffd4b6bef7ea9"
+  },
+  "findings": []
+}

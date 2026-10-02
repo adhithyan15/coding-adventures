@@ -1,0 +1,19 @@
+{
+  "chapter": 154,
+  "title": "So, Since, If, Although, Otherwise",
+  "label": "ch:ru-so-since-if-although-otherwise",
+  "canDo": "I can say so, since, if, although and otherwise.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "RU-C154-inache",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 154: I can say so, since, if, although and otherwise.",
+    "assesses": [
+      "RU-LEX-C154-PRICH154-03",
+      "RU-LEX-C154-PRICH154-04",
+      "RU-LEX-C154-PRICH154-05"
+    ]
+  }
+}

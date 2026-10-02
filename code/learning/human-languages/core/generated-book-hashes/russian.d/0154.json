@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:2515c69ab5978908",
+  "lessonIds": [
+    "RU-C154-poetomu",
+    "RU-C154-tak-kak",
+    "RU-C154-yesli",
+    "RU-C154-khotya",
+    "RU-C154-inache"
+  ],
+  "tex": "russian/book/chapters/ch154-so-since-if-although-otherwise.tex"
+}

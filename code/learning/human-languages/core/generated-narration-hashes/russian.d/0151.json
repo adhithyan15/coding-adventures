@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:6b1e31097988c843",
+  "lessonIds": [
+    "RU-C151-mesto",
+    "RU-C151-tsentr",
+    "RU-C151-okraina",
+    "RU-C151-rayon",
+    "RU-C151-prospekt"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch151.txt",
+  "json": "russian/narration/ch151.json",
+  "textHash": "fnv1a64:d880d7e5c743db42",
+  "jsonHash": "fnv1a64:5437e523a220eadd",
+  "findings": []
+}

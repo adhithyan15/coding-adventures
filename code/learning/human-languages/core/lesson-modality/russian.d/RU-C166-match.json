@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C166-match",
+    "language": "russian",
+    "chapter": 166,
+    "sequence": 9170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:79d258424a218592"
+  },
+  "findings": []
+}

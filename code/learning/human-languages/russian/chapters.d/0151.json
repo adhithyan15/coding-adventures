@@ -1,0 +1,19 @@
+{
+  "chapter": 151,
+  "title": "Place, Centre, Outskirts, District, Avenue",
+  "label": "ch:ru-place-centre-outskirts-district-avenue",
+  "canDo": "I can say a place, the centre, the outskirts, a district and an avenue.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "RU-C151-prospekt",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 151: I can say a place, the centre, the outskirts, a district and an avenue.",
+    "assesses": [
+      "RU-LEX-C151-MESTO151-03",
+      "RU-LEX-C151-MESTO151-04",
+      "RU-LEX-C151-MESTO151-05"
+    ]
+  }
+}

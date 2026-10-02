@@ -1,0 +1,11 @@
+{
+  "id": "RU-C147-nasmork",
+  "pathSegment": "RU-PATH-147-ZDOROV147",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-147-ZDOROV147",
+      "order": 3
+    }
+  ]
+}

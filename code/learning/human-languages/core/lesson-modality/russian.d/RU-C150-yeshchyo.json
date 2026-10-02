@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C150-yeshchyo",
+    "language": "russian",
+    "chapter": 150,
+    "sequence": 8190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d4454a7d91c03e0"
+  },
+  "findings": []
+}

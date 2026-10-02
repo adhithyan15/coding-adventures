@@ -1,0 +1,11 @@
+{
+  "id": "RU-C148-silnyy",
+  "pathSegment": "RU-PATH-148-ZDOROV148",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-148-ZDOROV148",
+      "order": 2
+    }
+  ]
+}

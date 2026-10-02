@@ -1,0 +1,19 @@
+{
+  "chapter": 161,
+  "title": "Form, Envelope, Postage stamp, Postcard, Parcel",
+  "label": "ch:ru-form-envelope-postage-stamp-postcard-parcel",
+  "canDo": "I can say a form, an envelope, a postage stamp, a postcard and a parcel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C161-posylka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 161: I can say a form, an envelope, a postage stamp, a postcard and a parcel.",
+    "assesses": [
+      "RU-LEX-C161-VESHCH161-03",
+      "RU-LEX-C161-VESHCH161-04",
+      "RU-LEX-C161-VESHCH161-05"
+    ]
+  }
+}

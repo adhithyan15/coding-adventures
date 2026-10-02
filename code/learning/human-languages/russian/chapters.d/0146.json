@@ -1,0 +1,19 @@
+{
+  "chapter": 146,
+  "title": "To book, To turn, To cross, To stop, To park",
+  "label": "ch:ru-to-book-to-turn-to-cross-to-stop-to-park",
+  "canDo": "I can say to book, to turn, to cross, to stop and to park.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C146-parkovat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 146: I can say to book, to turn, to cross, to stop and to park.",
+    "assesses": [
+      "RU-LEX-C146-ACT146-03",
+      "RU-LEX-C146-ACT146-04",
+      "RU-LEX-C146-ACT146-05"
+    ]
+  }
+}

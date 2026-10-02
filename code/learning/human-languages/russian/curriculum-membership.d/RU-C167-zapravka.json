@@ -1,0 +1,11 @@
+{
+  "id": "RU-C167-zapravka",
+  "pathSegment": "RU-PATH-167-VESHCH167",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-167-VESHCH167",
+      "order": 4
+    }
+  ]
+}

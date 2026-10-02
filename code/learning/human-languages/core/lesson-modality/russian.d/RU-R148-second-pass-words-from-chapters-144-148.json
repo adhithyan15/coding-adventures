@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-R148-second-pass-words-from-chapters-144-148",
+    "language": "russian",
+    "chapter": 148,
+    "sequence": 7920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3eaf8b60dc1c464c"
+  },
+  "findings": []
+}

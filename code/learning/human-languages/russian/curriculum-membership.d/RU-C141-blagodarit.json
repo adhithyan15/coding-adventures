@@ -1,0 +1,11 @@
+{
+  "id": "RU-C141-blagodarit",
+  "pathSegment": "RU-PATH-141-ACT141",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-141-ACT141",
+      "order": 3
+    }
+  ]
+}

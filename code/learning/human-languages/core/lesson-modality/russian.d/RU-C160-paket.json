@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C160-paket",
+    "language": "russian",
+    "chapter": 160,
+    "sequence": 8850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98b160a91f18a99e"
+  },
+  "findings": []
+}

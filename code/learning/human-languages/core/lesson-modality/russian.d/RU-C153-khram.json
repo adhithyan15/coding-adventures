@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C153-khram",
+    "language": "russian",
+    "chapter": 153,
+    "sequence": 8320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8194d90c4363938"
+  },
+  "findings": []
+}

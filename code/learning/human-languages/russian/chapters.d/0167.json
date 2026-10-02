@@ -1,0 +1,19 @@
+{
+  "chapter": 167,
+  "title": "Suburban train, Motorbike, Lorry, Petrol, Petrol station",
+  "label": "ch:ru-suburban-train-motorbike-lorry-petrol-petrol-station",
+  "canDo": "I can say a suburban train, a motorbike, a lorry, petrol and a petrol station.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C167-zapravka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 167: I can say a suburban train, a motorbike, a lorry, petrol and a petrol station.",
+    "assesses": [
+      "RU-LEX-C167-VESHCH167-03",
+      "RU-LEX-C167-VESHCH167-04",
+      "RU-LEX-C167-VESHCH167-05"
+    ]
+  }
+}

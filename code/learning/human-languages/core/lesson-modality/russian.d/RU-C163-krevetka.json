@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C163-krevetka",
+    "language": "russian",
+    "chapter": 163,
+    "sequence": 9000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:732c1b198a87f45b"
+  },
+  "findings": []
+}

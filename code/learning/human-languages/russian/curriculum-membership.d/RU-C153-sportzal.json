@@ -1,0 +1,11 @@
+{
+  "id": "RU-C153-sportzal",
+  "pathSegment": "RU-PATH-153-MESTO153",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-153-MESTO153",
+      "order": 0
+    }
+  ]
+}

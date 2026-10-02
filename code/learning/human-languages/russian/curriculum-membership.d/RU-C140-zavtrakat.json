@@ -1,0 +1,11 @@
+{
+  "id": "RU-C140-zavtrakat",
+  "pathSegment": "RU-PATH-140-ACT140",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-140-ACT140",
+      "order": 1
+    }
+  ]
+}

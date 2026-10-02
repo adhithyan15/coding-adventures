@@ -1,0 +1,11 @@
+{
+  "id": "RU-C140-stirat",
+  "pathSegment": "RU-PATH-140-ACT140",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-140-ACT140",
+      "order": 3
+    }
+  ]
+}

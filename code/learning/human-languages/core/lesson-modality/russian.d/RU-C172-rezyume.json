@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C172-rezyume",
+    "language": "russian",
+    "chapter": 172,
+    "sequence": 9630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d65ef1515a3e23c"
+  },
+  "findings": []
+}

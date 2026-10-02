@@ -1,0 +1,11 @@
+{
+  "id": "RU-C162-bluzka",
+  "pathSegment": "RU-PATH-162-VESHCH162",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-162-VESHCH162",
+      "order": 0
+    }
+  ]
+}

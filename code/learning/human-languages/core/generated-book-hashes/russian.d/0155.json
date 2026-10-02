@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 155,
+  "sourceHash": "fnv1a64:b375df380edcd4c1",
+  "lessonIds": [
+    "RU-C155-milyy",
+    "RU-C155-umnyy",
+    "RU-C155-glupyy",
+    "RU-C155-lenivyy",
+    "RU-C155-vezhlivyy"
+  ],
+  "tex": "russian/book/chapters/ch155-nice-clever-silly-lazy-polite.tex"
+}

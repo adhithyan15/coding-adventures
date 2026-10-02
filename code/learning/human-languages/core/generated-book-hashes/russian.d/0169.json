@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:eedcdf54eca7687f",
+  "lessonIds": [
+    "RU-C169-prosba",
+    "RU-C169-pomoshch",
+    "RU-C169-mneniye",
+    "RU-C169-pravda",
+    "RU-C169-lozh"
+  ],
+  "tex": "russian/book/chapters/ch169-request-help-opinion-truth-lie.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C154-yesli",
+    "language": "russian",
+    "chapter": 154,
+    "sequence": 8370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:747d512ad2bb9312"
+  },
+  "findings": []
+}

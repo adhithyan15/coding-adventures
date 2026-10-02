@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:4582787eafb88ec1",
+  "lessonIds": [
+    "RU-C161-anketa",
+    "RU-C161-konvert",
+    "RU-C161-marka",
+    "RU-C161-otkrytka",
+    "RU-C161-posylka"
+  ],
+  "tex": "russian/book/chapters/ch161-form-envelope-postage-stamp-postcard-parcel.tex"
+}

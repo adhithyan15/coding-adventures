@@ -1,0 +1,11 @@
+{
+  "id": "RU-C156-pustoy",
+  "pathSegment": "RU-PATH-156-KACH156",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-156-KACH156",
+      "order": 4
+    }
+  ]
+}

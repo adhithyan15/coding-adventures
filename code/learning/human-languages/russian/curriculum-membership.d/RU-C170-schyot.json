@@ -1,0 +1,11 @@
+{
+  "id": "RU-C170-schyot",
+  "pathSegment": "RU-PATH-170-RABOTA170",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-170-RABOTA170",
+      "order": 3
+    }
+  ]
+}

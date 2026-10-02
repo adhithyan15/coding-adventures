@@ -1,0 +1,11 @@
+{
+  "id": "RU-C162-kolgotki",
+  "pathSegment": "RU-PATH-162-VESHCH162",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-162-VESHCH162",
+      "order": 2
+    }
+  ]
+}

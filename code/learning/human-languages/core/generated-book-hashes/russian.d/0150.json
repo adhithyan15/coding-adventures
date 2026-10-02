@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:3c3bf87cc968fdd2",
+  "lessonIds": [
+    "RU-C150-redko",
+    "RU-C150-kazhdyy",
+    "RU-C150-snachala",
+    "RU-C150-nakonets",
+    "RU-C150-yeshchyo"
+  ],
+  "tex": "russian/book/chapters/ch150-rarely-every-at-first-at-last-still.tex"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-160-VESHCH160",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a wine glass, a bag, a box, a drawer and a light bulb.",
+  "prerequisites": []
+}

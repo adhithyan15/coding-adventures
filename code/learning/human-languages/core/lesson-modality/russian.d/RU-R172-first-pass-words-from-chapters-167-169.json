@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-R172-first-pass-words-from-chapters-167-169",
+    "language": "russian",
+    "chapter": 172,
+    "sequence": 9680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d5e18fbb1f79660e"
+  },
+  "findings": []
+}

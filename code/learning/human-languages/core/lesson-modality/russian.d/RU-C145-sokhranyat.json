@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C145-sokhranyat",
+    "language": "russian",
+    "chapter": 145,
+    "sequence": 7730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c84a7fa99f26697b"
+  },
+  "findings": []
+}

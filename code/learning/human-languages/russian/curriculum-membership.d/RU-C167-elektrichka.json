@@ -1,0 +1,11 @@
+{
+  "id": "RU-C167-elektrichka",
+  "pathSegment": "RU-PATH-167-VESHCH167",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-167-VESHCH167",
+      "order": 0
+    }
+  ]
+}

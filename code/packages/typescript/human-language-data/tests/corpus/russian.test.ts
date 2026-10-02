@@ -45,7 +45,10 @@ it("pins Russian lesson-content budgets", () =>
     // 696 -> 718: the A2 spine chapters 136-139 (saying no, the past, the
     // future, reading practical texts): twenty word lessons and two reviews. No
     // idiom, sense or culture claim.
-    lessons: 718,
+    // 718 -> 891: the first A2 vocabulary tranche, chapters 140-172: 165 word
+    // lessons (thirty-five verbs) and eight reviews. No idiom, sense or culture
+    // claim.
+    lessons: 891,
     idioms: 0,
     senses: 4,
     cultureClaims: 10,

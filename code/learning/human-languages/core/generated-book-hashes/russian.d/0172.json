@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:d603a9931ba7ad6b",
+  "lessonIds": [
+    "RU-C172-rezyume",
+    "RU-C172-karyera",
+    "RU-C172-pensiya",
+    "RU-C172-komandirovka",
+    "RU-C172-dogovor",
+    "RU-R172-first-pass-words-from-chapters-167-169",
+    "RU-R172-second-pass-words-from-chapters-170-172"
+  ],
+  "tex": "russian/book/chapters/ch172-cv-career-pension-business-trip-contract.tex"
+}

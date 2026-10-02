@@ -1,0 +1,19 @@
+{
+  "chapter": 140,
+  "title": "To have lunch, To have breakfast, To have dinner, To do the laundry, To iron",
+  "label": "ch:ru-to-have-lunch-to-have-breakfast-to-have-dinner-to-do-the-laundry-to-iron",
+  "canDo": "I can say to have lunch, to have breakfast, to have dinner, to do the laundry and to iron.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C140-gladit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 140: I can say to have lunch, to have breakfast, to have dinner, to do the laundry and to iron.",
+    "assesses": [
+      "RU-LEX-C140-ACT140-03",
+      "RU-LEX-C140-ACT140-04",
+      "RU-LEX-C140-ACT140-05"
+    ]
+  }
+}

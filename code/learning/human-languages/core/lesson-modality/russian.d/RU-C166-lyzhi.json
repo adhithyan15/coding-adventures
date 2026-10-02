@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C166-lyzhi",
+    "language": "russian",
+    "chapter": 166,
+    "sequence": 9140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:54c526c81de989e6"
+  },
+  "findings": []
+}

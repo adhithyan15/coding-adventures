@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C147-bolnoy",
+    "language": "russian",
+    "chapter": 147,
+    "sequence": 7810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5bdbdf1bd4860bbe"
+  },
+  "findings": []
+}
