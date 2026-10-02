@@ -5,9 +5,9 @@
  * Content-Length JSON-RPC, lifecycle, streaming, diagnostics, cancellation,
  * crash isolation, and host-mediated capabilities.
  *
- * Runtime/OS sandbox launchers are deliberately injected and remain FM-B015.
- * The host has no unsandboxed fallback and accepts only an explicit sandbox
- * attestation from the configured process factory.
+ * Runtime/OS sandbox launchers remain deliberately injected after the
+ * FM-B015 product milestone. The host has no unsandboxed fallback and accepts
+ * only an explicit sandbox attestation from the configured process factory.
  */
 
 export { createPluginHost, FORME_PLUGIN_PROTOCOL_VERSION } from "./host.js";
