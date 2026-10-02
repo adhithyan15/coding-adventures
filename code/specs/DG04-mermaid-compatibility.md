@@ -562,6 +562,8 @@ Auto and balance text-wrap styles retain greedy wrapping or redistribute text
 across the existing line count toward even backend-neutral line widths.
 Pretty wrapping additionally moves a trailing word when that reduces final-line
 raggedness without exceeding the authored line width.
+The text-wrap shorthand composes wrap, nowrap, balance, and pretty into the
+same typed mode and style fields before backend-neutral lowering.
 Normal and positive or negative pixel/em letter spacing adjusts shaped glyph
 positions and line measurement through backend-neutral PaintInstructions.
 Normal and positive or negative pixel/em word spacing likewise adjusts ASCII
