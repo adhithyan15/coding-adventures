@@ -276,6 +276,7 @@ describe("installed plugin runtime composition", () => {
         try {
           const pipeline = await orchestrator.buildPipeline(mixed);
           const result = await orchestrator.runOnce(pipeline);
+          expect(result.errors).toEqual([]);
           expect(result.outcome).toBe("success");
           expect(result.outputs.result).toMatchObject({
             path: "index.md",
