@@ -356,7 +356,9 @@ describe("real curriculum", () => {
       // headwords, twenty-five verbs), and chapter 93, which writes э from этот
       // and щ from площадь -- the two letters these words bring -- before any
       // review prints them.
-    ).toEqual(Array.from({ length: 135 }, (_, index) => index + 1));
+      // 135 -> 139: the A2 spine chapters -- saying no, the past, the future
+      // and reading practical texts.
+    ).toEqual(Array.from({ length: 139 }, (_, index) => index + 1));
     expect(
       books.books.every((book) =>
         book.chapters.every((chapter) => chapter.tex.length > 100),

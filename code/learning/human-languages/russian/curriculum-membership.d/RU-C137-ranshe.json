@@ -1,0 +1,11 @@
+{
+  "id": "RU-C137-ranshe",
+  "pathSegment": "RU-PATH-137-PAS137",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-137-PAS137",
+      "order": 2
+    }
+  ]
+}

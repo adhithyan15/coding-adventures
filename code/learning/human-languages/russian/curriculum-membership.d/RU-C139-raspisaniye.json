@@ -1,0 +1,11 @@
+{
+  "id": "RU-C139-raspisaniye",
+  "pathSegment": "RU-PATH-139-CHT139",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-139-CHT139",
+      "order": 0
+    }
+  ]
+}

@@ -42,7 +42,10 @@ it("pins Russian lesson-content budgets", () =>
     // sense or culture claim.
     // 695 -> 696: RU-C03-govorit-false-friend, the atom-budget continuation that
     // carries the govorit/govern etymology. No idiom, sense or culture claim.
-    lessons: 696,
+    // 696 -> 718: the A2 spine chapters 136-139 (saying no, the past, the
+    // future, reading practical texts): twenty word lessons and two reviews. No
+    // idiom, sense or culture claim.
+    lessons: 718,
     idioms: 0,
     senses: 4,
     cultureClaims: 10,

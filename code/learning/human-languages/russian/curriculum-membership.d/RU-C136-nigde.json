@@ -1,0 +1,11 @@
+{
+  "id": "RU-C136-nigde",
+  "pathSegment": "RU-PATH-136-NEG136",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-136-NEG136",
+      "order": 2
+    }
+  ]
+}

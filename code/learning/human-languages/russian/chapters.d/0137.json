@@ -1,0 +1,19 @@
+{
+  "chapter": 137,
+  "title": "Recently, for a Long Time, Before, Last, To Happen",
+  "label": "ch:ru-recently-for-a-long-time-before-last-to-happen",
+  "canDo": "I can say what happened, and when: recently, last week, a long time ago.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "RU-C137-sluchitsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 137: I can say what happened, and when: recently, last week, a long time ago.",
+    "assesses": [
+      "RU-LEX-C137-PAS137-03",
+      "RU-LEX-C137-PAS137-04",
+      "RU-LEX-C137-PAS137-05"
+    ]
+  }
+}
