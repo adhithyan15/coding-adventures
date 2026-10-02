@@ -93,5 +93,8 @@ describe("blog interactivity asset composition", () => {
       ...exact,
       sourcePath: "assets/other.js",
     }]))).rejects.toThrow(/conflicting script asset claim/);
+
+    await expect(collect(node("2026-05-15-hello-forme.md", [exact, exact])))
+      .rejects.toThrow(/conflicting script asset claim/);
   });
 });

@@ -48,15 +48,18 @@ const attachBlogInteractivity = defineStage({
         continue;
       }
 
-      const existing = node.assetRefs.find(ref =>
+      const existing = node.assetRefs.filter(ref =>
         ref.id === PIPELINE_ISLAND_ASSET_ID ||
         ref.sourcePath === PIPELINE_ISLAND_SOURCE_PATH);
-      if (existing !== undefined) {
+      if (existing.length > 0) {
+        const [existingRef] = existing;
         if (
-          existing.id !== pipelineIslandRef.id ||
-          existing.role !== pipelineIslandRef.role ||
-          existing.sourcePath !== pipelineIslandRef.sourcePath ||
-          existing.nodePath.length !== 0
+          existing.length !== 1 ||
+          existingRef === undefined ||
+          existingRef.id !== pipelineIslandRef.id ||
+          existingRef.role !== pipelineIslandRef.role ||
+          existingRef.sourcePath !== pipelineIslandRef.sourcePath ||
+          existingRef.nodePath.length !== 0
         ) {
           throw new Error(
             "blog-attach-interactivity: conflicting script asset claim for the pipeline-step island",
