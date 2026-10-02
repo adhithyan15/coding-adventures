@@ -28,10 +28,22 @@ from pathlib import Path
 
 
 WORKFLOWS = Path(__file__).resolve().parents[3] / ".github" / "workflows"
-PUBLISHER = "peaceiris/actions-gh-pages@"
+PUBLISHER = re.compile(r"peaceiris/actions-gh-pages@", re.IGNORECASE)
 
 
-CHECKOUT = re.compile(r"^(?P<indent>\s*)(?P<dash>- )?uses: actions/checkout@")
+# Any spelling GitHub accepts: quoted or not, extra spaces, any letter case
+# (owner/repo names resolve case-insensitively).
+CHECKOUT = re.compile(
+    r"^(?P<indent>\s*)(?P<dash>-\s+)?uses:\s*[\"']?actions/checkout@", re.IGNORECASE
+)
+# The setting only counts inside the step's `with:` block.
+WITH_DROPS_CREDENTIALS = re.compile(
+    r"(?ms)^\s+with:\s*$.*?^\s+persist-credentials:\s*false\s*$"
+)
+
+
+def workflow_files() -> list[Path]:
+    return sorted([*WORKFLOWS.glob("*.yml"), *WORKFLOWS.glob("*.yaml")])
 
 
 def checkout_steps(text: str):
@@ -47,7 +59,7 @@ def checkout_steps(text: str):
         match = CHECKOUT.match(line)
         if not match:
             continue
-        key_indent = len(match["indent"]) + (2 if match["dash"] else 0)
+        key_indent = len(match["indent"]) + len(match["dash"] or "")
         block = [line]
         for following in lines[number + 1 :]:
             stripped = following.strip()
@@ -67,21 +79,21 @@ class DeployWorkflowsDropCheckoutCredentialsTests(unittest.TestCase):
         # below would pass vacuously.
         publishing = [
             path
-            for path in WORKFLOWS.glob("*.yml")
-            if PUBLISHER in path.read_text(encoding="utf-8")
+            for path in workflow_files()
+            if PUBLISHER.search(path.read_text(encoding="utf-8"))
         ]
         self.assertGreaterEqual(len(publishing), 10)
 
     def test_checkouts_in_publishing_workflows_drop_credentials(self) -> None:
-        for path in sorted(WORKFLOWS.glob("*.yml")):
+        for path in sorted(workflow_files()):
             text = path.read_text(encoding="utf-8")
-            if PUBLISHER not in text:
+            if not PUBLISHER.search(text):
                 continue
             for line, step in checkout_steps(text):
                 with self.subTest(workflow=path.name, line=line):
                     self.assertRegex(
                         step,
-                        r"(?m)^\s+persist-credentials:\s*false\s*$",
+                        WITH_DROPS_CREDENTIALS,
                         f"{path.name}:{line} checks out with the write token "
                         "left in .git/config; add `persist-credentials: false`",
                     )
@@ -100,6 +112,18 @@ class DeployWorkflowsDropCheckoutCredentialsTests(unittest.TestCase):
         self.assertEqual([line for line, _ in steps], [2, 6])
         self.assertIn("persist-credentials: false", steps[0][1])
         self.assertNotIn("persist-credentials", steps[1][1])
+
+    def test_step_reader_sees_unusual_spellings(self) -> None:
+        text = (
+            "    steps:\n"
+            '      -   uses:  "Actions/Checkout@v7"\n'
+            "          env:\n"
+            "            persist-credentials: false\n"
+        )
+        steps = list(checkout_steps(text))
+        self.assertEqual(len(steps), 1)
+        # Under `env:` it does nothing, so it must not count.
+        self.assertNotRegex(steps[0][1], WITH_DROPS_CREDENTIALS)
 
 
 if __name__ == "__main__":
