@@ -391,6 +391,14 @@ fn treemap_text_node(
         };
         node.ext.insert("text.letter-spacing".into(), ExtValue::Float(spacing));
     }
+    if let Some(spacing) = style.and_then(|style| style.word_spacing) {
+        let spacing = match spacing {
+            diagram_ir::TreemapWordSpacing::Normal => 0.0,
+            diagram_ir::TreemapWordSpacing::Pixels(value) => value,
+            diagram_ir::TreemapWordSpacing::Factor(value) => value * font_size,
+        };
+        node.ext.insert("text.word-spacing".into(), ExtValue::Float(spacing));
+    }
     if let Some(direction) = style.and_then(|style| style.direction) {
         let value = match direction {
             diagram_ir::TreemapTextDirection::LeftToRight => "ltr",
@@ -6962,6 +6970,7 @@ mod tests {
                     text_indent: Some(diagram_ir::TreemapTextIndent::Factor(0.1)),
                     white_space: Some(diagram_ir::TreemapWhiteSpace::NoWrap),
                     letter_spacing: None,
+                    word_spacing: None,
                     direction: None,
                     text_shadow: None,
                     tab_size: None,
@@ -7026,6 +7035,12 @@ mod tests {
             current_color, Some(&whitespace_style),
         );
         assert_eq!(letter_spaced_text.ext.get("text.letter-spacing"), Some(&ExtValue::Float(1.75)));
+        whitespace_style.word_spacing = Some(diagram_ir::TreemapWordSpacing::Factor(0.25));
+        let word_spaced_text = treemap_text_node(
+            "two words", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(word_spaced_text.ext.get("text.word-spacing"), Some(&ExtValue::Float(3.5)));
         whitespace_style.direction = Some(diagram_ir::TreemapTextDirection::RightToLeft);
         let rtl_text = treemap_text_node(
             "مرحبا", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),

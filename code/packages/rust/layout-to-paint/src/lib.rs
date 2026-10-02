@@ -243,6 +243,7 @@ where
                     box_w,
                     dpr,
                     text_letter_spacing(frame.node) * dpr,
+                    text_word_spacing(frame.node) * dpr,
                     direction,
                     options,
                     &mut font_cache,
@@ -448,6 +449,14 @@ fn node_direction(node: &PositionedNode) -> Option<BaseDirection> {
 
 fn text_letter_spacing(node: &PositionedNode) -> f64 {
     match node.ext.get("text.letter-spacing") {
+        Some(ExtValue::Float(value)) if value.is_finite() => *value,
+        Some(ExtValue::Int(value)) => *value as f64,
+        _ => 0.0,
+    }
+}
+
+fn text_word_spacing(node: &PositionedNode) -> f64 {
+    match node.ext.get("text.word-spacing") {
         Some(ExtValue::Float(value)) if value.is_finite() => *value,
         Some(ExtValue::Int(value)) => *value as f64,
         _ => 0.0,
@@ -1218,6 +1227,7 @@ fn emit_text_content<S, M, R>(
     box_width: f64,
     dpr: f64,
     letter_spacing: f64,
+    word_spacing: f64,
     direction: BaseDirection,
     options: &LayoutToPaintOptions<'_, S, M, R>,
     font_cache: &mut HashMap<FontCacheKey, CachedFont<S::Handle>>,
@@ -1270,6 +1280,7 @@ fn emit_text_content<S, M, R>(
                 size_dpr,
                 max_width_dpr,
                 letter_spacing,
+                word_spacing,
                 direction,
             )
         } else {
@@ -1282,7 +1293,9 @@ fn emit_text_content<S, M, R>(
                 baseline_y += line_height_dpr;
                 continue;
             }
-            let shaped = match shape_visual_line(options.shaper, handle, &line, size_dpr, direction)
+            let shaped = match shape_visual_line(
+                options.shaper, handle, &line, size_dpr, word_spacing, direction,
+            )
             {
                 Ok(s) => s,
                 Err(_) => {
@@ -1325,6 +1338,7 @@ fn shape_visual_line<S: TextShaper>(
     handle: &S::Handle,
     line: &str,
     size: f32,
+    word_spacing: f64,
     direction: BaseDirection,
 ) -> Result<ShapedText, text_interfaces::ShapingError> {
     let flow = TextFlow::analyze(line, direction);
@@ -1338,13 +1352,54 @@ fn shape_visual_line<S: TextShaper>(
             },
             ..ShapeOptions::default()
         };
-        runs.extend(
-            shaper
-                .shape(&line[run.bytes.clone()], handle, size, &options)?
-                .runs,
-        );
+        let source = &line[run.bytes.clone()];
+        if word_spacing == 0.0 || !source.contains(' ') {
+            runs.extend(shaper.shape(source, handle, size, &options)?.runs);
+            continue;
+        }
+        let mut pieces = split_word_spacing_pieces(source);
+        if run.direction == FlowDirection::Rtl {
+            pieces.reverse();
+        }
+        for piece in pieces {
+            let mut shaped = shaper.shape(piece, handle, size, &options)?;
+            if piece == " " {
+                add_word_spacing(&mut shaped, word_spacing);
+            }
+            runs.extend(shaped.runs);
+        }
     }
     Ok(ShapedText { runs })
+}
+
+fn split_word_spacing_pieces(source: &str) -> Vec<&str> {
+    let mut pieces = Vec::new();
+    let mut start = 0;
+    for (index, character) in source.char_indices() {
+        if character != ' ' {
+            continue;
+        }
+        if start < index {
+            pieces.push(&source[start..index]);
+        }
+        pieces.push(&source[index..index + 1]);
+        start = index + 1;
+    }
+    if start < source.len() {
+        pieces.push(&source[start..]);
+    }
+    pieces
+}
+
+fn add_word_spacing(shaped: &mut ShapedText, word_spacing: f64) {
+    let spacing = word_spacing as f32;
+    let Some(run) = shaped.runs.iter_mut().rev().find(|run| !run.glyphs.is_empty()) else {
+        return;
+    };
+    if let Some(glyph) = run.glyphs.last_mut() {
+        glyph.x_advance += spacing;
+        run.x_advance_total += spacing;
+    }
 }
 
 fn shaped_advance(shaped: &ShapedText, letter_spacing: f64) -> f64 {
@@ -1525,6 +1580,7 @@ fn emit_glyph_runs_from_shaped(
 // Greedy word-wrap (mirrors the layout-text-measure-native algorithm)
 // ═══════════════════════════════════════════════════════════════════════════
 
+#[allow(clippy::too_many_arguments)]
 fn wrap_line<S: TextShaper>(
     shaper: &S,
     handle: &S::Handle,
@@ -1532,6 +1588,7 @@ fn wrap_line<S: TextShaper>(
     size: f32,
     max_width: f64,
     letter_spacing: f64,
+    word_spacing: f64,
     direction: BaseDirection,
 ) -> Vec<String> {
     if segment.is_empty() {
@@ -1545,7 +1602,7 @@ fn wrap_line<S: TextShaper>(
     // The greedy wrapper below intentionally collapses whitespace for paragraph
     // text, but ASCII art/code-like content should not be rewritten just because
     // it passed through UI04.
-    if let Ok(shaped) = shape_visual_line(shaper, handle, segment, size, direction) {
+    if let Ok(shaped) = shape_visual_line(shaper, handle, segment, size, word_spacing, direction) {
         if shaped_advance(&shaped, letter_spacing) <= max_width {
             return vec![segment.to_string()];
         }
@@ -1556,7 +1613,7 @@ fn wrap_line<S: TextShaper>(
     let mut current_width: f64 = 0.0;
 
     for piece in paint_wrap_pieces(segment, direction) {
-        let word_width = shape_visual_line(shaper, handle, piece.value, size, direction)
+        let word_width = shape_visual_line(shaper, handle, piece.value, size, word_spacing, direction)
             .map(|r| shaped_advance(&r, letter_spacing))
             .unwrap_or(piece.value.chars().count() as f64 * (size as f64) * 0.5);
         if current.is_empty() {
@@ -1565,7 +1622,7 @@ fn wrap_line<S: TextShaper>(
         } else {
             let separator = if piece.leading_space { " " } else { "" };
             let candidate = format!("{current}{separator}{}", piece.value);
-            let candidate_width = shape_visual_line(shaper, handle, &candidate, size, direction)
+            let candidate_width = shape_visual_line(shaper, handle, &candidate, size, word_spacing, direction)
                 .map(|shaped| shaped_advance(&shaped, letter_spacing))
                 .unwrap_or(current_width + word_width);
             if candidate_width <= max_width {
@@ -2845,5 +2902,35 @@ mod tests {
         };
         assert_eq!(run.glyphs[0].x, 41.0);
         assert_eq!(run.glyphs[1].x, 51.0);
+    }
+
+    #[test]
+    fn word_spacing_adjusts_backend_neutral_glyph_positions_and_alignment() {
+        let mut content = text_content("A B");
+        content.text_align = TextAlign::Center;
+        let mut leaf = positioned_leaf(content, 0.0, 0.0, 100.0, 20.0);
+        leaf.ext.insert("text.word-spacing".into(), ExtValue::Float(4.0));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let scene = layout_to_paint(&leaf, &make_options(&shaper, &metrics, &resolver));
+        let glyphs: Vec<_> = scene.instructions.iter().filter_map(|instruction| match instruction {
+            PaintInstruction::GlyphRun(run) => Some(run.glyphs.as_slice()),
+            _ => None,
+        }).flatten().collect();
+        assert_eq!(glyphs[0].x, 36.0);
+        assert_eq!(glyphs[1].x, 44.0);
+        assert_eq!(glyphs[2].x, 56.0);
+
+        let content = text_content("A B");
+        let mut narrow = positioned_leaf(content, 0.0, 0.0, 25.0, 40.0);
+        narrow.ext.insert("text.word-spacing".into(), ExtValue::Float(4.0));
+        let scene = layout_to_paint(&narrow, &make_options(&shaper, &metrics, &resolver));
+        let baselines: Vec<_> = scene.instructions.iter().filter_map(|instruction| match instruction {
+            PaintInstruction::GlyphRun(run) => run.glyphs.first().map(|glyph| glyph.y),
+            _ => None,
+        }).collect();
+        assert_eq!(baselines.len(), 2);
+        assert!(baselines[1] > baselines[0]);
     }
 }
