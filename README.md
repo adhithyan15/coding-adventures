@@ -282,9 +282,11 @@ atomic non-forced ref update. Both live sites now build, inspect, and publish
 through `forme deploy`, completing the turnkey headless v0 path. The plugin
 host now adds deterministic discovery, manifest-authored stage proxies, a
 bounded JSON-RPC wire contract, typed streams, mediated capabilities,
-cancellation, and crash isolation without an unsandboxed fallback. Runtime
-adapters and OS sandbox launchers remain, followed by interactivity and the
-authoring shell. Its canonical specification map now
+cancellation, and crash isolation without an unsandboxed fallback. Persistent
+trust and grants, atomic installation, TypeScript/Python/Rust runners, native
+Linux/macOS/Windows sandboxes, mixed first-/third-party orchestration, and
+bounded live storage watches complete the Extensible v1 path. Interactivity
+and the authoring shell remain. Its canonical specification map now
 runs collision-free from FM01 through FM08, with an implementation ledger in
 every Forme specification and an always-on CI contract guarding the map.
 The checked-in [completion roadmap](./code/specs/FM00-forme-completion-roadmap.md)

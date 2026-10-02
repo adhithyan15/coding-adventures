@@ -1,6 +1,6 @@
 # FM05 — Forme Interactivity IR
 
-> **Status:** Canonical location reserved; normative v1 contract pending.
+> **Status:** FM-B013 active; normative v1 contract in progress.
 > **Scope:** The backend-neutral behavior, event, state, binding, and island
 > representation carried alongside Content IR and Style IR.
 > **Delivery owner:** FM-B013 in the
@@ -11,9 +11,9 @@
 | Surface | Status | Evidence / next step |
 |---|---|---|
 | Kernel kind name | Placeholder implemented | FM01 and `forme-types` reserve the `Interactivity` kind. |
-| Behavior/event/state schema | Pending | FM-B013 must define the normative, versioned schema and validator. |
-| Per-page island tracking | Pending | FM-B013 must connect renderer usage to AOT selection. |
-| Progressive-enhancement proof | Pending | FM-B013 must ship an interactive component with a no-JavaScript fallback. |
+| Behavior/event/state schema | Active | FM-B013 defines the normative, versioned schema and validator. |
+| Per-page island tracking | Active | FM-B013 connects renderer usage to AOT selection. |
+| Progressive-enhancement proof | Active | FM-B013 ships an interactive component with a no-JavaScript fallback. |
 | Non-web degradation | Pending | FM-B017 owns explicit terminal/print/email behavior. |
 
 ## 1. Purpose and authority

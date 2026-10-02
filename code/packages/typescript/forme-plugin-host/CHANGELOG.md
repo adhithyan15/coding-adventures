@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Reconcile host documentation with the completed Extensible v1 milestone,
+  including implemented installer/sandbox ownership and the fail-closed limit
+  of manifest-plus-entry signatures for external config schemas.
 - Bridge `ctx.storage.watch` as a bounded host-owned capability stream instead
   of a materialized response. The runner explicitly starts and cancels each
   handle, and run cancellation, completion, disposal, or protocol failure

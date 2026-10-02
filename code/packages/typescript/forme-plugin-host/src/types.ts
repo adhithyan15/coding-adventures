@@ -80,8 +80,9 @@ export interface PluginHost extends PluginStageLoader {
 export interface PluginHostOptions {
   /**
    * Ordered, host-managed discovery roots. The caller must keep these roots
-   * quiescent for the duration of createPluginHost(); FM-B015 installers own
-   * atomic staging and immutable/owned install-root enforcement.
+   * quiescent for the duration of createPluginHost(); the FM-B049 installer
+   * core and FM-B056 CLI own atomic staging and immutable/owned install-root
+   * enforcement.
    */
   readonly roots: readonly string[];
   readonly grants?: Readonly<Record<string, readonly Capability[]>>;
