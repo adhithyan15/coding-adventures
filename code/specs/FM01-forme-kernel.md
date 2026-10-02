@@ -16,7 +16,7 @@
 | Identity and revision primitives | Implemented | `forme-identity` covers logical IDs, UUIDv7 identities, and canonical revisions. |
 | Manifest validation | Implemented | `forme-manifest` validates first-party manifest data; FM02 owns host enforcement. |
 | Shared diagnostics | Implemented | `forme-errors` supplies the common error surface. |
-| Interactivity shape | Placeholder | The normative contract is reserved at [FM05](FM05-forme-interactivity-ir.md). |
+| Interactivity shape | Placeholder active for compatibility | [FM05](FM05-forme-interactivity-ir.md) defines the normative v1 contract; FM-B059 supplies its dedicated package before a later kernel migration. |
 
 ---
 
