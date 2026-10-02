@@ -57,6 +57,7 @@ export function createWindowsSandboxFactory(options: WindowsSandboxOptions = {})
 }
 
 /** Use the native launcher to prove an install tree has no untrusted writer. */
+/* v8 ignore start -- native verifier execution is exercised by BUILD_windows */
 export function createWindowsInstallAclVerifier(
   options: WindowsInstallAclVerifierOptions = {},
 ): WindowsInstallAclVerifier {
@@ -96,6 +97,7 @@ async function trustedRegularFile(path: string): Promise<string | null> {
     ? canonical
     : null;
 }
+/* v8 ignore stop */
 
 function defaultLauncherPath(): string {
   return fileURLToPath(new URL("../native/forme-sandbox-windows.exe", import.meta.url));
