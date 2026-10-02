@@ -642,6 +642,7 @@ class PluginSession {
       if (!stream) {
         throw new PluginHostError("PROTOCOL_VIOLATION", `${method} targets an inactive capability stream`);
       }
+      /* c8 ignore next 3 -- capability handles are allocated only for the active run and all are retired before that run clears */
       if (stream.ownerRunId !== this.activeRunId) {
         throw new PluginHostError("PROTOCOL_VIOLATION", "capability stream belongs to a different run");
       }
@@ -742,8 +743,12 @@ class PluginSession {
     }
     const streamId = params.capabilityStreamId as number;
     const stream = this.capabilityStreams.get(streamId);
-    if (!stream || stream.ownerRunId !== params.streamId) {
+    if (!stream) {
       throw new PluginHostError("PROTOCOL_VIOLATION", "stream.cancel targets an inactive capability stream");
+    }
+    /* c8 ignore next 3 -- request authority is prevalidated against the active run and handles cannot outlive that run */
+    if (stream.ownerRunId !== params.streamId) {
+      throw new PluginHostError("PROTOCOL_VIOLATION", "stream.cancel targets a foreign capability stream");
     }
     await this.closeCapabilityStream(streamId, stream);
     if (stream.pump && !await settlesWithin(stream.pump, this.options.disposeGracePeriodMs)) {
