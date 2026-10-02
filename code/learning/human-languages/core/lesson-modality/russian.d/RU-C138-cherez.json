@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C138-cherez",
+    "language": "russian",
+    "chapter": 138,
+    "sequence": 7230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:510e25fc144ee767"
+  },
+  "findings": []
+}

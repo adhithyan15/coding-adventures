@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:2db0d30f205b3b7c",
+  "lessonIds": [
+    "RU-C138-budushchiy",
+    "RU-C138-cherez",
+    "RU-C138-plan",
+    "RU-C138-planirovat",
+    "RU-C138-nadeyatsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch138.txt",
+  "json": "russian/narration/ch138.json",
+  "textHash": "fnv1a64:3e818b6957eccd12",
+  "jsonHash": "fnv1a64:f4a0bbad41a6162a",
+  "findings": []
+}

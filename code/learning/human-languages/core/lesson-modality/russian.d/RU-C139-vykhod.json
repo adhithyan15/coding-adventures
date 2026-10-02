@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C139-vykhod",
+    "language": "russian",
+    "chapter": 139,
+    "sequence": 7300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9669381ca9e8e297"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C137-sluchitsya",
+  "pathSegment": "RU-PATH-137-PAS137",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-137-PAS137",
+      "order": 4
+    }
+  ]
+}

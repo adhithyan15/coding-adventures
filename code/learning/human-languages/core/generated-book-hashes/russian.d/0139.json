@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:b62938d6db381564",
+  "lessonIds": [
+    "RU-C139-raspisaniye",
+    "RU-C139-reklama",
+    "RU-C139-vkhod",
+    "RU-C139-vykhod",
+    "RU-C139-chek",
+    "RU-R139-first-pass-saying-no-and-looking-back",
+    "RU-R139-second-pass-looking-ahead-and-reading-signs"
+  ],
+  "tex": "russian/book/chapters/ch139-a-timetable-an-advert-an-entrance-an-exit-a-receipt.tex"
+}
