@@ -562,11 +562,13 @@ Clip and ellipsis text-overflow modes truncate oversized labels at grapheme
 boundaries, with ellipsis insertion remaining backend-neutral until shaping.
 Wrap and nowrap text-wrap modes independently enable or suppress soft wrapping
 through semantic text metadata while retaining authored hard line breaks.
-Auto and balance text-wrap styles retain greedy wrapping or redistribute text
+Auto, stable, and balance text-wrap styles retain greedy wrapping or redistribute text
 across the existing line count toward even backend-neutral line widths.
+Stable wrapping matches auto for an initial stateless render and preserves its
+typed intent for future incremental layout state.
 Pretty wrapping additionally moves a trailing word when that reduces final-line
 raggedness without exceeding the authored line width.
-The text-wrap shorthand composes wrap, nowrap, balance, and pretty into the
+The text-wrap shorthand composes wrap, nowrap, balance, pretty, and stable into the
 same typed mode and style fields before backend-neutral lowering.
 Justified text alignment distributes remaining line width across ASCII word
 separators on non-final lines before backend-neutral glyph placement.

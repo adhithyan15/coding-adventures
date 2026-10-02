@@ -554,12 +554,13 @@ fn text_wraps(node: &PositionedNode, fallback: bool) -> bool {
 }
 
 #[derive(Clone, Copy, PartialEq, Eq)]
-enum TextWrapStyle { Auto, Balance, Pretty }
+enum TextWrapStyle { Auto, Balance, Pretty, Stable }
 
 fn text_wrap_style(node: &PositionedNode) -> TextWrapStyle {
     match node.ext.get("text.wrap-style") {
         Some(ExtValue::Str(value)) if value == "balance" => TextWrapStyle::Balance,
         Some(ExtValue::Str(value)) if value == "pretty" => TextWrapStyle::Pretty,
+        Some(ExtValue::Str(value)) if value == "stable" => TextWrapStyle::Stable,
         _ => TextWrapStyle::Auto,
     }
 }
@@ -3532,6 +3533,24 @@ mod tests {
             }).collect::<Vec<_>>();
         assert_eq!(starts(&auto), vec![4.0, 20.0]);
         assert_eq!(starts(&pretty), vec![12.0, 12.0]);
+    }
+
+    #[test]
+    fn stable_text_wrap_uses_greedy_layout_without_prior_state() {
+        let auto = positioned_leaf(text_content("A A A A"), 0.0, 0.0, 48.0, 40.0);
+        let mut stable = auto.clone();
+        stable.ext.insert("text.wrap-style".into(), ExtValue::Str("stable".into()));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let options = make_options(&shaper, &metrics, &resolver);
+        let positions = |node: &PositionedNode| layout_to_paint(node, &options).instructions
+            .into_iter().filter_map(|instruction| match instruction {
+                PaintInstruction::GlyphRun(run) => run.glyphs.first()
+                    .map(|glyph| (glyph.x, glyph.y)),
+                _ => None,
+            }).collect::<Vec<_>>();
+        assert_eq!(positions(&stable), positions(&auto));
     }
 
     #[test]
