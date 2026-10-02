@@ -612,6 +612,12 @@ var commandPositionAssignment = regexp.MustCompile(`(?:^|[(;&|]\s*)([A-Za-z_][A-
 //	(cd ../x && NPM_CONFIG_CACHE=c npm i)    unchanged                      reject
 //	cargo test -p widget                     unchanged, no assignment       ok
 //
+// Known limits, none reached by any BUILD in the repo today: a `;` or `&`
+// inside a quoted argument (`python -c "import x; y=1"`) can trip it, and an
+// assignment after `then` or `{`, or a single-quoted value (`FOO='a b' cmd`,
+// which the rewrite mistranslates), slips past it. It is a guard for the
+// common shapes, not a shell parser.
+//
 // Only the file Windows actually resolves is checked: once a package has a
 // BUILD_windows, that hand-written file is what runs there, and its author
 // chose its syntax deliberately. Before this check, journal-mosaic-app,
