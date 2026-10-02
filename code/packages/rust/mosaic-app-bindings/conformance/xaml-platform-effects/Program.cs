@@ -180,6 +180,16 @@ internal static class Program
         Check(MosaicPlatformEffects.RoutesToPlatform("somethingElse", Kinds("importAnki")) is null, "unowned custom");
     }
 
+    private static void CheckStartLocation()
+    {
+        // UI59 §2: a "pictures only" open starts in the Pictures library.
+        Check(MosaicPlatformEffects.OnlyImages(new[] { "png", "jpg", "jpeg" }), "images start in Pictures");
+        Check(MosaicPlatformEffects.OnlyImages(new[] { "svg" }), "svg is an image");
+        Check(!MosaicPlatformEffects.OnlyImages(new[] { "png", "txt" }), "mixed types start in Documents");
+        Check(!MosaicPlatformEffects.OnlyImages(Array.Empty<string>()), "any file starts in Documents");
+        Check(!MosaicPlatformEffects.OnlyImages(new[] { "pdf" }), "a document starts in Documents");
+    }
+
     private static void CheckSave(string directory)
     {
         var target = Path.Combine(directory, "journal-2026-09-25.json");
@@ -588,6 +598,7 @@ internal static class Program
         try
         {
             CheckRouting();
+            CheckStartLocation();
             CheckSave(directory);
             CheckSaveRefusals(directory);
             CheckOpen(directory);
