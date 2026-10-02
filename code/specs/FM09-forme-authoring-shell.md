@@ -12,9 +12,9 @@
 
 | Surface | Status | Evidence / next step |
 |---|---|---|
-| Bounded project codec | Active | FM-B062 defines the v1 project shape and validates hostile persisted values. |
-| Crash-safe autosave and persistent undo/redo | Active | FM-B062 owns compare-and-swap persistence and deterministic history recovery. |
-| Accessible block editor and configuration UI | Pending | FM-B063 composes the core through editor slots. |
+| Bounded project codec | Implemented | `forme-authoring-core` validates the closed v1 project and authorable Content IR subset with hard recursive limits. |
+| Crash-safe autosave and persistent undo/redo | Implemented | The injected compare-and-swap adapter, immutable transactions, and canonical persisted history pass failure, conflict, cancellation, and restart tests. |
+| Accessible block editor and configuration UI | Active | FM-B063 composes the core through editor slots. |
 | Pipeline-backed preview | Pending | FM-B064 uses the real FM07 watch path and last-good output. |
 | Reviewed publish workflow | Pending | FM-B065 composes FM08 without exposing tokens or target files to editor plugins. |
 | Installable desktop shell | Pending | FM-B066 packages the proven workflow and first-run experience. |

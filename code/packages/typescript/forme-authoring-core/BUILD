@@ -1,2 +1,4 @@
+(cd ../document-ast && npm ci --quiet)
 npm ci --quiet
-npx vitest run --coverage
+npm run build
+npm run test:coverage
