@@ -1093,7 +1093,8 @@ backend immediately) come before the enabler-dependent items.
   body only reads the controlled variable, including exactly simulated finite
   binary64 steps. A terminating bounded `while` exit
   may symmetrically seed a following finite-step or single-value element under
-  the same read-only body rule, and one finite-step exit may seed another
+  the same read-only body rule, including for exactly simulated real controls,
+  and one finite-step exit may seed another
   finite-step element likewise. Two bounded `while` elements may chain their
   exact terminating snapshots under that rule as well.
   The recurrence assignment may instead occur in one or both branches of a

@@ -4144,6 +4144,16 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("7.75"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a bounded real while element may pass its exact terminating
+    // snapshot into a following finite binary64 step element while their
+    // shared body only reads the controlled variable.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real x, total; x := 0.0; total := 0.25; for x := if 'ALPHA' < 'BETA' then x + 0.5 else x + 1.0 while x <= 1.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.5 else 0.0 do total := total + x; print(total) end",
+        expect: Expect::Stdout("6.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a bounded while element may read its controlled variable in
     // the body without writing it. Its exact terminating snapshot then seeds
     // a following finite step element in the same for list.
@@ -14540,6 +14550,31 @@ fn algol_literal_string_selected_real_step_while_list_runs_on_every_available_st
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the literal-string-selected real step/while for list did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_real_while_step_list_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "else x + 1.0 while x <= 1.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step",
+                )
+        })
+        .expect("the literal-string-selected real while/step for list must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected real while/step for list did not run"
             );
             continue;
         };
