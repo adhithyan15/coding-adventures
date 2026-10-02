@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:3fb35bfad0581160",
+  "lessonIds": [
+    "MR-C187-vijar",
+    "MR-C187-moje",
+    "MR-C187-rumal",
+    "MR-C187-dagina",
+    "MR-C187-bangdi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch187.txt",
+  "json": "marathi/narration/ch187.json",
+  "textHash": "fnv1a64:7d785689e9f608d4",
+  "jsonHash": "fnv1a64:082dd4f77b5ae6ea",
+  "findings": []
+}

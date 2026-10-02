@@ -1,0 +1,11 @@
+{
+  "id": "MR-C163-vajan-karne",
+  "pathSegment": "MR-PATH-163-ACT163",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-163-ACT163",
+      "order": 2
+    }
+  ]
+}

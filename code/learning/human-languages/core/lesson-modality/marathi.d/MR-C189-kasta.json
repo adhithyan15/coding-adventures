@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C189-kasta",
+    "language": "marathi",
+    "chapter": 189,
+    "sequence": 9680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ae00e54996a48df"
+  },
+  "findings": []
+}

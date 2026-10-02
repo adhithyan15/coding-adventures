@@ -1,0 +1,11 @@
+{
+  "id": "MR-C167-adlabadal-karne",
+  "pathSegment": "MR-PATH-167-ACT167",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-167-ACT167",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C165-sudharne",
+    "language": "marathi",
+    "chapter": 165,
+    "sequence": 7900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4dad2e2d4e92d062"
+  },
+  "findings": []
+}

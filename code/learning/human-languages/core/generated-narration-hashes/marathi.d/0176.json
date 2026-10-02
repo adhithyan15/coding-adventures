@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:b4f29cfa7208de5b",
+  "lessonIds": [
+    "MR-C176-dhagal",
+    "MR-C176-pavsali",
+    "MR-C176-sakya",
+    "MR-C176-asakya",
+    "MR-C176-mukhya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch176.txt",
+  "json": "marathi/narration/ch176.json",
+  "textHash": "fnv1a64:5b485c36b2f784a9",
+  "jsonHash": "fnv1a64:3fc75aada466742d",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-188-VASTU188",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a calendar, a crab, an eagle, a cuckoo and a bee.",
+  "prerequisites": []
+}

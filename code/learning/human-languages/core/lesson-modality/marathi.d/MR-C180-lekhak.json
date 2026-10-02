@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C180-lekhak",
+    "language": "marathi",
+    "chapter": 180,
+    "sequence": 9020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30481622f30adc1e"
+  },
+  "findings": []
+}

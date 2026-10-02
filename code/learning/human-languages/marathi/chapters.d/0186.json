@@ -1,0 +1,19 @@
+{
+  "chapter": 186,
+  "title": "Papad, Chutney, Salad, Semolina pudding, Modak",
+  "label": "ch:mr-papad-chutney-salad-semolina-pudding-modak",
+  "canDo": "I can say a papad, a chutney, a salad, a semolina pudding and a modak.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C186-modak",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 186: I can say a papad, a chutney, a salad, a semolina pudding and a modak.",
+    "assesses": [
+      "MR-LEX-C186-VASTU186-03",
+      "MR-LEX-C186-VASTU186-04",
+      "MR-LEX-C186-VASTU186-05"
+    ]
+  }
+}

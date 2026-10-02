@@ -1,0 +1,11 @@
+{
+  "id": "MR-C172-saglikade",
+  "pathSegment": "MR-PATH-172-JAGA172",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-172-JAGA172",
+      "order": 1
+    }
+  ]
+}

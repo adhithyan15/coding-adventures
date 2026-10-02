@@ -1,0 +1,11 @@
+{
+  "id": "MR-C179-mahapaur",
+  "pathSegment": "MR-PATH-179-VASTU179",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-179-VASTU179",
+      "order": 2
+    }
+  ]
+}

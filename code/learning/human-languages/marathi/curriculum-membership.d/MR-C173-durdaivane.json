@@ -1,0 +1,11 @@
+{
+  "id": "MR-C173-durdaivane",
+  "pathSegment": "MR-PATH-173-KARAN173",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-173-KARAN173",
+      "order": 3
+    }
+  ]
+}

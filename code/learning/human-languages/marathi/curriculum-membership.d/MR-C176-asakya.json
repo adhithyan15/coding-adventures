@@ -1,0 +1,11 @@
+{
+  "id": "MR-C176-asakya",
+  "pathSegment": "MR-PATH-176-GUN176",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-176-GUN176",
+      "order": 3
+    }
+  ]
+}

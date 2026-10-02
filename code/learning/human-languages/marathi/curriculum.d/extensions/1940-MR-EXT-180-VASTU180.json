@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-180-VASTU180",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a writer, a painter, a photographer, a journalist and an architect.",
+  "prerequisites": []
+}

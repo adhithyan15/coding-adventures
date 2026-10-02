@@ -1,0 +1,11 @@
+{
+  "id": "MR-C178-jevanghar",
+  "pathSegment": "MR-PATH-178-VASTU178",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-178-VASTU178",
+      "order": 1
+    }
+  ]
+}

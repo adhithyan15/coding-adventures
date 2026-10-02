@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C185-vijay",
+    "language": "marathi",
+    "chapter": 185,
+    "sequence": 9290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:90eb5d02d02e6340"
+  },
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "marathi",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:4d78b97a898b5f4f",
+  "lessonIds": [
+    "MR-C192-kampani",
+    "MR-C192-sahakari",
+    "MR-C192-baithak",
+    "MR-C192-karar",
+    "MR-C192-mulakhat",
+    "MR-R192-first-pass-words-from-chapters-189-190",
+    "MR-R192-second-pass-words-from-chapters-191-192"
+  ],
+  "tex": "marathi/book/chapters/ch192-company-colleague-meeting-contract-interview.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:7641173334f53278",
+  "lessonIds": [
+    "MR-C177-premal",
+    "MR-C177-dayalu",
+    "MR-C177-krur",
+    "MR-C177-namra",
+    "MR-C177-garvistha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch177.txt",
+  "json": "marathi/narration/ch177.json",
+  "textHash": "fnv1a64:f7fd87e6535be19e",
+  "jsonHash": "fnv1a64:62a6722d62ed368e",
+  "findings": []
+}

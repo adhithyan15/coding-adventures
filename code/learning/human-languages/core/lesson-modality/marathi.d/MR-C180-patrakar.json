@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C180-patrakar",
+    "language": "marathi",
+    "chapter": 180,
+    "sequence": 9050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db9b8d9fc4b7bb31"
+  },
+  "findings": []
+}

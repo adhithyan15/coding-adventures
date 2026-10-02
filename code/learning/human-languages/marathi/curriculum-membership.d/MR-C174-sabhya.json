@@ -1,0 +1,11 @@
+{
+  "id": "MR-C174-sabhya",
+  "pathSegment": "MR-PATH-174-GUN174",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-174-GUN174",
+      "order": 1
+    }
+  ]
+}

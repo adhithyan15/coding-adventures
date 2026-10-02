@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C178-kappa",
+    "language": "marathi",
+    "chapter": 178,
+    "sequence": 8770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c21d6d05f04b6290"
+  },
+  "findings": []
+}

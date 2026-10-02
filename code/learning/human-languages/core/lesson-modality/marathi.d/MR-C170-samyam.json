@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C170-samyam",
+    "language": "marathi",
+    "chapter": 170,
+    "sequence": 8170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:978201a31c888217"
+  },
+  "findings": []
+}

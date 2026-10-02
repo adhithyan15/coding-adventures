@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C184-pradusan",
+    "language": "marathi",
+    "chapter": 184,
+    "sequence": 9260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ec7a405193a51a3"
+  },
+  "findings": []
+}

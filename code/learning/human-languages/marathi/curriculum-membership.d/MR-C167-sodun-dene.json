@@ -1,0 +1,11 @@
+{
+  "id": "MR-C167-sodun-dene",
+  "pathSegment": "MR-PATH-167-ACT167",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-167-ACT167",
+      "order": 1
+    }
+  ]
+}

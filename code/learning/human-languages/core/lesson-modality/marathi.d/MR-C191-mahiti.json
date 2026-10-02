@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C191-mahiti",
+    "language": "marathi",
+    "chapter": 191,
+    "sequence": 9800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80afcb5b1a1605f8"
+  },
+  "findings": []
+}

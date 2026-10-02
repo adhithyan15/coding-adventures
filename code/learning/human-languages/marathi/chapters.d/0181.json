@@ -1,0 +1,19 @@
+{
+  "chapter": 181,
+  "title": "Daughter-in-law, Bridegroom, Bride, Widow, Success",
+  "label": "ch:mr-daughter-in-law-bridegroom-bride-widow-success",
+  "canDo": "I can say a daughter-in-law, a bridegroom, a bride, a widow and success.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C181-yas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 181: I can say a daughter-in-law, a bridegroom, a bride, a widow and success.",
+    "assesses": [
+      "MR-LEX-C181-VASTU181-03",
+      "MR-LEX-C181-VASTU181-04",
+      "MR-LEX-C181-VASTU181-05"
+    ]
+  }
+}

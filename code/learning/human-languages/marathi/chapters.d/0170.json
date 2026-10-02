@@ -1,0 +1,19 @@
+{
+  "chapter": 170,
+  "title": "Shame, Jealousy, Boredom, Patience, Luck",
+  "label": "ch:mr-shame-jealousy-boredom-patience-luck",
+  "canDo": "I can say shame, jealousy, boredom, patience and luck.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MR-R170-second-pass-words-from-chapters-166-170",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 170: I can say shame, jealousy, boredom, patience and luck.",
+    "assesses": [
+      "MR-LEX-C170-AAROGYA170-03",
+      "MR-LEX-C170-AAROGYA170-04",
+      "MR-LEX-C170-AAROGYA170-05"
+    ]
+  }
+}

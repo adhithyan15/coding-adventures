@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:26e2ede291b6aeb5",
+  "lessonIds": [
+    "MR-C162-petavne",
+    "MR-C162-vijhavne",
+    "MR-C162-udi-marne",
+    "MR-C162-bolavne",
+    "MR-C162-abhar-manne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch162.txt",
+  "json": "marathi/narration/ch162.json",
+  "textHash": "fnv1a64:06a2c175421f5ef8",
+  "jsonHash": "fnv1a64:e4a027c257026a40",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 176,
+  "title": "Cloudy, Rainy, Possible, Impossible, Main",
+  "label": "ch:mr-cloudy-rainy-possible-impossible-main",
+  "canDo": "I can say cloudy, rainy, possible, impossible and main.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MR-C176-mukhya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 176: I can say cloudy, rainy, possible, impossible and main.",
+    "assesses": [
+      "MR-LEX-C176-GUN176-03",
+      "MR-LEX-C176-GUN176-04",
+      "MR-LEX-C176-GUN176-05"
+    ]
+  }
+}

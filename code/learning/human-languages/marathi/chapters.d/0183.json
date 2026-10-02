@@ -1,0 +1,19 @@
+{
+  "chapter": 183,
+  "title": "Tunnel, Fort, Tower, Monument, Statue",
+  "label": "ch:mr-tunnel-fort-tower-monument-statue",
+  "canDo": "I can say a tunnel, a fort, a tower, a monument and a statue.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C183-putala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 183: I can say a tunnel, a fort, a tower, a monument and a statue.",
+    "assesses": [
+      "MR-LEX-C183-VASTU183-03",
+      "MR-LEX-C183-VASTU183-04",
+      "MR-LEX-C183-VASTU183-05"
+    ]
+  }
+}

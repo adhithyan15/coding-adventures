@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C166-vahun-nene",
+    "language": "marathi",
+    "chapter": 166,
+    "sequence": 7970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d4071e915b8d1fc"
+  },
+  "findings": []
+}

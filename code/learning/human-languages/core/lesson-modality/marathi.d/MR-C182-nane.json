@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C182-nane",
+    "language": "marathi",
+    "chapter": 182,
+    "sequence": 9130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:65cccc4893ec83c4"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:961f51a3948e1d00",
+  "lessonIds": [
+    "MR-C175-vicitra",
+    "MR-C175-vegla",
+    "MR-C175-sarkha",
+    "MR-C175-yogya",
+    "MR-C175-ayogya"
+  ],
+  "tex": "marathi/book/chapters/ch175-strange-different-similar-proper-wrong.tex"
+}

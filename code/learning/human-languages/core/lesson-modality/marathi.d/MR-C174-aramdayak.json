@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C174-aramdayak",
+    "language": "marathi",
+    "chapter": 174,
+    "sequence": 8530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b6f8d1b516475735"
+  },
+  "findings": []
+}

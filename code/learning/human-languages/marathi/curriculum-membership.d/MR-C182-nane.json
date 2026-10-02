@@ -1,0 +1,11 @@
+{
+  "id": "MR-C182-nane",
+  "pathSegment": "MR-PATH-182-VASTU182",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-182-VASTU182",
+      "order": 1
+    }
+  ]
+}

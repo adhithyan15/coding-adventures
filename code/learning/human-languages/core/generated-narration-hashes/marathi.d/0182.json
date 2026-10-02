@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:128be2baf7cd396a",
+  "lessonIds": [
+    "MR-C182-savlat",
+    "MR-C182-nane",
+    "MR-C182-not",
+    "MR-C182-karja",
+    "MR-C182-kar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch182.txt",
+  "json": "marathi/narration/ch182.json",
+  "textHash": "fnv1a64:dd79609a8cbe4977",
+  "jsonHash": "fnv1a64:70c892da00614fab",
+  "findings": []
+}

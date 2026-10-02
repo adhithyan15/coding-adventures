@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:c42bb9fc2f7f9432",
+  "lessonIds": [
+    "MR-C172-bhovti",
+    "MR-C172-saglikade",
+    "MR-C172-itaratra",
+    "MR-C172-tikade",
+    "MR-C172-madhyabhagi"
+  ],
+  "tex": "marathi/book/chapters/ch172-around-everywhere-elsewhere-over-there-in-the-middle.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:68373db57d67179a",
+  "lessonIds": [
+    "MR-C189-dhoka",
+    "MR-C189-upkar",
+    "MR-C189-kasta",
+    "MR-C189-phayda",
+    "MR-C189-tota"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch189.txt",
+  "json": "marathi/narration/ch189.json",
+  "textHash": "fnv1a64:35a921b4d53e3db8",
+  "jsonHash": "fnv1a64:9327896f2f4c504f",
+  "findings": []
+}

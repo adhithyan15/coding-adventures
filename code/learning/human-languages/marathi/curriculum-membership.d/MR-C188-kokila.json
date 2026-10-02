@@ -1,0 +1,11 @@
+{
+  "id": "MR-C188-kokila",
+  "pathSegment": "MR-PATH-188-VASTU188",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-188-VASTU188",
+      "order": 3
+    }
+  ]
+}

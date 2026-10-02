@@ -1,0 +1,19 @@
+{
+  "chapter": 190,
+  "title": "Neighbourhood, Traffic, Passenger, Queue, Crowd",
+  "label": "ch:mr-neighbourhood-traffic-passenger-queue-crowd",
+  "canDo": "I can say the neighbourhood, traffic, a passenger, a queue and a crowd.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C190-gardi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 190: I can say the neighbourhood, traffic, a passenger, a queue and a crowd.",
+    "assesses": [
+      "MR-LEX-C190-VASTU190-03",
+      "MR-LEX-C190-VASTU190-04",
+      "MR-LEX-C190-VASTU190-05"
+    ]
+  }
+}

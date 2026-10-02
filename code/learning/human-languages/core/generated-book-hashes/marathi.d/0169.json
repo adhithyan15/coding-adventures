@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:c1bf881afbded0d4",
+  "lessonIds": [
+    "MR-C169-arogya",
+    "MR-C169-mendu",
+    "MR-C169-phuphphus",
+    "MR-C169-yakrt",
+    "MR-C169-mutrapind"
+  ],
+  "tex": "marathi/book/chapters/ch169-health-brain-lung-liver-kidney.tex"
+}

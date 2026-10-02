@@ -1,0 +1,15 @@
+{
+  "language": "marathi",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:34276bb6dbf9b9e0",
+  "lessonIds": [
+    "MR-C170-laj",
+    "MR-C170-matsar",
+    "MR-C170-kantala",
+    "MR-C170-samyam",
+    "MR-C170-nasib",
+    "MR-R170-first-pass-words-from-chapters-162-165",
+    "MR-R170-second-pass-words-from-chapters-166-170"
+  ],
+  "tex": "marathi/book/chapters/ch170-shame-jealousy-boredom-patience-luck.tex"
+}

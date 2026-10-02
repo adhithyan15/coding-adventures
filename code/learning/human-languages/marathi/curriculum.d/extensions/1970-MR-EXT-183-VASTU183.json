@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-183-VASTU183",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a tunnel, a fort, a tower, a monument and a statue.",
+  "prerequisites": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:8ac9b901f8ba1111",
+  "lessonIds": [
+    "MR-C180-lekhak",
+    "MR-C180-citrakar",
+    "MR-C180-chayacitrakar",
+    "MR-C180-patrakar",
+    "MR-C180-vastuvisarad"
+  ],
+  "tex": "marathi/book/chapters/ch180-writer-painter-photographer-journalist-architect.tex"
+}

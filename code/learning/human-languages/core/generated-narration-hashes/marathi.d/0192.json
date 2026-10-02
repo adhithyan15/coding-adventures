@@ -1,0 +1,21 @@
+{
+  "language": "marathi",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:82fc8edefa463c3e",
+  "lessonIds": [
+    "MR-C192-kampani",
+    "MR-C192-sahakari",
+    "MR-C192-baithak",
+    "MR-C192-karar",
+    "MR-C192-mulakhat",
+    "MR-R192-first-pass-words-from-chapters-189-190",
+    "MR-R192-second-pass-words-from-chapters-191-192"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marathi/narration/ch192.txt",
+  "json": "marathi/narration/ch192.json",
+  "textHash": "fnv1a64:92817d099b55a161",
+  "jsonHash": "fnv1a64:cd529e5ae1cae4ae",
+  "findings": []
+}

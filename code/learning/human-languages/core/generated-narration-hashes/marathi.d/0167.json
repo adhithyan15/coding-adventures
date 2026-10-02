@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:6224ad7a8474f645",
+  "lessonIds": [
+    "MR-C167-svas-ghene",
+    "MR-C167-sodun-dene",
+    "MR-C167-adlabadal-karne",
+    "MR-C167-ghasarne",
+    "MR-C167-samsay-ghene"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch167.txt",
+  "json": "marathi/narration/ch167.json",
+  "textHash": "fnv1a64:9530a00117b941af",
+  "jsonHash": "fnv1a64:bb331e4fb177d52c",
+  "findings": []
+}

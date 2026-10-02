@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C183-bogda",
+    "language": "marathi",
+    "chapter": 183,
+    "sequence": 9170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:620b9dc39bb2d81b"
+  },
+  "findings": []
+}

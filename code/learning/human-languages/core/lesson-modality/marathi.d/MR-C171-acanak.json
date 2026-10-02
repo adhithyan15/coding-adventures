@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C171-acanak",
+    "language": "marathi",
+    "chapter": 171,
+    "sequence": 8420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ae47e683a073e8a"
+  },
+  "findings": []
+}

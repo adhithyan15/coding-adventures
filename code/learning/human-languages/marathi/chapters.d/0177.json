@@ -1,0 +1,19 @@
+{
+  "chapter": 177,
+  "title": "Affectionate, Kind, Cruel, Humble, Arrogant",
+  "label": "ch:mr-affectionate-kind-cruel-humble-arrogant",
+  "canDo": "I can say affectionate, kind, cruel, humble and arrogant.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MR-C177-garvistha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 177: I can say affectionate, kind, cruel, humble and arrogant.",
+    "assesses": [
+      "MR-LEX-C177-GUN177-03",
+      "MR-LEX-C177-GUN177-04",
+      "MR-LEX-C177-GUN177-05"
+    ]
+  }
+}
