@@ -42,11 +42,12 @@ if (
 ) {
   throw new Error(`Blog article routes differ: ${JSON.stringify(articleRoutes)}`);
 }
-if (articles.files.length !== articleFiles.length + 1) {
+if (articles.files.length !== articleFiles.length + 2) {
   throw new Error(`Blog article artifact file count differs: ${articles.files.length}`);
 }
 
-const assetFiles = (await readdir(resolve(blogRoot, "assets")))
+const emittedAssets = await readdir(resolve(blogRoot, "assets"));
+const assetFiles = emittedAssets
   .filter(path => /^forme-pipeline\.[0-9a-f]{64}\.svg$/.test(path));
 if (assetFiles.length !== 1 || assetFiles[0] === undefined) {
   throw new Error(`Blog must emit exactly one fingerprinted pipeline asset: ${JSON.stringify(assetFiles)}`);
@@ -54,9 +55,11 @@ if (assetFiles.length !== 1 || assetFiles[0] === undefined) {
 const assetPath = `blog/assets/${assetFiles[0]}`;
 const assetBytes = await readFile(resolve(here, "dist", assetPath));
 const sha256 = createHash("sha256").update(assetBytes).digest("hex");
-const manifestAsset = articles.manifest.assets[0];
+const manifestAsset = articles.manifest.assets.find(
+  asset => asset.id === "01952c0d-7e63-7000-8000-000000000201",
+);
 if (
-  articles.manifest.assets.length !== 1 ||
+  articles.manifest.assets.length !== 2 ||
   manifestAsset === undefined ||
   manifestAsset.id !== "01952c0d-7e63-7000-8000-000000000201" ||
   manifestAsset.path !== assetPath ||
@@ -73,12 +76,52 @@ if (!helloHtml.includes(expectedAssetUrl) || helloHtml.includes("forme-asset:"))
   throw new Error(`Blog article did not contain the rewritten asset URL ${expectedAssetUrl}`);
 }
 
+const scriptFiles = emittedAssets.filter(path => /^pipeline-steps\.[0-9a-f]{64}\.js$/.test(path));
+if (scriptFiles.length !== 1 || scriptFiles[0] === undefined) {
+  throw new Error(`Blog must emit exactly one fingerprinted island module: ${JSON.stringify(scriptFiles)}`);
+}
+const scriptPath = `blog/assets/${scriptFiles[0]}`;
+const scriptBytes = await readFile(resolve(here, "dist", scriptPath));
+const scriptSha256 = createHash("sha256").update(scriptBytes).digest("hex");
+const manifestScript = articles.manifest.assets.find(
+  asset => asset.id === "01952c0d-7e63-7000-8000-000000000202",
+);
+if (
+  manifestScript === undefined ||
+  manifestScript.path !== scriptPath ||
+  manifestScript.mime !== "text/javascript" ||
+  manifestScript.sha256 !== scriptSha256 ||
+  !scriptPath.includes(scriptSha256)
+) {
+  throw new Error(`Blog island manifest asset differs: ${JSON.stringify(manifestScript)}`);
+}
+const helloRoute = articles.manifest.routes.find(
+  route => route.pattern === "/blog/2026-05-15-hello-forme.html",
+);
+if (JSON.stringify(helloRoute?.islands) !== JSON.stringify(["pipeline-step-explorer"])) {
+  throw new Error(`Hello, Forme island usage differs: ${JSON.stringify(helloRoute)}`);
+}
+const expectedScriptUrl = `/coding-adventures/${scriptPath}`;
+if (
+  !helloHtml.includes('<p id="forme-pipeline-steps">') ||
+  !helloHtml.includes(`<script type="module" src="${expectedScriptUrl}"></script>`)
+) {
+  throw new Error("Hello, Forme is missing its no-JavaScript fallback or exact island module");
+}
+for (const articleFile of articleFiles.filter(file => file !== "2026-05-15-hello-forme.html")) {
+  const staticHtml = await readFile(resolve(blogRoot, articleFile), "utf8");
+  const route = articles.manifest.routes.find(item => item.target.path === `blog/${articleFile}`);
+  if (staticHtml.includes("<script") || route?.islands.length !== 0) {
+    throw new Error(`Static blog article unexpectedly received interactivity: ${articleFile}`);
+  }
+}
+
 await verifyReportFiles(articles.files);
 await verifyReportFiles(surface.files);
 await rm(reportPath);
 
 console.log(
-  `blog verification: ${articleFiles.length} articles + ${expectedSurface.length} surface files + ${assetPath}`,
+  `blog verification: ${articleFiles.length} articles + ${expectedSurface.length} surface files + ${assetPath} + ${scriptPath}`,
 );
 
 async function verifyReportFiles(files: readonly ReportFile[]): Promise<void> {
@@ -100,7 +143,11 @@ interface ReportFile {
 interface ReportArtifact {
   readonly kind: string;
   readonly manifest: {
-    readonly routes: readonly { readonly pattern: string }[];
+    readonly routes: readonly {
+      readonly pattern: string;
+      readonly target: { readonly kind: "file"; readonly path: string };
+      readonly islands: readonly string[];
+    }[];
     readonly assets: readonly {
       readonly id: string;
       readonly path: string;

@@ -24,6 +24,7 @@ describe("live product scheduling", () => {
       expect(clean.stages.map(stage => [stage.instanceId, stage.outcome])).toEqual([
         ["source", "success"],
         ["parse", "success"],
+        ["attach-interactivity", "success"],
         ["resolve-assets", "success"],
         ["route", "success"],
         ["collect-posts", "success"],
@@ -36,6 +37,7 @@ describe("live product scheduling", () => {
       expect(warm.stages.map(stage => [stage.instanceId, stage.outcome])).toEqual([
         ["source", "skipped"],
         ["parse", "skipped"],
+        ["attach-interactivity", "skipped"],
         ["resolve-assets", "success"],
         ["route", "skipped"],
         ["collect-posts", "skipped"],
@@ -51,6 +53,7 @@ describe("live product scheduling", () => {
       expect(warm.buildId).toBe(clean.buildId);
       expect(Object.keys(clean.outputs)).toEqual(["articles", "surface"]);
       expect(JSON.stringify(warm.outputs)).toBe(JSON.stringify(clean.outputs));
+      expectInteractivityOutput(clean);
       await expectFilesMatchReport(warm);
     } finally {
       await rm(reports, { recursive: true, force: true });
@@ -61,6 +64,19 @@ describe("live product scheduling", () => {
 async function build(reportPath: string): Promise<BuildReport> {
   await runForme("build", "--reproducible", "--report", reportPath);
   return JSON.parse(await readFile(reportPath, "utf8")) as BuildReport;
+}
+
+function expectInteractivityOutput(report: BuildReport): void {
+  const articles = report.outputs.articles;
+  expect(articles).toBeDefined();
+  const hello = articles?.manifest.routes.find(
+    route => route.pattern === "/blog/2026-05-15-hello-forme.html",
+  );
+  expect(hello?.islands).toEqual(["pipeline-step-explorer"]);
+  expect(articles?.manifest.routes.filter(route => route.pattern !== hello?.pattern)
+    .every(route => route.islands.length === 0)).toBe(true);
+  expect(articles?.manifest.assets.filter(asset => asset.mime === "text/javascript"))
+    .toHaveLength(1);
 }
 
 async function runForme(...args: string[]): Promise<void> {
@@ -90,7 +106,11 @@ interface BuildReport {
     readonly cacheMisses: number;
   }[];
   readonly outputs: Readonly<Record<string, {
-    readonly manifest: { readonly buildTime: string };
+    readonly manifest: {
+      readonly buildTime: string;
+      readonly routes: readonly { readonly pattern: string; readonly islands: readonly string[] }[];
+      readonly assets: readonly { readonly mime: string }[];
+    };
     readonly files: readonly { readonly path: string; readonly sha256: string | null }[];
   }>>;
 }
