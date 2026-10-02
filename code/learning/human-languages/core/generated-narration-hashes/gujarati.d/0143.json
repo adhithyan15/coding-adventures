@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 143,
-  "sourceHash": "fnv1a64:bff8c2378ae153a1",
+  "sourceHash": "fnv1a64:3ab74779efcc69f6",
   "lessonIds": [
     "GU-C143-bhagvu",
     "GU-C143-pharvu",
@@ -9,13 +9,14 @@
     "GU-C143-manvu",
     "GU-C143-badalvu",
     "GU-R143-first-pass-describing-words",
-    "GU-R143-second-pass-verbs"
+    "GU-R143-second-pass-verbs",
+    "GU-W10-a1-timed-production"
   ],
   "voiceLessons": 7,
   "drivablePrefix": 7,
   "text": "gujarati/narration/ch143.txt",
   "json": "gujarati/narration/ch143.json",
-  "textHash": "fnv1a64:fb1dbfe3232c34d7",
-  "jsonHash": "fnv1a64:46925b1e6329412e",
+  "textHash": "fnv1a64:850ebfce12d9999c",
+  "jsonHash": "fnv1a64:4769fe09a8495391",
   "findings": []
 }

@@ -31,10 +31,8 @@ it("builds Gujarati's first A1 controlled question without a visible model", () 
   expect(activity?.answer).toBe("ઘર ક્યાં છે?");
 });
 
-it("leaves only timed assessment production missing from Gujarati A1", () => {
+it("keeps Gujarati A1 complete after the controlled question's successor lands", () => {
   const gujarati = languageWritingStages("gujarati");
   expect(gujarati.defects).toEqual([]);
-  expect(gujarati.levels.find((level) => level.level === "A1")?.missingStages).toEqual([
-    "timed-assessment-production",
-  ]);
+  expect(gujarati.levels.find((level) => level.level === "A1")?.missingStages).toEqual([]);
 });

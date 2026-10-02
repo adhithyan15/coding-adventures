@@ -234,5 +234,9 @@ it("pins Gujarati's complete pre-A1 writing runway", () => {
     "observe-trace",
     "guided-copy",
     "delayed-copy",
+    // HL-C452: the final A1 lesson adds no model and no new Gujarati. It asks
+    // for the actual six-field form and 30–40 word named-reader message under
+    // one continuous 20-minute clock, completing the assessed writing ladder.
+    "timed-assessment-production",
   ]);
 });
