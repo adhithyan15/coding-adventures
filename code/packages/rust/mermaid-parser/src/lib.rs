@@ -4606,6 +4606,14 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
             ),
             "line-height" => style.line_height = Some(parse_treemap_line_height(token, value)?),
             "text-indent" => style.text_indent = Some(parse_treemap_text_indent(token, value)?),
+            "white-space" => style.white_space = Some(match value.to_ascii_lowercase().as_str() {
+                "normal" => diagram_ir::TreemapWhiteSpace::Normal,
+                "nowrap" => diagram_ir::TreemapWhiteSpace::NoWrap,
+                "pre" => diagram_ir::TreemapWhiteSpace::Pre,
+                "pre-wrap" => diagram_ir::TreemapWhiteSpace::PreWrap,
+                "pre-line" => diagram_ir::TreemapWhiteSpace::PreLine,
+                _ => return Err(token_error(token, "unsupported treemap white-space")),
+            }),
             _ => merge_treemap_node_style(&mut style.node, &parse_block_style(token, declaration)?),
         }
     }
@@ -14444,6 +14452,24 @@ B//-A: reverse stick top
             let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-indent:{value}");
             assert!(parse_treemap(&source).is_err());
         }
+    }
+
+    #[test]
+    fn treemap_parses_white_space_modes() {
+        for (value, expected) in [
+            ("normal", diagram_ir::TreemapWhiteSpace::Normal),
+            ("nowrap", diagram_ir::TreemapWhiteSpace::NoWrap),
+            ("pre", diagram_ir::TreemapWhiteSpace::Pre),
+            ("pre-wrap", diagram_ir::TreemapWhiteSpace::PreWrap),
+            ("pre-line", diagram_ir::TreemapWhiteSpace::PreLine),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent white-space:{value}");
+            let diagram = parse_treemap(&source).expect("supported white-space mode must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.white_space), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent white-space:break-spaces",
+        ).is_err());
     }
 
     #[test]

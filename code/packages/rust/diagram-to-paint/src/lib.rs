@@ -322,17 +322,24 @@ fn treemap_text_node(
         diagram_ir::TreemapTextUnderlineOffset::Factor(value) => Some(font.size * value),
         diagram_ir::TreemapTextUnderlineOffset::Auto => None,
     });
+    let whitespace_value = match style.and_then(|style| style.white_space) {
+        Some(diagram_ir::TreemapWhiteSpace::Normal | diagram_ir::TreemapWhiteSpace::NoWrap) =>
+            value.split_whitespace().collect::<Vec<_>>().join(" "),
+        Some(diagram_ir::TreemapWhiteSpace::PreLine) => value.lines()
+            .map(|line| line.split_whitespace().collect::<Vec<_>>().join(" "))
+            .collect::<Vec<_>>().join("\n"),
+        _ => value.to_string(),
+    };
     let value = match style.and_then(|style| style.text_transform) {
-        Some(diagram_ir::TreemapTextTransform::Uppercase) => value.to_uppercase(),
-        Some(diagram_ir::TreemapTextTransform::Lowercase) => value.to_lowercase(),
-        Some(diagram_ir::TreemapTextTransform::Capitalize) => value.split_whitespace()
-            .map(capitalize).collect::<Vec<_>>().join(" "),
-        Some(diagram_ir::TreemapTextTransform::FullWidth) => value.chars().map(|character| match character {
+        Some(diagram_ir::TreemapTextTransform::Uppercase) => whitespace_value.to_uppercase(),
+        Some(diagram_ir::TreemapTextTransform::Lowercase) => whitespace_value.to_lowercase(),
+        Some(diagram_ir::TreemapTextTransform::Capitalize) => capitalize_words(&whitespace_value),
+        Some(diagram_ir::TreemapTextTransform::FullWidth) => whitespace_value.chars().map(|character| match character {
             ' ' => '\u{3000}',
             '!'..='~' => char::from_u32(character as u32 + 0xfee0).expect("ASCII full-width mapping is valid"),
             _ => character,
         }).collect(),
-        _ => value.to_string(),
+        _ => whitespace_value,
     };
     let mut node = text_node(
         &value, x + text_indent, y, (width - text_indent).max(0.0), height, font, color,
@@ -343,6 +350,8 @@ fn treemap_text_node(
             Some(diagram_ir::TreemapTextAlign::End) => TextAlign::End,
             _ => TextAlign::Center,
         };
+        content.wrap = !matches!(style.and_then(|style| style.white_space),
+            Some(diagram_ir::TreemapWhiteSpace::NoWrap | diagram_ir::TreemapWhiteSpace::Pre));
         content.decoration = style.and_then(|style| style.text_decoration).and_then(|decoration| {
             let mut lines = TextDecorationLines::NONE;
             if decoration.underline { lines = lines.union(TextDecorationLines::UNDERLINE); }
@@ -936,6 +945,23 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
 
 fn capitalize(value: &str) -> String {
     let mut characters = value.chars(); characters.next().map_or_else(String::new, |first| first.to_uppercase().collect::<String>() + characters.as_str())
+}
+
+fn capitalize_words(value: &str) -> String {
+    let mut result = String::new();
+    let mut at_word_start = true;
+    for character in value.chars() {
+        if character.is_whitespace() {
+            result.push(character);
+            at_word_start = true;
+        } else if at_word_start {
+            result.extend(character.to_uppercase());
+            at_word_start = false;
+        } else {
+            result.push(character);
+        }
+    }
+    result
 }
 
 fn with_opacity(color: &str, opacity: f64) -> String {
@@ -6892,6 +6918,7 @@ mod tests {
                     text_underline_offset: Some(diagram_ir::TreemapTextUnderlineOffset::Factor(0.25)),
                     line_height: Some(diagram_ir::TreemapLineHeight::Pixels(24.0)),
                     text_indent: Some(diagram_ir::TreemapTextIndent::Factor(0.1)),
+                    white_space: Some(diagram_ir::TreemapWhiteSpace::NoWrap),
                 }),
             }],
         };
@@ -6901,7 +6928,7 @@ mod tests {
             Color { r: 0, g: 0, b: 0, a: 255 }, layout.nodes[0].style.as_ref(),
         );
         assert!(matches!(styled_text.content,
-            Some(Content::Text(TextContent { value, text_align: TextAlign::End,
+            Some(Content::Text(TextContent { value, wrap: false, text_align: TextAlign::End,
                 decoration: Some(TextDecoration { lines, color: Some(decoration_color),
                     style: TextDecorationStyle::Wavy, thickness: Some(3.5), underline_offset: Some(3.5) }), .. }))
                 if value == "\u{ff33}\u{ff54}\u{ff59}\u{ff4c}\u{ff45}\u{ff44}\u{3000}\u{ff4e}\u{ff4f}\u{ff44}\u{ff45}"
@@ -6923,6 +6950,30 @@ mod tests {
             Some(Content::Text(TextContent {
                 decoration: Some(TextDecoration { color: Some(color), .. }), ..
             })) if color == current_color));
+        let mut whitespace_style = current_color_style;
+        whitespace_style.text_transform = Some(diagram_ir::TreemapTextTransform::None);
+        whitespace_style.white_space = Some(diagram_ir::TreemapWhiteSpace::Normal);
+        let collapsed_text = treemap_text_node(
+            "  one \n two   three ", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert!(matches!(collapsed_text.content,
+            Some(Content::Text(TextContent { value, wrap: true, .. })) if value == "one two three"));
+        whitespace_style.white_space = Some(diagram_ir::TreemapWhiteSpace::PreLine);
+        let pre_line_text = treemap_text_node(
+            "  one \n two   three ", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert!(matches!(pre_line_text.content,
+            Some(Content::Text(TextContent { value, wrap: true, .. })) if value == "one\ntwo three"));
+        whitespace_style.white_space = Some(diagram_ir::TreemapWhiteSpace::Pre);
+        whitespace_style.text_transform = Some(diagram_ir::TreemapTextTransform::Capitalize);
+        let pre_capitalized_text = treemap_text_node(
+            "one  two\nthree", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert!(matches!(pre_capitalized_text.content,
+            Some(Content::Text(TextContent { value, wrap: false, .. })) if value == "One  Two\nThree"));
         let mut styled_font = opts.label_font.clone();
         styled_font.size = 16.0;
         apply_treemap_line_height(&mut styled_font, layout.nodes[0].style.as_ref());
