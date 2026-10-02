@@ -152,6 +152,10 @@ pkg["build"] = {
     "linux": {"target": ["AppImage"], "category": "Education"},
     "mac": {"target": ["zip"], "category": "public.app-category.education"},
     "win": {"target": ["portable"]},
+    # Package the Electron runtime the build step below verified, instead of
+    # letting electron-builder download its own copy (see "Fetching the
+    # Electron runtime" further down).
+    "electronDist": "node_modules/electron/dist",
 }
 
 with open(path, "w") as handle:
@@ -180,6 +184,42 @@ if [[ "$RUN_BUILD" -eq 1 ]]; then
 fi
 
 if [[ "$RUN_PACKAGE" -eq 1 ]]; then
+  # The Electron runtime is the largest piece of code in the installer, and the
+  # lockfile does not cover it: the electron npm package is only a launcher
+  # that fetches the binary separately. Left alone, electron-builder downloads
+  # that zip itself and trusts it as served.
+  #
+  # Electron's own install.js fetches the same zip but checks it against
+  # checksums.json, which ships INSIDE the lockfile-pinned electron package --
+  # so the binary is pinned by the lock transitively:
+  #
+  #   package-lock.json --sha512--> electron-42.5.0.tgz --contains--> checksums.json
+  #                                                     --sha256--> electron-v42.5.0-<os>-<arch>.zip
+  #
+  # `electronDist` above then points electron-builder at that verified copy.
+  # The two environment variables that would make install.js fetch checksums
+  # from the network instead of using the pinned file are cleared for the call.
+  #
+  # A dropped connection mid-download is retried; install.js skips the fetch
+  # once a verified runtime is in place. A checksum mismatch fails every
+  # attempt the same way, so retrying never lets a bad zip through.
+  echo "[+] Fetching the Electron runtime, verified against the pinned checksums..."
+  for attempt in 1 2 3; do
+    if ( cd "$APP" && env -u electron_use_remote_checksums -u npm_config_electron_use_remote_checksums \
+        node node_modules/electron/install.js ); then
+      break
+    fi
+    if [[ "$attempt" -eq 3 ]]; then
+      echo "error: could not fetch a verified Electron runtime" >&2
+      exit 1
+    fi
+    echo "  attempt $attempt failed; retrying" >&2
+  done
+  if [[ ! -s "$APP/node_modules/electron/dist/version" ]]; then
+    echo "error: Electron's install.js left no runtime in node_modules/electron/dist" >&2
+    exit 1
+  fi
+
   echo "[+] Packaging with electron-builder..."
   ( cd "$APP" && npx --no-install electron-builder --publish never )
 
