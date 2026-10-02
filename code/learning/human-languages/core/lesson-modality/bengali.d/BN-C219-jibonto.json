@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C219-jibonto",
+    "language": "bengali",
+    "chapter": 219,
+    "sequence": 13410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3684e6377a982112"
+  },
+  "findings": []
+}

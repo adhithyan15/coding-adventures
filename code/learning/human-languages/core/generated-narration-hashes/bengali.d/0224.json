@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:b41c39457e05410c",
+  "lessonIds": [
+    "BN-C224-salad",
+    "BN-C224-jontu",
+    "BN-C224-chita",
+    "BN-C224-sheyal",
+    "BN-C224-nekre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch224.txt",
+  "json": "bengali/narration/ch224.json",
+  "textHash": "fnv1a64:f7edfd4e295134c8",
+  "jsonHash": "fnv1a64:efdca2dfad05880c",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:c48b826c163f1719",
+  "lessonIds": [
+    "BN-C234-shishi",
+    "BN-C234-smriti",
+    "BN-C234-chinta",
+    "BN-C234-chehara",
+    "BN-C234-bbohar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch234.txt",
+  "json": "bengali/narration/ch234.json",
+  "textHash": "fnv1a64:2cb32cfbf6af9b02",
+  "jsonHash": "fnv1a64:4337cc08b726b093",
+  "findings": []
+}

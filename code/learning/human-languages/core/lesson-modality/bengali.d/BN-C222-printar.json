@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C222-printar",
+    "language": "bengali",
+    "chapter": 222,
+    "sequence": 13590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8676a505f33fdd37"
+  },
+  "findings": []
+}

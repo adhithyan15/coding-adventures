@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R231-first-pass-words-from-chapters-227-228",
+    "language": "bengali",
+    "chapter": 231,
+    "sequence": 14240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:311b295618c9c0af"
+  },
+  "findings": []
+}

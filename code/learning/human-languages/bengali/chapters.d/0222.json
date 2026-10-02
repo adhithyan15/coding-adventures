@@ -1,0 +1,19 @@
+{
+  "chapter": 222,
+  "title": "Light bulb, Television, Remote control, Laptop, Printer",
+  "label": "ch:bn-light-bulb-television-remote-control-laptop-printer",
+  "canDo": "I can say a light bulb, a television, a remote control, a laptop and a printer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C222-printar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 222: I can say a light bulb, a television, a remote control, a laptop and a printer.",
+    "assesses": [
+      "BN-LEX-C222-JINIS222-03",
+      "BN-LEX-C222-JINIS222-04",
+      "BN-LEX-C222-JINIS222-05"
+    ]
+  }
+}

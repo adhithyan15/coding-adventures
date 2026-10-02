@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C236-kormi",
+    "language": "bengali",
+    "chapter": 236,
+    "sequence": 14600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ca99e2e40d831e1"
+  },
+  "findings": []
+}

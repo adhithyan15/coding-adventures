@@ -1,0 +1,19 @@
+{
+  "chapter": 236,
+  "title": "Class, Worker, Contract, Assembly, Journalist",
+  "label": "ch:bn-class-worker-contract-assembly-journalist",
+  "canDo": "I can say a class, a worker, a contract, an assembly and a journalist.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-R236-second-pass-words-from-chapters-234-236",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 236: I can say a class, a worker, a contract, an assembly and a journalist.",
+    "assesses": [
+      "BN-LEX-C236-KAJ236-03",
+      "BN-LEX-C236-KAJ236-04",
+      "BN-LEX-C236-KAJ236-05"
+    ]
+  }
+}

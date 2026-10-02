@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C216-opore",
+    "language": "bengali",
+    "chapter": 216,
+    "sequence": 13090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69ec48c91b0c7c57"
+  },
+  "findings": []
+}

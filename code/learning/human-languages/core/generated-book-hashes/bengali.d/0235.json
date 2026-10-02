@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:1f4ba1fd72d2b74c",
+  "lessonIds": [
+    "BN-C235-miting",
+    "BN-C235-kormochari",
+    "BN-C235-sohokormi",
+    "BN-C235-muchi",
+    "BN-C235-chhutor"
+  ],
+  "tex": "bengali/book/chapters/ch235-meeting-employee-colleague-cobbler-carpenter.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "language": "bengali",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:d042756bea2d797a",
+  "lessonIds": [
+    "BN-C217-hrod",
+    "BN-C217-bastnd",
+    "BN-C217-bimanbondor",
+    "BN-C217-rum",
+    "BN-C217-stediyam",
+    "BN-R217-first-pass-words-from-chapters-209-212",
+    "BN-R217-second-pass-words-from-chapters-213-217"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "bengali/narration/ch217.txt",
+  "json": "bengali/narration/ch217.json",
+  "textHash": "fnv1a64:f0bea3c600caa466",
+  "jsonHash": "fnv1a64:f5e7d96b438b7ae0",
+  "findings": []
+}

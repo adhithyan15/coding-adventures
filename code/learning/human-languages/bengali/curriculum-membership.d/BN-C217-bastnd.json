@@ -1,0 +1,11 @@
+{
+  "id": "BN-C217-bastnd",
+  "pathSegment": "BN-PATH-217-JAYGA217",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-217-JAYGA217",
+      "order": 1
+    }
+  ]
+}

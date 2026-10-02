@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:fea7c825aa2d3e67",
+  "lessonIds": [
+    "BN-C228-brthota",
+    "BN-C228-jibon",
+    "BN-C228-mrityu",
+    "BN-C228-bhagyo",
+    "BN-C228-siddhanto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch228.txt",
+  "json": "bengali/narration/ch228.json",
+  "textHash": "fnv1a64:1fae92a5d5f73a8b",
+  "jsonHash": "fnv1a64:e2cc14bcfcbb7528",
+  "findings": []
+}

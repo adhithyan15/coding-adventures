@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:1648a9ceb5f474a1",
+  "lessonIds": [
+    "BN-C234-shishi",
+    "BN-C234-smriti",
+    "BN-C234-chinta",
+    "BN-C234-chehara",
+    "BN-C234-bbohar"
+  ],
+  "tex": "bengali/book/chapters/ch234-vial-memory-thought-looks-behaviour.tex"
+}

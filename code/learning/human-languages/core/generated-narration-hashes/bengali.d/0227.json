@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:1babe5d20d85c9a2",
+  "lessonIds": [
+    "BN-C227-podobi",
+    "BN-C227-boyos",
+    "BN-C227-nombor",
+    "BN-C227-poramorsho",
+    "BN-C227-sotyo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch227.txt",
+  "json": "bengali/narration/ch227.json",
+  "textHash": "fnv1a64:8a28a1e1145e0a8e",
+  "jsonHash": "fnv1a64:1ce3a6d075fdd398",
+  "findings": []
+}

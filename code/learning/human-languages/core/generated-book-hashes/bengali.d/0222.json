@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:14934244fab75fab",
+  "lessonIds": [
+    "BN-C222-balb",
+    "BN-C222-tibhi",
+    "BN-C222-rimot",
+    "BN-C222-lptop",
+    "BN-C222-printar"
+  ],
+  "tex": "bengali/book/chapters/ch222-light-bulb-television-remote-control-laptop-printer.tex"
+}

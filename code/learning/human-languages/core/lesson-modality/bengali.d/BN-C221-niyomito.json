@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C221-niyomito",
+    "language": "bengali",
+    "chapter": 221,
+    "sequence": 13540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a53042560086eba"
+  },
+  "findings": []
+}

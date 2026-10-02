@@ -1,0 +1,19 @@
+{
+  "chapter": 223,
+  "title": "Bangle, Food, Vegetable curry, Prawn, Hilsa",
+  "label": "ch:bn-bangle-food-vegetable-curry-prawn-hilsa",
+  "canDo": "I can say a bangle, food, a vegetable curry, a prawn and hilsa.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C223-ilish",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 223: I can say a bangle, food, a vegetable curry, a prawn and hilsa.",
+    "assesses": [
+      "BN-LEX-C223-JINIS223-03",
+      "BN-LEX-C223-JINIS223-04",
+      "BN-LEX-C223-JINIS223-05"
+    ]
+  }
+}

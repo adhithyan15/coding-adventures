@@ -1,0 +1,11 @@
+{
+  "id": "BN-C216-charpashe",
+  "pathSegment": "BN-PATH-216-JAYGA216",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-216-JAYGA216",
+      "order": 2
+    }
+  ]
+}

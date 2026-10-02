@@ -1,0 +1,19 @@
+{
+  "chapter": 217,
+  "title": "Lake, Bus stand, Airport, Room, Stadium",
+  "label": "ch:bn-lake-bus-stand-airport-room-stadium",
+  "canDo": "I can say a lake, a bus stand, an airport, a room and a stadium.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "BN-R217-second-pass-words-from-chapters-213-217",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 217: I can say a lake, a bus stand, an airport, a room and a stadium.",
+    "assesses": [
+      "BN-LEX-C217-JAYGA217-03",
+      "BN-LEX-C217-JAYGA217-04",
+      "BN-LEX-C217-JAYGA217-05"
+    ]
+  }
+}

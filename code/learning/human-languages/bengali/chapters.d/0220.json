@@ -1,0 +1,19 @@
+{
+  "chapter": 220,
+  "title": "Equal, Main, Terrible, Excellent, Previous",
+  "label": "ch:bn-equal-main-terrible-excellent-previous",
+  "canDo": "I can say equal, main, terrible, excellent and previous.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "BN-C220-ager",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 220: I can say equal, main, terrible, excellent and previous.",
+    "assesses": [
+      "BN-LEX-C220-GUN220-03",
+      "BN-LEX-C220-GUN220-04",
+      "BN-LEX-C220-GUN220-05"
+    ]
+  }
+}

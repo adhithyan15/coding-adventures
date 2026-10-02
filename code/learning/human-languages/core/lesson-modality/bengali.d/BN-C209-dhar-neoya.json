@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C209-dhar-neoya",
+    "language": "bengali",
+    "chapter": 209,
+    "sequence": 12710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b1f26ab499696b8d"
+  },
+  "findings": []
+}

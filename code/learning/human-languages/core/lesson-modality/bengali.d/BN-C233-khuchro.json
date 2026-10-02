@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C233-khuchro",
+    "language": "bengali",
+    "chapter": 233,
+    "sequence": 14480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2951dc7c258d4aa7"
+  },
+  "findings": []
+}

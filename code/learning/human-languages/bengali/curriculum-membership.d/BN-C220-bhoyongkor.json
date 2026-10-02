@@ -1,0 +1,11 @@
+{
+  "id": "BN-C220-bhoyongkor",
+  "pathSegment": "BN-PATH-220-GUN220",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-220-GUN220",
+      "order": 2
+    }
+  ]
+}

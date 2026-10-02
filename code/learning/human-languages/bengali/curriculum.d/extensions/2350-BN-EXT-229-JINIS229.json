@@ -1,0 +1,8 @@
+{
+  "id": "BN-EXT-229-JINIS229",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a torch, a chain, a saw, a ribbon and the weather.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C221-niyomito",
+  "pathSegment": "BN-PATH-221-GUN221",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-221-GUN221",
+      "order": 4
+    }
+  ]
+}

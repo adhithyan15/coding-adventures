@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C230-somaj",
+    "language": "bengali",
+    "chapter": 230,
+    "sequence": 14170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10d37e02667b4122"
+  },
+  "findings": []
+}

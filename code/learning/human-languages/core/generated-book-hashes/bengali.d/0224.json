@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:4eafb8245ea6f4ec",
+  "lessonIds": [
+    "BN-C224-salad",
+    "BN-C224-jontu",
+    "BN-C224-chita",
+    "BN-C224-sheyal",
+    "BN-C224-nekre"
+  ],
+  "tex": "bengali/book/chapters/ch224-salad-animal-leopard-fox-wolf.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C236-sobha",
+  "pathSegment": "BN-PATH-236-KAJ236",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-236-KAJ236",
+      "order": 3
+    }
+  ]
+}

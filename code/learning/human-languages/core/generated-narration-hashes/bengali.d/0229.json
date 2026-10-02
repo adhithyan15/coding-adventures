@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:4f870d27c4a5414a",
+  "lessonIds": [
+    "BN-C229-torch",
+    "BN-C229-shikol",
+    "BN-C229-korat",
+    "BN-C229-phite",
+    "BN-C229-abohaoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch229.txt",
+  "json": "bengali/narration/ch229.json",
+  "textHash": "fnv1a64:75fc5dd0002ebce6",
+  "jsonHash": "fnv1a64:7d8a04d6260dd8a5",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C218-jate",
+  "pathSegment": "BN-PATH-218-KARON218",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-218-KARON218",
+      "order": 2
+    }
+  ]
+}

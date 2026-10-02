@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:7f90064a46842469",
+  "lessonIds": [
+    "BN-C219-nokol",
+    "BN-C219-jibonto",
+    "BN-C219-mrito",
+    "BN-C219-phaka",
+    "BN-C219-sthaniyo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch219.txt",
+  "json": "bengali/narration/ch219.json",
+  "textHash": "fnv1a64:c69be537eb889197",
+  "jsonHash": "fnv1a64:f50e00fc74de5f79",
+  "findings": []
+}

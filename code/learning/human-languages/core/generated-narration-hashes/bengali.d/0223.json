@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:8c233eb3f12bc27f",
+  "lessonIds": [
+    "BN-C223-churi",
+    "BN-C223-khabar",
+    "BN-C223-torkari",
+    "BN-C223-chingri",
+    "BN-C223-ilish"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch223.txt",
+  "json": "bengali/narration/ch223.json",
+  "textHash": "fnv1a64:a62ee7d12386268b",
+  "jsonHash": "fnv1a64:006a3b48e000e3c7",
+  "findings": []
+}

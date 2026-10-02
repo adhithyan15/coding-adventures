@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:b547886806c8e4d8",
+  "lessonIds": [
+    "BN-C210-soi-kora",
+    "BN-C210-phon-kora",
+    "BN-C210-dkha-kora",
+    "BN-C210-biye-kora",
+    "BN-C210-bacha"
+  ],
+  "tex": "bengali/book/chapters/ch210-to-sign-to-phone-to-meet-to-marry-to-survive.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C232-intarnet",
+    "language": "bengali",
+    "chapter": 232,
+    "sequence": 14430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1587e1026d37500"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 226,
+  "title": "Traffic jam, Penalty, Licence, Parking, People",
+  "label": "ch:bn-traffic-jam-penalty-licence-parking-people",
+  "canDo": "I can say a traffic jam, a penalty, a licence, parking and people.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-R226-second-pass-words-from-chapters-222-226",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 226: I can say a traffic jam, a penalty, a licence, parking and people.",
+    "assesses": [
+      "BN-LEX-C226-JINIS226-03",
+      "BN-LEX-C226-JINIS226-04",
+      "BN-LEX-C226-JINIS226-05"
+    ]
+  }
+}

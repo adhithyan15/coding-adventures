@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 217,
+  "title": "Lake, Bus stand, Airport, Room, Stadium",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:d042756bea2d797a",
+  "lessons": [
+    {
+      "id": "BN-C217-hrod",
+      "sequence": 13110,
+      "title": "হ্রদ (hrôd) — a lake",
+      "headword": "হ্রদ",
+      "romanization": "hrôd",
+      "gloss": "a lake",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb36f1459d304061",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for above, then the Bengali for somewhere."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: হ্রদ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হ্রদ — hrôd — \"a lake\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hrôd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hrôd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hrôd, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hrôd*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say hrôd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *hrôd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for above, then the Bengali for somewhere, then say hrôd again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for above, then the Bengali for somewhere, then say *hrôd* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does হ্রদ (hrôd) mean? (\"A lake\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C217-bastnd",
+      "sequence": 13120,
+      "title": "বাসস্ট্যান্ড (bāsṭænḍ) — a bus stand",
+      "headword": "বাসস্ট্যান্ড",
+      "romanization": "bāsṭænḍ",
+      "gloss": "a bus stand",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:71b2a65b33d34337",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for somewhere, then the Bengali for a lake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বাসস্ট্যান্ড",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বাসস্ট্যান্ড — bāsṭænḍ — \"a bus stand\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāsṭænḍ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāsṭænḍ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāsṭænḍ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāsṭænḍ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say bāsṭænḍ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *bāsṭænḍ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for somewhere, then the Bengali for a lake, then say bāsṭænḍ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for somewhere, then the Bengali for a lake, then say *bāsṭænḍ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বাসস্ট্যান্ড (bāsṭænḍ) mean? (\"A bus stand\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C217-bimanbondor",
+      "sequence": 13130,
+      "title": "বিমানবন্দর (bimānbôndôr) — an airport",
+      "headword": "বিমানবন্দর",
+      "romanization": "bimānbôndôr",
+      "gloss": "an airport",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e94cfc83f3beb58c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a lake, then the Bengali for a bus stand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বিমানবন্দর",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বিমানবন্দর — bimānbôndôr — \"an airport\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bimānbôndôr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bimānbôndôr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bimānbôndôr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bimānbôndôr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say bimānbôndôr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *bimānbôndôr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a lake, then the Bengali for a bus stand, then say bimānbôndôr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a lake, then the Bengali for a bus stand, then say *bimānbôndôr* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বিমানবন্দর (bimānbôndôr) mean? (\"An airport\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C217-rum",
+      "sequence": 13140,
+      "title": "রুম (rum) — a room (in a hotel)",
+      "headword": "রুম",
+      "romanization": "rum",
+      "gloss": "a room (in a hotel)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61f14a22452d5829",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a bus stand, then the Bengali for an airport."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: রুম",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "রুম — rum — \"a room (in a hotel)\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say rum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *rum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a bus stand, then the Bengali for an airport, then say rum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a bus stand, then the Bengali for an airport, then say *rum* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does রুম (rum) mean? (\"A room (in a hotel)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C217-stediyam",
+      "sequence": 13150,
+      "title": "স্টেডিয়াম (sṭeḍiyām) — a stadium",
+      "headword": "স্টেডিয়াম",
+      "romanization": "sṭeḍiyām",
+      "gloss": "a stadium",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f54116a8c4cef721",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an airport, then the Bengali for a room."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: স্টেডিয়াম",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "স্টেডিয়াম — sṭeḍiyām — \"a stadium\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sṭeḍiyām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sṭeḍiyām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sṭeḍiyām, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sṭeḍiyām*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say sṭeḍiyām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *sṭeḍiyām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an airport, then the Bengali for a room, then say sṭeḍiyām again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an airport, then the Bengali for a room, then say *sṭeḍiyām* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does স্টেডিয়াম (sṭeḍiyām) mean? (\"A stadium\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R217-first-pass-words-from-chapters-209-212",
+      "sequence": 13160,
+      "title": "Words from chapters 209-212 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 209-212",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:23b06f58b78ce5df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a room and a stadium."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to borrow, to lend, to save up, to spend, to weigh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to borrow, to lend, to save up, to spend, to weigh]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to sign, to phone, to meet, to marry, to survive",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to sign, to phone, to meet, to marry, to survive]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to shout, to get angry, to feel shy, to quarrel, to hug",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to shout, to get angry, to feel shy, to quarrel, to hug]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to compare, to rent, to swap, to fight, to run away",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to compare, to rent, to swap, to fight, to run away]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To borrow? (ধার নেওয়া, dhār neoyā.) To lend? (ধার দেওয়া, dhār deoyā.) To save up? (জমানো, jômāno.) To spend? (খরচ করা, khôrôch kôrā.) To weigh? (ওজন করা, ojôn kôrā.) To sign? (সই করা, sôi kôrā.) To phone? (ফোন করা, phon kôrā.) To meet? (দেখা করা, dækhā kôrā.) To marry? (বিয়ে করা, biye kôrā.) To survive? (বাঁচা, bā̃chā.) To shout? (চেঁচানো, chẽchāno.) To get angry? (রাগ করা, rāg kôrā.) To feel shy? (লজ্জা পাওয়া, lôjjā pāoyā.) To quarrel? (ঝগড়া করা, jhôgṛā kôrā.) To hug? (জড়িয়ে ধরা, jôṛiye dhôrā.) To compare? (তুলনা করা, tulônā kôrā.) To rent? (ভাড়া নেওয়া, bhāṛā neoyā.) To swap? (পাল্টানো, pālṭāno.) To fight? (লড়া, lôṛā.) To run away? (পালানো, pālāno.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R217-second-pass-words-from-chapters-213-217",
+      "sequence": 13170,
+      "title": "Words from chapters 213-217 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 213-217",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:21bd35ca846679e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to have a haircut and to dress up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to have a haircut, to dress up, to get ready, to set off, to ride",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to have a haircut, to dress up, to get ready, to set off, to ride]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to take a photo, to pass, to fail, to shake, to stir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to take a photo, to pass, to fail, to shake, to stir]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an ointment, a doctor's surgery, a patient, a pulse, breath",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an ointment, a doctor's surgery, a patient, a pulse, breath]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a garage, beside, all around, above, somewhere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a garage, beside, all around, above, somewhere]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lake, a bus stand, an airport, a room, a stadium",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lake, a bus stand, an airport, a room, a stadium]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To have a haircut? (চুল কাটা, chul kāṭā.) To dress up? (সাজা, sājā.) To get ready? (প্রস্তুত হওয়া, prôstut hôoyā.) To set off? (রওনা দেওয়া, rôonā deoyā.) To ride? (চড়া, chôṛā.) To take a photo? (ছবি তোলা, chhôbi tolā.) To pass? (পাস করা, pās kôrā.) To fail? (ফেল করা, phel kôrā.) To shake? (ঝাঁকানো, jhā̃kāno.) To stir? (নাড়ানো, nāṛāno.) An ointment? (মলম, môlôm.) A doctor's surgery? (ডাক্তারখানা, ḍāktārkhānā.) A patient? (রোগী, rogī.) A pulse? (নাড়ি, nāṛi.) Breath? (নিঃশ্বাস, niḥshvās.) A garage? (গ্যারেজ, gærej.) Beside? (পাশে, pāshe.) All around? (চারপাশে, chārpāshe.) Above? (ওপরে, opôre.) Somewhere? (কোথাও, kothāo.) A lake? (হ্রদ, hrôd.) A bus stand? (বাসস্ট্যান্ড, bāsṭænḍ.) An airport? (বিমানবন্দর, bimānbôndôr.) A room? (রুম, rum.) A stadium? (স্টেডিয়াম, sṭeḍiyām.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

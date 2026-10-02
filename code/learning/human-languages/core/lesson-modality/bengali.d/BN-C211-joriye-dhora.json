@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C211-joriye-dhora",
+    "language": "bengali",
+    "chapter": 211,
+    "sequence": 12850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d6ab781ce37c1d3"
+  },
+  "findings": []
+}

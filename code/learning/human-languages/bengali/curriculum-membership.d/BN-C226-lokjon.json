@@ -1,0 +1,11 @@
+{
+  "id": "BN-C226-lokjon",
+  "pathSegment": "BN-PATH-226-JINIS226",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-226-JINIS226",
+      "order": 4
+    }
+  ]
+}
