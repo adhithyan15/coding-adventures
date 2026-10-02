@@ -71,6 +71,26 @@ export function runCurriculumGapReport(args = process.argv.slice(2)): number {
       return 2;
     }
   }
+  const outputs = buildCurriculumGapReportOutputs(options.root, { registry, lessons, books, curricula, spine });
+  process.stdout.write(options.format === "json" ? outputs.json : outputs.text);
+  return 0;
+}
+
+/**
+ * Builds the whole gap report once and renders it in BOTH formats.
+ *
+ * Building is the expensive part -- every pass reads every lesson -- and the
+ * two renderings are cheap string work over the same data, so a caller that
+ * wants both (the test suite does) should never pay for two builds. The CLI
+ * above writes one of the two; `loaded` lets it reuse the corpus it already
+ * read for the `--glossed-not-taught` branch.
+ */
+export function buildCurriculumGapReportOutputs(
+  root?: string,
+  loaded: Pick<ReturnType<typeof loadEverything>, "registry" | "lessons" | "books" | "curricula" | "spine"> = loadEverything(root),
+): { json: string; text: string } {
+  const options = { root };
+  const { registry, lessons, books, curricula, spine } = loaded;
   // The report's drivable percentages and the committed narration export must be
   // computed at the same table width, or the report will advertise a car-friendly
   // corpus the export cannot actually deliver. One policy file, read by both.
@@ -164,8 +184,7 @@ export function runCurriculumGapReport(args = process.argv.slice(2)): number {
     renderGlyphCoverage(glyphs).join("\n"),
     "",
   ].join("\n");
-  process.stdout.write(options.format === "json" ? json : text);
-  return 0;
+  return { json, text };
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
