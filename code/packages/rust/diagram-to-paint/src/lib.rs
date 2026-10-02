@@ -45,7 +45,7 @@ use diagram_ir::{
     RailroadElementKind, StructuralNodeKind,
 };
 use layout_ir::{
-    Color, Content, FontSpec, PositionedNode, TextAlign, TextContent, TextDecoration,
+    Color, Content, ExtValue, FontSpec, PositionedNode, TextAlign, TextContent, TextDecoration,
     TextDecorationLines, TextDecorationStyle,
 };
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
@@ -341,6 +341,7 @@ fn treemap_text_node(
         }).collect(),
         _ => whitespace_value,
     };
+    let font_size = font.size;
     let mut node = text_node(
         &value, x + text_indent, y, (width - text_indent).max(0.0), height, font, color,
     );
@@ -376,6 +377,14 @@ fn treemap_text_node(
                 underline_offset,
             })
         });
+    }
+    if let Some(spacing) = style.and_then(|style| style.letter_spacing) {
+        let spacing = match spacing {
+            diagram_ir::TreemapLetterSpacing::Normal => 0.0,
+            diagram_ir::TreemapLetterSpacing::Pixels(value) => value,
+            diagram_ir::TreemapLetterSpacing::Factor(value) => value * font_size,
+        };
+        node.ext.insert("text.letter-spacing".into(), ExtValue::Float(spacing));
     }
     node
 }
@@ -6919,6 +6928,7 @@ mod tests {
                     line_height: Some(diagram_ir::TreemapLineHeight::Pixels(24.0)),
                     text_indent: Some(diagram_ir::TreemapTextIndent::Factor(0.1)),
                     white_space: Some(diagram_ir::TreemapWhiteSpace::NoWrap),
+                    letter_spacing: None,
                 }),
             }],
         };
@@ -6974,6 +6984,12 @@ mod tests {
         );
         assert!(matches!(pre_capitalized_text.content,
             Some(Content::Text(TextContent { value, wrap: false, .. })) if value == "One  Two\nThree"));
+        whitespace_style.letter_spacing = Some(diagram_ir::TreemapLetterSpacing::Factor(0.125));
+        let letter_spaced_text = treemap_text_node(
+            "tracked", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(letter_spaced_text.ext.get("text.letter-spacing"), Some(&ExtValue::Float(1.75)));
         let mut styled_font = opts.label_font.clone();
         styled_font.size = 16.0;
         apply_treemap_line_height(&mut styled_font, layout.nodes[0].style.as_ref());

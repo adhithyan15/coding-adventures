@@ -546,6 +546,8 @@ percentage, and pixel line heights flow through the same text layout path.
 Pixel and percentage first-line text indents likewise adjust the backend-neutral
 label line box before glyph shaping. Normal, nowrap, pre, pre-wrap, and pre-line
 white-space modes control whitespace collapsing and native line wrapping.
+Normal and positive or negative pixel/em letter spacing adjusts shaped glyph
+positions and line measurement through backend-neutral PaintInstructions.
 All twelve `cScale`,
 `cScalePeer`, and `cScaleLabel` theme-variable slots
 also flow from init directives or YAML front matter through category-aware
