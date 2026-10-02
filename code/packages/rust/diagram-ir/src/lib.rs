@@ -1490,6 +1490,7 @@ pub struct TreemapStyle {
     pub line_height: Option<TreemapLineHeight>,
     pub text_indent: Option<TreemapTextIndent>,
     pub white_space: Option<TreemapWhiteSpace>,
+    pub overflow_wrap: Option<TreemapOverflowWrap>,
     pub letter_spacing: Option<TreemapLetterSpacing>,
     pub word_spacing: Option<TreemapWordSpacing>,
     pub direction: Option<TreemapTextDirection>,
@@ -1536,6 +1537,9 @@ pub enum TreemapTextIndent { Pixels(f64), Factor(f64) }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum TreemapWhiteSpace { Normal, NoWrap, Pre, PreWrap, PreLine }
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TreemapOverflowWrap { Normal, BreakWord, Anywhere }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum TreemapLetterSpacing { Normal, Pixels(f64), Factor(f64) }
