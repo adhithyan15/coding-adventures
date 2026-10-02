@@ -230,6 +230,13 @@ describe("RenderedPage", () => {
       html: "<!doctype html><html><body>hi</body></html>",
       usedStyle: ["body" as StyleRuleId],
       usedIslands: ["search" as IslandId],
+      islandModules: [{
+        island: "search" as IslandId,
+        asset: SAMPLE_ID,
+        packageName: "@example/search",
+        export: "enhance",
+        sha256: "a".repeat(64),
+      }],
       usedAssets: [],
       meta: {
         title: "Hello",
@@ -244,6 +251,7 @@ describe("RenderedPage", () => {
     };
     expect(page.usedStyle.length).toBe(1);
     expect(page.usedIslands.length).toBe(1);
+    expect(page.islandModules?.[0]?.sha256).toBe("a".repeat(64));
     expect(page.provenance.contributors[0]?.revision).toBe(SAMPLE_REV);
   });
 

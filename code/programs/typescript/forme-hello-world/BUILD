@@ -18,6 +18,7 @@ set -e
 #
 #     document-ast            ← Content IR (no Forme deps)
 #     forme-types             ← kind vocabulary
+#     forme-interactivity-ir  ← hostile-data FM05 validation and snapshots
 #     forme-errors            ← StageError / CapabilityError / CancellationError
 #     forme-capability        ← capability parser+matcher
 #     forme-stage             ← Stage<In,Out> + StageContext
@@ -51,6 +52,7 @@ set -e
 
 cd ../../../packages/typescript/document-ast && npm install --silent
 cd ../../../packages/typescript/forme-types && npm install --silent
+cd ../../../packages/typescript/forme-interactivity-ir && npm install --silent
 cd ../../../packages/typescript/forme-errors && npm install --silent
 cd ../../../packages/typescript/forme-capability && npm install --silent
 cd ../../../packages/typescript/forme-stage && npm install --silent

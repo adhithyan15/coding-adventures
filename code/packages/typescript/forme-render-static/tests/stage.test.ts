@@ -37,6 +37,29 @@ import {
 } from "@coding-adventures/forme-style-ir";
 import renderStatic from "../src/index.js";
 
+const MODULE_ASSET_ID = "01952c0d-7e63-7000-8000-000000000090" as never;
+const MODULE_SHA256 = "a".repeat(64);
+
+function interactivityDocument(overrides: Record<string, unknown> = {}) {
+  return {
+    kind: "Interactivity",
+    version: 1,
+    state: [],
+    bindings: [],
+    handlers: [],
+    islands: [{
+      id: "counter",
+      packageName: "@example/counter-island",
+      export: "enhanceCounter",
+      target: { kind: "element", id: "counter" },
+      fallback: { kind: "element", id: "counter-fallback" },
+      activation: "load",
+      config: { step: 1 },
+    }],
+    ...overrides,
+  };
+}
+
 function makeCtx(overrides: Partial<StageContext> = {}): StageContext {
   return {
     logger: silentLogger(),
@@ -94,6 +117,7 @@ async function runRender(
     meta: { title: string; description: string | null; canonicalUrl: string | null };
     usedStyle: readonly unknown[];
     usedIslands: readonly unknown[];
+    islandModules: readonly unknown[];
     usedAssets: readonly unknown[];
   }>;
 }
@@ -106,6 +130,21 @@ describe("renderStatic — stage shape", () => {
 
   it("declares no capabilities", () => {
     expect(renderStatic.capabilities).toEqual([]);
+  });
+
+  it("rejects hostile top-level config without invoking traps", async () => {
+    const node = makeNode({ sourcePath: "p.md", markdown: "# x\n" });
+    await expect(runRender([node], new Proxy({}, {}))).rejects.toThrow(/config must be a plain object/);
+    let reads = 0;
+    const config = {} as Record<string, unknown>;
+    Object.defineProperty(config, "siteTitle", { enumerable: true, get: () => { reads++; return "trap"; } });
+    await expect(runRender([node], config)).rejects.toThrow(/must not be an accessor/);
+    expect(reads).toBe(0);
+
+    let proxyReads = 0;
+    const modules = new Proxy([], { get(target, key, receiver) { proxyReads++; return Reflect.get(target, key, receiver); } });
+    await expect(runRender([node], { islandModules: modules })).rejects.toThrow(/must be an array/);
+    expect(proxyReads).toBe(0);
   });
 
   it("targets apiVersion 1", () => {
@@ -211,6 +250,119 @@ describe("renderStatic — single-node rendering", () => {
     expect(page!.usedStyle).toEqual([]);
     expect(page!.usedIslands).toEqual([]);
     expect(page!.usedAssets).toEqual([]);
+    expect(page!.islandModules).toEqual([]);
+  });
+
+  it("resolves authored element references and selects exact reviewed island modules", async () => {
+    const route = "/interactive.html";
+    const [page] = await runRender([
+      makeNode({
+        sourcePath: "interactive.md",
+        route,
+        markdown: '<section id="counter-fallback"><button id="counter">Count</button></section>\n',
+      }),
+    ], {
+      interactivity: [{ route, document: interactivityDocument() }],
+      islandModules: [{
+        packageName: "@example/counter-island",
+        export: "enhanceCounter",
+        assetId: MODULE_ASSET_ID,
+        sha256: MODULE_SHA256,
+      }],
+      allowExecutableAssets: true,
+    });
+
+    expect(page!.usedIslands).toEqual(["counter"]);
+    expect(page!.islandModules).toEqual([{
+      island: "counter",
+      asset: MODULE_ASSET_ID,
+      packageName: "@example/counter-island",
+      export: "enhanceCounter",
+      sha256: MODULE_SHA256,
+    }]);
+    expect(page!.usedAssets).toEqual([MODULE_ASSET_ID]);
+    expect(page!.html).not.toContain("<script");
+  });
+
+  it("requires explicit executable-output authority for reviewed script mappings", async () => {
+    const route = "/interactive.html";
+    await expect(runRender([makeNode({
+      sourcePath: "interactive.md",
+      route,
+      markdown: '<div id="counter-fallback"><button id="counter"></button></div>\n',
+    })], {
+      interactivity: [{ route, document: interactivityDocument() }],
+      islandModules: [{
+        packageName: "@example/counter-island",
+        export: "enhanceCounter",
+        assetId: MODULE_ASSET_ID,
+        sha256: MODULE_SHA256,
+      }],
+    })).rejects.toThrow(/allowExecutableAssets: true/);
+  });
+
+  it("rejects missing, ambiguous, and raw-text-only authored element references", async () => {
+    const route = "/bad.html";
+    const config = {
+      interactivity: [{ route, document: interactivityDocument() }],
+      islandModules: [{
+        packageName: "@example/counter-island",
+        export: "enhanceCounter",
+        assetId: MODULE_ASSET_ID,
+        sha256: MODULE_SHA256,
+      }],
+      allowExecutableAssets: true,
+    };
+
+    await expect(runRender([
+      makeNode({ sourcePath: "missing.md", route, markdown: '<button id="counter">Count</button>\n' }),
+    ], config)).rejects.toThrow(/element id "counter-fallback" is missing/);
+
+    await expect(runRender([
+      makeNode({
+        sourcePath: "duplicate.md",
+        route,
+        markdown: '<div id="counter-fallback"></div><button id="counter"></button><i id="counter"></i>\n',
+      }),
+    ], config)).rejects.toThrow(/element id "counter" is ambiguous/);
+
+    await expect(runRender([
+      makeNode({
+        sourcePath: "raw-text.md",
+        route,
+        markdown: '<button id="counter"></button><script>const fake = \'<div id="counter-fallback">\';</script>\n',
+      }),
+    ], config)).rejects.toThrow(/element id "counter-fallback" is missing/);
+  });
+
+  it("fails closed for missing or duplicate reviewed module mappings", async () => {
+    const route = "/interactive.html";
+    const node = makeNode({
+      sourcePath: "interactive.md",
+      route,
+      markdown: '<div id="counter-fallback"><button id="counter"></button></div>\n',
+    });
+    const interactivity = [{ route, document: interactivityDocument() }];
+
+    await expect(runRender([node], { interactivity, islandModules: [], allowExecutableAssets: true }))
+      .rejects.toThrow(/has no reviewed module mapping/);
+    await expect(runRender([node], {
+      interactivity,
+      islandModules: [
+        { packageName: "@example/counter-island", export: "enhanceCounter", assetId: MODULE_ASSET_ID, sha256: MODULE_SHA256 },
+        { packageName: "@example/counter-island", export: "enhanceCounter", assetId: MODULE_ASSET_ID, sha256: MODULE_SHA256 },
+      ],
+      allowExecutableAssets: true,
+    })).rejects.toThrow(/duplicate island module mapping/);
+  });
+
+  it("rejects configured interactivity routes that match no rendered page", async () => {
+    await expect(runRender([
+      makeNode({ sourcePath: "static.md", route: "/static.html", markdown: "Static.\n" }),
+    ], {
+      interactivity: [{ route: "/typo.html", document: interactivityDocument({ islands: [] }) }],
+      islandModules: [],
+    })).rejects.toThrow(/configured interactivity route "\/typo.html" did not match/);
   });
 
   it("renders resolved assets as placeholders and records unique usage", async () => {

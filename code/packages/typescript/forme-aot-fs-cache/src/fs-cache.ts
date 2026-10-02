@@ -27,11 +27,11 @@
  * ## Atomic writes (default on)
  *
  * `put(key, value, meta)` writes to a temp file then `fs.rename`s
- * onto the final path.  POSIX guarantees `rename` is atomic within
- * a single filesystem, so concurrent puts for the same key never
- * leave a partial-write reader.  Cost: one extra file create per
- * write.  Set `atomicWrites: false` to skip when you trust the
- * caller (single-process, single-thread).
+ * onto the final path.  POSIX guarantees atomic replacement within
+ * one filesystem.  Windows replacements are serialized in-process
+ * and remove the old complete entry before renaming the new one, so
+ * readers may see a brief miss but never a partial value.  Set
+ * `atomicWrites: false` to skip the temp-file protocol.
  *
  * ## Symlink safety
  *
@@ -64,9 +64,10 @@ export interface FsCacheOptions {
   readonly cacheDir: string;
   /**
    * Write to a temp file then `rename` onto the final path.  Default
-   * `true`.  Set to `false` to skip when concurrent writes to the
-   * same key are impossible (single-process, single-thread, or
-   * caller-coordinated).
+   * `true`. POSIX replacement is atomic; Windows replacement is
+   * process-serialized and may expose a brief cache miss. Set to
+   * `false` to skip when concurrent writes to the same key are
+   * impossible.
    */
   readonly atomicWrites?: boolean;
 }
@@ -82,8 +83,8 @@ const HEX64_RE = /^[0-9a-f]{64}$/;
  *
  * Each call returns an independent instance; instances are stateless
  * apart from the `cacheDir` reference.  Concurrent instances over
- * the same `cacheDir` are safe — atomic writes prevent partial-state
- * reads.
+ * the same `cacheDir` are safe from partial-state reads. On Windows,
+ * a reader may observe a cache miss during replacement.
  */
 export function createFsCacheIO(options: FsCacheOptions): CacheIO {
   const cacheDir = options.cacheDir;
@@ -112,15 +113,15 @@ export function createFsCacheIO(options: FsCacheOptions): CacheIO {
       await fs.mkdir(path.dirname(file), { recursive: true });
 
       if (atomicWrites) {
-        // Write to <file>.tmp.<pid>.<rand> then rename atomically.
+        // Write to <file>.tmp.<pid>.<rand> then replace the final file.
         // The temp name uses a fresh random suffix per call so two
         // concurrent puts to the same key don't collide on the
-        // temp file (the rename is what's atomic; the temp file is
-        // single-writer).
+        // temp file. POSIX rename is atomic; the Windows replacement
+        // fallback is serialized per destination within this process.
         const tmpFile = `${file}.tmp.${process.pid}.${randomSuffix()}`;
         try {
           await fs.writeFile(tmpFile, value, { encoding: "utf8" });
-          await fs.rename(tmpFile, file);
+          await replaceCacheFile(tmpFile, file);
         } catch (e) {
           // Best-effort cleanup of the temp file on write failure.
           // We swallow the unlink error because the original write
@@ -186,6 +187,45 @@ function keyToFilePath(cacheDir: string, key: string): string {
   // re-defend.  But `path.join` will normalise away any sneaky `..`
   // even if assertValidKey were bypassed.
   return path.join(cacheDir, key.slice(0, 2), `${key.slice(2)}.cache`);
+}
+
+// Windows does not replace an existing destination with rename(2).  Keep
+// same-process writes to one cache key ordered, then fall back to removing the
+// old complete entry before renaming the new complete entry into place.  The
+// fallback can expose a brief cache miss to a concurrent reader, but never a
+// partial cache value.  POSIX retains its native atomic-replace semantics.
+const pendingFileWrites = new Map<string, Promise<void>>();
+
+async function replaceCacheFile(tmpFile: string, file: string): Promise<void> {
+  const previous = pendingFileWrites.get(file) ?? Promise.resolve();
+  const current = previous.catch(() => undefined).then(async () => {
+    try {
+      await fs.rename(tmpFile, file);
+    } catch (error) {
+      const code = (error as NodeJS.ErrnoException).code;
+      if (process.platform !== "win32" || (code !== "EEXIST" && code !== "EPERM")) {
+        throw error;
+      }
+
+      try {
+        await fs.unlink(file);
+      } catch (unlinkError) {
+        if ((unlinkError as NodeJS.ErrnoException).code !== "ENOENT") {
+          throw unlinkError;
+        }
+      }
+      await fs.rename(tmpFile, file);
+    }
+  });
+
+  pendingFileWrites.set(file, current);
+  try {
+    await current;
+  } finally {
+    if (pendingFileWrites.get(file) === current) {
+      pendingFileWrites.delete(file);
+    }
+  }
 }
 
 // ─── cacheDir validation ─────────────────────────────────────────────────

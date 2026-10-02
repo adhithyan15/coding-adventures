@@ -6,6 +6,18 @@
 
 - Resolved image references now render as `forme-asset:` placeholders and
   populate `RenderedPage.usedAssets` without mutating the authored AST.
+- Per-route FM05 documents now resolve every authored element reference against
+  the rendered body and populate exact, declaration-ordered `usedIslands`.
+- Explicitly authorized reviewed package/export mappings bind exact script
+  asset identities and SHA-256 bytes without
+  importing executable modules during rendering; static routes remain empty.
+
+### Security
+
+- Reject missing or ambiguous element IDs, raw-text/comment lookalikes,
+  duplicate module mappings, accessors, proxies, sparse config arrays, and
+  malformed package/export/asset identifiers. A configured route that matches
+  no rendered page fails the completed stream instead of silently dropping JS.
 
 ## 0.2.0 — 2026-08-27
 

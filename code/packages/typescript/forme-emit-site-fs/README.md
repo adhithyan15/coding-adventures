@@ -4,6 +4,12 @@ The asset-aware static-site emitter for Forme. It joins rendered pages with
 loaded `Asset` IR, replaces renderer-owned `forme-asset:<logical-id>`
 placeholders, and writes one complete `DeployArtifact` to disk.
 
+Interactive pages additionally carry exact `IslandId` to script-asset pairs.
+The emitter verifies those pairs, fingerprints only referenced script assets,
+adds one external `type="module"` tag per distinct asset immediately before `</body>`, and copies the
+same ordered IDs into each deploy route. A page with no islands receives no
+script tag, loader shell, or unused script asset.
+
 ## Stage contract
 
 ```ts
@@ -33,12 +39,19 @@ or hidden-filesystem side channels.
 - `manifest.assets` records each logical ID, artifact path, MIME type, and
   complete SHA-256 digest.
 - `manifest.buildId` covers the hashes of every rewritten page and asset file.
+- Script assets require a JavaScript MIME type and are emitted only when named
+  by a page's exact `islandModules` list. The emitter recomputes and verifies
+  each reviewed SHA-256 binding before producing a module tag. Other asset
+  roles preserve the existing complete-stream behavior.
 
 The stage copies asset bytes defensively, sorts output paths before writing,
-and rejects duplicate identities, conflicting output paths, route traversal,
+and rejects duplicate identities, exact or portable-filesystem-conflicting
+output paths, route traversal,
 missing `meta.sourcePath`, inconsistent byte lengths, missing assets, and
 undeclared placeholders. Validation finishes before the first write except for
 cancellation, which is checked throughout collection and materialization.
+Page asset/island/module lists are descriptor-snapshotted with explicit count
+bounds so later producer mutation cannot alter the deploy manifest.
 
 `filesystem:write` follows the same adapter exception as `forme-emit-fs`: the
 stage declares the capability and directly materializes through

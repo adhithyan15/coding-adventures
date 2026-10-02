@@ -61,6 +61,7 @@ export type {
   Document,
   StyleRuleId,
   IslandId,
+  IslandModuleUse,
   PageMeta,
   ProvenanceContributor,
   OutputProvenance,

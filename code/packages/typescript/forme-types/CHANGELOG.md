@@ -12,6 +12,8 @@
   input behind a rendered output. `RenderedPage` now accepts revision-aware
   provenance while preserving the legacy single-source producer shape during
   migration; the kind descriptor advances compatibly to `1.1`.
+- `AssetRole` now includes `script`, and `RenderedPage.islandModules` pairs
+  exact `IslandId` usage with reviewed module identity and SHA-256 bindings.
 
 ## 0.1.0 — 2026-05-14
 

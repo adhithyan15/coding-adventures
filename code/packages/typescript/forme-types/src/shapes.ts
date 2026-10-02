@@ -40,6 +40,7 @@ export type AssetRole =
   | "video"
   | "audio"
   | "font"
+  | "script"
   | "embed"
   | "binary";
 
@@ -243,6 +244,17 @@ export type StyleRuleId = string & { readonly __brand: "StyleRuleId" };
 /** Branded ID for an interactivity island, before bundling. */
 export type IslandId = string & { readonly __brand: "IslandId" };
 
+/** One exact executable asset selected for a document-local island. */
+export interface IslandModuleUse {
+  readonly island: IslandId;
+  readonly asset: LogicalId;
+  /** Reviewed package whose named export owns this executable asset. */
+  readonly packageName: string;
+  readonly export: string;
+  /** Lowercase SHA-256 of the exact executable bytes approved by the product. */
+  readonly sha256: string;
+}
+
 /**
  * Per-page metadata used by the renderer to populate <head> tags and
  * by feed/sitemap stages to know what to syndicate.
@@ -288,6 +300,12 @@ export interface RenderedPageFields {
   readonly html: string;
   readonly usedStyle: readonly StyleRuleId[];
   readonly usedIslands: readonly IslandId[];
+  /**
+   * Exact module assets corresponding one-for-one with `usedIslands`.
+   * Optional only for legacy static producers; an interactive page must
+   * provide the field so deploy emitters can fail closed.
+   */
+  readonly islandModules?: readonly IslandModuleUse[];
   readonly usedAssets: readonly LogicalId[];
   readonly meta: PageMeta;
 }

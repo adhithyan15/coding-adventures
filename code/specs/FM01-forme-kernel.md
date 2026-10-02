@@ -236,6 +236,7 @@ export type AssetRole =
   | "video"
   | "audio"
   | "font"
+  | "script"
   | "embed"
   | "binary";
 ```
@@ -401,6 +402,14 @@ export interface RenderedPageFields {
    * uses this to bundle per-island JS.
    */
   readonly usedIslands: readonly IslandId[];
+  /** Exact reviewed, content-bound script asset for each used island, in the same order. */
+  readonly islandModules?: readonly {
+    readonly island: IslandId;
+    readonly asset: LogicalId;
+    readonly packageName: string;
+    readonly export: string;
+    readonly sha256: string;
+  }[];
   /** Asset IDs referenced by this page. */
   readonly usedAssets: readonly LogicalId[];
   /** Meta tags (title, description, OG, etc.). */
