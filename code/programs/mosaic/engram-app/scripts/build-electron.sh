@@ -198,11 +198,14 @@ if [[ "$RUN_PACKAGE" -eq 1 ]]; then
     echo "error: no app.asar in the packaged output; cannot verify the engine" >&2
     exit 1
   fi
-  ENGINES="$(npx --no-install @electron/asar list "$ASAR" | grep -c 'engram_engine\.wasm' || true)"
+  # Run from inside the project: `npx --no-install` finds the pinned
+  # @electron/asar only in the project's own node_modules, and from anywhere
+  # else it refuses rather than downloading.
+  ENGINES="$( (cd "$APP" && npx --no-install @electron/asar list "$ASAR") | grep -c 'engram_engine\.wasm' || true)"
   if [[ "$ENGINES" -lt 2 ]]; then
     echo "error: expected the engine in both dist/ and electron/, found $ENGINES copy/copies in $ASAR" >&2
     echo "       the app would launch and then fail to import a deck" >&2
-    npx --no-install @electron/asar list "$ASAR" | grep -v '^/node_modules' >&2
+    (cd "$APP" && npx --no-install @electron/asar list "$ASAR") | grep -v '^/node_modules' >&2
     exit 1
   fi
   echo "  engine verified inside app.asar ($ENGINES copies)"
