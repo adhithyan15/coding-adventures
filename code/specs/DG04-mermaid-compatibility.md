@@ -544,10 +544,12 @@ until it resolves against the final label color. Auto, pixel, and percentage und
 backend-neutral geometry path. Normal, unitless,
 percentage, and pixel line heights flow through the same text layout path.
 Pixel and percentage first-line text indents likewise adjust the backend-neutral
-label line box before glyph shaping. Normal, nowrap, pre, pre-wrap, and pre-line
-white-space modes control whitespace collapsing and native line wrapping.
-Auto, left/start, center, and right/end last-line alignment overrides flow into
-backend-neutral line positioning while unsupported justification remains rejected.
+label line box before glyph shaping. Normal, nowrap, pre, pre-wrap, pre-line,
+and break-spaces white-space modes control collapsing, preservation, and native
+line wrapping. Break-spaces keeps every ASCII separator and exposes each one as
+a backend-neutral wrap opportunity. Auto, left/start, center, right/end, and
+justify last-line alignment overrides flow into backend-neutral line positioning
+and glyph spacing.
 Normal, break-word, and anywhere overflow wrapping preserve ordinary Unicode
 line breaks and optionally split oversized words at grapheme boundaries.
 Normal, break-all, and keep-all word-breaking modes respectively preserve

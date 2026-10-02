@@ -4621,6 +4621,7 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                 "pre" => diagram_ir::TreemapWhiteSpace::Pre,
                 "pre-wrap" => diagram_ir::TreemapWhiteSpace::PreWrap,
                 "pre-line" => diagram_ir::TreemapWhiteSpace::PreLine,
+                "break-spaces" => diagram_ir::TreemapWhiteSpace::BreakSpaces,
                 _ => return Err(token_error(token, "unsupported treemap white-space")),
             }),
             "overflow-wrap" => style.overflow_wrap = Some(match value.to_ascii_lowercase().as_str() {
@@ -14631,13 +14632,14 @@ B//-A: reverse stick top
             ("pre", diagram_ir::TreemapWhiteSpace::Pre),
             ("pre-wrap", diagram_ir::TreemapWhiteSpace::PreWrap),
             ("pre-line", diagram_ir::TreemapWhiteSpace::PreLine),
+            ("break-spaces", diagram_ir::TreemapWhiteSpace::BreakSpaces),
         ] {
             let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent white-space:{value}");
             let diagram = parse_treemap(&source).expect("supported white-space mode must parse");
             assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.white_space), Some(expected));
         }
         assert!(parse_treemap(
-            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent white-space:break-spaces",
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent white-space:collapse",
         ).is_err());
     }
 

@@ -252,6 +252,7 @@ where
                     text_overflow(frame.node),
                     text_wraps(frame.node, tc.wrap),
                     text_wrap_style(frame.node),
+                    text_break_spaces(frame.node),
                     text_justifies(frame.node),
                     direction,
                     options,
@@ -542,6 +543,10 @@ fn text_wrap_style(node: &PositionedNode) -> TextWrapStyle {
         Some(ExtValue::Str(value)) if value == "pretty" => TextWrapStyle::Pretty,
         _ => TextWrapStyle::Auto,
     }
+}
+
+fn text_break_spaces(node: &PositionedNode) -> bool {
+    matches!(node.ext.get("text.break-spaces"), Some(ExtValue::Bool(true)))
 }
 
 fn text_justifies(node: &PositionedNode) -> bool {
@@ -1321,6 +1326,7 @@ fn emit_text_content<S, M, R>(
     text_overflow: Option<TextOverflow>,
     wrap: bool,
     wrap_style: TextWrapStyle,
+    break_spaces: bool,
     justify: bool,
     direction: BaseDirection,
     options: &LayoutToPaintOptions<'_, S, M, R>,
@@ -1379,6 +1385,7 @@ fn emit_text_content<S, M, R>(
                 word_break,
                 line_break,
                 wrap_style,
+                break_spaces,
                 direction,
             )
         } else {
@@ -1725,6 +1732,7 @@ fn wrap_line<S: TextShaper>(
     word_break: TextWordBreak,
     line_break: TextLineBreak,
     wrap_style: TextWrapStyle,
+    break_spaces: bool,
     direction: BaseDirection,
 ) -> Vec<String> {
     if segment.is_empty() {
@@ -1732,6 +1740,11 @@ fn wrap_line<S: TextShaper>(
     }
     if max_width <= 0.0 {
         return vec![segment.to_string()];
+    }
+    if break_spaces {
+        return wrap_preserved_spaces(
+            shaper, handle, segment, size, max_width, letter_spacing, word_spacing, direction,
+        );
     }
     if word_break == TextWordBreak::BreakAll || line_break == TextLineBreak::Anywhere {
         return break_line_anywhere(
@@ -1805,6 +1818,7 @@ fn wrap_line<S: TextShaper>(
             word_break,
             line_break,
             TextWrapStyle::Auto,
+            false,
             direction,
         );
         if balanced.len() == lines.len() {
@@ -1839,6 +1853,38 @@ fn wrap_line<S: TextShaper>(
     lines.into_iter().flat_map(|line| break_line_anywhere(
         shaper, handle, &line, size, max_width, letter_spacing, word_spacing, direction,
     )).collect()
+}
+
+#[allow(clippy::too_many_arguments)]
+fn wrap_preserved_spaces<S: TextShaper>(
+    shaper: &S,
+    handle: &S::Handle,
+    segment: &str,
+    size: f32,
+    max_width: f64,
+    letter_spacing: f64,
+    word_spacing: f64,
+    direction: BaseDirection,
+) -> Vec<String> {
+    let measure = |value: &str| shape_visual_line(
+        shaper, handle, value, size, word_spacing, direction,
+    ).map(|shaped| shaped_advance(&shaped, letter_spacing)).unwrap_or(max_width);
+    if measure(segment) <= max_width {
+        return vec![segment.to_string()];
+    }
+    let mut lines = Vec::new();
+    let mut current = String::new();
+    for piece in segment.split_inclusive(' ') {
+        let candidate = format!("{current}{piece}");
+        if !current.is_empty() && measure(&candidate) > max_width {
+            lines.push(std::mem::take(&mut current));
+        }
+        current.push_str(piece);
+    }
+    if !current.is_empty() {
+        lines.push(current);
+    }
+    lines
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -2528,6 +2574,26 @@ mod tests {
             }
             other => panic!("expected GlyphRun, got {:?}", other),
         }
+    }
+
+    #[test]
+    fn break_spaces_preserves_and_wraps_each_ascii_space() {
+        let mut leaf = positioned_leaf(text_content("A  B"), 0.0, 0.0, 24.0, 40.0);
+        leaf.ext.insert("text.break-spaces".into(), ExtValue::Bool(true));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let scene = layout_to_paint(&leaf, &make_options(&shaper, &metrics, &resolver));
+        let runs: Vec<_> = scene.instructions.iter().filter_map(|instruction| match instruction {
+            PaintInstruction::GlyphRun(run) => Some(run),
+            _ => None,
+        }).collect();
+        assert_eq!(runs.len(), 2);
+        assert_eq!(runs[0].glyphs.len(), 3);
+        assert_eq!(runs[1].glyphs.len(), 1);
+        assert_eq!(runs[0].glyphs[0].x, 0.0);
+        assert_eq!(runs[1].glyphs[0].x, 0.0);
+        assert!(runs[1].glyphs[0].y > runs[0].glyphs[0].y);
     }
 
     #[test]
