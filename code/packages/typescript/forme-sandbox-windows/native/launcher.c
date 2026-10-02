@@ -486,9 +486,14 @@ static int verify_acl_tree(
             CloseHandle(handle);
             return -1;
         }
-        wcscpy(pattern, path);
-        if (length > 0 && path[length - 1] != L'\\' && path[length - 1] != L'/') wcscat(pattern, L"\\");
-        wcscat(pattern, L"*");
+        if (wcscpy_s(pattern, length + 3, path) != 0
+                || (length > 0 && path[length - 1] != L'\\' && path[length - 1] != L'/'
+                    && wcscat_s(pattern, length + 3, L"\\") != 0)
+                || wcscat_s(pattern, length + 3, L"*") != 0) {
+            free(pattern);
+            CloseHandle(handle);
+            return -1;
+        }
         WIN32_FIND_DATAW found;
         HANDLE search = FindFirstFileW(pattern, &found);
         free(pattern);
@@ -506,9 +511,14 @@ static int verify_acl_tree(
                     valid = 0;
                     break;
                 }
-                wcscpy(child, path);
-                if (length > 0 && path[length - 1] != L'\\' && path[length - 1] != L'/') wcscat(child, L"\\");
-                wcscat(child, found.cFileName);
+                if (wcscpy_s(child, child_size, path) != 0
+                        || (length > 0 && path[length - 1] != L'\\' && path[length - 1] != L'/'
+                            && wcscat_s(child, child_size, L"\\") != 0)
+                        || wcscat_s(child, child_size, found.cFileName) != 0) {
+                    free(child);
+                    valid = 0;
+                    break;
+                }
                 if (verify_acl_tree(child, 1, 0, replacement_only,
                         depth + 1, entries, user, administrators, system_sid,
                         trusted_installer) != 0) valid = 0;
