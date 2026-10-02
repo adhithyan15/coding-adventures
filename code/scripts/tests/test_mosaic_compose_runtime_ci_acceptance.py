@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import re
 import subprocess
 import sys
 import tempfile
@@ -258,6 +259,25 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 git("commit", "-q", "-am", f"change {path}")
                 self.assertTrue(MODULE.workflow_changed(repo, "main"), path)
                 git("reset", "-q", "--hard", "HEAD~1")
+
+    def test_every_script_the_android_steps_call_is_a_lane_script(self) -> None:
+        """A script only the Trestle Android steps call belongs to no package,
+        so the lane reruns on a change to it only if CI_SCRIPT_PATHS lists it.
+        Read the scripts the steps actually call, so a new one cannot be
+        forgotten the way verify-gradle-wrapper-jar.sh first was."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        called: set[str] = set()
+        for name in (
+            "Build Trestle for Android (UI89 step 4)",
+            "Build Trestle for Android with its Rust runtime (UI89 step 5)",
+            "Launch Trestle on an Android emulator (UI89 step 5)",
+        ):
+            start = workflow.index(f"- name: {name}")
+            block = workflow[start : workflow.index("\n      - name:", start)]
+            called.update(re.findall(r"code/scripts/[\w./-]+\.(?:sh|py|ps1)\b", block))
+        self.assertTrue(called)
+        self.assertEqual(sorted(called - set(MODULE.CI_SCRIPT_PATHS)), [])
 
     def test_task_app_requires_acceptance(self) -> None:
         self.assertTrue(

@@ -47,6 +47,9 @@ CI_SCRIPT_PATHS = (
     "code/scripts/build-mosaic-android-libs.sh",
     "code/scripts/start-mosaic-android-emulator.sh",
     "code/scripts/mosaic-android-emulator-gate.sh",
+    # Checks the generated gradle-wrapper.jar against Gradle's published
+    # checksum before either Trestle build runs ./gradlew.
+    "code/scripts/verify-gradle-wrapper-jar.sh",
 )
 
 
