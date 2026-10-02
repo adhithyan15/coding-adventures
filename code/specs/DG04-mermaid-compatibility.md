@@ -548,6 +548,8 @@ label line box before glyph shaping. Normal, nowrap, pre, pre-wrap, and pre-line
 white-space modes control whitespace collapsing and native line wrapping.
 Normal and positive or negative pixel/em letter spacing adjusts shaped glyph
 positions and line measurement through backend-neutral PaintInstructions.
+Normal and positive or negative pixel/em word spacing likewise adjusts ASCII
+word-separator advances, line measurement, wrapping, and alignment before paint.
 Left-to-right and right-to-left class directions select the corresponding
 Unicode text-flow analysis and native shaping direction before glyph lowering.
 Single colored text shadows with pixel offsets and optional blur lower to
