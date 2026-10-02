@@ -1,0 +1,21 @@
+{
+  "chapter": 143,
+  "title": "A connected A2 message",
+  "label": "ch:ur-a-connected-a2-message",
+  "canDo": "I can plan and write a connected 70–90 word Urdu message about a familiar day for a named reader and purpose.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "UR-W11-a2-connected-composition",
+    "kind": "production",
+    "summary": "Complete chapter 143 by writing a model-free 70–90 word connected Urdu message for a named reader and practical purpose.",
+    "assesses": [
+      "UR-LEX-AUR",
+      "UR-LEX-LEKIN",
+      "UR-LEX-KYUNKI",
+      "UR-LEX-C76-TIME76-05",
+      "UR-LEX-C50-VERBS50-04"
+    ]
+  }
+}
