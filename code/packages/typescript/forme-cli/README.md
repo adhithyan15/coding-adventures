@@ -72,6 +72,12 @@ project.
   oversized trees, changing file identities, and unsafe install roots are
   rejected. Windows remains fail-closed until the runtime-composition milestone
   supplies its native install-root ACL verifier.
+- Configs containing plugin `StageRef`s discover only the current project's
+  installed `forme-plugins/` root, load its manifest-bound grants, and launch
+  lazily through the current platform's native sandbox. Node uses the current
+  trusted executable; other language runtimes remain unavailable unless an
+  absolute executable and containing runtime root are supplied by the product
+  adapter. Direct-import-only configs create no plugin host or subprocess.
 - `check` performs config-schema, capability, wiring, kind, and output
   validation without invoking a stage or writing output.
 - `clean` validates the pipeline, then removes its configured cache directory
@@ -102,9 +108,8 @@ on exception stacks for expected failures.
 
 TypeScript and JavaScript configs are executable modules. The CLI treats the
 selected project config as trusted code, matching FM03's direct-import host; it
-does not claim to sandbox config evaluation. Installed-plugin execution remains
-the next Forme milestone; this command does not imply that the project runtime
-has loaded the plugin yet.
+does not claim to sandbox config evaluation. Installed plugin stages are
+separate verified snapshots and always require an attested native sandbox.
 
 ## Repository bootstrap helper
 

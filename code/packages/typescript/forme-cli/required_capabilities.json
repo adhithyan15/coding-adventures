@@ -6,8 +6,8 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "packaged CLI specification, project Forme config/content, deploy inputs, user plugin trust store, and one explicitly selected local plugin package",
-      "justification": "Loads the declarative CLI Builder specification, selected project/deploy inputs, and bounded local plugin snapshot plus persisted trust decisions."
+      "target": "packaged CLI specification, project Forme config/content, deploy inputs, user plugin trust store, one explicitly selected local plugin package, and installed project plugin snapshots with grants",
+      "justification": "Loads the declarative CLI Builder specification, selected project/deploy inputs, bounded local plugin snapshots, and exact manifest-bound persisted trust decisions."
     },
     {
       "category": "fs",
@@ -54,8 +54,8 @@
     {
       "category": "proc",
       "action": "exec",
-      "target": "npm install for local file dependencies",
-      "justification": "The repository-only bootstrap helper installs local file dependencies in deterministic leaf-first order."
+      "target": "npm install for local file dependencies and the native Forme sandbox supervisor plus configured plugin runtime",
+      "justification": "The repository-only bootstrap helper installs local file dependencies in deterministic leaf-first order; StageRef execution delegates verified snapshots only through an attested platform sandbox."
     },
     {
       "category": "proc",

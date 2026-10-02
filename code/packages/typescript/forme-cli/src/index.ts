@@ -14,3 +14,8 @@ export type {
   PluginInstallInvocation,
   ProductPluginInstallResult,
 } from "./install.js";
+export { createProductOrchestrator } from "./runtime.js";
+export type {
+  ProductRuntimeDependencies,
+  ProductRuntimeOptions,
+} from "./runtime.js";

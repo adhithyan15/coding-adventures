@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Compose installed plugin `StageRef`s with manifest-bound persistent grants,
+  the current platform's native sandbox factory, and lazy orchestrator-owned
+  plugin sessions. Direct-only pipelines retain their process-free path, and
+  a mixed direct/plugin product DAG runs in every supported platform gate.
 - Added `forme install <PACKAGE>` for bounded local plugin directories with
   preflighted identity/trust classification, control-safe cancellable
   per-capability review against the configured runtime roots, user trust-store

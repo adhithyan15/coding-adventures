@@ -12,8 +12,8 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "plugin.toml, selected runtime entry, and declared config schema beneath an explicit plugin root",
-      "justification": "Parses and authenticates manifests, computes entry-bound identities, and loads declared metadata after realpath containment checks."
+      "target": "plugin.toml, grants.toml, selected runtime entry, and declared config schema beneath an explicit plugin root",
+      "justification": "Parses and authenticates manifests, binds persistent grants to exact manifest hashes, computes entry-bound identities, and loads declared metadata after realpath containment checks."
     },
     {
       "category": "fs",

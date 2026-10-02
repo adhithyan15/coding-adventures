@@ -13,9 +13,7 @@ import {
   startDevServer,
   type DevServer,
 } from "@coding-adventures/forme-dev-server";
-import { filesystemCache } from "@coding-adventures/forme-cache";
 import {
-  createOrchestrator,
   type Orchestrator,
   type Pipeline,
   type RunResult,
@@ -26,10 +24,7 @@ import {
   loadTsConfig,
   type PipelineConfig,
 } from "@coding-adventures/forme-pipeline-config";
-import {
-  silentLogger,
-  type CancellationToken,
-} from "@coding-adventures/forme-stage";
+import { type CancellationToken } from "@coding-adventures/forme-stage";
 import { watchProject } from "./project-watcher.js";
 import { executeDeploy, materializeDeployInput, type DeployInvocation } from "./deploy.js";
 import {
@@ -38,6 +33,7 @@ import {
   type PluginInstallInvocation,
   type ProductPluginInstallResult,
 } from "./install.js";
+import { createProductOrchestrator } from "./runtime.js";
 
 export const EXIT_OK = 0;
 export const EXIT_BUILD_FAILED = 1;
@@ -65,7 +61,10 @@ export interface CliIO {
 
 export interface CliServices {
   loadConfig(path: string): Promise<PipelineConfig>;
-  createOrchestrator(cacheRoot: string | null): Orchestrator;
+  createOrchestrator(
+    cacheRoot: string | null,
+    runtime: { readonly config: PipelineConfig; readonly projectRoot: string },
+  ): Orchestrator | Promise<Orchestrator>;
   startDevServer(options: { readonly port: number }): Promise<DevServer>;
   watchProject(root: string, ignoredPaths: readonly string[]): AsyncIterable<unknown>;
   installPlugin(invocation: PluginInstallInvocation): Promise<ProductPluginInstallResult>;
@@ -101,9 +100,9 @@ const defaultIO: CliIO = {
 
 const defaultServices: CliServices = {
   loadConfig: path => loadTsConfig(path),
-  createOrchestrator: cacheRoot => createOrchestrator({
-    logger: silentLogger(),
-    ...(cacheRoot === null ? {} : { cache: filesystemCache(cacheRoot) }),
+  createOrchestrator: (cacheRoot, runtime) => createProductOrchestrator({
+    ...runtime,
+    cacheRoot,
   }),
   startDevServer: options => startDevServer(options),
   watchProject: (root, ignoredPaths) => watchProject(root, ignoredPaths),
@@ -225,7 +224,10 @@ export async function run(
       };
     }
 
-    orchestrator = services.createOrchestrator(projectCacheRoot(config, projectRoot));
+    orchestrator = await services.createOrchestrator(
+      projectCacheRoot(config, projectRoot),
+      { config, projectRoot },
+    );
     const pipeline = await orchestrator.buildPipeline(config);
 
     if (args.command === "watch") {
