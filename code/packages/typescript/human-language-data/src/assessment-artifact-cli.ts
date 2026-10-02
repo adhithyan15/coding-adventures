@@ -200,5 +200,5 @@ export function runAssessmentArtifactCli(
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
-  process.exit(runAssessmentArtifactCli());
+  process.exitCode = runAssessmentArtifactCli();
 }

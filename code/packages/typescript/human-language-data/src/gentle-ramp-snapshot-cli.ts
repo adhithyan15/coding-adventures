@@ -52,5 +52,5 @@ export function runGentleRampSnapshots(
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
-  process.exit(runGentleRampSnapshots());
+  process.exitCode = runGentleRampSnapshots();
 }

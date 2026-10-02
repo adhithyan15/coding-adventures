@@ -608,5 +608,5 @@ export function runSpanishA1MockAudit(
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
-  process.exit(runSpanishA1MockAudit());
+  process.exitCode = runSpanishA1MockAudit();
 }
