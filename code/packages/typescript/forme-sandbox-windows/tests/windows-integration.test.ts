@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { execFile } from "node:child_process";
 import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
-import { tmpdir } from "node:os";
+import { homedir, tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
@@ -75,7 +75,10 @@ async function exitWithStderr(child: Awaited<ReturnType<ReturnType<typeof create
 
 describe.skipIf(process.platform !== "win32")("Windows native sandbox", () => {
   it("accepts an owned tree and rejects reparse points or untrusted writers", async () => {
-    const root = await mkdtemp(join(tmpdir(), "forme-windows-acl-"));
+    // Hosted-runner temp roots are intentionally shared and therefore fail
+    // the verifier's ancestor replacement-authority check. The user profile
+    // gives this positive fixture the same trusted ancestry required in use.
+    const root = await mkdtemp(join(homedir(), "forme-windows-acl-"));
     roots.push(root);
     await mkdir(join(root, "plugin"));
     await writeFile(join(root, "plugin", "entry.mjs"), "process.exit(0);\n");
