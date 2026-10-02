@@ -90,6 +90,13 @@ struct MosaicSystemFileDialogs: MosaicFileDialogs {
     panel.allowsMultipleSelection = false
     let types = extensions.compactMap { UTType(filenameExtension: $0) }
     if !types.isEmpty { panel.allowedContentTypes = types }
+    // Images only: open in Pictures, as a photo picker should. Anything else
+    // keeps the panel's own default start.
+    if mosaicOnlyImages(extensions),
+      let pictures = FileManager.default.urls(for: .picturesDirectory, in: .userDomainMask).first
+    {
+      panel.directoryURL = pictures
+    }
     return panel.runModal() == .OK ? panel.url : nil
     #else
     return nil
@@ -142,6 +149,25 @@ func mosaicMimeType(for url: URL) -> String {
   let fileExtension = url.pathExtension.lowercased()
   return mosaicMimeExtensions.first { $0.extensions.contains(fileExtension) }?.mime
     ?? "application/octet-stream"
+}
+
+/// Whether every extension the open panel filters on is an image's, so it can
+/// start in the Pictures folder (UI59 §2: a caller that wants "pictures only"
+/// accepts image types, and the panel's start location follows). No filter at
+/// all is not "only images": it means any file, and the panel starts where it
+/// always has. The same rule as the XAML, Qt and Compose libraries.
+///
+///     accept                         extensions        start
+///     ["image/png", "image/jpeg"]    png jpg jpeg      Pictures
+///     ["image/png", "text/plain"]    png txt           the panel's default
+///     []                             (none)            the panel's default
+func mosaicOnlyImages(_ extensions: [String]) -> Bool {
+  guard !extensions.isEmpty else { return false }
+  return extensions.allSatisfy { fileExtension in
+    mosaicMimeExtensions.contains { row in
+      row.mime.hasPrefix("image/") && row.extensions.contains(fileExtension)
+    }
+  }
 }
 
 private func mosaicPayloadDictionary(_ payload: Any) -> [String: Any] {
