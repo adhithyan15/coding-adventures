@@ -1,0 +1,11 @@
+{
+  "id": "LA-C260-erubesco",
+  "pathSegment": "LA-PATH-260-ACT260",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-260-ACT260",
+      "order": 4
+    }
+  ]
+}

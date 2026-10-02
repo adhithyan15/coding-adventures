@@ -1,0 +1,11 @@
+{
+  "id": "LA-C271-bellum",
+  "pathSegment": "LA-PATH-271-RES271",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-271-RES271",
+      "order": 4
+    }
+  ]
+}

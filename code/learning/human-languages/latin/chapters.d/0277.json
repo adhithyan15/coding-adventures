@@ -1,0 +1,19 @@
+{
+  "chapter": 277,
+  "title": "Helmet, Spear, Bow, Arrow, Trumpet",
+  "label": "ch:la-helmet-spear-bow-arrow-trumpet",
+  "canDo": "I can say a helmet, a spear, a bow, an arrow and a trumpet.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C277-tuba",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 277: I can say a helmet, a spear, a bow, an arrow and a trumpet.",
+    "assesses": [
+      "LA-LEX-C277-RES277-03",
+      "LA-LEX-C277-RES277-04",
+      "LA-LEX-C277-RES277-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C259-permuto",
+  "pathSegment": "LA-PATH-259-ACT259",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-259-ACT259",
+      "order": 4
+    }
+  ]
+}

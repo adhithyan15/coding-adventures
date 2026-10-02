@@ -1,0 +1,19 @@
+{
+  "chapter": 275,
+  "title": "Silk, Mud, Dust, Smoke, Ash",
+  "label": "ch:la-silk-mud-dust-smoke-ash",
+  "canDo": "I can say silk, mud, dust, smoke and ash.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C275-cinis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 275: I can say silk, mud, dust, smoke and ash.",
+    "assesses": [
+      "LA-LEX-C275-RES275-03",
+      "LA-LEX-C275-RES275-04",
+      "LA-LEX-C275-RES275-05"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:9a9c5b12abc17d46",
+  "lessonIds": [
+    "LA-C280-turris",
+    "LA-C280-columna",
+    "LA-C280-moenia",
+    "LA-C280-fossa",
+    "LA-C280-vallum",
+    "LA-R280-first-pass-words-from-chapters-273-276",
+    "LA-R280-second-pass-words-from-chapters-277-280"
+  ],
+  "tex": "latin/book/chapters/ch280-tower-column-city-walls-ditch-rampart.tex"
+}

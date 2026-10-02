@@ -1,0 +1,11 @@
+{
+  "id": "LA-C272-legatus",
+  "pathSegment": "LA-PATH-272-RES272",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-272-RES272",
+      "order": 3
+    }
+  ]
+}

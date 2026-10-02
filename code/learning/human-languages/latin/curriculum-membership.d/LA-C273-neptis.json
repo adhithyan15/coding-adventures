@@ -1,0 +1,11 @@
+{
+  "id": "LA-C273-neptis",
+  "pathSegment": "LA-PATH-273-RES273",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-273-RES273",
+      "order": 4
+    }
+  ]
+}

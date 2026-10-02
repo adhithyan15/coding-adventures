@@ -1,0 +1,19 @@
+{
+  "chapter": 262,
+  "title": "Trust, Courage, Shame, Envy, Boredom",
+  "label": "ch:la-trust-courage-shame-envy-boredom",
+  "canDo": "I can say trust, courage, shame, envy and boredom.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "LA-C262-taedium",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 262: I can say trust, courage, shame, envy and boredom.",
+    "assesses": [
+      "LA-LEX-C262-VALE262-03",
+      "LA-LEX-C262-VALE262-04",
+      "LA-LEX-C262-VALE262-05"
+    ]
+  }
+}

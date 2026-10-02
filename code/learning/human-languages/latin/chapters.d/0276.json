@@ -1,0 +1,19 @@
+{
+  "chapter": 276,
+  "title": "Wasp, Gnat, Flea, Worm, Tortoise",
+  "label": "ch:la-wasp-gnat-flea-worm-tortoise",
+  "canDo": "I can say a wasp, a gnat, a flea, a worm and a tortoise.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C276-testudo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 276: I can say a wasp, a gnat, a flea, a worm and a tortoise.",
+    "assesses": [
+      "LA-LEX-C276-RES276-03",
+      "LA-LEX-C276-RES276-04",
+      "LA-LEX-C276-RES276-05"
+    ]
+  }
+}

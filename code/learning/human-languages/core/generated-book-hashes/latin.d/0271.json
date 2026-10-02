@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:8616659184fe1ea0",
+  "lessonIds": [
+    "LA-C271-populus",
+    "LA-C271-civitas",
+    "LA-C271-patria",
+    "LA-C271-hostis",
+    "LA-C271-bellum"
+  ],
+  "tex": "latin/book/chapters/ch271-people-state-homeland-enemy-war.tex"
+}

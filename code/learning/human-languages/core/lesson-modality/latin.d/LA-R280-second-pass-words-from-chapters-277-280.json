@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R280-second-pass-words-from-chapters-277-280",
+    "language": "latin",
+    "chapter": 280,
+    "sequence": 15330,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:028ae0e8b0094cd9"
+  },
+  "findings": []
+}

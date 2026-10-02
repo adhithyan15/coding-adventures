@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C270-circus",
+    "language": "latin",
+    "chapter": 270,
+    "sequence": 14580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94f75a804ab11fa3"
+  },
+  "findings": []
+}

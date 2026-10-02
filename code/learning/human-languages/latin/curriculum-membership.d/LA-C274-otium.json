@@ -1,0 +1,11 @@
+{
+  "id": "LA-C274-otium",
+  "pathSegment": "LA-PATH-274-RES274",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-274-RES274",
+      "order": 0
+    }
+  ]
+}

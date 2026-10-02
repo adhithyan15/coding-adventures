@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:1f20653050c468bf",
+  "lessonIds": [
+    "LA-C274-otium",
+    "LA-C274-negotium",
+    "LA-C274-lucrum",
+    "LA-C274-damnum",
+    "LA-C274-debitum"
+  ],
+  "tex": "latin/book/chapters/ch274-leisure-business-profit-loss-debt.tex"
+}

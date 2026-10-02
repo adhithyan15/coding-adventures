@@ -1,0 +1,11 @@
+{
+  "id": "LA-C261-lugeo",
+  "pathSegment": "LA-PATH-261-ACT261",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-261-ACT261",
+      "order": 3
+    }
+  ]
+}

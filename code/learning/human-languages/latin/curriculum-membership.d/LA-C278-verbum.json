@@ -1,0 +1,11 @@
+{
+  "id": "LA-C278-verbum",
+  "pathSegment": "LA-PATH-278-RES278",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-278-RES278",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C277-hasta",
+    "language": "latin",
+    "chapter": 277,
+    "sequence": 15130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:033387748ed0175b"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:0400583cc9be54a0",
+  "lessonIds": [
+    "LA-C255-teneo",
+    "LA-C255-rumpo",
+    "LA-C255-calefacio",
+    "LA-C255-impleo",
+    "LA-C255-metior"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch255.txt",
+  "json": "latin/narration/ch255.json",
+  "textHash": "fnv1a64:7b97514a65e9271e",
+  "jsonHash": "fnv1a64:51798f8b7b668088",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C266-iustus",
+  "pathSegment": "LA-PATH-266-QUAL266",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-266-QUAL266",
+      "order": 3
+    }
+  ]
+}

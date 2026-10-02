@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:d2d4c77600623cad",
+  "lessonIds": [
+    "LA-C264-nusquam",
+    "LA-C264-undique",
+    "LA-C264-passim",
+    "LA-C264-sursum",
+    "LA-C264-deorsum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch264.txt",
+  "json": "latin/narration/ch264.json",
+  "textHash": "fnv1a64:ab34216aee7fe839",
+  "jsonHash": "fnv1a64:380fb5d30a604d51",
+  "findings": []
+}

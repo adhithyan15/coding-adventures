@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:216de5e6ceedac50",
+  "lessonIds": [
+    "LA-C266-mirus",
+    "LA-C266-diversus",
+    "LA-C266-similis",
+    "LA-C266-iustus",
+    "LA-C266-iniustus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch266.txt",
+  "json": "latin/narration/ch266.json",
+  "textHash": "fnv1a64:d100be584cf91e8e",
+  "jsonHash": "fnv1a64:2fc4c2a096f88481",
+  "findings": []
+}

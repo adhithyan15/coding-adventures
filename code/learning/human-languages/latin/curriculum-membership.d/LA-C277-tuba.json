@@ -1,0 +1,11 @@
+{
+  "id": "LA-C277-tuba",
+  "pathSegment": "LA-PATH-277-RES277",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-277-RES277",
+      "order": 4
+    }
+  ]
+}

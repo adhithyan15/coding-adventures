@@ -1,0 +1,11 @@
+{
+  "id": "LA-C258-pello",
+  "pathSegment": "LA-PATH-258-ACT258",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-258-ACT258",
+      "order": 1
+    }
+  ]
+}

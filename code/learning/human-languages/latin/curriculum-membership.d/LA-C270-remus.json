@@ -1,0 +1,11 @@
+{
+  "id": "LA-C270-remus",
+  "pathSegment": "LA-PATH-270-RES270",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-270-RES270",
+      "order": 4
+    }
+  ]
+}

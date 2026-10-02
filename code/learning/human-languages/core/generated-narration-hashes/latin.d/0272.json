@@ -1,0 +1,21 @@
+{
+  "language": "latin",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:58586badc2ed4795",
+  "lessonIds": [
+    "LA-C272-lanius",
+    "LA-C272-caupo",
+    "LA-C272-argentarius",
+    "LA-C272-legatus",
+    "LA-C272-scriba",
+    "LA-R272-first-pass-words-from-chapters-264-267",
+    "LA-R272-second-pass-words-from-chapters-268-272"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "latin/narration/ch272.txt",
+  "json": "latin/narration/ch272.json",
+  "textHash": "fnv1a64:a0bab0a2f8e14e46",
+  "jsonHash": "fnv1a64:bb2530360de5e113",
+  "findings": []
+}

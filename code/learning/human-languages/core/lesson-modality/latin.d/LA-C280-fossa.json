@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C280-fossa",
+    "language": "latin",
+    "chapter": 280,
+    "sequence": 15300,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:238c2f5e7a91e3e3"
+  },
+  "findings": []
+}

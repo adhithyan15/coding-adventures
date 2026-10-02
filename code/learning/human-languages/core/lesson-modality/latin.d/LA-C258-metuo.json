@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C258-metuo",
+    "language": "latin",
+    "chapter": 258,
+    "sequence": 13830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f121775282aca208"
+  },
+  "findings": []
+}

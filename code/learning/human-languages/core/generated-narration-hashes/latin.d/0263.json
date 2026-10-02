@@ -1,0 +1,21 @@
+{
+  "language": "latin",
+  "chapter": 263,
+  "sourceHash": "fnv1a64:0d5aeb29ffdd0595",
+  "lessonIds": [
+    "LA-C263-postridie",
+    "LA-C263-interea",
+    "LA-C263-aliquando",
+    "LA-C263-diu",
+    "LA-C263-brevi",
+    "LA-R263-first-pass-words-from-chapters-255-258",
+    "LA-R263-second-pass-words-from-chapters-259-263"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "latin/narration/ch263.txt",
+  "json": "latin/narration/ch263.json",
+  "textHash": "fnv1a64:37ac1ce2d1238524",
+  "jsonHash": "fnv1a64:261c815408bcfd37",
+  "findings": []
+}

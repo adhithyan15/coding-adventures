@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:b95ab07dcb7f574f",
+  "lessonIds": [
+    "LA-C270-circus",
+    "LA-C270-basilica",
+    "LA-C270-curia",
+    "LA-C270-ancora",
+    "LA-C270-remus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch270.txt",
+  "json": "latin/narration/ch270.json",
+  "textHash": "fnv1a64:1c1b25e18af5a4bb",
+  "jsonHash": "fnv1a64:3cef03824de11d16",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C277-sagitta",
+  "pathSegment": "LA-PATH-277-RES277",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-277-RES277",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 268,
+  "title": "Second of two, Suitable, Fit, Ready, Facing",
+  "label": "ch:la-second-of-two-suitable-fit-ready-facing",
+  "canDo": "I can say the second of two, suitable, fit, ready and facing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-C268-adversus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 268: I can say the second of two, suitable, fit, ready and facing.",
+    "assesses": [
+      "LA-LEX-C268-QUAL268-03",
+      "LA-LEX-C268-QUAL268-04",
+      "LA-LEX-C268-QUAL268-05"
+    ]
+  }
+}

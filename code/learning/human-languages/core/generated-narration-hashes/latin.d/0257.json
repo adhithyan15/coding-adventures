@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 257,
+  "sourceHash": "fnv1a64:25dd28a741f9d393",
+  "lessonIds": [
+    "LA-C257-mereor",
+    "LA-C257-emendo",
+    "LA-C257-offero",
+    "LA-C257-observo",
+    "LA-C257-spatior"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch257.txt",
+  "json": "latin/narration/ch257.json",
+  "textHash": "fnv1a64:3df3fc04ddacba07",
+  "jsonHash": "fnv1a64:3890491856e3c786",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C278-nomen",
+  "pathSegment": "LA-PATH-278-RES278",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-278-RES278",
+      "order": 4
+    }
+  ]
+}

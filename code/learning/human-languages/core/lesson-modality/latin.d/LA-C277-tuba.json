@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C277-tuba",
+    "language": "latin",
+    "chapter": 277,
+    "sequence": 15160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e32772d8de860b7d"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C274-debitum",
+    "language": "latin",
+    "chapter": 274,
+    "sequence": 15010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52d75b6852deb3b1"
+  },
+  "findings": []
+}

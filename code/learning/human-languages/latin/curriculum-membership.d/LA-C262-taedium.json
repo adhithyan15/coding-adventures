@@ -1,0 +1,11 @@
+{
+  "id": "LA-C262-taedium",
+  "pathSegment": "LA-PATH-262-VALE262",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-262-VALE262",
+      "order": 4
+    }
+  ]
+}

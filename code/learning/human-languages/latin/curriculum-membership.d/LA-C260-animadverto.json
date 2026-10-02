@@ -1,0 +1,11 @@
+{
+  "id": "LA-C260-animadverto",
+  "pathSegment": "LA-PATH-260-ACT260",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-260-ACT260",
+      "order": 3
+    }
+  ]
+}

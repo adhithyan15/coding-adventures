@@ -1,0 +1,19 @@
+{
+  "chapter": 278,
+  "title": "Book-roll, Page, Letter of the alphabet, Word, Name",
+  "label": "ch:la-book-roll-page-letter-of-the-alphabet-word-name",
+  "canDo": "I can say a book-roll, a page, a letter of the alphabet, a word and a name.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C278-nomen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 278: I can say a book-roll, a page, a letter of the alphabet, a word and a name.",
+    "assesses": [
+      "LA-LEX-C278-RES278-03",
+      "LA-LEX-C278-RES278-04",
+      "LA-LEX-C278-RES278-05"
+    ]
+  }
+}

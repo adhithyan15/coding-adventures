@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C262-virtus",
+    "language": "latin",
+    "chapter": 262,
+    "sequence": 14000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d32a435b25b3e7c3"
+  },
+  "findings": []
+}

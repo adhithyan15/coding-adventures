@@ -1,0 +1,11 @@
+{
+  "id": "LA-C270-curia",
+  "pathSegment": "LA-PATH-270-RES270",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-270-RES270",
+      "order": 2
+    }
+  ]
+}

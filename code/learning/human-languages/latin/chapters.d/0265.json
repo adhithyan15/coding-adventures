@@ -1,0 +1,19 @@
+{
+  "chapter": 265,
+  "title": "Even as, As, If only, On the contrary, At least",
+  "label": "ch:la-even-as-as-if-only-on-the-contrary-at-least",
+  "canDo": "I can say even as, as, if only, on the contrary and at least.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "LA-C265-saltem",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 265: I can say even as, as, if only, on the contrary and at least.",
+    "assesses": [
+      "LA-LEX-C265-CAUSA265-03",
+      "LA-LEX-C265-CAUSA265-04",
+      "LA-LEX-C265-CAUSA265-05"
+    ]
+  }
+}

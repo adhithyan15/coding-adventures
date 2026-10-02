@@ -1,0 +1,11 @@
+{
+  "id": "LA-C275-pulvis",
+  "pathSegment": "LA-PATH-275-RES275",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-275-RES275",
+      "order": 2
+    }
+  ]
+}

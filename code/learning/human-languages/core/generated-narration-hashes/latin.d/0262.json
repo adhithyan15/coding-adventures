@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:d2cbe2fac39c2a4d",
+  "lessonIds": [
+    "LA-C262-fides",
+    "LA-C262-virtus",
+    "LA-C262-pudor",
+    "LA-C262-invidia",
+    "LA-C262-taedium"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch262.txt",
+  "json": "latin/narration/ch262.json",
+  "textHash": "fnv1a64:1bc0ed45037ec426",
+  "jsonHash": "fnv1a64:550d068d89c6448b",
+  "findings": []
+}

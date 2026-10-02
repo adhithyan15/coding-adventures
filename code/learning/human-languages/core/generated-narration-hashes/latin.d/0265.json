@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:feea932bf484b700",
+  "lessonIds": [
+    "LA-C265-sicut",
+    "LA-C265-velut",
+    "LA-C265-utinam",
+    "LA-C265-immo",
+    "LA-C265-saltem"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch265.txt",
+  "json": "latin/narration/ch265.json",
+  "textHash": "fnv1a64:769af7ab3ce4c35a",
+  "jsonHash": "fnv1a64:efd9a07c63c03858",
+  "findings": []
+}

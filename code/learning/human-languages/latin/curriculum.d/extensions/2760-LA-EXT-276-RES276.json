@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-276-RES276",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a wasp, a gnat, a flea, a worm and a tortoise.",
+  "prerequisites": []
+}

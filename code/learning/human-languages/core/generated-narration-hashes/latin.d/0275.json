@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:065caf91edfa82a0",
+  "lessonIds": [
+    "LA-C275-sericum",
+    "LA-C275-lutum",
+    "LA-C275-pulvis",
+    "LA-C275-fumus",
+    "LA-C275-cinis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch275.txt",
+  "json": "latin/narration/ch275.json",
+  "textHash": "fnv1a64:74c58aff8eb9dd7f",
+  "jsonHash": "fnv1a64:db59bd356fb08ea6",
+  "findings": []
+}

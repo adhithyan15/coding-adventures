@@ -1,0 +1,11 @@
+{
+  "id": "LA-C265-utinam",
+  "pathSegment": "LA-PATH-265-CAUSA265",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-265-CAUSA265",
+      "order": 2
+    }
+  ]
+}

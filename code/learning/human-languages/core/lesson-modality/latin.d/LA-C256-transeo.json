@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C256-transeo",
+    "language": "latin",
+    "chapter": 256,
+    "sequence": 13700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:121b2d62947abc98"
+  },
+  "findings": []
+}

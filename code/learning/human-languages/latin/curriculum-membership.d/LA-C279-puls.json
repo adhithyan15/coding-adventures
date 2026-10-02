@@ -1,0 +1,11 @@
+{
+  "id": "LA-C279-puls",
+  "pathSegment": "LA-PATH-279-RES279",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-279-RES279",
+      "order": 4
+    }
+  ]
+}

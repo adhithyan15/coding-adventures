@@ -1,0 +1,11 @@
+{
+  "id": "LA-C264-passim",
+  "pathSegment": "LA-PATH-264-LOC264",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-264-LOC264",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 267,
+  "title": "Fat, Clever, Special, Former, Nearest",
+  "label": "ch:la-fat-clever-special-former-nearest",
+  "canDo": "I can say fat, clever, special, former and nearest.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-C267-proximus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 267: I can say fat, clever, special, former and nearest.",
+    "assesses": [
+      "LA-LEX-C267-QUAL267-03",
+      "LA-LEX-C267-QUAL267-04",
+      "LA-LEX-C267-QUAL267-05"
+    ]
+  }
+}

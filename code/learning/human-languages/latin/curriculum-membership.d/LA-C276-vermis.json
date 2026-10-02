@@ -1,0 +1,11 @@
+{
+  "id": "LA-C276-vermis",
+  "pathSegment": "LA-PATH-276-RES276",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-276-RES276",
+      "order": 3
+    }
+  ]
+}

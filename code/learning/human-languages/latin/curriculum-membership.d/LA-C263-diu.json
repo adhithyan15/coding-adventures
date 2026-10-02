@@ -1,0 +1,11 @@
+{
+  "id": "LA-C263-diu",
+  "pathSegment": "LA-PATH-263-TEMP263",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-263-TEMP263",
+      "order": 3
+    }
+  ]
+}

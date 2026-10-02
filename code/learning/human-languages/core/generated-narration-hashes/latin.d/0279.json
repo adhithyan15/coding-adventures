@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:fbd90bc534289f7d",
+  "lessonIds": [
+    "LA-C279-cerasum",
+    "LA-C279-prunum",
+    "LA-C279-brassica",
+    "LA-C279-porrum",
+    "LA-C279-puls"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch279.txt",
+  "json": "latin/narration/ch279.json",
+  "textHash": "fnv1a64:851f4c2c354829b4",
+  "jsonHash": "fnv1a64:20bac8f04d3109f5",
+  "findings": []
+}

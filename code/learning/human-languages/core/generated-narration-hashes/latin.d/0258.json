@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:0e913fa647d34fbd",
+  "lessonIds": [
+    "LA-C258-somnio",
+    "LA-C258-pello",
+    "LA-C258-praetereo",
+    "LA-C258-sileo",
+    "LA-C258-metuo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch258.txt",
+  "json": "latin/narration/ch258.json",
+  "textHash": "fnv1a64:1c987905e096c219",
+  "jsonHash": "fnv1a64:7d922bf5992307e2",
+  "findings": []
+}

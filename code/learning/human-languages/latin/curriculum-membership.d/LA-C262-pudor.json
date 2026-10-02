@@ -1,0 +1,11 @@
+{
+  "id": "LA-C262-pudor",
+  "pathSegment": "LA-PATH-262-VALE262",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-262-VALE262",
+      "order": 2
+    }
+  ]
+}
