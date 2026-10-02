@@ -543,8 +543,9 @@ overline, and line-through values. Decoration `currentColor` remains semantic
 until it resolves against the final label color. Auto, pixel, and percentage underline offsets follow the same
 backend-neutral geometry path. Normal, unitless,
 percentage, and pixel line heights flow through the same text layout path.
-Pixel and percentage first-line text indents likewise adjust the backend-neutral
-label line box before glyph shaping. Normal, nowrap, pre, pre-wrap, pre-line,
+Pixel and percentage text indents adjust only the first backend-neutral line box
+before glyph shaping while subsequent lines retain the authored box. Normal,
+nowrap, pre, pre-wrap, pre-line,
 and break-spaces white-space modes control collapsing, preservation, and native
 line wrapping. Break-spaces keeps every ASCII separator and exposes each one as
 a backend-neutral wrap opportunity. Auto, left/start, center, right/end, and

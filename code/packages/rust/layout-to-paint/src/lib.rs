@@ -242,6 +242,7 @@ where
                     abs_y,
                     box_w,
                     dpr,
+                    text_indent(frame.node) * dpr,
                     text_letter_spacing(frame.node) * dpr,
                     text_word_spacing(frame.node) * dpr,
                     text_align_last(frame.node),
@@ -459,6 +460,14 @@ fn node_direction(node: &PositionedNode) -> Option<BaseDirection> {
 
 fn text_letter_spacing(node: &PositionedNode) -> f64 {
     match node.ext.get("text.letter-spacing") {
+        Some(ExtValue::Float(value)) if value.is_finite() => *value,
+        Some(ExtValue::Int(value)) => *value as f64,
+        _ => 0.0,
+    }
+}
+
+fn text_indent(node: &PositionedNode) -> f64 {
+    match node.ext.get("text.indent") {
         Some(ExtValue::Float(value)) if value.is_finite() => *value,
         Some(ExtValue::Int(value)) => *value as f64,
         _ => 0.0,
@@ -1316,6 +1325,7 @@ fn emit_text_content<S, M, R>(
     box_y: f64,
     box_width: f64,
     dpr: f64,
+    text_indent: f64,
     letter_spacing: f64,
     word_spacing: f64,
     text_align_last: Option<TextAlign>,
@@ -1368,6 +1378,7 @@ fn emit_text_content<S, M, R>(
     let box_x_dpr = box_x * dpr;
     let box_y_dpr = box_y * dpr;
     let mut baseline_y = box_y_dpr + ascent_dpr;
+    let mut is_first_line = true;
 
     let fill_css = color_to_css(tc.color);
 
@@ -1393,13 +1404,17 @@ fn emit_text_content<S, M, R>(
         };
         let line_count = wrapped.len();
         for (line_index, line) in wrapped.into_iter().enumerate() {
+            let line_indent = if is_first_line { text_indent } else { 0.0 };
+            let line_box_x = box_x_dpr + line_indent;
+            let line_max_width = (max_width_dpr - line_indent).max(0.0);
+            is_first_line = false;
             let line = match text_overflow {
                 Some(mode) => fit_text_overflow(
                     options.shaper,
                     handle,
                     &line,
                     size_dpr,
-                    max_width_dpr,
+                    line_max_width,
                     letter_spacing,
                     word_spacing,
                     direction,
@@ -1421,8 +1436,8 @@ fn emit_text_content<S, M, R>(
                 } else {
                     let base_width = shape_visual_line(
                         options.shaper, handle, &line, size_dpr, word_spacing, direction,
-                    ).map(|shaped| shaped_advance(&shaped, letter_spacing)).unwrap_or(max_width_dpr);
-                    word_spacing + ((max_width_dpr - base_width) / separator_count as f64).max(0.0)
+                    ).map(|shaped| shaped_advance(&shaped, letter_spacing)).unwrap_or(line_max_width);
+                    word_spacing + ((line_max_width - base_width) / separator_count as f64).max(0.0)
                 }
             } else {
                 word_spacing
@@ -1446,9 +1461,9 @@ fn emit_text_content<S, M, R>(
                 tc.text_align
             };
             let baseline_x = match alignment {
-                TextAlign::Center => box_x_dpr + (max_width_dpr - line_advance) / 2.0,
-                TextAlign::End => box_x_dpr + max_width_dpr - line_advance,
-                TextAlign::Start => box_x_dpr,
+                TextAlign::Center => line_box_x + (line_max_width - line_advance) / 2.0,
+                TextAlign::End => line_box_x + line_max_width - line_advance,
+                TextAlign::Start => line_box_x,
             };
 
             emit_glyph_runs_from_shaped(
@@ -2618,6 +2633,23 @@ mod tests {
         assert_eq!(glyph_runs[1].glyphs.len(), 8); // "line two"
                                                    // Second line's baseline should be strictly greater than the first.
         assert!(glyph_runs[1].glyphs[0].y > glyph_runs[0].glyphs[0].y);
+    }
+
+    #[test]
+    fn text_indent_offsets_only_the_first_formatted_line() {
+        let mut content = text_content("A\nB");
+        content.text_align = TextAlign::Start;
+        let mut leaf = positioned_leaf(content, 0.0, 0.0, 100.0, 40.0);
+        leaf.ext.insert("text.indent".into(), ExtValue::Float(12.0));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let scene = layout_to_paint(&leaf, &make_options(&shaper, &metrics, &resolver));
+        let starts: Vec<_> = scene.instructions.iter().filter_map(|instruction| match instruction {
+            PaintInstruction::GlyphRun(run) => run.glyphs.first().map(|glyph| glyph.x),
+            _ => None,
+        }).collect();
+        assert_eq!(starts, vec![12.0, 0.0]);
     }
 
     #[test]
