@@ -558,6 +558,8 @@ Clip and ellipsis text-overflow modes truncate oversized labels at grapheme
 boundaries, with ellipsis insertion remaining backend-neutral until shaping.
 Wrap and nowrap text-wrap modes independently enable or suppress soft wrapping
 through semantic text metadata while retaining authored hard line breaks.
+Auto and balance text-wrap styles retain greedy wrapping or redistribute text
+across the existing line count toward even backend-neutral line widths.
 Normal and positive or negative pixel/em letter spacing adjusts shaped glyph
 positions and line measurement through backend-neutral PaintInstructions.
 Normal and positive or negative pixel/em word spacing likewise adjusts ASCII

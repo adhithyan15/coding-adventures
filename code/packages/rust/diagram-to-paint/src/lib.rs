@@ -448,6 +448,13 @@ fn treemap_text_node(
         };
         node.ext.insert("text.wrap-mode".into(), ExtValue::Str(text_wrap_mode.into()));
     }
+    if let Some(text_wrap_style) = style.and_then(|style| style.text_wrap_style) {
+        let text_wrap_style = match text_wrap_style {
+            diagram_ir::TreemapTextWrapStyle::Auto => "auto",
+            diagram_ir::TreemapTextWrapStyle::Balance => "balance",
+        };
+        node.ext.insert("text.wrap-style".into(), ExtValue::Str(text_wrap_style.into()));
+    }
     if let Some(direction) = style.and_then(|style| style.direction) {
         let value = match direction {
             diagram_ir::TreemapTextDirection::LeftToRight => "ltr",
@@ -7024,6 +7031,7 @@ mod tests {
                     line_break: None,
                     text_overflow: None,
                     text_wrap_mode: None,
+                    text_wrap_style: None,
                     letter_spacing: None,
                     word_spacing: None,
                     direction: None,
@@ -7132,6 +7140,12 @@ mod tests {
             current_color, Some(&whitespace_style),
         );
         assert_eq!(nowrap_text.ext.get("text.wrap-mode"), Some(&ExtValue::Str("nowrap".into())));
+        whitespace_style.text_wrap_style = Some(diagram_ir::TreemapTextWrapStyle::Balance);
+        let balanced_text = treemap_text_node(
+            "one two three", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(balanced_text.ext.get("text.wrap-style"), Some(&ExtValue::Str("balance".into())));
         whitespace_style.direction = Some(diagram_ir::TreemapTextDirection::RightToLeft);
         let rtl_text = treemap_text_node(
             "مرحبا", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
