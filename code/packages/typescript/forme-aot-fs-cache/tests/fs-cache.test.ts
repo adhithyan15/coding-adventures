@@ -5,7 +5,7 @@
  * afterEach.  No subprocesses, no network.
  */
 
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { createHash, randomBytes } from "node:crypto";
 import { promises as fs } from "node:fs";
 import * as os from "node:os";
@@ -203,6 +203,28 @@ describe("createFsCacheIO — atomic writes", () => {
     await io.put(k, "old", META);
     await io.put(k, "new", META);
     expect(await io.get(k)).toBe("new");
+  });
+
+  it("replaces an existing entry after the Windows rename error", async () => {
+    const io = createFsCacheIO({ cacheDir });
+    const k = key("windows-atomic-overwrite");
+    await io.put(k, "old", META);
+
+    const realRename = fs.rename.bind(fs);
+    const renameError = Object.assign(new Error("destination exists"), { code: "EEXIST" });
+    const platformSpy = vi.spyOn(process, "platform", "get").mockReturnValue("win32");
+    const renameSpy = vi.spyOn(fs, "rename")
+      .mockRejectedValueOnce(renameError)
+      .mockImplementation((from, to) => realRename(from, to));
+
+    try {
+      await io.put(k, "new", META);
+      expect(await io.get(k)).toBe("new");
+      expect(renameSpy).toHaveBeenCalledTimes(2);
+    } finally {
+      renameSpy.mockRestore();
+      platformSpy.mockRestore();
+    }
   });
 
   it("concurrent puts to the same key don't corrupt entries", async () => {
