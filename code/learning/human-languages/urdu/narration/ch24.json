@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Here, There, and Where",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:2fd0cd9069c29f9e",
+  "sourceHash": "fnv1a64:6ebb3be49bffe873",
   "lessons": [
     {
       "id": "UR-C24-is",
@@ -503,13 +503,18 @@
       "romanization": "vahāṅ",
       "gloss": "there — the last cell of the frame, and a word the reader can predict before it is shown",
       "script": "urdu-nastaliq",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-block"
       ],
-      "sourceHash": "fnv1a64:916b2da4409bdea7",
-      "notice": null,
+      "sourceHash": "fnv1a64:694b822092f5a3b9",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -649,6 +654,40 @@
         },
         {
           "index": 4,
+          "type": "writing",
+          "title": "Writing: the first question you assemble yourself",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the models above. From meaning alone, write Where is the tea? There is no word bank, romanization, or copyable sentence. Choose three familiar pieces, put them in Urdu order, and add the Urdu question mark. This first composition is untimed: finish before opening the answer key."
+            },
+            {
+              "kind": "speech",
+              "text": "Then check the thing, place word, final verb, and punctuation separately. Repair the first difference and write the whole question once more from meaning. One controlled line proves this rung, not the later timed A1 writing task."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-C24-vahan-controlled-question",
+              "prompt": "With no word bank, romanization, or copyable answer, write the Urdu question meaning: Where is the tea?",
+              "assesses": [
+                "UR-LEX-CHAI",
+                "UR-LEX-KAHAN"
+              ],
+              "responseSeconds": 40,
+              "acceptedResponses": [
+                "چائے کہاں ہے؟",
+                "چائے کہاں ہے"
+              ],
+              "feedback": {
+                "correct": "You selected three familiar pieces and wrote an Urdu location question.",
+                "incorrect": "Finish the attempt first. Then check the thing, place word, final verb, and Urdu question mark separately."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
