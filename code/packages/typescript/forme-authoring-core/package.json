@@ -1,0 +1,23 @@
+{
+  "name": "@coding-adventures/forme-authoring-core",
+  "version": "0.1.0",
+  "description": "Bounded immutable authoring project state, autosave, and persistent undo/redo for the Forme authoring shell",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/document-ast": "file:../document-ast"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.11",
+    "@vitest/coverage-v8": "^4.1.11"
+  }
+}
