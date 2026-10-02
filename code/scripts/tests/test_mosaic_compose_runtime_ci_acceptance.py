@@ -160,7 +160,10 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("needs.detect.outputs.needs_mosaic_compose_runtime == 'true'", block)
         self.assertIn('android_project="$RUNNER_TEMP/mosaic-compose-taskapp/compose/android"', block)
         self.assertIn('test ! -e "$android_project/src/main/kotlin/Main.kt"', block)
-        self.assertIn("./gradlew --no-daemon --stacktrace assembleDebug", block)
+        self.assertIn(
+            "-cp gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain",
+            block,
+        )
         self.assertIn("launchable-activity: name='mosaic\\.android\\.MosaicActivity'", block)
         self.assertIn("package: name='dev\\.codingadventures\\.trestle'", block)
         self.assertIn("^(min)?[sS]dkVersion:'26'", block)
