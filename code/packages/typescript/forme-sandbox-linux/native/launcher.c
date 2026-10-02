@@ -571,6 +571,16 @@ static int install_seccomp(void) {
 #ifdef SYS_ioctl
         ALLOW_NR(SYS_ioctl),
 #endif
+        /* Node/libuv identifies inherited stdio socketpairs before attaching
+         * them to the event loop. These calls only inspect already-open file
+         * descriptors; socket creation and network I/O remain denied, and the
+         * process is still isolated in its private network namespace. */
+#ifdef SYS_getsockname
+        ALLOW_NR(SYS_getsockname),
+#endif
+#ifdef SYS_getsockopt
+        ALLOW_NR(SYS_getsockopt),
+#endif
 #ifdef SYS_dup
         ALLOW_NR(SYS_dup),
 #endif

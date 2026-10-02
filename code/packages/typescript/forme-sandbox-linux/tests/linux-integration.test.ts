@@ -39,7 +39,12 @@ async function request(probe: string): Promise<SandboxLaunchRequest> {
 async function nodeRequest(): Promise<SandboxLaunchRequest> {
   const workingDirectory = await mkdtemp(join(tmpdir(), "forme-linux-node-"));
   roots.push(workingDirectory);
-  const entryBytes = new TextEncoder().encode("process.exit(0);\n");
+  const entryBytes = new TextEncoder().encode(`
+let input = "";
+process.stdin.setEncoding("utf8");
+process.stdin.on("data", chunk => { input += chunk; });
+process.stdin.on("end", () => process.stdout.write(input, () => process.exit(0)));
+`);
   const manifest: Manifest = {
     manifestVersion: 1,
     plugin: { name: "@example/linux-node", version: "1.0.0", apiVersion: 1 },
@@ -56,10 +61,14 @@ async function nodeRequest(): Promise<SandboxLaunchRequest> {
 }
 
 describe.skipIf(process.platform !== "linux")("Linux native sandbox", () => {
-  it("boots the trusted Node runtime after installing the sandbox", async () => {
+  it("exchanges protocol bytes over inherited pipes after installing the sandbox", async () => {
     const child = await createLinuxSandboxFactory({ launcherPath, cgroupRoot, readinessTimeoutMs: 2_000 })
       .launch(await nodeRequest());
+    const chunks: Buffer[] = [];
+    child.stdout.on("data", chunk => chunks.push(Buffer.from(chunk)));
+    child.stdin.end("sandbox protocol probe");
     expect(await child.exited).toEqual({ code: 0, signal: null });
+    expect(Buffer.concat(chunks).toString("utf8")).toBe("sandbox protocol probe");
   });
 
   it.each(["filesystem", "network", "process", "memory", "descriptors", "environment", "cpu", "wall-clock", "mount"])(

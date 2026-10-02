@@ -19,3 +19,5 @@
 - Preserved the exact private-root mount stage in pre-attestation diagnostics.
 - Kept the private root's `/dev` empty instead of importing host device nodes;
   runtimes retain inherited standard handles and the allowed `getrandom` syscall.
+- Allowed read-only socket metadata inspection for inherited protocol pipes so
+  Node/libuv can attach standard I/O without granting socket creation or network I/O.
