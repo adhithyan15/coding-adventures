@@ -104,6 +104,7 @@ class RunnerState:
         self.last_config: Any = {}
         self._shutdown_task: asyncio.Task[None] | None = None
         self.inputs: dict[int, StreamInput] = {}
+        self.capability_input_ids: set[int] = set()
         self.peer: Peer | None = None
 
     async def request(self, request_id: int, method: str, raw_params: Any) -> Any:
@@ -150,8 +151,10 @@ class RunnerState:
         if self.cancellation is not None:
             self.cancellation.cancel(reason)
         error = CancellationError(reason)
-        for stream in self.inputs.values():
-            asyncio.create_task(stream.fail(error))
+        for stream_id in self.capability_input_ids:
+            stream = self.inputs.get(stream_id)
+            if stream is not None:
+                asyncio.create_task(stream.fail(error))
         task = self.active_task
         if task is not None and task is not asyncio.current_task() and not task.done():
             task.cancel(reason)
@@ -256,7 +259,13 @@ class RunnerState:
                 self.inputs[input_stream_id] = stream
                 input_value = stream
             assert self.peer is not None
-            context = StageContext(self.peer, stream_id, cancellation, self.last_config)
+            context = StageContext(
+                self.peer,
+                stream_id,
+                cancellation,
+                self.last_config,
+                self._open_capability_stream,
+            )
             output = await self.stage.run(input_value, params.get("config"), context)
             cancellation.throw_if_cancelled()
             if self.stage.produces.startswith("Stream<"):
@@ -275,6 +284,7 @@ class RunnerState:
         except BaseException as error:
             raise _stage_fault(error) from error
         finally:
+            await self._close_capability_streams()
             if output_iterator is not None:
                 await _close_async_iterator(output_iterator)
             if input_stream_id is not None:
@@ -284,6 +294,44 @@ class RunnerState:
             self.cancellation = None
             self.active_task = None
             self.active_completion.set()
+
+    async def _open_capability_stream(self, handle: Any) -> AsyncIterator[Any]:
+        if (
+            not isinstance(handle, dict)
+            or set(handle) != {"kind", "streamId"}
+            or handle.get("kind") != "stream-handle"
+        ):
+            raise ProtocolError("storage.watch result is malformed")
+        stream_id = _safe_id(handle.get("streamId"), "capability streamId")
+        if stream_id == 0 or stream_id in self.inputs:
+            raise ProtocolError("storage.watch returned a duplicate stream handle")
+        stream = StreamInput(self.max_buffered_stream_values, self.max_buffered_stream_bytes)
+        self.inputs[stream_id] = stream
+        self.capability_input_ids.add(stream_id)
+        started = False
+        try:
+            assert self.peer is not None
+            await self.peer.notify("stream.start", {"streamId": stream_id})
+            started = True
+            async for value in stream:
+                yield value
+        finally:
+            await self._close_capability_stream(stream_id, started)
+
+    async def _close_capability_stream(self, stream_id: int, notify: bool) -> None:
+        if stream_id not in self.capability_input_ids:
+            return
+        self.capability_input_ids.remove(stream_id)
+        stream = self.inputs.pop(stream_id, None)
+        if stream is not None:
+            await stream.end()
+        if notify:
+            assert self.peer is not None
+            await self.peer.notify("stream.cancel", {"streamId": stream_id})
+
+    async def _close_capability_streams(self) -> None:
+        for stream_id in list(self.capability_input_ids):
+            await self._close_capability_stream(stream_id, True)
 
     async def _dispose(self) -> None:
         if self.phase == "disposed":
@@ -296,6 +344,7 @@ class RunnerState:
         for stream in self.inputs.values():
             await stream.end()
         self.inputs.clear()
+        self.capability_input_ids.clear()
         try:
             if self.stage.dispose is not None:
                 assert self.peer is not None

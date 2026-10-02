@@ -1,10 +1,11 @@
+use crate::context::ContextStreams;
 use crate::peer::{object, safe_id, Peer, RpcFault};
 use crate::stage::{FromWire, Stage, StageInput, StageOutput, StreamItem, StreamTerminal};
 use crate::{
     CancellationToken, FrameDecoder, InputStream, ProtocolError, StageContext, StageError,
     WireValue,
 };
-use std::collections::{BTreeMap, HashMap};
+use std::collections::{BTreeMap, HashMap, HashSet};
 use std::sync::Arc;
 use tokio::io::AsyncReadExt;
 use tokio::sync::{mpsc, oneshot, Mutex, Semaphore};
@@ -107,11 +108,11 @@ struct Active {
     cancellation: CancellationToken,
 }
 
-struct InputSender {
-    sender: mpsc::Sender<StreamItem>,
-    bytes: Arc<Semaphore>,
-    max_bytes: usize,
-    terminal: Arc<StreamTerminal>,
+pub(crate) struct InputSender {
+    pub(crate) sender: mpsc::Sender<StreamItem>,
+    pub(crate) bytes: Arc<Semaphore>,
+    pub(crate) max_bytes: usize,
+    pub(crate) terminal: Arc<StreamTerminal>,
 }
 
 impl Clone for InputSender {
@@ -125,7 +126,7 @@ impl Clone for InputSender {
     }
 }
 
-type InputSenders = HashMap<i64, InputSender>;
+pub(crate) type InputSenders = HashMap<i64, InputSender>;
 
 struct Runtime<S: Stage> {
     stage: Arc<S>,
@@ -136,7 +137,8 @@ struct Runtime<S: Stage> {
     control: Mutex<()>,
     active: Mutex<Option<Active>>,
     active_done: tokio::sync::Notify,
-    inputs: Mutex<InputSenders>,
+    inputs: Arc<Mutex<InputSenders>>,
+    capability_inputs: Arc<Mutex<HashSet<i64>>>,
     last_config: Mutex<WireValue>,
 }
 
@@ -162,6 +164,15 @@ impl Drop for DispatchReady {
 }
 
 impl<S: Stage> Runtime<S> {
+    fn context_streams(&self) -> ContextStreams {
+        ContextStreams {
+            inputs: self.inputs.clone(),
+            capability_inputs: self.capability_inputs.clone(),
+            max_buffered_values: self.options.max_buffered_stream_values,
+            max_buffered_bytes: self.options.max_buffered_stream_bytes,
+        }
+    }
+
     async fn request(
         self: &Arc<Self>,
         id: i64,
@@ -207,6 +218,8 @@ impl<S: Stage> Runtime<S> {
                     sender.terminal.fail(error.clone());
                 }
                 inputs.clear();
+                drop(inputs);
+                self.capability_inputs.lock().await.clear();
             }
             return Ok(());
         }
@@ -365,6 +378,7 @@ impl<S: Stage> Runtime<S> {
             0,
             CancellationToken::new(),
             config.clone(),
+            self.context_streams(),
         );
         let stage = self.stage.clone();
         let init = tokio::spawn(async move { stage.init(config, &context).await })
@@ -419,6 +433,7 @@ impl<S: Stage> Runtime<S> {
             .await
             .map_err(|_| RpcFault::new(-32603, "INTERNAL_ERROR", None))
             .and_then(std::convert::identity);
+        self.close_capability_streams().await;
         self.inputs.lock().await.clear();
         *self.active.lock().await = None;
         self.active_done.notify_waiters();
@@ -476,6 +491,7 @@ impl<S: Stage> Runtime<S> {
             stream_id,
             cancellation.clone(),
             config.clone(),
+            self.context_streams(),
         );
         let stage = self.stage.clone();
         let mut task = tokio::spawn(async move { stage.run(input, config, &context).await });
@@ -550,7 +566,13 @@ impl<S: Stage> Runtime<S> {
             return Err(phase_fault(phase));
         }
         let config = self.last_config.lock().await.clone();
-        let context = StageContext::new(self.peer.clone(), 0, CancellationToken::new(), config);
+        let context = StageContext::new(
+            self.peer.clone(),
+            0,
+            CancellationToken::new(),
+            config,
+            self.context_streams(),
+        );
         let stage = self.stage.clone();
         tokio::spawn(async move { stage.dispose(&context).await })
             .await
@@ -582,11 +604,26 @@ impl<S: Stage> Runtime<S> {
                 notified.await;
             }
         }
+        self.close_capability_streams().await;
         self.inputs.lock().await.clear();
         if *self.phase.lock().await == Phase::Initialized && self.active.lock().await.is_none() {
             let _ = self.dispose().await;
         }
         self.peer.stop();
+    }
+
+    async fn close_capability_streams(&self) {
+        let stream_ids = {
+            let mut active = self.capability_inputs.lock().await;
+            active.drain().collect::<Vec<_>>()
+        };
+        for stream_id in stream_ids {
+            self.inputs.lock().await.remove(&stream_id);
+            let _ = self
+                .peer
+                .notify("stream.cancel", object([("streamId", stream_id.into())]))
+                .await;
+        }
     }
 }
 
@@ -612,7 +649,8 @@ pub async fn run_plugin<S: Stage>(stage: S, options: RunnerOptions) -> Result<()
         control: Mutex::new(()),
         active: Mutex::new(None),
         active_done: tokio::sync::Notify::new(),
-        inputs: Mutex::new(HashMap::new()),
+        inputs: Arc::new(Mutex::new(HashMap::new())),
+        capability_inputs: Arc::new(Mutex::new(HashSet::new())),
         last_config: Mutex::new(WireValue::Null),
     });
     let request_limit = Arc::new(Semaphore::new(options.max_inflight_requests));

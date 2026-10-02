@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Require every runner to start a live storage-watch handle, receive a pushed
+  change, and cancel the handle after early iterator return.
+
 ## 0.1.0 — 2026-09-30
 
 - Add the language-neutral FM02 subprocess driver and canonical runner vectors.

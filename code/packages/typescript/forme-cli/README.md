@@ -82,7 +82,9 @@ project.
   project storage and grant-mediated network, environment, and broad user
   filesystem adapters, but host-owned plugin installation and cache roots stay
   hidden and inaccessible through every adapter; shell execution remains
-  forbidden. Direct-import-only configs create no plugin host or subprocess.
+  forbidden. Storage watches stay live through the same contained adapter and
+  are closed when their plugin run ends. Direct-import-only configs create no
+  plugin host or subprocess.
 - `check` performs config-schema, capability, wiring, kind, and output
   validation without invoking a stage or writing output.
 - `clean` validates the pipeline, then removes its configured cache directory

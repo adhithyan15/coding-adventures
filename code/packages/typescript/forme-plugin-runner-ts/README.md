@@ -31,7 +31,10 @@ values, and reserved-looking objects.
 
 Storage, network, environment, wall-clock, and filesystem operations are RPCs
 mediated by the host's active run and grants. Their asynchronous SDK methods
-must be awaited. Cancellation and monotonic time remain local and synchronous.
+must be awaited. `storage.watch()` remains live across the boundary through a
+bounded stream handle; returning early cancels that handle, and run teardown
+releases any watcher the plugin retained. Cancellation and monotonic time
+remain local and synchronous.
 Stage-local cache and event-bus state never cross the process boundary;
 telemetry remains a no-op until FM02 assigns it a wire method. `system:shell`
 still crosses the host boundary and is rejected for third-party plugins.

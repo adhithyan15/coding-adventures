@@ -19,6 +19,7 @@ class HostDriver {
   private readonly pending = new Map<number, { resolve(value: unknown): void; reject(error: unknown): void }>();
   private nextId = 1;
   handler: (method: string, params: Record<string, unknown>) => Promise<unknown> = async () => null;
+  notificationHandler: (method: string, params: Record<string, unknown>) => void = () => undefined;
 
   constructor() {
     this.output.on("data", chunk => {
@@ -43,6 +44,7 @@ class HostDriver {
     if (typeof message.method === "string") {
       if (message.id === undefined) {
         this.notifications.push(message);
+        this.notificationHandler(message.method, (message.params ?? {}) as Record<string, unknown>);
         return;
       }
       try {
@@ -107,12 +109,18 @@ const echoStage = defineStage({
       const entries = [];
       for await (const entry of ctx.storage.list("posts")) entries.push(entry);
       const response = await ctx.network.fetch("https://example.com/data");
+      const watched = [];
+      for await (const change of ctx.storage.watch("posts")) {
+        watched.push(change);
+        break;
+      }
       ctx.logger.info("runner fixture", { ok: true });
       return {
         bytes,
         exists: await ctx.storage.exists("posts/a.md"),
         stat: await ctx.storage.stat("posts/a.md"),
         entries,
+        watched,
         env: await ctx.env.get("ALLOWED"),
         nowMs: await ctx.time.nowMs(),
         nowIso: await ctx.time.nowIso(),
@@ -157,12 +165,22 @@ describe("TypeScript plugin runner", () => {
     await expect(driver.request("stage.run", { input: { ok: true }, config: {}, streamId: 10 }))
       .resolves.toEqual({ kind: "single", value: { ok: true } });
     await expect(driver.request("stage.dispose", {})).resolves.toBeNull();
+    await expect(driver.request("stage.dispose", {})).resolves.toBeNull();
     driver.close();
     await expect(completed).resolves.toBeUndefined();
   });
 
   it("provides the complete wire-backed context and binary envelopes", async () => {
     const { driver, completed } = start(echoStage);
+    let watchResult: unknown = { kind: "stream-handle", streamId: 701 };
+    driver.notificationHandler = (method, params) => {
+      if (method === "stream.start") {
+        driver.notify("stream.value", {
+          streamId: params.streamId,
+          value: { path: "posts/a.md", kind: "modified" },
+        });
+      }
+    };
     driver.handler = async (method, params) => {
       const replies: Record<string, unknown> = {
         "ctx.storage.read": { bytes: Buffer.from("hello").toString("base64") },
@@ -170,6 +188,7 @@ describe("TypeScript plugin runner", () => {
         "ctx.storage.exists": true,
         "ctx.storage.stat": { size: 5, mtimeMs: 0, type: "file" },
         "ctx.storage.list": [{ path: "posts/a.md", type: "file" }],
+        "ctx.storage.watch": watchResult,
         "ctx.env.get": "secret",
         "ctx.time.nowMs": 42,
         "ctx.time.nowIso": "1970-01-01T00:00:00.042Z",
@@ -181,7 +200,7 @@ describe("TypeScript plugin runner", () => {
           bytes: Buffer.from("network").toString("base64"), url: "https://example.com/data",
         },
       };
-      expect(params.streamId).toBe(11);
+      expect([11, 12, 13]).toContain(params.streamId);
       return replies[method];
     };
     await handshake(driver);
@@ -192,10 +211,22 @@ describe("TypeScript plugin runner", () => {
     expect(result.value).toMatchObject({
       bytes: new Uint8Array(Buffer.from("hello")), env: "secret", nowMs: 42,
       home: "/home/test", status: 201, body: new Uint8Array(Buffer.from("network")),
+      watched: [{ path: "posts/a.md", kind: "modified" }],
     });
     expect(driver.notifications).toContainEqual(expect.objectContaining({
       method: "log", params: { level: "info", message: "runner fixture", fields: { ok: true } },
     }));
+    expect(driver.notifications).toContainEqual(expect.objectContaining({
+      method: "stream.cancel", params: { streamId: 701 },
+    }));
+    watchResult = {};
+    await expect(driver.request("stage.run", {
+      input: { exerciseContext: true }, config: {}, streamId: 12,
+    })).rejects.toMatchObject({ code: -32004 });
+    watchResult = { kind: "stream-handle", streamId: 0 };
+    await expect(driver.request("stage.run", {
+      input: { exerciseContext: true }, config: {}, streamId: 13,
+    })).rejects.toMatchObject({ code: -32004 });
     await driver.request("stage.dispose", {});
     driver.close();
     await completed;
@@ -225,6 +256,11 @@ describe("TypeScript plugin runner", () => {
     await expect(run).resolves.toEqual({ kind: "stream", streamId: 21, produced: 2 });
     expect(driver.notifications.filter(message => message.method === "stream.value").map(message => message.params))
       .toEqual([{ streamId: 21, value: { n: 1 } }, { streamId: 21, value: { n: 2 } }]);
+    const failed = driver.request("stage.run", {
+      input: { kind: "stream-handle", streamId: 22 }, config: {}, streamId: 23,
+    });
+    driver.notify("stream.error", { streamId: 22 });
+    await expect(failed).rejects.toMatchObject({ code: -32900 });
     await driver.request("stage.dispose", {});
     driver.close();
     await completed;
@@ -321,6 +357,7 @@ describe("TypeScript plugin runner", () => {
     let disposed = 0;
     const lifecycle = defineStage({
       ...echoStage,
+      name: "echo",
       async init(config, context) {
         initialized += 1;
         expect(context.config).toEqual(config);
@@ -334,7 +371,7 @@ describe("TypeScript plugin runner", () => {
     const driver = new HostDriver();
     const { completed } = start(lifecycle, driver, { argv: ["node", "plugin.mjs"] });
     await driver.request("handshake", {
-      pluginName: "@example/echo", pluginVersion: "1.0.0", apiVersion: 1, protocolVersion: 1,
+      pluginName: "echo", pluginVersion: "1.0.0", apiVersion: 1, protocolVersion: 1,
     });
     await expect(driver.request("announce", {})).resolves.toMatchObject({
       stage: { id: "echo", configSchemaHash: null },

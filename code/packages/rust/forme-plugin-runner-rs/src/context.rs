@@ -1,11 +1,22 @@
-use crate::peer::{object, Peer, ProtocolErrorOrRemote};
+use crate::peer::{object, safe_id, Peer, ProtocolErrorOrRemote};
+use crate::runner::{InputSender, InputSenders};
+use crate::stage::{InputStream, StreamTerminal};
 use crate::{CancellationToken, StageError, WireValue};
 use coding_adventures_base64::{decode, encode, STANDARD};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashSet};
 use std::sync::Arc;
 use std::time::Instant;
+use tokio::sync::{mpsc, Mutex, Semaphore};
 
 const MAX_MEDIATED_BYTES: usize = 1024 * 1024;
+
+#[derive(Clone)]
+pub(crate) struct ContextStreams {
+    pub(crate) inputs: Arc<Mutex<InputSenders>>,
+    pub(crate) capability_inputs: Arc<Mutex<HashSet<i64>>>,
+    pub(crate) max_buffered_values: usize,
+    pub(crate) max_buffered_bytes: usize,
+}
 
 #[derive(Clone)]
 pub struct StageContext {
@@ -13,6 +24,10 @@ pub struct StageContext {
     stream_id: i64,
     pub cancellation: CancellationToken,
     pub config: WireValue,
+    inputs: Arc<Mutex<InputSenders>>,
+    capability_inputs: Arc<Mutex<HashSet<i64>>>,
+    max_buffered_stream_values: usize,
+    max_buffered_stream_bytes: usize,
 }
 
 impl StageContext {
@@ -21,12 +36,17 @@ impl StageContext {
         stream_id: i64,
         cancellation: CancellationToken,
         config: WireValue,
+        streams: ContextStreams,
     ) -> Self {
         Self {
             peer,
             stream_id,
             cancellation,
             config,
+            inputs: streams.inputs,
+            capability_inputs: streams.capability_inputs,
+            max_buffered_stream_values: streams.max_buffered_values,
+            max_buffered_stream_bytes: streams.max_buffered_bytes,
         }
     }
 
@@ -186,16 +206,88 @@ impl StorageApi<'_> {
         )
     }
 
-    pub async fn watch(&self, path: &str) -> Result<Vec<WireValue>, StageError> {
-        require_array(
-            self.0
-                .request(
-                    "ctx.storage.watch",
-                    BTreeMap::from([("path".into(), path.into())]),
-                )
-                .await?,
-            "storage.watch",
-        )
+    pub async fn watch(&self, path: &str) -> Result<StorageWatch, StageError> {
+        let result = self
+            .0
+            .request(
+                "ctx.storage.watch",
+                BTreeMap::from([("path".into(), path.into())]),
+            )
+            .await?;
+        let handle = match result {
+            WireValue::Object(value)
+                if value.len() == 2
+                    && value.get("kind").and_then(WireValue::as_str) == Some("stream-handle") =>
+            {
+                value
+            }
+            _ => {
+                return Err(StageError::new(
+                    "PLUGIN_PROTOCOL_ERROR",
+                    "storage.watch result is malformed",
+                ))
+            }
+        };
+        let stream_id = safe_id(handle.get("streamId"), "capability streamId").map_err(|_| {
+            StageError::new("PLUGIN_PROTOCOL_ERROR", "storage.watch result is malformed")
+        })?;
+        if stream_id <= 0 {
+            return Err(StageError::new(
+                "PLUGIN_PROTOCOL_ERROR",
+                "storage.watch returned an invalid stream handle",
+            ));
+        }
+        let (sender, receiver) = mpsc::channel(self.0.max_buffered_stream_values);
+        let terminal = Arc::new(StreamTerminal::new());
+        let mut inputs = self.0.inputs.lock().await;
+        if inputs.contains_key(&stream_id) {
+            return Err(StageError::new(
+                "PLUGIN_PROTOCOL_ERROR",
+                "storage.watch returned a duplicate stream handle",
+            ));
+        }
+        let mut capability_inputs = self.0.capability_inputs.lock().await;
+        inputs.insert(
+            stream_id,
+            InputSender {
+                sender,
+                bytes: Arc::new(Semaphore::new(self.0.max_buffered_stream_bytes)),
+                max_bytes: self.0.max_buffered_stream_bytes,
+                terminal: terminal.clone(),
+            },
+        );
+        capability_inputs.insert(stream_id);
+        drop(capability_inputs);
+        drop(inputs);
+        let start = object([("streamId", stream_id.into())]);
+        if self
+            .0
+            .peer
+            .notify_cancellable("stream.start", start, &self.0.cancellation)
+            .await
+            .is_err()
+        {
+            release_capability_stream(
+                self.0.peer.clone(),
+                self.0.inputs.clone(),
+                self.0.capability_inputs.clone(),
+                stream_id,
+                false,
+            )
+            .await;
+            return Err(StageError::new(
+                "PLUGIN_PROTOCOL_ERROR",
+                "storage.watch stream could not start",
+            ));
+        }
+        Ok(StorageWatch {
+            stream: InputStream::new(receiver, terminal),
+            peer: self.0.peer.clone(),
+            inputs: self.0.inputs.clone(),
+            capability_inputs: self.0.capability_inputs.clone(),
+            stream_id,
+            closed: false,
+        })
     }
 
     pub async fn remove(&self, path: &str) -> Result<(), StageError> {
@@ -206,6 +298,76 @@ impl StorageApi<'_> {
             )
             .await?;
         Ok(())
+    }
+}
+
+pub struct StorageWatch {
+    stream: InputStream<WireValue>,
+    peer: Arc<Peer>,
+    inputs: Arc<Mutex<InputSenders>>,
+    capability_inputs: Arc<Mutex<HashSet<i64>>>,
+    stream_id: i64,
+    closed: bool,
+}
+
+impl StorageWatch {
+    pub async fn next(&mut self) -> Option<Result<WireValue, StageError>> {
+        let item = self.stream.next().await;
+        if item.is_none() {
+            self.close().await;
+        }
+        item
+    }
+
+    pub async fn close(&mut self) {
+        if self.closed {
+            return;
+        }
+        self.closed = true;
+        release_capability_stream(
+            self.peer.clone(),
+            self.inputs.clone(),
+            self.capability_inputs.clone(),
+            self.stream_id,
+            true,
+        )
+        .await;
+    }
+}
+
+impl Drop for StorageWatch {
+    fn drop(&mut self) {
+        if self.closed {
+            return;
+        }
+        self.closed = true;
+        let peer = self.peer.clone();
+        let inputs = self.inputs.clone();
+        let capability_inputs = self.capability_inputs.clone();
+        let stream_id = self.stream_id;
+        if let Ok(runtime) = tokio::runtime::Handle::try_current() {
+            runtime.spawn(async move {
+                release_capability_stream(peer, inputs, capability_inputs, stream_id, true).await;
+            });
+        }
+    }
+}
+
+async fn release_capability_stream(
+    peer: Arc<Peer>,
+    inputs: Arc<Mutex<InputSenders>>,
+    capability_inputs: Arc<Mutex<HashSet<i64>>>,
+    stream_id: i64,
+    notify: bool,
+) {
+    if !capability_inputs.lock().await.remove(&stream_id) {
+        return;
+    }
+    inputs.lock().await.remove(&stream_id);
+    if notify {
+        let _ = peer
+            .notify("stream.cancel", object([("streamId", stream_id.into())]))
+            .await;
     }
 }
 

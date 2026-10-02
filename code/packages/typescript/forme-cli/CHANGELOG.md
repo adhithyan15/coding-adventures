@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Back plugin `storage:read` watches with a live contained filesystem iterator.
+  Watch setup reuses storage path containment and reserved-root checks, queues
+  are bounded, and iterator return or host teardown closes the native watcher.
 - Compose installed plugin `StageRef`s with manifest-bound persistent grants,
   the current platform's native sandbox factory, and lazy orchestrator-owned
   plugin sessions. Direct-only pipelines retain their process-free path, and

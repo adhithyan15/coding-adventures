@@ -40,6 +40,8 @@ frames, preserves bytes and reserved objects, permits one active invocation,
 bounds in-flight work, pending requests, writes, stream values, and retained
 stream bytes, and redacts internal failures. Malformed, oversized,
 out-of-phase, or unknown peers fail closed.
+`StageContext::storage().watch()` returns a live bounded `StorageWatch`; callers
+can close it explicitly, and the runner cancels retained watches at run end.
 
 `sh BUILD` runs formatting, strict Clippy, unit tests, Linux coverage when
 available, and the exact language-neutral subprocess corpus passed by the

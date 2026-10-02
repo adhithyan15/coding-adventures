@@ -71,6 +71,8 @@ describe("capability mediation", () => {
     await expect(mediateCapabilityRequest("ctx.storage.watch", { path: "a" }, ctx, grants, openStream))
       .resolves.toEqual({ kind: "stream-handle", streamId: 17 });
     expect(openStream).toHaveBeenCalledOnce();
+    await expect(mediateCapabilityRequest("ctx.storage.watch", { path: "a" }, ctx, grants))
+      .rejects.toMatchObject({ rpcCode: -32603 });
     await expect(mediateCapabilityRequest("ctx.storage.remove", { path: "a" }, ctx, grants))
       .resolves.toBeNull();
   });

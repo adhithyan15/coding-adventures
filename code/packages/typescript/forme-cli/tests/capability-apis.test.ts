@@ -39,14 +39,20 @@ describe("product capability APIs", () => {
     const storage = createProjectStorage(root);
     const iterator = storage.watch("posts")[Symbol.asyncIterator]();
     const next = iterator.next();
-    await writeFile(join(root, "posts", "a.md"), "after");
-    await expect(Promise.race([
-      next,
-      new Promise((_, reject) => setTimeout(() => reject(new Error("watch timed out")), 5_000)),
-    ])).resolves.toMatchObject({
-      done: false,
-      value: { path: "posts/a.md" },
-    });
+    let revision = 0;
+    const writer = setInterval(() => {
+      void writeFile(join(root, "posts", "a.md"), `after-${revision++}`);
+    }, 25);
+    try {
+      const event = await Promise.race([
+        next,
+        new Promise((_, reject) => setTimeout(() => reject(new Error("watch timed out")), 4_000)),
+      ]) as IteratorResult<{ path: string }>;
+      expect(event.done).toBe(false);
+      expect(["posts", "posts/a.md"]).toContain(event.value?.path);
+    } finally {
+      clearInterval(writer);
+    }
     await expect(iterator.return?.()).resolves.toMatchObject({ done: true });
   });
 

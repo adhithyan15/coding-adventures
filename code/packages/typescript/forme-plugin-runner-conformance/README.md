@@ -29,7 +29,8 @@ single source of truth for future SDK fixtures.
 The corpus covers lifecycle negotiation, binary and reserved-looking JSON
 values, every host-mediated `StageContext` capability, logger notifications,
 single/stream/hybrid shapes, cooperative cancellation, typed stage errors,
-malformed frame rejection, and frame resource bounds. Driver input, output,
+live storage-watch start/value/cancel lifecycle, malformed frame rejection,
+and frame resource bounds. Driver input, output,
 stderr capture, aggregate stdout, message and notification counts, queued
 work, headers, payloads, request IDs, and timeouts are bounded. Outbound
 values are size-preflighted before binary expansion or JSON allocation. A

@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Consume live host-mediated storage watches as bounded asynchronous streams,
+  cancel abandoned iterators, and release every capability stream at run end.
+
 ## 0.1.0 — 2026-10-01
 
 - Add the bounded Python FM02 plugin runner and idiomatic stage/context API.

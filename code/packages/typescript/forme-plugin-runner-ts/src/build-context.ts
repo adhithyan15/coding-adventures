@@ -22,6 +22,7 @@ export function buildWireContext(
   peer: RunnerRpcPeer,
   streamId: number,
   cancellation: CancellationToken,
+  openStream: OpenStream = unavailableStream,
 ): StageContext {
   const request = async (method: string, params: Record<string, unknown> = {}): Promise<unknown> => {
     cancellation.throwIfCancelled();
@@ -43,7 +44,7 @@ export function buildWireContext(
     },
     cache: inMemoryCache(),
     telemetry: noOpTelemetryEmitter(),
-    storage: storageApi(request),
+    storage: storageApi(request, openStream),
     network: networkApi(request),
     env: envApi(request),
     filesystem: filesystemApi(request),
@@ -66,7 +67,7 @@ export function wireLogger(peer: RunnerRpcPeer, base: Record<string, JsonValue> 
   };
 }
 
-function storageApi(request: Request): StorageApi {
+function storageApi(request: Request, openStream: OpenStream): StorageApi {
   return {
     async read(path) { return bytesResult(await request("ctx.storage.read", { path }), "storage.read"); },
     async readBounded(path, maxBytes) {
@@ -86,13 +87,18 @@ function storageApi(request: Request): StorageApi {
       for (const entry of entries) yield entry as never;
     },
     async *watch(path) {
-      const entries = await request("ctx.storage.watch", { path });
-      if (!Array.isArray(entries)) throw protocol("storage.watch result");
-      for (const entry of entries) yield entry as never;
+      const handle = await request("ctx.storage.watch", { path });
+      for await (const entry of openStream(handle)) yield entry as never;
     },
     async remove(path) { await request("ctx.storage.remove", { path }); },
     async stat(path) { return asRecord(await request("ctx.storage.stat", { path }), "storage.stat result") as never; },
   };
+}
+
+type OpenStream = (handle: unknown) => AsyncIterable<unknown>;
+
+async function* unavailableStream(): AsyncIterable<never> {
+  throw protocol("storage.watch lifecycle");
 }
 
 function envApi(request: Request): EnvApi {

@@ -139,7 +139,13 @@ async fn context_result(context: &StageContext) -> Result<WireValue, StageError>
     let data = context.storage().read("posts/a.md").await?;
     context.storage().write("out/a.md", &data).await?;
     let entries = context.storage().list("posts").await?;
-    let watched = context.storage().watch("posts").await?;
+    let mut watch = context.storage().watch("posts").await?;
+    let watched = match watch.next().await {
+        Some(Ok(value)) => vec![value],
+        Some(Err(error)) => return Err(error),
+        None => Vec::new(),
+    };
+    watch.close().await;
     context.storage().remove("out/stale.md").await?;
     let response = context
         .network()

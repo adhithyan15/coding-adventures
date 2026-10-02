@@ -38,6 +38,7 @@ import { RpcPeer, asRecord } from "./wire.js";
 import { readGrantsFile } from "./persistent-authority.js";
 
 export const FORME_PLUGIN_PROTOCOL_VERSION = 1 as const;
+const MAX_CAPABILITY_STREAMS = 64;
 
 interface ResolvedOptions {
   readonly processFactory: PluginHostOptions["processFactory"];
@@ -59,6 +60,14 @@ interface ResolvedOptions {
   readonly maxBufferedStreamBytes: number;
   readonly maxLogEntries: number;
   readonly maxLogBytes: number;
+}
+
+interface CapabilityStream {
+  readonly iterator: AsyncIterator<unknown>;
+  started: boolean;
+  cancelled: boolean;
+  completed: boolean;
+  pump: Promise<void> | null;
 }
 
 class PluginHostImpl implements PluginHost {
@@ -252,6 +261,7 @@ class PluginSession {
   private activeContext: StageContext | null = null;
   private activeRunId: number | null = null;
   private readonly outputStreams = new Map<number, AsyncQueue<unknown>>();
+  private readonly capabilityStreams = new Map<number, CapabilityStream>();
   private nextStreamId = 1;
   private logEntries = 0;
   private logBytes = 0;
@@ -334,6 +344,7 @@ class PluginSession {
           this.options.killGracePeriodMs,
         );
       }
+      await this.closeCapabilityStreams();
       this.activeContext = null;
       this.activeRunId = null;
       if (failed || !inputCompleted || context.cancellation.cancelled) await this.dispose();
@@ -398,6 +409,7 @@ class PluginSession {
           this.options.killGracePeriodMs,
         );
       }
+      await this.closeCapabilityStreams();
       this.outputStreams.delete(outputStreamId);
       this.activeContext = null;
       this.activeRunId = null;
@@ -437,6 +449,7 @@ class PluginSession {
         await settlesWithin(this.process.exited, this.options.killGracePeriodMs);
       }
     } finally {
+      await this.closeCapabilityStreams();
       this.disposed = true;
       this.disposing = false;
       this.peer?.fail(new Error("plugin session disposed"));
@@ -528,6 +541,7 @@ class PluginSession {
           request,
           capabilityContext(this.activeContext, this.options.capabilityApis),
           this.grants,
+          source => this.openCapabilityStream(source),
         );
       },
       onNotification: (method, params) => this.onNotification(method, params),
@@ -606,7 +620,7 @@ class PluginSession {
     }
   }
 
-  private onNotification(method: string, rawParams: unknown): void {
+  private async onNotification(method: string, rawParams: unknown): Promise<void> {
     const params = asRecord(rawParams ?? {}, `${method} params`);
     if (method === "stream.value") {
       if (!Number.isSafeInteger(params.streamId)) {
@@ -615,6 +629,26 @@ class PluginSession {
       const queue = this.outputStreams.get(params.streamId as number);
       if (!queue) throw new PluginHostError("PROTOCOL_VIOLATION", "stream.value targets an inactive stream");
       queue.push(params.value);
+      return;
+    }
+    if (method === "stream.start" || method === "stream.cancel") {
+      if (!Number.isSafeInteger(params.streamId)) {
+        throw new PluginHostError("PROTOCOL_VIOLATION", `${method} requires a safe streamId`);
+      }
+      const streamId = params.streamId as number;
+      const stream = this.capabilityStreams.get(streamId);
+      if (!stream) {
+        throw new PluginHostError("PROTOCOL_VIOLATION", `${method} targets an inactive capability stream`);
+      }
+      if (method === "stream.start") {
+        if (stream.started) {
+          throw new PluginHostError("PROTOCOL_VIOLATION", "capability stream was started more than once");
+        }
+        stream.started = true;
+        stream.pump = this.pumpCapabilityStream(streamId, stream);
+      } else {
+        await this.closeCapabilityStream(streamId, stream);
+      }
       return;
     }
     if (method === "log") {
@@ -675,7 +709,81 @@ class PluginSession {
     this.fault = error;
     this.peer?.fail(error);
     for (const queue of this.outputStreams.values()) queue.fail(error);
+    void this.closeCapabilityStreams().catch(() => undefined);
     if (kill) this.process?.signal("SIGKILL");
+  }
+
+  private openCapabilityStream(source: AsyncIterable<unknown>): Readonly<{
+    kind: "stream-handle";
+    streamId: number;
+  }> {
+    if (this.capabilityStreams.size >= MAX_CAPABILITY_STREAMS) {
+      throw new RpcFault(-32003, "RESOURCE_LIMIT_EXCEEDED", {
+        resource: "capability-streams",
+        limit: MAX_CAPABILITY_STREAMS,
+      });
+    }
+    const streamId = this.allocateStreamId();
+    this.capabilityStreams.set(streamId, {
+      iterator: source[Symbol.asyncIterator](),
+      started: false,
+      cancelled: false,
+      completed: false,
+      pump: null,
+    });
+    return Object.freeze({ kind: "stream-handle", streamId });
+  }
+
+  private async pumpCapabilityStream(streamId: number, stream: CapabilityStream): Promise<void> {
+    try {
+      while (!stream.cancelled) {
+        const item = await stream.iterator.next();
+        if (item.done || stream.cancelled) break;
+        await this.peer!.notify("stream.value", { streamId, value: item.value });
+      }
+      if (!stream.cancelled) {
+        stream.completed = true;
+        await this.peer!.notify("stream.end", { streamId });
+      }
+    } catch {
+      if (!stream.cancelled) {
+        stream.completed = true;
+        try {
+          await this.peer!.notify("stream.error", {
+            streamId,
+            error: { code: "CAPABILITY_STREAM_ERROR", message: "storage watch failed" },
+          });
+        } catch (error) {
+          this.fatal(translateRemoteError(error));
+        }
+      }
+    }
+  }
+
+  private async closeCapabilityStream(streamId: number, stream: CapabilityStream): Promise<void> {
+    if (stream.cancelled) return;
+    stream.cancelled = true;
+    this.capabilityStreams.delete(streamId);
+    if (!stream.completed && stream.iterator.return) {
+      await settlesWithin(
+        this.returnCapabilityIterator(stream),
+        this.options.disposeGracePeriodMs,
+      );
+    }
+  }
+
+  private async closeCapabilityStreams(): Promise<void> {
+    const streams = [...this.capabilityStreams];
+    this.capabilityStreams.clear();
+    for (const [streamId, stream] of streams) await this.closeCapabilityStream(streamId, stream);
+  }
+
+  private async returnCapabilityIterator(stream: CapabilityStream): Promise<void> {
+    try {
+      await stream.iterator.return?.();
+    } catch {
+      // Trusted adapter cleanup errors cannot restore a retired capability stream.
+    }
   }
 
   private async readStderr(process: LaunchedPluginProcess): Promise<void> {

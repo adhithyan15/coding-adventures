@@ -133,6 +133,29 @@ async function handle(message) {
       send({ jsonrpc: "2.0", method: "stream.value", params: { streamId: 999, value: null } });
       return;
     }
+    if (input?.badCapabilityStreamId === true) {
+      send({ jsonrpc: "2.0", method: "stream.start", params: { streamId: "bad" } });
+      return;
+    }
+    if (input?.inactiveCapabilityStream === true) {
+      send({ jsonrpc: "2.0", method: "stream.start", params: { streamId: 999 } });
+      return;
+    }
+    if (input?.duplicateCapabilityStream === true || input?.cancelCapabilityStream === true) {
+      const reply = await request("ctx.storage.watch", {
+        path: "posts",
+        streamId: message.params.streamId,
+      });
+      const capabilityStreamId = reply.result.streamId;
+      const method = input.cancelCapabilityStream ? "stream.cancel" : "stream.start";
+      send({ jsonrpc: "2.0", method, params: { streamId: capabilityStreamId } });
+      if (input.duplicateCapabilityStream) {
+        send({ jsonrpc: "2.0", method: "stream.start", params: { streamId: capabilityStreamId } });
+        return;
+      }
+      respond(message.id, { kind: "single", value: input });
+      return;
+    }
     if (input?.invalidLog === true) {
       send({ jsonrpc: "2.0", method: "log", params: { level: "fatal", message: 7 } });
       return;

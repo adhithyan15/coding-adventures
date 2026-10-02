@@ -194,10 +194,31 @@ describe("plugin host cross-process contract", () => {
   });
 
   it("runs a real TypeScript SDK stage end to end", async () => {
+    let watchClosed = false;
+    const liveStorage: StorageApi = {
+      ...storage,
+      watch(path) {
+        let delivered = false;
+        let finish: ((value: IteratorResult<never>) => void) | null = null;
+        return {
+          [Symbol.asyncIterator]() { return this; },
+          async next() {
+            if (delivered) return new Promise<IteratorResult<never>>(resolve => { finish = resolve; });
+            delivered = true;
+            return { done: false, value: { type: "modified", path } };
+          },
+          async return() {
+            watchClosed = true;
+            finish?.({ done: true, value: undefined });
+            return { done: true, value: undefined };
+          },
+        };
+      },
+    };
     const host = await createPluginHost({
       roots: [fixtureRoot],
       grants: { "@example/sdk": ["storage:read"] },
-      capabilityApis: { storage },
+      capabilityApis: { storage: liveStorage },
       processFactory: processFactory(),
     });
     const stage = await host.loadStage({
@@ -207,6 +228,10 @@ describe("plugin host cross-process contract", () => {
       bytes: Uint8Array;
     };
     expect(result.bytes).toEqual(new TextEncoder().encode("read:posts/sdk.md"));
+    await expect(stage.run({ watchPath: "posts" } as never, {}, context())).resolves.toMatchObject({
+      change: { type: "modified", path: "posts" },
+    });
+    expect(watchClosed).toBe(true);
     await stage.dispose?.(initContext());
     await host.dispose();
   });
@@ -611,6 +636,9 @@ describe("plugin host cross-process contract", () => {
   it.each([
     ["badStreamNotification"],
     ["inactiveStreamNotification"],
+    ["badCapabilityStreamId"],
+    ["inactiveCapabilityStream"],
+    ["duplicateCapabilityStream"],
     ["invalidLog"],
     ["unknownNotification"],
   ])("isolates malformed %s notifications", async (key) => {
@@ -621,6 +649,17 @@ describe("plugin host cross-process contract", () => {
     await stage.init?.({}, initContext());
     await expect(stage.run({ [key]: true } as never, {}, context()))
       .rejects.toThrow();
+    await host.dispose();
+  });
+
+  it("accepts explicit cancellation of a capability stream", async () => {
+    const host = await makeHost();
+    const stage = await host.loadStage({
+      kind: "stage-ref", packageName: "@example/echo", export: "echo",
+    }, "cancel-capability-stream");
+    await expect(stage.run({ cancelCapabilityStream: true } as never, {}, context()))
+      .resolves.toEqual({ cancelCapabilityStream: true });
+    await stage.dispose?.(initContext());
     await host.dispose();
   });
 

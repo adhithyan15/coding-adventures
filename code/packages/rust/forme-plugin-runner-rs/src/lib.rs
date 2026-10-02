@@ -10,7 +10,7 @@ mod wire;
 
 pub use context::{
     EnvApi, FilesystemApi, Logger, NetworkApi, NetworkResponse, ShellApi, ShellResult,
-    StageContext, StorageApi, TimeApi,
+    StageContext, StorageApi, StorageWatch, TimeApi,
 };
 pub use runner::{run_plugin, RunnerOptions};
 pub use stage::{

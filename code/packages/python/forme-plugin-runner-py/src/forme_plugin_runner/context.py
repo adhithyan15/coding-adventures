@@ -5,7 +5,7 @@ from __future__ import annotations
 import base64
 import binascii
 import time
-from collections.abc import AsyncIterator, Sequence
+from collections.abc import AsyncIterator, Callable, Sequence
 from dataclasses import dataclass
 from typing import Any
 
@@ -83,10 +83,8 @@ class StorageApi(_Api):
             yield value
 
     async def watch(self, path: str) -> AsyncIterator[Any]:
-        values = await self._request("ctx.storage.watch", {"path": path})
-        if not isinstance(values, list):
-            raise StageError("PLUGIN_PROTOCOL_ERROR", "storage.watch result is malformed")
-        for value in values:
+        handle = await self._request("ctx.storage.watch", {"path": path})
+        async for value in self._context._open_stream(handle):
             yield value
 
     async def remove(self, path: str) -> None:
@@ -268,11 +266,13 @@ class StageContext:
         stream_id: int,
         cancellation: CancellationToken,
         config: Any = None,
+        open_stream: Callable[[Any], AsyncIterator[Any]] | None = None,
     ) -> None:
         self._peer = peer
         self._stream_id = stream_id
         self.cancellation = cancellation
         self.config = config
+        self._open_stream = open_stream or _unavailable_stream
         self.storage = StorageApi(self)
         self.env = EnvApi(self)
         self.time = TimeApi(self)
@@ -299,6 +299,11 @@ class StageContext:
             ) from error
         self.cancellation.throw_if_cancelled()
         return result
+
+
+async def _unavailable_stream(_handle: Any) -> AsyncIterator[Any]:
+    raise StageError("PLUGIN_PROTOCOL_ERROR", "storage.watch lifecycle is unavailable")
+    yield
 
 
 def _assert_bound(value: int) -> None:
