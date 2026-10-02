@@ -1,10 +1,10 @@
 import { execFile } from "node:child_process";
 import { cp, mkdir, mkdtemp, realpath, rm, writeFile } from "node:fs/promises";
 import { homedir, tmpdir } from "node:os";
-import { dirname, join, resolve } from "node:path";
+import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
-import { describe, expect, it, vi } from "vitest";
+import { afterAll, describe, expect, it, vi } from "vitest";
 import type { Orchestrator } from "@coding-adventures/forme-orchestrator";
 import type { PluginHost, PluginHostOptions, PluginProcessFactory } from "@coding-adventures/forme-plugin-host";
 import type { PipelineConfig } from "@coding-adventures/forme-pipeline-config";
@@ -17,7 +17,91 @@ import {
 const PROJECT_ROOT = "/project";
 const CACHE_ROOT = join(PROJECT_ROOT, ".forme", "cache");
 const pluginFixture = fileURLToPath(new URL("../../forme-plugin-host/tests/fixtures/echo-plugin", import.meta.url));
+const windowsLauncherPath = fileURLToPath(new URL(
+  "../../forme-sandbox-windows/native/forme-sandbox-windows.exe",
+  import.meta.url,
+));
 const execFileAsync = promisify(execFile);
+const suiteRoots: string[] = [];
+
+afterAll(async () => Promise.all(suiteRoots.splice(0).map(root => rm(root, {
+  recursive: true,
+  force: true,
+  maxRetries: 5,
+  retryDelay: 100,
+}))));
+
+let pythonDistributionPromise: Promise<{ readonly executable: string; readonly root: string }> | undefined;
+
+function escapedDiagnosticPath(path: string): string {
+  return path.split("\\").join("\\\\");
+}
+
+async function verifyWindowsRuntimeRoot(path: string): Promise<{
+  readonly accepted: boolean;
+  readonly stderr: string;
+}> {
+  return new Promise(resolveVerification => {
+    execFile(windowsLauncherPath, [`--verify-runtime-root=${path}`], {
+      windowsHide: true,
+    }, (error, _stdout, stderr) => resolveVerification({
+      accepted: error === null,
+      stderr,
+    }));
+  });
+}
+
+async function pythonDistribution(): Promise<{ readonly executable: string; readonly root: string }> {
+  pythonDistributionPromise ??= (async () => {
+    const { stdout } = await execFileAsync(process.platform === "win32" ? "python" : "python3", [
+      "-c",
+      "import os,sys; app=os.path.join(sys.prefix,'Resources','Python.app','Contents','MacOS','Python'); print(os.path.realpath(app if os.path.isfile(app) else sys.executable)); print(os.path.realpath(sys.prefix))",
+    ]);
+    const [sourceExecutable, sourceRoot] = stdout.trim().split(/\r?\n/);
+    if (!sourceExecutable || !sourceRoot) {
+      throw new Error("Python runtime discovery returned an incomplete distribution");
+    }
+    if (process.platform !== "win32") {
+      return { executable: sourceExecutable, root: sourceRoot };
+    }
+
+    const executableRelativePath = relative(sourceRoot, sourceExecutable);
+    if (executableRelativePath.startsWith("..") || isAbsolute(executableRelativePath)) {
+      throw new Error("Python executable is outside its reported distribution root");
+    }
+    if (sourceRoot.toLowerCase().includes("\\hostedtoolcache\\")) {
+      const sourceVerification = await verifyWindowsRuntimeRoot(sourceRoot);
+      expect(sourceVerification.accepted).toBe(false);
+      expect(sourceVerification.stderr).toContain("untrusted writer");
+      expect(sourceVerification.stderr).toContain("sid=S-1-5-11");
+      expect(sourceVerification.stderr).toContain(escapedDiagnosticPath(sourceRoot));
+    }
+
+    const root = await mkdtemp(join(homedir(), "forme-cli-python-runtime-"));
+    suiteRoots.push(root);
+    await execFileAsync(sourceExecutable, [
+      "-c",
+      String.raw`import os, shutil, sys
+source, destination = sys.argv[1:]
+source_lib = os.path.normcase(os.path.abspath(os.path.join(source, "Lib")))
+is_junction = getattr(os.path, "isjunction", lambda _path: False)
+def ignored(directory, names):
+    rejected = {name for name in names if os.path.islink(os.path.join(directory, name)) or is_junction(os.path.join(directory, name))}
+    rejected.update(name for name in names if name == "__pycache__")
+    if os.path.normcase(os.path.abspath(directory)) == source_lib:
+        rejected.update(name for name in names if name == "site-packages")
+    return rejected
+shutil.copytree(source, destination, dirs_exist_ok=True, symlinks=True, ignore=ignored)
+`,
+      sourceRoot,
+      root,
+    ], { timeout: 60_000, maxBuffer: 16_384 });
+    const destinationVerification = await verifyWindowsRuntimeRoot(root);
+    expect(destinationVerification.accepted, destinationVerification.stderr).toBe(true);
+    return { executable: join(root, executableRelativePath), root };
+  })();
+  return pythonDistributionPromise;
+}
 
 function productTestRoot(prefix: string): string {
   // The Windows product boundary intentionally rejects shared ancestors such
@@ -303,13 +387,7 @@ describe("installed plugin runtime composition", () => {
   it.skipIf(!["linux", "darwin", "win32"].includes(process.platform))(
     "runs a configured Python plugin through the product sandbox",
     async () => {
-      const { stdout } = await execFileAsync(process.platform === "win32" ? "python" : "python3", [
-        "-c",
-        "import os,sys; app=os.path.join(sys.prefix,'Resources','Python.app','Contents','MacOS','Python'); print(os.path.realpath(app if os.path.isfile(app) else sys.executable)); print(os.path.realpath(sys.prefix))",
-      ]);
-      const [pythonExecutable, pythonRoot] = stdout.trim().split(/\r?\n/);
-      expect(pythonExecutable).toBeTruthy();
-      expect(pythonRoot).toBeTruthy();
+      const python = await pythonDistribution();
       const projectRoot = await mkdtemp(productTestRoot("forme-python-product-"));
       try {
         const installed = join(projectRoot, "forme-plugins", "python-echo");
@@ -335,7 +413,7 @@ describe("installed plugin runtime composition", () => {
             storageRoot: ".",
             cacheDir: null,
             pluginRuntimes: {
-              python: { executable: await realpath(pythonExecutable!), root: await realpath(pythonRoot!) },
+              python: { executable: await realpath(python.executable), root: await realpath(python.root) },
             },
           },
           stages: [
@@ -362,7 +440,7 @@ describe("installed plugin runtime composition", () => {
         await rm(projectRoot, { recursive: true, force: true });
       }
     },
-    30_000,
+    90_000,
   );
 });
 

@@ -27,6 +27,10 @@
 - Let the GET-only GitHub Pages dry-run boundary use the fixed `GITHUB_TOKEN`
   when available, avoiding shared anonymous API limits while preserving
   tokenless local inspection.
+- Run the Windows Python product acceptance test against a private runtime copy
+  whose tree passes the production trust verifier. The test first proves that
+  the hosted shared toolcache is rejected and never weakens its ACL or the
+  product's trusted-writer policy.
 
 ## 0.5.0 — 2026-09-27
 
