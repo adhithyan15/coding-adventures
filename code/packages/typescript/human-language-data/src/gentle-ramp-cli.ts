@@ -67,5 +67,5 @@ export function runGentleRampReport(args = process.argv.slice(2)): number {
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
-  process.exit(runGentleRampReport());
+  process.exitCode = runGentleRampReport();
 }

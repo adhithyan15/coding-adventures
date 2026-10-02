@@ -202,5 +202,5 @@ export function runCompletionPlan(args = process.argv.slice(2)): number {
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  process.exit(runCompletionPlan());
+  process.exitCode = runCompletionPlan();
 }
