@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:4fa19e58a4b95dc0",
+  "lessonIds": [
+    "RU-C182-teper",
+    "RU-C182-kanikuly",
+    "RU-C182-den-rozhdeniya",
+    "RU-C182-vykhodnoy",
+    "RU-C182-vovremya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch182.txt",
+  "json": "russian/narration/ch182.json",
+  "textHash": "fnv1a64:ae6a2c35734c68ed",
+  "jsonHash": "fnv1a64:5e24cc7d32cb22d2",
+  "findings": []
+}

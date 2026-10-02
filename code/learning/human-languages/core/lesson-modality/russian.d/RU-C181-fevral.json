@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C181-fevral",
+    "language": "russian",
+    "chapter": 181,
+    "sequence": 10250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c9aed9ed841d65b"
+  },
+  "findings": []
+}

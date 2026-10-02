@@ -1,0 +1,19 @@
+{
+  "chapter": 180,
+  "title": "Headache, Sleep, Diet, Vitamin, Lungs",
+  "label": "ch:ru-headache-sleep-diet-vitamin-lungs",
+  "canDo": "I can say a headache, sleep, a diet, a vitamin and the lungs.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "RU-C180-lyogkiye",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 180: I can say a headache, sleep, a diet, a vitamin and the lungs.",
+    "assesses": [
+      "RU-LEX-C180-ZDOROV180-03",
+      "RU-LEX-C180-ZDOROV180-04",
+      "RU-LEX-C180-ZDOROV180-05"
+    ]
+  }
+}

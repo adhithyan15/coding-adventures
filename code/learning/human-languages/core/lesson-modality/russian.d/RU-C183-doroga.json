@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C183-doroga",
+    "language": "russian",
+    "chapter": 183,
+    "sequence": 10550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4c5d620cf0991db"
+  },
+  "findings": []
+}

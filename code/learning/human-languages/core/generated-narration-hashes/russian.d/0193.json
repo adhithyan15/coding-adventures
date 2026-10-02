@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:d430fb70d155717a",
+  "lessonIds": [
+    "RU-C193-shlyapa",
+    "RU-C193-remen",
+    "RU-C193-karman",
+    "RU-C193-pugovitsa",
+    "RU-C193-sergi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch193.txt",
+  "json": "russian/narration/ch193.json",
+  "textHash": "fnv1a64:db98a0322088f2ad",
+  "jsonHash": "fnv1a64:06691be6aec1130b",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:c81ab2201c18e17e",
+  "lessonIds": [
+    "RU-C178-trenirovatsya",
+    "RU-C178-begat",
+    "RU-C178-prygat",
+    "RU-C178-katatsya",
+    "RU-C178-zagorat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch178.txt",
+  "json": "russian/narration/ch178.json",
+  "textHash": "fnv1a64:d300bb5c49349e2d",
+  "jsonHash": "fnv1a64:c22d84f78dd3bbf1",
+  "findings": []
+}

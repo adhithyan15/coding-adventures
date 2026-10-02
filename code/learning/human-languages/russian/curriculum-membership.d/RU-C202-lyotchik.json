@@ -1,0 +1,11 @@
+{
+  "id": "RU-C202-lyotchik",
+  "pathSegment": "RU-PATH-202-RABOTA202",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-202-RABOTA202",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:a89843f32bcba9f3",
+  "lessonIds": [
+    "RU-C185-prichina",
+    "RU-C185-tsel",
+    "RU-C185-rezultat",
+    "RU-C185-znachit",
+    "RU-C185-naprimer"
+  ],
+  "tex": "russian/book/chapters/ch185-reason-goal-result-that-means-for-example.tex"
+}

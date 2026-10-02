@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:3115728bdcd0a5fd",
+  "lessonIds": [
+    "RU-C179-retsept",
+    "RU-C179-ukol",
+    "RU-C179-rana",
+    "RU-C179-sinyak",
+    "RU-C179-perelom"
+  ],
+  "tex": "russian/book/chapters/ch179-prescription-injection-wound-bruise-fracture.tex"
+}

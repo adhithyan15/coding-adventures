@@ -1,0 +1,19 @@
+{
+  "chapter": 202,
+  "title": "Electrician, Plumber, Pilot, Sailor, Fisherman",
+  "label": "ch:ru-electrician-plumber-pilot-sailor-fisherman",
+  "canDo": "I can say an electrician, a plumber, a pilot, a sailor and a fisherman.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C202-rybak",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 202: I can say an electrician, a plumber, a pilot, a sailor and a fisherman.",
+    "assesses": [
+      "RU-LEX-C202-RABOTA202-03",
+      "RU-LEX-C202-RABOTA202-04",
+      "RU-LEX-C202-RABOTA202-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:3ae0f17fc2e98693",
+  "lessonIds": [
+    "RU-C200-sekret",
+    "RU-C200-shutka",
+    "RU-C200-smekh",
+    "RU-C200-slyozy",
+    "RU-C200-ulybka"
+  ],
+  "tex": "russian/book/chapters/ch200-secret-joke-laughter-tears-smile.tex"
+}

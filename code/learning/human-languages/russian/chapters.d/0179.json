@@ -1,0 +1,19 @@
+{
+  "chapter": 179,
+  "title": "Prescription, Injection, Wound, Bruise, Fracture",
+  "label": "ch:ru-prescription-injection-wound-bruise-fracture",
+  "canDo": "I can say a prescription, an injection, a wound, a bruise and a fracture.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "RU-C179-perelom",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 179: I can say a prescription, an injection, a wound, a bruise and a fracture.",
+    "assesses": [
+      "RU-LEX-C179-ZDOROV179-03",
+      "RU-LEX-C179-ZDOROV179-04",
+      "RU-LEX-C179-ZDOROV179-05"
+    ]
+  }
+}

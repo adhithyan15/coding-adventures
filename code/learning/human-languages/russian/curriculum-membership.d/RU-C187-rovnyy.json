@@ -1,0 +1,11 @@
+{
+  "id": "RU-C187-rovnyy",
+  "pathSegment": "RU-PATH-187-KACH187",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-187-KACH187",
+      "order": 2
+    }
+  ]
+}

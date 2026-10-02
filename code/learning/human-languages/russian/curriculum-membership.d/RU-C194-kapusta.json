@@ -1,0 +1,11 @@
+{
+  "id": "RU-C194-kapusta",
+  "pathSegment": "RU-PATH-194-VESHCH194",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-194-VESHCH194",
+      "order": 2
+    }
+  ]
+}

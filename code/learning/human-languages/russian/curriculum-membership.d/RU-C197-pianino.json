@@ -1,0 +1,11 @@
+{
+  "id": "RU-C197-pianino",
+  "pathSegment": "RU-PATH-197-VESHCH197",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-197-VESHCH197",
+      "order": 4
+    }
+  ]
+}

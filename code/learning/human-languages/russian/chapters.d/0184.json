@@ -1,0 +1,19 @@
+{
+  "chapter": 184,
+  "title": "In front, Everywhere, To there, To here, From there",
+  "label": "ch:ru-in-front-everywhere-to-there-to-here-from-there",
+  "canDo": "I can say in front, everywhere, to there, to here and from there.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "RU-C184-ottuda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 184: I can say in front, everywhere, to there, to here and from there.",
+    "assesses": [
+      "RU-LEX-C184-MESTO184-03",
+      "RU-LEX-C184-MESTO184-04",
+      "RU-LEX-C184-MESTO184-05"
+    ]
+  }
+}

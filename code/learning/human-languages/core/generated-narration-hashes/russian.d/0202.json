@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:7913ae1b64ca8269",
+  "lessonIds": [
+    "RU-C202-elektrik",
+    "RU-C202-santekhnik",
+    "RU-C202-lyotchik",
+    "RU-C202-moryak",
+    "RU-C202-rybak"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch202.txt",
+  "json": "russian/narration/ch202.json",
+  "textHash": "fnv1a64:e5beabe1c0fc47cd",
+  "jsonHash": "fnv1a64:00fc4503eb48df4d",
+  "findings": []
+}

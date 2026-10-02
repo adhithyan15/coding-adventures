@@ -1,0 +1,19 @@
+{
+  "chapter": 200,
+  "title": "Secret, Joke, Laughter, Tears, Smile",
+  "label": "ch:ru-secret-joke-laughter-tears-smile",
+  "canDo": "I can say a secret, a joke, laughter, tears and a smile.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C200-ulybka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 200: I can say a secret, a joke, laughter, tears and a smile.",
+    "assesses": [
+      "RU-LEX-C200-VESHCH200-03",
+      "RU-LEX-C200-VESHCH200-04",
+      "RU-LEX-C200-VESHCH200-05"
+    ]
+  }
+}

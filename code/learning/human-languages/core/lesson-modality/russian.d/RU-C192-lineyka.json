@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C192-lineyka",
+    "language": "russian",
+    "chapter": 192,
+    "sequence": 11200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9bfdaf7723108c2"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:144089f174ef35c8",
+  "lessonIds": [
+    "RU-C200-sekret",
+    "RU-C200-shutka",
+    "RU-C200-smekh",
+    "RU-C200-slyozy",
+    "RU-C200-ulybka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch200.txt",
+  "json": "russian/narration/ch200.json",
+  "textHash": "fnv1a64:beb8ddb0217e3981",
+  "jsonHash": "fnv1a64:a16fc62da1b0c4be",
+  "findings": []
+}

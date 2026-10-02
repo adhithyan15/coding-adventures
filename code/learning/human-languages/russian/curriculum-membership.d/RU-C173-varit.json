@@ -1,0 +1,11 @@
+{
+  "id": "RU-C173-varit",
+  "pathSegment": "RU-PATH-173-ACT173",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-173-ACT173",
+      "order": 2
+    }
+  ]
+}

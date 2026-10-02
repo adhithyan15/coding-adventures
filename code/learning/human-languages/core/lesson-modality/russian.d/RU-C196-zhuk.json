@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C196-zhuk",
+    "language": "russian",
+    "chapter": 196,
+    "sequence": 11410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:284e45c16f6c090a"
+  },
+  "findings": []
+}

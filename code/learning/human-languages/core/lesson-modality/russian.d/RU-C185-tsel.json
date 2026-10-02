@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C185-tsel",
+    "language": "russian",
+    "chapter": 185,
+    "sequence": 10640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1b0ae9c7bc1fae30"
+  },
+  "findings": []
+}

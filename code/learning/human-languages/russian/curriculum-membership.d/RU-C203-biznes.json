@@ -1,0 +1,11 @@
+{
+  "id": "RU-C203-biznes",
+  "pathSegment": "RU-PATH-203-RABOTA203",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-203-RABOTA203",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C179-sinyak",
+  "pathSegment": "RU-PATH-179-ZDOROV179",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-179-ZDOROV179",
+      "order": 3
+    }
+  ]
+}

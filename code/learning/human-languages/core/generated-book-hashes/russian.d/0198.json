@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:4d18035889de10d5",
+  "lessonIds": [
+    "RU-C198-passazhir",
+    "RU-C198-vagon",
+    "RU-C198-peresadka",
+    "RU-C198-probka",
+    "RU-C198-avariya"
+  ],
+  "tex": "russian/book/chapters/ch198-passenger-carriage-transfer-traffic-jam-accident.tex"
+}

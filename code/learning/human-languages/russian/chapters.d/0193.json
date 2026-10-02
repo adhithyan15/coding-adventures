@@ -1,0 +1,19 @@
+{
+  "chapter": 193,
+  "title": "Brimmed hat, Belt, Pocket, Button, Earrings",
+  "label": "ch:ru-brimmed-hat-belt-pocket-button-earrings",
+  "canDo": "I can say a brimmed hat, a belt, a pocket, a button and earrings.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C193-sergi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 193: I can say a brimmed hat, a belt, a pocket, a button and earrings.",
+    "assesses": [
+      "RU-LEX-C193-VESHCH193-03",
+      "RU-LEX-C193-VESHCH193-04",
+      "RU-LEX-C193-VESHCH193-05"
+    ]
+  }
+}

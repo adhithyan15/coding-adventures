@@ -1,0 +1,11 @@
+{
+  "id": "RU-C175-podnimat",
+  "pathSegment": "RU-PATH-175-ACT175",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-175-ACT175",
+      "order": 1
+    }
+  ]
+}

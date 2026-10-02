@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-R190-second-pass-words-from-chapters-186-190",
+    "language": "russian",
+    "chapter": 190,
+    "sequence": 10940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6e169d50bc366d7"
+  },
+  "findings": []
+}

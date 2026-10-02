@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C179-perelom",
+    "language": "russian",
+    "chapter": 179,
+    "sequence": 10180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e0a04aa9cb84628"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C198-probka",
+  "pathSegment": "RU-PATH-198-VESHCH198",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-198-VESHCH198",
+      "order": 3
+    }
+  ]
+}

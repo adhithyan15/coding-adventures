@@ -1,0 +1,19 @@
+{
+  "chapter": 196,
+  "title": "Rat, Spider, Mosquito, Fly, Beetle",
+  "label": "ch:ru-rat-spider-mosquito-fly-beetle",
+  "canDo": "I can say a rat, a spider, a mosquito, a fly and a beetle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C196-zhuk",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 196: I can say a rat, a spider, a mosquito, a fly and a beetle.",
+    "assesses": [
+      "RU-LEX-C196-VESHCH196-03",
+      "RU-LEX-C196-VESHCH196-04",
+      "RU-LEX-C196-VESHCH196-05"
+    ]
+  }
+}

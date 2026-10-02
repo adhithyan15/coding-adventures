@@ -1,0 +1,21 @@
+{
+  "language": "russian",
+  "chapter": 181,
+  "sourceHash": "fnv1a64:1568bbd61c9b6267",
+  "lessonIds": [
+    "RU-C181-yanvar",
+    "RU-C181-fevral",
+    "RU-C181-mart",
+    "RU-C181-aprel",
+    "RU-C181-may",
+    "RU-R181-first-pass-words-from-chapters-173-176",
+    "RU-R181-second-pass-words-from-chapters-177-181"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "russian/narration/ch181.txt",
+  "json": "russian/narration/ch181.json",
+  "textHash": "fnv1a64:0f1888d75cb4cb94",
+  "jsonHash": "fnv1a64:991012fc263928d4",
+  "findings": []
+}

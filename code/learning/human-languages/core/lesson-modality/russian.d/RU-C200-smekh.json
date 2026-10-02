@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C200-smekh",
+    "language": "russian",
+    "chapter": 200,
+    "sequence": 11780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:688992f527a62e99"
+  },
+  "findings": []
+}

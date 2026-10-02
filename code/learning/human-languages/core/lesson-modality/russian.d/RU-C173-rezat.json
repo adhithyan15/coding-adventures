@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C173-rezat",
+    "language": "russian",
+    "chapter": 173,
+    "sequence": 9850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b972c6df1fbf2b2a"
+  },
+  "findings": []
+}

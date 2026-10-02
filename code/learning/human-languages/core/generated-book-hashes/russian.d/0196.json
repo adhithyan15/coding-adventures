@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:a2ba64cc4766d7cb",
+  "lessonIds": [
+    "RU-C196-krysa",
+    "RU-C196-pauk",
+    "RU-C196-komar",
+    "RU-C196-mukha",
+    "RU-C196-zhuk"
+  ],
+  "tex": "russian/book/chapters/ch196-rat-spider-mosquito-fly-beetle.tex"
+}

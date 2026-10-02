@@ -1,0 +1,19 @@
+{
+  "chapter": 198,
+  "title": "Passenger, Carriage, Transfer, Traffic jam, Accident",
+  "label": "ch:ru-passenger-carriage-transfer-traffic-jam-accident",
+  "canDo": "I can say a passenger, a carriage, a transfer, a traffic jam and an accident.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C198-avariya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 198: I can say a passenger, a carriage, a transfer, a traffic jam and an accident.",
+    "assesses": [
+      "RU-LEX-C198-VESHCH198-03",
+      "RU-LEX-C198-VESHCH198-04",
+      "RU-LEX-C198-VESHCH198-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C201-skidka",
+  "pathSegment": "RU-PATH-201-RABOTA201",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-201-RABOTA201",
+      "order": 1
+    }
+  ]
+}

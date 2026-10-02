@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 184,
+  "sourceHash": "fnv1a64:59f70e134c47b84c",
+  "lessonIds": [
+    "RU-C184-vperedi",
+    "RU-C184-vezde",
+    "RU-C184-tuda",
+    "RU-C184-syuda",
+    "RU-C184-ottuda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch184.txt",
+  "json": "russian/narration/ch184.json",
+  "textHash": "fnv1a64:707882ccd1ef8692",
+  "jsonHash": "fnv1a64:9e6635b8420eed71",
+  "findings": []
+}

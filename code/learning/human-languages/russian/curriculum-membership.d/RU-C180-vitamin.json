@@ -1,0 +1,11 @@
+{
+  "id": "RU-C180-vitamin",
+  "pathSegment": "RU-PATH-180-ZDOROV180",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-180-ZDOROV180",
+      "order": 3
+    }
+  ]
+}

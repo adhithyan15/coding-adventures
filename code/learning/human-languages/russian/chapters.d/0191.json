@@ -1,0 +1,19 @@
+{
+  "chapter": 191,
+  "title": "Radiator, Socket, Wire, Charger, Laptop",
+  "label": "ch:ru-radiator-socket-wire-charger-laptop",
+  "canDo": "I can say a radiator, a socket, a wire, a charger and a laptop.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C191-noutbuk",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 191: I can say a radiator, a socket, a wire, a charger and a laptop.",
+    "assesses": [
+      "RU-LEX-C191-VESHCH191-03",
+      "RU-LEX-C191-VESHCH191-04",
+      "RU-LEX-C191-VESHCH191-05"
+    ]
+  }
+}

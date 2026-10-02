@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:d2fb3c6707887694",
+  "lessonIds": [
+    "RU-C196-krysa",
+    "RU-C196-pauk",
+    "RU-C196-komar",
+    "RU-C196-mukha",
+    "RU-C196-zhuk"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch196.txt",
+  "json": "russian/narration/ch196.json",
+  "textHash": "fnv1a64:bfbf3a33afae1241",
+  "jsonHash": "fnv1a64:6e462727b5297473",
+  "findings": []
+}

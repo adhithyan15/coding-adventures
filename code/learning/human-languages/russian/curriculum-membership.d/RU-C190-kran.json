@@ -1,0 +1,11 @@
+{
+  "id": "RU-C190-kran",
+  "pathSegment": "RU-PATH-190-VESHCH190",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-190-VESHCH190",
+      "order": 2
+    }
+  ]
+}

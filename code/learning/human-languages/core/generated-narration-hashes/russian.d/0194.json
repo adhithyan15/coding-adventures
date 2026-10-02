@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:6700f455dffe6154",
+  "lessonIds": [
+    "RU-C194-pelmeni",
+    "RU-C194-salat",
+    "RU-C194-kapusta",
+    "RU-C194-svyokla",
+    "RU-C194-gorokh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch194.txt",
+  "json": "russian/narration/ch194.json",
+  "textHash": "fnv1a64:a0c5a5d52171173f",
+  "jsonHash": "fnv1a64:18404a4907dce695",
+  "findings": []
+}

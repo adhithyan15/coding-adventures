@@ -1,0 +1,11 @@
+{
+  "id": "RU-C200-ulybka",
+  "pathSegment": "RU-PATH-200-VESHCH200",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-200-VESHCH200",
+      "order": 4
+    }
+  ]
+}

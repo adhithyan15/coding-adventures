@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C196-krysa",
+    "language": "russian",
+    "chapter": 196,
+    "sequence": 11370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:733fedf950ec555a"
+  },
+  "findings": []
+}

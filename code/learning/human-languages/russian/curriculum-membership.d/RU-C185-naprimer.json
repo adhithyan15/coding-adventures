@@ -1,0 +1,11 @@
+{
+  "id": "RU-C185-naprimer",
+  "pathSegment": "RU-PATH-185-PRICH185",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-185-PRICH185",
+      "order": 4
+    }
+  ]
+}

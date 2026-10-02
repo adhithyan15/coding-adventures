@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:1ac08653afc35889",
+  "lessonIds": [
+    "RU-C173-shit",
+    "RU-C173-rezat",
+    "RU-C173-varit",
+    "RU-C173-zharit",
+    "RU-C173-nalivat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch173.txt",
+  "json": "russian/narration/ch173.json",
+  "textHash": "fnv1a64:0775841ad4b5aa1c",
+  "jsonHash": "fnv1a64:3f9bbe334f498d68",
+  "findings": []
+}

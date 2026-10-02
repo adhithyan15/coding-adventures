@@ -1,0 +1,19 @@
+{
+  "chapter": 199,
+  "title": "Young people, Citizen, Foreigner, Tourist, Text",
+  "label": "ch:ru-young-people-citizen-foreigner-tourist-text",
+  "canDo": "I can say young people, a citizen, a foreigner, a tourist and a text.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-R199-second-pass-words-from-chapters-195-199",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 199: I can say young people, a citizen, a foreigner, a tourist and a text.",
+    "assesses": [
+      "RU-LEX-C199-VESHCH199-03",
+      "RU-LEX-C199-VESHCH199-04",
+      "RU-LEX-C199-VESHCH199-05"
+    ]
+  }
+}

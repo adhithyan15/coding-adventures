@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 186,
+  "sourceHash": "fnv1a64:43be3d2d478a71ef",
+  "lessonIds": [
+    "RU-C186-grubyy",
+    "RU-C186-chestnyy",
+    "RU-C186-khrabryy",
+    "RU-C186-shchedryy",
+    "RU-C186-zhadnyy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch186.txt",
+  "json": "russian/narration/ch186.json",
+  "textHash": "fnv1a64:b4a34858de880ac7",
+  "jsonHash": "fnv1a64:860d952c7277202e",
+  "findings": []
+}

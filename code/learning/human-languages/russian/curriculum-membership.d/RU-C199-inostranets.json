@@ -1,0 +1,11 @@
+{
+  "id": "RU-C199-inostranets",
+  "pathSegment": "RU-PATH-199-VESHCH199",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-199-VESHCH199",
+      "order": 2
+    }
+  ]
+}

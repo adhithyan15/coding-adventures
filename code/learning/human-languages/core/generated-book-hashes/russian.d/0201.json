@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:3deae8b7d4b61c96",
+  "lessonIds": [
+    "RU-C201-sdacha",
+    "RU-C201-skidka",
+    "RU-C201-pokupka",
+    "RU-C201-kollega",
+    "RU-C201-direktor"
+  ],
+  "tex": "russian/book/chapters/ch201-change-discount-purchase-colleague-director.tex"
+}

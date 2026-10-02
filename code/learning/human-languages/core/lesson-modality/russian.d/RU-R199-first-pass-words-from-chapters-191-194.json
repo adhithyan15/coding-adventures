@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-R199-first-pass-words-from-chapters-191-194",
+    "language": "russian",
+    "chapter": 199,
+    "sequence": 11570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ca6070a93d4af59"
+  },
+  "findings": []
+}

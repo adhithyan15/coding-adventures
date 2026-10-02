@@ -1,0 +1,11 @@
+{
+  "id": "RU-C175-vklyuchat",
+  "pathSegment": "RU-PATH-175-ACT175",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-175-ACT175",
+      "order": 2
+    }
+  ]
+}
