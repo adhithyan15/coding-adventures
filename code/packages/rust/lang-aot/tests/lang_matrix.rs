@@ -4184,6 +4184,16 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("7.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a real single-value element may pass its exact snapshot
+    // into a following bounded real while element while their shared body
+    // only reads the controlled variable.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 0.5 else 9.0, if 'BETA' < 'ALPHA' then x + 1.0 else x + 0.5 while if 'ALPHA' < 'BETA' then x <= 2.0 else x <= 1.0 do total := total + x; print(total) end",
+        expect: Expect::Stdout("5.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — one bounded real while element may pass its exact
     // terminating snapshot into another bounded real while element while
     // their shared body only reads the controlled variable.
@@ -14700,6 +14710,31 @@ fn algol_literal_string_selected_real_single_step_list_runs_on_every_available_s
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the literal-string-selected real single/step for list did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_real_single_while_list_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "then 0.5 else 9.0, if 'BETA' < 'ALPHA' then x + 1.0 else x + 0.5 while",
+                )
+        })
+        .expect("the literal-string-selected real single/while for list must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected real single/while for list did not run"
             );
             continue;
         };
