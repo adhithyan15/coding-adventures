@@ -1492,6 +1492,7 @@ pub struct TreemapStyle {
     pub letter_spacing: Option<TreemapLetterSpacing>,
     pub direction: Option<TreemapTextDirection>,
     pub text_shadow: Option<TreemapTextShadow>,
+    pub tab_size: Option<u16>,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]

@@ -323,13 +323,17 @@ fn treemap_text_node(
         diagram_ir::TreemapTextUnderlineOffset::Factor(value) => Some(font.size * value),
         diagram_ir::TreemapTextUnderlineOffset::Auto => None,
     });
-    let whitespace_value = match style.and_then(|style| style.white_space) {
-        Some(diagram_ir::TreemapWhiteSpace::Normal | diagram_ir::TreemapWhiteSpace::NoWrap) =>
+    let white_space = style.and_then(|style| style.white_space);
+    let whitespace_value = match white_space {
+        None | Some(diagram_ir::TreemapWhiteSpace::Normal | diagram_ir::TreemapWhiteSpace::NoWrap) =>
             value.split_whitespace().collect::<Vec<_>>().join(" "),
         Some(diagram_ir::TreemapWhiteSpace::PreLine) => value.lines()
             .map(|line| line.split_whitespace().collect::<Vec<_>>().join(" "))
             .collect::<Vec<_>>().join("\n"),
-        _ => value.to_string(),
+        Some(diagram_ir::TreemapWhiteSpace::Pre | diagram_ir::TreemapWhiteSpace::PreWrap) => {
+            let tab = " ".repeat(style.and_then(|style| style.tab_size).unwrap_or(8) as usize);
+            value.replace('\t', &tab)
+        }
     };
     let value = match style.and_then(|style| style.text_transform) {
         Some(diagram_ir::TreemapTextTransform::Uppercase) => whitespace_value.to_uppercase(),
@@ -6960,6 +6964,7 @@ mod tests {
                     letter_spacing: None,
                     direction: None,
                     text_shadow: None,
+                    tab_size: None,
                 }),
             }],
         };
@@ -7038,6 +7043,15 @@ mod tests {
         assert!(matches!(EffectStyle::from_positioned(&shadowed_text).filters.as_slice(),
             [EffectFilter::DropShadow { dx: 2.0, dy: 3.0, blur: 4.0,
                 color: EffectColor { r: 51, g: 65, b: 85, a: 204 } }]));
+        whitespace_style.white_space = Some(diagram_ir::TreemapWhiteSpace::Pre);
+        whitespace_style.tab_size = Some(3);
+        whitespace_style.text_transform = Some(diagram_ir::TreemapTextTransform::None);
+        let tabbed_text = treemap_text_node(
+            "one\ttwo", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert!(matches!(tabbed_text.content,
+            Some(Content::Text(TextContent { value, .. })) if value == "one   two"));
         let mut styled_font = opts.label_font.clone();
         styled_font.size = 16.0;
         apply_treemap_line_height(&mut styled_font, layout.nodes[0].style.as_ref());
