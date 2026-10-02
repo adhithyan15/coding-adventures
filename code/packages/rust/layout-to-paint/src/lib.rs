@@ -245,6 +245,7 @@ where
                     text_letter_spacing(frame.node) * dpr,
                     text_word_spacing(frame.node) * dpr,
                     text_align_last(frame.node),
+                    text_justifies_last(frame.node),
                     text_breaks_anywhere(frame.node),
                     text_word_break(frame.node),
                     text_line_break(frame.node),
@@ -478,6 +479,10 @@ fn text_align_last(node: &PositionedNode) -> Option<TextAlign> {
         Some(ExtValue::Str(value)) if value == "end" => Some(TextAlign::End),
         _ => None,
     }
+}
+
+fn text_justifies_last(node: &PositionedNode) -> bool {
+    matches!(node.ext.get("text.align-last"), Some(ExtValue::Str(value)) if value == "justify")
 }
 
 fn text_breaks_anywhere(node: &PositionedNode) -> bool {
@@ -1309,6 +1314,7 @@ fn emit_text_content<S, M, R>(
     letter_spacing: f64,
     word_spacing: f64,
     text_align_last: Option<TextAlign>,
+    justify_last: bool,
     breaks_anywhere: bool,
     word_break: TextWordBreak,
     line_break: TextLineBreak,
@@ -1401,7 +1407,7 @@ fn emit_text_content<S, M, R>(
                 continue;
             }
             let is_final_line = line_index + 1 == line_count;
-            let line_word_spacing = if justify && !is_final_line {
+            let line_word_spacing = if (justify && !is_final_line) || (justify_last && is_final_line) {
                 let separator_count = line.chars().filter(|character| *character == ' ').count();
                 if separator_count == 0 {
                     word_spacing
@@ -3241,6 +3247,26 @@ mod tests {
             _ => None,
         }).collect();
         assert_eq!(starts, vec![4.5, 9.0]);
+    }
+
+    #[test]
+    fn last_line_justification_distributes_only_the_final_line_space() {
+        let mut leaf = positioned_leaf(text_content("A A A A"), 0.0, 0.0, 48.0, 40.0);
+        leaf.ext.insert("text.align-last".into(), ExtValue::Str("justify".into()));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let scene = layout_to_paint(&leaf, &make_options(&shaper, &metrics, &resolver));
+        let mut lines = std::collections::BTreeMap::<i64, Vec<f64>>::new();
+        for glyph in scene.instructions.iter().filter_map(|instruction| match instruction {
+            PaintInstruction::GlyphRun(run) => Some(run.glyphs.iter()),
+            _ => None,
+        }).flatten() {
+            lines.entry(glyph.y.round() as i64).or_default().push(glyph.x);
+        }
+        let positions = lines.into_values().collect::<Vec<_>>();
+        assert_eq!(positions[0], vec![0.0, 8.0, 16.0, 24.0, 32.0]);
+        assert_eq!(positions[1], vec![0.0]);
     }
 
     #[test]
