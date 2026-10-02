@@ -4571,6 +4571,13 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                 "right" | "end" => diagram_ir::TreemapTextAlign::End,
                 _ => return Err(token_error(token, "treemap text-align must be left, center, right, start, or end")),
             }),
+            "text-align-last" => style.text_align_last = Some(match value.to_ascii_lowercase().as_str() {
+                "auto" => diagram_ir::TreemapTextAlignLast::Auto,
+                "left" | "start" => diagram_ir::TreemapTextAlignLast::Start,
+                "center" => diagram_ir::TreemapTextAlignLast::Center,
+                "right" | "end" => diagram_ir::TreemapTextAlignLast::End,
+                _ => return Err(token_error(token, "treemap text-align-last must be auto, left, center, right, start, or end")),
+            }),
             "text-transform" => style.text_transform = Some(match value.to_ascii_lowercase().as_str() {
                 "none" => diagram_ir::TreemapTextTransform::None,
                 "uppercase" => diagram_ir::TreemapTextTransform::Uppercase,
@@ -14598,6 +14605,25 @@ B//-A: reverse stick top
             let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent word-spacing:{value}");
             assert!(parse_treemap(&source).is_err());
         }
+    }
+
+    #[test]
+    fn treemap_parses_last_line_alignment() {
+        for (value, expected) in [
+            ("auto", diagram_ir::TreemapTextAlignLast::Auto),
+            ("left", diagram_ir::TreemapTextAlignLast::Start),
+            ("start", diagram_ir::TreemapTextAlignLast::Start),
+            ("center", diagram_ir::TreemapTextAlignLast::Center),
+            ("right", diagram_ir::TreemapTextAlignLast::End),
+            ("end", diagram_ir::TreemapTextAlignLast::End),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-align-last:{value}");
+            let diagram = parse_treemap(&source).expect("supported last-line alignment must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_align_last), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-align-last:justify",
+        ).is_err());
     }
 
     #[test]

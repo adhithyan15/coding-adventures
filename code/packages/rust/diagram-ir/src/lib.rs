@@ -1480,6 +1480,7 @@ pub struct TreemapStyle {
     pub stroke_opacity: Option<f64>,
     pub stroke_dash_offset: Option<f64>,
     pub text_align: Option<TreemapTextAlign>,
+    pub text_align_last: Option<TreemapTextAlignLast>,
     pub text_transform: Option<TreemapTextTransform>,
     pub text_decoration: Option<TreemapTextDecoration>,
     pub text_decoration_color: Option<TreemapTextDecorationColor>,
@@ -1498,6 +1499,9 @@ pub struct TreemapStyle {
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum TreemapTextAlign { Start, Center, End }
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TreemapTextAlignLast { Auto, Start, Center, End }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum TreemapTextTransform { None, Uppercase, Lowercase, Capitalize, FullWidth }

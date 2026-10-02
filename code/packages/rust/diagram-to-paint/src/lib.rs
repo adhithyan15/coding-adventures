@@ -399,6 +399,15 @@ fn treemap_text_node(
         };
         node.ext.insert("text.word-spacing".into(), ExtValue::Float(spacing));
     }
+    if let Some(align) = style.and_then(|style| style.text_align_last) {
+        let align = match align {
+            diagram_ir::TreemapTextAlignLast::Auto => "auto",
+            diagram_ir::TreemapTextAlignLast::Start => "start",
+            diagram_ir::TreemapTextAlignLast::Center => "center",
+            diagram_ir::TreemapTextAlignLast::End => "end",
+        };
+        node.ext.insert("text.align-last".into(), ExtValue::Str(align.into()));
+    }
     if let Some(direction) = style.and_then(|style| style.direction) {
         let value = match direction {
             diagram_ir::TreemapTextDirection::LeftToRight => "ltr",
@@ -6958,6 +6967,7 @@ mod tests {
                     },
                     opacity: Some(0.8), fill_opacity: Some(0.5), stroke_opacity: Some(0.5), stroke_dash_offset: Some(-1.0),
                     text_align: Some(diagram_ir::TreemapTextAlign::End),
+                    text_align_last: None,
                     text_transform: Some(diagram_ir::TreemapTextTransform::FullWidth),
                     text_decoration: Some(diagram_ir::TreemapTextDecoration {
                         underline: true, overline: true, line_through: true,
@@ -7041,6 +7051,12 @@ mod tests {
             current_color, Some(&whitespace_style),
         );
         assert_eq!(word_spaced_text.ext.get("text.word-spacing"), Some(&ExtValue::Float(3.5)));
+        whitespace_style.text_align_last = Some(diagram_ir::TreemapTextAlignLast::Start);
+        let last_aligned_text = treemap_text_node(
+            "last line", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(last_aligned_text.ext.get("text.align-last"), Some(&ExtValue::Str("start".into())));
         whitespace_style.direction = Some(diagram_ir::TreemapTextDirection::RightToLeft);
         let rtl_text = treemap_text_node(
             "مرحبا", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
