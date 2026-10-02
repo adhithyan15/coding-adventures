@@ -30,8 +30,8 @@ on:
       - "code/packages/typescript/lattice-ast-to-css/**"
       - "code/packages/typescript/lattice-parser/**"
       - "code/packages/typescript/lattice-lexer/**"
-      - "code/grammars/lattice.tokens"
-      - "code/grammars/lattice.grammar"
+      # The grammar files the playground inlines with Vite's `?raw` imports.
+      - "code/grammars/lattice/**"
       - ".github/workflows/deploy-lattice-docs.yml"
   workflow_dispatch:
 
