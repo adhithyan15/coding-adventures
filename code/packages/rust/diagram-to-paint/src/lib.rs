@@ -424,6 +424,16 @@ fn treemap_text_node(
         };
         node.ext.insert("text.word-break".into(), ExtValue::Str(word_break.into()));
     }
+    if let Some(line_break) = style.and_then(|style| style.line_break) {
+        let line_break = match line_break {
+            diagram_ir::TreemapLineBreak::Auto => "auto",
+            diagram_ir::TreemapLineBreak::Loose => "loose",
+            diagram_ir::TreemapLineBreak::Normal => "normal",
+            diagram_ir::TreemapLineBreak::Strict => "strict",
+            diagram_ir::TreemapLineBreak::Anywhere => "anywhere",
+        };
+        node.ext.insert("text.line-break".into(), ExtValue::Str(line_break.into()));
+    }
     if let Some(direction) = style.and_then(|style| style.direction) {
         let value = match direction {
             diagram_ir::TreemapTextDirection::LeftToRight => "ltr",
@@ -6997,6 +7007,7 @@ mod tests {
                     white_space: Some(diagram_ir::TreemapWhiteSpace::NoWrap),
                     overflow_wrap: None,
                     word_break: None,
+                    line_break: None,
                     letter_spacing: None,
                     word_spacing: None,
                     direction: None,
@@ -7087,6 +7098,12 @@ mod tests {
             current_color, Some(&whitespace_style),
         );
         assert_eq!(keep_all_text.ext.get("text.word-break"), Some(&ExtValue::Str("keep-all".into())));
+        whitespace_style.line_break = Some(diagram_ir::TreemapLineBreak::Loose);
+        let loose_text = treemap_text_node(
+            "あぁ", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(loose_text.ext.get("text.line-break"), Some(&ExtValue::Str("loose".into())));
         whitespace_style.direction = Some(diagram_ir::TreemapTextDirection::RightToLeft);
         let rtl_text = treemap_text_node(
             "مرحبا", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
