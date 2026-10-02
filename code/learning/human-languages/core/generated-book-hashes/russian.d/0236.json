@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:d73fa924cc906d0b",
+  "lessonIds": [
+    "RU-C236-schitat",
+    "RU-C236-izmeryat",
+    "RU-C236-sravnivat",
+    "RU-C236-proveryat",
+    "RU-C236-zapolnyat"
+  ],
+  "tex": "russian/book/chapters/ch236-to-count-to-measure-to-compare-to-check-to-fill-in.tex"
+}

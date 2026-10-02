@@ -1,0 +1,19 @@
+{
+  "chapter": 244,
+  "title": "Ancient, Loud, Bright, Dark, Light",
+  "label": "ch:ru-ancient-loud-bright-dark-light",
+  "canDo": "I can say ancient, loud, bright, dark and light.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "RU-C244-svetlyy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 244: I can say ancient, loud, bright, dark and light.",
+    "assesses": [
+      "RU-LEX-C244-KACH244-03",
+      "RU-LEX-C244-KACH244-04",
+      "RU-LEX-C244-KACH244-05"
+    ]
+  }
+}

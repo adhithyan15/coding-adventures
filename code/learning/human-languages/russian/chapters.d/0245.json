@@ -1,0 +1,19 @@
+{
+  "chapter": 245,
+  "title": "Strange, Funny, Wonderful, Terrible, Excellent",
+  "label": "ch:ru-strange-funny-wonderful-terrible-excellent",
+  "canDo": "I can say strange, funny, wonderful, terrible and excellent.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "RU-C245-otlichnyy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 245: I can say strange, funny, wonderful, terrible and excellent.",
+    "assesses": [
+      "RU-LEX-C245-KACH245-03",
+      "RU-LEX-C245-KACH245-04",
+      "RU-LEX-C245-KACH245-05"
+    ]
+  }
+}

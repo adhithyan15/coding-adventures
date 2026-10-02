@@ -1,0 +1,11 @@
+{
+  "id": "RU-C233-vybirat",
+  "pathSegment": "RU-PATH-233-ACT233",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-233-ACT233",
+      "order": 1
+    }
+  ]
+}

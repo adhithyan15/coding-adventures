@@ -1,0 +1,11 @@
+{
+  "id": "RU-C239-brov",
+  "pathSegment": "RU-PATH-239-ZDOROV239",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-239-ZDOROV239",
+      "order": 2
+    }
+  ]
+}

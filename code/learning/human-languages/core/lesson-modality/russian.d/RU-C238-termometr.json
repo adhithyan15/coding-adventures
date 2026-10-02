@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C238-termometr",
+    "language": "russian",
+    "chapter": 238,
+    "sequence": 14500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f327c004f6e301c8"
+  },
+  "findings": []
+}

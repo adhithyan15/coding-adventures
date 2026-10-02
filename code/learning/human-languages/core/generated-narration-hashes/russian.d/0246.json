@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:a847d16950d4dda2",
+  "lessonIds": [
+    "RU-C246-mikrovolnovka",
+    "RU-C246-chaynik",
+    "RU-C246-miska",
+    "RU-C246-blyudtse",
+    "RU-C246-kruzhka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch246.txt",
+  "json": "russian/narration/ch246.json",
+  "textHash": "fnv1a64:3814edb5171a5661",
+  "jsonHash": "fnv1a64:e16b798b7fd9f62d",
+  "findings": []
+}

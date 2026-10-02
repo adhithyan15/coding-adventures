@@ -1,0 +1,11 @@
+{
+  "id": "RU-C251-petukh",
+  "pathSegment": "RU-PATH-251-VESHCH251",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-251-VESHCH251",
+      "order": 1
+    }
+  ]
+}

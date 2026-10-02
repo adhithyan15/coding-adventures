@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C251-petukh",
+    "language": "russian",
+    "chapter": 251,
+    "sequence": 15520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:050434457bbc1606"
+  },
+  "findings": []
+}

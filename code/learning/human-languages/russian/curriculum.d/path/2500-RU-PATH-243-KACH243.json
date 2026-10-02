@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-243-KACH243",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "RU-EXT-243-KACH243"
+  ],
+  "after": []
+}

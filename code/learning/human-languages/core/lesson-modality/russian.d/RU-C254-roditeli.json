@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C254-roditeli",
+    "language": "russian",
+    "chapter": 254,
+    "sequence": 15690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a04072be528a18a"
+  },
+  "findings": []
+}

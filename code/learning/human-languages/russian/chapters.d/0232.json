@@ -1,0 +1,19 @@
+{
+  "chapter": 232,
+  "title": "To save up, To borrow, To ring, To send, To receive",
+  "label": "ch:ru-to-save-up-to-borrow-to-ring-to-send-to-receive",
+  "canDo": "I can say to save up, to borrow, to ring, to send and to receive.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C232-poluchat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 232: I can say to save up, to borrow, to ring, to send and to receive.",
+    "assesses": [
+      "RU-LEX-C232-ACT232-03",
+      "RU-LEX-C232-ACT232-04",
+      "RU-LEX-C232-ACT232-05"
+    ]
+  }
+}

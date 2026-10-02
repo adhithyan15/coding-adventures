@@ -1,0 +1,19 @@
+{
+  "chapter": 236,
+  "title": "To count, To measure, To compare, To check, To fill in",
+  "label": "ch:ru-to-count-to-measure-to-compare-to-check-to-fill-in",
+  "canDo": "I can say to count, to measure, to compare, to check and to fill in.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C236-zapolnyat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 236: I can say to count, to measure, to compare, to check and to fill in.",
+    "assesses": [
+      "RU-LEX-C236-ACT236-03",
+      "RU-LEX-C236-ACT236-04",
+      "RU-LEX-C236-ACT236-05"
+    ]
+  }
+}

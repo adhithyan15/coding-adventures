@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C249-smetana",
+    "language": "russian",
+    "chapter": 249,
+    "sequence": 15220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed6ddf0f3ac5f89d"
+  },
+  "findings": []
+}

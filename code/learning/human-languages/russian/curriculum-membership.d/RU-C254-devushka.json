@@ -1,0 +1,11 @@
+{
+  "id": "RU-C254-devushka",
+  "pathSegment": "RU-PATH-254-VESHCH254",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-254-VESHCH254",
+      "order": 2
+    }
+  ]
+}

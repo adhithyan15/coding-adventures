@@ -1,0 +1,19 @@
+{
+  "chapter": 252,
+  "title": "Hockey, Tennis, Basketball, Running, Swimming",
+  "label": "ch:ru-hockey-tennis-basketball-running-swimming",
+  "canDo": "I can say hockey, tennis, basketball, running and swimming.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C252-plavaniye",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 252: I can say hockey, tennis, basketball, running and swimming.",
+    "assesses": [
+      "RU-LEX-C252-VESHCH252-03",
+      "RU-LEX-C252-VESHCH252-04",
+      "RU-LEX-C252-VESHCH252-05"
+    ]
+  }
+}

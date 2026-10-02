@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:e2b565197aebdd2b",
+  "lessonIds": [
+    "RU-C256-professor",
+    "RU-C256-zhurnalist",
+    "RU-C256-khudozhnik",
+    "RU-C256-muzykant",
+    "RU-C256-aktyor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch256.txt",
+  "json": "russian/narration/ch256.json",
+  "textHash": "fnv1a64:8800c6611359b62d",
+  "jsonHash": "fnv1a64:e36b6fa4a7c7b5f3",
+  "findings": []
+}

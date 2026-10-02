@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:a2f80048feb497b6",
+  "lessonIds": [
+    "RU-C235-krichat",
+    "RU-C235-sheptat",
+    "RU-C235-molchat",
+    "RU-C235-ulybatsya",
+    "RU-C235-serditsya"
+  ],
+  "tex": "russian/book/chapters/ch235-to-shout-to-whisper-to-be-silent-to-smile-to-be-angry.tex"
+}

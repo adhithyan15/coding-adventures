@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C257-zadacha",
+    "language": "russian",
+    "chapter": 257,
+    "sequence": 15840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d355f46682a914e2"
+  },
+  "findings": []
+}

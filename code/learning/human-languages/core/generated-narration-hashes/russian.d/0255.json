@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:d97f4c6ce5d30bd3",
+  "lessonIds": [
+    "RU-C255-familiya",
+    "RU-C255-vozrast",
+    "RU-C255-nomer",
+    "RU-C255-soobshcheniye",
+    "RU-C255-razgovor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch255.txt",
+  "json": "russian/narration/ch255.json",
+  "textHash": "fnv1a64:bcc4c4a74c123a39",
+  "jsonHash": "fnv1a64:b781a5e70ca63bd0",
+  "findings": []
+}

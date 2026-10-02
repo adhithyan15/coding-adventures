@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C254-paren",
+    "language": "russian",
+    "chapter": 254,
+    "sequence": 15670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cbc04777dc0fbfb9"
+  },
+  "findings": []
+}

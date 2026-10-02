@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:71c168f3484276fe",
+  "lessonIds": [
+    "RU-C248-odezhda",
+    "RU-C248-plashch",
+    "RU-C248-kostyum",
+    "RU-C248-dzhinsy",
+    "RU-C248-shorty"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch248.txt",
+  "json": "russian/narration/ch248.json",
+  "textHash": "fnv1a64:b35a865be941cfe8",
+  "jsonHash": "fnv1a64:66a53bb00c018c26",
+  "findings": []
+}

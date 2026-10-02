@@ -1,0 +1,11 @@
+{
+  "id": "RU-C237-zarabatyvat",
+  "pathSegment": "RU-PATH-237-ACT237",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-237-ACT237",
+      "order": 4
+    }
+  ]
+}

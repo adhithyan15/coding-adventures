@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:e2a215e2002d8963",
+  "lessonIds": [
+    "RU-C241-podval",
+    "RU-C241-balkon",
+    "RU-C241-dvor",
+    "RU-C241-naprotiv",
+    "RU-C241-mezhdu"
+  ],
+  "tex": "russian/book/chapters/ch241-basement-balcony-yard-opposite-between.tex"
+}

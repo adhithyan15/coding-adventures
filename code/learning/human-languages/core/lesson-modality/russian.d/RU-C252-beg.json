@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C252-beg",
+    "language": "russian",
+    "chapter": 252,
+    "sequence": 15590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c776cac9ff2d592"
+  },
+  "findings": []
+}

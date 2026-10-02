@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-R249-second-pass-words-from-chapters-245-249",
+    "language": "russian",
+    "chapter": 249,
+    "sequence": 15280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:650719c96edbc747"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 253,
+  "title": "Fairy tale, Story, Chess, Transport, Trolleybus",
+  "label": "ch:ru-fairy-tale-story-chess-transport-trolleybus",
+  "canDo": "I can say a fairy tale, a story, chess, transport and a trolleybus.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C253-trolleybus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 253: I can say a fairy tale, a story, chess, transport and a trolleybus.",
+    "assesses": [
+      "RU-LEX-C253-VESHCH253-03",
+      "RU-LEX-C253-VESHCH253-04",
+      "RU-LEX-C253-VESHCH253-05"
+    ]
+  }
+}

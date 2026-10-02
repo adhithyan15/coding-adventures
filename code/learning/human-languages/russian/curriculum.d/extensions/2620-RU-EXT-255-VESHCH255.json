@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-255-VESHCH255",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a surname, an age, a number, a message and a conversation.",
+  "prerequisites": []
+}

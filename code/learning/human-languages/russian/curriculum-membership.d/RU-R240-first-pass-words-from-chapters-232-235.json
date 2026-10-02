@@ -1,0 +1,11 @@
+{
+  "id": "RU-R240-first-pass-words-from-chapters-232-235",
+  "pathSegment": "RU-PATH-240-VREMYA240",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "RU-EXT-240-VREMYA240",
+      "order": 5
+    }
+  ]
+}

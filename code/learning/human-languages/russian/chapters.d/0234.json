@@ -1,0 +1,19 @@
+{
+  "chapter": 234,
+  "title": "To sweep, To plant, To water, To grow, To feed",
+  "label": "ch:ru-to-sweep-to-plant-to-water-to-grow-to-feed",
+  "canDo": "I can say to sweep, to plant, to water, to grow and to feed.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C234-kormit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 234: I can say to sweep, to plant, to water, to grow and to feed.",
+    "assesses": [
+      "RU-LEX-C234-ACT234-03",
+      "RU-LEX-C234-ACT234-04",
+      "RU-LEX-C234-ACT234-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C232-otpravlyat",
+    "language": "russian",
+    "chapter": 232,
+    "sequence": 14210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad3dd33878ac7f1e"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C235-serditsya",
+    "language": "russian",
+    "chapter": 235,
+    "sequence": 14370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5395af103f85f2b2"
+  },
+  "findings": []
+}

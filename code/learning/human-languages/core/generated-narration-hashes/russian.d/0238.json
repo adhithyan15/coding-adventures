@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 238,
+  "sourceHash": "fnv1a64:61e75530c686701a",
+  "lessonIds": [
+    "RU-C238-maz",
+    "RU-C238-kapli",
+    "RU-C238-termometr",
+    "RU-C238-poliklinika",
+    "RU-C238-skoraya-pomoshch"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch238.txt",
+  "json": "russian/narration/ch238.json",
+  "textHash": "fnv1a64:d2baabfc88a36c22",
+  "jsonHash": "fnv1a64:1ab97371e6f1ba56",
+  "findings": []
+}

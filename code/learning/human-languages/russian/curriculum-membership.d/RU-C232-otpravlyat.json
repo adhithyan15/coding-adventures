@@ -1,0 +1,11 @@
+{
+  "id": "RU-C232-otpravlyat",
+  "pathSegment": "RU-PATH-232-ACT232",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-232-ACT232",
+      "order": 3
+    }
+  ]
+}

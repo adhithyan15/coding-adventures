@@ -1,0 +1,11 @@
+{
+  "id": "RU-C249-svinina",
+  "pathSegment": "RU-PATH-249-VESHCH249",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-249-VESHCH249",
+      "order": 2
+    }
+  ]
+}

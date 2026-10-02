@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:3c289540c67034ed",
+  "lessonIds": [
+    "RU-C237-umirat",
+    "RU-C237-stuchat",
+    "RU-C237-remontirovat",
+    "RU-C237-pereyezzhat",
+    "RU-C237-zarabatyvat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch237.txt",
+  "json": "russian/narration/ch237.json",
+  "textHash": "fnv1a64:a1642fea045d9771",
+  "jsonHash": "fnv1a64:b09476ad3fafb168",
+  "findings": []
+}

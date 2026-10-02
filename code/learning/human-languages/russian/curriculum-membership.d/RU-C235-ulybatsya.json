@@ -1,0 +1,11 @@
+{
+  "id": "RU-C235-ulybatsya",
+  "pathSegment": "RU-PATH-235-ACT235",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-235-ACT235",
+      "order": 3
+    }
+  ]
+}

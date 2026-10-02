@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C233-vybirat",
+    "language": "russian",
+    "chapter": 233,
+    "sequence": 14240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0093a1c8f0fcbc9"
+  },
+  "findings": []
+}

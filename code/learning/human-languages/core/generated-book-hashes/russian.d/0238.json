@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 238,
+  "sourceHash": "fnv1a64:706eee4b8efa15d2",
+  "lessonIds": [
+    "RU-C238-maz",
+    "RU-C238-kapli",
+    "RU-C238-termometr",
+    "RU-C238-poliklinika",
+    "RU-C238-skoraya-pomoshch"
+  ],
+  "tex": "russian/book/chapters/ch238-ointment-drops-thermometer-clinic-ambulance.tex"
+}

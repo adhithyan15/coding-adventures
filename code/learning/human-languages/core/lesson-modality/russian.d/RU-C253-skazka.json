@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C253-skazka",
+    "language": "russian",
+    "chapter": 253,
+    "sequence": 15610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c1ee4e950438e06"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 242,
+  "title": "Library, University, Café, Zoo, Circus",
+  "label": "ch:ru-library-university-cafe-zoo-circus",
+  "canDo": "I can say a library, a university, a café, a zoo and a circus.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "RU-C242-tsirk",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 242: I can say a library, a university, a café, a zoo and a circus.",
+    "assesses": [
+      "RU-LEX-C242-MESTO242-03",
+      "RU-LEX-C242-MESTO242-04",
+      "RU-LEX-C242-MESTO242-05"
+    ]
+  }
+}

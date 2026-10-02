@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C237-remontirovat",
+    "language": "russian",
+    "chapter": 237,
+    "sequence": 14450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f3f1761e37fe7b7a"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C242-zoopark",
+  "pathSegment": "RU-PATH-242-MESTO242",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-242-MESTO242",
+      "order": 3
+    }
+  ]
+}

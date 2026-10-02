@@ -1,0 +1,19 @@
+{
+  "chapter": 256,
+  "title": "Professor, Journalist, Artist, Musician, Actor",
+  "label": "ch:ru-professor-journalist-artist-musician-actor",
+  "canDo": "I can say a professor, a journalist, an artist, a musician and an actor.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C256-aktyor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 256: I can say a professor, a journalist, an artist, a musician and an actor.",
+    "assesses": [
+      "RU-LEX-C256-RABOTA256-03",
+      "RU-LEX-C256-RABOTA256-04",
+      "RU-LEX-C256-RABOTA256-05"
+    ]
+  }
+}
