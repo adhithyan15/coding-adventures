@@ -3,6 +3,12 @@
 All notable changes to this package follow [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- **Windows build.** New `BUILD_windows` running the same gradle command without the POSIX
+  lock loop (`while ! mkdir ...; do sleep 1; done; ...; status=$?`), which `cmd /C` cannot run.
+  Flagged by the build tool's new Windows env-assignment check.
+
 ## [0.1.0] — 2026-05-06
 
 ### Added

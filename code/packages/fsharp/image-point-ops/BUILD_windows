@@ -1,0 +1,1 @@
+dotnet test tests/CodingAdventures.ImagePointOps.Tests/CodingAdventures.ImagePointOps.Tests.fsproj --disable-build-servers --artifacts-path .artifacts /p:CollectCoverage=true /p:Threshold=80 /p:ThresholdType=line "/p:Exclude=[CodingAdventures.PixelContainer]*"

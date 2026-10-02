@@ -25,6 +25,7 @@ import (
 
 	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/executor"
 )
 
 // Languages in this set are expected to materialize their transitive local
@@ -142,6 +143,7 @@ func ValidateBuildFiles(packages []discovery.Package, graph *directedgraph.Graph
 		problems = append(problems, ciProblem)
 	}
 	problems = append(problems, validateNoSilentlyTruncatedCommands(packages)...)
+	problems = append(problems, validateWindowsEnvAssignments(packages)...)
 	problems = append(problems, validateLuaIsolatedBuildFiles(packages)...)
 	problems = append(problems, validatePerlBuildFiles(packages)...)
 	problems = append(problems, validateRustWorkspaceMembers(packages)...)
@@ -573,6 +575,77 @@ func validateNoSilentlyTruncatedCommands(packages []discovery.Package) []string 
 					pkg.Name, buildFile, truncateForMessage(trimmed),
 				))
 			}
+		}
+	}
+	return problems
+}
+
+// commandPositionAssignment matches a POSIX `VAR=` assignment where a shell
+// expects a command name: at the start of the line, or right after `(`, `;`,
+// `&`/`&&` or `|`/`||`.
+//
+//	FOO=bar cmd                      start of line
+//	(cd ../dep && FOO=bar cmd)       after `&&`, inside a subshell
+//
+// `cmd /C` has no inline assignment. It reads `FOO` as the program to run: on a
+// case-insensitive filesystem `RUSTC=...` even resolves to rustup's `rustc.exe`
+// proxy, which dies with "unknown proxy name: 'RUSTC'".
+var commandPositionAssignment = regexp.MustCompile(`(?:^|[(;&|]\s*)([A-Za-z_][A-Za-z0-9_]*)=`)
+
+// validateWindowsEnvAssignments rejects a shared BUILD file that Windows would
+// run with a POSIX environment assignment `cmd /C` cannot execute.
+//
+// The executor already rewrites the simple shape, a leading `VAR=value cmd`
+// or `VAR="value" cmd`, into cmd's `set "VAR=value"&& cmd`
+// (executor.RewriteInlineEnvPrefixForWindows). This check applies that same
+// rewrite first. It then reports any assignment still in command position:
+//
+//   - a value the rewrite refuses to translate, e.g. `RUSTC="$(rustup which
+//     rustc)" cargo ...` or `PERL5LIB=$(cd ../aes && pwd)/lib ...`;
+//   - an assignment after `&&`, `;` or `(`, which the rewrite never touches.
+//
+// Truth table, for a package with no BUILD_windows:
+//
+//	BUILD line                               after rewrite                  verdict
+//	RUSTDOCFLAGS="-D warnings" cargo doc     set "RUSTDOCFLAGS=..."&& ...   ok
+//	RUSTC="$(rustup which rustc)" cargo ...  unchanged                      reject
+//	(cd ../x && NPM_CONFIG_CACHE=c npm i)    unchanged                      reject
+//	cargo test -p widget                     unchanged, no assignment       ok
+//
+// Known limits, none reached by any BUILD in the repo today: a `;` or `&`
+// inside a quoted argument (`python -c "import x; y=1"`) can trip it, and an
+// assignment after `then` or `{`, or a single-quoted value (`FOO='a b' cmd`,
+// which the rewrite mistranslates), slips past it. It is a guard for the
+// common shapes, not a shell parser.
+//
+// Only the file Windows actually resolves is checked: once a package has a
+// BUILD_windows, that hand-written file is what runs there, and its author
+// chose its syntax deliberately. Before this check, journal-mosaic-app,
+// spice-mosaic-app and three board-vm-uno-r4 crates each failed on Windows
+// only when something rebuilt them there, long after the line was written.
+func validateWindowsEnvAssignments(packages []discovery.Package) []string {
+	var problems []string
+	for _, pkg := range packages {
+		if pkg.IsStarlark {
+			continue
+		}
+		windowsBuild := discovery.GetBuildFileForPlatform(pkg.Path, "windows")
+		if windowsBuild == "" || filepath.Base(windowsBuild) != "BUILD" {
+			continue
+		}
+		for _, line := range readBuildLines(windowsBuild) {
+			rewritten := executor.RewriteInlineEnvPrefixForWindows(line)
+			match := commandPositionAssignment.FindStringSubmatch(rewritten)
+			if match == nil {
+				continue
+			}
+			problems = append(problems, fmt.Sprintf(
+				"%s (%s): %q sets %s in a way `cmd /C` cannot run on Windows (cmd reads %s as "+
+					"the command name). Add a BUILD_windows that uses cmd's "+
+					"`set \"%s=...\" && command` form.",
+				pkg.Name, buildFileLabel(pkg.Path), truncateForMessage(line), match[1], match[1], match[1],
+			))
+			break
 		}
 	}
 	return problems

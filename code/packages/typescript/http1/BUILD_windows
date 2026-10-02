@@ -1,0 +1,3 @@
+cd ..\http-core && set "NPM_CONFIG_CACHE=.npm-cache" && npm install --silent
+set "NPM_CONFIG_CACHE=.npm-cache" && npm install --silent
+set "NPM_CONFIG_CACHE=.npm-cache" && npx vitest run --coverage

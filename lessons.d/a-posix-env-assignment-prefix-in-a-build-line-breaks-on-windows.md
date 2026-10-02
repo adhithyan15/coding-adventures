@@ -18,7 +18,17 @@ crates) and so rebuilt both apps on Windows.
 prefix (`rustup run stable cargo build -p <crate> --target
 wasm32-unknown-unknown`). On Windows CI, rustup's stable is the only rustc.
 
-**Do instead:** any BUILD line that uses shell-only syntax (`VAR=value cmd`,
-`$(...)`, `&&` chains that rely on POSIX semantics, quoting) needs a
-`BUILD_windows` alongside it. Before pushing, grep for
-`^[A-Z_]+=.* ` in BUILD files that have no `BUILD_windows`.
+**Correction (same week):** a plain prefix is NOT a problem in itself. On
+Windows the executor rewrites a leading `VAR=value cmd` or `VAR="value" cmd`
+into `set "VAR=value"&& cmd` (`rewriteInlineEnvPrefixForWindows`), so
+`RUSTDOCFLAGS="-D warnings" cargo doc` works there. Two kinds of line break:
+- a value the rewrite refuses: `$`, a backtick, `&|;()<>`, or chained
+  assignments, such as `RUSTC="$(rustup which rustc)"`;
+- any assignment that is not at the start of the line, e.g. after `&&` or
+  inside `( ... )`.
+
+**Do instead:** let the build tool tell you. `-validate-build-files` now runs
+each shared BUILD line through that same rewrite and rejects any `VAR=` left in
+command position when the package has no `BUILD_windows`. Its first run found 18
+more latent packages beyond the five fixed by hand. For the Windows file, use
+cmd's `set "VAR=value" && cmd`, `;` as the path separator, and `\` in paths.
