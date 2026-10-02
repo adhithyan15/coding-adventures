@@ -73,51 +73,79 @@ function findDocument(project: AuthoringProject, id: string): number {
   return index;
 }
 
+function validateCommand(value: unknown): AuthoringCommand {
+  if (value === null || typeof value !== "object" || Object.getPrototypeOf(value) !== Object.prototype) {
+    throw new AuthoringError("INVALID_COMMAND", "Authoring commands must be plain objects.");
+  }
+  const descriptors = Object.getOwnPropertyDescriptors(value);
+  const typeDescriptor = descriptors.type;
+  if (typeDescriptor === undefined || !("value" in typeDescriptor) || typeof typeDescriptor.value !== "string") {
+    throw new AuthoringError("INVALID_COMMAND", "The authoring command type must be a data field.");
+  }
+  let expected: readonly string[];
+  switch (typeDescriptor.value) {
+    case "create-document": expected = ["type", "document", "activate"]; break;
+    case "remove-document": expected = ["type", "documentId"]; break;
+    case "update-document-metadata": expected = ["type", "documentId", "title", "slug", "status"]; break;
+    case "replace-document-body": expected = ["type", "documentId", "body"]; break;
+    case "configure-site": expected = ["type", "title", "baseUrl", "themeId"]; break;
+    case "set-active-document": expected = ["type", "documentId"]; break;
+    default: throw new AuthoringError("INVALID_COMMAND", "The authoring command type is not supported.");
+  }
+  const actual = Object.keys(descriptors).sort();
+  const sortedExpected = [...expected].sort();
+  if (actual.length !== sortedExpected.length || actual.some((key, index) => key !== sortedExpected[index])) {
+    throw new AuthoringError("INVALID_COMMAND", "The authoring command has missing or unknown fields.");
+  }
+  if (Object.values(descriptors).some((item) => !("value" in item) || !item.enumerable)) {
+    throw new AuthoringError("INVALID_COMMAND", "The authoring command contains an accessor or hidden field.");
+  }
+  return value as AuthoringCommand;
+}
+
 function applyCommand(project: AuthoringProject, command: AuthoringCommand, limits: AuthoringLimits): AuthoringProject {
-  if (command === null || typeof command !== "object") throw new AuthoringError("INVALID_COMMAND", "Authoring commands must be objects.");
-  switch (command.type) {
+  const checked = validateCommand(command);
+  switch (checked.type) {
     case "create-document":
       return validateAuthoringProject({
         ...project,
-        documents: [...project.documents, command.document],
-        activeDocumentId: command.activate ? command.document.id : project.activeDocumentId,
+        documents: [...project.documents, checked.document],
+        activeDocumentId: checked.activate ? checked.document.id : project.activeDocumentId,
       }, limits);
     case "remove-document": {
-      const index = findDocument(project, command.documentId);
+      const index = findDocument(project, checked.documentId);
       return validateAuthoringProject({
         ...project,
         documents: project.documents.filter((_, itemIndex) => itemIndex !== index),
-        activeDocumentId: project.activeDocumentId === command.documentId ? null : project.activeDocumentId,
+        activeDocumentId: project.activeDocumentId === checked.documentId ? null : project.activeDocumentId,
       }, limits);
     }
     case "update-document-metadata": {
-      const index = findDocument(project, command.documentId);
+      const index = findDocument(project, checked.documentId);
       return validateAuthoringProject({
         ...project,
         documents: project.documents.map((document, itemIndex) => itemIndex === index
-          ? { ...document, title: command.title, slug: command.slug, status: command.status }
+          ? { ...document, title: checked.title, slug: checked.slug, status: checked.status }
           : document),
       }, limits);
     }
     case "replace-document-body": {
-      const index = findDocument(project, command.documentId);
+      const index = findDocument(project, checked.documentId);
       return validateAuthoringProject({
         ...project,
         documents: project.documents.map((document, itemIndex) => itemIndex === index
-          ? { ...document, body: command.body }
+          ? { ...document, body: checked.body }
           : document),
       }, limits);
     }
     case "configure-site":
       return validateAuthoringProject({
         ...project,
-        title: command.title,
-        site: { baseUrl: command.baseUrl, themeId: command.themeId },
+        title: checked.title,
+        site: { baseUrl: checked.baseUrl, themeId: checked.themeId },
       }, limits);
     case "set-active-document":
-      return validateAuthoringProject({ ...project, activeDocumentId: command.documentId }, limits);
-    default:
-      throw new AuthoringError("INVALID_COMMAND", "The authoring command type is not supported.");
+      return validateAuthoringProject({ ...project, activeDocumentId: checked.documentId }, limits);
   }
 }
 
@@ -189,6 +217,9 @@ export async function openAuthoringSession(options: OpenAuthoringSessionOptions)
   abortIfNeeded(options.signal);
   const limits = resolveLimits(options.limits);
   const loaded = await options.storage.load(options.signal);
+  if (loaded === undefined || (loaded !== null && typeof loaded !== "object")) {
+    invalidState("storage adapter returned an invalid loaded state");
+  }
   if (loaded !== null) {
     const state = decodeStored(loaded, limits);
     return new Session(options.storage, state, validateRevision(loaded.revision, "stored"), limits);

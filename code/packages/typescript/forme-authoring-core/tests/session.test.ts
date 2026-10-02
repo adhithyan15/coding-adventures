@@ -256,6 +256,12 @@ describe("durable authoring sessions", () => {
     };
     await expect(openAuthoringSession({ storage: wrongBytes })).rejects.toMatchObject({ code: "INVALID_STATE" });
 
+    const missingLoadResult: AuthoringStorage = {
+      async load() { return undefined as never; },
+      async compareAndSwap() { return { revision: "unused" }; },
+    };
+    await expect(openAuthoringSession({ storage: missingLoadResult })).rejects.toMatchObject({ code: "INVALID_STATE" });
+
     const invalidStoredRevision = new MemoryStorage();
     await openAuthoringSession({ storage: invalidStoredRevision, initialProject: initial() });
     invalidStoredRevision.revision = "";
@@ -293,7 +299,16 @@ describe("durable authoring sessions", () => {
     await expect(session.undo()).rejects.toMatchObject({ code: "NO_UNDO" });
     await expect(session.redo()).rejects.toMatchObject({ code: "NO_REDO" });
     await expect(session.dispatch({ type: "remove-document", documentId: DOC_A })).rejects.toMatchObject({ code: "DOCUMENT_NOT_FOUND" });
+    await expect(session.dispatch(null as never)).rejects.toMatchObject({ code: "INVALID_COMMAND" });
     await expect(session.dispatch({ type: "mystery" } as never)).rejects.toMatchObject({ code: "INVALID_COMMAND" });
+    await expect(session.dispatch({ type: "set-active-document", documentId: null, extra: true } as never)).rejects.toMatchObject({ code: "INVALID_COMMAND" });
+    await expect(session.dispatch(Object.create({ type: "set-active-document", documentId: null }) as never)).rejects.toMatchObject({ code: "INVALID_COMMAND" });
+    let reads = 0;
+    const accessor = {} as Record<string, unknown>;
+    Object.defineProperty(accessor, "type", { enumerable: true, get: () => { reads += 1; return "set-active-document"; } });
+    Object.defineProperty(accessor, "documentId", { enumerable: true, value: null });
+    await expect(session.dispatch(accessor as never)).rejects.toMatchObject({ code: "INVALID_COMMAND" });
+    expect(reads).toBe(0);
     await session.dispatch({ type: "create-document", document: document(), activate: false });
     await expect(session.dispatch({ type: "create-document", document: document(), activate: false })).rejects.toMatchObject({ code: "INVALID_PROJECT" });
     await expect(openAuthoringSession({ storage: new MemoryStorage(), initialProject: initial(), historyLimit: 0 })).rejects.toMatchObject({ code: "INVALID_LIMIT" });
