@@ -4615,6 +4615,7 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                 _ => return Err(token_error(token, "unsupported treemap white-space")),
             }),
             "letter-spacing" => style.letter_spacing = Some(parse_treemap_letter_spacing(token, value)?),
+            "word-spacing" => style.word_spacing = Some(parse_treemap_word_spacing(token, value)?),
             "direction" => style.direction = Some(match value.to_ascii_lowercase().as_str() {
                 "ltr" => diagram_ir::TreemapTextDirection::LeftToRight,
                 "rtl" => diagram_ir::TreemapTextDirection::RightToLeft,
@@ -4655,6 +4656,30 @@ fn parse_treemap_letter_spacing(
         diagram_ir::TreemapLetterSpacing::Factor(value)
     } else {
         diagram_ir::TreemapLetterSpacing::Pixels(value)
+    })
+}
+
+fn parse_treemap_word_spacing(
+    token: &Token,
+    source: &str,
+) -> Result<diagram_ir::TreemapWordSpacing, ParseError> {
+    let source = source.trim();
+    if source.eq_ignore_ascii_case("normal") {
+        return Ok(diagram_ir::TreemapWordSpacing::Normal);
+    }
+    let (number, is_factor) = if let Some(value) = source.strip_suffix("px") {
+        (value.trim(), false)
+    } else if let Some(value) = source.strip_suffix("em") {
+        (value.trim(), true)
+    } else {
+        return Err(token_error(token, "treemap word-spacing must be normal or a px or em length"));
+    };
+    let value = number.parse::<f64>().ok().filter(|value| value.is_finite())
+        .ok_or_else(|| token_error(token, "invalid treemap word-spacing"))?;
+    Ok(if is_factor {
+        diagram_ir::TreemapWordSpacing::Factor(value)
+    } else {
+        diagram_ir::TreemapWordSpacing::Pixels(value)
     })
 }
 
@@ -14554,6 +14579,23 @@ B//-A: reverse stick top
         }
         for value in ["2", "10%", "0.25rem", "wide"] {
             let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent letter-spacing:{value}");
+            assert!(parse_treemap(&source).is_err());
+        }
+    }
+
+    #[test]
+    fn treemap_parses_word_spacing_lengths() {
+        for (value, expected) in [
+            ("normal", diagram_ir::TreemapWordSpacing::Normal),
+            ("4px", diagram_ir::TreemapWordSpacing::Pixels(4.0)),
+            ("-0.25em", diagram_ir::TreemapWordSpacing::Factor(-0.25)),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent word-spacing:{value}");
+            let diagram = parse_treemap(&source).expect("supported word spacing must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.word_spacing), Some(expected));
+        }
+        for value in ["4", "1rem", "calc(1px)"] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent word-spacing:{value}");
             assert!(parse_treemap(&source).is_err());
         }
     }

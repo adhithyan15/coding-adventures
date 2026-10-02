@@ -1490,6 +1490,7 @@ pub struct TreemapStyle {
     pub text_indent: Option<TreemapTextIndent>,
     pub white_space: Option<TreemapWhiteSpace>,
     pub letter_spacing: Option<TreemapLetterSpacing>,
+    pub word_spacing: Option<TreemapWordSpacing>,
     pub direction: Option<TreemapTextDirection>,
     pub text_shadow: Option<TreemapTextShadow>,
     pub tab_size: Option<u16>,
@@ -1534,6 +1535,9 @@ pub enum TreemapWhiteSpace { Normal, NoWrap, Pre, PreWrap, PreLine }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum TreemapLetterSpacing { Normal, Pixels(f64), Factor(f64) }
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum TreemapWordSpacing { Normal, Pixels(f64), Factor(f64) }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum TreemapTextDirection { LeftToRight, RightToLeft }
