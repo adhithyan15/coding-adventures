@@ -18,6 +18,7 @@ class MemoryStorage implements AuthoringStorage {
   revision: string | null = null;
   writes = 0;
   failNext: Error | null = null;
+  returnedRevision: unknown = null;
 
   async load(signal?: AbortSignal): Promise<StoredAuthoringState | null> {
     if (signal?.aborted) throw signal.reason;
@@ -43,8 +44,16 @@ class MemoryStorage implements AuthoringStorage {
     this.writes += 1;
     this.bytes = bytes.slice();
     this.revision = `revision-${this.writes}`;
-    return { revision: this.revision };
+    return { revision: (this.returnedRevision ?? this.revision) as string };
   }
+}
+
+function canonical(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map(canonical).join(",")}]`;
+  if (value !== null && typeof value === "object") {
+    return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${canonical((value as Record<string, unknown>)[key])}`).join(",")}}`;
+  }
+  return JSON.stringify(value);
 }
 
 function initial(): AuthoringProject {
@@ -189,6 +198,7 @@ describe("durable authoring sessions", () => {
       new TextEncoder().encode('{"schemaVersion":2}'),
       new TextEncoder().encode('{"cursor":0,"history":[],"schemaVersion":1}'),
       new TextEncoder().encode('{"cursor":1,"history":[{}],"schemaVersion":1}'),
+      new Uint8Array([0xff]),
       new Uint8Array(8 * 1024 * 1024 + 1),
     ];
 
@@ -199,6 +209,81 @@ describe("durable authoring sessions", () => {
       await expect(openAuthoringSession({ storage })).rejects.toBeInstanceOf(AuthoringError);
       expect(storage.writes).toBe(0);
     }
+
+    const valid = new MemoryStorage();
+    await openAuthoringSession({ storage: valid, initialProject: initial() });
+    valid.bytes = new TextEncoder().encode(`${new TextDecoder().decode(valid.bytes!)} `);
+    await expect(openAuthoringSession({ storage: valid })).rejects.toMatchObject({ code: "INVALID_STATE" });
+  });
+
+  it("rejects every malformed persisted-history boundary", async () => {
+    const base = new MemoryStorage();
+    await openAuthoringSession({ storage: base, initialProject: initial() });
+    const original = JSON.parse(new TextDecoder().decode(base.bytes!)) as Record<string, unknown>;
+    const cases: Record<string, unknown>[] = [
+      { ...original, historyLimit: 0 },
+      { ...original, historyLimit: 201 },
+      { ...original, history: [] },
+      { ...original, cursor: -1 },
+      { ...original, cursor: 1 },
+      { ...original, cursor: 0.5 },
+      { ...original, extra: true },
+    ];
+    for (const value of cases) {
+      const storage = new MemoryStorage();
+      storage.bytes = new TextEncoder().encode(canonical(value));
+      storage.revision = "stored";
+      await expect(openAuthoringSession({ storage })).rejects.toMatchObject({ code: "INVALID_STATE" });
+    }
+
+    const other = createAuthoringProject({
+      projectId: "01952c0d-7e63-7000-8000-000000000099",
+      title: "Other",
+    });
+    const crossed = { ...original, history: [...(original.history as unknown[]), other], historyLimit: 2, cursor: 1 };
+    const storage = new MemoryStorage();
+    storage.bytes = new TextEncoder().encode(canonical(crossed));
+    storage.revision = "stored";
+    await expect(openAuthoringSession({ storage })).rejects.toMatchObject({ code: "INVALID_STATE" });
+  });
+
+  it("rejects malformed adapter values and session options", async () => {
+    await expect(openAuthoringSession(null as never)).rejects.toMatchObject({ code: "INVALID_STATE" });
+
+    const wrongBytes: AuthoringStorage = {
+      async load() { return { bytes: "not-bytes" as never, revision: "stored" }; },
+      async compareAndSwap() { return { revision: "unused" }; },
+    };
+    await expect(openAuthoringSession({ storage: wrongBytes })).rejects.toMatchObject({ code: "INVALID_STATE" });
+
+    const invalidStoredRevision = new MemoryStorage();
+    await openAuthoringSession({ storage: invalidStoredRevision, initialProject: initial() });
+    invalidStoredRevision.revision = "";
+    await expect(openAuthoringSession({ storage: invalidStoredRevision })).rejects.toMatchObject({ code: "INVALID_STATE" });
+
+    const invalidAdapterRevision = new MemoryStorage();
+    invalidAdapterRevision.returnedRevision = "bad\u0007revision";
+    await expect(openAuthoringSession({ storage: invalidAdapterRevision, initialProject: initial() })).rejects.toMatchObject({ code: "INVALID_STATE" });
+  });
+
+  it("rejects an aborted open and a command that makes retained history too large", async () => {
+    const controller = new AbortController();
+    controller.abort();
+    await expect(openAuthoringSession({ storage: new MemoryStorage(), initialProject: initial(), signal: controller.signal })).rejects.toMatchObject({ name: "AbortError" });
+
+    const storage = new MemoryStorage();
+    const session = await openAuthoringSession({
+      storage,
+      initialProject: initial(),
+      limits: { maxJsonBytes: 600 },
+    });
+    await expect(session.dispatch({
+      type: "configure-site",
+      title: "x".repeat(300),
+      baseUrl: null,
+      themeId: "forme-classless",
+    })).rejects.toMatchObject({ code: "INVALID_STATE" });
+    expect(session.project.title).toBe("My site");
   });
 
   it("rejects unknown commands, missing documents, duplicate entries, invalid history limits, and empty undo/redo", async () => {

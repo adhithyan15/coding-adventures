@@ -127,6 +127,7 @@ describe("the authoring project codec", () => {
               { type: "image", destination: "images/cat.png", title: "Cat", alt: "cat" },
               { type: "soft_break" },
               { type: "autolink", destination: "https://example.com", isEmail: false },
+              { type: "autolink", destination: "hello@example.com", isEmail: true },
               { type: "hard_break" },
             ] },
           ],
@@ -156,7 +157,12 @@ describe("the authoring project codec", () => {
     invalid({ ...project(), title: " padded " });
     invalid({ ...project(), title: "bad\u0007title" });
     invalid({ ...project(), title: "bad\ud800title" });
+    invalid({ ...project(), title: "bad\udc00title" });
+    invalid({ ...project(), title: 42 });
+    invalid({ ...project(), title: "" });
     invalid({ ...project(), site: { ...project().site, baseUrl: "javascript:alert(1)" } });
+    invalid({ ...project(), site: { ...project().site, baseUrl: "/relative" } });
+    invalid({ ...project(), site: { ...project().site, baseUrl: "https://user:pass@example.com" } });
     invalid({ ...project(), site: { ...project().site, themeId: "../theme" } });
     invalid({ ...project(), activeDocumentId: "01952c0d-7e63-7000-8000-000000000099" });
     invalid({ ...project(), documents: [{ ...project().documents[0]!, slug: "Not Portable" }] });
@@ -176,16 +182,50 @@ describe("the authoring project codec", () => {
     invalid(withBody({ type: "document", children: [{ type: "raw_block", format: "html", value: "<script>" }] }));
     invalid(withBody({ type: "document", children: [{ type: "paragraph", children: [{ type: "raw_inline", format: "html", value: "x" }] }] }));
     invalid(withBody({ type: "document", children: [{ type: "paragraph", children: [{ type: "link", destination: "data:text/html,x", title: null, children: [] }] }] }));
+    invalid(withBody({ type: "document", children: [{ type: "paragraph", children: [{ type: "link", destination: "//example.com", title: null, children: [] }] }] }));
+    invalid(withBody({ type: "document", children: [{ type: "paragraph", children: [{ type: "image", destination: "images\\cat.png", title: null, alt: "cat" }] }] }));
+    invalid(withBody({ type: "document", children: [{ type: "paragraph", children: [{ type: "autolink", destination: "not-an-email", isEmail: true }] }] }));
+    invalid(withBody({ type: "document", children: [{ type: "paragraph", children: [{ type: "autolink", destination: "https://example.com", isEmail: "no" }] }] }));
+    invalid(withBody({ type: "document", children: [{ type: "paragraph", children: [null] }] }));
+    invalid(withBody({ type: "document", children: [{ type: "paragraph", children: [{ type: "link", destination: "/a", title: null, children: [{ type: "link", destination: "/b", title: null, children: [] }] }] }] }));
     invalid(withBody({ type: "document", children: [{ type: "heading", level: 7, children: [] }] }));
+    invalid(withBody({ type: "document", children: [null] }));
+    invalid(withBody({ type: "document", children: [{ type: "document", children: [] }] }));
     invalid(withBody({ type: "document", children: [{ type: "mystery" }] }));
     invalid(withBody({ type: "paragraph", children: [] }));
+  });
+
+  it("rejects malformed list, code, table, status, and shared-tree shapes", () => {
+    const withBlock = (block: unknown) => ({
+      ...project(),
+      documents: [{ ...project().documents[0]!, body: { type: "document", children: [block] } }],
+    });
+    invalid(withBlock({ type: "code_block", language: null, value: "missing newline" }));
+    invalid(withBlock({ type: "task_item", checked: "yes", children: [] }));
+    invalid(withBlock({ type: "list", ordered: "yes", start: 1, tight: true, children: [] }));
+    invalid(withBlock({ type: "list", ordered: true, start: 0, tight: true, children: [] }));
+    invalid(withBlock({ type: "list", ordered: false, start: 1, tight: true, children: [] }));
+    invalid(withBlock({ type: "list", ordered: false, start: null, tight: "yes", children: [] }));
+    invalid(withBlock({ type: "list", ordered: false, start: null, tight: true, children: [{ type: "paragraph", children: [] }] }));
+    invalid(withBlock({ type: "table", align: ["diagonal"], children: [] }));
+    invalid(withBlock({ type: "table", align: ["left"], children: [{ type: "paragraph", isHeader: true, children: [] }] }));
+    invalid(withBlock({ type: "table", align: ["left"], children: [{ type: "table_row", isHeader: "yes", children: [] }] }));
+    invalid(withBlock({ type: "table", align: ["left"], children: [{ type: "table_row", isHeader: true, children: [{ type: "paragraph", children: [] }] }] }));
+    invalid(withBlock({ type: "table", align: ["left", "right"], children: [{ type: "table_row", isHeader: true, children: [{ type: "table_cell", children: [] }] }] }));
+    invalid({ ...project(), documents: [{ ...project().documents[0]!, status: "archived" }] });
+
+    const shared = { type: "text", value: "shared" };
+    invalid(withBlock({ type: "paragraph", children: [shared, shared] }));
+    const cycle: unknown[] = [];
+    cycle.push(cycle);
+    invalid(withBlock({ type: "paragraph", children: cycle }));
   });
 
   it("enforces caller-lowered document, depth, node, string, URL, and byte limits", () => {
     invalid({ ...project(), documents: [] }, "INVALID_PROJECT");
     expect(() => validateAuthoringProject(project(), { maxDocuments: 0 })).toThrow(/documents/i);
     expect(() => validateAuthoringProject(project(), { maxDepth: 1 })).toThrow(/depth/i);
-    expect(() => validateAuthoringProject(project(), { maxNodesPerDocument: 2 })).toThrow(/nodes/i);
+    expect(() => validateAuthoringProject(project(), { maxNodesPerDocument: 2 })).toThrow(/node/i);
     expect(() => validateAuthoringProject(project({ title: "abcd" }), { maxTitleScalars: 3 })).toThrow(/title/i);
     expect(() => validateAuthoringProject(project(), { maxUrlScalars: 5 })).toThrow(/url|destination/i);
     expect(() => validateAuthoringProject(project(), { maxJsonBytes: 16 })).toThrow(/bytes/i);
@@ -195,5 +235,7 @@ describe("the authoring project codec", () => {
     expect(() => validateAuthoringProject(project(), {
       maxDocuments: HARD_AUTHORING_LIMITS.maxDocuments + 1,
     })).toThrow(/limit/i);
+    expect(() => validateAuthoringProject(project(), null as never)).toThrow(/plain object/i);
+    expect(() => validateAuthoringProject(project(), { surprise: 1 } as never)).toThrow(/unknown field/i);
   });
 });
