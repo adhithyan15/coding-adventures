@@ -76,9 +76,13 @@ project.
 - Configs containing plugin `StageRef`s discover only the current project's
   installed `forme-plugins/` root, load its manifest-bound grants, and launch
   lazily through the current platform's native sandbox. Node uses the current
-  trusted executable; other language runtimes remain unavailable unless an
-  absolute executable and containing runtime root are supplied by the product
-  adapter. Direct-import-only configs create no plugin host or subprocess.
+  trusted executable; Deno, Bun, and Python use explicit absolute executable
+  and distribution-root pairs from `settings.pluginRuntimes`. Rust plugins use
+  their exact installed `binary` entry. The host exposes contained bounded
+  project storage and grant-mediated network, environment, and broad user
+  filesystem adapters, but host-owned plugin installation and cache roots stay
+  hidden and inaccessible through every adapter; shell execution remains
+  forbidden. Direct-import-only configs create no plugin host or subprocess.
 - `check` performs config-schema, capability, wiring, kind, and output
   validation without invoking a stage or writing output.
 - `clean` validates the pipeline, then removes its configured cache directory

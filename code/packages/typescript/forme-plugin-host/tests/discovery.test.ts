@@ -1,6 +1,7 @@
 import { mkdtemp, mkdir, realpath, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { descriptorForKindReference, discoverPlugins, PluginHostError, resolveContainedFile } from "../src/index.js";
 import { __testing, readBoundedRegularFile } from "../src/discovery.js";
@@ -152,6 +153,16 @@ signedAt = "2026-05-16T00:00:00Z"
     await writeFile(join(base, "README"), "not a plugin");
     await expect(discoverPlugins([join(base, "absent"), base])).resolves.toEqual(new Map());
     await expect(discoverPlugins([join(base, "README")])).rejects.toBeInstanceOf(Error);
+  });
+
+  it("honours cancellation before discovery and bounded reads", async () => {
+    const controller = new AbortController();
+    controller.abort(new Error("stop discovery"));
+    await expect(discoverPlugins(["/absent"], controller.signal))
+      .rejects.toThrow("stop discovery");
+    await expect(readBoundedRegularFile(
+      fileURLToPath(import.meta.url), 1024 * 1024, "test file", undefined, controller.signal,
+    )).rejects.toThrow("stop discovery");
   });
 
   it("bounds roots and examined directories independently of retained plugins", async () => {

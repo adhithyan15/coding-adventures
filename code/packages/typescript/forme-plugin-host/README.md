@@ -23,6 +23,7 @@ launchers remain FM-B049–FM-B052.
 const host = await createPluginHost({
   roots: [projectPluginRoot, userPluginRoot],
   loadPersistentGrants: true,
+  signal: cancellation.signal,
   capabilityApis: { storage: boundedProjectStorage },
   processFactory: sandboxedLauncher,
 });
@@ -37,6 +38,8 @@ const stage = await host.loadStage({
 `loadPersistentGrants` reads the host-owned `grants.toml` beside each exact
 discovery snapshot and is mutually exclusive with injected `grants`. Missing
 or stale authority grants nothing; malformed files abort host creation.
+An optional `signal` cooperatively cancels bounded discovery, snapshot reads,
+and persistent-authority loading before any stage can resolve.
 
 Discovery never launches plugin code. A process begins only when the proxy is
 initialized or run. Missing grants, announcement drift, malformed/oversized

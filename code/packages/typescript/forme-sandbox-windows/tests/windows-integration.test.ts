@@ -83,6 +83,18 @@ describe.skipIf(process.platform !== "win32")("Windows native sandbox", () => {
     expect(await verify(root, "install-root")).toBe(true);
     expect(await verify(join(root, "plugin"), "existing-target-tree")).toBe(true);
 
+    const transactionRoot = join(root, "transaction-root");
+    await mkdir(transactionRoot);
+    await execFileAsync("icacls.exe", [transactionRoot, "/grant", "*S-1-1-0:(OI)(CI)(IO)M", "/Q"]);
+    expect(await verify(transactionRoot, "install-root")).toBe(false);
+    expect(await verify(transactionRoot, "existing-target-tree")).toBe(true);
+    await execFileAsync("icacls.exe", [transactionRoot, "/remove:g", "*S-1-1-0", "/Q"]);
+    expect(await verify(transactionRoot, "install-root")).toBe(true);
+
+    await execFileAsync("icacls.exe", [root, "/grant", "*S-1-1-0:(NP)M", "/Q"]);
+    expect(await verify(join(root, "plugin"), "install-root")).toBe(false);
+    await execFileAsync("icacls.exe", [root, "/remove:g", "*S-1-1-0", "/Q"]);
+
     const outside = await mkdtemp(join(tmpdir(), "forme-windows-acl-outside-"));
     roots.push(outside);
     await symlink(outside, join(root, "plugin", "link"), "junction");

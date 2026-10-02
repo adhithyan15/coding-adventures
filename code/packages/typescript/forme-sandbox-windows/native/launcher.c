@@ -354,11 +354,18 @@ static int write_readiness(const wchar_t *manifest, const wchar_t *schema, const
     return _write(READY_FD, readiness, (unsigned int)length) == length ? 0 : -1;
 }
 
-#define ACL_TREE_MAX_ENTRIES 4096
-#define ACL_TREE_MAX_DEPTH 64
+#define ACL_TREE_MAX_ENTRIES 8193
+#define ACL_TREE_MAX_DEPTH 256
 
-static int trusted_write_sid(PSID sid, PSID user, PSID administrators, PSID system_sid) {
-    return EqualSid(sid, user) || EqualSid(sid, administrators) || EqualSid(sid, system_sid);
+static int trusted_write_sid(
+    PSID sid,
+    PSID user,
+    PSID administrators,
+    PSID system_sid,
+    PSID trusted_installer
+) {
+    return EqualSid(sid, user) || EqualSid(sid, administrators) || EqualSid(sid, system_sid)
+        || EqualSid(sid, trusted_installer);
 }
 
 static PSID allowed_ace_sid(void *raw, BYTE type) {
@@ -375,7 +382,15 @@ static PSID allowed_ace_sid(void *raw, BYTE type) {
     return NULL;
 }
 
-static int verify_handle_acl(HANDLE handle, PSID user, PSID administrators, PSID system_sid) {
+static int verify_handle_acl(
+    HANDLE handle,
+    int reject_inherit_only_writes,
+    int replacement_only,
+    PSID user,
+    PSID administrators,
+    PSID system_sid,
+    PSID trusted_installer
+) {
     PSID owner = NULL;
     PACL dacl = NULL;
     PSECURITY_DESCRIPTOR descriptor = NULL;
@@ -384,7 +399,7 @@ static int verify_handle_acl(HANDLE handle, PSID user, PSID administrators, PSID
         &owner, NULL, &dacl, NULL, &descriptor);
     if (result != ERROR_SUCCESS || descriptor == NULL || owner == NULL || dacl == NULL
             || !IsValidSid(owner) || !IsValidAcl(dacl)
-            || !trusted_write_sid(owner, user, administrators, system_sid)) {
+            || !trusted_write_sid(owner, user, administrators, system_sid, trusted_installer)) {
         if (descriptor != NULL) LocalFree(descriptor);
         return -1;
     }
@@ -394,8 +409,10 @@ static int verify_handle_acl(HANDLE handle, PSID user, PSID administrators, PSID
         FILE_GENERIC_EXECUTE,
         FILE_ALL_ACCESS,
     };
-    const DWORD dangerous = FILE_WRITE_DATA | FILE_APPEND_DATA | FILE_WRITE_EA
-        | FILE_WRITE_ATTRIBUTES | FILE_DELETE_CHILD | DELETE | WRITE_DAC | WRITE_OWNER;
+    const DWORD replacement = FILE_DELETE_CHILD | DELETE | WRITE_DAC | WRITE_OWNER;
+    const DWORD dangerous = replacement_only ? replacement
+        : FILE_WRITE_DATA | FILE_APPEND_DATA | FILE_WRITE_EA
+            | FILE_WRITE_ATTRIBUTES | replacement;
     for (DWORD index = 0; index < dacl->AceCount; index++) {
         void *raw = NULL;
         if (!GetAce(dacl, index, &raw) || raw == NULL) {
@@ -403,7 +420,6 @@ static int verify_handle_acl(HANDLE handle, PSID user, PSID administrators, PSID
             return -1;
         }
         ACE_HEADER *header = (ACE_HEADER *)raw;
-        if (header->AceFlags & INHERIT_ONLY_ACE) continue;
         PSID sid = allowed_ace_sid(raw, header->AceType);
         if (sid == NULL) {
             if (header->AceType == ACCESS_DENIED_ACE_TYPE
@@ -413,10 +429,12 @@ static int verify_handle_acl(HANDLE handle, PSID user, PSID administrators, PSID
             LocalFree(descriptor);
             return -1;
         }
+        if ((header->AceFlags & INHERIT_ONLY_ACE) && !reject_inherit_only_writes) continue;
         DWORD mask = ((ACCESS_ALLOWED_ACE *)raw)->Mask;
         MapGenericMask(&mask, &mapping);
         if ((mask & dangerous) != 0
-                && (!IsValidSid(sid) || !trusted_write_sid(sid, user, administrators, system_sid))) {
+                && (!IsValidSid(sid)
+                    || !trusted_write_sid(sid, user, administrators, system_sid, trusted_installer))) {
             LocalFree(descriptor);
             return -1;
         }
@@ -434,11 +452,14 @@ static int same_file_identity(const BY_HANDLE_FILE_INFORMATION *left, const BY_H
 static int verify_acl_tree(
     const wchar_t *path,
     int recurse,
+    int reject_inherit_only_writes,
+    int replacement_only,
     unsigned int depth,
     unsigned int *entries,
     PSID user,
     PSID administrators,
-    PSID system_sid
+    PSID system_sid,
+    PSID trusted_installer
 ) {
     if (depth > ACL_TREE_MAX_DEPTH || ++*entries > ACL_TREE_MAX_ENTRIES) return -1;
     HANDLE handle = CreateFileW(path, FILE_READ_ATTRIBUTES | READ_CONTROL,
@@ -448,7 +469,8 @@ static int verify_acl_tree(
     BY_HANDLE_FILE_INFORMATION before;
     if (!GetFileInformationByHandle(handle, &before)
             || (before.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT)
-            || verify_handle_acl(handle, user, administrators, system_sid) != 0) {
+            || verify_handle_acl(handle, reject_inherit_only_writes, replacement_only,
+                user, administrators, system_sid, trusted_installer) != 0) {
         CloseHandle(handle);
         return -1;
     }
@@ -487,7 +509,9 @@ static int verify_acl_tree(
                 wcscpy(child, path);
                 if (length > 0 && path[length - 1] != L'\\' && path[length - 1] != L'/') wcscat(child, L"\\");
                 wcscat(child, found.cFileName);
-                if (verify_acl_tree(child, 1, depth + 1, entries, user, administrators, system_sid) != 0) valid = 0;
+                if (verify_acl_tree(child, 1, 0, replacement_only,
+                        depth + 1, entries, user, administrators, system_sid,
+                        trusted_installer) != 0) valid = 0;
                 free(child);
                 if (!valid) break;
             } while (FindNextFileW(search, &found));
@@ -516,7 +540,7 @@ static int verify_install_acl(const wchar_t *path, int recurse) {
     HANDLE token = NULL;
     DWORD needed = 0;
     TOKEN_USER *token_user = NULL;
-    PSID administrators = NULL, system_sid = NULL;
+    PSID administrators = NULL, system_sid = NULL, trusted_installer = NULL;
     int valid = 0;
     if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &token)) goto done;
     GetTokenInformation(token, TokenUser, NULL, 0, &needed);
@@ -528,13 +552,51 @@ static int verify_install_acl(const wchar_t *path, int recurse) {
     if (!AllocateAndInitializeSid(&nt, 2, SECURITY_BUILTIN_DOMAIN_RID,
             DOMAIN_ALIAS_RID_ADMINS, 0, 0, 0, 0, 0, 0, &administrators)
             || !AllocateAndInitializeSid(&nt, 1, SECURITY_LOCAL_SYSTEM_RID,
-                0, 0, 0, 0, 0, 0, 0, &system_sid)) goto done;
+                0, 0, 0, 0, 0, 0, 0, &system_sid)
+            || !ConvertStringSidToSidW(
+                L"S-1-5-80-956008885-3418522649-1831038044-1853292631-2271478464",
+                &trusted_installer)) goto done;
     unsigned int entries = 0;
-    valid = verify_acl_tree(path, recurse, 0, &entries, token_user->User.Sid,
-        administrators, system_sid) == 0;
+    if (verify_acl_tree(path, recurse, !recurse, 0, 0, &entries, token_user->User.Sid,
+            administrators, system_sid, trusted_installer) != 0) goto done;
+
+    size_t path_length = wcslen(path);
+    if (path_length == 0 || path_length > 32760) goto done;
+    wchar_t volume_root[32768];
+    if (!GetVolumePathNameW(path, volume_root, 32768)) goto done;
+    size_t volume_length = wcslen(volume_root);
+    wchar_t *ancestor = _wcsdup(path);
+    if (ancestor == NULL) goto done;
+    size_t ancestor_length = wcslen(ancestor);
+    unsigned int ancestor_entries = 0;
+    while (ancestor_length > volume_length) {
+        while (ancestor_length > volume_length
+                && ancestor[ancestor_length - 1] != L'\\'
+                && ancestor[ancestor_length - 1] != L'/') {
+            ancestor[--ancestor_length] = L'\0';
+        }
+        while (ancestor_length > volume_length
+                && (ancestor[ancestor_length - 1] == L'\\'
+                    || ancestor[ancestor_length - 1] == L'/')) {
+            ancestor[--ancestor_length] = L'\0';
+        }
+        if (ancestor_length < volume_length) break;
+        if (verify_acl_tree(ancestor, 0, 0, 1, 0, &ancestor_entries, token_user->User.Sid,
+                administrators, system_sid, trusted_installer) != 0) {
+            free(ancestor);
+            goto done;
+        }
+    }
+    free(ancestor);
+    if (ancestor_length != volume_length
+            || verify_acl_tree(volume_root, 0, 0, 1, 0, &ancestor_entries,
+                token_user->User.Sid, administrators, system_sid,
+                trusted_installer) != 0) goto done;
+    valid = 1;
 done:
     if (administrators != NULL) FreeSid(administrators);
     if (system_sid != NULL) FreeSid(system_sid);
+    if (trusted_installer != NULL) LocalFree(trusted_installer);
     if (token_user != NULL) HeapFree(GetProcessHeap(), 0, token_user);
     if (token != NULL) CloseHandle(token);
     return valid ? 0 : 1;

@@ -105,8 +105,13 @@ The CLI selects the native sandbox factory for the current operating system;
 there is no ambient subprocess fallback. `node` plugins use the current
 canonical Node executable, `binary` plugins execute the exact selected entry,
 and `deno`, `bun`, and `python` require explicitly configured absolute runtime
-executables and roots. The resulting plugin host is passed to the orchestrator
-and disposed on every success, failure, and cancellation path.
+executables and roots in `settings.pluginRuntimes`. The product host supplies
+the bounded storage adapter and the grant-mediated network, environment, and
+broad user-filesystem adapters defined by FM01; third-party shell execution
+remains forbidden. Host-owned plugin installation and cache roots MUST be
+reserved from storage and broad filesystem adapters even when the configured
+storage root is the project root. The resulting plugin host is passed to the
+orchestrator and disposed on every success, failure, and cancellation path.
 
 A mixed direct/`StageRef` DAG must validate without launching a subprocess and
 must launch the referenced runner lazily for build and watch. Platform product
@@ -116,7 +121,11 @@ sandbox instead of a process-free test double.
 On Windows, a native ACL verifier canonicalizes the install root and existing
 target tree without following reparse points, proves that only the current user
 or trusted administrators retain write authority, and binds its result to the
-opened identities. Any unprovable owner, DACL, inheritance, or identity change
+opened identities. Inherit-only write rules are rejected on the install root
+where transaction children are created, while every ancestor through the
+volume root is checked for effective replacement authority. Product discovery
+rechecks the root identity after the cancellable host snapshot pass. Any
+unprovable owner, DACL, inheritance, ancestor, cancellation, or identity change
 fails closed before installation or launch.
 
 ## 3. Diagnostics and reproducibility

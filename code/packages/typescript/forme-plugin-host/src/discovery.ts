@@ -30,7 +30,9 @@ const MAX_DISCOVERED_SNAPSHOT_BYTES = 128 * 1024 * 1024;
 
 export async function discoverPlugins(
   roots: readonly string[],
+  signal?: AbortSignal,
 ): Promise<ReadonlyMap<string, DiscoveredPlugin>> {
+  signal?.throwIfAborted();
   const discovered = new Map<string, DiscoveredPlugin>();
   let snapshotBytes = 0;
   let examinedCandidates = 0;
@@ -42,6 +44,7 @@ export async function discoverPlugins(
     );
   }
   for (const root of roots) {
+    signal?.throwIfAborted();
     const namesInRoot = new Set<string>();
     const candidateNames: string[] = [];
     let directory;
@@ -52,6 +55,7 @@ export async function discoverPlugins(
       throw error;
     }
     for await (const entry of directory) {
+      signal?.throwIfAborted();
       examinedEntries += 1;
       if (examinedEntries > MAX_DISCOVERY_ENTRIES) {
         throw new PluginHostError(
@@ -72,9 +76,11 @@ export async function discoverPlugins(
     }
     candidateNames.sort(compareCodePoints);
     for (const candidateName of candidateNames) {
+      signal?.throwIfAborted();
       const candidate = await loadPlugin(
         join(root, candidateName),
         MAX_DISCOVERED_SNAPSHOT_BYTES - snapshotBytes,
+        signal,
       );
       if (namesInRoot.has(candidate.manifest.plugin.name)) {
         throw new PluginHostError(
@@ -93,7 +99,12 @@ export async function discoverPlugins(
   return new Map([...discovered.entries()].sort(([a], [b]) => compareCodePoints(a, b)));
 }
 
-async function loadPlugin(directory: string, remainingSnapshotBytes: number): Promise<DiscoveredPlugin> {
+async function loadPlugin(
+  directory: string,
+  remainingSnapshotBytes: number,
+  signal?: AbortSignal,
+): Promise<DiscoveredPlugin> {
+  signal?.throwIfAborted();
   const rootDirectory = await realpath(directory);
   const manifestPath = await resolveContainedFile(rootDirectory, "plugin.toml", "plugin manifest");
   let manifest: Manifest;
@@ -103,6 +114,7 @@ async function loadPlugin(directory: string, remainingSnapshotBytes: number): Pr
       MAX_MANIFEST_BYTES,
       "plugin.toml",
       rootDirectory,
+      signal,
     );
     manifest = parseManifest(manifestBytes.toString("utf8"));
     validateManifest(manifest);
@@ -119,6 +131,7 @@ async function loadPlugin(directory: string, remainingSnapshotBytes: number): Pr
   }
   const entryBytes = await readBoundedRegularFile(
     entryPath, Math.min(MAX_ENTRY_BYTES, remainingSnapshotBytes), "runtime entry", rootDirectory,
+    signal,
   );
   let retainedBytes = entryBytes.byteLength;
   const configSchemas: Record<string, {
@@ -131,6 +144,7 @@ async function loadPlugin(directory: string, remainingSnapshotBytes: number): Pr
     readonly hash: string;
   }>();
   for (const stage of manifest.contributes.stages) {
+    signal?.throwIfAborted();
     if (!stage.configSchema) continue;
     if (manifest.signature) {
       throw new PluginHostError(
@@ -155,6 +169,7 @@ async function loadPlugin(directory: string, remainingSnapshotBytes: number): Pr
     }
     const bytes = await readBoundedRegularFile(
       schemaPath, Math.min(MAX_CONFIG_SCHEMA_BYTES, remaining), "config schema", rootDirectory,
+      signal,
     );
     retainedBytes += bytes.byteLength;
     const sharedSnapshot = Object.freeze({
@@ -196,7 +211,9 @@ export async function readBoundedRegularFile(
   maxBytes: number,
   label: string,
   rootDirectory?: string,
+  signal?: AbortSignal,
 ): Promise<Buffer> {
+  signal?.throwIfAborted();
   const noFollow = "O_NOFOLLOW" in fsConstants ? fsConstants.O_NOFOLLOW : 0;
   const nonBlock = "O_NONBLOCK" in fsConstants ? fsConstants.O_NONBLOCK : 0;
   const handle = await open(path, fsConstants.O_RDONLY | noFollow | nonBlock);
@@ -225,10 +242,12 @@ export async function readBoundedRegularFile(
     const bytes = Buffer.allocUnsafe(Math.min(opened.size, maxBytes) + 1);
     let offset = 0;
     while (offset < bytes.byteLength) {
+      signal?.throwIfAborted();
       const { bytesRead } = await handle.read(bytes, offset, bytes.byteLength - offset, offset);
       if (bytesRead === 0) break;
       offset += bytesRead;
     }
+    signal?.throwIfAborted();
     if (offset > maxBytes || offset > opened.size) {
       throw new PluginHostError("MANIFEST_INVALID", `${label} changed or exceeded its byte limit`, { path });
     }

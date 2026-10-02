@@ -189,15 +189,17 @@ class PluginHostImpl implements PluginHost {
 }
 
 export async function createPluginHost(options: PluginHostOptions): Promise<PluginHost> {
+  options.signal?.throwIfAborted();
   if (options.roots.length === 0) {
     throw new PluginHostError("PLUGIN_NOT_FOUND", "at least one discovery root is required");
   }
   if (options.loadPersistentGrants === true && options.grants !== undefined) {
     throw new TypeError("loadPersistentGrants and grants are mutually exclusive");
   }
-  const plugins = await discoverPlugins(options.roots);
+  const plugins = await discoverPlugins(options.roots, options.signal);
+  options.signal?.throwIfAborted();
   const grants = options.loadPersistentGrants === true
-    ? await loadInstalledGrants(plugins)
+    ? await loadInstalledGrants(plugins, options.signal)
     : options.grants ?? {};
   const resolved: ResolvedOptions = {
     processFactory: options.processFactory,
@@ -225,10 +227,13 @@ export async function createPluginHost(options: PluginHostOptions): Promise<Plug
 
 async function loadInstalledGrants(
   plugins: ReadonlyMap<string, DiscoveredPlugin>,
+  signal?: AbortSignal,
 ): Promise<Readonly<Record<string, readonly Capability[]>>> {
   const grants: Record<string, readonly Capability[]> = Object.create(null) as Record<string, readonly Capability[]>;
   for (const [name, plugin] of plugins) {
+    signal?.throwIfAborted();
     const loaded = await readGrantsFile(join(plugin.rootDirectory, "grants.toml"), plugin.manifestHash);
+    signal?.throwIfAborted();
     grants[name] = loaded.capabilities;
   }
   return Object.freeze(grants);

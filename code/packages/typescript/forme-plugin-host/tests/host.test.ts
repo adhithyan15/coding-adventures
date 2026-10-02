@@ -212,6 +212,10 @@ describe("plugin host cross-process contract", () => {
   });
 
   it("validates roots, limits, stage identities, and disposed hosts", async () => {
+    const controller = new AbortController();
+    controller.abort(new Error("cancel host creation"));
+    await expect(createPluginHost({ roots: [fixtureRoot], signal: controller.signal }))
+      .rejects.toThrow("cancel host creation");
     await expect(createPluginHost({ roots: [] })).rejects.toThrow(/at least one/);
     await expect(createPluginHost({ roots: [fixtureRoot], requestTimeoutMs: 0 }))
       .rejects.toBeInstanceOf(RangeError);

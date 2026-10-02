@@ -29,6 +29,7 @@
  */
 
 import { KERNEL_API_VERSION } from "@coding-adventures/forme-types";
+import { isAbsolute } from "node:path";
 import type { JsonValue } from "@coding-adventures/forme-types";
 import { isStageRef } from "./types.js";
 import { CONFIG_ERROR_CODES, ConfigError } from "./errors.js";
@@ -137,6 +138,50 @@ function validateSettings(s: PipelineSettings, errors: ConfigErrorEntry[]): void
   if (s.deadlineMs !== null
       && (typeof s.deadlineMs !== "number" || !Number.isFinite(s.deadlineMs) || s.deadlineMs <= 0)) {
     errors.push({ path: "settings.deadlineMs", code: CONFIG_ERROR_CODES.MALFORMED, message: "must be a positive number or null" });
+  }
+  validatePluginRuntimes(s.pluginRuntimes, errors);
+}
+
+function validatePluginRuntimes(
+  runtimes: PipelineSettings["pluginRuntimes"],
+  errors: ConfigErrorEntry[],
+): void {
+  if (runtimes === undefined) return;
+  if (typeof runtimes !== "object" || runtimes === null || Array.isArray(runtimes)) {
+    errors.push({
+      path: "settings.pluginRuntimes",
+      code: CONFIG_ERROR_CODES.MALFORMED,
+      message: "must be an object",
+    });
+    return;
+  }
+  const supported = new Set(["deno", "bun", "python"]);
+  for (const [kind, value] of Object.entries(runtimes)) {
+    const path = `settings.pluginRuntimes.${kind}`;
+    if (!supported.has(kind)) {
+      errors.push({ path, code: CONFIG_ERROR_CODES.MALFORMED, message: "is not a configurable plugin runtime" });
+      continue;
+    }
+    if (typeof value !== "object" || value === null || Array.isArray(value)) {
+      errors.push({ path, code: CONFIG_ERROR_CODES.MALFORMED, message: "must be an object" });
+      continue;
+    }
+    const record = value as unknown as Record<string, unknown>;
+    for (const key of Object.keys(record)) {
+      if (key !== "executable" && key !== "root") {
+        errors.push({ path: `${path}.${key}`, code: CONFIG_ERROR_CODES.MALFORMED, message: "is not supported" });
+      }
+    }
+    for (const key of ["executable", "root"] as const) {
+      const candidate = record[key];
+      if (typeof candidate !== "string" || candidate.includes("\0") || !isAbsolute(candidate)) {
+        errors.push({
+          path: `${path}.${key}`,
+          code: CONFIG_ERROR_CODES.MALFORMED,
+          message: "must be an absolute path without NUL",
+        });
+      }
+    }
   }
 }
 

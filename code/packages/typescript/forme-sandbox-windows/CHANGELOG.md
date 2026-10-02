@@ -4,7 +4,10 @@
 
 - Add the native install-tree ACL verifier used by `forme install` and product
   discovery. It rejects reparse points, identity changes, untrusted owners or
-  writers, malformed DACLs, and over-deep or oversized trees.
+  writers (including inherit-only authority on the transaction root), unsafe
+  effective replacement authority on every ancestor through the volume root,
+  malformed DACLs, and over-deep or
+  oversized trees. Its resource bounds match the installer snapshot contract.
 
 ## 0.1.0 — 2026-10-01
 

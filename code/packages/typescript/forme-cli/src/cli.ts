@@ -65,7 +65,11 @@ export interface CliServices {
   loadConfig(path: string): Promise<PipelineConfig>;
   createOrchestrator(
     cacheRoot: string | null,
-    runtime: { readonly config: PipelineConfig; readonly projectRoot: string },
+    runtime: {
+      readonly config: PipelineConfig;
+      readonly projectRoot: string;
+      readonly signal?: AbortSignal;
+    },
   ): Orchestrator | Promise<Orchestrator>;
   startDevServer(options: { readonly port: number }): Promise<DevServer>;
   watchProject(root: string, ignoredPaths: readonly string[]): AsyncIterable<unknown>;
@@ -231,7 +235,11 @@ export async function run(
 
     orchestrator = await services.createOrchestrator(
       projectCacheRoot(config, projectRoot),
-      { config, projectRoot },
+      {
+        config,
+        projectRoot,
+        ...(options.cancellation === undefined ? {} : { signal: options.cancellation.signal }),
+      },
     );
     const pipeline = await orchestrator.buildPipeline(config);
 
@@ -290,6 +298,10 @@ export async function run(
     }
     return result.outcome === "cancelled" ? EXIT_CANCELLED : EXIT_BUILD_FAILED;
   } catch (error) {
+    if (options.cancellation?.cancelled === true) {
+      diagnostic(io, "E_CANCELLED", options.cancellation.reason ?? "command cancelled");
+      return EXIT_CANCELLED;
+    }
     const entries = configErrorEntries(error);
     if (entries !== null) {
       for (const entry of entries) {

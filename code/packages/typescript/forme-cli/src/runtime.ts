@@ -1,4 +1,5 @@
 import { resolve } from "node:path";
+import { lstat, realpath } from "node:fs/promises";
 import { filesystemCache, type CacheBackend } from "@coding-adventures/forme-cache";
 import {
   createOrchestrator,
@@ -19,7 +20,8 @@ import {
   createWindowsSandboxFactory,
   type WindowsInstallAclVerifier,
 } from "@coding-adventures/forme-sandbox-windows";
-import { silentLogger } from "@coding-adventures/forme-stage";
+import { silentLogger, type StageContext } from "@coding-adventures/forme-stage";
+import { createProductCapabilityApis } from "./capability-apis.js";
 
 type ConfigurableRuntime = "node" | "deno" | "bun" | "python";
 
@@ -30,6 +32,8 @@ export interface ProductRuntimeOptions {
   readonly platform?: NodeJS.Platform;
   readonly runtimeExecutables?: Partial<Readonly<Record<ConfigurableRuntime, string>>>;
   readonly runtimeRoots?: Partial<Readonly<Record<ConfigurableRuntime, string>>>;
+  /** Cooperative cancellation for installed-plugin discovery and grant loading. */
+  readonly signal?: AbortSignal;
 }
 
 interface SandboxFactoryOptions {
@@ -45,6 +49,11 @@ export interface ProductRuntimeDependencies {
   createMacosSandboxFactory(options: SandboxFactoryOptions): PluginProcessFactory;
   createWindowsSandboxFactory(options: SandboxFactoryOptions): PluginProcessFactory;
   verifyWindowsAcl: WindowsInstallAclVerifier;
+  pluginRootIdentity(path: string): Promise<string>;
+  createCapabilityApis(storageRoot: string, reservedRoots: readonly string[]): Partial<Pick<
+    StageContext,
+    "storage" | "network" | "env" | "filesystem"
+  >>;
 }
 
 const defaultDependencies: ProductRuntimeDependencies = {
@@ -55,6 +64,18 @@ const defaultDependencies: ProductRuntimeDependencies = {
   createMacosSandboxFactory,
   createWindowsSandboxFactory,
   verifyWindowsAcl: createWindowsInstallAclVerifier(),
+  pluginRootIdentity: async path => {
+    const canonical = await realpath(path);
+    if (canonical.toLowerCase() !== resolve(path).toLowerCase()) {
+      throw new Error("Windows plugin install root is not canonical");
+    }
+    const stat = await lstat(canonical, { bigint: true });
+    if (!stat.isDirectory() || stat.isSymbolicLink()) {
+      throw new Error("Windows plugin install root is not a real directory");
+    }
+    return `${stat.dev}:${stat.ino}`;
+  },
+  createCapabilityApis: createProductCapabilityApis,
 };
 
 /** Compose the installed-plugin boundary only when the pipeline references it. */
@@ -71,14 +92,16 @@ export async function createProductOrchestrator(
   }
 
   const sandboxOptions: SandboxFactoryOptions = {
-    ...(options.runtimeExecutables === undefined ? {} : { runtimeExecutables: options.runtimeExecutables }),
-    ...(options.runtimeRoots === undefined ? {} : { runtimeRoots: options.runtimeRoots }),
+    ...runtimeConfiguration(options),
   };
   const pluginRoot = resolve(options.projectRoot, "forme-plugins");
   const platform = options.platform ?? process.platform;
-  if (platform === "win32"
-      && !await dependencies.verifyWindowsAcl(pluginRoot, "existing-target-tree")) {
-    throw new Error("unsafe Windows plugin install-root ACL");
+  let verifiedRootIdentity: string | null = null;
+  if (platform === "win32") {
+    verifiedRootIdentity = await dependencies.pluginRootIdentity(pluginRoot);
+    if (!await dependencies.verifyWindowsAcl(pluginRoot, "existing-target-tree")) {
+      throw new Error("unsafe Windows plugin install-root ACL");
+    }
   }
   const processFactory = selectSandboxFactory(
     platform,
@@ -92,13 +115,40 @@ export async function createProductOrchestrator(
     storageRoot: resolve(options.projectRoot, options.config.settings.storageRoot),
     cacheDirectory: options.cacheRoot,
     logger: silentLogger(),
+    capabilityApis: dependencies.createCapabilityApis(
+      resolve(options.projectRoot, options.config.settings.storageRoot),
+      [pluginRoot, ...(options.cacheRoot === null ? [] : [options.cacheRoot])],
+    ),
+    ...(options.signal === undefined ? {} : { signal: options.signal }),
   });
   try {
+    if (verifiedRootIdentity !== null
+        && await dependencies.pluginRootIdentity(pluginRoot) !== verifiedRootIdentity) {
+      throw new Error("Windows plugin install root changed identity after plugin discovery");
+    }
     return dependencies.createOrchestrator({ ...base, pluginHost });
   } catch (error) {
     await pluginHost.dispose();
     throw error;
   }
+}
+
+function runtimeConfiguration(options: ProductRuntimeOptions): SandboxFactoryOptions {
+  const configured = options.config.settings.pluginRuntimes ?? {};
+  const runtimeExecutables: Partial<Record<ConfigurableRuntime, string>> = {};
+  const runtimeRoots: Partial<Record<ConfigurableRuntime, string>> = {};
+  for (const kind of ["deno", "bun", "python"] as const) {
+    const runtime = configured[kind];
+    if (runtime === undefined) continue;
+    runtimeExecutables[kind] = runtime.executable;
+    runtimeRoots[kind] = runtime.root;
+  }
+  Object.assign(runtimeExecutables, options.runtimeExecutables);
+  Object.assign(runtimeRoots, options.runtimeRoots);
+  return {
+    ...(Object.keys(runtimeExecutables).length === 0 ? {} : { runtimeExecutables }),
+    ...(Object.keys(runtimeRoots).length === 0 ? {} : { runtimeRoots }),
+  };
 }
 
 function selectSandboxFactory(

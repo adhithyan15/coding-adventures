@@ -87,6 +87,8 @@ export interface PluginHostOptions {
   readonly grants?: Readonly<Record<string, readonly Capability[]>>;
   /** Load each discovered plugin's manifest-bound grants.toml. Mutually exclusive with grants. */
   readonly loadPersistentGrants?: boolean;
+  /** Cooperative cancellation for bounded discovery and authority loading. */
+  readonly signal?: AbortSignal;
   readonly processFactory?: PluginProcessFactory;
   readonly logger?: Logger;
   /** Trusted host implementations used only after plugin capability checks pass. */

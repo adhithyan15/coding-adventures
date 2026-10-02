@@ -80,7 +80,10 @@ function services(
   loaded: PipelineConfig,
   result: RunResult = successfulResult(),
   onBuild?: (value: PipelineConfig) => void,
-  onCreate?: (cacheRoot: string | null) => void,
+  onCreate?: (
+    cacheRoot: string | null,
+    runtime: { readonly config: PipelineConfig; readonly projectRoot: string; readonly signal?: AbortSignal },
+  ) => void,
 ): CliServices {
   const pipeline = (value: PipelineConfig): Pipeline => ({
     config: value,
@@ -93,8 +96,8 @@ function services(
   }) as never;
   return {
     loadConfig: async () => loaded,
-    createOrchestrator: cacheRoot => {
-      onCreate?.(cacheRoot);
+    createOrchestrator: (cacheRoot, runtime) => {
+      onCreate?.(cacheRoot, runtime);
       return {
         buildPipeline: async value => {
           onBuild?.(value);
@@ -443,6 +446,41 @@ describe("build and check", () => {
     expect(observed?.settings.reproducibleBuild).toBe(true);
     expect(loaded.settings.reproducibleBuild).toBe(false);
     expect(io.stdoutText).toContain("forme build: fixture success");
+  });
+
+  it("forwards command cancellation into product runtime creation", async () => {
+    const io = makeIO();
+    const cancellation = createCancellationTokenSource();
+    let observedSignal: AbortSignal | undefined;
+    expect(await run(["check"], io, { cancellation: cancellation.token }, services(
+      config(),
+      successfulResult(),
+      undefined,
+      (_cacheRoot, runtime) => { observedSignal = runtime.signal; },
+    ))).toBe(EXIT_OK);
+    expect(observedSignal).toBe(cancellation.token.signal);
+  });
+
+  it("reports cancellation during product runtime creation with exit 130", async () => {
+    const io = makeIO();
+    const cancellation = createCancellationTokenSource();
+    const base = services(config());
+    let releaseStarted: (() => void) | undefined;
+    const started = new Promise<void>(resolve => { releaseStarted = resolve; });
+    const custom: CliServices = {
+      ...base,
+      createOrchestrator: async (_cacheRoot, runtime) => {
+        releaseStarted?.();
+        await new Promise<void>(resolve => runtime.signal?.addEventListener("abort", () => resolve(), { once: true }));
+        runtime.signal?.throwIfAborted();
+        throw new Error("unreachable");
+      },
+    };
+    const running = run(["check"], io, { cancellation: cancellation.token }, custom);
+    await started;
+    cancellation.cancel("startup interrupted");
+    expect(await running).toBe(130);
+    expect(io.stderrText).toBe("forme: E_CANCELLED: startup interrupted\n");
   });
 
   it("accepts the FM03 forme run spelling as a build alias", async () => {

@@ -468,7 +468,9 @@ hermetic-build scenarios.
 Discovery roots are host-managed snapshot inputs. They MUST remain quiescent
 for the complete discovery operation. The host rejects symlink escapes,
 rechecks containment and opened-file identity, and thereafter launches only
-from its private verified byte snapshot. Concurrent same-user mutation of a
+from its private verified byte snapshot. Product callers pass the command's
+`AbortSignal`; discovery, bounded file reads, and manifest-bound grant loading
+check it throughout the snapshot pass. Concurrent same-user mutation of a
 discovery root is outside the FM-B014 boundary. FM-B015 installation MUST
 stage atomically and enforce immutable, host-owned install roots before making
 them discoverable.
