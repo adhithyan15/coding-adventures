@@ -17042,6 +17042,20 @@ mod tests {
     }
 
     #[test]
+    fn al4_while_step_list_sequences_literal_string_selected_values() {
+        let module = compile_source(
+            "begin integer i; real total; i := 0; total := 0.25; for i := if 'ALPHA' < 'BETA' then i + 1 else i + 2 while i <= 2, if 'BETA' < 'ALPHA' then 9 else i + 1 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'ALPHA' < 'BETA' then 5 else 0 do total := total + i; print(total) end",
+            "test",
+        )
+        .expect("a read-only while body may seed a following finite step element");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "12.25")
+        }));
+    }
+
+    #[test]
     fn al4_control_recurrence_rejects_dynamic_statement_selector() {
         let err = compile_source(
             "begin integer i; boolean take; for i := 1 step 1 until 10 do if take then i := i * 2 else i := i + 3; print(i + 0.25) end",

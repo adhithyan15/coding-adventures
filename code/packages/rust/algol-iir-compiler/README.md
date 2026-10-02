@@ -267,7 +267,9 @@ expressions and predicates of bounded `while` elements, finite step-loop header
 expressions, and values sequenced across bounded multi-element `for` lists,
 including mixed finite-step and single-value elements and finite-step exits
 that seed following bounded `while` elements when the body only reads the
-controlled variable.
+controlled variable. A terminating bounded `while` element likewise retains
+its exact exit snapshot when that shared body only reads the control, allowing
+a following finite-step element to derive its initial value from the exit.
 Unknown selectors, unsupported selector or dependency writes, string targets, overflow,
 non-finite values, and loops that do not reach false within 4,096 evaluations
 fail closed.
