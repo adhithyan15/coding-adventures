@@ -234,7 +234,9 @@ needs an install script, and their fallbacks fetch unpinned code), and
 `--update-lock` resolves only versions published at least seven days earlier,
 since most compromised npm releases are pulled within days. The lock test also
 fails on an entry no dependency reaches, a tarball that is not the entry's own,
-and any new package that declares an install script.
+and any new package that declares an install script. It cannot tell one
+in-range version from another (that needs registry data), so a lockfile diff is
+reviewed like code.
 
 ## Emitting every host shell
 

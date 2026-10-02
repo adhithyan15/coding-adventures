@@ -21,5 +21,6 @@
   emitted package.json (plus the packaging tools for Electron), when a locked
   package is not its own registry tarball (`<name>/-/<name>-<version>.tgz`) or
   lacks a sha512 hash, when an entry is unreachable from the project's
-  dependencies (npm ci would still install it), and when a package outside
+  dependencies (optional peers are not followed, and an npm alias must be
+  one its dependent asked for), and when a package outside
   `@swc/core`, `esbuild` and `fsevents` declares an install script.

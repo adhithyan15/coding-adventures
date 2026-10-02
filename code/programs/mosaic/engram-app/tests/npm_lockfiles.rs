@@ -252,6 +252,18 @@ fn every_locked_package_is_reachable_from_the_project() {
     // An entry nothing depends on is still installed by `npm ci`. Walk the
     // dependency graph from the root the way Node resolves modules and fail on
     // any entry the walk never reaches.
+    //
+    // Two edges are treated strictly, because each is a way to smuggle a
+    // package in under a name the walk would otherwise accept:
+    //
+    //   optional peer   `debug` lists `supports-color` as an optional peer, so
+    //                   following it would bless an injected `supports-color`
+    //                   -- which `debug` then loads. Optional peers are not
+    //                   followed; a non-optional peer is installed by npm and is.
+    //   alias           An entry's own `"name"` says which tarball it really
+    //                   is. It may differ from the directory name only when the
+    //                   dependent asked for exactly that, `npm:<name>@<range>`;
+    //                   otherwise `node_modules/picocolors` could be `once`.
     for lock in ["web", "electron"] {
         let packages = lock_packages(lock);
         let mut reached = std::collections::BTreeSet::from([String::new()]);
@@ -266,12 +278,26 @@ fn every_locked_package_is_reachable_from_the_project() {
                 let Some(deps) = entry[section].as_object() else {
                     continue;
                 };
-                for name in deps.keys() {
+                for (name, spec) in deps {
+                    if section == "peerDependencies"
+                        && entry["peerDependenciesMeta"][name]["optional"].as_bool() == Some(true)
+                    {
+                        continue;
+                    }
                     // A missing optional or peer dependency is npm's to judge.
-                    if let Some(found) = resolve(&packages, &key, name) {
-                        if reached.insert(found.clone()) {
-                            queue.push(found.clone());
-                        }
+                    let Some(found) = resolve(&packages, &key, name) else {
+                        continue;
+                    };
+                    if let Some(real) = packages[found]["name"].as_str() {
+                        let spec = spec.as_str().unwrap_or_default();
+                        assert!(
+                            real == name || spec.starts_with(&format!("npm:{real}@")),
+                            "npm/{lock}: {found} installs {real:?}, but {key:?} asked \
+                             for {name:?} as {spec:?}, not as an alias of it"
+                        );
+                    }
+                    if reached.insert(found.clone()) {
+                        queue.push(found.clone());
                     }
                 }
             }
