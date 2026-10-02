@@ -1095,7 +1095,8 @@ backend immediately) come before the enabler-dependent items.
   may symmetrically seed a following finite-step or single-value element under
   the same read-only body rule, including for exactly simulated real controls,
   and one finite-step exit may seed another
-  finite-step element likewise. Two bounded `while` elements may chain their
+  finite-step element likewise, including for exactly simulated real controls.
+  Two bounded `while` elements may chain their
   exact terminating snapshots under that rule as well.
   The recurrence assignment may instead occur in one or both branches of a
   conditional statement selected by those exact snapshots. A branch without
