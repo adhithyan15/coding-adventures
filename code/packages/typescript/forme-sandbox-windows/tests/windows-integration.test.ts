@@ -2,10 +2,10 @@ import { createHash } from "node:crypto";
 import { execFile } from "node:child_process";
 import { copyFile, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { homedir, tmpdir } from "node:os";
-import { dirname, join } from "node:path";
+import { dirname, isAbsolute, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterAll, afterEach, describe, expect, it } from "vitest";
 import { computeManifestHash, type Manifest } from "@coding-adventures/forme-manifest";
 import type { SandboxLaunchRequest } from "@coding-adventures/forme-sandbox-core";
 import { createWindowsInstallAclVerifier, createWindowsSandboxFactory } from "../src/index.js";
@@ -14,6 +14,7 @@ const packageRoot = dirname(dirname(fileURLToPath(import.meta.url)));
 const launcherPath = join(packageRoot, "native", "forme-sandbox-windows.exe");
 const probePath = join(packageRoot, "native", "forme-sandbox-probe.exe");
 const roots: string[] = [];
+const suiteRoots: string[] = [];
 const execFileAsync = promisify(execFile);
 afterEach(async () => Promise.all(roots.splice(0).map(root => rm(root, {
   recursive: true,
@@ -21,6 +22,71 @@ afterEach(async () => Promise.all(roots.splice(0).map(root => rm(root, {
   maxRetries: 5,
   retryDelay: 100,
 }))));
+afterAll(async () => Promise.all(suiteRoots.splice(0).map(root => rm(root, {
+  recursive: true,
+  force: true,
+  maxRetries: 5,
+  retryDelay: 100,
+}))));
+
+let trustedPythonPromise: Promise<{ readonly executable: string; readonly root: string }> | undefined;
+
+function escapedDiagnosticPath(path: string): string {
+  return path.split("\\").join("\\\\");
+}
+
+async function trustedPythonDistribution(): Promise<{ readonly executable: string; readonly root: string }> {
+  trustedPythonPromise ??= (async () => {
+    const { stdout } = await execFileAsync("python", [
+      "-c",
+      "import os,sys; print(os.path.realpath(sys.executable)); print(os.path.realpath(sys.prefix))",
+    ]);
+    const [sourceExecutable, sourceRoot] = stdout.trim().split(/\r?\n/);
+    if (!sourceExecutable || !sourceRoot) {
+      throw new Error("Python runtime discovery returned an incomplete distribution");
+    }
+    const executableRelativePath = relative(sourceRoot, sourceExecutable);
+    if (executableRelativePath.startsWith("..") || isAbsolute(executableRelativePath)) {
+      throw new Error("Python executable is outside its reported distribution root");
+    }
+    if (sourceRoot.toLowerCase().includes("\\hostedtoolcache\\")) {
+      const sourceVerification = await verifyRuntimeRoot(sourceRoot);
+      expect(sourceVerification.accepted).toBe(false);
+      expect(sourceVerification.stderr).toContain("untrusted writer");
+      expect(sourceVerification.stderr).toContain("sid=S-1-5-11");
+      expect(sourceVerification.stderr).toContain(escapedDiagnosticPath(sourceRoot));
+    }
+
+    // The hosted toolcache grants Authenticated Users write authority and is
+    // therefore correctly rejected by the production trust verifier.  Copy
+    // its runner-controlled bytes into this user-owned tree so the acceptance
+    // test exercises a genuinely trusted distribution without weakening or
+    // mutating the shared toolcache ACL.
+    const root = await mkdtemp(join(homedir(), "forme-windows-python-runtime-"));
+    suiteRoots.push(root);
+    await execFileAsync(sourceExecutable, [
+      "-c",
+      String.raw`import os, shutil, sys
+source, destination = sys.argv[1:]
+source_lib = os.path.normcase(os.path.abspath(os.path.join(source, "Lib")))
+is_junction = getattr(os.path, "isjunction", lambda _path: False)
+def ignored(directory, names):
+    rejected = {name for name in names if os.path.islink(os.path.join(directory, name)) or is_junction(os.path.join(directory, name))}
+    rejected.update(name for name in names if name == "__pycache__")
+    if os.path.normcase(os.path.abspath(directory)) == source_lib:
+        rejected.update(name for name in names if name == "site-packages")
+    return rejected
+shutil.copytree(source, destination, dirs_exist_ok=True, symlinks=True, ignore=ignored)
+`,
+      sourceRoot,
+      root,
+    ], { timeout: 60_000, maxBuffer: 16_384 });
+    const destinationVerification = await verifyRuntimeRoot(root);
+    expect(destinationVerification.accepted, destinationVerification.stderr).toBe(true);
+    return { executable: join(root, executableRelativePath), root };
+  })();
+  return trustedPythonPromise;
+}
 
 async function request(probe: string): Promise<SandboxLaunchRequest> {
   const workingDirectory = await mkdtemp(join(tmpdir(), "forme-windows-integration-"));
@@ -77,12 +143,7 @@ async function pythonRequest(): Promise<{
   readonly executable: string;
   readonly root: string;
 }> {
-  const { stdout } = await execFileAsync("python", [
-    "-c",
-    "import os,sys; print(os.path.realpath(sys.executable)); print(os.path.realpath(sys.prefix))",
-  ]);
-  const [executable, root] = stdout.trim().split(/\r?\n/);
-  if (!executable || !root) throw new Error("Python runtime discovery returned an incomplete distribution");
+  const { executable, root } = await trustedPythonDistribution();
   const workingDirectory = await mkdtemp(join(tmpdir(), "forme-windows-python-"));
   roots.push(workingDirectory);
   const entryBytes = new TextEncoder().encode(String.raw`import sys
@@ -197,7 +258,7 @@ describe.skipIf(process.platform !== "win32")("Windows native sandbox", () => {
     expect(verification.accepted).toBe(false);
     expect(verification.stderr).toContain("trust verification rejected");
     expect(verification.stderr).toContain("untrusted writer");
-    expect(verification.stderr).toContain(root.split("\\").join("\\\\"));
+    expect(verification.stderr).toContain(escapedDiagnosticPath(root));
     await execFileAsync("icacls.exe", [root, "/remove:g", "*S-1-1-0", "/Q"]);
     verification = await verifyRuntimeRoot(root);
     expect(verification.accepted, verification.stderr).toBe(true);
@@ -209,7 +270,7 @@ describe.skipIf(process.platform !== "win32")("Windows native sandbox", () => {
     expect(verification.accepted).toBe(false);
     expect(verification.stderr).toContain("trust verification rejected");
     expect(verification.stderr).toContain("reparse target escapes the runtime root");
-    expect(verification.stderr).toContain(alias.split("\\").join("\\\\"));
+    expect(verification.stderr).toContain(escapedDiagnosticPath(alias));
     await rm(alias, { force: true });
 
     verification = await verifyRuntimeRoot(join(root, "missing"));
@@ -243,7 +304,7 @@ describe.skipIf(process.platform !== "win32")("Windows native sandbox", () => {
     const result = await exitWithStderr(child);
     expect(result.exit, result.stderr).toEqual({ code: 0, signal: null });
     expect(Buffer.concat(stdout).toString("utf8")).toBe("sandbox python protocol probe");
-  }, 15_000);
+  }, 75_000);
 
   it("does not grant Node access to sibling runtime-root files", async () => {
     const runtimeRoot = await mkdtemp(join(homedir(), "forme-windows-node-runtime-"));

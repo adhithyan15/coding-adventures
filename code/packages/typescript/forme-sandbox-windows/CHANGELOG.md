@@ -24,6 +24,11 @@
   length-bounded inspected path on native stderr, including immediately
   captured numeric Win32 errors for failed system calls, while preserving the
   same fail-closed result.
+- Exercise Python acceptance against a private, user-owned copy of the hosted
+  runtime so the test does not weaken or mutate a shared toolcache that grants
+  Authenticated Users write authority. The gate first proves the hosted root is
+  rejected, never follows source reparses, and then proves the private copy is
+  accepted before launch.
 
 ## 0.1.0 — 2026-10-01
 
