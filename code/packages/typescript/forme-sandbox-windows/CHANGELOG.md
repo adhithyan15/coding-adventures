@@ -5,6 +5,11 @@
 - Duplicate protocol stdin/stdout/stderr as explicitly inheritable handles
   before launching the AppContainer child, with a native byte-round-trip
   regression test for buffered runtime stdio.
+- Grant the ephemeral AppContainer read/execute authority over Python's
+  no-follow, ACL-verified, identity-pinned runtime distribution root, then
+  revoke the propagated SID grant through the same stable handle during normal
+  or janitor cleanup. Native Python byte-round-trip and overlapping-grant tests
+  cover it, while a negative Node test preserves exact-executable authority.
 - Add the native install-tree ACL verifier used by `forme install` and product
   discovery. It rejects reparse points, identity changes, untrusted owners or
   writers (including inherit-only authority on the transaction root), unsafe

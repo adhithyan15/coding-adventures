@@ -152,8 +152,8 @@ static wchar_t *quote(const wchar_t *value) {
 
 static int start_profile_janitor(
     const wchar_t *profile_name,
-    const wchar_t *runtime,
-    const wchar_t *entry
+    const wchar_t *runtime_acl_path,
+    HANDLE runtime_root
 ) {
     wchar_t executable[MAX_PATH];
     wchar_t safe_cwd[MAX_PATH];
@@ -161,29 +161,46 @@ static int start_profile_janitor(
     UINT safe_cwd_length = GetWindowsDirectoryW(safe_cwd, MAX_PATH);
     if (executable_length == 0 || executable_length >= MAX_PATH
             || safe_cwd_length == 0 || safe_cwd_length >= MAX_PATH) return -1;
-    HANDLE supervisor = NULL;
+    HANDLE inherited[2] = { NULL, NULL };
     if (!DuplicateHandle(GetCurrentProcess(), GetCurrentProcess(), GetCurrentProcess(),
-            &supervisor, SYNCHRONIZE, TRUE, 0)) return -1;
+            &inherited[0], SYNCHRONIZE, TRUE, 0)) return -1;
+    size_t inherited_count = 1;
+    if (runtime_root != INVALID_HANDLE_VALUE) {
+        if (!DuplicateHandle(GetCurrentProcess(), runtime_root, GetCurrentProcess(),
+                &inherited[1], READ_CONTROL | WRITE_DAC, TRUE, 0)) {
+            close_handles(inherited, 2);
+            return -1;
+        }
+        inherited_count = 2;
+    }
     wchar_t *quoted_executable = quote(executable);
-    wchar_t *quoted_runtime = quote(wcscmp(runtime, entry) == 0 ? L"-" : runtime);
+    wchar_t *quoted_runtime = quote(runtime_acl_path);
     if (quoted_executable == NULL || quoted_runtime == NULL) {
-        CloseHandle(supervisor);
+        close_handles(inherited, 2);
         free(quoted_runtime);
         free(quoted_executable);
         return -1;
     }
-    size_t size = wcslen(quoted_executable) + wcslen(profile_name) + wcslen(quoted_runtime) + 128;
+    size_t size = wcslen(quoted_executable) + wcslen(profile_name) + wcslen(quoted_runtime) + 192;
     wchar_t *command = calloc(size, sizeof(wchar_t));
     if (command == NULL) {
-        CloseHandle(supervisor);
+        close_handles(inherited, 2);
         free(quoted_runtime);
         free(quoted_executable);
         return -1;
     }
-    swprintf(command, size,
-        L"%s --cleanup-profile=%s --cleanup-runtime=%s --supervisor-handle=%llu",
+    int command_length = swprintf(command, size,
+        L"%s --cleanup-profile=%s --cleanup-runtime=%s --supervisor-handle=%llu --cleanup-runtime-handle=%llu",
         quoted_executable, profile_name, quoted_runtime,
-        (unsigned long long)(ULONG_PTR)supervisor);
+        (unsigned long long)(ULONG_PTR)inherited[0],
+        (unsigned long long)(ULONG_PTR)inherited[1]);
+    if (command_length < 0 || (size_t)command_length >= size) {
+        close_handles(inherited, 2);
+        free(command);
+        free(quoted_runtime);
+        free(quoted_executable);
+        return -1;
+    }
     SIZE_T attribute_size = 0;
     InitializeProcThreadAttributeList(NULL, 1, 0, &attribute_size);
     LPPROC_THREAD_ATTRIBUTE_LIST attributes = HeapAlloc(
@@ -196,9 +213,9 @@ static int start_profile_janitor(
     if (attributes == NULL
             || !InitializeProcThreadAttributeList(attributes, 1, 0, &attribute_size)
             || !UpdateProcThreadAttribute(attributes, 0, PROC_THREAD_ATTRIBUTE_HANDLE_LIST,
-                &supervisor, sizeof(supervisor), NULL, NULL)) {
+                inherited, sizeof(HANDLE) * inherited_count, NULL, NULL)) {
         if (attributes != NULL) HeapFree(GetProcessHeap(), 0, attributes);
-        CloseHandle(supervisor);
+        close_handles(inherited, 2);
         free(command);
         free(quoted_runtime);
         free(quoted_executable);
@@ -210,7 +227,7 @@ static int start_profile_janitor(
         NULL, safe_cwd, &startup.StartupInfo, &process);
     DeleteProcThreadAttributeList(attributes);
     HeapFree(GetProcessHeap(), 0, attributes);
-    CloseHandle(supervisor);
+    close_handles(inherited, 2);
     free(command);
     free(quoted_runtime);
     free(quoted_executable);
@@ -293,16 +310,86 @@ static int revoke_appcontainer_acl(const wchar_t *path, PSID sid) {
     return result == ERROR_SUCCESS ? 0 : -1;
 }
 
+static int add_appcontainer_acl_handle(
+    HANDLE handle,
+    PSID sid,
+    DWORD permissions,
+    DWORD inheritance
+) {
+    HANDLE mutex = acquire_acl_mutex();
+    if (mutex == NULL) return -1;
+    PACL old_acl = NULL;
+    PSECURITY_DESCRIPTOR descriptor = NULL;
+    DWORD result = GetSecurityInfo(handle, SE_FILE_OBJECT, DACL_SECURITY_INFORMATION,
+        NULL, NULL, &old_acl, NULL, &descriptor);
+    if (result != ERROR_SUCCESS) {
+        release_acl_mutex(mutex);
+        return -1;
+    }
+    EXPLICIT_ACCESSW access;
+    ZeroMemory(&access, sizeof(access));
+    access.grfAccessPermissions = permissions;
+    access.grfAccessMode = GRANT_ACCESS;
+    access.grfInheritance = inheritance;
+    access.Trustee.TrusteeForm = TRUSTEE_IS_SID;
+    access.Trustee.TrusteeType = TRUSTEE_IS_USER;
+    access.Trustee.ptstrName = sid;
+    PACL new_acl = NULL;
+    result = SetEntriesInAclW(1, &access, old_acl, &new_acl);
+    if (result == ERROR_SUCCESS) {
+        result = SetSecurityInfo(handle, SE_FILE_OBJECT, DACL_SECURITY_INFORMATION,
+            NULL, NULL, new_acl, NULL);
+    }
+    if (new_acl != NULL) LocalFree(new_acl);
+    if (descriptor != NULL) LocalFree(descriptor);
+    release_acl_mutex(mutex);
+    return result == ERROR_SUCCESS ? 0 : -1;
+}
+
+static int revoke_appcontainer_acl_handle(HANDLE handle, PSID sid) {
+    HANDLE mutex = acquire_acl_mutex();
+    if (mutex == NULL) return -1;
+    PACL old_acl = NULL;
+    PSECURITY_DESCRIPTOR descriptor = NULL;
+    DWORD result = GetSecurityInfo(handle, SE_FILE_OBJECT, DACL_SECURITY_INFORMATION,
+        NULL, NULL, &old_acl, NULL, &descriptor);
+    if (result != ERROR_SUCCESS) {
+        release_acl_mutex(mutex);
+        return -1;
+    }
+    EXPLICIT_ACCESSW access;
+    ZeroMemory(&access, sizeof(access));
+    access.grfAccessMode = REVOKE_ACCESS;
+    access.Trustee.TrusteeForm = TRUSTEE_IS_SID;
+    access.Trustee.TrusteeType = TRUSTEE_IS_USER;
+    access.Trustee.ptstrName = sid;
+    PACL new_acl = NULL;
+    result = SetEntriesInAclW(1, &access, old_acl, &new_acl);
+    if (result == ERROR_SUCCESS) {
+        result = SetSecurityInfo(handle, SE_FILE_OBJECT, DACL_SECURITY_INFORMATION,
+            NULL, NULL, new_acl, NULL);
+    }
+    if (new_acl != NULL) LocalFree(new_acl);
+    if (descriptor != NULL) LocalFree(descriptor);
+    release_acl_mutex(mutex);
+    return result == ERROR_SUCCESS ? 0 : -1;
+}
+
 static int cleanup_appcontainer(
     const wchar_t *profile_name,
     PSID sid,
-    const wchar_t *runtime,
-    const wchar_t *entry
+    const wchar_t *runtime_acl_path,
+    HANDLE runtime_root
 ) {
-    if (sid == NULL) return -1;
-    int revoked = wcscmp(runtime, entry) == 0;
+    if (sid == NULL) {
+        if (runtime_root != INVALID_HANDLE_VALUE) CloseHandle(runtime_root);
+        return -1;
+    }
+    int revoked = runtime_root == INVALID_HANDLE_VALUE && wcscmp(runtime_acl_path, L"-") == 0;
     for (int attempt = 0; !revoked && attempt < 100; attempt++) {
-        revoked = revoke_appcontainer_acl(runtime, sid) == 0;
+        revoked = runtime_root == INVALID_HANDLE_VALUE
+            ? revoke_appcontainer_acl(runtime_acl_path, sid) == 0
+            : revoke_appcontainer_acl_handle(runtime_root, sid) == 0;
         if (!revoked) Sleep(50);
     }
     int deleted = 0;
@@ -312,6 +399,7 @@ static int cleanup_appcontainer(
         if (!deleted) Sleep(50);
     }
     FreeSid(sid);
+    if (runtime_root != INVALID_HANDLE_VALUE) CloseHandle(runtime_root);
     return revoked && deleted ? 0 : -1;
 }
 
@@ -636,6 +724,36 @@ done:
     return valid ? 0 : 1;
 }
 
+static HANDLE pin_trusted_runtime_root(const wchar_t *path) {
+    HANDLE handle = CreateFileW(path,
+        FILE_READ_ATTRIBUTES | READ_CONTROL | WRITE_DAC,
+        FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING,
+        FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT, NULL);
+    if (handle == INVALID_HANDLE_VALUE) return INVALID_HANDLE_VALUE;
+    BY_HANDLE_FILE_INFORMATION pinned;
+    if (!GetFileInformationByHandle(handle, &pinned)
+            || !(pinned.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+            || (pinned.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT)
+            || verify_install_acl(path, 1) != 0) {
+        CloseHandle(handle);
+        return INVALID_HANDLE_VALUE;
+    }
+    HANDLE named = CreateFileW(path, FILE_READ_ATTRIBUTES,
+        FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING,
+        FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT, NULL);
+    BY_HANDLE_FILE_INFORMATION confirmed;
+    int unchanged = named != INVALID_HANDLE_VALUE
+        && GetFileInformationByHandle(named, &confirmed)
+        && !(confirmed.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT)
+        && same_file_identity(&pinned, &confirmed);
+    if (named != INVALID_HANDLE_VALUE) CloseHandle(named);
+    if (!unchanged) {
+        CloseHandle(handle);
+        return INVALID_HANDLE_VALUE;
+    }
+    return handle;
+}
+
 int wmain(int argc, wchar_t **argv) {
     const wchar_t *verify_acl_path = argument(argc, argv, L"--verify-acl-path");
     const wchar_t *verify_acl_scope = argument(argc, argv, L"--verify-acl-scope");
@@ -648,32 +766,47 @@ int wmain(int argc, wchar_t **argv) {
     const wchar_t *cleanup_profile = argument(argc, argv, L"--cleanup-profile");
     const wchar_t *cleanup_runtime = argument(argc, argv, L"--cleanup-runtime");
     const wchar_t *supervisor_handle_text = argument(argc, argv, L"--supervisor-handle");
-    if (cleanup_profile != NULL || cleanup_runtime != NULL || supervisor_handle_text != NULL) {
-        wchar_t *end = NULL;
-        unsigned long long inherited = _wcstoui64(
-            supervisor_handle_text == NULL ? L"" : supervisor_handle_text, &end, 10);
+    const wchar_t *runtime_handle_text = argument(argc, argv, L"--cleanup-runtime-handle");
+    if (cleanup_profile != NULL || cleanup_runtime != NULL || supervisor_handle_text != NULL
+            || runtime_handle_text != NULL) {
+        wchar_t *supervisor_end = NULL;
+        wchar_t *runtime_end = NULL;
+        unsigned long long inherited = _wcstoui64(supervisor_handle_text == NULL
+            ? L"" : supervisor_handle_text, &supervisor_end, 10);
+        unsigned long long inherited_runtime = _wcstoui64(runtime_handle_text == NULL
+            ? L"" : runtime_handle_text, &runtime_end, 10);
         if (cleanup_profile == NULL || cleanup_runtime == NULL
-                || end == supervisor_handle_text || *end != L'\0' || inherited == 0) return 63;
+                || supervisor_handle_text == NULL || runtime_handle_text == NULL
+                || supervisor_end == supervisor_handle_text || *supervisor_end != L'\0'
+                || runtime_end == runtime_handle_text || *runtime_end != L'\0'
+                || inherited == 0) return 63;
         HANDLE supervisor = (HANDLE)(ULONG_PTR)inherited;
+        HANDLE runtime_root = inherited_runtime == 0
+            ? INVALID_HANDLE_VALUE
+            : (HANDLE)(ULONG_PTR)inherited_runtime;
         WaitForSingleObject(supervisor, INFINITE);
         CloseHandle(supervisor);
         PSID cleanup_sid = NULL;
         HRESULT derived = DeriveAppContainerSidFromAppContainerName(cleanup_profile, &cleanup_sid);
-        int revoked = wcscmp(cleanup_runtime, L"-") == 0;
+        int revoked = runtime_root == INVALID_HANDLE_VALUE && wcscmp(cleanup_runtime, L"-") == 0;
         for (int attempt = 0; attempt < 100; attempt++) {
             if (!revoked && SUCCEEDED(derived) && cleanup_sid != NULL) {
-                revoked = revoke_appcontainer_acl(cleanup_runtime, cleanup_sid) == 0;
+                revoked = runtime_root == INVALID_HANDLE_VALUE
+                    ? revoke_appcontainer_acl(cleanup_runtime, cleanup_sid) == 0
+                    : revoke_appcontainer_acl_handle(runtime_root, cleanup_sid) == 0;
             }
             HRESULT deleted = revoked
                 ? DeleteAppContainerProfile(cleanup_profile)
                 : E_ACCESSDENIED;
             if (revoked && (SUCCEEDED(deleted)
                     || deleted == HRESULT_FROM_WIN32(ERROR_NOT_FOUND))) {
+                if (runtime_root != INVALID_HANDLE_VALUE) CloseHandle(runtime_root);
                 if (cleanup_sid != NULL) FreeSid(cleanup_sid);
                 return 0;
             }
             Sleep(50);
         }
+        if (runtime_root != INVALID_HANDLE_VALUE) CloseHandle(runtime_root);
         if (cleanup_sid != NULL) FreeSid(cleanup_sid);
         return 63;
     }
@@ -716,9 +849,22 @@ int wmain(int argc, wchar_t **argv) {
             return 65;
         }
     }
+    int python_runtime = wcscmp(runtime_kind, L"python") == 0;
+    const wchar_t *runtime_acl_path = wcscmp(runtime, entry) == 0 || python_runtime
+        ? L"-"
+        : runtime;
+    HANDLE pinned_runtime_root = python_runtime
+        ? pin_trusted_runtime_root(runtime_root)
+        : INVALID_HANDLE_VALUE;
+    if (python_runtime && pinned_runtime_root == INVALID_HANDLE_VALUE) {
+        CloseHandle(pinned_entry);
+        if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
+        return 65;
+    }
 
     unsigned char profile_nonce[16];
     if (BCryptGenRandom(NULL, profile_nonce, sizeof(profile_nonce), BCRYPT_USE_SYSTEM_PREFERRED_RNG) < 0) {
+        if (pinned_runtime_root != INVALID_HANDLE_VALUE) CloseHandle(pinned_runtime_root);
         CloseHandle(pinned_entry);
         if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 66;
@@ -745,21 +891,25 @@ int wmain(int argc, wchar_t **argv) {
             GENERIC_READ | GENERIC_EXECUTE, NO_INHERITANCE) != 0
         || (wcscmp(schema_hash, L"-") != 0
             && add_appcontainer_acl(schema, app_sid, GENERIC_READ, NO_INHERITANCE) != 0)
-        || (wcscmp(runtime, entry) != 0
-            && add_appcontainer_acl(runtime, app_sid,
+        || (pinned_runtime_root != INVALID_HANDLE_VALUE
+            && add_appcontainer_acl_handle(pinned_runtime_root, app_sid,
+                GENERIC_READ | GENERIC_EXECUTE,
+                SUB_CONTAINERS_AND_OBJECTS_INHERIT) != 0)
+        || (wcscmp(runtime_acl_path, L"-") != 0
+            && add_appcontainer_acl(runtime_acl_path, app_sid,
                 GENERIC_READ | GENERIC_EXECUTE, NO_INHERITANCE) != 0)
         || add_appcontainer_acl(working_directory, app_sid,
             GENERIC_READ | GENERIC_WRITE | GENERIC_EXECUTE | DELETE,
             SUB_CONTAINERS_AND_OBJECTS_INHERIT) != 0;
     free(snapshot_directory);
     if (FAILED(profile) || acl_failed) {
-        if (SUCCEEDED(profile)) cleanup_appcontainer(profile_name, app_sid, runtime, entry);
+        cleanup_appcontainer(profile_name, app_sid, runtime_acl_path, pinned_runtime_root);
         CloseHandle(pinned_entry);
         if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 66;
     }
-    if (start_profile_janitor(profile_name, runtime, entry) != 0) {
-        cleanup_appcontainer(profile_name, app_sid, runtime, entry);
+    if (start_profile_janitor(profile_name, runtime_acl_path, pinned_runtime_root) != 0) {
+        cleanup_appcontainer(profile_name, app_sid, runtime_acl_path, pinned_runtime_root);
         CloseHandle(pinned_entry);
         if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 66;
@@ -767,7 +917,7 @@ int wmain(int argc, wchar_t **argv) {
 
     HANDLE job = configured_job(memory, cpu_ms);
     if (job == NULL) {
-        cleanup_appcontainer(profile_name, app_sid, runtime, entry);
+        cleanup_appcontainer(profile_name, app_sid, runtime_acl_path, pinned_runtime_root);
         CloseHandle(pinned_entry);
         if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 67;
@@ -787,7 +937,7 @@ int wmain(int argc, wchar_t **argv) {
     if (duplicate_inheritable_stdio(inherited) != 0) {
         if (attributes != NULL) HeapFree(GetProcessHeap(), 0, attributes);
         CloseHandle(job);
-        cleanup_appcontainer(profile_name, app_sid, runtime, entry);
+        cleanup_appcontainer(profile_name, app_sid, runtime_acl_path, pinned_runtime_root);
         CloseHandle(pinned_entry);
         if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 68;
@@ -811,7 +961,7 @@ int wmain(int argc, wchar_t **argv) {
         if (attributes != NULL) HeapFree(GetProcessHeap(), 0, attributes);
         close_handles(inherited, 3);
         CloseHandle(job);
-        cleanup_appcontainer(profile_name, app_sid, runtime, entry);
+        cleanup_appcontainer(profile_name, app_sid, runtime_acl_path, pinned_runtime_root);
         CloseHandle(pinned_entry);
         if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 68;
@@ -823,7 +973,7 @@ int wmain(int argc, wchar_t **argv) {
         free(quoted_runtime); free(quoted_entry); free(quoted_stage); free(quoted_schema);
         DeleteProcThreadAttributeList(attributes); HeapFree(GetProcessHeap(), 0, attributes);
         close_handles(inherited, 3);
-        CloseHandle(job); cleanup_appcontainer(profile_name, app_sid, runtime, entry);
+        CloseHandle(job); cleanup_appcontainer(profile_name, app_sid, runtime_acl_path, pinned_runtime_root);
         CloseHandle(pinned_entry); if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 69;
     }
@@ -837,7 +987,7 @@ int wmain(int argc, wchar_t **argv) {
         free(quoted_runtime); free(quoted_entry); free(quoted_stage); free(quoted_schema);
         DeleteProcThreadAttributeList(attributes); HeapFree(GetProcessHeap(), 0, attributes);
         close_handles(inherited, 3);
-        CloseHandle(job); cleanup_appcontainer(profile_name, app_sid, runtime, entry);
+        CloseHandle(job); cleanup_appcontainer(profile_name, app_sid, runtime_acl_path, pinned_runtime_root);
         CloseHandle(pinned_entry); if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 69;
     }
@@ -859,7 +1009,7 @@ int wmain(int argc, wchar_t **argv) {
     if (!created) {
         fwprintf(stderr, L"CreateProcessAsUserW failed: %lu\n", (unsigned long)create_error);
         DeleteProcThreadAttributeList(attributes); HeapFree(GetProcessHeap(), 0, attributes);
-        CloseHandle(job); cleanup_appcontainer(profile_name, app_sid, runtime, entry);
+        CloseHandle(job); cleanup_appcontainer(profile_name, app_sid, runtime_acl_path, pinned_runtime_root);
         CloseHandle(pinned_entry); if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 70;
     }
@@ -870,7 +1020,7 @@ int wmain(int argc, wchar_t **argv) {
         TerminateProcess(process.hProcess, 71);
         CloseHandle(process.hThread); CloseHandle(process.hProcess);
         DeleteProcThreadAttributeList(attributes); HeapFree(GetProcessHeap(), 0, attributes);
-        CloseHandle(job); cleanup_appcontainer(profile_name, app_sid, runtime, entry);
+        CloseHandle(job); cleanup_appcontainer(profile_name, app_sid, runtime_acl_path, pinned_runtime_root);
         CloseHandle(pinned_entry); if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 71;
     }
@@ -879,7 +1029,7 @@ int wmain(int argc, wchar_t **argv) {
         TerminateJobObject(job, 71);
         CloseHandle(process.hProcess);
         DeleteProcThreadAttributeList(attributes); HeapFree(GetProcessHeap(), 0, attributes);
-        CloseHandle(job); cleanup_appcontainer(profile_name, app_sid, runtime, entry);
+        CloseHandle(job); cleanup_appcontainer(profile_name, app_sid, runtime_acl_path, pinned_runtime_root);
         CloseHandle(pinned_entry); if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 71;
     }
@@ -923,6 +1073,6 @@ int wmain(int argc, wchar_t **argv) {
     CloseHandle(job);
     DeleteProcThreadAttributeList(attributes);
     HeapFree(GetProcessHeap(), 0, attributes);
-    int cleanup_result = cleanup_appcontainer(profile_name, app_sid, runtime, entry);
+    int cleanup_result = cleanup_appcontainer(profile_name, app_sid, runtime_acl_path, pinned_runtime_root);
     return cleanup_result == 0 ? (int)exit_code : 73;
 }

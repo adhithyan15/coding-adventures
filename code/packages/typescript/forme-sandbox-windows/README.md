@@ -12,6 +12,12 @@ normal buffered stdio implementations without gaining another host handle.
 It pins verified entry/schema handles without delete sharing until process exit
 and uses a cryptographically random ephemeral AppContainer profile name that is
 deleted on every post-creation exit path. Closing the launcher kills the job.
+Python plugins receive read/execute access to a no-follow, ACL-verified, pinned
+runtime distribution root and its inherited contents so the interpreter can
+load its standard library and runtime DLLs. Node, Deno, and Bun retain access
+only to their exact executable. The temporary SID grant carries no write
+authority and is revoked through the same stable handle before profile
+deletion, including through the abnormal-exit janitor.
 For Node plugins the launcher preserves the already verified, symlink-free main
 path, avoiding a broader AppContainer ACL solely for Node's root-to-entry
 canonicalization walk.

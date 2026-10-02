@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { execFile } from "node:child_process";
-import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { homedir, tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -44,14 +44,14 @@ async function request(probe: string): Promise<SandboxLaunchRequest> {
   };
 }
 
-async function nodeRequest(): Promise<SandboxLaunchRequest> {
-  const workingDirectory = await mkdtemp(join(tmpdir(), "forme-windows-node-"));
-  roots.push(workingDirectory);
-  const entryBytes = new TextEncoder().encode(String.raw`let input = "";
+async function nodeRequest(source = String.raw`let input = "";
 process.stdin.setEncoding("utf8");
 process.stdin.on("data", chunk => { input += chunk; });
 process.stdin.on("end", () => process.stdout.write(input, () => process.exit(0)));
-`);
+`): Promise<SandboxLaunchRequest> {
+  const workingDirectory = await mkdtemp(join(tmpdir(), "forme-windows-node-"));
+  roots.push(workingDirectory);
+  const entryBytes = new TextEncoder().encode(source);
   const manifest: Manifest = {
     manifestVersion: 1,
     plugin: { name: "@example/windows-node", version: "1.0.0", apiVersion: 1 },
@@ -64,6 +64,43 @@ process.stdin.on("end", () => process.stdout.write(input, () => process.exit(0))
     plugin: { manifest, manifestHash: computeManifestHash(manifest, entryBytes), entryBytes },
     stage: manifest.contributes.stages[0]!, instanceId: "node/main", workingDirectory,
     resources: manifest.resources, configSchema: null,
+  };
+}
+
+async function pythonRequest(): Promise<{
+  readonly request: SandboxLaunchRequest;
+  readonly executable: string;
+  readonly root: string;
+}> {
+  const { stdout } = await execFileAsync("python", [
+    "-c",
+    "import os,sys; print(os.path.realpath(sys.executable)); print(os.path.realpath(sys.prefix))",
+  ]);
+  const [executable, root] = stdout.trim().split(/\r?\n/);
+  if (!executable || !root) throw new Error("Python runtime discovery returned an incomplete distribution");
+  const workingDirectory = await mkdtemp(join(tmpdir(), "forme-windows-python-"));
+  roots.push(workingDirectory);
+  const entryBytes = new TextEncoder().encode(String.raw`import sys
+data = sys.stdin.buffer.read()
+sys.stdout.buffer.write(data)
+sys.stdout.buffer.flush()
+`);
+  const manifest: Manifest = {
+    manifestVersion: 1,
+    plugin: { name: "@example/windows-python", version: "1.0.0", apiVersion: 1 },
+    runtime: { kind: "python", entry: "entry.py" },
+    capabilities: { required: [], optional: [] },
+    contributes: { stages: [{ id: "main", consumes: "ContentSource", produces: "ContentNode" }], kinds: [] },
+    resources: { maxMemoryMb: 64, maxWallClockMs: 5_000, maxFileDescriptors: 256 },
+  };
+  return {
+    executable,
+    root,
+    request: {
+      plugin: { manifest, manifestHash: computeManifestHash(manifest, entryBytes), entryBytes },
+      stage: manifest.contributes.stages[0]!, instanceId: "python/main", workingDirectory,
+      resources: manifest.resources, configSchema: null,
+    },
   };
 }
 
@@ -122,6 +159,68 @@ describe.skipIf(process.platform !== "win32")("Windows native sandbox", () => {
     expect(result.exit, result.stderr).toEqual({ code: 0, signal: null });
     expect(Buffer.concat(stdout).toString("utf8")).toBe("sandbox protocol probe");
   });
+
+  it("round-trips protocol bytes through a trusted Python distribution", async () => {
+    const python = await pythonRequest();
+    const child = await createWindowsSandboxFactory({
+      launcherPath,
+      readinessTimeoutMs: 5_000,
+      runtimeExecutables: { python: python.executable },
+      runtimeRoots: { python: python.root },
+    }).launch(python.request);
+    const stdout: Buffer[] = [];
+    child.stdout.on("data", chunk => stdout.push(Buffer.from(chunk)));
+    child.stdin.end("sandbox python protocol probe");
+    const result = await exitWithStderr(child);
+    expect(result.exit, result.stderr).toEqual({ code: 0, signal: null });
+    expect(Buffer.concat(stdout).toString("utf8")).toBe("sandbox python protocol probe");
+  }, 15_000);
+
+  it("does not grant Node access to sibling runtime-root files", async () => {
+    const runtimeRoot = await mkdtemp(join(homedir(), "forme-windows-node-runtime-"));
+    roots.push(runtimeRoot);
+    const runtime = join(runtimeRoot, "node.exe");
+    const secret = join(runtimeRoot, "must-stay-private.txt");
+    await copyFile(process.execPath, runtime);
+    await writeFile(secret, "private runtime sibling");
+    const child = await createWindowsSandboxFactory({
+      launcherPath,
+      readinessTimeoutMs: 5_000,
+      runtimeExecutables: { node: runtime },
+      runtimeRoots: { node: runtimeRoot },
+    }).launch(await nodeRequest(String.raw`import { readFileSync } from "node:fs";
+try {
+  readFileSync(${JSON.stringify(secret)});
+  process.exit(91);
+} catch (error) {
+  process.exit(error?.code === "EACCES" || error?.code === "EPERM" ? 0 : 92);
+}
+`));
+    const result = await exitWithStderr(child);
+    expect(result.exit, result.stderr).toEqual({ code: 0, signal: null });
+  }, 20_000);
+
+  it("serializes overlapping Python runtime-root grants and revocations", async () => {
+    const [firstRequest, secondRequest] = await Promise.all([pythonRequest(), pythonRequest()]);
+    expect(secondRequest.root.toLowerCase()).toBe(firstRequest.root.toLowerCase());
+    const factory = createWindowsSandboxFactory({
+      launcherPath,
+      readinessTimeoutMs: 5_000,
+      runtimeExecutables: { python: firstRequest.executable },
+      runtimeRoots: { python: firstRequest.root },
+    });
+    const [first, second] = await Promise.all([
+      factory.launch(firstRequest.request),
+      factory.launch(secondRequest.request),
+    ]);
+    first.stdin.end();
+    second.stdin.end();
+    const results = await Promise.all([exitWithStderr(first), exitWithStderr(second)]);
+    expect(results.map(result => result.exit), results.map(result => result.stderr).join("\n")).toEqual([
+      { code: 0, signal: null },
+      { code: 0, signal: null },
+    ]);
+  }, 30_000);
 
   it("serializes overlapping trusted-runtime ACL grants and revocations", async () => {
     const [first, second] = await Promise.all([
