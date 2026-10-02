@@ -17098,6 +17098,20 @@ mod tests {
     }
 
     #[test]
+    fn al4_real_single_step_list_sequences_literal_string_selected_values() {
+        let module = compile_source(
+            "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 1.0 else 9.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.5 else 0.0 do total := total + x; print(total) end",
+            "test",
+        )
+        .expect("a real single-value snapshot may seed a following finite step element");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "7.25")
+        }));
+    }
+
+    #[test]
     fn al4_real_while_while_list_sequences_literal_string_selected_values() {
         let module = compile_source(
             "begin real x, total; x := 0.0; total := 0.25; for x := if 'ALPHA' < 'BETA' then x + 0.5 else x + 1.0 while x <= 1.0, if 'BETA' < 'ALPHA' then x + 1.5 else x + 0.5 while if 'ALPHA' < 'BETA' then x <= 2.5 else x <= 1.5 do total := total + x; print(total) end",
