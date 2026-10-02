@@ -251,6 +251,7 @@ where
                     text_overflow(frame.node),
                     text_wraps(frame.node, tc.wrap),
                     text_wrap_style(frame.node),
+                    text_justifies(frame.node),
                     direction,
                     options,
                     &mut font_cache,
@@ -536,6 +537,10 @@ fn text_wrap_style(node: &PositionedNode) -> TextWrapStyle {
         Some(ExtValue::Str(value)) if value == "pretty" => TextWrapStyle::Pretty,
         _ => TextWrapStyle::Auto,
     }
+}
+
+fn text_justifies(node: &PositionedNode) -> bool {
+    matches!(node.ext.get("text.justify"), Some(ExtValue::Bool(true)))
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1310,6 +1315,7 @@ fn emit_text_content<S, M, R>(
     text_overflow: Option<TextOverflow>,
     wrap: bool,
     wrap_style: TextWrapStyle,
+    justify: bool,
     direction: BaseDirection,
     options: &LayoutToPaintOptions<'_, S, M, R>,
     font_cache: &mut HashMap<FontCacheKey, CachedFont<S::Handle>>,
@@ -1394,8 +1400,22 @@ fn emit_text_content<S, M, R>(
                 baseline_y += line_height_dpr;
                 continue;
             }
+            let is_final_line = line_index + 1 == line_count;
+            let line_word_spacing = if justify && !is_final_line {
+                let separator_count = line.chars().filter(|character| *character == ' ').count();
+                if separator_count == 0 {
+                    word_spacing
+                } else {
+                    let base_width = shape_visual_line(
+                        options.shaper, handle, &line, size_dpr, word_spacing, direction,
+                    ).map(|shaped| shaped_advance(&shaped, letter_spacing)).unwrap_or(max_width_dpr);
+                    word_spacing + ((max_width_dpr - base_width) / separator_count as f64).max(0.0)
+                }
+            } else {
+                word_spacing
+            };
             let shaped = match shape_visual_line(
-                options.shaper, handle, &line, size_dpr, word_spacing, direction,
+                options.shaper, handle, &line, size_dpr, line_word_spacing, direction,
             )
             {
                 Ok(s) => s,
@@ -1407,7 +1427,7 @@ fn emit_text_content<S, M, R>(
 
             // Compute the starting x position based on text alignment.
             let line_advance = shaped_advance(&shaped, letter_spacing);
-            let alignment = if line_index + 1 == line_count {
+            let alignment = if is_final_line {
                 text_align_last.unwrap_or(tc.text_align)
             } else {
                 tc.text_align
@@ -3352,5 +3372,30 @@ mod tests {
             }).collect::<Vec<_>>();
         assert_eq!(starts(&auto), vec![4.0, 20.0]);
         assert_eq!(starts(&pretty), vec![12.0, 12.0]);
+    }
+
+    #[test]
+    fn justified_text_distributes_non_final_line_space() {
+        let normal = positioned_leaf(text_content("A A A A"), 0.0, 0.0, 48.0, 40.0);
+        let mut justified = normal.clone();
+        justified.ext.insert("text.justify".into(), ExtValue::Bool(true));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let options = make_options(&shaper, &metrics, &resolver);
+        let first_line_x = |node: &PositionedNode| {
+            let scene = layout_to_paint(node, &options);
+            let first_y = scene.instructions.iter().find_map(|instruction| match instruction {
+                PaintInstruction::GlyphRun(run) => run.glyphs.first().map(|glyph| glyph.y),
+                _ => None,
+            }).expect("first text line must lower");
+            scene.instructions.iter().filter_map(|instruction| match instruction {
+                PaintInstruction::GlyphRun(run) => Some(run.glyphs.iter()),
+                _ => None,
+            }).flatten().filter(|glyph| glyph.y == first_y)
+                .map(|glyph| glyph.x).collect::<Vec<_>>()
+        };
+        assert_eq!(first_line_x(&normal), vec![0.0, 8.0, 16.0, 24.0, 32.0]);
+        assert_eq!(first_line_x(&justified), vec![0.0, 8.0, 20.0, 28.0, 40.0]);
     }
 }
