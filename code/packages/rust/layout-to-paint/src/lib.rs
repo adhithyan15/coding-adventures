@@ -249,6 +249,7 @@ where
                     text_word_break(frame.node),
                     text_line_break(frame.node),
                     text_overflow(frame.node),
+                    text_wraps(frame.node, tc.wrap),
                     direction,
                     options,
                     &mut font_cache,
@@ -514,6 +515,14 @@ fn text_overflow(node: &PositionedNode) -> Option<TextOverflow> {
         Some(ExtValue::Str(value)) if value == "clip" => Some(TextOverflow::Clip),
         Some(ExtValue::Str(value)) if value == "ellipsis" => Some(TextOverflow::Ellipsis),
         _ => None,
+    }
+}
+
+fn text_wraps(node: &PositionedNode, fallback: bool) -> bool {
+    match node.ext.get("text.wrap-mode") {
+        Some(ExtValue::Str(value)) if value == "wrap" => true,
+        Some(ExtValue::Str(value)) if value == "nowrap" => false,
+        _ => fallback,
     }
 }
 
@@ -1287,6 +1296,7 @@ fn emit_text_content<S, M, R>(
     word_break: TextWordBreak,
     line_break: TextLineBreak,
     text_overflow: Option<TextOverflow>,
+    wrap: bool,
     direction: BaseDirection,
     options: &LayoutToPaintOptions<'_, S, M, R>,
     font_cache: &mut HashMap<FontCacheKey, CachedFont<S::Handle>>,
@@ -1331,7 +1341,7 @@ fn emit_text_content<S, M, R>(
     let fill_css = color_to_css(tc.color);
 
     for segment in tc.value.split('\n') {
-        let wrapped = if tc.wrap {
+        let wrapped = if wrap {
             wrap_line(
                 options.shaper,
                 handle,
@@ -3226,5 +3236,21 @@ mod tests {
             }).expect("text must lower to a glyph run");
         assert_eq!(glyph_ids(&clip), vec!['a' as u32, 'b' as u32]);
         assert_eq!(glyph_ids(&ellipsis), vec!['a' as u32, '…' as u32]);
+    }
+
+    #[test]
+    fn text_wrap_mode_overrides_soft_wrapping_without_removing_hard_breaks() {
+        let mut nowrap = positioned_leaf(text_content("AA AA\nBB"), 0.0, 0.0, 25.0, 60.0);
+        nowrap.ext.insert("text.wrap-mode".into(), ExtValue::Str("nowrap".into()));
+        let mut wrap = nowrap.clone();
+        wrap.ext.insert("text.wrap-mode".into(), ExtValue::Str("wrap".into()));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let options = make_options(&shaper, &metrics, &resolver);
+        let count = |node: &PositionedNode| layout_to_paint(node, &options).instructions.iter()
+            .filter(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))).count();
+        assert_eq!(count(&nowrap), 2);
+        assert_eq!(count(&wrap), 3);
     }
 }

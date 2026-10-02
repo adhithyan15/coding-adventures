@@ -441,6 +441,13 @@ fn treemap_text_node(
         };
         node.ext.insert("text.overflow".into(), ExtValue::Str(text_overflow.into()));
     }
+    if let Some(text_wrap_mode) = style.and_then(|style| style.text_wrap_mode) {
+        let text_wrap_mode = match text_wrap_mode {
+            diagram_ir::TreemapTextWrapMode::Wrap => "wrap",
+            diagram_ir::TreemapTextWrapMode::NoWrap => "nowrap",
+        };
+        node.ext.insert("text.wrap-mode".into(), ExtValue::Str(text_wrap_mode.into()));
+    }
     if let Some(direction) = style.and_then(|style| style.direction) {
         let value = match direction {
             diagram_ir::TreemapTextDirection::LeftToRight => "ltr",
@@ -7016,6 +7023,7 @@ mod tests {
                     word_break: None,
                     line_break: None,
                     text_overflow: None,
+                    text_wrap_mode: None,
                     letter_spacing: None,
                     word_spacing: None,
                     direction: None,
@@ -7118,6 +7126,12 @@ mod tests {
             current_color, Some(&whitespace_style),
         );
         assert_eq!(ellipsis_text.ext.get("text.overflow"), Some(&ExtValue::Str("ellipsis".into())));
+        whitespace_style.text_wrap_mode = Some(diagram_ir::TreemapTextWrapMode::NoWrap);
+        let nowrap_text = treemap_text_node(
+            "one two", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(nowrap_text.ext.get("text.wrap-mode"), Some(&ExtValue::Str("nowrap".into())));
         whitespace_style.direction = Some(diagram_ir::TreemapTextDirection::RightToLeft);
         let rtl_text = treemap_text_node(
             "مرحبا", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
