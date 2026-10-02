@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:035f8d87a6921349",
+  "lessonIds": [
+    "BN-C188-bishvobidyaloy",
+    "BN-C188-kolej",
+    "BN-C188-thana",
+    "BN-C188-phlt",
+    "BN-C188-tola"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch188.txt",
+  "json": "bengali/narration/ch188.json",
+  "textHash": "fnv1a64:e42f89649f9c9db9",
+  "jsonHash": "fnv1a64:eaaf8b4055df3554",
+  "findings": []
+}

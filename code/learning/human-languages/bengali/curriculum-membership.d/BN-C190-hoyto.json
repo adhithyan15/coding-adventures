@@ -1,0 +1,11 @@
+{
+  "id": "BN-C190-hoyto",
+  "pathSegment": "BN-PATH-190-KARON190",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-190-KARON190",
+      "order": 1
+    }
+  ]
+}

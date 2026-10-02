@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R196-second-pass-words-from-chapters-192-196",
+    "language": "bengali",
+    "chapter": 196,
+    "sequence": 11610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c4487f860958fe3"
+  },
+  "findings": []
+}

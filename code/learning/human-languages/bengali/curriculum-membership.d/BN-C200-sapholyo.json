@@ -1,0 +1,11 @@
+{
+  "id": "BN-C200-sapholyo",
+  "pathSegment": "BN-PATH-200-JINIS200",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-200-JINIS200",
+      "order": 4
+    }
+  ]
+}

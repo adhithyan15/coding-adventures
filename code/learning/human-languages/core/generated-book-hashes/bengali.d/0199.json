@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:1ffdcbef94b20606",
+  "lessonIds": [
+    "BN-C199-nagorik",
+    "BN-C199-porjotok",
+    "BN-C199-bakyo",
+    "BN-C199-bhul",
+    "BN-C199-niyom"
+  ],
+  "tex": "bengali/book/chapters/ch199-citizen-tourist-sentence-mistake-rule.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C189-guha",
+    "language": "bengali",
+    "chapter": 189,
+    "sequence": 11220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dfca11c7c2e01185"
+  },
+  "findings": []
+}

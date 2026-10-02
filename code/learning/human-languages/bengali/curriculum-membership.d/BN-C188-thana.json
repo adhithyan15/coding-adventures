@@ -1,0 +1,11 @@
+{
+  "id": "BN-C188-thana",
+  "pathSegment": "BN-PATH-188-JAYGA188",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-188-JAYGA188",
+      "order": 2
+    }
+  ]
+}

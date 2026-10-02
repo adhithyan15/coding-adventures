@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C204-peyara",
+    "language": "bengali",
+    "chapter": 204,
+    "sequence": 12320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c8720783c946e44"
+  },
+  "findings": []
+}

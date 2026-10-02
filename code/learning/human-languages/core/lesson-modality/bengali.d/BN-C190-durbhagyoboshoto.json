@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C190-durbhagyoboshoto",
+    "language": "bengali",
+    "chapter": 190,
+    "sequence": 11280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da8e652833a148c4"
+  },
+  "findings": []
+}

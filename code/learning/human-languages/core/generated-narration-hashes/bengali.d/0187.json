@@ -1,0 +1,21 @@
+{
+  "language": "bengali",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:07579dec14f2148e",
+  "lessonIds": [
+    "BN-C187-somoymoto",
+    "BN-C187-shotabdi",
+    "BN-C187-jug",
+    "BN-C187-doshok",
+    "BN-C187-soptahanto",
+    "BN-R187-first-pass-words-from-chapters-179-182",
+    "BN-R187-second-pass-words-from-chapters-183-187"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "bengali/narration/ch187.txt",
+  "json": "bengali/narration/ch187.json",
+  "textHash": "fnv1a64:e6d0d7c6921f2c6d",
+  "jsonHash": "fnv1a64:002123f65c5c628e",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C200-sapholyo",
+    "language": "bengali",
+    "chapter": 200,
+    "sequence": 11980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:45d44ff128f49bb5"
+  },
+  "findings": []
+}

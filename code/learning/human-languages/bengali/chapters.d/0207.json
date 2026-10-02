@@ -1,0 +1,19 @@
+{
+  "chapter": 207,
+  "title": "Price, Shopkeeper, Customer, Business, Company",
+  "label": "ch:bn-price-shopkeeper-customer-business-company",
+  "canDo": "I can say a price, a shopkeeper, a customer, business and a company.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C207-kompani",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 207: I can say a price, a shopkeeper, a customer, business and a company.",
+    "assesses": [
+      "BN-LEX-C207-KAJ207-03",
+      "BN-LEX-C207-KAJ207-04",
+      "BN-LEX-C207-KAJ207-05"
+    ]
+  }
+}

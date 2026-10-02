@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C190-pholaphol",
+    "language": "bengali",
+    "chapter": 190,
+    "sequence": 11290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:875fa8ba2b127bcb"
+  },
+  "findings": []
+}

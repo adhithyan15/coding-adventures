@@ -1,0 +1,15 @@
+{
+  "language": "bengali",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:f3318b905d19d4d9",
+  "lessonIds": [
+    "BN-C196-biriyani",
+    "BN-C196-khichuri",
+    "BN-C196-chop",
+    "BN-C196-achar",
+    "BN-C196-chatni",
+    "BN-R196-first-pass-words-from-chapters-188-191",
+    "BN-R196-second-pass-words-from-chapters-192-196"
+  ],
+  "tex": "bengali/book/chapters/ch196-biryani-khichuri-croquette-pickle-chutney.tex"
+}

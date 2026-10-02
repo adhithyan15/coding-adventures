@@ -1,0 +1,11 @@
+{
+  "id": "BN-C183-jaga",
+  "pathSegment": "BN-PATH-183-ACT183",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-183-ACT183",
+      "order": 3
+    }
+  ]
+}

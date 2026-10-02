@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C192-alada",
+    "language": "bengali",
+    "chapter": 192,
+    "sequence": 11380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:37fc5ea01be6e61e"
+  },
+  "findings": []
+}

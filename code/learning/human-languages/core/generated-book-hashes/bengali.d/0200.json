@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:54118ec5386bff61",
+  "lessonIds": [
+    "BN-C200-juddho",
+    "BN-C200-svadhinota",
+    "BN-C200-ain",
+    "BN-C200-kortobyo",
+    "BN-C200-sapholyo"
+  ],
+  "tex": "bengali/book/chapters/ch200-war-freedom-law-duty-success.tex"
+}

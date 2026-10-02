@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:4905bec9e52ab7a1",
+  "lessonIds": [
+    "BN-C207-dam",
+    "BN-C207-dokandar",
+    "BN-C207-khodder",
+    "BN-C207-bbsa",
+    "BN-C207-kompani"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch207.txt",
+  "json": "bengali/narration/ch207.json",
+  "textHash": "fnv1a64:e25fa2ae7b23272f",
+  "jsonHash": "fnv1a64:c3373356ff1bedee",
+  "findings": []
+}

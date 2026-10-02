@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:9049cd84c8a986e1",
+  "lessonIds": [
+    "BN-C180-rojgar-kora",
+    "BN-C180-dkhashona-kora",
+    "BN-C180-pala",
+    "BN-C180-jol-deoya",
+    "BN-C180-chhapa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch180.txt",
+  "json": "bengali/narration/ch180.json",
+  "textHash": "fnv1a64:02168f47af75fa13",
+  "jsonHash": "fnv1a64:4c8479f7b89c67e4",
+  "findings": []
+}

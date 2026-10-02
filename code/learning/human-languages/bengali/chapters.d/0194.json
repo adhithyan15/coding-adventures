@@ -1,0 +1,19 @@
+{
+  "chapter": 194,
+  "title": "Brush, Iron, Jug, Kettle, Basket",
+  "label": "ch:bn-brush-iron-jug-kettle-basket",
+  "canDo": "I can say a brush, an iron, a jug, a kettle and a basket.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C194-jhuri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 194: I can say a brush, an iron, a jug, a kettle and a basket.",
+    "assesses": [
+      "BN-LEX-C194-JINIS194-03",
+      "BN-LEX-C194-JINIS194-04",
+      "BN-LEX-C194-JINIS194-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 181,
+  "title": "To breathe, To shiver, To get wet, To memorise, To explain",
+  "label": "ch:bn-to-breathe-to-shiver-to-get-wet-to-memorise-to-explain",
+  "canDo": "I can say to breathe, to shiver, to get wet, to memorise and to explain.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C181-bojhano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 181: I can say to breathe, to shiver, to get wet, to memorise and to explain.",
+    "assesses": [
+      "BN-LEX-C181-ACT181-03",
+      "BN-LEX-C181-ACT181-04",
+      "BN-LEX-C181-ACT181-05"
+    ]
+  }
+}

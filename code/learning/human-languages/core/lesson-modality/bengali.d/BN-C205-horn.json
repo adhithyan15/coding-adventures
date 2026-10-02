@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C205-horn",
+    "language": "bengali",
+    "chapter": 205,
+    "sequence": 12350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47e128c1d9a4c6a1"
+  },
+  "findings": []
+}

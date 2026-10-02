@@ -1,0 +1,11 @@
+{
+  "id": "BN-C204-peyara",
+  "pathSegment": "BN-PATH-204-JINIS204",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-204-JINIS204",
+      "order": 2
+    }
+  ]
+}

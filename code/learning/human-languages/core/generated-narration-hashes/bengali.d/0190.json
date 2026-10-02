@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:5823de50b340c918",
+  "lessonIds": [
+    "BN-C190-borong",
+    "BN-C190-hoyto",
+    "BN-C190-nishchoyi",
+    "BN-C190-durbhagyoboshoto",
+    "BN-C190-pholaphol"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch190.txt",
+  "json": "bengali/narration/ch190.json",
+  "textHash": "fnv1a64:efa56f23e8de17f8",
+  "jsonHash": "fnv1a64:f48639eb85aebccf",
+  "findings": []
+}

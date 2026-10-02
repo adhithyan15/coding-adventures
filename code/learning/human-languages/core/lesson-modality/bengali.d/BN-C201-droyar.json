@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C201-droyar",
+    "language": "bengali",
+    "chapter": 201,
+    "sequence": 12010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2f928da888e49452"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C195-belt",
+  "pathSegment": "BN-PATH-195-JINIS195",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-195-JINIS195",
+      "order": 2
+    }
+  ]
+}

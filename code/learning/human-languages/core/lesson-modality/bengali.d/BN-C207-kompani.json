@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C207-kompani",
+    "language": "bengali",
+    "chapter": 207,
+    "sequence": 12490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:622e57ed354bec3d"
+  },
+  "findings": []
+}

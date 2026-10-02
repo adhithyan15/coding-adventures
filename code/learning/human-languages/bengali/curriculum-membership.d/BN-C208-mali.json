@@ -1,0 +1,11 @@
+{
+  "id": "BN-C208-mali",
+  "pathSegment": "BN-PATH-208-KAJ208",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-208-KAJ208",
+      "order": 2
+    }
+  ]
+}

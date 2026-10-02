@@ -1,0 +1,11 @@
+{
+  "id": "BN-C197-hoki",
+  "pathSegment": "BN-PATH-197-JINIS197",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-197-JINIS197",
+      "order": 1
+    }
+  ]
+}

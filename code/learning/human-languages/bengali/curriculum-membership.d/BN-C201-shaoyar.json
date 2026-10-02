@@ -1,0 +1,11 @@
+{
+  "id": "BN-C201-shaoyar",
+  "pathSegment": "BN-PATH-201-JINIS201",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-201-JINIS201",
+      "order": 1
+    }
+  ]
+}

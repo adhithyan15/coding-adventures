@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C193-kachher",
+    "language": "bengali",
+    "chapter": 193,
+    "sequence": 11420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ca7f64c88559c9b"
+  },
+  "findings": []
+}

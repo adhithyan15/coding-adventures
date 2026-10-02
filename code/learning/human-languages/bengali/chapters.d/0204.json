@@ -1,0 +1,19 @@
+{
+  "chapter": 204,
+  "title": "Custard apple, Pomegranate, Guava, Date, Nut",
+  "label": "ch:bn-custard-apple-pomegranate-guava-date-nut",
+  "canDo": "I can say a custard apple, a pomegranate, a guava, a date and a nut.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C204-badam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 204: I can say a custard apple, a pomegranate, a guava, a date and a nut.",
+    "assesses": [
+      "BN-LEX-C204-JINIS204-03",
+      "BN-LEX-C204-JINIS204-04",
+      "BN-LEX-C204-JINIS204-05"
+    ]
+  }
+}

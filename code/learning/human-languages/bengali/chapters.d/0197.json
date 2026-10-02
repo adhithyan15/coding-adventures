@@ -1,0 +1,19 @@
+{
+  "chapter": 197,
+  "title": "Football, Hockey, Tennis, Chess, Playing cards",
+  "label": "ch:bn-football-hockey-tennis-chess-playing-cards",
+  "canDo": "I can say football, hockey, tennis, chess and playing cards.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C197-tas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 197: I can say football, hockey, tennis, chess and playing cards.",
+    "assesses": [
+      "BN-LEX-C197-JINIS197-03",
+      "BN-LEX-C197-JINIS197-04",
+      "BN-LEX-C197-JINIS197-05"
+    ]
+  }
+}

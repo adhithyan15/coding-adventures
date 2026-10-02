@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C191-adhunik",
+    "language": "bengali",
+    "chapter": 191,
+    "sequence": 11320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89e901d8dbbb6ec8"
+  },
+  "findings": []
+}

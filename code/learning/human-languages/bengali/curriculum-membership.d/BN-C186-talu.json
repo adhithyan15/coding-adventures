@@ -1,0 +1,11 @@
+{
+  "id": "BN-C186-talu",
+  "pathSegment": "BN-PATH-186-SVASTHYO186",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-186-SVASTHYO186",
+      "order": 2
+    }
+  ]
+}

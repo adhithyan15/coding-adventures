@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:09ed7056a9b510c5",
+  "lessonIds": [
+    "BN-C194-brash",
+    "BN-C194-istri",
+    "BN-C194-jog",
+    "BN-C194-ketli",
+    "BN-C194-jhuri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch194.txt",
+  "json": "bengali/narration/ch194.json",
+  "textHash": "fnv1a64:e697332b3624e5d4",
+  "jsonHash": "fnv1a64:f77a3a295644568d",
+  "findings": []
+}

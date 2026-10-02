@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C205-signl",
+    "language": "bengali",
+    "chapter": 205,
+    "sequence": 12360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b67b40c128f471d4"
+  },
+  "findings": []
+}

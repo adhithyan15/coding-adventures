@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:f8dd6d138879f546",
+  "lessonIds": [
+    "BN-C200-juddho",
+    "BN-C200-svadhinota",
+    "BN-C200-ain",
+    "BN-C200-kortobyo",
+    "BN-C200-sapholyo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch200.txt",
+  "json": "bengali/narration/ch200.json",
+  "textHash": "fnv1a64:c7de058d5c3fe58f",
+  "jsonHash": "fnv1a64:2ee3bd066ff63343",
+  "findings": []
+}

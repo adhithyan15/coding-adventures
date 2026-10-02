@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:82a8527f08acfc51",
+  "lessonIds": [
+    "BN-C201-besin",
+    "BN-C201-shaoyar",
+    "BN-C201-droyar",
+    "BN-C201-thole",
+    "BN-C201-glas"
+  ],
+  "tex": "bengali/book/chapters/ch201-basin-shower-drawer-cloth-bag-glass.tex"
+}

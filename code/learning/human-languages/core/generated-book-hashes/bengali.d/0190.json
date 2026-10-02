@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:705127751eb3110a",
+  "lessonIds": [
+    "BN-C190-borong",
+    "BN-C190-hoyto",
+    "BN-C190-nishchoyi",
+    "BN-C190-durbhagyoboshoto",
+    "BN-C190-pholaphol"
+  ],
+  "tex": "bengali/book/chapters/ch190-rather-perhaps-certainly-unfortunately-result.tex"
+}

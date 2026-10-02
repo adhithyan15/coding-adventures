@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C198-pltphorm",
+    "language": "bengali",
+    "chapter": 198,
+    "sequence": 11880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:069d8a9cab517f84"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:afa7b48f1004b3ae",
+  "lessonIds": [
+    "BN-C206-silindar",
+    "BN-C206-kukar",
+    "BN-C206-miksi",
+    "BN-C206-tre",
+    "BN-C206-chhakni"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch206.txt",
+  "json": "bengali/narration/ch206.json",
+  "textHash": "fnv1a64:73446f359fd0e1c0",
+  "jsonHash": "fnv1a64:2d3a58bdc3c42e0b",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C196-achar",
+  "pathSegment": "BN-PATH-196-JINIS196",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-196-JINIS196",
+      "order": 3
+    }
+  ]
+}
