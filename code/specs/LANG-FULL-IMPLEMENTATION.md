@@ -1090,7 +1090,8 @@ backend immediately) come before the enabler-dependent items.
   header expressions, and values sequenced across bounded multi-element `for`
   lists, including mixed finite-step and single-value elements in either order
   and finite-step exits that seed following bounded `while` elements when the
-  body only reads the controlled variable. A terminating bounded `while` exit
+  body only reads the controlled variable, including exactly simulated finite
+  binary64 steps. A terminating bounded `while` exit
   may symmetrically seed a following finite-step or single-value element under
   the same read-only body rule, and one finite-step exit may seed another
   finite-step element likewise. Two bounded `while` elements may chain their
