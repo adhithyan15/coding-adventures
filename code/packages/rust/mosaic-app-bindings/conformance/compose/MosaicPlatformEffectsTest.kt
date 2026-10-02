@@ -177,6 +177,16 @@ class MosaicPlatformEffectsTest {
     }
 
     @Test
+    fun onlyAnImageOnlyOpenStartsInPictures() {
+        // UI59 §2: a "pictures only" open starts in the Pictures folder.
+        assertTrue(mosaicOnlyImages(listOf("png", "jpg", "jpeg")), "images start in Pictures")
+        assertTrue(mosaicOnlyImages(listOf("svg")), "svg is an image")
+        assertFalse(mosaicOnlyImages(listOf("png", "txt")), "mixed types keep the default start")
+        assertFalse(mosaicOnlyImages(emptyList()), "any file keeps the default start")
+        assertFalse(mosaicOnlyImages(listOf("pdf")), "a document keeps the default start")
+    }
+
+    @Test
     fun openingSomethingThatIsNotAFileFails() {
         val outcome = mosaicRunFilesOpen(emptyMap<String, Any?>(), FakeDialogs(directory))
         assertTrue(outcome.containsKey("failed"))

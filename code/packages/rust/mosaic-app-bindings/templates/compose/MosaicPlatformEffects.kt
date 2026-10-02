@@ -75,6 +75,12 @@ interface MosaicFileDialogs {
 object AwtMosaicFileDialogs : MosaicFileDialogs {
     override fun chooseFileToOpen(extensions: List<String>): File? {
         val dialog = FileDialog(null as Frame?, "Open", FileDialog.LOAD)
+        // Images only: open in Pictures, as a photo picker should. Anything
+        // else -- and a home with no Pictures folder -- keeps the dialog's
+        // own default start.
+        if (mosaicOnlyImages(extensions)) {
+            mosaicPicturesDirectory()?.let { dialog.directory = it.path }
+        }
         if (extensions.isNotEmpty()) {
             dialog.setFilenameFilter { _, name -> extensions.any { name.lowercase().endsWith(".$it") } }
         }
@@ -113,6 +119,35 @@ private val MOSAIC_MIME_EXTENSIONS: Map<String, List<String>> = mapOf(
     "image/tiff" to listOf("tif", "tiff"),
     "image/svg+xml" to listOf("svg"),
 )
+
+/**
+ * Whether every extension the open dialog filters on is an image's, so it can
+ * start in the Pictures folder (UI59 §2: a caller that wants "pictures only"
+ * accepts image types, and the dialog's start location follows). No filter at
+ * all is not "only images": it means any file, and the dialog starts where it
+ * always has. The same rule as the XAML and Qt libraries.
+ *
+ *     accept                         extensions        start
+ *     ["image/png", "image/jpeg"]    png jpg jpeg      Pictures
+ *     ["image/png", "text/plain"]    png txt           the dialog's default
+ *     []                             (none)            the dialog's default
+ */
+fun mosaicOnlyImages(extensions: List<String>): Boolean =
+    extensions.isNotEmpty() &&
+        extensions.all { extension ->
+            MOSAIC_MIME_EXTENSIONS.any { (mime, known) -> mime.startsWith("image/") && extension in known }
+        }
+
+/**
+ * `~/Pictures`, when this home has one. The JVM names no Pictures folder of its
+ * own; this is the folder macOS and Windows create, and most Linux desktops'
+ * default. A home without it (or with a localized XDG name) keeps the
+ * dialog's default start rather than a folder that is not there.
+ */
+private fun mosaicPicturesDirectory(): File? {
+    val home = System.getProperty("user.home") ?: return null
+    return File(home, "Pictures").takeIf { it.isDirectory }
+}
 
 private fun mosaicMimeTypeFor(file: File): String {
     val extension = file.extension.lowercase()
