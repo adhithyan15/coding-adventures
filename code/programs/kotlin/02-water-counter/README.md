@@ -9,8 +9,8 @@ The app tracks how much water you have drunk today against a 2,000 ml daily
 goal:
 - Each tap of the button adds a 250 ml serving.
 - A progress bar fills toward the goal.
-- When the total reaches the goal, the drop icon and the colors change and a
-  "goal reached" message appears.
+- When the total reaches the goal, the drop icon and the colors change, a
+  "goal reached" message appears, and the add button is disabled.
 - **Reset** sets the total back to zero.
 
 ## What it teaches
