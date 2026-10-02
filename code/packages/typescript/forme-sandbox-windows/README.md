@@ -17,7 +17,11 @@ runtime distribution root and its inherited contents so the interpreter can
 load its standard library and runtime DLLs. Node, Deno, and Bun retain access
 only to their exact executable. The temporary SID grant carries no write
 authority and is revoked through the same stable handle before profile
-deletion, including through the abnormal-exit janitor.
+deletion, including through the abnormal-exit janitor. Descendant runtime
+aliases are not recursively followed and are valid only when their opened
+final target remains inside that pinned, trusted root and both link and target
+pass the strict writer check. External targets and inherit-only untrusted
+writers are rejected; install-tree verification remains reparse-free.
 For Node plugins the launcher preserves the already verified, symlink-free main
 path, avoiding a broader AppContainer ACL solely for Node's root-to-entry
 canonicalization walk.

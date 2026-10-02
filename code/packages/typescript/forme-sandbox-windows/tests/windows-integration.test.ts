@@ -15,7 +15,12 @@ const launcherPath = join(packageRoot, "native", "forme-sandbox-windows.exe");
 const probePath = join(packageRoot, "native", "forme-sandbox-probe.exe");
 const roots: string[] = [];
 const execFileAsync = promisify(execFile);
-afterEach(async () => Promise.all(roots.splice(0).map(root => rm(root, { recursive: true, force: true }))));
+afterEach(async () => Promise.all(roots.splice(0).map(root => rm(root, {
+  recursive: true,
+  force: true,
+  maxRetries: 5,
+  retryDelay: 100,
+}))));
 
 async function request(probe: string): Promise<SandboxLaunchRequest> {
   const workingDirectory = await mkdtemp(join(tmpdir(), "forme-windows-integration-"));
@@ -114,6 +119,16 @@ async function exitWithStderr(child: Awaited<ReturnType<ReturnType<typeof create
   return { exit, stderr: Buffer.concat(chunks).toString("utf8") };
 }
 
+async function verifyRuntimeRoot(path: string): Promise<boolean> {
+  return new Promise(resolveResult => {
+    execFile(launcherPath, [`--verify-runtime-root=${path}`], {
+      windowsHide: true,
+      timeout: 5_000,
+      maxBuffer: 1_024,
+    }, error => resolveResult(error === null));
+  });
+}
+
 describe.skipIf(process.platform !== "win32")("Windows native sandbox", () => {
   it("accepts an owned tree and rejects reparse points or untrusted writers", async () => {
     // Hosted-runner temp roots are intentionally shared and therefore fail
@@ -158,6 +173,28 @@ describe.skipIf(process.platform !== "win32")("Windows native sandbox", () => {
     const result = await exitWithStderr(child);
     expect(result.exit, result.stderr).toEqual({ code: 0, signal: null });
     expect(Buffer.concat(stdout).toString("utf8")).toBe("sandbox protocol probe");
+  });
+
+  it("accepts only contained runtime-root reparse targets", async () => {
+    const root = await mkdtemp(join(homedir(), "forme-windows-runtime-root-"));
+    roots.push(root);
+    const contained = join(root, "contained");
+    await mkdir(contained);
+    const alias = join(root, "alias");
+    await symlink(contained, alias, "junction");
+    expect(await verifyRuntimeRoot(root)).toBe(true);
+    await rm(alias, { force: true });
+
+    await execFileAsync("icacls.exe", [root, "/grant", "*S-1-1-0:(OI)(CI)(IO)M", "/Q"]);
+    expect(await verifyRuntimeRoot(root)).toBe(false);
+    await execFileAsync("icacls.exe", [root, "/remove:g", "*S-1-1-0", "/Q"]);
+    expect(await verifyRuntimeRoot(root)).toBe(true);
+
+    const outside = await mkdtemp(join(homedir(), "forme-windows-runtime-outside-"));
+    roots.push(outside);
+    await symlink(outside, alias, "junction");
+    expect(await verifyRuntimeRoot(root)).toBe(false);
+    await rm(alias, { force: true });
   });
 
   it("round-trips protocol bytes through a trusted Python distribution", async () => {

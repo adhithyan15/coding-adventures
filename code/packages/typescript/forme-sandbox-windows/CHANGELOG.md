@@ -10,6 +10,10 @@
   revoke the propagated SID grant through the same stable handle during normal
   or janitor cleanup. Native Python byte-round-trip and overlapping-grant tests
   cover it, while a negative Node test preserves exact-executable authority.
+  Runtime aliases are accepted without recursive alias traversal only when
+  their opened final target remains inside that trusted root and both link and
+  target pass the strict writer check; external aliases and inherit-only
+  untrusted writers fail closed. Install-tree verification remains reparse-free.
 - Add the native install-tree ACL verifier used by `forme install` and product
   discovery. It rejects reparse points, identity changes, untrusted owners or
   writers (including inherit-only authority on the transaction root), unsafe

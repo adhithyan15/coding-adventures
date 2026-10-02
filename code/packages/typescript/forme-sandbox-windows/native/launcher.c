@@ -566,6 +566,7 @@ static int verify_acl_tree(
     int recurse,
     int reject_inherit_only_writes,
     int replacement_only,
+    const wchar_t *allowed_reparse_root,
     unsigned int depth,
     unsigned int *entries,
     PSID user,
@@ -580,13 +581,38 @@ static int verify_acl_tree(
     if (handle == INVALID_HANDLE_VALUE) return -1;
     BY_HANDLE_FILE_INFORMATION before;
     if (!GetFileInformationByHandle(handle, &before)
-            || (before.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT)
             || verify_handle_acl(handle, reject_inherit_only_writes, replacement_only,
                 user, administrators, system_sid, trusted_installer) != 0) {
         CloseHandle(handle);
         return -1;
     }
-    int is_directory = (before.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
+    int is_reparse = (before.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) != 0;
+    if (is_reparse) {
+        if (allowed_reparse_root == NULL) {
+            CloseHandle(handle);
+            return -1;
+        }
+        HANDLE target = CreateFileW(path, FILE_READ_ATTRIBUTES | READ_CONTROL,
+            FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING,
+            FILE_FLAG_BACKUP_SEMANTICS, NULL);
+        wchar_t target_path[32768];
+        DWORD target_length = target == INVALID_HANDLE_VALUE ? 0
+            : GetFinalPathNameByHandleW(target, target_path, 32768,
+                FILE_NAME_NORMALIZED | VOLUME_NAME_DOS);
+        size_t root_length = wcslen(allowed_reparse_root);
+        int contained = target_length > 0 && target_length < 32768
+            && _wcsnicmp(target_path, allowed_reparse_root, root_length) == 0
+            && (target_path[root_length] == L'\\' || target_path[root_length] == L'/');
+        if (!contained || verify_handle_acl(target, reject_inherit_only_writes, replacement_only,
+                user, administrators, system_sid, trusted_installer) != 0) {
+            if (target != INVALID_HANDLE_VALUE) CloseHandle(target);
+            CloseHandle(handle);
+            return -1;
+        }
+        CloseHandle(target);
+    }
+    int is_directory = !is_reparse
+        && (before.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
     if (recurse && is_directory) {
         size_t length = wcslen(path);
         if (length > 32760) {
@@ -631,7 +657,8 @@ static int verify_acl_tree(
                     valid = 0;
                     break;
                 }
-                if (verify_acl_tree(child, 1, 0, replacement_only,
+                if (verify_acl_tree(child, 1, reject_inherit_only_writes,
+                        replacement_only, allowed_reparse_root,
                         depth + 1, entries, user, administrators, system_sid,
                         trusted_installer) != 0) valid = 0;
                 free(child);
@@ -651,14 +678,19 @@ static int verify_acl_tree(
     BY_HANDLE_FILE_INFORMATION after;
     int unchanged = named != INVALID_HANDLE_VALUE
         && GetFileInformationByHandle(named, &after)
-        && !(after.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT)
+        && ((after.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) != 0) == is_reparse
         && same_file_identity(&before, &after);
     if (named != INVALID_HANDLE_VALUE) CloseHandle(named);
     CloseHandle(handle);
     return unchanged ? 0 : -1;
 }
 
-static int verify_install_acl(const wchar_t *path, int recurse) {
+static int verify_install_acl(
+    const wchar_t *path,
+    int recurse,
+    const wchar_t *allowed_reparse_root,
+    int strict_tree_writers
+) {
     HANDLE token = NULL;
     DWORD needed = 0;
     TOKEN_USER *token_user = NULL;
@@ -679,7 +711,9 @@ static int verify_install_acl(const wchar_t *path, int recurse) {
                 L"S-1-5-80-956008885-3418522649-1831038044-1853292631-2271478464",
                 &trusted_installer)) goto done;
     unsigned int entries = 0;
-    if (verify_acl_tree(path, recurse, !recurse, 0, 0, &entries, token_user->User.Sid,
+    if (verify_acl_tree(path, recurse, strict_tree_writers || !recurse,
+            0, allowed_reparse_root,
+            0, &entries, token_user->User.Sid,
             administrators, system_sid, trusted_installer) != 0) goto done;
 
     size_t path_length = wcslen(path);
@@ -703,7 +737,8 @@ static int verify_install_acl(const wchar_t *path, int recurse) {
             ancestor[--ancestor_length] = L'\0';
         }
         if (ancestor_length < volume_length) break;
-        if (verify_acl_tree(ancestor, 0, 0, 1, 0, &ancestor_entries, token_user->User.Sid,
+        if (verify_acl_tree(ancestor, 0, 0, 1, NULL,
+                0, &ancestor_entries, token_user->User.Sid,
                 administrators, system_sid, trusted_installer) != 0) {
             free(ancestor);
             goto done;
@@ -711,7 +746,7 @@ static int verify_install_acl(const wchar_t *path, int recurse) {
     }
     free(ancestor);
     if (ancestor_length != volume_length
-            || verify_acl_tree(volume_root, 0, 0, 1, 0, &ancestor_entries,
+            || verify_acl_tree(volume_root, 0, 0, 1, NULL, 0, &ancestor_entries,
                 token_user->User.Sid, administrators, system_sid,
                 trusted_installer) != 0) goto done;
     valid = 1;
@@ -731,10 +766,18 @@ static HANDLE pin_trusted_runtime_root(const wchar_t *path) {
         FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT, NULL);
     if (handle == INVALID_HANDLE_VALUE) return INVALID_HANDLE_VALUE;
     BY_HANDLE_FILE_INFORMATION pinned;
+    wchar_t final_path[32768];
+    DWORD final_length = GetFinalPathNameByHandleW(handle, final_path, 32768,
+        FILE_NAME_NORMALIZED | VOLUME_NAME_DOS);
+    while (final_length > 4 && final_length < 32768
+            && (final_path[final_length - 1] == L'\\' || final_path[final_length - 1] == L'/')) {
+        final_path[--final_length] = L'\0';
+    }
     if (!GetFileInformationByHandle(handle, &pinned)
             || !(pinned.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
             || (pinned.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT)
-            || verify_install_acl(path, 1) != 0) {
+            || final_length == 0 || final_length >= 32768
+            || verify_install_acl(path, 1, final_path, 1) != 0) {
         CloseHandle(handle);
         return INVALID_HANDLE_VALUE;
     }
@@ -759,9 +802,16 @@ int wmain(int argc, wchar_t **argv) {
     const wchar_t *verify_acl_scope = argument(argc, argv, L"--verify-acl-scope");
     if (verify_acl_path != NULL || verify_acl_scope != NULL) {
         if (verify_acl_path == NULL || verify_acl_scope == NULL) return 62;
-        if (wcscmp(verify_acl_scope, L"install-root") == 0) return verify_install_acl(verify_acl_path, 0);
-        if (wcscmp(verify_acl_scope, L"existing-target-tree") == 0) return verify_install_acl(verify_acl_path, 1);
+        if (wcscmp(verify_acl_scope, L"install-root") == 0) return verify_install_acl(verify_acl_path, 0, NULL, 0);
+        if (wcscmp(verify_acl_scope, L"existing-target-tree") == 0) return verify_install_acl(verify_acl_path, 1, NULL, 0);
         return 62;
+    }
+    const wchar_t *verify_runtime_root = argument(argc, argv, L"--verify-runtime-root");
+    if (verify_runtime_root != NULL) {
+        HANDLE root = pin_trusted_runtime_root(verify_runtime_root);
+        if (root == INVALID_HANDLE_VALUE) return 1;
+        CloseHandle(root);
+        return 0;
     }
     const wchar_t *cleanup_profile = argument(argc, argv, L"--cleanup-profile");
     const wchar_t *cleanup_runtime = argument(argc, argv, L"--cleanup-runtime");

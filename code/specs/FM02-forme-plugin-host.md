@@ -1587,7 +1587,12 @@ the supervisor exits unexpectedly; it exits when the plugin does.
   authority. Python plugins receive read/execute authority over a no-follow,
   ACL-verified, identity-pinned trusted runtime distribution root and its
   inherited contents so the interpreter can load its standard library and
-  DLLs. Node, Deno, and Bun retain access only to their exact executable. The
+  DLLs. A descendant runtime reparse point MUST NOT be recursively followed and
+  is valid only when its opened final target remains strictly beneath that
+  pinned root and both link and target satisfy the strict trusted-writer policy,
+  including rejection of inherit-only dangerous authority. An external target
+  MUST fail closed, while install-tree verification remains reparse-free. Node, Deno, and
+  Bun retain access only to their exact executable. The
   runtime-root ACE carries no write authority and MUST be revoked through the
   same pinned handle before the ephemeral AppContainer profile is deleted, including by the
   asynchronous janitor if the supervisor exits unexpectedly. Runtime DACL
