@@ -248,6 +248,7 @@ where
                     text_breaks_anywhere(frame.node),
                     text_word_break(frame.node),
                     text_line_break(frame.node),
+                    text_overflow(frame.node),
                     direction,
                     options,
                     &mut font_cache,
@@ -502,6 +503,17 @@ fn text_line_break(node: &PositionedNode) -> TextLineBreak {
         Some(ExtValue::Str(value)) if value == "strict" => TextLineBreak::Strict,
         Some(ExtValue::Str(value)) if value == "anywhere" => TextLineBreak::Anywhere,
         _ => TextLineBreak::Auto,
+    }
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum TextOverflow { Clip, Ellipsis }
+
+fn text_overflow(node: &PositionedNode) -> Option<TextOverflow> {
+    match node.ext.get("text.overflow") {
+        Some(ExtValue::Str(value)) if value == "clip" => Some(TextOverflow::Clip),
+        Some(ExtValue::Str(value)) if value == "ellipsis" => Some(TextOverflow::Ellipsis),
+        _ => None,
     }
 }
 
@@ -1274,6 +1286,7 @@ fn emit_text_content<S, M, R>(
     breaks_anywhere: bool,
     word_break: TextWordBreak,
     line_break: TextLineBreak,
+    text_overflow: Option<TextOverflow>,
     direction: BaseDirection,
     options: &LayoutToPaintOptions<'_, S, M, R>,
     font_cache: &mut HashMap<FontCacheKey, CachedFont<S::Handle>>,
@@ -1337,6 +1350,20 @@ fn emit_text_content<S, M, R>(
         };
         let line_count = wrapped.len();
         for (line_index, line) in wrapped.into_iter().enumerate() {
+            let line = match text_overflow {
+                Some(mode) => fit_text_overflow(
+                    options.shaper,
+                    handle,
+                    &line,
+                    size_dpr,
+                    max_width_dpr,
+                    letter_spacing,
+                    word_spacing,
+                    direction,
+                    mode,
+                ),
+                None => line,
+            };
             // Shape the line once. This gives us total_advance for
             // alignment AND the glyph IDs/positions for emission.
             if line.is_empty() {
@@ -1753,6 +1780,42 @@ fn break_line_anywhere<S: TextShaper>(
         lines.push(current);
     }
     lines
+}
+
+#[allow(clippy::too_many_arguments)]
+fn fit_text_overflow<S: TextShaper>(
+    shaper: &S,
+    handle: &S::Handle,
+    line: &str,
+    size: f32,
+    max_width: f64,
+    letter_spacing: f64,
+    word_spacing: f64,
+    direction: BaseDirection,
+    mode: TextOverflow,
+) -> String {
+    let fits = |value: &str| shape_visual_line(shaper, handle, value, size, word_spacing, direction)
+        .map(|shaped| shaped_advance(&shaped, letter_spacing) <= max_width)
+        .unwrap_or(true);
+    if fits(line) {
+        return line.to_string();
+    }
+    let suffix = if mode == TextOverflow::Ellipsis { "…" } else { "" };
+    if !fits(suffix) {
+        return String::new();
+    }
+    let flow = TextFlow::analyze(line, direction);
+    let mut visible = String::new();
+    for grapheme in flow.graphemes {
+        let value = &line[grapheme.bytes];
+        let candidate = format!("{visible}{value}{suffix}");
+        if !fits(&candidate) {
+            break;
+        }
+        visible.push_str(value);
+    }
+    visible.push_str(suffix);
+    visible
 }
 
 struct PaintWrapPiece<'a> {
@@ -3141,5 +3204,27 @@ mod tests {
         assert_eq!(count(&loose), 3);
         assert_eq!(count(&strict), 2);
         assert_eq!(count(&anywhere), 3);
+    }
+
+    #[test]
+    fn text_overflow_clips_or_inserts_an_ellipsis_at_grapheme_boundaries() {
+        let mut content = text_content("abcdef");
+        content.wrap = false;
+        let mut clip = positioned_leaf(content.clone(), 0.0, 0.0, 16.0, 20.0);
+        clip.ext.insert("text.overflow".into(), ExtValue::Str("clip".into()));
+        let mut ellipsis = positioned_leaf(content, 0.0, 0.0, 16.0, 20.0);
+        ellipsis.ext.insert("text.overflow".into(), ExtValue::Str("ellipsis".into()));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let options = make_options(&shaper, &metrics, &resolver);
+        let glyph_ids = |node: &PositionedNode| layout_to_paint(node, &options).instructions.into_iter()
+            .find_map(|instruction| match instruction {
+                PaintInstruction::GlyphRun(run) => Some(run.glyphs.into_iter()
+                    .map(|glyph| glyph.glyph_id).collect::<Vec<_>>()),
+                _ => None,
+            }).expect("text must lower to a glyph run");
+        assert_eq!(glyph_ids(&clip), vec!['a' as u32, 'b' as u32]);
+        assert_eq!(glyph_ids(&ellipsis), vec!['a' as u32, '…' as u32]);
     }
 }

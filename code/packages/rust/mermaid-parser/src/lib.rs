@@ -4641,6 +4641,11 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                 "anywhere" => diagram_ir::TreemapLineBreak::Anywhere,
                 _ => return Err(token_error(token, "treemap line-break must be auto, loose, normal, strict, or anywhere")),
             }),
+            "text-overflow" => style.text_overflow = Some(match value.to_ascii_lowercase().as_str() {
+                "clip" => diagram_ir::TreemapTextOverflow::Clip,
+                "ellipsis" => diagram_ir::TreemapTextOverflow::Ellipsis,
+                _ => return Err(token_error(token, "treemap text-overflow must be clip or ellipsis")),
+            }),
             "letter-spacing" => style.letter_spacing = Some(parse_treemap_letter_spacing(token, value)?),
             "word-spacing" => style.word_spacing = Some(parse_treemap_word_spacing(token, value)?),
             "direction" => style.direction = Some(match value.to_ascii_lowercase().as_str() {
@@ -14693,6 +14698,21 @@ B//-A: reverse stick top
         }
         assert!(parse_treemap(
             "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent line-break:initial",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_text_overflow_modes() {
+        for (value, expected) in [
+            ("clip", diagram_ir::TreemapTextOverflow::Clip),
+            ("ellipsis", diagram_ir::TreemapTextOverflow::Ellipsis),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-overflow:{value}");
+            let diagram = parse_treemap(&source).expect("supported text-overflow mode must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_overflow), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-overflow:fade",
         ).is_err());
     }
 
