@@ -153,8 +153,8 @@ pkg["build"] = {
     "mac": {"target": ["zip"], "category": "public.app-category.education"},
     "win": {"target": ["portable"]},
     # Package the Electron runtime the build step below verified, instead of
-    # letting electron-builder download its own copy (see "Fetching the
-    # Electron runtime" further down).
+    # letting electron-builder download its own copy (see the --package step
+    # below).
     "electronDist": "node_modules/electron/dist",
 }
 
@@ -197,16 +197,28 @@ if [[ "$RUN_PACKAGE" -eq 1 ]]; then
   #                                                     --sha256--> electron-v42.5.0-<os>-<arch>.zip
   #
   # `electronDist` above then points electron-builder at that verified copy.
-  # The two environment variables that would make install.js fetch checksums
-  # from the network instead of using the pinned file are cleared for the call.
+  #
+  # install.js is started through a small Node wrapper that first deletes the
+  # environment variables that would change what it does:
+  #
+  #   electron_use_remote_checksums      fetch SHASUMS256.txt from the network
+  #   npm_config_electron_use_remote_... instead of using the pinned file
+  #   ELECTRON_INSTALL_PLATFORM / _ARCH  fetch another platform's runtime,
+  #   npm_config_platform / _arch        which would package a broken app
+  #
+  # The deletion happens inside Node, case-insensitively, because Windows
+  # environment names are case-insensitive: `env -u` would remove only the one
+  # spelling it is given.
   #
   # A dropped connection mid-download is retried; install.js skips the fetch
   # once a verified runtime is in place. A checksum mismatch fails every
   # attempt the same way, so retrying never lets a bad zip through.
   echo "[+] Fetching the Electron runtime, verified against the pinned checksums..."
   for attempt in 1 2 3; do
-    if ( cd "$APP" && env -u electron_use_remote_checksums -u npm_config_electron_use_remote_checksums \
-        node node_modules/electron/install.js ); then
+    if ( cd "$APP" && node -e '
+      const unsafe = /^(npm_config_)?(electron_use_remote_checksums|platform|arch)$|^electron_install_(platform|arch)$/i;
+      for (const name of Object.keys(process.env)) if (unsafe.test(name)) delete process.env[name];
+      require("./node_modules/electron/install.js");' ); then
       break
     fi
     if [[ "$attempt" -eq 3 ]]; then
@@ -215,8 +227,16 @@ if [[ "$RUN_PACKAGE" -eq 1 ]]; then
     fi
     echo "  attempt $attempt failed; retrying" >&2
   done
-  if [[ ! -s "$APP/node_modules/electron/dist/version" ]]; then
-    echo "error: Electron's install.js left no runtime in node_modules/electron/dist" >&2
+  # The runtime in dist/ must be the version the lock pinned, fully extracted.
+  if ! ( cd "$APP" && node -e '
+      const fs = require("fs");
+      const want = require("./node_modules/electron/package.json").version;
+      const have = fs.readFileSync("node_modules/electron/dist/version", "utf8").trim().replace(/^v/, "");
+      if (have !== want || !fs.existsSync("node_modules/electron/path.txt")) {
+        console.error(`dist/ holds Electron ${have || "(nothing)"}, expected ${want}`);
+        process.exit(1);
+      }' ); then
+    echo "error: node_modules/electron/dist is not the lock-pinned Electron runtime" >&2
     exit 1
   fi
 
