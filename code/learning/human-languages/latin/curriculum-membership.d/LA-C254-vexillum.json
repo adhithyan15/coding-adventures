@@ -1,0 +1,11 @@
+{
+  "id": "LA-C254-vexillum",
+  "pathSegment": "LA-PATH-254-RES254",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-254-RES254",
+      "order": 4
+    }
+  ]
+}

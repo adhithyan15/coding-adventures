@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C251-clava",
+    "language": "latin",
+    "chapter": 251,
+    "sequence": 13280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff5fa5e6493a3378"
+  },
+  "findings": []
+}

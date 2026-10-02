@@ -1,0 +1,11 @@
+{
+  "id": "LA-C243-fidus",
+  "pathSegment": "LA-PATH-243-QUAL243",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-243-QUAL243",
+      "order": 1
+    }
+  ]
+}

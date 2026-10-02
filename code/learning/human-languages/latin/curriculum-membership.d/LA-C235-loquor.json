@@ -1,0 +1,11 @@
+{
+  "id": "LA-C235-loquor",
+  "pathSegment": "LA-PATH-235-ACT235",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-235-ACT235",
+      "order": 1
+    }
+  ]
+}

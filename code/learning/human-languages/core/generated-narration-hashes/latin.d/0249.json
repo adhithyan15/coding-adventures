@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:0d4ac560721c2573",
+  "lessonIds": [
+    "LA-C249-lignum",
+    "LA-C249-marmor",
+    "LA-C249-vitrum",
+    "LA-C249-corium",
+    "LA-C249-linum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch249.txt",
+  "json": "latin/narration/ch249.json",
+  "textHash": "fnv1a64:46f05a150d216d7f",
+  "jsonHash": "fnv1a64:5b43bde029529b76",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C230-comitor",
+  "pathSegment": "LA-PATH-230-ACT230",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-230-ACT230",
+      "order": 1
+    }
+  ]
+}

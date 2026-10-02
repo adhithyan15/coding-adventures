@@ -1,0 +1,11 @@
+{
+  "id": "LA-C253-ara",
+  "pathSegment": "LA-PATH-253-RES253",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-253-RES253",
+      "order": 3
+    }
+  ]
+}

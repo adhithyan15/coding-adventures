@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:24121e0c305fb5d5",
+  "lessonIds": [
+    "LA-C233-insto",
+    "LA-C233-interrumpo",
+    "LA-C233-ligo",
+    "LA-C233-misceo",
+    "LA-C233-pareo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch233.txt",
+  "json": "latin/narration/ch233.json",
+  "textHash": "fnv1a64:050d0449653ecb48",
+  "jsonHash": "fnv1a64:54bea81bb3ed2fbc",
+  "findings": []
+}

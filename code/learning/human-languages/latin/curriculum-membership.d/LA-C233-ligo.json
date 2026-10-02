@@ -1,0 +1,11 @@
+{
+  "id": "LA-C233-ligo",
+  "pathSegment": "LA-PATH-233-ACT233",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-233-ACT233",
+      "order": 2
+    }
+  ]
+}

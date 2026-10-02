@@ -1,0 +1,19 @@
+{
+  "chapter": 245,
+  "title": "Thief, Robber, Consul, General, Kingdom",
+  "label": "ch:la-thief-robber-consul-general-kingdom",
+  "canDo": "I can say a thief, a robber, a consul, a general and a kingdom.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C245-regnum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 245: I can say a thief, a robber, a consul, a general and a kingdom.",
+    "assesses": [
+      "LA-LEX-C245-RES245-03",
+      "LA-LEX-C245-RES245-04",
+      "LA-LEX-C245-RES245-05"
+    ]
+  }
+}

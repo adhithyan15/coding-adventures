@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R254-first-pass-words-from-chapters-247-250",
+    "language": "latin",
+    "chapter": 254,
+    "sequence": 13460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2089a3653f5dbf37"
+  },
+  "findings": []
+}

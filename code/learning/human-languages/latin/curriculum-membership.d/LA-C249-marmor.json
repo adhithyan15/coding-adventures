@@ -1,0 +1,11 @@
+{
+  "id": "LA-C249-marmor",
+  "pathSegment": "LA-PATH-249-RES249",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-249-RES249",
+      "order": 1
+    }
+  ]
+}

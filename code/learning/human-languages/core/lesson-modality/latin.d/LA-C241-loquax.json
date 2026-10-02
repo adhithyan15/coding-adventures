@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C241-loquax",
+    "language": "latin",
+    "chapter": 241,
+    "sequence": 12580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:abddaf2f304a9b0a"
+  },
+  "findings": []
+}

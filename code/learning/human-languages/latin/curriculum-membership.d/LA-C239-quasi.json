@@ -1,0 +1,11 @@
+{
+  "id": "LA-C239-quasi",
+  "pathSegment": "LA-PATH-239-CAUSA239",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-239-CAUSA239",
+      "order": 3
+    }
+  ]
+}

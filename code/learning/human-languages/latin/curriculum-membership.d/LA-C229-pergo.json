@@ -1,0 +1,11 @@
+{
+  "id": "LA-C229-pergo",
+  "pathSegment": "LA-PATH-229-ACT229",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-229-ACT229",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:a12934aa47e73212",
+  "lessonIds": [
+    "LA-C245-fur",
+    "LA-C245-latro",
+    "LA-C245-consul",
+    "LA-C245-imperator",
+    "LA-C245-regnum"
+  ],
+  "tex": "latin/book/chapters/ch245-thief-robber-consul-general-kingdom.tex"
+}

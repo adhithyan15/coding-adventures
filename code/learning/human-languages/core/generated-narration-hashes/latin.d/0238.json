@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 238,
+  "sourceHash": "fnv1a64:a0154f057cd74615",
+  "lessonIds": [
+    "LA-C238-ultra",
+    "LA-C238-citra",
+    "LA-C238-apud",
+    "LA-C238-coram",
+    "LA-C238-qua"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch238.txt",
+  "json": "latin/narration/ch238.json",
+  "textHash": "fnv1a64:8491d7ac77b52a86",
+  "jsonHash": "fnv1a64:3794d55e8ef679bd",
+  "findings": []
+}

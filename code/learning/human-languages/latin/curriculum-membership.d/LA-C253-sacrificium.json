@@ -1,0 +1,11 @@
+{
+  "id": "LA-C253-sacrificium",
+  "pathSegment": "LA-PATH-253-RES253",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-253-RES253",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:948a792c0d7169fd",
+  "lessonIds": [
+    "LA-C230-expergiscor",
+    "LA-C230-comitor",
+    "LA-C230-addo",
+    "LA-C230-nuntio",
+    "LA-C230-appareo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch230.txt",
+  "json": "latin/narration/ch230.json",
+  "textHash": "fnv1a64:6b2b7cec529bbcbe",
+  "jsonHash": "fnv1a64:a58cae79227b93f5",
+  "findings": []
+}

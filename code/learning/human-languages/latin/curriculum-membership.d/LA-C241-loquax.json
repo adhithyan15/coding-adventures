@@ -1,0 +1,11 @@
+{
+  "id": "LA-C241-loquax",
+  "pathSegment": "LA-PATH-241-QUAL241",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-241-QUAL241",
+      "order": 1
+    }
+  ]
+}

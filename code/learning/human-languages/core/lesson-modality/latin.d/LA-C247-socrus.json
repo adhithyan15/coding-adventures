@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C247-socrus",
+    "language": "latin",
+    "chapter": 247,
+    "sequence": 13080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c155a9dc8bc0c6f"
+  },
+  "findings": []
+}

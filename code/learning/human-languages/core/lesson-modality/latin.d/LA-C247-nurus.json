@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C247-nurus",
+    "language": "latin",
+    "chapter": 247,
+    "sequence": 13100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:538dd30f12b1658e"
+  },
+  "findings": []
+}

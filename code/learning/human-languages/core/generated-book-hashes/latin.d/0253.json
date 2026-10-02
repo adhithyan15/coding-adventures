@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:1f465d7303b19623",
+  "lessonIds": [
+    "LA-C253-feriae",
+    "LA-C253-convivium",
+    "LA-C253-sacrificium",
+    "LA-C253-ara",
+    "LA-C253-dea"
+  ],
+  "tex": "latin/book/chapters/ch253-holidays-banquet-sacrifice-altar-goddess.tex"
+}

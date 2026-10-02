@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:9883df105bab70c3",
+  "lessonIds": [
+    "LA-C250-vitis",
+    "LA-C250-quercus",
+    "LA-C250-pinus",
+    "LA-C250-laurus",
+    "LA-C250-viola"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch250.txt",
+  "json": "latin/narration/ch250.json",
+  "textHash": "fnv1a64:5d4d963cc1afbc4d",
+  "jsonHash": "fnv1a64:e9c9234d9e629295",
+  "findings": []
+}

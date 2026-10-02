@@ -1,0 +1,19 @@
+{
+  "chapter": 229,
+  "title": "To decree, To try, To go on, To hold off, To remove",
+  "label": "ch:la-to-decree-to-try-to-go-on-to-hold-off-to-remove",
+  "canDo": "I can say to decree, to try, to go on, to hold off and to remove.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C229-removeo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 229: I can say to decree, to try, to go on, to hold off and to remove.",
+    "assesses": [
+      "LA-LEX-C229-ACT229-03",
+      "LA-LEX-C229-ACT229-04",
+      "LA-LEX-C229-ACT229-05"
+    ]
+  }
+}

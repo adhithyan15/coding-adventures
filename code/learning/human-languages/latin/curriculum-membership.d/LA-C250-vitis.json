@@ -1,0 +1,11 @@
+{
+  "id": "LA-C250-vitis",
+  "pathSegment": "LA-PATH-250-RES250",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-250-RES250",
+      "order": 0
+    }
+  ]
+}

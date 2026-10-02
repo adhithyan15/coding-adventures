@@ -1,0 +1,11 @@
+{
+  "id": "LA-C246-versus",
+  "pathSegment": "LA-PATH-246-RES246",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-246-RES246",
+      "order": 1
+    }
+  ]
+}

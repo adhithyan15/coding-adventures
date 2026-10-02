@@ -1,0 +1,19 @@
+{
+  "chapter": 240,
+  "title": "Rough, Deep, Unknown, Necessary, Useless",
+  "label": "ch:la-rough-deep-unknown-necessary-useless",
+  "canDo": "I can say rough, deep, unknown, necessary and useless.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-C240-inutilis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 240: I can say rough, deep, unknown, necessary and useless.",
+    "assesses": [
+      "LA-LEX-C240-QUAL240-03",
+      "LA-LEX-C240-QUAL240-04",
+      "LA-LEX-C240-QUAL240-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:4205fd68727832c6",
+  "lessonIds": [
+    "LA-C236-emplastrum",
+    "LA-C236-remedium",
+    "LA-C236-somnium",
+    "LA-C236-amor",
+    "LA-C236-amicitia"
+  ],
+  "tex": "latin/book/chapters/ch236-plaster-remedy-dream-love-friendship.tex"
+}

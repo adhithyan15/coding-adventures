@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C233-misceo",
+    "language": "latin",
+    "chapter": 233,
+    "sequence": 12010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:35fd50f122a7d2ff"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:d77cc3966c87d2cb",
+  "lessonIds": [
+    "LA-C242-pauci",
+    "LA-C242-omnis",
+    "LA-C242-totus",
+    "LA-C242-ceteri",
+    "LA-C242-alius"
+  ],
+  "tex": "latin/book/chapters/ch242-few-all-whole-others-other.tex"
+}

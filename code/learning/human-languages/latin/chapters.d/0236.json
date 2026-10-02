@@ -1,0 +1,19 @@
+{
+  "chapter": 236,
+  "title": "Plaster, Remedy, Dream, Love, Friendship",
+  "label": "ch:la-plaster-remedy-dream-love-friendship",
+  "canDo": "I can say a plaster, a remedy, a dream, love and friendship.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "LA-C236-amicitia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 236: I can say a plaster, a remedy, a dream, love and friendship.",
+    "assesses": [
+      "LA-LEX-C236-VALE236-03",
+      "LA-LEX-C236-VALE236-04",
+      "LA-LEX-C236-VALE236-05"
+    ]
+  }
+}

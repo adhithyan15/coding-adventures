@@ -1,0 +1,21 @@
+{
+  "language": "latin",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:4ffc33199285883e",
+  "lessonIds": [
+    "LA-C237-finis",
+    "LA-C237-mora",
+    "LA-C237-interdum",
+    "LA-C237-cotidie",
+    "LA-C237-pridie",
+    "LA-R237-first-pass-words-from-chapters-229-232",
+    "LA-R237-second-pass-words-from-chapters-233-237"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "latin/narration/ch237.txt",
+  "json": "latin/narration/ch237.json",
+  "textHash": "fnv1a64:c8797b6f37b7d983",
+  "jsonHash": "fnv1a64:cc845fbaf494b49d",
+  "findings": []
+}

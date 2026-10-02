@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:fc69798e0c923cd6",
+  "lessonIds": [
+    "LA-C235-memini",
+    "LA-C235-loquor",
+    "LA-C235-sequor",
+    "LA-C235-proficiscor",
+    "LA-C235-utor"
+  ],
+  "tex": "latin/book/chapters/ch235-to-remember-to-speak-to-follow-to-set-out-to-use.tex"
+}

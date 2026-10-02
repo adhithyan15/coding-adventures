@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:9a2e41624e059fb1",
+  "lessonIds": [
+    "LA-C248-occasio",
+    "LA-C248-periculum",
+    "LA-C248-beneficium",
+    "LA-C248-officium",
+    "LA-C248-labor2"
+  ],
+  "tex": "latin/book/chapters/ch248-opportunity-danger-kindness-duty-work.tex"
+}

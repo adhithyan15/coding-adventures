@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C252-candelabrum",
+    "language": "latin",
+    "chapter": 252,
+    "sequence": 13340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dfac8e9d4452ed00"
+  },
+  "findings": []
+}

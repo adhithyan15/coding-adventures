@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R246-first-pass-words-from-chapters-238-241",
+    "language": "latin",
+    "chapter": 246,
+    "sequence": 12870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0aed35f88a85fcb"
+  },
+  "findings": []
+}

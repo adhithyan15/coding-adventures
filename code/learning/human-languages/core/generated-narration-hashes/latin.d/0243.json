@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:f0434ccc051d4205",
+  "lessonIds": [
+    "LA-C243-dubius",
+    "LA-C243-fidus",
+    "LA-C243-fidelis",
+    "LA-C243-infelix",
+    "LA-C243-beatus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch243.txt",
+  "json": "latin/narration/ch243.json",
+  "textHash": "fnv1a64:ed495682d35d2dd5",
+  "jsonHash": "fnv1a64:596eccbecd814a32",
+  "findings": []
+}

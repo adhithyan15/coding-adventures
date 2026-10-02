@@ -1,0 +1,19 @@
+{
+  "chapter": 235,
+  "title": "To remember, To speak, To follow, To set out, To use",
+  "label": "ch:la-to-remember-to-speak-to-follow-to-set-out-to-use",
+  "canDo": "I can say to remember, to speak, to follow, to set out and to use.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C235-utor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 235: I can say to remember, to speak, to follow, to set out and to use.",
+    "assesses": [
+      "LA-LEX-C235-ACT235-03",
+      "LA-LEX-C235-ACT235-04",
+      "LA-LEX-C235-ACT235-05"
+    ]
+  }
+}

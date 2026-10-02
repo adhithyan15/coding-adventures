@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:d0e7a6ce5e3fedd4",
+  "lessonIds": [
+    "LA-C241-industrius",
+    "LA-C241-loquax",
+    "LA-C241-sollicitus",
+    "LA-C241-caelebs",
+    "LA-C241-pluvius"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch241.txt",
+  "json": "latin/narration/ch241.json",
+  "textHash": "fnv1a64:fab660d64772f746",
+  "jsonHash": "fnv1a64:b67dc187dcd8ffda",
+  "findings": []
+}

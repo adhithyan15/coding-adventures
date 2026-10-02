@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C243-fidelis",
+    "language": "latin",
+    "chapter": 243,
+    "sequence": 12690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad1436b818e32788"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C240-ignotus",
+  "pathSegment": "LA-PATH-240-QUAL240",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-240-QUAL240",
+      "order": 2
+    }
+  ]
+}

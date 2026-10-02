@@ -1,0 +1,11 @@
+{
+  "id": "LA-C241-sollicitus",
+  "pathSegment": "LA-PATH-241-QUAL241",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-241-QUAL241",
+      "order": 2
+    }
+  ]
+}

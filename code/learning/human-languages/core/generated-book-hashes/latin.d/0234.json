@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:cb033ab36e9221d2",
+  "lessonIds": [
+    "LA-C234-demitto",
+    "LA-C234-colligo",
+    "LA-C234-evanesco",
+    "LA-C234-mando",
+    "LA-C234-retineo"
+  ],
+  "tex": "latin/book/chapters/ch234-to-let-down-to-gather-to-vanish-to-entrust-to-hold-back.tex"
+}

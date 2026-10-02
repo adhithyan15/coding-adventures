@@ -44,7 +44,10 @@ it("pins Latin lesson-content budgets", () =>
     // 867 -> 1035: the second Latin A2 vocabulary tranche, chapters 197-228.
     // 160 word lessons (forty verbs) and two reviews per run of at most nine
     // chapters. No idiom, sense or culture claim.
-    lessons: 1035,
+    // 1035 -> 1171: the third Latin A2 vocabulary tranche, chapters 229-254.
+    // 130 word lessons (thirty-five verbs) and two reviews per run of at most
+    // nine chapters. No idiom, sense or culture claim.
+    lessons: 1171,
     idioms: 16,
     senses: 6,
     cultureClaims: 17,

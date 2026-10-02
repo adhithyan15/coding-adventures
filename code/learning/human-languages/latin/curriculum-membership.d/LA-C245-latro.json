@@ -1,0 +1,11 @@
+{
+  "id": "LA-C245-latro",
+  "pathSegment": "LA-PATH-245-RES245",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-245-RES245",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C240-inutilis",
+    "language": "latin",
+    "chapter": 240,
+    "sequence": 12560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc7ef7e422783846"
+  },
+  "findings": []
+}

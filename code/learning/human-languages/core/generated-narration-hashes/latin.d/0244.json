@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:526c3737536bea57",
+  "lessonIds": [
+    "LA-C244-raeda",
+    "LA-C244-platea",
+    "LA-C244-aquaeductus",
+    "LA-C244-thermae",
+    "LA-C244-amphitheatrum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch244.txt",
+  "json": "latin/narration/ch244.json",
+  "textHash": "fnv1a64:6679f13f9698132a",
+  "jsonHash": "fnv1a64:087f74a808b5aafc",
+  "findings": []
+}
