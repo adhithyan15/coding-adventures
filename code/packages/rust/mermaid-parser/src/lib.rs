@@ -4621,6 +4621,9 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                 _ => return Err(token_error(token, "treemap direction must be ltr or rtl")),
             }),
             "text-shadow" => style.text_shadow = Some(parse_treemap_text_shadow(token, value)?),
+            "tab-size" => style.tab_size = Some(value.parse::<u16>().ok()
+                .filter(|value| *value <= 256)
+                .ok_or_else(|| token_error(token, "treemap tab-size must be an integer from 0 through 256"))?),
             _ => merge_treemap_node_style(&mut style.node, &parse_block_style(token, declaration)?),
         }
     }
@@ -14587,6 +14590,19 @@ B//-A: reverse stick top
         }
         for value in ["2px red", "1px 2px -3px red", "1px 2px red blue"] {
             let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-shadow:{value}");
+            assert!(parse_treemap(&source).is_err());
+        }
+    }
+
+    #[test]
+    fn treemap_parses_bounded_integer_tab_sizes() {
+        for value in [0, 4, 256] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent tab-size:{value}");
+            let diagram = parse_treemap(&source).expect("supported tab size must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.tab_size), Some(value));
+        }
+        for value in ["-1", "2.5", "257", "4px"] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent tab-size:{value}");
             assert!(parse_treemap(&source).is_err());
         }
     }

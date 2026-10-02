@@ -552,6 +552,8 @@ Left-to-right and right-to-left class directions select the corresponding
 Unicode text-flow analysis and native shaping direction before glyph lowering.
 Single colored text shadows with pixel offsets and optional blur lower to
 backend-neutral drop-shadow filter layers around the shaped glyph instructions.
+Integer tab sizes from zero through 256 expand preserved tabs before shaping;
+normal/default and pre-line whitespace continue to collapse tabs as CSS spaces.
 All twelve `cScale`,
 `cScalePeer`, and `cScaleLabel` theme-variable slots
 also flow from init directives or YAML front matter through category-aware
