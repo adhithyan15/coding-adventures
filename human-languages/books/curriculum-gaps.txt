@@ -1,19 +1,19 @@
 Human Languages curriculum gap report
 ====================================
-23 tracks, 23306 lessons, 23 books
+23 tracks, 23469 lessons, 23 books
 0 lessons over 300 effective seconds
 0 unknown prerequisites; 50 later-chapter lessons without prerequisites
 0 tracks without books; 0 lesson chapters without book chapters
 0 legacy, 0 mixed, 23 version-2 schema tracks
-21517 drivable lessons (92% of the corpus)
-levels: 9068 pre-A1, 13018 A1, 1136 A2, 39 B1, 17 B2, 10 C1, 18 C2; 0 unmapped (100% placed)
+21680 drivable lessons (92% of the corpus)
+levels: 9078 pre-A1, 13171 A1, 1136 A2, 39 B1, 17 B2, 10 C1, 18 C2; 0 unmapped (100% placed)
 ramp: 0 lessons above 3 new atoms (106 unmeasurable, 100% measurable); 62 chapters above 12
 script ramp: 30 lessons above 3 new glyphs; 0 opening more than 1 writing system at once; steepest RU-C01-privet at 14
 cousin layer: 216 lessons show another script (max 26 glyphs) — context, never charged to the budget
 script closure: 194 lessons ask the reader to decode a glyph nobody taught them, across 17 non-Latin tracks; 0 of those tracks teach NO letters at all
 exposure: 46 native-script headwords carry no romanization, so they are load-bearing rather than exposure; the rule exempts 1624 glyphs and makes 550 lessons clean on its own
 order: 0 lessons with no declared sequence across 0 tracks; 0 prerequisites and 0 reviews pointing forward
-reinforcement: 156 of 24101 atoms never revisited (1%); missed windows R1 1745, R2 15876, R3 13316, R4 18601
+reinforcement: 156 of 24256 atoms never revisited (1%); missed windows R1 1745, R2 15986, R3 13387, R4 18756
 forward references: 1071 uses of material a later lesson teaches
 writing stages: 23/23 tracks prove the cumulative pre-A1 ladder; 829 evidence blocks, 0 invalid; 197 missing (track, level, stage) pairs
 super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 111 named track/debt items
@@ -47,16 +47,16 @@ per-track ladder (HL09 §3.1), fewest criteria left first, every blocker listed 
   urdu        touches A2     complete A1     working A2     vocabulary 618/1200 — 3 blockers: spine-nodes 3, verb-vocabulary 40, vocabulary 582
   gujarati    touches A2     complete A1     working A2     vocabulary 630/1200 — 4 blockers: spine-nodes 4, verb-vocabulary 48, vocabulary 570, writing-stage 1
   telugu      touches A2     complete A1     working A2     vocabulary 620/1200 — 4 blockers: spine-nodes 4, verb-vocabulary 62, vocabulary 580, writing-stage 1
-0 of 4662 book chapters without an HL05 capability; 94 payoffs below the 0.5 representativeness floor; 10 tracks already clean
+0 of 4693 book chapters without an HL05 capability; 94 payoffs below the 0.5 representativeness floor; 10 tracks already clean
 
 Longest effective lessons:
 
 Modality (HL08) — derived from lesson type and block structure, never from `skills`:
-  20939 voice, 999 sight, 1368 pen of 23306 lessons; 92% drivable
+  21102 voice, 999 sight, 1368 pen of 23469 lessons; 92% drivable
   tables of more than 3 column(s) count as sight
-  21517 lessons have a voice CORE; 885 carry a detachable writing segment (578 rescued for the hands-free view)
+  21680 lessons have a voice CORE; 885 carry a detachable writing segment (578 rescued for the hands-free view)
   arabic: 620 voice, 55 sight, 38 pen; 93% drivable; 155 chapters, 635 lessons reachable in chapter-prefix order; 41 rescued by a detachable writing segment
-  bengali: 615 voice, 76 sight, 92 pen; 87% drivable; 147 chapters, 660 lessons reachable in chapter-prefix order; 65 rescued by a detachable writing segment
+  bengali: 778 voice, 76 sight, 92 pen; 89% drivable; 178 chapters, 823 lessons reachable in chapter-prefix order; 65 rescued by a detachable writing segment
   chinese: 145 voice, 30 sight, 75 pen; 60% drivable; 29 chapters, 23 lessons reachable in chapter-prefix order; 6 rescued by a detachable writing segment
   french: 1348 voice, 16 sight, 12 pen; 98% drivable; 257 chapters, 1316 lessons reachable in chapter-prefix order; 3 rescued by a detachable writing segment
   german: 1367 voice, 7 sight, 10 pen; 99% drivable; 251 chapters, 1336 lessons reachable in chapter-prefix order; 1 rescued by a detachable writing segment
@@ -122,13 +122,13 @@ root ledger: 4248 roots, 3786 spent fewer than 3 times (89%), 2591 never spent a
   taught once and never returned to: a-dios-latin (ES-C05-adios), a-k-l (AR-C30-akala), a-kh-dh (AR-C32-akhadha)
   best-spent root: stare-latin with 15 payoffs
 
-info dump (report-only): 120 of 23306 lessons -- 32 rule statements, 91 paradigm tables (20 full grids)
+info dump (report-only): 120 of 23469 lessons -- 32 rule statements, 91 paradigm tables (20 full grids)
   complete paradigms presented at once: FR-C05-parler (7-row table with 6 person rows), PT-C16-ser-roots (6-row table with 5 person rows), ES-C07-repaso-presente-completo (7-row table with 6 person rows)
 
-lesson content budgets (report-only): 19133 of 23306 lessons measured -- 101 idioms, 103 senses, 208 culture claims; 0 lessons over budget
-  annotation coverage: idioms 19133, senses 19134, culture claims 19133
+lesson content budgets (report-only): 19296 of 23469 lessons measured -- 101 idioms, 103 senses, 208 culture claims; 0 lessons over budget
+  annotation coverage: idioms 19296, senses 19297, culture claims 19296
 
-metalanguage: 54 of 54 grammar terms appear in 22394 lessons; 40190 uses come before introduction, of which 6408 are technical terms across 3623 lessons
+metalanguage: 54 of 54 grammar terms appear in 22557 lessons; 40354 uses come before introduction, of which 6408 are technical terms across 3623 lessons
   most-used-before-introduction: verb (2067 lessons), noun (1208 lessons), adjective (375 lessons), pronoun (261 lessons), article (255 lessons), tense (254 lessons)
-literal markup: none in 23306 lessons or any generated book
-glyph coverage: every character renders -- 135 main-font and 803 script characters across 4731 generated files
+literal markup: none in 23469 lessons or any generated book
+glyph coverage: every character renders -- 135 main-font and 803 script characters across 4762 generated files
