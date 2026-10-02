@@ -31,6 +31,9 @@
 #
 # It fails CLOSED: if the published checksum cannot be fetched, the build stops
 # rather than trusting an unverified jar.
+#
+# The checksum is fetched over HTTPS only, redirects included: the published
+# sum is the one thing the jar is judged against.
 set -euo pipefail
 
 if [[ $# -ne 1 ]]; then
@@ -60,7 +63,7 @@ fi
 # services.gradle.org has been briefly unreachable from runners before. A
 # transient failure should not fail the build when a retry would succeed.
 url="https://services.gradle.org/distributions/gradle-${version}-wrapper.jar.sha256"
-if ! expected="$(curl --fail --silent --show-error --location --retry 5 --retry-all-errors --retry-delay 3 "$url" | tr -d '[:space:]')"; then
+if ! expected="$(curl --proto =https --proto-redir =https --tlsv1.2 --fail --silent --show-error --location --retry 5 --retry-all-errors --retry-delay 3 "$url" | tr -d '[:space:]')"; then
   echo "::error::could not fetch $url" >&2
   exit 1
 fi
@@ -71,9 +74,9 @@ fi
 
 # This file's own SHA-256: sha256sum on Linux, shasum on macOS.
 if command -v sha256sum > /dev/null; then
-  actual="$(sha256sum "$jar" | cut -d' ' -f1)"
+  actual="$(sha256sum -- "$jar" | cut -d' ' -f1)"
 else
-  actual="$(shasum -a 256 "$jar" | cut -d' ' -f1)"
+  actual="$(shasum -a 256 -- "$jar" | cut -d' ' -f1)"
 fi
 
 if [[ "$actual" != "$expected" ]]; then
