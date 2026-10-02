@@ -14,7 +14,7 @@
 | Incremental slice cache | Implemented | `forme-aot-incremental-cache` plus `forme-aot-fs-cache`. |
 | Page/style/script emission | Implemented | Page, HTML document, style-tag, script-tag, and bundle emitters exist. |
 | Site metadata emission | Implemented | Sitemap, robots, discovery links, and deploy-manifest emitters exist. |
-| Interactivity tree shaking | Blocked | Requires the normative FM05 schema and usage tracking in FM-B013. |
+| Interactivity tree shaking | Blocked | FM05 is normative; FM-B059 supplies validation and FM-B060 composes exact usage tracking. |
 | Multi-backend release proof | Blocked | FM-B017 owns the non-HTML backend boundary. |
 
 ## 1. Purpose
@@ -46,8 +46,8 @@ content hash. Unknown identifiers are diagnostics, not an invitation to retain
 unrelated rules silently. Aggregate pages that cannot expose an inspectable AST
 may deliberately retain a complete trusted theme, as documented by FM04.
 
-FM-B013 will extend this section with the equivalent `usedInteractivity`
-contract after FM05 is normative.
+FM-B060 will extend this section with exact `usedIslands` selection after the
+FM-B059 validator package lands.
 
 ## 4. Incremental cache
 
@@ -83,6 +83,6 @@ authority.
 - [FM01](FM01-forme-kernel.md) — kinds, artifacts, revisions, and usage records
 - [FM03](FM03-forme-orchestrator.md) — execution, caching, and reproducibility
 - [FM04](FM04-forme-style-ir.md) — Style IR and `usedStyle`
-- [FM05](FM05-forme-interactivity-ir.md) — future interactivity usage contract
+- [FM05](FM05-forme-interactivity-ir.md) — normative interactivity contract
 - [FM07](FM07-forme-cli-dev-server.md) — user-facing build and preview commands
 - [FM08](FM08-forme-deploy-runner.md) — external publication boundary

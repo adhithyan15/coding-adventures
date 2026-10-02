@@ -14,7 +14,7 @@
 | Headless build/check/preview | Implemented | FM01, FM03, FM04, FM06, and FM07 have live product coverage. |
 | Headless deployment | Implemented | [FM08](FM08-forme-deploy-runner.md) and FM-B044–FM-B047 close the FM-B012 milestone with live product publication. |
 | Third-party plugin runtime | Implemented | [FM02](FM02-forme-plugin-host.md)'s host, runners, installation, grants, sandboxes, product composition, and live storage-watch mediation close FM-B015 and Extensible v1. |
-| Interactivity IR | Active | [FM05](FM05-forme-interactivity-ir.md) reserves the contract; FM-B013 owns the current implementation slice. |
+| Interactivity IR | Active | [FM05](FM05-forme-interactivity-ir.md) defines the normative v1 contract; FM-B059 owns its validator package before FM-B060/FM-B061 product integration. |
 | Authoring shell and multi-backend proof | Pending | Tracked by FM-B016–FM-B018 in the [roadmap](FM00-forme-completion-roadmap.md). |
 
 This document remains the long-range vision. The implementation ledger and
@@ -272,7 +272,7 @@ selectors, not through cascading-inheritance-as-side-effect the way CSS
 does it. This makes it tractable to compile to LaTeX (which does not have
 CSS-style cascade) without losing expressiveness.
 
-### 3.3 Interactivity IR — new, to be designed
+### 3.3 Interactivity IR — design sketch superseded by FM05
 
 Interactivity is the smallest of the three IRs for most documents — many
 posts have none at all — but it is the one that costs the most bytes when
@@ -280,7 +280,8 @@ it is present. Getting it right is what makes the AOT-compiler thesis
 work: if interactivity is explicit in the IR, the compiler can know which
 pages need any JavaScript and which do not.
 
-Proposed shape:
+The original proposed shape follows for historical context. The normative,
+bounded v1 schema is now [FM05](FM05-forme-interactivity-ir.md).
 
 ```typescript
 type InteractivityDocument = {
