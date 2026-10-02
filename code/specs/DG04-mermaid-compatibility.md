@@ -560,6 +560,8 @@ Wrap and nowrap text-wrap modes independently enable or suppress soft wrapping
 through semantic text metadata while retaining authored hard line breaks.
 Auto and balance text-wrap styles retain greedy wrapping or redistribute text
 across the existing line count toward even backend-neutral line widths.
+Pretty wrapping additionally moves a trailing word when that reduces final-line
+raggedness without exceeding the authored line width.
 Normal and positive or negative pixel/em letter spacing adjusts shaped glyph
 positions and line measurement through backend-neutral PaintInstructions.
 Normal and positive or negative pixel/em word spacing likewise adjusts ASCII

@@ -452,6 +452,7 @@ fn treemap_text_node(
         let text_wrap_style = match text_wrap_style {
             diagram_ir::TreemapTextWrapStyle::Auto => "auto",
             diagram_ir::TreemapTextWrapStyle::Balance => "balance",
+            diagram_ir::TreemapTextWrapStyle::Pretty => "pretty",
         };
         node.ext.insert("text.wrap-style".into(), ExtValue::Str(text_wrap_style.into()));
     }
@@ -7146,6 +7147,12 @@ mod tests {
             current_color, Some(&whitespace_style),
         );
         assert_eq!(balanced_text.ext.get("text.wrap-style"), Some(&ExtValue::Str("balance".into())));
+        whitespace_style.text_wrap_style = Some(diagram_ir::TreemapTextWrapStyle::Pretty);
+        let pretty_text = treemap_text_node(
+            "one two three", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(pretty_text.ext.get("text.wrap-style"), Some(&ExtValue::Str("pretty".into())));
         whitespace_style.direction = Some(diagram_ir::TreemapTextDirection::RightToLeft);
         let rtl_text = treemap_text_node(
             "مرحبا", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
