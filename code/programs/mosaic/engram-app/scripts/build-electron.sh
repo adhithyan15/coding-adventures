@@ -34,19 +34,27 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 REPO="$(cd "$HERE/../../../.." && pwd)"
 RUST="$REPO/code/packages/rust"
 WASM="$RUST/engram-wasm"
+LOCK="$HERE/npm/electron/package-lock.json"
+# shellcheck source=SCRIPTDIR/npm-lock.sh
+source "$HERE/scripts/npm-lock.sh"
 
 OUTPUT="$HERE/dist-electron"
 RUN_BUILD=0
 RUN_PACKAGE=0
+UPDATE_LOCK=0
 
 usage() {
   cat <<'USAGE'
 build-electron.sh — build the Engram desktop app from the Mosaic package
 
   --output DIR   Where to emit (default: <engram-app>/dist-electron)
-  --build        Also run `npm install` and `npm run build`
+  --build        Also install from npm/electron/package-lock.json (`npm ci`)
+                 and run `npm run build`
   --package      Also produce a distributable with electron-builder
                  (implies --build; builds for the CURRENT platform only)
+  --update-lock  Only emit the project and regenerate
+                 npm/electron/package-lock.json from its package.json
+                 (skips the wasm build; installs nothing)
   -h, --help     Show this message
 USAGE
 }
@@ -56,13 +64,22 @@ while [[ $# -gt 0 ]]; do
     --output)  OUTPUT="$2"; shift 2 ;;
     --build)   RUN_BUILD=1; shift ;;
     --package) RUN_BUILD=1; RUN_PACKAGE=1; shift ;;
+    --update-lock) UPDATE_LOCK=1; shift ;;
     -h|--help) usage; exit 0 ;;
     *) echo "unknown argument: $1" >&2; usage >&2; exit 2 ;;
   esac
 done
 
-echo "[1/4] Building the Engram engine to wasm..."
-bash "$WASM/build-wasm.sh"
+if [[ "$UPDATE_LOCK" -eq 1 && "$RUN_BUILD" -eq 1 ]]; then
+  echo "--update-lock cannot be combined with --build or --package" >&2
+  exit 2
+fi
+
+# The lockfile depends only on package.json, so --update-lock skips the engine.
+if [[ "$UPDATE_LOCK" -eq 0 ]]; then
+  echo "[1/4] Building the Engram engine to wasm..."
+  bash "$WASM/build-wasm.sh"
+fi
 
 echo "[2/4] Emitting the Mosaic app as an Electron project..."
 rm -rf "$OUTPUT"
@@ -71,14 +88,16 @@ rm -rf "$OUTPUT"
 
 APP="$OUTPUT/electron"
 
-echo "[3/4] Installing the wasm runtime into the emitted project..."
-mkdir -p "$APP/src" "$APP/public" "$APP/electron"
-cp "$WASM/js/engram-mosaic-host-wasm.mjs" "$APP/src/engram-mosaic-host-wasm.mjs"
-cp "$WASM/pkg/engram_engine.wasm"         "$APP/public/engram_engine.wasm"
-# The Electron main process loads the engine too, from beside its own bundle
-# rather than through the renderer's public/ directory.
-cp "$WASM/js/engram-mosaic-host-wasm.mjs" "$APP/electron/engram-mosaic-host-wasm.mjs"
-cp "$WASM/pkg/engram_engine.wasm"         "$APP/electron/engram_engine.wasm"
+if [[ "$UPDATE_LOCK" -eq 0 ]]; then
+  echo "[3/4] Installing the wasm runtime into the emitted project..."
+  mkdir -p "$APP/src" "$APP/public" "$APP/electron"
+  cp "$WASM/js/engram-mosaic-host-wasm.mjs" "$APP/src/engram-mosaic-host-wasm.mjs"
+  cp "$WASM/pkg/engram_engine.wasm"         "$APP/public/engram_engine.wasm"
+  # The Electron main process loads the engine too, from beside its own bundle
+  # rather than through the renderer's public/ directory.
+  cp "$WASM/js/engram-mosaic-host-wasm.mjs" "$APP/electron/engram-mosaic-host-wasm.mjs"
+  cp "$WASM/pkg/engram_engine.wasm"         "$APP/electron/engram_engine.wasm"
+fi
 
 echo "[4/4] Adding packaging configuration..."
 # electron-builder reads its config from package.json's "build" key. Injecting
@@ -103,7 +122,13 @@ pkg.setdefault("version", "0.0.0")
 pkg["author"] = "coding-adventures"
 pkg["license"] = "MIT"
 
-pkg.setdefault("devDependencies", {})["electron-builder"] = "^25.1.8"
+# The packaging tools are devDependencies at exact versions, so they come from
+# the committed lockfile like everything else. They used to be fetched by
+# `npx --yes` at whatever version the registry served that day -- unpinned code
+# that builds the installer and opens it again to check it.
+dev = pkg.setdefault("devDependencies", {})
+dev["electron-builder"] = "25.1.8"
+dev["@electron/asar"] = "4.3.1"
 pkg.setdefault("scripts", {})["package"] = "electron-builder --publish never"
 
 pkg["build"] = {
@@ -132,9 +157,16 @@ with open(path, "w") as handle:
 print(f"  configured electron-builder in {path}")
 PY
 
+if [[ "$UPDATE_LOCK" -eq 1 ]]; then
+  update_lock "$APP" "$LOCK"
+  exit 0
+fi
+
 if [[ "$RUN_BUILD" -eq 1 ]]; then
+  echo "[+] Installing from the committed lockfile..."
+  install_from_lock "$APP" "$LOCK"
   echo "[+] Building..."
-  ( cd "$APP" && npm install --no-audit --no-fund && npm run build )
+  ( cd "$APP" && npm run build )
   # The engine has to reach the shipped app, not merely the build directory.
   # Vite copies public/ into dist/, and a missing wasm there is a runtime
   # failure behind a successful build -- the same shape of bug the web lane
@@ -146,7 +178,7 @@ fi
 
 if [[ "$RUN_PACKAGE" -eq 1 ]]; then
   echo "[+] Packaging with electron-builder..."
-  ( cd "$APP" && npx --yes electron-builder --publish never )
+  ( cd "$APP" && npx --no-install electron-builder --publish never )
 
   # Verify the engine actually reached the packaged app.
   #
@@ -163,11 +195,11 @@ if [[ "$RUN_PACKAGE" -eq 1 ]]; then
     echo "error: no app.asar in the packaged output; cannot verify the engine" >&2
     exit 1
   fi
-  ENGINES="$(npx --yes @electron/asar list "$ASAR" | grep -c 'engram_engine\.wasm' || true)"
+  ENGINES="$(npx --no-install @electron/asar list "$ASAR" | grep -c 'engram_engine\.wasm' || true)"
   if [[ "$ENGINES" -lt 2 ]]; then
     echo "error: expected the engine in both dist/ and electron/, found $ENGINES copy/copies in $ASAR" >&2
     echo "       the app would launch and then fail to import a deck" >&2
-    npx --yes @electron/asar list "$ASAR" | grep -v '^/node_modules' >&2
+    npx --no-install @electron/asar list "$ASAR" | grep -v '^/node_modules' >&2
     exit 1
   fi
   echo "  engine verified inside app.asar ($ENGINES copies)"
