@@ -119,13 +119,19 @@ async function exitWithStderr(child: Awaited<ReturnType<ReturnType<typeof create
   return { exit, stderr: Buffer.concat(chunks).toString("utf8") };
 }
 
-async function verifyRuntimeRoot(path: string): Promise<boolean> {
+async function verifyRuntimeRoot(path: string): Promise<{
+  readonly accepted: boolean;
+  readonly stderr: string;
+}> {
   return new Promise(resolveResult => {
     execFile(launcherPath, [`--verify-runtime-root=${path}`], {
       windowsHide: true,
       timeout: 5_000,
-      maxBuffer: 1_024,
-    }, error => resolveResult(error === null));
+      maxBuffer: 16_384,
+    }, (error, _stdout, stderr) => resolveResult({
+      accepted: error === null,
+      stderr,
+    }));
   });
 }
 
@@ -182,23 +188,49 @@ describe.skipIf(process.platform !== "win32")("Windows native sandbox", () => {
     await mkdir(contained);
     const alias = join(root, "alias");
     await symlink(contained, alias, "junction");
-    expect(await verifyRuntimeRoot(root)).toBe(true);
+    let verification = await verifyRuntimeRoot(root);
+    expect(verification.accepted, verification.stderr).toBe(true);
     await rm(alias, { force: true });
 
     await execFileAsync("icacls.exe", [root, "/grant", "*S-1-1-0:(OI)(CI)(IO)M", "/Q"]);
-    expect(await verifyRuntimeRoot(root)).toBe(false);
+    verification = await verifyRuntimeRoot(root);
+    expect(verification.accepted).toBe(false);
+    expect(verification.stderr).toContain("trust verification rejected");
+    expect(verification.stderr).toContain("untrusted writer");
+    expect(verification.stderr).toContain(root.split("\\").join("\\\\"));
     await execFileAsync("icacls.exe", [root, "/remove:g", "*S-1-1-0", "/Q"]);
-    expect(await verifyRuntimeRoot(root)).toBe(true);
+    verification = await verifyRuntimeRoot(root);
+    expect(verification.accepted, verification.stderr).toBe(true);
 
     const outside = await mkdtemp(join(homedir(), "forme-windows-runtime-outside-"));
     roots.push(outside);
     await symlink(outside, alias, "junction");
-    expect(await verifyRuntimeRoot(root)).toBe(false);
+    verification = await verifyRuntimeRoot(root);
+    expect(verification.accepted).toBe(false);
+    expect(verification.stderr).toContain("trust verification rejected");
+    expect(verification.stderr).toContain("reparse target escapes the runtime root");
+    expect(verification.stderr).toContain(alias.split("\\").join("\\\\"));
     await rm(alias, { force: true });
+
+    verification = await verifyRuntimeRoot(join(root, "missing"));
+    expect(verification.accepted).toBe(false);
+    expect(verification.stderr).toContain("[win32=2]");
+
+    const hostileDiagnosticPath = `${root}\n\u001b\u202e`;
+    verification = await verifyRuntimeRoot(hostileDiagnosticPath);
+    expect(verification.accepted).toBe(false);
+    expect(verification.stderr).toContain("\\u000A");
+    expect(verification.stderr).toContain("\\u001B");
+    expect(verification.stderr).toContain("\\u202E");
+    expect(verification.stderr).not.toContain("\u001b");
+    expect(verification.stderr).not.toContain("\u202e");
+    expect(verification.stderr.match(/\r?\n/g)).toHaveLength(1);
   });
 
   it("round-trips protocol bytes through a trusted Python distribution", async () => {
     const python = await pythonRequest();
+    const verification = await verifyRuntimeRoot(python.root);
+    expect(verification.accepted, verification.stderr).toBe(true);
     const child = await createWindowsSandboxFactory({
       launcherPath,
       readinessTimeoutMs: 5_000,

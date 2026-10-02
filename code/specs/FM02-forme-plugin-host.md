@@ -1597,7 +1597,12 @@ the supervisor exits unexpectedly; it exits when the plugin does.
   same pinned handle before the ephemeral AppContainer profile is deleted, including by the
   asynchronous janitor if the supervisor exits unexpectedly. Runtime DACL
   grant/revoke operations MUST use a cross-process lock so overlapping plugin
-  launches cannot lose or resurrect another sandbox's ACE.
+  launches cannot lose or resurrect another sandbox's ACE. Trust rejection
+  remains fail-closed, but the launcher MUST emit a bounded stderr diagnostic
+  naming the rejected verification stage and an ASCII-escaped, length-bounded
+  inspected path (plus the numeric Win32 error captured immediately for failed
+  system calls) so operators can distinguish policy, traversal-bound, and
+  platform failures without weakening the decision or enabling log injection.
   The host passes the validated manifest runtime kind to the launcher. For a Node runtime,
   the launcher supplies `--preserve-symlinks-main`, allowing Node to load the
   exact, already verified and symlink-free staged entry without canonicalizing

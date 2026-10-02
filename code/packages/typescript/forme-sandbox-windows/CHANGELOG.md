@@ -20,6 +20,10 @@
   effective replacement authority on every ancestor through the volume root,
   malformed DACLs, and over-deep or
   oversized trees. Its resource bounds match the installer snapshot contract.
+- Report the exact rejected trust-verification stage and an ASCII-escaped,
+  length-bounded inspected path on native stderr, including immediately
+  captured numeric Win32 errors for failed system calls, while preserving the
+  same fail-closed result.
 
 ## 0.1.0 — 2026-10-01
 

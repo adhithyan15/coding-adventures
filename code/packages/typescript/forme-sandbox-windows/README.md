@@ -22,6 +22,11 @@ aliases are not recursively followed and are valid only when their opened
 final target remains inside that pinned, trusted root and both link and target
 pass the strict writer check. External targets and inherit-only untrusted
 writers are rejected; install-tree verification remains reparse-free.
+Every trust rejection remains fail-closed and emits one bounded stderr
+diagnostic with the failed verification stage and an ASCII-escaped inspected
+path; failed Win32 calls also include their immediately captured numeric error.
+This makes native Windows failures actionable without exposing a fallback,
+allowing log injection, or weakening the trust policy.
 For Node plugins the launcher preserves the already verified, symlink-free main
 path, avoiding a broader AppContainer ACL solely for Node's root-to-entry
 canonicalization walk.

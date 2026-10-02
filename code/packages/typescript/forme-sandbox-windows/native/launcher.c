@@ -468,6 +468,83 @@ static int write_readiness(const wchar_t *manifest, const wchar_t *schema, const
 
 #define ACL_TREE_MAX_ENTRIES 8193
 #define ACL_TREE_MAX_DEPTH 256
+#define TRUST_DIAGNOSTIC_PATH_UNITS ((size_t)256)
+
+/*
+ * A fail-closed verifier still owes its operator a useful failure.  The
+ * launcher never turns these diagnostics into an acceptance decision: they
+ * only identify which already-rejected object needs inspection.  Keeping the
+ * message bounded to one reason, one path, and (when applicable) one numeric
+ * Win32 error also makes it safe for the TypeScript wrapper to retain stderr.
+ * At worst 512 UTF-16 units become six ASCII bytes each, keeping the complete
+ * line below sandbox-core's 4096-byte retained-diagnostic ceiling.
+ */
+static int trust_failure_reported = 0;
+
+static void print_escaped_trust_unit(wchar_t unit) {
+    unsigned int value = (unsigned int)(unsigned short)unit;
+    if (value >= 0x20 && value <= 0x7e && value != '\\') {
+        fputc((int)value, stderr);
+    } else if (value == '\\') {
+        fputs("\\\\", stderr);
+    } else {
+        fprintf(stderr, "\\u%04X", value);
+    }
+}
+
+static void print_bounded_trust_path(const wchar_t *path) {
+    if (path == NULL) {
+        fputs("<unknown>", stderr);
+        return;
+    }
+    size_t length = wcslen(path);
+    size_t prefix = length;
+    size_t suffix = 0;
+    if (length > TRUST_DIAGNOSTIC_PATH_UNITS * 2) {
+        prefix = TRUST_DIAGNOSTIC_PATH_UNITS;
+        suffix = TRUST_DIAGNOSTIC_PATH_UNITS;
+    }
+    for (size_t index = 0; index < prefix; index++) print_escaped_trust_unit(path[index]);
+    if (suffix > 0) {
+        fputs("...", stderr);
+        for (size_t index = length - suffix; index < length; index++) {
+            print_escaped_trust_unit(path[index]);
+        }
+    }
+}
+
+static void report_trust_failure(
+    const char *reason,
+    const wchar_t *path,
+    DWORD win32_error
+) {
+    if (trust_failure_reported) return;
+    trust_failure_reported = 1;
+    fprintf(stderr, "forme launcher: trust verification rejected (%s): ", reason);
+    print_bounded_trust_path(path);
+    if (win32_error != ERROR_SUCCESS) fprintf(stderr, " [win32=%lu]", win32_error);
+    fputc('\n', stderr);
+}
+
+static void report_untrusted_sid(
+    const char *reason,
+    const wchar_t *path,
+    PSID sid
+) {
+    if (trust_failure_reported) return;
+    LPWSTR sid_text = NULL;
+    if (sid != NULL && IsValidSid(sid) && ConvertSidToStringSidW(sid, &sid_text)) {
+        trust_failure_reported = 1;
+        fprintf(stderr, "forme launcher: trust verification rejected (%s, sid=", reason);
+        print_bounded_trust_path(sid_text);
+        fputs("): ", stderr);
+        print_bounded_trust_path(path);
+        fputc('\n', stderr);
+        LocalFree(sid_text);
+        return;
+    }
+    report_trust_failure(reason, path, ERROR_SUCCESS);
+}
 
 static int trusted_write_sid(
     PSID sid,
@@ -496,6 +573,7 @@ static PSID allowed_ace_sid(void *raw, BYTE type) {
 
 static int verify_handle_acl(
     HANDLE handle,
+    const wchar_t *path,
     int reject_inherit_only_writes,
     int replacement_only,
     PSID user,
@@ -509,9 +587,19 @@ static int verify_handle_acl(
     DWORD result = GetSecurityInfo(handle, SE_FILE_OBJECT,
         OWNER_SECURITY_INFORMATION | DACL_SECURITY_INFORMATION,
         &owner, NULL, &dacl, NULL, &descriptor);
-    if (result != ERROR_SUCCESS || descriptor == NULL || owner == NULL || dacl == NULL
-            || !IsValidSid(owner) || !IsValidAcl(dacl)
-            || !trusted_write_sid(owner, user, administrators, system_sid, trusted_installer)) {
+    if (result != ERROR_SUCCESS) {
+        report_trust_failure("security descriptor query failed", path, result);
+        if (descriptor != NULL) LocalFree(descriptor);
+        return -1;
+    }
+    if (descriptor == NULL || owner == NULL || dacl == NULL
+            || !IsValidSid(owner) || !IsValidAcl(dacl)) {
+        report_trust_failure("security descriptor is incomplete or invalid", path, ERROR_SUCCESS);
+        if (descriptor != NULL) LocalFree(descriptor);
+        return -1;
+    }
+    if (!trusted_write_sid(owner, user, administrators, system_sid, trusted_installer)) {
+        report_untrusted_sid("untrusted owner", path, owner);
         if (descriptor != NULL) LocalFree(descriptor);
         return -1;
     }
@@ -528,6 +616,7 @@ static int verify_handle_acl(
     for (DWORD index = 0; index < dacl->AceCount; index++) {
         void *raw = NULL;
         if (!GetAce(dacl, index, &raw) || raw == NULL) {
+            report_trust_failure("ACL entry could not be read", path, ERROR_INVALID_ACL);
             LocalFree(descriptor);
             return -1;
         }
@@ -538,6 +627,7 @@ static int verify_handle_acl(
                     || header->AceType == ACCESS_DENIED_OBJECT_ACE_TYPE
                     || header->AceType == ACCESS_DENIED_CALLBACK_ACE_TYPE
                     || header->AceType == ACCESS_DENIED_CALLBACK_OBJECT_ACE_TYPE) continue;
+            report_trust_failure("unsupported allowed ACL entry", path, ERROR_SUCCESS);
             LocalFree(descriptor);
             return -1;
         }
@@ -547,6 +637,7 @@ static int verify_handle_acl(
         if ((mask & dangerous) != 0
                 && (!IsValidSid(sid)
                     || !trusted_write_sid(sid, user, administrators, system_sid, trusted_installer))) {
+            report_untrusted_sid("untrusted writer", path, sid);
             LocalFree(descriptor);
             return -1;
         }
@@ -574,36 +665,72 @@ static int verify_acl_tree(
     PSID system_sid,
     PSID trusted_installer
 ) {
-    if (depth > ACL_TREE_MAX_DEPTH || ++*entries > ACL_TREE_MAX_ENTRIES) return -1;
+    if (depth > ACL_TREE_MAX_DEPTH) {
+        report_trust_failure("tree depth limit exceeded", path, ERROR_SUCCESS);
+        return -1;
+    }
+    if (++*entries > ACL_TREE_MAX_ENTRIES) {
+        report_trust_failure("tree entry limit exceeded", path, ERROR_SUCCESS);
+        return -1;
+    }
     HANDLE handle = CreateFileW(path, FILE_READ_ATTRIBUTES | READ_CONTROL,
         FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING,
         FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT, NULL);
-    if (handle == INVALID_HANDLE_VALUE) return -1;
+    if (handle == INVALID_HANDLE_VALUE) {
+        report_trust_failure("tree entry could not be opened", path, GetLastError());
+        return -1;
+    }
     BY_HANDLE_FILE_INFORMATION before;
-    if (!GetFileInformationByHandle(handle, &before)
-            || verify_handle_acl(handle, reject_inherit_only_writes, replacement_only,
-                user, administrators, system_sid, trusted_installer) != 0) {
+    if (!GetFileInformationByHandle(handle, &before)) {
+        report_trust_failure("tree entry identity query failed", path, GetLastError());
+        CloseHandle(handle);
+        return -1;
+    }
+    if (verify_handle_acl(handle, path, reject_inherit_only_writes, replacement_only,
+            user, administrators, system_sid, trusted_installer) != 0) {
         CloseHandle(handle);
         return -1;
     }
     int is_reparse = (before.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) != 0;
     if (is_reparse) {
         if (allowed_reparse_root == NULL) {
+            report_trust_failure("reparse point is forbidden", path, ERROR_SUCCESS);
             CloseHandle(handle);
             return -1;
         }
         HANDLE target = CreateFileW(path, FILE_READ_ATTRIBUTES | READ_CONTROL,
             FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING,
             FILE_FLAG_BACKUP_SEMANTICS, NULL);
+        DWORD target_open_error = target == INVALID_HANDLE_VALUE ? GetLastError() : ERROR_SUCCESS;
         wchar_t target_path[32768];
         DWORD target_length = target == INVALID_HANDLE_VALUE ? 0
             : GetFinalPathNameByHandleW(target, target_path, 32768,
                 FILE_NAME_NORMALIZED | VOLUME_NAME_DOS);
+        DWORD target_path_error = target != INVALID_HANDLE_VALUE && target_length == 0
+            ? GetLastError()
+            : target_length >= 32768 ? ERROR_INSUFFICIENT_BUFFER : ERROR_SUCCESS;
         size_t root_length = wcslen(allowed_reparse_root);
         int contained = target_length > 0 && target_length < 32768
             && _wcsnicmp(target_path, allowed_reparse_root, root_length) == 0
             && (target_path[root_length] == L'\\' || target_path[root_length] == L'/');
-        if (!contained || verify_handle_acl(target, reject_inherit_only_writes, replacement_only,
+        if (target == INVALID_HANDLE_VALUE) {
+            report_trust_failure("reparse target could not be opened", path, target_open_error);
+            CloseHandle(handle);
+            return -1;
+        }
+        if (target_length == 0 || target_length >= 32768) {
+            report_trust_failure("reparse target path query failed", path, target_path_error);
+            CloseHandle(target);
+            CloseHandle(handle);
+            return -1;
+        }
+        if (!contained) {
+            report_trust_failure("reparse target escapes the runtime root", path, ERROR_SUCCESS);
+            CloseHandle(target);
+            CloseHandle(handle);
+            return -1;
+        }
+        if (verify_handle_acl(target, target_path, reject_inherit_only_writes, replacement_only,
                 user, administrators, system_sid, trusted_installer) != 0) {
             if (target != INVALID_HANDLE_VALUE) CloseHandle(target);
             CloseHandle(handle);
@@ -616,11 +743,13 @@ static int verify_acl_tree(
     if (recurse && is_directory) {
         size_t length = wcslen(path);
         if (length > 32760) {
+            report_trust_failure("tree path is too long", path, ERROR_SUCCESS);
             CloseHandle(handle);
             return -1;
         }
         wchar_t *pattern = calloc(length + 3, sizeof(wchar_t));
         if (pattern == NULL) {
+            report_trust_failure("tree pattern allocation failed", path, ERROR_NOT_ENOUGH_MEMORY);
             CloseHandle(handle);
             return -1;
         }
@@ -628,14 +757,17 @@ static int verify_acl_tree(
                 || (length > 0 && path[length - 1] != L'\\' && path[length - 1] != L'/'
                     && wcscat_s(pattern, length + 3, L"\\") != 0)
                 || wcscat_s(pattern, length + 3, L"*") != 0) {
+            report_trust_failure("tree pattern construction failed", path, ERROR_INSUFFICIENT_BUFFER);
             free(pattern);
             CloseHandle(handle);
             return -1;
         }
         WIN32_FIND_DATAW found;
         HANDLE search = FindFirstFileW(pattern, &found);
+        DWORD search_error = search == INVALID_HANDLE_VALUE ? GetLastError() : ERROR_SUCCESS;
         free(pattern);
-        if (search == INVALID_HANDLE_VALUE && GetLastError() != ERROR_FILE_NOT_FOUND) {
+        if (search == INVALID_HANDLE_VALUE && search_error != ERROR_FILE_NOT_FOUND) {
+            report_trust_failure("tree enumeration failed", path, search_error);
             CloseHandle(handle);
             return -1;
         }
@@ -646,13 +778,15 @@ static int verify_acl_tree(
                 size_t child_size = length + wcslen(found.cFileName) + 2;
                 wchar_t *child = calloc(child_size, sizeof(wchar_t));
                 if (child == NULL) {
+                    report_trust_failure("child path allocation failed", path, ERROR_NOT_ENOUGH_MEMORY);
                     valid = 0;
                     break;
                 }
                 if (wcscpy_s(child, child_size, path) != 0
                         || (length > 0 && path[length - 1] != L'\\' && path[length - 1] != L'/'
-                            && wcscat_s(child, child_size, L"\\") != 0)
+                        && wcscat_s(child, child_size, L"\\") != 0)
                         || wcscat_s(child, child_size, found.cFileName) != 0) {
+                    report_trust_failure("child path construction failed", path, ERROR_INSUFFICIENT_BUFFER);
                     free(child);
                     valid = 0;
                     break;
@@ -664,7 +798,11 @@ static int verify_acl_tree(
                 free(child);
                 if (!valid) break;
             } while (FindNextFileW(search, &found));
-            if (valid && GetLastError() != ERROR_NO_MORE_FILES) valid = 0;
+            DWORD enumeration_error = GetLastError();
+            if (valid && enumeration_error != ERROR_NO_MORE_FILES) {
+                report_trust_failure("tree enumeration did not complete", path, enumeration_error);
+                valid = 0;
+            }
             FindClose(search);
             if (!valid) {
                 CloseHandle(handle);
@@ -676,12 +814,20 @@ static int verify_acl_tree(
         FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING,
         FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT, NULL);
     BY_HANDLE_FILE_INFORMATION after;
-    int unchanged = named != INVALID_HANDLE_VALUE
-        && GetFileInformationByHandle(named, &after)
-        && ((after.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) != 0) == is_reparse
-        && same_file_identity(&before, &after);
+    DWORD reopen_error = named == INVALID_HANDLE_VALUE ? GetLastError() : ERROR_SUCCESS;
+    int unchanged = 0;
+    if (named != INVALID_HANDLE_VALUE) {
+        if (!GetFileInformationByHandle(named, &after)) {
+            reopen_error = GetLastError();
+        } else {
+            unchanged = ((after.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) != 0) == is_reparse
+                && same_file_identity(&before, &after);
+        }
+    }
     if (named != INVALID_HANDLE_VALUE) CloseHandle(named);
     CloseHandle(handle);
+    if (!unchanged) report_trust_failure("tree entry changed during verification", path,
+        reopen_error);
     return unchanged ? 0 : -1;
 }
 
@@ -696,20 +842,45 @@ static int verify_install_acl(
     TOKEN_USER *token_user = NULL;
     PSID administrators = NULL, system_sid = NULL, trusted_installer = NULL;
     int valid = 0;
-    if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &token)) goto done;
-    GetTokenInformation(token, TokenUser, NULL, 0, &needed);
-    if (needed == 0 || GetLastError() != ERROR_INSUFFICIENT_BUFFER) goto done;
+    if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &token)) {
+        report_trust_failure("process token could not be opened", path, GetLastError());
+        goto done;
+    }
+    if (GetTokenInformation(token, TokenUser, NULL, 0, &needed)) {
+        report_trust_failure("token user size query unexpectedly succeeded", path, ERROR_INVALID_DATA);
+        goto done;
+    }
+    DWORD token_size_error = GetLastError();
+    if (needed == 0 || token_size_error != ERROR_INSUFFICIENT_BUFFER) {
+        report_trust_failure("token user size query failed", path, token_size_error);
+        goto done;
+    }
     token_user = HeapAlloc(GetProcessHeap(), 0, needed);
-    if (token_user == NULL
-            || !GetTokenInformation(token, TokenUser, token_user, needed, &needed)) goto done;
+    if (token_user == NULL) {
+        report_trust_failure("token user allocation failed", path, ERROR_NOT_ENOUGH_MEMORY);
+        goto done;
+    }
+    if (!GetTokenInformation(token, TokenUser, token_user, needed, &needed)) {
+        report_trust_failure("token user query failed", path, GetLastError());
+        goto done;
+    }
     SID_IDENTIFIER_AUTHORITY nt = SECURITY_NT_AUTHORITY;
     if (!AllocateAndInitializeSid(&nt, 2, SECURITY_BUILTIN_DOMAIN_RID,
-            DOMAIN_ALIAS_RID_ADMINS, 0, 0, 0, 0, 0, 0, &administrators)
-            || !AllocateAndInitializeSid(&nt, 1, SECURITY_LOCAL_SYSTEM_RID,
-                0, 0, 0, 0, 0, 0, 0, &system_sid)
-            || !ConvertStringSidToSidW(
-                L"S-1-5-80-956008885-3418522649-1831038044-1853292631-2271478464",
-                &trusted_installer)) goto done;
+            DOMAIN_ALIAS_RID_ADMINS, 0, 0, 0, 0, 0, 0, &administrators)) {
+        report_trust_failure("administrators SID allocation failed", path, GetLastError());
+        goto done;
+    }
+    if (!AllocateAndInitializeSid(&nt, 1, SECURITY_LOCAL_SYSTEM_RID,
+            0, 0, 0, 0, 0, 0, 0, &system_sid)) {
+        report_trust_failure("system SID allocation failed", path, GetLastError());
+        goto done;
+    }
+    if (!ConvertStringSidToSidW(
+            L"S-1-5-80-956008885-3418522649-1831038044-1853292631-2271478464",
+            &trusted_installer)) {
+        report_trust_failure("TrustedInstaller SID conversion failed", path, GetLastError());
+        goto done;
+    }
     unsigned int entries = 0;
     if (verify_acl_tree(path, recurse, strict_tree_writers || !recurse,
             0, allowed_reparse_root,
@@ -717,12 +888,21 @@ static int verify_install_acl(
             administrators, system_sid, trusted_installer) != 0) goto done;
 
     size_t path_length = wcslen(path);
-    if (path_length == 0 || path_length > 32760) goto done;
+    if (path_length == 0 || path_length > 32760) {
+        report_trust_failure("verification path length is invalid", path, ERROR_INVALID_NAME);
+        goto done;
+    }
     wchar_t volume_root[32768];
-    if (!GetVolumePathNameW(path, volume_root, 32768)) goto done;
+    if (!GetVolumePathNameW(path, volume_root, 32768)) {
+        report_trust_failure("volume root query failed", path, GetLastError());
+        goto done;
+    }
     size_t volume_length = wcslen(volume_root);
     wchar_t *ancestor = _wcsdup(path);
-    if (ancestor == NULL) goto done;
+    if (ancestor == NULL) {
+        report_trust_failure("ancestor path allocation failed", path, ERROR_NOT_ENOUGH_MEMORY);
+        goto done;
+    }
     size_t ancestor_length = wcslen(ancestor);
     unsigned int ancestor_entries = 0;
     while (ancestor_length > volume_length) {
@@ -745,8 +925,11 @@ static int verify_install_acl(
         }
     }
     free(ancestor);
-    if (ancestor_length != volume_length
-            || verify_acl_tree(volume_root, 0, 0, 1, NULL, 0, &ancestor_entries,
+    if (ancestor_length != volume_length) {
+        report_trust_failure("ancestor walk did not reach the volume root", path, ERROR_INVALID_NAME);
+        goto done;
+    }
+    if (verify_acl_tree(volume_root, 0, 0, 1, NULL, 0, &ancestor_entries,
                 token_user->User.Sid, administrators, system_sid,
                 trusted_installer) != 0) goto done;
     valid = 1;
@@ -764,20 +947,42 @@ static HANDLE pin_trusted_runtime_root(const wchar_t *path) {
         FILE_READ_ATTRIBUTES | READ_CONTROL | WRITE_DAC,
         FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING,
         FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT, NULL);
-    if (handle == INVALID_HANDLE_VALUE) return INVALID_HANDLE_VALUE;
+    if (handle == INVALID_HANDLE_VALUE) {
+        report_trust_failure("runtime root could not be pinned", path, GetLastError());
+        return INVALID_HANDLE_VALUE;
+    }
     BY_HANDLE_FILE_INFORMATION pinned;
     wchar_t final_path[32768];
     DWORD final_length = GetFinalPathNameByHandleW(handle, final_path, 32768,
         FILE_NAME_NORMALIZED | VOLUME_NAME_DOS);
+    DWORD final_path_error = final_length == 0 ? GetLastError()
+        : final_length >= 32768 ? ERROR_INSUFFICIENT_BUFFER : ERROR_SUCCESS;
     while (final_length > 4 && final_length < 32768
             && (final_path[final_length - 1] == L'\\' || final_path[final_length - 1] == L'/')) {
         final_path[--final_length] = L'\0';
     }
-    if (!GetFileInformationByHandle(handle, &pinned)
-            || !(pinned.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-            || (pinned.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT)
-            || final_length == 0 || final_length >= 32768
-            || verify_install_acl(path, 1, final_path, 1) != 0) {
+    if (!GetFileInformationByHandle(handle, &pinned)) {
+        report_trust_failure("runtime root identity query failed", path, GetLastError());
+        CloseHandle(handle);
+        return INVALID_HANDLE_VALUE;
+    }
+    if (!(pinned.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
+        report_trust_failure("runtime root is not a directory", path, ERROR_SUCCESS);
+        CloseHandle(handle);
+        return INVALID_HANDLE_VALUE;
+    }
+    if (pinned.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) {
+        report_trust_failure("runtime root is a reparse point", path, ERROR_SUCCESS);
+        CloseHandle(handle);
+        return INVALID_HANDLE_VALUE;
+    }
+    if (final_length == 0 || final_length >= 32768) {
+        report_trust_failure("runtime root path query failed", path, final_path_error);
+        CloseHandle(handle);
+        return INVALID_HANDLE_VALUE;
+    }
+    if (verify_install_acl(path, 1, final_path, 1) != 0) {
+        report_trust_failure("runtime root ACL verification failed", path, ERROR_SUCCESS);
         CloseHandle(handle);
         return INVALID_HANDLE_VALUE;
     }
@@ -785,12 +990,20 @@ static HANDLE pin_trusted_runtime_root(const wchar_t *path) {
         FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING,
         FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT, NULL);
     BY_HANDLE_FILE_INFORMATION confirmed;
-    int unchanged = named != INVALID_HANDLE_VALUE
-        && GetFileInformationByHandle(named, &confirmed)
-        && !(confirmed.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT)
-        && same_file_identity(&pinned, &confirmed);
+    DWORD reopen_error = named == INVALID_HANDLE_VALUE ? GetLastError() : ERROR_SUCCESS;
+    int unchanged = 0;
+    if (named != INVALID_HANDLE_VALUE) {
+        if (!GetFileInformationByHandle(named, &confirmed)) {
+            reopen_error = GetLastError();
+        } else {
+            unchanged = !(confirmed.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT)
+                && same_file_identity(&pinned, &confirmed);
+        }
+    }
     if (named != INVALID_HANDLE_VALUE) CloseHandle(named);
     if (!unchanged) {
+        report_trust_failure("runtime root changed during verification", path,
+            reopen_error);
         CloseHandle(handle);
         return INVALID_HANDLE_VALUE;
     }
