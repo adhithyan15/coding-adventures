@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C170-michhil",
+    "language": "bengali",
+    "chapter": 170,
+    "sequence": 9760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32d8bcfe4bff7a1c"
+  },
+  "findings": []
+}

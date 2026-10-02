@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R165-second-pass-words-from-chapters-161-165",
+    "language": "bengali",
+    "chapter": 165,
+    "sequence": 9350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d67446e2bb0c237"
+  },
+  "findings": []
+}

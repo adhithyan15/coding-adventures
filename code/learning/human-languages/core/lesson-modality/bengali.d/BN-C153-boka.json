@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C153-boka",
+    "language": "bengali",
+    "chapter": 153,
+    "sequence": 8520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b1723b6cd6e10fbf"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "bengali",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:50131dc337d071ca",
+  "lessonIds": [
+    "BN-C174-plag",
+    "BN-C174-injin",
+    "BN-C174-chaka",
+    "BN-C174-tayar",
+    "BN-C174-brek",
+    "BN-R174-first-pass-words-from-chapters-166-169",
+    "BN-R174-second-pass-words-from-chapters-170-174"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "bengali/narration/ch174.txt",
+  "json": "bengali/narration/ch174.json",
+  "textHash": "fnv1a64:8fa7e35cf6d752e3",
+  "jsonHash": "fnv1a64:98c3c083470c6e10",
+  "findings": []
+}

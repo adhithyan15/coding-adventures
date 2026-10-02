@@ -1,0 +1,21 @@
+{
+  "language": "bengali",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:14d853d3cfc7fb21",
+  "lessonIds": [
+    "BN-C178-dater-daktar",
+    "BN-C178-domkol",
+    "BN-C178-dhatri",
+    "BN-C178-bikreta",
+    "BN-C178-kreta",
+    "BN-R178-first-pass-words-from-chapters-175-176",
+    "BN-R178-second-pass-words-from-chapters-177-178"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "bengali/narration/ch178.txt",
+  "json": "bengali/narration/ch178.json",
+  "textHash": "fnv1a64:adec36dfc9611a80",
+  "jsonHash": "fnv1a64:2aa5ce7885fe282d",
+  "findings": []
+}

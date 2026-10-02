@@ -1,0 +1,19 @@
+{
+  "chapter": 148,
+  "title": "To cook, To sew, To iron, To sweep, To boil",
+  "label": "ch:bn-to-cook-to-sew-to-iron-to-sweep-to-boil",
+  "canDo": "I can say to cook, to sew, to iron, to sweep and to boil.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C148-seddho-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 148: I can say to cook, to sew, to iron, to sweep and to boil.",
+    "assesses": [
+      "BN-LEX-C148-ACT148-03",
+      "BN-LEX-C148-ACT148-04",
+      "BN-LEX-C148-ACT148-05"
+    ]
+  }
+}

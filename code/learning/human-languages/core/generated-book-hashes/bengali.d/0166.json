@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:50fb6d0513ba9245",
+  "lessonIds": [
+    "BN-C166-shokun",
+    "BN-C166-timi",
+    "BN-C166-kakra",
+    "BN-C166-shamuk",
+    "BN-C166-kriket"
+  ],
+  "tex": "bengali/book/chapters/ch166-vulture-whale-crab-snail-cricket.tex"
+}

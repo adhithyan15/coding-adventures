@@ -1,0 +1,19 @@
+{
+  "chapter": 171,
+  "title": "Bud, Rose, Banyan tree, Paddy, High tide",
+  "label": "ch:bn-bud-rose-banyan-tree-paddy-high-tide",
+  "canDo": "I can say a bud, a rose, a banyan tree, paddy and high tide.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C171-joyar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 171: I can say a bud, a rose, a banyan tree, paddy and high tide.",
+    "assesses": [
+      "BN-LEX-C171-JINIS171-03",
+      "BN-LEX-C171-JINIS171-04",
+      "BN-LEX-C171-JINIS171-05"
+    ]
+  }
+}

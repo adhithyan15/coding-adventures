@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:f4c22506ee484250",
+  "lessonIds": [
+    "BN-C148-ranna-kora",
+    "BN-C148-selai-kora",
+    "BN-C148-istri-kora",
+    "BN-C148-jhat-deoya",
+    "BN-C148-seddho-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch148.txt",
+  "json": "bengali/narration/ch148.json",
+  "textHash": "fnv1a64:72e55463c3902fcb",
+  "jsonHash": "fnv1a64:22be0c4dca9d58b1",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C164-poshak",
+    "language": "bengali",
+    "chapter": 164,
+    "sequence": 9250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf953b6462dd8a19"
+  },
+  "findings": []
+}

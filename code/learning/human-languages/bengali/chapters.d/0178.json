@@ -1,0 +1,19 @@
+{
+  "chapter": 178,
+  "title": "Dentist, Fire brigade, Midwife, Seller, Buyer",
+  "label": "ch:bn-dentist-fire-brigade-midwife-seller-buyer",
+  "canDo": "I can say a dentist, the fire brigade, a midwife, a seller and a buyer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-R178-second-pass-words-from-chapters-177-178",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 178: I can say a dentist, the fire brigade, a midwife, a seller and a buyer.",
+    "assesses": [
+      "BN-LEX-C178-KAJ178-03",
+      "BN-LEX-C178-KAJ178-04",
+      "BN-LEX-C178-KAJ178-05"
+    ]
+  }
+}

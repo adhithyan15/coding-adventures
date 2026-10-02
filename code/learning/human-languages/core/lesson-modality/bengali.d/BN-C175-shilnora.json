@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C175-shilnora",
+    "language": "bengali",
+    "chapter": 175,
+    "sequence": 10200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db48b22ccc9e557e"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C148-jhat-deoya",
+    "language": "bengali",
+    "chapter": 148,
+    "sequence": 8280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d6ab20701833a53e"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:ae6df5ccb23976ea",
+  "lessonIds": [
+    "BN-C162-sugondhi",
+    "BN-C162-pocha",
+    "BN-C162-adha",
+    "BN-C162-puro",
+    "BN-C162-samanyo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch162.txt",
+  "json": "bengali/narration/ch162.json",
+  "textHash": "fnv1a64:43eb034660dddaaa",
+  "jsonHash": "fnv1a64:68b81a4ba0ec7a91",
+  "findings": []
+}

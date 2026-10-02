@@ -1,0 +1,11 @@
+{
+  "id": "BN-C168-kone",
+  "pathSegment": "BN-PATH-168-JINIS168",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-168-JINIS168",
+      "order": 2
+    }
+  ]
+}

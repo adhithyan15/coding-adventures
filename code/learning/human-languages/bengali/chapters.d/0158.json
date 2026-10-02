@@ -1,0 +1,19 @@
+{
+  "chapter": 158,
+  "title": "Graveyard, Palace, Fort, Minaret, Ceiling",
+  "label": "ch:bn-graveyard-palace-fort-minaret-ceiling",
+  "canDo": "I can say a graveyard, a palace, a fort, a minaret and a ceiling.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "BN-C158-siling",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 158: I can say a graveyard, a palace, a fort, a minaret and a ceiling.",
+    "assesses": [
+      "BN-LEX-C158-JAYGA158-03",
+      "BN-LEX-C158-JAYGA158-04",
+      "BN-LEX-C158-JAYGA158-05"
+    ]
+  }
+}

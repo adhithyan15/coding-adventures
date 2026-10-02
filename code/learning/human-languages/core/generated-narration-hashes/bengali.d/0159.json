@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:3ebffb876d5459d7",
+  "lessonIds": [
+    "BN-C159-tai",
+    "BN-C159-jehetu",
+    "BN-C159-jodi",
+    "BN-C159-tobu",
+    "BN-C159-nahole"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch159.txt",
+  "json": "bengali/narration/ch159.json",
+  "textHash": "fnv1a64:1f1b725ed35e17bc",
+  "jsonHash": "fnv1a64:8df7e73b3f8b6c9d",
+  "findings": []
+}

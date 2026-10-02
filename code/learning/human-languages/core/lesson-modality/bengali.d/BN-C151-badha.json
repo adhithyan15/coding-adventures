@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C151-badha",
+    "language": "bengali",
+    "chapter": 151,
+    "sequence": 8440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa4994ccbccf25e9"
+  },
+  "findings": []
+}

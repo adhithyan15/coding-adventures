@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C169-shanti",
+    "language": "bengali",
+    "chapter": 169,
+    "sequence": 9720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1862ee1477a43ee"
+  },
+  "findings": []
+}

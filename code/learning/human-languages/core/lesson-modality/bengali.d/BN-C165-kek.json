@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C165-kek",
+    "language": "bengali",
+    "chapter": 165,
+    "sequence": 9310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf9125c4b46e540d"
+  },
+  "findings": []
+}

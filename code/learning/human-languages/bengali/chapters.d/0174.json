@@ -1,0 +1,19 @@
+{
+  "chapter": 174,
+  "title": "Plug, Engine, Wheel, Tyre, Brake",
+  "label": "ch:bn-plug-engine-wheel-tyre-brake",
+  "canDo": "I can say a plug, an engine, a wheel, a tyre and a brake.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-R174-second-pass-words-from-chapters-170-174",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 174: I can say a plug, an engine, a wheel, a tyre and a brake.",
+    "assesses": [
+      "BN-LEX-C174-JINIS174-03",
+      "BN-LEX-C174-JINIS174-04",
+      "BN-LEX-C174-JINIS174-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C155-kobji",
+    "language": "bengali",
+    "chapter": 155,
+    "sequence": 8600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3dc92bb782e31ff5"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 154,
+  "title": "Disease, Cold, Cough, Headache, Stomach ache",
+  "label": "ch:bn-disease-cold-cough-headache-stomach-ache",
+  "canDo": "I can say a disease, a cold, a cough, a headache and a stomach ache.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "BN-C154-petbtha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 154: I can say a disease, a cold, a cough, a headache and a stomach ache.",
+    "assesses": [
+      "BN-LEX-C154-SVASTHYO154-03",
+      "BN-LEX-C154-SVASTHYO154-04",
+      "BN-LEX-C154-SVASTHYO154-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C163-toyale",
+  "pathSegment": "BN-PATH-163-JINIS163",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-163-JINIS163",
+      "order": 3
+    }
+  ]
+}

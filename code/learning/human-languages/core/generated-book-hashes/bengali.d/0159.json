@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:5f58ffb94ccbfd68",
+  "lessonIds": [
+    "BN-C159-tai",
+    "BN-C159-jehetu",
+    "BN-C159-jodi",
+    "BN-C159-tobu",
+    "BN-C159-nahole"
+  ],
+  "tex": "bengali/book/chapters/ch159-so-since-if-yet-otherwise.tex"
+}

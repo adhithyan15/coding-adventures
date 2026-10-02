@@ -1,0 +1,11 @@
+{
+  "id": "BN-C153-proshongsa-kora",
+  "pathSegment": "BN-PATH-153-ACT153",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-153-ACT153",
+      "order": 1
+    }
+  ]
+}

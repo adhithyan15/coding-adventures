@@ -1,0 +1,19 @@
+{
+  "chapter": 152,
+  "title": "To dry, To soak, To launder, To comb, To bite",
+  "label": "ch:bn-to-dry-to-soak-to-launder-to-comb-to-bite",
+  "canDo": "I can say to dry, to soak, to launder, to comb and to bite.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C152-kamrano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 152: I can say to dry, to soak, to launder, to comb and to bite.",
+    "assesses": [
+      "BN-LEX-C152-ACT152-03",
+      "BN-LEX-C152-ACT152-04",
+      "BN-LEX-C152-ACT152-05"
+    ]
+  }
+}

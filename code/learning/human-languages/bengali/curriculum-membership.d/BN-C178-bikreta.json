@@ -1,0 +1,11 @@
+{
+  "id": "BN-C178-bikreta",
+  "pathSegment": "BN-PATH-178-KAJ178",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-178-KAJ178",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 176,
+  "title": "Profession, Debt, Bill, Expense, Savings",
+  "label": "ch:bn-profession-debt-bill-expense-savings",
+  "canDo": "I can say a profession, a debt, a bill, an expense and savings.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C176-sonchoy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 176: I can say a profession, a debt, a bill, an expense and savings.",
+    "assesses": [
+      "BN-LEX-C176-KAJ176-03",
+      "BN-LEX-C176-KAJ176-04",
+      "BN-LEX-C176-KAJ176-05"
+    ]
+  }
+}

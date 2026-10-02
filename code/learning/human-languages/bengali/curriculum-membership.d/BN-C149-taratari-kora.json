@@ -1,0 +1,11 @@
+{
+  "id": "BN-C149-taratari-kora",
+  "pathSegment": "BN-PATH-149-ACT149",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-149-ACT149",
+      "order": 3
+    }
+  ]
+}

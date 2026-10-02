@@ -1,0 +1,11 @@
+{
+  "id": "BN-C152-kamrano",
+  "pathSegment": "BN-PATH-152-ACT152",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-152-ACT152",
+      "order": 4
+    }
+  ]
+}

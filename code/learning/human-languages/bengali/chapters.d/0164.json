@@ -1,0 +1,19 @@
+{
+  "chapter": 164,
+  "title": "File, Clothes, Jeans, Shorts, Sweater",
+  "label": "ch:bn-file-clothes-jeans-shorts-sweater",
+  "canDo": "I can say a file, clothes, jeans, shorts and a sweater.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C164-soyetar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 164: I can say a file, clothes, jeans, shorts and a sweater.",
+    "assesses": [
+      "BN-LEX-C164-JINIS164-03",
+      "BN-LEX-C164-JINIS164-04",
+      "BN-LEX-C164-JINIS164-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 171,
+  "sourceHash": "fnv1a64:8dae9064a800ba17",
+  "lessonIds": [
+    "BN-C171-kuri",
+    "BN-C171-golap",
+    "BN-C171-bot",
+    "BN-C171-dhan",
+    "BN-C171-joyar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch171.txt",
+  "json": "bengali/narration/ch171.json",
+  "textHash": "fnv1a64:1514c17e272e66fe",
+  "jsonHash": "fnv1a64:04d391a161809356",
+  "findings": []
+}

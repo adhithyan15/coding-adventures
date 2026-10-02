@@ -1,0 +1,19 @@
+{
+  "chapter": 156,
+  "title": "Sometimes, At first, Calendar date, Birthday, Late",
+  "label": "ch:bn-sometimes-at-first-calendar-date-birthday-late",
+  "canDo": "I can say sometimes, at first, a calendar date, a birthday and late.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "BN-R156-second-pass-words-from-chapters-152-156",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 156: I can say sometimes, at first, a calendar date, a birthday and late.",
+    "assesses": [
+      "BN-LEX-C156-SOMOY156-03",
+      "BN-LEX-C156-SOMOY156-04",
+      "BN-LEX-C156-SOMOY156-05"
+    ]
+  }
+}

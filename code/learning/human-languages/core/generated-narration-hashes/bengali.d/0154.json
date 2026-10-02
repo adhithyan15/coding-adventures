@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:293281850af09086",
+  "lessonIds": [
+    "BN-C154-rog",
+    "BN-C154-sordi",
+    "BN-C154-kashi",
+    "BN-C154-mathabtha",
+    "BN-C154-petbtha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch154.txt",
+  "json": "bengali/narration/ch154.json",
+  "textHash": "fnv1a64:96a949caf8e53f59",
+  "jsonHash": "fnv1a64:528b88abe5eae19c",
+  "findings": []
+}

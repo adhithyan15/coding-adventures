@@ -1,0 +1,19 @@
+{
+  "chapter": 160,
+  "title": "Intelligent, Hardworking, Greedy, Worried, Elderly",
+  "label": "ch:bn-intelligent-hardworking-greedy-worried-elderly",
+  "canDo": "I can say intelligent, hardworking, greedy, worried and elderly.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "BN-C160-buro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 160: I can say intelligent, hardworking, greedy, worried and elderly.",
+    "assesses": [
+      "BN-LEX-C160-GUN160-03",
+      "BN-LEX-C160-GUN160-04",
+      "BN-LEX-C160-GUN160-05"
+    ]
+  }
+}

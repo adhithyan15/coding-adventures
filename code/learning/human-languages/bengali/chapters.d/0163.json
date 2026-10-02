@@ -1,0 +1,19 @@
+{
+  "chapter": 163,
+  "title": "Luggage, Furniture, Shampoo, Towel, Toothpaste",
+  "label": "ch:bn-luggage-furniture-shampoo-towel-toothpaste",
+  "canDo": "I can say luggage, furniture, shampoo, a towel and toothpaste.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C163-tuthpest",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 163: I can say luggage, furniture, shampoo, a towel and toothpaste.",
+    "assesses": [
+      "BN-LEX-C163-JINIS163-03",
+      "BN-LEX-C163-JINIS163-04",
+      "BN-LEX-C163-JINIS163-05"
+    ]
+  }
+}

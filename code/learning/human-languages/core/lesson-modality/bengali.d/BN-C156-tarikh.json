@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C156-tarikh",
+    "language": "bengali",
+    "chapter": 156,
+    "sequence": 8670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23d30abfdf50b4cc"
+  },
+  "findings": []
+}

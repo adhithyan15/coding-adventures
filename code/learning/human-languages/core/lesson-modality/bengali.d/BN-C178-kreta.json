@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C178-kreta",
+    "language": "bengali",
+    "chapter": 178,
+    "sequence": 10360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25ab85a21754bd6d"
+  },
+  "findings": []
+}

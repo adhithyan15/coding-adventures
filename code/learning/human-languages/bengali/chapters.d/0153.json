@@ -1,0 +1,19 @@
+{
+  "chapter": 153,
+  "title": "To discuss, To praise, To scold, To thank, To put up with",
+  "label": "ch:bn-to-discuss-to-praise-to-scold-to-thank-to-put-up-with",
+  "canDo": "I can say to discuss, to praise, to scold, to thank and to put up with.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C153-sohyo-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 153: I can say to discuss, to praise, to scold, to thank and to put up with.",
+    "assesses": [
+      "BN-LEX-C153-ACT153-03",
+      "BN-LEX-C153-ACT153-04",
+      "BN-LEX-C153-ACT153-05"
+    ]
+  }
+}

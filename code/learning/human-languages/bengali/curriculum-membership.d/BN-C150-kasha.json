@@ -1,0 +1,11 @@
+{
+  "id": "BN-C150-kasha",
+  "pathSegment": "BN-PATH-150-ACT150",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-150-ACT150",
+      "order": 4
+    }
+  ]
+}

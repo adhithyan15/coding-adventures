@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C161-sukhi",
+    "language": "bengali",
+    "chapter": 161,
+    "sequence": 9120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ec3017a640a80d8"
+  },
+  "findings": []
+}

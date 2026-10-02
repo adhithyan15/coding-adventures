@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:c61586042cb6ac3d",
+  "lessonIds": [
+    "BN-C161-bhodro",
+    "BN-C161-komol",
+    "BN-C161-kora",
+    "BN-C161-sukhi",
+    "BN-C161-birokto"
+  ],
+  "tex": "bengali/book/chapters/ch161-polite-gentle-strict-contented-annoyed.tex"
+}

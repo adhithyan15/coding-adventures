@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C150-kasha",
+    "language": "bengali",
+    "chapter": 150,
+    "sequence": 8390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:285fdd4e0a2c25b6"
+  },
+  "findings": []
+}

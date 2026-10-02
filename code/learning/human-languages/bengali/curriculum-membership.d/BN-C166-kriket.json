@@ -1,0 +1,11 @@
+{
+  "id": "BN-C166-kriket",
+  "pathSegment": "BN-PATH-166-JINIS166",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-166-JINIS166",
+      "order": 4
+    }
+  ]
+}

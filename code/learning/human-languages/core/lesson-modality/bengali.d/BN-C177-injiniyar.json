@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C177-injiniyar",
+    "language": "bengali",
+    "chapter": 177,
+    "sequence": 10290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab11e945a1697ff7"
+  },
+  "findings": []
+}

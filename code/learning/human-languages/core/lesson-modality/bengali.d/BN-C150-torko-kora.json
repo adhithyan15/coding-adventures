@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C150-torko-kora",
+    "language": "bengali",
+    "chapter": 150,
+    "sequence": 8360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73a4970c943d4a72"
+  },
+  "findings": []
+}

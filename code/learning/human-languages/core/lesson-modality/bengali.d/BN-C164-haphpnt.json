@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C164-haphpnt",
+    "language": "bengali",
+    "chapter": 164,
+    "sequence": 9270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0900e5ec1cb7a8b2"
+  },
+  "findings": []
+}

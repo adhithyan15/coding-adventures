@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C150-hacha",
+    "language": "bengali",
+    "chapter": 150,
+    "sequence": 8380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d0d7c0518a64e73"
+  },
+  "findings": []
+}

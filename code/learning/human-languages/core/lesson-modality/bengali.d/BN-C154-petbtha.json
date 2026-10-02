@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C154-petbtha",
+    "language": "bengali",
+    "chapter": 154,
+    "sequence": 8590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c525c667c95b281"
+  },
+  "findings": []
+}

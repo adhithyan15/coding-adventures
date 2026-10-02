@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R178-first-pass-words-from-chapters-175-176",
+    "language": "bengali",
+    "chapter": 178,
+    "sequence": 10370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dbd51dee655e5125"
+  },
+  "findings": []
+}
