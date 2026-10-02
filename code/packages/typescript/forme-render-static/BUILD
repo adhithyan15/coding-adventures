@@ -13,7 +13,6 @@ cd ../forme-style-to-css && npm install --silent
 cd ../forme-aot-css-slicer && npm install --silent
 cd ../document-ast-to-html && npm install --silent
 cd ../directed-graph && npm install --silent
-cd ../cli-builder && npm ci --quiet
 cd ../state-machine && npm install --silent
 cd ../gfm-parser && npm install --silent
 npm install --silent && npx vitest run --coverage
