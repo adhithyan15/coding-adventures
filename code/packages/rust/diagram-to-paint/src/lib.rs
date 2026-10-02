@@ -416,6 +416,14 @@ fn treemap_text_node(
         };
         node.ext.insert("text.overflow-wrap".into(), ExtValue::Str(wrap.into()));
     }
+    if let Some(word_break) = style.and_then(|style| style.word_break) {
+        let word_break = match word_break {
+            diagram_ir::TreemapWordBreak::Normal => "normal",
+            diagram_ir::TreemapWordBreak::BreakAll => "break-all",
+            diagram_ir::TreemapWordBreak::KeepAll => "keep-all",
+        };
+        node.ext.insert("text.word-break".into(), ExtValue::Str(word_break.into()));
+    }
     if let Some(direction) = style.and_then(|style| style.direction) {
         let value = match direction {
             diagram_ir::TreemapTextDirection::LeftToRight => "ltr",
@@ -6988,6 +6996,7 @@ mod tests {
                     text_indent: Some(diagram_ir::TreemapTextIndent::Factor(0.1)),
                     white_space: Some(diagram_ir::TreemapWhiteSpace::NoWrap),
                     overflow_wrap: None,
+                    word_break: None,
                     letter_spacing: None,
                     word_spacing: None,
                     direction: None,
@@ -7072,6 +7081,12 @@ mod tests {
             current_color, Some(&whitespace_style),
         );
         assert_eq!(anywhere_text.ext.get("text.overflow-wrap"), Some(&ExtValue::Str("anywhere".into())));
+        whitespace_style.word_break = Some(diagram_ir::TreemapWordBreak::KeepAll);
+        let keep_all_text = treemap_text_node(
+            "日本語", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(keep_all_text.ext.get("text.word-break"), Some(&ExtValue::Str("keep-all".into())));
         whitespace_style.direction = Some(diagram_ir::TreemapTextDirection::RightToLeft);
         let rtl_text = treemap_text_node(
             "مرحبا", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),

@@ -246,6 +246,7 @@ where
                     text_word_spacing(frame.node) * dpr,
                     text_align_last(frame.node),
                     text_breaks_anywhere(frame.node),
+                    text_word_break(frame.node),
                     direction,
                     options,
                     &mut font_cache,
@@ -477,6 +478,17 @@ fn text_align_last(node: &PositionedNode) -> Option<TextAlign> {
 fn text_breaks_anywhere(node: &PositionedNode) -> bool {
     matches!(node.ext.get("text.overflow-wrap"),
         Some(ExtValue::Str(value)) if value == "break-word" || value == "anywhere")
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum TextWordBreak { Normal, BreakAll, KeepAll }
+
+fn text_word_break(node: &PositionedNode) -> TextWordBreak {
+    match node.ext.get("text.word-break") {
+        Some(ExtValue::Str(value)) if value == "break-all" => TextWordBreak::BreakAll,
+        Some(ExtValue::Str(value)) if value == "keep-all" => TextWordBreak::KeepAll,
+        _ => TextWordBreak::Normal,
+    }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1246,6 +1258,7 @@ fn emit_text_content<S, M, R>(
     word_spacing: f64,
     text_align_last: Option<TextAlign>,
     breaks_anywhere: bool,
+    word_break: TextWordBreak,
     direction: BaseDirection,
     options: &LayoutToPaintOptions<'_, S, M, R>,
     font_cache: &mut HashMap<FontCacheKey, CachedFont<S::Handle>>,
@@ -1300,6 +1313,7 @@ fn emit_text_content<S, M, R>(
                 letter_spacing,
                 word_spacing,
                 breaks_anywhere,
+                word_break,
                 direction,
             )
         } else {
@@ -1615,6 +1629,7 @@ fn wrap_line<S: TextShaper>(
     letter_spacing: f64,
     word_spacing: f64,
     breaks_anywhere: bool,
+    word_break: TextWordBreak,
     direction: BaseDirection,
 ) -> Vec<String> {
     if segment.is_empty() {
@@ -1622,6 +1637,11 @@ fn wrap_line<S: TextShaper>(
     }
     if max_width <= 0.0 {
         return vec![segment.to_string()];
+    }
+    if word_break == TextWordBreak::BreakAll {
+        return break_line_anywhere(
+            shaper, handle, segment, size, max_width, letter_spacing, word_spacing, direction,
+        );
     }
 
     // Preserve source whitespace for fixed-format text when it already fits.
@@ -1638,7 +1658,7 @@ fn wrap_line<S: TextShaper>(
     let mut current = String::new();
     let mut current_width: f64 = 0.0;
 
-    for piece in paint_wrap_pieces(segment, direction) {
+    for piece in paint_wrap_pieces(segment, direction, word_break == TextWordBreak::KeepAll) {
         let word_width = shape_visual_line(shaper, handle, piece.value, size, word_spacing, direction)
             .map(|r| shaped_advance(&r, letter_spacing))
             .unwrap_or(piece.value.chars().count() as f64 * (size as f64) * 0.5);
@@ -1718,7 +1738,17 @@ struct PaintWrapPiece<'a> {
     leading_space: bool,
 }
 
-fn paint_wrap_pieces(segment: &str, direction: BaseDirection) -> Vec<PaintWrapPiece<'_>> {
+fn paint_wrap_pieces(
+    segment: &str,
+    direction: BaseDirection,
+    keep_all: bool,
+) -> Vec<PaintWrapPiece<'_>> {
+    if keep_all {
+        return segment.split_whitespace().enumerate().map(|(index, value)| PaintWrapPiece {
+            value,
+            leading_space: index > 0,
+        }).collect();
+    }
     let flow = TextFlow::analyze(segment, direction);
     let mut boundaries: Vec<_> = flow
         .breaks
@@ -3035,5 +3065,21 @@ mod tests {
             .filter(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))).count();
         assert_eq!(count(&normal_scene), 1);
         assert_eq!(count(&anywhere_scene), 3);
+    }
+
+    #[test]
+    fn word_break_controls_grapheme_break_opportunities() {
+        let mut break_all = positioned_leaf(text_content("abcdef"), 0.0, 0.0, 16.0, 60.0);
+        break_all.ext.insert("text.word-break".into(), ExtValue::Str("break-all".into()));
+        let mut keep_all = positioned_leaf(text_content("日本語文"), 0.0, 0.0, 16.0, 40.0);
+        keep_all.ext.insert("text.word-break".into(), ExtValue::Str("keep-all".into()));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let options = make_options(&shaper, &metrics, &resolver);
+        let count = |node: &PositionedNode| layout_to_paint(node, &options).instructions.iter()
+            .filter(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))).count();
+        assert_eq!(count(&break_all), 3);
+        assert_eq!(count(&keep_all), 1);
     }
 }
