@@ -348,9 +348,7 @@ fn treemap_text_node(
         _ => whitespace_value,
     };
     let font_size = font.size;
-    let mut node = text_node(
-        &value, x + text_indent, y, (width - text_indent).max(0.0), height, font, color,
-    );
+    let mut node = text_node(&value, x, y, width, height, font, color);
     if let Some(Content::Text(content)) = &mut node.content {
         content.text_align = match style.and_then(|style| style.text_align) {
             Some(diagram_ir::TreemapTextAlign::Start) => TextAlign::Start,
@@ -387,6 +385,9 @@ fn treemap_text_node(
     }
     if matches!(white_space, Some(diagram_ir::TreemapWhiteSpace::BreakSpaces)) {
         node.ext.insert("text.break-spaces".into(), ExtValue::Bool(true));
+    }
+    if text_indent != 0.0 {
+        node.ext.insert("text.indent".into(), ExtValue::Float(text_indent));
     }
     if let Some(spacing) = style.and_then(|style| style.letter_spacing) {
         let spacing = match spacing {
@@ -7064,8 +7065,9 @@ mod tests {
                     && lines.contains(TextDecorationLines::OVERLINE)
                     && lines.contains(TextDecorationLines::LINE_THROUGH)
                     && decoration_color == (Color { r: 37, g: 99, b: 235, a: 204 })));
-        assert_eq!(styled_text.x, 10.0);
-        assert_eq!(styled_text.width, 90.0);
+        assert_eq!(styled_text.x, 0.0);
+        assert_eq!(styled_text.width, 100.0);
+        assert_eq!(styled_text.ext.get("text.indent"), Some(&ExtValue::Float(10.0)));
         let mut current_color_style = layout.nodes[0].style.clone().expect("treemap style");
         current_color_style.text_decoration_color =
             Some(diagram_ir::TreemapTextDecorationColor::CurrentColor);
