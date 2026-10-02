@@ -4124,6 +4124,16 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("7.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a finite step element may read its controlled variable in
+    // the body without writing it. Its exact exit snapshot then seeds a
+    // following bounded while element in the same for list.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real total; total := 0.25; for i := if 'ALPHA' < 'BETA' then 1 else 9 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'ALPHA' < 'BETA' then 2 else 0, if 'BETA' < 'ALPHA' then i + 3 else i + 1 while i <= 4 do total := total + i; print(total) end",
+        expect: Expect::Stdout("7.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — an exact control recurrence remains analyzable when every
     // additional compound-body statement is an inert local scalar assignment.
     Prog {
@@ -14421,6 +14431,31 @@ fn algol_literal_string_selected_mixed_for_list_headers_run_on_every_available_s
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the literal-string-selected mixed for-list headers did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_literal_string_selected_step_while_list_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "else i + 1 while i <= 4 do total := total + i; print(total)",
+                )
+        })
+        .expect("the literal-string-selected step/while for list must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the literal-string-selected step/while for list did not run"
             );
             continue;
         };

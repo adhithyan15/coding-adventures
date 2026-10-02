@@ -1088,7 +1088,9 @@ backend immediately) come before the enabler-dependent items.
   assignments, bounded controlled-scalar recurrences, conditional value
   expressions and predicates of bounded `while` elements, finite step-loop
   header expressions, and values sequenced across bounded multi-element `for`
-  lists, including mixed finite-step and single-value elements.
+  lists, including mixed finite-step and single-value elements and finite-step
+  exits that seed following bounded `while` elements when the body only reads
+  the controlled variable.
   The recurrence assignment may instead occur in one or both branches of a
   conditional statement selected by those exact snapshots. A branch without
   the assignment preserves the dependency for that pass; unknown selectors
