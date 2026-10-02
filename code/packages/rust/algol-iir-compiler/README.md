@@ -267,10 +267,11 @@ expressions and predicates of bounded `while` elements, finite step-loop header
 expressions, and values sequenced across bounded multi-element `for` lists,
 including mixed finite-step and single-value elements in either order and
 finite-step exits that seed following bounded `while` elements when the body
-only reads the controlled variable. A terminating bounded `while` element
-likewise retains its exact exit snapshot when that shared body only reads the
-control, allowing a following finite-step or single-value element to derive
-its initial value from the exit. A finite-step element may also derive its
+only reads the controlled variable. That cross-element exit propagation also
+applies to exactly simulated finite binary64 steps. A terminating bounded
+`while` element likewise retains its exact exit snapshot when that shared body
+only reads the control, allowing a following finite-step or single-value
+element to derive its initial value from the exit. A finite-step element may also derive its
 initial value from an earlier finite-step exit under the same read-only body
 rule. Bounded `while` elements may likewise chain exact terminating snapshots
 when the shared body only reads the control.
