@@ -1097,7 +1097,8 @@ backend immediately) come before the enabler-dependent items.
   and one finite-step exit may seed another
   finite-step element likewise, including for exactly simulated real controls.
   Two bounded `while` elements may chain their
-  exact terminating snapshots under that rule as well.
+  exact terminating snapshots under that rule as well, including for exactly
+  simulated real controls.
   The recurrence assignment may instead occur in one or both branches of a
   conditional statement selected by those exact snapshots. A branch without
   the assignment preserves the dependency for that pass; unknown selectors
