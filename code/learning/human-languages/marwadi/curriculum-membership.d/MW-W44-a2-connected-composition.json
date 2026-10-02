@@ -1,0 +1,11 @@
+{
+  "id": "MW-W44-a2-connected-composition",
+  "pathSegment": "MW-PATH-150-A2WRITING",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MW-EXT-150-A2WRITING",
+      "order": 0
+    }
+  ]
+}

@@ -30,7 +30,12 @@ it("pins Marwadi lesson-content budgets", () =>
     // 584 -> 896: chapters 90-149, 300 word lessons and twelve reviews carry
     // Marwadi to A1. RE-MEASURED against the tree; none introduces an idiom, a
     // sense or a culture claim.
-    lessons: 896,
+    //
+    // 896 -> 897: chapter 150 adds the first model-free connected-composition
+    // lesson after the later vocabulary run has supplied time anchors, familiar
+    // actions, preference and reason language. It introduces no atom: the work
+    // is planning and independently connecting already-taught material.
+    lessons: 897,
     idioms: 7,
     senses: 3,
     cultureClaims: 5,

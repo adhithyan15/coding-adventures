@@ -19,13 +19,20 @@ it("pins Marwadi-owned chapters and objective activities", () => {
   // hand-authored list stays readable.
   // 584 -> 896, chapters 89 -> 149: the A1 vocabulary tranche, 300 word lessons
   // and twelve reviews, each with the same typed recall.
-  expect(lessons).toHaveLength(896);
+  // 896 -> 897, chapter 150: one model-free connected-writing lesson. Its
+  // evidence is the retained handwritten attempt, not an objective activity.
+  expect(lessons).toHaveLength(897);
   expect(new Set(lessons.map((lesson) => Number(lesson.frontmatter.chapter)))).toEqual(
-    new Set(Array.from({ length: 149 }, (unused, index) => index + 1)),
+    new Set(Array.from({ length: 150 }, (unused, index) => index + 1)),
   );
   const activities = lessons.flatMap((lesson) => compileLessonActivities(lesson.blocks));
   expect(activities).toHaveLength(896);
-  expect(lessons.every((lesson) => compileLessonActivities(lesson.blocks).length === 1)).toBe(true);
+  expect(
+    lessons.every((lesson) =>
+      compileLessonActivities(lesson.blocks).length ===
+      (lesson.realization.lessonId === "MW-W44-a2-connected-composition" ? 0 : 1),
+    ),
+  ).toBe(true);
   const vocabularyTranche =
     /^MW-(C(4[4-9]|[5-9][0-9]|1[0-4][0-9])|R66|R89|R99|R109|R119|R129|R139|R149)-.+-type$/;
   expect(activities.filter((activity) => vocabularyTranche.test(activity.id))).toHaveLength(546);
@@ -390,7 +397,7 @@ it("pins Marwadi-owned chapters and objective activities", () => {
   const closure = measureScriptClosure(lessons);
   expect(closure.violations.filter((violation) => violation.language === "marwadi")).toEqual([]);
   expect(closure.tracks.find((track) => track.language === "marwadi")).toMatchObject({
-    lessonCount: 896,
+    lessonCount: 897,
     neverTaughtGlyphs: 0,
     violations: 0,
   });
