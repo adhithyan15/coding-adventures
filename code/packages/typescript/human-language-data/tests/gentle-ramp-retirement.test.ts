@@ -52,5 +52,13 @@ describe("retired gentle-ramp snapshots", () => {
   it("derives the complete real report with no generated snapshot tree", () => {
     expect(() => assertGentleRampSnapshotsRetired(defaultCurriculumRoot())).not.toThrow();
     expect(runGentleRampSnapshots(["--check"])).toBe(0);
-  }, 30_000);
+    // `--check` loads the WHOLE corpus and derives the full gap report, so this
+    // test's cost grows with every tranche. It is not a fixed-size unit test
+    // wearing a generous budget. It runs ~17s on an idle laptop, and CI runners
+    // under full-suite load are slower still. With Bengali chapters 237-262 that
+    // put it past the 30s it carried, and a PR failed on a timeout rather than on
+    // anything this test asserts. 180s matches `gentle-ramp.test.ts`, which builds
+    // the same report and hit the same limit first. Nothing is skipped or
+    // weakened: the derivation still runs in full and must still return 0.
+  }, 180_000);
 });

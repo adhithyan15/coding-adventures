@@ -11,3 +11,8 @@
   that witness once it reached A2, but it is in progress at B1 and has no B1
   lesson yet, so the atom had no host and the test failed. The witness must now
   also have a lesson at its in-progress level.
+- `tests/gentle-ramp-retirement.test.ts`: the whole-corpus `--check` derivation
+  test gets a 180s budget, matching `gentle-ramp.test.ts`, which builds the same
+  report. It runs ~17s on an idle machine, and with these chapters it went past
+  its old 30s under CI's full-suite load. It still runs in full and asserts the
+  same result.
