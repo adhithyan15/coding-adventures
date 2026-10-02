@@ -4621,6 +4621,12 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                 "pre-line" => diagram_ir::TreemapWhiteSpace::PreLine,
                 _ => return Err(token_error(token, "unsupported treemap white-space")),
             }),
+            "overflow-wrap" => style.overflow_wrap = Some(match value.to_ascii_lowercase().as_str() {
+                "normal" => diagram_ir::TreemapOverflowWrap::Normal,
+                "break-word" => diagram_ir::TreemapOverflowWrap::BreakWord,
+                "anywhere" => diagram_ir::TreemapOverflowWrap::Anywhere,
+                _ => return Err(token_error(token, "treemap overflow-wrap must be normal, break-word, or anywhere")),
+            }),
             "letter-spacing" => style.letter_spacing = Some(parse_treemap_letter_spacing(token, value)?),
             "word-spacing" => style.word_spacing = Some(parse_treemap_word_spacing(token, value)?),
             "direction" => style.direction = Some(match value.to_ascii_lowercase().as_str() {
@@ -14623,6 +14629,22 @@ B//-A: reverse stick top
         }
         assert!(parse_treemap(
             "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-align-last:justify",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_overflow_wrap_modes() {
+        for (value, expected) in [
+            ("normal", diagram_ir::TreemapOverflowWrap::Normal),
+            ("break-word", diagram_ir::TreemapOverflowWrap::BreakWord),
+            ("anywhere", diagram_ir::TreemapOverflowWrap::Anywhere),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent overflow-wrap:{value}");
+            let diagram = parse_treemap(&source).expect("supported overflow wrapping must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.overflow_wrap), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent overflow-wrap:pretty",
         ).is_err());
     }
 

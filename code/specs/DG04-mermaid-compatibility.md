@@ -548,6 +548,8 @@ label line box before glyph shaping. Normal, nowrap, pre, pre-wrap, and pre-line
 white-space modes control whitespace collapsing and native line wrapping.
 Auto, left/start, center, and right/end last-line alignment overrides flow into
 backend-neutral line positioning while unsupported justification remains rejected.
+Normal, break-word, and anywhere overflow wrapping preserve ordinary Unicode
+line breaks and optionally split oversized words at grapheme boundaries.
 Normal and positive or negative pixel/em letter spacing adjusts shaped glyph
 positions and line measurement through backend-neutral PaintInstructions.
 Normal and positive or negative pixel/em word spacing likewise adjusts ASCII

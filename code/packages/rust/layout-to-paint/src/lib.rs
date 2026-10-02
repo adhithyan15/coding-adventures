@@ -245,6 +245,7 @@ where
                     text_letter_spacing(frame.node) * dpr,
                     text_word_spacing(frame.node) * dpr,
                     text_align_last(frame.node),
+                    text_breaks_anywhere(frame.node),
                     direction,
                     options,
                     &mut font_cache,
@@ -471,6 +472,11 @@ fn text_align_last(node: &PositionedNode) -> Option<TextAlign> {
         Some(ExtValue::Str(value)) if value == "end" => Some(TextAlign::End),
         _ => None,
     }
+}
+
+fn text_breaks_anywhere(node: &PositionedNode) -> bool {
+    matches!(node.ext.get("text.overflow-wrap"),
+        Some(ExtValue::Str(value)) if value == "break-word" || value == "anywhere")
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1239,6 +1245,7 @@ fn emit_text_content<S, M, R>(
     letter_spacing: f64,
     word_spacing: f64,
     text_align_last: Option<TextAlign>,
+    breaks_anywhere: bool,
     direction: BaseDirection,
     options: &LayoutToPaintOptions<'_, S, M, R>,
     font_cache: &mut HashMap<FontCacheKey, CachedFont<S::Handle>>,
@@ -1292,6 +1299,7 @@ fn emit_text_content<S, M, R>(
                 max_width_dpr,
                 letter_spacing,
                 word_spacing,
+                breaks_anywhere,
                 direction,
             )
         } else {
@@ -1606,6 +1614,7 @@ fn wrap_line<S: TextShaper>(
     max_width: f64,
     letter_spacing: f64,
     word_spacing: f64,
+    breaks_anywhere: bool,
     direction: BaseDirection,
 ) -> Vec<String> {
     if segment.is_empty() {
@@ -1658,6 +1667,48 @@ fn wrap_line<S: TextShaper>(
     }
     if lines.is_empty() {
         lines.push(String::new());
+    }
+    if !breaks_anywhere {
+        return lines;
+    }
+    lines.into_iter().flat_map(|line| break_line_anywhere(
+        shaper, handle, &line, size, max_width, letter_spacing, word_spacing, direction,
+    )).collect()
+}
+
+#[allow(clippy::too_many_arguments)]
+fn break_line_anywhere<S: TextShaper>(
+    shaper: &S,
+    handle: &S::Handle,
+    line: &str,
+    size: f32,
+    max_width: f64,
+    letter_spacing: f64,
+    word_spacing: f64,
+    direction: BaseDirection,
+) -> Vec<String> {
+    let fits = shape_visual_line(shaper, handle, line, size, word_spacing, direction)
+        .map(|shaped| shaped_advance(&shaped, letter_spacing) <= max_width)
+        .unwrap_or(true);
+    if fits {
+        return vec![line.to_string()];
+    }
+    let flow = TextFlow::analyze(line, direction);
+    let mut lines = Vec::new();
+    let mut current = String::new();
+    for grapheme in flow.graphemes {
+        let value = &line[grapheme.bytes];
+        let candidate = format!("{current}{value}");
+        let fits = shape_visual_line(shaper, handle, &candidate, size, word_spacing, direction)
+            .map(|shaped| shaped_advance(&shaped, letter_spacing) <= max_width)
+            .unwrap_or(true);
+        if !fits && !current.is_empty() {
+            lines.push(std::mem::take(&mut current));
+        }
+        current.push_str(value);
+    }
+    if !current.is_empty() {
+        lines.push(current);
     }
     lines
 }
@@ -2966,5 +3017,23 @@ mod tests {
             _ => None,
         }).collect();
         assert_eq!(starts, vec![4.5, 9.0]);
+    }
+
+    #[test]
+    fn overflow_wrap_breaks_oversized_words_at_grapheme_boundaries() {
+        let content = text_content("abcdef");
+        let normal = positioned_leaf(content.clone(), 0.0, 0.0, 16.0, 60.0);
+        let mut anywhere = positioned_leaf(content, 0.0, 0.0, 16.0, 60.0);
+        anywhere.ext.insert("text.overflow-wrap".into(), ExtValue::Str("anywhere".into()));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let options = make_options(&shaper, &metrics, &resolver);
+        let normal_scene = layout_to_paint(&normal, &options);
+        let anywhere_scene = layout_to_paint(&anywhere, &options);
+        let count = |scene: &PaintScene| scene.instructions.iter()
+            .filter(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))).count();
+        assert_eq!(count(&normal_scene), 1);
+        assert_eq!(count(&anywhere_scene), 3);
     }
 }
