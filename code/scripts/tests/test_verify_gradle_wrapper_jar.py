@@ -15,7 +15,8 @@ and no real Gradle:
 
 The last test reads ci.yml and checks the property the script exists for:
 every step that copies a generated wrapper jar into a project verifies it
-before ./gradlew runs.
+before the wrapper runs, and that none of them runs the generated gradlew
+script, the one part of the wrapper Gradle publishes no checksum for.
 """
 
 from __future__ import annotations
@@ -125,7 +126,11 @@ class VerifyGradleWrapperJarTests(unittest.TestCase):
 
 
 class WorkflowVerifiesEveryCopiedWrapperJarTests(unittest.TestCase):
-    def test_each_copied_jar_is_verified_before_gradlew(self) -> None:
+    @staticmethod
+    def runs_wrapper(line: str) -> bool:
+        return "./gradlew" in line or "gradle-wrapper.jar --no-daemon" in line
+
+    def test_each_copied_jar_is_verified_before_the_wrapper_runs(self) -> None:
         lines = WORKFLOW.read_text().splitlines()
         copy = re.compile(
             r'^\s*cp "\$wrapper_seed/gradle/wrapper/gradle-wrapper\.jar" '
@@ -138,13 +143,29 @@ class WorkflowVerifiesEveryCopiedWrapperJarTests(unittest.TestCase):
         for index, dest in copies:
             with self.subTest(line=index + 1):
                 rest = lines[index + 1 :]
-                gradlew = next(i for i, line in enumerate(rest) if "./gradlew" in line)
+                runs = next(i for i, line in enumerate(rest) if self.runs_wrapper(line))
                 verify = f'bash code/scripts/verify-gradle-wrapper-jar.sh "{dest}"'
                 self.assertTrue(
-                    any(verify in line for line in rest[:gradlew]),
+                    any(verify in line for line in rest[:runs]),
                     f"ci.yml line {index + 1} copies a wrapper jar that is "
-                    "not verified before ./gradlew runs",
+                    "not verified before the wrapper runs",
                 )
+
+    def test_no_wrapper_seed_step_runs_the_unverifiable_gradlew_script(self) -> None:
+        # Scoped to the steps that write a wrapper from $wrapper_seed: a step
+        # running a committed, reviewed gradlew is a different matter.
+        workflow = WORKFLOW.read_text()
+        steps = workflow.split("\n      - name: ")
+        seeding = [step for step in steps if "$wrapper_seed" in step]
+        self.assertGreaterEqual(len(seeding), 2, "expected the Android wrapper seeds")
+        for step in seeding:
+            name = step.splitlines()[0]
+            code = "\n".join(
+                line for line in step.splitlines() if not line.lstrip().startswith("#")
+            )
+            with self.subTest(step=name):
+                self.assertNotIn('"$wrapper_seed/gradlew"', code)
+                self.assertNotIn("./gradlew", code)
 
 
 if __name__ == "__main__":
