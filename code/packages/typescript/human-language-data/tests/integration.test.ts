@@ -361,7 +361,8 @@ describe("real curriculum", () => {
       // 139 -> 172: the first A2 vocabulary tranche, 165 headwords, thirty-five
       // of them verbs.
       // 172 -> 203: the second A2 vocabulary tranche, 155 headwords.
-    ).toEqual(Array.from({ length: 203 }, (_, index) => index + 1));
+      // 203 -> 231: the third A2 vocabulary tranche, 140 headwords.
+    ).toEqual(Array.from({ length: 231 }, (_, index) => index + 1));
     expect(
       books.books.every((book) =>
         book.chapters.every((chapter) => chapter.tex.length > 100),

@@ -1,0 +1,21 @@
+{
+  "language": "russian",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:025c8fe40afa1b49",
+  "lessonIds": [
+    "RU-C226-skripka",
+    "RU-C226-baraban",
+    "RU-C226-tanets",
+    "RU-C226-roman",
+    "RU-C226-stikhi",
+    "RU-R226-first-pass-words-from-chapters-222-223",
+    "RU-R226-second-pass-words-from-chapters-224-226"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "russian/narration/ch226.txt",
+  "json": "russian/narration/ch226.json",
+  "textHash": "fnv1a64:21a6d8d7b333bfc4",
+  "jsonHash": "fnv1a64:529fe92fc7a88e41",
+  "findings": []
+}

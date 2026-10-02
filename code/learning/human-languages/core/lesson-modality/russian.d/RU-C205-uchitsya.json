@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C205-uchitsya",
+    "language": "russian",
+    "chapter": 205,
+    "sequence": 12160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38e152698d8f72ba"
+  },
+  "findings": []
+}

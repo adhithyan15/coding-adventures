@@ -1,0 +1,11 @@
+{
+  "id": "RU-C210-allergiya",
+  "pathSegment": "RU-PATH-210-ZDOROV210",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-210-ZDOROV210",
+      "order": 1
+    }
+  ]
+}

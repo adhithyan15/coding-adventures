@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:26746c4be34b5992",
+  "lessonIds": [
+    "RU-C228-oshibka",
+    "RU-C228-pravilo",
+    "RU-C228-primer",
+    "RU-C228-znacheniye",
+    "RU-C228-imya"
+  ],
+  "tex": "russian/book/chapters/ch228-mistake-rule-example-meaning-first-name.tex"
+}

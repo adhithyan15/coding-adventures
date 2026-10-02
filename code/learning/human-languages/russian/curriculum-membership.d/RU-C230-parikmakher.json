@@ -1,0 +1,11 @@
+{
+  "id": "RU-C230-parikmakher",
+  "pathSegment": "RU-PATH-230-RABOTA230",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-230-RABOTA230",
+      "order": 2
+    }
+  ]
+}

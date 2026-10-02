@@ -1,0 +1,19 @@
+{
+  "chapter": 228,
+  "title": "Mistake, Rule, Example, Meaning, First name",
+  "label": "ch:ru-mistake-rule-example-meaning-first-name",
+  "canDo": "I can say a mistake, a rule, an example, a meaning and a first name.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C228-imya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 228: I can say a mistake, a rule, an example, a meaning and a first name.",
+    "assesses": [
+      "RU-LEX-C228-VESHCH228-03",
+      "RU-LEX-C228-VESHCH228-04",
+      "RU-LEX-C228-VESHCH228-05"
+    ]
+  }
+}

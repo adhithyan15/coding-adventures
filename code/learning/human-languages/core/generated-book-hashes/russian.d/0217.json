@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:e887fdb76f1f5755",
+  "lessonIds": [
+    "RU-C217-tupoy",
+    "RU-C217-gladkiy",
+    "RU-C217-prokhladnyy",
+    "RU-C217-svezhiy",
+    "RU-C217-sovremennyy"
+  ],
+  "tex": "russian/book/chapters/ch217-blunt-smooth-cool-fresh-modern.tex"
+}

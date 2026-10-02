@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:5175ad61033fc37c",
+  "lessonIds": [
+    "RU-C218-raznyy",
+    "RU-C218-odinakovyy",
+    "RU-C218-pokhozhiy",
+    "RU-C218-glavnyy",
+    "RU-C218-obychnyy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch218.txt",
+  "json": "russian/narration/ch218.json",
+  "textHash": "fnv1a64:9254245b3e118c0e",
+  "jsonHash": "fnv1a64:a83d37e2443503b7",
+  "findings": []
+}

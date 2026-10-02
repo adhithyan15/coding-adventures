@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-230-RABOTA230",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a gardener, a cashier, a hairdresser, a security guard and a nanny.",
+  "prerequisites": []
+}

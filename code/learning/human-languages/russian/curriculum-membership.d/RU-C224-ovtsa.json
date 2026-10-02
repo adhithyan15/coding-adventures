@@ -1,0 +1,11 @@
+{
+  "id": "RU-C224-ovtsa",
+  "pathSegment": "RU-PATH-224-VESHCH224",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-224-VESHCH224",
+      "order": 4
+    }
+  ]
+}

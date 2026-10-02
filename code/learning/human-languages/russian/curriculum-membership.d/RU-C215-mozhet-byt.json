@@ -1,0 +1,11 @@
+{
+  "id": "RU-C215-mozhet-byt",
+  "pathSegment": "RU-PATH-215-PRICH215",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-215-PRICH215",
+      "order": 2
+    }
+  ]
+}

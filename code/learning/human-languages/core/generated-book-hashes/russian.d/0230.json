@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:110fb0b8c39c4439",
+  "lessonIds": [
+    "RU-C230-sadovnik",
+    "RU-C230-kassir",
+    "RU-C230-parikmakher",
+    "RU-C230-okhrannik",
+    "RU-C230-nyanya"
+  ],
+  "tex": "russian/book/chapters/ch230-gardener-cashier-hairdresser-security-guard-nanny.tex"
+}

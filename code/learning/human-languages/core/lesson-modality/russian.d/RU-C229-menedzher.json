@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C229-menedzher",
+    "language": "russian",
+    "chapter": 229,
+    "sequence": 13900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f1d5c6ee8f3f693"
+  },
+  "findings": []
+}

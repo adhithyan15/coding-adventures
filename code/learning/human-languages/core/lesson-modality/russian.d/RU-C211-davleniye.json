@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C211-davleniye",
+    "language": "russian",
+    "chapter": 211,
+    "sequence": 12480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f172653de6b696c0"
+  },
+  "findings": []
+}

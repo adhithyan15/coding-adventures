@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C206-krasit",
+    "language": "russian",
+    "chapter": 206,
+    "sequence": 12230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b98e244a93fb5948"
+  },
+  "findings": []
+}

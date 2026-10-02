@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:0bbadba510b91243",
+  "lessonIds": [
+    "RU-C210-ozhog",
+    "RU-C210-allergiya",
+    "RU-C210-stomatolog",
+    "RU-C210-plastyr",
+    "RU-C210-bint"
+  ],
+  "tex": "russian/book/chapters/ch210-burn-allergy-dentist-sticking-plaster-bandage.tex"
+}

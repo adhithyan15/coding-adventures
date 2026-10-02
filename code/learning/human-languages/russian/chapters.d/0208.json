@@ -1,0 +1,19 @@
+{
+  "chapter": 208,
+  "title": "To feel, To notice, To hear, To sniff, To touch",
+  "label": "ch:ru-to-feel-to-notice-to-hear-to-sniff-to-touch",
+  "canDo": "I can say to feel, to notice, to hear, to sniff and to touch.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C208-trogat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 208: I can say to feel, to notice, to hear, to sniff and to touch.",
+    "assesses": [
+      "RU-LEX-C208-ACT208-03",
+      "RU-LEX-C208-ACT208-04",
+      "RU-LEX-C208-ACT208-05"
+    ]
+  }
+}

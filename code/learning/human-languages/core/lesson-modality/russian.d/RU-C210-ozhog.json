@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C210-ozhog",
+    "language": "russian",
+    "chapter": 210,
+    "sequence": 12400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c2c299349a6e17c"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C206-gasit",
+  "pathSegment": "RU-PATH-206-ACT206",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-206-ACT206",
+      "order": 0
+    }
+  ]
+}

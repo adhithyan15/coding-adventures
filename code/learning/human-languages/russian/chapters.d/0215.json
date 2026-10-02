@@ -1,0 +1,19 @@
+{
+  "chapter": 215,
+  "title": "Of course, Probably, Maybe, Unfortunately, Fortunately",
+  "label": "ch:ru-of-course-probably-maybe-unfortunately-fortunately",
+  "canDo": "I can say of course, probably, maybe, unfortunately and fortunately.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "RU-C215-k-schastyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 215: I can say of course, probably, maybe, unfortunately and fortunately.",
+    "assesses": [
+      "RU-LEX-C215-PRICH215-03",
+      "RU-LEX-C215-PRICH215-04",
+      "RU-LEX-C215-PRICH215-05"
+    ]
+  }
+}

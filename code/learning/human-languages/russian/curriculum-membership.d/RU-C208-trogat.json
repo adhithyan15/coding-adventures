@@ -1,0 +1,11 @@
+{
+  "id": "RU-C208-trogat",
+  "pathSegment": "RU-PATH-208-ACT208",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-208-ACT208",
+      "order": 4
+    }
+  ]
+}

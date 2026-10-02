@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:33b100c1ad239a30",
+  "lessonIds": [
+    "RU-C214-otsyuda",
+    "RU-C214-nazad",
+    "RU-C214-vperyod",
+    "RU-C214-vverkh",
+    "RU-C214-vniz"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch214.txt",
+  "json": "russian/narration/ch214.json",
+  "textHash": "fnv1a64:d405b59de1c0b36c",
+  "jsonHash": "fnv1a64:35f531eee69a9ef3",
+  "findings": []
+}

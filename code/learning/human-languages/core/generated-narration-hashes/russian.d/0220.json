@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:7ce609aaa223c33c",
+  "lessonIds": [
+    "RU-C220-planshet",
+    "RU-C220-ekran",
+    "RU-C220-klaviatura",
+    "RU-C220-printer",
+    "RU-C220-pult"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch220.txt",
+  "json": "russian/narration/ch220.json",
+  "textHash": "fnv1a64:0d1e28ee9ce698ac",
+  "jsonHash": "fnv1a64:a42bf6bc007d5b87",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "russian",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:f2db6363a4697682",
+  "lessonIds": [
+    "RU-C221-igrushka",
+    "RU-C221-myach",
+    "RU-C221-kukla",
+    "RU-C221-vaza",
+    "RU-C221-kartina",
+    "RU-R221-first-pass-words-from-chapters-213-216",
+    "RU-R221-second-pass-words-from-chapters-217-221"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "russian/narration/ch221.txt",
+  "json": "russian/narration/ch221.json",
+  "textHash": "fnv1a64:16a18d097762b78b",
+  "jsonHash": "fnv1a64:215aa7e6c50e4df3",
+  "findings": []
+}

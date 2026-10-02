@@ -1,0 +1,19 @@
+{
+  "chapter": 225,
+  "title": "Crocodile, Giraffe, Zebra, Camel, Deer",
+  "label": "ch:ru-crocodile-giraffe-zebra-camel-deer",
+  "canDo": "I can say a crocodile, a giraffe, a zebra, a camel and a deer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C225-olen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 225: I can say a crocodile, a giraffe, a zebra, a camel and a deer.",
+    "assesses": [
+      "RU-LEX-C225-VESHCH225-03",
+      "RU-LEX-C225-VESHCH225-04",
+      "RU-LEX-C225-VESHCH225-05"
+    ]
+  }
+}

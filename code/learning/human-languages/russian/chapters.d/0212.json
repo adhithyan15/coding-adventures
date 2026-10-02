@@ -1,0 +1,19 @@
+{
+  "chapter": 212,
+  "title": "June, July, August, September, October",
+  "label": "ch:ru-june-july-august-september-october",
+  "canDo": "I can say June, July, August, September and October.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "RU-R212-second-pass-words-from-chapters-208-212",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 212: I can say June, July, August, September and October.",
+    "assesses": [
+      "RU-LEX-C212-VREMYA212-03",
+      "RU-LEX-C212-VREMYA212-04",
+      "RU-LEX-C212-VREMYA212-05"
+    ]
+  }
+}

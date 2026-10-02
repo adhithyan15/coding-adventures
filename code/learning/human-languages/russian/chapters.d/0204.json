@@ -1,0 +1,19 @@
+{
+  "chapter": 204,
+  "title": "To try, To order, To pay, To cost, To spend",
+  "label": "ch:ru-to-try-to-order-to-pay-to-cost-to-spend",
+  "canDo": "I can say to try, to order, to pay, to cost and to spend.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C204-tratit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 204: I can say to try, to order, to pay, to cost and to spend.",
+    "assesses": [
+      "RU-LEX-C204-ACT204-03",
+      "RU-LEX-C204-ACT204-04",
+      "RU-LEX-C204-ACT204-05"
+    ]
+  }
+}

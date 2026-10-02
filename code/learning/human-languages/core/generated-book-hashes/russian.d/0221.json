@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:69ee9a4a364a4221",
+  "lessonIds": [
+    "RU-C221-igrushka",
+    "RU-C221-myach",
+    "RU-C221-kukla",
+    "RU-C221-vaza",
+    "RU-C221-kartina",
+    "RU-R221-first-pass-words-from-chapters-213-216",
+    "RU-R221-second-pass-words-from-chapters-217-221"
+  ],
+  "tex": "russian/book/chapters/ch221-toy-ball-doll-vase-painting.tex"
+}

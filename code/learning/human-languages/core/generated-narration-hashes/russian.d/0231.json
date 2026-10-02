@@ -1,0 +1,21 @@
+{
+  "language": "russian",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:9ccadfc185eda87b",
+  "lessonIds": [
+    "RU-C231-kopeyka",
+    "RU-C231-rubl",
+    "RU-C231-lektsiya",
+    "RU-C231-zanyatiye",
+    "RU-C231-otsenka",
+    "RU-R231-first-pass-words-from-chapters-227-228",
+    "RU-R231-second-pass-words-from-chapters-229-231"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "russian/narration/ch231.txt",
+  "json": "russian/narration/ch231.json",
+  "textHash": "fnv1a64:e63115af78a805f7",
+  "jsonHash": "fnv1a64:c3d3e2560d83e475",
+  "findings": []
+}

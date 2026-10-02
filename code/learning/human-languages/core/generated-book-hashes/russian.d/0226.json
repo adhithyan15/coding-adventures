@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:b9f22786cd6d1498",
+  "lessonIds": [
+    "RU-C226-skripka",
+    "RU-C226-baraban",
+    "RU-C226-tanets",
+    "RU-C226-roman",
+    "RU-C226-stikhi",
+    "RU-R226-first-pass-words-from-chapters-222-223",
+    "RU-R226-second-pass-words-from-chapters-224-226"
+  ],
+  "tex": "russian/book/chapters/ch226-violin-drum-dance-novel-poems.tex"
+}

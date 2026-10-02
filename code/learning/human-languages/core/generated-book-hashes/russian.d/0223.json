@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:42e7472ebb484bc4",
+  "lessonIds": [
+    "RU-C223-fasol",
+    "RU-C223-apelsin",
+    "RU-C223-limon",
+    "RU-C223-banan",
+    "RU-C223-vinograd"
+  ],
+  "tex": "russian/book/chapters/ch223-beans-orange-lemon-banana-grapes.tex"
+}

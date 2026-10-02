@@ -1,0 +1,19 @@
+{
+  "chapter": 205,
+  "title": "To forget, To be a student, To study, To teach, To hand in",
+  "label": "ch:ru-to-forget-to-be-a-student-to-study-to-teach-to-hand-in",
+  "canDo": "I can say to forget, to be a student, to study, to teach and to hand in.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C205-sdavat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 205: I can say to forget, to be a student, to study, to teach and to hand in.",
+    "assesses": [
+      "RU-LEX-C205-ACT205-03",
+      "RU-LEX-C205-ACT205-04",
+      "RU-LEX-C205-ACT205-05"
+    ]
+  }
+}

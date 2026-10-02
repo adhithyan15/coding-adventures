@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-223-VESHCH223",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say beans, an orange, a lemon, a banana and grapes.",
+  "prerequisites": []
+}

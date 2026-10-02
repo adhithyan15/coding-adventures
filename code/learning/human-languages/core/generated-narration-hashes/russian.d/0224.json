@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:9701184aaa2530ac",
+  "lessonIds": [
+    "RU-C224-beryoza",
+    "RU-C224-yel",
+    "RU-C224-sosna",
+    "RU-C224-kust",
+    "RU-C224-ovtsa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch224.txt",
+  "json": "russian/narration/ch224.json",
+  "textHash": "fnv1a64:08e369465e6571df",
+  "jsonHash": "fnv1a64:bb193dd302361e2a",
+  "findings": []
+}

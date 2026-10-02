@@ -1,0 +1,19 @@
+{
+  "chapter": 211,
+  "title": "Muscle, Bone, Pulse, Pressure, Strength",
+  "label": "ch:ru-muscle-bone-pulse-pressure-strength",
+  "canDo": "I can say a muscle, a bone, a pulse, pressure and strength.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "RU-C211-sila",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 211: I can say a muscle, a bone, a pulse, pressure and strength.",
+    "assesses": [
+      "RU-LEX-C211-ZDOROV211-03",
+      "RU-LEX-C211-ZDOROV211-04",
+      "RU-LEX-C211-ZDOROV211-05"
+    ]
+  }
+}

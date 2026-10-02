@@ -1,0 +1,11 @@
+{
+  "id": "RU-C222-blyudo",
+  "pathSegment": "RU-PATH-222-VESHCH222",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-222-VESHCH222",
+      "order": 1
+    }
+  ]
+}

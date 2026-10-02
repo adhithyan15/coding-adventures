@@ -1,0 +1,11 @@
+{
+  "id": "RU-C209-obeshchat",
+  "pathSegment": "RU-PATH-209-ACT209",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-209-ACT209",
+      "order": 2
+    }
+  ]
+}

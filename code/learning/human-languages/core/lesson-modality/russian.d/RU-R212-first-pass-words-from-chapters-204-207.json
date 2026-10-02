@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-R212-first-pass-words-from-chapters-204-207",
+    "language": "russian",
+    "chapter": 212,
+    "sequence": 12550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e45b701129a76c5"
+  },
+  "findings": []
+}

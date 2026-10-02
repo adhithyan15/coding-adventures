@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:1fb7a66b026455c3",
+  "lessonIds": [
+    "RU-C204-probovat",
+    "RU-C204-zakazyvat",
+    "RU-C204-platit",
+    "RU-C204-stoit",
+    "RU-C204-tratit"
+  ],
+  "tex": "russian/book/chapters/ch204-to-try-to-order-to-pay-to-cost-to-spend.tex"
+}

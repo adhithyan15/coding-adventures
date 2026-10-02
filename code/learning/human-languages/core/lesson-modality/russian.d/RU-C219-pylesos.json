@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C219-pylesos",
+    "language": "russian",
+    "chapter": 219,
+    "sequence": 13070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:763333ab7df65997"
+  },
+  "findings": []
+}

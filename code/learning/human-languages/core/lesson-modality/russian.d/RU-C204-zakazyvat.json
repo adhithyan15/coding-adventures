@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C204-zakazyvat",
+    "language": "russian",
+    "chapter": 204,
+    "sequence": 12110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98163d283ad5dfc1"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C218-odinakovyy",
+  "pathSegment": "RU-PATH-218-KACH218",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-218-KACH218",
+      "order": 1
+    }
+  ]
+}

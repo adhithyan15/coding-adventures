@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:817bac2e08ae337e",
+  "lessonIds": [
+    "RU-C218-raznyy",
+    "RU-C218-odinakovyy",
+    "RU-C218-pokhozhiy",
+    "RU-C218-glavnyy",
+    "RU-C218-obychnyy"
+  ],
+  "tex": "russian/book/chapters/ch218-different-same-similar-main-ordinary.tex"
+}

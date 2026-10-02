@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:28d545e7741dc104",
+  "lessonIds": [
+    "RU-C227-shtraf",
+    "RU-C227-chelovek",
+    "RU-C227-muzhchina",
+    "RU-C227-zhenshchina",
+    "RU-C227-malchik"
+  ],
+  "tex": "russian/book/chapters/ch227-fine-person-man-woman-boy.tex"
+}

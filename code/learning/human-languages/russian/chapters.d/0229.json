@@ -1,0 +1,19 @@
+{
+  "chapter": 229,
+  "title": "Secretary, Accountant, Manager, Programmer, Lecturer",
+  "label": "ch:ru-secretary-accountant-manager-programmer-lecturer",
+  "canDo": "I can say a secretary, an accountant, a manager, a programmer and a lecturer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C229-prepodavatel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 229: I can say a secretary, an accountant, a manager, a programmer and a lecturer.",
+    "assesses": [
+      "RU-LEX-C229-RABOTA229-03",
+      "RU-LEX-C229-RABOTA229-04",
+      "RU-LEX-C229-RABOTA229-05"
+    ]
+  }
+}
