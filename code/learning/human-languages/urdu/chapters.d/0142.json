@@ -1,16 +1,20 @@
 {
   "chapter": 142,
-  "title": "To get off, To fill, To hide, To be saved, To grow",
+  "title": "To get off, To fill, To hide, To be saved, To grow, A1 timed writing",
   "label": "ch:ur-to-get-off-to-fill-to-hide-to-be-saved-to-grow",
-  "canDo": "I can say to get off, to fill, to hide, to be saved and to grow.",
+  "canDo": "I can say to get off, to fill, to hide, to be saved and to grow, then complete the A1 writing paper within 20 minutes.",
   "spineNodes": [
     "SPINE-NAME-EVERYDAY-ACTIONS"
   ],
   "payoff": {
-    "lesson": "UR-R142-second-pass-verbs",
+    "lesson": "UR-W10-a1-timed-production",
     "kind": "production",
-    "summary": "Complete the last lesson of chapter 142: I can say to get off, to fill, to hide, to be saved and to grow.",
+    "summary": "Complete the last lesson of chapter 142: I can fill a six-field form and write a 30–40 word message within the A1 paper's 20-minute limit.",
     "assesses": [
+      "UR-LEX-MERA-NAAM-HAI",
+      "UR-LEX-BOLNA",
+      "UR-LEX-C50-VERBS50-04",
+      "UR-LEX-KAHAN",
       "UR-LEX-C142-ACT142-03",
       "UR-LEX-C142-ACT142-04",
       "UR-LEX-C142-ACT142-05"

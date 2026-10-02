@@ -26,10 +26,8 @@ it("builds Urdu's first A1 controlled question without a visible model", () => {
   expect(activity?.answer).toBe("چائے کہاں ہے؟");
 });
 
-it("leaves only timed assessment production missing from Urdu A1", () => {
+it("keeps Urdu A1 complete after the controlled question's successor lands", () => {
   const urdu = languageWritingStages("urdu");
   expect(urdu.defects).toEqual([]);
-  expect(urdu.levels.find((level) => level.level === "A1")?.missingStages).toEqual([
-    "timed-assessment-production",
-  ]);
+  expect(urdu.levels.find((level) => level.level === "A1")?.missingStages).toEqual([]);
 });

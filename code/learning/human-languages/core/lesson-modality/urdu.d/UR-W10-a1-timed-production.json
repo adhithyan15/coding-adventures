@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "UR-W10-a1-timed-production",
+    "language": "urdu",
+    "chapter": 142,
+    "sequence": 7520,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:319ad1d2dacb919c",
+    "detachableSegments": [
+      "Writing — timed assessment production"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
