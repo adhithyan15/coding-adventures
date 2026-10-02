@@ -658,8 +658,42 @@ describe("plugin host cross-process contract", () => {
       kind: "stage-ref", packageName: "@example/echo", export: "echo",
     }, "cancel-capability-stream");
     await expect(stage.run({ cancelCapabilityStream: true } as never, {}, context()))
-      .resolves.toEqual({ cancelCapabilityStream: true });
+      .resolves.toEqual({ cancelCapabilityStream: true, cancelCode: null });
+    await expect(stage.run({ staleCapabilityCancel: true } as never, {}, context()))
+      .resolves.toEqual({ staleCapabilityCancel: true, cancelCode: -32001 });
+    await expect(stage.run({ badCapabilityCancel: true } as never, {}, context()))
+      .resolves.toEqual({ badCapabilityCancel: true, cancelCode: expect.any(Number) });
+    await expect(stage.run({ inactiveCapabilityCancel: true } as never, {}, context()))
+      .resolves.toEqual({ inactiveCapabilityCancel: true, cancelCode: expect.any(Number) });
     await stage.dispose?.(initContext());
+    await host.dispose();
+  });
+
+  it("fails closed when a capability stream pump ignores bounded cancellation", async () => {
+    const never = new Promise<IteratorResult<unknown>>(() => undefined);
+    const stuckStorage: StorageApi = {
+      ...storage,
+      watch() {
+        return {
+          [Symbol.asyncIterator]() {
+            return { next: () => never, return: () => never };
+          },
+        };
+      },
+    };
+    const host = await createPluginHost({
+      roots: [fixtureRoot],
+      grants: { "@example/echo": ["storage:read"] },
+      capabilityApis: { storage: stuckStorage },
+      processFactory: processFactory(),
+      disposeGracePeriodMs: 10,
+      killGracePeriodMs: 30,
+    });
+    const stage = await host.loadStage({
+      kind: "stage-ref", packageName: "@example/echo", export: "echo",
+    }, "stuck-capability-stream");
+    await expect(stage.run({ stuckCapabilityCancel: true } as never, {}, context()))
+      .rejects.toThrow();
     await host.dispose();
   });
 

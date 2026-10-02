@@ -138,7 +138,8 @@ struct Runtime<S: Stage> {
     active: Mutex<Option<Active>>,
     active_done: tokio::sync::Notify,
     inputs: Arc<Mutex<InputSenders>>,
-    capability_inputs: Arc<Mutex<HashSet<i64>>>,
+    capability_inputs: Arc<Mutex<HashMap<i64, i64>>>,
+    retiring_capability_inputs: Arc<Mutex<HashSet<i64>>>,
     last_config: Mutex<WireValue>,
 }
 
@@ -168,6 +169,7 @@ impl<S: Stage> Runtime<S> {
         ContextStreams {
             inputs: self.inputs.clone(),
             capability_inputs: self.capability_inputs.clone(),
+            retiring_capability_inputs: self.retiring_capability_inputs.clone(),
             max_buffered_values: self.options.max_buffered_stream_values,
             max_buffered_bytes: self.options.max_buffered_stream_bytes,
         }
@@ -220,19 +222,28 @@ impl<S: Stage> Runtime<S> {
                 inputs.clear();
                 drop(inputs);
                 self.capability_inputs.lock().await.clear();
+                self.retiring_capability_inputs.lock().await.clear();
             }
             return Ok(());
         }
+        if !matches!(method, "stream.value" | "stream.end" | "stream.error") {
+            return Err(ProtocolError::InvalidMessage(
+                "unknown runner notification".into(),
+            ));
+        }
         let stream_id = safe_id(params.get("streamId"), "streamId")?;
-        let sender = self
-            .inputs
-            .lock()
-            .await
-            .get(&stream_id)
-            .cloned()
-            .ok_or_else(|| {
-                ProtocolError::InvalidMessage("notification targets an unknown stream".into())
-            })?;
+        if self.is_retiring_capability_input(stream_id).await {
+            return Ok(());
+        }
+        let sender = self.inputs.lock().await.get(&stream_id).cloned();
+        let Some(sender) = sender else {
+            if self.is_retiring_capability_input(stream_id).await {
+                return Ok(());
+            }
+            return Err(ProtocolError::InvalidMessage(
+                "notification targets an unknown stream".into(),
+            ));
+        };
         match method {
             "stream.value" => {
                 let value = params.get("value").cloned().unwrap_or(WireValue::Null);
@@ -240,32 +251,36 @@ impl<S: Stage> Runtime<S> {
                 let permits = u32::try_from(size.max(1)).map_err(|_| {
                     ProtocolError::ResourceLimit("stream value exceeds configured bound".into())
                 })?;
-                let byte_permit = sender
-                    .bytes
-                    .clone()
-                    .try_acquire_many_owned(permits)
-                    .map_err(|error| match error {
-                        tokio::sync::TryAcquireError::NoPermits => ProtocolError::ResourceLimit(
+                let byte_permit = match sender.bytes.clone().try_acquire_many_owned(permits) {
+                    Ok(permit) => permit,
+                    Err(tokio::sync::TryAcquireError::NoPermits) => {
+                        return Err(ProtocolError::ResourceLimit(
                             "stream buffer exceeds configured byte bound".into(),
-                        ),
-                        tokio::sync::TryAcquireError::Closed => {
-                            ProtocolError::Closed("stream is already complete".into())
+                        ));
+                    }
+                    Err(tokio::sync::TryAcquireError::Closed) => {
+                        if self.is_retiring_capability_input(stream_id).await {
+                            return Ok(());
                         }
-                    })?;
-                sender
-                    .sender
-                    .try_send(StreamItem {
-                        value: Ok(value),
-                        _bytes: Some(byte_permit),
-                    })
-                    .map_err(|error| match error {
-                        mpsc::error::TrySendError::Full(_) => ProtocolError::ResourceLimit(
-                            "stream buffer exceeds configured value bound".into(),
-                        ),
-                        mpsc::error::TrySendError::Closed(_) => {
-                            ProtocolError::Closed("stream is already complete".into())
+                        return Err(ProtocolError::Closed("stream is already complete".into()));
+                    }
+                };
+                match sender.sender.try_send(StreamItem {
+                    value: Ok(value),
+                    _bytes: Some(byte_permit),
+                }) {
+                    Ok(()) => Ok(()),
+                    Err(mpsc::error::TrySendError::Full(_)) => Err(ProtocolError::ResourceLimit(
+                        "stream buffer exceeds configured value bound".into(),
+                    )),
+                    Err(mpsc::error::TrySendError::Closed(_)) => {
+                        if self.is_retiring_capability_input(stream_id).await {
+                            Ok(())
+                        } else {
+                            Err(ProtocolError::Closed("stream is already complete".into()))
                         }
-                    })
+                    }
+                }
             }
             "stream.error" => {
                 sender.terminal.fail(StageError::new(
@@ -283,6 +298,13 @@ impl<S: Stage> Runtime<S> {
                 "unknown runner notification".into(),
             )),
         }
+    }
+
+    async fn is_retiring_capability_input(&self, stream_id: i64) -> bool {
+        self.retiring_capability_inputs
+            .lock()
+            .await
+            .contains(&stream_id)
     }
 
     async fn handshake(&self, params: BTreeMap<String, WireValue>) -> Result<Outcome, RpcFault> {
@@ -613,16 +635,37 @@ impl<S: Stage> Runtime<S> {
     }
 
     async fn close_capability_streams(&self) {
-        let stream_ids = {
+        let streams = {
             let mut active = self.capability_inputs.lock().await;
             active.drain().collect::<Vec<_>>()
         };
-        for stream_id in stream_ids {
+        for (stream_id, owner_run_id) in streams {
+            self.retiring_capability_inputs
+                .lock()
+                .await
+                .insert(stream_id);
             self.inputs.lock().await.remove(&stream_id);
-            let _ = self
+            let cancellation = CancellationToken::new();
+            let acknowledged = self
                 .peer
-                .notify("stream.cancel", object([("streamId", stream_id.into())]))
-                .await;
+                .request_cancellable(
+                    "stream.cancel",
+                    object([
+                        ("streamId", owner_run_id.into()),
+                        ("capabilityStreamId", stream_id.into()),
+                    ]),
+                    &cancellation,
+                )
+                .await
+                .is_ok();
+            if acknowledged {
+                self.retiring_capability_inputs
+                    .lock()
+                    .await
+                    .remove(&stream_id);
+            } else {
+                self.peer.stop();
+            }
         }
     }
 }
@@ -650,7 +693,8 @@ pub async fn run_plugin<S: Stage>(stage: S, options: RunnerOptions) -> Result<()
         active: Mutex::new(None),
         active_done: tokio::sync::Notify::new(),
         inputs: Arc::new(Mutex::new(HashMap::new())),
-        capability_inputs: Arc::new(Mutex::new(HashSet::new())),
+        capability_inputs: Arc::new(Mutex::new(HashMap::new())),
+        retiring_capability_inputs: Arc::new(Mutex::new(HashSet::new())),
         last_config: Mutex::new(WireValue::Null),
     });
     let request_limit = Arc::new(Semaphore::new(options.max_inflight_requests));
@@ -790,4 +834,95 @@ async fn termination_signal() {
 #[cfg(not(unix))]
 async fn termination_signal() {
     let _ = tokio::signal::ctrl_c().await;
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{StageMetadata, StageOutput};
+
+    struct TestStage;
+
+    #[async_trait::async_trait]
+    impl Stage for TestStage {
+        type Input = WireValue;
+        type Output = WireValue;
+
+        fn metadata(&self) -> StageMetadata {
+            StageMetadata::new(
+                "@forme/retirement-race",
+                "1.0.0",
+                1,
+                "ContentNode",
+                "ContentNode",
+                std::iter::empty::<&str>(),
+            )
+        }
+
+        async fn run(
+            &self,
+            _input: StageInput<Self::Input>,
+            _config: WireValue,
+            _context: &StageContext,
+        ) -> Result<StageOutput<Self::Output>, StageError> {
+            Ok(StageOutput::Single(WireValue::Null))
+        }
+    }
+
+    fn test_runtime() -> Arc<Runtime<TestStage>> {
+        let stage = Arc::new(TestStage);
+        Arc::new(Runtime {
+            metadata: stage.metadata(),
+            stage,
+            options: RunnerOptions::default(),
+            peer: Peer::new(4096, 4, 4),
+            phase: Mutex::new(Phase::Initialized),
+            control: Mutex::new(()),
+            active: Mutex::new(None),
+            active_done: tokio::sync::Notify::new(),
+            inputs: Arc::new(Mutex::new(HashMap::new())),
+            capability_inputs: Arc::new(Mutex::new(HashMap::new())),
+            retiring_capability_inputs: Arc::new(Mutex::new(HashSet::new())),
+            last_config: Mutex::new(WireValue::Object(BTreeMap::new())),
+        })
+    }
+
+    #[tokio::test]
+    async fn in_flight_notification_tolerates_retirement_between_lookup_locks() {
+        let runtime = test_runtime();
+        let (sender, _receiver) = mpsc::channel(1);
+        let mut inputs = runtime.inputs.lock().await;
+        inputs.insert(
+            701,
+            InputSender {
+                sender,
+                bytes: Arc::new(Semaphore::new(128)),
+                max_bytes: 128,
+                terminal: Arc::new(StreamTerminal::new()),
+            },
+        );
+        let retirement = runtime.retiring_capability_inputs.lock().await;
+        let task_runtime = runtime.clone();
+        let notification = tokio::spawn(async move {
+            task_runtime
+                .notification(
+                    "stream.value",
+                    object([("streamId", 701.into()), ("value", "late".into())]),
+                )
+                .await
+        });
+
+        tokio::task::yield_now().await;
+        drop(retirement);
+        let mut retirement = runtime.retiring_capability_inputs.lock().await;
+        retirement.insert(701);
+        inputs.remove(&701);
+        drop(inputs);
+        drop(retirement);
+
+        assert!(notification
+            .await
+            .expect("notification task panicked")
+            .is_ok());
+    }
 }

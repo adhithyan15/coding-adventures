@@ -141,19 +141,47 @@ async function handle(message) {
       send({ jsonrpc: "2.0", method: "stream.start", params: { streamId: 999 } });
       return;
     }
-    if (input?.duplicateCapabilityStream === true || input?.cancelCapabilityStream === true) {
+    if (input?.badCapabilityCancel === true || input?.inactiveCapabilityCancel === true) {
+      const reply = await request("stream.cancel", {
+        streamId: message.params.streamId,
+        capabilityStreamId: input.badCapabilityCancel ? "bad" : 999,
+      });
+      respond(message.id, {
+        kind: "single",
+        value: { ...input, cancelCode: reply?.error?.code ?? null },
+      });
+      return;
+    }
+    if (input?.duplicateCapabilityStream === true || input?.cancelCapabilityStream === true
+        || input?.staleCapabilityCancel === true || input?.stuckCapabilityCancel === true) {
       const reply = await request("ctx.storage.watch", {
         path: "posts",
         streamId: message.params.streamId,
       });
       const capabilityStreamId = reply.result.streamId;
-      const method = input.cancelCapabilityStream ? "stream.cancel" : "stream.start";
-      send({ jsonrpc: "2.0", method, params: { streamId: capabilityStreamId } });
+      let cancelled = null;
+      if (input.stuckCapabilityCancel) {
+        send({ jsonrpc: "2.0", method: "stream.start", params: { streamId: capabilityStreamId } });
+        cancelled = await request("stream.cancel", {
+          streamId: message.params.streamId,
+          capabilityStreamId,
+        });
+      } else if (input.cancelCapabilityStream || input.staleCapabilityCancel) {
+        cancelled = await request("stream.cancel", {
+          streamId: message.params.streamId + (input.staleCapabilityCancel ? 1 : 0),
+          capabilityStreamId,
+        });
+      } else {
+        send({ jsonrpc: "2.0", method: "stream.start", params: { streamId: capabilityStreamId } });
+      }
       if (input.duplicateCapabilityStream) {
         send({ jsonrpc: "2.0", method: "stream.start", params: { streamId: capabilityStreamId } });
         return;
       }
-      respond(message.id, { kind: "single", value: input });
+      respond(message.id, {
+        kind: "single",
+        value: { ...input, cancelCode: cancelled?.error?.code ?? null },
+      });
       return;
     }
     if (input?.invalidLog === true) {

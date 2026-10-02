@@ -64,6 +64,7 @@ interface ResolvedOptions {
 
 interface CapabilityStream {
   readonly iterator: AsyncIterator<unknown>;
+  readonly ownerRunId: number;
   started: boolean;
   cancelled: boolean;
   completed: boolean;
@@ -536,12 +537,13 @@ class PluginSession {
             expectedStreamId: this.activeRunId,
           });
         }
+        if (method === "stream.cancel") return this.cancelCapabilityStreamRequest(request);
         return mediateCapabilityRequest(
           method,
           request,
           capabilityContext(this.activeContext, this.options.capabilityApis),
           this.grants,
-          source => this.openCapabilityStream(source),
+          source => this.openCapabilityStream(source, request.streamId as number),
         );
       },
       onNotification: (method, params) => this.onNotification(method, params),
@@ -631,7 +633,7 @@ class PluginSession {
       queue.push(params.value);
       return;
     }
-    if (method === "stream.start" || method === "stream.cancel") {
+    if (method === "stream.start") {
       if (!Number.isSafeInteger(params.streamId)) {
         throw new PluginHostError("PROTOCOL_VIOLATION", `${method} requires a safe streamId`);
       }
@@ -640,15 +642,14 @@ class PluginSession {
       if (!stream) {
         throw new PluginHostError("PROTOCOL_VIOLATION", `${method} targets an inactive capability stream`);
       }
-      if (method === "stream.start") {
-        if (stream.started) {
-          throw new PluginHostError("PROTOCOL_VIOLATION", "capability stream was started more than once");
-        }
-        stream.started = true;
-        stream.pump = this.pumpCapabilityStream(streamId, stream);
-      } else {
-        await this.closeCapabilityStream(streamId, stream);
+      if (stream.ownerRunId !== this.activeRunId) {
+        throw new PluginHostError("PROTOCOL_VIOLATION", "capability stream belongs to a different run");
       }
+      if (stream.started) {
+        throw new PluginHostError("PROTOCOL_VIOLATION", "capability stream was started more than once");
+      }
+      stream.started = true;
+      stream.pump = this.pumpCapabilityStream(streamId, stream);
       return;
     }
     if (method === "log") {
@@ -713,7 +714,7 @@ class PluginSession {
     if (kill) this.process?.signal("SIGKILL");
   }
 
-  private openCapabilityStream(source: AsyncIterable<unknown>): Readonly<{
+  private openCapabilityStream(source: AsyncIterable<unknown>, ownerRunId: number): Readonly<{
     kind: "stream-handle";
     streamId: number;
   }> {
@@ -726,12 +727,34 @@ class PluginSession {
     const streamId = this.allocateStreamId();
     this.capabilityStreams.set(streamId, {
       iterator: source[Symbol.asyncIterator](),
+      ownerRunId,
       started: false,
       cancelled: false,
       completed: false,
       pump: null,
     });
     return Object.freeze({ kind: "stream-handle", streamId });
+  }
+
+  private async cancelCapabilityStreamRequest(params: Record<string, unknown>): Promise<null> {
+    if (!Number.isSafeInteger(params.capabilityStreamId)) {
+      throw new PluginHostError("PROTOCOL_VIOLATION", "stream.cancel requires a safe capabilityStreamId");
+    }
+    const streamId = params.capabilityStreamId as number;
+    const stream = this.capabilityStreams.get(streamId);
+    if (!stream || stream.ownerRunId !== params.streamId) {
+      throw new PluginHostError("PROTOCOL_VIOLATION", "stream.cancel targets an inactive capability stream");
+    }
+    await this.closeCapabilityStream(streamId, stream);
+    if (stream.pump && !await settlesWithin(stream.pump, this.options.disposeGracePeriodMs)) {
+      const error = new PluginHostError(
+        "RESOURCE_LIMIT_EXCEEDED",
+        "capability stream pump did not stop within its cancellation bound",
+      );
+      this.fatal(error);
+      throw error;
+    }
+    return null;
   }
 
   private async pumpCapabilityStream(streamId: number, stream: CapabilityStream): Promise<void> {

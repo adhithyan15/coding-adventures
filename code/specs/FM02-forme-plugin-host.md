@@ -1193,7 +1193,10 @@ materialize the potentially unbounded iterator. The runner registers a bounded
 receiver before sending `stream.start { streamId }`, which prevents a value from
 racing ahead of receiver registration. The host then emits `stream.value`,
 followed by exactly one `stream.end` or `stream.error`. Early iterator return
-sends `stream.cancel { streamId }`. Run cancellation, completion, protocol
+sends an acknowledged `stream.cancel { streamId: activeRunId,
+capabilityStreamId }` request. The runner retains a bounded tombstone and
+discards already queued frames for that capability stream until the host
+acknowledges that its pump has stopped. Run cancellation, completion, protocol
 failure, and session disposal close every outstanding host iterator even when a
 hostile plugin never starts or cancels it. Hosts admit at most 64 outstanding
 capability streams per active run; runner value/byte bounds and wire
@@ -2350,6 +2353,7 @@ FM02 as a whole is complete when:
 | `ctx.storage.write` | `{ path, bytes, streamId }` | `null` | `storage:write` |
 | `ctx.storage.remove` | `{ path, streamId }` | `null` | `storage:write` |
 | `ctx.storage.watch` | `{ path, streamId }` | `{ kind: "stream-handle", streamId }` | `storage:read` |
+| `stream.cancel` | `{ streamId, capabilityStreamId }` | `null` | active-run ownership of the capability handle |
 | `ctx.network.fetch` | `{ url, init?, streamId }` | `FetchResult` | `network:<host>` |
 | `ctx.env.get` | `{ name, streamId }` | `string \| null` | `env:<name>` |
 | `ctx.time.nowMs` | `{ streamId }` | `number` | `system:time:wallclock` |
@@ -2365,7 +2369,6 @@ FM02 as a whole is complete when:
 | `stream.end` | `{ streamId }` | either |
 | `stream.error` | `{ streamId, error }` | either |
 | `stream.start` | `{ streamId }` | plugin → host, capability streams only |
-| `stream.cancel` | `{ streamId }` | plugin → host, capability streams only |
 | `$/cancelRequest` | `{ id }` | host → plugin |
 
 ### B.4 Error codes

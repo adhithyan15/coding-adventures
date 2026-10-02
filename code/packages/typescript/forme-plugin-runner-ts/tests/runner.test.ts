@@ -179,9 +179,19 @@ describe("TypeScript plugin runner", () => {
           streamId: params.streamId,
           value: { path: "posts/a.md", kind: "modified" },
         });
+        for (let index = 0; index < 8; index += 1) {
+          driver.notify("stream.value", {
+            streamId: params.streamId,
+            value: { path: `posts/late-${index}.md`, kind: "modified" },
+          });
+        }
       }
     };
     driver.handler = async (method, params) => {
+      if (method === "stream.cancel") {
+        expect(params).toEqual({ streamId: 11, capabilityStreamId: 701 });
+        return null;
+      }
       const replies: Record<string, unknown> = {
         "ctx.storage.read": { bytes: Buffer.from("hello").toString("base64") },
         "ctx.storage.write": null,
@@ -215,9 +225,6 @@ describe("TypeScript plugin runner", () => {
     });
     expect(driver.notifications).toContainEqual(expect.objectContaining({
       method: "log", params: { level: "info", message: "runner fixture", fields: { ok: true } },
-    }));
-    expect(driver.notifications).toContainEqual(expect.objectContaining({
-      method: "stream.cancel", params: { streamId: 701 },
     }));
     watchResult = {};
     await expect(driver.request("stage.run", {

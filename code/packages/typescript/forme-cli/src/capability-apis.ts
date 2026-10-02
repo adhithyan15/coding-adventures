@@ -194,7 +194,8 @@ class ProjectStorageWatchIterator implements AsyncIterator<StorageChange> {
   private async toStorageChange(event: RawWatchEvent): Promise<StorageChange | null> {
     let portablePath = this.path;
     let target = this.target;
-    if (this.directory && event.filename !== null && event.filename !== basename(this.target)) {
+    if (this.directory) {
+      if (event.filename === null) return null;
       if (!portableWatchSegment(event.filename)) return null;
       portablePath = storageJoin(this.path, event.filename);
       target = resolve(this.target, event.filename);
@@ -205,18 +206,29 @@ class ProjectStorageWatchIterator implements AsyncIterator<StorageChange> {
       if (error instanceof TypeError && /host-reserved/.test(error.message)) return null;
       throw error;
     }
-    if (event.eventType === "change") {
-      return Object.freeze({ path: portablePath, kind: "modified" });
-    }
-    const exists = await lstat(target).then(
-      info => !info.isSymbolicLink(),
+    const info = await lstat(target).then(
+      value => value,
       error => {
-        if (isErrno(error, "ENOENT")) return false;
+        if (isErrno(error, "ENOENT")) return null;
         throw error;
       },
     );
-    if (exists && await isReservedPath(target, this.reservedRoots)) return null;
-    return Object.freeze({ path: portablePath, kind: exists ? "added" : "removed" });
+    if (info !== null) {
+      try {
+        if (await isReservedPath(target, this.reservedRoots)) return null;
+      } catch (error) {
+        // Existing links and reparse points must not reveal ambiguous aliases.
+        // A resolvable link is checked canonically above; an unresolved one is
+        // hidden rather than reported as an ordinary storage change.
+        if (info.isSymbolicLink()) return null;
+        throw error;
+      }
+    }
+    if (info === null && this.directory && event.filename === basename(this.target)) return null;
+    if (event.eventType === "change") {
+      return info === null ? null : Object.freeze({ path: portablePath, kind: "modified" });
+    }
+    return Object.freeze({ path: portablePath, kind: info === null ? "removed" : "added" });
   }
 
   private close(): void {

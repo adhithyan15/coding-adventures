@@ -3,7 +3,7 @@ use crate::runner::{InputSender, InputSenders};
 use crate::stage::{InputStream, StreamTerminal};
 use crate::{CancellationToken, StageError, WireValue};
 use coding_adventures_base64::{decode, encode, STANDARD};
-use std::collections::{BTreeMap, HashSet};
+use std::collections::{BTreeMap, HashMap, HashSet};
 use std::sync::Arc;
 use std::time::Instant;
 use tokio::sync::{mpsc, Mutex, Semaphore};
@@ -13,7 +13,8 @@ const MAX_MEDIATED_BYTES: usize = 1024 * 1024;
 #[derive(Clone)]
 pub(crate) struct ContextStreams {
     pub(crate) inputs: Arc<Mutex<InputSenders>>,
-    pub(crate) capability_inputs: Arc<Mutex<HashSet<i64>>>,
+    pub(crate) capability_inputs: Arc<Mutex<HashMap<i64, i64>>>,
+    pub(crate) retiring_capability_inputs: Arc<Mutex<HashSet<i64>>>,
     pub(crate) max_buffered_values: usize,
     pub(crate) max_buffered_bytes: usize,
 }
@@ -25,7 +26,8 @@ pub struct StageContext {
     pub cancellation: CancellationToken,
     pub config: WireValue,
     inputs: Arc<Mutex<InputSenders>>,
-    capability_inputs: Arc<Mutex<HashSet<i64>>>,
+    capability_inputs: Arc<Mutex<HashMap<i64, i64>>>,
+    retiring_capability_inputs: Arc<Mutex<HashSet<i64>>>,
     max_buffered_stream_values: usize,
     max_buffered_stream_bytes: usize,
 }
@@ -45,6 +47,7 @@ impl StageContext {
             config,
             inputs: streams.inputs,
             capability_inputs: streams.capability_inputs,
+            retiring_capability_inputs: streams.retiring_capability_inputs,
             max_buffered_stream_values: streams.max_buffered_values,
             max_buffered_stream_bytes: streams.max_buffered_bytes,
         }
@@ -239,26 +242,29 @@ impl StorageApi<'_> {
         }
         let (sender, receiver) = mpsc::channel(self.0.max_buffered_stream_values);
         let terminal = Arc::new(StreamTerminal::new());
-        let mut inputs = self.0.inputs.lock().await;
-        if inputs.contains_key(&stream_id) {
-            return Err(StageError::new(
-                "PLUGIN_PROTOCOL_ERROR",
-                "storage.watch returned a duplicate stream handle",
-            ));
+        {
+            let mut inputs = self.0.inputs.lock().await;
+            if inputs.contains_key(&stream_id) {
+                return Err(StageError::new(
+                    "PLUGIN_PROTOCOL_ERROR",
+                    "storage.watch returned a duplicate stream handle",
+                ));
+            }
+            inputs.insert(
+                stream_id,
+                InputSender {
+                    sender,
+                    bytes: Arc::new(Semaphore::new(self.0.max_buffered_stream_bytes)),
+                    max_bytes: self.0.max_buffered_stream_bytes,
+                    terminal: terminal.clone(),
+                },
+            );
         }
-        let mut capability_inputs = self.0.capability_inputs.lock().await;
-        inputs.insert(
-            stream_id,
-            InputSender {
-                sender,
-                bytes: Arc::new(Semaphore::new(self.0.max_buffered_stream_bytes)),
-                max_bytes: self.0.max_buffered_stream_bytes,
-                terminal: terminal.clone(),
-            },
-        );
-        capability_inputs.insert(stream_id);
-        drop(capability_inputs);
-        drop(inputs);
+        self.0
+            .capability_inputs
+            .lock()
+            .await
+            .insert(stream_id, self.0.stream_id);
         let start = object([("streamId", stream_id.into())]);
         if self
             .0
@@ -271,6 +277,7 @@ impl StorageApi<'_> {
                 self.0.peer.clone(),
                 self.0.inputs.clone(),
                 self.0.capability_inputs.clone(),
+                self.0.retiring_capability_inputs.clone(),
                 stream_id,
                 false,
             )
@@ -285,6 +292,7 @@ impl StorageApi<'_> {
             peer: self.0.peer.clone(),
             inputs: self.0.inputs.clone(),
             capability_inputs: self.0.capability_inputs.clone(),
+            retiring_capability_inputs: self.0.retiring_capability_inputs.clone(),
             stream_id,
             closed: false,
         })
@@ -305,7 +313,8 @@ pub struct StorageWatch {
     stream: InputStream<WireValue>,
     peer: Arc<Peer>,
     inputs: Arc<Mutex<InputSenders>>,
-    capability_inputs: Arc<Mutex<HashSet<i64>>>,
+    capability_inputs: Arc<Mutex<HashMap<i64, i64>>>,
+    retiring_capability_inputs: Arc<Mutex<HashSet<i64>>>,
     stream_id: i64,
     closed: bool,
 }
@@ -328,6 +337,7 @@ impl StorageWatch {
             self.peer.clone(),
             self.inputs.clone(),
             self.capability_inputs.clone(),
+            self.retiring_capability_inputs.clone(),
             self.stream_id,
             true,
         )
@@ -344,10 +354,19 @@ impl Drop for StorageWatch {
         let peer = self.peer.clone();
         let inputs = self.inputs.clone();
         let capability_inputs = self.capability_inputs.clone();
+        let retiring_capability_inputs = self.retiring_capability_inputs.clone();
         let stream_id = self.stream_id;
         if let Ok(runtime) = tokio::runtime::Handle::try_current() {
             runtime.spawn(async move {
-                release_capability_stream(peer, inputs, capability_inputs, stream_id, true).await;
+                release_capability_stream(
+                    peer,
+                    inputs,
+                    capability_inputs,
+                    retiring_capability_inputs,
+                    stream_id,
+                    true,
+                )
+                .await;
             });
         }
     }
@@ -356,18 +375,39 @@ impl Drop for StorageWatch {
 async fn release_capability_stream(
     peer: Arc<Peer>,
     inputs: Arc<Mutex<InputSenders>>,
-    capability_inputs: Arc<Mutex<HashSet<i64>>>,
+    capability_inputs: Arc<Mutex<HashMap<i64, i64>>>,
+    retiring_capability_inputs: Arc<Mutex<HashSet<i64>>>,
     stream_id: i64,
     notify: bool,
 ) {
-    if !capability_inputs.lock().await.remove(&stream_id) {
+    let was_active = {
+        let mut active = capability_inputs.lock().await;
+        active.remove(&stream_id)
+    };
+    let Some(owner_run_id) = was_active else {
         return;
-    }
+    };
+    retiring_capability_inputs.lock().await.insert(stream_id);
     inputs.lock().await.remove(&stream_id);
+    let mut acknowledged = true;
     if notify {
-        let _ = peer
-            .notify("stream.cancel", object([("streamId", stream_id.into())]))
-            .await;
+        let cancellation = CancellationToken::new();
+        acknowledged = peer
+            .request_cancellable(
+                "stream.cancel",
+                object([
+                    ("streamId", owner_run_id.into()),
+                    ("capabilityStreamId", stream_id.into()),
+                ]),
+                &cancellation,
+            )
+            .await
+            .is_ok();
+    }
+    if acknowledged {
+        retiring_capability_inputs.lock().await.remove(&stream_id);
+    } else {
+        peer.stop();
     }
 }
 

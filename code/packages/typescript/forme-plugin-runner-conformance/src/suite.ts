@@ -68,6 +68,7 @@ async function capabilityMediation(command: RunnerCommand): Promise<void> {
       "ctx.storage.stat": { size: 5, mtimeMs: 0, type: "file" },
       "ctx.storage.list": [{ path: "posts/a.md", type: "file" }],
       "ctx.storage.watch": { kind: "stream-handle", streamId: watchStreamId },
+      "stream.cancel": null,
       "ctx.storage.remove": null,
       "ctx.env.get": "allowed",
       "ctx.time.nowMs": 42,
@@ -97,6 +98,12 @@ async function capabilityMediation(command: RunnerCommand): Promise<void> {
       streamId: watchStreamId,
       value: { path: "posts/a.md", kind: "modified" },
     });
+    for (let index = 0; index < 3; index += 1) {
+      session.notify("stream.value", {
+        streamId: watchStreamId,
+        value: { path: `posts/late-${index}.md`, kind: "modified" },
+      });
+    }
     const result = await run;
     match(result, {
       kind: "single",
@@ -132,15 +139,17 @@ async function capabilityMediation(command: RunnerCommand): Promise<void> {
       call("ctx.filesystem.readAbsolute", { path: "/safe/a" }),
       call("ctx.filesystem.readAbsolute", { path: "/safe/a" }),
     ];
-    equal(calls, expected, "mediated capability call order");
+    equal(calls.filter(entry => entry.method !== "stream.cancel"), expected, "mediated capability call order");
+    equal(calls.filter(entry => entry.method === "stream.cancel"), [
+      call("stream.cancel", { capabilityStreamId: watchStreamId }),
+    ], "acknowledged storage watch cancellation");
     equal(session.notifications.filter(entry => entry.method === "log"), [{
       jsonrpc: "2.0", method: "log",
       params: { level: "info", message: "runner fixture", fields: { ok: true } },
     }], "wire logger notification");
-    equal(session.notifications.filter(entry => entry.method === "stream.start" || entry.method === "stream.cancel"), [
+    equal(session.notifications.filter(entry => entry.method === "stream.start"), [
       { jsonrpc: "2.0", method: "stream.start", params: { streamId: watchStreamId } },
-      { jsonrpc: "2.0", method: "stream.cancel", params: { streamId: watchStreamId } },
-    ], "storage watch lifecycle notifications");
+    ], "storage watch lifecycle notification");
     await expectCapabilityDenied(session.request("stage.run", {
       input: { operation: "capabilityDenied" }, config: {}, streamId: 12,
     }));

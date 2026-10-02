@@ -52,6 +52,32 @@ async def test_stream_failure_discards_buffered_values_and_wakes_reader() -> Non
         await blocked
 
 
+async def test_retiring_capability_stream_wakes_and_discards_blocked_push() -> None:
+    @define_stage(
+        name="@example/retiring-stream",
+        version="1.0.0",
+        api_version=1,
+        consumes="ContentNode",
+        produces="ContentNode",
+        capabilities=[],
+    )
+    async def stage(value: Any, _config: Any, _context: Any) -> Any:
+        return value
+
+    state = RunnerState(stage, "retiring-stream", None, 1, 128)
+    stream = StreamInput(1, 128)
+    state.inputs[701] = stream
+    await state.notification("stream.value", {"streamId": 701, "value": {"first": True}})
+    blocked = asyncio.create_task(
+        state.notification("stream.value", {"streamId": 701, "value": {"late": True}})
+    )
+    await asyncio.sleep(0)
+    assert not blocked.done()
+    state.retiring_capability_input_ids.add(701)
+    await stream.end()
+    await blocked
+
+
 async def test_peer_budgets_outgoing_work_and_rejects_boolean_error_codes() -> None:
     peer = _peer(max_outgoing_notifications=1)
     peer.notify_nowait("log", {"message": "one"})
