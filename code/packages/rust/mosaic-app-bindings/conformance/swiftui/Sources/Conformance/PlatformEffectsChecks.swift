@@ -87,6 +87,15 @@ private func checkRouting() {
   check(mosaicRoutesToPlatform("other", appKinds: ["importAnki"]) == nil, "unowned custom")
 }
 
+private func checkStartLocation() {
+  // UI59 §2: a "pictures only" open starts in the Pictures folder.
+  check(mosaicOnlyImages(["png", "jpg", "jpeg"]), "images start in Pictures")
+  check(mosaicOnlyImages(["svg"]), "svg is an image")
+  check(!mosaicOnlyImages(["png", "txt"]), "mixed types keep the default start")
+  check(!mosaicOnlyImages([]), "any file keeps the default start")
+  check(!mosaicOnlyImages(["pdf"]), "a document keeps the default start")
+}
+
 private func checkSave(in directory: URL) {
   let target = directory.appendingPathComponent("journal-2026-09-25.json")
   let dialogs = FakeDialogs(target)
@@ -318,6 +327,7 @@ func runPlatformEffectsChecks() {
   defer { try? FileManager.default.removeItem(at: directory) }
 
   checkRouting()
+  checkStartLocation()
   checkSave(in: directory)
   checkSaveRefusals(in: directory)
   checkOpen(in: directory)
