@@ -1,6 +1,7 @@
 # FM05 — Forme Interactivity IR
 
-> **Status:** Normative v1 contract active in FM-B059.
+> **Status:** Normative v1 contract implemented; per-page composition is active
+> in FM-B060.
 > **Scope:** The backend-neutral state, predicate, binding, event-handler, and
 > island representation carried alongside Content IR and Style IR.
 > **Delivery owner:** FM-B059–FM-B061 and the FM-B013 completion milestone in
@@ -11,9 +12,9 @@
 | Surface | Status | Evidence / next step |
 |---|---|---|
 | Kernel kind name | Placeholder implemented | FM01 and `forme-types` reserve the `Interactivity` kind. |
-| Behavior/event/state schema | Active | FM-B059 implements this contract in `forme-interactivity-ir`. |
-| Bounded validation and canonical bytes | Active | FM-B059 rejects hostile values and emits deterministic JSON. |
-| Per-page island tracking | Blocked | FM-B060 follows the validated contract and records exact `usedIslands`. |
+| Behavior/event/state schema | Implemented | FM-B059 implements this contract in `forme-interactivity-ir`. |
+| Bounded validation and canonical bytes | Implemented | FM-B059 rejects hostile values and emits deterministic JSON. |
+| Per-page island tracking | Active | FM-B060 composes validated documents with rendered pages and records exact `usedIslands`. |
 | Progressive-enhancement proof | Blocked | FM-B061 ships a live fallback plus one bounded enhancement. |
 | Non-web degradation | Pending | FM-B017 owns explicit terminal/print/email behavior. |
 
@@ -249,6 +250,24 @@ FM-B060 must emit exactly the selected `IslandId` values in `usedIslands` and
 the deploy route. A page with no selected declarations emits no island module,
 loader, inline program, or empty runtime shell.
 
+Before selection, the web renderer resolves every element reference against
+the rendered body. A referenced ID MUST occur exactly once. Missing and
+ambiguous IDs are errors; text that merely resembles markup inside a comment or
+raw-text element does not satisfy a reference. Selection preserves declaration
+order.
+
+The product config grants executable-output authority explicitly and supplies a
+reviewed `(packageName, export)` to script-asset allowlist. Every entry binds
+the exact asset identity and SHA-256 bytes; it does not claim that this stage
+performed FM02 installation or grant authentication. The renderer matches
+declarations against that allowlist without importing or inspecting the module.
+It records the selected script asset and digest beside each `IslandId`. The
+static-site emitter recomputes the digest, writes only referenced script assets,
+adds one external `type="module"` tag per distinct selected module asset, and
+copies the exact `IslandId` list to the deploy route. Missing authority, an
+absent or duplicate mapping, a digest mismatch, a non-script asset, or a
+module-use list that differs from `usedIslands` is an error.
+
 ## 10. Canonical serialization
 
 `canonicalInteractivityDocument(document)` returns UTF-8 JSON text with:
@@ -319,11 +338,13 @@ is client behavior and cannot access host storage. Navigation is data validated
 against §8. Dispatch is document-local. No effect can fetch, read a file,
 inspect environment variables, spawn a process, or execute source text.
 
-Island code remains executable plugin code. Its package is discovered,
-installed, granted, launched, and sandboxed through FM02/FM07. Interactivity IR
-does not confer capabilities and cannot widen the island manifest's effective
-grant set. Backends must not resolve a package path or import an island before
-the product plugin boundary has authenticated the exact selected package.
+Island code remains executable code. A browser module executes with the page
+origin's browser authority; FM-B060 does not launch it in the FM02/FM07 native
+plugin sandbox or enforce plugin grants. FM02 installation may provide upstream
+provenance in a future product integration, but the implemented boundary is the
+explicit product-config allowlist of reviewed executable bytes. Interactivity
+IR itself does not confer authority. Backends must not resolve a package path,
+import an island, or emit its module before that explicit authorization.
 
 ## 13. Delivery plan
 
