@@ -15464,11 +15464,10 @@ changelog paths.
 ### Ruby and Swift barcode-layout v1 adoption PR
 
 PR #16361 records the complete Ruby and Swift adoption without changing
-either legacy API. Implementation revision
-`e32c3e4b11f14de694b3358f3045b15632b255f3` binds Ruby package tree
+either legacy API. Durable squash-merge revision
+`02e8b7fc6dc0156808acf3d0395974c13ff6aa75` binds Ruby package tree
 `aafff095367353ae3da9738dfd82198c63b7913f` and Swift package tree
-`0d3e662c9d3a0b96ef08465c8b64906bca3a6a4c`; the evidence-only follow-up
-commit leaves both package roots untouched. The registry now reports both
+`0d3e662c9d3a0b96ef08465c8b64906bca3a6a4c`. The registry now reports both
 lanes conformant while keeping Elixir and Lua explicitly pending adoption.
 
 Ruby completed 2 native runs with 5 assertions and 64 conformance runs with

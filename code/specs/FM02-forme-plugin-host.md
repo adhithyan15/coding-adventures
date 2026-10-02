@@ -33,7 +33,7 @@
 | Python runner | Implemented | FM-B054 provides the first non-TypeScript SDK and passes the complete shared corpus without fixture changes. |
 | Rust runner | Implemented | FM-B055 provides typed stage/context APIs, bounded protocol concurrency and streams, and passes the complete shared corpus without fixture changes. |
 | OS sandbox profiles | Implemented | FM-B052 ships exact-snapshot Linux, macOS, and Windows launchers with platform CI. |
-| Install/trust CLI | Active | FM-B015 integrates the completed installer, authority stores, runners, and sandbox factories into FM07. |
+| Install/trust CLI | Active | FM-B056 composes the completed installer and authority stores into FM07; FM-B057 adds runtime/sandbox product composition. |
 
 ---
 

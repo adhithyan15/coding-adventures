@@ -6,8 +6,8 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "packaged CLI specification, project Forme config/content, deploy manifests/content stores/target configs, and local package manifests",
-      "justification": "Loads the declarative CLI Builder specification, selected project and deploy inputs, and local file dependencies for builds, deploy, watch mode, and the repository bootstrap helper."
+      "target": "packaged CLI specification, project Forme config/content, deploy inputs, user plugin trust store, and one explicitly selected local plugin package",
+      "justification": "Loads the declarative CLI Builder specification, selected project/deploy inputs, and bounded local plugin snapshot plus persisted trust decisions."
     },
     {
       "category": "fs",
@@ -24,20 +24,20 @@
     {
       "category": "fs",
       "action": "delete",
-      "target": "configured cache and DeployArtifact output directories beneath the project root",
-      "justification": "Implements the explicit forme clean command with containment checks."
+      "target": "configured cache/DeployArtifact paths and identity-checked plugin installation transaction paths beneath the project root",
+      "justification": "Implements containment-checked forme clean and removes only installer stages, backups, and locks owned by the current transaction."
     },
     {
       "category": "fs",
       "action": "write",
-      "target": "configured project cache, build-to-deploy input, selected filesystem deploy root, and user-selected deterministic report",
-      "justification": "Persists cache entries, materializes explicit deploy inputs, atomically publishes the selected filesystem target, and writes an optional real-deploy report."
+      "target": "configured project cache, build-to-deploy input, selected filesystem deploy root, project forme-plugins root, and user-selected deterministic report",
+      "justification": "Persists cache entries, deploy state and reports, and atomically publishes a reviewed plugin snapshot with host-owned grants."
     },
     {
       "category": "fs",
       "action": "create",
-      "target": "configured project cache, deploy-input staging, filesystem publication transaction paths, and report parents",
-      "justification": "Creates cache shards and the explicitly selected staging/publication/report paths."
+      "target": "configured project cache, deploy-input staging, filesystem/plugin publication transaction paths, and report parents",
+      "justification": "Creates cache shards and explicitly selected deploy, plugin-install, and report transaction paths."
     },
     {
       "category": "net",
@@ -70,5 +70,5 @@
       "justification": "Prints command summaries and stable machine-coded diagnostics for terminal and CI consumers."
     }
   ],
-  "justification": "The headless CLI loads project and deploy inputs, creates explicit build/deploy state, publishes only through the selected filesystem or GitHub Pages adapter, handles cooperative process cancellation, and provides the repository bootstrap helper."
+  "justification": "The CLI loads project, deploy, and explicitly selected local plugin inputs; creates bounded build/deploy/install state; publishes only through reviewed adapters; handles cooperative cancellation; and provides the repository bootstrap helper."
 }

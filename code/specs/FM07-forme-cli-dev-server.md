@@ -14,7 +14,7 @@
 | `forme clean` | Implemented | Removes only containment-checked output and cache targets. |
 | `forme watch` preview server | Implemented | Coalesced rebuilds, SSE reload, last-good output, and clean cancellation are tested. |
 | `forme deploy` | Implemented in FM-B047/FM-B012 | Uses CLI Builder for one manifest, exactly one content-store shape, one explicit target config, target-aware dry-run, and publication through the FM08 adapters. |
-| `forme install` and trust UX | Blocked | Requires the FM02 plugin host and FM-B014/FM-B015. |
+| `forme install` and trust UX | Active in FM-B056 | Compose the completed FM02 authority and atomic-installer cores for bounded local package directories before FM-B057 runtime composition. |
 | Authoring shell integration | Blocked | FM-B016 owns the non-developer product shell. |
 
 ## 1. Purpose
@@ -71,11 +71,26 @@ report inputs. CLI Builder owns parsing, required flags, and the exclusive
 content-store group. The command never loads a project config or changes the
 invocation working directory.
 
-### 2.6 Future commands
+### 2.6 Install
 
-Plugin installation and persisted trust decisions belong to
-[FM02](FM02-forme-plugin-host.md). Their absence must be reported explicitly;
-the CLI must not imply that an unavailable security boundary exists.
+`forme install <package-directory>` accepts one local directory as the v1
+registry adapter. It loads the selected project config, snapshots only bounded
+regular files, reads the user trust store, and resolves capability templates
+against the same configured storage/cache roots used at runtime. A side-effect-
+free installer preflight validates and classifies the exact snapshot before the
+CLI displays every required and optional capability with the plugin identity,
+trust tier, manifest reason, and a sensitive marker where applicable. Terminal
+controls in package-authored text are escaped. Required capabilities have no
+default; optional capabilities default to deny. Every grant therefore comes
+from an explicit interactive answer, not a bypass flag. The complete reviewed
+snapshot is committed by the FM02 atomic installer beneath the current
+project's `forme-plugins/` discovery root.
+
+The source tree and install root must be canonical directories. Symlinks,
+non-regular entries, racing file identities, unsafe install-root permissions,
+and malformed authority files fail closed. On Windows the command remains
+unavailable until FM-B057 supplies a native verifier proving that the complete
+root or existing target tree excludes untrusted writers.
 
 ## 3. Diagnostics and reproducibility
 

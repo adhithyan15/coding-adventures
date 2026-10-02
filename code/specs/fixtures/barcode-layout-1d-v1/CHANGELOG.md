@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Bind Ruby and Swift adoption evidence to PR #16361's durable squash-merge
+  revision so fresh clones can verify the recorded package trees.
 - Expand the adoption registry to all twelve established implementations with
   exact canonical roots for Elixir, Lua, Ruby, and Swift.
 - Preserve Elixir, Lua, Ruby, and Swift as truthful pending adoptions until
