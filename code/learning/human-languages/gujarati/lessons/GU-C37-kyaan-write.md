@@ -7,6 +7,7 @@ delivery: script
 chapter: 41
 type: writing
 headword: ક્યાં
+romanization: "kyā̃"
 gloss: "where, from one written word to a first independently composed question"
 prerequisites: [GU-C37-kyaan, GU-C36-te-write]
 sounds: []

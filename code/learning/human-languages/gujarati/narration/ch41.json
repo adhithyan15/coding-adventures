@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Who, Where, When, How Many",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:fcc2f9b540e362bb",
+  "sourceHash": "fnv1a64:eac0633344c6dc11",
   "lessons": [
     {
       "id": "GU-C37-kon",
@@ -262,7 +262,7 @@
       "sequence": 2113,
       "title": "ક્યાં (kyā̃) reaches the page",
       "headword": "ક્યાં",
-      "romanization": "",
+      "romanization": "kyā̃",
       "gloss": "where, from one written word to a first independently composed question",
       "script": "gujarati",
       "modality": "pen",
@@ -272,7 +272,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b60c7b42f8f4a82f",
+      "sourceHash": "fnv1a64:eca896c657f85656",
       "notice": {
         "modality": "pen",
         "needs": [

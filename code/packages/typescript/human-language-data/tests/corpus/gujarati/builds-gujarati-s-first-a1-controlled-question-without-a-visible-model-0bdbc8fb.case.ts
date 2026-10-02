@@ -7,7 +7,7 @@ it("builds Gujarati's first A1 controlled question without a visible model", () 
     (candidate) => candidate.realization.lessonId === "GU-C37-kyaan-write",
   );
   expect(lesson).toBeDefined();
-  expect(lesson?.frontmatter.romanization).toBeUndefined();
+  expect(lesson?.frontmatter.romanization).toBe("kyā̃");
   expect(lesson?.frontmatter.type).toBe("writing");
   expect(Number(lesson?.frontmatter["duration.max_seconds"])).toBeLessThanOrEqual(260);
 
