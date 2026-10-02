@@ -67,8 +67,10 @@ describe("capability mediation", () => {
       .resolves.toMatchObject({ size: 4 });
     await expect(mediateCapabilityRequest("ctx.storage.list", { path: "a" }, ctx, grants))
       .resolves.toEqual([{ path: "a", type: "file" }]);
-    await expect(mediateCapabilityRequest("ctx.storage.watch", { path: "a" }, ctx, grants))
-      .rejects.toMatchObject({ rpcCode: -32601 });
+    const openStream = vi.fn(() => ({ kind: "stream-handle", streamId: 17 }));
+    await expect(mediateCapabilityRequest("ctx.storage.watch", { path: "a" }, ctx, grants, openStream))
+      .resolves.toEqual({ kind: "stream-handle", streamId: 17 });
+    expect(openStream).toHaveBeenCalledOnce();
     await expect(mediateCapabilityRequest("ctx.storage.remove", { path: "a" }, ctx, grants))
       .resolves.toBeNull();
   });

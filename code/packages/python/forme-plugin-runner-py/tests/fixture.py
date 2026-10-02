@@ -60,7 +60,10 @@ async def fixture(input_value: Any, _config: Any, ctx: Any) -> Any:
         data = await ctx.storage.read("posts/a.md")
         await ctx.storage.write("out/a.md", data)
         entries = [entry async for entry in ctx.storage.list("posts")]
-        watched = [entry async for entry in ctx.storage.watch("posts")]
+        watched = []
+        async for entry in ctx.storage.watch("posts"):
+            watched.append(entry)
+            break
         await ctx.storage.remove("out/stale.md")
         response = await ctx.network.fetch(
             "https://example.com/data",

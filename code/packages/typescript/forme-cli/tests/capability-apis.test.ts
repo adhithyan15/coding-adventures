@@ -32,6 +32,24 @@ describe("product capability APIs", () => {
     expect(await storage.exists("posts/a.md")).toBe(false);
   });
 
+  it("streams live storage changes and closes on iterator return", async () => {
+    const root = await temporaryRoot("forme-storage-watch-");
+    await mkdir(join(root, "posts"));
+    await writeFile(join(root, "posts", "a.md"), "before");
+    const storage = createProjectStorage(root);
+    const iterator = storage.watch("posts")[Symbol.asyncIterator]();
+    const next = iterator.next();
+    await writeFile(join(root, "posts", "a.md"), "after");
+    await expect(Promise.race([
+      next,
+      new Promise((_, reject) => setTimeout(() => reject(new Error("watch timed out")), 5_000)),
+    ])).resolves.toMatchObject({
+      done: false,
+      value: { path: "posts/a.md" },
+    });
+    await expect(iterator.return?.()).resolves.toMatchObject({ done: true });
+  });
+
   it("rejects traversal and linked storage paths", async () => {
     const root = await temporaryRoot("forme-storage-root-");
     const outside = await temporaryRoot("forme-storage-outside-");
