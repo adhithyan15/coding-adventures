@@ -14,7 +14,7 @@ sounds: []
 roots: []
 etymology_hook: "Three heads on one ending, and the whole set falls out: ک- asks, یہ- points near, وہ- points far. A reader who sees the pattern gets وہاں for nothing, which is the point of teaching یہاں first."
 duration:
-  max_seconds: 240
+  max_seconds: 290
 requires:
   knowledge: [UR-LEX-YAHAN, UR-LEX-VOH, UR-LEX-KAHAN, UR-GRAMMAR-PAR]
 introduces:
@@ -23,8 +23,8 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-LEX-VAHAN, UR-LEX-YAHAN, UR-LEX-KAHAN, UR-LEX-VOH, UR-LEX-YIH, UR-GRAMMAR-NAHIN-VERB, UR-GRAMMAR-PAR, UR-GRAMMAR-MEIN-POST, UR-LEX-KAMRA, UR-GRAMMAR-IS-OBLIQUE]
-skills: [listening, speaking, reading]
+  knowledge: [UR-LEX-VAHAN, UR-LEX-YAHAN, UR-LEX-KAHAN, UR-LEX-VOH, UR-LEX-YIH, UR-GRAMMAR-NAHIN-VERB, UR-GRAMMAR-PAR, UR-GRAMMAR-MEIN-POST, UR-LEX-KAMRA, UR-GRAMMAR-IS-OBLIQUE, UR-LEX-CHAI]
+skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
@@ -79,6 +79,20 @@ the verb wherever the verb is:
 - [YOU SAY: the denial — *voh vahāṅ nahīṅ hai*]
 - [YOU SAY: gesturing and naming — *vahāṅ*, then *is kamre meṅ*]
 - [YOU SAY: the whole frame — *kyā, kahāṅ; yih, yahāṅ; voh, vahāṅ*]
+
+## Writing: the first question you assemble yourself
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-CHAI, UR-LEX-KAHAN] -->
+<!-- hl-writing-stage: controlled-composition -->
+<!-- hl-activity: {"id":"UR-C24-vahan-controlled-question","kind":"text","assesses":["UR-LEX-CHAI","UR-LEX-KAHAN"],"prompt":"With no word bank, romanization, or copyable answer, write the Urdu question meaning: Where is the tea?","answer":"چائے کہاں ہے؟","accepted":["چائے کہاں ہے"],"feedback":{"correct":"You selected three familiar pieces and wrote an Urdu location question.","incorrect":"Finish the attempt first. Then check the thing, place word, final verb, and Urdu question mark separately."},"response_seconds":40} -->
+
+Cover the models above. From meaning alone, write **Where is the tea?** There
+is no word bank, romanization, or copyable sentence. Choose three familiar
+pieces, put them in Urdu order, and add the Urdu question mark. This first
+composition is untimed: finish before opening the answer key.
+
+Then check the thing, place word, final verb, and punctuation separately.
+Repair the first difference and write the whole question once more from meaning.
+One controlled line proves this rung, not the later timed A1 writing task.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-VAHAN, UR-LEX-YAHAN, UR-LEX-KAHAN, UR-GRAMMAR-NAHIN-VERB] -->
