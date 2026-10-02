@@ -4605,6 +4605,7 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                 parse_treemap_text_underline_offset(token, value)?
             ),
             "line-height" => style.line_height = Some(parse_treemap_line_height(token, value)?),
+            "text-indent" => style.text_indent = Some(parse_treemap_text_indent(token, value)?),
             _ => merge_treemap_node_style(&mut style.node, &parse_block_style(token, declaration)?),
         }
     }
@@ -4763,6 +4764,20 @@ fn parse_treemap_line_height(token: &Token, source: &str) -> Result<diagram_ir::
         .ok_or_else(|| token_error(token, "treemap line-height must be normal or a positive number, percentage, or pixel length"))?
         / divisor;
     Ok(if pixels { diagram_ir::TreemapLineHeight::Pixels(value) } else { diagram_ir::TreemapLineHeight::Factor(value) })
+}
+
+fn parse_treemap_text_indent(token: &Token, source: &str) -> Result<diagram_ir::TreemapTextIndent, ParseError> {
+    if let Some(value) = source.strip_suffix('%') {
+        return value.trim().parse::<f64>().ok().filter(|value| value.is_finite())
+            .map(|value| diagram_ir::TreemapTextIndent::Factor(value / 100.0))
+            .ok_or_else(|| token_error(token, "invalid treemap text-indent"));
+    }
+    let trimmed = source.trim();
+    let number = trimmed.strip_suffix("px").or_else(|| (trimmed == "0").then_some(trimmed))
+        .ok_or_else(|| token_error(token, "treemap text-indent must use pixels or a percentage"))?;
+    let value = number.trim().parse::<f64>().ok().filter(|value| value.is_finite())
+        .ok_or_else(|| token_error(token, "invalid treemap text-indent"))?;
+    Ok(diagram_ir::TreemapTextIndent::Pixels(value))
 }
 
 fn merge_treemap_node_style(target: &mut DiagramStyle, source: &DiagramStyle) {
@@ -14412,6 +14427,23 @@ B//-A: reverse stick top
         assert!(parse_treemap(
             "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent line-height:0",
         ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_text_indent_lengths_and_percentages() {
+        for (value, expected) in [
+            ("0", diagram_ir::TreemapTextIndent::Pixels(0.0)),
+            ("18px", diagram_ir::TreemapTextIndent::Pixels(18.0)),
+            ("-10%", diagram_ir::TreemapTextIndent::Factor(-0.1)),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-indent:{value}");
+            let diagram = parse_treemap(&source).expect("supported text indent must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_indent), Some(expected));
+        }
+        for value in ["2", "1em", "auto"] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-indent:{value}");
+            assert!(parse_treemap(&source).is_err());
+        }
     }
 
     #[test]

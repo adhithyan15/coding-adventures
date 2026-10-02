@@ -307,6 +307,11 @@ fn treemap_text_node(
     color: Color,
     style: Option<&diagram_ir::TreemapStyle>,
 ) -> PositionedNode {
+    let text_indent = match style.and_then(|style| style.text_indent) {
+        Some(diagram_ir::TreemapTextIndent::Pixels(value)) => value,
+        Some(diagram_ir::TreemapTextIndent::Factor(value)) => width * value,
+        None => 0.0,
+    };
     let decoration_thickness = style.and_then(|style| style.text_decoration_thickness).and_then(|thickness| match thickness {
         diagram_ir::TreemapTextDecorationThickness::Pixels(value) => Some(value),
         diagram_ir::TreemapTextDecorationThickness::Factor(value) => Some(font.size * value),
@@ -329,7 +334,9 @@ fn treemap_text_node(
         }).collect(),
         _ => value.to_string(),
     };
-    let mut node = text_node(&value, x, y, width, height, font, color);
+    let mut node = text_node(
+        &value, x + text_indent, y, (width - text_indent).max(0.0), height, font, color,
+    );
     if let Some(Content::Text(content)) = &mut node.content {
         content.text_align = match style.and_then(|style| style.text_align) {
             Some(diagram_ir::TreemapTextAlign::Start) => TextAlign::Start,
@@ -6884,6 +6891,7 @@ mod tests {
                     text_decoration_thickness: Some(diagram_ir::TreemapTextDecorationThickness::Factor(0.25)),
                     text_underline_offset: Some(diagram_ir::TreemapTextUnderlineOffset::Factor(0.25)),
                     line_height: Some(diagram_ir::TreemapLineHeight::Pixels(24.0)),
+                    text_indent: Some(diagram_ir::TreemapTextIndent::Factor(0.1)),
                 }),
             }],
         };
@@ -6901,6 +6909,8 @@ mod tests {
                     && lines.contains(TextDecorationLines::OVERLINE)
                     && lines.contains(TextDecorationLines::LINE_THROUGH)
                     && decoration_color == (Color { r: 37, g: 99, b: 235, a: 204 })));
+        assert_eq!(styled_text.x, 10.0);
+        assert_eq!(styled_text.width, 90.0);
         let mut current_color_style = layout.nodes[0].style.clone().expect("treemap style");
         current_color_style.text_decoration_color =
             Some(diagram_ir::TreemapTextDecorationColor::CurrentColor);
