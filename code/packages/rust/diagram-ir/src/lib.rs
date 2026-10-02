@@ -1559,7 +1559,7 @@ pub enum TreemapTextOverflow { Clip, Ellipsis }
 pub enum TreemapTextWrapMode { Wrap, NoWrap }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum TreemapTextWrapStyle { Auto, Balance }
+pub enum TreemapTextWrapStyle { Auto, Balance, Pretty }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum TreemapLetterSpacing { Normal, Pixels(f64), Factor(f64) }

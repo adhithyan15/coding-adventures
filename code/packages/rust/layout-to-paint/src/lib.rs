@@ -528,11 +528,12 @@ fn text_wraps(node: &PositionedNode, fallback: bool) -> bool {
 }
 
 #[derive(Clone, Copy, PartialEq, Eq)]
-enum TextWrapStyle { Auto, Balance }
+enum TextWrapStyle { Auto, Balance, Pretty }
 
 fn text_wrap_style(node: &PositionedNode) -> TextWrapStyle {
     match node.ext.get("text.wrap-style") {
         Some(ExtValue::Str(value)) if value == "balance" => TextWrapStyle::Balance,
+        Some(ExtValue::Str(value)) if value == "pretty" => TextWrapStyle::Pretty,
         _ => TextWrapStyle::Auto,
     }
 }
@@ -1782,6 +1783,28 @@ fn wrap_line<S: TextShaper>(
         );
         if balanced.len() == lines.len() {
             return balanced;
+        }
+    }
+    if wrap_style == TextWrapStyle::Pretty && lines.len() > 1 {
+        let previous_index = lines.len() - 2;
+        let last_index = lines.len() - 1;
+        let previous = lines[previous_index].clone();
+        let last = lines[last_index].clone();
+        if let Some((shorter_previous, moved_word)) = previous.rsplit_once(' ') {
+            let fuller_last = format!("{moved_word} {last}");
+            let measure = |value: &str| shape_visual_line(
+                shaper, handle, value, size, word_spacing, direction,
+            ).map(|shaped| shaped_advance(&shaped, letter_spacing)).unwrap_or(max_width);
+            let previous_width = measure(&previous);
+            let last_width = measure(&last);
+            let shorter_width = measure(shorter_previous);
+            let fuller_width = measure(&fuller_last);
+            if fuller_width <= max_width
+                && (shorter_width - fuller_width).abs() < (previous_width - last_width).abs()
+            {
+                lines[previous_index] = shorter_previous.to_string();
+                lines[last_index] = fuller_last;
+            }
         }
     }
     if !breaks_anywhere {
@@ -3309,5 +3332,25 @@ mod tests {
             }).collect::<Vec<_>>();
         assert_eq!(starts(&auto), vec![4.0, 20.0]);
         assert_eq!(starts(&balance), vec![12.0, 12.0]);
+    }
+
+    #[test]
+    fn pretty_text_wrap_reduces_final_line_raggedness() {
+        let mut content = text_content("A A A A");
+        content.text_align = TextAlign::Center;
+        let auto = positioned_leaf(content, 0.0, 0.0, 48.0, 40.0);
+        let mut pretty = auto.clone();
+        pretty.ext.insert("text.wrap-style".into(), ExtValue::Str("pretty".into()));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let options = make_options(&shaper, &metrics, &resolver);
+        let starts = |node: &PositionedNode| layout_to_paint(node, &options).instructions.iter()
+            .filter_map(|instruction| match instruction {
+                PaintInstruction::GlyphRun(run) => run.glyphs.first().map(|glyph| glyph.x),
+                _ => None,
+            }).collect::<Vec<_>>();
+        assert_eq!(starts(&auto), vec![4.0, 20.0]);
+        assert_eq!(starts(&pretty), vec![12.0, 12.0]);
     }
 }

@@ -4654,7 +4654,8 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
             "text-wrap-style" => style.text_wrap_style = Some(match value.to_ascii_lowercase().as_str() {
                 "auto" => diagram_ir::TreemapTextWrapStyle::Auto,
                 "balance" => diagram_ir::TreemapTextWrapStyle::Balance,
-                _ => return Err(token_error(token, "treemap text-wrap-style must be auto or balance")),
+                "pretty" => diagram_ir::TreemapTextWrapStyle::Pretty,
+                _ => return Err(token_error(token, "treemap text-wrap-style must be auto, balance, or pretty")),
             }),
             "letter-spacing" => style.letter_spacing = Some(parse_treemap_letter_spacing(token, value)?),
             "word-spacing" => style.word_spacing = Some(parse_treemap_word_spacing(token, value)?),
@@ -14746,13 +14747,14 @@ B//-A: reverse stick top
         for (value, expected) in [
             ("auto", diagram_ir::TreemapTextWrapStyle::Auto),
             ("balance", diagram_ir::TreemapTextWrapStyle::Balance),
+            ("pretty", diagram_ir::TreemapTextWrapStyle::Pretty),
         ] {
             let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-wrap-style:{value}");
             let diagram = parse_treemap(&source).expect("supported text-wrap style must parse");
             assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_wrap_style), Some(expected));
         }
         assert!(parse_treemap(
-            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-wrap-style:pretty",
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-wrap-style:stable",
         ).is_err());
     }
 
