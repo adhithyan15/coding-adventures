@@ -416,6 +416,15 @@ func rewriteInlineEnvPrefixForWindows(command string) string {
 	return `set "` + name + `=` + value + `"&& ` + rest
 }
 
+// RewriteInlineEnvPrefixForWindows exposes rewriteInlineEnvPrefixForWindows
+// to the validator, so the -validate-build-files check can ask "would this
+// shared BUILD line still start a command with `VAR=` after the Windows
+// rewrite?" using exactly the translation the executor applies, rather than a
+// second copy of the regex that could drift from it.
+func RewriteInlineEnvPrefixForWindows(command string) string {
+	return rewriteInlineEnvPrefixForWindows(command)
+}
+
 // ExecuteBuilds runs BUILD commands for packages respecting dependency order.
 //
 // This is the main orchestrator. It:

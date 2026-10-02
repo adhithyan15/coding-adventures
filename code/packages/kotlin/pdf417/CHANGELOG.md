@@ -6,6 +6,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
+## Unreleased
+
+- **Windows build.** New `BUILD_windows` running the same gradle command without the POSIX
+  lock loop (`while ! mkdir ...; do sleep 1; done; ...; status=$?`), which `cmd /C` cannot run.
+  Flagged by the build tool's new Windows env-assignment check.
+
 ## [0.1.0] — 2026-04-26
 
 ### Added

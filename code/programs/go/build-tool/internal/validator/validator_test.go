@@ -1150,3 +1150,72 @@ func TestWindowsPathSeparatorIsNotAContinuation(t *testing.T) {
 		t.Fatal("guard is not proving anything: this command should trip the sh rule")
 	}
 }
+
+// windowsEnvPackage builds one package whose shared BUILD holds `build`, plus a
+// BUILD_windows holding `windows` when that is non-empty. The Windows check
+// reads the files from disk (it must see which one Windows would resolve), so
+// BuildCommands alone is not enough.
+func windowsEnvPackage(t *testing.T, build, windows string) []discovery.Package {
+	t.Helper()
+	pkgs := makePackages(t, []struct {
+		name     string
+		relPath  string
+		lang     string
+		commands []string
+	}{
+		{name: "rust/widget", relPath: "code/packages/rust/widget", lang: "rust", commands: []string{build}},
+	})
+	writeBuildFile(t, pkgs[0].Path, "BUILD", build+"\n")
+	if windows != "" {
+		writeBuildFile(t, pkgs[0].Path, "BUILD_windows", windows+"\n")
+	}
+	return pkgs
+}
+
+// The journal-mosaic-app / board-vm shape: a `$(...)` value the executor's
+// Windows rewrite refuses, so cmd ran `RUSTC` as a program.
+func TestValidateBuildFilesRejectsUnrewritableEnvPrefixWithoutWindowsBuild(t *testing.T) {
+	pkgs := windowsEnvPackage(t, `RUSTC="$(rustup which rustc)" rustup run stable cargo build -p widget`, "")
+	err := ValidateBuildFiles(pkgs, graphWithEdges())
+	if err == nil || !strings.Contains(err.Error(), "cmd reads RUSTC as the command name") {
+		t.Fatalf("expected the RUSTC prefix to be rejected, got %v", err)
+	}
+}
+
+// The rewrite only ever touches a line's leading assignment; one after `&&`
+// (here inside a subshell, as typescript/http1 had it) reaches cmd untouched.
+func TestValidateBuildFilesRejectsEnvAssignmentAfterAnd(t *testing.T) {
+	pkgs := windowsEnvPackage(t, `(cd ../core && NPM_CONFIG_CACHE=.npm-cache npm install --silent)`, "")
+	err := ValidateBuildFiles(pkgs, graphWithEdges())
+	if err == nil || !strings.Contains(err.Error(), "NPM_CONFIG_CACHE") {
+		t.Fatalf("expected the assignment after && to be rejected, got %v", err)
+	}
+}
+
+// A leading plain prefix is translated by the executor into `set "..."&& ...`,
+// so it already runs on Windows and must not be reported.
+func TestValidateBuildFilesAllowsRewritableEnvPrefix(t *testing.T) {
+	pkgs := windowsEnvPackage(t, `RUSTDOCFLAGS="-D warnings" cargo doc -p widget --no-deps`, "")
+	if err := ValidateBuildFiles(pkgs, graphWithEdges()); err != nil {
+		t.Fatalf("expected a rewritable prefix to pass, got %v", err)
+	}
+}
+
+// Once a BUILD_windows exists, Windows never runs the shared BUILD, so its
+// POSIX syntax is fine.
+func TestValidateBuildFilesAllowsEnvPrefixWhenWindowsBuildExists(t *testing.T) {
+	pkgs := windowsEnvPackage(t,
+		`RUSTC="$(rustup which rustc)" rustup run stable cargo build -p widget`,
+		`rustup run stable cargo build -p widget`)
+	if err := ValidateBuildFiles(pkgs, graphWithEdges()); err != nil {
+		t.Fatalf("expected a package with BUILD_windows to pass, got %v", err)
+	}
+}
+
+// Ordinary commands, including `=` inside arguments, are not assignments.
+func TestValidateBuildFilesAllowsEqualsInsideArguments(t *testing.T) {
+	pkgs := windowsEnvPackage(t, `cargo test -p widget --features=fast -- --test-threads=1`, "")
+	if err := ValidateBuildFiles(pkgs, graphWithEdges()); err != nil {
+		t.Fatalf("expected plain commands to pass, got %v", err)
+	}
+}

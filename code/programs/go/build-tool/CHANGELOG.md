@@ -4,6 +4,21 @@ All notable changes to the Go build tool will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- `-validate-build-files` rejects a shared `BUILD` that Windows would run with a
+  POSIX environment assignment `cmd /C` cannot execute. Each line is first
+  passed through the executor's own Windows rewrite
+  (`executor.RewriteInlineEnvPrefixForWindows`, newly exported for this). Any
+  `VAR=` left where a command name belongs is reported, at the start of the
+  line or after `(`, `;`, `&&` or `||`. That covers values the rewrite refuses,
+  such as `RUSTC="$(rustup which rustc)" ...`, and assignments after `&&`. cmd
+  would run `VAR` as a program: `RUSTC` even resolves to rustup's `rustc.exe`
+  proxy and fails with "unknown proxy name". Packages with a `BUILD_windows` are
+  exempt. The first run flagged 18 latent packages, which now have Windows
+  files: 8 .NET, 7 JVM, perl/aes-modes, typescript/http1 and
+  programs/python/xor-hidden-layer-demo.
+
 ### Changed
 
 - Advanced the graphdiff test's repository source-input boundary digest pin
