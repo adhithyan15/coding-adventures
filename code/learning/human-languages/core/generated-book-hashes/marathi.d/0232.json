@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:47fa70151376fab6",
+  "lessonIds": [
+    "MR-C232-matsari",
+    "MR-C232-abhimani",
+    "MR-C232-asvastha",
+    "MR-C232-gulgulit",
+    "MR-C232-kharkharit"
+  ],
+  "tex": "marathi/book/chapters/ch232-jealous-proud-uneasy-smooth-rough.tex"
+}

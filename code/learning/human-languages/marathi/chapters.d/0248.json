@@ -1,0 +1,19 @@
+{
+  "chapter": 248,
+  "title": "Festival, Procession, Village fair, Feast, Gift",
+  "label": "ch:mr-festival-procession-village-fair-feast-gift",
+  "canDo": "I can say a festival, a procession, a village fair, a feast and a gift.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C248-bhetvastu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 248: I can say a festival, a procession, a village fair, a feast and a gift.",
+    "assesses": [
+      "MR-LEX-C248-VASTU248-03",
+      "MR-LEX-C248-VASTU248-04",
+      "MR-LEX-C248-VASTU248-05"
+    ]
+  }
+}

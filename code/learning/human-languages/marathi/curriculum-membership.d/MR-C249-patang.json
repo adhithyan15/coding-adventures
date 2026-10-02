@@ -1,0 +1,11 @@
+{
+  "id": "MR-C249-patang",
+  "pathSegment": "MR-PATH-249-VASTU249",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-249-VASTU249",
+      "order": 3
+    }
+  ]
+}

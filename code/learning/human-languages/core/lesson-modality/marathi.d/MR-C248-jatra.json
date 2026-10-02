@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C248-jatra",
+    "language": "marathi",
+    "chapter": 248,
+    "sequence": 14000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0cef83f88e26a9f"
+  },
+  "findings": []
+}

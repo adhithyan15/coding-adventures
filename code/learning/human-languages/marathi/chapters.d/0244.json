@@ -1,0 +1,19 @@
+{
+  "chapter": 244,
+  "title": "Mustard seed, Coriander leaves, Curry leaves, Peanuts, Cashews",
+  "label": "ch:mr-mustard-seed-coriander-leaves-curry-leaves-peanuts-cashews",
+  "canDo": "I can say mustard seed, coriander leaves, curry leaves, peanuts and cashews.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C244-kaju",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 244: I can say mustard seed, coriander leaves, curry leaves, peanuts and cashews.",
+    "assesses": [
+      "MR-LEX-C244-VASTU244-03",
+      "MR-LEX-C244-VASTU244-04",
+      "MR-LEX-C244-VASTU244-05"
+    ]
+  }
+}

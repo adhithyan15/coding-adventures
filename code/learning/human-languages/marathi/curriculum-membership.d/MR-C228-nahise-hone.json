@@ -1,0 +1,11 @@
+{
+  "id": "MR-C228-nahise-hone",
+  "pathSegment": "MR-PATH-228-ACT228",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-228-ACT228",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:294d4c36fe68cc6d",
+  "lessonIds": [
+    "MR-C234-mahattvaca",
+    "MR-C234-manoranjak",
+    "MR-C234-ghanerda",
+    "MR-C234-bharlela",
+    "MR-C234-mand"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch234.txt",
+  "json": "marathi/narration/ch234.json",
+  "textHash": "fnv1a64:a1172e4af5a67902",
+  "jsonHash": "fnv1a64:5b7d73201db3a31f",
+  "findings": []
+}

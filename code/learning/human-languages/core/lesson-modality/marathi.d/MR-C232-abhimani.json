@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C232-abhimani",
+    "language": "marathi",
+    "chapter": 232,
+    "sequence": 12850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec9b4cb01d7cd43f"
+  },
+  "findings": []
+}

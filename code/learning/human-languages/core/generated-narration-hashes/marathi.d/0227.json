@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:fb9655ef93ad6dcd",
+  "lessonIds": [
+    "MR-C227-nasta-karne",
+    "MR-C227-atisayokti-karne",
+    "MR-C227-sajra-karne",
+    "MR-C227-tarangne",
+    "MR-C227-pathlag-karne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch227.txt",
+  "json": "marathi/narration/ch227.json",
+  "textHash": "fnv1a64:393089e1538672a4",
+  "jsonHash": "fnv1a64:727cc7d42843dfc8",
+  "findings": []
+}

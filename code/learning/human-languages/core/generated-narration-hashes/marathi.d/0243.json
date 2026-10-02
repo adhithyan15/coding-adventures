@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:2aebdb523152f795",
+  "lessonIds": [
+    "MR-C243-thikan",
+    "MR-C243-dekhava",
+    "MR-C243-sahal",
+    "MR-C243-tava",
+    "MR-C243-kadhai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch243.txt",
+  "json": "marathi/narration/ch243.json",
+  "textHash": "fnv1a64:37e0956e8f0fbac1",
+  "jsonHash": "fnv1a64:f8d5d3c4112e3d49",
+  "findings": []
+}

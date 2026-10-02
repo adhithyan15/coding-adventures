@@ -1,0 +1,15 @@
+{
+  "language": "marathi",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:909281cd322c5989",
+  "lessonIds": [
+    "MR-C240-praves",
+    "MR-C240-pravesdvar",
+    "MR-C240-saman",
+    "MR-C240-asan",
+    "MR-C240-cak",
+    "MR-R240-first-pass-words-from-chapters-232-235",
+    "MR-R240-second-pass-words-from-chapters-236-240"
+  ],
+  "tex": "marathi/book/chapters/ch240-entry-entrance-luggage-seat-wheel.tex"
+}

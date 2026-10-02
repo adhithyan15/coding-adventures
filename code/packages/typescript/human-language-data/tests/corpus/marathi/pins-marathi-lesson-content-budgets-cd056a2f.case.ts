@@ -208,7 +208,10 @@ it("pins Marathi lesson-content budgets", () =>
     // 1030 -> 1188: the second Marathi A2 vocabulary tranche, chapters
     // 193-222. 150 word lessons (thirty-five verbs) and two reviews per run of
     // at most nine chapters. No idiom, sense or culture claim.
-    lessons: 1188,
+    // 1188 -> 1336: the third Marathi A2 vocabulary tranche, chapters
+    // 223-250. 140 word lessons (thirty verbs) and two reviews per run of at
+    // most nine chapters. No idiom, sense or culture claim.
+    lessons: 1336,
     idioms: 5,
     senses: 4,
     // 7 -> 8: MR-CULTURE-SHUBH-FORMAL-WRITTEN-REGISTER-01. The shubh greetings

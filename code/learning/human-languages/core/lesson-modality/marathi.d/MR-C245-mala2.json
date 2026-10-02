@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C245-mala2",
+    "language": "marathi",
+    "chapter": 245,
+    "sequence": 13680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0729ccc4d457d4e3"
+  },
+  "findings": []
+}

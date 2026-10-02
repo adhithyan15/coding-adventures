@@ -1,0 +1,19 @@
+{
+  "chapter": 225,
+  "title": "To convince, To criticise, To prove, To depend, To avoid",
+  "label": "ch:mr-to-convince-to-criticise-to-prove-to-depend-to-avoid",
+  "canDo": "I can say to convince, to criticise, to prove, to depend and to avoid.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C225-talne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 225: I can say to convince, to criticise, to prove, to depend and to avoid.",
+    "assesses": [
+      "MR-LEX-C225-ACT225-03",
+      "MR-LEX-C225-ACT225-04",
+      "MR-LEX-C225-ACT225-05"
+    ]
+  }
+}

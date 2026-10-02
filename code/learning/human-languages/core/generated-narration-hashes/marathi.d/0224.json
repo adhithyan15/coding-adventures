@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:85c7c77b33ef647c",
+  "lessonIds": [
+    "MR-C224-mhatare-hone",
+    "MR-C224-ghatasphot-ghene",
+    "MR-C224-ghar-badalne",
+    "MR-C224-aram-karne",
+    "MR-C224-kantalne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch224.txt",
+  "json": "marathi/narration/ch224.json",
+  "textHash": "fnv1a64:f7340f4a684d18f1",
+  "jsonHash": "fnv1a64:0a86e64ff39d5193",
+  "findings": []
+}

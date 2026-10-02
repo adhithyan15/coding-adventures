@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:78c7eb90a5eca064",
+  "lessonIds": [
+    "MR-C232-matsari",
+    "MR-C232-abhimani",
+    "MR-C232-asvastha",
+    "MR-C232-gulgulit",
+    "MR-C232-kharkharit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch232.txt",
+  "json": "marathi/narration/ch232.json",
+  "textHash": "fnv1a64:6ae4b1700727d968",
+  "jsonHash": "fnv1a64:f8b53e7727cf7298",
+  "findings": []
+}

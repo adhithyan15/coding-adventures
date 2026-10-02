@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C237-parampara",
+    "language": "marathi",
+    "chapter": 237,
+    "sequence": 13090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b89e453673f449ec"
+  },
+  "findings": []
+}

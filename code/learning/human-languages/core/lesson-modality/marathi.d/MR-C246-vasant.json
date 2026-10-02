@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C246-vasant",
+    "language": "marathi",
+    "chapter": 246,
+    "sequence": 13900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6120b3e3c319e095"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:a7507f71061df81e",
+  "lessonIds": [
+    "MR-C242-camde",
+    "MR-C242-dhatu",
+    "MR-C242-vit",
+    "MR-C242-dhaga",
+    "MR-C242-sidi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch242.txt",
+  "json": "marathi/narration/ch242.json",
+  "textHash": "fnv1a64:d93bc537db83cf7f",
+  "jsonHash": "fnv1a64:dfec735a6de6b063",
+  "findings": []
+}

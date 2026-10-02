@@ -1,0 +1,19 @@
+{
+  "chapter": 224,
+  "title": "To grow old, To get divorced, To move house, To rest, To get bored",
+  "label": "ch:mr-to-grow-old-to-get-divorced-to-move-house-to-rest-to-get-bored",
+  "canDo": "I can say to grow old, to get divorced, to move house, to rest and to get bored.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C224-kantalne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 224: I can say to grow old, to get divorced, to move house, to rest and to get bored.",
+    "assesses": [
+      "MR-LEX-C224-ACT224-03",
+      "MR-LEX-C224-ACT224-04",
+      "MR-LEX-C224-ACT224-05"
+    ]
+  }
+}

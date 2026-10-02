@@ -1,0 +1,11 @@
+{
+  "id": "MR-C248-miravnuk",
+  "pathSegment": "MR-PATH-248-VASTU248",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-248-VASTU248",
+      "order": 1
+    }
+  ]
+}

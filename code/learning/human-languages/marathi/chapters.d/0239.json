@@ -1,0 +1,19 @@
+{
+  "chapter": 239,
+  "title": "Result, Difference, Example, Truth, Rule",
+  "label": "ch:mr-result-difference-example-truth-rule",
+  "canDo": "I can say a result, a difference, an example, the truth and a rule.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C239-niyam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 239: I can say a result, a difference, an example, the truth and a rule.",
+    "assesses": [
+      "MR-LEX-C239-VASTU239-03",
+      "MR-LEX-C239-VASTU239-04",
+      "MR-LEX-C239-VASTU239-05"
+    ]
+  }
+}

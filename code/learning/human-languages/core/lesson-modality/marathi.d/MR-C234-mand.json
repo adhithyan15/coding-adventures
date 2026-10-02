@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C234-mand",
+    "language": "marathi",
+    "chapter": 234,
+    "sequence": 12980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a1aec87e11a2635"
+  },
+  "findings": []
+}

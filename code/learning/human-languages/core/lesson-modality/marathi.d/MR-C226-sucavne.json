@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C226-sucavne",
+    "language": "marathi",
+    "chapter": 226,
+    "sequence": 12350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:149126f8c6026540"
+  },
+  "findings": []
+}

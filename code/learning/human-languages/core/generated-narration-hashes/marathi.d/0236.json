@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:d24afcd78d96fc2d",
+  "lessonIds": [
+    "MR-C236-phalat",
+    "MR-C236-parpatra",
+    "MR-C236-jakat",
+    "MR-C236-araksan",
+    "MR-C236-khore"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch236.txt",
+  "json": "marathi/narration/ch236.json",
+  "textHash": "fnv1a64:115f1aa4c7431a10",
+  "jsonHash": "fnv1a64:c97c1fd21fa62dab",
+  "findings": []
+}

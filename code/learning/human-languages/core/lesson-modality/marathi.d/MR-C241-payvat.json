@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C241-payvat",
+    "language": "marathi",
+    "chapter": 241,
+    "sequence": 13520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f4d0b43511227ba1"
+  },
+  "findings": []
+}

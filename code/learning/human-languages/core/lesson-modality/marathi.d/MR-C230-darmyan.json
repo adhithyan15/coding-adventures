@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C230-darmyan",
+    "language": "marathi",
+    "chapter": 230,
+    "sequence": 12580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:598bc2bd0d83ac71"
+  },
+  "findings": []
+}

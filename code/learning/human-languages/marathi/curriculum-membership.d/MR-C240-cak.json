@@ -1,0 +1,11 @@
+{
+  "id": "MR-C240-cak",
+  "pathSegment": "MR-PATH-240-VASTU240",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-240-VASTU240",
+      "order": 4
+    }
+  ]
+}

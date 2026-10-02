@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:5479a9dfd3b4229c",
+  "lessonIds": [
+    "MR-C225-patavne",
+    "MR-C225-tika-karne",
+    "MR-C225-siddha-karne",
+    "MR-C225-avlambun-asne",
+    "MR-C225-talne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch225.txt",
+  "json": "marathi/narration/ch225.json",
+  "textHash": "fnv1a64:608e6f32e210d26f",
+  "jsonHash": "fnv1a64:a1b8a43bfedac5d1",
+  "findings": []
+}
