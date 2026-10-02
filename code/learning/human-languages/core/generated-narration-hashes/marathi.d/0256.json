@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:dfb58495c4280f58",
+  "lessonIds": [
+    "MR-C256-usne-ghene",
+    "MR-C256-japne",
+    "MR-C256-vyakta-karne",
+    "MR-C256-barik-hone",
+    "MR-C256-khau-ghalne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch256.txt",
+  "json": "marathi/narration/ch256.json",
+  "textHash": "fnv1a64:899fe6a86ea010a5",
+  "jsonHash": "fnv1a64:08fb2f6790d7ad44",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:6c4234f2b078cd9b",
+  "lessonIds": [
+    "MR-C266-injin",
+    "MR-C266-mahamarg",
+    "MR-C266-dand",
+    "MR-C266-parvana",
+    "MR-C266-sirastran"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch266.txt",
+  "json": "marathi/narration/ch266.json",
+  "textHash": "fnv1a64:2503d285a4ca63ce",
+  "jsonHash": "fnv1a64:ad33a2100dd58fcb",
+  "findings": []
+}

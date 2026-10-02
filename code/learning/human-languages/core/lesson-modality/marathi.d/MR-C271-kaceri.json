@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C271-kaceri",
+    "language": "marathi",
+    "chapter": 271,
+    "sequence": 15660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a024af59ae1e5a1"
+  },
+  "findings": []
+}

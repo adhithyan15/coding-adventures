@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C275-kode",
+    "language": "marathi",
+    "chapter": 275,
+    "sequence": 15860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7dc70eda5ddbd607"
+  },
+  "findings": []
+}

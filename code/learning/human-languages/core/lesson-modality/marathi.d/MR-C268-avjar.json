@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C268-avjar",
+    "language": "marathi",
+    "chapter": 268,
+    "sequence": 15320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:31faed3b49fc7730"
+  },
+  "findings": []
+}

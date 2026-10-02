@@ -1,0 +1,11 @@
+{
+  "id": "MR-C254-seva-karne",
+  "pathSegment": "MR-PATH-254-ACT254",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-254-ACT254",
+      "order": 2
+    }
+  ]
+}

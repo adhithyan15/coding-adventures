@@ -1,0 +1,19 @@
+{
+  "chapter": 271,
+  "title": "Government office, Bus station, Blanket, Veranda, Broom",
+  "label": "ch:mr-government-office-bus-station-blanket-veranda-broom",
+  "canDo": "I can say a government office, a bus station, a blanket, a veranda and a broom.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C271-jhadu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 271: I can say a government office, a bus station, a blanket, a veranda and a broom.",
+    "assesses": [
+      "MR-LEX-C271-VASTU271-03",
+      "MR-LEX-C271-VASTU271-04",
+      "MR-LEX-C271-VASTU271-05"
+    ]
+  }
+}

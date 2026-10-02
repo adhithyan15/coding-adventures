@@ -1,0 +1,11 @@
+{
+  "id": "MR-C265-suraksa",
+  "pathSegment": "MR-PATH-265-VASTU265",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-265-VASTU265",
+      "order": 2
+    }
+  ]
+}

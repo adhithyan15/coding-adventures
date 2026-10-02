@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:50b1d1f6d6ab2fa6",
+  "lessonIds": [
+    "MR-C261-kurup",
+    "MR-C261-thaklela",
+    "MR-C261-bhukela",
+    "MR-C261-tahanlela",
+    "MR-C261-ragit"
+  ],
+  "tex": "marathi/book/chapters/ch261-ugly-tired-hungry-thirsty-short-tempered.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 266,
+  "title": "Engine, Highway, Fine, Licence, Helmet",
+  "label": "ch:mr-engine-highway-fine-licence-helmet",
+  "canDo": "I can say an engine, a highway, a fine, a licence and a helmet.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C266-sirastran",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 266: I can say an engine, a highway, a fine, a licence and a helmet.",
+    "assesses": [
+      "MR-LEX-C266-VASTU266-03",
+      "MR-LEX-C266-VASTU266-04",
+      "MR-LEX-C266-VASTU266-05"
+    ]
+  }
+}

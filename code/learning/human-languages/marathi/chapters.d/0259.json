@@ -1,0 +1,19 @@
+{
+  "chapter": 259,
+  "title": "Unknown, Simple, Complicated, Necessary, Useless",
+  "label": "ch:mr-unknown-simple-complicated-necessary-useless",
+  "canDo": "I can say unknown, simple, complicated, necessary and useless.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MR-R259-second-pass-words-from-chapters-255-259",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 259: I can say unknown, simple, complicated, necessary and useless.",
+    "assesses": [
+      "MR-LEX-C259-GUN259-03",
+      "MR-LEX-C259-GUN259-04",
+      "MR-LEX-C259-GUN259-05"
+    ]
+  }
+}

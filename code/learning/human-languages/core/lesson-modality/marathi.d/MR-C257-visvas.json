@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C257-visvas",
+    "language": "marathi",
+    "chapter": 257,
+    "sequence": 14610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f8061e75d375f78"
+  },
+  "findings": []
+}

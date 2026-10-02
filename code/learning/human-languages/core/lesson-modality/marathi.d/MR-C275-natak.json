@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C275-natak",
+    "language": "marathi",
+    "chapter": 275,
+    "sequence": 15870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a35e2176b06d2915"
+  },
+  "findings": []
+}

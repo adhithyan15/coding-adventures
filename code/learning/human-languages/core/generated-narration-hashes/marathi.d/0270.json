@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:e2ddc1c6cd933e7b",
+  "lessonIds": [
+    "MR-C270-badam",
+    "MR-C270-manuka",
+    "MR-C270-gul",
+    "MR-C270-dhotar",
+    "MR-C270-kurta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch270.txt",
+  "json": "marathi/narration/ch270.json",
+  "textHash": "fnv1a64:69f5a7f28f582d0a",
+  "jsonHash": "fnv1a64:310034c9f5f29f6d",
+  "findings": []
+}

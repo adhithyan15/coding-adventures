@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:a808a64cadb0edb7",
+  "lessonIds": [
+    "MR-C261-kurup",
+    "MR-C261-thaklela",
+    "MR-C261-bhukela",
+    "MR-C261-tahanlela",
+    "MR-C261-ragit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch261.txt",
+  "json": "marathi/narration/ch261.json",
+  "textHash": "fnv1a64:c104ef281a86c8a4",
+  "jsonHash": "fnv1a64:09f153a58ebfbf30",
+  "findings": []
+}

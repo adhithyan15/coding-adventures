@@ -1,0 +1,11 @@
+{
+  "id": "MR-C265-vacan",
+  "pathSegment": "MR-PATH-265-VASTU265",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-265-VASTU265",
+      "order": 4
+    }
+  ]
+}

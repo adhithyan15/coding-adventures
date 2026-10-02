@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C271-basasthanak",
+    "language": "marathi",
+    "chapter": 271,
+    "sequence": 15670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9135896f4b9f1ed0"
+  },
+  "findings": []
+}

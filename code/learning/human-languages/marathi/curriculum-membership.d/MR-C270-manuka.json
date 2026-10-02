@@ -1,0 +1,11 @@
+{
+  "id": "MR-C270-manuka",
+  "pathSegment": "MR-PATH-270-VASTU270",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-270-VASTU270",
+      "order": 1
+    }
+  ]
+}

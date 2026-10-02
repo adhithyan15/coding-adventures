@@ -1,0 +1,19 @@
+{
+  "chapter": 261,
+  "title": "Ugly, Tired, Hungry, Thirsty, Short-tempered",
+  "label": "ch:mr-ugly-tired-hungry-thirsty-short-tempered",
+  "canDo": "I can say ugly, tired, hungry, thirsty and short-tempered.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MR-C261-ragit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 261: I can say ugly, tired, hungry, thirsty and short-tempered.",
+    "assesses": [
+      "MR-LEX-C261-GUN261-03",
+      "MR-LEX-C261-GUN261-04",
+      "MR-LEX-C261-GUN261-05"
+    ]
+  }
+}

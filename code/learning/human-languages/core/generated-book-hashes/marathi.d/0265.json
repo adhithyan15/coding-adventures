@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:9341c34ee40d13f0",
+  "lessonIds": [
+    "MR-C265-parvangi",
+    "MR-C265-bandi",
+    "MR-C265-suraksa",
+    "MR-C265-salla",
+    "MR-C265-vacan"
+  ],
+  "tex": "marathi/book/chapters/ch265-permission-ban-safety-advice-promise.tex"
+}

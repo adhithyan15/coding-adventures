@@ -1,0 +1,19 @@
+{
+  "chapter": 257,
+  "title": "Rest, Anxiety, Friendship, Trust, Courage",
+  "label": "ch:mr-rest-anxiety-friendship-trust-courage",
+  "canDo": "I can say rest, anxiety, friendship, trust and courage.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MR-C257-dhairya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 257: I can say rest, anxiety, friendship, trust and courage.",
+    "assesses": [
+      "MR-LEX-C257-AAROGYA257-03",
+      "MR-LEX-C257-AAROGYA257-04",
+      "MR-LEX-C257-AAROGYA257-05"
+    ]
+  }
+}

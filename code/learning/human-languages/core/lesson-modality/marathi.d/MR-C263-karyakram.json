@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C263-karyakram",
+    "language": "marathi",
+    "chapter": 263,
+    "sequence": 15080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e373b91a0c649403"
+  },
+  "findings": []
+}

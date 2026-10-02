@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C265-parvangi",
+    "language": "marathi",
+    "chapter": 265,
+    "sequence": 15170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d88612a49a1be02"
+  },
+  "findings": []
+}

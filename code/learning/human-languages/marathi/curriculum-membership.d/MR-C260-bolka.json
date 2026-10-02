@@ -1,0 +1,11 @@
+{
+  "id": "MR-C260-bolka",
+  "pathSegment": "MR-PATH-260-GUN260",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-260-GUN260",
+      "order": 1
+    }
+  ]
+}

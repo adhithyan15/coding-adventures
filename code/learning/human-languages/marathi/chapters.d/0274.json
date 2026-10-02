@@ -1,0 +1,19 @@
+{
+  "chapter": 274,
+  "title": "Good wishes, Invitation, Ceremony, Worship, Officer",
+  "label": "ch:mr-good-wishes-invitation-ceremony-worship-officer",
+  "canDo": "I can say good wishes, an invitation, a ceremony, worship and an officer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C274-adhikari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 274: I can say good wishes, an invitation, a ceremony, worship and an officer.",
+    "assesses": [
+      "MR-LEX-C274-VASTU274-03",
+      "MR-LEX-C274-VASTU274-04",
+      "MR-LEX-C274-VASTU274-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C251-thambavne",
+    "language": "marathi",
+    "chapter": 251,
+    "sequence": 14300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4469c64a4b474a96"
+  },
+  "findings": []
+}

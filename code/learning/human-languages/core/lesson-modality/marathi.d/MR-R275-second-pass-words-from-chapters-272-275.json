@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R275-second-pass-words-from-chapters-272-275",
+    "language": "marathi",
+    "chapter": 275,
+    "sequence": 15920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d44d84380dbaacc"
+  },
+  "findings": []
+}

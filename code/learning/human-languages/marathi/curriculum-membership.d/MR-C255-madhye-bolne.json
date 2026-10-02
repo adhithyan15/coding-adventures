@@ -1,0 +1,11 @@
+{
+  "id": "MR-C255-madhye-bolne",
+  "pathSegment": "MR-PATH-255-ACT255",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-255-ACT255",
+      "order": 1
+    }
+  ]
+}

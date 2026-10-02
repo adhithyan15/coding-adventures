@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R268-second-pass-words-from-chapters-264-268",
+    "language": "marathi",
+    "chapter": 268,
+    "sequence": 15380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24744e64f8ba61ec"
+  },
+  "findings": []
+}

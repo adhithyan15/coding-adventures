@@ -1,0 +1,15 @@
+{
+  "language": "marathi",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:69ca06dd3d36b7d1",
+  "lessonIds": [
+    "MR-C275-kode",
+    "MR-C275-natak",
+    "MR-C275-citrapat",
+    "MR-C275-nrtya",
+    "MR-C275-rangmanc",
+    "MR-R275-first-pass-words-from-chapters-269-271",
+    "MR-R275-second-pass-words-from-chapters-272-275"
+  ],
+  "tex": "marathi/book/chapters/ch275-puzzle-play-film-dance-stage.tex"
+}

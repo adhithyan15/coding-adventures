@@ -1,0 +1,19 @@
+{
+  "chapter": 256,
+  "title": "To borrow, To look after, To express, To get thin, To feed",
+  "label": "ch:mr-to-borrow-to-look-after-to-express-to-get-thin-to-feed",
+  "canDo": "I can say to borrow, to look after, to express, to get thin and to feed.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C256-khau-ghalne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 256: I can say to borrow, to look after, to express, to get thin and to feed.",
+    "assesses": [
+      "MR-LEX-C256-ACT256-03",
+      "MR-LEX-C256-ACT256-04",
+      "MR-LEX-C256-ACT256-05"
+    ]
+  }
+}
