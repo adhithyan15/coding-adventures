@@ -67,6 +67,18 @@ bool mosaicIsPlainFileName(const QString &name);
 bool mosaicHasExecutableExtension(const QString &name);
 QSet<QString> mosaicExecutableExtensions();
 
+// Whether every extension the open dialog filters on is an image's, so it can
+// start in the Pictures folder (UI59 §2: a caller that wants "pictures only"
+// accepts image types, and the dialog's start location follows). No filter at
+// all is not "only images": it means any file, and the dialog starts where
+// Qt's own default puts it.
+//
+//     accept                         extensions        start
+//     ["image/png", "image/jpeg"]    png jpg jpeg      Pictures
+//     ["image/png", "text/plain"]    png txt           Qt's default
+//     []                             (none)            Qt's default
+bool mosaicOnlyImages(const QStringList &extensions);
+
 // The outcome maps, never an exception.
 QVariantMap mosaicRunFilesOpen(const QVariant &payload, MosaicFileDialogs &dialogs);
 QVariantMap mosaicRunFilesSave(const QVariant &payload, MosaicFileDialogs &dialogs);
