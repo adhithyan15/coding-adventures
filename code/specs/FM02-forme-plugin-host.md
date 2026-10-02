@@ -6,8 +6,8 @@
 > conformance harness implemented in FM-B053; the Python and Rust runtimes
 > implemented in FM-B054/FM-B055 and closed by FM-B051; production OS
 > sandboxes implemented in FM-B052; reviewed local installation implemented in
-> FM-B056; and runtime product composition active in FM-B057 before the FM-B015
-> completion milestone.
+> FM-B056; runtime product composition implemented in FM-B057; and bounded live
+> storage-watch mediation active in FM-B058 before the FM-B015 completion milestone.
 > Read alongside FM00 (vision), FM01 (kernel), and FM03 (orchestrator).
 > **Scope:** Everything required to load third-party Forme plugins
 > safely and run them under a strong isolation boundary. The packages
@@ -35,7 +35,8 @@
 | Rust runner | Implemented | FM-B055 provides typed stage/context APIs, bounded protocol concurrency and streams, and passes the complete shared corpus without fixture changes. |
 | OS sandbox profiles | Implemented | FM-B052 ships exact-snapshot Linux, macOS, and Windows launchers with platform CI. |
 | Install/trust CLI | Implemented | FM-B056 composes the completed installer and authority stores into FM07. |
-| Product runtime composition | Active | FM-B057 composes manifest-bound grants, language runners, and native platform sandboxes into FM07. |
+| Product runtime composition | Implemented | FM-B057 composes manifest-bound grants, language runners, and native platform sandboxes into FM07. |
+| Live storage-watch mediation | Active | FM-B058 bridges authorized watches through bounded cancellable host-to-plugin streams in every runner. |
 
 ---
 
@@ -1186,10 +1187,17 @@ Plugins requesting `storage:read` get:
 - `ctx.storage.list(path: string) → AsyncIterable<StorageEntry>`
   → wire `ctx.storage.list` (bounded snapshot)
 
-Live `ctx.storage.watch` mediation is deferred to FM-B015, where it
-must use a cancellable stream bridge rather than materializing a
-potentially unbounded iterator. FM-B014 hosts reject
-`ctx.storage.watch` with `METHOD_NOT_FOUND` (-32601).
+FM-B058 mediates `ctx.storage.watch(path)` as a live bounded stream. The
+plugin request returns `{ kind: "stream-handle", streamId }`; it does not
+materialize the potentially unbounded iterator. The runner registers a bounded
+receiver before sending `stream.start { streamId }`, which prevents a value from
+racing ahead of receiver registration. The host then emits `stream.value`,
+followed by exactly one `stream.end` or `stream.error`. Early iterator return
+sends `stream.cancel { streamId }`. Run cancellation, completion, protocol
+failure, and session disposal close every outstanding host iterator even when a
+hostile plugin never starts or cancels it. Hosts admit at most 64 outstanding
+capability streams per active run; runner value/byte bounds and wire
+backpressure apply independently to every stream.
 
 All paths are resolved relative to `storageRoot` on the host
 side. Path arguments containing `..` or absolute paths are
@@ -2341,7 +2349,7 @@ FM02 as a whole is complete when:
 | `ctx.storage.list` | `{ path, streamId }` | `readonly StorageEntry[]` | `storage:read` |
 | `ctx.storage.write` | `{ path, bytes, streamId }` | `null` | `storage:write` |
 | `ctx.storage.remove` | `{ path, streamId }` | `null` | `storage:write` |
-| `ctx.storage.watch` | `{ path, streamId }` | `METHOD_NOT_FOUND` until FM-B015 | `storage:read` |
+| `ctx.storage.watch` | `{ path, streamId }` | `{ kind: "stream-handle", streamId }` | `storage:read` |
 | `ctx.network.fetch` | `{ url, init?, streamId }` | `FetchResult` | `network:<host>` |
 | `ctx.env.get` | `{ name, streamId }` | `string \| null` | `env:<name>` |
 | `ctx.time.nowMs` | `{ streamId }` | `number` | `system:time:wallclock` |
@@ -2356,6 +2364,8 @@ FM02 as a whole is complete when:
 | `stream.value` | `{ streamId, value }` | either |
 | `stream.end` | `{ streamId }` | either |
 | `stream.error` | `{ streamId, error }` | either |
+| `stream.start` | `{ streamId }` | plugin → host, capability streams only |
+| `stream.cancel` | `{ streamId }` | plugin → host, capability streams only |
 | `$/cancelRequest` | `{ id }` | host → plugin |
 
 ### B.4 Error codes

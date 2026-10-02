@@ -1,6 +1,6 @@
 # Forme Completion Roadmap
 
-> **Status:** Living delivery backlog, last prioritized 2026-10-01.
+> **Status:** Living delivery backlog, last prioritized 2026-10-02.
 > This roadmap turns the north-star in [FM00](FM00-forme-vision.md) into
 > merge-sized work. Update it whenever implementation work discovers a new
 > gap, and reprioritize it after every merged Forme pull request.
@@ -11,7 +11,7 @@
 |---|---|---|
 | Vision and delivery backlog | Active | [FM00 vision](FM00-forme-vision.md) and this roadmap |
 | Kernel | Implemented | [FM01](FM01-forme-kernel.md) |
-| Plugin host | Host/wire boundary and runtime sandboxes implemented; product integration active | [FM02](FM02-forme-plugin-host.md) |
+| Plugin host | Host, runners, native sandboxes, installation, and product composition implemented; live storage-watch mediation active | [FM02](FM02-forme-plugin-host.md) |
 | Orchestrator | Headless v0 implemented | [FM03](FM03-forme-orchestrator.md) |
 | Style IR | Implemented | [FM04](FM04-forme-style-ir.md) |
 | Interactivity IR | Location reserved; contract pending | [FM05](FM05-forme-interactivity-ir.md) |
@@ -166,13 +166,14 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 47 | FM-B051 | done | Complete Python and Rust plugin runners | Depends on FM-B054 and FM-B055. Both SDKs pass the same handshake, value, capability, stream, cancellation, error, malformed-peer, and bounded-resource vectors as the TypeScript runner. |
 | 48 | FM-B052 | done | Implement production OS sandbox launchers | Depends on completed FM-B049–FM-B051. Linux, macOS, and Windows launchers stage exact verified snapshots, attest their identities, and block ungranted filesystem, network, environment, process, descriptor, memory, and CPU access in platform CI. |
 | 49 | FM-B056 | done | Compose the reviewed local-package `forme install` path | Depends on completed FM-B048 and FM-B049. FM07 snapshots one bounded local package directory, renders a mandatory per-capability review with required/optional reasons and sensitive warnings, reads the user trust store, and atomically installs the manifest-bound grants into the project discovery root. Non-POSIX hosts fail closed until an explicit ACL verifier is composed. |
-| 50 | FM-B057 | active | Compose installed plugins into the product runtime | Depends on FM-B056 and completed FM-B050–FM-B052. Wire persistent grants, language-runner selection, and the platform sandbox factory into the CLI/orchestrator path; prove one mixed first-/third-party pipeline on every supported OS, including the Windows install-root ACL verifier. |
-| 51 | FM-B015 | blocked | Complete plugin installation, runtimes, and sandboxes | Completion milestone depending on FM-B056 and FM-B057. `forme install`, persistent grants, all supported runners, production sandbox profiles, and mixed first-/third-party product integration close the Extensible v1 runtime path. |
-| 52 | FM-B013 | ready | Specify and implement Interactivity IR | Define the behavior/event/state schema and validator, integrate per-page island tracking, and prove a progressively enhanced interactive component with a no-JS fallback. |
-| 53 | FM-B016 | blocked | Build the authoring shell | Depends on FM-B009, FM-B013, and FM-B015. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
-| 54 | FM-B017 | blocked | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
-| 55 | FM-B018 | blocked | Close release-quality gates | Depends on the v1 product path. Add 1,000-page clean/incremental benchmarks, Lighthouse/accessibility budgets, package/API versioning, migration docs, security review, and supported-platform CI. |
-| 56 | FM-B029 | later | Make duplicate PR CI cancellation and merge state unambiguous | One commit has one authoritative required CI suite; branch updates cancel obsolete runs completely; cancelling a redundant push suite cannot leave a stale final gate or misleading failed rollup; babysitting tooling identifies required checks and the current head. |
+| 50 | FM-B057 | done | Compose installed plugins into the product runtime | Depends on FM-B056 and completed FM-B050–FM-B052. Wire persistent grants, language-runner selection, and the platform sandbox factory into the CLI/orchestrator path; prove one mixed first-/third-party pipeline on every supported OS, including the Windows install-root ACL verifier. |
+| 51 | FM-B058 | active | Stream live plugin storage watches | Depends on completed FM-B057. Replace the deferred `ctx.storage.watch` refusal with a capability-authorized, explicitly started, bounded host-to-plugin stream; all three runner SDKs pass one unchanged conformance vector, early iterator return sends cancellation, run cancellation/disposal closes every watcher, and the product storage adapter emits contained portable events without unbounded buffering. |
+| 52 | FM-B015 | blocked | Complete plugin installation, runtimes, and sandboxes | Completion milestone depending on FM-B056–FM-B058. `forme install`, persistent grants, all supported runners, production sandbox profiles, mixed first-/third-party product integration, and live storage-watch mediation close the Extensible v1 runtime path. |
+| 53 | FM-B013 | ready | Specify and implement Interactivity IR | Define the behavior/event/state schema and validator, integrate per-page island tracking, and prove a progressively enhanced interactive component with a no-JS fallback. |
+| 54 | FM-B016 | blocked | Build the authoring shell | Depends on FM-B009, FM-B013, and FM-B015. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
+| 55 | FM-B017 | blocked | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
+| 56 | FM-B018 | blocked | Close release-quality gates | Depends on the v1 product path. Add 1,000-page clean/incremental benchmarks, Lighthouse/accessibility budgets, package/API versioning, migration docs, security review, and supported-platform CI. |
+| 57 | FM-B029 | later | Make duplicate PR CI cancellation and merge state unambiguous | One commit has one authoritative required CI suite; branch updates cancel obsolete runs completely; cancelling a redundant push suite cannot leave a stale final gate or misleading failed rollup; babysitting tooling identifies required checks and the current head. |
 
 ## Dependency path
 
@@ -186,7 +187,7 @@ is proven, but it does not block FM-B004.
 
 Headless v0 is complete. The completed runtime path is FM-B048 →
 FM-B049/FM-B050 → FM-B053 → FM-B054 → FM-B055 → FM-B051 → FM-B052. The
-shortest remaining path to Extensible v1 is now FM-B057 → FM-B015. FM-B013 can proceed
+shortest remaining path to Extensible v1 is now FM-B058 → FM-B015. FM-B013 can proceed
 independently before joining the
 authoring path at FM-B016 and the backend proof at FM-B017.
 
@@ -281,6 +282,7 @@ work.
 | 2026-10-01 | The final FM-B015 product milestone still combined two independently reviewable authority boundaries: install-time package/capability consent and run-time grant/runner/sandbox composition. The installer core deliberately has no registry or prompt adapter, while the host deliberately has no production process factory. | Split FM-B056 for the bounded local-package install UX ahead of FM-B057 runtime composition, retain FM-B015 as their completion milestone, and keep exactly one product boundary active at a time. |
 | 2026-10-02 | FM-B056 landed the reviewed local-package install command with bounded snapshotting, mandatory per-capability consent, manifest-bound grant persistence, and atomic project-root publication; its platform CI and mandatory security review passed. The CLI still constructs an orchestrator without the installed-plugin host, persistent grants, or native sandbox factory. | Close FM-B056 and activate FM-B057 as the sole remaining Extensible v1 implementation item before the FM-B015 milestone. |
 | 2026-10-02 | FM-B057's Windows product acceptance exposed three hidden differences from package-level sandbox probes: managed protocol runtimes need explicitly inheritable stdio copies; the implemented 128-descriptor fallback contradicted FM02's 256-descriptor summary and was too small for normal Node/Python startup; and granting only the interpreter executable left Python unable to load its standard library and runtime DLLs from the validated distribution root. FM02 also contradicted itself by listing 512 MiB in its summary while specifying and implementing 256 MiB in the detailed default contract. | Keep the child handle allow-list restricted to duplicated stdin/stdout/stderr; add native Node and Python protocol byte round trips; preserve exact-executable authority for Node, Deno, and Bun while granting Python's ephemeral AppContainer read/execute-only authority over a no-follow, ACL-verified, identity-pinned runtime root with mandatory same-handle normal/janitor revocation and overlap coverage; set and test the omitted-manifest descriptor default at 256; and reconcile both FM02 summary/detail defaults before FM-B057 can close. |
+| 2026-10-02 | FM-B057 landed the complete installed-plugin product path, but the fresh milestone audit found that FM02 still required `ctx.storage.watch` to fail with `METHOD_NOT_FOUND`, every runner materialized its response as a finite array, and the product storage adapter deliberately threw. An unbounded watch cannot be materialized without violating the runner resource contract, so FM-B015 cannot honestly close on the merged product composition alone. | Close FM-B057, split FM-B058 as the sole active Extensible-v1 blocker, and require an explicitly started, cancellable, bounded host-to-plugin stream shared unchanged by TypeScript, Python, and Rust before closing FM-B015. |
 
 ## Loop protocol
 
