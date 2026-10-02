@@ -247,6 +247,7 @@ where
                     text_align_last(frame.node),
                     text_breaks_anywhere(frame.node),
                     text_word_break(frame.node),
+                    text_line_break(frame.node),
                     direction,
                     options,
                     &mut font_cache,
@@ -488,6 +489,19 @@ fn text_word_break(node: &PositionedNode) -> TextWordBreak {
         Some(ExtValue::Str(value)) if value == "break-all" => TextWordBreak::BreakAll,
         Some(ExtValue::Str(value)) if value == "keep-all" => TextWordBreak::KeepAll,
         _ => TextWordBreak::Normal,
+    }
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum TextLineBreak { Auto, Loose, Normal, Strict, Anywhere }
+
+fn text_line_break(node: &PositionedNode) -> TextLineBreak {
+    match node.ext.get("text.line-break") {
+        Some(ExtValue::Str(value)) if value == "loose" => TextLineBreak::Loose,
+        Some(ExtValue::Str(value)) if value == "normal" => TextLineBreak::Normal,
+        Some(ExtValue::Str(value)) if value == "strict" => TextLineBreak::Strict,
+        Some(ExtValue::Str(value)) if value == "anywhere" => TextLineBreak::Anywhere,
+        _ => TextLineBreak::Auto,
     }
 }
 
@@ -1259,6 +1273,7 @@ fn emit_text_content<S, M, R>(
     text_align_last: Option<TextAlign>,
     breaks_anywhere: bool,
     word_break: TextWordBreak,
+    line_break: TextLineBreak,
     direction: BaseDirection,
     options: &LayoutToPaintOptions<'_, S, M, R>,
     font_cache: &mut HashMap<FontCacheKey, CachedFont<S::Handle>>,
@@ -1314,6 +1329,7 @@ fn emit_text_content<S, M, R>(
                 word_spacing,
                 breaks_anywhere,
                 word_break,
+                line_break,
                 direction,
             )
         } else {
@@ -1630,6 +1646,7 @@ fn wrap_line<S: TextShaper>(
     word_spacing: f64,
     breaks_anywhere: bool,
     word_break: TextWordBreak,
+    line_break: TextLineBreak,
     direction: BaseDirection,
 ) -> Vec<String> {
     if segment.is_empty() {
@@ -1638,7 +1655,7 @@ fn wrap_line<S: TextShaper>(
     if max_width <= 0.0 {
         return vec![segment.to_string()];
     }
-    if word_break == TextWordBreak::BreakAll {
+    if word_break == TextWordBreak::BreakAll || line_break == TextLineBreak::Anywhere {
         return break_line_anywhere(
             shaper, handle, segment, size, max_width, letter_spacing, word_spacing, direction,
         );
@@ -1658,7 +1675,12 @@ fn wrap_line<S: TextShaper>(
     let mut current = String::new();
     let mut current_width: f64 = 0.0;
 
-    for piece in paint_wrap_pieces(segment, direction, word_break == TextWordBreak::KeepAll) {
+    for piece in paint_wrap_pieces(
+        segment,
+        direction,
+        word_break == TextWordBreak::KeepAll,
+        line_break,
+    ) {
         let word_width = shape_visual_line(shaper, handle, piece.value, size, word_spacing, direction)
             .map(|r| shaped_advance(&r, letter_spacing))
             .unwrap_or(piece.value.chars().count() as f64 * (size as f64) * 0.5);
@@ -1742,6 +1764,7 @@ fn paint_wrap_pieces(
     segment: &str,
     direction: BaseDirection,
     keep_all: bool,
+    line_break: TextLineBreak,
 ) -> Vec<PaintWrapPiece<'_>> {
     if keep_all {
         return segment.split_whitespace().enumerate().map(|(index, value)| PaintWrapPiece {
@@ -1756,9 +1779,23 @@ fn paint_wrap_pieces(
         .filter(|opportunity| opportunity.kind == text_flow::BreakKind::Allowed)
         .map(|opportunity| opportunity.byte_index)
         .collect();
+    if line_break == TextLineBreak::Loose {
+        boundaries.extend(flow.graphemes.iter().filter_map(|grapheme| {
+            let start = grapheme.bytes.start;
+            segment[start..].chars().next()
+                .filter(|_| start > 0)
+                .filter(|character| is_small_kana_or_iteration_mark(*character))
+                .map(|_| start)
+        }));
+    } else if line_break == TextLineBreak::Strict {
+        boundaries.retain(|boundary| segment[*boundary..].chars().next()
+            .is_none_or(|character| !is_small_kana_or_iteration_mark(character)));
+    }
     if boundaries.last().copied() != Some(segment.len()) {
         boundaries.push(segment.len());
     }
+    boundaries.sort_unstable();
+    boundaries.dedup();
     let mut pieces = Vec::new();
     let mut start = 0;
     let mut pending_space = false;
@@ -1777,6 +1814,10 @@ fn paint_wrap_pieces(
         pending_space = source.chars().last().is_some_and(char::is_whitespace);
     }
     pieces
+}
+
+fn is_small_kana_or_iteration_mark(character: char) -> bool {
+    "ぁぃぅぇぉっゃゅょゎァィゥェォッャュョヮヵヶー々〻ヽヾゝゞ".contains(character)
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -3081,5 +3122,24 @@ mod tests {
             .filter(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))).count();
         assert_eq!(count(&break_all), 3);
         assert_eq!(count(&keep_all), 1);
+    }
+
+    #[test]
+    fn line_break_tailors_small_kana_and_anywhere_opportunities() {
+        let mut loose = positioned_leaf(text_content("あぁあ"), 0.0, 0.0, 8.0, 60.0);
+        loose.ext.insert("text.line-break".into(), ExtValue::Str("loose".into()));
+        let mut strict = positioned_leaf(text_content("あぁあ"), 0.0, 0.0, 8.0, 60.0);
+        strict.ext.insert("text.line-break".into(), ExtValue::Str("strict".into()));
+        let mut anywhere = positioned_leaf(text_content("abcdef"), 0.0, 0.0, 16.0, 60.0);
+        anywhere.ext.insert("text.line-break".into(), ExtValue::Str("anywhere".into()));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let options = make_options(&shaper, &metrics, &resolver);
+        let count = |node: &PositionedNode| layout_to_paint(node, &options).instructions.iter()
+            .filter(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))).count();
+        assert_eq!(count(&loose), 3);
+        assert_eq!(count(&strict), 2);
+        assert_eq!(count(&anywhere), 3);
     }
 }

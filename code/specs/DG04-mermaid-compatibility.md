@@ -552,6 +552,8 @@ Normal, break-word, and anywhere overflow wrapping preserve ordinary Unicode
 line breaks and optionally split oversized words at grapheme boundaries.
 Normal, break-all, and keep-all word-breaking modes respectively preserve
 Unicode opportunities, add grapheme opportunities, or suppress CJK-internal breaks.
+Auto, loose, normal, strict, and anywhere line-breaking modes preserve Unicode
+defaults, tailor small-kana opportunities, or add grapheme opportunities.
 Normal and positive or negative pixel/em letter spacing adjusts shaped glyph
 positions and line measurement through backend-neutral PaintInstructions.
 Normal and positive or negative pixel/em word spacing likewise adjusts ASCII

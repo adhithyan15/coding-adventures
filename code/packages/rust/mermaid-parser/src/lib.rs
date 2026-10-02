@@ -4633,6 +4633,14 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                 "keep-all" => diagram_ir::TreemapWordBreak::KeepAll,
                 _ => return Err(token_error(token, "treemap word-break must be normal, break-all, or keep-all")),
             }),
+            "line-break" => style.line_break = Some(match value.to_ascii_lowercase().as_str() {
+                "auto" => diagram_ir::TreemapLineBreak::Auto,
+                "loose" => diagram_ir::TreemapLineBreak::Loose,
+                "normal" => diagram_ir::TreemapLineBreak::Normal,
+                "strict" => diagram_ir::TreemapLineBreak::Strict,
+                "anywhere" => diagram_ir::TreemapLineBreak::Anywhere,
+                _ => return Err(token_error(token, "treemap line-break must be auto, loose, normal, strict, or anywhere")),
+            }),
             "letter-spacing" => style.letter_spacing = Some(parse_treemap_letter_spacing(token, value)?),
             "word-spacing" => style.word_spacing = Some(parse_treemap_word_spacing(token, value)?),
             "direction" => style.direction = Some(match value.to_ascii_lowercase().as_str() {
@@ -14667,6 +14675,24 @@ B//-A: reverse stick top
         }
         assert!(parse_treemap(
             "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent word-break:auto-phrase",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_line_break_modes() {
+        for (value, expected) in [
+            ("auto", diagram_ir::TreemapLineBreak::Auto),
+            ("loose", diagram_ir::TreemapLineBreak::Loose),
+            ("normal", diagram_ir::TreemapLineBreak::Normal),
+            ("strict", diagram_ir::TreemapLineBreak::Strict),
+            ("anywhere", diagram_ir::TreemapLineBreak::Anywhere),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent line-break:{value}");
+            let diagram = parse_treemap(&source).expect("supported line-break mode must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.line_break), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent line-break:initial",
         ).is_err());
     }
 
