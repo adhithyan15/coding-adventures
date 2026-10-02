@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Who, Where, When, How Many",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:98c536f3987087f0",
+  "sourceHash": "fnv1a64:fcc2f9b540e362bb",
   "lessons": [
     {
       "id": "GU-C37-kon",
@@ -262,8 +262,8 @@
       "sequence": 2113,
       "title": "ક્યાં (kyā̃) reaches the page",
       "headword": "ક્યાં",
-      "romanization": "kyā̃",
-      "gloss": "where, on the page — a conjunct and a dot, both already taught",
+      "romanization": "",
+      "gloss": "where, from one written word to a first independently composed question",
       "script": "gujarati",
       "modality": "pen",
       "derivedModality": "pen",
@@ -272,7 +272,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:216a007cf2e182fd",
+      "sourceHash": "fnv1a64:b60c7b42f8f4a82f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -334,6 +334,41 @@
         },
         {
           "index": 3,
+          "type": "writing",
+          "title": "Writing — first controlled question",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now cover every Gujarati model above and keep earlier lessons closed. From the meaning alone, write the Gujarati question Where is the home?"
+            },
+            {
+              "kind": "speech",
+              "text": "There is no word bank, romanization, or copyable sentence. Choose the three known pieces, put them in Gujarati order, and add the question mark. The task is untimed: finish the line before opening the answer key."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C37-kyaan-write-controlled-question",
+              "prompt": "With no word bank, romanization, or copyable answer, write the Gujarati question meaning: Where is the home?",
+              "assesses": [
+                "GU-SCRIPT-GHAR-01",
+                "GU-Q-KYAAN-01",
+                "GU-CONCEPT-C02-CHHE-01"
+              ],
+              "responseSeconds": 45,
+              "acceptedResponses": [
+                "ઘર ક્યાં છે?",
+                "ઘર ક્યાં છે"
+              ],
+              "feedback": {
+                "correct": "You selected three known pieces and ordered them as a Gujarati location question.",
+                "incorrect": "Complete the attempt first. Then check only the place word, question word, final verb, and punctuation in separate passes."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -345,7 +380,11 @@
             },
             {
               "kind": "speech",
-              "text": "Write ક્યાં (kyā̃) from memory and check the dot. How many of its signs were new today? (None.)"
+              "text": "After the attempt, use the answer key for four separate checks: place word, question word, final verb, then punctuation. Repair only the first difference and write the whole question once more from meaning."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one short, untimed controlled question. It proves the next writing rung; it does not claim readiness for the full timed A1 writing task."
             }
           ]
         }
