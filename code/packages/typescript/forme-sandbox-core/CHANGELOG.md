@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Align the host-owned default descriptor budget with FM02's specified 256 so
+  standard Node and Python runtimes are not terminated during normal Windows
+  startup when a plugin manifest omits resource overrides.
+
 ## 0.1.0 — 2026-10-01
 
 - Added exclusive exact-snapshot entry and config-schema staging.

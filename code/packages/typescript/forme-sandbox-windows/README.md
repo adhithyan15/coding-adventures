@@ -6,6 +6,9 @@ The checked-in native launcher creates a capability-free AppContainer-derived
 low-integrity restricted token, applies process mitigations, starts the plugin
 suspended, assigns it to a single-process memory/CPU Job Object, restricts
 inherited handles to protocol stdio, and monitors the process handle count.
+The supervisor duplicates those three handles as explicitly inheritable copies
+before applying the child handle allow-list, so Node and Python can use their
+normal buffered stdio implementations without gaining another host handle.
 It pins verified entry/schema handles without delete sharing until process exit
 and uses a cryptographically random ephemeral AppContainer profile name that is
 deleted on every post-creation exit path. Closing the launcher kills the job.

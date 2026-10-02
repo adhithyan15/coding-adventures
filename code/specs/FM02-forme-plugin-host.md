@@ -1463,7 +1463,7 @@ Downstream code can't tell the difference.
 
 | Resource | Default cap | Enforcement |
 |---|---|---|
-| Resident memory | 512 MiB | rlimit on POSIX, Job Object on Windows |
+| Resident memory | 256 MiB | rlimit on POSIX, Job Object on Windows |
 | Virtual memory | 2 GiB | rlimit on POSIX, Job Object on Windows |
 | CPU seconds | 60 | rlimit/cgroup on Linux, Job Object on Windows |
 | Wall-clock per run | 30 s | orchestrator-side timer |
@@ -1671,7 +1671,7 @@ protocol session and cannot obtain another process slot.
 ### 12.6 Resource-limit defaults and ceilings
 
 Missing manifest values use host-owned defaults: 256 MiB memory, 30 seconds
-wall clock, and 128 descriptors.  Launchers reject non-positive, fractional,
+wall clock, and 256 descriptors.  Launchers reject non-positive, fractional,
 or platform-unrepresentable values.  The host may lower these values but may
 not raise the manifest request. Wall-clock expiry is enforced by both the
 host's cancellation/kill sequence and an independent native monotonic

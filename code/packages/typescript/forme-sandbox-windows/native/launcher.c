@@ -40,6 +40,30 @@ static void release_acl_mutex(HANDLE mutex) {
     CloseHandle(mutex);
 }
 
+static void close_handles(HANDLE *handles, size_t count) {
+    for (size_t index = 0; index < count; index++) {
+        if (handles[index] != NULL && handles[index] != INVALID_HANDLE_VALUE) {
+            CloseHandle(handles[index]);
+            handles[index] = NULL;
+        }
+    }
+}
+
+static int duplicate_inheritable_stdio(HANDLE inherited[3]) {
+    const DWORD identifiers[] = { STD_INPUT_HANDLE, STD_OUTPUT_HANDLE, STD_ERROR_HANDLE };
+    ZeroMemory(inherited, sizeof(HANDLE) * 3);
+    for (size_t index = 0; index < 3; index++) {
+        HANDLE source = GetStdHandle(identifiers[index]);
+        if (source == NULL || source == INVALID_HANDLE_VALUE
+                || !DuplicateHandle(GetCurrentProcess(), source, GetCurrentProcess(),
+                    &inherited[index], 0, TRUE, DUPLICATE_SAME_ACCESS)) {
+            close_handles(inherited, 3);
+            return -1;
+        }
+    }
+    return 0;
+}
+
 static HANDLE verify_and_pin_sha256_file(const wchar_t *path, const wchar_t *expected) {
     if (expected == NULL || wcsncmp(expected, L"sha256:", 7) != 0 || wcslen(expected) != 71) return INVALID_HANDLE_VALUE;
     DWORD attributes = GetFileAttributesW(path);
@@ -759,10 +783,18 @@ int wmain(int argc, wchar_t **argv) {
     ZeroMemory(&startup, sizeof(startup));
     startup.StartupInfo.cb = sizeof(startup);
     startup.StartupInfo.dwFlags = STARTF_USESTDHANDLES;
-    startup.StartupInfo.hStdInput = GetStdHandle(STD_INPUT_HANDLE);
-    startup.StartupInfo.hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE);
-    startup.StartupInfo.hStdError = GetStdHandle(STD_ERROR_HANDLE);
-    HANDLE inherited[] = { startup.StartupInfo.hStdInput, startup.StartupInfo.hStdOutput, startup.StartupInfo.hStdError };
+    HANDLE inherited[3];
+    if (duplicate_inheritable_stdio(inherited) != 0) {
+        if (attributes != NULL) HeapFree(GetProcessHeap(), 0, attributes);
+        CloseHandle(job);
+        cleanup_appcontainer(profile_name, app_sid, runtime, entry);
+        CloseHandle(pinned_entry);
+        if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
+        return 68;
+    }
+    startup.StartupInfo.hStdInput = inherited[0];
+    startup.StartupInfo.hStdOutput = inherited[1];
+    startup.StartupInfo.hStdError = inherited[2];
     DWORD64 mitigations = PROCESS_CREATION_MITIGATION_POLICY_DEP_ENABLE
         | PROCESS_CREATION_MITIGATION_POLICY_BOTTOM_UP_ASLR_ALWAYS_ON
         | PROCESS_CREATION_MITIGATION_POLICY_HIGH_ENTROPY_ASLR_ALWAYS_ON
@@ -777,6 +809,7 @@ int wmain(int argc, wchar_t **argv) {
             || !UpdateProcThreadAttribute(attributes, 0, PROC_THREAD_ATTRIBUTE_HANDLE_LIST,
                 inherited, sizeof(inherited), NULL, NULL)) {
         if (attributes != NULL) HeapFree(GetProcessHeap(), 0, attributes);
+        close_handles(inherited, 3);
         CloseHandle(job);
         cleanup_appcontainer(profile_name, app_sid, runtime, entry);
         CloseHandle(pinned_entry);
@@ -789,6 +822,7 @@ int wmain(int argc, wchar_t **argv) {
     if (quoted_runtime == NULL || quoted_entry == NULL || quoted_stage == NULL || quoted_schema == NULL) {
         free(quoted_runtime); free(quoted_entry); free(quoted_stage); free(quoted_schema);
         DeleteProcThreadAttributeList(attributes); HeapFree(GetProcessHeap(), 0, attributes);
+        close_handles(inherited, 3);
         CloseHandle(job); cleanup_appcontainer(profile_name, app_sid, runtime, entry);
         CloseHandle(pinned_entry); if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 69;
@@ -802,6 +836,7 @@ int wmain(int argc, wchar_t **argv) {
     if (command == NULL) {
         free(quoted_runtime); free(quoted_entry); free(quoted_stage); free(quoted_schema);
         DeleteProcThreadAttributeList(attributes); HeapFree(GetProcessHeap(), 0, attributes);
+        close_handles(inherited, 3);
         CloseHandle(job); cleanup_appcontainer(profile_name, app_sid, runtime, entry);
         CloseHandle(pinned_entry); if (pinned_schema != INVALID_HANDLE_VALUE) CloseHandle(pinned_schema);
         return 69;
@@ -819,6 +854,7 @@ int wmain(int argc, wchar_t **argv) {
     BOOL created = CreateProcessAsUserW(NULL, runtime, command, NULL, NULL, TRUE, flags, NULL,
         NULL, &startup.StartupInfo, &process);
     DWORD create_error = created ? ERROR_SUCCESS : GetLastError();
+    close_handles(inherited, 3);
     free(quoted_runtime); free(quoted_entry); free(quoted_stage); free(quoted_schema); free(command);
     if (!created) {
         fwprintf(stderr, L"CreateProcessAsUserW failed: %lu\n", (unsigned long)create_error);

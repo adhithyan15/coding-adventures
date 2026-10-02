@@ -47,7 +47,11 @@ async function request(probe: string): Promise<SandboxLaunchRequest> {
 async function nodeRequest(): Promise<SandboxLaunchRequest> {
   const workingDirectory = await mkdtemp(join(tmpdir(), "forme-windows-node-"));
   roots.push(workingDirectory);
-  const entryBytes = new TextEncoder().encode("setTimeout(() => process.exit(0), 250);\n");
+  const entryBytes = new TextEncoder().encode(String.raw`let input = "";
+process.stdin.setEncoding("utf8");
+process.stdin.on("data", chunk => { input += chunk; });
+process.stdin.on("end", () => process.stdout.write(input, () => process.exit(0)));
+`);
   const manifest: Manifest = {
     manifestVersion: 1,
     plugin: { name: "@example/windows-node", version: "1.0.0", apiVersion: 1 },
@@ -108,11 +112,15 @@ describe.skipIf(process.platform !== "win32")("Windows native sandbox", () => {
     expect(await verify(root, "existing-target-tree")).toBe(false);
   });
 
-  it("boots the trusted Node runtime after installing the sandbox", async () => {
+  it("round-trips protocol bytes through the trusted Node runtime", async () => {
     const child = await createWindowsSandboxFactory({ launcherPath, readinessTimeoutMs: 2_000 })
       .launch(await nodeRequest());
+    const stdout: Buffer[] = [];
+    child.stdout.on("data", chunk => stdout.push(Buffer.from(chunk)));
+    child.stdin.end("sandbox protocol probe");
     const result = await exitWithStderr(child);
     expect(result.exit, result.stderr).toEqual({ code: 0, signal: null });
+    expect(Buffer.concat(stdout).toString("utf8")).toBe("sandbox protocol probe");
   });
 
   it("serializes overlapping trusted-runtime ACL grants and revocations", async () => {
@@ -120,6 +128,8 @@ describe.skipIf(process.platform !== "win32")("Windows native sandbox", () => {
       createWindowsSandboxFactory({ launcherPath, readinessTimeoutMs: 2_000 }).launch(await nodeRequest()),
       createWindowsSandboxFactory({ launcherPath, readinessTimeoutMs: 2_000 }).launch(await nodeRequest()),
     ]);
+    first.stdin.end();
+    second.stdin.end();
     const results = await Promise.all([exitWithStderr(first), exitWithStderr(second)]);
     expect(results.map(result => result.exit), results.map(result => result.stderr).join("\n")).toEqual([
       { code: 0, signal: null },

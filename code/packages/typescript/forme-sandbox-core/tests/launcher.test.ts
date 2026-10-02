@@ -118,7 +118,10 @@ describe("launchWithNativeHelper", () => {
   it("applies host-owned defaults when the manifest omits resource limits", async () => {
     const value = await request();
     (value as { resources: undefined }).resources = undefined;
-    const child = await launchWithNativeHelper(value, policy(), { readinessTimeoutMs: 1_000 });
+    const child = await launchWithNativeHelper(value, {
+      ...policy(),
+      launcherPrefixArguments: [helper, "--expect-fd-limit=256"],
+    }, { readinessTimeoutMs: 1_000 });
     child.signal("SIGKILL");
     await child.exited;
   });

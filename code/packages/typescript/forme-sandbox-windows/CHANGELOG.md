@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Duplicate protocol stdin/stdout/stderr as explicitly inheritable handles
+  before launching the AppContainer child, with a native byte-round-trip
+  regression test for buffered runtime stdio.
 - Add the native install-tree ACL verifier used by `forme install` and product
   discovery. It rejects reparse points, identity changes, untrusted owners or
   writers (including inherit-only authority on the transaction root), unsafe
