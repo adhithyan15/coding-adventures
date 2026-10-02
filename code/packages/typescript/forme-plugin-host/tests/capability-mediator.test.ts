@@ -173,6 +173,11 @@ describe("capability mediation", () => {
     await expect(mediateCapabilityRequest(
       "ctx.storage.write", { path: "large", bytes: encoded }, makeContext(), ["storage:write"],
     )).rejects.toMatchObject({ rpcCode: -32003 });
+    const oversizedEncoding = Buffer.from(new Uint8Array(1024 * 1024 + 4)).toString("base64");
+    await expect(mediateCapabilityRequest(
+      "ctx.storage.write", { path: "preflight", bytes: oversizedEncoding },
+      makeContext(), ["storage:write"],
+    )).rejects.toMatchObject({ rpcCode: -32003 });
     await expect(mediateCapabilityRequest(
       "ctx.network.fetch",
       { url: "https://example.com", init: { body: encoded } },

@@ -464,7 +464,7 @@ async def _run(
     shutdown_task: asyncio.Task[bool] | None = None
     force_exit: asyncio.TimerHandle | None = None
 
-    def on_signal() -> None:
+    def on_signal() -> None:  # pragma: no cover - POSIX-only event-loop callback
         nonlocal force_exit, shutdown_task
         if shutdown_task is None:
             force_exit = loop.call_later(signal_shutdown_timeout_ms / 1000 + 0.1, os._exit, 1)
@@ -475,20 +475,22 @@ async def _run(
     for signum in (signal.SIGINT, signal.SIGTERM):
         with contextlib.suppress(NotImplementedError, RuntimeError, ValueError):
             loop.add_signal_handler(signum, on_signal)
-            installed_signals.append(signum)
+            installed_signals.append(signum)  # pragma: no cover - unsupported on Windows
     try:
         await peer.run()
     finally:
-        for signum in installed_signals:
+        for signum in installed_signals:  # pragma: no cover - empty on Windows
             with contextlib.suppress(NotImplementedError, RuntimeError, ValueError):
                 loop.remove_signal_handler(signum)
-        if shutdown_task is not None:
+        if shutdown_task is not None:  # pragma: no cover - set only by POSIX signals
             with contextlib.suppress(BaseException):
                 if await shutdown_task and force_exit is not None:
                     force_exit.cancel()
 
 
-async def _bounded_signal_shutdown(state: RunnerState, peer: Peer, timeout_ms: int) -> bool:
+async def _bounded_signal_shutdown(  # pragma: no cover - reached only by POSIX signals
+    state: RunnerState, peer: Peer, timeout_ms: int
+) -> bool:
     try:
         await asyncio.wait_for(state.shutdown(), timeout=timeout_ms / 1000)
         return True

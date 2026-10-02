@@ -16,6 +16,7 @@ const stage = defineStage({
       for await (const change of ctx.storage.watch(input.watchPath)) {
         return { ...input, change };
       }
+      return { ...input, ended: true };
     }
     if (input?.readPath) {
       const bytes = await ctx.storage.read(input.readPath);

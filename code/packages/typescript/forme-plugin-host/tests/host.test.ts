@@ -198,6 +198,7 @@ describe("plugin host cross-process contract", () => {
     const liveStorage: StorageApi = {
       ...storage,
       watch(path) {
+        if (path === "empty") return storage.watch(path);
         let delivered = false;
         let finish: ((value: IteratorResult<never>) => void) | null = null;
         return {
@@ -232,6 +233,8 @@ describe("plugin host cross-process contract", () => {
       change: { type: "modified", path: "posts" },
     });
     expect(watchClosed).toBe(true);
+    await expect(stage.run({ watchPath: "empty" } as never, {}, context()))
+      .resolves.toEqual({ watchPath: "empty", ended: true });
     await stage.dispose?.(initContext());
     await host.dispose();
   });
@@ -665,6 +668,17 @@ describe("plugin host cross-process contract", () => {
       .resolves.toEqual({ badCapabilityCancel: true, cancelCode: expect.any(Number) });
     await expect(stage.run({ inactiveCapabilityCancel: true } as never, {}, context()))
       .resolves.toEqual({ inactiveCapabilityCancel: true, cancelCode: expect.any(Number) });
+    await stage.dispose?.(initContext());
+    await host.dispose();
+  });
+
+  it("caps the number of capability streams owned by one run", async () => {
+    const host = await makeHost();
+    const stage = await host.loadStage({
+      kind: "stage-ref", packageName: "@example/echo", export: "echo",
+    }, "capability-stream-budget");
+    await expect(stage.run({ exhaustCapabilityStreams: true } as never, {}, context()))
+      .resolves.toEqual({ exhaustCapabilityStreams: true, overflowCode: -32003 });
     await stage.dispose?.(initContext());
     await host.dispose();
   });

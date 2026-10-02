@@ -152,6 +152,24 @@ async function handle(message) {
       });
       return;
     }
+    if (input?.exhaustCapabilityStreams === true) {
+      let overflowCode = null;
+      for (let index = 0; index <= 64; index += 1) {
+        const reply = await request("ctx.storage.watch", {
+          path: `posts/${index}`,
+          streamId: message.params.streamId,
+        });
+        if (reply.error) {
+          overflowCode = reply.error.code;
+          break;
+        }
+      }
+      respond(message.id, {
+        kind: "single",
+        value: { ...input, overflowCode },
+      });
+      return;
+    }
     if (input?.duplicateCapabilityStream === true || input?.cancelCapabilityStream === true
         || input?.staleCapabilityCancel === true || input?.stuckCapabilityCancel === true) {
       const reply = await request("ctx.storage.watch", {
