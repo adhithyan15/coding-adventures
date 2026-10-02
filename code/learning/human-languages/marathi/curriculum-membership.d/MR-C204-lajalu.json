@@ -1,0 +1,11 @@
+{
+  "id": "MR-C204-lajalu",
+  "pathSegment": "MR-PATH-204-GUN204",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-204-GUN204",
+      "order": 1
+    }
+  ]
+}

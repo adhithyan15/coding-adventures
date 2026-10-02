@@ -1,0 +1,11 @@
+{
+  "id": "MR-C202-rajdhani",
+  "pathSegment": "MR-PATH-202-JAGA202",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-202-JAGA202",
+      "order": 2
+    }
+  ]
+}

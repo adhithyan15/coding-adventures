@@ -1,0 +1,19 @@
+{
+  "chapter": 197,
+  "title": "To get used to, To hurry, To come near, To chat, To deliver",
+  "label": "ch:mr-to-get-used-to-to-hurry-to-come-near-to-chat-to-deliver",
+  "canDo": "I can say to get used to, to hurry, to come near, to chat and to deliver.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C197-pocavne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 197: I can say to get used to, to hurry, to come near, to chat and to deliver.",
+    "assesses": [
+      "MR-LEX-C197-ACT197-03",
+      "MR-LEX-C197-ACT197-04",
+      "MR-LEX-C197-ACT197-05"
+    ]
+  }
+}

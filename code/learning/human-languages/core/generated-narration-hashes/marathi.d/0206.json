@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:e3fc3db01086beec",
+  "lessonIds": [
+    "MR-C206-sarvajanik",
+    "MR-C206-khajgi",
+    "MR-C206-vaiyaktik",
+    "MR-C206-samanya",
+    "MR-C206-khas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch206.txt",
+  "json": "marathi/narration/ch206.json",
+  "textHash": "fnv1a64:d02d21ff4e9ad426",
+  "jsonHash": "fnv1a64:dd4f3a04a29265fc",
+  "findings": []
+}

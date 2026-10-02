@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C220-tac",
+    "language": "marathi",
+    "chapter": 220,
+    "sequence": 11890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d849c5ee4725793"
+  },
+  "findings": []
+}

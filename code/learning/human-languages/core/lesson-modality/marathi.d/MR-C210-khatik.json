@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C210-khatik",
+    "language": "marathi",
+    "chapter": 210,
+    "sequence": 11050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e13306335dc8f3a1"
+  },
+  "findings": []
+}

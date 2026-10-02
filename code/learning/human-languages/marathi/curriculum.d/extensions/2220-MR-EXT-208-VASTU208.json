@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-208-VASTU208",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an armchair, a button, a snack, a tip and a stop.",
+  "prerequisites": []
+}

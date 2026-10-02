@@ -1,0 +1,19 @@
+{
+  "chapter": 201,
+  "title": "Until, Decade, Sunset, Sunrise, End",
+  "label": "ch:mr-until-decade-sunset-sunrise-end",
+  "canDo": "I can say until, a decade, sunset, sunrise and the end.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "MR-R201-second-pass-words-from-chapters-197-201",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 201: I can say until, a decade, sunset, sunrise and the end.",
+    "assesses": [
+      "MR-LEX-C201-VEL201-03",
+      "MR-LEX-C201-VEL201-04",
+      "MR-LEX-C201-VEL201-05"
+    ]
+  }
+}

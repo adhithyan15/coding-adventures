@@ -1,0 +1,19 @@
+{
+  "chapter": 221,
+  "title": "Report, Subject, Chalk, Marks, Cradle",
+  "label": "ch:mr-report-subject-chalk-marks-cradle",
+  "canDo": "I can say a report, a subject, chalk, marks and a cradle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C221-palna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 221: I can say a report, a subject, chalk, marks and a cradle.",
+    "assesses": [
+      "MR-LEX-C221-VASTU221-03",
+      "MR-LEX-C221-VASTU221-04",
+      "MR-LEX-C221-VASTU221-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:850f185d980a0ce6",
+  "lessonIds": [
+    "MR-C221-ahval",
+    "MR-C221-visay",
+    "MR-C221-khadu",
+    "MR-C221-gun",
+    "MR-C221-palna"
+  ],
+  "tex": "marathi/book/chapters/ch221-report-subject-chalk-marks-cradle.tex"
+}

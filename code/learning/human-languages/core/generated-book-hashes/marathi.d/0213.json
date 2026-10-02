@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:cc51589d094d348a",
+  "lessonIds": [
+    "MR-C213-karanje",
+    "MR-C213-phatak",
+    "MR-C213-kumpan",
+    "MR-C213-talghar",
+    "MR-C213-mala"
+  ],
+  "tex": "marathi/book/chapters/ch213-fountain-gate-fence-cellar-loft.tex"
+}

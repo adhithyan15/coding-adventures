@@ -1,0 +1,11 @@
+{
+  "id": "MR-C208-khau",
+  "pathSegment": "MR-PATH-208-VASTU208",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-208-VASTU208",
+      "order": 2
+    }
+  ]
+}

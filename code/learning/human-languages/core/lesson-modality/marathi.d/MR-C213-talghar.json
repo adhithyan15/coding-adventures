@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C213-talghar",
+    "language": "marathi",
+    "chapter": 213,
+    "sequence": 11410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22680cf4c3f840c5"
+  },
+  "findings": []
+}

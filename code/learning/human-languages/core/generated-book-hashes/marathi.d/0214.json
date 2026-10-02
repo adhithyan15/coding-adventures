@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:e14434c67cc66dfc",
+  "lessonIds": [
+    "MR-C214-urja",
+    "MR-C214-plastik",
+    "MR-C214-kapus",
+    "MR-C214-lokar",
+    "MR-C214-resim"
+  ],
+  "tex": "marathi/book/chapters/ch214-energy-plastic-cotton-wool-silk.tex"
+}

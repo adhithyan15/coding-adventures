@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C193-bacat-karne",
+    "language": "marathi",
+    "chapter": 193,
+    "sequence": 10010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dfa37f17a4eb351c"
+  },
+  "findings": []
+}

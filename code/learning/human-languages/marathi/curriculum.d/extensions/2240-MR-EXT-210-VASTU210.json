@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-210-VASTU210",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a dentist, a butcher, a craftsman, a worker and an employee.",
+  "prerequisites": []
+}

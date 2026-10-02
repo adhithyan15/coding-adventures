@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R222-second-pass-words-from-chapters-220-222",
+    "language": "marathi",
+    "chapter": 222,
+    "sequence": 12050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e9ea338f0b5c78b"
+  },
+  "findings": []
+}

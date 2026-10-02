@@ -1,0 +1,19 @@
+{
+  "chapter": 199,
+  "title": "To stick, To reach, To visit, To knit, To harvest",
+  "label": "ch:mr-to-stick-to-reach-to-visit-to-knit-to-harvest",
+  "canDo": "I can say to stick, to reach, to visit, to knit and to harvest.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C199-kapni-karne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 199: I can say to stick, to reach, to visit, to knit and to harvest.",
+    "assesses": [
+      "MR-LEX-C199-ACT199-03",
+      "MR-LEX-C199-ACT199-04",
+      "MR-LEX-C199-ACT199-05"
+    ]
+  }
+}

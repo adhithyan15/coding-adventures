@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C215-prasthan",
+    "language": "marathi",
+    "chapter": 215,
+    "sequence": 11520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8099ed95fc7540f3"
+  },
+  "findings": []
+}

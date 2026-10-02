@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:653cd9871c1d9d0f",
+  "lessonIds": [
+    "MR-C196-phirayla-jane",
+    "MR-C196-ghadi-karne",
+    "MR-C196-tayari-karne",
+    "MR-C196-olakh-karun-dene",
+    "MR-C196-usne-dene"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch196.txt",
+  "json": "marathi/narration/ch196.json",
+  "textHash": "fnv1a64:507fe78848d38877",
+  "jsonHash": "fnv1a64:95a871fe272046e2",
+  "findings": []
+}

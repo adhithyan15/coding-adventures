@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C193-valavne",
+    "language": "marathi",
+    "chapter": 193,
+    "sequence": 10030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3439d0a266526a91"
+  },
+  "findings": []
+}

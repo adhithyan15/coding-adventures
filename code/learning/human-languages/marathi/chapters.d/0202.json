@@ -1,0 +1,19 @@
+{
+  "chapter": 202,
+  "title": "Border, Region, Capital city, Suburb, Up",
+  "label": "ch:mr-border-region-capital-city-suburb-up",
+  "canDo": "I can say a border, a region, a capital city, a suburb and up.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "MR-C202-varati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 202: I can say a border, a region, a capital city, a suburb and up.",
+    "assesses": [
+      "MR-LEX-C202-JAGA202-03",
+      "MR-LEX-C202-JAGA202-04",
+      "MR-LEX-C202-JAGA202-05"
+    ]
+  }
+}

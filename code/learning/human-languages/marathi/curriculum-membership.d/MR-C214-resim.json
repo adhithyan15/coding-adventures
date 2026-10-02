@@ -1,0 +1,11 @@
+{
+  "id": "MR-C214-resim",
+  "pathSegment": "MR-PATH-214-VASTU214",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-214-VASTU214",
+      "order": 4
+    }
+  ]
+}

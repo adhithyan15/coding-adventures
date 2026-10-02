@@ -1,0 +1,19 @@
+{
+  "chapter": 206,
+  "title": "Public, Private, Personal, Ordinary, Special",
+  "label": "ch:mr-public-private-personal-ordinary-special",
+  "canDo": "I can say public, private, personal, ordinary and special.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MR-C206-khas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 206: I can say public, private, personal, ordinary and special.",
+    "assesses": [
+      "MR-LEX-C206-GUN206-03",
+      "MR-LEX-C206-GUN206-04",
+      "MR-LEX-C206-GUN206-05"
+    ]
+  }
+}

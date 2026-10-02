@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-212-VASTU212",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an application, an envelope, an address, a salary and a guide.",
+  "prerequisites": []
+}

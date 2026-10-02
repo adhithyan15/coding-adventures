@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:689953c8ceaab28e",
+  "lessonIds": [
+    "MR-C200-snayu",
+    "MR-C200-jakham",
+    "MR-C200-vran",
+    "MR-C200-sardi",
+    "MR-C200-citthi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch200.txt",
+  "json": "marathi/narration/ch200.json",
+  "textHash": "fnv1a64:16c01be54652aa07",
+  "jsonHash": "fnv1a64:1f6f4a264d189e86",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C193-magavne",
+    "language": "marathi",
+    "chapter": 193,
+    "sequence": 10020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:04a042cbf7e46925"
+  },
+  "findings": []
+}

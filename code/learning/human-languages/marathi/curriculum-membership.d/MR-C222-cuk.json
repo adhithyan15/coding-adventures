@@ -1,0 +1,11 @@
+{
+  "id": "MR-C222-cuk",
+  "pathSegment": "MR-PATH-222-KAAM222",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-222-KAAM222",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 220,
+  "title": "Heel, Eyelid, Eyebrow, Sweat, Tear",
+  "label": "ch:mr-heel-eyelid-eyebrow-sweat-tear",
+  "canDo": "I can say a heel, an eyelid, an eyebrow, sweat and a tear.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C220-asru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 220: I can say a heel, an eyelid, an eyebrow, sweat and a tear.",
+    "assesses": [
+      "MR-LEX-C220-VASTU220-03",
+      "MR-LEX-C220-VASTU220-04",
+      "MR-LEX-C220-VASTU220-05"
+    ]
+  }
+}

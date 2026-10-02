@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C218-dav",
+    "language": "marathi",
+    "chapter": 218,
+    "sequence": 11830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ecdb68c54ed45a9"
+  },
+  "findings": []
+}

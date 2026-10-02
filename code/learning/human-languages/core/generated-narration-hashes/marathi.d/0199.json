@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:a94bdcc7bde88e53",
+  "lessonIds": [
+    "MR-C199-cikatavne",
+    "MR-C199-gathne",
+    "MR-C199-bhet-dene",
+    "MR-C199-vinne",
+    "MR-C199-kapni-karne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch199.txt",
+  "json": "marathi/narration/ch199.json",
+  "textHash": "fnv1a64:86fab6fe2c99cdf8",
+  "jsonHash": "fnv1a64:4ba570163d3dd666",
+  "findings": []
+}

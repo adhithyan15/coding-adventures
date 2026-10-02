@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C211-nivad",
+    "language": "marathi",
+    "chapter": 211,
+    "sequence": 11300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dfbfc5bdeab1ed10"
+  },
+  "findings": []
+}

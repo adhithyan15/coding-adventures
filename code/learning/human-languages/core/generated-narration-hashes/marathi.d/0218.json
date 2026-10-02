@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:066d357ab89cf65e",
+  "lessonIds": [
+    "MR-C218-koli",
+    "MR-C218-mhais",
+    "MR-C218-bakri",
+    "MR-C218-dhuke",
+    "MR-C218-dav"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch218.txt",
+  "json": "marathi/narration/ch218.json",
+  "textHash": "fnv1a64:7d0d2678943097b7",
+  "jsonHash": "fnv1a64:edf4129468b1453b",
+  "findings": []
+}

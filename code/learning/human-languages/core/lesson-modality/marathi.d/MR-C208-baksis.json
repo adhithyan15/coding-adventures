@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C208-baksis",
+    "language": "marathi",
+    "chapter": 208,
+    "sequence": 10970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78dbf07c4fe61cfc"
+  },
+  "findings": []
+}

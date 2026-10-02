@@ -1,0 +1,19 @@
+{
+  "chapter": 196,
+  "title": "To go for a walk, To fold, To prepare, To introduce, To lend",
+  "label": "ch:mr-to-go-for-a-walk-to-fold-to-prepare-to-introduce-to-lend",
+  "canDo": "I can say to go for a walk, to fold, to prepare, to introduce and to lend.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C196-usne-dene",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 196: I can say to go for a walk, to fold, to prepare, to introduce and to lend.",
+    "assesses": [
+      "MR-LEX-C196-ACT196-03",
+      "MR-LEX-C196-ACT196-04",
+      "MR-LEX-C196-ACT196-05"
+    ]
+  }
+}

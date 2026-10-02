@@ -1,0 +1,11 @@
+{
+  "id": "MR-C195-jalne",
+  "pathSegment": "MR-PATH-195-ACT195",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-195-ACT195",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-204-GUN204",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say serious, shy, valiant, fearful and curious.",
+  "prerequisites": []
+}

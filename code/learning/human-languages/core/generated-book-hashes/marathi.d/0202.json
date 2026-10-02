@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:efcfee1921a270d3",
+  "lessonIds": [
+    "MR-C202-sima",
+    "MR-C202-prades",
+    "MR-C202-rajdhani",
+    "MR-C202-upnagar",
+    "MR-C202-varati"
+  ],
+  "tex": "marathi/book/chapters/ch202-border-region-capital-city-suburb-up.tex"
+}

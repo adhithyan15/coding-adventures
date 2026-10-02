@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-208-VASTU208",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "MR-EXT-208-VASTU208"
+  ],
+  "after": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "marathi",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:56e7a57d6e14aa6c",
+  "lessonIds": [
+    "MR-C222-karkirda",
+    "MR-C222-masik",
+    "MR-C222-sabdakos",
+    "MR-C222-vidyapith",
+    "MR-C222-cuk",
+    "MR-R222-first-pass-words-from-chapters-217-219",
+    "MR-R222-second-pass-words-from-chapters-220-222"
+  ],
+  "tex": "marathi/book/chapters/ch222-career-monthly-magazine-dictionary-university-mistake.tex"
+}

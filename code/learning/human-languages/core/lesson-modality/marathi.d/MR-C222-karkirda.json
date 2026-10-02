@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C222-karkirda",
+    "language": "marathi",
+    "chapter": 222,
+    "sequence": 11990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00b2b8455ed75c16"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C219-grahak",
+    "language": "marathi",
+    "chapter": 219,
+    "sequence": 11880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:227290a709665460"
+  },
+  "findings": []
+}

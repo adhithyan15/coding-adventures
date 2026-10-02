@@ -1,0 +1,19 @@
+{
+  "chapter": 208,
+  "title": "Armchair, Button, Snack, Tip, Stop",
+  "label": "ch:mr-armchair-button-snack-tip-stop",
+  "canDo": "I can say an armchair, a button, a snack, a tip and a stop.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C208-thamba",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 208: I can say an armchair, a button, a snack, a tip and a stop.",
+    "assesses": [
+      "MR-LEX-C208-VASTU208-03",
+      "MR-LEX-C208-VASTU208-04",
+      "MR-LEX-C208-VASTU208-05"
+    ]
+  }
+}

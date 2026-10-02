@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:f6b06ba99a50e502",
+  "lessonIds": [
+    "MR-C220-tac",
+    "MR-C220-papni",
+    "MR-C220-bhuvai",
+    "MR-C220-gham",
+    "MR-C220-asru"
+  ],
+  "tex": "marathi/book/chapters/ch220-heel-eyelid-eyebrow-sweat-tear.tex"
+}

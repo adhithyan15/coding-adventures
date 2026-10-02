@@ -1,0 +1,19 @@
+{
+  "chapter": 193,
+  "title": "To spend, To put money by, To order, To dry, To iron",
+  "label": "ch:mr-to-spend-to-put-money-by-to-order-to-dry-to-iron",
+  "canDo": "I can say to spend, to put money by, to order, to dry and to iron.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C193-istri-karne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 193: I can say to spend, to put money by, to order, to dry and to iron.",
+    "assesses": [
+      "MR-LEX-C193-ACT193-03",
+      "MR-LEX-C193-ACT193-04",
+      "MR-LEX-C193-ACT193-05"
+    ]
+  }
+}

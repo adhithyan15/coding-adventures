@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:f806208983a8a6fd",
+  "lessonIds": [
+    "MR-C221-ahval",
+    "MR-C221-visay",
+    "MR-C221-khadu",
+    "MR-C221-gun",
+    "MR-C221-palna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch221.txt",
+  "json": "marathi/narration/ch221.json",
+  "textHash": "fnv1a64:b75e2b7ba2d835c0",
+  "jsonHash": "fnv1a64:428b67fdc7de0ae0",
+  "findings": []
+}
