@@ -1,4 +1,4 @@
-import { constants, type Stats } from "node:fs";
+import { constants, watch as watchFilesystem, type FSWatcher, type Stats } from "node:fs";
 import {
   lstat,
   mkdir,
@@ -9,7 +9,14 @@ import {
 } from "node:fs/promises";
 import { homedir, tmpdir } from "node:os";
 import { basename, dirname, isAbsolute, relative, resolve, sep } from "node:path";
-import type { StageContext, StorageApi, StorageStat } from "@coding-adventures/forme-stage";
+import type {
+  StageContext,
+  StorageApi,
+  StorageChange,
+  StorageStat,
+} from "@coding-adventures/forme-stage";
+
+const MAX_WATCH_EVENTS = 256;
 
 type ProductCapabilityApis = Partial<Pick<
   StageContext,
@@ -99,11 +106,9 @@ export function createProjectStorage(rootPath: string, reservedRoots: readonly s
     watch(path) {
       validateStoragePath(path, true);
       assertNotLexicallyReserved(resolve(root, path === "." ? "" : path), reserved);
-      return {
-        async *[Symbol.asyncIterator]() {
-          throw new Error("storage watch is not available in the v1 product adapter");
-        },
-      };
+      return Object.freeze({
+        [Symbol.asyncIterator]: () => new ProjectStorageWatchIterator(root, path, reserved),
+      });
     },
     async remove(path) {
       const target = await containedExistingPath(root, path, false, reserved);
@@ -129,6 +134,166 @@ export function createProjectStorage(rootPath: string, reservedRoots: readonly s
     },
   };
   return Object.freeze(storage);
+}
+
+interface RawWatchEvent {
+  readonly eventType: "rename" | "change";
+  readonly filename: string | null;
+}
+
+class ProjectStorageWatchIterator implements AsyncIterator<StorageChange> {
+  private readonly queue = new WatchEventQueue(MAX_WATCH_EVENTS, () => this.close());
+  private readonly startPromise: Promise<void>;
+  private watcher: FSWatcher | null = null;
+  private target = "";
+  private directory = false;
+  private closed = false;
+
+  constructor(
+    private readonly root: string,
+    private readonly path: string,
+    private readonly reservedRoots: readonly string[],
+  ) {
+    this.startPromise = this.start();
+  }
+
+  async next(): Promise<IteratorResult<StorageChange>> {
+    await this.startPromise;
+    while (!this.closed) {
+      const event = await this.queue.next();
+      if (event.done) return { value: undefined, done: true };
+      const change = await this.toStorageChange(event.value);
+      if (change) return { value: change, done: false };
+    }
+    return { value: undefined, done: true };
+  }
+
+  async return(): Promise<IteratorResult<StorageChange>> {
+    this.close();
+    await this.startPromise.catch(() => undefined);
+    return { value: undefined, done: true };
+  }
+
+  private async start(): Promise<void> {
+    this.target = await containedExistingPath(this.root, this.path, false, this.reservedRoots);
+    this.directory = (await lstat(this.target)).isDirectory();
+    if (this.closed) return;
+    const watcher = watchFilesystem(
+      this.target,
+      { persistent: false, encoding: "utf8" },
+      (eventType, filename) => this.queue.push({ eventType, filename }),
+    );
+    this.watcher = watcher;
+    watcher.on("error", error => {
+      this.queue.fail(error);
+      this.close();
+    });
+    if (this.closed) watcher.close();
+  }
+
+  private async toStorageChange(event: RawWatchEvent): Promise<StorageChange | null> {
+    let portablePath = this.path;
+    let target = this.target;
+    if (this.directory) {
+      if (event.filename === null) return null;
+      if (!portableWatchSegment(event.filename)) return null;
+      portablePath = storageJoin(this.path, event.filename);
+      target = resolve(this.target, event.filename);
+    }
+    try {
+      assertNotLexicallyReserved(target, this.reservedRoots);
+    } catch (error) {
+      if (error instanceof TypeError && /host-reserved/.test(error.message)) return null;
+      throw error;
+    }
+    const info = await lstat(target).then(
+      value => value,
+      error => {
+        if (isErrno(error, "ENOENT")) return null;
+        throw error;
+      },
+    );
+    if (info !== null) {
+      try {
+        if (await isReservedPath(target, this.reservedRoots)) return null;
+      } catch (error) {
+        // Existing links and reparse points must not reveal ambiguous aliases.
+        // A resolvable link is checked canonically above; an unresolved one is
+        // hidden rather than reported as an ordinary storage change.
+        if (info.isSymbolicLink()) return null;
+        throw error;
+      }
+    }
+    if (info === null && this.directory && event.filename === basename(this.target)) return null;
+    if (event.eventType === "change") {
+      return info === null ? null : Object.freeze({ path: portablePath, kind: "modified" });
+    }
+    return Object.freeze({ path: portablePath, kind: info === null ? "removed" : "added" });
+  }
+
+  private close(): void {
+    if (this.closed) return;
+    this.closed = true;
+    this.watcher?.close();
+    this.queue.end();
+  }
+}
+
+class WatchEventQueue {
+  private readonly values: RawWatchEvent[] = [];
+  private readonly waiters: Array<{
+    resolve(value: IteratorResult<RawWatchEvent>): void;
+    reject(error: unknown): void;
+  }> = [];
+  private done = false;
+  private error: unknown = null;
+
+  constructor(
+    private readonly maxEvents: number,
+    private readonly onOverflow: () => void,
+  ) {}
+
+  push(value: RawWatchEvent): void {
+    if (this.done) return;
+    const waiter = this.waiters.shift();
+    if (waiter) {
+      waiter.resolve({ value, done: false });
+      return;
+    }
+    if (this.values.length >= this.maxEvents) {
+      this.fail(new Error("storage watch exceeded its bounded event queue"));
+      this.onOverflow();
+      return;
+    }
+    this.values.push(value);
+  }
+
+  next(): Promise<IteratorResult<RawWatchEvent>> {
+    const value = this.values.shift();
+    if (value) return Promise.resolve({ value, done: false });
+    if (this.error) return Promise.reject(this.error);
+    if (this.done) return Promise.resolve({ value: undefined, done: true });
+    return new Promise((resolve, reject) => this.waiters.push({ resolve, reject }));
+  }
+
+  end(): void {
+    if (this.done) return;
+    this.done = true;
+    for (const waiter of this.waiters.splice(0)) waiter.resolve({ value: undefined, done: true });
+  }
+
+  fail(error: unknown): void {
+    if (this.done) return;
+    this.error = error;
+    this.done = true;
+    this.values.splice(0);
+    for (const waiter of this.waiters.splice(0)) waiter.reject(error);
+  }
+}
+
+function portableWatchSegment(value: string): boolean {
+  return value.length > 0 && value !== "." && value !== ".."
+    && !value.includes("/") && !value.includes("\\") && !value.includes("\0");
 }
 
 type FileHandle = Awaited<ReturnType<typeof open>>;

@@ -13,11 +13,17 @@ const MAX_NETWORK_BODY_BYTES = 1024 * 1024;
 const MAX_MEDIATED_BYTES = 1024 * 1024;
 const MAX_NETWORK_REDIRECTS = 10;
 
+export type OpenCapabilityStream = (source: AsyncIterable<unknown>) => Readonly<{
+  kind: "stream-handle";
+  streamId: number;
+}>;
+
 export async function mediateCapabilityRequest(
   method: string,
   rawParams: unknown,
   context: StageContext | null,
   grants: readonly Capability[],
+  openStream?: OpenCapabilityStream,
 ): Promise<unknown> {
   if (!context) deny("lifecycle:run", "capability calls are allowed only during stage.run");
   const params = asRecord(rawParams ?? {}, `${method} params`);
@@ -55,11 +61,10 @@ export async function mediateCapabilityRequest(
     }
     case "ctx.storage.watch": {
       authorize(grants, "storage:read");
-      storagePath(params.path);
-      throw new RpcFault(METHOD_NOT_FOUND, "METHOD_NOT_FOUND", {
-        method,
-        deferredTo: "FM-B015",
-      });
+      const path = storagePath(params.path);
+      if (!openStream) throw new RpcFault(-32603, "INTERNAL_ERROR");
+      context.cancellation.throwIfCancelled();
+      return openStream(context.storage.watch(path));
     }
     case "ctx.storage.remove":
       authorize(grants, "storage:write");

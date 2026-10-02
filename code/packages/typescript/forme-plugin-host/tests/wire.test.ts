@@ -69,6 +69,7 @@ describe("Content-Length framing", () => {
     ["missing length", Buffer.from("X-Test: 1\r\n\r\n{}")],
     ["duplicate length", Buffer.from("Content-Length: 2\r\nContent-Length: 2\r\n\r\n{}")],
     ["invalid length", Buffer.from("Content-Length: -1\r\n\r\n")],
+    ["non-decimal length", Buffer.from("Content-Length: 1x\r\n\r\n")],
     ["empty zero-length JSON", Buffer.from("Content-Length: 0\r\n\r\n")],
     ["invalid json", Buffer.from("Content-Length: 1\r\n\r\n{")],
   ])("rejects %s", (_name, bytes) => {

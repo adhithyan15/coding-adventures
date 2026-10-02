@@ -31,7 +31,7 @@ describe("wire-backed stage context", () => {
         "ctx.storage.write": null,
         "ctx.storage.exists": true,
         "ctx.storage.list": [{ path: "a", type: "file" }],
-        "ctx.storage.watch": [{ type: "changed", path: "a" }],
+        "ctx.storage.watch": { kind: "stream-handle", streamId: 701 },
         "ctx.storage.remove": null,
         "ctx.storage.stat": { size: 2, mtimeMs: 1, type: "file" },
         "ctx.env.get": params.name === "MISSING" ? null : "value",
@@ -50,7 +50,10 @@ describe("wire-backed stage context", () => {
       };
       return responses[method];
     });
-    const context = buildWireContext(peer, 77, neverCancelledToken());
+    const context = buildWireContext(peer, 77, neverCancelledToken(), async function* (handle) {
+      expect(handle).toEqual({ kind: "stream-handle", streamId: 701 });
+      yield { type: "changed", path: "a" };
+    });
 
     expect(await context.time.nowMs()).toBe(12);
     expect(await context.time.nowIso()).toBe("1970-01-01T00:00:00.012Z");

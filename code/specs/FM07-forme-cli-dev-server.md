@@ -15,7 +15,7 @@
 | `forme watch` preview server | Implemented | Coalesced rebuilds, SSE reload, last-good output, and clean cancellation are tested. |
 | `forme deploy` | Implemented in FM-B047/FM-B012 | Uses CLI Builder for one manifest, exactly one content-store shape, one explicit target config, target-aware dry-run, and publication through the FM08 adapters. |
 | `forme install` and trust UX | Implemented in FM-B056 | Composes the completed FM02 authority and atomic-installer cores for bounded local package directories. |
-| Installed plugin runtime | Active in FM-B057 | Compose manifest-bound grants, language selection, and native platform sandboxes into CLI/orchestrator execution. |
+| Installed plugin runtime | Implemented in FM-B057 | Manifest-bound grants, language selection, and native platform sandboxes are composed into CLI/orchestrator execution; FM-B058 closes live storage-watch mediation. |
 | Authoring shell integration | Blocked | FM-B016 owns the non-developer product shell. |
 
 ## 1. Purpose

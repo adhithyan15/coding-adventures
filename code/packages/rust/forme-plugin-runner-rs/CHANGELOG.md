@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Add live bounded storage-watch handles with explicit close, best-effort drop
+  cancellation, and run-level cleanup of outstanding capability streams.
+
 ## 0.1.0 — 2026-10-01
 
 - Add the typed asynchronous Rust FM02 stage and mediated context API.

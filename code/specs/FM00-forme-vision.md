@@ -13,7 +13,7 @@
 |---|---|---|
 | Headless build/check/preview | Implemented | FM01, FM03, FM04, FM06, and FM07 have live product coverage. |
 | Headless deployment | Implemented | [FM08](FM08-forme-deploy-runner.md) and FM-B044–FM-B047 close the FM-B012 milestone with live product publication. |
-| Third-party plugin runtime | Active | [FM02](FM02-forme-plugin-host.md)'s host/wire boundary is implemented by FM-B014; FM-B015 owns runners, installation, grants persistence, and OS sandboxes. |
+| Third-party plugin runtime | Active | [FM02](FM02-forme-plugin-host.md)'s host, runners, installation, grants, sandboxes, and product composition are implemented; FM-B058 closes live storage-watch mediation before the FM-B015 milestone. |
 | Interactivity IR | Pending | [FM05](FM05-forme-interactivity-ir.md) reserves the contract; FM-B013 owns implementation. |
 | Authoring shell and multi-backend proof | Pending | Tracked by FM-B016–FM-B018 in the [roadmap](FM00-forme-completion-roadmap.md). |
 

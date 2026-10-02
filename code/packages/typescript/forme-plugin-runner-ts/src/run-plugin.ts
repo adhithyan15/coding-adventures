@@ -63,6 +63,8 @@ class RunnerState {
   private phase: "spawned" | "handshaken" | "announced" | "initializing" | "initialized" | "disposing" | "disposed" | "failed" = "spawned";
   private active: { requestId: number; source: ReturnType<typeof createCancellationTokenSource> } | null = null;
   private readonly inputs = new Map<number, AsyncQueue<unknown>>();
+  private readonly capabilityInputIds = new Set<number>();
+  private readonly retiringCapabilityInputIds = new Set<number>();
   private lastConfig: unknown = {};
   private activeCompletion: Promise<void> | null = null;
   private resolveActiveCompletion: (() => void) | null = null;
@@ -104,24 +106,37 @@ class RunnerState {
       return;
     }
     if (method === "stream.value") {
+      const streamId = safeId(params.streamId, "streamId");
       const queue = this.inputQueue(params.streamId);
-      await queue.push(params.value);
+      if (!queue) return;
+      try {
+        await queue.push(params.value);
+      } catch (error) {
+        if (this.retiringCapabilityInputIds.has(streamId)) return;
+        throw error;
+      }
       return;
     }
     if (method === "stream.end") {
       const queue = this.inputQueue(params.streamId);
+      if (!queue) return;
       queue.end();
       return;
     }
     if (method === "stream.error") {
       const queue = this.inputQueue(params.streamId);
+      if (!queue) return;
       queue.fail(new StageError({ code: "UPSTREAM_STREAM_ERROR", message: "host input stream failed" }));
       return;
     }
     throw new RpcFault(-32004, "PROTOCOL_VIOLATION", { method });
   }
 
-  cancel(reason: string): void { this.active?.source.cancel(reason); }
+  cancel(reason: string): void {
+    this.active?.source.cancel(reason);
+    const error = new CancellationError(reason);
+    for (const streamId of this.capabilityInputIds) this.inputs.get(streamId)?.fail(error);
+  }
 
   shutdown(peer: RunnerRpcPeer): Promise<void> {
     if (this.shutdownPromise) return this.shutdownPromise;
@@ -206,7 +221,12 @@ class RunnerState {
         this.inputs.set(inputStreamId, queue);
         input = queue;
       }
-      const context = buildWireContext(peer, streamId, source.token);
+      const context = buildWireContext(
+        peer,
+        streamId,
+        source.token,
+        handle => this.openCapabilityStream(peer, streamId, handle),
+      );
       const output = await this.stage.run(input as never, params.config, context);
       source.token.throwIfCancelled();
       if (this.stage.produces.name === "Stream") {
@@ -224,6 +244,7 @@ class RunnerState {
     } catch (error) {
       throw stageFault(error);
     } finally {
+      await this.closeCapabilityStreams(peer, streamId);
       if (inputStreamId !== null) {
         this.inputs.get(inputStreamId)?.end();
         this.inputs.delete(inputStreamId);
@@ -261,11 +282,63 @@ class RunnerState {
     }
   }
 
-  private inputQueue(rawId: unknown): AsyncQueue<unknown> {
+  private inputQueue(rawId: unknown): AsyncQueue<unknown> | null {
     const id = safeId(rawId, "streamId");
+    if (this.retiringCapabilityInputIds.has(id)) return null;
     const queue = this.inputs.get(id);
     if (!queue) throw new RpcFault(-32004, "PROTOCOL_VIOLATION", { streamId: id });
     return queue;
+  }
+
+  private openCapabilityStream(peer: RunnerRpcPeer, ownerRunId: number, handle: unknown): AsyncIterable<unknown> {
+    if (!isCanonicalStreamHandle(handle)) throw new RunnerProtocolError("storage.watch result is malformed");
+    const streamId = safeId(handle.streamId, "capability streamId");
+    if (streamId === 0 || this.inputs.has(streamId)) {
+      throw new RunnerProtocolError("storage.watch returned a duplicate stream handle");
+    }
+    const queue = new AsyncQueue<unknown>(this.limits.maxBufferedStreamValues, this.limits.maxBufferedStreamBytes);
+    this.inputs.set(streamId, queue);
+    this.capabilityInputIds.add(streamId);
+    const state = this;
+    return {
+      async *[Symbol.asyncIterator]() {
+        let started = false;
+        try {
+          await peer.notify("stream.start", { streamId });
+          started = true;
+          for await (const value of queue) yield value;
+        } finally {
+          await state.closeCapabilityStream(peer, ownerRunId, streamId, started);
+        }
+      },
+    };
+  }
+
+  private async closeCapabilityStream(
+    peer: RunnerRpcPeer,
+    ownerRunId: number,
+    streamId: number,
+    notify: boolean,
+  ): Promise<void> {
+    if (!this.capabilityInputIds.delete(streamId)) return;
+    this.retiringCapabilityInputIds.add(streamId);
+    this.inputs.get(streamId)?.end();
+    this.inputs.delete(streamId);
+    try {
+      if (notify) await peer.request("stream.cancel", {
+        streamId: ownerRunId,
+        capabilityStreamId: streamId,
+      });
+      this.retiringCapabilityInputIds.delete(streamId);
+    } catch (error) {
+      peer.fail(new RunnerProtocolError("host did not acknowledge capability stream cancellation"));
+      throw error;
+    }
+  }
+
+  private async closeCapabilityStreams(peer: RunnerRpcPeer, ownerRunId: number): Promise<void> {
+    await Promise.all([...this.capabilityInputIds].map(streamId =>
+      this.closeCapabilityStream(peer, ownerRunId, streamId, true)));
   }
 }
 

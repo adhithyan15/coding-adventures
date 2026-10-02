@@ -28,6 +28,12 @@
       "justification": "Coalesces authored project changes into conservative full-pipeline preview rebuilds."
     },
     {
+      "category": "fs",
+      "action": "watch",
+      "target": "dynamic plugin grant: non-reserved configured project storage paths requested under storage:read",
+      "justification": "Streams bounded contained project changes only after the plugin host validates the installed plugin's manifest-bound storage:read grant."
+    },
+    {
       "category": "net",
       "action": "listen",
       "target": "127.0.0.1:*",

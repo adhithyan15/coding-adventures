@@ -37,6 +37,18 @@ def _peer(**limits: int) -> Peer:
     )
 
 
+@define_stage(
+    name="@example/security-passthrough",
+    version="1.0.0",
+    api_version=1,
+    consumes="ContentNode",
+    produces="ContentNode",
+    capabilities=[],
+)
+async def _passthrough_stage(value: Any, _config: Any, _context: Any) -> Any:
+    return value
+
+
 async def test_stream_failure_discards_buffered_values_and_wakes_reader() -> None:
     stream = StreamInput(2, 128)
     await stream.push({"stale": True})
@@ -50,6 +62,75 @@ async def test_stream_failure_discards_buffered_values_and_wakes_reader() -> Non
     await empty.fail(RuntimeError("stop"))
     with pytest.raises(RuntimeError, match="stop"):
         await blocked
+
+
+async def test_retiring_capability_stream_wakes_and_discards_blocked_push() -> None:
+    @define_stage(
+        name="@example/retiring-stream",
+        version="1.0.0",
+        api_version=1,
+        consumes="ContentNode",
+        produces="ContentNode",
+        capabilities=[],
+    )
+    async def stage(value: Any, _config: Any, _context: Any) -> Any:
+        return value
+
+    state = RunnerState(stage, "retiring-stream", None, 1, 128)
+    stream = StreamInput(1, 128)
+    state.inputs[701] = stream
+    await state.notification("stream.value", {"streamId": 701, "value": {"first": True}})
+    blocked = asyncio.create_task(
+        state.notification("stream.value", {"streamId": 701, "value": {"late": True}})
+    )
+    await asyncio.sleep(0)
+    assert not blocked.done()
+    state.retiring_capability_input_ids.add(701)
+    await stream.end()
+    await blocked
+
+
+async def test_capability_retirement_requires_ack_and_retains_failed_tombstone() -> None:
+    class AckPeer:
+        def __init__(self, failure: BaseException | None = None) -> None:
+            self.failure = failure
+            self.failed_with: BaseException | None = None
+            self.requests: list[tuple[str, Any]] = []
+
+        async def request(self, method: str, params: Any) -> Any:
+            self.requests.append((method, params))
+            if self.failure is not None:
+                raise self.failure
+            return None
+
+        def fail(self, error: BaseException) -> None:
+            self.failed_with = error
+
+    acknowledged = RunnerState(_passthrough_stage, "security-passthrough", None, 1, 128)
+    acknowledged_peer = AckPeer()
+    acknowledged.peer = acknowledged_peer  # type: ignore[assignment]
+    acknowledged.capability_input_ids.add(701)
+    acknowledged.inputs[701] = StreamInput(1, 128)
+    await acknowledged._close_capability_stream(11, 701, True)
+    assert acknowledged_peer.requests == [
+        ("stream.cancel", {"streamId": 11, "capabilityStreamId": 701})
+    ]
+    assert 701 not in acknowledged.retiring_capability_input_ids
+
+    failed = RunnerState(_passthrough_stage, "security-passthrough", None, 1, 128)
+    failed_peer = AckPeer(ProtocolError("no acknowledgement"))
+    failed.peer = failed_peer  # type: ignore[assignment]
+    failed.capability_input_ids.add(702)
+    failed.inputs[702] = StreamInput(1, 128)
+    with pytest.raises(ProtocolError, match="no acknowledgement"):
+        await failed._close_capability_stream(12, 702, True)
+    assert 702 in failed.retiring_capability_input_ids
+    assert isinstance(failed_peer.failed_with, ProtocolError)
+
+    for method in ("stream.value", "stream.end", "stream.error"):
+        await failed.notification(method, {"streamId": 702, "value": "late"})
+    with pytest.raises(RpcFault, match="PROTOCOL_VIOLATION"):
+        await failed.notification("stream.unknown", {"streamId": 702})
 
 
 async def test_peer_budgets_outgoing_work_and_rejects_boolean_error_codes() -> None:

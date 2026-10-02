@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Bridge `ctx.storage.watch` as a bounded host-owned capability stream instead
+  of a materialized response. The runner explicitly starts and cancels each
+  handle, and run cancellation, completion, disposal, or protocol failure
+  closes every outstanding watcher.
 - Let product callers load `grants.toml` for every discovered plugin in the
   same snapshot pass, granting nothing for missing or stale manifest hashes
   and rejecting malformed authority before any stage can resolve. Discovery

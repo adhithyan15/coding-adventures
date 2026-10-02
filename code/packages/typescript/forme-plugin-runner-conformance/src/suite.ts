@@ -53,6 +53,7 @@ async function lifecycleAndValues(command: RunnerCommand): Promise<void> {
 async function capabilityMediation(command: RunnerCommand): Promise<void> {
   const session = new RunnerSession(command, "single");
   const calls: Array<{ method: string; params: Readonly<Record<string, unknown>> }> = [];
+  const watchStreamId = 701;
   session.onRequest(async (method, params) => {
     calls.push({ method, params });
     if (!Number.isSafeInteger(params.streamId) || Number(params.streamId) <= 0) throw new Error("missing active stream id");
@@ -66,7 +67,8 @@ async function capabilityMediation(command: RunnerCommand): Promise<void> {
       "ctx.storage.exists": true,
       "ctx.storage.stat": { size: 5, mtimeMs: 0, type: "file" },
       "ctx.storage.list": [{ path: "posts/a.md", type: "file" }],
-      "ctx.storage.watch": [{ path: "posts/a.md", kind: "changed" }],
+      "ctx.storage.watch": { kind: "stream-handle", streamId: watchStreamId },
+      "stream.cancel": null,
       "ctx.storage.remove": null,
       "ctx.env.get": "allowed",
       "ctx.time.nowMs": 42,
@@ -90,13 +92,26 @@ async function capabilityMediation(command: RunnerCommand): Promise<void> {
   });
   try {
     await ready(session, command, "ContentNode", "ContentNode");
-    const result = await session.request("stage.run", { input: { operation: "context" }, config: {}, streamId: 11 });
+    const run = session.request("stage.run", { input: { operation: "context" }, config: {}, streamId: 11 });
+    await waitForNotification(session, "stream.start", { streamId: watchStreamId });
+    session.notify("stream.value", {
+      streamId: watchStreamId,
+      value: { path: "posts/a.md", kind: "modified" },
+    });
+    for (let index = 0; index < 3; index += 1) {
+      session.notify("stream.value", {
+        streamId: watchStreamId,
+        value: { path: `posts/late-${index}.md`, kind: "modified" },
+      });
+    }
+    const result = await run;
     match(result, {
       kind: "single",
       value: {
         bytes: new Uint8Array(Buffer.from("hello")), bounded: new Uint8Array(Buffer.from("hello")),
         exists: true, env: "allowed", envRequired: "allowed", nowMs: 42, home: "/home/test", status: 201,
         body: new Uint8Array(Buffer.from("network")),
+        watched: [{ path: "posts/a.md", kind: "modified" }],
         shell: { exitCode: 0, stdout: new Uint8Array(Buffer.from("stdout")), stderr: new Uint8Array(Buffer.from("stderr")) },
       },
     }, "mediated capability result");
@@ -124,11 +139,17 @@ async function capabilityMediation(command: RunnerCommand): Promise<void> {
       call("ctx.filesystem.readAbsolute", { path: "/safe/a" }),
       call("ctx.filesystem.readAbsolute", { path: "/safe/a" }),
     ];
-    equal(calls, expected, "mediated capability call order");
+    equal(calls.filter(entry => entry.method !== "stream.cancel"), expected, "mediated capability call order");
+    equal(calls.filter(entry => entry.method === "stream.cancel"), [
+      call("stream.cancel", { capabilityStreamId: watchStreamId }),
+    ], "acknowledged storage watch cancellation");
     equal(session.notifications.filter(entry => entry.method === "log"), [{
       jsonrpc: "2.0", method: "log",
       params: { level: "info", message: "runner fixture", fields: { ok: true } },
     }], "wire logger notification");
+    equal(session.notifications.filter(entry => entry.method === "stream.start"), [
+      { jsonrpc: "2.0", method: "stream.start", params: { streamId: watchStreamId } },
+    ], "storage watch lifecycle notification");
     await expectCapabilityDenied(session.request("stage.run", {
       input: { operation: "capabilityDenied" }, config: {}, streamId: 12,
     }));
@@ -136,6 +157,19 @@ async function capabilityMediation(command: RunnerCommand): Promise<void> {
   } finally {
     await session.terminate();
   }
+}
+
+async function waitForNotification(
+  session: RunnerSession,
+  method: string,
+  params: Readonly<Record<string, unknown>>,
+): Promise<void> {
+  for (let attempt = 0; attempt < 3_000; attempt += 1) {
+    if (session.notifications.some(entry => entry.method === method
+        && JSON.stringify(entry.params) === JSON.stringify(params))) return;
+    await new Promise(resolve => setTimeout(resolve, 1));
+  }
+  throw new RunnerConformanceError(`runner did not emit ${method}`);
 }
 
 async function identityMismatch(command: RunnerCommand): Promise<void> {

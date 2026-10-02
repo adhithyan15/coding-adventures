@@ -42,7 +42,10 @@ const stages = {
         const entries = [];
         for await (const entry of ctx.storage.list("posts")) entries.push(entry);
         const watched = [];
-        for await (const entry of ctx.storage.watch("posts")) watched.push(entry);
+        for await (const entry of ctx.storage.watch("posts")) {
+          watched.push(entry);
+          break;
+        }
         await ctx.storage.remove("out/stale.md");
         const response = await ctx.network.fetch("https://example.com/data", {
           method: "POST", body: new Uint8Array([1, 2, 3]), headers: { "x-test": "yes" },

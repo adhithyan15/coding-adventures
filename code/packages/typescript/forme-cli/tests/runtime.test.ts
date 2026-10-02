@@ -53,7 +53,14 @@ async function verifyWindowsRuntimeRoot(path: string): Promise<{
 
 async function pythonDistribution(): Promise<{ readonly executable: string; readonly root: string }> {
   pythonDistributionPromise ??= (async () => {
-    const { stdout } = await execFileAsync(process.platform === "win32" ? "python" : "python3", [
+    // setup-python prepends a separately packaged CPython to PATH whenever this
+    // repository's Python packages are in the CI change set. The Linux native
+    // sandbox acceptance fixture intentionally exercises the distro runtime
+    // whose complete system-library closure the launcher exposes.
+    const discoveryExecutable = process.platform === "win32"
+      ? "python"
+      : process.platform === "linux" ? "/usr/bin/python3" : "python3";
+    const { stdout } = await execFileAsync(discoveryExecutable, [
       "-c",
       "import os,sys; app=os.path.join(sys.prefix,'Resources','Python.app','Contents','MacOS','Python'); print(os.path.realpath(app if os.path.isfile(app) else sys.executable)); print(os.path.realpath(sys.prefix))",
     ]);

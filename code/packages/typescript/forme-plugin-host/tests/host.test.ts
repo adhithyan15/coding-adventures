@@ -194,10 +194,32 @@ describe("plugin host cross-process contract", () => {
   });
 
   it("runs a real TypeScript SDK stage end to end", async () => {
+    let watchClosed = false;
+    const liveStorage: StorageApi = {
+      ...storage,
+      watch(path) {
+        if (path === "empty") return storage.watch(path);
+        let delivered = false;
+        let finish: ((value: IteratorResult<never>) => void) | null = null;
+        return {
+          [Symbol.asyncIterator]() { return this; },
+          async next() {
+            if (delivered) return new Promise<IteratorResult<never>>(resolve => { finish = resolve; });
+            delivered = true;
+            return { done: false, value: { type: "modified", path } };
+          },
+          async return() {
+            watchClosed = true;
+            finish?.({ done: true, value: undefined });
+            return { done: true, value: undefined };
+          },
+        };
+      },
+    };
     const host = await createPluginHost({
       roots: [fixtureRoot],
       grants: { "@example/sdk": ["storage:read"] },
-      capabilityApis: { storage },
+      capabilityApis: { storage: liveStorage },
       processFactory: processFactory(),
     });
     const stage = await host.loadStage({
@@ -207,6 +229,12 @@ describe("plugin host cross-process contract", () => {
       bytes: Uint8Array;
     };
     expect(result.bytes).toEqual(new TextEncoder().encode("read:posts/sdk.md"));
+    await expect(stage.run({ watchPath: "posts" } as never, {}, context())).resolves.toMatchObject({
+      change: { type: "modified", path: "posts" },
+    });
+    expect(watchClosed).toBe(true);
+    await expect(stage.run({ watchPath: "empty" } as never, {}, context()))
+      .resolves.toEqual({ watchPath: "empty", ended: true });
     await stage.dispose?.(initContext());
     await host.dispose();
   });
@@ -611,6 +639,9 @@ describe("plugin host cross-process contract", () => {
   it.each([
     ["badStreamNotification"],
     ["inactiveStreamNotification"],
+    ["badCapabilityStreamId"],
+    ["inactiveCapabilityStream"],
+    ["duplicateCapabilityStream"],
     ["invalidLog"],
     ["unknownNotification"],
   ])("isolates malformed %s notifications", async (key) => {
@@ -620,6 +651,62 @@ describe("plugin host cross-process contract", () => {
     }, `malformed-${key}`);
     await stage.init?.({}, initContext());
     await expect(stage.run({ [key]: true } as never, {}, context()))
+      .rejects.toThrow();
+    await host.dispose();
+  });
+
+  it("accepts explicit cancellation of a capability stream", async () => {
+    const host = await makeHost();
+    const stage = await host.loadStage({
+      kind: "stage-ref", packageName: "@example/echo", export: "echo",
+    }, "cancel-capability-stream");
+    await expect(stage.run({ cancelCapabilityStream: true } as never, {}, context()))
+      .resolves.toEqual({ cancelCapabilityStream: true, cancelCode: null });
+    await expect(stage.run({ staleCapabilityCancel: true } as never, {}, context()))
+      .resolves.toEqual({ staleCapabilityCancel: true, cancelCode: -32001 });
+    await expect(stage.run({ badCapabilityCancel: true } as never, {}, context()))
+      .resolves.toEqual({ badCapabilityCancel: true, cancelCode: expect.any(Number) });
+    await expect(stage.run({ inactiveCapabilityCancel: true } as never, {}, context()))
+      .resolves.toEqual({ inactiveCapabilityCancel: true, cancelCode: expect.any(Number) });
+    await stage.dispose?.(initContext());
+    await host.dispose();
+  });
+
+  it("caps the number of capability streams owned by one run", async () => {
+    const host = await makeHost();
+    const stage = await host.loadStage({
+      kind: "stage-ref", packageName: "@example/echo", export: "echo",
+    }, "capability-stream-budget");
+    await expect(stage.run({ exhaustCapabilityStreams: true } as never, {}, context()))
+      .resolves.toEqual({ exhaustCapabilityStreams: true, overflowCode: -32003 });
+    await stage.dispose?.(initContext());
+    await host.dispose();
+  });
+
+  it("fails closed when a capability stream pump ignores bounded cancellation", async () => {
+    const never = new Promise<IteratorResult<unknown>>(() => undefined);
+    const stuckStorage: StorageApi = {
+      ...storage,
+      watch() {
+        return {
+          [Symbol.asyncIterator]() {
+            return { next: () => never, return: () => never };
+          },
+        };
+      },
+    };
+    const host = await createPluginHost({
+      roots: [fixtureRoot],
+      grants: { "@example/echo": ["storage:read"] },
+      capabilityApis: { storage: stuckStorage },
+      processFactory: processFactory(),
+      disposeGracePeriodMs: 10,
+      killGracePeriodMs: 30,
+    });
+    const stage = await host.loadStage({
+      kind: "stage-ref", packageName: "@example/echo", export: "echo",
+    }, "stuck-capability-stream");
+    await expect(stage.run({ stuckCapabilityCancel: true } as never, {}, context()))
       .rejects.toThrow();
     await host.dispose();
   });

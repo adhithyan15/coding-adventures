@@ -32,6 +32,8 @@ callbacks receive the same mediated context, and one-shot process-signal
 shutdown cancels active work, wakes streams, runs bounded cleanup, and stops
 the peer. Ingress, in-flight requests, outgoing notifications, pending calls,
 streams, and frames all have explicit memory or concurrency limits.
+`ctx.storage.watch()` uses the same bounded queues and cancels its host handle
+on early return; active capability streams are also released at run teardown.
 
 `sh BUILD` runs formatting, lint, strict typing, unit coverage, and the exact
 language-neutral corpus also passed by the TypeScript reference runner.

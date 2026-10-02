@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Consume live host-mediated storage watches through explicit bounded stream
+  handles, cancelling abandoned iterators and all outstanding capability
+  streams when a run ends.
+
 ## 0.1.0 — 2026-09-30
 
 - Add the bounded plugin-side Content-Length JSON-RPC peer and strict binary

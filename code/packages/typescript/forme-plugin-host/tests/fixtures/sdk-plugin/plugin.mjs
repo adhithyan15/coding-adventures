@@ -12,6 +12,12 @@ const stage = defineStage({
   capabilities: ["storage:read"],
   configSchema: null,
   async run(input, _config, ctx) {
+    if (input?.watchPath) {
+      for await (const change of ctx.storage.watch(input.watchPath)) {
+        return { ...input, change };
+      }
+      return { ...input, ended: true };
+    }
     if (input?.readPath) {
       const bytes = await ctx.storage.read(input.readPath);
       ctx.logger.info("sdk fixture", { bytes: bytes.byteLength });

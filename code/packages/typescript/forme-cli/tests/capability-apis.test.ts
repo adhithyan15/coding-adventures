@@ -32,6 +32,81 @@ describe("product capability APIs", () => {
     expect(await storage.exists("posts/a.md")).toBe(false);
   });
 
+  it("streams live storage changes and closes on iterator return", async () => {
+    const root = await temporaryRoot("forme-storage-watch-");
+    await mkdir(join(root, "posts"));
+    await writeFile(join(root, "posts", "a.md"), "before");
+    const storage = createProjectStorage(root);
+    const iterator = storage.watch("posts")[Symbol.asyncIterator]();
+    const next = iterator.next();
+    let revision = 0;
+    const writer = setInterval(() => {
+      void writeFile(join(root, "posts", "a.md"), `after-${revision++}`);
+    }, 25);
+    try {
+      const event = await Promise.race([
+        next,
+        new Promise((_, reject) => setTimeout(() => reject(new Error("watch timed out")), 4_000)),
+      ]) as IteratorResult<{ path: string }>;
+      expect(event.done).toBe(false);
+      expect(["posts/a.md", "posts/posts"]).toContain(event.value?.path);
+    } finally {
+      clearInterval(writer);
+    }
+    await expect(iterator.return?.()).resolves.toMatchObject({ done: true });
+  });
+
+  it("preserves a directory child whose name matches the watched directory", async () => {
+    const root = await temporaryRoot("forme-storage-watch-same-name-");
+    await mkdir(join(root, "posts"));
+    await writeFile(join(root, "posts", "posts"), "before");
+    const iterator = createProjectStorage(root).watch("posts")[Symbol.asyncIterator]();
+    const next = iterator.next();
+    let revision = 0;
+    const writer = setInterval(() => {
+      void writeFile(join(root, "posts", "posts"), `after-${revision++}`);
+    }, 25);
+    try {
+      const event = await Promise.race([
+        next,
+        new Promise((_, reject) => setTimeout(() => reject(new Error("watch timed out")), 4_000)),
+      ]) as IteratorResult<{ path: string }>;
+      expect(event).toMatchObject({ done: false, value: { path: "posts/posts" } });
+    } finally {
+      clearInterval(writer);
+      await iterator.return?.();
+    }
+  });
+
+  it("hides watched aliases into host-reserved roots", async () => {
+    const root = await temporaryRoot("forme-storage-watch-reserved-");
+    const reserved = await temporaryRoot("forme-storage-watch-host-");
+    await mkdir(join(root, "posts"));
+    const iterator = createProjectStorage(root, [reserved]).watch("posts")[Symbol.asyncIterator]();
+    const next = iterator.next();
+    let attempt = 0;
+    const writer = setInterval(() => {
+      const current = attempt++;
+      void symlink(
+        reserved,
+        join(root, "posts", `host-state-${current}`),
+        process.platform === "win32" ? "junction" : "dir",
+      ).then(async () => {
+        if (current >= 2) await writeFile(join(root, "posts", "visible.md"), "visible");
+      }).catch(() => undefined);
+    }, 25);
+    try {
+      const event = await Promise.race([
+        next,
+        new Promise((_, reject) => setTimeout(() => reject(new Error("watch timed out")), 4_000)),
+      ]) as IteratorResult<{ path: string }>;
+      expect(event).toMatchObject({ done: false, value: { path: "posts/visible.md" } });
+    } finally {
+      clearInterval(writer);
+      await iterator.return?.();
+    }
+  });
+
   it("rejects traversal and linked storage paths", async () => {
     const root = await temporaryRoot("forme-storage-root-");
     const outside = await temporaryRoot("forme-storage-outside-");

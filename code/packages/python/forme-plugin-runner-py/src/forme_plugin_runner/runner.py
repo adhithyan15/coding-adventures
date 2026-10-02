@@ -104,6 +104,8 @@ class RunnerState:
         self.last_config: Any = {}
         self._shutdown_task: asyncio.Task[None] | None = None
         self.inputs: dict[int, StreamInput] = {}
+        self.capability_input_ids: set[int] = set()
+        self.retiring_capability_input_ids: set[int] = set()
         self.peer: Peer | None = None
 
     async def request(self, request_id: int, method: str, raw_params: Any) -> Any:
@@ -131,12 +133,21 @@ class RunnerState:
                 assert self.cancellation is not None
                 self.cancel(reason if isinstance(reason, str) else "operation cancelled")
             return
+        if method not in {"stream.value", "stream.end", "stream.error"}:
+            raise RpcFault(-32004, "PROTOCOL_VIOLATION", {"method": method})
         stream_id = _safe_id(params.get("streamId"), "streamId")
+        if stream_id in self.retiring_capability_input_ids:
+            return
         stream = self.inputs.get(stream_id)
         if stream is None:
             raise RpcFault(-32004, "PROTOCOL_VIOLATION", {"streamId": stream_id})
         if method == "stream.value":
-            await stream.push(params.get("value"))
+            try:
+                await stream.push(params.get("value"))
+            except BaseException:
+                if stream_id in self.retiring_capability_input_ids:
+                    return
+                raise
             return
         if method == "stream.end":
             await stream.end()
@@ -144,14 +155,16 @@ class RunnerState:
         if method == "stream.error":
             await stream.fail(StageError("UPSTREAM_STREAM_ERROR", "host input stream failed"))
             return
-        raise RpcFault(-32004, "PROTOCOL_VIOLATION", {"method": method})
+        raise AssertionError("validated stream notification was not handled")
 
     def cancel(self, reason: str) -> None:
         if self.cancellation is not None:
             self.cancellation.cancel(reason)
         error = CancellationError(reason)
-        for stream in self.inputs.values():
-            asyncio.create_task(stream.fail(error))
+        for stream_id in self.capability_input_ids:
+            stream = self.inputs.get(stream_id)
+            if stream is not None:
+                asyncio.create_task(stream.fail(error))
         task = self.active_task
         if task is not None and task is not asyncio.current_task() and not task.done():
             task.cancel(reason)
@@ -256,7 +269,13 @@ class RunnerState:
                 self.inputs[input_stream_id] = stream
                 input_value = stream
             assert self.peer is not None
-            context = StageContext(self.peer, stream_id, cancellation, self.last_config)
+            context = StageContext(
+                self.peer,
+                stream_id,
+                cancellation,
+                self.last_config,
+                lambda handle: self._open_capability_stream(stream_id, handle),
+            )
             output = await self.stage.run(input_value, params.get("config"), context)
             cancellation.throw_if_cancelled()
             if self.stage.produces.startswith("Stream<"):
@@ -275,6 +294,7 @@ class RunnerState:
         except BaseException as error:
             raise _stage_fault(error) from error
         finally:
+            await self._close_capability_streams(stream_id)
             if output_iterator is not None:
                 await _close_async_iterator(output_iterator)
             if input_stream_id is not None:
@@ -284,6 +304,56 @@ class RunnerState:
             self.cancellation = None
             self.active_task = None
             self.active_completion.set()
+
+    async def _open_capability_stream(self, owner_run_id: int, handle: Any) -> AsyncIterator[Any]:
+        if (
+            not isinstance(handle, dict)
+            or set(handle) != {"kind", "streamId"}
+            or handle.get("kind") != "stream-handle"
+        ):
+            raise ProtocolError("storage.watch result is malformed")
+        stream_id = _safe_id(handle.get("streamId"), "capability streamId")
+        if stream_id == 0 or stream_id in self.inputs:
+            raise ProtocolError("storage.watch returned a duplicate stream handle")
+        stream = StreamInput(self.max_buffered_stream_values, self.max_buffered_stream_bytes)
+        self.inputs[stream_id] = stream
+        self.capability_input_ids.add(stream_id)
+        started = False
+        try:
+            assert self.peer is not None
+            await self.peer.notify("stream.start", {"streamId": stream_id})
+            started = True
+            async for value in stream:
+                yield value
+        finally:
+            await self._close_capability_stream(owner_run_id, stream_id, started)
+
+    async def _close_capability_stream(
+        self, owner_run_id: int, stream_id: int, notify: bool
+    ) -> None:
+        if stream_id not in self.capability_input_ids:
+            return
+        self.capability_input_ids.remove(stream_id)
+        self.retiring_capability_input_ids.add(stream_id)
+        stream = self.inputs.pop(stream_id, None)
+        if stream is not None:
+            await stream.end()
+        try:
+            if notify:
+                assert self.peer is not None
+                await self.peer.request(
+                    "stream.cancel",
+                    {"streamId": owner_run_id, "capabilityStreamId": stream_id},
+                )
+            self.retiring_capability_input_ids.discard(stream_id)
+        except BaseException:
+            assert self.peer is not None
+            self.peer.fail(ProtocolError("host did not acknowledge capability stream cancellation"))
+            raise
+
+    async def _close_capability_streams(self, owner_run_id: int) -> None:
+        for stream_id in list(self.capability_input_ids):
+            await self._close_capability_stream(owner_run_id, stream_id, True)
 
     async def _dispose(self) -> None:
         if self.phase == "disposed":
@@ -296,6 +366,8 @@ class RunnerState:
         for stream in self.inputs.values():
             await stream.end()
         self.inputs.clear()
+        self.capability_input_ids.clear()
+        self.retiring_capability_input_ids.clear()
         try:
             if self.stage.dispose is not None:
                 assert self.peer is not None
@@ -392,7 +464,7 @@ async def _run(
     shutdown_task: asyncio.Task[bool] | None = None
     force_exit: asyncio.TimerHandle | None = None
 
-    def on_signal() -> None:
+    def on_signal() -> None:  # pragma: no cover - POSIX-only event-loop callback
         nonlocal force_exit, shutdown_task
         if shutdown_task is None:
             force_exit = loop.call_later(signal_shutdown_timeout_ms / 1000 + 0.1, os._exit, 1)
@@ -403,20 +475,22 @@ async def _run(
     for signum in (signal.SIGINT, signal.SIGTERM):
         with contextlib.suppress(NotImplementedError, RuntimeError, ValueError):
             loop.add_signal_handler(signum, on_signal)
-            installed_signals.append(signum)
+            installed_signals.append(signum)  # pragma: no cover - unsupported on Windows
     try:
         await peer.run()
     finally:
-        for signum in installed_signals:
+        for signum in installed_signals:  # pragma: no cover - empty on Windows
             with contextlib.suppress(NotImplementedError, RuntimeError, ValueError):
                 loop.remove_signal_handler(signum)
-        if shutdown_task is not None:
+        if shutdown_task is not None:  # pragma: no cover - set only by POSIX signals
             with contextlib.suppress(BaseException):
                 if await shutdown_task and force_exit is not None:
                     force_exit.cancel()
 
 
-async def _bounded_signal_shutdown(state: RunnerState, peer: Peer, timeout_ms: int) -> bool:
+async def _bounded_signal_shutdown(  # pragma: no cover - reached only by POSIX signals
+    state: RunnerState, peer: Peer, timeout_ms: int
+) -> bool:
     try:
         await asyncio.wait_for(state.shutdown(), timeout=timeout_ms / 1000)
         return True

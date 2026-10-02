@@ -16,8 +16,7 @@ The package deliberately does **not** spawn an unsandboxed subprocess. Callers
 must inject a `PluginProcessFactory`, and each returned process must attest that
 the FM02 isolation boundary was established and that it staged the exact
 manifest-plus-entry identity the host verified. Runtime adapters, signed
-installation, cancellable live storage-watch mediation, and per-OS sandbox
-launchers remain FM-B049–FM-B052.
+installation and per-OS sandbox launchers remain FM-B049–FM-B052.
 
 ```ts
 const host = await createPluginHost({
@@ -66,4 +65,7 @@ byte and entry budgets.
 filesystem implementations must honor the FM01 complete-or-reject bounded-read
 contract. Supplying an API does not grant it: the host still intersects the
 manifest declaration, policy grants, and instance grants for every request,
-and every request must carry the currently active run ID.
+and every request must carry the currently active run ID. A storage watch is a
+live bounded stream: the plugin runner starts its opaque handle explicitly and
+cancels it on early return. The host caps concurrent handles and closes all
+remaining iterators when the active run ends or the session retires.

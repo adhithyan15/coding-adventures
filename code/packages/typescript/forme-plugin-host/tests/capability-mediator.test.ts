@@ -67,8 +67,12 @@ describe("capability mediation", () => {
       .resolves.toMatchObject({ size: 4 });
     await expect(mediateCapabilityRequest("ctx.storage.list", { path: "a" }, ctx, grants))
       .resolves.toEqual([{ path: "a", type: "file" }]);
+    const openStream = vi.fn(() => ({ kind: "stream-handle", streamId: 17 }));
+    await expect(mediateCapabilityRequest("ctx.storage.watch", { path: "a" }, ctx, grants, openStream))
+      .resolves.toEqual({ kind: "stream-handle", streamId: 17 });
+    expect(openStream).toHaveBeenCalledOnce();
     await expect(mediateCapabilityRequest("ctx.storage.watch", { path: "a" }, ctx, grants))
-      .rejects.toMatchObject({ rpcCode: -32601 });
+      .rejects.toMatchObject({ rpcCode: -32603 });
     await expect(mediateCapabilityRequest("ctx.storage.remove", { path: "a" }, ctx, grants))
       .resolves.toBeNull();
   });
@@ -168,6 +172,11 @@ describe("capability mediation", () => {
     const encoded = Buffer.from(tooLarge).toString("base64");
     await expect(mediateCapabilityRequest(
       "ctx.storage.write", { path: "large", bytes: encoded }, makeContext(), ["storage:write"],
+    )).rejects.toMatchObject({ rpcCode: -32003 });
+    const oversizedEncoding = Buffer.from(new Uint8Array(1024 * 1024 + 4)).toString("base64");
+    await expect(mediateCapabilityRequest(
+      "ctx.storage.write", { path: "preflight", bytes: oversizedEncoding },
+      makeContext(), ["storage:write"],
     )).rejects.toMatchObject({ rpcCode: -32003 });
     await expect(mediateCapabilityRequest(
       "ctx.network.fetch",
