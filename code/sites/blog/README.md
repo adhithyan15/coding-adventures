@@ -97,6 +97,9 @@ last good blog when an edit produces a build error.
 - `interactivity-stage.ts` — the narrow product authority boundary that
   attaches the reviewed pipeline-step module identity and source to the one
   article allowed to use it.
+- `pipeline-steps.test.ts` — DOM-level acceptance for the shipped browser
+  module's fallback preservation, opt-in focus controls, restoration,
+  idempotency, and fail-closed structure checks.
 - `surface-stage.ts` — collection adapter that composes the reusable Forme
   index/feed/sitemap/head generators into deployable pages.
 - `verify.ts` — site-specific filesystem acceptance checks that run after the

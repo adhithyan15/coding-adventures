@@ -53,7 +53,7 @@ describe("live product scheduling", () => {
       expect(warm.buildId).toBe(clean.buildId);
       expect(Object.keys(clean.outputs)).toEqual(["articles", "surface"]);
       expect(JSON.stringify(warm.outputs)).toBe(JSON.stringify(clean.outputs));
-      expectInteractivityOutput(clean);
+      await expectInteractivityOutput(clean);
       await expectFilesMatchReport(warm);
     } finally {
       await rm(reports, { recursive: true, force: true });
@@ -66,7 +66,7 @@ async function build(reportPath: string): Promise<BuildReport> {
   return JSON.parse(await readFile(reportPath, "utf8")) as BuildReport;
 }
 
-function expectInteractivityOutput(report: BuildReport): void {
+async function expectInteractivityOutput(report: BuildReport): Promise<void> {
   const articles = report.outputs.articles;
   expect(articles).toBeDefined();
   const hello = articles?.manifest.routes.find(
@@ -77,6 +77,24 @@ function expectInteractivityOutput(report: BuildReport): void {
     .every(route => route.islands.length === 0)).toBe(true);
   expect(articles?.manifest.assets.filter(asset => asset.mime === "text/javascript"))
     .toHaveLength(1);
+  const helloHtml = await readFile(
+    resolve(here, "dist/blog/2026-05-15-hello-forme.html"),
+    "utf8",
+  );
+  expect([...helloHtml.matchAll(/<li><strong><code>([^<]+)<\/code><\/strong>/g)]
+    .map(match => match[1])).toEqual([
+      "forme-source-fs",
+      "forme-parse-markdown",
+      "blog-attach-interactivity",
+      "forme-resolve-asset-refs-fs",
+      "forme-router",
+      "forme-collect-chronological",
+      "forme-render-static",
+      "forme-load-assets-fs",
+      "blog-surface",
+      "forme-emit-site-fs",
+      "forme-emit-fs",
+    ]);
 }
 
 async function runForme(...args: string[]): Promise<void> {
