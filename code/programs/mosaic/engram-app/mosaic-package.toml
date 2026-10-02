@@ -88,16 +88,21 @@ files = [
   # shape as SwiftUI, unlike Qt.
   { backend = "compose", source = "host/compose/EngramEffects.kt", target = "src/main/kotlin/EngramEffects.kt" },
 ]
+# Each handler claims Engram's two kinds explicitly (UI87 §7.2). Every
+# handler already answers exactly these and fails anything else, so this is the
+# same behaviour said out loud: the generated router sends `importAnki` and
+# `exportAnki` here, `files.open`/`files.save` to Mosaic's platform library,
+# and fails any other kind in the host instead of in Engram's code.
 handlers = [
-  { backend = "qt", include = "engram_effects.h", install = "installEngramEffects" },
+  { backend = "qt", include = "engram_effects.h", install = "installEngramEffects", kinds = ["importAnki", "exportAnki"] },
   # No `include`: Swift has no header, and every file in the module is visible.
-  { backend = "swiftui", install = "installEngramEffects" },
+  { backend = "swiftui", install = "installEngramEffects", kinds = ["importAnki", "exportAnki"] },
   # Relative to `lib/`, which is what the generated `main.dart` imports from.
-  { backend = "flutter", include = "engram_effects.dart", install = "installEngramEffects" },
+  { backend = "flutter", include = "engram_effects.dart", install = "installEngramEffects", kinds = ["importAnki", "exportAnki"] },
 
   # No `include`: Kotlin has no include directive and every file in the module
   # is visible. The emitter refuses one here for exactly that reason.
-  { backend = "compose", install = "installEngramEffects" },
+  { backend = "compose", install = "installEngramEffects", kinds = ["importAnki", "exportAnki"] },
 ]
 
 [kernel]
