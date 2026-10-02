@@ -229,6 +229,13 @@ wasm build and installs nothing), review the lockfile diff, and commit it.
 `build-electron.sh` also pins the packaging tools, `electron-builder` and
 `@electron/asar`, as devDependencies so they come from the lock too.
 
+Two more guards: `npm ci` runs with `--ignore-scripts` (nothing in the build
+needs an install script, and their fallbacks fetch unpinned code), and
+`--update-lock` resolves only versions published at least seven days earlier,
+since most compromised npm releases are pulled within days. The lock test also
+fails on an entry no dependency reaches, a tarball that is not the entry's own,
+and any new package that declares an install script.
+
 ## Emitting every host shell
 
 ```powershell

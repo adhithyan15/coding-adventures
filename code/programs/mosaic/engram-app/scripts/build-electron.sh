@@ -126,9 +126,12 @@ pkg["license"] = "MIT"
 # the committed lockfile like everything else. They used to be fetched by
 # `npx --yes` at whatever version the registry served that day -- unpinned code
 # that builds the installer and opens it again to check it.
+#
+# Keep each on one line of the form dev["name"] = "version": tests/npm_lockfiles.rs
+# reads them from this file to check the lock covers them.
 dev = pkg.setdefault("devDependencies", {})
 dev["electron-builder"] = "25.1.8"
-dev["@electron/asar"] = "4.3.1"
+dev["@electron/asar"] = "4.3.0"
 pkg.setdefault("scripts", {})["package"] = "electron-builder --publish never"
 
 pkg["build"] = {

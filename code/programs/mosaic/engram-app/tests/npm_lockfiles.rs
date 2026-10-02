@@ -156,28 +156,149 @@ fn electron_lock_matches_the_emitted_project_plus_packaging_tools() {
     assert_section_matches("electron", "devDependencies", &dev, &root);
 }
 
+/// Packages allowed to declare an install script. The build installs with
+/// `npm ci --ignore-scripts`, so none of these run; the list exists so that a
+/// regenerated lock which brings in a NEW install-script package is reviewed
+/// rather than slipping in -- the shape most npm supply-chain attacks take.
+const INSTALL_SCRIPT_PACKAGES: &[&str] = &["@swc/core", "esbuild", "fsevents"];
+
+fn lock_packages(lock: &str) -> serde_json::Map<String, Value> {
+    let path = package_root()
+        .join("npm")
+        .join(lock)
+        .join("package-lock.json");
+    read_json(&path)["packages"]
+        .as_object()
+        .expect("packages map")
+        .clone()
+}
+
+/// The package an entry installs: `node_modules/a/node_modules/@s/b` is
+/// `@s/b`, unless the entry is an npm alias, which records the real name.
+fn package_name<'a>(key: &'a str, entry: &'a Value) -> &'a str {
+    entry["name"].as_str().unwrap_or_else(|| {
+        key.rsplit_once("node_modules/")
+            .map(|(_, name)| name)
+            .unwrap_or(key)
+    })
+}
+
+/// The directory whose `node_modules/` an entry was installed into:
+/// `node_modules/a/node_modules/b` -> `node_modules/a`, `node_modules/a` -> ``.
+fn parent_of(key: &str) -> &str {
+    key.rfind("/node_modules/")
+        .map(|at| &key[..at])
+        .unwrap_or("")
+}
+
+/// Where Node would find dependency `name` from the package at `from`: its own
+/// `node_modules/` first, then each enclosing one, up to the root's.
+fn resolve<'a>(
+    packages: &'a serde_json::Map<String, Value>,
+    from: &str,
+    name: &str,
+) -> Option<&'a String> {
+    let mut dir = from.to_string();
+    loop {
+        let candidate = if dir.is_empty() {
+            format!("node_modules/{name}")
+        } else {
+            format!("{dir}/node_modules/{name}")
+        };
+        if let Some((key, _)) = packages.get_key_value(&candidate) {
+            return Some(key);
+        }
+        if dir.is_empty() {
+            return None;
+        }
+        dir = parent_of(&dir).to_string();
+    }
+}
+
 #[test]
-fn locks_resolve_only_from_the_public_registry_with_integrity() {
+fn every_locked_package_is_the_registry_tarball_it_names() {
     for lock in ["web", "electron"] {
-        let path = package_root()
-            .join("npm")
-            .join(lock)
-            .join("package-lock.json");
-        let lockfile = read_json(&path);
-        let packages = lockfile["packages"].as_object().expect("packages map");
-        for (key, entry) in packages {
-            if key.is_empty() || entry.get("link").is_some() {
+        for (key, entry) in lock_packages(lock) {
+            if key.is_empty() {
                 continue;
             }
-            let resolved = entry["resolved"].as_str().unwrap_or_default();
             assert!(
-                resolved.starts_with("https://registry.npmjs.org/"),
-                "npm/{lock}: {key} resolves from {resolved:?}, not the npm registry"
+                entry.get("link").is_none(),
+                "npm/{lock}: {key} is a link, not a registry package"
+            );
+            // The tarball must be the one for this entry's own name and
+            // version, so `node_modules/react` cannot quietly install some
+            // other package's tarball.
+            let name = package_name(&key, &entry);
+            let version = entry["version"].as_str().unwrap_or_default();
+            let basename = name.rsplit('/').next().unwrap_or(name);
+            let expected = format!("https://registry.npmjs.org/{name}/-/{basename}-{version}.tgz");
+            assert_eq!(
+                entry["resolved"].as_str(),
+                Some(expected.as_str()),
+                "npm/{lock}: {key} resolves somewhere other than its registry tarball"
             );
             let integrity = entry["integrity"].as_str().unwrap_or_default();
             assert!(
                 integrity.starts_with("sha512-"),
                 "npm/{lock}: {key} has no sha512 integrity hash"
+            );
+        }
+    }
+}
+
+#[test]
+fn every_locked_package_is_reachable_from_the_project() {
+    // An entry nothing depends on is still installed by `npm ci`. Walk the
+    // dependency graph from the root the way Node resolves modules and fail on
+    // any entry the walk never reaches.
+    for lock in ["web", "electron"] {
+        let packages = lock_packages(lock);
+        let mut reached = std::collections::BTreeSet::from([String::new()]);
+        let mut queue = vec![String::new()];
+        while let Some(key) = queue.pop() {
+            let entry = &packages[&key];
+            let mut sections = vec!["dependencies", "optionalDependencies", "peerDependencies"];
+            if key.is_empty() {
+                sections.push("devDependencies");
+            }
+            for section in sections {
+                let Some(deps) = entry[section].as_object() else {
+                    continue;
+                };
+                for name in deps.keys() {
+                    // A missing optional or peer dependency is npm's to judge.
+                    if let Some(found) = resolve(&packages, &key, name) {
+                        if reached.insert(found.clone()) {
+                            queue.push(found.clone());
+                        }
+                    }
+                }
+            }
+        }
+        let unreachable: Vec<_> = packages
+            .keys()
+            .filter(|key| !reached.contains(*key))
+            .collect();
+        assert!(
+            unreachable.is_empty(),
+            "npm/{lock}: entries no dependency reaches: {unreachable:?}"
+        );
+    }
+}
+
+#[test]
+fn only_known_packages_declare_install_scripts() {
+    for lock in ["web", "electron"] {
+        for (key, entry) in lock_packages(lock) {
+            if entry["hasInstallScript"].as_bool() != Some(true) {
+                continue;
+            }
+            let name = package_name(&key, &entry);
+            assert!(
+                INSTALL_SCRIPT_PACKAGES.contains(&name),
+                "npm/{lock}: {key} has an install script; review it and add it to \
+                 INSTALL_SCRIPT_PACKAGES only if it is expected"
             );
         }
     }
