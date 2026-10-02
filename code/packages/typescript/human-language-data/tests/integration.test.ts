@@ -306,7 +306,8 @@ describe("real curriculum", () => {
       // 87 -> 142: the A1 tranche, fifty-four chapters of five words (this and
       // that, time, places, can and want, things, describing words and verbs),
       // with chapter 99 writing ز and ط from روز and طرف.
-      ...Array.from({ length: 55 }, (_, i) => 88 + i)]);
+      // 142 -> 143: the first A2 writing rung, a model-free connected message.
+      ...Array.from({ length: 56 }, (_, i) => 88 + i)]);
     expect(
       books.books
         .find((book) => book.language === "russian")

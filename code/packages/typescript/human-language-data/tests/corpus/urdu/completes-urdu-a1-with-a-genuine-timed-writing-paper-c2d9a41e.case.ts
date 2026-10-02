@@ -11,11 +11,12 @@ it("completes Urdu A1 with a genuine timed writing paper", () => {
   expect(lesson?.frontmatter.type).toBe("writing");
   expect(Number(lesson?.frontmatter.sequence)).toBe(7520);
   expect(Number(lesson?.frontmatter["duration.max_seconds"])).toBeLessThanOrEqual(280);
-  expect(
-    lessons.toSorted(
-      (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
-    ).at(-1)?.realization.lessonId,
-  ).toBe("UR-W10-a1-timed-production");
+  const a2Successor = lessons.find(
+    (candidate) => candidate.realization.lessonId === "UR-W11-a2-connected-composition",
+  );
+  expect(Number(lesson?.frontmatter.sequence)).toBeLessThan(
+    Number(a2Successor?.frontmatter.sequence ?? Number.POSITIVE_INFINITY),
+  );
 
   const timed = lesson?.blocks.find(
     (block) => block.writingStage === "timed-assessment-production",

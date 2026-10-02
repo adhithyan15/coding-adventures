@@ -55,7 +55,10 @@ it("pins Urdu lesson-content budgets", () =>
     // verbs) and eight reviews, plus chapter 99's two letter lessons (ز and ط)
     // and their two reviews, and one no-new-atom timed writing checkpoint. No
     // idiom, sense or culture claim.
-    lessons: 722,
+    //
+    // 722 -> 723: one no-new-atom A2 connected-composition checkpoint in
+    // chapter 143. No idiom, sense or culture claim.
+    lessons: 723,
     idioms: 2,
     senses: 4,
     cultureClaims: 4,
