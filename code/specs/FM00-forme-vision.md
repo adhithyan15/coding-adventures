@@ -14,7 +14,7 @@
 | Headless build/check/preview | Implemented | FM01, FM03, FM04, FM06, and FM07 have live product coverage. |
 | Headless deployment | Implemented | [FM08](FM08-forme-deploy-runner.md) and FM-B044–FM-B047 close the FM-B012 milestone with live product publication. |
 | Third-party plugin runtime | Implemented | [FM02](FM02-forme-plugin-host.md)'s host, runners, installation, grants, sandboxes, product composition, and live storage-watch mediation close FM-B015 and Extensible v1. |
-| Interactivity IR | Active | [FM05](FM05-forme-interactivity-ir.md) defines the normative v1 contract; FM-B059 owns its validator package before FM-B060/FM-B061 product integration. |
+| Interactivity IR | Implemented | [FM05](FM05-forme-interactivity-ir.md) defines the normative v1 contract; FM-B059–FM-B061 deliver validation, exact per-page selection, and the live progressive-enhancement proof. |
 | Authoring shell and multi-backend proof | Pending | Tracked by FM-B016–FM-B018 in the [roadmap](FM00-forme-completion-roadmap.md). |
 
 This document remains the long-range vision. The implementation ledger and

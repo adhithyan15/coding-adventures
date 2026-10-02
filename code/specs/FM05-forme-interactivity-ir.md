@@ -1,7 +1,7 @@
 # FM05 — Forme Interactivity IR
 
-> **Status:** Normative v1 contract and per-page composition implemented;
-> live progressive-enhancement proof is active in FM-B061.
+> **Status:** Implemented through the normative v1 contract, exact per-page
+> composition, and live progressive-enhancement proof.
 > **Scope:** The backend-neutral state, predicate, binding, event-handler, and
 > island representation carried alongside Content IR and Style IR.
 > **Delivery owner:** FM-B059–FM-B061 and the FM-B013 completion milestone in
@@ -15,7 +15,7 @@
 | Behavior/event/state schema | Implemented | FM-B059 implements this contract in `forme-interactivity-ir`. |
 | Bounded validation and canonical bytes | Implemented | FM-B059 rejects hostile values and emits deterministic JSON. |
 | Per-page island tracking | Implemented | FM-B060 composes validated documents with rendered pages and records exact `usedIslands`. |
-| Progressive-enhancement proof | Active | FM-B061 ships a live fallback plus one bounded enhancement. |
+| Progressive-enhancement proof | Implemented | FM-B061 ships a live fallback plus one bounded enhancement. |
 | Non-web degradation | Pending | FM-B017 owns explicit terminal/print/email behavior. |
 
 ## 1. Purpose and authority
@@ -359,10 +359,10 @@ import an island, or emit its module before that explicit authorization.
 
 ## 13. Delivery plan
 
-FM-B059 ships the types, bounded validator, canonical serializer, conformance
-tests, package documentation, and this normative contract. FM-B060 composes
-validated documents with rendering and AOT/deploy selection. FM-B061 adds the
-live progressive-enhancement proof. FM-B013 closes only after all three merge.
+FM-B059 shipped the types, bounded validator, canonical serializer, conformance
+tests, package documentation, and this normative contract. FM-B060 composed
+validated documents with rendering and AOT/deploy selection. FM-B061 added the
+live progressive-enhancement proof, completing the FM-B013 milestone.
 
 ## 14. Related specifications
 
