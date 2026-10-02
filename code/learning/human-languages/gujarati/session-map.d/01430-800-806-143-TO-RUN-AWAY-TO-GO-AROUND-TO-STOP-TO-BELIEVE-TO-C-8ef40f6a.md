@@ -1,4 +1,4 @@
-| 800-806 | 143 | To run away, To go around, To stop, To believe, To change | `GU-C143-bhagvu` -> `GU-C143-pharvu` -> `GU-C143-atakvu` -> `GU-C143-manvu` -> `GU-C143-badalvu` -> `GU-R143-first-pass-describing-words` -> `GU-R143-second-pass-verbs` |
+| 800-807 | 143 | To run away, To go around, To stop, To believe, To change, A1 timed writing | `GU-C143-bhagvu` -> `GU-C143-pharvu` -> `GU-C143-atakvu` -> `GU-C143-manvu` -> `GU-C143-badalvu` -> `GU-R143-first-pass-describing-words` -> `GU-R143-second-pass-verbs` -> `GU-W10-a1-timed-production` |
 
 ## Current boundary
 

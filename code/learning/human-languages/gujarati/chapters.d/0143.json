@@ -1,16 +1,20 @@
 {
   "chapter": 143,
-  "title": "To run away, To go around, To stop, To believe, To change",
+  "title": "To run away, To go around, To stop, To believe, To change, A1 timed writing",
   "label": "ch:gu-to-run-away-to-go-around-to-stop-to-believe-to-change",
-  "canDo": "I can say to run away, to go around, to stop, to believe and to change.",
+  "canDo": "I can say to run away, to go around, to stop, to believe and to change, then complete the A1 writing paper within 20 minutes.",
   "spineNodes": [
     "SPINE-NAME-EVERYDAY-ACTIONS"
   ],
   "payoff": {
-    "lesson": "GU-R143-second-pass-verbs",
+    "lesson": "GU-W10-a1-timed-production",
     "kind": "production",
-    "summary": "Complete the last lesson of chapter 143: I can say to run away, to go around, to stop, to believe and to change.",
+    "summary": "Complete the last lesson of chapter 143: I can fill a six-field form and write a 30–40 word message within the A1 paper's 20-minute limit.",
     "assesses": [
+      "GU-CONCEPT-C02-MAARUNNAAMCHHE-01",
+      "GU-CONCEPT-C05-HUNGUJARATIBOLUNCHHUN-01",
+      "GU-CONCEPT-C05-RAHEVUN-01",
+      "GU-Q-KYAAN-01",
       "GU-LEX-C143-ACT143-03",
       "GU-LEX-C143-ACT143-04",
       "GU-LEX-C143-ACT143-05"

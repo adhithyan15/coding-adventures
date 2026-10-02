@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "GU-W10-a1-timed-production",
+    "language": "gujarati",
+    "chapter": 143,
+    "sequence": 7570,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:15a147c95242ff7d",
+    "detachableSegments": [
+      "Writing — timed assessment production"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -243,6 +243,6 @@ it("pins Gujarati's meaning-first opening script spine", () => {
     ["140", 5],
     ["141", 5],
     ["142", 5],
-    ["143", 7],
+    ["143", 8],
   ]);
 });
