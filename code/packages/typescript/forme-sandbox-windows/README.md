@@ -17,5 +17,12 @@ still passes through Job and profile cleanup instead of killing the supervisor.
 A detached profile janitor watches the stable supervisor handle and removes the
 profile after abnormal supervisor death.
 
+`createWindowsInstallAclVerifier()` invokes a separate native inspection mode
+before installation or discovery. It opens every named object without
+following reparse points, accepts write authority only for the current user,
+built-in administrators, or Local System, and rechecks file identities after a
+bounded walk. Unknown owners, null or malformed DACLs, untrusted allow ACEs,
+reparse points, races, and resource-limit exhaustion fail closed.
+
 Use `createWindowsSandboxFactory()` as the `processFactory` passed to
 `createPluginHost()`.

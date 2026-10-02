@@ -14,7 +14,11 @@ import {
 import { isStageRef, type PipelineConfig } from "@coding-adventures/forme-pipeline-config";
 import { createLinuxSandboxFactory } from "@coding-adventures/forme-sandbox-linux";
 import { createMacosSandboxFactory } from "@coding-adventures/forme-sandbox-macos";
-import { createWindowsSandboxFactory } from "@coding-adventures/forme-sandbox-windows";
+import {
+  createWindowsInstallAclVerifier,
+  createWindowsSandboxFactory,
+  type WindowsInstallAclVerifier,
+} from "@coding-adventures/forme-sandbox-windows";
 import { silentLogger } from "@coding-adventures/forme-stage";
 
 type ConfigurableRuntime = "node" | "deno" | "bun" | "python";
@@ -40,6 +44,7 @@ export interface ProductRuntimeDependencies {
   createLinuxSandboxFactory(options: SandboxFactoryOptions): PluginProcessFactory;
   createMacosSandboxFactory(options: SandboxFactoryOptions): PluginProcessFactory;
   createWindowsSandboxFactory(options: SandboxFactoryOptions): PluginProcessFactory;
+  verifyWindowsAcl: WindowsInstallAclVerifier;
 }
 
 const defaultDependencies: ProductRuntimeDependencies = {
@@ -49,6 +54,7 @@ const defaultDependencies: ProductRuntimeDependencies = {
   createLinuxSandboxFactory,
   createMacosSandboxFactory,
   createWindowsSandboxFactory,
+  verifyWindowsAcl: createWindowsInstallAclVerifier(),
 };
 
 /** Compose the installed-plugin boundary only when the pipeline references it. */
@@ -68,13 +74,19 @@ export async function createProductOrchestrator(
     ...(options.runtimeExecutables === undefined ? {} : { runtimeExecutables: options.runtimeExecutables }),
     ...(options.runtimeRoots === undefined ? {} : { runtimeRoots: options.runtimeRoots }),
   };
+  const pluginRoot = resolve(options.projectRoot, "forme-plugins");
+  const platform = options.platform ?? process.platform;
+  if (platform === "win32"
+      && !await dependencies.verifyWindowsAcl(pluginRoot, "existing-target-tree")) {
+    throw new Error("unsafe Windows plugin install-root ACL");
+  }
   const processFactory = selectSandboxFactory(
-    options.platform ?? process.platform,
+    platform,
     sandboxOptions,
     dependencies,
   );
   const pluginHost = await dependencies.createPluginHost({
-    roots: [resolve(options.projectRoot, "forme-plugins")],
+    roots: [pluginRoot],
     loadPersistentGrants: true,
     processFactory,
     storageRoot: resolve(options.projectRoot, options.config.settings.storageRoot),

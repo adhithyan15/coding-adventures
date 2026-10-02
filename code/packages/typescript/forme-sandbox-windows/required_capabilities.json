@@ -3,8 +3,9 @@
   "version": 1,
   "package": "typescript/forme-sandbox-windows",
   "capabilities": [
+    { "category": "fs", "action": "read", "target": "$pluginInstallTreeMetadata", "justification": "The native verifier reads bounded owner, DACL, reparse-point, and file-identity metadata without following links before install or discovery." },
     { "category": "fs", "action": "write", "target": "$pluginWorkingDirectoryAcl", "justification": "Stages the exact snapshot and grants its ephemeral AppContainer access only to that private directory." },
-    { "category": "proc", "action": "exec", "target": "$trustedNativeLauncher", "justification": "Starts the checked-in launcher that creates the restricted token, AppContainer, mitigations, and Job Object." },
+    { "category": "proc", "action": "exec", "target": "$trustedNativeLauncher", "justification": "Starts the checked-in launcher in either fail-closed ACL verification mode or sandbox-supervisor mode." },
     { "category": "proc", "action": "fork", "target": "$singleSuspendedSandboxChild", "justification": "Creates one suspended child and assigns it to the single-process Job Object before any plugin code runs." },
     { "category": "proc", "action": "signal", "target": "$singleSandboxChild", "justification": "Terminates the Job Object when cancellation or a resource boundary requires retirement." }
   ],

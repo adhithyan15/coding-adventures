@@ -42,6 +42,7 @@ function fixtureDependencies() {
   const hostOptions: PluginHostOptions[] = [];
   const orchestratorOptions: unknown[] = [];
   const selected: string[] = [];
+  const verified: Array<readonly [string, "install-root" | "existing-target-tree"]> = [];
   const dependencies: ProductRuntimeDependencies = {
     createPluginHost: async options => {
       hostOptions.push(options);
@@ -64,8 +65,12 @@ function fixtureDependencies() {
       selected.push(`win32:${JSON.stringify(options)}`);
       return factory;
     },
+    verifyWindowsAcl: async (path, scope) => {
+      verified.push([path, scope]);
+      return true;
+    },
   };
-  return { dependencies, host, orchestrator, factory, hostOptions, orchestratorOptions, selected };
+  return { dependencies, host, orchestrator, factory, hostOptions, orchestratorOptions, selected, verified };
 }
 
 describe("installed plugin runtime composition", () => {
@@ -115,6 +120,9 @@ describe("installed plugin runtime composition", () => {
         cache: { path: CACHE_ROOT },
         pluginHost: fixture.host,
       })]);
+      expect(fixture.verified).toEqual(platform === "win32"
+        ? [[join(PROJECT_ROOT, "forme-plugins"), "existing-target-tree"]]
+        : []);
     },
   );
 
@@ -140,6 +148,18 @@ describe("installed plugin runtime composition", () => {
       platform: "linux",
     }, fixture.dependencies)).rejects.toThrow("construction failed");
     expect(fixture.host.dispose).toHaveBeenCalledOnce();
+  });
+
+  it("fails before Windows discovery when the installed tree ACL is unsafe", async () => {
+    const fixture = fixtureDependencies();
+    fixture.dependencies.verifyWindowsAcl = async () => false;
+    await expect(createProductOrchestrator({
+      config: config(true),
+      projectRoot: PROJECT_ROOT,
+      cacheRoot: null,
+      platform: "win32",
+    }, fixture.dependencies)).rejects.toThrow("unsafe Windows plugin install-root ACL");
+    expect(fixture.hostOptions).toEqual([]);
   });
 
   it.skipIf(!["linux", "darwin", "win32"].includes(process.platform))(

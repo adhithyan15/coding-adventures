@@ -6,13 +6,15 @@
   the current platform's native sandbox factory, and lazy orchestrator-owned
   plugin sessions. Direct-only pipelines retain their process-free path, and
   a mixed direct/plugin product DAG runs in every supported platform gate.
+- Enable Windows installation and discovery only after the native verifier
+  proves the complete named tree excludes reparse points and untrusted write
+  authority while retaining stable file identities.
 - Added `forme install <PACKAGE>` for bounded local plugin directories with
   preflighted identity/trust classification, control-safe cancellable
   per-capability review against the configured runtime roots, user trust-store
   loading, manifest-bound grants, and atomic immutable discovery-root
   publication. Linked, special, oversized, changing, or package-authority
-  inputs fail closed; Windows awaits the explicit native ACL verifier in the
-  runtime-composition milestone.
+  inputs fail closed.
 - Made the install capability-review assertion use the manifest contract's
   colon-free path representation on Windows as well as native paths on Unix.
 - Let the GET-only GitHub Pages dry-run boundary use the fixed `GITHUB_TOKEN`

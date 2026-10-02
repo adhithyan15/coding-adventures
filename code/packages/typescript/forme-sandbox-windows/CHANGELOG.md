@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Add the native install-tree ACL verifier used by `forme install` and product
+  discovery. It rejects reparse points, identity changes, untrusted owners or
+  writers, malformed DACLs, and over-deep or oversized trees.
+
 ## 0.1.0 — 2026-10-01
 
 - Added the `forme-windows-v1` exact-snapshot native launcher.

@@ -354,7 +354,201 @@ static int write_readiness(const wchar_t *manifest, const wchar_t *schema, const
     return _write(READY_FD, readiness, (unsigned int)length) == length ? 0 : -1;
 }
 
+#define ACL_TREE_MAX_ENTRIES 4096
+#define ACL_TREE_MAX_DEPTH 64
+
+static int trusted_write_sid(PSID sid, PSID user, PSID administrators, PSID system_sid) {
+    return EqualSid(sid, user) || EqualSid(sid, administrators) || EqualSid(sid, system_sid);
+}
+
+static PSID allowed_ace_sid(void *raw, BYTE type) {
+    if (type == ACCESS_ALLOWED_ACE_TYPE || type == ACCESS_ALLOWED_CALLBACK_ACE_TYPE) {
+        return (PSID)&((ACCESS_ALLOWED_ACE *)raw)->SidStart;
+    }
+    if (type == ACCESS_ALLOWED_OBJECT_ACE_TYPE || type == ACCESS_ALLOWED_CALLBACK_OBJECT_ACE_TYPE) {
+        ACCESS_ALLOWED_OBJECT_ACE *ace = (ACCESS_ALLOWED_OBJECT_ACE *)raw;
+        BYTE *cursor = (BYTE *)&ace->ObjectType;
+        if (ace->Flags & ACE_OBJECT_TYPE_PRESENT) cursor += sizeof(GUID);
+        if (ace->Flags & ACE_INHERITED_OBJECT_TYPE_PRESENT) cursor += sizeof(GUID);
+        return (PSID)cursor;
+    }
+    return NULL;
+}
+
+static int verify_handle_acl(HANDLE handle, PSID user, PSID administrators, PSID system_sid) {
+    PSID owner = NULL;
+    PACL dacl = NULL;
+    PSECURITY_DESCRIPTOR descriptor = NULL;
+    DWORD result = GetSecurityInfo(handle, SE_FILE_OBJECT,
+        OWNER_SECURITY_INFORMATION | DACL_SECURITY_INFORMATION,
+        &owner, NULL, &dacl, NULL, &descriptor);
+    if (result != ERROR_SUCCESS || descriptor == NULL || owner == NULL || dacl == NULL
+            || !IsValidSid(owner) || !IsValidAcl(dacl)
+            || !trusted_write_sid(owner, user, administrators, system_sid)) {
+        if (descriptor != NULL) LocalFree(descriptor);
+        return -1;
+    }
+    GENERIC_MAPPING mapping = {
+        FILE_GENERIC_READ,
+        FILE_GENERIC_WRITE,
+        FILE_GENERIC_EXECUTE,
+        FILE_ALL_ACCESS,
+    };
+    const DWORD dangerous = FILE_WRITE_DATA | FILE_APPEND_DATA | FILE_WRITE_EA
+        | FILE_WRITE_ATTRIBUTES | FILE_DELETE_CHILD | DELETE | WRITE_DAC | WRITE_OWNER;
+    for (DWORD index = 0; index < dacl->AceCount; index++) {
+        void *raw = NULL;
+        if (!GetAce(dacl, index, &raw) || raw == NULL) {
+            LocalFree(descriptor);
+            return -1;
+        }
+        ACE_HEADER *header = (ACE_HEADER *)raw;
+        if (header->AceFlags & INHERIT_ONLY_ACE) continue;
+        PSID sid = allowed_ace_sid(raw, header->AceType);
+        if (sid == NULL) {
+            if (header->AceType == ACCESS_DENIED_ACE_TYPE
+                    || header->AceType == ACCESS_DENIED_OBJECT_ACE_TYPE
+                    || header->AceType == ACCESS_DENIED_CALLBACK_ACE_TYPE
+                    || header->AceType == ACCESS_DENIED_CALLBACK_OBJECT_ACE_TYPE) continue;
+            LocalFree(descriptor);
+            return -1;
+        }
+        DWORD mask = ((ACCESS_ALLOWED_ACE *)raw)->Mask;
+        MapGenericMask(&mask, &mapping);
+        if ((mask & dangerous) != 0
+                && (!IsValidSid(sid) || !trusted_write_sid(sid, user, administrators, system_sid))) {
+            LocalFree(descriptor);
+            return -1;
+        }
+    }
+    LocalFree(descriptor);
+    return 0;
+}
+
+static int same_file_identity(const BY_HANDLE_FILE_INFORMATION *left, const BY_HANDLE_FILE_INFORMATION *right) {
+    return left->dwVolumeSerialNumber == right->dwVolumeSerialNumber
+        && left->nFileIndexHigh == right->nFileIndexHigh
+        && left->nFileIndexLow == right->nFileIndexLow;
+}
+
+static int verify_acl_tree(
+    const wchar_t *path,
+    int recurse,
+    unsigned int depth,
+    unsigned int *entries,
+    PSID user,
+    PSID administrators,
+    PSID system_sid
+) {
+    if (depth > ACL_TREE_MAX_DEPTH || ++*entries > ACL_TREE_MAX_ENTRIES) return -1;
+    HANDLE handle = CreateFileW(path, FILE_READ_ATTRIBUTES | READ_CONTROL,
+        FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING,
+        FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT, NULL);
+    if (handle == INVALID_HANDLE_VALUE) return -1;
+    BY_HANDLE_FILE_INFORMATION before;
+    if (!GetFileInformationByHandle(handle, &before)
+            || (before.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT)
+            || verify_handle_acl(handle, user, administrators, system_sid) != 0) {
+        CloseHandle(handle);
+        return -1;
+    }
+    int is_directory = (before.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
+    if (recurse && is_directory) {
+        size_t length = wcslen(path);
+        if (length > 32760) {
+            CloseHandle(handle);
+            return -1;
+        }
+        wchar_t *pattern = calloc(length + 3, sizeof(wchar_t));
+        if (pattern == NULL) {
+            CloseHandle(handle);
+            return -1;
+        }
+        wcscpy(pattern, path);
+        if (length > 0 && path[length - 1] != L'\\' && path[length - 1] != L'/') wcscat(pattern, L"\\");
+        wcscat(pattern, L"*");
+        WIN32_FIND_DATAW found;
+        HANDLE search = FindFirstFileW(pattern, &found);
+        free(pattern);
+        if (search == INVALID_HANDLE_VALUE && GetLastError() != ERROR_FILE_NOT_FOUND) {
+            CloseHandle(handle);
+            return -1;
+        }
+        if (search != INVALID_HANDLE_VALUE) {
+            int valid = 1;
+            do {
+                if (wcscmp(found.cFileName, L".") == 0 || wcscmp(found.cFileName, L"..") == 0) continue;
+                size_t child_size = length + wcslen(found.cFileName) + 2;
+                wchar_t *child = calloc(child_size, sizeof(wchar_t));
+                if (child == NULL) {
+                    valid = 0;
+                    break;
+                }
+                wcscpy(child, path);
+                if (length > 0 && path[length - 1] != L'\\' && path[length - 1] != L'/') wcscat(child, L"\\");
+                wcscat(child, found.cFileName);
+                if (verify_acl_tree(child, 1, depth + 1, entries, user, administrators, system_sid) != 0) valid = 0;
+                free(child);
+                if (!valid) break;
+            } while (FindNextFileW(search, &found));
+            if (valid && GetLastError() != ERROR_NO_MORE_FILES) valid = 0;
+            FindClose(search);
+            if (!valid) {
+                CloseHandle(handle);
+                return -1;
+            }
+        }
+    }
+    HANDLE named = CreateFileW(path, FILE_READ_ATTRIBUTES,
+        FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING,
+        FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT, NULL);
+    BY_HANDLE_FILE_INFORMATION after;
+    int unchanged = named != INVALID_HANDLE_VALUE
+        && GetFileInformationByHandle(named, &after)
+        && !(after.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT)
+        && same_file_identity(&before, &after);
+    if (named != INVALID_HANDLE_VALUE) CloseHandle(named);
+    CloseHandle(handle);
+    return unchanged ? 0 : -1;
+}
+
+static int verify_install_acl(const wchar_t *path, int recurse) {
+    HANDLE token = NULL;
+    DWORD needed = 0;
+    TOKEN_USER *token_user = NULL;
+    PSID administrators = NULL, system_sid = NULL;
+    int valid = 0;
+    if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &token)) goto done;
+    GetTokenInformation(token, TokenUser, NULL, 0, &needed);
+    if (needed == 0 || GetLastError() != ERROR_INSUFFICIENT_BUFFER) goto done;
+    token_user = HeapAlloc(GetProcessHeap(), 0, needed);
+    if (token_user == NULL
+            || !GetTokenInformation(token, TokenUser, token_user, needed, &needed)) goto done;
+    SID_IDENTIFIER_AUTHORITY nt = SECURITY_NT_AUTHORITY;
+    if (!AllocateAndInitializeSid(&nt, 2, SECURITY_BUILTIN_DOMAIN_RID,
+            DOMAIN_ALIAS_RID_ADMINS, 0, 0, 0, 0, 0, 0, &administrators)
+            || !AllocateAndInitializeSid(&nt, 1, SECURITY_LOCAL_SYSTEM_RID,
+                0, 0, 0, 0, 0, 0, 0, &system_sid)) goto done;
+    unsigned int entries = 0;
+    valid = verify_acl_tree(path, recurse, 0, &entries, token_user->User.Sid,
+        administrators, system_sid) == 0;
+done:
+    if (administrators != NULL) FreeSid(administrators);
+    if (system_sid != NULL) FreeSid(system_sid);
+    if (token_user != NULL) HeapFree(GetProcessHeap(), 0, token_user);
+    if (token != NULL) CloseHandle(token);
+    return valid ? 0 : 1;
+}
+
 int wmain(int argc, wchar_t **argv) {
+    const wchar_t *verify_acl_path = argument(argc, argv, L"--verify-acl-path");
+    const wchar_t *verify_acl_scope = argument(argc, argv, L"--verify-acl-scope");
+    if (verify_acl_path != NULL || verify_acl_scope != NULL) {
+        if (verify_acl_path == NULL || verify_acl_scope == NULL) return 62;
+        if (wcscmp(verify_acl_scope, L"install-root") == 0) return verify_install_acl(verify_acl_path, 0);
+        if (wcscmp(verify_acl_scope, L"existing-target-tree") == 0) return verify_install_acl(verify_acl_path, 1);
+        return 62;
+    }
     const wchar_t *cleanup_profile = argument(argc, argv, L"--cleanup-profile");
     const wchar_t *cleanup_runtime = argument(argc, argv, L"--cleanup-runtime");
     const wchar_t *supervisor_handle_text = argument(argc, argv, L"--supervisor-handle");

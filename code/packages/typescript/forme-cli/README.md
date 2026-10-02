@@ -70,8 +70,9 @@ project.
   grants are atomically published beneath the current project's
   `forme-plugins/` root. Package-supplied `grants.toml`, links, special files,
   oversized trees, changing file identities, and unsafe install roots are
-  rejected. Windows remains fail-closed until the runtime-composition milestone
-  supplies its native install-root ACL verifier.
+  rejected. Windows additionally requires the native verifier to prove the
+  install root and any existing target tree exclude reparse points and
+  untrusted write authority.
 - Configs containing plugin `StageRef`s discover only the current project's
   installed `forme-plugins/` root, load its manifest-bound grants, and launch
   lazily through the current platform's native sandbox. Node uses the current

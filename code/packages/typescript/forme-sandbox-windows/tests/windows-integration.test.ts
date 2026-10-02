@@ -1,17 +1,20 @@
 import { createHash } from "node:crypto";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { execFile } from "node:child_process";
+import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { promisify } from "node:util";
 import { afterEach, describe, expect, it } from "vitest";
 import { computeManifestHash, type Manifest } from "@coding-adventures/forme-manifest";
 import type { SandboxLaunchRequest } from "@coding-adventures/forme-sandbox-core";
-import { createWindowsSandboxFactory } from "../src/index.js";
+import { createWindowsInstallAclVerifier, createWindowsSandboxFactory } from "../src/index.js";
 
 const packageRoot = dirname(dirname(fileURLToPath(import.meta.url)));
 const launcherPath = join(packageRoot, "native", "forme-sandbox-windows.exe");
 const probePath = join(packageRoot, "native", "forme-sandbox-probe.exe");
 const roots: string[] = [];
+const execFileAsync = promisify(execFile);
 afterEach(async () => Promise.all(roots.splice(0).map(root => rm(root, { recursive: true, force: true }))));
 
 async function request(probe: string): Promise<SandboxLaunchRequest> {
@@ -71,6 +74,25 @@ async function exitWithStderr(child: Awaited<ReturnType<ReturnType<typeof create
 }
 
 describe.skipIf(process.platform !== "win32")("Windows native sandbox", () => {
+  it("accepts an owned tree and rejects reparse points or untrusted writers", async () => {
+    const root = await mkdtemp(join(tmpdir(), "forme-windows-acl-"));
+    roots.push(root);
+    await mkdir(join(root, "plugin"));
+    await writeFile(join(root, "plugin", "entry.mjs"), "process.exit(0);\n");
+    const verify = createWindowsInstallAclVerifier({ launcherPath });
+    expect(await verify(root, "install-root")).toBe(true);
+    expect(await verify(join(root, "plugin"), "existing-target-tree")).toBe(true);
+
+    const outside = await mkdtemp(join(tmpdir(), "forme-windows-acl-outside-"));
+    roots.push(outside);
+    await symlink(outside, join(root, "plugin", "link"), "junction");
+    expect(await verify(join(root, "plugin"), "existing-target-tree")).toBe(false);
+    await rm(join(root, "plugin", "link"), { force: true });
+
+    await execFileAsync("icacls.exe", [root, "/grant", "*S-1-1-0:(OI)(CI)M", "/T", "/Q"]);
+    expect(await verify(root, "existing-target-tree")).toBe(false);
+  });
+
   it("boots the trusted Node runtime after installing the sandbox", async () => {
     const child = await createWindowsSandboxFactory({ launcherPath, readinessTimeoutMs: 2_000 })
       .launch(await nodeRequest());

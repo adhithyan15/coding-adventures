@@ -25,6 +25,7 @@ import {
   type PipelineConfig,
 } from "@coding-adventures/forme-pipeline-config";
 import { type CancellationToken } from "@coding-adventures/forme-stage";
+import { createWindowsInstallAclVerifier } from "@coding-adventures/forme-sandbox-windows";
 import { watchProject } from "./project-watcher.js";
 import { executeDeploy, materializeDeployInput, type DeployInvocation } from "./deploy.js";
 import {
@@ -48,6 +49,7 @@ const DEFAULT_CONFIG_NAMES = [
 ] as const;
 
 const CLI_SPEC_PATH = fileURLToPath(new URL("../forme.cli.json", import.meta.url));
+const verifyWindowsAcl = createWindowsInstallAclVerifier();
 
 export interface CliIO {
   readonly stdout: { write(value: string): unknown };
@@ -106,7 +108,10 @@ const defaultServices: CliServices = {
   }),
   startDevServer: options => startDevServer(options),
   watchProject: (root, ignoredPaths) => watchProject(root, ignoredPaths),
-  installPlugin: invocation => executePluginInstall(invocation),
+  installPlugin: invocation => executePluginInstall({
+    ...invocation,
+    ...(process.platform === "win32" ? { verifyWindowsAcl } : {}),
+  }),
 };
 
 export async function run(
