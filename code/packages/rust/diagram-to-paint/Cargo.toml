@@ -1,6 +1,6 @@
 [package]
 name = "diagram-to-paint"
-version = "0.178.0"
+version = "0.179.0"
 edition = "2021"
 description = "Lowers a LayoutedGraphDiagram (DG00) into a PaintScene (P2D00) for rendering by paint-metal and other backends"
 
@@ -8,6 +8,7 @@ description = "Lowers a LayoutedGraphDiagram (DG00) into a PaintScene (P2D00) fo
 diagram-ir = { path = "../diagram-ir" }
 paint-instructions = { path = "../paint-instructions" }
 layout-ir = { path = "../layout-ir" }
+layout-effects = { path = "../layout-effects" }
 layout-to-paint = { path = "../layout-to-paint" }
 text-interfaces = { path = "../text-interfaces" }
 
