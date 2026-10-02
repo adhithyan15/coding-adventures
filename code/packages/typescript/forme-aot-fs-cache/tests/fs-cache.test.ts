@@ -197,6 +197,14 @@ describe("createFsCacheIO — atomic writes", () => {
     expect(await io.get(k)).toBe("v");
   });
 
+  it("atomicWrites: true replaces an existing cache entry", async () => {
+    const io = createFsCacheIO({ cacheDir });
+    const k = key("atomic-overwrite");
+    await io.put(k, "old", META);
+    await io.put(k, "new", META);
+    expect(await io.get(k)).toBe("new");
+  });
+
   it("concurrent puts to the same key don't corrupt entries", async () => {
     const io = createFsCacheIO({ cacheDir });
     const k = key("concurrent");
