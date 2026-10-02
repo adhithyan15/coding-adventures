@@ -566,6 +566,8 @@ The text-wrap shorthand composes wrap, nowrap, balance, and pretty into the
 same typed mode and style fields before backend-neutral lowering.
 Justified text alignment distributes remaining line width across ASCII word
 separators on non-final lines before backend-neutral glyph placement.
+Justified last-line alignment applies that distribution to the final line while
+preserving the authored alignment of earlier lines.
 Normal and positive or negative pixel/em letter spacing adjusts shaped glyph
 positions and line measurement through backend-neutral PaintInstructions.
 Normal and positive or negative pixel/em word spacing likewise adjusts ASCII

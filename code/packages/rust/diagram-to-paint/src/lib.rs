@@ -406,6 +406,7 @@ fn treemap_text_node(
             diagram_ir::TreemapTextAlignLast::Start => "start",
             diagram_ir::TreemapTextAlignLast::Center => "center",
             diagram_ir::TreemapTextAlignLast::End => "end",
+            diagram_ir::TreemapTextAlignLast::Justify => "justify",
         };
         node.ext.insert("text.align-last".into(), ExtValue::Str(align.into()));
     }
@@ -7115,6 +7116,12 @@ mod tests {
             current_color, Some(&whitespace_style),
         );
         assert_eq!(last_aligned_text.ext.get("text.align-last"), Some(&ExtValue::Str("start".into())));
+        whitespace_style.text_align_last = Some(diagram_ir::TreemapTextAlignLast::Justify);
+        let last_justified_text = treemap_text_node(
+            "last line", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(last_justified_text.ext.get("text.align-last"), Some(&ExtValue::Str("justify".into())));
         whitespace_style.overflow_wrap = Some(diagram_ir::TreemapOverflowWrap::Anywhere);
         let anywhere_text = treemap_text_node(
             "unbreakable", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
