@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 254,
-  "sourceHash": "fnv1a64:7a657ad2ccb106da",
+  "sourceHash": "fnv1a64:d5f431fde2b21145",
   "lessonIds": [
     "HI-C254-saheli",
     "HI-C254-sathi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch254.txt",
   "json": "hindi/narration/ch254.json",
-  "textHash": "fnv1a64:82fde5eb04b4cee8",
-  "jsonHash": "fnv1a64:64109fdf96a00226",
+  "textHash": "fnv1a64:8bd6a4cf34debe8e",
+  "jsonHash": "fnv1a64:25a3d9e4c315e5a1",
   "findings": []
 }
