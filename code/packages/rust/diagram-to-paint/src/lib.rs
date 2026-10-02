@@ -330,7 +330,8 @@ fn treemap_text_node(
         Some(diagram_ir::TreemapWhiteSpace::PreLine) => value.lines()
             .map(|line| line.split_whitespace().collect::<Vec<_>>().join(" "))
             .collect::<Vec<_>>().join("\n"),
-        Some(diagram_ir::TreemapWhiteSpace::Pre | diagram_ir::TreemapWhiteSpace::PreWrap) => {
+        Some(diagram_ir::TreemapWhiteSpace::Pre | diagram_ir::TreemapWhiteSpace::PreWrap
+            | diagram_ir::TreemapWhiteSpace::BreakSpaces) => {
             let tab = " ".repeat(style.and_then(|style| style.tab_size).unwrap_or(8) as usize);
             value.replace('\t', &tab)
         }
@@ -383,6 +384,9 @@ fn treemap_text_node(
                 underline_offset,
             })
         });
+    }
+    if matches!(white_space, Some(diagram_ir::TreemapWhiteSpace::BreakSpaces)) {
+        node.ext.insert("text.break-spaces".into(), ExtValue::Bool(true));
     }
     if let Some(spacing) = style.and_then(|style| style.letter_spacing) {
         let spacing = match spacing {
@@ -7098,6 +7102,14 @@ mod tests {
         );
         assert!(matches!(pre_capitalized_text.content,
             Some(Content::Text(TextContent { value, wrap: false, .. })) if value == "One  Two\nThree"));
+        whitespace_style.white_space = Some(diagram_ir::TreemapWhiteSpace::BreakSpaces);
+        let break_spaces_text = treemap_text_node(
+            "one  two", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert!(matches!(break_spaces_text.content,
+            Some(Content::Text(TextContent { value, wrap: true, .. })) if value == "One  Two"));
+        assert_eq!(break_spaces_text.ext.get("text.break-spaces"), Some(&ExtValue::Bool(true)));
         whitespace_style.letter_spacing = Some(diagram_ir::TreemapLetterSpacing::Factor(0.125));
         let letter_spaced_text = treemap_text_node(
             "tracked", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
