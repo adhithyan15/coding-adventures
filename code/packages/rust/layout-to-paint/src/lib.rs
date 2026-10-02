@@ -242,6 +242,7 @@ where
                     abs_y,
                     box_w,
                     dpr,
+                    text_letter_spacing(frame.node) * dpr,
                     direction,
                     options,
                     &mut font_cache,
@@ -442,6 +443,14 @@ fn node_direction(node: &PositionedNode) -> Option<BaseDirection> {
         "rtl" => Some(BaseDirection::Rtl),
         "auto" => Some(BaseDirection::Auto),
         _ => None,
+    }
+}
+
+fn text_letter_spacing(node: &PositionedNode) -> f64 {
+    match node.ext.get("text.letter-spacing") {
+        Some(ExtValue::Float(value)) if value.is_finite() => *value,
+        Some(ExtValue::Int(value)) => *value as f64,
+        _ => 0.0,
     }
 }
 
@@ -1208,6 +1217,7 @@ fn emit_text_content<S, M, R>(
     box_y: f64,
     box_width: f64,
     dpr: f64,
+    letter_spacing: f64,
     direction: BaseDirection,
     options: &LayoutToPaintOptions<'_, S, M, R>,
     font_cache: &mut HashMap<FontCacheKey, CachedFont<S::Handle>>,
@@ -1259,6 +1269,7 @@ fn emit_text_content<S, M, R>(
                 segment,
                 size_dpr,
                 max_width_dpr,
+                letter_spacing,
                 direction,
             )
         } else {
@@ -1281,19 +1292,22 @@ fn emit_text_content<S, M, R>(
             };
 
             // Compute the starting x position based on text alignment.
-            let line_advance = shaped.total_advance() as f64;
+            let line_advance = shaped_advance(&shaped, letter_spacing);
             let baseline_x = match tc.text_align {
                 TextAlign::Center => box_x_dpr + (max_width_dpr - line_advance) / 2.0,
                 TextAlign::End => box_x_dpr + max_width_dpr - line_advance,
                 TextAlign::Start => box_x_dpr,
             };
 
-            emit_glyph_runs_from_shaped(&shaped, size_dpr, baseline_x, baseline_y, &fill_css, out);
+            emit_glyph_runs_from_shaped(
+                &shaped, size_dpr, baseline_x, baseline_y, letter_spacing, &fill_css, out,
+            );
             emit_text_decorations(
                 tc,
                 handle,
                 options.metrics,
                 &shaped,
+                letter_spacing,
                 size_dpr,
                 baseline_x,
                 baseline_y,
@@ -1333,12 +1347,20 @@ fn shape_visual_line<S: TextShaper>(
     Ok(ShapedText { runs })
 }
 
+fn shaped_advance(shaped: &ShapedText, letter_spacing: f64) -> f64 {
+    let glyph_count = shaped.runs.iter().map(|run| run.glyphs.len()).sum::<usize>();
+    (shaped.total_advance() as f64
+        + letter_spacing * glyph_count.saturating_sub(1) as f64)
+        .max(0.0)
+}
+
 #[allow(clippy::too_many_arguments)]
 fn emit_text_decorations<M>(
     tc: &TextContent,
     handle: &M::Handle,
     metrics: &M,
     shaped: &ShapedText,
+    letter_spacing: f64,
     size: f32,
     x: f64,
     baseline_y: f64,
@@ -1351,7 +1373,7 @@ fn emit_text_decorations<M>(
     let Some(decoration) = tc.decoration else {
         return;
     };
-    let width = shaped.total_advance() as f64;
+    let width = shaped_advance(shaped, letter_spacing);
     if width <= 0.0 {
         return;
     }
@@ -1441,6 +1463,7 @@ fn emit_glyph_runs_from_shaped(
     size: f32,
     baseline_x: f64,
     baseline_y: f64,
+    letter_spacing: f64,
     fill_css: &str,
     out: &mut Vec<PaintInstruction>,
 ) {
@@ -1452,6 +1475,8 @@ fn emit_glyph_runs_from_shaped(
     let mut line_pen_x: f64 = 0.0;
     let mut line_pen_y: f64 = 0.0;
 
+    let glyph_count = shaped.runs.iter().map(|run| run.glyphs.len()).sum::<usize>();
+    let mut glyph_index = 0usize;
     for run in &shaped.runs {
         if run.glyphs.is_empty() {
             continue;
@@ -1463,6 +1488,7 @@ fn emit_glyph_runs_from_shaped(
         let mut positions: Vec<GlyphPosition> = Vec::with_capacity(run.glyphs.len());
         let mut seg_pen_x: f64 = 0.0;
         let mut seg_pen_y: f64 = 0.0;
+        let mut spacing_advance = 0.0;
         for g in &run.glyphs {
             let gx = baseline_x + line_pen_x + seg_pen_x + g.x_offset as f64;
             let gy = baseline_y + line_pen_y + seg_pen_y + g.y_offset as f64;
@@ -1473,6 +1499,11 @@ fn emit_glyph_runs_from_shaped(
             });
             seg_pen_x += g.x_advance as f64;
             seg_pen_y += g.y_advance as f64;
+            glyph_index += 1;
+            if glyph_index < glyph_count {
+                seg_pen_x += letter_spacing;
+                spacing_advance += letter_spacing;
+            }
         }
 
         out.push(PaintInstruction::GlyphRun(PaintGlyphRun {
@@ -1485,7 +1516,7 @@ fn emit_glyph_runs_from_shaped(
 
         // Advance the line-level pen by this segment's total advance
         // so the next segment starts where this one ended.
-        line_pen_x += run.x_advance_total as f64;
+        line_pen_x += run.x_advance_total as f64 + spacing_advance;
         line_pen_y += run.glyphs.iter().map(|g| g.y_advance as f64).sum::<f64>();
     }
 }
@@ -1500,6 +1531,7 @@ fn wrap_line<S: TextShaper>(
     segment: &str,
     size: f32,
     max_width: f64,
+    letter_spacing: f64,
     direction: BaseDirection,
 ) -> Vec<String> {
     if segment.is_empty() {
@@ -1514,14 +1546,10 @@ fn wrap_line<S: TextShaper>(
     // text, but ASCII art/code-like content should not be rewritten just because
     // it passed through UI04.
     if let Ok(shaped) = shape_visual_line(shaper, handle, segment, size, direction) {
-        if shaped.total_advance() as f64 <= max_width {
+        if shaped_advance(&shaped, letter_spacing) <= max_width {
             return vec![segment.to_string()];
         }
     }
-
-    let space_width = shape_visual_line(shaper, handle, " ", size, direction)
-        .map(|r| r.total_advance() as f64)
-        .unwrap_or((size as f64) * 0.25);
 
     let mut lines: Vec<String> = Vec::new();
     let mut current = String::new();
@@ -1529,27 +1557,25 @@ fn wrap_line<S: TextShaper>(
 
     for piece in paint_wrap_pieces(segment, direction) {
         let word_width = shape_visual_line(shaper, handle, piece.value, size, direction)
-            .map(|r| r.total_advance() as f64)
+            .map(|r| shaped_advance(&r, letter_spacing))
             .unwrap_or(piece.value.chars().count() as f64 * (size as f64) * 0.5);
-        let gap = if piece.leading_space && !current.is_empty() {
-            space_width
-        } else {
-            0.0
-        };
-
         if current.is_empty() {
             current.push_str(piece.value);
             current_width = word_width;
-        } else if current_width + gap + word_width <= max_width {
-            if gap > 0.0 {
-                current.push(' ');
-            }
-            current.push_str(piece.value);
-            current_width += gap + word_width;
         } else {
-            lines.push(std::mem::take(&mut current));
-            current.push_str(piece.value);
-            current_width = word_width;
+            let separator = if piece.leading_space { " " } else { "" };
+            let candidate = format!("{current}{separator}{}", piece.value);
+            let candidate_width = shape_visual_line(shaper, handle, &candidate, size, direction)
+                .map(|shaped| shaped_advance(&shaped, letter_spacing))
+                .unwrap_or(current_width + word_width);
+            if candidate_width <= max_width {
+                current = candidate;
+                current_width = candidate_width;
+            } else {
+                lines.push(std::mem::take(&mut current));
+                current.push_str(piece.value);
+                current_width = word_width;
+            }
         }
     }
 
@@ -2802,5 +2828,22 @@ mod tests {
                 glyph_xs
             );
         }
+    }
+
+    #[test]
+    fn letter_spacing_adjusts_backend_neutral_glyph_positions() {
+        let mut content = text_content("AB");
+        content.text_align = TextAlign::Center;
+        let mut leaf = positioned_leaf(content, 0.0, 0.0, 100.0, 20.0);
+        leaf.ext.insert("text.letter-spacing".into(), ExtValue::Float(2.0));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let scene = layout_to_paint(&leaf, &make_options(&shaper, &metrics, &resolver));
+        let PaintInstruction::GlyphRun(run) = &scene.instructions[0] else {
+            panic!("expected glyph run");
+        };
+        assert_eq!(run.glyphs[0].x, 41.0);
+        assert_eq!(run.glyphs[1].x, 51.0);
     }
 }
