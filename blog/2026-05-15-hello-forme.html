@@ -49,6 +49,16 @@ h1 {
   margin-top: 0px;
 }
 
+h2 {
+  font-size: 1.55rem;
+  border-bottom: 1px solid #cbd5e1;
+  padding: 0px 0px 0.35rem 0px;
+}
+
+h3 {
+  font-size: 1.25rem;
+}
+
 p {
   margin-bottom: 1rem;
 }
@@ -74,6 +84,20 @@ code {
   border-radius: 5px;
 }
 
+pre {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  padding: 1rem 1rem 1rem 1rem;
+  background-color: #f1f5f9;
+  border-radius: 9px;
+}
+
+pre code {
+  padding: 0px 0px 0px 0px;
+  background-color: transparent;
+  border-radius: 0px;
+}
+
 blockquote {
   color: #64748b;
   padding: 0.25rem 1rem 0.25rem 1rem;
@@ -89,8 +113,46 @@ li {
   margin-bottom: 0.25rem;
 }
 
+#post-index li {
+  padding: 1rem 0px 1rem 0px;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+#post-index a {
+  font-size: 1.1rem;
+  font-weight: 650;
+}
+
+#post-index time {
+  display: block;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+#post-index p {
+  color: #64748b;
+  margin-top: 0.5rem;
+}
+
+hr {
+  border-top: 1px solid #cbd5e1;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
 img {
   max-width: 100%;
+}
+
+th, td {
+  border: 1px solid #cbd5e1;
+  padding: 0.45rem 0.7rem 0.45rem 0.7rem;
+  text-align: start;
+}
+
+th {
+  background-color: #f1f5f9;
+  font-weight: 650;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -136,11 +198,16 @@ authoring pipeline.</p>
 <p>The path it took from <code>data/2026-05-15-hello-forme.md</code> to
 <code>/coding-adventures/blog/2026-05-15-hello-forme.html</code> is exactly the
 shape laid out in the FM00 spec:</p>
+<div id="forme-pipeline-steps">
+  <p>The complete pipeline is listed below. With JavaScript enabled, optional controls can focus one step at a time.</p>
+</div>
 <ol>
 <li><strong><code>forme-source-fs</code></strong> walked <code>data/</code>, found this file, and emitted a
 <code>ContentSource</code>.</li>
 <li><strong><code>forme-parse-markdown</code></strong> split off the frontmatter you see above,
 parsed the body as GFM, and emitted a <code>ContentNode</code>.</li>
+<li><strong><code>blog-attach-interactivity</code></strong> attached the one reviewed pipeline-step
+module to this post and left every other post without a script asset.</li>
 <li><strong><code>forme-resolve-asset-refs-fs</code></strong> discovered the local diagram below,
 assigned its stable logical identity, and preserved its fragment target.</li>
 <li><strong><code>forme-router</code></strong> assigned one canonical route, then fanned the
@@ -149,12 +216,16 @@ routed node out to the page and collection branches.</li>
 by date while preserving that canonical route.</li>
 <li><strong><code>forme-render-static</code></strong> matched the reusable classless Style IR theme,
 recorded <code>usedStyle</code>, compiled the page slice through the AOT path, and
-emitted a <code>RenderedPage</code> with an asset placeholder.</li>
-<li><strong><code>forme-load-assets-fs</code></strong> loaded and hashed the SVG bytes while enforcing
-canonical storage-root containment.</li>
+emitted a <code>RenderedPage</code> with exact island usage and asset placeholders.</li>
+<li><strong><code>forme-load-assets-fs</code></strong> loaded and hashed the SVG and JavaScript bytes
+while enforcing canonical storage-root containment.</li>
+<li><strong><code>blog-surface</code></strong> rendered the chronological collection into the blog
+index, RSS, Atom, and sitemap artifacts.</li>
 <li><strong><code>forme-emit-site-fs</code></strong> joined the rendered page and asset streams,
-replaced the placeholder with a fingerprinted public URL, copied the SVG,
-and recorded it in the <code>DeployArtifact</code> manifest.</li>
+replaced placeholders with fingerprinted public URLs, emitted only the
+selected script, and recorded the article <code>DeployArtifact</code> manifest.</li>
+<li><strong><code>forme-emit-fs</code></strong> wrote the index, feeds, and sitemap through the
+independent surface branch.</li>
 </ol>
 <p><img src="/coding-adventures/blog/assets/forme-pipeline.72ffee2452eee26dbb2457bb00401bb5ab2abfb903f2d9da1a0cd710fabfa8e5.svg#pipeline" alt="Forme turns source content into reusable IR and many output surfaces." /></p>
 <p>The point isn't the post — it's that everything between the parser
@@ -168,5 +239,5 @@ the DAG stays put.</p>
 <p>The next few posts will work through what the kernel + orchestrator
 gives you, and how collection outputs grow into indexes and feeds.</p>
 </main>
-</body>
+<script type="module" src="/coding-adventures/blog/assets/pipeline-steps.269714b31b6f60c902db694de7ebfbdc8690f3ec519ddf9406c41167eb73b4b8.js"></script></body>
 </html>
