@@ -121,25 +121,45 @@ fn jar_version(path: &Path) -> Vec<u64> {
         .collect()
 }
 
+/// The oldest JNA this test can run: 5.7.0 is the first release whose native
+/// dispatch library carries an arm64 macOS slice. Older JNA jars (5.6.0 rides
+/// in with older `kotlin-compiler-embeddable`) hold only `i386,x86_64`, so on
+/// an Apple-silicon runner `Native.load` fails before the host ever sees the
+/// runtime: "fat file, but missing compatible architecture".
+const MIN_JNA_VERSION: &[u64] = &[5, 7, 0];
+
 fn jar(prefix: &str, environment_override: &str) -> Option<PathBuf> {
+    jar_at_least(prefix, environment_override, &[])
+}
+
+/// Like [jar], but ignores cached jars older than `min_version`. An explicit
+/// `environment_override` is still taken as given: whoever set it chose it.
+fn jar_at_least(prefix: &str, environment_override: &str, min_version: &[u64]) -> Option<PathBuf> {
     if let Some(path) = std::env::var_os(environment_override) {
         let path = PathBuf::from(path);
         return path.is_file().then_some(path);
     }
     let home = std::env::var_os("HOME").map(PathBuf::from)?;
-    // The version must follow the prefix directly. A bare `starts_with` on
-    // `jna-` also matches `jna-platform-*.jar`, which is a different artifact
-    // and does not carry `Native` -- the same over-broad-prefix trap that
-    // `kotlin-stdlib-jdk8.jar` sets for `kotlin_stdlib` below.
-    let owned = prefix.to_string();
     find_jar(
         &home.join(".gradle"),
-        &move |name: &str| {
-            name.strip_prefix(&owned)
-                .is_some_and(|rest| rest.starts_with(|c: char| c.is_ascii_digit()))
-        },
+        &versioned_jar(prefix, min_version),
         10,
     )
+}
+
+/// Matches `<prefix><version>.jar` at `min_version` or newer. The version must
+/// follow the prefix directly: a bare `starts_with` on `jna-` also matches
+/// `jna-platform-*.jar`, which is a different artifact and does not carry
+/// `Native` -- the same over-broad-prefix trap that `kotlin-stdlib-jdk8.jar`
+/// sets for `kotlin_stdlib` below.
+fn versioned_jar(prefix: &str, min_version: &[u64]) -> impl Fn(&str) -> bool {
+    let owned = prefix.to_string();
+    let minimum = min_version.to_vec();
+    move |name: &str| {
+        name.strip_prefix(&owned)
+            .is_some_and(|rest| rest.starts_with(|c: char| c.is_ascii_digit()))
+            && jar_version(Path::new(name)) >= minimum
+    }
 }
 
 /// The Kotlin standard library, which `java` needs and `kotlinc` does not.
@@ -209,14 +229,14 @@ fn the_emitted_compose_host_answers_effects() {
         return;
     }
     let (Some(jna), Some(json), Some(core), Some(stdlib)) = (
-        jar("jna-", "MOSAIC_JNA_JAR"),
+        jar_at_least("jna-", "MOSAIC_JNA_JAR", MIN_JNA_VERSION),
         jar("kotlinx-serialization-json-jvm-", "MOSAIC_KOTLINX_JSON_JAR"),
         jar("kotlinx-serialization-core-jvm-", "MOSAIC_KOTLINX_CORE_JAR"),
         kotlin_stdlib(),
     ) else {
         eprintln!(
-            "skipping Compose effect acceptance: JNA, kotlinx-serialization or kotlin-stdlib \
-             jars not found; set MOSAIC_JNA_JAR, MOSAIC_KOTLINX_JSON_JAR, \
+            "skipping Compose effect acceptance: JNA 5.7+, kotlinx-serialization or \
+             kotlin-stdlib jars not found; set MOSAIC_JNA_JAR, MOSAIC_KOTLINX_JSON_JAR, \
              MOSAIC_KOTLINX_CORE_JAR and MOSAIC_KOTLIN_STDLIB_JAR to run it"
         );
         return;
@@ -366,12 +386,16 @@ fn the_newest_jar_version_wins() {
     ] {
         std::fs::write(dir.join(file), b"").unwrap();
     }
-    let jna = |name: &str| {
-        name.strip_prefix("jna-")
-            .is_some_and(|rest| rest.starts_with(|c: char| c.is_ascii_digit()))
-    };
+    let jna = versioned_jar("jna-", &[]);
     let found = find_jar(&dir, &jna, 10).expect("a JNA jar");
     assert_eq!(found.file_name().unwrap(), "jna-5.19.1.jar");
+    // With only a pre-5.7 JNA cached, the minimum filters it out: the test
+    // skips instead of loading a library that cannot run on Apple silicon.
+    std::fs::remove_dir_all(dir.join("a")).unwrap();
+    assert_eq!(
+        find_jar(&dir, &versioned_jar("jna-", MIN_JNA_VERSION), 10),
+        None
+    );
     assert!(jar_version(Path::new("jna-5.19.1.jar")) > jar_version(Path::new("jna-5.6.0.jar")));
     std::fs::remove_dir_all(&dir).unwrap();
 }
