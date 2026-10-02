@@ -244,6 +244,7 @@ where
                     dpr,
                     text_letter_spacing(frame.node) * dpr,
                     text_word_spacing(frame.node) * dpr,
+                    text_align_last(frame.node),
                     direction,
                     options,
                     &mut font_cache,
@@ -460,6 +461,15 @@ fn text_word_spacing(node: &PositionedNode) -> f64 {
         Some(ExtValue::Float(value)) if value.is_finite() => *value,
         Some(ExtValue::Int(value)) => *value as f64,
         _ => 0.0,
+    }
+}
+
+fn text_align_last(node: &PositionedNode) -> Option<TextAlign> {
+    match node.ext.get("text.align-last") {
+        Some(ExtValue::Str(value)) if value == "start" => Some(TextAlign::Start),
+        Some(ExtValue::Str(value)) if value == "center" => Some(TextAlign::Center),
+        Some(ExtValue::Str(value)) if value == "end" => Some(TextAlign::End),
+        _ => None,
     }
 }
 
@@ -1228,6 +1238,7 @@ fn emit_text_content<S, M, R>(
     dpr: f64,
     letter_spacing: f64,
     word_spacing: f64,
+    text_align_last: Option<TextAlign>,
     direction: BaseDirection,
     options: &LayoutToPaintOptions<'_, S, M, R>,
     font_cache: &mut HashMap<FontCacheKey, CachedFont<S::Handle>>,
@@ -1286,7 +1297,8 @@ fn emit_text_content<S, M, R>(
         } else {
             vec![segment.to_string()]
         };
-        for line in wrapped {
+        let line_count = wrapped.len();
+        for (line_index, line) in wrapped.into_iter().enumerate() {
             // Shape the line once. This gives us total_advance for
             // alignment AND the glyph IDs/positions for emission.
             if line.is_empty() {
@@ -1306,7 +1318,12 @@ fn emit_text_content<S, M, R>(
 
             // Compute the starting x position based on text alignment.
             let line_advance = shaped_advance(&shaped, letter_spacing);
-            let baseline_x = match tc.text_align {
+            let alignment = if line_index + 1 == line_count {
+                text_align_last.unwrap_or(tc.text_align)
+            } else {
+                tc.text_align
+            };
+            let baseline_x = match alignment {
                 TextAlign::Center => box_x_dpr + (max_width_dpr - line_advance) / 2.0,
                 TextAlign::End => box_x_dpr + max_width_dpr - line_advance,
                 TextAlign::Start => box_x_dpr,
@@ -2932,5 +2949,22 @@ mod tests {
         }).collect();
         assert_eq!(baselines.len(), 2);
         assert!(baselines[1] > baselines[0]);
+    }
+
+    #[test]
+    fn last_line_alignment_only_overrides_the_final_wrapped_line() {
+        let mut content = text_content("AA AA");
+        content.text_align = TextAlign::Center;
+        let mut leaf = positioned_leaf(content, 0.0, 0.0, 25.0, 40.0);
+        leaf.ext.insert("text.align-last".into(), ExtValue::Str("end".into()));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let scene = layout_to_paint(&leaf, &make_options(&shaper, &metrics, &resolver));
+        let starts: Vec<_> = scene.instructions.iter().filter_map(|instruction| match instruction {
+            PaintInstruction::GlyphRun(run) => run.glyphs.first().map(|glyph| glyph.x),
+            _ => None,
+        }).collect();
+        assert_eq!(starts, vec![4.5, 9.0]);
     }
 }
