@@ -95,6 +95,13 @@ pub trait MosaicApp {
     /// The default ignores it, so an app that never looks at its environment
     /// keeps working when a host starts reporting one. As with dispatch, an
     /// error must leave application state unchanged.
+    ///
+    /// Returning `None` must also leave the state [`MosaicApp::snapshot`]
+    /// saves unchanged. The runtime answers `None` at the current revision,
+    /// and native hosts persist a snapshot only when the revision moves
+    /// (UI48 §7.12), so a change recorded silently would not be saved until
+    /// the next event -- and would be lost if the app were killed first. An
+    /// app that wants the environment in its saved state returns `Some`.
     fn environment_changed(
         &mut self,
         _environment: Environment,
@@ -184,6 +191,29 @@ pub enum Platform {
 /// (UI48 §5.2). The runtime intercepts it; the app sees
 /// [`MosaicApp::environment_changed`], never a `dispatch` of this name.
 pub const ENVIRONMENT_CHANGED: &str = "environmentChanged";
+
+/// How every refusal of an invalid `environmentChanged` payload begins
+/// ([`RuntimeError::InvalidEnvironment`]'s message, which is what a native
+/// host reads across the C ABI as the failure's diagnostic).
+///
+/// A host keeps a report the runtime refused *for this reason* from being
+/// sent again until it changes -- the same invalid report would be refused
+/// on every tick of a window drag. Every other failure (an app error, a
+/// closed runtime) says nothing about the report itself, so the host sends
+/// it again with the next report (UI48 §7.6-§7.8). The ABI status alone
+/// cannot tell them apart: an invalid payload shares `ProtocolError` with a
+/// sequence mismatch. The text can, because no other failure begins this
+/// way -- an app error begins `Mosaic application error:`, a panic `Rust
+/// panic:` -- and `mosaic-app-bindings` writes this constant into each host
+/// rather than a copy of it.
+///
+/// ```text
+///   failure                        diagnostic begins          held back?
+///   invalid payload (refused)      INVALID_ENVIRONMENT_...    yes, until it changes
+///   app error (maybe transient)    "Mosaic application error" no, sent again
+///   closed / poisoned / sequence   something else             no, sent again
+/// ```
+pub const INVALID_ENVIRONMENT_DIAGNOSTIC: &str = "invalid Mosaic environmentChanged payload";
 
 /// Available width, as a bucket rather than pixels (UI48 §4). Each backend
 /// maps its native notion (SwiftUI `horizontalSizeClass`, Compose
@@ -804,7 +834,7 @@ impl<E: fmt::Display> fmt::Display for RuntimeError<E> {
             }
             Self::Poisoned => f.write_str("Mosaic instance produced invalid effects; recreate it"),
             Self::InvalidEnvironment(detail) => {
-                write!(f, "invalid Mosaic environmentChanged payload: {detail}")
+                write!(f, "{INVALID_ENVIRONMENT_DIAGNOSTIC}: {detail}")
             }
         }
     }
@@ -1050,6 +1080,64 @@ mod tests {
         assert_eq!(runtime.environment(), before);
         // Sequence 1 is still next.
         assert_eq!(runtime.dispatch(phone().into_event(1)).unwrap().revision, 2);
+    }
+
+    /// Hosts hold back an invalid report, and only that, by the start of
+    /// the diagnostic (UI48 §7.6-§7.8), so no other failure may begin the
+    /// same way -- in particular not an app error, which may be transient.
+    #[test]
+    fn only_an_invalid_environment_reads_as_one() {
+        let mut runtime = MosaicRuntime::new(AdaptiveApp::default());
+        runtime.start(start_context()).unwrap();
+        let refused = runtime
+            .dispatch(Event::new(1, ENVIRONMENT_CHANGED, json!({ "sizeClass": "compact" })))
+            .unwrap_err()
+            .to_string();
+        assert!(
+            refused.starts_with(&format!("{INVALID_ENVIRONMENT_DIAGNOSTIC}: ")),
+            "{refused}"
+        );
+        // Every other variant, one of each, chained by an exhaustive match: a
+        // new variant does not compile until it has an arm, and so a place in
+        // the chain this walks.
+        fn successor(error: &RuntimeError<TestError>) -> Option<RuntimeError<TestError>> {
+            use RuntimeError::*;
+            Some(match error {
+                ProtocolVersionMismatch { .. } => InvalidTextScale,
+                InvalidTextScale => InvalidUtcOffset,
+                InvalidUtcOffset => AlreadyStarted,
+                AlreadyStarted => NotStarted,
+                NotStarted => UnexpectedSequence {
+                    expected: 2,
+                    received: 3,
+                },
+                UnexpectedSequence { .. } => SequenceOverflow,
+                SequenceOverflow => RevisionOverflow,
+                RevisionOverflow => Application(TestError),
+                Application(_) => PendingEffects(vec![1]),
+                PendingEffects(_) => UnknownEffect(1),
+                UnknownEffect(_) => InvalidEffectId(1),
+                InvalidEffectId(_) => EffectsRequireV2,
+                EffectsRequireV2 => CompletionUnsupported,
+                CompletionUnsupported => Poisoned,
+                Poisoned => InvalidEnvironment("the end of the chain".into()),
+                InvalidEnvironment(_) => return None,
+            })
+        }
+        let mut others = Vec::new();
+        let mut current = RuntimeError::ProtocolVersionMismatch {
+            expected: 2,
+            received: 1,
+        };
+        while !matches!(current, RuntimeError::InvalidEnvironment(_)) {
+            let next = successor(&current).expect("the chain ends at InvalidEnvironment");
+            others.push(current.to_string());
+            current = next;
+        }
+        assert_eq!(others.len(), 15, "every variant but InvalidEnvironment");
+        for text in others {
+            assert!(!text.starts_with(INVALID_ENVIRONMENT_DIAGNOSTIC), "{text}");
+        }
     }
 
     #[test]

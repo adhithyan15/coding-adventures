@@ -526,10 +526,16 @@ mod tests {
 
     #[test]
     fn digamma_known_values() {
-        // R: digamma(1) = -0.5772156649 (Euler-Mascheroni)
-        assert!(close(digamma(1.0), -0.5772156649_f64, 1e-6));
+        // R: digamma(1) = -0.5772156649 (Euler-Mascheroni). The standard
+        // library's constant, not the literal: clippy's approx_constant
+        // rejects the hand-typed value since EULER_GAMMA became stable.
+        assert!(close(digamma(1.0), -std::f64::consts::EULER_GAMMA, 1e-6));
         // digamma(2) = 1 - γ
-        assert!(close(digamma(2.0), 1.0 - 0.5772156649_f64, 1e-6));
+        assert!(close(
+            digamma(2.0),
+            1.0 - std::f64::consts::EULER_GAMMA,
+            1e-6
+        ));
         // digamma(5) ≈ 1.5061177
         assert!(close(digamma(5.0), 1.5061177_f64, 1e-5));
     }

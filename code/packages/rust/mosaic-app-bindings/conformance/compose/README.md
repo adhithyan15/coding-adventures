@@ -16,3 +16,13 @@ runtime is required for the console round trip.
 
 CI runs the harness across clean, restored, and incompatible-state launches
 against one explicit state path.
+
+It also checks UI48 ENV4 (environment reporting, spec §7.4) against the
+conformance runtime, which ignores `environmentChanged`: an ignored report keeps
+the props and revision, an unchanged one is not resent, and an invalid one is
+refused and the identical one held back. With the conformance app's
+`failEnvironment` switch on, a report that failed for the app's own reasons is
+sent again rather than held back. With `MOSAIC_APP_STATE_PATH` set, an ignored
+report does not rewrite the state file and raises no persistence warning, while
+an event that cannot persist surfaces one at once; once the path is writable
+again, the next ignored report retries the failed save and clears the warning.

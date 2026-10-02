@@ -21,6 +21,13 @@ public static class MosaicRuntimeHost
     private static readonly bool PersistenceEnabled = __MOSAIC_PERSISTENCE_ENABLED__;
     private const string ApplicationId = "__MOSAIC_APPLICATION_ID__";
     private const string StateFileName = "mosaic-state.v1.json";
+    /// <summary>
+    /// How the runtime's refusal of an invalid environment begins
+    /// (<c>mosaic-app-runtime</c>'s <c>INVALID_ENVIRONMENT_DIAGNOSTIC</c>). No
+    /// other failure begins this way: an app error begins "Mosaic application
+    /// error".
+    /// </summary>
+    private const string InvalidEnvironmentDiagnostic = "__MOSAIC_INVALID_ENVIRONMENT__";
     private static string? LastLoadError;
     private static Runtime? State = Load();
 
@@ -137,13 +144,14 @@ public static class MosaicRuntimeHost
     /// <returns>
     /// Null when there was nothing to say or the runtime took it and it was
     /// shown; a status line when it failed (refused, or its props could not be
-    /// applied) or when taking it tripped a settle guard. Accepting says nothing, so the status
+    /// applied), when taking it tripped a settle guard, or when it retried a
+    /// failed save and so set or cleared the storage warning. Accepting says nothing, so the status
     /// bar keeps describing the user's last action rather than a resize.
     /// </returns>
     /// <remarks>
     /// <list type="bullet">
     /// <item>No runtime, the same report as the last one taken, or the same
-    /// as the last one refused: nothing is sent.</item>
+    /// as the last one refused as invalid: nothing is sent.</item>
     /// <item>An app that does not react answers at the revision already
     /// showing, without props. The props showing stay (see
     /// <c>KeepShowingProps</c>) and nothing is re-applied, so lists are not
@@ -151,11 +159,17 @@ public static class MosaicRuntimeHost
     /// <item>An answer with new props is applied, strictly when
     /// <paramref name="requiredProps"/> are named (a native-complete shell), as
     /// <see cref="HandleRequiredEvent"/> applies an event's.</item>
-    /// <item>A refusal (an invalid environment) leaves the screen as it is and
-    /// is not remembered as taken; only that identical report is held back.
+    /// <item>A failure leaves the screen as it is and is not remembered as
+    /// taken. Only a refusal of the report itself (an invalid environment)
+    /// holds that identical report back; any other failure -- an app error,
+    /// which may be transient -- lets the same report be sent again.
     /// A report the runtime took but whose strict apply failed IS remembered
     /// (the runtime has it); the apply is retried by the next report or
     /// event.</item>
+    /// <item>An answer at the revision showing (the app ignored it) rewrites
+    /// no state file, so a resize storm costs no disk writes -- unless an
+    /// earlier save failed, when it retries that save and shows the warning
+    /// it sets or clears.</item>
     /// </list>
     /// </remarks>
     public static string? ReportEnvironment(
@@ -336,12 +350,23 @@ public static class MosaicRuntimeHost
         private JsonElement latestUpdate;
         private string? persistenceWarning;
         /// <summary>
+        /// The revision the state file was last saved at by an answer, so an
+        /// answer at that same revision skips the write. Null until the first
+        /// save: the first answer after launch always writes, so a fresh
+        /// install has its state on disk even when the app ignored that first
+        /// answer.
+        /// </summary>
+        private ulong? savedRevision;
+        /// <summary>
         /// The last environment the runtime took (UI48 ENV4), so an unchanged
         /// report is not sent twice. Per runtime: a retried start reports
         /// afresh.
         /// </summary>
         private Dictionary<string, string>? lastReportedEnvironment;
-        /// <summary>The last report the runtime refused, not re-sent unchanged.</summary>
+        /// <summary>
+        /// The last report the runtime refused as invalid, not re-sent
+        /// unchanged. Any other failure leaves it alone.
+        /// </summary>
         private Dictionary<string, string>? lastRefusedEnvironment;
         /// <summary>
         /// The revision last applied to a component, so an environment report
@@ -541,7 +566,24 @@ public static class MosaicRuntimeHost
                 // while an effect is outstanding, so persisting first warns on
                 // every effect.
                 latestUpdate = KeepShowingProps(SettleEffects(update));
-                PersistSnapshot();
+                // An answer at the revision the state file already holds --
+                // an environment the app ignored (UI48 §7.1) -- changed
+                // nothing the app would save, so the file is not rewritten: a
+                // resize storm costs no disk writes. Compared with the
+                // revision SAVED, not the one showing: a fresh install's first
+                // answer is often an ignored environment, and must still write
+                // the state. Unless an earlier save failed (a warning is
+                // pending): then it retries that save, so a kill before the
+                // next event does not lose that revision. Unreadable revisions
+                // persist.
+                var revision = Revision(latestUpdate);
+                if (revision is null
+                    || revision != savedRevision
+                    || persistenceWarning is not null)
+                {
+                    PersistSnapshot();
+                    savedRevision = persistenceWarning is null ? revision : null;
+                }
             }
         }
 
@@ -594,16 +636,23 @@ public static class MosaicRuntimeHost
                 if (settling > 0) return null;
                 var report = new Dictionary<string, string>(environment);
                 if (SameEnvironment(lastReportedEnvironment, report)) return null;
-                // A report the runtime refused is not re-sent until it
-                // changes: a drag over a threshold would otherwise send it,
+                // A report the runtime refused as invalid is not re-sent until
+                // it changes: a drag over a threshold would otherwise send it,
                 // and rewrite the status line, on every tick.
                 if (SameEnvironment(lastRefusedEnvironment, report)) return null;
+                var warningBefore = persistenceWarning;
                 try
                 {
                     Dispatch("environmentChanged", report);
                 }
-                catch
+                catch (MosaicRuntimeException error) when (
+                    error.Message.StartsWith(InvalidEnvironmentDiagnostic, StringComparison.Ordinal))
                 {
+                    // Only a refusal of the report itself. Any other failure
+                    // (an app error, which may be transient) propagates
+                    // unremembered, so the same report is sent again rather
+                    // than leaving the app on a stale environment until the
+                    // window changes to a third one.
                     lastRefusedEnvironment = report;
                     throw;
                 }
@@ -617,9 +666,13 @@ public static class MosaicRuntimeHost
                 // Status, which consumes it.
                 if (settleError is not null)
                     return Status("Mosaic runtime handled environmentChanged");
-                if (Revision(latestUpdate) != appliedRevision)
+                // An ignored report retries a failed save (see Dispatch); if
+                // that set or cleared the storage warning, it is shown as an
+                // event's would be: re-applied props and a status line.
+                var warningChanged = persistenceWarning != warningBefore;
+                if (Revision(latestUpdate) != appliedRevision || warningChanged)
                     ApplyProps(component, requiredProps, strict: requiredProps.Count > 0);
-                return null;
+                return warningChanged ? Status("Mosaic runtime handled environmentChanged") : null;
             }
         }
 

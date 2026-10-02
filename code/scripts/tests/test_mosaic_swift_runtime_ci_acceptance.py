@@ -103,6 +103,9 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("-destination 'generic/platform=iOS Simulator'", block)
         self.assertIn("-destination 'generic/platform=iOS'", block)
         self.assertIn("nm -gU", block)
+        # `nm | grep -q` under pipefail fails on SIGPIPE whenever grep exits
+        # at its first match while nm is still writing.
+        self.assertNotRegex(block, r"(?m)^\s*nm [^\n]*\| *grep -q")
 
     def test_ios_app_target_builds_installs_and_launches(self) -> None:
         """UI89 §2.2: the generated Xcode project builds an .app with the
@@ -114,6 +117,7 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
         block = workflow[start:workflow.index("\n\n", start)]
         self.assertIn("xcodebuild -project App.xcodeproj -target App -sdk iphonesimulator", block)
         self.assertIn("nm -gU \"$ios_app/App\"", block)
+        self.assertNotRegex(block, r"(?m)^\s*nm [^\n]*\| *grep -q")
         self.assertIn("= dev.codingadventures.trestle", block)
         self.assertIn("xcrun simctl install", block)
         self.assertIn("xcrun simctl launch", block)

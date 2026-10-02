@@ -352,8 +352,17 @@ int main(int argc, char **argv) {
                   MosaicHost::environmentReport(800, 800, true).value(QStringLiteral("colorScheme")) == QStringLiteral("dark"),
               "size classes split at 600 and 1024, and a square window is landscape");
 
+        // A fresh host's first answer saves its state even when the app
+        // ignored it: nothing is on disk yet, so the skip -- "the file already
+        // holds this revision" -- cannot apply (an Android fresh install
+        // answers an ignored report first, and its gate expects the file).
+        const auto freshStatePath = qEnvironmentVariable("MOSAIC_APP_STATE_PATH");
+        check(!freshStatePath.isEmpty() && !QFile::exists(freshStatePath),
+              "the environment host starts with no state file");
         const auto reported = host.reportEnvironment(compact);
         check(!reported.contains(QStringLiteral("error")), "an ignored environment is accepted");
+        check(QFile::exists(freshStatePath),
+              "a fresh host's first answer writes its state, even an ignored report's");
         check(reported.value(QStringLiteral("revision")).toLongLong() == shownRevision,
               "an ignored environment keeps the revision");
         check(reported.value(QStringLiteral("props")).toMap() == shownProps,
@@ -376,6 +385,69 @@ int main(int argc, char **argv) {
         check(!host.reportEnvironment(compact).isEmpty(),
               "a refused report was not remembered, and going back is a change");
         check(!host.isSettling(), "no settle is left open");
+
+        // Only an invalid report is held back. While failEnvironment is on,
+        // every report that reaches the app is an app error -- a failure that
+        // is not the report's fault -- so an error answer proves a report was
+        // sent and an empty one that it was held back.
+        const auto failEnvironment = [&host](bool fail) {
+            return host.handleEvent(QVariantMap{
+                {QStringLiteral("name"), QStringLiteral("failEnvironment")},
+                {QStringLiteral("payload"), QVariantMap{{QStringLiteral("fail"), fail}}},
+            });
+        };
+        check(!failEnvironment(true).contains(QStringLiteral("error")),
+              "the app is told to fail environment changes");
+        check(host.reportEnvironment(compact).isEmpty(),
+              "the report last taken is still held back");
+        const auto tablet = MosaicHost::environmentReport(800, 1000, false);
+        check(host.reportEnvironment(tablet).value(QStringLiteral("error")).toString()
+                  .startsWith(QStringLiteral("Mosaic application error")),
+              "an app's failure on a report is an error answer");
+        check(host.reportEnvironment(tablet).contains(QStringLiteral("error")),
+              "a report that failed transiently is sent again");
+        check(host.reportEnvironment(invalid).contains(QStringLiteral("error")) &&
+                  host.reportEnvironment(invalid).isEmpty(),
+              "an invalid report is still held back after one refusal");
+        check(host.reportEnvironment(tablet).contains(QStringLiteral("error")),
+              "holding back an invalid report holds back nothing else");
+        check(!failEnvironment(false).contains(QStringLiteral("error")),
+              "the app is told to take environment changes again");
+
+        // An ignored report writes no state: nothing the app saves changed.
+        const auto statePath = qEnvironmentVariable("MOSAIC_APP_STATE_PATH");
+        check(!statePath.isEmpty() && QFile::exists(statePath), "the environment host persists");
+        QFile::remove(statePath);
+        const auto revisionBefore = host.props().value(QStringLiteral("revision")).toLongLong();
+        const auto retried = host.reportEnvironment(tablet);
+        check(!retried.isEmpty() && !retried.contains(QStringLiteral("error")) &&
+                  retried.value(QStringLiteral("revision")).toLongLong() == revisionBefore,
+              "once the failure passes, the same report is taken");
+        check(!QFile::exists(statePath), "an ignored report does not rewrite the state file");
+        // With the state path a directory, any write fails and says so. With
+        // no failed save pending, an ignored report attempts none, so it
+        // raises no warning; an event still does, on its own answer. Once a
+        // save has failed, the next ignored report retries it -- so a kill
+        // before the next event does not lose that revision -- and its
+        // answer carries the warning's clearing, as an event's would.
+        check(QDir().mkpath(statePath), "the state path made unwritable");
+        check(!host.reportEnvironment(compact).contains(QStringLiteral("persistenceWarning")),
+              "an ignored report raises no persistence warning");
+        check(failEnvironment(false).contains(QStringLiteral("persistenceWarning")),
+              "an event that cannot persist surfaces the warning at once");
+        check(host.reportEnvironment(tablet).contains(QStringLiteral("persistenceWarning")),
+              "an ignored report while saving still fails keeps the warning");
+        check(QDir(statePath).removeRecursively(), "the state path made writable again");
+        const auto saved = host.reportEnvironment(compact);
+        check(!saved.isEmpty() && !saved.contains(QStringLiteral("error")) &&
+                  !saved.contains(QStringLiteral("persistenceWarning")) && QFile::exists(statePath),
+              "an ignored report retries a failed save and clears the warning");
+        check(failEnvironment(true).value(QStringLiteral("error")).isNull(),
+              "the app is told to fail environment changes once more");
+        check(host.reportEnvironment(compact).isEmpty(),
+              "the report that retried the save is held back");
+        check(!failEnvironment(false).contains(QStringLiteral("error")),
+              "the app is left taking environment changes");
 
         // A native-complete shell: the answer reaches QML checked and under
         // its QML names, exactly as handleRequiredEvent's does.

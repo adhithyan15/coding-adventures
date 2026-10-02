@@ -241,11 +241,14 @@ class MosaicHost {
   ///
   /// Returns null when there is nothing for the shell to do: no runtime, a
   /// report the host held back (the same as the last one taken or the last
-  /// one refused), or an answer at the revision already showing -- an app
-  /// that does not react. Returns the runtime's answer when it moved the
-  /// revision (the app reacted) or carries an `error`, and
-  /// `{'error': 'Mosaic environment report failed: ...'}` when the report
-  /// failed: refused as invalid, or the runtime closed underneath.
+  /// one refused as invalid), or an answer at the revision already showing --
+  /// an app that does not react, which also writes no state unless an earlier
+  /// save failed. Returns the runtime's answer when it moved the revision (the
+  /// app reacted), set or cleared the storage warning (it retried a failed
+  /// save), or carries an `error`, and
+  /// `{'error': 'Mosaic environment report failed: ...'}`
+  /// when the report failed: refused as invalid, an app error, or the runtime
+  /// closed underneath.
   ///
   /// Never throws. A resize is not something the user did, so a failure is
   /// something to log, never a reason to tear the running app down.
@@ -370,6 +373,11 @@ final class _MosaicRuntime {
   static const String _applicationId = '__MOSAIC_APPLICATION_ID__';
   static const String _stateFileName = 'mosaic-state.v1.json';
 
+  /// How the runtime's refusal of an invalid environment begins
+  /// (`mosaic-app-runtime`'s `INVALID_ENVIRONMENT_DIAGNOSTIC`). No other
+  /// failure begins this way: an app error begins "Mosaic application error".
+  static const String _invalidEnvironment = '__MOSAIC_INVALID_ENVIRONMENT__';
+
   final _Create _create;
   final _Dispatch _dispatch;
   final _Snapshot _snapshot;
@@ -393,9 +401,16 @@ final class _MosaicRuntime {
   /// is not sent twice. Per runtime: a retried start reports afresh.
   Map<String, String>? _lastReportedEnvironment;
 
-  /// The last report the runtime refused, not re-sent until it changes.
+  /// The last report the runtime refused as invalid, not re-sent until it
+  /// changes. Any other failure leaves it alone.
   Map<String, String>? _lastRefusedEnvironment;
   String? _persistenceWarning;
+
+  /// The revision the state file was last saved at by an answer, so an answer
+  /// at that same revision skips the write. Null until the first save: the
+  /// first answer after launch always writes, so a fresh install has its
+  /// state on disk even when the app ignored that first answer.
+  int? _savedRevision;
   void Function()? propsChangedHandler;
 
   /// Called once per effect the runtime asks for.
@@ -492,7 +507,22 @@ final class _MosaicRuntime {
     // is outstanding, so persisting first warns on every effect.
     final settled = _keepShowingProps(_settleEffects(update));
     _runtimeUpdate = settled;
-    _persistSnapshot();
+    // An answer at the revision the state file already holds -- an
+    // environment the app ignored (UI48 §7.1) -- changed nothing the app would
+    // save, so the file is not rewritten: a resize storm costs no disk writes.
+    // Compared with the revision SAVED, not the one showing: a fresh install's
+    // first answer is often an ignored environment, and must still write the
+    // state. Unless an earlier save failed (a warning is pending): then it
+    // retries that save, so a kill before the next event does not lose that
+    // revision, and [reportEnvironment] shows the warning it sets or clears.
+    // Unreadable revisions persist.
+    final revision = _revision(settled);
+    if (revision == null ||
+        revision != _savedRevision ||
+        _persistenceWarning != null) {
+      _persistSnapshot();
+      _savedRevision = _persistenceWarning == null ? revision : null;
+    }
     latestUpdate = _withPersistenceWarning(settled);
     return latestUpdate;
   }
@@ -507,11 +537,13 @@ final class _MosaicRuntime {
   ///   dispatch would nest in the outer settle and be overwritten by it.
   ///   Nothing is sent and nothing remembered, so the next report is sent.
   ///   The shell reports from a post-frame callback, so this is a backstop.
-  /// - The same report as the last one taken, or the last one refused, is not
-  ///   sent: a drag across a threshold would otherwise re-send a refused one,
-  ///   and log it, on every frame.
-  /// - A refusal (an invalid environment) throws, and is remembered as
-  ///   refused; it does not replace the last report taken.
+  /// - The same report as the last one taken, or the last one refused as
+  ///   invalid, is not sent: a drag across a threshold would otherwise re-send
+  ///   a refused one, and log it, on every frame.
+  /// - A failure throws and does not replace the last report taken. Only a
+  ///   refusal of the report itself (an invalid environment) is remembered as
+  ///   refused; any other failure -- an app error, which may be transient --
+  ///   lets the same report be sent again.
   /// - A report the runtime took is remembered at once.
   Map<String, Object?>? reportEnvironment(Map<String, String> environment) {
     _ensureOpen();
@@ -520,6 +552,7 @@ final class _MosaicRuntime {
     if (_sameEnvironment(_lastReportedEnvironment, report)) return null;
     if (_sameEnvironment(_lastRefusedEnvironment, report)) return null;
     final shownRevision = _revision(_runtimeUpdate);
+    final shownWarning = latestUpdate['persistenceWarning'];
     final answer = _dispatchEnvironment(report);
     _lastReportedEnvironment = report;
     _lastRefusedEnvironment = null;
@@ -527,19 +560,29 @@ final class _MosaicRuntime {
     if (answer['error'] != null) return answer;
     // An app that does not react answers at the revision already showing,
     // its props kept by [_keepShowingProps]: nothing new to show, so the
-    // shell rebuilds nothing on a resize.
-    return _revision(answer) == shownRevision ? null : answer;
+    // shell rebuilds nothing on a resize -- unless it retried a failed save
+    // and so set or cleared the storage warning, which is shown as an
+    // event's would be.
+    return _revision(answer) == shownRevision &&
+            answer['persistenceWarning'] == shownWarning
+        ? null
+        : answer;
   }
 
-  /// Send [report], recording it as refused when the runtime says no.
+  /// Send [report], recording it as refused when the runtime says it is
+  /// invalid. Any other failure (an app error, which may be transient) is
+  /// not recorded, so the same report is sent again rather than leaving the
+  /// app on a stale environment until the window changes to a third one.
   Map<String, Object?> _dispatchEnvironment(Map<String, String> report) {
     try {
       return dispatch(<String, Object?>{
         'name': _environmentChanged,
         'payload': report,
       });
-    } on Object {
-      _lastRefusedEnvironment = report;
+    } on MosaicRuntimeException catch (error) {
+      if (error.message.startsWith(_invalidEnvironment)) {
+        _lastRefusedEnvironment = report;
+      }
       rethrow;
     }
   }

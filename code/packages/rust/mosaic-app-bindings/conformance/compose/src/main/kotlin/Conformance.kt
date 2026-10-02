@@ -1,3 +1,5 @@
+import java.io.File
+
 interface MosaicComposeHost : AutoCloseable {
     fun props(): Map<String, Any?>?
     fun handleEvent(event: Map<String, Any?>): Map<String, Any?>?
@@ -111,9 +113,12 @@ fun main() {
             == restoredProps, "the host still shows the same props")
         requireConformance(host.reportEnvironment(compact) == null,
             "an unchanged environment is not sent again")
-        val refused = host.reportEnvironment(compact + ("sizeClass" to "enormous"))
+        val invalid = compact + ("sizeClass" to "enormous")
+        val refused = host.reportEnvironment(invalid)
         requireConformance(refused?.containsKey("error") == true,
             "an invalid environment is refused")
+        requireConformance(host.reportEnvironment(invalid) == null,
+            "the same refused report is not resent")
         requireConformance(props(objectMap(host.props(), "props after refusal"), "props after refusal")
             == restoredProps, "a refused environment leaves the props")
         val expanded = compact + ("sizeClass" to "expanded") + ("orientation" to "landscape")
@@ -121,6 +126,75 @@ fun main() {
             "a changed size class is sent")
         requireConformance(host.reportEnvironment(compact) != null,
             "a refused report was not remembered, and going back is a change")
+
+        // Only an invalid report is held back. While failEnvironment is on,
+        // every report that reaches the app is an app error -- a failure that
+        // is not the report's fault -- so an error answer proves a report was
+        // sent and null that it was held back.
+        fun failEnvironment(fail: Boolean, assertion: String): Map<String, Any?> = objectMap(
+            host.handleEvent(mapOf("name" to "failEnvironment", "payload" to mapOf("fail" to fail))),
+            assertion,
+        )
+        failEnvironment(true, "the app is told to fail environment changes")
+        requireConformance(host.reportEnvironment(compact) == null,
+            "the report last taken is still held back")
+        val tablet = compact + ("sizeClass" to "regular")
+        requireConformance(
+            (host.reportEnvironment(tablet)?.get("error") as? String)
+                ?.startsWith("Mosaic application error") == true,
+            "an app's failure on a report is an error answer",
+        )
+        requireConformance(host.reportEnvironment(tablet)?.containsKey("error") == true,
+            "a report that failed transiently is sent again")
+        requireConformance(
+            host.reportEnvironment(invalid)?.containsKey("error") == true &&
+                host.reportEnvironment(invalid) == null,
+            "an invalid report is still held back after one refusal",
+        )
+        requireConformance(host.reportEnvironment(tablet)?.containsKey("error") == true,
+            "holding back an invalid report holds back nothing else")
+        failEnvironment(false, "the app is told to take environment changes again")
+
+        // An ignored report writes no state: nothing the app saves changed.
+        val statePath = System.getenv("MOSAIC_APP_STATE_PATH")
+        if (statePath.isNullOrBlank()) {
+            println("MOSAIC_APP_STATE_PATH unset: skipped the checks that an ignored report writes no state")
+        } else {
+            val state = File(statePath)
+            requireConformance(state.isFile, "the state persists")
+            requireConformance(state.delete(), "the state file removed")
+            val revisionBefore = integer(objectMap(host.props(), "props before retry")["revision"], "revision")
+            val retried = objectMap(host.reportEnvironment(tablet), "retried report")
+            requireConformance(integer(retried["revision"], "retried revision") == revisionBefore,
+                "once the failure passes, the same report is taken")
+            requireConformance(!state.exists(), "an ignored report does not rewrite the state file")
+            // With the state path a (non-empty) directory, any write fails and
+            // says so. With no failed save pending, an ignored report
+            // attempts none, so it raises no warning; an event still does, on
+            // its own answer. Once a save has failed, the next ignored report
+            // retries it -- so a kill before the next event does not lose that
+            // revision -- and its answer carries the warning's clearing.
+            requireConformance(File(state, "occupied").let { state.mkdirs() && it.createNewFile() },
+                "the state path made unwritable")
+            requireConformance(
+                "persistenceWarning" !in objectMap(host.reportEnvironment(compact), "report while unwritable"),
+                "an ignored report raises no persistence warning",
+            )
+            requireConformance("persistenceWarning" in failEnvironment(false, "an event while saving fails"),
+                "an event that cannot persist surfaces the warning at once")
+            requireConformance(
+                "persistenceWarning" in objectMap(host.reportEnvironment(tablet), "report while still failing"),
+                "an ignored report while saving still fails keeps the warning",
+            )
+            requireConformance(state.deleteRecursively(), "the state path made writable again")
+            val cleared = objectMap(host.reportEnvironment(compact), "report after the path is writable")
+            requireConformance(state.isFile && "persistenceWarning" !in cleared,
+                "an ignored report retries a failed save and clears the warning")
+            failEnvironment(true, "the app is told to fail environment changes once more")
+            requireConformance(host.reportEnvironment(compact) == null,
+                "the report that retried the save is held back")
+            failEnvironment(false, "the app is left taking environment changes")
+        }
         requireConformance(MosaicRuntimeHost.initialEnvironment()["pointer"] == "fine" &&
             MosaicRuntimeHost.initialEnvironment()["hover"] == "hover",
             "a desktop start context carries a fine, hovering pointer")

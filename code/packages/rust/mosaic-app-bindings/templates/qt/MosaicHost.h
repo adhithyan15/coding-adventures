@@ -37,9 +37,15 @@ public:
     //   runtime took: nothing is sent, and the answer is an empty map.
     // - An app that does not react answers with the props already showing
     //   (see keepShowingProps).
-    // - A refusal (an invalid environment) answers {"error": ...} and is not
-    //   remembered as the runtime's environment; only the identical report is
-    //   not resent.
+    // - A failure answers {"error": ...} and is not remembered as the
+    //   runtime's environment. Only a refusal of the report itself (an
+    //   invalid environment, InvalidEnvironmentDiagnostic) holds the identical
+    //   report back; any other failure (an app error, which may be transient)
+    //   lets the same report be sent again.
+    // - An ignored report (no new revision) writes no state file: nothing
+    //   the app would save has changed. Unless an earlier save failed: then
+    //   it retries that save, and the answer carries the warning or its
+    //   clearing, as an event's does.
     // - In a native-complete shell (configureRequiredProps) the answer is
     //   checked and mapped to QML names, as handleRequiredEvent's is.
     Q_INVOKABLE QVariantMap reportEnvironment(const QVariantMap &environment);
@@ -182,6 +188,7 @@ private:
     QVariantMap requireAndMapUpdate(const QVariantMap &update, const char *kind) const;
     QVariantMap failure(const QString &message) const;
     QVariantMap keepShowingProps(const QVariantMap &update) const;
+    static bool sameRevision(const QVariantMap &update, const QVariant &saved);
     QVariant loadPersistedSnapshot();
     void quarantinePersistedState(const QString &reason);
     void persistSnapshot();
@@ -197,6 +204,10 @@ private:
     static constexpr quint32 ProtocolVersion = __MOSAIC_PROTOCOL_VERSION__;
     static constexpr bool PersistenceEnabled = __MOSAIC_PERSISTENCE_ENABLED__;
     static constexpr const char *ApplicationId = "__MOSAIC_APPLICATION_ID__";
+    // How the runtime's refusal of an invalid environment begins
+    // (mosaic-app-runtime's INVALID_ENVIRONMENT_DIAGNOSTIC). No other failure
+    // begins this way: an app error begins "Mosaic application error".
+    static constexpr const char *InvalidEnvironmentDiagnostic = "__MOSAIC_INVALID_ENVIRONMENT__";
     QLibrary library_;
     void *app_ = nullptr;
     quint64 sequence_ = 0;
@@ -204,7 +215,8 @@ private:
     // The last environment the runtime took; a report is never empty, so the
     // empty map means "none yet".
     QVariantMap lastReportedEnvironment_;
-    // The last report the runtime refused, so an identical one is not resent.
+    // The last report the runtime refused as invalid, so an identical one is
+    // not resent. Any other failure leaves it alone.
     QVariantMap lastRefusedEnvironment_;
     // The props the runtime last gave, before any persistence warning.
     QVariant shownRuntimeProps_;
@@ -215,6 +227,11 @@ private:
     QStringList requiredProps_;
     QString error_;
     QString persistenceWarning_;
+    // The revision the state file was last saved at by an answer, so an
+    // answer at that same revision skips the write. Invalid until the first
+    // save: the first answer after launch always writes, so a fresh install
+    // has its state on disk even when the app ignored that first answer.
+    QVariant savedRevision_;
     // Effect ids the runtime is waiting on and nothing has answered yet.
     QSet<quint64> awaiting_;
     // Effects a handler has taken ownership of. Kept OUT of the fail sweep --
