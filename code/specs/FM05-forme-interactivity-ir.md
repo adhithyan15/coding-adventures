@@ -1,7 +1,7 @@
 # FM05 — Forme Interactivity IR
 
-> **Status:** Normative v1 contract implemented; per-page composition is active
-> in FM-B060.
+> **Status:** Implemented through the normative v1 contract, exact per-page
+> composition, and live progressive-enhancement proof.
 > **Scope:** The backend-neutral state, predicate, binding, event-handler, and
 > island representation carried alongside Content IR and Style IR.
 > **Delivery owner:** FM-B059–FM-B061 and the FM-B013 completion milestone in
@@ -14,8 +14,8 @@
 | Kernel kind name | Placeholder implemented | FM01 and `forme-types` reserve the `Interactivity` kind. |
 | Behavior/event/state schema | Implemented | FM-B059 implements this contract in `forme-interactivity-ir`. |
 | Bounded validation and canonical bytes | Implemented | FM-B059 rejects hostile values and emits deterministic JSON. |
-| Per-page island tracking | Active | FM-B060 composes validated documents with rendered pages and records exact `usedIslands`. |
-| Progressive-enhancement proof | Blocked | FM-B061 ships a live fallback plus one bounded enhancement. |
+| Per-page island tracking | Implemented | FM-B060 composes validated documents with rendered pages and records exact `usedIslands`. |
+| Progressive-enhancement proof | Implemented | FM-B061 ships a live fallback plus one bounded enhancement. |
 | Non-web degradation | Pending | FM-B017 owns explicit terminal/print/email behavior. |
 
 ## 1. Purpose and authority
@@ -268,6 +268,17 @@ copies the exact `IslandId` list to the deploy route. Missing authority, an
 absent or duplicate mapping, a digest mismatch, a non-script asset, or a
 module-use list that differs from `usedIslands` is an error.
 
+FM-B061 proves this contract in the multi-page Coding Adventures blog. Only
+the `Hello, Forme` route declares a load-activated pipeline-step island. Its
+authored ordered list remains complete and usable when JavaScript is disabled;
+the reviewed module may add opt-in step navigation but may not replace or hide
+that fallback until the reader asks it to. The product composition attaches one
+stable `script` asset reference, binds the site package/export pair to its
+exact SHA-256 bytes, and grants executable-output authority explicitly. Clean
+and unchanged warm builds must agree byte-for-byte, emit exactly one module for
+that route, preserve declaration-order `usedIslands`, and leave every other
+article without scripts or island IDs.
+
 ## 10. Canonical serialization
 
 `canonicalInteractivityDocument(document)` returns UTF-8 JSON text with:
@@ -348,10 +359,10 @@ import an island, or emit its module before that explicit authorization.
 
 ## 13. Delivery plan
 
-FM-B059 ships the types, bounded validator, canonical serializer, conformance
-tests, package documentation, and this normative contract. FM-B060 composes
-validated documents with rendering and AOT/deploy selection. FM-B061 adds the
-live progressive-enhancement proof. FM-B013 closes only after all three merge.
+FM-B059 shipped the types, bounded validator, canonical serializer, conformance
+tests, package documentation, and this normative contract. FM-B060 composed
+validated documents with rendering and AOT/deploy selection. FM-B061 added the
+live progressive-enhancement proof, completing the FM-B013 milestone.
 
 ## 14. Related specifications
 

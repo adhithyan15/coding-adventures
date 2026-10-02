@@ -77,7 +77,7 @@ func TestOrphanPackageRootSnapshotPinsGeneratedRegistry(t *testing.T) {
 	if _, err := ValidateOrphanPackageRootSnapshot(snapshot); err == nil || !strings.Contains(err.Error(), "does not pin") {
 		t.Fatalf("expected digest mismatch, got %v", err)
 	}
-	if hasher.SourceInputRegistryDigest() != "9bc672eac5d5ffc8e2d7d9ff94709a80bdcf0c2de01e7984d9cf8671d3dfa823" {
+	if hasher.SourceInputRegistryDigest() != "5201a045ea3e2086fd9be316f2692743ca329f1d84f1c0983a0da47e96b3f621" {
 		t.Fatalf("unexpected generated registry digest %s", hasher.SourceInputRegistryDigest())
 	}
 }

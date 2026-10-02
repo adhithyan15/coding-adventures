@@ -14,7 +14,7 @@
 | Plugin host | Extensible v1 implemented: installation, authority, runners, native sandboxes, product composition, and live storage watches | [FM02](FM02-forme-plugin-host.md) |
 | Orchestrator | Headless v0 implemented | [FM03](FM03-forme-orchestrator.md) |
 | Style IR | Implemented | [FM04](FM04-forme-style-ir.md) |
-| Interactivity IR | Active in FM-B013 | [FM05](FM05-forme-interactivity-ir.md) |
+| Interactivity IR | Implemented | [FM05](FM05-forme-interactivity-ir.md) |
 | AOT compiler | Static v0 implemented | [FM06](FM06-forme-aot-compiler.md) |
 | CLI and development server | Headless v0 implemented | [FM07](FM07-forme-cli-dev-server.md) |
 | Deploy runner | Headless v0 implemented | [FM08](FM08-forme-deploy-runner.md) |
@@ -51,7 +51,8 @@ The implementation now forms a complete headless v0 product:
   three supported runners pass one unchanged language-neutral subprocess corpus
   for lifecycle, mediated capabilities, wire values, stream shapes,
   cancellation, typed errors, malformed peers, and resource bounds.
-- The blog proves a ten-stage routed DAG: source → parse → asset resolution →
+- The blog proves an eleven-stage routed DAG: source → parse → exact reviewed
+  interactivity attachment → asset resolution →
   router fans out to article rendering, asset loading, and chronological
   collection. Typed page/asset fan-in writes fingerprinted local assets and
   manifest entries while the second filesystem sink emits an index, RSS, Atom,
@@ -75,7 +76,7 @@ The implementation now forms a complete headless v0 product:
   prefixes through non-forced ref updates. Installed third-party plugins now
   share that product path through persistent least-authority grants, native
   sandboxes, three runner SDKs, and bounded live storage watches. The
-  interactivity contract and authoring shell remain.
+  authoring shell remains.
 - The CLI now persists per-invocation cache entries and topology-scoped
   materialized checkpoints through a containment-checked project cache.
   Filesystem sources publish validated external-state manifests, and successful
@@ -87,8 +88,10 @@ The implementation now forms a complete headless v0 product:
   bounded fan-out while a content-addressed checkpoint branch publishes its
   manifest last. One shared FIFO permit pool bounds ready stages, per-item work,
   and iterator pulls without deadlocking at `maxConcurrency: 1`.
-- Interactivity IR now has a canonical FM05 location but no normative schema or
-  package. FM06 reconciles the existing static AOT family, FM07 records the
+- Interactivity IR has a canonical FM05 contract, bounded validator and
+  serializer, exact per-page renderer/deploy selection, and a live blog proof
+  that preserves a complete fallback while leaving unrelated routes
+  script-free. FM06 reconciles the existing static AOT family, FM07 records the
   shipped headless CLI/dev server, and the deploy-runner contract is FM08.
 - The completed concurrent scheduler has product-level clean/incremental and
   reproducibility proof in both live sites. The reconciled specification map
@@ -172,10 +175,10 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 51 | FM-B058 | done | Stream live plugin storage watches | Depends on completed FM-B057. Replace the deferred `ctx.storage.watch` refusal with a capability-authorized, explicitly started, bounded host-to-plugin stream; all three runner SDKs pass one unchanged conformance vector, early iterator return sends cancellation, run cancellation/disposal closes every watcher, and the product storage adapter emits contained portable events without unbounded buffering. |
 | 52 | FM-B015 | done | Complete plugin installation, runtimes, and sandboxes | Completion milestone depending on FM-B056–FM-B058. `forme install`, persistent grants, all supported runners, production sandbox profiles, mixed first-/third-party product integration, and live storage-watch mediation close the Extensible v1 runtime path. |
 | 53 | FM-B059 | done | Define and validate Interactivity IR v1 | Replace FM05's placeholder with a bounded versioned state/predicate/binding/handler/island contract; ship a pure `forme-interactivity-ir` package whose validator rejects malformed, cyclic, over-limit, ambiguous, and dangling-reference values and whose canonical serializer is deterministic. |
-| 54 | FM-B060 | active | Track and emit exact per-page interactivity | Depends on FM-B059. Resolve each page's authored element references, record exact `usedIslands`, select only those island modules in the AOT/deploy path, and preserve zero-JavaScript output for pages without interactivity. |
-| 55 | FM-B061 | blocked | Prove progressive enhancement in a live Forme site | Depends on FM-B060. One dogfood page ships a useful no-JavaScript fallback plus one declarative enhanced interaction; clean and incremental builds prove only that page receives its bounded island module. |
-| 56 | FM-B013 | blocked | Complete Interactivity IR | Completion milestone depending on FM-B059–FM-B061. The normative schema, validator, exact per-page island selection, zero-JavaScript static path, and live progressive-enhancement proof close the FM05 delivery gate. |
-| 57 | FM-B016 | blocked | Build the authoring shell | Depends on FM-B009, FM-B013, and FM-B015. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
+| 54 | FM-B060 | done | Track and emit exact per-page interactivity | Depends on FM-B059. Resolve each page's authored element references, record exact `usedIslands`, select only those island modules in the AOT/deploy path, and preserve zero-JavaScript output for pages without interactivity. |
+| 55 | FM-B061 | done | Prove progressive enhancement in a live Forme site | Depends on FM-B060. One dogfood page ships a useful no-JavaScript fallback plus one declarative enhanced interaction; clean and incremental builds prove only that page receives its bounded island module. |
+| 56 | FM-B013 | done | Complete Interactivity IR | Completion milestone depending on FM-B059–FM-B061. The normative schema, validator, exact per-page island selection, zero-JavaScript static path, and live progressive-enhancement proof close the FM05 delivery gate. |
+| 57 | FM-B016 | active | Build the authoring shell | Depends on FM-B009, FM-B013, and FM-B015. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
 | 58 | FM-B017 | blocked | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
 | 59 | FM-B018 | blocked | Close release-quality gates | Depends on FM-B016 and FM-B017. Add 1,000-page clean/incremental benchmarks, Lighthouse/accessibility budgets, package/API versioning, migration docs, security review, and supported-platform CI. |
 | 60 | FM-B029 | later | Make duplicate PR CI cancellation and merge state unambiguous | One commit has one authoritative required CI suite; branch updates cancel obsolete runs completely; cancelling a redundant push suite cannot leave a stale final gate or misleading failed rollup; babysitting tooling identifies required checks and the current head. |
@@ -192,10 +195,10 @@ is proven, but it does not block FM-B004.
 
 Headless v0 is complete. Extensible v1 is complete through FM-B048 →
 FM-B049/FM-B050 → FM-B053 → FM-B054 → FM-B055 → FM-B051 → FM-B052 →
-FM-B056 → FM-B057 → FM-B058 → FM-B015. The shortest remaining path to
-Authoring v1 is FM-B059 → FM-B060 → FM-B061 → FM-B013, followed by the
-FM-B016 authoring shell and FM-B017 backend proof, then the FM-B018
-release-quality gate.
+FM-B056 → FM-B057 → FM-B058 → FM-B015. Interactivity is complete through
+FM-B059 → FM-B060 → FM-B061 → FM-B013. The shortest remaining path to
+Authoring v1 is the FM-B016 authoring shell and FM-B017 backend proof, followed
+by the FM-B018 release-quality gate.
 
 ## Discovery log
 
@@ -292,7 +295,9 @@ work.
 | 2026-10-02 | FM-B058 landed capability-authorized, explicitly started, bounded storage-watch streams across the host, all three runners, the shared conformance corpus, and the contained product adapter. Linux, macOS, Windows, duplicate push CI, CodeQL, and the mandatory security review all passed on the final head; the fresh milestone audit found no remaining FM-B015 acceptance gap. | Close FM-B058 and FM-B015. Extensible v1 is complete; activate FM-B013 as the single Authoring-v1 critical-path item. |
 | 2026-10-02 | The FM-B013 audit found three independently reviewable boundaries hidden in one item: a hostile-data schema/validator, renderer/AOT/deploy selection, and a live progressive-enhancement proof. The existing kernel type is only a permissive JSON placeholder, the static renderer always emits `usedIslands: []`, and no dogfood site exercises a fallback. | Split FM-B013 into FM-B059–FM-B061 and retain it as the completion milestone. Activate only FM-B059 so the bounded declarative contract lands before any renderer or product code consumes it. |
 | 2026-10-02 | FM-B059 merged with the normative schema, hostile-input validator, and canonical serializer. The renderer still emits an empty usage set and the static-site emitter has no script-asset selection boundary. | Close FM-B059 and activate FM-B060. Compose validated route documents with an explicitly authorized reviewed-content allowlist, exact element resolution, SHA-256-bound deploy-time script pruning, and a zero-JavaScript static path before attempting the live dogfood proof. |
-| 2026-10-02 | FM-B060 security review established that browser island modules execute with page-origin authority, not the FM02 native-plugin sandbox; a generic config mapping cannot honestly claim FM02 authentication. HTML identity also requires browser-equivalent tree construction, and emitted paths must remain collision-free on portable filesystems and replay. | Define this PR's boundary as explicit executable-output authority plus a reviewed package/export-to-exact-bytes allowlist; use HTML5 parsing with aggregate budgets, recompute script digests at the sink, snapshot bounded page usage, and reserve portable output keys in both initial materialization and replay. Leave FM02 provenance integration to the live product proof where an actual trusted producer can be composed. |
+| 2026-10-02 | FM-B060 security review established that browser island modules execute with page-origin authority, not the FM02 native-plugin sandbox; a generic config mapping cannot honestly claim FM02 authentication. HTML identity also requires browser-equivalent tree construction, and emitted paths must remain collision-free on portable filesystems and replay. | Define this PR's boundary as explicit executable-output authority plus a reviewed package/export-to-exact-bytes allowlist; use HTML5 parsing with aggregate budgets, recompute script digests at the sink, snapshot bounded page usage, and reserve portable output keys in both initial materialization and replay. The live product uses a repository-reviewed, site-owned producer; optional FM02 provenance integration remains future work and would not reduce the island's browser page-origin authority. |
+| 2026-10-02 | FM-B060 merged after macOS, Windows, Linux, metadata, duplicate-push, CodeQL, and mandatory security review passed. The multi-page blog already uses the generic renderer and asset-aware emitter, so it can prove selected and zero-JavaScript routes without duplicating the new composition boundary. | Close FM-B060 and activate FM-B061. Enhance only the `Hello, Forme` article with a reviewed, exact-byte pipeline-step island; retain its complete ordered-list fallback, keep every other article script-free, and extend clean plus warm incremental product acceptance to assert the route/module split. |
+| 2026-10-02 | FM-B061 added an opt-in pipeline-step explorer to only the `Hello, Forme` article. Its full ordered list remains the no-JavaScript fallback; the product binds one stable script identity to reviewed SHA-256 bytes; clean and unchanged warm builds are byte-identical; and every other article remains script- and island-free. The source-input audit also added the module identity sidecar to the exact blog boundary and regenerated every checked digest projection. | Close FM-B061 and its FM-B013 completion milestone. Interactivity IR is implemented end to end. Activate FM-B016 as the highest-priority ready Authoring-v1 item; FM-B017 is independently ready but remains blocked so only one roadmap item is active. |
 
 ## Loop protocol
 

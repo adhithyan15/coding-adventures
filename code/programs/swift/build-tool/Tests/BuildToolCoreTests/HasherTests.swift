@@ -292,7 +292,7 @@ struct HasherTests {
         #expect(Set(checked.languages.map(\.language)).count == 23)
         #expect(
             Hasher.languageSourceInputRegistryDigest
-                == "9bc672eac5d5ffc8e2d7d9ff94709a80bdcf0c2de01e7984d9cf8671d3dfa823"
+                == "5201a045ea3e2086fd9be316f2692743ca329f1d84f1c0983a0da47e96b3f621"
         )
         #expect(
             try Hasher.canonicalLanguageSourceInputRegistryDigest(from: checkedData)
@@ -322,7 +322,7 @@ struct HasherTests {
         #expect(Set(checked.boundaries.flatMap(\.inputs).map(\.path)).count == 19)
         #expect(
             Hasher.repositorySourceInputBoundaryDigest
-                == "9524d704836ae08c202fb26c47d1d963ab020b4d286fc41441d0cfdf3db2d950"
+                == "c69e97fc384c7d63d32148269023f1ea34fa9906df265fe63ede9a0486c6e3e6"
         )
         #expect(
             try Hasher.canonicalRepositorySourceInputBoundaryDigest(from: checkedData)

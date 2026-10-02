@@ -2,7 +2,7 @@
   "name": "@coding-adventures/blog-site",
   "version": "0.1.0",
   "private": true,
-  "description": "The Coding Adventures blog — a complete ten-stage Forme surface with fingerprinted assets, deployed to /coding-adventures/blog/ on GitHub Pages.",
+  "description": "The Coding Adventures blog — an eleven-stage Forme surface with fingerprinted assets and exact per-page progressive enhancement.",
   "type": "module",
   "scripts": {
     "bootstrap": "node ../../packages/typescript/forme-cli/bin/bootstrap.mjs .",
@@ -13,7 +13,7 @@
     "build:clean": "npm run bootstrap && npm run clean && npm run build",
     "clean": "forme clean",
     "dev": "forme watch",
-    "test": "vitest run surface-stage.test.ts product-build.test.ts"
+    "test": "vitest run surface-stage.test.ts interactivity-stage.test.ts pipeline-steps.test.ts product-build.test.ts"
   },
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
@@ -43,6 +43,8 @@
   "devDependencies": {
     "@coding-adventures/forme-cli": "file:../../packages/typescript/forme-cli",
     "@types/node": "^22.0.0",
+    "@vitest/coverage-v8": "^4.1.11",
+    "happy-dom": "^20.14.5",
     "typescript": "^5.0.0",
     "tsx": "^4.0.0",
     "vitest": "^4.1.11"

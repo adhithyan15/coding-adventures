@@ -1,13 +1,14 @@
 /**
  * forme.config.ts — pipeline config for the Coding Adventures blog.
  *
- * Ten stages with explicit fan-out after asset resolution, routing, and collection.
+ * Eleven stages with explicit fan-out after asset resolution, routing, and collection.
  * See `build.ts` for the driver that verifies both deploy sinks.
  *
  * Roll call:
  *
  *   forme-source-fs              Void                 → Stream<ContentSource>
  *   forme-parse-markdown         ContentSource        → ContentNode
+ *   blog-attach-interactivity    Stream<ContentNode>  → Stream<ContentNode>
  *   forme-resolve-asset-refs-fs  Stream<ContentNode>  → Stream<ContentNode>
  *   forme-router                 Stream<ContentNode>  → Stream<ContentNode>
  *                                         ├→ collect → blog-surface → emit-surface
@@ -43,7 +44,27 @@ import loadAssetsFs   from "@coding-adventures/forme-load-assets-fs";
 import emitFs         from "@coding-adventures/forme-emit-fs";
 import emitSiteFs     from "@coding-adventures/forme-emit-site-fs";
 import blogSurface    from "./surface-stage.ts";
+import attachBlogInteractivity, {
+  PIPELINE_ISLAND_ASSET_ID,
+} from "./interactivity-stage.ts";
 import type { PipelineConfig } from "@coding-adventures/forme-pipeline-config";
+
+const pipelineStepsInteractivity = {
+  kind: "Interactivity",
+  version: 1,
+  state: [],
+  bindings: [],
+  handlers: [],
+  islands: [{
+    id: "pipeline-step-explorer",
+    packageName: "@coding-adventures/blog-site",
+    export: "enhancePipelineSteps",
+    target: { kind: "element", id: "forme-pipeline-steps" },
+    fallback: { kind: "element", id: "forme-pipeline-steps" },
+    activation: "load",
+    config: {},
+  }],
+} as const;
 
 const config: PipelineConfig = {
   name: "coding-adventures-blog",
@@ -65,6 +86,11 @@ const config: PipelineConfig = {
     {
       id: "parse",
       stage: parseMarkdown,
+      config: {},
+    },
+    {
+      id: "attach-interactivity",
+      stage: attachBlogInteractivity,
       config: {},
     },
     {
@@ -93,6 +119,17 @@ const config: PipelineConfig = {
         atomRoute: "/blog/atom.xml",
         style: classlessTheme,
         activeStyleContexts: ["dark", "narrow", "high-contrast"],
+        interactivity: [{
+          route: "/blog/2026-05-15-hello-forme.html",
+          document: pipelineStepsInteractivity,
+        }],
+        islandModules: [{
+          packageName: "@coding-adventures/blog-site",
+          export: "enhancePipelineSteps",
+          assetId: PIPELINE_ISLAND_ASSET_ID,
+          sha256: "269714b31b6f60c902db694de7ebfbdc8690f3ec519ddf9406c41167eb73b4b8",
+        }],
+        allowExecutableAssets: true,
       },
     },
     {
@@ -130,7 +167,8 @@ const config: PipelineConfig = {
   ],
   wires: [
     { from: { id: "source" },       to: { id: "parse" } },
-    { from: { id: "parse" },        to: { id: "resolve-assets" } },
+    { from: { id: "parse" },        to: { id: "attach-interactivity" } },
+    { from: { id: "attach-interactivity" }, to: { id: "resolve-assets" } },
     { from: { id: "resolve-assets" }, to: { id: "route" } },
     { from: { id: "route" },        to: { id: "collect-posts" } },
     { from: { id: "route" },        to: { id: "render-pages" } },

@@ -452,7 +452,7 @@ class CorpusTests(unittest.TestCase):
         )
         self.assertEqual(
             runner.repository_source_input_boundary_digest(boundary),
-            "9524d704836ae08c202fb26c47d1d963ab020b4d286fc41441d0cfdf3db2d950",
+            "c69e97fc384c7d63d32148269023f1ea34fa9906df265fe63ede9a0486c6e3e6",
         )
         by_id = {entry["id"]: entry for entry in boundary["boundaries"]}
         self.assertEqual(
@@ -1303,6 +1303,7 @@ class CorpusTests(unittest.TestCase):
                 "data/2026-05-12-why-forme.md",
                 "data/2026-05-15-hello-forme.md",
                 "data/assets/.forme-pipeline.svg.id.json",
+                "data/assets/.pipeline-steps.js.id.json",
                 "data/assets/forme-pipeline.svg",
             ],
             "code/sites/landing-page": [

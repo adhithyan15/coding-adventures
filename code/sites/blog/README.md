@@ -23,6 +23,7 @@ only those deployment settings change; the routes and destination do not.
 ```
 forme-source-fs           Void                → Stream<ContentSource>
 forme-parse-markdown      ContentSource       → ContentNode
+blog-attach-interactivity Stream<ContentNode> → Stream<ContentNode>
 forme-resolve-asset-refs  Stream<ContentNode> → Stream<ContentNode>
 forme-router              Stream<ContentNode> → Stream<ContentNode>
                          ├→ forme-render-static ───────────┐
@@ -57,10 +58,19 @@ post-build verifier checks the exact surface, fingerprinted asset bytes,
 rewritten project-page URL, and absence of unresolved Forme placeholders. HTML
 files carry matched rules from the
 reusable classless Style IR theme compiled through the AOT slicer and inlined
-in `<style>` — including light/dark preferences, with no JS or external CSS.
+in `<style>` — including light/dark preferences. Static articles remain at
+zero JavaScript; the one enhanced article receives only its selected module.
 Local post images are emitted under `dist/blog/assets/` with complete content
 hashes, making changed bytes produce a new cache-safe URL while unchanged bytes
 keep the same URL.
+
+The `Hello, Forme` article is the live FM05 progressive-enhancement proof. Its
+complete pipeline list is useful without JavaScript. A site-owned pure stage
+attaches one reviewed script asset only to that source, and the render config
+binds the declared package/export pair to the asset's exact identity and
+SHA-256 bytes with explicit executable-output authority. The emitter includes
+the fingerprinted module and `pipeline-step-explorer` island ID only on that
+route; the other article pages contain no script tags or island IDs.
 
 The test suite also runs a clean and an unchanged second-process build in
 reproducible mode. It requires identical build IDs, canonical output reports,
@@ -81,9 +91,15 @@ last good blog when an edit produces a build error.
 - `data/` — Markdown posts. Frontmatter is `key: value` only (the v0
   parser is grammar-restricted; see
   `code/packages/typescript/forme-parse-markdown/README.md`).
-- `forme.config.ts` — `PipelineConfig` literal wiring ten named stage
+- `forme.config.ts` — `PipelineConfig` literal wiring eleven named stage
   instances, including routed content/asset fan-out, named asset fan-in, and
   two deploy outputs.
+- `interactivity-stage.ts` — the narrow product authority boundary that
+  attaches the reviewed pipeline-step module identity and source to the one
+  article allowed to use it.
+- `pipeline-steps.test.ts` — DOM-level acceptance for the shipped browser
+  module's fallback preservation, opt-in focus controls, restoration,
+  idempotency, and fail-closed structure checks.
 - `surface-stage.ts` — collection adapter that composes the reusable Forme
   index/feed/sitemap/head generators into deployable pages.
 - `verify.ts` — site-specific filesystem acceptance checks that run after the
