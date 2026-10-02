@@ -13,9 +13,7 @@ import {
   startDevServer,
   type DevServer,
 } from "@coding-adventures/forme-dev-server";
-import { filesystemCache } from "@coding-adventures/forme-cache";
 import {
-  createOrchestrator,
   type Orchestrator,
   type Pipeline,
   type RunResult,
@@ -26,10 +24,8 @@ import {
   loadTsConfig,
   type PipelineConfig,
 } from "@coding-adventures/forme-pipeline-config";
-import {
-  silentLogger,
-  type CancellationToken,
-} from "@coding-adventures/forme-stage";
+import { type CancellationToken } from "@coding-adventures/forme-stage";
+import { createWindowsInstallAclVerifier } from "@coding-adventures/forme-sandbox-windows";
 import { watchProject } from "./project-watcher.js";
 import { executeDeploy, materializeDeployInput, type DeployInvocation } from "./deploy.js";
 import {
@@ -38,6 +34,7 @@ import {
   type PluginInstallInvocation,
   type ProductPluginInstallResult,
 } from "./install.js";
+import { createProductOrchestrator } from "./runtime.js";
 
 export const EXIT_OK = 0;
 export const EXIT_BUILD_FAILED = 1;
@@ -52,6 +49,7 @@ const DEFAULT_CONFIG_NAMES = [
 ] as const;
 
 const CLI_SPEC_PATH = fileURLToPath(new URL("../forme.cli.json", import.meta.url));
+const verifyWindowsAcl = createWindowsInstallAclVerifier();
 
 export interface CliIO {
   readonly stdout: { write(value: string): unknown };
@@ -65,7 +63,14 @@ export interface CliIO {
 
 export interface CliServices {
   loadConfig(path: string): Promise<PipelineConfig>;
-  createOrchestrator(cacheRoot: string | null): Orchestrator;
+  createOrchestrator(
+    cacheRoot: string | null,
+    runtime: {
+      readonly config: PipelineConfig;
+      readonly projectRoot: string;
+      readonly signal?: AbortSignal;
+    },
+  ): Orchestrator | Promise<Orchestrator>;
   startDevServer(options: { readonly port: number }): Promise<DevServer>;
   watchProject(root: string, ignoredPaths: readonly string[]): AsyncIterable<unknown>;
   installPlugin(invocation: PluginInstallInvocation): Promise<ProductPluginInstallResult>;
@@ -101,13 +106,16 @@ const defaultIO: CliIO = {
 
 const defaultServices: CliServices = {
   loadConfig: path => loadTsConfig(path),
-  createOrchestrator: cacheRoot => createOrchestrator({
-    logger: silentLogger(),
-    ...(cacheRoot === null ? {} : { cache: filesystemCache(cacheRoot) }),
+  createOrchestrator: (cacheRoot, runtime) => createProductOrchestrator({
+    ...runtime,
+    cacheRoot,
   }),
   startDevServer: options => startDevServer(options),
   watchProject: (root, ignoredPaths) => watchProject(root, ignoredPaths),
-  installPlugin: invocation => executePluginInstall(invocation),
+  installPlugin: invocation => executePluginInstall({
+    ...invocation,
+    ...(process.platform === "win32" ? { verifyWindowsAcl } : {}),
+  }),
 };
 
 export async function run(
@@ -225,7 +233,14 @@ export async function run(
       };
     }
 
-    orchestrator = services.createOrchestrator(projectCacheRoot(config, projectRoot));
+    orchestrator = await services.createOrchestrator(
+      projectCacheRoot(config, projectRoot),
+      {
+        config,
+        projectRoot,
+        ...(options.cancellation === undefined ? {} : { signal: options.cancellation.signal }),
+      },
+    );
     const pipeline = await orchestrator.buildPipeline(config);
 
     if (args.command === "watch") {
@@ -283,6 +298,10 @@ export async function run(
     }
     return result.outcome === "cancelled" ? EXIT_CANCELLED : EXIT_BUILD_FAILED;
   } catch (error) {
+    if (options.cancellation?.cancelled === true) {
+      diagnostic(io, "E_CANCELLED", options.cancellation.reason ?? "command cancelled");
+      return EXIT_CANCELLED;
+    }
     const entries = configErrorEntries(error);
     if (entries !== null) {
       for (const entry of entries) {

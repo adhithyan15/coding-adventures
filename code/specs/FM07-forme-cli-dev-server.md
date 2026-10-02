@@ -14,7 +14,8 @@
 | `forme clean` | Implemented | Removes only containment-checked output and cache targets. |
 | `forme watch` preview server | Implemented | Coalesced rebuilds, SSE reload, last-good output, and clean cancellation are tested. |
 | `forme deploy` | Implemented in FM-B047/FM-B012 | Uses CLI Builder for one manifest, exactly one content-store shape, one explicit target config, target-aware dry-run, and publication through the FM08 adapters. |
-| `forme install` and trust UX | Active in FM-B056 | Compose the completed FM02 authority and atomic-installer cores for bounded local package directories before FM-B057 runtime composition. |
+| `forme install` and trust UX | Implemented in FM-B056 | Composes the completed FM02 authority and atomic-installer cores for bounded local package directories. |
+| Installed plugin runtime | Active in FM-B057 | Compose manifest-bound grants, language selection, and native platform sandboxes into CLI/orchestrator execution. |
 | Authoring shell integration | Blocked | FM-B016 owns the non-developer product shell. |
 
 ## 1. Purpose
@@ -89,8 +90,43 @@ project's `forme-plugins/` discovery root.
 The source tree and install root must be canonical directories. Symlinks,
 non-regular entries, racing file identities, unsafe install-root permissions,
 and malformed authority files fail closed. On Windows the command remains
-unavailable until FM-B057 supplies a native verifier proving that the complete
-root or existing target tree excludes untrusted writers.
+unavailable unless FM-B057's native verifier proves that the complete root or
+existing target tree excludes untrusted writers.
+
+### 2.7 Installed plugin runtime composition
+
+Pipelines containing only direct first-party stages retain the existing
+process-free path. When a pipeline contains a plugin `StageRef`, the CLI opens
+the canonical `<project>/forme-plugins` discovery root and loads only the
+current manifest-bound grants stored beside each installed plugin. Missing or
+stale grants grant nothing; malformed authority data is fatal.
+
+The CLI selects the native sandbox factory for the current operating system;
+there is no ambient subprocess fallback. `node` plugins use the current
+canonical Node executable, `binary` plugins execute the exact selected entry,
+and `deno`, `bun`, and `python` require explicitly configured absolute runtime
+executables and roots in `settings.pluginRuntimes`. The product host supplies
+the bounded storage adapter and the grant-mediated network, environment, and
+broad user-filesystem adapters defined by FM01; third-party shell execution
+remains forbidden. Host-owned plugin installation and cache roots MUST be
+reserved from storage and broad filesystem adapters even when the configured
+storage root is the project root. The resulting plugin host is passed to the
+orchestrator and disposed on every success, failure, and cancellation path.
+
+A mixed direct/`StageRef` DAG must validate without launching a subprocess and
+must launch the referenced runner lazily for build and watch. Platform product
+tests execute the same mixed pipeline through the real Linux, macOS, or Windows
+sandbox instead of a process-free test double.
+
+On Windows, a native ACL verifier canonicalizes the install root and existing
+target tree without following reparse points, proves that only the current user
+or trusted administrators retain write authority, and binds its result to the
+opened identities. Inherit-only write rules are rejected on the install root
+where transaction children are created, while every ancestor through the
+volume root is checked for effective replacement authority. Product discovery
+rechecks the root identity after the cancellable host snapshot pass. Any
+unprovable owner, DACL, inheritance, ancestor, cancellation, or identity change
+fails closed before installation or launch.
 
 ## 3. Diagnostics and reproducibility
 

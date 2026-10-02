@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Let product callers load `grants.toml` for every discovered plugin in the
+  same snapshot pass, granting nothing for missing or stale manifest hashes
+  and rejecting malformed authority before any stage can resolve. Discovery
+  and authority loading accept an `AbortSignal` and check it throughout their
+  bounded filesystem walks.
 - Exported the verified config-schema snapshot type used by production sandbox
   process factories.
 

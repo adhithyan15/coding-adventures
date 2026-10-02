@@ -2,18 +2,35 @@
 
 ## Unreleased
 
+- Compose installed plugin `StageRef`s with manifest-bound persistent grants,
+  the current platform's native sandbox factory, and lazy orchestrator-owned
+  plugin sessions. Direct-only pipelines retain their process-free path, and
+  a mixed direct/plugin product DAG runs in every supported platform gate.
+  The product host supplies bounded storage plus grant-mediated network,
+  environment, and filesystem backends while hiding host-owned plugin and
+  cache state from every plugin grant. Project config selects trusted
+  non-default runtime distributions; product tests exercise both a granted
+  storage call and a real Python plugin.
+- Enable Windows installation and discovery only after the native verifier
+  proves the complete named tree excludes reparse points and untrusted write
+  authority while retaining stable file identities. Product discovery binds
+  the verified root identity across the host snapshot pass and propagates CLI
+  cancellation into plugin discovery and authority loading.
 - Added `forme install <PACKAGE>` for bounded local plugin directories with
   preflighted identity/trust classification, control-safe cancellable
   per-capability review against the configured runtime roots, user trust-store
   loading, manifest-bound grants, and atomic immutable discovery-root
   publication. Linked, special, oversized, changing, or package-authority
-  inputs fail closed; Windows awaits the explicit native ACL verifier in the
-  runtime-composition milestone.
+  inputs fail closed.
 - Made the install capability-review assertion use the manifest contract's
   colon-free path representation on Windows as well as native paths on Unix.
 - Let the GET-only GitHub Pages dry-run boundary use the fixed `GITHUB_TOKEN`
   when available, avoiding shared anonymous API limits while preserving
   tokenless local inspection.
+- Run the Windows Python product acceptance test against a private runtime copy
+  whose tree passes the production trust verifier. The test first proves that
+  the hosted shared toolcache is rejected and never weakens its ACL or the
+  product's trusted-writer policy.
 
 ## 0.5.0 — 2026-09-27
 

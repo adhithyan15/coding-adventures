@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { createWindowsSandboxFactory, windowsSandboxContract } from "../src/index.js";
+import {
+  createWindowsInstallAclVerifier,
+  createWindowsSandboxFactory,
+  windowsSandboxContract,
+} from "../src/index.js";
 
 describe("Windows sandbox policy", () => {
   it("pins the complete FM02 Job, token, AppContainer, and mitigation boundary", () => {
@@ -21,5 +25,13 @@ describe("Windows sandbox policy", () => {
     const factory = createWindowsSandboxFactory({ launcherPath: "C:\\trusted\\forme-sandbox-windows.exe" });
     expect(typeof factory.launch).toBe("function");
     expect(typeof createWindowsSandboxFactory().launch).toBe("function");
+  });
+
+  it("constructs a fail-closed native install ACL verifier", async () => {
+    const verify = createWindowsInstallAclVerifier({
+      launcherPath: "C:\\trusted\\forme-sandbox-windows.exe",
+    });
+    expect(typeof verify).toBe("function");
+    expect(await verify("relative", "install-root")).toBe(false);
   });
 });

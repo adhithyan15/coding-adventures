@@ -6,8 +6,20 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "packaged CLI specification, project Forme config/content, deploy inputs, user plugin trust store, and one explicitly selected local plugin package",
-      "justification": "Loads the declarative CLI Builder specification, selected project/deploy inputs, and bounded local plugin snapshot plus persisted trust decisions."
+      "target": "packaged CLI specification, project Forme config/content, deploy inputs, user plugin trust store, one explicitly selected local plugin package, and installed project plugin snapshots with grants",
+      "justification": "Loads the declarative CLI Builder specification, selected project/deploy inputs, bounded local plugin snapshots, and exact manifest-bound persisted trust decisions."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "dynamic plugin grant: non-reserved configured project storage paths and non-reserved absolute user paths requested under storage:read or filesystem:user",
+      "justification": "Supplies the product-side adapter only after the plugin host validates a persisted manifest-bound grant and path shape; project reads are containment checked and all reads are identity checked."
+    },
+    {
+      "category": "fs",
+      "action": "list",
+      "target": "dynamic plugin grant: non-reserved directories beneath the configured project storage root requested under storage:read",
+      "justification": "Enumerates only containment-checked project directories after the plugin host authorizes the requesting installed plugin."
     },
     {
       "category": "fs",
@@ -29,9 +41,21 @@
     },
     {
       "category": "fs",
+      "action": "delete",
+      "target": "dynamic plugin grant: non-reserved singly linked regular files beneath the configured project storage root requested under storage:write",
+      "justification": "Removes a contained project file only after the plugin host validates the installed plugin's manifest-bound storage:write grant."
+    },
+    {
+      "category": "fs",
       "action": "write",
       "target": "configured project cache, build-to-deploy input, selected filesystem deploy root, project forme-plugins root, and user-selected deterministic report",
       "justification": "Persists cache entries, deploy state and reports, and atomically publishes a reviewed plugin snapshot with host-owned grants."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "dynamic plugin grant: non-reserved configured project storage files and non-reserved absolute user files requested under storage:write or filesystem:user",
+      "justification": "Writes only through no-follow, regular-file-checked adapters after the plugin host validates a persisted manifest-bound grant."
     },
     {
       "category": "fs",
@@ -40,10 +64,28 @@
       "justification": "Creates cache shards and explicitly selected deploy, plugin-install, and report transaction paths."
     },
     {
+      "category": "fs",
+      "action": "create",
+      "target": "dynamic plugin grant: non-reserved configured project storage paths and non-reserved absolute user files requested under storage:write or filesystem:user",
+      "justification": "Creates project directories or regular files only after the plugin host validates the installed plugin's manifest-bound grant."
+    },
+    {
       "category": "net",
       "action": "connect",
       "target": "https://api.github.com",
       "justification": "Inspects and publishes the explicitly configured GitHub Pages source ref through the reviewed Git Data API boundary."
+    },
+    {
+      "category": "net",
+      "action": "connect",
+      "target": "dynamic plugin grant: origins named by network:<host> or network:<scheme>:<host>",
+      "justification": "Performs bounded fetches only after the plugin host authorizes every initial and redirected origin against the installed plugin's manifest-bound grants."
+    },
+    {
+      "category": "net",
+      "action": "dns",
+      "target": "dynamic plugin grant: hosts named by network:<host> or network:<scheme>:<host>",
+      "justification": "Host resolution is an unavoidable part of the separately authorized plugin fetch adapter and never occurs before the plugin host validates the requested hostname."
     },
     {
       "category": "env",
@@ -52,10 +94,16 @@
       "justification": "Reads the sole supported hosted-deploy credential only for a real GitHub Pages publication."
     },
     {
+      "category": "env",
+      "action": "read",
+      "target": "dynamic plugin grant: variable names approved as env:<name>",
+      "justification": "Reads an exact environment variable only after the plugin host matches it against the installed plugin's persisted manifest-bound grant."
+    },
+    {
       "category": "proc",
       "action": "exec",
-      "target": "npm install for local file dependencies",
-      "justification": "The repository-only bootstrap helper installs local file dependencies in deterministic leaf-first order."
+      "target": "npm install for local file dependencies and the native Forme sandbox supervisor plus configured plugin runtime",
+      "justification": "The repository-only bootstrap helper installs local file dependencies in deterministic leaf-first order; StageRef execution delegates verified snapshots only through an attested platform sandbox."
     },
     {
       "category": "proc",
@@ -70,5 +118,5 @@
       "justification": "Prints command summaries and stable machine-coded diagnostics for terminal and CI consumers."
     }
   ],
-  "justification": "The CLI loads project, deploy, and explicitly selected local plugin inputs; creates bounded build/deploy/install state; publishes only through reviewed adapters; handles cooperative cancellation; and provides the repository bootstrap helper."
+  "justification": "The CLI loads project, deploy, and explicitly selected local plugin inputs; creates bounded build/deploy/install state; publishes only through reviewed adapters; provides explicit grant-mediated plugin storage, network, environment, and user-filesystem backends; handles cooperative cancellation; and provides the repository bootstrap helper."
 }

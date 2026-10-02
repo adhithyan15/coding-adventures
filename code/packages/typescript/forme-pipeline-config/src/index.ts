@@ -26,6 +26,7 @@
 export type {
   PipelineConfig,
   PipelineSettings,
+  PluginRuntimeConfig,
   StageInstanceSpec,
   StageRef,
   EdgeSpec,

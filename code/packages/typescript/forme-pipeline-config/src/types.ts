@@ -66,6 +66,15 @@ export interface PipelineSettings {
   readonly bestEffort: boolean;
   /** Maximum wall-clock for the entire run.  Null = unlimited. */
   readonly deadlineMs: number | null;
+  /** Trusted host distributions for non-default plugin runtimes. */
+  readonly pluginRuntimes?: Readonly<Partial<Record<"deno" | "bun" | "python", PluginRuntimeConfig>>>;
+}
+
+export interface PluginRuntimeConfig {
+  /** Absolute executable path within `root`. */
+  readonly executable: string;
+  /** Absolute root of the trusted runtime distribution. */
+  readonly root: string;
 }
 
 // ─── Stage references ─────────────────────────────────────────────────────

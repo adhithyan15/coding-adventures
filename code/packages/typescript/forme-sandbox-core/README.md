@@ -22,6 +22,9 @@ Production callers use one of `forme-sandbox-linux`, `forme-sandbox-macos`, or
 `forme-sandbox-windows`. A missing helper, invalid resource limit, unsupported
 runtime, malformed readiness record, or identity mismatch fails the launch;
 there is no unsandboxed fallback.
+When a manifest omits resource overrides, the host applies FM02's bounded
+defaults, including a 256-descriptor budget that accommodates normal managed
+runtime startup while remaining enforced by the platform launcher.
 
 `SandboxProcessFactory` directly extends `forme-plugin-host`'s
 `PluginProcessFactory`, so each OS factory is compile-time checked against the

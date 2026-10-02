@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { access, cp, mkdtemp, mkdir, writeFile } from "node:fs/promises";
+import { access, cp, mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -24,6 +24,7 @@ import {
 import { CapabilityError, CancellationError, StageError } from "@coding-adventures/forme-errors";
 import {
   createPluginHost,
+  formatGrantsFile,
   PluginHostError,
   type PluginLaunchRequest,
   type PluginProcessFactory,
@@ -154,6 +155,44 @@ async function makeHost(factory: PluginProcessFactory | undefined = processFacto
 }
 
 describe("plugin host cross-process contract", () => {
+  it("loads only current manifest-bound grants from installed plugin directories", async () => {
+    const root = await mkdtemp(join(tmpdir(), "forme-installed-grants-"));
+    try {
+      await cp(fixtureRoot, root, { recursive: true });
+      const discovered = await createPluginHost({ roots: [root] });
+      const plugin = discovered.plugins.get("@example/echo");
+      expect(plugin).toBeDefined();
+      await discovered.dispose();
+      await writeFile(join(plugin!.rootDirectory, "grants.toml"), formatGrantsFile({
+        manifestHash: plugin!.manifestHash,
+        granted: [{ capability: "storage:read", grantedAt: "2026-10-02T00:00:00Z" }],
+      }));
+
+      const current = await createPluginHost({ roots: [root], loadPersistentGrants: true });
+      const stage = await current.loadStage({
+        kind: "stage-ref", packageName: "@example/echo", export: "echo",
+      });
+      expect(stage.capabilities).toEqual(["storage:read"]);
+      await current.dispose();
+
+      await writeFile(join(plugin!.rootDirectory, "grants.toml"), formatGrantsFile({
+        manifestHash: `blake2b:${"a".repeat(64)}`,
+        granted: [{ capability: "storage:read", grantedAt: "2026-10-02T00:00:00Z" }],
+      }));
+      const stale = await createPluginHost({ roots: [root], loadPersistentGrants: true });
+      await expect(stale.loadStage({
+        kind: "stage-ref", packageName: "@example/echo", export: "echo",
+      })).rejects.toMatchObject({ code: "REQUIRED_CAPABILITY_DENIED" });
+      await stale.dispose();
+
+      await writeFile(join(plugin!.rootDirectory, "grants.toml"), "not valid authority data\n");
+      await expect(createPluginHost({ roots: [root], loadPersistentGrants: true }))
+        .rejects.toThrow(/malformed authority assignment/);
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
   it("runs a real TypeScript SDK stage end to end", async () => {
     const host = await createPluginHost({
       roots: [fixtureRoot],
@@ -173,6 +212,10 @@ describe("plugin host cross-process contract", () => {
   });
 
   it("validates roots, limits, stage identities, and disposed hosts", async () => {
+    const controller = new AbortController();
+    controller.abort(new Error("cancel host creation"));
+    await expect(createPluginHost({ roots: [fixtureRoot], signal: controller.signal }))
+      .rejects.toThrow("cancel host creation");
     await expect(createPluginHost({ roots: [] })).rejects.toThrow(/at least one/);
     await expect(createPluginHost({ roots: [fixtureRoot], requestTimeoutMs: 0 }))
       .rejects.toBeInstanceOf(RangeError);

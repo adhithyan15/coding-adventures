@@ -6,6 +6,7 @@
  */
 
 import { describe, it, expect } from "vitest";
+import { resolve } from "node:path";
 import {
   KERNEL_API_VERSION,
   Kinds,
@@ -232,6 +233,29 @@ describe("validateConfig — settings", () => {
       ...config([{ stage: makeStage("s", Kinds.Void, Kinds.ContentSource) }]),
       settings: settings({ cacheDir: ".forme/cache" }),
     })).not.toThrow();
+  });
+
+  it("accepts absolute non-default plugin runtime distributions", () => {
+    expect(() => validateConfig({
+      ...config([{ stage: makeStage("s", Kinds.Void, Kinds.ContentSource) }]),
+      settings: settings({
+        pluginRuntimes: {
+          python: { executable: resolve("runtime", "bin", "python3"), root: resolve("runtime") },
+        },
+      }),
+    })).not.toThrow();
+  });
+
+  it.each([
+    { python: { executable: "python3", root: "/opt/python" } },
+    { python: { executable: resolve("runtime", "python3"), root: "relative" } },
+    { node: { executable: resolve("runtime", "node"), root: resolve("runtime") } },
+    { python: { executable: resolve("runtime", "python3"), root: resolve("runtime"), extra: true } },
+  ])("rejects malformed plugin runtime settings", pluginRuntimes => {
+    expect(() => validateConfig({
+      ...config([{ stage: makeStage("s", Kinds.Void, Kinds.ContentSource) }]),
+      settings: settings({ pluginRuntimes: pluginRuntimes as never }),
+    })).toThrow(ConfigError);
   });
 
   it("rejects non-boolean reproducibleBuild", () => {

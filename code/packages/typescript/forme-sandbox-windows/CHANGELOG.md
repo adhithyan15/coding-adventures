@@ -1,5 +1,35 @@
 # Changelog
 
+## Unreleased
+
+- Duplicate protocol stdin/stdout/stderr as explicitly inheritable handles
+  before launching the AppContainer child, with a native byte-round-trip
+  regression test for buffered runtime stdio.
+- Grant the ephemeral AppContainer read/execute authority over Python's
+  no-follow, ACL-verified, identity-pinned runtime distribution root, then
+  revoke the propagated SID grant through the same stable handle during normal
+  or janitor cleanup. Native Python byte-round-trip and overlapping-grant tests
+  cover it, while a negative Node test preserves exact-executable authority.
+  Runtime aliases are accepted without recursive alias traversal only when
+  their opened final target remains inside that trusted root and both link and
+  target pass the strict writer check; external aliases and inherit-only
+  untrusted writers fail closed. Install-tree verification remains reparse-free.
+- Add the native install-tree ACL verifier used by `forme install` and product
+  discovery. It rejects reparse points, identity changes, untrusted owners or
+  writers (including inherit-only authority on the transaction root), unsafe
+  effective replacement authority on every ancestor through the volume root,
+  malformed DACLs, and over-deep or
+  oversized trees. Its resource bounds match the installer snapshot contract.
+- Report the exact rejected trust-verification stage and an ASCII-escaped,
+  length-bounded inspected path on native stderr, including immediately
+  captured numeric Win32 errors for failed system calls, while preserving the
+  same fail-closed result.
+- Exercise Python acceptance against a private, user-owned copy of the hosted
+  runtime so the test does not weaken or mutate a shared toolcache that grants
+  Authenticated Users write authority. The gate first proves the hosted root is
+  rejected, never follows source reparses, and then proves the private copy is
+  accepted before launch.
+
 ## 0.1.0 — 2026-10-01
 
 - Added the `forme-windows-v1` exact-snapshot native launcher.

@@ -94,7 +94,7 @@ interface ReadinessRecord {
 
 const DEFAULT_MEMORY_MB = 256;
 const DEFAULT_WALL_CLOCK_MS = 30_000;
-const DEFAULT_FILE_DESCRIPTORS = 128;
+const DEFAULT_FILE_DESCRIPTORS = 256;
 const MAX_READINESS_BYTES = 4 * 1024;
 
 export async function stageVerifiedPlugin(

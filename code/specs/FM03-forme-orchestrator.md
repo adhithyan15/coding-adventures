@@ -164,6 +164,12 @@ export interface PipelineSettings {
 
   /** Maximum wall-clock for the entire run. Null = unlimited. */
   readonly deadlineMs: number | null;
+
+  /** Trusted host distributions for non-default plugin runtimes. */
+  readonly pluginRuntimes?: Partial<Record<"deno" | "bun" | "python", {
+    readonly executable: string;
+    readonly root: string;
+  }>>;
 }
 
 export interface StageInstanceSpec {

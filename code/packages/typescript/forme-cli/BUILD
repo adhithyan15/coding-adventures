@@ -18,6 +18,10 @@ cd ../forme-manifest && npm install --silent
 cd ../forme-plugin-runner-ts && npm install --silent
 cd ../forme-plugin-host && npm install --silent
 cd ../forme-plugin-installer-core && npm install --silent
+cd ../forme-sandbox-core && npm install --silent
+cd ../forme-sandbox-linux && npm install --silent && npm run build:native --silent
+cd ../forme-sandbox-macos && npm install --silent && npm run build:native --silent
+cd ../forme-sandbox-windows && npm install --silent && npm run build:native --silent
 cd ../forme-identity && npm install --silent
 cd ../forme-cache && npm install --silent
 cd ../forme-orchestrator && npm install --silent

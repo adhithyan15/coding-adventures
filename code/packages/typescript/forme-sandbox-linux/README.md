@@ -9,7 +9,9 @@ mount, PID, network, IPC, and UTS namespaces; constructs a private root
 containing only the staged snapshot and runtime dependencies; applies memory,
 CPU, PID, and descriptor limits; sets `no_new_privs`; and installs a seccomp
 filter that denies networking, process creation, tracing, and cross-process
-memory access. It fails closed if any primitive is unavailable.
+memory access. The filter permits read-only socket metadata inspection for the
+already-inherited protocol pipes required by Node/libuv, while socket creation
+and network I/O remain denied. It fails closed if any primitive is unavailable.
 
 Use `createLinuxSandboxFactory()` as the `processFactory` passed to
 `createPluginHost()`.

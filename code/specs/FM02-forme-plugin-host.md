@@ -5,8 +5,9 @@
 > the TypeScript runtime adapter implemented in FM-B050; the reusable runner
 > conformance harness implemented in FM-B053; the Python and Rust runtimes
 > implemented in FM-B054/FM-B055 and closed by FM-B051; production OS
-> sandboxes implemented in FM-B052; and product integration tracked by the
-> FM-B015 completion milestone.
+> sandboxes implemented in FM-B052; reviewed local installation implemented in
+> FM-B056; and runtime product composition active in FM-B057 before the FM-B015
+> completion milestone.
 > Read alongside FM00 (vision), FM01 (kernel), and FM03 (orchestrator).
 > **Scope:** Everything required to load third-party Forme plugins
 > safely and run them under a strong isolation boundary. The packages
@@ -33,7 +34,8 @@
 | Python runner | Implemented | FM-B054 provides the first non-TypeScript SDK and passes the complete shared corpus without fixture changes. |
 | Rust runner | Implemented | FM-B055 provides typed stage/context APIs, bounded protocol concurrency and streams, and passes the complete shared corpus without fixture changes. |
 | OS sandbox profiles | Implemented | FM-B052 ships exact-snapshot Linux, macOS, and Windows launchers with platform CI. |
-| Install/trust CLI | Active | FM-B056 composes the completed installer and authority stores into FM07; FM-B057 adds runtime/sandbox product composition. |
+| Install/trust CLI | Implemented | FM-B056 composes the completed installer and authority stores into FM07. |
+| Product runtime composition | Active | FM-B057 composes manifest-bound grants, language runners, and native platform sandboxes into FM07. |
 
 ---
 
@@ -466,7 +468,9 @@ hermetic-build scenarios.
 Discovery roots are host-managed snapshot inputs. They MUST remain quiescent
 for the complete discovery operation. The host rejects symlink escapes,
 rechecks containment and opened-file identity, and thereafter launches only
-from its private verified byte snapshot. Concurrent same-user mutation of a
+from its private verified byte snapshot. Product callers pass the command's
+`AbortSignal`; discovery, bounded file reads, and manifest-bound grant loading
+check it throughout the snapshot pass. Concurrent same-user mutation of a
 discovery root is outside the FM-B014 boundary. FM-B015 installation MUST
 stage atomically and enforce immutable, host-owned install roots before making
 them discoverable.
@@ -1459,7 +1463,7 @@ Downstream code can't tell the difference.
 
 | Resource | Default cap | Enforcement |
 |---|---|---|
-| Resident memory | 512 MiB | rlimit on POSIX, Job Object on Windows |
+| Resident memory | 256 MiB | rlimit on POSIX, Job Object on Windows |
 | Virtual memory | 2 GiB | rlimit on POSIX, Job Object on Windows |
 | CPU seconds | 60 | rlimit/cgroup on Linux, Job Object on Windows |
 | Wall-clock per run | 30 s | orchestrator-side timer |
@@ -1579,12 +1583,26 @@ the supervisor exits unexpectedly; it exits when the plugin does.
   blocks network and most filesystem access at the kernel. The launcher grants
   the unique AppContainer SID write access only to plugin scratch, while the
   pre-existing snapshot directory uses a protected DACL and the directory,
-  entry, schema, and exact trusted runtime executable receive explicit
-  read/traverse ACLs without write authority. The runtime ACE MUST be revoked
-  before the ephemeral AppContainer profile is deleted, including by the
+  entry, and schema receive explicit read/traverse ACLs without write
+  authority. Python plugins receive read/execute authority over a no-follow,
+  ACL-verified, identity-pinned trusted runtime distribution root and its
+  inherited contents so the interpreter can load its standard library and
+  DLLs. A descendant runtime reparse point MUST NOT be recursively followed and
+  is valid only when its opened final target remains strictly beneath that
+  pinned root and both link and target satisfy the strict trusted-writer policy,
+  including rejection of inherit-only dangerous authority. An external target
+  MUST fail closed, while install-tree verification remains reparse-free. Node, Deno, and
+  Bun retain access only to their exact executable. The
+  runtime-root ACE carries no write authority and MUST be revoked through the
+  same pinned handle before the ephemeral AppContainer profile is deleted, including by the
   asynchronous janitor if the supervisor exits unexpectedly. Runtime DACL
   grant/revoke operations MUST use a cross-process lock so overlapping plugin
-  launches cannot lose or resurrect another sandbox's ACE.
+  launches cannot lose or resurrect another sandbox's ACE. Trust rejection
+  remains fail-closed, but the launcher MUST emit a bounded stderr diagnostic
+  naming the rejected verification stage and an ASCII-escaped, length-bounded
+  inspected path (plus the numeric Win32 error captured immediately for failed
+  system calls) so operators can distinguish policy, traversal-bound, and
+  platform failures without weakening the decision or enabling log injection.
   The host passes the validated manifest runtime kind to the launcher. For a Node runtime,
   the launcher supplies `--preserve-symlinks-main`, allowing Node to load the
   exact, already verified and symlink-free staged entry without canonicalizing
@@ -1667,7 +1685,7 @@ protocol session and cannot obtain another process slot.
 ### 12.6 Resource-limit defaults and ceilings
 
 Missing manifest values use host-owned defaults: 256 MiB memory, 30 seconds
-wall clock, and 128 descriptors.  Launchers reject non-positive, fractional,
+wall clock, and 256 descriptors.  Launchers reject non-positive, fractional,
 or platform-unrepresentable values.  The host may lower these values but may
 not raise the manifest request. Wall-clock expiry is enforced by both the
 host's cancellation/kill sequence and an independent native monotonic
