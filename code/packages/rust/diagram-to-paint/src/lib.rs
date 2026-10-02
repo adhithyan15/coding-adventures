@@ -48,6 +48,7 @@ use layout_ir::{
     Color, Content, ExtValue, FontSpec, PositionedNode, TextAlign, TextContent, TextDecoration,
     TextDecorationLines, TextDecorationStyle,
 };
+use layout_effects::{EffectColor, EffectFilter, EffectStyle};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
 use paint_instructions::{
     GlyphPosition, PaintBase, PaintEllipse, PaintGlyphRun, PaintGroup, PaintInstruction, PaintPath,
@@ -394,6 +395,25 @@ fn treemap_text_node(
         node.ext.insert("html".into(), ExtValue::Map(HashMap::from([
             ("dir".into(), ExtValue::Str(value.into())),
         ])));
+    }
+    if let Some(diagram_ir::TreemapTextShadow::Shadow {
+        offset_x, offset_y, blur_radius, color: shadow_color,
+    }) = style.and_then(|style| style.text_shadow.as_ref()) {
+        let shadow_color = color_with_opacity(
+            css_to_color(shadow_color), style.and_then(|style| style.opacity).unwrap_or(1.0),
+        );
+        let effects = EffectStyle {
+            filters: vec![EffectFilter::DropShadow {
+                dx: *offset_x,
+                dy: *offset_y,
+                blur: *blur_radius,
+                color: EffectColor {
+                    r: shadow_color.r, g: shadow_color.g, b: shadow_color.b, a: shadow_color.a,
+                },
+            }],
+            ..EffectStyle::default()
+        };
+        node.ext.insert("effects".into(), effects.to_ext());
     }
     node
 }
@@ -6939,6 +6959,7 @@ mod tests {
                     white_space: Some(diagram_ir::TreemapWhiteSpace::NoWrap),
                     letter_spacing: None,
                     direction: None,
+                    text_shadow: None,
                 }),
             }],
         };
@@ -7007,6 +7028,16 @@ mod tests {
         );
         assert!(matches!(rtl_text.ext.get("html"),
             Some(ExtValue::Map(html)) if html.get("dir") == Some(&ExtValue::Str("rtl".into()))));
+        whitespace_style.text_shadow = Some(diagram_ir::TreemapTextShadow::Shadow {
+            offset_x: 2.0, offset_y: 3.0, blur_radius: 4.0, color: "#334155".into(),
+        });
+        let shadowed_text = treemap_text_node(
+            "shadowed", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert!(matches!(EffectStyle::from_positioned(&shadowed_text).filters.as_slice(),
+            [EffectFilter::DropShadow { dx: 2.0, dy: 3.0, blur: 4.0,
+                color: EffectColor { r: 51, g: 65, b: 85, a: 204 } }]));
         let mut styled_font = opts.label_font.clone();
         styled_font.size = 16.0;
         apply_treemap_line_height(&mut styled_font, layout.nodes[0].style.as_ref());

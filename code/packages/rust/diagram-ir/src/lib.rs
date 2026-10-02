@@ -1491,6 +1491,7 @@ pub struct TreemapStyle {
     pub white_space: Option<TreemapWhiteSpace>,
     pub letter_spacing: Option<TreemapLetterSpacing>,
     pub direction: Option<TreemapTextDirection>,
+    pub text_shadow: Option<TreemapTextShadow>,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -1535,6 +1536,12 @@ pub enum TreemapLetterSpacing { Normal, Pixels(f64), Factor(f64) }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum TreemapTextDirection { LeftToRight, RightToLeft }
+
+#[derive(Clone, Debug, PartialEq)]
+pub enum TreemapTextShadow {
+    None,
+    Shadow { offset_x: f64, offset_y: f64, blur_radius: f64, color: String },
+}
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct TreemapNode {

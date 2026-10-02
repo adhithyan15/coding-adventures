@@ -550,6 +550,8 @@ Normal and positive or negative pixel/em letter spacing adjusts shaped glyph
 positions and line measurement through backend-neutral PaintInstructions.
 Left-to-right and right-to-left class directions select the corresponding
 Unicode text-flow analysis and native shaping direction before glyph lowering.
+Single colored text shadows with pixel offsets and optional blur lower to
+backend-neutral drop-shadow filter layers around the shaped glyph instructions.
 All twelve `cScale`,
 `cScalePeer`, and `cScaleLabel` theme-variable slots
 also flow from init directives or YAML front matter through category-aware
