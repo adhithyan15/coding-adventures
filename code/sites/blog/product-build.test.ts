@@ -37,7 +37,7 @@ describe("live product scheduling", () => {
       expect(warm.stages.map(stage => [stage.instanceId, stage.outcome])).toEqual([
         ["source", "skipped"],
         ["parse", "skipped"],
-        ["attach-interactivity", "skipped"],
+        ["attach-interactivity", "success"],
         ["resolve-assets", "success"],
         ["route", "skipped"],
         ["collect-posts", "skipped"],

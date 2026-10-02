@@ -881,8 +881,8 @@ internal static class SourceInputRegistryProjection
         {
           "id": "typescript-blog-authored-inputs",
           "package_root": "code/sites/blog",
-          "paths": ["data/.2026-05-08-capability-typed-stages.md.id.json", "data/.2026-05-12-why-forme.md.id.json", "data/.2026-05-15-hello-forme.md.id.json", "data/2026-05-08-capability-typed-stages.md", "data/2026-05-12-why-forme.md", "data/2026-05-15-hello-forme.md", "data/assets/.forme-pipeline.svg.id.json", "data/assets/forme-pipeline.svg"],
-          "reason": "The blog Forme pipeline consumes exactly the three reviewed posts, their persisted identities, and the checked SVG asset with its identity sidecar.",
+          "paths": ["data/.2026-05-08-capability-typed-stages.md.id.json", "data/.2026-05-12-why-forme.md.id.json", "data/.2026-05-15-hello-forme.md.id.json", "data/2026-05-08-capability-typed-stages.md", "data/2026-05-12-why-forme.md", "data/2026-05-15-hello-forme.md", "data/assets/.forme-pipeline.svg.id.json", "data/assets/.pipeline-steps.js.id.json", "data/assets/forme-pipeline.svg"],
+          "reason": "The blog Forme pipeline consumes exactly the three reviewed posts, their persisted identities, the checked SVG asset, and the progressive module identity sidecar; TypeScript code remains suffix-selected.",
           "owner": "build-tool-site-authored-resource-source-input-extension"
         },
         {
@@ -1024,7 +1024,7 @@ internal static class SourceInputRegistryProjection
     internal const string RepositoryBoundaryJson = """
 {
   "schema_version": 1,
-  "language_source_input_registry_sha256": "9bc672eac5d5ffc8e2d7d9ff94709a80bdcf0c2de01e7984d9cf8671d3dfa823",
+  "language_source_input_registry_sha256": "5201a045ea3e2086fd9be316f2692743ca329f1d84f1c0983a0da47e96b3f621",
   "boundaries": [
     {
       "id": "haskell-workspace-project",

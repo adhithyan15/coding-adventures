@@ -109,7 +109,7 @@ enum RepositorySourceInputBoundaryProjection {
     private static let embeddedJSON = #"""
         {
           "schema_version": 1,
-          "language_source_input_registry_sha256": "9bc672eac5d5ffc8e2d7d9ff94709a80bdcf0c2de01e7984d9cf8671d3dfa823",
+          "language_source_input_registry_sha256": "5201a045ea3e2086fd9be316f2692743ca329f1d84f1c0983a0da47e96b3f621",
           "boundaries": [
             {
               "id": "haskell-workspace-project",

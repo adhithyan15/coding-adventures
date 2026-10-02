@@ -103,7 +103,7 @@ if (JSON.stringify(helloRoute?.islands) !== JSON.stringify(["pipeline-step-explo
 }
 const expectedScriptUrl = `/coding-adventures/${scriptPath}`;
 if (
-  !helloHtml.includes('<p id="forme-pipeline-steps">') ||
+  !helloHtml.includes('<div id="forme-pipeline-steps">') ||
   !helloHtml.includes(`<script type="module" src="${expectedScriptUrl}"></script>`)
 ) {
   throw new Error("Hello, Forme is missing its no-JavaScript fallback or exact island module");

@@ -15,6 +15,10 @@ The path it took from `data/2026-05-15-hello-forme.md` to
 `/coding-adventures/blog/2026-05-15-hello-forme.html` is exactly the
 shape laid out in the FM00 spec:
 
+<div id="forme-pipeline-steps">
+  <p>The complete pipeline is listed below. With JavaScript enabled, optional controls can focus one step at a time.</p>
+</div>
+
 1. **`forme-source-fs`** walked `data/`, found this file, and emitted a
    `ContentSource`.
 2. **`forme-parse-markdown`** split off the frontmatter you see above,
