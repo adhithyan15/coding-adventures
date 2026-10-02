@@ -250,6 +250,7 @@ where
                     text_line_break(frame.node),
                     text_overflow(frame.node),
                     text_wraps(frame.node, tc.wrap),
+                    text_wrap_style(frame.node),
                     direction,
                     options,
                     &mut font_cache,
@@ -523,6 +524,16 @@ fn text_wraps(node: &PositionedNode, fallback: bool) -> bool {
         Some(ExtValue::Str(value)) if value == "wrap" => true,
         Some(ExtValue::Str(value)) if value == "nowrap" => false,
         _ => fallback,
+    }
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum TextWrapStyle { Auto, Balance }
+
+fn text_wrap_style(node: &PositionedNode) -> TextWrapStyle {
+    match node.ext.get("text.wrap-style") {
+        Some(ExtValue::Str(value)) if value == "balance" => TextWrapStyle::Balance,
+        _ => TextWrapStyle::Auto,
     }
 }
 
@@ -1297,6 +1308,7 @@ fn emit_text_content<S, M, R>(
     line_break: TextLineBreak,
     text_overflow: Option<TextOverflow>,
     wrap: bool,
+    wrap_style: TextWrapStyle,
     direction: BaseDirection,
     options: &LayoutToPaintOptions<'_, S, M, R>,
     font_cache: &mut HashMap<FontCacheKey, CachedFont<S::Handle>>,
@@ -1353,6 +1365,7 @@ fn emit_text_content<S, M, R>(
                 breaks_anywhere,
                 word_break,
                 line_break,
+                wrap_style,
                 direction,
             )
         } else {
@@ -1684,6 +1697,7 @@ fn wrap_line<S: TextShaper>(
     breaks_anywhere: bool,
     word_break: TextWordBreak,
     line_break: TextLineBreak,
+    wrap_style: TextWrapStyle,
     direction: BaseDirection,
 ) -> Vec<String> {
     if segment.is_empty() {
@@ -1746,6 +1760,29 @@ fn wrap_line<S: TextShaper>(
     }
     if lines.is_empty() {
         lines.push(String::new());
+    }
+    if wrap_style == TextWrapStyle::Balance && lines.len() > 1 {
+        let full_width = shape_visual_line(shaper, handle, segment, size, word_spacing, direction)
+            .map(|shaped| shaped_advance(&shaped, letter_spacing))
+            .unwrap_or(max_width);
+        let balanced_width = (full_width / lines.len() as f64).min(max_width);
+        let balanced = wrap_line(
+            shaper,
+            handle,
+            segment,
+            size,
+            balanced_width,
+            letter_spacing,
+            word_spacing,
+            breaks_anywhere,
+            word_break,
+            line_break,
+            TextWrapStyle::Auto,
+            direction,
+        );
+        if balanced.len() == lines.len() {
+            return balanced;
+        }
     }
     if !breaks_anywhere {
         return lines;
@@ -3252,5 +3289,25 @@ mod tests {
             .filter(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))).count();
         assert_eq!(count(&nowrap), 2);
         assert_eq!(count(&wrap), 3);
+    }
+
+    #[test]
+    fn balanced_text_wrap_redistributes_the_existing_line_count() {
+        let mut content = text_content("A A A A");
+        content.text_align = TextAlign::Center;
+        let auto = positioned_leaf(content, 0.0, 0.0, 48.0, 40.0);
+        let mut balance = auto.clone();
+        balance.ext.insert("text.wrap-style".into(), ExtValue::Str("balance".into()));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let options = make_options(&shaper, &metrics, &resolver);
+        let starts = |node: &PositionedNode| layout_to_paint(node, &options).instructions.iter()
+            .filter_map(|instruction| match instruction {
+                PaintInstruction::GlyphRun(run) => run.glyphs.first().map(|glyph| glyph.x),
+                _ => None,
+            }).collect::<Vec<_>>();
+        assert_eq!(starts(&auto), vec![4.0, 20.0]);
+        assert_eq!(starts(&balance), vec![12.0, 12.0]);
     }
 }

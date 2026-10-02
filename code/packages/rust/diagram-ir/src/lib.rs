@@ -1495,6 +1495,7 @@ pub struct TreemapStyle {
     pub line_break: Option<TreemapLineBreak>,
     pub text_overflow: Option<TreemapTextOverflow>,
     pub text_wrap_mode: Option<TreemapTextWrapMode>,
+    pub text_wrap_style: Option<TreemapTextWrapStyle>,
     pub letter_spacing: Option<TreemapLetterSpacing>,
     pub word_spacing: Option<TreemapWordSpacing>,
     pub direction: Option<TreemapTextDirection>,
@@ -1556,6 +1557,9 @@ pub enum TreemapTextOverflow { Clip, Ellipsis }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum TreemapTextWrapMode { Wrap, NoWrap }
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TreemapTextWrapStyle { Auto, Balance }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum TreemapLetterSpacing { Normal, Pixels(f64), Factor(f64) }
