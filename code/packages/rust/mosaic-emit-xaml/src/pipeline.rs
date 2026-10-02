@@ -8285,7 +8285,7 @@ fn emit_main_window_cs(
     let ns = &options.namespace;
     let component_ctor = build_component_constructor(name, slots, &options.slot_values);
     let dispatch_match = build_dispatch_match(name, emits);
-    let host_helpers = build_optional_host_helpers(name, ns);
+    let host_helpers = build_optional_host_helpers(name, ns, emits);
 
     match shape {
         RootShape::ContentDialog => {
@@ -8647,7 +8647,21 @@ fn build_required_prop_names(slots: &[SlotDecl]) -> String {
     }
 }
 
-fn build_optional_host_helpers(name: &str, namespace: &str) -> String {
+fn build_optional_host_helpers(name: &str, namespace: &str, emits: &[EmitDecl]) -> String {
+    // The status line names the event the host handled. Only a component
+    // that declares events gets the `MosaicName` envelope on its event union
+    // (see `emit_events`); an emit-less component's `{Name}Event` is a bare
+    // abstract record with no members, so `ev.MosaicName` would not compile
+    // (CS1061). Such a component never dispatches, so the line is never
+    // reached -- it only has to compile, and the runtime type name will do:
+    //
+    //     declares events   ->  ev.MosaicName          "Status: ... handled increment"
+    //     declares none     ->  ev.GetType().Name      (unreachable, but compiles)
+    let event_label = if emits.is_empty() {
+        "ev.GetType().Name"
+    } else {
+        "ev.MosaicName"
+    };
     let host_type = escape_csharp_string(&format!("{namespace}.MosaicHost"));
     let runtime_type = escape_csharp_string(&format!("{namespace}.MosaicRuntimeHost"));
     format!(
@@ -8696,7 +8710,7 @@ fn build_optional_host_helpers(name: &str, namespace: &str) -> String {
              try\n        \
              {{\n            \
                  var result = await UnwrapMosaicHostResultAsync(method.Invoke(null, new object[] {{ component, ev }}));\n            \
-                 var status = CoerceMosaicHostResult(result, $\"Status: Mosaic host handled {{ev.MosaicName}}\");\n            \
+                 var status = CoerceMosaicHostResult(result, $\"Status: Mosaic host handled {{{event_label}}}\");\n            \
                  var intent = GetMosaicHostIntent(result);\n            \
                  if (intent is not null)\n            \
                  {{\n                \
@@ -20257,6 +20271,51 @@ mod tests {
             "payload keyword must not be emitted as a pattern variable, got:\n{}",
             p.main_window_cs
         );
+    }
+
+    /// The sample shell's host-status line names the handled event. Only a
+    /// component that declares events gets `MosaicName` on its event union,
+    /// so an emit-less component's shell must not read it: `FooEvent` is then
+    /// a bare `public abstract record FooEvent;` and `ev.MosaicName` failed
+    /// the WinUI build with CS1061.
+    #[test]
+    fn project_main_window_names_events_only_through_members_the_union_has() {
+        let s = empty_style("Foo");
+        let mut o = opts();
+        o.emit_project = true;
+        for (emits, label, absent) in [
+            (vec![], "ev.GetType().Name", "ev.MosaicName"),
+            (
+                vec![emit(
+                    "onToggle",
+                    vec![param("checked", EmitPayloadType::Bool)],
+                )],
+                "ev.MosaicName",
+                "ev.GetType().Name",
+            ),
+        ] {
+            let declares_events = !emits.is_empty();
+            let c = component("Foo", vec![], emits);
+            let l = layout_with_root("Foo", box_root());
+            let r = from_pipeline(&c, &l, &s, None, &o).unwrap();
+            assert_eq!(
+                r.events.contains("public abstract string MosaicName"),
+                declares_events,
+                "got:\n{}",
+                r.events
+            );
+            let shell = &r
+                .project
+                .as_ref()
+                .expect("project populated")
+                .main_window_cs;
+            let status = format!("$\"Status: Mosaic host handled {{{label}}}\"");
+            assert!(shell.contains(&status), "want {status}, got:\n{shell}");
+            assert!(
+                !shell.contains(absent),
+                "{absent} must not appear, got:\n{shell}"
+            );
+        }
     }
 
     /// Fix B1: for a UserControl-rooted component, the MainWindow
