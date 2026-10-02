@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C218-testis",
+    "language": "latin",
+    "chapter": 218,
+    "sequence": 10900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5147ffe2e22473b8"
+  },
+  "findings": []
+}

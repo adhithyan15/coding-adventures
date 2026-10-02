@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:2cc1fb2bff755ffd",
+  "lessonIds": [
+    "LA-C209-regio",
+    "LA-C209-provincia",
+    "LA-C209-inde",
+    "LA-C209-obviam",
+    "LA-C209-usque"
+  ],
+  "tex": "latin/book/chapters/ch209-region-province-from-there-in-the-way-all-the-way.tex"
+}

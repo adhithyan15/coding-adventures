@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C203-obliviscor",
+    "language": "latin",
+    "chapter": 203,
+    "sequence": 9800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:529bb72bd2c78484"
+  },
+  "findings": []
+}

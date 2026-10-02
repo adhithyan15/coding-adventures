@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:4a64d55e2aa8caa3",
+  "lessonIds": [
+    "LA-C213-peregrinus",
+    "LA-C213-probus",
+    "LA-C213-patiens",
+    "LA-C213-liberalis",
+    "LA-C213-ignavus"
+  ],
+  "tex": "latin/book/chapters/ch213-foreign-honest-patient-generous-idle.tex"
+}

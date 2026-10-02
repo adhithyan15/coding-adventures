@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C218-reus",
+    "language": "latin",
+    "chapter": 218,
+    "sequence": 10910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:332157ec11fc0236"
+  },
+  "findings": []
+}

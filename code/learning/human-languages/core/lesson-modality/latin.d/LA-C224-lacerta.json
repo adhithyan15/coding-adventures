@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C224-lacerta",
+    "language": "latin",
+    "chapter": 224,
+    "sequence": 11380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a3a47432321402a4"
+  },
+  "findings": []
+}

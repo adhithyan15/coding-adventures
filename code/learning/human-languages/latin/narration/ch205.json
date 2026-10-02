@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 205,
+  "title": "Wound, Scar, Head cold, Drug, Ointment",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:51b2add66f093b69",
+  "lessons": [
+    {
+      "id": "LA-C205-vulnus",
+      "sequence": 9860,
+      "title": "vulnus, vulneris — a wound",
+      "headword": "vulnus, vulneris",
+      "romanization": "vulnus, vulneris",
+      "gloss": "a wound",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:872c7436967b4be7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to throw together; to guess, then the Latin for to cease."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: vulnus, vulneris",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vulnus, vulneris — \"a wound\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vulnus, vulneris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vulnus, vulneris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vulnus, vulneris, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vulnus, vulneris*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say vulnus, vulneris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *vulnus, vulneris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to throw together; to guess, then the Latin for to cease, then say vulnus, vulneris again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to throw together; to guess, then the Latin for to cease, then say *vulnus, vulneris* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does vulnus, vulneris mean? (\"A wound\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C205-cicatrix",
+      "sequence": 9870,
+      "title": "cicātrīx, cicātrīcis — a scar",
+      "headword": "cicātrīx, cicātrīcis",
+      "romanization": "cicātrīx, cicātrīcis",
+      "gloss": "a scar",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6bd2b3063a49016",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to cease, then the Latin for a wound."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cicātrīx, cicātrīcis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cicātrīx, cicātrīcis — \"a scar\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cicātrīx, cicātrīcis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cicātrīx, cicātrīcis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cicātrīx, cicātrīcis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cicātrīx, cicātrīcis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say cicātrīx, cicātrīcis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *cicātrīx, cicātrīcis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to cease, then the Latin for a wound, then say cicātrīx, cicātrīcis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to cease, then the Latin for a wound, then say *cicātrīx, cicātrīcis* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cicātrīx, cicātrīcis mean? (\"A scar\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C205-gravedo",
+      "sequence": 9880,
+      "title": "gravēdō, gravēdinis — a head cold",
+      "headword": "gravēdō, gravēdinis",
+      "romanization": "gravēdō, gravēdinis",
+      "gloss": "a head cold",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b745e491ea083f6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a wound, then the Latin for a scar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: gravēdō, gravēdinis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gravēdō, gravēdinis — \"a head cold\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gravēdō, gravēdinis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gravēdō, gravēdinis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gravēdō, gravēdinis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gravēdō, gravēdinis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say gravēdō, gravēdinis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *gravēdō, gravēdinis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a wound, then the Latin for a scar, then say gravēdō, gravēdinis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a wound, then the Latin for a scar, then say *gravēdō, gravēdinis* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does gravēdō, gravēdinis mean? (\"A head cold\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C205-medicamentum",
+      "sequence": 9890,
+      "title": "medicāmentum, medicāmentī — a drug, a medicine",
+      "headword": "medicāmentum, medicāmentī",
+      "romanization": "medicāmentum, medicāmentī",
+      "gloss": "a drug, a medicine",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0eee028b8653ecee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a scar, then the Latin for a head cold."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: medicāmentum, medicāmentī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "medicāmentum, medicāmentī — \"a drug, a medicine\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "medicāmentum, medicāmentī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *medicāmentum, medicāmentī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "medicāmentum, medicāmentī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *medicāmentum, medicāmentī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say medicāmentum, medicāmentī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *medicāmentum, medicāmentī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a scar, then the Latin for a head cold, then say medicāmentum, medicāmentī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a scar, then the Latin for a head cold, then say *medicāmentum, medicāmentī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does medicāmentum, medicāmentī mean? (\"A drug, a medicine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C205-unguentum",
+      "sequence": 9900,
+      "title": "unguentum, unguentī — an ointment",
+      "headword": "unguentum, unguentī",
+      "romanization": "unguentum, unguentī",
+      "gloss": "an ointment",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa4bd11354638956",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a head cold, then the Latin for a drug."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: unguentum, unguentī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "unguentum, unguentī — \"an ointment\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unguentum, unguentī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unguentum, unguentī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unguentum, unguentī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unguentum, unguentī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say unguentum, unguentī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *unguentum, unguentī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a head cold, then the Latin for a drug, then say unguentum, unguentī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a head cold, then the Latin for a drug, then say *unguentum, unguentī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does unguentum, unguentī mean? (\"An ointment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R205-first-pass-words-from-chapters-197-200",
+      "sequence": 9910,
+      "title": "Words from chapters 197-200 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "first pass over chapters 197-200",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d68abde9afccc6f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a drug and an ointment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to kiss, to greet, to invite, to explain, to interpret",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to kiss, to greet, to invite, to explain, to interpret]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to forbid, to defend, to die, to marry, to rest",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to forbid, to defend, to die, to marry, to rest]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to compare; to get ready, to persuade, to blame, to share, to avoid",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to compare; to get ready, to persuade, to blame, to share, to avoid]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to lift, to reach, to recognise, to refuse, to fly about",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to lift, to reach, to recognise, to refuse, to fly about]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To kiss? (ōsculor, ōsculārī.) To greet? (salūtō, salūtāre.) To invite? (invītō, invītāre.) To explain? (explicō, explicāre.) To interpret? (interpretor, interpretārī.) To forbid? (vetō, vetāre.) To defend? (dēfendō, dēfendere.) To die? (morior, morī.) To marry? (nūbō, nūbere.) To rest? (quiēscō, quiēscere.) To compare; to get ready? (comparō, comparāre.) To persuade? (persuādeō, persuādēre.) To blame? (reprehendō, reprehendere.) To share? (partior, partīrī.) To avoid? (vītō, vītāre.) To lift? (tollō, tollere.) To reach? (perveniō, pervenīre.) To recognise? (agnōscō, agnōscere.) To refuse? (recūsō, recūsāre.) To fly about? (volitō, volitāre.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R205-second-pass-words-from-chapters-201-205",
+      "sequence": 9920,
+      "title": "Words from chapters 201-205 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "second pass over chapters 201-205",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d32cb2523c5e21f6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to talk together and to hand over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to talk together, to hand over, to straighten, to celebrate, to pursue",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to talk together, to hand over, to straighten, to celebrate, to pursue]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to advise, to tremble, to welcome, to do, to go forward",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to advise, to tremble, to welcome, to do, to go forward]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to doubt, to look for, to use up, to annoy, to forget",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to doubt, to look for, to use up, to annoy, to forget]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to state firmly, to hurt, to decorate, to throw together; to guess, to cease",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to state firmly, to hurt, to decorate, to throw together; to guess, to cease]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wound, a scar, a head cold, a drug, an ointment",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wound, a scar, a head cold, a drug, an ointment]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To talk together? (colloquor, colloquī.) To hand over? (trādō, trādere.) To straighten? (corrigō, corrigere.) To celebrate? (celebrō, celebrāre.) To pursue? (persequor, persequī.) To advise? (suādeō, suādēre.) To tremble? (tremō, tremere.) To welcome? (excipiō, excipere.) To do? (agō, agere.) To go forward? (prōcēdō, prōcēdere.) To doubt? (dubitō, dubitāre.) To look for? (quaerō, quaerere.) To use up? (cōnsūmō, cōnsūmere.) To annoy? (vexō, vexāre.) To forget? (oblīvīscor, oblīvīscī.) To state firmly? (affirmō, affirmāre.) To hurt? (doleō, dolēre.) To decorate? (ōrnō, ōrnāre.) To throw together; to guess? (coniciō, conicere.) To cease? (dēsinō, dēsinere.) A wound? (vulnus, vulneris.) A scar? (cicātrīx, cicātrīcis.) A head cold? (gravēdō, gravēdinis.) A drug? (medicāmentum, medicāmentī.) An ointment? (unguentum, unguentī.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

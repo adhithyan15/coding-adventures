@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:64acce7cdfdd5e97",
+  "lessonIds": [
+    "LA-C219-fama",
+    "LA-C219-nuntius",
+    "LA-C219-spectaculum",
+    "LA-C219-histrio",
+    "LA-C219-fabula"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch219.txt",
+  "json": "latin/narration/ch219.json",
+  "textHash": "fnv1a64:f455b19c5764ddc2",
+  "jsonHash": "fnv1a64:3ef935784c2cada8",
+  "findings": []
+}

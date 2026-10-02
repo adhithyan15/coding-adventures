@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C212-placidus",
+    "language": "latin",
+    "chapter": 212,
+    "sequence": 10430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:976d679dbbb8a13c"
+  },
+  "findings": []
+}

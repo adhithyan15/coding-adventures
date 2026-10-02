@@ -1,0 +1,19 @@
+{
+  "chapter": 217,
+  "title": "Roof tile, Furnace, Litter, Vehicle, Chariot",
+  "label": "ch:la-roof-tile-furnace-litter-vehicle-chariot",
+  "canDo": "I can say a roof tile, a furnace, a litter, a vehicle and a chariot.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C217-currus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 217: I can say a roof tile, a furnace, a litter, a vehicle and a chariot.",
+    "assesses": [
+      "LA-LEX-C217-RES217-03",
+      "LA-LEX-C217-RES217-04",
+      "LA-LEX-C217-RES217-05"
+    ]
+  }
+}

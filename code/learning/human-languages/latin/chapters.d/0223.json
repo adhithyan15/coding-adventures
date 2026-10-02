@@ -1,0 +1,19 @@
+{
+  "chapter": 223,
+  "title": "Mist, Breeze, Root, Thorn, Crop",
+  "label": "ch:la-mist-breeze-root-thorn-crop",
+  "canDo": "I can say mist, a breeze, a root, a thorn and a crop.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-R223-second-pass-words-from-chapters-219-223",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 223: I can say mist, a breeze, a root, a thorn and a crop.",
+    "assesses": [
+      "LA-LEX-C223-RES223-03",
+      "LA-LEX-C223-RES223-04",
+      "LA-LEX-C223-RES223-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C227-deversorium",
+    "language": "latin",
+    "chapter": 227,
+    "sequence": 11560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee454ea7b5463cf4"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C219-nuntius",
+    "language": "latin",
+    "chapter": 219,
+    "sequence": 10950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd00e0a56eb0c7c8"
+  },
+  "findings": []
+}

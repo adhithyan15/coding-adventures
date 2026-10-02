@@ -1,0 +1,19 @@
+{
+  "chapter": 227,
+  "title": "Fate, Lair, Hospitality, Lodging house, Traveller",
+  "label": "ch:la-fate-lair-hospitality-lodging-house-traveller",
+  "canDo": "I can say fate, a lair, hospitality, a lodging house and a traveller.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C227-viator",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 227: I can say fate, a lair, hospitality, a lodging house and a traveller.",
+    "assesses": [
+      "LA-LEX-C227-RES227-03",
+      "LA-LEX-C227-RES227-04",
+      "LA-LEX-C227-RES227-05"
+    ]
+  }
+}

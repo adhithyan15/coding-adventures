@@ -1,0 +1,11 @@
+{
+  "id": "LA-C222-ferrum",
+  "pathSegment": "LA-PATH-222-RES222",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-222-RES222",
+      "order": 3
+    }
+  ]
+}

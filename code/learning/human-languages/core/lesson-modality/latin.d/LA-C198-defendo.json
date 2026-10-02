@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C198-defendo",
+    "language": "latin",
+    "chapter": 198,
+    "sequence": 9520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b90f0802f2c772f4"
+  },
+  "findings": []
+}

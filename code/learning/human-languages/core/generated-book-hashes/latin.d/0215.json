@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:3f493156886dd14c",
+  "lessonIds": [
+    "LA-C215-hodiernus",
+    "LA-C215-hesternus",
+    "LA-C215-crastinus",
+    "LA-C215-verus",
+    "LA-C215-incertus"
+  ],
+  "tex": "latin/book/chapters/ch215-today-s-yesterday-s-tomorrow-s-true-uncertain.tex"
+}

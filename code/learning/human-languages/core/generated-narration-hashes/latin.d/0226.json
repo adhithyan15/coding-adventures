@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:9290046449817e90",
+  "lessonIds": [
+    "LA-C226-grammatica",
+    "LA-C226-philosophia",
+    "LA-C226-studium",
+    "LA-C226-quaestio",
+    "LA-C226-responsum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch226.txt",
+  "json": "latin/narration/ch226.json",
+  "textHash": "fnv1a64:85d571c8d304e969",
+  "jsonHash": "fnv1a64:d05f86fe681a0a25",
+  "findings": []
+}

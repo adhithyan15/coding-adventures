@@ -1,0 +1,11 @@
+{
+  "id": "LA-C220-advena",
+  "pathSegment": "LA-PATH-220-RES220",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-220-RES220",
+      "order": 2
+    }
+  ]
+}

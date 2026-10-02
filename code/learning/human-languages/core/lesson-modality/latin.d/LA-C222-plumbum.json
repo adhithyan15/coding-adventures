@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C222-plumbum",
+    "language": "latin",
+    "chapter": 222,
+    "sequence": 11130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1713957cec0eac7"
+  },
+  "findings": []
+}

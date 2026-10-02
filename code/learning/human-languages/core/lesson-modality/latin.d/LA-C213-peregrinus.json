@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C213-peregrinus",
+    "language": "latin",
+    "chapter": 213,
+    "sequence": 10450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6cb86bfd3da5418b"
+  },
+  "findings": []
+}

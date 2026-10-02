@@ -1,0 +1,11 @@
+{
+  "id": "LA-C213-liberalis",
+  "pathSegment": "LA-PATH-213-QUAL213",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-213-QUAL213",
+      "order": 3
+    }
+  ]
+}

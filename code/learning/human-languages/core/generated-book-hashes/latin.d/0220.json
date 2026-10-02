@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:bca5a70d35ff2b6d",
+  "lessonIds": [
+    "LA-C220-ancilla",
+    "LA-C220-libertus",
+    "LA-C220-advena",
+    "LA-C220-adulescens",
+    "LA-C220-vidua"
+  ],
+  "tex": "latin/book/chapters/ch220-maidservant-freedman-newcomer-young-person-widow.tex"
+}

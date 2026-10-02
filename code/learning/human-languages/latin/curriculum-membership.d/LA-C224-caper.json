@@ -1,0 +1,11 @@
+{
+  "id": "LA-C224-caper",
+  "pathSegment": "LA-PATH-224-RES224",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-224-RES224",
+      "order": 2
+    }
+  ]
+}

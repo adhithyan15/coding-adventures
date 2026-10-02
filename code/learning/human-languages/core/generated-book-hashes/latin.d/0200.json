@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:d800a85fcae808ae",
+  "lessonIds": [
+    "LA-C200-tollo",
+    "LA-C200-pervenio",
+    "LA-C200-agnosco",
+    "LA-C200-recuso",
+    "LA-C200-volito"
+  ],
+  "tex": "latin/book/chapters/ch200-to-lift-to-reach-to-recognise-to-refuse-to-fly-about.tex"
+}

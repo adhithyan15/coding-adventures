@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:ea58ce28f247fc0e",
+  "lessonIds": [
+    "LA-C210-autem",
+    "LA-C210-vero",
+    "LA-C210-profecto",
+    "LA-C210-fere",
+    "LA-C210-tantum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch210.txt",
+  "json": "latin/narration/ch210.json",
+  "textHash": "fnv1a64:2e90ed21a22a35c2",
+  "jsonHash": "fnv1a64:203e57d5043b49a4",
+  "findings": []
+}

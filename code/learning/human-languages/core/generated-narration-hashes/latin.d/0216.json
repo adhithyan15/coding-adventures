@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:11240420f613da8d",
+  "lessonIds": [
+    "LA-C216-calvus",
+    "LA-C216-barbatus",
+    "LA-C216-venustus",
+    "LA-C216-defessus",
+    "LA-C216-vigil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch216.txt",
+  "json": "latin/narration/ch216.json",
+  "textHash": "fnv1a64:2ba7f9cc7d0daa3c",
+  "jsonHash": "fnv1a64:2235bb1bf6ee4d3b",
+  "findings": []
+}

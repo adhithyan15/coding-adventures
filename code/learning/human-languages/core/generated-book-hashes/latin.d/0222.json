@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:9bde1b79582f4438",
+  "lessonIds": [
+    "LA-C222-aurum",
+    "LA-C222-argentum",
+    "LA-C222-aes",
+    "LA-C222-ferrum",
+    "LA-C222-plumbum"
+  ],
+  "tex": "latin/book/chapters/ch222-gold-silver-bronze-iron-metal-lead.tex"
+}

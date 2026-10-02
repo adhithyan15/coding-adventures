@@ -1,0 +1,11 @@
+{
+  "id": "LA-C207-diluculum",
+  "pathSegment": "LA-PATH-207-TEMP207",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-207-TEMP207",
+      "order": 4
+    }
+  ]
+}

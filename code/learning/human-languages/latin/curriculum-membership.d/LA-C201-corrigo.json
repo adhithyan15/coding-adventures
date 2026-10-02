@@ -1,0 +1,11 @@
+{
+  "id": "LA-C201-corrigo",
+  "pathSegment": "LA-PATH-201-ACT201",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-201-ACT201",
+      "order": 2
+    }
+  ]
+}

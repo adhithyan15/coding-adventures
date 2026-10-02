@@ -1,0 +1,19 @@
+{
+  "chapter": 213,
+  "title": "Foreign, Honest, Patient, Generous, Idle",
+  "label": "ch:la-foreign-honest-patient-generous-idle",
+  "canDo": "I can say foreign, honest, patient, generous and idle.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-C213-ignavus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 213: I can say foreign, honest, patient, generous and idle.",
+    "assesses": [
+      "LA-LEX-C213-QUAL213-03",
+      "LA-LEX-C213-QUAL213-04",
+      "LA-LEX-C213-QUAL213-05"
+    ]
+  }
+}

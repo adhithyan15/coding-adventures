@@ -1,0 +1,11 @@
+{
+  "id": "LA-C217-lectica",
+  "pathSegment": "LA-PATH-217-RES217",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-217-RES217",
+      "order": 2
+    }
+  ]
+}

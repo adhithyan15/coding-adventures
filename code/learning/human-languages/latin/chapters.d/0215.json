@@ -1,0 +1,19 @@
+{
+  "chapter": 215,
+  "title": "Today's, Yesterday's, Tomorrow's, True, Uncertain",
+  "label": "ch:la-today-s-yesterday-s-tomorrow-s-true-uncertain",
+  "canDo": "I can say today's, yesterday's, tomorrow's, true and uncertain.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-C215-incertus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 215: I can say today's, yesterday's, tomorrow's, true and uncertain.",
+    "assesses": [
+      "LA-LEX-C215-QUAL215-03",
+      "LA-LEX-C215-QUAL215-04",
+      "LA-LEX-C215-QUAL215-05"
+    ]
+  }
+}

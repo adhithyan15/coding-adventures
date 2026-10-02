@@ -1,0 +1,11 @@
+{
+  "id": "LA-C217-fornax",
+  "pathSegment": "LA-PATH-217-RES217",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-217-RES217",
+      "order": 1
+    }
+  ]
+}

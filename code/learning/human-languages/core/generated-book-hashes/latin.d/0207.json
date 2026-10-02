@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:d61909136177030c",
+  "lessonIds": [
+    "LA-C207-saeculum",
+    "LA-C207-aetas",
+    "LA-C207-occasus",
+    "LA-C207-ortus",
+    "LA-C207-diluculum"
+  ],
+  "tex": "latin/book/chapters/ch207-generation-age-sunset-sunrise-first-light.tex"
+}

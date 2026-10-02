@@ -1,0 +1,19 @@
+{
+  "chapter": 208,
+  "title": "Finally, Lastly, On the spot, Formerly, Long since",
+  "label": "ch:la-finally-lastly-on-the-spot-formerly-long-since",
+  "canDo": "I can say finally, lastly, on the spot, formerly and long since.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "LA-C208-iamdudum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 208: I can say finally, lastly, on the spot, formerly and long since.",
+    "assesses": [
+      "LA-LEX-C208-TEMP208-03",
+      "LA-LEX-C208-TEMP208-04",
+      "LA-LEX-C208-TEMP208-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C210-vero",
+    "language": "latin",
+    "chapter": 210,
+    "sequence": 10310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2dec6883928f840b"
+  },
+  "findings": []
+}

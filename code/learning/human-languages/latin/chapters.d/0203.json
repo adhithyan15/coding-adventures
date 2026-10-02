@@ -1,0 +1,19 @@
+{
+  "chapter": 203,
+  "title": "To doubt, To look for, To use up, To annoy, To forget",
+  "label": "ch:la-to-doubt-to-look-for-to-use-up-to-annoy-to-forget",
+  "canDo": "I can say to doubt, to look for, to use up, to annoy and to forget.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C203-obliviscor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 203: I can say to doubt, to look for, to use up, to annoy and to forget.",
+    "assesses": [
+      "LA-LEX-C203-ACT203-03",
+      "LA-LEX-C203-ACT203-04",
+      "LA-LEX-C203-ACT203-05"
+    ]
+  }
+}

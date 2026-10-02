@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:58be47d7a0c5af03",
+  "lessonIds": [
+    "LA-C224-lacerta",
+    "LA-C224-aper",
+    "LA-C224-caper",
+    "LA-C224-agnus",
+    "LA-C224-vitulus"
+  ],
+  "tex": "latin/book/chapters/ch224-lizard-wild-boar-billy-goat-lamb-calf.tex"
+}

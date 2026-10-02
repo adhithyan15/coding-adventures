@@ -1,0 +1,11 @@
+{
+  "id": "LA-C214-ferus",
+  "pathSegment": "LA-PATH-214-QUAL214",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-214-QUAL214",
+      "order": 1
+    }
+  ]
+}

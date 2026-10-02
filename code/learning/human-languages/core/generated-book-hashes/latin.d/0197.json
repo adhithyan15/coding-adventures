@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:222210f28b00ed84",
+  "lessonIds": [
+    "LA-C197-osculor",
+    "LA-C197-saluto",
+    "LA-C197-invito",
+    "LA-C197-explico",
+    "LA-C197-interpretor"
+  ],
+  "tex": "latin/book/chapters/ch197-to-kiss-to-greet-to-invite-to-explain-to-interpret.tex"
+}

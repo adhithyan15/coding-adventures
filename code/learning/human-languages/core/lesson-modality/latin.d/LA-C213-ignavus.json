@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C213-ignavus",
+    "language": "latin",
+    "chapter": 213,
+    "sequence": 10490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c378c85a0a9d1677"
+  },
+  "findings": []
+}

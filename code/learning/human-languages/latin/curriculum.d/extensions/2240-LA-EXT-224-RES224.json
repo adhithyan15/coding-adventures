@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-224-RES224",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a lizard, a wild boar, a billy goat, a lamb and a calf.",
+  "prerequisites": []
+}

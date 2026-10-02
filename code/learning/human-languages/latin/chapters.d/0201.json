@@ -1,0 +1,19 @@
+{
+  "chapter": 201,
+  "title": "To talk together, To hand over, To straighten, To celebrate, To pursue",
+  "label": "ch:la-to-talk-together-to-hand-over-to-straighten-to-celebrate-to-pursue",
+  "canDo": "I can say to talk together, to hand over, to straighten, to celebrate and to pursue.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C201-persequor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 201: I can say to talk together, to hand over, to straighten, to celebrate and to pursue.",
+    "assesses": [
+      "LA-LEX-C201-ACT201-03",
+      "LA-LEX-C201-ACT201-04",
+      "LA-LEX-C201-ACT201-05"
+    ]
+  }
+}

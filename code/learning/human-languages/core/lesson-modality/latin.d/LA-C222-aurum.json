@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C222-aurum",
+    "language": "latin",
+    "chapter": 222,
+    "sequence": 11090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b22b4dd655cb1f8d"
+  },
+  "findings": []
+}

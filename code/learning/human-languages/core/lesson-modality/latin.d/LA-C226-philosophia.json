@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C226-philosophia",
+    "language": "latin",
+    "chapter": 226,
+    "sequence": 11490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c31a4f442e5f6b4c"
+  },
+  "findings": []
+}

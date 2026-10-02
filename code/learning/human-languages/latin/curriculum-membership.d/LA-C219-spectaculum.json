@@ -1,0 +1,11 @@
+{
+  "id": "LA-C219-spectaculum",
+  "pathSegment": "LA-PATH-219-RES219",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-219-RES219",
+      "order": 2
+    }
+  ]
+}

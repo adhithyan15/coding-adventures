@@ -1,0 +1,19 @@
+{
+  "chapter": 212,
+  "title": "Inquisitive, Envious, Anxious, Peaceful, Silent",
+  "label": "ch:la-inquisitive-envious-anxious-peaceful-silent",
+  "canDo": "I can say inquisitive, envious, anxious, peaceful and silent.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-C212-tacitus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 212: I can say inquisitive, envious, anxious, peaceful and silent.",
+    "assesses": [
+      "LA-LEX-C212-QUAL212-03",
+      "LA-LEX-C212-QUAL212-04",
+      "LA-LEX-C212-QUAL212-05"
+    ]
+  }
+}

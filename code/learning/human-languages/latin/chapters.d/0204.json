@@ -1,0 +1,19 @@
+{
+  "chapter": 204,
+  "title": "To state firmly, To hurt, To decorate, To throw together, To cease",
+  "label": "ch:la-to-state-firmly-to-hurt-to-decorate-to-throw-together-to-cease",
+  "canDo": "I can say to state firmly, to hurt, to decorate, to throw together and to cease.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C204-desino",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 204: I can say to state firmly, to hurt, to decorate, to throw together and to cease.",
+    "assesses": [
+      "LA-LEX-C204-ACT204-03",
+      "LA-LEX-C204-ACT204-04",
+      "LA-LEX-C204-ACT204-05"
+    ]
+  }
+}

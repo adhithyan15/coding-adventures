@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C224-vitulus",
+    "language": "latin",
+    "chapter": 224,
+    "sequence": 11420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b8e4a4cfe22105c"
+  },
+  "findings": []
+}

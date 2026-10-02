@@ -1,0 +1,19 @@
+{
+  "chapter": 222,
+  "title": "Gold, Silver, Bronze, Iron, Metal lead",
+  "label": "ch:la-gold-silver-bronze-iron-metal-lead",
+  "canDo": "I can say gold, silver, bronze, iron and the metal lead.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C222-plumbum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 222: I can say gold, silver, bronze, iron and the metal lead.",
+    "assesses": [
+      "LA-LEX-C222-RES222-03",
+      "LA-LEX-C222-RES222-04",
+      "LA-LEX-C222-RES222-05"
+    ]
+  }
+}

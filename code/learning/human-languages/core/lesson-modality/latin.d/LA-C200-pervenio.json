@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C200-pervenio",
+    "language": "latin",
+    "chapter": 200,
+    "sequence": 9620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d040418391ff6e78"
+  },
+  "findings": []
+}

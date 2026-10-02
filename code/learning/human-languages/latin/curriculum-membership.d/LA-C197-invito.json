@@ -1,0 +1,11 @@
+{
+  "id": "LA-C197-invito",
+  "pathSegment": "LA-PATH-197-ACT197",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-197-ACT197",
+      "order": 2
+    }
+  ]
+}

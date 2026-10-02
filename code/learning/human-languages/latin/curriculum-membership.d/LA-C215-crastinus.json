@@ -1,0 +1,11 @@
+{
+  "id": "LA-C215-crastinus",
+  "pathSegment": "LA-PATH-215-QUAL215",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-215-QUAL215",
+      "order": 2
+    }
+  ]
+}

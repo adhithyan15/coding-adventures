@@ -1,0 +1,21 @@
+{
+  "language": "latin",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:ed1b2950946cd980",
+  "lessonIds": [
+    "LA-C228-saltus",
+    "LA-C228-cacumen",
+    "LA-C228-iugum",
+    "LA-C228-vertex",
+    "LA-C228-ordo",
+    "LA-R228-first-pass-words-from-chapters-224-225",
+    "LA-R228-second-pass-words-from-chapters-226-228"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "latin/narration/ch228.txt",
+  "json": "latin/narration/ch228.json",
+  "textHash": "fnv1a64:492f4c429037276f",
+  "jsonHash": "fnv1a64:00aad0b6577f0b36",
+  "findings": []
+}

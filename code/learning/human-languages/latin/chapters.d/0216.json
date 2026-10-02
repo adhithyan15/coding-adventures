@@ -1,0 +1,19 @@
+{
+  "chapter": 216,
+  "title": "Bald, Bearded, Charming, Worn out, Wakeful",
+  "label": "ch:la-bald-bearded-charming-worn-out-wakeful",
+  "canDo": "I can say bald, bearded, charming, worn out and wakeful.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-C216-vigil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 216: I can say bald, bearded, charming, worn out and wakeful.",
+    "assesses": [
+      "LA-LEX-C216-QUAL216-03",
+      "LA-LEX-C216-QUAL216-04",
+      "LA-LEX-C216-QUAL216-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 207,
+  "title": "Generation, Age, Sunset, Sunrise, First light",
+  "label": "ch:la-generation-age-sunset-sunrise-first-light",
+  "canDo": "I can say a generation, age, sunset, sunrise and first light.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "LA-C207-diluculum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 207: I can say a generation, age, sunset, sunrise and first light.",
+    "assesses": [
+      "LA-LEX-C207-TEMP207-03",
+      "LA-LEX-C207-TEMP207-04",
+      "LA-LEX-C207-TEMP207-05"
+    ]
+  }
+}

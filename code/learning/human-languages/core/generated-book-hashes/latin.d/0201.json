@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:3292f835da6dddee",
+  "lessonIds": [
+    "LA-C201-colloquor",
+    "LA-C201-trado",
+    "LA-C201-corrigo",
+    "LA-C201-celebro",
+    "LA-C201-persequor"
+  ],
+  "tex": "latin/book/chapters/ch201-to-talk-together-to-hand-over-to-straighten-to-celebrate-to-pursue.tex"
+}

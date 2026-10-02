@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R205-first-pass-words-from-chapters-197-200",
+    "language": "latin",
+    "chapter": 205,
+    "sequence": 9910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d68abde9afccc6f"
+  },
+  "findings": []
+}

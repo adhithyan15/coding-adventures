@@ -1,0 +1,19 @@
+{
+  "chapter": 225,
+  "title": "Gem, Garment, Sandal, Fold of a garment, Mattress",
+  "label": "ch:la-gem-garment-sandal-fold-of-a-garment-mattress",
+  "canDo": "I can say a gem, a garment, a sandal, a fold of a garment and a mattress.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C225-culcita",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 225: I can say a gem, a garment, a sandal, a fold of a garment and a mattress.",
+    "assesses": [
+      "LA-LEX-C225-RES225-03",
+      "LA-LEX-C225-RES225-04",
+      "LA-LEX-C225-RES225-05"
+    ]
+  }
+}

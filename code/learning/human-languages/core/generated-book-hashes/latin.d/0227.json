@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:f7824e27112733a9",
+  "lessonIds": [
+    "LA-C227-fatum",
+    "LA-C227-cubile",
+    "LA-C227-hospitium",
+    "LA-C227-deversorium",
+    "LA-C227-viator"
+  ],
+  "tex": "latin/book/chapters/ch227-fate-lair-hospitality-lodging-house-traveller.tex"
+}

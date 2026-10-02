@@ -1,0 +1,11 @@
+{
+  "id": "LA-C202-excipio",
+  "pathSegment": "LA-PATH-202-ACT202",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-202-ACT202",
+      "order": 2
+    }
+  ]
+}

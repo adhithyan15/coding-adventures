@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:ee9e590d90622681",
+  "lessonIds": [
+    "LA-C213-peregrinus",
+    "LA-C213-probus",
+    "LA-C213-patiens",
+    "LA-C213-liberalis",
+    "LA-C213-ignavus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch213.txt",
+  "json": "latin/narration/ch213.json",
+  "textHash": "fnv1a64:592e789b3f38ec6d",
+  "jsonHash": "fnv1a64:de650bcb19ff73fe",
+  "findings": []
+}

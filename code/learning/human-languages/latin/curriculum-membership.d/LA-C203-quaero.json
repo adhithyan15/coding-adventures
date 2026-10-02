@@ -1,0 +1,11 @@
+{
+  "id": "LA-C203-quaero",
+  "pathSegment": "LA-PATH-203-ACT203",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-203-ACT203",
+      "order": 1
+    }
+  ]
+}
