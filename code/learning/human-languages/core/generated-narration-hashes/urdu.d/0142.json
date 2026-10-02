@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 142,
-  "sourceHash": "fnv1a64:7b6736103ac36c7b",
+  "sourceHash": "fnv1a64:8f9b1093e71fb108",
   "lessonIds": [
     "UR-C142-utarna",
     "UR-C142-bharna",
@@ -9,13 +9,14 @@
     "UR-C142-bachna",
     "UR-C142-barhna",
     "UR-R142-first-pass-describing-words",
-    "UR-R142-second-pass-verbs"
+    "UR-R142-second-pass-verbs",
+    "UR-W10-a1-timed-production"
   ],
   "voiceLessons": 7,
   "drivablePrefix": 7,
   "text": "urdu/narration/ch142.txt",
   "json": "urdu/narration/ch142.json",
-  "textHash": "fnv1a64:50fe0e393a7130b1",
-  "jsonHash": "fnv1a64:e7f40af0b9ecceec",
+  "textHash": "fnv1a64:9d85bcb61c6d4cbd",
+  "jsonHash": "fnv1a64:028105c5b0d76ce7",
   "findings": []
 }
