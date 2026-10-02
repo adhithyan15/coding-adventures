@@ -1590,6 +1590,7 @@ internal static class SourceInputRegistryProjection
           "code/packages/typescript/forme-feeds",
           "code/packages/typescript/forme-identity",
           "code/packages/typescript/forme-index-renderer",
+          "code/packages/typescript/forme-interactivity-ir",
           "code/packages/typescript/forme-load-assets-fs",
           "code/packages/typescript/forme-manifest",
           "code/packages/typescript/forme-opengraph",

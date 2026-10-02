@@ -294,7 +294,7 @@ rejects accessors, snapshots it, and never retains the caller's object.
 Validation is fail-closed and deterministic. It rejects:
 
 - a non-plain object, accessor, symbol key, unknown/missing field, or sparse
-  array at any IR-owned position;
+  array at any IR-owned position, and every Proxy before invoking a meta-trap;
 - a cyclic graph or repeated object identity (the wire format is a tree);
 - invalid identifiers, duplicate declarations, and dangling state/island
   references;
@@ -304,8 +304,13 @@ Validation is fail-closed and deterministic. It rejects:
 - any count, depth, string, JSON-node, expression-node, or canonical-byte
   limit violation.
 
-Errors carry a stable code and JSON-pointer-like path. Diagnostics may truncate
-hostile strings but must never echo the whole rejected document.
+Canonical UTF-8 bytes are counted exactly in a bounded descriptor walk before
+a snapshot or output string is built. Strings with unpaired UTF-16
+surrogates are rejected because they do not define a Unicode scalar sequence.
+
+Errors carry a stable code and JSON-pointer-like path. Attacker-controlled path
+segments are length-bounded and ASCII-escaped; diagnostics must never echo the
+whole rejected document or raw terminal controls.
 
 ## 12. Capability and trust boundary
 

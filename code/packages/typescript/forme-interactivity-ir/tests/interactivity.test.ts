@@ -290,6 +290,22 @@ describe("Interactivity IR validation", () => {
       value: { kind: "state", state: "theme" },
     }];
     expectCode(() => validateInteractivityDocument(incompatibleState), "TYPE_MISMATCH");
+
+    const incompatibleEnum = validDocument();
+    (incompatibleEnum.state as Array<Record<string, unknown>>).push({
+      name: "accent",
+      scope: "document",
+      type: "enum",
+      initial: "blue",
+      persist: "none",
+      values: ["blue", "red"],
+    });
+    (incompatibleEnum.handlers as Array<Record<string, unknown>>)[0]!.effects = [{
+      kind: "set-state",
+      state: "theme",
+      value: { kind: "state", state: "accent" },
+    }];
+    expectCode(() => validateInteractivityDocument(incompatibleEnum), "TYPE_MISMATCH");
   });
 
   it("accepts safe navigation and rejects unsafe targets", () => {
@@ -337,6 +353,15 @@ describe("Interactivity IR validation", () => {
   });
 
   it("validates and bounds JSON values", () => {
+    expect(validateInteractivityDocument({
+      kind: "Interactivity",
+      version: 1,
+      state: [],
+      bindings: [],
+      handlers: [],
+      islands: [],
+    }, { maxJsonNodes: 1 })).toEqual(EMPTY_INTERACTIVITY);
+
     const unsupported = validDocument();
     (unsupported.islands as Array<Record<string, unknown>>)[0]!.config = undefined;
     expectCode(() => validateInteractivityDocument(unsupported), "INVALID_TYPE");
@@ -362,6 +387,10 @@ describe("Interactivity IR validation", () => {
     expectCode(() => validateInteractivityDocument(long, { maxStringBytes: 5 }), "LIMIT_EXCEEDED");
 
     expectCode(() => validateInteractivityDocument(validDocument(), { maxCanonicalBytes: 32 }), "LIMIT_EXCEEDED", "$");
+
+    const enormousSparse = validDocument();
+    enormousSparse.state = new Array(20_000);
+    expectCode(() => validateInteractivityDocument(enormousSparse), "LIMIT_EXCEEDED", "$.state");
   });
 
   it("validates, snapshots, and freezes caller-provided limits", () => {
@@ -385,6 +414,133 @@ describe("Interactivity IR validation", () => {
     });
     expectCode(() => validateInteractivityDocument(validDocument(), accessor), "ACCESSOR", "$.limits.maxHandlers");
     expect(reads).toBe(0);
+  });
+
+  it("rejects malformed limit containers and properties", () => {
+    expectCode(() => validateInteractivityDocument(validDocument(), null as never), "INVALID_TYPE", "$.limits");
+    expectCode(() => validateInteractivityDocument(validDocument(), [] as never), "INVALID_TYPE", "$.limits");
+    expectCode(() => validateInteractivityDocument(validDocument(), new (class Limits {})() as never), "INVALID_TYPE", "$.limits");
+
+    const symbol = { maxHandlers: 8 };
+    Object.defineProperty(symbol, Symbol("hidden"), { enumerable: true, value: 1 });
+    expectCode(() => validateInteractivityDocument(validDocument(), symbol), "SYMBOL_KEY", "$.limits");
+    expectCode(() => validateInteractivityDocument(validDocument(), { surprise: 1 } as never), "UNKNOWN_FIELD", "$.limits.surprise");
+
+    const hidden = {};
+    Object.defineProperty(hidden, "maxHandlers", { enumerable: false, value: 8 });
+    expectCode(() => validateInteractivityDocument(validDocument(), hidden), "INVALID_LIMIT", "$.limits.maxHandlers");
+
+    const tooMany = Object.fromEntries(Array.from({ length: 13 }, (_, index) => [`limit-${index}`, 1]));
+    expectCode(() => validateInteractivityDocument(validDocument(), tooMany), "INVALID_LIMIT", "$.limits");
+  });
+
+  it("rejects hostile nested objects and arrays without invoking accessors", () => {
+    const nonPlain = validDocument();
+    (nonPlain.islands as Array<Record<string, unknown>>)[0]!.config = new Date();
+    expectCode(() => validateInteractivityDocument(nonPlain), "INVALID_TYPE");
+
+    let reads = 0;
+    const accessorConfig = Object.defineProperty({}, "secret", {
+      enumerable: true,
+      get() {
+        reads++;
+        return true;
+      },
+    });
+    const accessor = validDocument();
+    (accessor.islands as Array<Record<string, unknown>>)[0]!.config = accessorConfig;
+    expectCode(() => validateInteractivityDocument(accessor), "ACCESSOR");
+    expect(reads).toBe(0);
+
+    const extraArray = validDocument();
+    const array = [true] as boolean[] & { note?: string };
+    array.note = "hidden";
+    (extraArray.islands as Array<Record<string, unknown>>)[0]!.config = array;
+    expectCode(() => validateInteractivityDocument(extraArray), "UNKNOWN_FIELD");
+  });
+
+  it("rejects proxies before invoking their meta-traps", () => {
+    let traps = 0;
+    const proxied = new Proxy(validDocument(), {
+      getPrototypeOf() {
+        traps++;
+        throw new Error("must not run");
+      },
+    });
+    expectCode(() => validateInteractivityDocument(proxied), "INVALID_TYPE", "$");
+    expect(traps).toBe(0);
+
+    const limits = new Proxy({ maxHandlers: 8 }, {
+      ownKeys() {
+        traps++;
+        throw new Error("must not run");
+      },
+    });
+    expectCode(() => validateInteractivityDocument(validDocument(), limits), "INVALID_TYPE", "$.limits");
+    expect(traps).toBe(0);
+
+    const revocable = Proxy.revocable(validDocument(), {});
+    revocable.revoke();
+    expectCode(() => validateInteractivityDocument(revocable.proxy), "INVALID_TYPE", "$");
+
+    const revokedLimits = Proxy.revocable({ maxHandlers: 8 }, {});
+    revokedLimits.revoke();
+    expectCode(() => validateInteractivityDocument(validDocument(), revokedLimits.proxy), "INVALID_TYPE", "$.limits");
+  });
+
+  it("snapshots prototype-shaped JSON keys without prototype mutation", () => {
+    const config = Object.create(null) as Record<string, unknown>;
+    Object.defineProperty(config, "__proto__", { enumerable: true, value: { polluted: true } });
+    const input = validDocument();
+    (input.islands as Array<Record<string, unknown>>)[0]!.config = config;
+    const result = validateInteractivityDocument(input);
+    expect(Object.getPrototypeOf(result.islands[0]!.config)).toBeNull();
+    expect(({} as Record<string, unknown>).polluted).toBeUndefined();
+    expect(canonicalInteractivityDocument(result)).toContain('"__proto__":{"polluted":true}');
+  });
+
+  it("rejects unknown discriminants and accepts document-wide targets", () => {
+    const target = validDocument();
+    (target.bindings as Array<Record<string, unknown>>)[0]!.target = { kind: "document" };
+    expect(validateInteractivityDocument(target).bindings[0]!.target).toEqual({ kind: "document" });
+
+    const badRef = validDocument();
+    (badRef.bindings as Array<Record<string, unknown>>)[0]!.target = { kind: "selector", id: "x" };
+    expectCode(() => validateInteractivityDocument(badRef), "INVALID_VALUE");
+
+    const badExpr = validDocument();
+    (badExpr.bindings as Array<Record<string, unknown>>)[0]!.when = {
+      kind: "truthy",
+      value: { kind: "call" },
+    };
+    expectCode(() => validateInteractivityDocument(badExpr), "INVALID_VALUE");
+
+    const badEffect = validDocument();
+    (badEffect.handlers as Array<Record<string, unknown>>)[0]!.effects = [{ kind: "fetch" }];
+    expectCode(() => validateInteractivityDocument(badEffect), "INVALID_VALUE");
+  });
+
+  it("bounds and escapes attacker-controlled diagnostic paths", () => {
+    const input = validDocument();
+    const hostileKey = `bad\n\u001b${"x".repeat(200)}`;
+    Object.defineProperty(input, hostileKey, { enumerable: true, value: true });
+    try {
+      validateInteractivityDocument(input);
+      throw new Error("expected validation to throw");
+    } catch (error) {
+      expect(error).toBeInstanceOf(InteractivityError);
+      const path = (error as InteractivityError).path;
+      expect(path.length).toBeLessThan(300);
+      expect(path).not.toContain("\n");
+      expect(path).not.toContain("\u001b");
+      expect(path).toContain("\\u000a\\u001b");
+    }
+  });
+
+  it("rejects ill-formed Unicode strings", () => {
+    const input = validDocument();
+    (input.islands as Array<Record<string, unknown>>)[0]!.config = "\ud800";
+    expectCode(() => validateInteractivityDocument(input), "INVALID_VALUE", "$.islands[0].config");
   });
 });
 
@@ -416,5 +572,25 @@ describe("Interactivity IR canonical serialization", () => {
   it("accepts a validated document type", () => {
     const document: InteractivityDocument = validateInteractivityDocument(validDocument());
     expect(canonicalInteractivityDocument(document)).toMatch(/^\{"bindings":/);
+  });
+
+  it("orders object keys by Unicode scalar value", () => {
+    const input = validDocument();
+    (input.islands as Array<Record<string, unknown>>)[0]!.config = { "\u{10000}": 1, "\ue000": 2 };
+    const canonical = canonicalInteractivityDocument(validateInteractivityDocument(input));
+    expect(canonical.indexOf('"\ue000"')).toBeLessThan(canonical.indexOf('"\u{10000}"'));
+  });
+
+  it("refuses unvalidated typed objects without reading their fields", () => {
+    let reads = 0;
+    const raw = Object.defineProperty({}, "kind", {
+      enumerable: true,
+      get() {
+        reads++;
+        return "Interactivity";
+      },
+    }) as InteractivityDocument;
+    expect(() => canonicalInteractivityDocument(raw)).toThrow(TypeError);
+    expect(reads).toBe(0);
   });
 });
