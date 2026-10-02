@@ -554,6 +554,8 @@ Normal, break-all, and keep-all word-breaking modes respectively preserve
 Unicode opportunities, add grapheme opportunities, or suppress CJK-internal breaks.
 Auto, loose, normal, strict, and anywhere line-breaking modes preserve Unicode
 defaults, tailor small-kana opportunities, or add grapheme opportunities.
+Clip and ellipsis text-overflow modes truncate oversized labels at grapheme
+boundaries, with ellipsis insertion remaining backend-neutral until shaping.
 Normal and positive or negative pixel/em letter spacing adjusts shaped glyph
 positions and line measurement through backend-neutral PaintInstructions.
 Normal and positive or negative pixel/em word spacing likewise adjusts ASCII

@@ -434,6 +434,13 @@ fn treemap_text_node(
         };
         node.ext.insert("text.line-break".into(), ExtValue::Str(line_break.into()));
     }
+    if let Some(text_overflow) = style.and_then(|style| style.text_overflow) {
+        let text_overflow = match text_overflow {
+            diagram_ir::TreemapTextOverflow::Clip => "clip",
+            diagram_ir::TreemapTextOverflow::Ellipsis => "ellipsis",
+        };
+        node.ext.insert("text.overflow".into(), ExtValue::Str(text_overflow.into()));
+    }
     if let Some(direction) = style.and_then(|style| style.direction) {
         let value = match direction {
             diagram_ir::TreemapTextDirection::LeftToRight => "ltr",
@@ -7008,6 +7015,7 @@ mod tests {
                     overflow_wrap: None,
                     word_break: None,
                     line_break: None,
+                    text_overflow: None,
                     letter_spacing: None,
                     word_spacing: None,
                     direction: None,
@@ -7104,6 +7112,12 @@ mod tests {
             current_color, Some(&whitespace_style),
         );
         assert_eq!(loose_text.ext.get("text.line-break"), Some(&ExtValue::Str("loose".into())));
+        whitespace_style.text_overflow = Some(diagram_ir::TreemapTextOverflow::Ellipsis);
+        let ellipsis_text = treemap_text_node(
+            "overflow", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(ellipsis_text.ext.get("text.overflow"), Some(&ExtValue::Str("ellipsis".into())));
         whitespace_style.direction = Some(diagram_ir::TreemapTextDirection::RightToLeft);
         let rtl_text = treemap_text_node(
             "مرحبا", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
