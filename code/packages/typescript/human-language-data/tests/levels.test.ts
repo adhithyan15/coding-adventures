@@ -261,13 +261,14 @@ describe("corpus level summary", () => {
       expect(readdirSync(join(root, "core", entry.name)), entry.name).toEqual([]);
     }
   });
-  it("shows twenty tracks have reached A2, and every track has now reached A1", () => {
+  it("shows twenty-one tracks have reached A2, and every track has now reached A1", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const summary = summarizeLevels(lessons, paths, spine);
     // `reach` is the highest level a track has ANY lesson at, so this names the tracks
     // rather than counting them — "no track is at A2" has become a list, and listing it
     // keeps the assertion as tight as the original. Spanish has now left this list --
-    // it reaches B1 -- so the list is 19, and the ceiling for everyone else is A2.
+    // it reaches B1. Marwadi now joins the A2 list through its first connected
+    // writing chapter, so the list is 21 and the ceiling for everyone else is A2.
     expect(
       summary.tracks.filter((track) => track.reach === "A2").map((track) => track.language),
     ).toEqual([
@@ -287,6 +288,7 @@ describe("corpus level summary", () => {
       "latin",
       "malayalam",
       "marathi",
+      "marwadi",
       "persian",
       "portuguese",
       "punjabi",
