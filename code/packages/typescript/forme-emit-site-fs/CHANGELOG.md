@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Verify `RenderedPage.usedIslands` against exact island-module asset uses,
+  emit fingerprinted external module tags, and preserve those IDs in deploy
+  routes.
+- Prune unreferenced `script` assets while preserving the zero-JavaScript path
+  for static pages.
+
+### Security
+
+- Reject missing, duplicate, non-script, non-JavaScript-MIME, or usage-list
+  mismatches before materializing an interactive page. Recompute reviewed
+  script SHA-256 bindings, snapshot bounded page usage, and reject exact or
+  portable case/Unicode-normalization output-path collisions before writes.
+
 ## 0.2.0 — 2026-09-19
 
 ### Added

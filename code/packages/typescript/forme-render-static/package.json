@@ -1,7 +1,7 @@
 {
   "name": "@coding-adventures/forme-render-static",
   "version": "0.2.0",
-  "description": "Forme render stage: Stream<ContentNode> → Stream<RenderedPage>. Matches Style IR and inlines AOT-sliced CSS.",
+  "description": "Forme render stage: Stream<ContentNode> → Stream<RenderedPage>. Matches Style IR and selects exact per-page Interactivity IR islands.",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
@@ -14,13 +14,15 @@
   "dependencies": {
     "@coding-adventures/forme-types": "file:../forme-types",
     "@coding-adventures/forme-identity": "file:../forme-identity",
+    "@coding-adventures/forme-interactivity-ir": "file:../forme-interactivity-ir",
     "@coding-adventures/forme-stage": "file:../forme-stage",
     "@coding-adventures/document-ast-to-html": "file:../document-ast-to-html",
     "@coding-adventures/document-ast": "file:../document-ast",
     "@coding-adventures/forme-style-ir": "file:../forme-style-ir",
     "@coding-adventures/forme-aot-css-slicer": "file:../forme-aot-css-slicer",
     "@coding-adventures/forme-aot-meta-link-tags": "file:../forme-aot-meta-link-tags",
-    "@coding-adventures/forme-aot-rss-discovery-link": "file:../forme-aot-rss-discovery-link"
+    "@coding-adventures/forme-aot-rss-discovery-link": "file:../forme-aot-rss-discovery-link",
+    "parse5": "^7.3.0"
   },
   "devDependencies": {
     "@coding-adventures/gfm-parser": "file:../gfm-parser",

@@ -25,7 +25,7 @@ Void                  → no payload (source-stage input, sink-stage output)
 ContentSource         → raw bytes + metadata from a storage adapter
 ContentNode           → parsed document (DocumentNode + frontmatter + identity)
 Collection            → ordered set of content references with grouping discriminant
-Asset                 → image / video / font / binary with metadata
+Asset                 → image / video / font / script / binary with metadata
 Document              → (content, style, interactivity) triple ready to render
 RenderedPage          → HTML + metadata + revision-aware input provenance
 PrintForme            → backend-neutral page for LaTeX / PDF / EPUB
@@ -75,6 +75,11 @@ set. Use `createOutputProvenance` from `@coding-adventures/forme-identity` to
 construct it. Aggregate pages omit the legacy `source` field instead of
 inventing a single source; v1.0 producers that only carry `source` remain valid
 during the v1.1 migration.
+
+Interactive renderers also provide an exact `islandModules` list pairing each
+document-local `IslandId` with its reviewed script `LogicalId`, package/export,
+and exact SHA-256 bytes. The field
+is optional only so legacy static producers remain source-compatible.
 
 ## Spec divergences (v0)
 
