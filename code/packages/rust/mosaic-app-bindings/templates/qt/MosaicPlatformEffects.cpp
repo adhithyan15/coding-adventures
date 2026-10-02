@@ -33,7 +33,9 @@
 #endif
 
 #ifdef QT_WIDGETS_LIB
+#include <QDir>
 #include <QFileDialog>
+#include <QStandardPaths>
 #endif
 
 #include "MosaicHost.h"
@@ -287,7 +289,18 @@ class QtFileDialogs final : public MosaicFileDialogs
 public:
     QString chooseFileToOpen(const QStringList &extensions) override
     {
-        return QFileDialog::getOpenFileName(nullptr, QObject::tr("Open"), QString(),
+        // Images only: open in Pictures, as a photo picker should. Anything
+        // else -- and a Pictures folder this system does not have -- keeps
+        // Qt's default start (an empty directory).
+        QString start;
+        if (mosaicOnlyImages(extensions)) {
+            const QString pictures =
+                QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
+            if (!pictures.isEmpty() && QDir(pictures).exists()) {
+                start = pictures;
+            }
+        }
+        return QFileDialog::getOpenFileName(nullptr, QObject::tr("Open"), start,
                                             filterFor(extensions));
     }
 
@@ -300,6 +313,26 @@ public:
 #endif
 
 } // namespace
+
+bool mosaicOnlyImages(const QStringList &extensions)
+{
+    if (extensions.isEmpty()) {
+        return false;
+    }
+    for (const QString &extension : extensions) {
+        bool image = false;
+        for (const auto &row : mimeExtensions()) {
+            if (row.first.startsWith(QStringLiteral("image/")) && row.second.contains(extension)) {
+                image = true;
+                break;
+            }
+        }
+        if (!image) {
+            return false;
+        }
+    }
+    return true;
+}
 
 QSet<QString> mosaicStandardEffectKinds()
 {

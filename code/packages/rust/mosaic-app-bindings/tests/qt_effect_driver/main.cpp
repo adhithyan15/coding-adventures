@@ -544,6 +544,15 @@ int main(int argc, char **argv) {
                   opened.value(QStringLiteral("mimeType")).toString() == QStringLiteral("image/png") &&
                   opened.value(QStringLiteral("bytes")).toString() == QStringLiteral("AQID"),
               "files.open returns the name, type and bytes, never the path");
+        // UI59 §2: a "pictures only" open starts in the Pictures folder.
+        check(mosaicOnlyImages({QStringLiteral("png"), QStringLiteral("jpg"), QStringLiteral("jpeg")}),
+              "images start in Pictures");
+        check(mosaicOnlyImages({QStringLiteral("svg")}), "svg is an image");
+        check(!mosaicOnlyImages({QStringLiteral("png"), QStringLiteral("txt")}),
+              "mixed types keep Qt's default start");
+        check(!mosaicOnlyImages({}), "any file keeps Qt's default start");
+        check(!mosaicOnlyImages({QStringLiteral("pdf")}), "a document keeps Qt's default start");
+
         FakeDialogs folder;
         folder.choice = directory.path();
         check(mosaicRunFilesOpen(QVariantMap{}, folder).value(QStringLiteral("failed")).toMap()

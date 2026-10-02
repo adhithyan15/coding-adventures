@@ -252,6 +252,11 @@ fn the_emitted_qt_host_answers_effects() {
         "files.save refuses a launcher when no type is named",
         "files.open returns the name, type and bytes, never the path",
         "files.open refuses something that is not a regular file",
+        "images start in Pictures",
+        "svg is an image",
+        "mixed types keep Qt's default start",
+        "any file keeps Qt's default start",
+        "a document keeps Qt's default start",
     ] {
         assert!(
             stdout.contains(expected),
