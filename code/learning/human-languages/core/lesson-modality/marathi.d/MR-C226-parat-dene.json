@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C226-parat-dene",
+    "language": "marathi",
+    "chapter": 226,
+    "sequence": 12360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:84da318f5f59bf5b"
+  },
+  "findings": []
+}

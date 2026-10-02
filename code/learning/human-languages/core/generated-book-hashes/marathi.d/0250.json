@@ -1,0 +1,15 @@
+{
+  "language": "marathi",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:0526c04eeb91cd0d",
+  "lessonIds": [
+    "MR-C250-itihas",
+    "MR-C250-bhugol",
+    "MR-C250-ganit",
+    "MR-C250-kala",
+    "MR-C250-sangh",
+    "MR-R250-first-pass-words-from-chapters-246-247",
+    "MR-R250-second-pass-words-from-chapters-248-250"
+  ],
+  "tex": "marathi/book/chapters/ch250-history-geography-mathematics-art-team.tex"
+}

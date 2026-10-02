@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:858a4f857e7b5095",
+  "lessonIds": [
+    "MR-C243-thikan",
+    "MR-C243-dekhava",
+    "MR-C243-sahal",
+    "MR-C243-tava",
+    "MR-C243-kadhai"
+  ],
+  "tex": "marathi/book/chapters/ch243-place-view-outing-griddle-wok.tex"
+}

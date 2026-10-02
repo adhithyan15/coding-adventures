@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-235-GUN235",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say lovely, terrible, amazing, boring and whole.",
+  "prerequisites": []
+}

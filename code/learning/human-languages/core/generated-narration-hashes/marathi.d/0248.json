@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:92d11e5fdd2c3a8e",
+  "lessonIds": [
+    "MR-C248-san",
+    "MR-C248-miravnuk",
+    "MR-C248-jatra",
+    "MR-C248-mejvani",
+    "MR-C248-bhetvastu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch248.txt",
+  "json": "marathi/narration/ch248.json",
+  "textHash": "fnv1a64:770fd84968b91032",
+  "jsonHash": "fnv1a64:6b3babae381eba85",
+  "findings": []
+}

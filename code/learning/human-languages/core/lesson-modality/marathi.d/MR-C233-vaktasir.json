@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C233-vaktasir",
+    "language": "marathi",
+    "chapter": 233,
+    "sequence": 12920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe8b05073e369a4a"
+  },
+  "findings": []
+}

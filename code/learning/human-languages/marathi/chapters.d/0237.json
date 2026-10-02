@@ -1,0 +1,19 @@
+{
+  "chapter": 237,
+  "title": "Tradition, Dialect, Publicity, Website, Keyboard",
+  "label": "ch:mr-tradition-dialect-publicity-website-keyboard",
+  "canDo": "I can say a tradition, a dialect, publicity, a website and a keyboard.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C237-kalphalak",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 237: I can say a tradition, a dialect, publicity, a website and a keyboard.",
+    "assesses": [
+      "MR-LEX-C237-VASTU237-03",
+      "MR-LEX-C237-VASTU237-04",
+      "MR-LEX-C237-VASTU237-05"
+    ]
+  }
+}

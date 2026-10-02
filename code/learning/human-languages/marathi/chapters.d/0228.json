@@ -1,0 +1,19 @@
+{
+  "chapter": 228,
+  "title": "To praise, To go forward, To go back, To defend, To disappear",
+  "label": "ch:mr-to-praise-to-go-forward-to-go-back-to-defend-to-disappear",
+  "canDo": "I can say to praise, to go forward, to go back, to defend and to disappear.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C228-nahise-hone",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 228: I can say to praise, to go forward, to go back, to defend and to disappear.",
+    "assesses": [
+      "MR-LEX-C228-ACT228-03",
+      "MR-LEX-C228-ACT228-04",
+      "MR-LEX-C228-ACT228-05"
+    ]
+  }
+}

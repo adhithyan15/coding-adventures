@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C229-ahar",
+    "language": "marathi",
+    "chapter": 229,
+    "sequence": 12540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b63bfdd294bd818d"
+  },
+  "findings": []
+}

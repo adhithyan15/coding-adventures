@@ -1,0 +1,19 @@
+{
+  "chapter": 229,
+  "title": "Tablet, Ointment, Bandage, Ambulance, Diet",
+  "label": "ch:mr-tablet-ointment-bandage-ambulance-diet",
+  "canDo": "I can say a tablet, an ointment, a bandage, an ambulance and a diet.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MR-C229-ahar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 229: I can say a tablet, an ointment, a bandage, an ambulance and a diet.",
+    "assesses": [
+      "MR-LEX-C229-AAROGYA229-03",
+      "MR-LEX-C229-AAROGYA229-04",
+      "MR-LEX-C229-AAROGYA229-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:fe0822f2e7caf09e",
+  "lessonIds": [
+    "MR-C230-suruvat",
+    "MR-C230-mudat",
+    "MR-C230-darroj",
+    "MR-C230-darmyan",
+    "MR-C230-kayam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch230.txt",
+  "json": "marathi/narration/ch230.json",
+  "textHash": "fnv1a64:c4ae809d6cd24974",
+  "jsonHash": "fnv1a64:4e034d2cf17081d5",
+  "findings": []
+}

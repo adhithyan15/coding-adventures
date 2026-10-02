@@ -1,0 +1,11 @@
+{
+  "id": "MR-C235-ascaryakarak",
+  "pathSegment": "MR-PATH-235-GUN235",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-235-GUN235",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 231,
+  "title": "Together, Perhaps, Besides, Of course, That is to say",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:ac6e29e2b0aaa34a",
+  "lessons": [
+    {
+      "id": "MR-C231-ekatra",
+      "sequence": 12600,
+      "title": "एकत्र (ekatra) — together",
+      "headword": "एकत्र",
+      "romanization": "ekatra",
+      "gloss": "together",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:123425fdc89e027a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for meanwhile, then the Marathi for for good."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: एकत्र",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "एकत्र — ekatra — \"together\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekatra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekatra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekatra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekatra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ekatra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ekatra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for meanwhile, then the Marathi for for good, then say ekatra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for meanwhile, then the Marathi for for good, then say *ekatra* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does एकत्र (ekatra) mean? (\"Together\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C231-kadacit",
+      "sequence": 12610,
+      "title": "कदाचित (kadācit) — perhaps",
+      "headword": "कदाचित",
+      "romanization": "kadācit",
+      "gloss": "perhaps",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e6ec2b8fb317b14a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for for good, then the Marathi for together."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कदाचित",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कदाचित — kadācit — \"perhaps\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kadācit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kadācit*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kadācit, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kadācit*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kadācit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kadācit*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for for good, then the Marathi for together, then say kadācit again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for for good, then the Marathi for together, then say *kadācit* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कदाचित (kadācit) mean? (\"Perhaps\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C231-sivay",
+      "sequence": 12620,
+      "title": "शिवाय (śivāy) — besides, apart from",
+      "headword": "शिवाय",
+      "romanization": "śivāy",
+      "gloss": "besides, apart from",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7d09079b9f564c2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for together, then the Marathi for perhaps."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शिवाय",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शिवाय — śivāy — \"besides, apart from\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śivāy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śivāy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śivāy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śivāy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say śivāy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *śivāy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for together, then the Marathi for perhaps, then say śivāy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for together, then the Marathi for perhaps, then say *śivāy* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शिवाय (śivāy) mean? (\"Besides, apart from\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C231-arthat",
+      "sequence": 12630,
+      "title": "अर्थात (arthāt) — of course",
+      "headword": "अर्थात",
+      "romanization": "arthāt",
+      "gloss": "of course",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e53a3899f35038fd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for perhaps, then the Marathi for besides."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अर्थात",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अर्थात — arthāt — \"of course\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arthāt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arthāt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arthāt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arthāt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say arthāt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *arthāt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for perhaps, then the Marathi for besides, then say arthāt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for perhaps, then the Marathi for besides, then say *arthāt* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अर्थात (arthāt) mean? (\"Of course\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C231-mhanje",
+      "sequence": 12640,
+      "title": "म्हणजे (mhaṇje) — that is to say",
+      "headword": "म्हणजे",
+      "romanization": "mhaṇje",
+      "gloss": "that is to say",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9eaf9167528fa3d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for besides, then the Marathi for of course."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: म्हणजे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "म्हणजे — mhaṇje — \"that is to say\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhaṇje",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhaṇje*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhaṇje, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhaṇje*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say mhaṇje",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *mhaṇje*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for besides, then the Marathi for of course, then say mhaṇje again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for besides, then the Marathi for of course, then say *mhaṇje* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does म्हणजे (mhaṇje) mean? (\"That is to say\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R231-first-pass-words-from-chapters-223-226",
+      "sequence": 12650,
+      "title": "Words from chapters 223-226 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 223-226",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7801bec8d9d95afa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for of course and that is to say."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to repair, to take a photo, to explain, to translate, to make a decision",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to repair, to take a photo, to explain, to translate, to make a decision]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to grow old, to get divorced, to move house, to rest, to get bored",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to grow old, to get divorced, to move house, to rest, to get bored]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to convince, to criticise, to prove, to depend, to avoid",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to convince, to criticise, to prove, to depend, to avoid]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to suggest, to give back, to refuse, to take a risk, to solve",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to suggest, to give back, to refuse, to take a risk, to solve]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To repair? (दुरुस्त करणे, durust karṇe.) To take a photo? (फोटो काढणे, phoṭo kāḍhṇe.) To explain? (समजावणे, samjāvṇe.) To translate? (भाषांतर करणे, bhāṣāntar karṇe.) To make a decision? (निर्णय घेणे, nirṇay gheṇe.) To grow old? (म्हातारे होणे, mhātāre hoṇe.) To get divorced? (घटस्फोट घेणे, ghaṭasphoṭ gheṇe.) To move house? (घर बदलणे, ghar badalṇe.) To rest? (आराम करणे, ārām karṇe.) To get bored? (कंटाळणे, kaṇṭāḷṇe.) To convince? (पटवणे, paṭavṇe.) To criticise? (टीका करणे, ṭīkā karṇe.) To prove? (सिद्ध करणे, siddha karṇe.) To depend? (अवलंबून असणे, avlambūn asṇe.) To avoid? (टाळणे, ṭāḷṇe.) To suggest? (सुचवणे, sucavṇe.) To give back? (परत देणे, parat deṇe.) To refuse? (नाकारणे, nākārṇe.) To take a risk? (धोका पत्करणे, dhokā patkarṇe.) To solve? (सोडवणे, soḍavṇe.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R231-second-pass-words-from-chapters-227-231",
+      "sequence": 12660,
+      "title": "Words from chapters 227-231 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 227-231",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:443ff99ed90dcd8b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to destroy and to exaggerate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to destroy, to exaggerate, to celebrate, to float, to chase",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to destroy, to exaggerate, to celebrate, to float, to chase]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to praise, to go forward, to go back, to defend, to disappear",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to praise, to go forward, to go back, to defend, to disappear]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tablet, an ointment, a bandage; a strip, an ambulance, a diet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tablet, an ointment, a bandage; a strip, an ambulance, a diet]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the beginning, a deadline, daily, meanwhile, for good",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the beginning, a deadline, daily, meanwhile, for good]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "together, perhaps, besides, of course, that is to say",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: together, perhaps, besides, of course, that is to say]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To destroy? (नष्ट करणे, naṣṭa karṇe.) To exaggerate? (अतिशयोक्ती करणे, atiśayoktī karṇe.) To celebrate? (साजरा करणे, sājrā karṇe.) To float? (तरंगणे, taraṅgṇe.) To chase? (पाठलाग करणे, pāṭhlāg karṇe.) To praise? (कौतुक करणे, kautuk karṇe.) To go forward? (पुढे जाणे, puḍhe jāṇe.) To go back? (मागे जाणे, māge jāṇe.) To defend? (बचाव करणे, bacāv karṇe.) To disappear? (नाहीसे होणे, nāhīse hoṇe.) A tablet? (गोळी, goḷī.) An ointment? (मलम, malam.) A bandage; a strip? (पट्टी, paṭṭī.) An ambulance? (रुग्णवाहिका, rugṇavāhikā.) A diet? (आहार, āhār.) The beginning? (सुरुवात, suruvāt.) A deadline? (मुदत, mudat.) Daily? (दररोज, darroj.) Meanwhile? (दरम्यान, darmyān.) For good? (कायम, kāyam.) Together? (एकत्र, ekatra.) Perhaps? (कदाचित, kadācit.) Besides? (शिवाय, śivāy.) Of course? (अर्थात, arthāt.) That is to say? (म्हणजे, mhaṇje.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 249,
+  "title": "Swing, Toys, Doll, Kite, Spinning top",
+  "label": "ch:mr-swing-toys-doll-kite-spinning-top",
+  "canDo": "I can say a swing, toys, a doll, a kite and a spinning top.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C249-bhovra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 249: I can say a swing, toys, a doll, a kite and a spinning top.",
+    "assesses": [
+      "MR-LEX-C249-VASTU249-03",
+      "MR-LEX-C249-VASTU249-04",
+      "MR-LEX-C249-VASTU249-05"
+    ]
+  }
+}

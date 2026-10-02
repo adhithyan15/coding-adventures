@@ -1,0 +1,11 @@
+{
+  "id": "MR-C243-kadhai",
+  "pathSegment": "MR-PATH-243-VASTU243",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-243-VASTU243",
+      "order": 4
+    }
+  ]
+}

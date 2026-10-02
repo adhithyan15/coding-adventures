@@ -1,0 +1,11 @@
+{
+  "id": "MR-C247-grhapath",
+  "pathSegment": "MR-PATH-247-VASTU247",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-247-VASTU247",
+      "order": 2
+    }
+  ]
+}

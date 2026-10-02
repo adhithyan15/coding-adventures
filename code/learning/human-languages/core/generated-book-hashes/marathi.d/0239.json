@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:2bf6a4b3a5037d49",
+  "lessonIds": [
+    "MR-C239-nikal",
+    "MR-C239-pharak",
+    "MR-C239-udaharan",
+    "MR-C239-satya",
+    "MR-C239-niyam"
+  ],
+  "tex": "marathi/book/chapters/ch239-result-difference-example-truth-rule.tex"
+}

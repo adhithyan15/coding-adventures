@@ -1,0 +1,11 @@
+{
+  "id": "MR-R245-second-pass-words-from-chapters-243-245",
+  "pathSegment": "MR-PATH-245-VASTU245",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "MR-EXT-245-VASTU245",
+      "order": 6
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 250,
+  "title": "History, Geography, Mathematics, Art, Team",
+  "label": "ch:mr-history-geography-mathematics-art-team",
+  "canDo": "I can say history, geography, mathematics, art and a team.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-R250-second-pass-words-from-chapters-248-250",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 250: I can say history, geography, mathematics, art and a team.",
+    "assesses": [
+      "MR-LEX-C250-KAAM250-03",
+      "MR-LEX-C250-KAAM250-04",
+      "MR-LEX-C250-KAAM250-05"
+    ]
+  }
+}

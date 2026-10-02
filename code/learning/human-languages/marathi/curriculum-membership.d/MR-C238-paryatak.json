@@ -1,0 +1,11 @@
+{
+  "id": "MR-C238-paryatak",
+  "pathSegment": "MR-PATH-238-VASTU238",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-238-VASTU238",
+      "order": 3
+    }
+  ]
+}

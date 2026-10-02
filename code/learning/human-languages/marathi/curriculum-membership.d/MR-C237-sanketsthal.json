@@ -1,0 +1,11 @@
+{
+  "id": "MR-C237-sanketsthal",
+  "pathSegment": "MR-PATH-237-VASTU237",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-237-VASTU237",
+      "order": 3
+    }
+  ]
+}

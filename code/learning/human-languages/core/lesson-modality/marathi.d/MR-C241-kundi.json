@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C241-kundi",
+    "language": "marathi",
+    "chapter": 241,
+    "sequence": 13480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d7aa86d8696a82f7"
+  },
+  "findings": []
+}

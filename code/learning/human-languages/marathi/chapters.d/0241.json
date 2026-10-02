@@ -1,0 +1,19 @@
+{
+  "chapter": 241,
+  "title": "Flowerpot, Seedling, Trunk, Lawn, Footpath",
+  "label": "ch:mr-flowerpot-seedling-trunk-lawn-footpath",
+  "canDo": "I can say a flowerpot, a seedling, a trunk, a lawn and a footpath.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C241-payvat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 241: I can say a flowerpot, a seedling, a trunk, a lawn and a footpath.",
+    "assesses": [
+      "MR-LEX-C241-VASTU241-03",
+      "MR-LEX-C241-VASTU241-04",
+      "MR-LEX-C241-VASTU241-05"
+    ]
+  }
+}

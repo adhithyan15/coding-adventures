@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:d94cbca2fa4850dd",
+  "lessonIds": [
+    "MR-C233-gadad",
+    "MR-C233-phikat",
+    "MR-C233-durca",
+    "MR-C233-vaktasir",
+    "MR-C233-sahansil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch233.txt",
+  "json": "marathi/narration/ch233.json",
+  "textHash": "fnv1a64:eaf561028327b2f7",
+  "jsonHash": "fnv1a64:38c1d7a57fa97ac1",
+  "findings": []
+}

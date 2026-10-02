@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C229-patti",
+    "language": "marathi",
+    "chapter": 229,
+    "sequence": 12520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9fe6bc0211bbff4"
+  },
+  "findings": []
+}

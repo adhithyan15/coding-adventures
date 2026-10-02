@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C236-khore",
+    "language": "marathi",
+    "chapter": 236,
+    "sequence": 13080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c19fb01a01c8a2f"
+  },
+  "findings": []
+}

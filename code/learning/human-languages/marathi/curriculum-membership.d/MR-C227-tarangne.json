@@ -1,0 +1,11 @@
+{
+  "id": "MR-C227-tarangne",
+  "pathSegment": "MR-PATH-227-ACT227",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-227-ACT227",
+      "order": 3
+    }
+  ]
+}

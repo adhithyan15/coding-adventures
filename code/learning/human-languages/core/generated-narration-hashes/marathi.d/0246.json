@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:692a9e19f0e1d0ad",
+  "lessonIds": [
+    "MR-C246-indradhanusya",
+    "MR-C246-gara",
+    "MR-C246-vasant",
+    "MR-C246-grah",
+    "MR-C246-svatantrya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch246.txt",
+  "json": "marathi/narration/ch246.json",
+  "textHash": "fnv1a64:db68f6f996f1366f",
+  "jsonHash": "fnv1a64:b25ddee88fb248b7",
+  "findings": []
+}

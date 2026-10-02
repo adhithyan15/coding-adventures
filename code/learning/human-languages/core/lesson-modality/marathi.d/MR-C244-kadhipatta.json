@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C244-kadhipatta",
+    "language": "marathi",
+    "chapter": 244,
+    "sequence": 13650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a4a1e543baeb39e"
+  },
+  "findings": []
+}

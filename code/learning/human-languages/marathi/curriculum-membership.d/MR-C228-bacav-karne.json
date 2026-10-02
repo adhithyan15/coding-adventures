@@ -1,0 +1,11 @@
+{
+  "id": "MR-C228-bacav-karne",
+  "pathSegment": "MR-PATH-228-ACT228",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-228-ACT228",
+      "order": 3
+    }
+  ]
+}

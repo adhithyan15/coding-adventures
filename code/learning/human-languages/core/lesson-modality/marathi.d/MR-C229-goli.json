@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C229-goli",
+    "language": "marathi",
+    "chapter": 229,
+    "sequence": 12500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bfc79d443a32380e"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:69f5561dbe53df73",
+  "lessonIds": [
+    "MR-C226-sucavne",
+    "MR-C226-parat-dene",
+    "MR-C226-nakarne",
+    "MR-C226-dhoka-patkarne",
+    "MR-C226-sodavne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch226.txt",
+  "json": "marathi/narration/ch226.json",
+  "textHash": "fnv1a64:02305fa8d2e3f7be",
+  "jsonHash": "fnv1a64:4f20185df527318e",
+  "findings": []
+}

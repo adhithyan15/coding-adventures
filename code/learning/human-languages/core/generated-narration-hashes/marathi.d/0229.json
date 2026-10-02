@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:d1c3d1dd5e16b077",
+  "lessonIds": [
+    "MR-C229-goli",
+    "MR-C229-malam",
+    "MR-C229-patti",
+    "MR-C229-rugnavahika",
+    "MR-C229-ahar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch229.txt",
+  "json": "marathi/narration/ch229.json",
+  "textHash": "fnv1a64:0da907c81f29fed2",
+  "jsonHash": "fnv1a64:fbd4ecf23363bd2c",
+  "findings": []
+}

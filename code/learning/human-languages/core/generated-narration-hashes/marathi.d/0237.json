@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:ce86139a092aa2e8",
+  "lessonIds": [
+    "MR-C237-parampara",
+    "MR-C237-boli",
+    "MR-C237-prasiddhi",
+    "MR-C237-sanketsthal",
+    "MR-C237-kalphalak"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch237.txt",
+  "json": "marathi/narration/ch237.json",
+  "textHash": "fnv1a64:ec3a422039701f2b",
+  "jsonHash": "fnv1a64:bc481f439a6eadd8",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:750b09c6a1de5fc8",
+  "lessonIds": [
+    "MR-C234-mahattvaca",
+    "MR-C234-manoranjak",
+    "MR-C234-ghanerda",
+    "MR-C234-bharlela",
+    "MR-C234-mand"
+  ],
+  "tex": "marathi/book/chapters/ch234-important-entertaining-filthy-full-slow.tex"
+}

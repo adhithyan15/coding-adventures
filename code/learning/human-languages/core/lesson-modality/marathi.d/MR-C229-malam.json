@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C229-malam",
+    "language": "marathi",
+    "chapter": 229,
+    "sequence": 12510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8c09f465e2bee43"
+  },
+  "findings": []
+}
