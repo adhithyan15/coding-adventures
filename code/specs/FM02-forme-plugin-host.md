@@ -5,8 +5,9 @@
 > the TypeScript runtime adapter implemented in FM-B050; the reusable runner
 > conformance harness implemented in FM-B053; the Python and Rust runtimes
 > implemented in FM-B054/FM-B055 and closed by FM-B051; production OS
-> sandboxes implemented in FM-B052; and product integration tracked by the
-> FM-B015 completion milestone.
+> sandboxes implemented in FM-B052; reviewed local installation implemented in
+> FM-B056; and runtime product composition active in FM-B057 before the FM-B015
+> completion milestone.
 > Read alongside FM00 (vision), FM01 (kernel), and FM03 (orchestrator).
 > **Scope:** Everything required to load third-party Forme plugins
 > safely and run them under a strong isolation boundary. The packages
@@ -33,7 +34,8 @@
 | Python runner | Implemented | FM-B054 provides the first non-TypeScript SDK and passes the complete shared corpus without fixture changes. |
 | Rust runner | Implemented | FM-B055 provides typed stage/context APIs, bounded protocol concurrency and streams, and passes the complete shared corpus without fixture changes. |
 | OS sandbox profiles | Implemented | FM-B052 ships exact-snapshot Linux, macOS, and Windows launchers with platform CI. |
-| Install/trust CLI | Active | FM-B056 composes the completed installer and authority stores into FM07; FM-B057 adds runtime/sandbox product composition. |
+| Install/trust CLI | Implemented | FM-B056 composes the completed installer and authority stores into FM07. |
+| Product runtime composition | Active | FM-B057 composes manifest-bound grants, language runners, and native platform sandboxes into FM07. |
 
 ---
 
