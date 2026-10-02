@@ -354,6 +354,7 @@ fn treemap_text_node(
         content.text_align = match style.and_then(|style| style.text_align) {
             Some(diagram_ir::TreemapTextAlign::Start) => TextAlign::Start,
             Some(diagram_ir::TreemapTextAlign::End) => TextAlign::End,
+            Some(diagram_ir::TreemapTextAlign::Justify) => TextAlign::Start,
             _ => TextAlign::Center,
         };
         content.wrap = !matches!(style.and_then(|style| style.white_space),
@@ -455,6 +456,9 @@ fn treemap_text_node(
             diagram_ir::TreemapTextWrapStyle::Pretty => "pretty",
         };
         node.ext.insert("text.wrap-style".into(), ExtValue::Str(text_wrap_style.into()));
+    }
+    if matches!(style.and_then(|style| style.text_align), Some(diagram_ir::TreemapTextAlign::Justify)) {
+        node.ext.insert("text.justify".into(), ExtValue::Bool(true));
     }
     if let Some(direction) = style.and_then(|style| style.direction) {
         let value = match direction {
@@ -7153,6 +7157,12 @@ mod tests {
             current_color, Some(&whitespace_style),
         );
         assert_eq!(pretty_text.ext.get("text.wrap-style"), Some(&ExtValue::Str("pretty".into())));
+        whitespace_style.text_align = Some(diagram_ir::TreemapTextAlign::Justify);
+        let justified_text = treemap_text_node(
+            "one two three", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(justified_text.ext.get("text.justify"), Some(&ExtValue::Bool(true)));
         whitespace_style.direction = Some(diagram_ir::TreemapTextDirection::RightToLeft);
         let rtl_text = treemap_text_node(
             "مرحبا", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),

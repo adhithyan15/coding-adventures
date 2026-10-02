@@ -4569,7 +4569,8 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                 "left" | "start" => diagram_ir::TreemapTextAlign::Start,
                 "center" => diagram_ir::TreemapTextAlign::Center,
                 "right" | "end" => diagram_ir::TreemapTextAlign::End,
-                _ => return Err(token_error(token, "treemap text-align must be left, center, right, start, or end")),
+                "justify" => diagram_ir::TreemapTextAlign::Justify,
+                _ => return Err(token_error(token, "treemap text-align must be left, center, right, start, end, or justify")),
             }),
             "text-align-last" => style.text_align_last = Some(match value.to_ascii_lowercase().as_str() {
                 "auto" => diagram_ir::TreemapTextAlignLast::Auto,
@@ -14485,6 +14486,17 @@ B//-A: reverse stick top
         assert_eq!(style.text_decoration_thickness, Some(diagram_ir::TreemapTextDecorationThickness::Pixels(3.0)));
         assert_eq!(style.text_underline_offset, Some(diagram_ir::TreemapTextUnderlineOffset::Factor(0.25)));
         assert_eq!(style.line_height, Some(diagram_ir::TreemapLineHeight::Factor(1.5)));
+    }
+
+    #[test]
+    fn treemap_parses_justified_text_alignment() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-align:justify",
+        ).expect("justified text alignment must parse");
+        assert_eq!(
+            diagram.nodes[1].style.as_ref().and_then(|style| style.text_align),
+            Some(diagram_ir::TreemapTextAlign::Justify),
+        );
     }
 
     #[test]

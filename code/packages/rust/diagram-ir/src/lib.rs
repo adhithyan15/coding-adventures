@@ -1504,7 +1504,7 @@ pub struct TreemapStyle {
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum TreemapTextAlign { Start, Center, End }
+pub enum TreemapTextAlign { Start, Center, End, Justify }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum TreemapTextAlignLast { Auto, Start, Center, End }
