@@ -238,6 +238,12 @@ and any new package that declares an install script. It cannot tell one
 in-range version from another (that needs registry data), so a lockfile diff is
 reviewed like code.
 
+The Electron runtime itself is not an npm package: the `electron` package only
+fetches it. `build-electron.sh --package` runs Electron's own `install.js`, which
+checks the downloaded zip against `checksums.json` inside the lock-pinned
+`electron` tarball, and points electron-builder at that copy (`electronDist`)
+instead of letting it download one of its own.
+
 ## Emitting every host shell
 
 ```powershell

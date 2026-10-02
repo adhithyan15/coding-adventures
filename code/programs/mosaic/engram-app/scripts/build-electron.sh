@@ -152,6 +152,10 @@ pkg["build"] = {
     "linux": {"target": ["AppImage"], "category": "Education"},
     "mac": {"target": ["zip"], "category": "public.app-category.education"},
     "win": {"target": ["portable"]},
+    # Package the Electron runtime the build step below verified, instead of
+    # letting electron-builder download its own copy (see the --package step
+    # below).
+    "electronDist": "node_modules/electron/dist",
 }
 
 with open(path, "w") as handle:
@@ -180,6 +184,62 @@ if [[ "$RUN_BUILD" -eq 1 ]]; then
 fi
 
 if [[ "$RUN_PACKAGE" -eq 1 ]]; then
+  # The Electron runtime is the largest piece of code in the installer, and the
+  # lockfile does not cover it: the electron npm package is only a launcher
+  # that fetches the binary separately. Left alone, electron-builder downloads
+  # that zip itself and trusts it as served.
+  #
+  # Electron's own install.js fetches the same zip but checks it against
+  # checksums.json, which ships INSIDE the lockfile-pinned electron package --
+  # so the binary is pinned by the lock transitively:
+  #
+  #   package-lock.json --sha512--> electron-42.5.0.tgz --contains--> checksums.json
+  #                                                     --sha256--> electron-v42.5.0-<os>-<arch>.zip
+  #
+  # `electronDist` above then points electron-builder at that verified copy.
+  #
+  # install.js is started through a small Node wrapper that first deletes the
+  # environment variables that would change what it does:
+  #
+  #   electron_use_remote_checksums      fetch SHASUMS256.txt from the network
+  #   npm_config_electron_use_remote_... instead of using the pinned file
+  #   ELECTRON_INSTALL_PLATFORM / _ARCH  fetch another platform's runtime,
+  #   npm_config_platform / _arch        which would package a broken app
+  #
+  # The deletion happens inside Node, case-insensitively, because Windows
+  # environment names are case-insensitive: `env -u` would remove only the one
+  # spelling it is given.
+  #
+  # A dropped connection mid-download is retried; install.js skips the fetch
+  # once a verified runtime is in place. A checksum mismatch fails every
+  # attempt the same way, so retrying never lets a bad zip through.
+  echo "[+] Fetching the Electron runtime, verified against the pinned checksums..."
+  for attempt in 1 2 3; do
+    if ( cd "$APP" && node -e '
+      const unsafe = /^(npm_config_)?(electron_use_remote_checksums|platform|arch)$|^electron_install_(platform|arch)$/i;
+      for (const name of Object.keys(process.env)) if (unsafe.test(name)) delete process.env[name];
+      require("./node_modules/electron/install.js");' ); then
+      break
+    fi
+    if [[ "$attempt" -eq 3 ]]; then
+      echo "error: could not fetch a verified Electron runtime" >&2
+      exit 1
+    fi
+    echo "  attempt $attempt failed; retrying" >&2
+  done
+  # The runtime in dist/ must be the version the lock pinned, fully extracted.
+  if ! ( cd "$APP" && node -e '
+      const fs = require("fs");
+      const want = require("./node_modules/electron/package.json").version;
+      const have = fs.readFileSync("node_modules/electron/dist/version", "utf8").trim().replace(/^v/, "");
+      if (have !== want || !fs.existsSync("node_modules/electron/path.txt")) {
+        console.error(`dist/ holds Electron ${have || "(nothing)"}, expected ${want}`);
+        process.exit(1);
+      }' ); then
+    echo "error: node_modules/electron/dist is not the lock-pinned Electron runtime" >&2
+    exit 1
+  fi
+
   echo "[+] Packaging with electron-builder..."
   ( cd "$APP" && npx --no-install electron-builder --publish never )
 
