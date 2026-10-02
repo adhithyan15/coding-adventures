@@ -271,6 +271,38 @@ public static class MosaicPlatformEffects
         return extensions;
     }
 
+    /// <summary>
+    /// Whether every extension the picker will filter on is an image's, so
+    /// the open picker can start in the Pictures library (UI59 §2: a caller
+    /// that wants "pictures only" accepts image types, and the picker's start
+    /// location follows). No filter at all is not "only images": it means any
+    /// file, which starts in Documents.
+    ///
+    ///     accept                         extensions        start
+    ///     ["image/png", "image/jpeg"]    png jpg jpeg      Pictures
+    ///     ["image/png", "text/plain"]    png txt           Documents
+    ///     []                             (none)            Documents
+    /// </summary>
+    public static bool OnlyImages(IReadOnlyList<string> extensions)
+    {
+        if (extensions.Count == 0) return false;
+        foreach (var extension in extensions)
+        {
+            var image = false;
+            foreach (var row in MimeExtensions)
+            {
+                if (row.Mime.StartsWith("image/", StringComparison.Ordinal)
+                    && Array.IndexOf(row.Extensions, extension) >= 0)
+                {
+                    image = true;
+                    break;
+                }
+            }
+            if (!image) return false;
+        }
+        return true;
+    }
+
     /// <summary>The text after the last <c>.</c> of a file name, or empty.</summary>
     private static string ExtensionOf(string name)
     {
@@ -937,10 +969,17 @@ public sealed class WinUIMosaicFileDialogs : IMosaicFileDialogs
 
     public async Task<string?> ChooseFileToOpenAsync(IReadOnlyList<string> extensions)
     {
+        // Images only: open in Pictures, as a photo picker should, and show
+        // thumbnails; anything else opens in Documents as a list.
+        var images = MosaicPlatformEffects.OnlyImages(extensions);
         var picker = new global::Windows.Storage.Pickers.FileOpenPicker
         {
-            ViewMode = global::Windows.Storage.Pickers.PickerViewMode.List,
-            SuggestedStartLocation = global::Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary,
+            ViewMode = images
+                ? global::Windows.Storage.Pickers.PickerViewMode.Thumbnail
+                : global::Windows.Storage.Pickers.PickerViewMode.List,
+            SuggestedStartLocation = images
+                ? global::Windows.Storage.Pickers.PickerLocationId.PicturesLibrary
+                : global::Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary,
         };
         // FileTypeFilter must hold at least one entry or the picker throws;
         // `*` is "any file", which is what no accepted type means (UI59 §3).
