@@ -1,0 +1,11 @@
+{
+  "id": "MR-C161-sucana",
+  "pathSegment": "MR-PATH-161-VACH161",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-161-VACH161",
+      "order": 1
+    }
+  ]
+}

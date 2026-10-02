@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C161-bhade",
+    "language": "marathi",
+    "chapter": 161,
+    "sequence": 7690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a81313ad37d863b4"
+  },
+  "findings": []
+}

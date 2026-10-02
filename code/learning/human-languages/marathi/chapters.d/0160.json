@@ -1,0 +1,19 @@
+{
+  "chapter": 160,
+  "title": "The Future, Soon, Next, From Now On, To Plan",
+  "label": "ch:mr-the-future-soon-next-from-now-on-to-plan",
+  "canDo": "I can say what will happen, and when: soon, next week, from now on.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "MR-C160-akhne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 160: I can say what will happen, and when: soon, next week, from now on.",
+    "assesses": [
+      "MR-LEX-C160-BHAV160-03",
+      "MR-LEX-C160-BHAV160-04",
+      "MR-LEX-C160-BHAV160-05"
+    ]
+  }
+}
