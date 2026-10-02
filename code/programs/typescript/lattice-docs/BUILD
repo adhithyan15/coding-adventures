@@ -10,3 +10,4 @@ cd ../../../packages/typescript/lattice-parser && npm install
 cd ../../../packages/typescript/lattice-transpiler && npm install
 npm install
 npx vitest run
+npm run build
