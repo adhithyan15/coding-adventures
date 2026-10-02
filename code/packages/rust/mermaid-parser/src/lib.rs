@@ -4615,6 +4615,11 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                 _ => return Err(token_error(token, "unsupported treemap white-space")),
             }),
             "letter-spacing" => style.letter_spacing = Some(parse_treemap_letter_spacing(token, value)?),
+            "direction" => style.direction = Some(match value.to_ascii_lowercase().as_str() {
+                "ltr" => diagram_ir::TreemapTextDirection::LeftToRight,
+                "rtl" => diagram_ir::TreemapTextDirection::RightToLeft,
+                _ => return Err(token_error(token, "treemap direction must be ltr or rtl")),
+            }),
             _ => merge_treemap_node_style(&mut style.node, &parse_block_style(token, declaration)?),
         }
     }
@@ -14511,6 +14516,21 @@ B//-A: reverse stick top
             let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent letter-spacing:{value}");
             assert!(parse_treemap(&source).is_err());
         }
+    }
+
+    #[test]
+    fn treemap_parses_text_directions() {
+        for (value, expected) in [
+            ("ltr", diagram_ir::TreemapTextDirection::LeftToRight),
+            ("rtl", diagram_ir::TreemapTextDirection::RightToLeft),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent direction:{value}");
+            let diagram = parse_treemap(&source).expect("supported text direction must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.direction), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent direction:auto",
+        ).is_err());
     }
 
     #[test]

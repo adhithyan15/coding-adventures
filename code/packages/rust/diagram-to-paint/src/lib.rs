@@ -386,6 +386,15 @@ fn treemap_text_node(
         };
         node.ext.insert("text.letter-spacing".into(), ExtValue::Float(spacing));
     }
+    if let Some(direction) = style.and_then(|style| style.direction) {
+        let value = match direction {
+            diagram_ir::TreemapTextDirection::LeftToRight => "ltr",
+            diagram_ir::TreemapTextDirection::RightToLeft => "rtl",
+        };
+        node.ext.insert("html".into(), ExtValue::Map(HashMap::from([
+            ("dir".into(), ExtValue::Str(value.into())),
+        ])));
+    }
     node
 }
 
@@ -6929,6 +6938,7 @@ mod tests {
                     text_indent: Some(diagram_ir::TreemapTextIndent::Factor(0.1)),
                     white_space: Some(diagram_ir::TreemapWhiteSpace::NoWrap),
                     letter_spacing: None,
+                    direction: None,
                 }),
             }],
         };
@@ -6990,6 +7000,13 @@ mod tests {
             current_color, Some(&whitespace_style),
         );
         assert_eq!(letter_spaced_text.ext.get("text.letter-spacing"), Some(&ExtValue::Float(1.75)));
+        whitespace_style.direction = Some(diagram_ir::TreemapTextDirection::RightToLeft);
+        let rtl_text = treemap_text_node(
+            "مرحبا", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert!(matches!(rtl_text.ext.get("html"),
+            Some(ExtValue::Map(html)) if html.get("dir") == Some(&ExtValue::Str("rtl".into()))));
         let mut styled_font = opts.label_font.clone();
         styled_font.size = 16.0;
         apply_treemap_line_height(&mut styled_font, layout.nodes[0].style.as_ref());
