@@ -389,6 +389,12 @@ fn treemap_text_node(
     if text_indent != 0.0 {
         node.ext.insert("text.indent".into(), ExtValue::Float(text_indent));
     }
+    if style.is_some_and(|style| style.text_indent_hanging) {
+        node.ext.insert("text.indent-hanging".into(), ExtValue::Bool(true));
+    }
+    if style.is_some_and(|style| style.text_indent_each_line) {
+        node.ext.insert("text.indent-each-line".into(), ExtValue::Bool(true));
+    }
     if let Some(spacing) = style.and_then(|style| style.letter_spacing) {
         let spacing = match spacing {
             diagram_ir::TreemapLetterSpacing::Normal => 0.0,
@@ -7036,6 +7042,8 @@ mod tests {
                     text_underline_offset: Some(diagram_ir::TreemapTextUnderlineOffset::Factor(0.25)),
                     line_height: Some(diagram_ir::TreemapLineHeight::Pixels(24.0)),
                     text_indent: Some(diagram_ir::TreemapTextIndent::Factor(0.1)),
+                    text_indent_hanging: true,
+                    text_indent_each_line: true,
                     white_space: Some(diagram_ir::TreemapWhiteSpace::NoWrap),
                     overflow_wrap: None,
                     word_break: None,
@@ -7068,6 +7076,8 @@ mod tests {
         assert_eq!(styled_text.x, 0.0);
         assert_eq!(styled_text.width, 100.0);
         assert_eq!(styled_text.ext.get("text.indent"), Some(&ExtValue::Float(10.0)));
+        assert_eq!(styled_text.ext.get("text.indent-hanging"), Some(&ExtValue::Bool(true)));
+        assert_eq!(styled_text.ext.get("text.indent-each-line"), Some(&ExtValue::Bool(true)));
         let mut current_color_style = layout.nodes[0].style.clone().expect("treemap style");
         current_color_style.text_decoration_color =
             Some(diagram_ir::TreemapTextDecorationColor::CurrentColor);
