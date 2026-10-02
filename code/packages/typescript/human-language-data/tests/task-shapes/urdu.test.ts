@@ -81,4 +81,78 @@ describe("Urdu task-shape inventories", () => {
     expect(writing?.parts.every((part) => part.notPublished.some((rule) => rule.includes("unwritten short vowels")))).toBe(true);
     expect(writing?.parts.every((part) => part.notPublished.some((rule) => rule.includes("calligraphic ligatures")))).toBe(true);
   });
+
+  it("loads the project-defined Urdu A2 envelope with four independent 100-point papers", () => {
+    const inventory = loadTaskShapeInventory("urdu", "A2");
+    expect(inventory.target).toEqual({
+      name: "Coding Adventures Urdu A2 Assessment — project-defined equivalent",
+      basis: "project-defined",
+    });
+    expect(inventory.administration).toMatchObject({
+      writtenMinutes: 85,
+      speakingMinutes: 12,
+      speakingPreparationMinutes: 5,
+    });
+    expect(inventory.sections.map((section) => [section.skill, section.minutes])).toEqual([
+      ["reading", 30],
+      ["listening", 25],
+      ["writing", 30],
+      ["speaking", 12],
+    ]);
+    expect(inventory.sections.map((section) =>
+      section.parts.reduce((sum, part) => sum + (part.scoring.maxRawPoints ?? 0), 0)
+    )).toEqual([100, 100, 100, 100]);
+    expect(Object.values(inventory.passRule.independentSkillThresholds)).toEqual([0.6, 0.6, 0.6, 0.6]);
+  });
+
+  it("keeps the published Urdu A2 task, length, speed, replay, and timing boundaries exact", () => {
+    const inventory = loadTaskShapeInventory("urdu", "A2");
+    const reading = inventory.sections.find((section) => section.skill === "reading");
+    expect(reading?.parts.reduce((sum, part) => sum + part.items, 0)).toBe(24);
+    expect(reading?.parts.reduce((sum, part) => sum + (part.stimulusLength?.minimum ?? 0), 0)).toBe(550);
+    expect(reading?.parts.reduce((sum, part) => sum + (part.stimulusLength?.maximum ?? 0), 0)).toBe(750);
+
+    const listening = inventory.sections.find((section) => section.skill === "listening");
+    expect(listening?.parts.reduce((sum, part) => sum + part.items, 0)).toBe(20);
+    expect(listening?.parts.every((part) => part.replayCount === 2)).toBe(true);
+    expect(listening?.parts.every((part) =>
+      part.promptModes.includes("recorded contemporary standard Urdu at 110-130 words per minute")
+    )).toBe(true);
+    expect(listening?.parts[2]?.stimulusLength).toMatchObject({ unit: "seconds", minimum: 120, maximum: 180 });
+
+    const writing = inventory.sections.find((section) => section.skill === "writing");
+    expect(writing?.parts.map((part) => part.responseLength)).toMatchObject([
+      { unit: "words", minimum: 25, maximum: 35 },
+      { unit: "words", minimum: 70, maximum: 90 },
+    ]);
+
+    const speaking = inventory.sections.find((section) => section.skill === "speaking");
+    expect(speaking?.parts.map((part) => part.id)).toEqual([
+      "a2-speaking-personal-interview",
+      "a2-speaking-prepared-account",
+      "a2-speaking-information-exchange-role-play",
+    ]);
+    expect(speaking?.parts[1]?.responseLength).toMatchObject({ unit: "seconds", minimum: 90, maximum: 120 });
+  });
+
+  it("makes A2 genuinely Urdu-script and keeps its language-specific scoring rules", () => {
+    const inventory = loadTaskShapeInventory("urdu", "A2");
+    const parts = inventory.sections.flatMap((section) => section.parts);
+    expect(parts.every((part) => part.aids.forbidden.includes("Roman Urdu"))).toBe(true);
+    expect(parts.every((part) => part.aids.forbidden.includes("Devanagari substitution"))).toBe(true);
+
+    const written = parts.filter((part) => part.promptModes.some((mode) => mode.includes("written Urdu")));
+    expect(written.length).toBeGreaterThan(0);
+    expect(written.every((part) =>
+      part.promptModes.some((mode) => mode.includes("approved Nastaliq or accessibility Naskh"))
+    )).toBe(true);
+
+    const writing = inventory.sections.find((section) => section.skill === "writing");
+    expect(writing?.parts.every((part) => part.scoring.criteria.includes(
+      "range and control of Urdu vocabulary, grammar, and register",
+    ))).toBe(true);
+    expect(writing?.parts.every((part) => part.scoring.criteria.includes("Urdu orthographic control"))).toBe(true);
+    expect(writing?.parts.every((part) => part.notPublished.some((rule) => rule.includes("unwritten short vowels")))).toBe(true);
+    expect(writing?.parts.every((part) => part.notPublished.some((rule) => rule.includes("calligraphic ligatures")))).toBe(true);
+  });
 });
