@@ -178,10 +178,15 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 54 | FM-B060 | done | Track and emit exact per-page interactivity | Depends on FM-B059. Resolve each page's authored element references, record exact `usedIslands`, select only those island modules in the AOT/deploy path, and preserve zero-JavaScript output for pages without interactivity. |
 | 55 | FM-B061 | done | Prove progressive enhancement in a live Forme site | Depends on FM-B060. One dogfood page ships a useful no-JavaScript fallback plus one declarative enhanced interaction; clean and incremental builds prove only that page receives its bounded island module. |
 | 56 | FM-B013 | done | Complete Interactivity IR | Completion milestone depending on FM-B059–FM-B061. The normative schema, validator, exact per-page island selection, zero-JavaScript static path, and live progressive-enhancement proof close the FM05 delivery gate. |
-| 57 | FM-B016 | active | Build the authoring shell | Depends on FM-B009, FM-B013, and FM-B015. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
-| 58 | FM-B017 | blocked | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
-| 59 | FM-B018 | blocked | Close release-quality gates | Depends on FM-B016 and FM-B017. Add 1,000-page clean/incremental benchmarks, Lighthouse/accessibility budgets, package/API versioning, migration docs, security review, and supported-platform CI. |
-| 60 | FM-B029 | later | Make duplicate PR CI cancellation and merge state unambiguous | One commit has one authoritative required CI suite; branch updates cancel obsolete runs completely; cancelling a redundant push suite cannot leave a stale final gate or misleading failed rollup; babysitting tooling identifies required checks and the current head. |
+| 57 | FM-B062 | active | Implement the durable authoring project core | Depends on FM-B013 and FM-B015. A bounded closed project codec, semantic immutable transactions, compare-and-swap autosave, and persistent bounded undo/redo pass hostile-input, failure, conflict, cancellation, and restart tests without ambient I/O. |
+| 58 | FM-B063 | blocked | Build the accessible default block editor | Depends on FM-B062. A keyboard-complete editor and configuration UI create and edit the default Content IR block set through plugin slots and core commands without exposing storage or host authority. |
+| 59 | FM-B064 | blocked | Run exact pipeline-backed live preview | Depends on FM-B009 and FM-B063. The active persisted draft revision runs through the real pipeline with coalescing, cancellation, last-good output, bounded diagnostics, and exact revision attribution. |
+| 60 | FM-B065 | blocked | Compose the reviewed authoring publish workflow | Depends on FM-B012 and FM-B064. The shell builds the exact persisted revision and publishes through one reviewed FM08 target without exposing credentials or silently marking failed/indeterminate work as published. |
+| 61 | FM-B066 | blocked | Package the first-run desktop authoring product | Depends on FM-B065. An installable local shell creates a project, selects a theme, edits and previews a first post, configures a supported target, and publishes without source/config editing, git, or a command line. |
+| 62 | FM-B016 | blocked | Complete the authoring shell | Completion milestone depending on FM-B062–FM-B066. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
+| 63 | FM-B017 | blocked | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
+| 64 | FM-B018 | blocked | Close release-quality gates | Depends on FM-B016 and FM-B017. Add 1,000-page clean/incremental benchmarks, Lighthouse/accessibility budgets, package/API versioning, migration docs, security review, and supported-platform CI. |
+| 65 | FM-B029 | later | Make duplicate PR CI cancellation and merge state unambiguous | One commit has one authoritative required CI suite; branch updates cancel obsolete runs completely; cancelling a redundant push suite cannot leave a stale final gate or misleading failed rollup; babysitting tooling identifies required checks and the current head. |
 
 ## Dependency path
 
@@ -197,8 +202,9 @@ Headless v0 is complete. Extensible v1 is complete through FM-B048 →
 FM-B049/FM-B050 → FM-B053 → FM-B054 → FM-B055 → FM-B051 → FM-B052 →
 FM-B056 → FM-B057 → FM-B058 → FM-B015. Interactivity is complete through
 FM-B059 → FM-B060 → FM-B061 → FM-B013. The shortest remaining path to
-Authoring v1 is the FM-B016 authoring shell and FM-B017 backend proof, followed
-by the FM-B018 release-quality gate.
+Authoring v1 is the FM-B062 → FM-B063 → FM-B064 → FM-B065 → FM-B066 →
+FM-B016 authoring path and FM-B017 backend proof, followed by the FM-B018
+release-quality gate.
 
 ## Discovery log
 
@@ -208,6 +214,7 @@ work.
 
 | Date | Discovery | Disposition |
 |---|---|---|
+| 2026-10-02 | FM-B016 combined durable user data, editor behavior, preview fidelity, deployment authority, and native packaging in one acceptance gate. Those boundaries cannot receive focused tests or security review in one merge-sized change. | Split the linear authoring path into FM-B062–FM-B066, retained FM-B016 as the completion milestone, and made the durable UI-free core the only active item. |
 | 2026-08-27 | The blog README advertises `npm install && npm run build`, but file-linked source packages require their own dependency bootstrap in a clean checkout. | FM-B002 |
 | 2026-08-27 | Blog comments and package metadata say “five stages”; the actual configured pipeline has four because the collector is not wired. | FM-B002 |
 | 2026-08-27 | The blog README links to a nonexistent lowercase FM00 filename. | FM-B002 |
