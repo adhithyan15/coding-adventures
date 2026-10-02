@@ -4627,6 +4627,12 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                 "anywhere" => diagram_ir::TreemapOverflowWrap::Anywhere,
                 _ => return Err(token_error(token, "treemap overflow-wrap must be normal, break-word, or anywhere")),
             }),
+            "word-break" => style.word_break = Some(match value.to_ascii_lowercase().as_str() {
+                "normal" => diagram_ir::TreemapWordBreak::Normal,
+                "break-all" => diagram_ir::TreemapWordBreak::BreakAll,
+                "keep-all" => diagram_ir::TreemapWordBreak::KeepAll,
+                _ => return Err(token_error(token, "treemap word-break must be normal, break-all, or keep-all")),
+            }),
             "letter-spacing" => style.letter_spacing = Some(parse_treemap_letter_spacing(token, value)?),
             "word-spacing" => style.word_spacing = Some(parse_treemap_word_spacing(token, value)?),
             "direction" => style.direction = Some(match value.to_ascii_lowercase().as_str() {
@@ -14645,6 +14651,22 @@ B//-A: reverse stick top
         }
         assert!(parse_treemap(
             "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent overflow-wrap:pretty",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_word_break_modes() {
+        for (value, expected) in [
+            ("normal", diagram_ir::TreemapWordBreak::Normal),
+            ("break-all", diagram_ir::TreemapWordBreak::BreakAll),
+            ("keep-all", diagram_ir::TreemapWordBreak::KeepAll),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent word-break:{value}");
+            let diagram = parse_treemap(&source).expect("supported word-break mode must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.word_break), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent word-break:auto-phrase",
         ).is_err());
     }
 
