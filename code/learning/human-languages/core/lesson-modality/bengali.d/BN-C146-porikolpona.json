@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C146-porikolpona",
+    "language": "bengali",
+    "chapter": 146,
+    "sequence": 8040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:361d105c67a92a6c"
+  },
+  "findings": []
+}

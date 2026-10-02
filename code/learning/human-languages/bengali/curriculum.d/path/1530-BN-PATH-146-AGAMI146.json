@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-146-AGAMI146",
+  "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+  "before": [],
+  "inline": [
+    "BN-EXT-146-AGAMI146"
+  ],
+  "after": []
+}

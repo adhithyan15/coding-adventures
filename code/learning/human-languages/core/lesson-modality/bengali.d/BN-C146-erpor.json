@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C146-erpor",
+    "language": "bengali",
+    "chapter": 146,
+    "sequence": 8030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:005e943f1d4b46ff"
+  },
+  "findings": []
+}

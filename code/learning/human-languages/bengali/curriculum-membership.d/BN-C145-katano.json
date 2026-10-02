@@ -1,0 +1,11 @@
+{
+  "id": "BN-C145-katano",
+  "pathSegment": "BN-PATH-145-ATIT145",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-145-ATIT145",
+      "order": 4
+    }
+  ]
+}

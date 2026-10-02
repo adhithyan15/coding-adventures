@@ -1,0 +1,11 @@
+{
+  "id": "BN-C145-ekshomoy",
+  "pathSegment": "BN-PATH-145-ATIT145",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-145-ATIT145",
+      "order": 3
+    }
+  ]
+}

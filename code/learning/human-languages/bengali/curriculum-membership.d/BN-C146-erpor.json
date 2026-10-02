@@ -1,0 +1,11 @@
+{
+  "id": "BN-C146-erpor",
+  "pathSegment": "BN-PATH-146-AGAMI146",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-146-AGAMI146",
+      "order": 1
+    }
+  ]
+}

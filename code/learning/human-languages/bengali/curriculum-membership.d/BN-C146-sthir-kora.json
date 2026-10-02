@@ -1,0 +1,11 @@
+{
+  "id": "BN-C146-sthir-kora",
+  "pathSegment": "BN-PATH-146-AGAMI146",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-146-AGAMI146",
+      "order": 3
+    }
+  ]
+}
