@@ -1,7 +1,7 @@
 import { execFile } from "node:child_process";
 import { cp, mkdir, mkdtemp, realpath, rm, writeFile } from "node:fs/promises";
-import { tmpdir } from "node:os";
-import { dirname, join } from "node:path";
+import { homedir, tmpdir } from "node:os";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { describe, expect, it, vi } from "vitest";
@@ -18,6 +18,13 @@ const PROJECT_ROOT = "/project";
 const CACHE_ROOT = join(PROJECT_ROOT, ".forme", "cache");
 const pluginFixture = fileURLToPath(new URL("../../forme-plugin-host/tests/fixtures/echo-plugin", import.meta.url));
 const execFileAsync = promisify(execFile);
+
+function productTestRoot(prefix: string): string {
+  // The Windows product boundary intentionally rejects shared ancestors such
+  // as the hosted runner's temp directory. Use the private user profile for
+  // positive end-to-end fixtures on that platform.
+  return join(process.platform === "win32" ? homedir() : tmpdir(), prefix);
+}
 
 function config(withPlugin = false): PipelineConfig {
   return {
@@ -125,10 +132,10 @@ describe("installed plugin runtime composition", () => {
         })}`,
       ]);
       expect(fixture.hostOptions).toEqual([expect.objectContaining({
-        roots: [join(PROJECT_ROOT, "forme-plugins")],
+        roots: [resolve(PROJECT_ROOT, "forme-plugins")],
         loadPersistentGrants: true,
         processFactory: fixture.factory,
-        storageRoot: join(PROJECT_ROOT, "content"),
+        storageRoot: resolve(PROJECT_ROOT, "content"),
         cacheDirectory: CACHE_ROOT,
         signal: controller.signal,
         capabilityApis: { storage: { fixture: true } },
@@ -138,11 +145,11 @@ describe("installed plugin runtime composition", () => {
         pluginHost: fixture.host,
       })]);
       expect(fixture.capabilityRequests).toEqual([[
-        join(PROJECT_ROOT, "content"),
-        [join(PROJECT_ROOT, "forme-plugins"), CACHE_ROOT],
+        resolve(PROJECT_ROOT, "content"),
+        [resolve(PROJECT_ROOT, "forme-plugins"), CACHE_ROOT],
       ]]);
       expect(fixture.verified).toEqual(platform === "win32"
-        ? [[join(PROJECT_ROOT, "forme-plugins"), "existing-target-tree"]]
+        ? [[resolve(PROJECT_ROOT, "forme-plugins"), "existing-target-tree"]]
         : []);
     },
   );
@@ -225,7 +232,7 @@ describe("installed plugin runtime composition", () => {
   it.skipIf(!["linux", "darwin", "win32"].includes(process.platform))(
     "runs a mixed direct/plugin pipeline through the native platform sandbox",
     async () => {
-      const projectRoot = await mkdtemp(join(tmpdir(), "forme-product-runtime-"));
+      const projectRoot = await mkdtemp(productTestRoot("forme-product-runtime-"));
       try {
         const installed = join(projectRoot, "forme-plugins", "plugin-echo");
         await mkdir(dirname(installed), { recursive: true });
@@ -303,7 +310,7 @@ describe("installed plugin runtime composition", () => {
       const [pythonExecutable, pythonRoot] = stdout.trim().split(/\r?\n/);
       expect(pythonExecutable).toBeTruthy();
       expect(pythonRoot).toBeTruthy();
-      const projectRoot = await mkdtemp(join(tmpdir(), "forme-python-product-"));
+      const projectRoot = await mkdtemp(productTestRoot("forme-python-product-"));
       try {
         const installed = join(projectRoot, "forme-plugins", "python-echo");
         await mkdir(installed, { recursive: true });
