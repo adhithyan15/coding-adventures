@@ -23,7 +23,6 @@ from __future__ import annotations
 
 import hashlib
 import os
-import re
 import stat
 import subprocess
 import tempfile
@@ -126,46 +125,75 @@ class VerifyGradleWrapperJarTests(unittest.TestCase):
 
 
 class WorkflowVerifiesEveryCopiedWrapperJarTests(unittest.TestCase):
-    @staticmethod
-    def runs_wrapper(line: str) -> bool:
-        return "./gradlew" in line or "gradle-wrapper.jar --no-daemon" in line
+    """Each step that seeds a Gradle wrapper from `$wrapper_seed` must:
 
-    def test_each_copied_jar_is_verified_before_the_wrapper_runs(self) -> None:
-        lines = WORKFLOW.read_text().splitlines()
-        copy = re.compile(
-            r'^\s*cp "\$wrapper_seed/gradle/wrapper/gradle-wrapper\.jar" '
-            r'"(?P<dest>[^"]+)"$'
-        )
-        copies = [
-            (i, m["dest"]) for i, line in enumerate(lines) if (m := copy.match(line))
-        ]
-        self.assertGreaterEqual(len(copies), 2, "expected the Android wrapper seeds")
-        for index, dest in copies:
-            with self.subTest(line=index + 1):
-                rest = lines[index + 1 :]
-                runs = next(i for i, line in enumerate(rest) if self.runs_wrapper(line))
-                verify = f'bash code/scripts/verify-gradle-wrapper-jar.sh "{dest}"'
-                self.assertTrue(
-                    any(verify in line for line in rest[:runs]),
-                    f"ci.yml line {index + 1} copies a wrapper jar that is "
-                    "not verified before the wrapper runs",
+        copy only gradle-wrapper.jar  ->  verify it  ->  then run it
+
+    and never copy or run the generated gradlew script. Checked step by step,
+    so one step's verify line can never vouch for another step's run.
+    """
+
+    VERIFY = "code/scripts/verify-gradle-wrapper-jar.sh"
+    JAR = "gradle/wrapper/gradle-wrapper.jar"
+
+    @staticmethod
+    def seeding_steps() -> list[tuple[str, list[str]]]:
+        steps = WORKFLOW.read_text().split("\n      - name: ")
+        found = []
+        for step in steps:
+            if "$wrapper_seed" not in step:
+                continue
+            code = [
+                line.strip()
+                for line in step.splitlines()[1:]
+                if line.strip() and not line.lstrip().startswith("#")
+            ]
+            found.append((step.splitlines()[0], code))
+        return found
+
+    def test_there_are_wrapper_seeding_steps(self) -> None:
+        self.assertGreaterEqual(len(self.seeding_steps()), 2)
+
+    def test_each_step_copies_verifies_then_runs_the_jar(self) -> None:
+        for name, code in self.seeding_steps():
+            with self.subTest(step=name):
+                copies = [
+                    i
+                    for i, line in enumerate(code)
+                    if line.startswith("cp ") and "$wrapper_seed" in line
+                ]
+                # Only the jar is taken from the seed: `cp -R "$wrapper_seed/."`
+                # or a copy of gradlew would bring the unverified script along.
+                self.assertTrue(copies, "no copy from $wrapper_seed")
+                for i in copies:
+                    self.assertRegex(
+                        code[i],
+                        r'^cp "\$wrapper_seed/gradle/wrapper/gradle-wrapper\.jar" "[^"]+"$',
+                    )
+                verifies = [i for i, line in enumerate(code) if self.VERIFY in line]
+                self.assertTrue(verifies, "the copied jar is never verified")
+                runs = [
+                    i
+                    for i, line in enumerate(code)
+                    if i not in copies
+                    and i not in verifies
+                    and (
+                        "gradle-wrapper.jar" in line
+                        or "GradleWrapperMain" in line
+                        or "gradlew" in line.replace("-Dorg.gradle.appname=gradlew", "")
+                    )
+                ]
+                self.assertTrue(runs, "the step never runs the wrapper")
+                self.assertLess(max(copies), min(verifies))
+                self.assertLess(
+                    min(verifies), min(runs), "the wrapper runs before it is verified"
                 )
 
-    def test_no_wrapper_seed_step_runs_the_unverifiable_gradlew_script(self) -> None:
-        # Scoped to the steps that write a wrapper from $wrapper_seed: a step
-        # running a committed, reviewed gradlew is a different matter.
-        workflow = WORKFLOW.read_text()
-        steps = workflow.split("\n      - name: ")
-        seeding = [step for step in steps if "$wrapper_seed" in step]
-        self.assertGreaterEqual(len(seeding), 2, "expected the Android wrapper seeds")
-        for step in seeding:
-            name = step.splitlines()[0]
-            code = "\n".join(
-                line for line in step.splitlines() if not line.lstrip().startswith("#")
-            )
+    def test_no_step_copies_or_runs_the_unverifiable_gradlew_script(self) -> None:
+        for name, code in self.seeding_steps():
             with self.subTest(step=name):
-                self.assertNotIn('"$wrapper_seed/gradlew"', code)
-                self.assertNotIn("./gradlew", code)
+                text = "\n".join(code).replace("-Dorg.gradle.appname=gradlew", "")
+                self.assertNotIn("gradlew", text)
 
 
 if __name__ == "__main__":

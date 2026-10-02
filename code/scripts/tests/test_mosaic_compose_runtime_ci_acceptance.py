@@ -161,7 +161,7 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn('android_project="$RUNNER_TEMP/mosaic-compose-taskapp/compose/android"', block)
         self.assertIn('test ! -e "$android_project/src/main/kotlin/Main.kt"', block)
         self.assertIn(
-            "-jar gradle/wrapper/gradle-wrapper.jar --no-daemon --stacktrace assembleDebug",
+            "-cp gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain",
             block,
         )
         self.assertIn("launchable-activity: name='mosaic\\.android\\.MosaicActivity'", block)

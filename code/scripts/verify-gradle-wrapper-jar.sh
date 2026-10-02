@@ -7,7 +7,8 @@
 # ---------------
 # CI writes the Mosaic Android project's wrapper by running `gradle wrapper`
 # with whatever Gradle the runner has installed, then copies the resulting
-# gradle-wrapper.jar into the project and runs ./gradlew. That jar is the
+# gradle-wrapper.jar into the project and runs it (never the unverifiable
+# gradlew script, for which Gradle publishes no checksum). That jar is the
 # first code to execute in the build: it downloads the Gradle distribution and
 # checks it against gradle-wrapper.properties' distributionSha256Sum. So the
 # distribution pin is only as trustworthy as the jar enforcing it. A tampered

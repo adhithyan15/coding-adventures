@@ -3495,13 +3495,16 @@ jobs:
           cp "$wrapper_seed/gradle/wrapper/gradle-wrapper.jar" "$android_project/gradle/wrapper/gradle-wrapper.jar"
           # Refuse to run a wrapper jar that is not the one Gradle published.
           bash code/scripts/verify-gradle-wrapper-jar.sh "$android_project/gradle/wrapper/gradle-wrapper.jar"
-          # Run the verified jar itself, as gradlew would, rather than the
-          # generated gradlew script: Gradle publishes no checksum for the
-          # script, so it is the one part of the wrapper nothing can verify.
+          # Run the verified jar itself, with gradlew's JVM options, rather
+          # than the generated gradlew script: Gradle publishes no checksum for
+          # the script, so it is the one part of the wrapper nothing can
+          # verify. Naming the main class (not `-jar`) works with every
+          # Gradle's wrapper jar, including old ones without a Main-Class.
           (
             cd "$android_project"
             "${JAVA_HOME:+$JAVA_HOME/bin/}java" -Xmx64m -Xms64m -Dorg.gradle.appname=gradlew \
-              -jar gradle/wrapper/gradle-wrapper.jar --no-daemon --stacktrace assembleDebug
+              -cp gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain \
+              --no-daemon --stacktrace assembleDebug
           )
 
           apk="$(find "$android_project/build/outputs/apk/debug" -name '*.apk' -print -quit)"
@@ -3583,13 +3586,16 @@ jobs:
           cp "$wrapper_seed/gradle/wrapper/gradle-wrapper.jar" "$android_project/gradle/wrapper/gradle-wrapper.jar"
           # Refuse to run a wrapper jar that is not the one Gradle published.
           bash code/scripts/verify-gradle-wrapper-jar.sh "$android_project/gradle/wrapper/gradle-wrapper.jar"
-          # Run the verified jar itself, as gradlew would, rather than the
-          # generated gradlew script: Gradle publishes no checksum for the
-          # script, so it is the one part of the wrapper nothing can verify.
+          # Run the verified jar itself, with gradlew's JVM options, rather
+          # than the generated gradlew script: Gradle publishes no checksum for
+          # the script, so it is the one part of the wrapper nothing can
+          # verify. Naming the main class (not `-jar`) works with every
+          # Gradle's wrapper jar, including old ones without a Main-Class.
           (
             cd "$android_project"
             "${JAVA_HOME:+$JAVA_HOME/bin/}java" -Xmx64m -Xms64m -Dorg.gradle.appname=gradlew \
-              -jar gradle/wrapper/gradle-wrapper.jar --no-daemon --stacktrace assembleDebug
+              -cp gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain \
+              --no-daemon --stacktrace assembleDebug
           )
 
           apk="$(find "$android_project/build/outputs/apk/debug" -name '*.apk' -print -quit)"
