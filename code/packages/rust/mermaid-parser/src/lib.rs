@@ -4614,7 +4614,12 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                 parse_treemap_text_underline_offset(token, value)?
             ),
             "line-height" => style.line_height = Some(parse_treemap_line_height(token, value)?),
-            "text-indent" => style.text_indent = Some(parse_treemap_text_indent(token, value)?),
+            "text-indent" => {
+                let (indent, hanging, each_line) = parse_treemap_text_indent(token, value)?;
+                style.text_indent = Some(indent);
+                style.text_indent_hanging = hanging;
+                style.text_indent_each_line = each_line;
+            }
             "white-space" => style.white_space = Some(match value.to_ascii_lowercase().as_str() {
                 "normal" => diagram_ir::TreemapWhiteSpace::Normal,
                 "nowrap" => diagram_ir::TreemapWhiteSpace::NoWrap,
@@ -4933,18 +4938,36 @@ fn parse_treemap_line_height(token: &Token, source: &str) -> Result<diagram_ir::
     Ok(if pixels { diagram_ir::TreemapLineHeight::Pixels(value) } else { diagram_ir::TreemapLineHeight::Factor(value) })
 }
 
-fn parse_treemap_text_indent(token: &Token, source: &str) -> Result<diagram_ir::TreemapTextIndent, ParseError> {
-    if let Some(value) = source.strip_suffix('%') {
-        return value.trim().parse::<f64>().ok().filter(|value| value.is_finite())
-            .map(|value| diagram_ir::TreemapTextIndent::Factor(value / 100.0))
-            .ok_or_else(|| token_error(token, "invalid treemap text-indent"));
+fn parse_treemap_text_indent(
+    token: &Token,
+    source: &str,
+) -> Result<(diagram_ir::TreemapTextIndent, bool, bool), ParseError> {
+    let mut amount = None;
+    let mut hanging = false;
+    let mut each_line = false;
+    for component in source.split_whitespace() {
+        if component.eq_ignore_ascii_case("hanging") && !hanging {
+            hanging = true;
+        } else if component.eq_ignore_ascii_case("each-line") && !each_line {
+            each_line = true;
+        } else if amount.is_none() {
+            amount = Some(component);
+        } else {
+            return Err(token_error(token, "invalid treemap text-indent"));
+        }
     }
-    let trimmed = source.trim();
+    let trimmed = amount.ok_or_else(|| token_error(token, "treemap text-indent requires a length"))?;
+    if let Some(value) = trimmed.strip_suffix('%') {
+        let indent = value.trim().parse::<f64>().ok().filter(|value| value.is_finite())
+            .map(|value| diagram_ir::TreemapTextIndent::Factor(value / 100.0))
+            .ok_or_else(|| token_error(token, "invalid treemap text-indent"))?;
+        return Ok((indent, hanging, each_line));
+    }
     let number = trimmed.strip_suffix("px").or_else(|| (trimmed == "0").then_some(trimmed))
         .ok_or_else(|| token_error(token, "treemap text-indent must use pixels or a percentage"))?;
     let value = number.trim().parse::<f64>().ok().filter(|value| value.is_finite())
         .ok_or_else(|| token_error(token, "invalid treemap text-indent"))?;
-    Ok(diagram_ir::TreemapTextIndent::Pixels(value))
+    Ok((diagram_ir::TreemapTextIndent::Pixels(value), hanging, each_line))
 }
 
 fn merge_treemap_node_style(target: &mut DiagramStyle, source: &DiagramStyle) {
@@ -14609,16 +14632,19 @@ B//-A: reverse stick top
 
     #[test]
     fn treemap_parses_text_indent_lengths_and_percentages() {
-        for (value, expected) in [
-            ("0", diagram_ir::TreemapTextIndent::Pixels(0.0)),
-            ("18px", diagram_ir::TreemapTextIndent::Pixels(18.0)),
-            ("-10%", diagram_ir::TreemapTextIndent::Factor(-0.1)),
+        for (value, expected, hanging, each_line) in [
+            ("0", diagram_ir::TreemapTextIndent::Pixels(0.0), false, false),
+            ("hanging 18px", diagram_ir::TreemapTextIndent::Pixels(18.0), true, false),
+            ("-10% each-line", diagram_ir::TreemapTextIndent::Factor(-0.1), false, true),
+            ("each-line 5% hanging", diagram_ir::TreemapTextIndent::Factor(0.05), true, true),
         ] {
             let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-indent:{value}");
             let diagram = parse_treemap(&source).expect("supported text indent must parse");
             assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_indent), Some(expected));
+            assert_eq!(diagram.nodes[1].style.as_ref().is_some_and(|style| style.text_indent_hanging), hanging);
+            assert_eq!(diagram.nodes[1].style.as_ref().is_some_and(|style| style.text_indent_each_line), each_line);
         }
-        for value in ["2", "1em", "auto"] {
+        for value in ["2", "1em", "auto", "10px hanging hanging", "each-line"] {
             let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-indent:{value}");
             assert!(parse_treemap(&source).is_err());
         }

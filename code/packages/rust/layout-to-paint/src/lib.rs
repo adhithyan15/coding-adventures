@@ -243,6 +243,8 @@ where
                     box_w,
                     dpr,
                     text_indent(frame.node) * dpr,
+                    text_indent_hanging(frame.node),
+                    text_indent_each_line(frame.node),
                     text_letter_spacing(frame.node) * dpr,
                     text_word_spacing(frame.node) * dpr,
                     text_align_last(frame.node),
@@ -472,6 +474,14 @@ fn text_indent(node: &PositionedNode) -> f64 {
         Some(ExtValue::Int(value)) => *value as f64,
         _ => 0.0,
     }
+}
+
+fn text_indent_hanging(node: &PositionedNode) -> bool {
+    matches!(node.ext.get("text.indent-hanging"), Some(ExtValue::Bool(true)))
+}
+
+fn text_indent_each_line(node: &PositionedNode) -> bool {
+    matches!(node.ext.get("text.indent-each-line"), Some(ExtValue::Bool(true)))
 }
 
 fn text_word_spacing(node: &PositionedNode) -> f64 {
@@ -1326,6 +1336,8 @@ fn emit_text_content<S, M, R>(
     box_width: f64,
     dpr: f64,
     text_indent: f64,
+    text_indent_hanging: bool,
+    text_indent_each_line: bool,
     letter_spacing: f64,
     word_spacing: f64,
     text_align_last: Option<TextAlign>,
@@ -1404,7 +1416,8 @@ fn emit_text_content<S, M, R>(
         };
         let line_count = wrapped.len();
         for (line_index, line) in wrapped.into_iter().enumerate() {
-            let line_indent = if is_first_line { text_indent } else { 0.0 };
+            let indent_target = is_first_line || (text_indent_each_line && line_index == 0);
+            let line_indent = if indent_target != text_indent_hanging { text_indent } else { 0.0 };
             let line_box_x = box_x_dpr + line_indent;
             let line_max_width = (max_width_dpr - line_indent).max(0.0);
             is_first_line = false;
@@ -2650,6 +2663,29 @@ mod tests {
             _ => None,
         }).collect();
         assert_eq!(starts, vec![12.0, 0.0]);
+    }
+
+    #[test]
+    fn hanging_and_each_line_control_indent_targets() {
+        let make_starts = |hanging: bool, each_line: bool| {
+            let mut content = text_content("A\nB");
+            content.text_align = TextAlign::Start;
+            let mut leaf = positioned_leaf(content, 0.0, 0.0, 100.0, 40.0);
+            leaf.ext.insert("text.indent".into(), ExtValue::Float(12.0));
+            leaf.ext.insert("text.indent-hanging".into(), ExtValue::Bool(hanging));
+            leaf.ext.insert("text.indent-each-line".into(), ExtValue::Bool(each_line));
+            let shaper = FakeShaper;
+            let metrics = FakeMetrics;
+            let resolver = FakeResolver;
+            layout_to_paint(&leaf, &make_options(&shaper, &metrics, &resolver)).instructions
+                .into_iter().filter_map(|instruction| match instruction {
+                    PaintInstruction::GlyphRun(run) => run.glyphs.first().map(|glyph| glyph.x),
+                    _ => None,
+                }).collect::<Vec<_>>()
+        };
+        assert_eq!(make_starts(true, false), vec![0.0, 12.0]);
+        assert_eq!(make_starts(false, true), vec![12.0, 12.0]);
+        assert_eq!(make_starts(true, true), vec![0.0, 0.0]);
     }
 
     #[test]

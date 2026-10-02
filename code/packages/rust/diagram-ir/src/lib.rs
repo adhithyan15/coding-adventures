@@ -1489,6 +1489,8 @@ pub struct TreemapStyle {
     pub text_underline_offset: Option<TreemapTextUnderlineOffset>,
     pub line_height: Option<TreemapLineHeight>,
     pub text_indent: Option<TreemapTextIndent>,
+    pub text_indent_hanging: bool,
+    pub text_indent_each_line: bool,
     pub white_space: Option<TreemapWhiteSpace>,
     pub overflow_wrap: Option<TreemapOverflowWrap>,
     pub word_break: Option<TreemapWordBreak>,

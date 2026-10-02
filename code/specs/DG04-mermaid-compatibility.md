@@ -544,7 +544,8 @@ until it resolves against the final label color. Auto, pixel, and percentage und
 backend-neutral geometry path. Normal, unitless,
 percentage, and pixel line heights flow through the same text layout path.
 Pixel and percentage text indents adjust only the first backend-neutral line box
-before glyph shaping while subsequent lines retain the authored box. Normal,
+before glyph shaping while `hanging` inverts the target and `each-line` restarts
+the target after forced breaks. Subsequent lines otherwise retain the authored box. Normal,
 nowrap, pre, pre-wrap, pre-line,
 and break-spaces white-space modes control collapsing, preservation, and native
 line wrapping. Break-spaces keeps every ASCII separator and exposes each one as
