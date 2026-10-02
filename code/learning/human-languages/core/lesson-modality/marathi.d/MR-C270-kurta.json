@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C270-kurta",
+    "language": "marathi",
+    "chapter": 270,
+    "sequence": 15650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f9852edbf96e542"
+  },
+  "findings": []
+}

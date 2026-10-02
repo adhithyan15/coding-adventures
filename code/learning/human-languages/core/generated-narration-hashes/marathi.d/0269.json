@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:f9c6c49d063e27a0",
+  "lessonIds": [
+    "MR-C269-jhakan",
+    "MR-C269-barni",
+    "MR-C269-amti",
+    "MR-C269-usal",
+    "MR-C269-lonce"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch269.txt",
+  "json": "marathi/narration/ch269.json",
+  "textHash": "fnv1a64:991a7abc18853d77",
+  "jsonHash": "fnv1a64:a36019323cd6a069",
+  "findings": []
+}

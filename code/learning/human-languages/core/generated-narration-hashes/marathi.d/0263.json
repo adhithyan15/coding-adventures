@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 263,
+  "sourceHash": "fnv1a64:4ca18743a8a673a7",
+  "lessonIds": [
+    "MR-C263-gayak",
+    "MR-C263-karyakram",
+    "MR-C263-abhineta",
+    "MR-C263-abhinetri",
+    "MR-C263-kavita"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch263.txt",
+  "json": "marathi/narration/ch263.json",
+  "textHash": "fnv1a64:b2e05f71ae25f04a",
+  "jsonHash": "fnv1a64:53d412fc2fdf31d7",
+  "findings": []
+}

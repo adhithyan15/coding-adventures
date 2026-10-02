@@ -1,0 +1,19 @@
+{
+  "chapter": 262,
+  "title": "Temperature, Fly, Society, Government, Law",
+  "label": "ch:mr-temperature-fly-society-government-law",
+  "canDo": "I can say temperature, a fly, society, the government and a law.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C262-kayda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 262: I can say temperature, a fly, society, the government and a law.",
+    "assesses": [
+      "MR-LEX-C262-VASTU262-03",
+      "MR-LEX-C262-VASTU262-04",
+      "MR-LEX-C262-VASTU262-05"
+    ]
+  }
+}

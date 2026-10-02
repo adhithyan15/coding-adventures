@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:3e82205b5cd994eb",
+  "lessonIds": [
+    "MR-C271-kaceri",
+    "MR-C271-basasthanak",
+    "MR-C271-pangharun",
+    "MR-C271-osri",
+    "MR-C271-jhadu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch271.txt",
+  "json": "marathi/narration/ch271.json",
+  "textHash": "fnv1a64:81cbf81c6716ce9d",
+  "jsonHash": "fnv1a64:c7f55a3c925fba59",
+  "findings": []
+}

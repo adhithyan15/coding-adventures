@@ -6,8 +6,9 @@
 > conformance harness implemented in FM-B053; the Python and Rust runtimes
 > implemented in FM-B054/FM-B055 and closed by FM-B051; production OS
 > sandboxes implemented in FM-B052; reviewed local installation implemented in
-> FM-B056; runtime product composition implemented in FM-B057; and bounded live
-> storage-watch mediation active in FM-B058 before the FM-B015 completion milestone.
+> FM-B056; runtime product composition implemented in FM-B057; bounded live
+> storage-watch mediation implemented in FM-B058; and Extensible v1 closed by
+> the FM-B015 completion milestone.
 > Read alongside FM00 (vision), FM01 (kernel), and FM03 (orchestrator).
 > **Scope:** Everything required to load third-party Forme plugins
 > safely and run them under a strong isolation boundary. The packages
@@ -36,7 +37,7 @@
 | OS sandbox profiles | Implemented | FM-B052 ships exact-snapshot Linux, macOS, and Windows launchers with platform CI. |
 | Install/trust CLI | Implemented | FM-B056 composes the completed installer and authority stores into FM07. |
 | Product runtime composition | Implemented | FM-B057 composes manifest-bound grants, language runners, and native platform sandboxes into FM07. |
-| Live storage-watch mediation | Active | FM-B058 bridges authorized watches through bounded cancellable host-to-plugin streams in every runner. |
+| Live storage-watch mediation | Implemented | FM-B058 bridges authorized watches through bounded cancellable host-to-plugin streams in every runner and the contained product adapter. |
 
 ---
 
@@ -472,9 +473,10 @@ rechecks containment and opened-file identity, and thereafter launches only
 from its private verified byte snapshot. Product callers pass the command's
 `AbortSignal`; discovery, bounded file reads, and manifest-bound grant loading
 check it throughout the snapshot pass. Concurrent same-user mutation of a
-discovery root is outside the FM-B014 boundary. FM-B015 installation MUST
-stage atomically and enforce immutable, host-owned install roots before making
-them discoverable.
+discovery root is outside the FM-B014 boundary. The FM-B049 installer core and
+FM-B056 CLI MUST stage atomically and enforce immutable, host-owned install
+roots before making them discoverable; FM-B015 closes their product
+integration milestone.
 
 Third-party plugin config schemas use the host's bounded draft-07 subset.
 `pattern` is rejected until a guaranteed-linear regex engine is available;
@@ -483,10 +485,12 @@ would violate the sandbox boundary.
 Discovery reads every referenced schema into the same private, aggregate-bounded
 snapshot as the runtime entry. Later stage loads, launcher requests, schema
 validation, and announcement checks use only that snapshot, even if the source
-file is subsequently changed or deleted. Until FM-B015 defines a package
-signature that binds auxiliary files, a plugin with `[signature]` MUST NOT use
-an external `configSchema`; hosts reject that combination rather than imply the
-existing manifest-and-entry signature authenticates schema bytes.
+file is subsequently changed or deleted. The current signature binds the
+manifest and selected runtime entry, not auxiliary files. Until a future
+package-signature revision binds the complete file set, a plugin with
+`[signature]` MUST NOT use an external `configSchema`; hosts reject that
+combination rather than imply the existing signature authenticates schema
+bytes.
 
 ### 4.2 The `forme install` flow
 
@@ -1892,9 +1896,10 @@ the `PluginHost` interface FM03 §12 declared.
 FM-B014 ships this package with an injected process-launch boundary. It
 refuses to load a third-party plugin unless a launcher explicitly reports
 that it established the required isolation boundary and echoes the manifest
-hash for the exact entry bytes it staged for execution. FM-B015 supplies the
-production per-runtime and per-OS launchers; host contract tests use a
-dedicated fixture launcher and never weaken the production default.
+hash for the exact entry bytes it staged for execution. FM-B052 supplies the
+production per-runtime and per-OS launchers, FM-B057 composes them into product
+execution, and FM-B015 closes the Extensible v1 milestone. Host contract tests
+use a dedicated fixture launcher and never weaken the production default.
 
 ### 14.3 `@coding-adventures/forme-plugin-runner-ts`
 
@@ -2174,8 +2179,9 @@ FM-B014 (host and wire protocol) is complete when:
    cross-process contract tests.
 3. Production loading fails closed when no isolation-establishing launcher is
    installed. FM-B048 adds bounded manifest-bound grant and trust persistence;
-   the TypeScript/Python/Rust runners and OS sandbox launchers are complete in
-   FM-B049–FM-B052; install UX and product integration remain in FM-B015.
+   the TypeScript/Python/Rust runners, OS sandbox launchers, install UX, product
+   composition, and live watches are complete in FM-B049–FM-B058 and closed by
+   FM-B015.
 
 FM02 as a whole is complete when:
 
@@ -2209,6 +2215,10 @@ FM02 as a whole is complete when:
     one pipeline; the host routes each via the correct
     `PluginHost` (direct import vs subprocess) and the
     orchestrator is none the wiser.
+11. **Live storage watches remain bounded and cancellable** across the host,
+    TypeScript/Python/Rust runners, shared conformance corpus, and contained
+    product adapter; early return, run cancellation, and disposal retire every
+    watcher.
 
 ---
 

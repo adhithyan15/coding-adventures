@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C263-kavita",
+    "language": "marathi",
+    "chapter": 263,
+    "sequence": 15110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83be8826c8fcc0aa"
+  },
+  "findings": []
+}

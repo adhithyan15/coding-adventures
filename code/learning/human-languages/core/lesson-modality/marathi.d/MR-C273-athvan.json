@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C273-athvan",
+    "language": "marathi",
+    "chapter": 273,
+    "sequence": 15760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82c021f5cd3328fb"
+  },
+  "findings": []
+}

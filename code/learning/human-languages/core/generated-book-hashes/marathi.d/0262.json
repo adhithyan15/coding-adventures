@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:3cfe5707fa1146e9",
+  "lessonIds": [
+    "MR-C262-tapman",
+    "MR-C262-masi",
+    "MR-C262-samaj",
+    "MR-C262-sarkar",
+    "MR-C262-kayda"
+  ],
+  "tex": "marathi/book/chapters/ch262-temperature-fly-society-government-law.tex"
+}

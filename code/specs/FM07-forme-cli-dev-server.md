@@ -1,6 +1,6 @@
 # FM07 — Forme CLI and Development Server
 
-> **Status:** Headless v0 implemented; extensible and authoring commands pending.
+> **Status:** Headless v0 and Extensible v1 implemented; authoring commands pending.
 > **Scope:** User-facing command semantics, configuration loading, diagnostics,
 > watch mode, preview serving, cancellation, and command composition.
 > **Packages:** `forme-cli` and `forme-dev-server`.
@@ -15,7 +15,7 @@
 | `forme watch` preview server | Implemented | Coalesced rebuilds, SSE reload, last-good output, and clean cancellation are tested. |
 | `forme deploy` | Implemented in FM-B047/FM-B012 | Uses CLI Builder for one manifest, exactly one content-store shape, one explicit target config, target-aware dry-run, and publication through the FM08 adapters. |
 | `forme install` and trust UX | Implemented in FM-B056 | Composes the completed FM02 authority and atomic-installer cores for bounded local package directories. |
-| Installed plugin runtime | Implemented in FM-B057 | Manifest-bound grants, language selection, and native platform sandboxes are composed into CLI/orchestrator execution; FM-B058 closes live storage-watch mediation. |
+| Installed plugin runtime | Implemented in FM-B057/FM-B058/FM-B015 | Manifest-bound grants, language selection, native platform sandboxes, and bounded live storage watches compose into CLI/orchestrator execution. |
 | Authoring shell integration | Blocked | FM-B016 owns the non-developer product shell. |
 
 ## 1. Purpose

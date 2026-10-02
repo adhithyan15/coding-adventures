@@ -1,0 +1,19 @@
+{
+  "chapter": 252,
+  "title": "To have fun, To get angry, To worry, To smoke, To go with",
+  "label": "ch:mr-to-have-fun-to-get-angry-to-worry-to-smoke-to-go-with",
+  "canDo": "I can say to have fun, to get angry, to worry, to smoke and to go with.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C252-sobat-jane",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 252: I can say to have fun, to get angry, to worry, to smoke and to go with.",
+    "assesses": [
+      "MR-LEX-C252-ACT252-03",
+      "MR-LEX-C252-ACT252-04",
+      "MR-LEX-C252-ACT252-05"
+    ]
+  }
+}

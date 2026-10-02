@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C259-nirupyogi",
+    "language": "marathi",
+    "chapter": 259,
+    "sequence": 14720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69f26043cb79d71a"
+  },
+  "findings": []
+}

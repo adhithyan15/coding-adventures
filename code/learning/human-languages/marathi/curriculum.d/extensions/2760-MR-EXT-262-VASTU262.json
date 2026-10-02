@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-262-VASTU262",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say temperature, a fly, society, the government and a law.",
+  "prerequisites": []
+}

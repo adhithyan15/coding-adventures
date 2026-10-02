@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C270-badam",
+    "language": "marathi",
+    "chapter": 270,
+    "sequence": 15610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8adeaec07e1ea992"
+  },
+  "findings": []
+}

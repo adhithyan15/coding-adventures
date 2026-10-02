@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C254-seva-karne",
+    "language": "marathi",
+    "chapter": 254,
+    "sequence": 14450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:71da82af04a7a7f9"
+  },
+  "findings": []
+}

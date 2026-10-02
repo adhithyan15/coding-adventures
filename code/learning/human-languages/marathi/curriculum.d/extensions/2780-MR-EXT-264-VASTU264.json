@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-264-VASTU264",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an elderly person, twins, a mother-in-law, a father-in-law and a son-in-law.",
+  "prerequisites": []
+}

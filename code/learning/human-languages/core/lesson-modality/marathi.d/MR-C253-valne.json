@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C253-valne",
+    "language": "marathi",
+    "chapter": 253,
+    "sequence": 14380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:abe1e9500dd3ea8e"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:e86ed23d3507e36e",
+  "lessonIds": [
+    "MR-C254-corne",
+    "MR-C254-sodhun-kadhne",
+    "MR-C254-seva-karne",
+    "MR-C254-sahan-karne",
+    "MR-C254-svapna-pahne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch254.txt",
+  "json": "marathi/narration/ch254.json",
+  "textHash": "fnv1a64:fc42ff3d19258d9f",
+  "jsonHash": "fnv1a64:96742c221376316e",
+  "findings": []
+}

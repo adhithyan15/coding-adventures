@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:222086cab99d1dc6",
+  "lessonIds": [
+    "MR-C274-subheccha",
+    "MR-C274-amantran",
+    "MR-C274-samarambh",
+    "MR-C274-puja",
+    "MR-C274-adhikari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch274.txt",
+  "json": "marathi/narration/ch274.json",
+  "textHash": "fnv1a64:ad48d04be0b4817f",
+  "jsonHash": "fnv1a64:d3fc48c291ead6b2",
+  "findings": []
+}

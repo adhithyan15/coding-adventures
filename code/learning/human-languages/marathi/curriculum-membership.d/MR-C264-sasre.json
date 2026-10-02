@@ -1,0 +1,11 @@
+{
+  "id": "MR-C264-sasre",
+  "pathSegment": "MR-PATH-264-VASTU264",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-264-VASTU264",
+      "order": 3
+    }
+  ]
+}

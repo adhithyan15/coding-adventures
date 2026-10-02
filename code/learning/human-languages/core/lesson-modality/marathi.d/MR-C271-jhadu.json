@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C271-jhadu",
+    "language": "marathi",
+    "chapter": 271,
+    "sequence": 15700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43b6769962bb3c4c"
+  },
+  "findings": []
+}

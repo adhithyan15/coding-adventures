@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C253-anand-ghene",
+    "language": "marathi",
+    "chapter": 253,
+    "sequence": 14390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:985b56e560cee90a"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:e8a66062d9f00c4f",
+  "lessonIds": [
+    "MR-C251-prayatna-karne",
+    "MR-C251-calu-thevne",
+    "MR-C251-thambavne",
+    "MR-C251-halavne",
+    "MR-C251-garam-karne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch251.txt",
+  "json": "marathi/narration/ch251.json",
+  "textHash": "fnv1a64:c6dbf97d959de31f",
+  "jsonHash": "fnv1a64:0655f9bd783d06a7",
+  "findings": []
+}

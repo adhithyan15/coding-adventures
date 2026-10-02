@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-271-VASTU271",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a government office, a bus station, a blanket, a veranda and a broom.",
+  "prerequisites": []
+}

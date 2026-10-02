@@ -1,0 +1,11 @@
+{
+  "id": "MR-R259-first-pass-words-from-chapters-251-254",
+  "pathSegment": "MR-PATH-259-GUN259",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "MR-EXT-259-GUN259",
+      "order": 5
+    }
+  ]
+}

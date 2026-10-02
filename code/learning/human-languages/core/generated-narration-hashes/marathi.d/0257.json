@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 257,
+  "sourceHash": "fnv1a64:397833ac06c7ca87",
+  "lessonIds": [
+    "MR-C257-visranti",
+    "MR-C257-cinta",
+    "MR-C257-maitri",
+    "MR-C257-visvas",
+    "MR-C257-dhairya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch257.txt",
+  "json": "marathi/narration/ch257.json",
+  "textHash": "fnv1a64:a993112139b57491",
+  "jsonHash": "fnv1a64:63de4acf88739b67",
+  "findings": []
+}

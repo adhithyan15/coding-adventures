@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:6d3f113220a20ccd",
+  "lessonIds": [
+    "MR-C252-maja-karne",
+    "MR-C252-ragavne",
+    "MR-C252-kalji-karne",
+    "MR-C252-dhumrapan-karne",
+    "MR-C252-sobat-jane"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch252.txt",
+  "json": "marathi/narration/ch252.json",
+  "textHash": "fnv1a64:9d7ba26dc6900bda",
+  "jsonHash": "fnv1a64:236e0d839e93766b",
+  "findings": []
+}

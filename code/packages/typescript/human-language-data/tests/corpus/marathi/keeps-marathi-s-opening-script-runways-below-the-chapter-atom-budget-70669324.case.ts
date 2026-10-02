@@ -411,5 +411,33 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     ["248", 5],
     ["249", 5],
     ["250", 7],
+    // Chapters 251-275: A2 vocabulary tranche 4, five word lessons each, in runs
+    // of at most nine chapters. The last chapter of each run (259, 268, 275) also
+    // carries that run's two reviews.
+    ["251", 5],
+    ["252", 5],
+    ["253", 5],
+    ["254", 5],
+    ["255", 5],
+    ["256", 5],
+    ["257", 5],
+    ["258", 5],
+    ["259", 7],
+    ["260", 5],
+    ["261", 5],
+    ["262", 5],
+    ["263", 5],
+    ["264", 5],
+    ["265", 5],
+    ["266", 5],
+    ["267", 5],
+    ["268", 7],
+    ["269", 5],
+    ["270", 5],
+    ["271", 5],
+    ["272", 5],
+    ["273", 5],
+    ["274", 5],
+    ["275", 7],
   ]);
 });

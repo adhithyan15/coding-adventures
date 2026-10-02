@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C256-usne-ghene",
+    "language": "marathi",
+    "chapter": 256,
+    "sequence": 14530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c72c7375d6ba05c6"
+  },
+  "findings": []
+}

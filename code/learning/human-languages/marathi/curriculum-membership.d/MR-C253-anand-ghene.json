@@ -1,0 +1,11 @@
+{
+  "id": "MR-C253-anand-ghene",
+  "pathSegment": "MR-PATH-253-ACT253",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-253-ACT253",
+      "order": 1
+    }
+  ]
+}

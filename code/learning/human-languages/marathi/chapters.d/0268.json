@@ -1,0 +1,19 @@
+{
+  "chapter": 268,
+  "title": "Tool, Tabla, Flute, Sitar, Ball",
+  "label": "ch:mr-tool-tabla-flute-sitar-ball",
+  "canDo": "I can say a tool, a tabla, a flute, a sitar and a ball.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-R268-second-pass-words-from-chapters-264-268",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 268: I can say a tool, a tabla, a flute, a sitar and a ball.",
+    "assesses": [
+      "MR-LEX-C268-VASTU268-03",
+      "MR-LEX-C268-VASTU268-04",
+      "MR-LEX-C268-VASTU268-05"
+    ]
+  }
+}
