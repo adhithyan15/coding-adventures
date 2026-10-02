@@ -2832,9 +2832,10 @@ jobs:
           # The handler is wired into the generated entry point, which is the
           # half a text assertion over the manifest cannot see.
           grep -q 'installEngramEffects(mosaicHost);' "$engram_output/qt/main.cpp"
-          # Mosaic's Qt platform library (UI87 §7.4a) wraps it, and is in the
+          # Mosaic's Qt platform library (UI87 §7.4a) wraps it, routing the two
+          # kinds Engram's manifest claims to it (UI87 §7.2), and is in the
           # build the cmake step below compiles.
-          grep -q 'installMosaicPlatformEffects(mosaicHost, std::nullopt);' "$engram_output/qt/main.cpp"
+          grep -qF 'installMosaicPlatformEffects(mosaicHost, QSet<QString>{QStringLiteral("importAnki"), QStringLiteral("exportAnki")});' "$engram_output/qt/main.cpp"
           grep -q 'MosaicHost.h MosaicPlatformEffects.cpp MosaicPlatformEffects.h)' "$engram_output/qt/CMakeLists.txt"
 
           # UI48 §7.10 (ENV2/ENV3): Engram is the one package with a layout

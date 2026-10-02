@@ -249,8 +249,13 @@ class MosaicQtRuntimeCIAcceptanceTests(unittest.TestCase):
         # assertion over the manifest can see.
         self.assertIn("installEngramEffects(mosaicHost);", engram_step)
         # UI87 §7.4a: the platform library wraps the package handler and is
-        # in the sources the build compiles.
-        self.assertIn("installMosaicPlatformEffects(mosaicHost, std::nullopt);", engram_step)
+        # in the sources the build compiles; UI87 §7.2: it routes the two kinds
+        # Engram's manifest claims to that handler.
+        self.assertIn(
+            'installMosaicPlatformEffects(mosaicHost, QSet<QString>{QStringLiteral("importAnki"), '
+            'QStringLiteral("exportAnki")});',
+            engram_step,
+        )
         self.assertIn("MosaicPlatformEffects.cpp MosaicPlatformEffects.h)", engram_step)
         # The gate is that it builds.
         self.assertIn('cmake --build "$engram_output/qt/build"', workflow)
