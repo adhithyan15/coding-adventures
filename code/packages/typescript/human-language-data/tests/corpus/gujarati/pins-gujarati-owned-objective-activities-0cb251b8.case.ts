@@ -132,6 +132,7 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-C30-people-five-carryover",
     "GU-C30-people-five-listening",
     "GU-C30-people-five-speaking",
+    "GU-C37-kyaan-write-controlled-question",
     "GU-C38-biju-r1",
     "GU-C38-chothu-r1",
     "GU-C38-pahelu-r1",

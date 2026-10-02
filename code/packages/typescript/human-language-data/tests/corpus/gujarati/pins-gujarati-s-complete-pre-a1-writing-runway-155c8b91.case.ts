@@ -210,11 +210,13 @@ it("pins Gujarati's complete pre-A1 writing runway", () => {
     "dictation-transcription",
     "guided-copy",
     "dictation-transcription",
-    // 189 -> 197. The joining tranche adds eight: GU-W08-pha is the only new
+    // 189 -> 198. The joining tranche adds nine: GU-W08-pha is the only new
     // LETTER in seven chapters and contributes an observe-trace and a guided
     // copy, and the six word-writing lessons -- ane, ke, kemke, jo, te, kyaan --
     // contribute one guided copy each. Every one of those six spends ZERO new
     // signs: the words this book most needed were never a writing problem.
+    // GU-C37-kyaan-write then covers the model and composes one untimed location
+    // question from three known pieces, proving the first A1 writing rung.
     "observe-trace",
     "guided-copy",
     "guided-copy",
@@ -223,7 +225,8 @@ it("pins Gujarati's complete pre-A1 writing runway", () => {
     "guided-copy",
     "guided-copy",
     "guided-copy",
-    // 197 -> 200. Chapter 43's ONE new letter, the retroflex aspirate ttha, and
+    "controlled-composition",
+    // 198 -> 201. Chapter 43's ONE new letter, the retroflex aspirate ttha, and
     // the full three-stage ladder on it. The other four numbers of the chapter
     // add nothing here because they add no sign: chha is a letter the reader has
     // been writing inside chhe since chapter two, and saat, nav and das are made
