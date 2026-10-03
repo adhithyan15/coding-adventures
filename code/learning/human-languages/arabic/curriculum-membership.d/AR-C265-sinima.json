@@ -1,0 +1,11 @@
+{
+  "id": "AR-C265-sinima",
+  "pathSegment": "AR-PATH-265-MAKAN265",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-265-MAKAN265",
+      "order": 1
+    }
+  ]
+}

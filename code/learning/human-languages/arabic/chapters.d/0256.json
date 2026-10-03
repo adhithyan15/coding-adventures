@@ -1,0 +1,19 @@
+{
+  "chapter": 256,
+  "title": "To fail, To pass, To explain, To translate, To give back",
+  "label": "ch:ar-to-fail-to-pass-to-explain-to-translate-to-give-back",
+  "canDo": "I can say to fail, to pass, to explain, to translate and to give back.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C256-aada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 256: I can say to fail, to pass, to explain, to translate and to give back.",
+    "assesses": [
+      "AR-LEX-C256-ACT256-03",
+      "AR-LEX-C256-ACT256-04",
+      "AR-LEX-C256-ACT256-05"
+    ]
+  }
+}

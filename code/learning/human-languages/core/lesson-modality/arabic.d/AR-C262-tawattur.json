@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C262-tawattur",
+    "language": "arabic",
+    "chapter": 262,
+    "sequence": 14830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a9575f99f680cc3b"
+  },
+  "findings": []
+}

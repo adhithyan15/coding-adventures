@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-280-AMAL280",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a client, an engineer, a lawyer, a pilot and a pharmacist.",
+  "prerequisites": []
+}

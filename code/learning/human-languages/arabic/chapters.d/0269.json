@@ -1,0 +1,19 @@
+{
+  "chapter": 269,
+  "title": "Failure, Step, Harm, Fault, Advantage",
+  "label": "ch:ar-failure-step-harm-fault-advantage",
+  "canDo": "I can say failure, a step, harm, a fault and an advantage.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "AR-C269-miza",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 269: I can say failure, a step, harm, a fault and an advantage.",
+    "assesses": [
+      "AR-LEX-C269-SABAB269-03",
+      "AR-LEX-C269-SABAB269-04",
+      "AR-LEX-C269-SABAB269-05"
+    ]
+  }
+}

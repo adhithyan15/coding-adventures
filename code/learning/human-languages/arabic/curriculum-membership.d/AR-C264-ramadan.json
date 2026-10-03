@@ -1,0 +1,11 @@
+{
+  "id": "AR-C264-ramadan",
+  "pathSegment": "AR-PATH-264-WAQT264",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-264-WAQT264",
+      "order": 3
+    }
+  ]
+}

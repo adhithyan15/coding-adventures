@@ -1,0 +1,19 @@
+{
+  "chapter": 279,
+  "title": "Rectangle, Coat hanger, Sponge, Tape, Glue",
+  "label": "ch:ar-rectangle-coat-hanger-sponge-tape-glue",
+  "canDo": "I can say a rectangle, a coat hanger, a sponge, a tape and glue.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C279-ghira",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 279: I can say a rectangle, a coat hanger, a sponge, a tape and glue.",
+    "assesses": [
+      "AR-LEX-C279-SHAY279-03",
+      "AR-LEX-C279-SHAY279-04",
+      "AR-LEX-C279-SHAY279-05"
+    ]
+  }
+}

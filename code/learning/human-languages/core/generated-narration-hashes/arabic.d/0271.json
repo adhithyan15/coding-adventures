@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:70e7d1b9bb4e06b1",
+  "lessonIds": [
+    "AR-C271-anid",
+    "AR-C271-wahid",
+    "AR-C271-burtuqali",
+    "AR-C271-wardi",
+    "AR-C271-banafsaji",
+    "AR-R271-first-pass-words-from-chapters-263-266",
+    "AR-R271-second-pass-words-from-chapters-267-271"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch271.txt",
+  "json": "arabic/narration/ch271.json",
+  "textHash": "fnv1a64:c5232e40a958ed32",
+  "jsonHash": "fnv1a64:8209aaa8916fbda8",
+  "findings": []
+}

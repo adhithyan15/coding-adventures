@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:555a13ef62b3b138",
+  "lessonIds": [
+    "AR-C266-qabw",
+    "AR-C266-midkhana",
+    "AR-C266-ataba",
+    "AR-C266-siyaj",
+    "AR-C266-fina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch266.txt",
+  "json": "arabic/narration/ch266.json",
+  "textHash": "fnv1a64:c6b26b029c397a20",
+  "jsonHash": "fnv1a64:84bb29be7cd96820",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:7837049d8d33d356",
+  "lessonIds": [
+    "AR-C278-ghallaya",
+    "AR-C278-siniyya",
+    "AR-C278-misfah",
+    "AR-C278-mighrafa",
+    "AR-C278-barmil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch278.txt",
+  "json": "arabic/narration/ch278.json",
+  "textHash": "fnv1a64:f1d611edb3bafb6e",
+  "jsonHash": "fnv1a64:fcfe715fcb01ef08",
+  "findings": []
+}

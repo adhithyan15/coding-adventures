@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R282-second-pass-words-from-chapters-280-282",
+    "language": "arabic",
+    "chapter": 282,
+    "sequence": 16390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:441e8dbe78fc1693"
+  },
+  "findings": []
+}

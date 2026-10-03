@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C276-hayawan",
+    "language": "arabic",
+    "chapter": 276,
+    "sequence": 15870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7404ac9b409e816b"
+  },
+  "findings": []
+}

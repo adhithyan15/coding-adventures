@@ -1,0 +1,11 @@
+{
+  "id": "AR-C256-ijtaza",
+  "pathSegment": "AR-PATH-256-ACT256",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-256-ACT256",
+      "order": 1
+    }
+  ]
+}

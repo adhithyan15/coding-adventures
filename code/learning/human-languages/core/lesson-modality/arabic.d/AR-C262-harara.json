@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C262-harara",
+    "language": "arabic",
+    "chapter": 262,
+    "sequence": 14800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91e4cf58a3858943"
+  },
+  "findings": []
+}

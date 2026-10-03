@@ -1,0 +1,19 @@
+{
+  "chapter": 268,
+  "title": "Together, According to, Without, For example, First",
+  "label": "ch:ar-together-according-to-without-for-example-first",
+  "canDo": "I can say together, according to, without, for example and first.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "AR-C268-awwalan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 268: I can say together, according to, without, for example and first.",
+    "assesses": [
+      "AR-LEX-C268-SABAB268-03",
+      "AR-LEX-C268-SABAB268-04",
+      "AR-LEX-C268-SABAB268-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C264-fasl",
+    "language": "arabic",
+    "chapter": 264,
+    "sequence": 15080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:26584b1ade4ece23"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C278-misfah",
+  "pathSegment": "AR-PATH-278-SHAY278",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-278-SHAY278",
+      "order": 2
+    }
+  ]
+}

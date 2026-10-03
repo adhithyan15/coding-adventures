@@ -1,0 +1,19 @@
+{
+  "chapter": 260,
+  "title": "To sprinkle, To knock, To stick, To stir, To wrap",
+  "label": "ch:ar-to-sprinkle-to-knock-to-stick-to-stir-to-wrap",
+  "canDo": "I can say to sprinkle, to knock, to stick, to stir and to wrap.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C260-laffa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 260: I can say to sprinkle, to knock, to stick, to stir and to wrap.",
+    "assesses": [
+      "AR-LEX-C260-ACT260-03",
+      "AR-LEX-C260-ACT260-04",
+      "AR-LEX-C260-ACT260-05"
+    ]
+  }
+}

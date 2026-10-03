@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-279-SHAY279",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "AR-EXT-279-SHAY279"
+  ],
+  "after": []
+}

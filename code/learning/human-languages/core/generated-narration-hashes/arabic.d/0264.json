@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:8ece9c97354896ee",
+  "lessonIds": [
+    "AR-C264-fasl",
+    "AR-C264-tufula",
+    "AR-C264-sahra",
+    "AR-C264-ramadan",
+    "AR-C264-asr"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch264.txt",
+  "json": "arabic/narration/ch264.json",
+  "textHash": "fnv1a64:37e07c892890ab6e",
+  "jsonHash": "fnv1a64:b8aa92ccb5a2cf2b",
+  "findings": []
+}

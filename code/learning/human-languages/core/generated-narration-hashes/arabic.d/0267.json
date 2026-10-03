@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:ffaaba4336617e29",
+  "lessonIds": [
+    "AR-C267-taqlid",
+    "AR-C267-thaqafa",
+    "AR-C267-din",
+    "AR-C267-salah",
+    "AR-C267-alaqa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch267.txt",
+  "json": "arabic/narration/ch267.json",
+  "textHash": "fnv1a64:7a13df1f60446850",
+  "jsonHash": "fnv1a64:89f79d35fb1cc718",
+  "findings": []
+}

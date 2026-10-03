@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:1717a4b6f00f69c3",
+  "lessonIds": [
+    "AR-C255-taakhkhara",
+    "AR-C255-zara",
+    "AR-C255-ittasala",
+    "AR-C255-tahassana",
+    "AR-C255-fahasa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch255.txt",
+  "json": "arabic/narration/ch255.json",
+  "textHash": "fnv1a64:ea713c46b6c33072",
+  "jsonHash": "fnv1a64:402fc63eb0d75d11",
+  "findings": []
+}

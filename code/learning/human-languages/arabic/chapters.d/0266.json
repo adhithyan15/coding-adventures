@@ -1,0 +1,19 @@
+{
+  "chapter": 266,
+  "title": "Basement, Chimney, Doorstep, Fence, Courtyard",
+  "label": "ch:ar-basement-chimney-doorstep-fence-courtyard",
+  "canDo": "I can say a basement, a chimney, a doorstep, a fence and a courtyard.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "AR-C266-fina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 266: I can say a basement, a chimney, a doorstep, a fence and a courtyard.",
+    "assesses": [
+      "AR-LEX-C266-MAKAN266-03",
+      "AR-LEX-C266-MAKAN266-04",
+      "AR-LEX-C266-MAKAN266-05"
+    ]
+  }
+}

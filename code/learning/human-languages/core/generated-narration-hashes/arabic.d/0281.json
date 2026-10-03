@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:4b655e05dd288403",
+  "lessonIds": [
+    "AR-C281-raqm",
+    "AR-C281-mukalama",
+    "AR-C281-malumat",
+    "AR-C281-mudhi",
+    "AR-C281-mumaththil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch281.txt",
+  "json": "arabic/narration/ch281.json",
+  "textHash": "fnv1a64:d6a6c3582e4c7545",
+  "jsonHash": "fnv1a64:cb9b7d69f22d115a",
+  "findings": []
+}

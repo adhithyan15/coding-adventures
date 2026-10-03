@@ -1,0 +1,11 @@
+{
+  "id": "AR-C270-duwali",
+  "pathSegment": "AR-PATH-270-SIFA270",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-270-SIFA270",
+      "order": 3
+    }
+  ]
+}

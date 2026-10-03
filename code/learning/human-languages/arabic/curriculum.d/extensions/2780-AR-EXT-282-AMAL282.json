@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-282-AMAL282",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a calculator, a pencil case, a page, a sentence and a barber.",
+  "prerequisites": []
+}

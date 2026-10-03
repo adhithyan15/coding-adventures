@@ -1,0 +1,19 @@
+{
+  "chapter": 254,
+  "title": "To fry, To grill, To boil, To mix, To peel",
+  "label": "ch:ar-to-fry-to-grill-to-boil-to-mix-to-peel",
+  "canDo": "I can say to fry, to grill, to boil, to mix and to peel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C254-qashshara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 254: I can say to fry, to grill, to boil, to mix and to peel.",
+    "assesses": [
+      "AR-LEX-C254-ACT254-03",
+      "AR-LEX-C254-ACT254-04",
+      "AR-LEX-C254-ACT254-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 259,
+  "sourceHash": "fnv1a64:abb6689420900ef8",
+  "lessonIds": [
+    "AR-C259-nashara",
+    "AR-C259-baththa",
+    "AR-C259-tabaa2",
+    "AR-C259-qafaza",
+    "AR-C259-daghata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch259.txt",
+  "json": "arabic/narration/ch259.json",
+  "textHash": "fnv1a64:4ec6a0b2981fafab",
+  "jsonHash": "fnv1a64:a26f2bc25484c49e",
+  "findings": []
+}

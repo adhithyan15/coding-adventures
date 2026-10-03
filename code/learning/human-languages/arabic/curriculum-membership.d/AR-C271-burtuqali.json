@@ -1,0 +1,11 @@
+{
+  "id": "AR-C271-burtuqali",
+  "pathSegment": "AR-PATH-271-SIFA271",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-271-SIFA271",
+      "order": 2
+    }
+  ]
+}

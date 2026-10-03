@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-279-SHAY279",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a rectangle, a coat hanger, a sponge, a tape and glue.",
+  "prerequisites": []
+}

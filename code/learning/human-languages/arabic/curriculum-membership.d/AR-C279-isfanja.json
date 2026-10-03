@@ -1,0 +1,11 @@
+{
+  "id": "AR-C279-isfanja",
+  "pathSegment": "AR-PATH-279-SHAY279",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-279-SHAY279",
+      "order": 2
+    }
+  ]
+}

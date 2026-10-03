@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:593f92174e9c643c",
+  "lessonIds": [
+    "AR-C277-kura",
+    "AR-C277-mubara",
+    "AR-C277-fariq",
+    "AR-C277-sibaq",
+    "AR-C277-riyada",
+    "AR-R277-first-pass-words-from-chapters-272-274",
+    "AR-R277-second-pass-words-from-chapters-275-277"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch277.txt",
+  "json": "arabic/narration/ch277.json",
+  "textHash": "fnv1a64:a8cd755f8f46a9e1",
+  "jsonHash": "fnv1a64:04a12ac80200d276",
+  "findings": []
+}

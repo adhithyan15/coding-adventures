@@ -1,0 +1,11 @@
+{
+  "id": "AR-C268-mathalan",
+  "pathSegment": "AR-PATH-268-SABAB268",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-268-SABAB268",
+      "order": 3
+    }
+  ]
+}

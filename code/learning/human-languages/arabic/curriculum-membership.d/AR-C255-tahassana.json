@@ -1,0 +1,11 @@
+{
+  "id": "AR-C255-tahassana",
+  "pathSegment": "AR-PATH-255-ACT255",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-255-ACT255",
+      "order": 3
+    }
+  ]
+}

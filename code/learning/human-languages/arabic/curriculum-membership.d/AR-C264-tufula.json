@@ -1,0 +1,11 @@
+{
+  "id": "AR-C264-tufula",
+  "pathSegment": "AR-PATH-264-WAQT264",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-264-WAQT264",
+      "order": 1
+    }
+  ]
+}

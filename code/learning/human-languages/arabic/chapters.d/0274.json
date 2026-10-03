@@ -1,0 +1,19 @@
+{
+  "chapter": 274,
+  "title": "Printer, Ink, Blackboard, Dictionary, File",
+  "label": "ch:ar-printer-ink-blackboard-dictionary-file",
+  "canDo": "I can say a printer, ink, a blackboard, a dictionary and a file.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C274-malaff",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 274: I can say a printer, ink, a blackboard, a dictionary and a file.",
+    "assesses": [
+      "AR-LEX-C274-SHAY274-03",
+      "AR-LEX-C274-SHAY274-04",
+      "AR-LEX-C274-SHAY274-05"
+    ]
+  }
+}

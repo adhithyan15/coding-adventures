@@ -1,0 +1,11 @@
+{
+  "id": "AR-C268-bidun",
+  "pathSegment": "AR-PATH-268-SABAB268",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-268-SABAB268",
+      "order": 2
+    }
+  ]
+}

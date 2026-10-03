@@ -1,0 +1,19 @@
+{
+  "chapter": 271,
+  "title": "Stubborn, Lonely, Orange, Pink, Purple",
+  "label": "ch:ar-stubborn-lonely-orange-pink-purple",
+  "canDo": "I can say stubborn, lonely, orange, pink and purple.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "AR-R271-second-pass-words-from-chapters-267-271",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 271: I can say stubborn, lonely, orange, pink and purple.",
+    "assesses": [
+      "AR-LEX-C271-SIFA271-03",
+      "AR-LEX-C271-SIFA271-04",
+      "AR-LEX-C271-SIFA271-05"
+    ]
+  }
+}

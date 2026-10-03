@@ -1,0 +1,11 @@
+{
+  "id": "AR-C257-ibtasama",
+  "pathSegment": "AR-PATH-257-ACT257",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-257-ACT257",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C269-darar",
+  "pathSegment": "AR-PATH-269-SABAB269",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-269-SABAB269",
+      "order": 2
+    }
+  ]
+}

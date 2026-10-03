@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:f0c300fa3202a119",
+  "lessonIds": [
+    "AR-C268-maan",
+    "AR-C268-hasaba",
+    "AR-C268-bidun",
+    "AR-C268-mathalan",
+    "AR-C268-awwalan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch268.txt",
+  "json": "arabic/narration/ch268.json",
+  "textHash": "fnv1a64:60c5a7f33b6d1338",
+  "jsonHash": "fnv1a64:35ad8d56d5ca7dc1",
+  "findings": []
+}
