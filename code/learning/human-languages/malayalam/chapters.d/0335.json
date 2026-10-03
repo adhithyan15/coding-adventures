@@ -1,0 +1,19 @@
+{
+  "chapter": 335,
+  "title": "Degree, Subject, Mathematics, Homework, Letter",
+  "label": "ch:ml-degree-subject-mathematics-homework-letter",
+  "canDo": "I can say a degree, a subject, mathematics, homework and a letter.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C335-aksaram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 335: I can say a degree, a subject, mathematics, homework and a letter.",
+    "assesses": [
+      "ML-LEX-C335-JOLI335-03",
+      "ML-LEX-C335-JOLI335-04",
+      "ML-LEX-C335-JOLI335-05"
+    ]
+  }
+}

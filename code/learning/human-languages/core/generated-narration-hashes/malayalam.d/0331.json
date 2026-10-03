@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:31a44e17e0e33584",
+  "lessonIds": [
+    "ML-C331-cirava",
+    "ML-C331-cattukam",
+    "ML-C331-kuja",
+    "ML-C331-kampi",
+    "ML-C331-kampili"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch331.txt",
+  "json": "malayalam/narration/ch331.json",
+  "textHash": "fnv1a64:9083fc6a61d069bd",
+  "jsonHash": "fnv1a64:7a4ba0e3e092793b",
+  "findings": []
+}

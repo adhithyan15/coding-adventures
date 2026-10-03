@@ -1,0 +1,19 @@
+{
+  "chapter": 313,
+  "title": "Hiccup, Yawn, Ointment, Herbal decoction, Pregnant woman",
+  "label": "ch:ml-hiccup-yawn-ointment-herbal-decoction-pregnant-woman",
+  "canDo": "I can say a hiccup, a yawn, an ointment, a herbal decoction and a pregnant woman.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ML-C313-garbhini",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 313: I can say a hiccup, a yawn, an ointment, a herbal decoction and a pregnant woman.",
+    "assesses": [
+      "ML-LEX-C313-AROGYAM313-03",
+      "ML-LEX-C313-AROGYAM313-04",
+      "ML-LEX-C313-AROGYAM313-05"
+    ]
+  }
+}

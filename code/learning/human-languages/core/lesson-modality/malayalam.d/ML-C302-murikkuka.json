@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C302-murikkuka",
+    "language": "malayalam",
+    "chapter": 302,
+    "sequence": 14210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12bf42c270c4ce11"
+  },
+  "findings": []
+}

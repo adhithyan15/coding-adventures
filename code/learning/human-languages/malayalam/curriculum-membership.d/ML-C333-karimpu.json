@@ -1,0 +1,11 @@
+{
+  "id": "ML-C333-karimpu",
+  "pathSegment": "ML-PATH-333-VASTU333",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-333-VASTU333",
+      "order": 1
+    }
+  ]
+}

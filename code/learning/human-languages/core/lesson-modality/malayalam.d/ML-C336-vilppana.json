@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C336-vilppana",
+    "language": "malayalam",
+    "chapter": 336,
+    "sequence": 15950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d4ecc4f958f555b"
+  },
+  "findings": []
+}

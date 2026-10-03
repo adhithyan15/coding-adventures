@@ -1,0 +1,11 @@
+{
+  "id": "ML-C334-kampani",
+  "pathSegment": "ML-PATH-334-JOLI334",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-334-JOLI334",
+      "order": 3
+    }
+  ]
+}

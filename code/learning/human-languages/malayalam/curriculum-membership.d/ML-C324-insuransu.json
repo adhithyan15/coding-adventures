@@ -1,0 +1,11 @@
+{
+  "id": "ML-C324-insuransu",
+  "pathSegment": "ML-PATH-324-VASTU324",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-324-VASTU324",
+      "order": 4
+    }
+  ]
+}

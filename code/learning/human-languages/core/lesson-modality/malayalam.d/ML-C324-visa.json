@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C324-visa",
+    "language": "malayalam",
+    "chapter": 324,
+    "sequence": 15360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3fbd5796b466858f"
+  },
+  "findings": []
+}

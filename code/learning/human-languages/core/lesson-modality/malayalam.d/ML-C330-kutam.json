@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C330-kutam",
+    "language": "malayalam",
+    "chapter": 330,
+    "sequence": 15670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d030ba9e2a7475fb"
+  },
+  "findings": []
+}

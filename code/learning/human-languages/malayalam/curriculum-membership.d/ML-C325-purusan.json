@@ -1,0 +1,11 @@
+{
+  "id": "ML-C325-purusan",
+  "pathSegment": "ML-PATH-325-VASTU325",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-325-VASTU325",
+      "order": 3
+    }
+  ]
+}

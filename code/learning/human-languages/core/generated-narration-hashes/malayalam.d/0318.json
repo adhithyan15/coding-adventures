@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:b5323837aeb37762",
+  "lessonIds": [
+    "ML-C318-parajayam",
+    "ML-C318-telivu",
+    "ML-C318-vicaram",
+    "ML-C318-ormma",
+    "ML-C318-nirddesam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch318.txt",
+  "json": "malayalam/narration/ch318.json",
+  "textHash": "fnv1a64:fa15c52c7353a9cc",
+  "jsonHash": "fnv1a64:4c1ebf70200f62bf",
+  "findings": []
+}

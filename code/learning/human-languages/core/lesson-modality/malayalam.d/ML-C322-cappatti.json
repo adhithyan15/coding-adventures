@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C322-cappatti",
+    "language": "malayalam",
+    "chapter": 322,
+    "sequence": 15240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ad34e8e0fe539f7"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:6bfc85d9ba5eaa64",
+  "lessonIds": [
+    "ML-C319-onlain",
+    "ML-C319-vinayam",
+    "ML-C319-svabhavam",
+    "ML-C319-ahankaram",
+    "ML-C319-karsanamaya",
+    "ML-R319-first-pass-words-from-chapters-311-314",
+    "ML-R319-second-pass-words-from-chapters-315-319"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch319.txt",
+  "json": "malayalam/narration/ch319.json",
+  "textHash": "fnv1a64:6d771c81ed514b3c",
+  "jsonHash": "fnv1a64:48fb79c3fa4ee6ef",
+  "findings": []
+}

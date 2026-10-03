@@ -1,0 +1,19 @@
+{
+  "chapter": 323,
+  "title": "Watermelon, Spinach, Carrot, Cucumber, Coriander",
+  "label": "ch:ml-watermelon-spinach-carrot-cucumber-coriander",
+  "canDo": "I can say a watermelon, spinach, a carrot, a cucumber and coriander.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C323-malli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 323: I can say a watermelon, spinach, a carrot, a cucumber and coriander.",
+    "assesses": [
+      "ML-LEX-C323-VASTU323-03",
+      "ML-LEX-C323-VASTU323-04",
+      "ML-LEX-C323-VASTU323-05"
+    ]
+  }
+}

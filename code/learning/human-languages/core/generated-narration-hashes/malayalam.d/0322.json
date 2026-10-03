@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:9fe4009e3643aa71",
+  "lessonIds": [
+    "ML-C322-biriyani",
+    "ML-C322-cappatti",
+    "ML-C322-porotta",
+    "ML-C322-kappa",
+    "ML-C322-cammanti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch322.txt",
+  "json": "malayalam/narration/ch322.json",
+  "textHash": "fnv1a64:929bdcd11ec0c152",
+  "jsonHash": "fnv1a64:29a83afe9d45031f",
+  "findings": []
+}

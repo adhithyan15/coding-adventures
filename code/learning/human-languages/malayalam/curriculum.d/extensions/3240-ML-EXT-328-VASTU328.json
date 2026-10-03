@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-328-VASTU328",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a bench, a shelf, a curtain, an axe and a spade.",
+  "prerequisites": []
+}

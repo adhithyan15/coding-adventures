@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:e0e4e8514c6119af",
+  "lessonIds": [
+    "ML-C309-kuraykkuka2",
+    "ML-C309-tiriccariyuka",
+    "ML-C309-puttuka",
+    "ML-C309-vivarikkuka",
+    "ML-C309-olivakkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch309.txt",
+  "json": "malayalam/narration/ch309.json",
+  "textHash": "fnv1a64:418ff822da6fe486",
+  "jsonHash": "fnv1a64:a12ebd68b352ed2e",
+  "findings": []
+}

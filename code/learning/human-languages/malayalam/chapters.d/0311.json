@@ -1,0 +1,19 @@
+{
+  "chapter": 311,
+  "title": "To stroke, To tidy away, To pull down, To bear fruit, To spread",
+  "label": "ch:ml-to-stroke-to-tidy-away-to-pull-down-to-bear-fruit-to-spread",
+  "canDo": "I can say to stroke, to tidy away, to pull down, to bear fruit and to spread.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C311-pataruka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 311: I can say to stroke, to tidy away, to pull down, to bear fruit and to spread.",
+    "assesses": [
+      "ML-LEX-C311-KRIYA311-03",
+      "ML-LEX-C311-KRIYA311-04",
+      "ML-LEX-C311-KRIYA311-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 324,
+  "title": "Document, Certificate, Passport, Visa, Insurance",
+  "label": "ch:ml-document-certificate-passport-visa-insurance",
+  "canDo": "I can say a document, a certificate, a passport, a visa and insurance.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C324-insuransu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 324: I can say a document, a certificate, a passport, a visa and insurance.",
+    "assesses": [
+      "ML-LEX-C324-VASTU324-03",
+      "ML-LEX-C324-VASTU324-04",
+      "ML-LEX-C324-VASTU324-05"
+    ]
+  }
+}

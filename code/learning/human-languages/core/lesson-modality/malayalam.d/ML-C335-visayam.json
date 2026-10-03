@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C335-visayam",
+    "language": "malayalam",
+    "chapter": 335,
+    "sequence": 15910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d4c6199d8ec8f93"
+  },
+  "findings": []
+}

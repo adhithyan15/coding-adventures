@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-330-VASTU330",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a lid, a jar, a water pot, a sack and gold.",
+  "prerequisites": []
+}

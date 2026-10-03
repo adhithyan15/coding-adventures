@@ -1,0 +1,19 @@
+{
+  "chapter": 304,
+  "title": "To breathe, To sneeze, To shiver, To swell, To itch",
+  "label": "ch:ml-to-breathe-to-sneeze-to-shiver-to-swell-to-itch",
+  "canDo": "I can say to breathe, to sneeze, to shiver, to swell and to itch.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C304-coriyuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 304: I can say to breathe, to sneeze, to shiver, to swell and to itch.",
+    "assesses": [
+      "ML-LEX-C304-KRIYA304-03",
+      "ML-LEX-C304-KRIYA304-04",
+      "ML-LEX-C304-KRIYA304-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:a843560907bd1fe2",
+  "lessonIds": [
+    "ML-C336-vilppana",
+    "ML-C336-yantram",
+    "ML-C336-krsi",
+    "ML-C336-sastram",
+    "ML-C336-caritram"
+  ],
+  "tex": "malayalam/book/chapters/ch336-sale-machine-farming-science-history.tex"
+}

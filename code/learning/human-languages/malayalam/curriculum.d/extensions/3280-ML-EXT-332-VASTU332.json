@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-332-VASTU332",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a coconut shell, firewood, charcoal, ash and a sapling.",
+  "prerequisites": []
+}

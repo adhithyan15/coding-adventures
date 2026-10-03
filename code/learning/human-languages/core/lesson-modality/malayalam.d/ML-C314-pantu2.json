@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C314-pantu2",
+    "language": "malayalam",
+    "chapter": 314,
+    "sequence": 14840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c89a2968a4f1a1b9"
+  },
+  "findings": []
+}

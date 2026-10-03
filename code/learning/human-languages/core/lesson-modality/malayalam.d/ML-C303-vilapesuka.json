@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C303-vilapesuka",
+    "language": "malayalam",
+    "chapter": 303,
+    "sequence": 14280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:598b04e7933a7197"
+  },
+  "findings": []
+}

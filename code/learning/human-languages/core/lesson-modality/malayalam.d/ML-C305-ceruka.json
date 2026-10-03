@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C305-ceruka",
+    "language": "malayalam",
+    "chapter": 305,
+    "sequence": 14360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63cd0691ca1a21cc"
+  },
+  "findings": []
+}

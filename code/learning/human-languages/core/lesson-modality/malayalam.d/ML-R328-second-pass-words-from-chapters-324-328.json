@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R328-second-pass-words-from-chapters-324-328",
+    "language": "malayalam",
+    "chapter": 328,
+    "sequence": 15590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9615bc6edb3121a7"
+  },
+  "findings": []
+}

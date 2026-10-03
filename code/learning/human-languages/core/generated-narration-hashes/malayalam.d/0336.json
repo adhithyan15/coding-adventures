@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:a05c670559d218b1",
+  "lessonIds": [
+    "ML-C336-vilppana",
+    "ML-C336-yantram",
+    "ML-C336-krsi",
+    "ML-C336-sastram",
+    "ML-C336-caritram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch336.txt",
+  "json": "malayalam/narration/ch336.json",
+  "textHash": "fnv1a64:e7655f02ede38c27",
+  "jsonHash": "fnv1a64:b15fcc67506f4b0b",
+  "findings": []
+}

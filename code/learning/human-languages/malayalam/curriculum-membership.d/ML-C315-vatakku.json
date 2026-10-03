@@ -1,0 +1,11 @@
+{
+  "id": "ML-C315-vatakku",
+  "pathSegment": "ML-PATH-315-STHALAM315",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-315-STHALAM315",
+      "order": 4
+    }
+  ]
+}

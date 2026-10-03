@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C307-pottikkuka",
+    "language": "malayalam",
+    "chapter": 307,
+    "sequence": 14470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:36d0585fbeaf013a"
+  },
+  "findings": []
+}

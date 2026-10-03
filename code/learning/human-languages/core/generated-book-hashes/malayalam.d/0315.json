@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:dcb2186eb357f272",
+  "lessonIds": [
+    "ML-C315-samsthanam",
+    "ML-C315-videsam",
+    "ML-C315-sthalam",
+    "ML-C315-disa",
+    "ML-C315-vatakku"
+  ],
+  "tex": "malayalam/book/chapters/ch315-state-abroad-place-direction-north.tex"
+}

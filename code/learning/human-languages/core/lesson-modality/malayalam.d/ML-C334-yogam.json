@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C334-yogam",
+    "language": "malayalam",
+    "chapter": 334,
+    "sequence": 15890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb85b1662b2f9be3"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:4ae0a9ce8180329b",
+  "lessonIds": [
+    "ML-C314-nurrantu",
+    "ML-C314-patirrantu",
+    "ML-C314-kalantar",
+    "ML-C314-pantu2",
+    "ML-C314-pularcce"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch314.txt",
+  "json": "malayalam/narration/ch314.json",
+  "textHash": "fnv1a64:9960f5036d2ba052",
+  "jsonHash": "fnv1a64:e999fbed3f3ce72e",
+  "findings": []
+}

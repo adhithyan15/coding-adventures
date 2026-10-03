@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C307-pukalttuka",
+    "language": "malayalam",
+    "chapter": 307,
+    "sequence": 14480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12966429f99ec3f3"
+  },
+  "findings": []
+}

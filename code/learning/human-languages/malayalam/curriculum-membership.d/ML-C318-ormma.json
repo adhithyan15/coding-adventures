@@ -1,0 +1,11 @@
+{
+  "id": "ML-C318-ormma",
+  "pathSegment": "ML-PATH-318-KARANAM318",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-318-KARANAM318",
+      "order": 3
+    }
+  ]
+}

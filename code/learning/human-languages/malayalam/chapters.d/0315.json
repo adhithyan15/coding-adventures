@@ -1,0 +1,19 @@
+{
+  "chapter": 315,
+  "title": "State, Abroad, Place, Direction, North",
+  "label": "ch:ml-state-abroad-place-direction-north",
+  "canDo": "I can say a state, abroad, a place, a direction and north.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ML-C315-vatakku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 315: I can say a state, abroad, a place, a direction and north.",
+    "assesses": [
+      "ML-LEX-C315-STHALAM315-03",
+      "ML-LEX-C315-STHALAM315-04",
+      "ML-LEX-C315-STHALAM315-05"
+    ]
+  }
+}

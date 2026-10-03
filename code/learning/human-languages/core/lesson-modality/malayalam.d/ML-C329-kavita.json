@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C329-kavita",
+    "language": "malayalam",
+    "chapter": 329,
+    "sequence": 15610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f6f8181763f19ff6"
+  },
+  "findings": []
+}

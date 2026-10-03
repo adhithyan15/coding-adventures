@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:ed0cf5223c27472d",
+  "lessonIds": [
+    "ML-C320-prasastamaya",
+    "ML-C320-sadharana",
+    "ML-C320-priyappetta",
+    "ML-C320-bhayankaramaya",
+    "ML-C320-atipoli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch320.txt",
+  "json": "malayalam/narration/ch320.json",
+  "textHash": "fnv1a64:66779a8a0ac6262b",
+  "jsonHash": "fnv1a64:7e18f734bc82bb26",
+  "findings": []
+}

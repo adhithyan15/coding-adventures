@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:6778546257705dff",
+  "lessonIds": [
+    "ML-C302-tunnuka",
+    "ML-C302-istiriyituka",
+    "ML-C302-murikkuka",
+    "ML-C302-ariyuka",
+    "ML-C302-araykkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch302.txt",
+  "json": "malayalam/narration/ch302.json",
+  "textHash": "fnv1a64:f8624ecfa2f2b94a",
+  "jsonHash": "fnv1a64:cfb3e728c3dc19d0",
+  "findings": []
+}

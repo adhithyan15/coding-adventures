@@ -1,0 +1,19 @@
+{
+  "chapter": 316,
+  "title": "Earth, Nature, Border, Village council, Countryside",
+  "label": "ch:ml-earth-nature-border-village-council-countryside",
+  "canDo": "I can say the earth, nature, a border, a village council and the countryside.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ML-C316-nattinpuram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 316: I can say the earth, nature, a border, a village council and the countryside.",
+    "assesses": [
+      "ML-LEX-C316-STHALAM316-03",
+      "ML-LEX-C316-STHALAM316-04",
+      "ML-LEX-C316-STHALAM316-05"
+    ]
+  }
+}

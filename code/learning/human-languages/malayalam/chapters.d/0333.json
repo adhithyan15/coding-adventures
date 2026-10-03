@@ -1,0 +1,19 @@
+{
+  "chapter": 333,
+  "title": "Cashew nut, Sugarcane, Sickle, Bindi, Helmet",
+  "label": "ch:ml-cashew-nut-sugarcane-sickle-bindi-helmet",
+  "canDo": "I can say a cashew nut, sugarcane, a sickle, a bindi and a helmet.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C333-helmerru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 333: I can say a cashew nut, sugarcane, a sickle, a bindi and a helmet.",
+    "assesses": [
+      "ML-LEX-C333-VASTU333-03",
+      "ML-LEX-C333-VASTU333-04",
+      "ML-LEX-C333-VASTU333-05"
+    ]
+  }
+}

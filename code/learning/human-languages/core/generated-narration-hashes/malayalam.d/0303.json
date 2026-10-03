@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:92373e79393c61bb",
+  "lessonIds": [
+    "ML-C303-tukkuka",
+    "ML-C303-ennuka",
+    "ML-C303-kuttuka",
+    "ML-C303-labhikkuka",
+    "ML-C303-vilapesuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch303.txt",
+  "json": "malayalam/narration/ch303.json",
+  "textHash": "fnv1a64:ff2b8a0e3739e221",
+  "jsonHash": "fnv1a64:b8fd522e37232806",
+  "findings": []
+}

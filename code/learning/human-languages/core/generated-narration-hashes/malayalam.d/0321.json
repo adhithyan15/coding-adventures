@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:e0e99493dc6bc9f0",
+  "lessonIds": [
+    "ML-C321-pulliyulla",
+    "ML-C321-sugandhamulla",
+    "ML-C321-narunna",
+    "ML-C321-bahalamulla",
+    "ML-C321-satyasandhamaya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch321.txt",
+  "json": "malayalam/narration/ch321.json",
+  "textHash": "fnv1a64:02488121dbe94251",
+  "jsonHash": "fnv1a64:99d374c02b5b934f",
+  "findings": []
+}

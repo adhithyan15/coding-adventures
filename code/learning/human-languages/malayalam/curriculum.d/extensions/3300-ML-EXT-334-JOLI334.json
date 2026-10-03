@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-334-JOLI334",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an employee, a boss, a manager, a company and a meeting.",
+  "prerequisites": []
+}

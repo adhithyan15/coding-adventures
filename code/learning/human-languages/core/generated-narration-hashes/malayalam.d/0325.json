@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:fca9054c140d236a",
+  "lessonIds": [
+    "ML-C325-kunnu2",
+    "ML-C325-al",
+    "ML-C325-stri",
+    "ML-C325-purusan",
+    "ML-C325-ceruppakkaran"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch325.txt",
+  "json": "malayalam/narration/ch325.json",
+  "textHash": "fnv1a64:2796de79fec5a96b",
+  "jsonHash": "fnv1a64:932ac3b21f4691b0",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C316-nattinpuram",
+    "language": "malayalam",
+    "chapter": 316,
+    "sequence": 14950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7522b65c198d4c72"
+  },
+  "findings": []
+}

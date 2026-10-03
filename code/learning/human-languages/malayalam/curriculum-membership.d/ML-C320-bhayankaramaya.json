@@ -1,0 +1,11 @@
+{
+  "id": "ML-C320-bhayankaramaya",
+  "pathSegment": "ML-PATH-320-GUNAM320",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-320-GUNAM320",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:f6b74168ca7d8e0d",
+  "lessonIds": [
+    "ML-C318-parajayam",
+    "ML-C318-telivu",
+    "ML-C318-vicaram",
+    "ML-C318-ormma",
+    "ML-C318-nirddesam"
+  ],
+  "tex": "malayalam/book/chapters/ch318-failure-evidence-thought-memory-suggestion.tex"
+}

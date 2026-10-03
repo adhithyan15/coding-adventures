@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C322-cammanti",
+    "language": "malayalam",
+    "chapter": 322,
+    "sequence": 15270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ed01e3f9056774d"
+  },
+  "findings": []
+}

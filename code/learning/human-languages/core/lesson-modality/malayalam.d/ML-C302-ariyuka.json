@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C302-ariyuka",
+    "language": "malayalam",
+    "chapter": 302,
+    "sequence": 14220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:010dcbd5c6248e2c"
+  },
+  "findings": []
+}

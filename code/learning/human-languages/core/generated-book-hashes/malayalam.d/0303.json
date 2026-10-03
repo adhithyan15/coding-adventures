@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:a9dde7ca7d1a1d64",
+  "lessonIds": [
+    "ML-C303-tukkuka",
+    "ML-C303-ennuka",
+    "ML-C303-kuttuka",
+    "ML-C303-labhikkuka",
+    "ML-C303-vilapesuka"
+  ],
+  "tex": "malayalam/book/chapters/ch303-to-weigh-to-count-to-add-to-save-to-bargain.tex"
+}

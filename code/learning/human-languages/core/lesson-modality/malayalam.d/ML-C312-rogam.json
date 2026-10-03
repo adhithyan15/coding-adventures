@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C312-rogam",
+    "language": "malayalam",
+    "chapter": 312,
+    "sequence": 14710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a48decdc2b9c2c05"
+  },
+  "findings": []
+}

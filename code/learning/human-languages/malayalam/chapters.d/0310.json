@@ -1,0 +1,19 @@
+{
+  "chapter": 310,
+  "title": "To slip, To scrub, To untie, To give up, To repeat",
+  "label": "ch:ml-to-slip-to-scrub-to-untie-to-give-up-to-repeat",
+  "canDo": "I can say to slip, to scrub, to untie, to give up and to repeat.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-R310-second-pass-words-from-chapters-306-310",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 310: I can say to slip, to scrub, to untie, to give up and to repeat.",
+    "assesses": [
+      "ML-LEX-C310-KRIYA310-03",
+      "ML-LEX-C310-KRIYA310-04",
+      "ML-LEX-C310-KRIYA310-05"
+    ]
+  }
+}

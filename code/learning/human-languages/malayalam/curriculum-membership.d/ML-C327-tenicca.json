@@ -1,0 +1,11 @@
+{
+  "id": "ML-C327-tenicca",
+  "pathSegment": "ML-PATH-327-VASTU327",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-327-VASTU327",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:b67253436e126c4b",
+  "lessonIds": [
+    "ML-C332-ciratta",
+    "ML-C332-viraku",
+    "ML-C332-kari",
+    "ML-C332-caram",
+    "ML-C332-tai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch332.txt",
+  "json": "malayalam/narration/ch332.json",
+  "textHash": "fnv1a64:15e07c61dce9fb98",
+  "jsonHash": "fnv1a64:6fdabccdbb33e6cb",
+  "findings": []
+}

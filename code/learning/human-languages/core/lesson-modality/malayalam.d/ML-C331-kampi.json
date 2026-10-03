@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C331-kampi",
+    "language": "malayalam",
+    "chapter": 331,
+    "sequence": 15730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21019791955d17c4"
+  },
+  "findings": []
+}

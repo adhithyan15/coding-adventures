@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C329-lekhanam",
+    "language": "malayalam",
+    "chapter": 329,
+    "sequence": 15600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:663292a5100f4a6c"
+  },
+  "findings": []
+}

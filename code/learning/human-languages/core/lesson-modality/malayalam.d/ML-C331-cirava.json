@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C331-cirava",
+    "language": "malayalam",
+    "chapter": 331,
+    "sequence": 15700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:13561f92029ad192"
+  },
+  "findings": []
+}

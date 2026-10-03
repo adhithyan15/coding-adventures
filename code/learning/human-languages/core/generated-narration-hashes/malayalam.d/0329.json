@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:6536067643fa1869",
+  "lessonIds": [
+    "ML-C329-lekhanam",
+    "ML-C329-kavita",
+    "ML-C329-natakam",
+    "ML-C329-phutbol",
+    "ML-C329-krikkarru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch329.txt",
+  "json": "malayalam/narration/ch329.json",
+  "textHash": "fnv1a64:842826424d46657b",
+  "jsonHash": "fnv1a64:9fc77eb136b9a7d3",
+  "findings": []
+}

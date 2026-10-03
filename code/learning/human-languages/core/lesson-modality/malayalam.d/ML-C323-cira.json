@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C323-cira",
+    "language": "malayalam",
+    "chapter": 323,
+    "sequence": 15290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30ba2a64f1042ce1"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 336,
+  "title": "Sale, Machine, Farming, Science, History",
+  "label": "ch:ml-sale-machine-farming-science-history",
+  "canDo": "I can say a sale, a machine, farming, science and history.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C336-caritram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 336: I can say a sale, a machine, farming, science and history.",
+    "assesses": [
+      "ML-LEX-C336-JOLI336-03",
+      "ML-LEX-C336-JOLI336-04",
+      "ML-LEX-C336-JOLI336-05"
+    ]
+  }
+}

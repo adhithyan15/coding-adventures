@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:d9673566b1603f48",
+  "lessonIds": [
+    "ML-C312-rogam",
+    "ML-C312-rogi",
+    "ML-C312-nalsu",
+    "ML-C312-kuttivayppu",
+    "ML-C312-ambulansu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch312.txt",
+  "json": "malayalam/narration/ch312.json",
+  "textHash": "fnv1a64:cd3279579f820b31",
+  "jsonHash": "fnv1a64:9029c54acbde764f",
+  "findings": []
+}

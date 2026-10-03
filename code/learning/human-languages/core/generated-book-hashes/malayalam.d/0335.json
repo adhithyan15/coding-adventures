@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:56ff0c24af7e1e9f",
+  "lessonIds": [
+    "ML-C335-birudam",
+    "ML-C335-visayam",
+    "ML-C335-kanakku",
+    "ML-C335-grhapatham",
+    "ML-C335-aksaram"
+  ],
+  "tex": "malayalam/book/chapters/ch335-degree-subject-mathematics-homework-letter.tex"
+}

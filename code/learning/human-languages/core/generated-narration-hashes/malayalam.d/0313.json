@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:018a0cd0239642db",
+  "lessonIds": [
+    "ML-C313-ekkil",
+    "ML-C313-kottuva",
+    "ML-C313-lepanam",
+    "ML-C313-kasayam",
+    "ML-C313-garbhini"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch313.txt",
+  "json": "malayalam/narration/ch313.json",
+  "textHash": "fnv1a64:98f523ce8f722a29",
+  "jsonHash": "fnv1a64:ab61f6081b80e017",
+  "findings": []
+}

@@ -132,7 +132,9 @@ describe("the committed Malayalam A1 inventory", () => {
     // lessons and ten reviews); `shown` and the overlap hold at 69.
     // 1294 -> 1494: chapters 264-301, the third A2 vocabulary tranche (190
     // lessons and ten reviews); `shown` and the overlap hold at 69.
-    expect(lessons).toHaveLength(1494);
+    // 1494 -> 1682: chapters 302-337, the fourth A2 vocabulary tranche (180
+    // lessons and eight reviews); `shown` and the overlap hold at 69.
+    expect(lessons).toHaveLength(1682);
     expect(shown.size).toBe(69);
     expect([...shown].filter((glyph) => directlyOwned.has(glyph))).toHaveLength(69);
     expect(open).toEqual([]);

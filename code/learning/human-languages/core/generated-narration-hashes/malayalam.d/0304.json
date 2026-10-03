@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:ce7651fefc5e66c5",
+  "lessonIds": [
+    "ML-C304-svasikkuka",
+    "ML-C304-tummuka",
+    "ML-C304-viraykkuka",
+    "ML-C304-virkkuka",
+    "ML-C304-coriyuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch304.txt",
+  "json": "malayalam/narration/ch304.json",
+  "textHash": "fnv1a64:b201f6aa351cfe95",
+  "jsonHash": "fnv1a64:ed01317ab3236d05",
+  "findings": []
+}
