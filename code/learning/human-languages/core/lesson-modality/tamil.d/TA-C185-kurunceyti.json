@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C185-kurunceyti",
+    "language": "tamil",
+    "chapter": 185,
+    "sequence": 9140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:34591211c825182f"
+  },
+  "findings": []
+}

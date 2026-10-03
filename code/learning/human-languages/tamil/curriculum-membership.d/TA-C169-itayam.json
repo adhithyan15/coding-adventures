@@ -1,0 +1,11 @@
+{
+  "id": "TA-C169-itayam",
+  "pathSegment": "TA-PATH-169-NALAM169",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-169-NALAM169",
+      "order": 3
+    }
+  ]
+}

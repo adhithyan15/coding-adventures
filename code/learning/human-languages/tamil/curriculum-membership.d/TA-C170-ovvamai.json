@@ -1,0 +1,11 @@
+{
+  "id": "TA-C170-ovvamai",
+  "pathSegment": "TA-PATH-170-NALAM170",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-170-NALAM170",
+      "order": 0
+    }
+  ]
+}

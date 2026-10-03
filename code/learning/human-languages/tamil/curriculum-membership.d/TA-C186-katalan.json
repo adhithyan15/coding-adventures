@@ -1,0 +1,11 @@
+{
+  "id": "TA-C186-katalan",
+  "pathSegment": "TA-PATH-186-PORUL186",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-186-PORUL186",
+      "order": 1
+    }
+  ]
+}

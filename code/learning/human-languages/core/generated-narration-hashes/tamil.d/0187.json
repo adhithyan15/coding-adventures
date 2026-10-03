@@ -1,0 +1,21 @@
+{
+  "language": "tamil",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:96d613ac17794698",
+  "lessonIds": [
+    "TA-C187-cellappirani",
+    "TA-C187-kalai",
+    "TA-C187-kanru",
+    "TA-C187-onay",
+    "TA-C187-ciruttai",
+    "TA-R187-first-pass-words-from-chapters-179-182",
+    "TA-R187-second-pass-words-from-chapters-183-187"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "tamil/narration/ch187.txt",
+  "json": "tamil/narration/ch187.json",
+  "textHash": "fnv1a64:8a3a3f8a4c64b932",
+  "jsonHash": "fnv1a64:75f8414b6d0976e7",
+  "findings": []
+}

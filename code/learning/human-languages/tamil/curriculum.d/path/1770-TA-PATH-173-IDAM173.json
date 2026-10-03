@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-173-IDAM173",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "TA-EXT-173-IDAM173"
+  ],
+  "after": []
+}

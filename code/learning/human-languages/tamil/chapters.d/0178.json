@@ -1,0 +1,19 @@
+{
+  "chapter": 178,
+  "title": "Tasty, Cheap, Expensive, Free of charge, Ripe",
+  "label": "ch:ta-tasty-cheap-expensive-free-of-charge-ripe",
+  "canDo": "I can say tasty, cheap, expensive, free of charge and ripe.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TA-R178-second-pass-words-from-chapters-174-178",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 178: I can say tasty, cheap, expensive, free of charge and ripe.",
+    "assesses": [
+      "TA-LEX-C178-GUNAM178-03",
+      "TA-LEX-C178-GUNAM178-04",
+      "TA-LEX-C178-GUNAM178-05"
+    ]
+  }
+}

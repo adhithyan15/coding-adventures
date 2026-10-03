@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C162-kata",
+    "language": "tamil",
+    "chapter": 162,
+    "sequence": 7590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ae34485d2ada5e6"
+  },
+  "findings": []
+}

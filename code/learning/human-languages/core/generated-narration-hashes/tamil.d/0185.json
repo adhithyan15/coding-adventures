@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:a0bc0bfd51efb3b7",
+  "lessonIds": [
+    "TA-C185-varicai",
+    "TA-C185-en",
+    "TA-C185-kurunceyti",
+    "TA-C185-ceyti",
+    "TA-C185-minnancal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch185.txt",
+  "json": "tamil/narration/ch185.json",
+  "textHash": "fnv1a64:ac0669763f0f059c",
+  "jsonHash": "fnv1a64:807ab3e1a795daac",
+  "findings": []
+}

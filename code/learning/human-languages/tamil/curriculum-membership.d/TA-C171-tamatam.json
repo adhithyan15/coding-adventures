@@ -1,0 +1,11 @@
+{
+  "id": "TA-C171-tamatam",
+  "pathSegment": "TA-PATH-171-NERAM171",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-171-NERAM171",
+      "order": 4
+    }
+  ]
+}

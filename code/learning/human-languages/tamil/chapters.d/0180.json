@@ -1,0 +1,19 @@
+{
+  "chapter": 180,
+  "title": "Active, Naughty, Stubborn, Funny, Interesting",
+  "label": "ch:ta-active-naughty-stubborn-funny-interesting",
+  "canDo": "I can say active, naughty, stubborn, funny and interesting.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TA-C180-cuvaraciyamana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 180: I can say active, naughty, stubborn, funny and interesting.",
+    "assesses": [
+      "TA-LEX-C180-GUNAM180-03",
+      "TA-LEX-C180-GUNAM180-04",
+      "TA-LEX-C180-GUNAM180-05"
+    ]
+  }
+}

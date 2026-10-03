@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C183-ponkal",
+    "language": "tamil",
+    "chapter": 183,
+    "sequence": 9020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:441d155269125306"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C185-kurunceyti",
+  "pathSegment": "TA-PATH-185-PORUL185",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-185-PORUL185",
+      "order": 2
+    }
+  ]
+}

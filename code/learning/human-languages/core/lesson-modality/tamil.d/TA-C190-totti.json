@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C190-totti",
+    "language": "tamil",
+    "chapter": 190,
+    "sequence": 9600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e0e0ea1a786877b"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:9a07eb4c18ff0e93",
+  "lessonIds": [
+    "TA-C192-kavalar",
+    "TA-C192-ottunar",
+    "TA-C192-tapalkarar",
+    "TA-C192-viyapari",
+    "TA-C192-caka-uliyar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch192.txt",
+  "json": "tamil/narration/ch192.json",
+  "textHash": "fnv1a64:d6eb1180a72cc339",
+  "jsonHash": "fnv1a64:6285185747709317",
+  "findings": []
+}

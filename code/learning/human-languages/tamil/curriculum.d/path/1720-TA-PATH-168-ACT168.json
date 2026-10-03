@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-168-ACT168",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "before": [],
+  "inline": [
+    "TA-EXT-168-ACT168"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C189-melukuvartti",
+  "pathSegment": "TA-PATH-189-PORUL189",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-189-PORUL189",
+      "order": 1
+    }
+  ]
+}

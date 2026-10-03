@@ -1,0 +1,11 @@
+{
+  "id": "TA-C182-kulay",
+  "pathSegment": "TA-PATH-182-PORUL182",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-182-PORUL182",
+      "order": 1
+    }
+  ]
+}

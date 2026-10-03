@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:96844af77481a902",
+  "lessonIds": [
+    "TA-C173-camaiyalarai",
+    "TA-C173-kuliyalarai",
+    "TA-C173-patukkaiyarai",
+    "TA-C173-kalipparai",
+    "TA-C173-cannal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch173.txt",
+  "json": "tamil/narration/ch173.json",
+  "textHash": "fnv1a64:5582897b3c575160",
+  "jsonHash": "fnv1a64:1db51b3f5d37765f",
+  "findings": []
+}

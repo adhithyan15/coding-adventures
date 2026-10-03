@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C185-varicai",
+    "language": "tamil",
+    "chapter": 185,
+    "sequence": 9120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63fd33d5d7033e3f"
+  },
+  "findings": []
+}

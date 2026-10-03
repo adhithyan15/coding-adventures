@@ -1,0 +1,11 @@
+{
+  "id": "TA-C168-valukku",
+  "pathSegment": "TA-PATH-168-ACT168",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-168-ACT168",
+      "order": 3
+    }
+  ]
+}

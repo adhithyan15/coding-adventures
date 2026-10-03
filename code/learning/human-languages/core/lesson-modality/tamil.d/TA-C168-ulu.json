@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C168-ulu",
+    "language": "tamil",
+    "chapter": 168,
+    "sequence": 7890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:85780587fbeb9dcd"
+  },
+  "findings": []
+}

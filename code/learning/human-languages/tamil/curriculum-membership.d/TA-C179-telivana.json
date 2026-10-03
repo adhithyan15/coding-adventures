@@ -1,0 +1,11 @@
+{
+  "id": "TA-C179-telivana",
+  "pathSegment": "TA-PATH-179-GUNAM179",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-179-GUNAM179",
+      "order": 3
+    }
+  ]
+}

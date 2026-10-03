@@ -1,0 +1,19 @@
+{
+  "chapter": 175,
+  "title": "Desert, Cave, Stream, Farm, Zoo",
+  "label": "ch:ta-desert-cave-stream-farm-zoo",
+  "canDo": "I can say a desert, a cave, a stream, a farm and a zoo.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TA-C175-mirukakkatcicalai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 175: I can say a desert, a cave, a stream, a farm and a zoo.",
+    "assesses": [
+      "TA-LEX-C175-IDAM175-03",
+      "TA-LEX-C175-IDAM175-04",
+      "TA-LEX-C175-IDAM175-05"
+    ]
+  }
+}

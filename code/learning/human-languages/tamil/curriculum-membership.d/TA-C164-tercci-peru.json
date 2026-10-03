@@ -1,0 +1,11 @@
+{
+  "id": "TA-C164-tercci-peru",
+  "pathSegment": "TA-PATH-164-ACT164",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-164-ACT164",
+      "order": 3
+    }
+  ]
+}

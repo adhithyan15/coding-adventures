@@ -1,0 +1,19 @@
+{
+  "chapter": 168,
+  "title": "To plough, To dig, To stretch out, To slip, To yawn",
+  "label": "ch:ta-to-plough-to-dig-to-stretch-out-to-slip-to-yawn",
+  "canDo": "I can say to plough, to dig, to stretch out, to slip and to yawn.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C168-kottavi-vitu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 168: I can say to plough, to dig, to stretch out, to slip and to yawn.",
+    "assesses": [
+      "TA-LEX-C168-ACT168-03",
+      "TA-LEX-C168-ACT168-04",
+      "TA-LEX-C168-ACT168-05"
+    ]
+  }
+}

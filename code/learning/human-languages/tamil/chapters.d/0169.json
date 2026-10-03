@@ -1,0 +1,19 @@
+{
+  "chapter": 169,
+  "title": "Ankle, Waist, Throat, Heart, Blood",
+  "label": "ch:ta-ankle-waist-throat-heart-blood",
+  "canDo": "I can say an ankle, the waist, the throat, the heart and blood.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TA-R169-second-pass-words-from-chapters-165-169",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 169: I can say an ankle, the waist, the throat, the heart and blood.",
+    "assesses": [
+      "TA-LEX-C169-NALAM169-03",
+      "TA-LEX-C169-NALAM169-04",
+      "TA-LEX-C169-NALAM169-05"
+    ]
+  }
+}

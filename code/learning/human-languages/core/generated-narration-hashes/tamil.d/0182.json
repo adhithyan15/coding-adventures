@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:5d427805c346924c",
+  "lessonIds": [
+    "TA-C182-kulircatanap-petti",
+    "TA-C182-kulay",
+    "TA-C182-tamlar",
+    "TA-C182-catti",
+    "TA-C182-muti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch182.txt",
+  "json": "tamil/narration/ch182.json",
+  "textHash": "fnv1a64:045d49d22adee474",
+  "jsonHash": "fnv1a64:0fe0ffe048249f4b",
+  "findings": []
+}

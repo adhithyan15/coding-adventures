@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 184,
+  "sourceHash": "fnv1a64:bd90c3ab92400154",
+  "lessonIds": [
+    "TA-C184-panikkatti",
+    "TA-C184-kalai-unavu",
+    "TA-C184-matiya-unavu",
+    "TA-C184-iravu-unavu",
+    "TA-C184-kurippetu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch184.txt",
+  "json": "tamil/narration/ch184.json",
+  "textHash": "fnv1a64:d6ea9a122e21ad38",
+  "jsonHash": "fnv1a64:bb80063e3b8e1c22",
+  "findings": []
+}

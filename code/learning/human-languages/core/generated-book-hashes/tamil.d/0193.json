@@ -1,0 +1,15 @@
+{
+  "language": "tamil",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:00473c202136dc5f",
+  "lessonIds": [
+    "TA-C193-parvaiyalar",
+    "TA-C193-natikar",
+    "TA-C193-patakar",
+    "TA-C193-payirciyalar",
+    "TA-C193-taccar",
+    "TA-R193-first-pass-words-from-chapters-188-190",
+    "TA-R193-second-pass-words-from-chapters-191-193"
+  ],
+  "tex": "tamil/book/chapters/ch193-spectator-actor-singer-coach-carpenter.tex"
+}

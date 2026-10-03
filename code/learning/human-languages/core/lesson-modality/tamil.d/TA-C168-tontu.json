@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C168-tontu",
+    "language": "tamil",
+    "chapter": 168,
+    "sequence": 7900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98610001ba8a8e72"
+  },
+  "findings": []
+}

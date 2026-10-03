@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C180-cuvaraciyamana",
+    "language": "tamil",
+    "chapter": 180,
+    "sequence": 8910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f8dcb058c5d9a11"
+  },
+  "findings": []
+}

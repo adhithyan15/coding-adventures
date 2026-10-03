@@ -1,0 +1,15 @@
+{
+  "language": "tamil",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:016b353488b667cd",
+  "lessonIds": [
+    "TA-C169-kanukkal",
+    "TA-C169-ituppu",
+    "TA-C169-tontai",
+    "TA-C169-itayam",
+    "TA-C169-irattam",
+    "TA-R169-first-pass-words-from-chapters-161-164",
+    "TA-R169-second-pass-words-from-chapters-165-169"
+  ],
+  "tex": "tamil/book/chapters/ch169-ankle-waist-throat-heart-blood.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R193-second-pass-words-from-chapters-191-193",
+    "language": "tamil",
+    "chapter": 193,
+    "sequence": 9770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f21cb4082992839c"
+  },
+  "findings": []
+}

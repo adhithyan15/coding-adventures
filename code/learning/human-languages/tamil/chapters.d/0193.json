@@ -1,0 +1,19 @@
+{
+  "chapter": 193,
+  "title": "Spectator, Actor, Singer, Coach, Carpenter",
+  "label": "ch:ta-spectator-actor-singer-coach-carpenter",
+  "canDo": "I can say a spectator, an actor, a singer, a coach and a carpenter.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-R193-second-pass-words-from-chapters-191-193",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 193: I can say a spectator, an actor, a singer, a coach and a carpenter.",
+    "assesses": [
+      "TA-LEX-C193-VELAI193-03",
+      "TA-LEX-C193-VELAI193-04",
+      "TA-LEX-C193-VELAI193-05"
+    ]
+  }
+}

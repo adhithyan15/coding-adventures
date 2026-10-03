@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C171-tamatam",
+    "language": "tamil",
+    "chapter": 171,
+    "sequence": 8270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:162b750508a05dd2"
+  },
+  "findings": []
+}

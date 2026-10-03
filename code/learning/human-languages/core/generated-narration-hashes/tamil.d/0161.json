@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:8fe8ff4d1fccbbc0",
+  "lessonIds": [
+    "TA-C161-vil",
+    "TA-C161-koti",
+    "TA-C161-varu",
+    "TA-C161-arai",
+    "TA-C161-kalakku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch161.txt",
+  "json": "tamil/narration/ch161.json",
+  "textHash": "fnv1a64:7bfa28b74aa3c844",
+  "jsonHash": "fnv1a64:b35fe75228d9acfb",
+  "findings": []
+}

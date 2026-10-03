@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C173-camaiyalarai",
+    "language": "tamil",
+    "chapter": 173,
+    "sequence": 8330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23aea90b45f5e2f9"
+  },
+  "findings": []
+}

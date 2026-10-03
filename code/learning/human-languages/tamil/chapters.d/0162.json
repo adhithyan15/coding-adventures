@@ -1,0 +1,19 @@
+{
+  "chapter": 162,
+  "title": "To cross, To stay, To go around, To move, To lift",
+  "label": "ch:ta-to-cross-to-stay-to-go-around-to-move-to-lift",
+  "canDo": "I can say to cross, to stay, to go around, to move and to lift.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C162-tukku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 162: I can say to cross, to stay, to go around, to move and to lift.",
+    "assesses": [
+      "TA-LEX-C162-ACT162-03",
+      "TA-LEX-C162-ACT162-04",
+      "TA-LEX-C162-ACT162-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C192-ottunar",
+    "language": "tamil",
+    "chapter": 192,
+    "sequence": 9670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:07a70b4f9367b15f"
+  },
+  "findings": []
+}

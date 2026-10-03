@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:eccee4d1bc40e364",
+  "lessonIds": [
+    "TA-C168-ulu",
+    "TA-C168-tontu",
+    "TA-C168-nittu",
+    "TA-C168-valukku",
+    "TA-C168-kottavi-vitu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch168.txt",
+  "json": "tamil/narration/ch168.json",
+  "textHash": "fnv1a64:93bc664b26057cb7",
+  "jsonHash": "fnv1a64:e760a1118c54d760",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "tamil",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:94f1877efa37155e",
+  "lessonIds": [
+    "TA-C169-kanukkal",
+    "TA-C169-ituppu",
+    "TA-C169-tontai",
+    "TA-C169-itayam",
+    "TA-C169-irattam",
+    "TA-R169-first-pass-words-from-chapters-161-164",
+    "TA-R169-second-pass-words-from-chapters-165-169"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "tamil/narration/ch169.txt",
+  "json": "tamil/narration/ch169.json",
+  "textHash": "fnv1a64:502439520ea1f27b",
+  "jsonHash": "fnv1a64:bb58a34ad56c55b4",
+  "findings": []
+}
