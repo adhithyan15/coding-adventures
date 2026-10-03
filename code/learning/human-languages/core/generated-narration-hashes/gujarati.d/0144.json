@@ -1,0 +1,15 @@
+{
+  "language": "gujarati",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:cd04820fad0c9aa7",
+  "lessonIds": [
+    "GU-W11-a2-connected-composition"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "gujarati/narration/ch144.txt",
+  "json": "gujarati/narration/ch144.json",
+  "textHash": "fnv1a64:7e22ed1688df7661",
+  "jsonHash": "fnv1a64:66b5ecad97103c16",
+  "findings": []
+}

@@ -238,5 +238,8 @@ it("pins Gujarati's complete pre-A1 writing runway", () => {
     // for the actual six-field form and 30–40 word named-reader message under
     // one continuous 20-minute clock, completing the assessed writing ladder.
     "timed-assessment-production",
+    // Chapter 144 removes the model and the clock, then asks for the first
+    // independently connected 70–90 word message for a named reader.
+    "connected-composition",
   ]);
 });

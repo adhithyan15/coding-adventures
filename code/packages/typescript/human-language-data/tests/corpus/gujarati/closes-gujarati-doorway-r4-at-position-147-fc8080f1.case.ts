@@ -162,7 +162,9 @@ it("closes Gujarati doorway R4 at position 149", () => {
   //      0 pre-existing windows lost. The continuations pushed four older atoms
   //        (nām, mārũ, kāle, pāchhā) past R3 and the headless clue past R2;
   //        each is retrieved by name in a warm-up at the right distance.
-  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(1465);
+  // Chapter 144's connected-composition retrieval exposes three later
+  // measured windows without changing the pinned A1 doorway boundary.
+  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(1468);
   expect(
     afterCheckpoint.reinforcement.filter(
       (defect) => doorway.includes(defect.atom) && defect.missed.includes("R4"),
