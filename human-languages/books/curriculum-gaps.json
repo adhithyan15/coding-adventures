@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 25382,
+    "totalLessons": 25399,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -40,7 +40,7 @@
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 192,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 23591,
+    "drivableLessons": 23608,
     "drivablePercent": 93,
     "chaptersWithoutDrivablePrefix": 278,
     "unexplainedModalityOverrides": 0
@@ -3492,7 +3492,10 @@
           152,
           153,
           154,
-          155
+          155,
+          156,
+          157,
+          158
         ],
         "bookChapters": [
           1,
@@ -3649,7 +3652,10 @@
           152,
           153,
           154,
-          155
+          155,
+          156,
+          157,
+          158
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -11100,9 +11106,9 @@
       {
         "language": "arabic",
         "status": "version-2",
-        "lessonCount": 713,
+        "lessonCount": 730,
         "versions": {
-          "2": 713
+          "2": 730
         }
       },
       {
@@ -11915,8 +11921,8 @@
     "tracks": [
       {
         "language": "arabic",
-        "bookChapters": 155,
-        "declaredChapters": 155,
+        "bookChapters": 158,
+        "declaredChapters": 158,
         "missingCapability": 0,
         "findings": 4,
         "clean": false
@@ -12099,8 +12105,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 5058,
-      "declaredChapters": 5058,
+      "bookChapters": 5061,
+      "declaredChapters": 5061,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 94,
@@ -12112,11 +12118,11 @@
     }
   },
   "levels": {
-    "totalLessons": 25382,
+    "totalLessons": 25399,
     "byLevel": {
       "pre-A1": 9175,
       "A1": 14759,
-      "A2": 1364,
+      "A2": 1381,
       "B1": 39,
       "B2": 17,
       "C1": 10,
@@ -12127,11 +12133,11 @@
     "tracks": [
       {
         "language": "arabic",
-        "lessonCount": 713,
+        "lessonCount": 730,
         "byLevel": {
           "pre-A1": 366,
           "A1": 329,
-          "A2": 18,
+          "A2": 35,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -12917,8 +12923,8 @@
     "tracks": [
       {
         "language": "arabic",
-        "lessonCount": 713,
-        "measurable": 710,
+        "lessonCount": 730,
+        "measurable": 727,
         "unmeasurable": 3,
         "lessonViolations": 0,
         "chapterViolations": 4
@@ -13443,7 +13449,7 @@
           "language": "arabic",
           "script": "arabic",
           "latinScript": false,
-          "lessonCount": 713,
+          "lessonCount": 730,
           "totalGlyphs": 45,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -92167,6 +92173,193 @@
         "revisits": 3
       },
       {
+        "atom": "AR-LEX-C140-THINGS140-05",
+        "language": "arabic",
+        "introducedBy": "AR-C140-shafa",
+        "introducedAt": 633,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C141-THINGS141-01",
+        "language": "arabic",
+        "introducedBy": "AR-C141-lisan",
+        "introducedAt": 634,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C141-THINGS141-02",
+        "language": "arabic",
+        "introducedBy": "AR-C141-batn",
+        "introducedAt": 635,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C141-THINGS141-03",
+        "language": "arabic",
+        "introducedBy": "AR-C141-saq",
+        "introducedAt": 636,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C141-THINGS141-04",
+        "language": "arabic",
+        "introducedBy": "AR-C141-jild",
+        "introducedAt": 637,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C141-THINGS141-05",
+        "language": "arabic",
+        "introducedBy": "AR-C141-azm",
+        "introducedAt": 638,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C142-THINGS142-01",
+        "language": "arabic",
+        "introducedBy": "AR-C142-darraja",
+        "introducedAt": 639,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C142-THINGS142-02",
+        "language": "arabic",
+        "introducedBy": "AR-C142-safina",
+        "introducedAt": 640,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C142-THINGS142-03",
+        "language": "arabic",
+        "introducedBy": "AR-C142-musafir",
+        "introducedAt": 641,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C142-THINGS142-04",
+        "language": "arabic",
+        "introducedBy": "AR-C142-masna",
+        "introducedAt": 642,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C142-THINGS142-05",
+        "language": "arabic",
+        "introducedBy": "AR-C142-saha",
+        "introducedAt": 643,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C143-THINGS143-01",
+        "language": "arabic",
+        "introducedBy": "AR-C143-mimhah",
+        "introducedAt": 644,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C143-THINGS143-02",
+        "language": "arabic",
+        "introducedBy": "AR-C143-saff",
+        "introducedAt": 645,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C143-THINGS143-03",
+        "language": "arabic",
+        "introducedBy": "AR-C143-talib",
+        "introducedAt": 646,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C143-THINGS143-04",
+        "language": "arabic",
+        "introducedBy": "AR-C143-wazifa",
+        "introducedAt": 647,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C143-THINGS143-05",
+        "language": "arabic",
+        "introducedBy": "AR-C143-ratib",
+        "introducedAt": 648,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C144-THINGS144-01",
+        "language": "arabic",
+        "introducedBy": "AR-C144-khayyat",
+        "introducedAt": 649,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "AR-LEX-C144-THINGS144-03",
         "language": "arabic",
         "introducedBy": "AR-C144-khabbaz",
@@ -92237,6 +92430,72 @@
         "language": "arabic",
         "introducedBy": "AR-C147-ghadib",
         "introducedAt": 668,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "AR-LEX-C152-QUAL152-03",
+        "language": "arabic",
+        "introducedBy": "AR-C152-naim",
+        "introducedAt": 693,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C152-QUAL152-04",
+        "language": "arabic",
+        "introducedBy": "AR-C152-sulb",
+        "introducedAt": 694,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C152-QUAL152-05",
+        "language": "arabic",
+        "introducedBy": "AR-C152-dhaki",
+        "introducedAt": 695,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C153-QUAL153-01",
+        "language": "arabic",
+        "introducedBy": "AR-C153-kasul",
+        "introducedAt": 696,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C155-QUAL155-03",
+        "language": "arabic",
+        "introducedBy": "AR-C155-thamin",
+        "introducedAt": 708,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C155-QUAL155-04",
+        "language": "arabic",
+        "introducedBy": "AR-C155-sakhin",
+        "introducedAt": 709,
         "missed": [
           "R2",
           "R3"
@@ -263303,176 +263562,6 @@
         "revisits": 11
       },
       {
-        "atom": "AR-LEX-C140-THINGS140-05",
-        "language": "arabic",
-        "introducedBy": "AR-C140-shafa",
-        "introducedAt": 633,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "AR-LEX-C141-THINGS141-01",
-        "language": "arabic",
-        "introducedBy": "AR-C141-lisan",
-        "introducedAt": 634,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "AR-LEX-C141-THINGS141-02",
-        "language": "arabic",
-        "introducedBy": "AR-C141-batn",
-        "introducedAt": 635,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "AR-LEX-C141-THINGS141-03",
-        "language": "arabic",
-        "introducedBy": "AR-C141-saq",
-        "introducedAt": 636,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "AR-LEX-C141-THINGS141-04",
-        "language": "arabic",
-        "introducedBy": "AR-C141-jild",
-        "introducedAt": 637,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "AR-LEX-C141-THINGS141-05",
-        "language": "arabic",
-        "introducedBy": "AR-C141-azm",
-        "introducedAt": 638,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "AR-LEX-C142-THINGS142-01",
-        "language": "arabic",
-        "introducedBy": "AR-C142-darraja",
-        "introducedAt": 639,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "AR-LEX-C142-THINGS142-02",
-        "language": "arabic",
-        "introducedBy": "AR-C142-safina",
-        "introducedAt": 640,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "AR-LEX-C142-THINGS142-03",
-        "language": "arabic",
-        "introducedBy": "AR-C142-musafir",
-        "introducedAt": 641,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "AR-LEX-C142-THINGS142-04",
-        "language": "arabic",
-        "introducedBy": "AR-C142-masna",
-        "introducedAt": 642,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "AR-LEX-C142-THINGS142-05",
-        "language": "arabic",
-        "introducedBy": "AR-C142-saha",
-        "introducedAt": 643,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "AR-LEX-C143-THINGS143-01",
-        "language": "arabic",
-        "introducedBy": "AR-C143-mimhah",
-        "introducedAt": 644,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "AR-LEX-C143-THINGS143-02",
-        "language": "arabic",
-        "introducedBy": "AR-C143-saff",
-        "introducedAt": 645,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "AR-LEX-C143-THINGS143-03",
-        "language": "arabic",
-        "introducedBy": "AR-C143-talib",
-        "introducedAt": 646,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "AR-LEX-C143-THINGS143-04",
-        "language": "arabic",
-        "introducedBy": "AR-C143-wazifa",
-        "introducedAt": 647,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "AR-LEX-C143-THINGS143-05",
-        "language": "arabic",
-        "introducedBy": "AR-C143-ratib",
-        "introducedAt": 648,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "AR-LEX-C144-THINGS144-01",
-        "language": "arabic",
-        "introducedBy": "AR-C144-khayyat",
-        "introducedAt": 649,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "AR-LEX-C144-THINGS144-02",
         "language": "arabic",
         "introducedBy": "AR-C144-najjar",
@@ -263813,44 +263902,124 @@
         "revisits": 3
       },
       {
-        "atom": "AR-LEX-C152-QUAL152-03",
+        "atom": "AR-LEX-C153-QUAL153-02",
         "language": "arabic",
-        "introducedBy": "AR-C152-naim",
-        "introducedAt": 693,
+        "introducedBy": "AR-C153-shuja",
+        "introducedAt": 697,
         "missed": [
-          "R2"
+          "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "AR-LEX-C152-QUAL152-04",
+        "atom": "AR-LEX-C153-QUAL153-03",
         "language": "arabic",
-        "introducedBy": "AR-C152-sulb",
-        "introducedAt": 694,
+        "introducedBy": "AR-C153-atshan",
+        "introducedAt": 698,
         "missed": [
-          "R2"
+          "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "AR-LEX-C152-QUAL152-05",
+        "atom": "AR-LEX-C153-QUAL153-04",
         "language": "arabic",
-        "introducedBy": "AR-C152-dhaki",
-        "introducedAt": 695,
+        "introducedBy": "AR-C153-tazaj",
+        "introducedAt": 699,
         "missed": [
-          "R2"
+          "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "AR-LEX-C153-QUAL153-01",
+        "atom": "AR-LEX-C153-QUAL153-05",
         "language": "arabic",
-        "introducedBy": "AR-C153-kasul",
-        "introducedAt": 696,
+        "introducedBy": "AR-C153-nadij",
+        "introducedAt": 700,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C154-QUAL154-01",
+        "language": "arabic",
+        "introducedBy": "AR-C154-mali",
+        "introducedAt": 701,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C154-QUAL154-02",
+        "language": "arabic",
+        "introducedBy": "AR-C154-shabb",
+        "introducedAt": 702,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C154-QUAL154-03",
+        "language": "arabic",
+        "introducedBy": "AR-C154-ajuz",
+        "introducedAt": 703,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C154-QUAL154-04",
+        "language": "arabic",
+        "introducedBy": "AR-C154-qawi",
+        "introducedAt": 704,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C154-QUAL154-05",
+        "language": "arabic",
+        "introducedBy": "AR-C154-daif",
+        "introducedAt": 705,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C155-QUAL155-01",
+        "language": "arabic",
+        "introducedBy": "AR-C155-daruri",
+        "introducedAt": 706,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C155-QUAL155-02",
+        "language": "arabic",
+        "introducedBy": "AR-C155-qabih",
+        "introducedAt": 707,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "AR-LEX-C155-QUAL155-05",
+        "language": "arabic",
+        "introducedBy": "AR-C155-muzdahim",
+        "introducedAt": 710,
         "missed": [
           "R2"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "AR-LEX-C38-AW-01",
@@ -302038,11 +302207,11 @@
     "tracks": [
       {
         "language": "arabic",
-        "lessonCount": 713,
+        "lessonCount": 730,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 769,
+        "atomsTaught": 784,
         "atomsNeverRevisited": 0,
         "forwardReferences": 13
       },
@@ -302272,14 +302441,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 26076,
+      "atomsTaught": 26091,
       "atomsNeverRevisited": 156,
       "neverRevisitedPercent": 1,
       "missedByWindow": {
         "R1": 1745,
-        "R2": 17294,
-        "R3": 14212,
-        "R4": 20549
+        "R2": 17297,
+        "R3": 14229,
+        "R4": 20566
       },
       "forwardReferences": 1185
     }
@@ -302289,7 +302458,7 @@
       {
         "language": "arabic",
         "script": "arabic",
-        "lessonCount": 713,
+        "lessonCount": 730,
         "scriptLessons": 35,
         "taughtGlyphs": 41,
         "shownGlyphs": 45,
@@ -322735,8 +322904,8 @@
     "tracks": [
       {
         "language": "arabic",
-        "lessonCount": 713,
-        "atomMeasurableLessons": 710,
+        "lessonCount": 730,
+        "atomMeasurableLessons": 727,
         "atomMeasurementBlindLessons": 3,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -322751,14 +322920,14 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 13,
-        "atomsTaught": 769,
+        "atomsTaught": 784,
         "atomsNeverRevisited": 0,
-        "reinforcementWindowMisses": 1681,
+        "reinforcementWindowMisses": 1718,
         "reinforcementMissesByWindow": {
           "R1": 138,
-          "R2": 617,
-          "R3": 388,
-          "R4": 538
+          "R2": 620,
+          "R3": 405,
+          "R4": 555
         },
         "payoffSurprises": 4,
         "writingPracticeLessons": 76,
@@ -322789,7 +322958,7 @@
           {
             "language": "arabic",
             "kind": "reinforcement",
-            "count": 1681,
+            "count": 1718,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -324962,7 +325131,7 @@
       {
         "language": "arabic",
         "kind": "reinforcement",
-        "count": 1681,
+        "count": 1718,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -325269,22 +325438,17 @@
         "inProgressAt": "A2",
         "blockers": [
           {
-            "criterion": "spine-nodes",
-            "detail": "3 of 5 A2 spine node(s) unrealized: SPINE-TALK-ABOUT-PAST, SPINE-TALK-ABOUT-FUTURE, SPINE-READ-PRACTICAL-TEXTS",
-            "shortfall": 3
-          },
-          {
             "criterion": "vocabulary",
-            "detail": "teaches 627 distinct headwords at or below A2, against 1200",
-            "shortfall": 573
+            "detail": "teaches 642 distinct headwords at or below A2, against 1200",
+            "shortfall": 558
           },
           {
             "criterion": "verb-vocabulary",
-            "detail": "teaches 69 distinct verb headwords at or below A2, against 120",
-            "shortfall": 51
+            "detail": "teaches 72 distinct verb headwords at or below A2, against 120",
+            "shortfall": 48
           }
         ],
-        "vocabulary": 627
+        "vocabulary": 642
       },
       {
         "language": "bengali",
@@ -325721,23 +325885,23 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 25382,
-    "voice": 23013,
+    "totalLessons": 25399,
+    "voice": 23030,
     "sight": 1000,
     "pen": 1369,
-    "coreVoice": 23591,
+    "coreVoice": 23608,
     "lessonsWithWritingSegments": 886,
     "drivablePercent": 93,
     "tracks": [
       {
         "language": "arabic",
-        "lessonCount": 713,
-        "voice": 620,
+        "lessonCount": 730,
+        "voice": 637,
         "sight": 55,
         "pen": 38,
-        "coreVoice": 661,
+        "coreVoice": 678,
         "drivablePercent": 93,
-        "drivablePrefixTotal": 635,
+        "drivablePrefixTotal": 652,
         "chapters": [
           {
             "language": "arabic",
@@ -327922,6 +328086,48 @@
           {
             "language": "arabic",
             "chapter": 155,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "arabic",
+            "chapter": 156,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "arabic",
+            "chapter": 157,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "arabic",
+            "chapter": 158,
             "lessonCount": 7,
             "voice": 7,
             "sight": 0,
@@ -398342,7 +398548,7 @@
     "underspentPercent": 89
   },
   "infoDump": {
-    "lessons": 25382,
+    "lessons": 25399,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -398350,11 +398556,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 25382,
-    "measuredLessons": 21016,
-    "idiomMeasuredLessons": 21016,
-    "senseMeasuredLessons": 21017,
-    "cultureClaimMeasuredLessons": 21016,
+    "lessons": 25399,
+    "measuredLessons": 21033,
+    "idiomMeasuredLessons": 21033,
+    "senseMeasuredLessons": 21034,
+    "cultureClaimMeasuredLessons": 21033,
     "idioms": 101,
     "senses": 103,
     "cultureClaims": 208,
@@ -398363,8 +398569,8 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 24463,
-    "usesBeforeIntroduction": 42373,
+    "lessonsUsingTerms": 24480,
+    "usesBeforeIntroduction": 42396,
     "technicalUsesBeforeIntroduction": 6458,
     "technicalLessons": 3672,
     "worstTerms": [
@@ -398395,12 +398601,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 25382,
+    "lessonsScanned": 25399,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 5127,
+    "filesScanned": 5130,
     "mainCharacters": 135,
     "scriptCharacters": 803,
     "gaps": 0
