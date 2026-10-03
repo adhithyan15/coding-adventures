@@ -1,0 +1,19 @@
+{
+  "chapter": 216,
+  "title": "Poem, Conversation, Secret, Promise, Fog",
+  "label": "ch:ar-poem-conversation-secret-promise-fog",
+  "canDo": "I can say a poem, a conversation, a secret, a promise and fog.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C216-dabab",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 216: I can say a poem, a conversation, a secret, a promise and fog.",
+    "assesses": [
+      "AR-LEX-C216-SHAY216-03",
+      "AR-LEX-C216-SHAY216-04",
+      "AR-LEX-C216-SHAY216-05"
+    ]
+  }
+}

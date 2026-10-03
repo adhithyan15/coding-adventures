@@ -1,0 +1,11 @@
+{
+  "id": "AR-C203-usbui",
+  "pathSegment": "AR-PATH-203-WAQT203",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-203-WAQT203",
+      "order": 4
+    }
+  ]
+}

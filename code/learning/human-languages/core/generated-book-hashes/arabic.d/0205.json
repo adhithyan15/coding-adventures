@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:542e9f2c82cb2abc",
+  "lessonIds": [
+    "AR-C205-tabia",
+    "AR-C205-turab",
+    "AR-C205-tin",
+    "AR-C205-hudud",
+    "AR-C205-kawkab"
+  ],
+  "tex": "arabic/book/chapters/ch205-nature-dust-mud-borders-planet.tex"
+}

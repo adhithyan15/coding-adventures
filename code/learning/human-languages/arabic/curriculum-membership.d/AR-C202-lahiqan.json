@@ -1,0 +1,11 @@
+{
+  "id": "AR-C202-lahiqan",
+  "pathSegment": "AR-PATH-202-WAQT202",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-202-WAQT202",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:e008b235eca9155b",
+  "lessonIds": [
+    "AR-C203-sabiqan",
+    "AR-C203-akhiran",
+    "AR-C203-athnaa",
+    "AR-C203-qarn",
+    "AR-C203-usbui"
+  ],
+  "tex": "arabic/book/chapters/ch203-previously-finally-during-century-weekly.tex"
+}

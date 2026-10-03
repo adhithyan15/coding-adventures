@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-220-AMAL220",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a card, a loan, goods, an account and a butcher.",
+  "prerequisites": []
+}

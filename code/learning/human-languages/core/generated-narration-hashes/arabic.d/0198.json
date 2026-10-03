@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:9ed16ee8d0122702",
+  "lessonIds": [
+    "AR-C198-samaha",
+    "AR-C198-manaa",
+    "AR-C198-hadatha",
+    "AR-C198-saqata",
+    "AR-C198-hafara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch198.txt",
+  "json": "arabic/narration/ch198.json",
+  "textHash": "fnv1a64:87e25385e2f53112",
+  "jsonHash": "fnv1a64:2183bfa8089d6d2d",
+  "findings": []
+}

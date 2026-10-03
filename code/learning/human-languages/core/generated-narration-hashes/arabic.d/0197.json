@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:db3c6370c30548c4",
+  "lessonIds": [
+    "AR-C197-naqasha",
+    "AR-C197-qarana",
+    "AR-C197-lahaza",
+    "AR-C197-intabaha",
+    "AR-C197-itabara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch197.txt",
+  "json": "arabic/narration/ch197.json",
+  "textHash": "fnv1a64:cfac14e48dbb7773",
+  "jsonHash": "fnv1a64:76f0f351f9a006b2",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-219-SHAY219",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a hose, wood, glass, copper and silk.",
+  "prerequisites": []
+}

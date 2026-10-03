@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C216-hadith",
+    "language": "arabic",
+    "chapter": 216,
+    "sequence": 11460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc15a3ecc32b4d0c"
+  },
+  "findings": []
+}

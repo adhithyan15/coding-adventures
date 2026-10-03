@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-200-SIHHA200",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a cold, a cough, an allergy, a wound and health.",
+  "prerequisites": []
+}

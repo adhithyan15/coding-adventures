@@ -1,0 +1,19 @@
+{
+  "chapter": 205,
+  "title": "Nature, Dust, Mud, Borders, Planet",
+  "label": "ch:ar-nature-dust-mud-borders-planet",
+  "canDo": "I can say nature, dust, mud, borders and a planet.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "AR-C205-kawkab",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 205: I can say nature, dust, mud, borders and a planet.",
+    "assesses": [
+      "AR-LEX-C205-MAKAN205-03",
+      "AR-LEX-C205-MAKAN205-04",
+      "AR-LEX-C205-MAKAN205-05"
+    ]
+  }
+}

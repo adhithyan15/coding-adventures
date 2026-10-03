@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:26989981663ff2d1",
+  "lessonIds": [
+    "AR-C211-mushmis",
+    "AR-C211-mukhtalif",
+    "AR-C211-mushabih",
+    "AR-C211-nadir",
+    "AR-C211-adi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch211.txt",
+  "json": "arabic/narration/ch211.json",
+  "textHash": "fnv1a64:62ca19fc89411b9b",
+  "jsonHash": "fnv1a64:de109c7ef6ac0c6b",
+  "findings": []
+}

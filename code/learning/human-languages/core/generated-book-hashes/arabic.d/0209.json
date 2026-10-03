@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:1f39a65f1c1acc05",
+  "lessonIds": [
+    "AR-C209-mashwi",
+    "AR-C209-masluq",
+    "AR-C209-mahruq",
+    "AR-C209-sihhi",
+    "AR-C209-maksur",
+    "AR-R209-first-pass-words-from-chapters-201-204",
+    "AR-R209-second-pass-words-from-chapters-205-209"
+  ],
+  "tex": "arabic/book/chapters/ch209-grilled-boiled-burnt-healthy-broken.tex"
+}

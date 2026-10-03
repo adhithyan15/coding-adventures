@@ -1,0 +1,19 @@
+{
+  "chapter": 210,
+  "title": "Direct, Generous, Mean, Shy, Sociable",
+  "label": "ch:ar-direct-generous-mean-shy-sociable",
+  "canDo": "I can say direct, generous, mean, shy and sociable.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "AR-C210-ijtimai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 210: I can say direct, generous, mean, shy and sociable.",
+    "assesses": [
+      "AR-LEX-C210-SIFA210-03",
+      "AR-LEX-C210-SIFA210-04",
+      "AR-LEX-C210-SIFA210-05"
+    ]
+  }
+}

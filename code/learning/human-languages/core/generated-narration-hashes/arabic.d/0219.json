@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:8bfa6176c319f244",
+  "lessonIds": [
+    "AR-C219-khartum",
+    "AR-C219-khashab",
+    "AR-C219-zujaj",
+    "AR-C219-nuhas",
+    "AR-C219-harir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch219.txt",
+  "json": "arabic/narration/ch219.json",
+  "textHash": "fnv1a64:5046359aafc5cb78",
+  "jsonHash": "fnv1a64:ef087f75f3acf76f",
+  "findings": []
+}

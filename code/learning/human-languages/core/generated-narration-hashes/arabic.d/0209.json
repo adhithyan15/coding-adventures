@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:2bce4e089a945df8",
+  "lessonIds": [
+    "AR-C209-mashwi",
+    "AR-C209-masluq",
+    "AR-C209-mahruq",
+    "AR-C209-sihhi",
+    "AR-C209-maksur",
+    "AR-R209-first-pass-words-from-chapters-201-204",
+    "AR-R209-second-pass-words-from-chapters-205-209"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch209.txt",
+  "json": "arabic/narration/ch209.json",
+  "textHash": "fnv1a64:01480482c8bcb9a6",
+  "jsonHash": "fnv1a64:f8d565c603f223fd",
+  "findings": []
+}

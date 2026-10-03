@@ -1,0 +1,19 @@
+{
+  "chapter": 213,
+  "title": "Sofa, Brush, Lid, Furniture, Laundry",
+  "label": "ch:ar-sofa-brush-lid-furniture-laundry",
+  "canDo": "I can say a sofa, a brush, a lid, furniture and laundry.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C213-ghasil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 213: I can say a sofa, a brush, a lid, furniture and laundry.",
+    "assesses": [
+      "AR-LEX-C213-SHAY213-03",
+      "AR-LEX-C213-SHAY213-04",
+      "AR-LEX-C213-SHAY213-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C198-hafara",
+  "pathSegment": "AR-PATH-198-ACT198",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-198-ACT198",
+      "order": 4
+    }
+  ]
+}

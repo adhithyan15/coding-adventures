@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C213-arika",
+    "language": "arabic",
+    "chapter": 213,
+    "sequence": 11300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2c46ff84ee6d9fb"
+  },
+  "findings": []
+}

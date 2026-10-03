@@ -1,0 +1,19 @@
+{
+  "chapter": 212,
+  "title": "Rough, Sticky, Fragile, Transparent, Shiny",
+  "label": "ch:ar-rough-sticky-fragile-transparent-shiny",
+  "canDo": "I can say rough, sticky, fragile, transparent and shiny.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "AR-C212-lami",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 212: I can say rough, sticky, fragile, transparent and shiny.",
+    "assesses": [
+      "AR-LEX-C212-SIFA212-03",
+      "AR-LEX-C212-SIFA212-04",
+      "AR-LEX-C212-SIFA212-05"
+    ]
+  }
+}

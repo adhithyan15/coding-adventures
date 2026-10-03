@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-217-SHAY217",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a tail, a wing, a camera, headphones and a battery.",
+  "prerequisites": []
+}

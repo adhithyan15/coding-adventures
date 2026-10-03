@@ -1,0 +1,19 @@
+{
+  "chapter": 215,
+  "title": "Identity card, Visa, Luggage, Charger, Taxi",
+  "label": "ch:ar-identity-card-visa-luggage-charger-taxi",
+  "canDo": "I can say an identity card, a visa, luggage, a charger and a taxi.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C215-taksi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 215: I can say an identity card, a visa, luggage, a charger and a taxi.",
+    "assesses": [
+      "AR-LEX-C215-SHAY215-03",
+      "AR-LEX-C215-SHAY215-04",
+      "AR-LEX-C215-SHAY215-05"
+    ]
+  }
+}

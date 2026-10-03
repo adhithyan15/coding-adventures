@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:21590bf0603fdc6c",
+  "lessonIds": [
+    "AR-C202-ghaliban",
+    "AR-C202-fawran",
+    "AR-C202-lahiqan",
+    "AR-C202-tarikh",
+    "AR-C202-lahza"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch202.txt",
+  "json": "arabic/narration/ch202.json",
+  "textHash": "fnv1a64:58623552e4178920",
+  "jsonHash": "fnv1a64:e6f2c5b66e54cd34",
+  "findings": []
+}

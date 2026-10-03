@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C215-amtia",
+    "language": "arabic",
+    "chapter": 215,
+    "sequence": 11420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e2a8623b48ab671a"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:a9e6755ba3fcf15d",
+  "lessonIds": [
+    "AR-C207-faqat",
+    "AR-C207-jiddan",
+    "AR-C207-hatta",
+    "AR-C207-idha",
+    "AR-C207-kama"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch207.txt",
+  "json": "arabic/narration/ch207.json",
+  "textHash": "fnv1a64:667f94467b9317fc",
+  "jsonHash": "fnv1a64:e137462550fbcdc1",
+  "findings": []
+}

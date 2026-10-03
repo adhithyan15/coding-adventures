@@ -1,0 +1,19 @@
+{
+  "chapter": 199,
+  "title": "To shake, To bite, To blow, To whisper, To harvest",
+  "label": "ch:ar-to-shake-to-bite-to-blow-to-whisper-to-harvest",
+  "canDo": "I can say to shake, to bite, to blow, to whisper and to harvest.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C199-hasada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 199: I can say to shake, to bite, to blow, to whisper and to harvest.",
+    "assesses": [
+      "AR-LEX-C199-ACT199-03",
+      "AR-LEX-C199-ACT199-04",
+      "AR-LEX-C199-ACT199-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:885e3e8a5fd7792a",
+  "lessonIds": [
+    "AR-C208-mana",
+    "AR-C208-mithal",
+    "AR-C208-hurriyya",
+    "AR-C208-qaida",
+    "AR-C208-tariqa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch208.txt",
+  "json": "arabic/narration/ch208.json",
+  "textHash": "fnv1a64:a38d05b5eb902cb7",
+  "jsonHash": "fnv1a64:123a14d3466a3de1",
+  "findings": []
+}

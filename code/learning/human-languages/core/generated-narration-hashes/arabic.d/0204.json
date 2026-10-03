@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:75e246ef643a1b1a",
+  "lessonIds": [
+    "AR-C204-nahwa",
+    "AR-C204-mintaqa",
+    "AR-C204-markaz",
+    "AR-C204-asima",
+    "AR-C204-ayna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch204.txt",
+  "json": "arabic/narration/ch204.json",
+  "textHash": "fnv1a64:da018264b515bd3f",
+  "jsonHash": "fnv1a64:ef1a8bf50d30441d",
+  "findings": []
+}

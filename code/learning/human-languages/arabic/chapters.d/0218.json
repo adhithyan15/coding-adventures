@@ -1,0 +1,19 @@
+{
+  "chapter": 218,
+  "title": "Hammer, Topic, Scales, Piece, Weight",
+  "label": "ch:ar-hammer-topic-scales-piece-weight",
+  "canDo": "I can say a hammer, a topic, scales, a piece and weight.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-R218-second-pass-words-from-chapters-214-218",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 218: I can say a hammer, a topic, scales, a piece and weight.",
+    "assesses": [
+      "AR-LEX-C218-SHAY218-03",
+      "AR-LEX-C218-SHAY218-04",
+      "AR-LEX-C218-SHAY218-05"
+    ]
+  }
+}

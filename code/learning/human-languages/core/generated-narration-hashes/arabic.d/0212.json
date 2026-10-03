@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:2fd35188e5b47635",
+  "lessonIds": [
+    "AR-C212-khashin",
+    "AR-C212-lazij",
+    "AR-C212-hashsh",
+    "AR-C212-shaffaf",
+    "AR-C212-lami"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch212.txt",
+  "json": "arabic/narration/ch212.json",
+  "textHash": "fnv1a64:1693a3d0cba487aa",
+  "jsonHash": "fnv1a64:90e85770ade3870d",
+  "findings": []
+}

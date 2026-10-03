@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:2065da4bb2aa527e",
+  "lessonIds": [
+    "AR-C212-khashin",
+    "AR-C212-lazij",
+    "AR-C212-hashsh",
+    "AR-C212-shaffaf",
+    "AR-C212-lami"
+  ],
+  "tex": "arabic/book/chapters/ch212-rough-sticky-fragile-transparent-shiny.tex"
+}
