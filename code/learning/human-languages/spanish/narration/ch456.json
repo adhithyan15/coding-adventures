@@ -4,7 +4,7 @@
   "chapter": 456,
   "title": "La cuenta",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8d5aceaaaf449633",
+  "sourceHash": "fnv1a64:f0d57cd7be5833fc",
   "lessons": [
     {
       "id": "ES-C456-ensalada",
@@ -343,7 +343,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d8c2545ab7c017f",
+      "sourceHash": "fnv1a64:a0fbb0306e16c24f",
       "notice": null,
       "blocks": [
         {

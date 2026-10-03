@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 414,
-  "sourceHash": "fnv1a64:d6b3adc9c84466ae",
+  "sourceHash": "fnv1a64:b8bb23ad017851c6",
   "lessonIds": [
     "ES-C414-apuntarse",
     "ES-C414-recepcion",
@@ -13,6 +13,6 @@
   "text": "spanish/narration/ch414.txt",
   "json": "spanish/narration/ch414.json",
   "textHash": "fnv1a64:12d5b5d7b6d5fafa",
-  "jsonHash": "fnv1a64:c1dc561e24999c9c",
+  "jsonHash": "fnv1a64:7fea7ee0026a79a6",
   "findings": []
 }

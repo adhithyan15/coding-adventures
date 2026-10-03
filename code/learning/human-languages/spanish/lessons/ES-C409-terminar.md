@@ -7,7 +7,7 @@ chapter: 409
 type: word
 headword: terminar
 gloss: to finish, to end
-concept_tag: ES-PLAN-TERMINAR
+concept_tag: ES-VERB-TERMINAR
 prerequisites: [ES-C394-trabajo]
 sounds: [stress-final, r-tap]
 roots: [terminare-latin]

@@ -7,7 +7,7 @@ chapter: 456
 type: word
 headword: aceptar
 gloss: to accept — to take a thing towards you, and the sign on the till
-concept_tag: ES-BILL-ACEPTAR
+concept_tag: ES-VERB-ACEPTAR
 prerequisites: [ES-C456-cargo, ES-C382-pagar, ES-C311-cuenta]
 sounds: [soft-c, p-b-hard, stress-final]
 roots: [capere-latin]

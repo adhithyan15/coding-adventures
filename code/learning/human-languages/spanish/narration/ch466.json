@@ -4,7 +4,7 @@
   "chapter": 466,
   "title": "Una carta del colegio",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:63e7f810aa40c1bb",
+  "sourceHash": "fnv1a64:fb87431ef3b0f1e4",
   "lessons": [
     {
       "id": "ES-C466-director",
@@ -524,7 +524,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5cfc3ba54a6b2617",
+      "sourceHash": "fnv1a64:0200732f831d077d",
       "notice": null,
       "blocks": [
         {

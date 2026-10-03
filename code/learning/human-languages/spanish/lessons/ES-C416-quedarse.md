@@ -7,7 +7,7 @@ chapter: 416
 type: word
 headword: quedarse
 gloss: to stay, to remain
-concept_tag: ES-HOTEL-QUEDARSE
+concept_tag: ES-VERB-QUEDARSE
 prerequisites: [ES-C268-habitacion]
 sounds: [stress-penultimate]
 roots: [quietare-latin]

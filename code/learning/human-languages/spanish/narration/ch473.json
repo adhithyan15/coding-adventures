@@ -4,7 +4,7 @@
   "chapter": 473,
   "title": "El consejo a otras bibliotecas",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:00344e962be6e703",
+  "sourceHash": "fnv1a64:2f125c2ebfbe0c31",
   "lessons": [
     {
       "id": "ES-C473-aconsejar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e809514ace82136",
+      "sourceHash": "fnv1a64:7330e6a2c056ce0c",
       "notice": null,
       "blocks": [
         {
@@ -185,7 +185,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8063ac0d4733e5aa",
+      "sourceHash": "fnv1a64:d21e991668d3e4b4",
       "notice": null,
       "blocks": [
         {

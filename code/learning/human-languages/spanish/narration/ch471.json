@@ -4,7 +4,7 @@
   "chapter": 471,
   "title": "El curso de cocina",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:38b513f93e2b62ad",
+  "sourceHash": "fnv1a64:37d153f6894caa55",
   "lessons": [
     {
       "id": "ES-C471-demasiado",
@@ -844,7 +844,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0340801548d934b",
+      "sourceHash": "fnv1a64:c97366cebaf10125",
       "notice": null,
       "blocks": [
         {

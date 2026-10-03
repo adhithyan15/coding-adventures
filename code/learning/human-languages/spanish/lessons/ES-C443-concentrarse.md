@@ -7,7 +7,7 @@ chapter: 443
 type: word
 headword: concentrarse
 gloss: to concentrate — to gather yourself to a centre, with the Greek word for a goad inside it
-concept_tag: ES-ACT-CONCENTRARSE
+concept_tag: ES-VERB-CONCENTRARSE
 prerequisites: [ES-C443-acercarse, ES-C347-centro, ES-C410-examen]
 sounds: [soft-c, stress-final]
 roots: [centrum-latin, kentron-greek]

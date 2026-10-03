@@ -7,7 +7,7 @@ chapter: 446
 type: word
 headword: mover
 gloss: to move something — the verb your phone is named after
-concept_tag: ES-ACT-MOVER
+concept_tag: ES-VERB-MOVER
 prerequisites: [ES-C446-mirar, ES-C404-movil, ES-C439-trasladar]
 sounds: [diphthong-ue, stress-final]
 roots: [movere-latin]

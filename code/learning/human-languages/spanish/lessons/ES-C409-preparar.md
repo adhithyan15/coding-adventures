@@ -7,7 +7,7 @@ chapter: 409
 type: word
 headword: preparar
 gloss: to prepare
-concept_tag: ES-PLAN-PREPARAR
+concept_tag: ES-VERB-PREPARAR
 prerequisites: [ES-C409-terminar, ES-C391-postre]
 sounds: [pr-cluster, r-tap, stress-final]
 roots: [praeparare-latin]

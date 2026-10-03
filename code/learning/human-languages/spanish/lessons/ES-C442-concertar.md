@@ -7,7 +7,7 @@ chapter: 442
 type: word
 headword: concertar
 gloss: to arrange an appointment — the same word as a concert, and it began as a fight
-concept_tag: ES-ACT-CONCERTAR
+concept_tag: ES-VERB-CONCERTAR
 prerequisites: [ES-C442-envio, ES-C356-cita, ES-C413-concierto, ES-C29-la-hora]
 sounds: [soft-c, stress-final]
 roots: [concertare-latin]

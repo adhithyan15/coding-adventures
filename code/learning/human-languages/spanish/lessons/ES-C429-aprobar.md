@@ -7,7 +7,7 @@ chapter: 429
 type: word
 headword: aprobar
 gloss: to pass an exam — and the surprise is who does the approving, because the Latin has the exam approving you
-concept_tag: ES-ACTION-APROBAR
+concept_tag: ES-VERB-APROBAR
 prerequisites: [ES-C429-calificacion]
 sounds: [pr-cluster, b-soft, stress-final]
 roots: [probare-latin]

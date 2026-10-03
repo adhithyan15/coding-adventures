@@ -7,7 +7,7 @@ chapter: 414
 type: word
 headword: apuntarse
 gloss: to sign up, to put one's name down
-concept_tag: ES-SIGNUP-APUNTARSE
+concept_tag: ES-VERB-APUNTARSE
 prerequisites: [ES-C342-punto]
 sounds: [stress-penultimate]
 roots: []

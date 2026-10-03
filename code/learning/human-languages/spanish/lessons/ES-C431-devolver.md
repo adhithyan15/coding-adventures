@@ -7,7 +7,7 @@ chapter: 431
 type: word
 headword: devolver
 gloss: to give back — the verb every shop notice and every borrowed object needs, and the one this level asks for most
-concept_tag: ES-ACT-DEVOLVER
+concept_tag: ES-VERB-DEVOLVER
 prerequisites: [ES-C431-pedido, ES-C382-pagar]
 sounds: [diphthong-ue]
 roots: [volvere-latin]

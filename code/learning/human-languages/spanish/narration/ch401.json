@@ -4,7 +4,7 @@
   "chapter": 401,
   "title": "Four Words for Following Directions",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:3edd9e68d96d3aa0",
+  "sourceHash": "fnv1a64:06b6b3b3e7a55155",
   "lessons": [
     {
       "id": "ES-C401-seguir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d085db3d1f9fb825",
+      "sourceHash": "fnv1a64:b519faa57516d9c6",
       "notice": null,
       "blocks": [
         {
@@ -184,7 +184,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:11629859ffe8ff16",
+      "sourceHash": "fnv1a64:7ba599dc30cbfcb5",
       "notice": null,
       "blocks": [
         {

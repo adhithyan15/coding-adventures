@@ -7,7 +7,7 @@ chapter: 409
 type: word
 headword: reservar
 gloss: to reserve, to book
-concept_tag: ES-PLAN-RESERVAR
+concept_tag: ES-VERB-RESERVAR
 prerequisites: [ES-C409-fin-de-semana, ES-C268-habitacion]
 sounds: [r-tap, b-soft, stress-final]
 roots: [reservare-latin]

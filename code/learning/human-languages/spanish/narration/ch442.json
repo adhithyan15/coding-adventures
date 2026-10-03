@@ -4,7 +4,7 @@
   "chapter": 442,
   "title": "La Gestion",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7d01cad5c35a4646",
+  "sourceHash": "fnv1a64:f9ca33f7bc6ae5fd",
   "lessons": [
     {
       "id": "ES-C442-administracion",
@@ -359,7 +359,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de3f8d9b1bd7dfe2",
+      "sourceHash": "fnv1a64:b4f3a2781f288f49",
       "notice": null,
       "blocks": [
         {

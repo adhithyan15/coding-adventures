@@ -7,7 +7,7 @@ chapter: 438
 type: word
 headword: reír
 gloss: to laugh — a word that wears a prefix it never had, and an accent that marks a missing consonant
-concept_tag: ES-ACT-REIR
+concept_tag: ES-VERB-REIR
 prerequisites: [ES-C438-descansar, ES-C315-risa]
 sounds: [written-accent, r-tap]
 roots: [ridere-latin]

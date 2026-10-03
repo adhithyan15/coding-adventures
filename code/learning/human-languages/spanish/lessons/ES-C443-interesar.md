@@ -7,7 +7,7 @@ chapter: 443
 type: word
 headword: interesar
 gloss: to interest — the verb behind an adjective you own, running on the same machine as doler
-concept_tag: ES-ACT-INTERESAR
+concept_tag: ES-VERB-INTERESAR
 prerequisites: [ES-C443-doler, ES-C398-interesante, ES-C06-estudiar]
 sounds: [stress-final, s-clear]
 roots: [interesse-latin]

@@ -4,7 +4,7 @@
   "chapter": 436,
   "title": "Gente Y Trato",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:970406c3ec821263",
+  "sourceHash": "fnv1a64:ba90cf417ff83a6a",
   "lessons": [
     {
       "id": "ES-C436-companero",
@@ -302,7 +302,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f76f378bd9e98d9b",
+      "sourceHash": "fnv1a64:e37163ba959d8b8e",
       "notice": null,
       "blocks": [
         {
@@ -442,7 +442,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5bec54951e4d0d51",
+      "sourceHash": "fnv1a64:4ded85b5bc6c842a",
       "notice": null,
       "blocks": [
         {
@@ -590,7 +590,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d2f6df7fc1052755",
+      "sourceHash": "fnv1a64:c66a408994e85b0e",
       "notice": null,
       "blocks": [
         {

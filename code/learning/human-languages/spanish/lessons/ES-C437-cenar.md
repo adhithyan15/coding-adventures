@@ -7,7 +7,7 @@ chapter: 437
 type: word
 headword: cenar
 gloss: to have dinner — one verb where English needs three words, and the meal a plan usually ends at
-concept_tag: ES-ACT-CENAR
+concept_tag: ES-VERB-CENAR
 prerequisites: [ES-C437-tardar, ES-C07-comer]
 sounds: []
 roots: []

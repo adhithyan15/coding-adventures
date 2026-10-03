@@ -4,7 +4,7 @@
   "chapter": 449,
   "title": "El taller",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c4f7787ce489f4ab",
+  "sourceHash": "fnv1a64:d9a6542c93af680c",
   "lessons": [
     {
       "id": "ES-C449-arreglar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a20e49b914a02f4",
+      "sourceHash": "fnv1a64:722ae8ec7376a976",
       "notice": null,
       "blocks": [
         {
@@ -665,7 +665,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b47856f45fdecb6b",
+      "sourceHash": "fnv1a64:6ab3e826bb948efd",
       "notice": null,
       "blocks": [
         {

@@ -7,7 +7,7 @@ chapter: 438
 type: word
 headword: descansar
 gloss: to rest — named in Spanish as the undoing of tiredness, not as a state
-concept_tag: ES-BODY-DESCANSAR
+concept_tag: ES-VERB-DESCANSAR
 prerequisites: [ES-C438-torcerse, ES-C09-cansado]
 sounds: [stress-final]
 roots: [campsare-latin]

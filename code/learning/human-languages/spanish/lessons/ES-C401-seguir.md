@@ -7,7 +7,7 @@ chapter: 401
 type: word
 headword: seguir
 gloss: to follow or continue — from Vulgar Latin sequīre, built from Latin sequī with the ending of īre, to go
-concept_tag: ES-ACTION-SEGUIR
+concept_tag: ES-VERB-SEGUIR
 prerequisites: [ES-C400-playa]
 sounds: [stress-final, g-hard, vowel-e, vowel-i]
 roots: [sequi-latin]

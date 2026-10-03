@@ -4,7 +4,7 @@
   "chapter": 447,
   "title": "Juzgar",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:20783ff4b661461d",
+  "sourceHash": "fnv1a64:ba18b48352db0701",
   "lessons": [
     {
       "id": "ES-C447-analisis",
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:093bb3bbe0d82edc",
+      "sourceHash": "fnv1a64:883aad0cccad4bb1",
       "notice": null,
       "blocks": [
         {

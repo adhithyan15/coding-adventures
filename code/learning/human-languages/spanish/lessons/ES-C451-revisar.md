@@ -7,7 +7,7 @@ chapter: 451
 type: word
 headword: revisar
 gloss: to check over — looking at something a second time, on purpose
-concept_tag: ES-TURN-REVISAR
+concept_tag: ES-VERB-REVISAR
 prerequisites: [ES-C451-ticket, ES-C16-ver, ES-C332-aviso]
 sounds: [v-b, s-clear, stress-final]
 roots: [videre-latin]

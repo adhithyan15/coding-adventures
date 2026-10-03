@@ -7,7 +7,7 @@ chapter: 472
 type: word
 headword: surgir
 gloss: to arise, to come up — Latin surgere, to rise, and the verb a question reaches for when it asks where an idea came from
-concept_tag: ES-ASK-SURGIR
+concept_tag: ES-VERB-SURGIR
 prerequisites: [ES-C472-encuesta, ES-C471-sintesis-curso, ES-C353-biblioteca]
 sounds: [j-jota, r-tap, stress-final]
 roots: [surgere-latin]

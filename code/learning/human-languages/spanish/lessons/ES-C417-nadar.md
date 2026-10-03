@@ -7,7 +7,7 @@ chapter: 417
 type: word
 headword: nadar
 gloss: to swim
-concept_tag: ES-SWIM-NADAR
+concept_tag: ES-VERB-NADAR
 prerequisites: [ES-C417-curso, ES-C390-piscina]
 sounds: [stress-final]
 roots: [natare-latin]

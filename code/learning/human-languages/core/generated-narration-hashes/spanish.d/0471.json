@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 471,
-  "sourceHash": "fnv1a64:38b513f93e2b62ad",
+  "sourceHash": "fnv1a64:37d153f6894caa55",
   "lessonIds": [
     "ES-C471-demasiado",
     "ES-C471-nivel",
@@ -17,6 +17,6 @@
   "text": "spanish/narration/ch471.txt",
   "json": "spanish/narration/ch471.json",
   "textHash": "fnv1a64:25d3c396813008f1",
-  "jsonHash": "fnv1a64:0834d1420aafccec",
+  "jsonHash": "fnv1a64:5c4a028272a342f1",
   "findings": []
 }

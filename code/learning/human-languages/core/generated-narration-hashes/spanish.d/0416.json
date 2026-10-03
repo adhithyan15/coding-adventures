@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 416,
-  "sourceHash": "fnv1a64:13c60f7ca4e09bea",
+  "sourceHash": "fnv1a64:8323c01f88e0ad4b",
   "lessonIds": [
     "ES-C416-quedarse",
     "ES-C416-mayo",
@@ -13,6 +13,6 @@
   "text": "spanish/narration/ch416.txt",
   "json": "spanish/narration/ch416.json",
   "textHash": "fnv1a64:a58ac4291e5f30b9",
-  "jsonHash": "fnv1a64:8674c7aaa65d35cf",
+  "jsonHash": "fnv1a64:dd84901c0bf3a10c",
   "findings": []
 }

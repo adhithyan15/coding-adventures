@@ -7,7 +7,7 @@ chapter: 436
 type: word
 headword: recoger
 gloss: to collect, to pick up — the single most demanded verb in the A2 papers, and one word for four English ones
-concept_tag: ES-ACT-RECOGER
+concept_tag: ES-VERB-RECOGER
 prerequisites: [ES-C436-prestar, ES-C431-pedido]
 sounds: []
 roots: []

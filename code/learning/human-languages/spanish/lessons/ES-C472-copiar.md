@@ -7,7 +7,7 @@ chapter: 472
 type: word
 headword: copiar
 gloss: to copy — from Latin copia, abundance, because the first copies were made to have plenty
-concept_tag: ES-ASK-COPIAR
+concept_tag: ES-VERB-COPIAR
 prerequisites: [ES-C472-lectura, ES-C472-usuario, ES-C353-biblioteca]
 sounds: [k-hard, p-b-hard, stress-final, diphthong-ia]
 roots: [copia-latin]

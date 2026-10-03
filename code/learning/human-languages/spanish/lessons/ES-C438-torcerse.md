@@ -7,7 +7,7 @@ chapter: 438
 type: word
 headword: torcerse
 gloss: to twist something of your own — the injury verb, and a stem that breaks under stress
-concept_tag: ES-BODY-TORCERSE
+concept_tag: ES-VERB-TORCERSE
 prerequisites: [ES-C438-natacion, ES-C314-pie, ES-C293-tobillo, ES-C36-dormir]
 sounds: [diphthong-ue, soft-c]
 roots: [torquere-latin]

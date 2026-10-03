@@ -7,7 +7,7 @@ chapter: 446
 type: word
 headword: mirar
 gloss: to look at — the verb behind the mira you already use, and it began as wonder
-concept_tag: ES-ACT-MIRAR
+concept_tag: ES-VERB-MIRAR
 prerequisites: [ES-C445-sintesis-puesto, ES-C272-mira, ES-C16-ver, ES-C286-ojo]
 sounds: [r-tap, stress-final]
 roots: [mirari]

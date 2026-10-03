@@ -7,7 +7,7 @@ chapter: 449
 type: word
 headword: acercar
 gloss: to pass, to bring closer — the same verb as *acercarse* with the -se taken off
-concept_tag: ES-FIX-ACERCAR
+concept_tag: ES-VERB-ACERCAR
 prerequisites: [ES-C449-taladro, ES-C443-acercarse, ES-C340-cerca]
 sounds: [soft-c, r-tap, stress-final]
 roots: [circa-latin]

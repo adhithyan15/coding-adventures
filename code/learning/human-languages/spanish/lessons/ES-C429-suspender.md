@@ -7,7 +7,7 @@ chapter: 429
 type: word
 headword: suspender
 gloss: to fail an exam — Latin for to leave hanging, which is exactly what a resit does to your year
-concept_tag: ES-ACTION-SUSPENDER
+concept_tag: ES-VERB-SUSPENDER
 prerequisites: [ES-C429-aprobar]
 sounds: [s-t-cluster, nasal-n, stress-final]
 roots: [pendere-latin]

@@ -7,7 +7,7 @@ chapter: 470
 type: word
 headword: avisar
 gloss: to let know — the verb el aviso was named from, handed over now, and it shows rather than orders
-concept_tag: ES-ASK-AVISAR
+concept_tag: ES-VERB-AVISAR
 prerequisites: [ES-C470-encontrar, ES-C332-aviso, ES-C383-dejar]
 sounds: [v-b, s-clear, stress-final]
 roots: [videre-latin]

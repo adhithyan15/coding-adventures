@@ -7,7 +7,7 @@ chapter: 437
 type: word
 headword: coincidir
 gloss: to clash, to coincide — the reason people give for not coming, and a word your English eye can already read
-concept_tag: ES-ACT-COINCIDIR
+concept_tag: ES-VERB-COINCIDIR
 prerequisites: [ES-C437-decidir, ES-C436-grupo]
 sounds: []
 roots: []

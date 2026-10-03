@@ -4,7 +4,7 @@
   "chapter": 465,
   "title": "El cuaderno de campo",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:43e5ede668f2d01a",
+  "sourceHash": "fnv1a64:ef11fc13952c7570",
   "lessons": [
     {
       "id": "ES-C465-cuaderno",
@@ -198,7 +198,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:677d61032c2f6834",
+      "sourceHash": "fnv1a64:6b01714d8d5429c0",
       "notice": null,
       "blocks": [
         {
