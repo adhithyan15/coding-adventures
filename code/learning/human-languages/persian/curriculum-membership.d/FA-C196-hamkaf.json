@@ -1,0 +1,11 @@
+{
+  "id": "FA-C196-hamkaf",
+  "pathSegment": "FA-PATH-196-MAKAN196",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-196-MAKAN196",
+      "order": 4
+    }
+  ]
+}

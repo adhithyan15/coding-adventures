@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:8ff28c273151cc16",
+  "lessonIds": [
+    "FA-C190-mask",
+    "FA-C190-tabsanj",
+    "FA-C190-behdasht",
+    "FA-C190-feshar-e-khun",
+    "FA-C190-bihal"
+  ],
+  "tex": "persian/book/chapters/ch190-face-mask-thermometer-hygiene-blood-pressure-listless.tex"
+}

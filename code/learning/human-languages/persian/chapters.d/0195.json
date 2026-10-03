@@ -1,0 +1,19 @@
+{
+  "chapter": 195,
+  "title": "Flat, Roof, Balcony, Corridor, Dome",
+  "label": "ch:fa-flat-roof-balcony-corridor-dome",
+  "canDo": "I can say a flat, a roof, a balcony, a corridor and a dome.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "FA-C195-gonbad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 195: I can say a flat, a roof, a balcony, a corridor and a dome.",
+    "assesses": [
+      "FA-LEX-C195-MAKAN195-03",
+      "FA-LEX-C195-MAKAN195-04",
+      "FA-LEX-C195-MAKAN195-05"
+    ]
+  }
+}

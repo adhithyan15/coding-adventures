@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C197-shart",
+    "language": "persian",
+    "chapter": 197,
+    "sequence": 10130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c5adcd442c2df88"
+  },
+  "findings": []
+}

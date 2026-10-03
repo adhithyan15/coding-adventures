@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C202-kamrang",
+    "language": "persian",
+    "chapter": 202,
+    "sequence": 10410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be804930f784f17b"
+  },
+  "findings": []
+}

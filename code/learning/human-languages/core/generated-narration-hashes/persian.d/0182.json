@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:fea1efb6a24347da",
+  "lessonIds": [
+    "FA-C182-rezerv-kardan",
+    "FA-C182-estekhdam-kardan",
+    "FA-C182-tekrar-kardan",
+    "FA-C182-tarjome-kardan",
+    "FA-C182-sohbat-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch182.txt",
+  "json": "persian/narration/ch182.json",
+  "textHash": "fnv1a64:13a6d160ab6e9c96",
+  "jsonHash": "fnv1a64:bf2dd3dc632d8c86",
+  "findings": []
+}

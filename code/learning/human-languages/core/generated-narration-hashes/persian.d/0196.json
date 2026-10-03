@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:593918f7fc8390d2",
+  "lessonIds": [
+    "FA-C196-navdan",
+    "FA-C196-sotun",
+    "FA-C196-atraf",
+    "FA-C196-labe",
+    "FA-C196-hamkaf",
+    "FA-R196-first-pass-words-from-chapters-188-191",
+    "FA-R196-second-pass-words-from-chapters-192-196"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 1,
+  "text": "persian/narration/ch196.txt",
+  "json": "persian/narration/ch196.json",
+  "textHash": "fnv1a64:e3bdb77dd34ed71d",
+  "jsonHash": "fnv1a64:028d2f974a824adf",
+  "findings": []
+}

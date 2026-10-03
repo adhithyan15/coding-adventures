@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:556e874517852b52",
+  "lessonIds": [
+    "FA-C214-tajrobe",
+    "FA-C214-karfarma",
+    "FA-C214-karmand",
+    "FA-C214-hamkar",
+    "FA-C214-modir"
+  ],
+  "tex": "persian/book/chapters/ch214-experience-employer-employee-colleague-manager.tex"
+}

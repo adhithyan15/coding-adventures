@@ -1,0 +1,15 @@
+{
+  "language": "persian",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:61b8c9b8cfc9600a",
+  "lessonIds": [
+    "FA-C211-panbe",
+    "FA-C211-pashm",
+    "FA-C211-abrisham",
+    "FA-C211-ajor",
+    "FA-C211-felez",
+    "FA-R211-first-pass-words-from-chapters-206-208",
+    "FA-R211-second-pass-words-from-chapters-209-211"
+  ],
+  "tex": "persian/book/chapters/ch211-cotton-wool-silk-brick-metal.tex"
+}

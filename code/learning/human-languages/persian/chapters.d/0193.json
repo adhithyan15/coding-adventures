@@ -1,0 +1,19 @@
+{
+  "chapter": 193,
+  "title": "Clinic, Gym, Yard, Place, Distance",
+  "label": "ch:fa-clinic-gym-yard-place-distance",
+  "canDo": "I can say a clinic, a gym, a yard, a place and a distance.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "FA-C193-fasele",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 193: I can say a clinic, a gym, a yard, a place and a distance.",
+    "assesses": [
+      "FA-LEX-C193-MAKAN193-03",
+      "FA-LEX-C193-MAKAN193-04",
+      "FA-LEX-C193-MAKAN193-05"
+    ]
+  }
+}

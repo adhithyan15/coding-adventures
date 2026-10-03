@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C188-talaffoz-kardan",
+    "language": "persian",
+    "chapter": 188,
+    "sequence": 9670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8283f35bdd5d4a28"
+  },
+  "findings": []
+}

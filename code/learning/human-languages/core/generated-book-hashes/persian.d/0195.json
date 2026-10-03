@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:bec153bdfe770aa6",
+  "lessonIds": [
+    "FA-C195-aparteman",
+    "FA-C195-bam",
+    "FA-C195-balkon",
+    "FA-C195-rahrow",
+    "FA-C195-gonbad"
+  ],
+  "tex": "persian/book/chapters/ch195-flat-roof-balcony-corridor-dome.tex"
+}

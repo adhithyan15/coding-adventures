@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:e41140ad694b704e",
+  "lessonIds": [
+    "FA-C199-alude",
+    "FA-C199-charb",
+    "FA-C199-qavi",
+    "FA-C199-rahat",
+    "FA-C199-shik"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch199.txt",
+  "json": "persian/narration/ch199.json",
+  "textHash": "fnv1a64:ad22ae9f93475856",
+  "jsonHash": "fnv1a64:fd04adf4b8a45f47",
+  "findings": []
+}

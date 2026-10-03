@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:9ae993b80055b722",
+  "lessonIds": [
+    "FA-C200-khejalati",
+    "FA-C200-badakhlaq",
+    "FA-C200-jeddi",
+    "FA-C200-tanha",
+    "FA-C200-khodkhah"
+  ],
+  "tex": "persian/book/chapters/ch200-shy-bad-tempered-serious-alone-selfish.tex"
+}

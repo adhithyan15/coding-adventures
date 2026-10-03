@@ -1,0 +1,19 @@
+{
+  "chapter": 206,
+  "title": "Document, Birth certificate, File, Printer, Address",
+  "label": "ch:fa-document-birth-certificate-file-printer-address",
+  "canDo": "I can say a document, a birth certificate, a file, a printer and an address.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C206-adres",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 206: I can say a document, a birth certificate, a file, a printer and an address.",
+    "assesses": [
+      "FA-LEX-C206-CHIZ206-03",
+      "FA-LEX-C206-CHIZ206-04",
+      "FA-LEX-C206-CHIZ206-05"
+    ]
+  }
+}

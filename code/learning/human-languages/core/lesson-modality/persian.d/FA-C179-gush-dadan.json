@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C179-gush-dadan",
+    "language": "persian",
+    "chapter": 179,
+    "sequence": 9230,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ab264368bef2c066"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:5f3aa0d50a65dca5",
+  "lessonIds": [
+    "FA-C198-bayad",
+    "FA-C198-ide",
+    "FA-C198-farq",
+    "FA-C198-nemune",
+    "FA-C198-movaffaqiyat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch198.txt",
+  "json": "persian/narration/ch198.json",
+  "textHash": "fnv1a64:aa0069903420b5fa",
+  "jsonHash": "fnv1a64:57213b9a5127a1d5",
+  "findings": []
+}

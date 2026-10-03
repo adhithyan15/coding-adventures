@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C184-qabul-kardan",
+    "language": "persian",
+    "chapter": 184,
+    "sequence": 9440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58db27386ec167bb"
+  },
+  "findings": []
+}

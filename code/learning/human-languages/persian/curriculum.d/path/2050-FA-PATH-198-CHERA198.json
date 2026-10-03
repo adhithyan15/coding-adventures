@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-198-CHERA198",
+  "spine_node": "SPINE-SAY-WHY",
+  "before": [],
+  "inline": [
+    "FA-EXT-198-CHERA198"
+  ],
+  "after": []
+}

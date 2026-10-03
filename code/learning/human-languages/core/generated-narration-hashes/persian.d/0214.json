@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:7ee93935601f75f7",
+  "lessonIds": [
+    "FA-C214-tajrobe",
+    "FA-C214-karfarma",
+    "FA-C214-karmand",
+    "FA-C214-hamkar",
+    "FA-C214-modir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch214.txt",
+  "json": "persian/narration/ch214.json",
+  "textHash": "fnv1a64:e4c168708c6f8585",
+  "jsonHash": "fnv1a64:f56f2afee1761e55",
+  "findings": []
+}

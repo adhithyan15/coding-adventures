@@ -1,0 +1,11 @@
+{
+  "id": "FA-C198-movaffaqiyat",
+  "pathSegment": "FA-PATH-198-CHERA198",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-198-CHERA198",
+      "order": 4
+    }
+  ]
+}

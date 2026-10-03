@@ -1,0 +1,19 @@
+{
+  "chapter": 208,
+  "title": "Weather, Ice, Hail, Shade, Temperature",
+  "label": "ch:fa-weather-ice-hail-shade-temperature",
+  "canDo": "I can say weather, ice, hail, shade and temperature.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C208-dama",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 208: I can say weather, ice, hail, shade and temperature.",
+    "assesses": [
+      "FA-LEX-C208-CHIZ208-03",
+      "FA-LEX-C208-CHIZ208-04",
+      "FA-LEX-C208-CHIZ208-05"
+    ]
+  }
+}

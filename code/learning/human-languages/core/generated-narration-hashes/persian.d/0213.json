@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:387ec3c2d5646aa6",
+  "lessonIds": [
+    "FA-C213-nakhongir",
+    "FA-C213-chaharpaye",
+    "FA-C213-taqche",
+    "FA-C213-dayere",
+    "FA-C213-noqte"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch213.txt",
+  "json": "persian/narration/ch213.json",
+  "textHash": "fnv1a64:62b203c1474d5059",
+  "jsonHash": "fnv1a64:abdf9e28b784108f",
+  "findings": []
+}

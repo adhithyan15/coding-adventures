@@ -1,0 +1,11 @@
+{
+  "id": "FA-C202-khoshtip",
+  "pathSegment": "FA-PATH-202-SEFAT202",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-202-SEFAT202",
+      "order": 2
+    }
+  ]
+}

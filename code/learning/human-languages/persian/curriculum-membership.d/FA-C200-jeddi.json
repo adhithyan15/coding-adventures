@@ -1,0 +1,11 @@
+{
+  "id": "FA-C200-jeddi",
+  "pathSegment": "FA-PATH-200-SEFAT200",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-200-SEFAT200",
+      "order": 2
+    }
+  ]
+}

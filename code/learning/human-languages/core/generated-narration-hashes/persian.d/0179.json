@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:7e02ef68d125bb54",
+  "lessonIds": [
+    "FA-C179-dush-gereftan",
+    "FA-C179-bardashtan",
+    "FA-C179-tamasha-kardan",
+    "FA-C179-negah-kardan",
+    "FA-C179-gush-dadan"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "persian/narration/ch179.txt",
+  "json": "persian/narration/ch179.json",
+  "textHash": "fnv1a64:f467302b47c0bbff",
+  "jsonHash": "fnv1a64:8289c3e4116eb7e9",
+  "findings": []
+}

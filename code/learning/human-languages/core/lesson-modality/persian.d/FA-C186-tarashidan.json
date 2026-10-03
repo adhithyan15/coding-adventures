@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C186-tarashidan",
+    "language": "persian",
+    "chapter": 186,
+    "sequence": 9550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1939bcff9b92c8b0"
+  },
+  "findings": []
+}

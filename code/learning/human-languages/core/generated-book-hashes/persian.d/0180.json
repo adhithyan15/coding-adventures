@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:dba2eef414b21525",
+  "lessonIds": [
+    "FA-C180-makhlut-kardan",
+    "FA-C180-ham-zadan",
+    "FA-C180-jushandan",
+    "FA-C180-sorkh-kardan",
+    "FA-C180-khord-kardan"
+  ],
+  "tex": "persian/book/chapters/ch180-to-mix-to-stir-to-boil-to-fry-to-chop.tex"
+}

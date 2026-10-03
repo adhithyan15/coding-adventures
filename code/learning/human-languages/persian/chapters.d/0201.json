@@ -1,0 +1,19 @@
+{
+  "chapter": 201,
+  "title": "Similar, Fragrant, Sunny, Cloudy, Rainy",
+  "label": "ch:fa-similar-fragrant-sunny-cloudy-rainy",
+  "canDo": "I can say similar, fragrant, sunny, cloudy and rainy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FA-C201-barani",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 201: I can say similar, fragrant, sunny, cloudy and rainy.",
+    "assesses": [
+      "FA-LEX-C201-SEFAT201-03",
+      "FA-LEX-C201-SEFAT201-04",
+      "FA-LEX-C201-SEFAT201-05"
+    ]
+  }
+}

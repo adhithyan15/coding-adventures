@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C181-morattab-kardan",
+    "language": "persian",
+    "chapter": 181,
+    "sequence": 9300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b1e2ebe5f22ca995"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-202-SEFAT202",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "FA-EXT-202-SEFAT202"
+  ],
+  "after": []
+}

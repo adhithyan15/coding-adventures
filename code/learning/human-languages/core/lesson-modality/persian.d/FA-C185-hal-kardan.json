@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C185-hal-kardan",
+    "language": "persian",
+    "chapter": 185,
+    "sequence": 9500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21559399424f5e7a"
+  },
+  "findings": []
+}

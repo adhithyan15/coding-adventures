@@ -1,0 +1,11 @@
+{
+  "id": "FA-C201-barani",
+  "pathSegment": "FA-PATH-201-SEFAT201",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-201-SEFAT201",
+      "order": 4
+    }
+  ]
+}

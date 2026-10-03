@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:eba6fb0976d22f86",
+  "lessonIds": [
+    "FA-C205-kotlet",
+    "FA-C205-sandvich",
+    "FA-C205-makaroni",
+    "FA-C205-qeyme",
+    "FA-C205-zeytun",
+    "FA-R205-first-pass-words-from-chapters-197-200",
+    "FA-R205-second-pass-words-from-chapters-201-205"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "persian/narration/ch205.txt",
+  "json": "persian/narration/ch205.json",
+  "textHash": "fnv1a64:5e75479a4cf886ac",
+  "jsonHash": "fnv1a64:46a93e6e12a70c2b",
+  "findings": []
+}

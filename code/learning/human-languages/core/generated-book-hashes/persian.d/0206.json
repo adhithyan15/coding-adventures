@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:7b5383eee9bfc708",
+  "lessonIds": [
+    "FA-C206-madrak",
+    "FA-C206-shenasname",
+    "FA-C206-parvande",
+    "FA-C206-printer",
+    "FA-C206-adres"
+  ],
+  "tex": "persian/book/chapters/ch206-document-birth-certificate-file-printer-address.tex"
+}

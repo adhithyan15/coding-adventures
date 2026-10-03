@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C202-kaj",
+    "language": "persian",
+    "chapter": 202,
+    "sequence": 10390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77eb655909a27994"
+  },
+  "findings": []
+}

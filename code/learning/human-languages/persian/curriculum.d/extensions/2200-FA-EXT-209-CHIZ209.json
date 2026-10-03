@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-209-CHIZ209",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a nightingale, a crocodile, a zebra, a lamb and a crab.",
+  "prerequisites": []
+}

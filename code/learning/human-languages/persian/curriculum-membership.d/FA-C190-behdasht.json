@@ -1,0 +1,11 @@
+{
+  "id": "FA-C190-behdasht",
+  "pathSegment": "FA-PATH-190-SALAMAT190",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-190-SALAMAT190",
+      "order": 2
+    }
+  ]
+}

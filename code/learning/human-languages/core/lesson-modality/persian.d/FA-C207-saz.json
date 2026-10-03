@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C207-saz",
+    "language": "persian",
+    "chapter": 207,
+    "sequence": 10690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:42776b14e236d44b"
+  },
+  "findings": []
+}

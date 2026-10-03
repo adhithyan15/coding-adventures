@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-203-CHIZ203",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a stair, a ceiling, a floor, a lift and a dish.",
+  "prerequisites": []
+}

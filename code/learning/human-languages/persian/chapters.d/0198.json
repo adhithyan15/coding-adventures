@@ -1,0 +1,19 @@
+{
+  "chapter": 198,
+  "title": "Must, Idea, Difference, Example, Success",
+  "label": "ch:fa-must-idea-difference-example-success",
+  "canDo": "I can say must, an idea, a difference, an example and success.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "FA-C198-movaffaqiyat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 198: I can say must, an idea, a difference, an example and success.",
+    "assesses": [
+      "FA-LEX-C198-CHERA198-03",
+      "FA-LEX-C198-CHERA198-04",
+      "FA-LEX-C198-CHERA198-05"
+    ]
+  }
+}

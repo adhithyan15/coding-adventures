@@ -1,0 +1,19 @@
+{
+  "chapter": 205,
+  "title": "Cutlet, Sandwich, Pasta, Qeymeh, Olive",
+  "label": "ch:fa-cutlet-sandwich-pasta-qeymeh-olive",
+  "canDo": "I can say a cutlet, a sandwich, pasta, qeymeh and an olive.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-R205-second-pass-words-from-chapters-201-205",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 205: I can say a cutlet, a sandwich, pasta, qeymeh and an olive.",
+    "assesses": [
+      "FA-LEX-C205-CHIZ205-03",
+      "FA-LEX-C205-CHIZ205-04",
+      "FA-LEX-C205-CHIZ205-05"
+    ]
+  }
+}

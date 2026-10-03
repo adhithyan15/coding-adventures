@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:04bc0ad92197641c",
+  "lessonIds": [
+    "FA-C195-aparteman",
+    "FA-C195-bam",
+    "FA-C195-balkon",
+    "FA-C195-rahrow",
+    "FA-C195-gonbad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch195.txt",
+  "json": "persian/narration/ch195.json",
+  "textHash": "fnv1a64:d1d0df33281503ff",
+  "jsonHash": "fnv1a64:0af355b703760251",
+  "findings": []
+}

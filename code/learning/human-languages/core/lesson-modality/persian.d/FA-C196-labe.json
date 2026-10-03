@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C196-labe",
+    "language": "persian",
+    "chapter": 196,
+    "sequence": 10090,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:63b9d1903d2b2f3d"
+  },
+  "findings": []
+}

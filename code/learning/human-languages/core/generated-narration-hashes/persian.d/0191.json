@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:3f3a29ca56f3a0ba",
+  "lessonIds": [
+    "FA-C191-sar-e-vaqt",
+    "FA-C191-qarar",
+    "FA-C191-mohlat",
+    "FA-C191-nowruz",
+    "FA-C191-yalda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch191.txt",
+  "json": "persian/narration/ch191.json",
+  "textHash": "fnv1a64:082c9bdcddc53a02",
+  "jsonHash": "fnv1a64:6fa5d43e0a834f65",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:d3ff4633c3d84112",
+  "lessonIds": [
+    "FA-C209-bolbol",
+    "FA-C209-tamsah",
+    "FA-C209-gurekhar",
+    "FA-C209-bare",
+    "FA-C209-kharchang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch209.txt",
+  "json": "persian/narration/ch209.json",
+  "textHash": "fnv1a64:8ecdd926b60824cb",
+  "jsonHash": "fnv1a64:228ed8b9c6f24745",
+  "findings": []
+}

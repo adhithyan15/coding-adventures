@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C208-yakh",
+    "language": "persian",
+    "chapter": 208,
+    "sequence": 10710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1fe9bca9fe20d155"
+  },
+  "findings": []
+}

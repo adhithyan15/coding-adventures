@@ -1,0 +1,11 @@
+{
+  "id": "FA-C193-fasele",
+  "pathSegment": "FA-PATH-193-MAKAN193",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-193-MAKAN193",
+      "order": 4
+    }
+  ]
+}

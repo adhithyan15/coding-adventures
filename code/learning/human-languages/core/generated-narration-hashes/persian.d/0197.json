@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:28bb6ae2de374f35",
+  "lessonIds": [
+    "FA-C197-shart",
+    "FA-C197-qanun",
+    "FA-C197-ba-in-hal",
+    "FA-C197-agarche",
+    "FA-C197-ya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch197.txt",
+  "json": "persian/narration/ch197.json",
+  "textHash": "fnv1a64:e1e61248b25cf0e6",
+  "jsonHash": "fnv1a64:323eab5eab3b635a",
+  "findings": []
+}

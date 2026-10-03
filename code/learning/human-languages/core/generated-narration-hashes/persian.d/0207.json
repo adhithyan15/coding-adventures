@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:4d17848ab927c453",
+  "lessonIds": [
+    "FA-C207-haft-sin",
+    "FA-C207-hediye",
+    "FA-C207-sonnat",
+    "FA-C207-mehmani",
+    "FA-C207-saz"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch207.txt",
+  "json": "persian/narration/ch207.json",
+  "textHash": "fnv1a64:f4669b2c0829d871",
+  "jsonHash": "fnv1a64:d8e1ff2e626893a3",
+  "findings": []
+}
