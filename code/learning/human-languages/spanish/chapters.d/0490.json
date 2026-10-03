@@ -1,0 +1,19 @@
+{
+  "chapter": 490,
+  "title": "Buscar trabajo",
+  "label": "ch:es-buscar-trabajo",
+  "canDo": "I can read a job advert about the position, the salary and the interview, and news of a strike or a business.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C490-negocio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 490: I can read a job advert about the position, the salary and the interview, and news of a strike or a business.",
+    "assesses": [
+      "ES-LEX-C490-EMPLEO-03",
+      "ES-LEX-C490-EMPLEO-04",
+      "ES-LEX-C490-EMPLEO-05"
+    ]
+  }
+}

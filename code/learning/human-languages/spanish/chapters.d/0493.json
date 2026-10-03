@@ -1,0 +1,19 @@
+{
+  "chapter": 493,
+  "title": "Dar una opinión",
+  "label": "ch:es-dar-una-opinion",
+  "canDo": "I can give and weigh opinions: think, convince, insist, suggest and doubt.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-R493-repaso-palabras-de-los-capitulos-490-493",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 493: I can give and weigh opinions: think, convince, insist, suggest and doubt.",
+    "assesses": [
+      "ES-LEX-C493-OPINION-03",
+      "ES-LEX-C493-OPINION-04",
+      "ES-LEX-C493-OPINION-05"
+    ]
+  }
+}

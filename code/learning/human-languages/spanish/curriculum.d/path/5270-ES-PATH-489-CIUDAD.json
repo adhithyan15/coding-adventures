@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-489-CIUDAD",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-489-CIUDAD"
+  ],
+  "after": []
+}

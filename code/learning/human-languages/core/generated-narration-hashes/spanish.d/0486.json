@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:b0f29d5cf0daaae1",
+  "lessonIds": [
+    "ES-C486-afeitarse",
+    "ES-C486-toser",
+    "ES-C486-respirar",
+    "ES-C486-aspirina",
+    "ES-C486-vacuna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch486.txt",
+  "json": "spanish/narration/ch486.json",
+  "textHash": "fnv1a64:0829b32b726e8a0a",
+  "jsonHash": "fnv1a64:8b829383f22fe7ac",
+  "findings": []
+}

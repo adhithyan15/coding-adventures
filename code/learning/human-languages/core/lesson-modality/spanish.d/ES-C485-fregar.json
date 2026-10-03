@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C485-fregar",
+    "language": "spanish",
+    "chapter": 485,
+    "sequence": 13780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5fb245319b840787"
+  },
+  "findings": []
+}

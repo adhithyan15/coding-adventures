@@ -1,0 +1,19 @@
+{
+  "chapter": 485,
+  "title": "Las tareas de casa",
+  "label": "ch:es-las-tareas-de-casa",
+  "canDo": "I can read a rota of housework: sweeping, washing up, cleaning, drying and taking out the rubbish.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C485-basura",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 485: I can read a rota of housework: sweeping, washing up, cleaning, drying and taking out the rubbish.",
+    "assesses": [
+      "ES-LEX-C485-LIMPIEZA-03",
+      "ES-LEX-C485-LIMPIEZA-04",
+      "ES-LEX-C485-LIMPIEZA-05"
+    ]
+  }
+}

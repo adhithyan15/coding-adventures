@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-487-ANIMO",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that someone is glad, gets angry, worries, relaxes or has fun.",
+  "prerequisites": []
+}

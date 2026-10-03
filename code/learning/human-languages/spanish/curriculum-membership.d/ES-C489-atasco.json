@@ -1,0 +1,11 @@
+{
+  "id": "ES-C489-atasco",
+  "pathSegment": "ES-PATH-489-CIUDAD",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-489-CIUDAD",
+      "order": 1
+    }
+  ]
+}

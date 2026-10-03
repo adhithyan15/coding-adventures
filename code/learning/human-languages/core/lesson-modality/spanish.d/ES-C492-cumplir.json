@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C492-cumplir",
+    "language": "spanish",
+    "chapter": 492,
+    "sequence": 14160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8b5e2eba06e26ac"
+  },
+  "findings": []
+}

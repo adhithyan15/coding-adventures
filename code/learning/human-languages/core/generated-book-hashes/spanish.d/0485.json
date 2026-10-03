@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:ebf307f2e7375a79",
+  "lessonIds": [
+    "ES-C485-barrer",
+    "ES-C485-fregar",
+    "ES-C485-limpiar",
+    "ES-C485-secar",
+    "ES-C485-basura"
+  ],
+  "tex": "spanish/book/chapters/ch485-las-tareas-de-casa.tex"
+}

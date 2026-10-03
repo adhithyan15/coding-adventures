@@ -1,0 +1,11 @@
+{
+  "id": "ES-C492-lograr",
+  "pathSegment": "ES-PATH-492-LOGRO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-492-LOGRO",
+      "order": 1
+    }
+  ]
+}

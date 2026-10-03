@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C489-gasolina",
+    "language": "spanish",
+    "chapter": 489,
+    "sequence": 13990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:696274dff8861ddd"
+  },
+  "findings": []
+}

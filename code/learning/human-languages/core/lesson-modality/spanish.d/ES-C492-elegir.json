@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C492-elegir",
+    "language": "spanish",
+    "chapter": 492,
+    "sequence": 14150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a7fc9ac2d148b182"
+  },
+  "findings": []
+}

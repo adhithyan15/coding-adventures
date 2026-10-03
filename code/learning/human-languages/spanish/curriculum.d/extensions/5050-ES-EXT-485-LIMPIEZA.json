@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-485-LIMPIEZA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read a rota of housework: sweeping, washing up, cleaning, drying and taking out the rubbish.",
+  "prerequisites": []
+}

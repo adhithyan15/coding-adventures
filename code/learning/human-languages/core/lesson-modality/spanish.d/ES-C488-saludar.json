@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C488-saludar",
+    "language": "spanish",
+    "chapter": 488,
+    "sequence": 13960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f4bd572e3db1dd41"
+  },
+  "findings": []
+}

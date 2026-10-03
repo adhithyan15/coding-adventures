@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-493-OPINION",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-493-OPINION"
+  ],
+  "after": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-488-GENTE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read news of people who marry, divorce or fall in love, and say hello or goodbye politely.",
+  "prerequisites": []
+}

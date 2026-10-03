@@ -1,0 +1,11 @@
+{
+  "id": "ES-C488-despedirse",
+  "pathSegment": "ES-PATH-488-GENTE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-488-GENTE",
+      "order": 3
+    }
+  ]
+}

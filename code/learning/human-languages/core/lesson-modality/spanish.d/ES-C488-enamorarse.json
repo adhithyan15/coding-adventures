@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C488-enamorarse",
+    "language": "spanish",
+    "chapter": 488,
+    "sequence": 13940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6603aa3feb620e78"
+  },
+  "findings": []
+}

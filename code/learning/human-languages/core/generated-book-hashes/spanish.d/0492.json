@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:3a48b68c0e92bcc2",
+  "lessonIds": [
+    "ES-C492-intentar",
+    "ES-C492-lograr",
+    "ES-C492-evitar",
+    "ES-C492-elegir",
+    "ES-C492-cumplir"
+  ],
+  "tex": "spanish/book/chapters/ch492-intentarlo.tex"
+}

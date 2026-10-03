@@ -1,0 +1,19 @@
+{
+  "chapter": 491,
+  "title": "Pagar en la tienda",
+  "label": "ch:es-pagar-en-la-tienda",
+  "canDo": "I can deal with a receipt, a special offer, the cashier, my wallet and a tip.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C491-propina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 491: I can deal with a receipt, a special offer, the cashier, my wallet and a tip.",
+    "assesses": [
+      "ES-LEX-C491-COMPRA-03",
+      "ES-LEX-C491-COMPRA-04",
+      "ES-LEX-C491-COMPRA-05"
+    ]
+  }
+}
