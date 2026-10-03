@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:144dd21ec9234c21",
+  "lessonIds": [
+    "TA-C208-arivu",
+    "TA-C208-katamai",
+    "TA-C208-cutantiram",
+    "TA-C208-takaval",
+    "TA-C208-rakaciyam"
+  ],
+  "tex": "tamil/book/chapters/ch208-knowledge-duty-freedom-information-secret.tex"
+}

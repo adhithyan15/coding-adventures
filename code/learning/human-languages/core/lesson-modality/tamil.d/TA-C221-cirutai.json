@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C221-cirutai",
+    "language": "tamil",
+    "chapter": 221,
+    "sequence": 11880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ce681e80589d23d"
+  },
+  "findings": []
+}

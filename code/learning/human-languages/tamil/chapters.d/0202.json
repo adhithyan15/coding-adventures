@@ -1,0 +1,19 @@
+{
+  "chapter": 202,
+  "title": "Weekend, Up to, Temple festival, Deepavali, New Year",
+  "label": "ch:ta-weekend-up-to-temple-festival-deepavali-new-year",
+  "canDo": "I can say a weekend, up to, a temple festival, Deepavali and the New Year.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TA-R202-second-pass-words-from-chapters-198-202",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 202: I can say a weekend, up to, a temple festival, Deepavali and the New Year.",
+    "assesses": [
+      "TA-LEX-C202-NERAM202-03",
+      "TA-LEX-C202-NERAM202-04",
+      "TA-LEX-C202-NERAM202-05"
+    ]
+  }
+}

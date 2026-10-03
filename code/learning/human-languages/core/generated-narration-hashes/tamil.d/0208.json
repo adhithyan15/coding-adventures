@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:21c5891dbe3a7674",
+  "lessonIds": [
+    "TA-C208-arivu",
+    "TA-C208-katamai",
+    "TA-C208-cutantiram",
+    "TA-C208-takaval",
+    "TA-C208-rakaciyam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch208.txt",
+  "json": "tamil/narration/ch208.json",
+  "textHash": "fnv1a64:05688a82bb0aac61",
+  "jsonHash": "fnv1a64:c10f1ac0712ce282",
+  "findings": []
+}

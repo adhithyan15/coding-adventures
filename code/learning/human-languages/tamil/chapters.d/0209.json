@@ -1,0 +1,19 @@
+{
+  "chapter": 209,
+  "title": "Spoiled, Full, Empty, Tight, Loose",
+  "label": "ch:ta-spoiled-full-empty-tight-loose",
+  "canDo": "I can say spoiled, full, empty, tight and loose.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TA-C209-talarvana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 209: I can say spoiled, full, empty, tight and loose.",
+    "assesses": [
+      "TA-LEX-C209-GUNAM209-03",
+      "TA-LEX-C209-GUNAM209-04",
+      "TA-LEX-C209-GUNAM209-05"
+    ]
+  }
+}

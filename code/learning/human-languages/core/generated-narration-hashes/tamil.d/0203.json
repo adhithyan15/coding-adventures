@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:7ace3e96ad84fed9",
+  "lessonIds": [
+    "TA-C203-nurrantu",
+    "TA-C203-ituvarai",
+    "TA-C203-kalakketu",
+    "TA-C203-atuvarai",
+    "TA-C203-kulantaip-paruvam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch203.txt",
+  "json": "tamil/narration/ch203.json",
+  "textHash": "fnv1a64:b98248adeea1f773",
+  "jsonHash": "fnv1a64:65876437fa5bd8b5",
+  "findings": []
+}

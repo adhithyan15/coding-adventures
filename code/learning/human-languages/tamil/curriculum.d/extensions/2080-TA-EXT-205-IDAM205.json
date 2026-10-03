@@ -1,0 +1,8 @@
+{
+  "id": "TA-EXT-205-IDAM205",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a tour, a cinema, a building, an upper floor and a police station.",
+  "prerequisites": []
+}

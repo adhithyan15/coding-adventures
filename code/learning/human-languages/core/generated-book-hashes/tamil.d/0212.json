@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:e76b9e99f7c64a34",
+  "lessonIds": [
+    "TA-C212-palavinamana",
+    "TA-C212-cuyanalamana",
+    "TA-C212-peruntanmaiyana",
+    "TA-C212-olukkamana",
+    "TA-C212-acinkamana"
+  ],
+  "tex": "tamil/book/chapters/ch212-weak-selfish-generous-well-behaved-ugly.tex"
+}

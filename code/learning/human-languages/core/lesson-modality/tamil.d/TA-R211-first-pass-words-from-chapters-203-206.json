@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R211-first-pass-words-from-chapters-203-206",
+    "language": "tamil",
+    "chapter": 211,
+    "sequence": 11010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f58dda29e089cbf2"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C207-kittattatta",
+  "pathSegment": "TA-PATH-207-KARANAM207",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-207-KARANAM207",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:1959b0d523b75c72",
+  "lessonIds": [
+    "TA-C201-nerri",
+    "TA-C201-tati",
+    "TA-C201-micai",
+    "TA-C201-ullankai",
+    "TA-C201-vayirruvali"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch201.txt",
+  "json": "tamil/narration/ch201.json",
+  "textHash": "fnv1a64:01e3f71ede075276",
+  "jsonHash": "fnv1a64:421988dcafb20839",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C219-tenral",
+  "pathSegment": "TA-PATH-219-PORUL219",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-219-PORUL219",
+      "order": 3
+    }
+  ]
+}

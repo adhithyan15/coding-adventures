@@ -1,0 +1,19 @@
+{
+  "chapter": 200,
+  "title": "To pinch, To bend, To paint, To collect, To suck",
+  "label": "ch:ta-to-pinch-to-bend-to-paint-to-collect-to-suck",
+  "canDo": "I can say to pinch, to bend, to paint, to collect and to suck.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C200-urincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 200: I can say to pinch, to bend, to paint, to collect and to suck.",
+    "assesses": [
+      "TA-LEX-C200-ACT200-03",
+      "TA-LEX-C200-ACT200-04",
+      "TA-LEX-C200-ACT200-05"
+    ]
+  }
+}

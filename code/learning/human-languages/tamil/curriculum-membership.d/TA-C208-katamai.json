@@ -1,0 +1,11 @@
+{
+  "id": "TA-C208-katamai",
+  "pathSegment": "TA-PATH-208-KARANAM208",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-208-KARANAM208",
+      "order": 1
+    }
+  ]
+}

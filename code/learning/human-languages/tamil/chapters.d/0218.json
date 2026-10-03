@@ -1,0 +1,19 @@
+{
+  "chapter": 218,
+  "title": "Giraffe, Zebra, Crocodile, Butterfly, Bee",
+  "label": "ch:ta-giraffe-zebra-crocodile-butterfly-bee",
+  "canDo": "I can say a giraffe, a zebra, a crocodile, a butterfly and a bee.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C218-teni",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 218: I can say a giraffe, a zebra, a crocodile, a butterfly and a bee.",
+    "assesses": [
+      "TA-LEX-C218-PORUL218-03",
+      "TA-LEX-C218-PORUL218-04",
+      "TA-LEX-C218-PORUL218-05"
+    ]
+  }
+}

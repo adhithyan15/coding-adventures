@@ -1,0 +1,11 @@
+{
+  "id": "TA-C195-payanpatuttu",
+  "pathSegment": "TA-PATH-195-ACT195",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-195-ACT195",
+      "order": 3
+    }
+  ]
+}

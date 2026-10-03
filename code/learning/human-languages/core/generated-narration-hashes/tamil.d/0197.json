@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:8d3b6975c725d8e9",
+  "lessonIds": [
+    "TA-C197-ninaivuttu",
+    "TA-C197-campati",
+    "TA-C197-tavir",
+    "TA-C197-kutipeyar",
+    "TA-C197-totarpu-kol"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch197.txt",
+  "json": "tamil/narration/ch197.json",
+  "textHash": "fnv1a64:a7c6b58690ccdbd3",
+  "jsonHash": "fnv1a64:2107fb832adecfaa",
+  "findings": []
+}

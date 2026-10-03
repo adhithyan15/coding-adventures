@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C211-natpana",
+    "language": "tamil",
+    "chapter": 211,
+    "sequence": 10970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c354b9e39dd6a3b4"
+  },
+  "findings": []
+}

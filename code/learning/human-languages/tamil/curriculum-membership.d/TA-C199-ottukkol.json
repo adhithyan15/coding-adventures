@@ -1,0 +1,11 @@
+{
+  "id": "TA-C199-ottukkol",
+  "pathSegment": "TA-PATH-199-ACT199",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-199-ACT199",
+      "order": 1
+    }
+  ]
+}

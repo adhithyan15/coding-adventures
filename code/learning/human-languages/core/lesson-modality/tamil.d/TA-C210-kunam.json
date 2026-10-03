@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C210-kunam",
+    "language": "tamil",
+    "chapter": 210,
+    "sequence": 10920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1a4f1abc6e17af1"
+  },
+  "findings": []
+}

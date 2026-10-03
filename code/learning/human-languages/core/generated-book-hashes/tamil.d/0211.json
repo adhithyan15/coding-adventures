@@ -1,0 +1,15 @@
+{
+  "language": "tamil",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:4f92d7606b758f8a",
+  "lessonIds": [
+    "TA-C211-inimaiyana",
+    "TA-C211-natpana",
+    "TA-C211-muttal",
+    "TA-C211-ilancivappu",
+    "TA-C211-paluppu",
+    "TA-R211-first-pass-words-from-chapters-203-206",
+    "TA-R211-second-pass-words-from-chapters-207-211"
+  ],
+  "tex": "tamil/book/chapters/ch211-pleasant-friendly-fool-pink-brown.tex"
+}

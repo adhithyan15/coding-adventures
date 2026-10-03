@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C217-manamakal",
+    "language": "tamil",
+    "chapter": 217,
+    "sequence": 11450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb7a9c61e2ad05fd"
+  },
+  "findings": []
+}

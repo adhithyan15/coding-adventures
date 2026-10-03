@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:bfc3928b70a7b92c",
+  "lessonIds": [
+    "TA-C215-pencil",
+    "TA-C215-akarati",
+    "TA-C215-kattanam",
+    "TA-C215-katitam",
+    "TA-C215-urai"
+  ],
+  "tex": "tamil/book/chapters/ch215-pencil-dictionary-fee-letter-envelope.tex"
+}

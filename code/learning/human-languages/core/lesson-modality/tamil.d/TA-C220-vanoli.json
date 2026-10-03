@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C220-vanoli",
+    "language": "tamil",
+    "chapter": 220,
+    "sequence": 11620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10d5b63882bee521"
+  },
+  "findings": []
+}

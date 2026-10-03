@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:728e6c021e1e5863",
+  "lessonIds": [
+    "TA-C207-appatiyanal",
+    "TA-C207-kittattatta",
+    "TA-C207-unmaiyil",
+    "TA-C207-potuvaka",
+    "TA-C207-valakkamaka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch207.txt",
+  "json": "tamil/narration/ch207.json",
+  "textHash": "fnv1a64:6e9a6ebc319dad95",
+  "jsonHash": "fnv1a64:c3dba4d0ba2f0da8",
+  "findings": []
+}

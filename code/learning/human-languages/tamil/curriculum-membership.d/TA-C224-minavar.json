@@ -1,0 +1,11 @@
+{
+  "id": "TA-C224-minavar",
+  "pathSegment": "TA-PATH-224-VELAI224",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-224-VELAI224",
+      "order": 0
+    }
+  ]
+}

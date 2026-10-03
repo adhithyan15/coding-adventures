@@ -1,0 +1,19 @@
+{
+  "chapter": 208,
+  "title": "Knowledge, Duty, Freedom, Information, Secret",
+  "label": "ch:ta-knowledge-duty-freedom-information-secret",
+  "canDo": "I can say knowledge, a duty, freedom, information and a secret.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "TA-C208-rakaciyam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 208: I can say knowledge, a duty, freedom, information and a secret.",
+    "assesses": [
+      "TA-LEX-C208-KARANAM208-03",
+      "TA-LEX-C208-KARANAM208-04",
+      "TA-LEX-C208-KARANAM208-05"
+    ]
+  }
+}

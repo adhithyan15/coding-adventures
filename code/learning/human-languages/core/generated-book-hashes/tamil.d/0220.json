@@ -1,0 +1,15 @@
+{
+  "language": "tamil",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:602092ab85c45c99",
+  "lessonIds": [
+    "TA-C220-vicaippalakai",
+    "TA-C220-kemara",
+    "TA-C220-vanoli",
+    "TA-C220-nikalcci",
+    "TA-C220-tiraippatam",
+    "TA-R220-first-pass-words-from-chapters-212-215",
+    "TA-R220-second-pass-words-from-chapters-216-220"
+  ],
+  "tex": "tamil/book/chapters/ch220-keyboard-camera-radio-programme-film.tex"
+}

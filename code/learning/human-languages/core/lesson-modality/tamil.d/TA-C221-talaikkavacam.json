@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C221-talaikkavacam",
+    "language": "tamil",
+    "chapter": 221,
+    "sequence": 11840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6fb02f494e877a99"
+  },
+  "findings": []
+}

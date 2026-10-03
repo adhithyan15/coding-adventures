@@ -1,0 +1,19 @@
+{
+  "chapter": 222,
+  "title": "Discount, Rupee, Coin, Expense, Salary",
+  "label": "ch:ta-discount-rupee-coin-expense-salary",
+  "canDo": "I can say a discount, a rupee, a coin, an expense and a salary.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C222-campalam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 222: I can say a discount, a rupee, a coin, an expense and a salary.",
+    "assesses": [
+      "TA-LEX-C222-VELAI222-03",
+      "TA-LEX-C222-VELAI222-04",
+      "TA-LEX-C222-VELAI222-05"
+    ]
+  }
+}

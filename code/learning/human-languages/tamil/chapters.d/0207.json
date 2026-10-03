@@ -1,0 +1,19 @@
+{
+  "chapter": 207,
+  "title": "In that case, Almost, Actually, In general, Usually",
+  "label": "ch:ta-in-that-case-almost-actually-in-general-usually",
+  "canDo": "I can say in that case, almost, actually, in general and usually.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "TA-C207-valakkamaka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 207: I can say in that case, almost, actually, in general and usually.",
+    "assesses": [
+      "TA-LEX-C207-KARANAM207-03",
+      "TA-LEX-C207-KARANAM207-04",
+      "TA-LEX-C207-KARANAM207-05"
+    ]
+  }
+}

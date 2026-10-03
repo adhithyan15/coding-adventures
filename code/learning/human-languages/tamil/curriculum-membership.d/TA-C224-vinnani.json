@@ -1,0 +1,11 @@
+{
+  "id": "TA-C224-vinnani",
+  "pathSegment": "TA-PATH-224-VELAI224",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-224-VELAI224",
+      "order": 4
+    }
+  ]
+}

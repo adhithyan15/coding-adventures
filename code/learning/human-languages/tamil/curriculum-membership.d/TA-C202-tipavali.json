@@ -1,0 +1,11 @@
+{
+  "id": "TA-C202-tipavali",
+  "pathSegment": "TA-PATH-202-NERAM202",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-202-NERAM202",
+      "order": 3
+    }
+  ]
+}

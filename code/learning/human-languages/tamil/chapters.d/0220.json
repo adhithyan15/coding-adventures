@@ -1,0 +1,19 @@
+{
+  "chapter": 220,
+  "title": "Keyboard, Camera, Radio, Programme, Film",
+  "label": "ch:ta-keyboard-camera-radio-programme-film",
+  "canDo": "I can say a keyboard, a camera, the radio, a programme and a film.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-R220-second-pass-words-from-chapters-216-220",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 220: I can say a keyboard, a camera, the radio, a programme and a film.",
+    "assesses": [
+      "TA-LEX-C220-PORUL220-03",
+      "TA-LEX-C220-PORUL220-04",
+      "TA-LEX-C220-PORUL220-05"
+    ]
+  }
+}
