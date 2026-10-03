@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C173-burkan",
+    "language": "arabic",
+    "chapter": 173,
+    "sequence": 8420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c43d2f2f7f6c7659"
+  },
+  "findings": []
+}

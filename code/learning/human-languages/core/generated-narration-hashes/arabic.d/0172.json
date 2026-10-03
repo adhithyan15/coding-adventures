@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:f05d26f3b810d741",
+  "lessonIds": [
+    "AR-C172-sala",
+    "AR-C172-makhbaz",
+    "AR-C172-maqha",
+    "AR-C172-ittijah",
+    "AR-C172-muqabil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch172.txt",
+  "json": "arabic/narration/ch172.json",
+  "textHash": "fnv1a64:7dde859e9f2a5d9c",
+  "jsonHash": "fnv1a64:5042d683b44528d5",
+  "findings": []
+}

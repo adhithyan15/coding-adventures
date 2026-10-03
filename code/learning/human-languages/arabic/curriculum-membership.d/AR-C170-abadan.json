@@ -1,0 +1,11 @@
+{
+  "id": "AR-C170-abadan",
+  "pathSegment": "AR-PATH-170-WAQT170",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-170-WAQT170",
+      "order": 4
+    }
+  ]
+}

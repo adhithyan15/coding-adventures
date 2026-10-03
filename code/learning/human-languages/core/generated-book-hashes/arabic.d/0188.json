@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:b909be67236bb57a",
+  "lessonIds": [
+    "AR-C188-umla",
+    "AR-C188-fatura",
+    "AR-C188-khasm",
+    "AR-C188-zabun",
+    "AR-C188-sarraf"
+  ],
+  "tex": "arabic/book/chapters/ch188-currency-bill-discount-customer-cashier.tex"
+}

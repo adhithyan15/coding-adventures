@@ -1,0 +1,11 @@
+{
+  "id": "AR-C188-fatura",
+  "pathSegment": "AR-PATH-188-AMAL188",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-188-AMAL188",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C180-ajnabi",
+  "pathSegment": "AR-PATH-180-SIFA180",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-180-SIFA180",
+      "order": 3
+    }
+  ]
+}

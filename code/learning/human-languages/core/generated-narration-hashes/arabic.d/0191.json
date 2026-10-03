@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:3e6312dd69e7aa81",
+  "lessonIds": [
+    "AR-C191-sabbak",
+    "AR-C191-baqqal",
+    "AR-C191-sayyad",
+    "AR-C191-warsha",
+    "AR-C191-tawqi",
+    "AR-R191-first-pass-words-from-chapters-186-188",
+    "AR-R191-second-pass-words-from-chapters-189-191"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch191.txt",
+  "json": "arabic/narration/ch191.json",
+  "textHash": "fnv1a64:cc437f5b747f9a18",
+  "jsonHash": "fnv1a64:f63b7f8636d0c7a5",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C185-dulfin",
+  "pathSegment": "AR-PATH-185-SHAY185",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "AR-EXT-185-SHAY185",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:cd52ace906f73e71",
+  "lessonIds": [
+    "AR-C176-thumma",
+    "AR-C176-baynama",
+    "AR-C176-akthar",
+    "AR-C176-aqall",
+    "AR-C176-farq",
+    "AR-R176-first-pass-words-from-chapters-168-171",
+    "AR-R176-second-pass-words-from-chapters-172-176"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch176.txt",
+  "json": "arabic/narration/ch176.json",
+  "textHash": "fnv1a64:afef07dca041ffa2",
+  "jsonHash": "fnv1a64:44e2954cf93a49aa",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C172-makhbaz",
+  "pathSegment": "AR-PATH-172-MAKAN172",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-172-MAKAN172",
+      "order": 1
+    }
+  ]
+}

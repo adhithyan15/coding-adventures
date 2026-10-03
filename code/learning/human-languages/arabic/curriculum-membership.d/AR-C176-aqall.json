@@ -1,0 +1,11 @@
+{
+  "id": "AR-C176-aqall",
+  "pathSegment": "AR-PATH-176-SABAB176",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-176-SABAB176",
+      "order": 3
+    }
+  ]
+}

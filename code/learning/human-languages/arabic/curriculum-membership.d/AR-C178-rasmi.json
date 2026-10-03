@@ -1,0 +1,11 @@
+{
+  "id": "AR-C178-rasmi",
+  "pathSegment": "AR-PATH-178-SIFA178",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "AR-EXT-178-SIFA178",
+      "order": 0
+    }
+  ]
+}

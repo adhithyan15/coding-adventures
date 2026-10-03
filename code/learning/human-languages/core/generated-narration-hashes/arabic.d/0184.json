@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 184,
+  "sourceHash": "fnv1a64:56e779a8665652d7",
+  "lessonIds": [
+    "AR-C184-mahrajan",
+    "AR-C184-dawa",
+    "AR-C184-munasaba",
+    "AR-C184-zina",
+    "AR-C184-film"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch184.txt",
+  "json": "arabic/narration/ch184.json",
+  "textHash": "fnv1a64:cb773b0b6836751c",
+  "jsonHash": "fnv1a64:41523b422e7556f4",
+  "findings": []
+}

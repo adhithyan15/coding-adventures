@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 181,
+  "sourceHash": "fnv1a64:d6ecc5c0ea1d0c0b",
+  "lessonIds": [
+    "AR-C181-ghassala",
+    "AR-C181-mukayyif",
+    "AR-C181-ulba",
+    "AR-C181-maghsala",
+    "AR-C181-raff"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch181.txt",
+  "json": "arabic/narration/ch181.json",
+  "textHash": "fnv1a64:a7433756c4012e73",
+  "jsonHash": "fnv1a64:66ad1fe5edd5e6d8",
+  "findings": []
+}

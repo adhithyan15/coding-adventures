@@ -1,0 +1,19 @@
+{
+  "chapter": 185,
+  "title": "Dolphin, Parrot, Ant, Bull, Insect",
+  "label": "ch:ar-dolphin-parrot-ant-bull-insect",
+  "canDo": "I can say a dolphin, a parrot, an ant, a bull and an insect.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-R185-second-pass-words-from-chapters-181-185",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 185: I can say a dolphin, a parrot, an ant, a bull and an insect.",
+    "assesses": [
+      "AR-LEX-C185-SHAY185-03",
+      "AR-LEX-C185-SHAY185-04",
+      "AR-LEX-C185-SHAY185-05"
+    ]
+  }
+}

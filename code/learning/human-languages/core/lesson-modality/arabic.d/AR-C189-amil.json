@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C189-amil",
+    "language": "arabic",
+    "chapter": 189,
+    "sequence": 9580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:577c1f3b310eb5e7"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C180-taqlidi",
+    "language": "arabic",
+    "chapter": 180,
+    "sequence": 8940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e48d0d562d1791f9"
+  },
+  "findings": []
+}

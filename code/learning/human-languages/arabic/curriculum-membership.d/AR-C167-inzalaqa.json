@@ -1,0 +1,11 @@
+{
+  "id": "AR-C167-inzalaqa",
+  "pathSegment": "AR-PATH-167-ACT167",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-167-ACT167",
+      "order": 1
+    }
+  ]
+}

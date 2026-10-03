@@ -1,0 +1,11 @@
+{
+  "id": "AR-C162-nasakha",
+  "pathSegment": "AR-PATH-162-ACT162",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-162-ACT162",
+      "order": 1
+    }
+  ]
+}

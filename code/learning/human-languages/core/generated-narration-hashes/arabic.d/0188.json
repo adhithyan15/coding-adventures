@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:a12d56788f40f6e3",
+  "lessonIds": [
+    "AR-C188-umla",
+    "AR-C188-fatura",
+    "AR-C188-khasm",
+    "AR-C188-zabun",
+    "AR-C188-sarraf"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch188.txt",
+  "json": "arabic/narration/ch188.json",
+  "textHash": "fnv1a64:3e410184a447a8fd",
+  "jsonHash": "fnv1a64:a61c2ee57526bb76",
+  "findings": []
+}

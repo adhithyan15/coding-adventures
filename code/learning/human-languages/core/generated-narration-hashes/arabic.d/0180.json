@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:ab738c6298bc58b5",
+  "lessonIds": [
+    "AR-C180-musab",
+    "AR-C180-rifi",
+    "AR-C180-taqlidi",
+    "AR-C180-ajnabi",
+    "AR-C180-musattah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch180.txt",
+  "json": "arabic/narration/ch180.json",
+  "textHash": "fnv1a64:91f48299b10baf20",
+  "jsonHash": "fnv1a64:db8908ec5827d11c",
+  "findings": []
+}

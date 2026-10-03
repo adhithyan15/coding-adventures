@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:f99b6f2602b7d851",
+  "lessonIds": [
+    "AR-C160-dhaqa",
+    "AR-C160-sabba",
+    "AR-C160-atfaa",
+    "AR-C160-malaa",
+    "AR-C160-istahamma"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch160.txt",
+  "json": "arabic/narration/ch160.json",
+  "textHash": "fnv1a64:c2d74f6e53f52683",
+  "jsonHash": "fnv1a64:61f8f41ab5f81f77",
+  "findings": []
+}

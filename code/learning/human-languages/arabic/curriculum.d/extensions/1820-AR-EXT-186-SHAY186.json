@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-186-SHAY186",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a hobby, chess, a novel, a painting and a machine.",
+  "prerequisites": []
+}

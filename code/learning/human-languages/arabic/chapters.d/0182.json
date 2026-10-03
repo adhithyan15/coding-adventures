@@ -1,0 +1,19 @@
+{
+  "chapter": 182,
+  "title": "Sauce, Sandwich, Ice cream, Meal, Skirt",
+  "label": "ch:ar-sauce-sandwich-ice-cream-meal-skirt",
+  "canDo": "I can say a sauce, a sandwich, ice cream, a meal and a skirt.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C182-tannura",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 182: I can say a sauce, a sandwich, ice cream, a meal and a skirt.",
+    "assesses": [
+      "AR-LEX-C182-SHAY182-03",
+      "AR-LEX-C182-SHAY182-04",
+      "AR-LEX-C182-SHAY182-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 183,
+  "sourceHash": "fnv1a64:f32190ea53328699",
+  "lessonIds": [
+    "AR-C183-tabi",
+    "AR-C183-tard",
+    "AR-C183-shik",
+    "AR-C183-istimara",
+    "AR-C183-wathiqa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch183.txt",
+  "json": "arabic/narration/ch183.json",
+  "textHash": "fnv1a64:43a12cbd11d25788",
+  "jsonHash": "fnv1a64:9fd2730779435aa8",
+  "findings": []
+}

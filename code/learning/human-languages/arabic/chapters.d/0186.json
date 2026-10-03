@@ -1,0 +1,19 @@
+{
+  "chapter": 186,
+  "title": "Hobby, Chess, Novel, Painting, Machine",
+  "label": "ch:ar-hobby-chess-novel-painting-machine",
+  "canDo": "I can say a hobby, chess, a novel, a painting and a machine.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C186-ala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 186: I can say a hobby, chess, a novel, a painting and a machine.",
+    "assesses": [
+      "AR-LEX-C186-SHAY186-03",
+      "AR-LEX-C186-SHAY186-04",
+      "AR-LEX-C186-SHAY186-05"
+    ]
+  }
+}

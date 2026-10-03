@@ -1,0 +1,11 @@
+{
+  "id": "AR-C187-unbub",
+  "pathSegment": "AR-PATH-187-SHAY187",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-187-SHAY187",
+      "order": 2
+    }
+  ]
+}

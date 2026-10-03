@@ -1,0 +1,11 @@
+{
+  "id": "AR-C164-itaqada",
+  "pathSegment": "AR-PATH-164-ACT164",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-164-ACT164",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 174,
+  "title": "Reason, Result, Therefore, So, So that",
+  "label": "ch:ar-reason-result-therefore-so-so-that",
+  "canDo": "I can say a reason, a result, therefore, so and so that.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "AR-C174-kay",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 174: I can say a reason, a result, therefore, so and so that.",
+    "assesses": [
+      "AR-LEX-C174-SABAB174-03",
+      "AR-LEX-C174-SABAB174-04",
+      "AR-LEX-C174-SABAB174-05"
+    ]
+  }
+}

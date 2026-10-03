@@ -1,0 +1,11 @@
+{
+  "id": "AR-C175-diyafa",
+  "pathSegment": "AR-PATH-175-SABAB175",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-175-SABAB175",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C190-riyadiyyat",
+  "pathSegment": "AR-PATH-190-AMAL190",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-190-AMAL190",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C177-nay",
+    "language": "arabic",
+    "chapter": 177,
+    "sequence": 8790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1296109ea1c91cb0"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:4ff310e389c1b77f",
+  "lessonIds": [
+    "AR-C173-bustan",
+    "AR-C173-khayma",
+    "AR-C173-mawqif",
+    "AR-C173-qarra",
+    "AR-C173-burkan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch173.txt",
+  "json": "arabic/narration/ch173.json",
+  "textHash": "fnv1a64:27a804b6169b5520",
+  "jsonHash": "fnv1a64:8804466f96029522",
+  "findings": []
+}

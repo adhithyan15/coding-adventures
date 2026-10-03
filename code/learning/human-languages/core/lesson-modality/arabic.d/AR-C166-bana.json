@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C166-bana",
+    "language": "arabic",
+    "chapter": 166,
+    "sequence": 7850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18dbac9e026524fe"
+  },
+  "findings": []
+}

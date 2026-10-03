@@ -1,0 +1,19 @@
+{
+  "chapter": 177,
+  "title": "Expensive, Free, Raw, Cooked, Fried",
+  "label": "ch:ar-expensive-free-raw-cooked-fried",
+  "canDo": "I can say expensive, free, raw, cooked and fried.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "AR-C177-maqli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 177: I can say expensive, free, raw, cooked and fried.",
+    "assesses": [
+      "AR-LEX-C177-SIFA177-03",
+      "AR-LEX-C177-SIFA177-04",
+      "AR-LEX-C177-SIFA177-05"
+    ]
+  }
+}

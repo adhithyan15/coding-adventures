@@ -1,0 +1,11 @@
+{
+  "id": "AR-C182-salsa",
+  "pathSegment": "AR-PATH-182-SHAY182",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "AR-EXT-182-SHAY182",
+      "order": 0
+    }
+  ]
+}

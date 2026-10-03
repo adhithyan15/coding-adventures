@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C163-tazawwaja",
+    "language": "arabic",
+    "chapter": 163,
+    "sequence": 7710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6200c30d89d3aea4"
+  },
+  "findings": []
+}

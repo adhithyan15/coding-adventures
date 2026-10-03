@@ -1,0 +1,11 @@
+{
+  "id": "AR-C190-mudarrib",
+  "pathSegment": "AR-PATH-190-AMAL190",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-190-AMAL190",
+      "order": 2
+    }
+  ]
+}

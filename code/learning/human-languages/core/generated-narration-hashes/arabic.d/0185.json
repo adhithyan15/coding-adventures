@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:64dc17569a847115",
+  "lessonIds": [
+    "AR-C185-dulfin",
+    "AR-C185-babbagha",
+    "AR-C185-namla",
+    "AR-C185-thawr",
+    "AR-C185-hashara",
+    "AR-R185-first-pass-words-from-chapters-177-180",
+    "AR-R185-second-pass-words-from-chapters-181-185"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch185.txt",
+  "json": "arabic/narration/ch185.json",
+  "textHash": "fnv1a64:b7de9553e8e1cc21",
+  "jsonHash": "fnv1a64:bb03964a140dc933",
+  "findings": []
+}

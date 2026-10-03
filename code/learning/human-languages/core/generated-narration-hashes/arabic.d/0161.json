@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:b62a93750802c1bc",
+  "lessonIds": [
+    "AR-C161-atasa",
+    "AR-C161-tanaffasa",
+    "AR-C161-kasara",
+    "AR-C161-istaraha",
+    "AR-C161-ahassa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch161.txt",
+  "json": "arabic/narration/ch161.json",
+  "textHash": "fnv1a64:62edacbed4ad0d79",
+  "jsonHash": "fnv1a64:8f361641cfab65cf",
+  "findings": []
+}

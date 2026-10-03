@@ -1,0 +1,11 @@
+{
+  "id": "AR-C173-bustan",
+  "pathSegment": "AR-PATH-173-MAKAN173",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "AR-EXT-173-MAKAN173",
+      "order": 0
+    }
+  ]
+}

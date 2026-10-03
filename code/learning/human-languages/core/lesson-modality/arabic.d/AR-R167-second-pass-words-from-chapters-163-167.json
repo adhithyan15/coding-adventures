@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R167-second-pass-words-from-chapters-163-167",
+    "language": "arabic",
+    "chapter": 167,
+    "sequence": 7950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb421aeec55ddb09"
+  },
+  "findings": []
+}

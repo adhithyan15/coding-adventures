@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-181-SHAY181",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a washing machine, an air conditioner, a tin, a sink and a shelf.",
+  "prerequisites": []
+}

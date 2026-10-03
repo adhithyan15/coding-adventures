@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C175-mujtama",
+    "language": "arabic",
+    "chapter": 175,
+    "sequence": 8490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b812df3981a2c00b"
+  },
+  "findings": []
+}

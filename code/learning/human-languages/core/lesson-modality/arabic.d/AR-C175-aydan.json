@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C175-aydan",
+    "language": "arabic",
+    "chapter": 175,
+    "sequence": 8520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:405b4bb0132d325b"
+  },
+  "findings": []
+}

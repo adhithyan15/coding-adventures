@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-173-MAKAN173",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "AR-EXT-173-MAKAN173"
+  ],
+  "after": []
+}

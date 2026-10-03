@@ -1,0 +1,11 @@
+{
+  "id": "AR-C179-dhahabi",
+  "pathSegment": "AR-PATH-179-SIFA179",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-179-SIFA179",
+      "order": 1
+    }
+  ]
+}

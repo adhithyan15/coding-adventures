@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:98e46464e121844c",
+  "lessonIds": [
+    "AR-C170-mubakkiran",
+    "AR-C170-yawmiyyan",
+    "AR-C170-takhir",
+    "AR-C170-mutaakhkhiran",
+    "AR-C170-abadan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch170.txt",
+  "json": "arabic/narration/ch170.json",
+  "textHash": "fnv1a64:991f1d7e512ed68c",
+  "jsonHash": "fnv1a64:e0fb9ce7d2172968",
+  "findings": []
+}
