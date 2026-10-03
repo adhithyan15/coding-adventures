@@ -1,0 +1,11 @@
+{
+  "id": "UR-C144-pesh-ana",
+  "pathSegment": "UR-PATH-144-MAZI144",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-144-MAZI144",
+      "order": 4
+    }
+  ]
+}

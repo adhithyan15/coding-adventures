@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C144-hal-hi-mein",
+    "language": "urdu",
+    "chapter": 144,
+    "sequence": 7540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c72b7c60a4524037"
+  },
+  "findings": []
+}

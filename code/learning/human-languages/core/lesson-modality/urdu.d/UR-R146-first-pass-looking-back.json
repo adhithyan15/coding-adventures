@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R146-first-pass-looking-back",
+    "language": "urdu",
+    "chapter": 146,
+    "sequence": 7690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b7e8e0fb060c30c6"
+  },
+  "findings": []
+}

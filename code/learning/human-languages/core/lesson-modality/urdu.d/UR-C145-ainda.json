@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C145-ainda",
+    "language": "urdu",
+    "chapter": 145,
+    "sequence": 7600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:deef986dcdc861ba"
+  },
+  "findings": []
+}

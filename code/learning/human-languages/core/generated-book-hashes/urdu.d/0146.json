@@ -1,0 +1,15 @@
+{
+  "language": "urdu",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:08c2a572afa2f6cb",
+  "lessonIds": [
+    "UR-C146-taim-tebal",
+    "UR-C146-notis",
+    "UR-C146-kiraya",
+    "UR-C146-ishtihar",
+    "UR-C146-rasid",
+    "UR-R146-first-pass-looking-back",
+    "UR-R146-second-pass-looking-ahead-and-reading-signs"
+  ],
+  "tex": "urdu/book/chapters/ch146-a-timetable-a-notice-the-rent-an-advert-a-receipt.tex"
+}

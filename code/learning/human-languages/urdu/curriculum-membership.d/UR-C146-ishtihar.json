@@ -1,0 +1,11 @@
+{
+  "id": "UR-C146-ishtihar",
+  "pathSegment": "UR-PATH-146-PARH146",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-146-PARH146",
+      "order": 3
+    }
+  ]
+}

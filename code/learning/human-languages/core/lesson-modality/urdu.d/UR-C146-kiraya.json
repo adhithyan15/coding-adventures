@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C146-kiraya",
+    "language": "urdu",
+    "chapter": 146,
+    "sequence": 7660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d51d10ec537979f"
+  },
+  "findings": []
+}

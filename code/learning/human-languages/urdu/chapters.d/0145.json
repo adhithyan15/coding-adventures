@@ -1,0 +1,19 @@
+{
+  "chapter": 145,
+  "title": "The Future, Next, Soon, a Plan, To Decide",
+  "label": "ch:ur-the-future-next-soon-a-plan-to-decide",
+  "canDo": "I can say what will happen, and when: next week, soon, and what I plan.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "UR-C145-tai-karna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 145: I can say what will happen, and when: next week, soon, and what I plan.",
+    "assesses": [
+      "UR-LEX-C145-MUST145-03",
+      "UR-LEX-C145-MUST145-04",
+      "UR-LEX-C145-MUST145-05"
+    ]
+  }
+}

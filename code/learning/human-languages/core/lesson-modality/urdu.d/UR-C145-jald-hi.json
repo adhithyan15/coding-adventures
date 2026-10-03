@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C145-jald-hi",
+    "language": "urdu",
+    "chapter": 145,
+    "sequence": 7610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:194f10e60fe4bed9"
+  },
+  "findings": []
+}

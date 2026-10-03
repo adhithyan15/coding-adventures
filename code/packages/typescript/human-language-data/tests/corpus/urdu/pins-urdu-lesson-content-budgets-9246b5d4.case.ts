@@ -58,7 +58,11 @@ it("pins Urdu lesson-content budgets", () =>
     //
     // 722 -> 723: one no-new-atom A2 connected-composition checkpoint in
     // chapter 143. No idiom, sense or culture claim.
-    lessons: 723,
+    //
+    // 723 -> 740: the A2 spine chapters 144-146 (the past, the future, reading
+    // practical texts): fifteen word lessons and two reviews. No idiom, sense or
+    // culture claim.
+    lessons: 740,
     idioms: 2,
     senses: 4,
     cultureClaims: 4,
