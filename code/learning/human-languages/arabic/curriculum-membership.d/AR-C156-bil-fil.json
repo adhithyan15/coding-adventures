@@ -1,0 +1,11 @@
+{
+  "id": "AR-C156-bil-fil",
+  "pathSegment": "AR-PATH-156-MADI156",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-156-MADI156",
+      "order": 1
+    }
+  ]
+}

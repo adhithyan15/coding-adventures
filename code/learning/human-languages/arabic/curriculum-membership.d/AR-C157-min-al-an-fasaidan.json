@@ -1,0 +1,11 @@
+{
+  "id": "AR-C157-min-al-an-fasaidan",
+  "pathSegment": "AR-PATH-157-MUSTAQBAL157",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-157-MUSTAQBAL157",
+      "order": 1
+    }
+  ]
+}

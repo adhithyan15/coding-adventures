@@ -1,0 +1,11 @@
+{
+  "id": "AR-C157-barnamaj",
+  "pathSegment": "AR-PATH-157-MUSTAQBAL157",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-157-MUSTAQBAL157",
+      "order": 2
+    }
+  ]
+}

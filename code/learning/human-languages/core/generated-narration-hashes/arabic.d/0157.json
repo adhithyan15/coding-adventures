@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 157,
+  "sourceHash": "fnv1a64:1c7044ce4d248a5e",
+  "lessonIds": [
+    "AR-C157-al-qadim",
+    "AR-C157-min-al-an-fasaidan",
+    "AR-C157-barnamaj",
+    "AR-C157-qarrara",
+    "AR-C157-nawa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch157.txt",
+  "json": "arabic/narration/ch157.json",
+  "textHash": "fnv1a64:bddefb179b010154",
+  "jsonHash": "fnv1a64:92b402387f7a6e67",
+  "findings": []
+}

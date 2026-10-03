@@ -1,0 +1,19 @@
+{
+  "chapter": 156,
+  "title": "Recently, Already, Last, Once, To Spend (Time)",
+  "label": "ch:ar-recently-already-last-once-to-spend-time",
+  "canDo": "I can say what happened, and when: recently, already, last week.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "AR-C156-qada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 156: I can say what happened, and when: recently, already, last week.",
+    "assesses": [
+      "AR-LEX-C156-MADI156-03",
+      "AR-LEX-C156-MADI156-04",
+      "AR-LEX-C156-MADI156-05"
+    ]
+  }
+}

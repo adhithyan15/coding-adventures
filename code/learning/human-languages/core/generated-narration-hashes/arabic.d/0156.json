@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 156,
+  "sourceHash": "fnv1a64:cf833b911276a486",
+  "lessonIds": [
+    "AR-C156-hadithan",
+    "AR-C156-bil-fil",
+    "AR-C156-al-madi",
+    "AR-C156-dhata-marra",
+    "AR-C156-qada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch156.txt",
+  "json": "arabic/narration/ch156.json",
+  "textHash": "fnv1a64:23b19585327ff51f",
+  "jsonHash": "fnv1a64:24128b1da22dc205",
+  "findings": []
+}

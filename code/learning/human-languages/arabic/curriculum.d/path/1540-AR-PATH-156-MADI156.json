@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-156-MADI156",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "before": [],
+  "inline": [
+    "AR-EXT-156-MADI156"
+  ],
+  "after": []
+}
