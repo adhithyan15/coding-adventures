@@ -1,0 +1,11 @@
+{
+  "id": "UR-C173-gamla",
+  "pathSegment": "UR-PATH-173-CHIZ173",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-173-CHIZ173",
+      "order": 1
+    }
+  ]
+}

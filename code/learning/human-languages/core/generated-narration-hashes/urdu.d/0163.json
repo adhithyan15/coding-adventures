@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:f1d1b1e8a40d1555",
+  "lessonIds": [
+    "UR-C163-fuzul",
+    "UR-C163-majbur",
+    "UR-C163-azad",
+    "UR-C163-pak",
+    "UR-C163-sharminda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch163.txt",
+  "json": "urdu/narration/ch163.json",
+  "textHash": "fnv1a64:e85ab735abc00363",
+  "jsonHash": "fnv1a64:d9c3c35f63a2ef14",
+  "findings": []
+}

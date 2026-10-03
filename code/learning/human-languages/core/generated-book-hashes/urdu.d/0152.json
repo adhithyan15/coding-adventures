@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:28ccb48b6a7e2f88",
+  "lessonIds": [
+    "UR-C152-bimari",
+    "UR-C152-zukam",
+    "UR-C152-khansi",
+    "UR-C152-sar-dard",
+    "UR-C152-pet-dard"
+  ],
+  "tex": "urdu/book/chapters/ch152-illness-head-cold-cough-headache-stomach-ache.tex"
+}

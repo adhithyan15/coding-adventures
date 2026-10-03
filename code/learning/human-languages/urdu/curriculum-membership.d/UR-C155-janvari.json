@@ -1,0 +1,11 @@
+{
+  "id": "UR-C155-janvari",
+  "pathSegment": "UR-PATH-155-VAQT155",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-155-VAQT155",
+      "order": 2
+    }
+  ]
+}

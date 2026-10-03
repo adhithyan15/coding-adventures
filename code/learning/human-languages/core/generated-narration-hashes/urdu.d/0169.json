@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:b579760365332c25",
+  "lessonIds": [
+    "UR-C169-bansuri",
+    "UR-C169-nach",
+    "UR-C169-numaish",
+    "UR-C169-mela",
+    "UR-C169-jashn"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch169.txt",
+  "json": "urdu/narration/ch169.json",
+  "textHash": "fnv1a64:a4f36a592dd1e2e5",
+  "jsonHash": "fnv1a64:994ac5b05da93e1b",
+  "findings": []
+}

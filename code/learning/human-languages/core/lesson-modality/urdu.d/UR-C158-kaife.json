@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C158-kaife",
+    "language": "urdu",
+    "chapter": 158,
+    "sequence": 8580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23843ef0ec6bd5b9"
+  },
+  "findings": []
+}

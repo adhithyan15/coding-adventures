@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:d02b373e87b6902b",
+  "lessonIds": [
+    "UR-C161-mahfuz",
+    "UR-C161-nazuk",
+    "UR-C161-chikna",
+    "UR-C161-khurdura",
+    "UR-C161-gol"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch161.txt",
+  "json": "urdu/narration/ch161.json",
+  "textHash": "fnv1a64:30560dffcaeb631e",
+  "jsonHash": "fnv1a64:1ec073e5fe5d5b17",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 170,
+  "title": "Human being, Elder, Parents, Uncle, Aunt",
+  "label": "ch:ur-human-being-elder-parents-uncle-aunt",
+  "canDo": "I can say a human being, an elder, parents, an uncle and an aunt.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C170-chachi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 170: I can say a human being, an elder, parents, an uncle and an aunt.",
+    "assesses": [
+      "UR-LEX-C170-CHIZ170-03",
+      "UR-LEX-C170-CHIZ170-04",
+      "UR-LEX-C170-CHIZ170-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:ed506ae0c9724ac6",
+  "lessonIds": [
+    "UR-C158-qaum",
+    "UR-C158-basti",
+    "UR-C158-bandargah",
+    "UR-C158-restorent",
+    "UR-C158-kaife"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch158.txt",
+  "json": "urdu/narration/ch158.json",
+  "textHash": "fnv1a64:97607ab649b7e565",
+  "jsonHash": "fnv1a64:344740854527bbe5",
+  "findings": []
+}

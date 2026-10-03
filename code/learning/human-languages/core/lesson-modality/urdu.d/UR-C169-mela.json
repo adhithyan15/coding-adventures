@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C169-mela",
+    "language": "urdu",
+    "chapter": 169,
+    "sequence": 9310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4bf21771786bcc54"
+  },
+  "findings": []
+}

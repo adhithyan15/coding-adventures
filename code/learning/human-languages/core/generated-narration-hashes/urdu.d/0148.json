@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:3332dba8919084c1",
+  "lessonIds": [
+    "UR-C148-chunna",
+    "UR-C148-badalna",
+    "UR-C148-udhar-lena",
+    "UR-C148-qarz-dena",
+    "UR-C148-bachana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch148.txt",
+  "json": "urdu/narration/ch148.json",
+  "textHash": "fnv1a64:8c2191ceb19f0823",
+  "jsonHash": "fnv1a64:b1ca653b0576a72b",
+  "findings": []
+}

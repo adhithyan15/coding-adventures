@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:ea49300ab51e6c9b",
+  "lessonIds": [
+    "UR-C177-mulazim",
+    "UR-C177-sathi",
+    "UR-C177-mazdur",
+    "UR-C177-kisan",
+    "UR-C177-darzi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch177.txt",
+  "json": "urdu/narration/ch177.json",
+  "textHash": "fnv1a64:8228576823b85a62",
+  "jsonHash": "fnv1a64:66b2e3f6354b9b1a",
+  "findings": []
+}

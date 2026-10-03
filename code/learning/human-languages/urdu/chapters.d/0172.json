@@ -1,0 +1,19 @@
+{
+  "chapter": 172,
+  "title": "Surprise, Calm, Peace, War, Freedom",
+  "label": "ch:ur-surprise-calm-peace-war-freedom",
+  "canDo": "I can say surprise, calm, peace, a war and freedom.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C172-azadi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 172: I can say surprise, calm, peace, a war and freedom.",
+    "assesses": [
+      "UR-LEX-C172-CHIZ172-03",
+      "UR-LEX-C172-CHIZ172-04",
+      "UR-LEX-C172-CHIZ172-05"
+    ]
+  }
+}

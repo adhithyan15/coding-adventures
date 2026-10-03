@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-160-SIFAT160",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say kind, sensible, foolish, lazy and hardworking.",
+  "prerequisites": []
+}

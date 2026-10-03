@@ -309,7 +309,9 @@ describe("real curriculum", () => {
       // 142 -> 143: the first A2 writing rung, a model-free connected message.
       // 143 -> 146: the A2 spine chapters (the past, the future, reading
       // practical texts).
-      ...Array.from({ length: 59 }, (_, i) => 88 + i)]);
+      // 146 -> 179: the first A2 vocabulary tranche, 165 headwords, twenty-five
+      // of them verbs.
+      ...Array.from({ length: 92 }, (_, i) => 88 + i)]);
     expect(
       books.books
         .find((book) => book.language === "russian")

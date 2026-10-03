@@ -1,0 +1,11 @@
+{
+  "id": "UR-C152-sar-dard",
+  "pathSegment": "UR-PATH-152-SEHAT152",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-152-SEHAT152",
+      "order": 3
+    }
+  ]
+}

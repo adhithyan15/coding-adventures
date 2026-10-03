@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C172-hairat",
+    "language": "urdu",
+    "chapter": 172,
+    "sequence": 9430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e2ad27f70396704"
+  },
+  "findings": []
+}

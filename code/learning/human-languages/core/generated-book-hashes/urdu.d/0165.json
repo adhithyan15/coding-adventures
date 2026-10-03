@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:f50801e68b0fd2b7",
+  "lessonIds": [
+    "UR-C165-balb",
+    "UR-C165-rimot",
+    "UR-C165-laiptap",
+    "UR-C165-printar",
+    "UR-C165-charjar"
+  ],
+  "tex": "urdu/book/chapters/ch165-light-bulb-remote-control-laptop-printer-charger.tex"
+}

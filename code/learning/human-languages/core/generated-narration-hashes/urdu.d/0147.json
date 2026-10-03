@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 147,
+  "sourceHash": "fnv1a64:d9ef0619d8abf5ad",
+  "lessonIds": [
+    "UR-C147-parhana",
+    "UR-C147-yad-karna",
+    "UR-C147-chikhna",
+    "UR-C147-muskurana",
+    "UR-C147-ghabrana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch147.txt",
+  "json": "urdu/narration/ch147.json",
+  "textHash": "fnv1a64:265a2144eab88fe3",
+  "jsonHash": "fnv1a64:cd0fc2177e0b2eaa",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 161,
+  "title": "Safe, Delicate, Smooth, Rough, Round",
+  "label": "ch:ur-safe-delicate-smooth-rough-round",
+  "canDo": "I can say safe, delicate, smooth, rough and round.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "UR-C161-gol",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 161: I can say safe, delicate, smooth, rough and round.",
+    "assesses": [
+      "UR-LEX-C161-SIFAT161-03",
+      "UR-LEX-C161-SIFAT161-04",
+      "UR-LEX-C161-SIFAT161-05"
+    ]
+  }
+}

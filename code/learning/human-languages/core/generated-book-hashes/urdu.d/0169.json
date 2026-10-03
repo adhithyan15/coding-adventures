@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:2567cf9c0229211d",
+  "lessonIds": [
+    "UR-C169-bansuri",
+    "UR-C169-nach",
+    "UR-C169-numaish",
+    "UR-C169-mela",
+    "UR-C169-jashn"
+  ],
+  "tex": "urdu/book/chapters/ch169-flute-dance-exhibition-fair-celebration.tex"
+}

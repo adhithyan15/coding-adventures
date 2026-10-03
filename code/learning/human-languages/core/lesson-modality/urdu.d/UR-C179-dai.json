@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C179-dai",
+    "language": "urdu",
+    "chapter": 179,
+    "sequence": 9970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd71cd9b7f1dd7cc"
+  },
+  "findings": []
+}

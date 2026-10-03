@@ -62,7 +62,11 @@ it("pins Urdu lesson-content budgets", () =>
     // 723 -> 740: the A2 spine chapters 144-146 (the past, the future, reading
     // practical texts): fifteen word lessons and two reviews. No idiom, sense or
     // culture claim.
-    lessons: 740,
+    //
+    // 740 -> 913: the first A2 vocabulary tranche, chapters 147-179: 165 word
+    // lessons (twenty-five verbs) and eight reviews. No idiom, sense or culture
+    // claim.
+    lessons: 913,
     idioms: 2,
     senses: 4,
     cultureClaims: 4,

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C174-chane",
+  "pathSegment": "UR-PATH-174-CHIZ174",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-174-CHIZ174",
+      "order": 2
+    }
+  ]
+}

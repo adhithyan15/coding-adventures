@@ -1,0 +1,11 @@
+{
+  "id": "UR-C166-har",
+  "pathSegment": "UR-PATH-166-CHIZ166",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-166-CHIZ166",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C161-gol",
+  "pathSegment": "UR-PATH-161-SIFAT161",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-161-SIFAT161",
+      "order": 4
+    }
+  ]
+}

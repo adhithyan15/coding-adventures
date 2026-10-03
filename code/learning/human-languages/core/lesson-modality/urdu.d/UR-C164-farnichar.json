@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C164-farnichar",
+    "language": "urdu",
+    "chapter": 164,
+    "sequence": 8860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a126ff8d623d7d59"
+  },
+  "findings": []
+}

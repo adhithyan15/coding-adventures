@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C164-qalin",
+    "language": "urdu",
+    "chapter": 164,
+    "sequence": 8880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46755a150f39e6cd"
+  },
+  "findings": []
+}

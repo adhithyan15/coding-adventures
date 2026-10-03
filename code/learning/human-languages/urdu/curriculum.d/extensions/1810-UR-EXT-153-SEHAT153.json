@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-153-SEHAT153",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a nurse, a patient, an ambulance, an eyelid and an eyebrow.",
+  "prerequisites": []
+}

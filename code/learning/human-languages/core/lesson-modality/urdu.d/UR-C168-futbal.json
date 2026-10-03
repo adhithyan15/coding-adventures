@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C168-futbal",
+    "language": "urdu",
+    "chapter": 168,
+    "sequence": 9270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:643a0c36e06ce6c6"
+  },
+  "findings": []
+}

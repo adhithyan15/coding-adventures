@@ -1,0 +1,19 @@
+{
+  "chapter": 179,
+  "title": "Midwife, Treasurer, Clerk, Minister, King",
+  "label": "ch:ur-midwife-treasurer-clerk-minister-king",
+  "canDo": "I can say a midwife, a treasurer, a clerk, a minister and a king.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-R179-second-pass-words-from-chapters-177-179",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 179: I can say a midwife, a treasurer, a clerk, a minister and a king.",
+    "assesses": [
+      "UR-LEX-C179-KAM179-03",
+      "UR-LEX-C179-KAM179-04",
+      "UR-LEX-C179-KAM179-05"
+    ]
+  }
+}

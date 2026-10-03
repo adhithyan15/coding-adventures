@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:67964dc7b0c6b717",
+  "lessonIds": [
+    "UR-C172-hairat",
+    "UR-C172-sukun",
+    "UR-C172-aman",
+    "UR-C172-jang",
+    "UR-C172-azadi"
+  ],
+  "tex": "urdu/book/chapters/ch172-surprise-calm-peace-war-freedom.tex"
+}

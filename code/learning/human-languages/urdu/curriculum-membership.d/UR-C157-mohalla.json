@@ -1,0 +1,11 @@
+{
+  "id": "UR-C157-mohalla",
+  "pathSegment": "UR-PATH-157-JAGAH157",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-157-JAGAH157",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C171-sayyah",
+  "pathSegment": "UR-PATH-171-CHIZ171",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-171-CHIZ171",
+      "order": 1
+    }
+  ]
+}

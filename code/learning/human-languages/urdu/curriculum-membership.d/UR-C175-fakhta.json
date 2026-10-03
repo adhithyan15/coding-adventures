@@ -1,0 +1,11 @@
+{
+  "id": "UR-C175-fakhta",
+  "pathSegment": "UR-PATH-175-CHIZ175",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-175-CHIZ175",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C156-har-sal",
+    "language": "urdu",
+    "chapter": 156,
+    "sequence": 8480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad4e8227a6c76641"
+  },
+  "findings": []
+}

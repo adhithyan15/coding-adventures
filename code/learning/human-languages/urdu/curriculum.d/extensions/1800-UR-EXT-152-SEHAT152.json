@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-152-SEHAT152",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an illness, a head cold, a cough, a headache and a stomach ache.",
+  "prerequisites": []
+}

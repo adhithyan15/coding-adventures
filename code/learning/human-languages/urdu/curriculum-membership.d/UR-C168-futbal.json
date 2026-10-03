@@ -1,0 +1,11 @@
+{
+  "id": "UR-C168-futbal",
+  "pathSegment": "UR-PATH-168-CHIZ168",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-168-CHIZ168",
+      "order": 4
+    }
+  ]
+}

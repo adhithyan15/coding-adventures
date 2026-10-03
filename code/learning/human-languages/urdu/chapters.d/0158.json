@@ -1,0 +1,19 @@
+{
+  "chapter": 158,
+  "title": "Nation, Settlement, Port, Restaurant, Café",
+  "label": "ch:ur-nation-settlement-port-restaurant-cafe",
+  "canDo": "I can say a nation, a settlement, a port, a restaurant and a café.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "UR-C158-kaife",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 158: I can say a nation, a settlement, a port, a restaurant and a café.",
+    "assesses": [
+      "UR-LEX-C158-JAGAH158-03",
+      "UR-LEX-C158-JAGAH158-04",
+      "UR-LEX-C158-JAGAH158-05"
+    ]
+  }
+}

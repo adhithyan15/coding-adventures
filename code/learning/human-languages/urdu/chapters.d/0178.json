@@ -1,0 +1,19 @@
+{
+  "chapter": 178,
+  "title": "Singer, Pilot, Sailor, Fisherman, Gardener",
+  "label": "ch:ur-singer-pilot-sailor-fisherman-gardener",
+  "canDo": "I can say a singer, a pilot, a sailor, a fisherman and a gardener.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C178-mali",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 178: I can say a singer, a pilot, a sailor, a fisherman and a gardener.",
+    "assesses": [
+      "UR-LEX-C178-KAM178-03",
+      "UR-LEX-C178-KAM178-04",
+      "UR-LEX-C178-KAM178-05"
+    ]
+  }
+}

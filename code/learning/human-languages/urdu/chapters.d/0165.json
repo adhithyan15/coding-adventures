@@ -1,0 +1,19 @@
+{
+  "chapter": 165,
+  "title": "Light bulb, Remote control, Laptop, Printer, Charger",
+  "label": "ch:ur-light-bulb-remote-control-laptop-printer-charger",
+  "canDo": "I can say a light bulb, a remote control, a laptop, a printer and a charger.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C165-charjar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 165: I can say a light bulb, a remote control, a laptop, a printer and a charger.",
+    "assesses": [
+      "UR-LEX-C165-CHIZ165-03",
+      "UR-LEX-C165-CHIZ165-04",
+      "UR-LEX-C165-CHIZ165-05"
+    ]
+  }
+}

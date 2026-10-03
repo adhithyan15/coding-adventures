@@ -1,0 +1,19 @@
+{
+  "chapter": 169,
+  "title": "Flute, Dance, Exhibition, Fair, Celebration",
+  "label": "ch:ur-flute-dance-exhibition-fair-celebration",
+  "canDo": "I can say a flute, a dance, an exhibition, a fair and a celebration.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C169-jashn",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 169: I can say a flute, a dance, an exhibition, a fair and a celebration.",
+    "assesses": [
+      "UR-LEX-C169-CHIZ169-03",
+      "UR-LEX-C169-CHIZ169-04",
+      "UR-LEX-C169-CHIZ169-05"
+    ]
+  }
+}

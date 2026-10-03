@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C177-mazdur",
+    "language": "urdu",
+    "chapter": 177,
+    "sequence": 9890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1be4a9448ee07571"
+  },
+  "findings": []
+}

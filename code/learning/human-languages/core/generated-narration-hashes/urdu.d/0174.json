@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:5c21ab27d06c7e15",
+  "lessonIds": [
+    "UR-C174-makai",
+    "UR-C174-gandum",
+    "UR-C174-chane",
+    "UR-C174-rajma",
+    "UR-C174-anjir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch174.txt",
+  "json": "urdu/narration/ch174.json",
+  "textHash": "fnv1a64:2e9c68455af3cc01",
+  "jsonHash": "fnv1a64:aa29829695cd1ff2",
+  "findings": []
+}

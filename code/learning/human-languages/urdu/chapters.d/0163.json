@@ -1,0 +1,19 @@
+{
+  "chapter": 163,
+  "title": "Pointless, Forced, Free, Pure, Embarrassed",
+  "label": "ch:ur-pointless-forced-free-pure-embarrassed",
+  "canDo": "I can say pointless, forced, free, pure and embarrassed.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "UR-C163-sharminda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 163: I can say pointless, forced, free, pure and embarrassed.",
+    "assesses": [
+      "UR-LEX-C163-SIFAT163-03",
+      "UR-LEX-C163-SIFAT163-04",
+      "UR-LEX-C163-SIFAT163-05"
+    ]
+  }
+}

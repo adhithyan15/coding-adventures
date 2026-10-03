@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R155-first-pass-words-from-chapters-147-150",
+    "language": "urdu",
+    "chapter": 155,
+    "sequence": 8250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff22414306907940"
+  },
+  "findings": []
+}

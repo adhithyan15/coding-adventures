@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:f9b5b805a80b8f7b",
+  "lessonIds": [
+    "UR-C167-pista",
+    "UR-C167-kishmish",
+    "UR-C167-murabba",
+    "UR-C167-keik",
+    "UR-C167-mithai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch167.txt",
+  "json": "urdu/narration/ch167.json",
+  "textHash": "fnv1a64:4331423b315ce5e9",
+  "jsonHash": "fnv1a64:a67196217826e994",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-168-CHIZ168",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a duck, an owl, a whale, cricket and football.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C150-mitana",
+  "pathSegment": "UR-PATH-150-ACT150",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-150-ACT150",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C156-naya-sal",
+    "language": "urdu",
+    "chapter": 156,
+    "sequence": 8450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e80d3d567c86031"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C169-nach",
+    "language": "urdu",
+    "chapter": 169,
+    "sequence": 9290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e8b88342bc3400a"
+  },
+  "findings": []
+}

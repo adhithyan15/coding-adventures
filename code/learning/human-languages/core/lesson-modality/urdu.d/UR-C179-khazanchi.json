@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C179-khazanchi",
+    "language": "urdu",
+    "chapter": 179,
+    "sequence": 9980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:af56cd1c102d09ec"
+  },
+  "findings": []
+}

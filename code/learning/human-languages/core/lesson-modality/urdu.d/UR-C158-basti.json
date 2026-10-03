@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C158-basti",
+    "language": "urdu",
+    "chapter": 158,
+    "sequence": 8550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0903c10a458da73c"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C164-chiz",
+    "language": "urdu",
+    "chapter": 164,
+    "sequence": 8850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f745447de41779ec"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C160-sust",
+    "language": "urdu",
+    "chapter": 160,
+    "sequence": 8670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be11515337c7fd1d"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C154-tika",
+  "pathSegment": "UR-PATH-154-SEHAT154",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-154-SEHAT154",
+      "order": 0
+    }
+  ]
+}
