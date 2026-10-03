@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C138-tasmim-gereftan",
+    "language": "persian",
+    "chapter": 138,
+    "sequence": 7050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d89698da6d150f7"
+  },
+  "findings": []
+}

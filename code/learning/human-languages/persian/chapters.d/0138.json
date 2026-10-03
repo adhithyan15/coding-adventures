@@ -1,0 +1,19 @@
+{
+  "chapter": 138,
+  "title": "Next, From Now On, a Plan, To Decide, To Hope",
+  "label": "ch:fa-next-from-now-on-a-plan-to-decide-to-hope",
+  "canDo": "I can say what will happen, and when: next week, from now on, and what I plan.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "FA-C138-omidvar-budan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 138: I can say what will happen, and when: next week, from now on, and what I plan.",
+    "assesses": [
+      "FA-LEX-C138-AYANDE138-03",
+      "FA-LEX-C138-AYANDE138-04",
+      "FA-LEX-C138-AYANDE138-05"
+    ]
+  }
+}
