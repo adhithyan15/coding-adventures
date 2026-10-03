@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:0460da18bd410f71",
+  "lessonIds": [
+    "AR-C158-jadwal",
+    "AR-C158-lafita",
+    "AR-C158-ijar",
+    "AR-C158-ilan",
+    "AR-C158-isal",
+    "AR-R158-first-pass-looking-back",
+    "AR-R158-second-pass-looking-ahead-and-reading-signs"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch158.txt",
+  "json": "arabic/narration/ch158.json",
+  "textHash": "fnv1a64:a84984bfb4251dc7",
+  "jsonHash": "fnv1a64:9ddd0f805bff92cf",
+  "findings": []
+}

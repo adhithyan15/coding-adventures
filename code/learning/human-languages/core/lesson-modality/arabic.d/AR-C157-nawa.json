@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C157-nawa",
+    "language": "arabic",
+    "chapter": 157,
+    "sequence": 7410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c20c95233f1b1d93"
+  },
+  "findings": []
+}

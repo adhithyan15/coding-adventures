@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C158-isal",
+    "language": "arabic",
+    "chapter": 158,
+    "sequence": 7460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1f091e653c64d7df"
+  },
+  "findings": []
+}

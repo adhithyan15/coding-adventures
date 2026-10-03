@@ -1,0 +1,19 @@
+{
+  "chapter": 158,
+  "title": "A Timetable, a Sign, the Rent, an Advert, a Receipt",
+  "label": "ch:ar-a-timetable-a-sign-the-rent-an-advert-a-receipt",
+  "canDo": "I can read a timetable, a sign, an advert and a receipt, and act on what they say.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "AR-R158-second-pass-looking-ahead-and-reading-signs",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 158: I can read a timetable, a sign, an advert and a receipt, and act on what they say.",
+    "assesses": [
+      "AR-LEX-C158-QIRAA158-03",
+      "AR-LEX-C158-QIRAA158-04",
+      "AR-LEX-C158-QIRAA158-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 157,
+  "title": "Next, From Now On, a Programme, To Decide, To Intend",
+  "label": "ch:ar-next-from-now-on-a-programme-to-decide-to-intend",
+  "canDo": "I can say what will happen, and when: next week, from now on, and what I intend to do.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "AR-C157-nawa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 157: I can say what will happen, and when: next week, from now on, and what I intend to do.",
+    "assesses": [
+      "AR-LEX-C157-MUSTAQBAL157-03",
+      "AR-LEX-C157-MUSTAQBAL157-04",
+      "AR-LEX-C157-MUSTAQBAL157-05"
+    ]
+  }
+}

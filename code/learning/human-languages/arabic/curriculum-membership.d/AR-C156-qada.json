@@ -1,0 +1,11 @@
+{
+  "id": "AR-C156-qada",
+  "pathSegment": "AR-PATH-156-MADI156",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-156-MADI156",
+      "order": 4
+    }
+  ]
+}
