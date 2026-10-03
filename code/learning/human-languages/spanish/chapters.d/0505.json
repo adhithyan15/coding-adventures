@@ -1,0 +1,19 @@
+{
+  "chapter": 505,
+  "title": "Estudiar",
+  "label": "ch:es-estudiar",
+  "canDo": "I can talk about education: attending class, an explanation, rehearsing and success.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C505-exito",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 505: I can talk about education: attending class, an explanation, rehearsing and success.",
+    "assesses": [
+      "ES-LEX-C505-ESTUDIO-03",
+      "ES-LEX-C505-ESTUDIO-04",
+      "ES-LEX-C505-ESTUDIO-05"
+    ]
+  }
+}

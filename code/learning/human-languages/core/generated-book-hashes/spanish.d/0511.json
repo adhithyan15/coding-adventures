@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:b571321b1325a1c2",
+  "lessonIds": [
+    "ES-C511-parecer",
+    "ES-C511-mantener",
+    "ES-C511-tratar",
+    "ES-C511-realizar",
+    "ES-C511-soler",
+    "ES-R511-repaso-palabras-de-los-capitulos-503-507",
+    "ES-R511-repaso-palabras-de-los-capitulos-508-511"
+  ],
+  "tex": "spanish/book/chapters/ch511-hacer-y-parecer.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:c2ebe57f62a69377",
+  "lessonIds": [
+    "ES-C510-disculparse",
+    "ES-C510-fiarse",
+    "ES-C510-pelear",
+    "ES-C510-odiar",
+    "ES-C510-sorprender"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch510.txt",
+  "json": "spanish/narration/ch510.json",
+  "textHash": "fnv1a64:f7db56f966aa4d6c",
+  "jsonHash": "fnv1a64:505e79e2994d5dc1",
+  "findings": []
+}

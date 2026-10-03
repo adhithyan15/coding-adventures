@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C506-envolver",
+    "language": "spanish",
+    "chapter": 506,
+    "sequence": 14870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62d6c03f5b9a9a62"
+  },
+  "findings": []
+}

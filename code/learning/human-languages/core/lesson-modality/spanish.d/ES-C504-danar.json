@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C504-danar",
+    "language": "spanish",
+    "chapter": 504,
+    "sequence": 14800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e927bf5e891bd90"
+  },
+  "findings": []
+}

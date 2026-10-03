@@ -1,0 +1,19 @@
+{
+  "chapter": 510,
+  "title": "Entre personas",
+  "label": "ch:es-entre-personas",
+  "canDo": "I can talk about apologising, trusting, fighting, hating and surprising someone.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C510-sorprender",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 510: I can talk about apologising, trusting, fighting, hating and surprising someone.",
+    "assesses": [
+      "ES-LEX-C510-TRATO-03",
+      "ES-LEX-C510-TRATO-04",
+      "ES-LEX-C510-TRATO-05"
+    ]
+  }
+}

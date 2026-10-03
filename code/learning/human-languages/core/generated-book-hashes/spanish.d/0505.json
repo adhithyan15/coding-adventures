@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:e8fce6bb52e7c994",
+  "lessonIds": [
+    "ES-C505-educacion",
+    "ES-C505-asistir",
+    "ES-C505-explicacion",
+    "ES-C505-ensayar",
+    "ES-C505-exito"
+  ],
+  "tex": "spanish/book/chapters/ch505-estudiar.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:4fa8ac23605212b8",
+  "lessonIds": [
+    "ES-C505-educacion",
+    "ES-C505-asistir",
+    "ES-C505-explicacion",
+    "ES-C505-ensayar",
+    "ES-C505-exito"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch505.txt",
+  "json": "spanish/narration/ch505.json",
+  "textHash": "fnv1a64:f8194a3415253d78",
+  "jsonHash": "fnv1a64:bfaa64875363b4d1",
+  "findings": []
+}

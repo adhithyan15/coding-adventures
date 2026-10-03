@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R511-repaso-palabras-de-los-capitulos-503-507",
+    "language": "spanish",
+    "chapter": 511,
+    "sequence": 15160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0e08626b10a53bf"
+  },
+  "findings": []
+}

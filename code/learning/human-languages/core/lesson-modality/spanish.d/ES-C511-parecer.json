@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C511-parecer",
+    "language": "spanish",
+    "chapter": 511,
+    "sequence": 15110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2dfb176936eceaf"
+  },
+  "findings": []
+}

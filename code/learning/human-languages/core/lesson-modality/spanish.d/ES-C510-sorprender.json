@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C510-sorprender",
+    "language": "spanish",
+    "chapter": 510,
+    "sequence": 15100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46c78775ec5f6cc9"
+  },
+  "findings": []
+}

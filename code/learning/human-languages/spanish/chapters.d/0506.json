@@ -1,0 +1,19 @@
+{
+  "chapter": 506,
+  "title": "Un cumpleaños",
+  "label": "ch:es-un-cumpleanos",
+  "canDo": "I can talk about a birthday: giving a present, wrapping it, a toy, congratulating and hugging.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C506-abrazar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 506: I can talk about a birthday: giving a present, wrapping it, a toy, congratulating and hugging.",
+    "assesses": [
+      "ES-LEX-C506-REGALO-03",
+      "ES-LEX-C506-REGALO-04",
+      "ES-LEX-C506-REGALO-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "language": "spanish",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:6de17a759559cc6c",
+  "lessonIds": [
+    "ES-C511-parecer",
+    "ES-C511-mantener",
+    "ES-C511-tratar",
+    "ES-C511-realizar",
+    "ES-C511-soler",
+    "ES-R511-repaso-palabras-de-los-capitulos-503-507",
+    "ES-R511-repaso-palabras-de-los-capitulos-508-511"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "spanish/narration/ch511.txt",
+  "json": "spanish/narration/ch511.json",
+  "textHash": "fnv1a64:0c4a64875794126f",
+  "jsonHash": "fnv1a64:af67f123261496f5",
+  "findings": []
+}

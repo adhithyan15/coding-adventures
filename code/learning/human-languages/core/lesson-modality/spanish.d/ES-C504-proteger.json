@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C504-proteger",
+    "language": "spanish",
+    "chapter": 504,
+    "sequence": 14780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09b269117bff4e21"
+  },
+  "findings": []
+}

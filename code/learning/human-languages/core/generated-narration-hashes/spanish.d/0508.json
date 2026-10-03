@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:f7c183de4964e993",
+  "lessonIds": [
+    "ES-C508-increible",
+    "ES-C508-independiente",
+    "ES-C508-conocido",
+    "ES-C508-actual",
+    "ES-C508-aceptable"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch508.txt",
+  "json": "spanish/narration/ch508.json",
+  "textHash": "fnv1a64:59c40692079b58a4",
+  "jsonHash": "fnv1a64:9a25f0ce32172dbc",
+  "findings": []
+}

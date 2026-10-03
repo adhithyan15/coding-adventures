@@ -1,0 +1,11 @@
+{
+  "id": "ES-C504-fabrica",
+  "pathSegment": "ES-PATH-504-PLANETA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-504-PLANETA",
+      "order": 3
+    }
+  ]
+}

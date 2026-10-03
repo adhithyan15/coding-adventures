@@ -1,0 +1,11 @@
+{
+  "id": "ES-R511-repaso-palabras-de-los-capitulos-503-507",
+  "pathSegment": "ES-PATH-511-HACER",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-511-HACER",
+      "order": 5
+    }
+  ]
+}

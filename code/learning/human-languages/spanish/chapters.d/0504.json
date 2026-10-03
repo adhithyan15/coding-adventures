@@ -1,0 +1,19 @@
+{
+  "chapter": 504,
+  "title": "Cuidar el planeta",
+  "label": "ch:es-cuidar-el-planeta",
+  "canDo": "I can read a notice about recycling, pollution, protecting nature, a factory and damage.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C504-danar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 504: I can read a notice about recycling, pollution, protecting nature, a factory and damage.",
+    "assesses": [
+      "ES-LEX-C504-PLANETA-03",
+      "ES-LEX-C504-PLANETA-04",
+      "ES-LEX-C504-PLANETA-05"
+    ]
+  }
+}
