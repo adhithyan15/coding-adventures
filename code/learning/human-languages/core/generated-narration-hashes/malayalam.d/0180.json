@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:e4a2bdf7041760c8",
+  "lessonIds": [
+    "ML-C180-samayappattika",
+    "ML-C180-ariyippu",
+    "ML-C180-vataka",
+    "ML-C180-parasyam",
+    "ML-C180-rasitu",
+    "ML-R180-first-pass-saying-no-and-looking-back",
+    "ML-R180-second-pass-looking-ahead-and-reading-signs"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch180.txt",
+  "json": "malayalam/narration/ch180.json",
+  "textHash": "fnv1a64:308800dda7fd2b53",
+  "jsonHash": "fnv1a64:fe59561980b30b62",
+  "findings": []
+}

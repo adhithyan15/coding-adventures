@@ -1,0 +1,19 @@
+{
+  "chapter": 180,
+  "title": "A Timetable, a Notice, the Rent, an Advert, a Receipt",
+  "label": "ch:ml-a-timetable-a-notice-the-rent-an-advert-a-receipt",
+  "canDo": "I can read a timetable, a notice, an advert and a receipt, and act on what they say.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ML-R180-second-pass-looking-ahead-and-reading-signs",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 180: I can read a timetable, a notice, an advert and a receipt, and act on what they say.",
+    "assesses": [
+      "ML-LEX-C180-VAYANA180-03",
+      "ML-LEX-C180-VAYANA180-04",
+      "ML-LEX-C180-VAYANA180-05"
+    ]
+  }
+}

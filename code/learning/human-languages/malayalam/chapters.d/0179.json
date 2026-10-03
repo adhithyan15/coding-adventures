@@ -1,0 +1,19 @@
+{
+  "chapter": 179,
+  "title": "Next, From Now On, the Future, To Decide, To Expect",
+  "label": "ch:ml-next-from-now-on-the-future-to-decide-to-expect",
+  "canDo": "I can say what will happen, and when: next week, from now on, and what I have decided.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "ML-C179-pratikshikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 179: I can say what will happen, and when: next week, from now on, and what I have decided.",
+    "assesses": [
+      "ML-LEX-C179-BHAVI179-03",
+      "ML-LEX-C179-BHAVI179-04",
+      "ML-LEX-C179-BHAVI179-05"
+    ]
+  }
+}

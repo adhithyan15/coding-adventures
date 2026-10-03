@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C178-itinakam",
+    "language": "malayalam",
+    "chapter": 178,
+    "sequence": 7680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e10c762014e17450"
+  },
+  "findings": []
+}

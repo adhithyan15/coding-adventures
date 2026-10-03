@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:58927e04d6faa9d1",
+  "lessonIds": [
+    "ML-C178-atuttite",
+    "ML-C178-itinakam",
+    "ML-C178-kazhinja",
+    "ML-C178-orikkal",
+    "ML-C178-celavazhikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch178.txt",
+  "json": "malayalam/narration/ch178.json",
+  "textHash": "fnv1a64:9c097153e21c11a3",
+  "jsonHash": "fnv1a64:e35cd1e628ab6439",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 177,
+  "title": "Nobody, Never, Nowhere, Anyone, Anything",
+  "label": "ch:ml-nobody-never-nowhere-anyone-anything",
+  "canDo": "I can say what is not so, and ask yes-or-no questions.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "ML-C177-entenkilum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 177: I can say what is not so, and ask yes-or-no questions.",
+    "assesses": [
+      "ML-LEX-C177-NISHEDHAM177-03",
+      "ML-LEX-C177-NISHEDHAM177-04",
+      "ML-LEX-C177-NISHEDHAM177-05"
+    ]
+  }
+}
