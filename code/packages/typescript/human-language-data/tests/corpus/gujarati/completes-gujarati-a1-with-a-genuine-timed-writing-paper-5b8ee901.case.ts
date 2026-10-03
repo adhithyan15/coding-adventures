@@ -15,7 +15,7 @@ it("completes Gujarati A1 with a genuine timed writing paper", () => {
     lessons.toSorted(
       (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
     ).at(-1)?.realization.lessonId,
-  ).toBe("GU-W10-a1-timed-production");
+  ).toBe("GU-W11-a2-connected-composition");
 
   const timed = lesson?.blocks.find(
     (block) => block.writingStage === "timed-assessment-production",
