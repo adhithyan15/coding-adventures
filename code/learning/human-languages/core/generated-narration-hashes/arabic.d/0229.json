@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:928c7c1eccbeebb3",
+  "lessonIds": [
+    "AR-C229-rabata",
+    "AR-C229-fakka",
+    "AR-C229-saqa",
+    "AR-C229-ajana",
+    "AR-C229-masaha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch229.txt",
+  "json": "arabic/narration/ch229.json",
+  "textHash": "fnv1a64:2a611750235199b1",
+  "jsonHash": "fnv1a64:789dd01b88c28e84",
+  "findings": []
+}

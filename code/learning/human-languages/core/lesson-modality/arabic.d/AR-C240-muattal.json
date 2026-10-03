@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C240-muattal",
+    "language": "arabic",
+    "chapter": 240,
+    "sequence": 13170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a68cc7253727d9c6"
+  },
+  "findings": []
+}

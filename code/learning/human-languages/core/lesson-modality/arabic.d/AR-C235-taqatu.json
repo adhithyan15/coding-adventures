@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C235-taqatu",
+    "language": "arabic",
+    "chapter": 235,
+    "sequence": 12950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b61e7ce8c9aea94"
+  },
+  "findings": []
+}

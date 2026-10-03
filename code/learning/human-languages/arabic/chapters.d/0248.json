@@ -1,0 +1,19 @@
+{
+  "chapter": 248,
+  "title": "Internet, Website, App, Device, TV series",
+  "label": "ch:ar-internet-website-app-device-tv-series",
+  "canDo": "I can say the internet, a website, an app, a device and a TV series.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C248-musalsal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 248: I can say the internet, a website, an app, a device and a TV series.",
+    "assesses": [
+      "AR-LEX-C248-SHAY248-03",
+      "AR-LEX-C248-SHAY248-04",
+      "AR-LEX-C248-SHAY248-05"
+    ]
+  }
+}

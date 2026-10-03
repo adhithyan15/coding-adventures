@@ -1,0 +1,11 @@
+{
+  "id": "AR-C247-mawja",
+  "pathSegment": "AR-PATH-247-SHAY247",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-247-SHAY247",
+      "order": 1
+    }
+  ]
+}

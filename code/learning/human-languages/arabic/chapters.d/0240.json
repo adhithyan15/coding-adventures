@@ -1,0 +1,19 @@
+{
+  "chapter": 240,
+  "title": "Out of order, Ready, Genuine, Suitable, Excellent",
+  "label": "ch:ar-out-of-order-ready-genuine-suitable-excellent",
+  "canDo": "I can say out of order, ready, genuine, suitable and excellent.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "AR-R240-second-pass-words-from-chapters-236-240",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 240: I can say out of order, ready, genuine, suitable and excellent.",
+    "assesses": [
+      "AR-LEX-C240-SIFA240-03",
+      "AR-LEX-C240-SIFA240-04",
+      "AR-LEX-C240-SIFA240-05"
+    ]
+  }
+}

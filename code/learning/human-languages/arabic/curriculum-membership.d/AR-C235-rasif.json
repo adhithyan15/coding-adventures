@@ -1,0 +1,11 @@
+{
+  "id": "AR-C235-rasif",
+  "pathSegment": "AR-PATH-235-MAKAN235",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-235-MAKAN235",
+      "order": 2
+    }
+  ]
+}

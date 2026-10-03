@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C245-qilada",
+    "language": "arabic",
+    "chapter": 245,
+    "sequence": 13610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1c7c361c42b144a"
+  },
+  "findings": []
+}

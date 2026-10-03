@@ -1,0 +1,11 @@
+{
+  "id": "AR-C247-nakhla",
+  "pathSegment": "AR-PATH-247-SHAY247",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-247-SHAY247",
+      "order": 3
+    }
+  ]
+}

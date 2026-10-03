@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C240-jahiz",
+    "language": "arabic",
+    "chapter": 240,
+    "sequence": 13180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:357e2568a12f9f25"
+  },
+  "findings": []
+}

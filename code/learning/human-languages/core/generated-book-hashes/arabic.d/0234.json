@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:07a8a8bb8d43bd17",
+  "lessonIds": [
+    "AR-C234-sanawi",
+    "AR-C234-duha",
+    "AR-C234-qariban",
+    "AR-C234-munabbih",
+    "AR-C234-taqwim"
+  ],
+  "tex": "arabic/book/chapters/ch234-yearly-late-morning-soon-alarm-clock-calendar.tex"
+}

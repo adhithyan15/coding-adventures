@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:f525f10ce0a1f85a",
+  "lessonIds": [
+    "AR-C231-ilaj",
+    "AR-C231-wasfa",
+    "AR-C231-iyada",
+    "AR-C231-saydaliyya",
+    "AR-C231-mumarrid",
+    "AR-R231-first-pass-words-from-chapters-223-226",
+    "AR-R231-second-pass-words-from-chapters-227-231"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch231.txt",
+  "json": "arabic/narration/ch231.json",
+  "textHash": "fnv1a64:e53f2b6730bc243f",
+  "jsonHash": "fnv1a64:4818011394a9a608",
+  "findings": []
+}

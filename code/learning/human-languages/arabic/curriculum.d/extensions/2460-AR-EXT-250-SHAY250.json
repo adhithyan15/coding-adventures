@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-250-SHAY250",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say cardboard, bricks, marble, rubber and a triangle.",
+  "prerequisites": []
+}

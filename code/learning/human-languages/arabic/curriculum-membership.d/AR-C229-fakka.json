@@ -1,0 +1,11 @@
+{
+  "id": "AR-C229-fakka",
+  "pathSegment": "AR-PATH-229-ACT229",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-229-ACT229",
+      "order": 1
+    }
+  ]
+}

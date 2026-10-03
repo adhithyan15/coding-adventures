@@ -1,0 +1,19 @@
+{
+  "chapter": 232,
+  "title": "Dizziness, Ointment, Surgeon, Crutch, Bleeding",
+  "label": "ch:ar-dizziness-ointment-surgeon-crutch-bleeding",
+  "canDo": "I can say dizziness, an ointment, a surgeon, a crutch and bleeding.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "AR-C232-nazif",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 232: I can say dizziness, an ointment, a surgeon, a crutch and bleeding.",
+    "assesses": [
+      "AR-LEX-C232-SIHHA232-03",
+      "AR-LEX-C232-SIHHA232-04",
+      "AR-LEX-C232-SIHHA232-05"
+    ]
+  }
+}

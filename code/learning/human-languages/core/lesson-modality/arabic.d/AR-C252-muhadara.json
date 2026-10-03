@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C252-muhadara",
+    "language": "arabic",
+    "chapter": 252,
+    "sequence": 14160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:31a36b0b748bc834"
+  },
+  "findings": []
+}

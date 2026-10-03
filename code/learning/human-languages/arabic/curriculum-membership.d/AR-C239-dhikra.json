@@ -1,0 +1,11 @@
+{
+  "id": "AR-C239-dhikra",
+  "pathSegment": "AR-PATH-239-SABAB239",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-239-SABAB239",
+      "order": 3
+    }
+  ]
+}

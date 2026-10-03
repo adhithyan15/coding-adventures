@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R231-second-pass-words-from-chapters-227-231",
+    "language": "arabic",
+    "chapter": 231,
+    "sequence": 12590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f8ad38321ba7510"
+  },
+  "findings": []
+}

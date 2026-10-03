@@ -1,0 +1,11 @@
+{
+  "id": "AR-C249-mabruk",
+  "pathSegment": "AR-PATH-249-SHAY249",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-249-SHAY249",
+      "order": 3
+    }
+  ]
+}

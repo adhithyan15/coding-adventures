@@ -1,0 +1,11 @@
+{
+  "id": "AR-C234-duha",
+  "pathSegment": "AR-PATH-234-WAQT234",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-234-WAQT234",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:abad625948be1801",
+  "lessonIds": [
+    "AR-C224-kasaba",
+    "AR-C224-iqtarada",
+    "AR-C224-aqrada",
+    "AR-C224-ghayyara",
+    "AR-C224-asraa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch224.txt",
+  "json": "arabic/narration/ch224.json",
+  "textHash": "fnv1a64:8ed47fe56ce043c6",
+  "jsonHash": "fnv1a64:b4073cb867c7254d",
+  "findings": []
+}

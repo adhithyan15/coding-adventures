@@ -1,0 +1,11 @@
+{
+  "id": "AR-C228-rasama",
+  "pathSegment": "AR-PATH-228-ACT228",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-228-ACT228",
+      "order": 2
+    }
+  ]
+}

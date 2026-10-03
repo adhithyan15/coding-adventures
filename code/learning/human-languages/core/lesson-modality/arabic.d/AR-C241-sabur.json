@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C241-sabur",
+    "language": "arabic",
+    "chapter": 241,
+    "sequence": 13420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f570e8b238c12edb"
+  },
+  "findings": []
+}

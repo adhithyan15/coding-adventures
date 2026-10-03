@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:9cc714b3786ce708",
+  "lessonIds": [
+    "AR-C225-sahaba",
+    "AR-C225-haddara",
+    "AR-C225-aslaha",
+    "AR-C225-istamala",
+    "AR-C225-ahdara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch225.txt",
+  "json": "arabic/narration/ch225.json",
+  "textHash": "fnv1a64:c27ce26c2e8a4866",
+  "jsonHash": "fnv1a64:2de27ffc29da9854",
+  "findings": []
+}

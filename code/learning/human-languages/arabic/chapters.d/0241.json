@@ -1,0 +1,19 @@
+{
+  "chapter": 241,
+  "title": "Polite, Patient, Modest, Funny, Serious",
+  "label": "ch:ar-polite-patient-modest-funny-serious",
+  "canDo": "I can say polite, patient, modest, funny and serious.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "AR-C241-jadd",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 241: I can say polite, patient, modest, funny and serious.",
+    "assesses": [
+      "AR-LEX-C241-SIFA241-03",
+      "AR-LEX-C241-SIFA241-04",
+      "AR-LEX-C241-SIFA241-05"
+    ]
+  }
+}

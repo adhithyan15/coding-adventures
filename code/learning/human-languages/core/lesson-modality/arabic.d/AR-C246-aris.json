@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C246-aris",
+    "language": "arabic",
+    "chapter": 246,
+    "sequence": 13700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3717eb675d2a1046"
+  },
+  "findings": []
+}

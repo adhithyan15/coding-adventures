@@ -1,0 +1,19 @@
+{
+  "chapter": 242,
+  "title": "Noisy, Dead, Wild, Tame, Poisonous",
+  "label": "ch:ar-noisy-dead-wild-tame-poisonous",
+  "canDo": "I can say noisy, dead, wild, tame and poisonous.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "AR-C242-samm",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 242: I can say noisy, dead, wild, tame and poisonous.",
+    "assesses": [
+      "AR-LEX-C242-SIFA242-03",
+      "AR-LEX-C242-SIFA242-04",
+      "AR-LEX-C242-SIFA242-05"
+    ]
+  }
+}

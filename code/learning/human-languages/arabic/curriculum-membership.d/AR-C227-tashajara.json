@@ -1,0 +1,11 @@
+{
+  "id": "AR-C227-tashajara",
+  "pathSegment": "AR-PATH-227-ACT227",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-227-ACT227",
+      "order": 3
+    }
+  ]
+}

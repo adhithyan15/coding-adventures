@@ -1,0 +1,11 @@
+{
+  "id": "AR-C223-tawa",
+  "pathSegment": "AR-PATH-223-ACT223",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-223-ACT223",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 237,
+  "title": "Patience, Generosity, Feeling, Morals, Personality",
+  "label": "ch:ar-patience-generosity-feeling-morals-personality",
+  "canDo": "I can say patience, generosity, a feeling, morals and personality.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "AR-C237-shakhsiyya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 237: I can say patience, generosity, a feeling, morals and personality.",
+    "assesses": [
+      "AR-LEX-C237-SABAB237-03",
+      "AR-LEX-C237-SABAB237-04",
+      "AR-LEX-C237-SABAB237-05"
+    ]
+  }
+}

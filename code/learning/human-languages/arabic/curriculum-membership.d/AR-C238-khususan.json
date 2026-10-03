@@ -1,0 +1,11 @@
+{
+  "id": "AR-C238-khususan",
+  "pathSegment": "AR-PATH-238-SABAB238",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-238-SABAB238",
+      "order": 4
+    }
+  ]
+}

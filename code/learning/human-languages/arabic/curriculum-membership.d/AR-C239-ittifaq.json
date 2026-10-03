@@ -1,0 +1,11 @@
+{
+  "id": "AR-C239-ittifaq",
+  "pathSegment": "AR-PATH-239-SABAB239",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-239-SABAB239",
+      "order": 1
+    }
+  ]
+}

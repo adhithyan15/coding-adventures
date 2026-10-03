@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C227-khajila",
+    "language": "arabic",
+    "chapter": 227,
+    "sequence": 12330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:39cd2e4953f627c3"
+  },
+  "findings": []
+}

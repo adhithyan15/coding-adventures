@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C247-yasamin",
+    "language": "arabic",
+    "chapter": 247,
+    "sequence": 13750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f029f2fc5ea94b74"
+  },
+  "findings": []
+}

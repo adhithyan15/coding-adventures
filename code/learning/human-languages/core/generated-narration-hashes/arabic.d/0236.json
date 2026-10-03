@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:21b3198868917b4d",
+  "lessonIds": [
+    "AR-C236-zilzal",
+    "AR-C236-fayadan",
+    "AR-C236-jalid",
+    "AR-C236-muwatin",
+    "AR-C236-sukkan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch236.txt",
+  "json": "arabic/narration/ch236.json",
+  "textHash": "fnv1a64:aa7bdbe508abf9b3",
+  "jsonHash": "fnv1a64:5be628e2ad9c3aab",
+  "findings": []
+}

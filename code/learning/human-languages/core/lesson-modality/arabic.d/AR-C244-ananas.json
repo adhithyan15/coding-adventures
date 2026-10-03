@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C244-ananas",
+    "language": "arabic",
+    "chapter": 244,
+    "sequence": 13590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3a4780fd5484966"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-234-WAQT234",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "before": [],
+  "inline": [
+    "AR-EXT-234-WAQT234"
+  ],
+  "after": []
+}

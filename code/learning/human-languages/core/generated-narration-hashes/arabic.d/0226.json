@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:8b02c08280d262fc",
+  "lessonIds": [
+    "AR-C226-intalaqa",
+    "AR-C226-shahana",
+    "AR-C226-itadhara",
+    "AR-C226-akhbara",
+    "AR-C226-ittafaqa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch226.txt",
+  "json": "arabic/narration/ch226.json",
+  "textHash": "fnv1a64:f2339808b81914e5",
+  "jsonHash": "fnv1a64:2017f4b44c56ac4a",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C242-samm",
+  "pathSegment": "AR-PATH-242-SIFA242",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-242-SIFA242",
+      "order": 4
+    }
+  ]
+}

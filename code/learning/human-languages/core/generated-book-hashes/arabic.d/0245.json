@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:65d4710901cb41fb",
+  "lessonIds": [
+    "AR-C245-qilada",
+    "AR-C245-maqas",
+    "AR-C245-hatif",
+    "AR-C245-jawwal",
+    "AR-C245-shasha"
+  ],
+  "tex": "arabic/book/chapters/ch245-necklace-size-telephone-mobile-phone-screen.tex"
+}

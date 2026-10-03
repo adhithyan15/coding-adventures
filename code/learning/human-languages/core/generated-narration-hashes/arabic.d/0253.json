@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:d63a9b2c3e9c7306",
+  "lessonIds": [
+    "AR-C253-tijara",
+    "AR-C253-mistara",
+    "AR-C253-mibrah",
+    "AR-C253-tabashir",
+    "AR-C253-dabbasa",
+    "AR-R253-first-pass-words-from-chapters-250-251",
+    "AR-R253-second-pass-words-from-chapters-252-253"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch253.txt",
+  "json": "arabic/narration/ch253.json",
+  "textHash": "fnv1a64:ae91b6ca55ea898d",
+  "jsonHash": "fnv1a64:6876ecfe8386c1cc",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C231-saydaliyya",
+  "pathSegment": "AR-PATH-231-SIHHA231",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-231-SIHHA231",
+      "order": 3
+    }
+  ]
+}

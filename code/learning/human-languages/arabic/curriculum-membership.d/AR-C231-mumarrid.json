@@ -1,0 +1,11 @@
+{
+  "id": "AR-C231-mumarrid",
+  "pathSegment": "AR-PATH-231-SIHHA231",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-231-SIHHA231",
+      "order": 4
+    }
+  ]
+}
