@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:7f1478f9ba117725",
+  "lessonIds": [
+    "TA-C247-kuruvi",
+    "TA-C247-kaluku",
+    "TA-C247-naykkutti",
+    "TA-C247-anil",
+    "TA-C247-pulu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch247.txt",
+  "json": "tamil/narration/ch247.json",
+  "textHash": "fnv1a64:bb562c3281cf396a",
+  "jsonHash": "fnv1a64:f79fe87e1e123b6d",
+  "findings": []
+}

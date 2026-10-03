@@ -1,0 +1,19 @@
+{
+  "chapter": 226,
+  "title": "To begin, To touch, To sneeze, To swallow, To chew",
+  "label": "ch:ta-to-begin-to-touch-to-sneeze-to-swallow-to-chew",
+  "canDo": "I can say to begin, to touch, to sneeze, to swallow and to chew.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C226-mel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 226: I can say to begin, to touch, to sneeze, to swallow and to chew.",
+    "assesses": [
+      "TA-LEX-C226-ACT226-03",
+      "TA-LEX-C226-ACT226-04",
+      "TA-LEX-C226-ACT226-05"
+    ]
+  }
+}

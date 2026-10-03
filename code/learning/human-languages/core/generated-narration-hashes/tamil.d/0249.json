@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:77b4dd9dfc03a05a",
+  "lessonIds": [
+    "TA-C249-vilaiyattu",
+    "TA-C249-kalpantu",
+    "TA-C249-kiriket",
+    "TA-C249-catarankam",
+    "TA-C249-potti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch249.txt",
+  "json": "tamil/narration/ch249.json",
+  "textHash": "fnv1a64:b96da108fbb7b946",
+  "jsonHash": "fnv1a64:e4c3bd1d47d11a68",
+  "findings": []
+}

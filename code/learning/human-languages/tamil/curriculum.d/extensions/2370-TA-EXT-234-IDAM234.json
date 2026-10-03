@@ -1,0 +1,8 @@
+{
+  "id": "TA-EXT-234-IDAM234",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a post office, a city, a country, a capital city and a crossroads.",
+  "prerequisites": []
+}

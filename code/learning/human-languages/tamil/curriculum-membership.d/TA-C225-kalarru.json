@@ -1,0 +1,11 @@
+{
+  "id": "TA-C225-kalarru",
+  "pathSegment": "TA-PATH-225-ACT225",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-225-ACT225",
+      "order": 3
+    }
+  ]
+}

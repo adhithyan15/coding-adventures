@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:a98e952fdf04afc0",
+  "lessonIds": [
+    "TA-C229-parattu",
+    "TA-C229-tittu",
+    "TA-C229-kanavu-kan",
+    "TA-C229-piri",
+    "TA-C229-vicu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch229.txt",
+  "json": "tamil/narration/ch229.json",
+  "textHash": "fnv1a64:5a230de6f5474af2",
+  "jsonHash": "fnv1a64:4349e6651de0560f",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:ed106cde30eb4a25",
+  "lessonIds": [
+    "TA-C239-emarram",
+    "TA-C239-perumai",
+    "TA-C239-tirupti",
+    "TA-C239-irakkam",
+    "TA-C239-tanimai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch239.txt",
+  "json": "tamil/narration/ch239.json",
+  "textHash": "fnv1a64:09878cf0ea6282a7",
+  "jsonHash": "fnv1a64:56d2d5731088fdca",
+  "findings": []
+}

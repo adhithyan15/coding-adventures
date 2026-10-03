@@ -1,0 +1,19 @@
+{
+  "chapter": 231,
+  "title": "To faint, To wilt, To warn, To beg, To manage",
+  "label": "ch:ta-to-faint-to-wilt-to-warn-to-beg-to-manage",
+  "canDo": "I can say to faint, to wilt, to warn, to beg and to manage.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C231-camali",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 231: I can say to faint, to wilt, to warn, to beg and to manage.",
+    "assesses": [
+      "TA-LEX-C231-ACT231-03",
+      "TA-LEX-C231-ACT231-04",
+      "TA-LEX-C231-ACT231-05"
+    ]
+  }
+}

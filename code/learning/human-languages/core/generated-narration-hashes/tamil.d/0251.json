@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:e3bb639075dd62c3",
+  "lessonIds": [
+    "TA-C251-mottam",
+    "TA-C251-pattiyal",
+    "TA-C251-porul",
+    "TA-C251-virpanai",
+    "TA-C251-mutalali"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch251.txt",
+  "json": "tamil/narration/ch251.json",
+  "textHash": "fnv1a64:044af05c288904fa",
+  "jsonHash": "fnv1a64:ec2ccb7073702eca",
+  "findings": []
+}

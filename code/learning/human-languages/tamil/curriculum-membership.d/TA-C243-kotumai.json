@@ -1,0 +1,11 @@
+{
+  "id": "TA-C243-kotumai",
+  "pathSegment": "TA-PATH-243-PORUL243",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-243-PORUL243",
+      "order": 0
+    }
+  ]
+}

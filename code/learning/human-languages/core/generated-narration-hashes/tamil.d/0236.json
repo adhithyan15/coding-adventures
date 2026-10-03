@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:e00fa111e24f3ceb",
+  "lessonIds": [
+    "TA-C236-arunkatciyakam",
+    "TA-C236-cantu",
+    "TA-C236-turaimukam",
+    "TA-C236-kottai",
+    "TA-C236-aranmanai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch236.txt",
+  "json": "tamil/narration/ch236.json",
+  "textHash": "fnv1a64:72498de382c7dca6",
+  "jsonHash": "fnv1a64:c47612f082cdd1ac",
+  "findings": []
+}

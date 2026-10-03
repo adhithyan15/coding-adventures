@@ -1,0 +1,19 @@
+{
+  "chapter": 230,
+  "title": "To imagine, To doubt, To complain, To download, To upload",
+  "label": "ch:ta-to-imagine-to-doubt-to-complain-to-download-to-upload",
+  "canDo": "I can say to imagine, to doubt, to complain, to download and to upload.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C230-pativerru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 230: I can say to imagine, to doubt, to complain, to download and to upload.",
+    "assesses": [
+      "TA-LEX-C230-ACT230-03",
+      "TA-LEX-C230-ACT230-04",
+      "TA-LEX-C230-ACT230-05"
+    ]
+  }
+}

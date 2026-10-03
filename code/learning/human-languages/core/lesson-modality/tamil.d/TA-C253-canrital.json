@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C253-canrital",
+    "language": "tamil",
+    "chapter": 253,
+    "sequence": 14160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fca349bf6b52a3f8"
+  },
+  "findings": []
+}

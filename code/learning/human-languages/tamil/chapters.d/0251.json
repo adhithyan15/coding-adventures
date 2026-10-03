@@ -1,0 +1,19 @@
+{
+  "chapter": 251,
+  "title": "Total, List, Thing, Sale, Employer",
+  "label": "ch:ta-total-list-thing-sale-employer",
+  "canDo": "I can say the total, a list, a thing, a sale and an employer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C251-mutalali",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 251: I can say the total, a list, a thing, a sale and an employer.",
+    "assesses": [
+      "TA-LEX-C251-VELAI251-03",
+      "TA-LEX-C251-VELAI251-04",
+      "TA-LEX-C251-VELAI251-05"
+    ]
+  }
+}

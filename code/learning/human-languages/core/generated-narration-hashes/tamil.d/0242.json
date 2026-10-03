@@ -1,0 +1,21 @@
+{
+  "language": "tamil",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:836b98d30db52d1f",
+  "lessonIds": [
+    "TA-C242-atai",
+    "TA-C242-kalcattai",
+    "TA-C242-cattaippai",
+    "TA-C242-pottan",
+    "TA-C242-ravikkai",
+    "TA-R242-first-pass-words-from-chapters-234-237",
+    "TA-R242-second-pass-words-from-chapters-238-242"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "tamil/narration/ch242.txt",
+  "json": "tamil/narration/ch242.json",
+  "textHash": "fnv1a64:e56c97a67fe8ed53",
+  "jsonHash": "fnv1a64:2450525b8fe93501",
+  "findings": []
+}

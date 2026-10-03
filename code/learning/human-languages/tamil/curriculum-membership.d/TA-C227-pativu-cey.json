@@ -1,0 +1,11 @@
+{
+  "id": "TA-C227-pativu-cey",
+  "pathSegment": "TA-PATH-227-ACT227",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-227-ACT227",
+      "order": 2
+    }
+  ]
+}

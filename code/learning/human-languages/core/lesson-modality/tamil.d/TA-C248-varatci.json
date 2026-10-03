@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C248-varatci",
+    "language": "tamil",
+    "chapter": 248,
+    "sequence": 13710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a6b48de786390245"
+  },
+  "findings": []
+}

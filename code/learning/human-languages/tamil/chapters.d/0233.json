@@ -1,0 +1,19 @@
+{
+  "chapter": 233,
+  "title": "Every year, Dawn, Day after tomorrow, Day before yesterday, Second",
+  "label": "ch:ta-every-year-dawn-day-after-tomorrow-day-before-yesterday-second",
+  "canDo": "I can say every year, dawn, the day after tomorrow, the day before yesterday and a second.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TA-R233-second-pass-words-from-chapters-229-233",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 233: I can say every year, dawn, the day after tomorrow, the day before yesterday and a second.",
+    "assesses": [
+      "TA-LEX-C233-NERAM233-03",
+      "TA-LEX-C233-NERAM233-04",
+      "TA-LEX-C233-NERAM233-05"
+    ]
+  }
+}

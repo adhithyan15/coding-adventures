@@ -1,0 +1,21 @@
+{
+  "language": "tamil",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:b5a49598e4bed487",
+  "lessonIds": [
+    "TA-C233-antutorum",
+    "TA-C233-vitiyal",
+    "TA-C233-nalai-marunal",
+    "TA-C233-nerru-muntinam",
+    "TA-C233-vinati",
+    "TA-R233-first-pass-words-from-chapters-225-228",
+    "TA-R233-second-pass-words-from-chapters-229-233"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "tamil/narration/ch233.txt",
+  "json": "tamil/narration/ch233.json",
+  "textHash": "fnv1a64:b53e7d01320aaee4",
+  "jsonHash": "fnv1a64:d7459c7de242d870",
+  "findings": []
+}

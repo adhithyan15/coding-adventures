@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:ba463390537afd5e",
+  "lessonIds": [
+    "TA-C235-ticai",
+    "TA-C235-vatakku",
+    "TA-C235-terku",
+    "TA-C235-kilakku",
+    "TA-C235-merku"
+  ],
+  "tex": "tamil/book/chapters/ch235-direction-north-south-east-west.tex"
+}

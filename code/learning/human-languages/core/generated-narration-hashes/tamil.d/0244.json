@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:97b1d97e08e640e2",
+  "lessonIds": [
+    "TA-C244-ancal-talai",
+    "TA-C244-pottalam",
+    "TA-C244-pativam",
+    "TA-C244-avanam",
+    "TA-C244-katavuccittu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch244.txt",
+  "json": "tamil/narration/ch244.json",
+  "textHash": "fnv1a64:f718121785f41bb3",
+  "jsonHash": "fnv1a64:69a3f4fdac1dec36",
+  "findings": []
+}

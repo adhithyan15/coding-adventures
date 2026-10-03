@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:0460dc2912da38ab",
+  "lessonIds": [
+    "TA-C252-matippen",
+    "TA-C252-palkalaikkalakam",
+    "TA-C252-kalvi",
+    "TA-C252-kanitam",
+    "TA-C252-ariviyal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch252.txt",
+  "json": "tamil/narration/ch252.json",
+  "textHash": "fnv1a64:00a87fa94b07819a",
+  "jsonHash": "fnv1a64:5d1f8d9fdcb40b0d",
+  "findings": []
+}

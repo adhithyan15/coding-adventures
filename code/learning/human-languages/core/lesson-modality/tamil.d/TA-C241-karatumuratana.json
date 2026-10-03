@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C241-karatumuratana",
+    "language": "tamil",
+    "chapter": 241,
+    "sequence": 13200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:af4de1329b66fbbe"
+  },
+  "findings": []
+}

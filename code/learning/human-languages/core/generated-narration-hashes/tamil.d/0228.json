@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:efb0a831093b98a2",
+  "lessonIds": [
+    "TA-C228-tattaccu-cey",
+    "TA-C228-molipeyar",
+    "TA-C228-rattu-cey",
+    "TA-C228-avacarappatu",
+    "TA-C228-neci"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch228.txt",
+  "json": "tamil/narration/ch228.json",
+  "textHash": "fnv1a64:f9f9732448d5ef50",
+  "jsonHash": "fnv1a64:9616df418d3f1bab",
+  "findings": []
+}

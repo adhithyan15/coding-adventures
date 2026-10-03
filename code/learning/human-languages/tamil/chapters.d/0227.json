@@ -1,0 +1,19 @@
+{
+  "chapter": 227,
+  "title": "To correct, To enquire, To register, To book in advance, To apply",
+  "label": "ch:ta-to-correct-to-enquire-to-register-to-book-in-advance-to-apply",
+  "canDo": "I can say to correct, to enquire, to register, to book in advance and to apply.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C227-vinnappi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 227: I can say to correct, to enquire, to register, to book in advance and to apply.",
+    "assesses": [
+      "TA-LEX-C227-ACT227-03",
+      "TA-LEX-C227-ACT227-04",
+      "TA-LEX-C227-ACT227-05"
+    ]
+  }
+}

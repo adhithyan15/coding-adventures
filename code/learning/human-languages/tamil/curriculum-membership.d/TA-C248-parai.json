@@ -1,0 +1,11 @@
+{
+  "id": "TA-C248-parai",
+  "pathSegment": "TA-PATH-248-PORUL248",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-248-PORUL248",
+      "order": 3
+    }
+  ]
+}

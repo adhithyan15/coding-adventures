@@ -1,0 +1,19 @@
+{
+  "chapter": 249,
+  "title": "Game, Football, Cricket, Chess, Competition",
+  "label": "ch:ta-game-football-cricket-chess-competition",
+  "canDo": "I can say a game, football, cricket, chess and a competition.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C249-potti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 249: I can say a game, football, cricket, chess and a competition.",
+    "assesses": [
+      "TA-LEX-C249-PORUL249-03",
+      "TA-LEX-C249-PORUL249-04",
+      "TA-LEX-C249-PORUL249-05"
+    ]
+  }
+}

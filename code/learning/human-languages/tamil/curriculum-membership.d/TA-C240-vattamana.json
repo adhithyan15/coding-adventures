@@ -1,0 +1,11 @@
+{
+  "id": "TA-C240-vattamana",
+  "pathSegment": "TA-PATH-240-GUNAM240",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-240-GUNAM240",
+      "order": 1
+    }
+  ]
+}

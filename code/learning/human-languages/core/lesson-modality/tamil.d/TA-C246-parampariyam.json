@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C246-parampariyam",
+    "language": "tamil",
+    "chapter": 246,
+    "sequence": 13650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b39ba2eaebbc9304"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C226-arampi",
+    "language": "tamil",
+    "chapter": 226,
+    "sequence": 12230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6c24d2f9f288409"
+  },
+  "findings": []
+}

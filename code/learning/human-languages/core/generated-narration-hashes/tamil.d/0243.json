@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:f5f48dd3f94a0482",
+  "lessonIds": [
+    "TA-C243-kotumai",
+    "TA-C243-urulaikkilanku",
+    "TA-C243-kattarikkay",
+    "TA-C243-vacanai",
+    "TA-C243-vellarikkay"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch243.txt",
+  "json": "tamil/narration/ch243.json",
+  "textHash": "fnv1a64:1bcc39e0f29b1e47",
+  "jsonHash": "fnv1a64:faeb0d7828be5729",
+  "findings": []
+}

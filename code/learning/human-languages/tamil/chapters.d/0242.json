@@ -1,0 +1,19 @@
+{
+  "chapter": 242,
+  "title": "Clothing, Trousers, Pocket, Button, Blouse",
+  "label": "ch:ta-clothing-trousers-pocket-button-blouse",
+  "canDo": "I can say clothing, trousers, a pocket, a button and a blouse.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-R242-second-pass-words-from-chapters-238-242",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 242: I can say clothing, trousers, a pocket, a button and a blouse.",
+    "assesses": [
+      "TA-LEX-C242-PORUL242-03",
+      "TA-LEX-C242-PORUL242-04",
+      "TA-LEX-C242-PORUL242-05"
+    ]
+  }
+}

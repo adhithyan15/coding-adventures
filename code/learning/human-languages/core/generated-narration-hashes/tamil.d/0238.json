@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 238,
+  "sourceHash": "fnv1a64:15fe5112b35d153f",
+  "lessonIds": [
+    "TA-C238-niram",
+    "TA-C238-alavu",
+    "TA-C238-etai",
+    "TA-C238-arokkiyamana",
+    "TA-C238-olliyana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch238.txt",
+  "json": "tamil/narration/ch238.json",
+  "textHash": "fnv1a64:6666491cf5ec7f26",
+  "jsonHash": "fnv1a64:e45cab07f9eb0de8",
+  "findings": []
+}

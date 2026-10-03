@@ -1,0 +1,11 @@
+{
+  "id": "TA-C233-nalai-marunal",
+  "pathSegment": "TA-PATH-233-NERAM233",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-233-NERAM233",
+      "order": 2
+    }
+  ]
+}

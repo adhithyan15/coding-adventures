@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C253-oyvutiyam",
+    "language": "tamil",
+    "chapter": 253,
+    "sequence": 14150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:925e12721e6ec561"
+  },
+  "findings": []
+}

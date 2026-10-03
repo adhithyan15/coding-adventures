@@ -1,0 +1,19 @@
+{
+  "chapter": 232,
+  "title": "Toothache, Wound, Tablet, Patient, Nurse",
+  "label": "ch:ta-toothache-wound-tablet-patient-nurse",
+  "canDo": "I can say a toothache, a wound, a tablet, a patient and a nurse.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TA-C232-ceviliyar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 232: I can say a toothache, a wound, a tablet, a patient and a nurse.",
+    "assesses": [
+      "TA-LEX-C232-NALAM232-03",
+      "TA-LEX-C232-NALAM232-04",
+      "TA-LEX-C232-NALAM232-05"
+    ]
+  }
+}

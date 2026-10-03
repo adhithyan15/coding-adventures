@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C230-karpanai-cey",
+    "language": "tamil",
+    "chapter": 230,
+    "sequence": 12430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:af4e3a02427e53ad"
+  },
+  "findings": []
+}

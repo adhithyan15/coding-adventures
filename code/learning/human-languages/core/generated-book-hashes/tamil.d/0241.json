@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:3de3239dec6479ba",
+  "lessonIds": [
+    "TA-C241-cataranamana",
+    "TA-C241-apurvamana",
+    "TA-C241-camamana",
+    "TA-C241-karatumuratana",
+    "TA-C241-vetuvetuppana"
+  ],
+  "tex": "tamil/book/chapters/ch241-ordinary-rare-equal-rough-lukewarm.tex"
+}

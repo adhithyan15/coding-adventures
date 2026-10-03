@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C233-vitiyal",
+    "language": "tamil",
+    "chapter": 233,
+    "sequence": 12590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd4f5d3ee3f0dd87"
+  },
+  "findings": []
+}

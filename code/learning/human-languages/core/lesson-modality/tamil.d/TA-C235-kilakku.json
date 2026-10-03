@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C235-kilakku",
+    "language": "tamil",
+    "chapter": 235,
+    "sequence": 12900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf358044ae1f75b9"
+  },
+  "findings": []
+}

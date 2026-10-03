@@ -1,0 +1,11 @@
+{
+  "id": "TA-C231-kencu",
+  "pathSegment": "TA-PATH-231-ACT231",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-231-ACT231",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:2942700f167283ae",
+  "lessonIds": [
+    "TA-C234-ancalakam",
+    "TA-C234-nakaram",
+    "TA-C234-natu",
+    "TA-C234-talainakaram",
+    "TA-C234-narcanti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch234.txt",
+  "json": "tamil/narration/ch234.json",
+  "textHash": "fnv1a64:1fa391421aa5730a",
+  "jsonHash": "fnv1a64:0fce2a0a988d2b3f",
+  "findings": []
+}
