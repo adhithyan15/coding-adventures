@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:de45e43c0cb90627",
+  "lessonIds": [
+    "AR-C232-duwar",
+    "AR-C232-marham",
+    "AR-C232-jarrah",
+    "AR-C232-ukkaz",
+    "AR-C232-nazif"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch232.txt",
+  "json": "arabic/narration/ch232.json",
+  "textHash": "fnv1a64:b524b01ddf56aa51",
+  "jsonHash": "fnv1a64:bc0d41e8b57e37bd",
+  "findings": []
+}

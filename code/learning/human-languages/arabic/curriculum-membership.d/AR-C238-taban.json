@@ -1,0 +1,11 @@
+{
+  "id": "AR-C238-taban",
+  "pathSegment": "AR-PATH-238-SABAB238",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-238-SABAB238",
+      "order": 2
+    }
+  ]
+}

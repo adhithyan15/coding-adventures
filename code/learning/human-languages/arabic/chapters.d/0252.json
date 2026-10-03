@@ -1,0 +1,19 @@
+{
+  "chapter": 252,
+  "title": "Mark, Lecture, School subject, Fees, Post",
+  "label": "ch:ar-mark-lecture-school-subject-fees-post",
+  "canDo": "I can say a mark, a lecture, a school subject, fees and post.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C252-barid",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 252: I can say a mark, a lecture, a school subject, fees and post.",
+    "assesses": [
+      "AR-LEX-C252-AMAL252-03",
+      "AR-LEX-C252-AMAL252-04",
+      "AR-LEX-C252-AMAL252-05"
+    ]
+  }
+}

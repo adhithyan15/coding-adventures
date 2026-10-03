@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C227-taarrafa",
+    "language": "arabic",
+    "chapter": 227,
+    "sequence": 12350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aaf02992451d14fb"
+  },
+  "findings": []
+}

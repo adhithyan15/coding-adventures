@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:d69ba3bfaeed6c51",
+  "lessonIds": [
+    "AR-C230-nabaha",
+    "AR-C230-atama",
+    "AR-C230-adafa",
+    "AR-C230-qassama",
+    "AR-C230-rakala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch230.txt",
+  "json": "arabic/narration/ch230.json",
+  "textHash": "fnv1a64:a336396e0a0792d3",
+  "jsonHash": "fnv1a64:6ee34f2995244a93",
+  "findings": []
+}

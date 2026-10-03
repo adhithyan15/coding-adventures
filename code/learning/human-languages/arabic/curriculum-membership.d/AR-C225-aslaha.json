@@ -1,0 +1,11 @@
+{
+  "id": "AR-C225-aslaha",
+  "pathSegment": "AR-PATH-225-ACT225",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-225-ACT225",
+      "order": 2
+    }
+  ]
+}

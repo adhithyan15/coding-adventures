@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C235-mathaf",
+    "language": "arabic",
+    "chapter": 235,
+    "sequence": 12920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:29ba0325da55eb0d"
+  },
+  "findings": []
+}

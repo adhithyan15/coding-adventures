@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:c5d60d44c9caa182",
+  "lessonIds": [
+    "AR-C252-alama",
+    "AR-C252-muhadara",
+    "AR-C252-madda",
+    "AR-C252-rusum",
+    "AR-C252-barid"
+  ],
+  "tex": "arabic/book/chapters/ch252-mark-lecture-school-subject-fees-post.tex"
+}

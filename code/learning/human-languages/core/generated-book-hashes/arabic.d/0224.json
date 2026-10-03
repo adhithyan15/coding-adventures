@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:66cfeb7f288cc711",
+  "lessonIds": [
+    "AR-C224-kasaba",
+    "AR-C224-iqtarada",
+    "AR-C224-aqrada",
+    "AR-C224-ghayyara",
+    "AR-C224-asraa"
+  ],
+  "tex": "arabic/book/chapters/ch224-to-earn-to-borrow-to-lend-to-change-to-hurry.tex"
+}

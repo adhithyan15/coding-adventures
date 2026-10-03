@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:a9187afa709cbbbd",
+  "lessonIds": [
+    "AR-C247-hawa",
+    "AR-C247-mawja",
+    "AR-C247-ward",
+    "AR-C247-nakhla",
+    "AR-C247-yasamin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch247.txt",
+  "json": "arabic/narration/ch247.json",
+  "textHash": "fnv1a64:c92b854aef9f8660",
+  "jsonHash": "fnv1a64:933ea18644118381",
+  "findings": []
+}

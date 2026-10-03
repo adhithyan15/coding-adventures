@@ -1,0 +1,19 @@
+{
+  "chapter": 226,
+  "title": "To set off, To charge, To apologise, To inform, To agree",
+  "label": "ch:ar-to-set-off-to-charge-to-apologise-to-inform-to-agree",
+  "canDo": "I can say to set off, to charge, to apologise, to inform and to agree.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C226-ittafaqa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 226: I can say to set off, to charge, to apologise, to inform and to agree.",
+    "assesses": [
+      "AR-LEX-C226-ACT226-03",
+      "AR-LEX-C226-ACT226-04",
+      "AR-LEX-C226-ACT226-05"
+    ]
+  }
+}

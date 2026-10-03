@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:03caadb782c278cc",
+  "lessonIds": [
+    "AR-C239-hazz",
+    "AR-C239-ittifaq",
+    "AR-C239-niqash",
+    "AR-C239-dhikra",
+    "AR-C239-shakk"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch239.txt",
+  "json": "arabic/narration/ch239.json",
+  "textHash": "fnv1a64:06189c02430f931a",
+  "jsonHash": "fnv1a64:2f3e3cfc7777af37",
+  "findings": []
+}

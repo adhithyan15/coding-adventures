@@ -1,0 +1,19 @@
+{
+  "chapter": 243,
+  "title": "Lukewarm, Annoying, Frightening, Second-hand, Fake",
+  "label": "ch:ar-lukewarm-annoying-frightening-second-hand-fake",
+  "canDo": "I can say lukewarm, annoying, frightening, second-hand and fake.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "AR-C243-muzayyaf",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 243: I can say lukewarm, annoying, frightening, second-hand and fake.",
+    "assesses": [
+      "AR-LEX-C243-SIFA243-03",
+      "AR-LEX-C243-SIFA243-04",
+      "AR-LEX-C243-SIFA243-05"
+    ]
+  }
+}

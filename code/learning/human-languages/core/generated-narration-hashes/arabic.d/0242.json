@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:20f09c7c1211b452",
+  "lessonIds": [
+    "AR-C242-sakhib",
+    "AR-C242-mayyit",
+    "AR-C242-barri",
+    "AR-C242-alif",
+    "AR-C242-samm"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch242.txt",
+  "json": "arabic/narration/ch242.json",
+  "textHash": "fnv1a64:8ffebbb98b605e3c",
+  "jsonHash": "fnv1a64:dc01ed20db040e31",
+  "findings": []
+}

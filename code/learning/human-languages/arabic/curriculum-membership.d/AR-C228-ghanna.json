@@ -1,0 +1,11 @@
+{
+  "id": "AR-C228-ghanna",
+  "pathSegment": "AR-PATH-228-ACT228",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-228-ACT228",
+      "order": 3
+    }
+  ]
+}

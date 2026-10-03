@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R253-second-pass-words-from-chapters-252-253",
+    "language": "arabic",
+    "chapter": 253,
+    "sequence": 14260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:727bf74c3610a177"
+  },
+  "findings": []
+}

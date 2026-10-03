@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-234-WAQT234",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say yearly, late morning, soon, an alarm clock and a calendar.",
+  "prerequisites": []
+}

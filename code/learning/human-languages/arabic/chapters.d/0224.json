@@ -1,0 +1,19 @@
+{
+  "chapter": 224,
+  "title": "To earn, To borrow, To lend, To change, To hurry",
+  "label": "ch:ar-to-earn-to-borrow-to-lend-to-change-to-hurry",
+  "canDo": "I can say to earn, to borrow, to lend, to change and to hurry.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C224-asraa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 224: I can say to earn, to borrow, to lend, to change and to hurry.",
+    "assesses": [
+      "AR-LEX-C224-ACT224-03",
+      "AR-LEX-C224-ACT224-04",
+      "AR-LEX-C224-ACT224-05"
+    ]
+  }
+}

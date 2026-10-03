@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 238,
+  "sourceHash": "fnv1a64:f99db142e1ee0a22",
+  "lessonIds": [
+    "AR-C238-mithl",
+    "AR-C238-tamaman",
+    "AR-C238-taban",
+    "AR-C238-taqriban",
+    "AR-C238-khususan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch238.txt",
+  "json": "arabic/narration/ch238.json",
+  "textHash": "fnv1a64:096b0d9390ad7344",
+  "jsonHash": "fnv1a64:c0f92d3e9ff5f566",
+  "findings": []
+}

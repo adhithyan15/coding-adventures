@@ -1,0 +1,11 @@
+{
+  "id": "AR-C240-jahiz",
+  "pathSegment": "AR-PATH-240-SIFA240",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-240-SIFA240",
+      "order": 1
+    }
+  ]
+}

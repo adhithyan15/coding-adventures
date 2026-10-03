@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:662ec2b57c42ffe0",
+  "lessonIds": [
+    "AR-C231-ilaj",
+    "AR-C231-wasfa",
+    "AR-C231-iyada",
+    "AR-C231-saydaliyya",
+    "AR-C231-mumarrid",
+    "AR-R231-first-pass-words-from-chapters-223-226",
+    "AR-R231-second-pass-words-from-chapters-227-231"
+  ],
+  "tex": "arabic/book/chapters/ch231-treatment-prescription-clinic-pharmacy-nurse.tex"
+}

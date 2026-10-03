@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C238-taqriban",
+    "language": "arabic",
+    "chapter": 238,
+    "sequence": 13100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:68beb6c5e1afd84e"
+  },
+  "findings": []
+}

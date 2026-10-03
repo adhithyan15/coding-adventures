@@ -1,0 +1,11 @@
+{
+  "id": "AR-C226-akhbara",
+  "pathSegment": "AR-PATH-226-ACT226",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-226-ACT226",
+      "order": 3
+    }
+  ]
+}

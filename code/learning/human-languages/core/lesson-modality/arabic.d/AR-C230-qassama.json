@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C230-qassama",
+    "language": "arabic",
+    "chapter": 230,
+    "sequence": 12510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e31969a675c5f283"
+  },
+  "findings": []
+}

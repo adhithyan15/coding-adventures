@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:14f4314d8ea743a7",
+  "lessonIds": [
+    "AR-C249-kammiyya",
+    "AR-C249-jawda",
+    "AR-C249-ihtifal",
+    "AR-C249-mabruk",
+    "AR-C249-tanjara",
+    "AR-R249-first-pass-words-from-chapters-241-244",
+    "AR-R249-second-pass-words-from-chapters-245-249"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch249.txt",
+  "json": "arabic/narration/ch249.json",
+  "textHash": "fnv1a64:0b163ebf902b2fe2",
+  "jsonHash": "fnv1a64:dc947dbdb95fe429",
+  "findings": []
+}

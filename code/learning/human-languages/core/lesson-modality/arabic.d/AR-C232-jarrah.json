@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C232-jarrah",
+    "language": "arabic",
+    "chapter": 232,
+    "sequence": 12790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8fbfe58dc2ed6c7c"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C228-sawwara",
+  "pathSegment": "AR-PATH-228-ACT228",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-228-ACT228",
+      "order": 4
+    }
+  ]
+}

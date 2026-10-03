@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C229-rabata",
+    "language": "arabic",
+    "chapter": 229,
+    "sequence": 12430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c874a8ab5374a46"
+  },
+  "findings": []
+}

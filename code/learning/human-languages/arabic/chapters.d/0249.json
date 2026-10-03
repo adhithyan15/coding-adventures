@@ -1,0 +1,19 @@
+{
+  "chapter": 249,
+  "title": "Quantity, Quality, Celebration, Congratulations, Cooking pot",
+  "label": "ch:ar-quantity-quality-celebration-congratulations-cooking-pot",
+  "canDo": "I can say a quantity, quality, a celebration, congratulations and a cooking pot.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-R249-second-pass-words-from-chapters-245-249",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 249: I can say a quantity, quality, a celebration, congratulations and a cooking pot.",
+    "assesses": [
+      "AR-LEX-C249-SHAY249-03",
+      "AR-LEX-C249-SHAY249-04",
+      "AR-LEX-C249-SHAY249-05"
+    ]
+  }
+}

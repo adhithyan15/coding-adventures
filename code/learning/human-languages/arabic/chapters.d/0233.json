@@ -1,0 +1,19 @@
+{
+  "chapter": 233,
+  "title": "Since, Dawn, Sunrise, Sunset, Birth",
+  "label": "ch:ar-since-dawn-sunrise-sunset-birth",
+  "canDo": "I can say since, dawn, sunrise, sunset and birth.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "AR-C233-milad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 233: I can say since, dawn, sunrise, sunset and birth.",
+    "assesses": [
+      "AR-LEX-C233-WAQT233-03",
+      "AR-LEX-C233-WAQT233-04",
+      "AR-LEX-C233-WAQT233-05"
+    ]
+  }
+}

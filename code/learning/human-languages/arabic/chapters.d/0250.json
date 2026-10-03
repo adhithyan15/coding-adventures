@@ -1,0 +1,19 @@
+{
+  "chapter": 250,
+  "title": "Cardboard, Bricks, Marble, Rubber, Triangle",
+  "label": "ch:ar-cardboard-bricks-marble-rubber-triangle",
+  "canDo": "I can say cardboard, bricks, marble, rubber and a triangle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C250-muthallath",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 250: I can say cardboard, bricks, marble, rubber and a triangle.",
+    "assesses": [
+      "AR-LEX-C250-SHAY250-03",
+      "AR-LEX-C250-SHAY250-04",
+      "AR-LEX-C250-SHAY250-05"
+    ]
+  }
+}

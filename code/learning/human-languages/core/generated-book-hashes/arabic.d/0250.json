@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:f28b02d0f55b62bf",
+  "lessonIds": [
+    "AR-C250-kartun",
+    "AR-C250-tub",
+    "AR-C250-rukham",
+    "AR-C250-mattat",
+    "AR-C250-muthallath"
+  ],
+  "tex": "arabic/book/chapters/ch250-cardboard-bricks-marble-rubber-triangle.tex"
+}

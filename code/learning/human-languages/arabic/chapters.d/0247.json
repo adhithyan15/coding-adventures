@@ -1,0 +1,19 @@
+{
+  "chapter": 247,
+  "title": "Air, Wave, Roses, Palm tree, Jasmine",
+  "label": "ch:ar-air-wave-roses-palm-tree-jasmine",
+  "canDo": "I can say air, a wave, roses, a palm tree and jasmine.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C247-yasamin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 247: I can say air, a wave, roses, a palm tree and jasmine.",
+    "assesses": [
+      "AR-LEX-C247-SHAY247-03",
+      "AR-LEX-C247-SHAY247-04",
+      "AR-LEX-C247-SHAY247-05"
+    ]
+  }
+}

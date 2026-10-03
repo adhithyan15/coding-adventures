@@ -1,0 +1,19 @@
+{
+  "chapter": 227,
+  "title": "To be shy, To worry, To get to know, To quarrel, To make up",
+  "label": "ch:ar-to-be-shy-to-worry-to-get-to-know-to-quarrel-to-make-up",
+  "canDo": "I can say to be shy, to worry, to get to know, to quarrel and to make up.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C227-tasalaha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 227: I can say to be shy, to worry, to get to know, to quarrel and to make up.",
+    "assesses": [
+      "AR-LEX-C227-ACT227-03",
+      "AR-LEX-C227-ACT227-04",
+      "AR-LEX-C227-ACT227-05"
+    ]
+  }
+}

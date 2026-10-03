@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C240-mumtaz",
+    "language": "arabic",
+    "chapter": 240,
+    "sequence": 13210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b6979ade375aa2b"
+  },
+  "findings": []
+}

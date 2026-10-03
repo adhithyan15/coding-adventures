@@ -1,0 +1,11 @@
+{
+  "id": "AR-C240-munasib",
+  "pathSegment": "AR-PATH-240-SIFA240",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-240-SIFA240",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C230-rakala",
+  "pathSegment": "AR-PATH-230-ACT230",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-230-ACT230",
+      "order": 4
+    }
+  ]
+}

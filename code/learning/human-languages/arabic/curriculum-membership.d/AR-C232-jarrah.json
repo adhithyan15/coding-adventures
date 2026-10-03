@@ -1,0 +1,11 @@
+{
+  "id": "AR-C232-jarrah",
+  "pathSegment": "AR-PATH-232-SIHHA232",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-232-SIHHA232",
+      "order": 2
+    }
+  ]
+}

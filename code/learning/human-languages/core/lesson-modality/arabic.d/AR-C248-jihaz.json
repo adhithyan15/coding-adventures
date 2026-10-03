@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C248-jihaz",
+    "language": "arabic",
+    "chapter": 248,
+    "sequence": 13790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5113593b000ad613"
+  },
+  "findings": []
+}

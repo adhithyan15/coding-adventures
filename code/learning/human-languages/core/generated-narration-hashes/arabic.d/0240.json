@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:461c5a250b32b8a6",
+  "lessonIds": [
+    "AR-C240-muattal",
+    "AR-C240-jahiz",
+    "AR-C240-asli",
+    "AR-C240-munasib",
+    "AR-C240-mumtaz",
+    "AR-R240-first-pass-words-from-chapters-232-235",
+    "AR-R240-second-pass-words-from-chapters-236-240"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch240.txt",
+  "json": "arabic/narration/ch240.json",
+  "textHash": "fnv1a64:23e050903b133457",
+  "jsonHash": "fnv1a64:d21991e8069a3ab8",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C232-nazif",
+  "pathSegment": "AR-PATH-232-SIHHA232",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-232-SIHHA232",
+      "order": 4
+    }
+  ]
+}
