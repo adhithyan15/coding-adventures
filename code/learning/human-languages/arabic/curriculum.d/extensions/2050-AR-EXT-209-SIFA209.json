@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-209-SIFA209",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say grilled, boiled, burnt, healthy and broken.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C199-hasada",
+  "pathSegment": "AR-PATH-199-ACT199",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-199-ACT199",
+      "order": 4
+    }
+  ]
+}

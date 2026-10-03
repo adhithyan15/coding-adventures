@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-211-SIFA211",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say sunny, different, similar, rare and ordinary.",
+  "prerequisites": []
+}

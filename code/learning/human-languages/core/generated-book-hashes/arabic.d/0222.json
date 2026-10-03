@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:080af173584cc983",
+  "lessonIds": [
+    "AR-C222-ulum",
+    "AR-C222-kimiya",
+    "AR-C222-fiziya",
+    "AR-C222-adab",
+    "AR-C222-tajir",
+    "AR-R222-first-pass-words-from-chapters-219-220",
+    "AR-R222-second-pass-words-from-chapters-221-222"
+  ],
+  "tex": "arabic/book/chapters/ch222-science-chemistry-physics-literature-merchant.tex"
+}

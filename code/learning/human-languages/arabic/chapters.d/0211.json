@@ -1,0 +1,19 @@
+{
+  "chapter": 211,
+  "title": "Sunny, Different, Similar, Rare, Ordinary",
+  "label": "ch:ar-sunny-different-similar-rare-ordinary",
+  "canDo": "I can say sunny, different, similar, rare and ordinary.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "AR-C211-adi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 211: I can say sunny, different, similar, rare and ordinary.",
+    "assesses": [
+      "AR-LEX-C211-SIFA211-03",
+      "AR-LEX-C211-SIFA211-04",
+      "AR-LEX-C211-SIFA211-05"
+    ]
+  }
+}

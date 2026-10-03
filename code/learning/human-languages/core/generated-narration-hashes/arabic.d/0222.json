@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:0e2878cb69da1a85",
+  "lessonIds": [
+    "AR-C222-ulum",
+    "AR-C222-kimiya",
+    "AR-C222-fiziya",
+    "AR-C222-adab",
+    "AR-C222-tajir",
+    "AR-R222-first-pass-words-from-chapters-219-220",
+    "AR-R222-second-pass-words-from-chapters-221-222"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch222.txt",
+  "json": "arabic/narration/ch222.json",
+  "textHash": "fnv1a64:45db6f4f0e7582c2",
+  "jsonHash": "fnv1a64:e572eb293fe21315",
+  "findings": []
+}

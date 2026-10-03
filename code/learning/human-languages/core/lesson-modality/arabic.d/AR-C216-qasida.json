@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C216-qasida",
+    "language": "arabic",
+    "chapter": 216,
+    "sequence": 11450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:094205b7687ba689"
+  },
+  "findings": []
+}

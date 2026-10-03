@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:f418377927ae5567",
+  "lessonIds": [
+    "AR-C203-sabiqan",
+    "AR-C203-akhiran",
+    "AR-C203-athnaa",
+    "AR-C203-qarn",
+    "AR-C203-usbui"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch203.txt",
+  "json": "arabic/narration/ch203.json",
+  "textHash": "fnv1a64:598cf9b759d4e2fa",
+  "jsonHash": "fnv1a64:a855aaf405afbfc4",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:0c35ed4c7d6e7600",
+  "lessonIds": [
+    "AR-C221-taqrir",
+    "AR-C221-ijtima",
+    "AR-C221-aqd",
+    "AR-C221-imtihan",
+    "AR-C221-wajib"
+  ],
+  "tex": "arabic/book/chapters/ch221-report-meeting-contract-exam-homework.tex"
+}

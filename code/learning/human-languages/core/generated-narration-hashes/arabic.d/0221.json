@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:3f1eb6651cd50f14",
+  "lessonIds": [
+    "AR-C221-taqrir",
+    "AR-C221-ijtima",
+    "AR-C221-aqd",
+    "AR-C221-imtihan",
+    "AR-C221-wajib"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch221.txt",
+  "json": "arabic/narration/ch221.json",
+  "textHash": "fnv1a64:3cdc0ba81250013a",
+  "jsonHash": "fnv1a64:5289e4a26101d9bd",
+  "findings": []
+}

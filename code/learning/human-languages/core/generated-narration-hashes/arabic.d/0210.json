@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:5642949050a10f74",
+  "lessonIds": [
+    "AR-C210-mubashir",
+    "AR-C210-karim",
+    "AR-C210-bakhil",
+    "AR-C210-khajul",
+    "AR-C210-ijtimai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch210.txt",
+  "json": "arabic/narration/ch210.json",
+  "textHash": "fnv1a64:b53fea95d79a54de",
+  "jsonHash": "fnv1a64:83761b7e180b5845",
+  "findings": []
+}

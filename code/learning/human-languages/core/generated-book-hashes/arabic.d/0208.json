@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:7254bf396b0357f1",
+  "lessonIds": [
+    "AR-C208-mana",
+    "AR-C208-mithal",
+    "AR-C208-hurriyya",
+    "AR-C208-qaida",
+    "AR-C208-tariqa"
+  ],
+  "tex": "arabic/book/chapters/ch208-meaning-example-freedom-rule-way.tex"
+}

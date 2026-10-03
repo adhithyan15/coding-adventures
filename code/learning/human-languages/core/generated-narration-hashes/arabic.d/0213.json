@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:e074da88fa51b357",
+  "lessonIds": [
+    "AR-C213-arika",
+    "AR-C213-fursha",
+    "AR-C213-ghita",
+    "AR-C213-athath",
+    "AR-C213-ghasil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch213.txt",
+  "json": "arabic/narration/ch213.json",
+  "textHash": "fnv1a64:dbe4c1dfc4d5b6e8",
+  "jsonHash": "fnv1a64:d6e3d83523e11e08",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C205-turab",
+  "pathSegment": "AR-PATH-205-MAKAN205",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-205-MAKAN205",
+      "order": 1
+    }
+  ]
+}

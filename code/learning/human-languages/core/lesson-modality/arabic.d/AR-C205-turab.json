@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C205-turab",
+    "language": "arabic",
+    "chapter": 205,
+    "sequence": 10720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d36bc8a9a20b4f60"
+  },
+  "findings": []
+}

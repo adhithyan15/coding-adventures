@@ -1,0 +1,19 @@
+{
+  "chapter": 204,
+  "title": "Towards, Area, Centre, Capital city, Where",
+  "label": "ch:ar-towards-area-centre-capital-city-where",
+  "canDo": "I can say towards, an area, a centre, a capital city and where.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "AR-C204-ayna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 204: I can say towards, an area, a centre, a capital city and where.",
+    "assesses": [
+      "AR-LEX-C204-MAKAN204-03",
+      "AR-LEX-C204-MAKAN204-04",
+      "AR-LEX-C204-MAKAN204-05"
+    ]
+  }
+}

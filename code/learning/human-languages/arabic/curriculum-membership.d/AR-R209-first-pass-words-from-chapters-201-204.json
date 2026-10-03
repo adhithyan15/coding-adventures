@@ -1,0 +1,11 @@
+{
+  "id": "AR-R209-first-pass-words-from-chapters-201-204",
+  "pathSegment": "AR-PATH-209-SIFA209",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "AR-EXT-209-SIFA209",
+      "order": 5
+    }
+  ]
+}

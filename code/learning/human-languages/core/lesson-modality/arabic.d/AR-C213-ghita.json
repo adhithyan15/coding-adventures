@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C213-ghita",
+    "language": "arabic",
+    "chapter": 213,
+    "sequence": 11320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16caedf4485eb886"
+  },
+  "findings": []
+}

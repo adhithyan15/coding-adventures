@@ -55,7 +55,8 @@ it("pins Arabic lesson-content budgets", () =>
     // past, the future, practical texts) with fifteen word lessons and two
     // reviews. No idiom, sense or culture claim.
     // 730 -> 903: chapters 159-191, 165 A2 words and eight reviews. No idiom, sense or culture claim.
-    lessons: 903,
+    // 903 -> 1066: chapters 192-222, 155 A2 words and eight reviews. No idiom, sense or culture claim.
+    lessons: 1066,
     idioms: 2,
     senses: 3,
     cultureClaims: 14,

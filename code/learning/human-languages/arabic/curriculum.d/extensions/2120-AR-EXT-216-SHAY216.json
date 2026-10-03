@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-216-SHAY216",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a poem, a conversation, a secret, a promise and fog.",
+  "prerequisites": []
+}

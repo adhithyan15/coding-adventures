@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C209-maksur",
+    "language": "arabic",
+    "chapter": 209,
+    "sequence": 10950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:520f8dbd638afea1"
+  },
+  "findings": []
+}

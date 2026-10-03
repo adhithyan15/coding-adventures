@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:3cc0e287a3267b07",
+  "lessonIds": [
+    "AR-C215-hawiyya",
+    "AR-C215-tashira",
+    "AR-C215-amtia",
+    "AR-C215-shahin",
+    "AR-C215-taksi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch215.txt",
+  "json": "arabic/narration/ch215.json",
+  "textHash": "fnv1a64:2bff55110b70c605",
+  "jsonHash": "fnv1a64:fd6985576ea88a83",
+  "findings": []
+}

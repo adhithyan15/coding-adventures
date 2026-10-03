@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:216c6e92e833cb4e",
+  "lessonIds": [
+    "AR-C201-huqna",
+    "AR-C201-amaliyya",
+    "AR-C201-kadma",
+    "AR-C201-harq",
+    "AR-C201-maghas"
+  ],
+  "tex": "arabic/book/chapters/ch201-injection-operation-bruise-burn-stomach-cramp.tex"
+}

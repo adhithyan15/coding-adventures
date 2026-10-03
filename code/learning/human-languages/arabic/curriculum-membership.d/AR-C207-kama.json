@@ -1,0 +1,11 @@
+{
+  "id": "AR-C207-kama",
+  "pathSegment": "AR-PATH-207-SABAB207",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-207-SABAB207",
+      "order": 4
+    }
+  ]
+}

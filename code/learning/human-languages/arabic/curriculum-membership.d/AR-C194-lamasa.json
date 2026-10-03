@@ -1,0 +1,11 @@
+{
+  "id": "AR-C194-lamasa",
+  "pathSegment": "AR-PATH-194-ACT194",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-194-ACT194",
+      "order": 2
+    }
+  ]
+}

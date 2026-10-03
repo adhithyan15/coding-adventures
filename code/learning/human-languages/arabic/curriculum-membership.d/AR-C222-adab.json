@@ -1,0 +1,11 @@
+{
+  "id": "AR-C222-adab",
+  "pathSegment": "AR-PATH-222-AMAL222",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-222-AMAL222",
+      "order": 3
+    }
+  ]
+}

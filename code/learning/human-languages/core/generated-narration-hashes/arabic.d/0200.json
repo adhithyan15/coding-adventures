@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:c0f21e32e850e340",
+  "lessonIds": [
+    "AR-C200-zukam",
+    "AR-C200-sual",
+    "AR-C200-hassasiyya",
+    "AR-C200-jurh",
+    "AR-C200-sihha",
+    "AR-R200-first-pass-words-from-chapters-192-195",
+    "AR-R200-second-pass-words-from-chapters-196-200"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch200.txt",
+  "json": "arabic/narration/ch200.json",
+  "textHash": "fnv1a64:cdefd89e5e1ce584",
+  "jsonHash": "fnv1a64:0aea8beb99761d47",
+  "findings": []
+}

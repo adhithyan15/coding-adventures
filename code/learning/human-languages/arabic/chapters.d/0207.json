@@ -1,0 +1,19 @@
+{
+  "chapter": 207,
+  "title": "Only, Very, Even, If, As",
+  "label": "ch:ar-only-very-even-if-as",
+  "canDo": "I can say only, very, even, if and as.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "AR-C207-kama",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 207: I can say only, very, even, if and as.",
+    "assesses": [
+      "AR-LEX-C207-SABAB207-03",
+      "AR-LEX-C207-SABAB207-04",
+      "AR-LEX-C207-SABAB207-05"
+    ]
+  }
+}

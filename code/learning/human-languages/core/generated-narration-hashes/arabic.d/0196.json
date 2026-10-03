@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:ba4a12dc1089b5b8",
+  "lessonIds": [
+    "AR-C196-zaraa",
+    "AR-C196-qatafa",
+    "AR-C196-amtara",
+    "AR-C196-hannaa",
+    "AR-C196-wathiqa2"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch196.txt",
+  "json": "arabic/narration/ch196.json",
+  "textHash": "fnv1a64:c9575ff5fd237c14",
+  "jsonHash": "fnv1a64:9b128f2def6817d6",
+  "findings": []
+}

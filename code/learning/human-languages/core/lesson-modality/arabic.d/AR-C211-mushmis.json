@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C211-mushmis",
+    "language": "arabic",
+    "chapter": 211,
+    "sequence": 11200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f3cda6739eadf134"
+  },
+  "findings": []
+}

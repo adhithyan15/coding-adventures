@@ -1,0 +1,19 @@
+{
+  "chapter": 195,
+  "title": "To resign, To manage, To meet, To get lost, To show the way",
+  "label": "ch:ar-to-resign-to-manage-to-meet-to-get-lost-to-show-the-way",
+  "canDo": "I can say to resign, to manage, to meet, to get lost and to show the way.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C195-dalla2",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 195: I can say to resign, to manage, to meet, to get lost and to show the way.",
+    "assesses": [
+      "AR-LEX-C195-ACT195-03",
+      "AR-LEX-C195-ACT195-04",
+      "AR-LEX-C195-ACT195-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C209-sihhi",
+    "language": "arabic",
+    "chapter": 209,
+    "sequence": 10940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:79f53ee7e178d660"
+  },
+  "findings": []
+}

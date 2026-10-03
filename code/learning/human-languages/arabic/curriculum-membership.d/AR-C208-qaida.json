@@ -1,0 +1,11 @@
+{
+  "id": "AR-C208-qaida",
+  "pathSegment": "AR-PATH-208-SABAB208",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-208-SABAB208",
+      "order": 3
+    }
+  ]
+}

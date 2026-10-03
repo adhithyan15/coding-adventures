@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:d34c7c4ae1393b65",
+  "lessonIds": [
+    "AR-C216-qasida",
+    "AR-C216-hadith",
+    "AR-C216-sirr",
+    "AR-C216-wad",
+    "AR-C216-dabab"
+  ],
+  "tex": "arabic/book/chapters/ch216-poem-conversation-secret-promise-fog.tex"
+}

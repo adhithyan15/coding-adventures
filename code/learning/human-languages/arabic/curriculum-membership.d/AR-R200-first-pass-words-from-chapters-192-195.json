@@ -1,0 +1,11 @@
+{
+  "id": "AR-R200-first-pass-words-from-chapters-192-195",
+  "pathSegment": "AR-PATH-200-SIHHA200",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "AR-EXT-200-SIHHA200",
+      "order": 5
+    }
+  ]
+}

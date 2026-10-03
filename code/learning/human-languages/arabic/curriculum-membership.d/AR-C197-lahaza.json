@@ -1,0 +1,11 @@
+{
+  "id": "AR-C197-lahaza",
+  "pathSegment": "AR-PATH-197-ACT197",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-197-ACT197",
+      "order": 2
+    }
+  ]
+}
