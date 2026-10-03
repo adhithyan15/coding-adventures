@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:30954a66de7e85e2",
+  "lessonIds": [
+    "UR-C210-nai",
+    "UR-C210-dhobi",
+    "UR-C210-mochi",
+    "UR-C210-lohar",
+    "UR-C210-barhai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch210.txt",
+  "json": "urdu/narration/ch210.json",
+  "textHash": "fnv1a64:a67270881269ee67",
+  "jsonHash": "fnv1a64:6b892860a37c3710",
+  "findings": []
+}

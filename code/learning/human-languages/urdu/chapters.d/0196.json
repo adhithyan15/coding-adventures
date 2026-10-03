@@ -1,0 +1,19 @@
+{
+  "chapter": 196,
+  "title": "Restless, Notorious, Virtuous, Youthful, Modern",
+  "label": "ch:ur-restless-notorious-virtuous-youthful-modern",
+  "canDo": "I can say restless, notorious, virtuous, youthful and modern.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "UR-C196-jadid",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 196: I can say restless, notorious, virtuous, youthful and modern.",
+    "assesses": [
+      "UR-LEX-C196-SIFAT196-03",
+      "UR-LEX-C196-SIFAT196-04",
+      "UR-LEX-C196-SIFAT196-05"
+    ]
+  }
+}

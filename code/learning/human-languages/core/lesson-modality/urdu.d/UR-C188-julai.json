@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C188-julai",
+    "language": "urdu",
+    "chapter": 188,
+    "sequence": 10610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d7628f3fab33d2e"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C198-pasport",
+  "pathSegment": "UR-PATH-198-CHIZ198",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-198-CHIZ198",
+      "order": 3
+    }
+  ]
+}

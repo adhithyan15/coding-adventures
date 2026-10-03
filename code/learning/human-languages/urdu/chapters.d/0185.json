@@ -1,0 +1,19 @@
+{
+  "chapter": 185,
+  "title": "Pill, Prescription, Injection, Wound, Injury",
+  "label": "ch:ur-pill-prescription-injection-wound-injury",
+  "canDo": "I can say a pill, a prescription, an injection, a wound and an injury.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "UR-C185-chot",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 185: I can say a pill, a prescription, an injection, a wound and an injury.",
+    "assesses": [
+      "UR-LEX-C185-SEHAT185-03",
+      "UR-LEX-C185-SEHAT185-04",
+      "UR-LEX-C185-SEHAT185-05"
+    ]
+  }
+}

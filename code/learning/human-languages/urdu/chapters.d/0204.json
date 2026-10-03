@@ -1,0 +1,19 @@
+{
+  "chapter": 204,
+  "title": "Number, News, Matter, Conversation, Advice",
+  "label": "ch:ur-number-news-matter-conversation-advice",
+  "canDo": "I can say a number, news, a matter, a conversation and advice.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C204-mashvara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 204: I can say a number, news, a matter, a conversation and advice.",
+    "assesses": [
+      "UR-LEX-C204-CHIZ204-03",
+      "UR-LEX-C204-CHIZ204-04",
+      "UR-LEX-C204-CHIZ204-05"
+    ]
+  }
+}

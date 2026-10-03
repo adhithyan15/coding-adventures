@@ -1,0 +1,19 @@
+{
+  "chapter": 180,
+  "title": "To be shy, To quarrel, To celebrate, To mix, To join",
+  "label": "ch:ur-to-be-shy-to-quarrel-to-celebrate-to-mix-to-join",
+  "canDo": "I can say to be shy, to quarrel, to celebrate, to mix and to join.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C180-jorna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 180: I can say to be shy, to quarrel, to celebrate, to mix and to join.",
+    "assesses": [
+      "UR-LEX-C180-ACT180-03",
+      "UR-LEX-C180-ACT180-04",
+      "UR-LEX-C180-ACT180-05"
+    ]
+  }
+}

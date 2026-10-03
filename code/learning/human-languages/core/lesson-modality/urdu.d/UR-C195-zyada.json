@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C195-zyada",
+    "language": "urdu",
+    "chapter": 195,
+    "sequence": 11140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8e78be66a14228c"
+  },
+  "findings": []
+}

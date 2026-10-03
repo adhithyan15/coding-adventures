@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C193-pareshan",
+    "language": "urdu",
+    "chapter": 193,
+    "sequence": 11060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d73d2b07b1ac6609"
+  },
+  "findings": []
+}

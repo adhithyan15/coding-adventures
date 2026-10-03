@@ -1,0 +1,11 @@
+{
+  "id": "UR-C210-lohar",
+  "pathSegment": "UR-PATH-210-KAM210",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-210-KAM210",
+      "order": 3
+    }
+  ]
+}

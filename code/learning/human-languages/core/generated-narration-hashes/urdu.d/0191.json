@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:24a4fbaa8f15d028",
+  "lessonIds": [
+    "UR-C191-chae-khana",
+    "UR-C191-girja-ghar",
+    "UR-C191-gurdvara",
+    "UR-C191-qabristan",
+    "UR-C191-minar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch191.txt",
+  "json": "urdu/narration/ch191.json",
+  "textHash": "fnv1a64:b6d0fc01941efa08",
+  "jsonHash": "fnv1a64:23997bc735d29a62",
+  "findings": []
+}

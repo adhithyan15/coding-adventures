@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:d810d3c024c5cf84",
+  "lessonIds": [
+    "UR-C207-laung",
+    "UR-C207-ilaichi",
+    "UR-C207-darchini",
+    "UR-C207-kali-mirch",
+    "UR-C207-sirka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch207.txt",
+  "json": "urdu/narration/ch207.json",
+  "textHash": "fnv1a64:bec9cd34e8ea0b4d",
+  "jsonHash": "fnv1a64:5f6ab30f59381e3a",
+  "findings": []
+}

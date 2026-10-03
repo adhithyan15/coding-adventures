@@ -1,0 +1,19 @@
+{
+  "chapter": 191,
+  "title": "Tea house, Church, Gurdwara, Graveyard, Minaret",
+  "label": "ch:ur-tea-house-church-gurdwara-graveyard-minaret",
+  "canDo": "I can say a tea house, a church, a gurdwara, a graveyard and a minaret.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "UR-C191-minar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 191: I can say a tea house, a church, a gurdwara, a graveyard and a minaret.",
+    "assesses": [
+      "UR-LEX-C191-JAGAH191-03",
+      "UR-LEX-C191-JAGAH191-04",
+      "UR-LEX-C191-JAGAH191-05"
+    ]
+  }
+}

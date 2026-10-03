@@ -1,0 +1,21 @@
+{
+  "language": "urdu",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:7bdf45429f0473d2",
+  "lessonIds": [
+    "UR-C188-aprail",
+    "UR-C188-mai",
+    "UR-C188-jun",
+    "UR-C188-julai",
+    "UR-C188-agast",
+    "UR-R188-first-pass-words-from-chapters-180-183",
+    "UR-R188-second-pass-words-from-chapters-184-188"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "urdu/narration/ch188.txt",
+  "json": "urdu/narration/ch188.json",
+  "textHash": "fnv1a64:1a030f55177746be",
+  "jsonHash": "fnv1a64:af662dfe7bd8b9ba",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C211-mainejar",
+    "language": "urdu",
+    "chapter": 211,
+    "sequence": 12310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:403b367c7fea23f8"
+  },
+  "findings": []
+}

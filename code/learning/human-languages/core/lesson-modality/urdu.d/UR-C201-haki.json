@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C201-haki",
+    "language": "urdu",
+    "chapter": 201,
+    "sequence": 11610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d727e7ba49b1e89"
+  },
+  "findings": []
+}

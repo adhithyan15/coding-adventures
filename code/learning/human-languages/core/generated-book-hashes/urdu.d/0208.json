@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:7c955fa216241a73",
+  "lessonIds": [
+    "UR-C208-bulbul",
+    "UR-C208-saras",
+    "UR-C208-giddh",
+    "UR-C208-chamgadar",
+    "UR-C208-bichchhu"
+  ],
+  "tex": "urdu/book/chapters/ch208-nightingale-crane-vulture-bat-scorpion.tex"
+}

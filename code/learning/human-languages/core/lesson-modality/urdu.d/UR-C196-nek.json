@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C196-nek",
+    "language": "urdu",
+    "chapter": 196,
+    "sequence": 11190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bbfb0788dd3faf37"
+  },
+  "findings": []
+}

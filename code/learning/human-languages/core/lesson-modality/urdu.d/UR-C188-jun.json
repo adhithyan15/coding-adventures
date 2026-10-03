@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C188-jun",
+    "language": "urdu",
+    "chapter": 188,
+    "sequence": 10600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c62588096a121c0"
+  },
+  "findings": []
+}

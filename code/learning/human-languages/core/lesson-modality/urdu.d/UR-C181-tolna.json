@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C181-tolna",
+    "language": "urdu",
+    "chapter": 181,
+    "sequence": 10260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f77beacd1c00b915"
+  },
+  "findings": []
+}

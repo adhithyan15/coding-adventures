@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C195-bilkul",
+    "language": "urdu",
+    "chapter": 195,
+    "sequence": 11150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1d6f9be25e017a8"
+  },
+  "findings": []
+}

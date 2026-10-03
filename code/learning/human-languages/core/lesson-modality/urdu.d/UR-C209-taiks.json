@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C209-taiks",
+    "language": "urdu",
+    "chapter": 209,
+    "sequence": 12220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df85dd8a7f289094"
+  },
+  "findings": []
+}

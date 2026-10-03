@@ -1,0 +1,11 @@
+{
+  "id": "UR-C202-musafir",
+  "pathSegment": "UR-PATH-202-CHIZ202",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-202-CHIZ202",
+      "order": 2
+    }
+  ]
+}

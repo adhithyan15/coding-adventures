@@ -1,0 +1,19 @@
+{
+  "chapter": 198,
+  "title": "Wire, Screen, Camera, Passport, Visa",
+  "label": "ch:ur-wire-screen-camera-passport-visa",
+  "canDo": "I can say a wire, a screen, a camera, a passport and a visa.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C198-viza",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 198: I can say a wire, a screen, a camera, a passport and a visa.",
+    "assesses": [
+      "UR-LEX-C198-CHIZ198-03",
+      "UR-LEX-C198-CHIZ198-04",
+      "UR-LEX-C198-CHIZ198-05"
+    ]
+  }
+}

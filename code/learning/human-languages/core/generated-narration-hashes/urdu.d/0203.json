@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:c663cee118dd0219",
+  "lessonIds": [
+    "UR-C203-mamun",
+    "UR-C203-khala",
+    "UR-C203-phuphi",
+    "UR-C203-bhatija",
+    "UR-C203-pota"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch203.txt",
+  "json": "urdu/narration/ch203.json",
+  "textHash": "fnv1a64:bbe975b8dce005f9",
+  "jsonHash": "fnv1a64:2f7a4f13bfc614e2",
+  "findings": []
+}

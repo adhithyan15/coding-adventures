@@ -1,0 +1,19 @@
+{
+  "chapter": 205,
+  "title": "Law, Right, Duty, Progress, Success",
+  "label": "ch:ur-law-right-duty-progress-success",
+  "canDo": "I can say a law, a right, a duty, progress and success.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C205-kamyabi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 205: I can say a law, a right, a duty, progress and success.",
+    "assesses": [
+      "UR-LEX-C205-CHIZ205-03",
+      "UR-LEX-C205-CHIZ205-04",
+      "UR-LEX-C205-CHIZ205-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C200-salad",
+  "pathSegment": "UR-PATH-200-CHIZ200",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-200-CHIZ200",
+      "order": 4
+    }
+  ]
+}

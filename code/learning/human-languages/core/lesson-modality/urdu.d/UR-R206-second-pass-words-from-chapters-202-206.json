@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R206-second-pass-words-from-chapters-202-206",
+    "language": "urdu",
+    "chapter": 206,
+    "sequence": 11920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f94cd1b5b31ade31"
+  },
+  "findings": []
+}

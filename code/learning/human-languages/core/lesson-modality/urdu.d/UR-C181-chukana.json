@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C181-chukana",
+    "language": "urdu",
+    "chapter": 181,
+    "sequence": 10240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf6baba33e9231b0"
+  },
+  "findings": []
+}

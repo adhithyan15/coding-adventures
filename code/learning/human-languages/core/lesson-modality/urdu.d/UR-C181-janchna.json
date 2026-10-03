@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C181-janchna",
+    "language": "urdu",
+    "chapter": 181,
+    "sequence": 10270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:67c205a8e5fe7404"
+  },
+  "findings": []
+}

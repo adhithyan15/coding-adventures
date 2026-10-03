@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C199-chapati",
+    "language": "urdu",
+    "chapter": 199,
+    "sequence": 11510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bfe31bdf3f5f7277"
+  },
+  "findings": []
+}

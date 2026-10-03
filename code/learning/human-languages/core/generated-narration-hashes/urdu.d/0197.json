@@ -1,0 +1,21 @@
+{
+  "language": "urdu",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:0a5534b3979f52c7",
+  "lessonIds": [
+    "UR-C197-chatai",
+    "UR-C197-shaimpu",
+    "UR-C197-tuthpest",
+    "UR-C197-brash",
+    "UR-C197-ustara",
+    "UR-R197-first-pass-words-from-chapters-189-192",
+    "UR-R197-second-pass-words-from-chapters-193-197"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "urdu/narration/ch197.txt",
+  "json": "urdu/narration/ch197.json",
+  "textHash": "fnv1a64:291a58d94b2f0682",
+  "jsonHash": "fnv1a64:72333e59795595a2",
+  "findings": []
+}

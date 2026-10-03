@@ -1,0 +1,11 @@
+{
+  "id": "UR-C205-taraqqi",
+  "pathSegment": "UR-PATH-205-CHIZ205",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-205-CHIZ205",
+      "order": 3
+    }
+  ]
+}

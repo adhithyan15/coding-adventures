@@ -1,0 +1,11 @@
+{
+  "id": "UR-C199-zira",
+  "pathSegment": "UR-PATH-199-CHIZ199",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-199-CHIZ199",
+      "order": 4
+    }
+  ]
+}

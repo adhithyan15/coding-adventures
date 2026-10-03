@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:70f518f4bf12143c",
+  "lessonIds": [
+    "UR-C189-jab-tak",
+    "UR-C189-tab-tak",
+    "UR-C189-abhi-tak",
+    "UR-C189-isi-vaqt",
+    "UR-C189-der-se"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch189.txt",
+  "json": "urdu/narration/ch189.json",
+  "textHash": "fnv1a64:1e842714061bfb26",
+  "jsonHash": "fnv1a64:8a3c2677fd286371",
+  "findings": []
+}

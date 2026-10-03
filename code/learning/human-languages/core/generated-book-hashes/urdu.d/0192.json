@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:d2e1ddc00ed973c4",
+  "lessonIds": [
+    "UR-C192-balki",
+    "UR-C192-shayad",
+    "UR-C192-zarur",
+    "UR-C192-beshak",
+    "UR-C192-afsos"
+  ],
+  "tex": "urdu/book/chapters/ch192-but-rather-perhaps-certainly-of-course-regret.tex"
+}

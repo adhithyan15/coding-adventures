@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:68a3c3a6babccca8",
+  "lessonIds": [
+    "UR-C201-haki",
+    "UR-C201-tenis",
+    "UR-C201-shatranj",
+    "UR-C201-tash",
+    "UR-C201-daur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch201.txt",
+  "json": "urdu/narration/ch201.json",
+  "textHash": "fnv1a64:0212701fe6375f90",
+  "jsonHash": "fnv1a64:68b292c2f425d644",
+  "findings": []
+}

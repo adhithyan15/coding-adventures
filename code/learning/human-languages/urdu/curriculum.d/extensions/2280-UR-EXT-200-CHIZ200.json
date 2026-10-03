@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-200-CHIZ200",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a pakora, korma, pickle, raita and a salad.",
+  "prerequisites": []
+}

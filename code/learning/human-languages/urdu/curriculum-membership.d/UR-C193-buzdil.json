@@ -1,0 +1,11 @@
+{
+  "id": "UR-C193-buzdil",
+  "pathSegment": "UR-PATH-193-SIFAT193",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-193-SIFAT193",
+      "order": 1
+    }
+  ]
+}

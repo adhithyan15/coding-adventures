@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C208-saras",
+    "language": "urdu",
+    "chapter": 208,
+    "sequence": 12160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2f7db8d6cec26ba"
+  },
+  "findings": []
+}

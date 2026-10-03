@@ -1,0 +1,11 @@
+{
+  "id": "UR-C191-minar",
+  "pathSegment": "UR-PATH-191-JAGAH191",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-191-JAGAH191",
+      "order": 4
+    }
+  ]
+}

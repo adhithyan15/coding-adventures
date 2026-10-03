@@ -1,0 +1,11 @@
+{
+  "id": "UR-C180-jorna",
+  "pathSegment": "UR-PATH-180-ACT180",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-180-ACT180",
+      "order": 4
+    }
+  ]
+}

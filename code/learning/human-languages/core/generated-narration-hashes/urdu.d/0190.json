@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:dd12ec54286d6b61",
+  "lessonIds": [
+    "UR-C190-vadi",
+    "UR-C190-chirya-ghar",
+    "UR-C190-yunivarsiti",
+    "UR-C190-kalij",
+    "UR-C190-makan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch190.txt",
+  "json": "urdu/narration/ch190.json",
+  "textHash": "fnv1a64:c0078fd5e7202436",
+  "jsonHash": "fnv1a64:d8a18f136315afed",
+  "findings": []
+}

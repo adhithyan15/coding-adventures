@@ -1,0 +1,11 @@
+{
+  "id": "UR-C198-skrin",
+  "pathSegment": "UR-PATH-198-CHIZ198",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-198-CHIZ198",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C201-tenis",
+    "language": "urdu",
+    "chapter": 201,
+    "sequence": 11620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:429d8185b7177c4d"
+  },
+  "findings": []
+}

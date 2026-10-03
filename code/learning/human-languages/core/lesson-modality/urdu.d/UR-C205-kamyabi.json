@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C205-kamyabi",
+    "language": "urdu",
+    "chapter": 205,
+    "sequence": 11850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:581e93d8a0484ba3"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 199,
+  "title": "Chapati, Ghee, Spice, Turmeric, Cumin",
+  "label": "ch:ur-chapati-ghee-spice-turmeric-cumin",
+  "canDo": "I can say a chapati, ghee, spice, turmeric and cumin.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C199-zira",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 199: I can say a chapati, ghee, spice, turmeric and cumin.",
+    "assesses": [
+      "UR-LEX-C199-CHIZ199-03",
+      "UR-LEX-C199-CHIZ199-04",
+      "UR-LEX-C199-CHIZ199-05"
+    ]
+  }
+}

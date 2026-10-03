@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:510f4ee3074a7289",
+  "lessonIds": [
+    "UR-C210-nai",
+    "UR-C210-dhobi",
+    "UR-C210-mochi",
+    "UR-C210-lohar",
+    "UR-C210-barhai"
+  ],
+  "tex": "urdu/book/chapters/ch210-barber-washerman-cobbler-blacksmith-carpenter.tex"
+}

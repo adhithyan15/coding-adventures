@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C210-dhobi",
+    "language": "urdu",
+    "chapter": 210,
+    "sequence": 12260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5acbe8919f83cc06"
+  },
+  "findings": []
+}
