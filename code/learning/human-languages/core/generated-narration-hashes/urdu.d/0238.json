@@ -1,0 +1,21 @@
+{
+  "language": "urdu",
+  "chapter": 238,
+  "sourceHash": "fnv1a64:3f69f38cf2d54c8d",
+  "lessonIds": [
+    "UR-C238-mahir",
+    "UR-C238-fankar",
+    "UR-C238-karigar",
+    "UR-C238-sunar",
+    "UR-C238-kumhar",
+    "UR-R238-first-pass-words-from-chapters-230-233",
+    "UR-R238-second-pass-words-from-chapters-234-238"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "urdu/narration/ch238.txt",
+  "json": "urdu/narration/ch238.json",
+  "textHash": "fnv1a64:3e0c0e210f0d8d7d",
+  "jsonHash": "fnv1a64:3e60007055251f3e",
+  "findings": []
+}

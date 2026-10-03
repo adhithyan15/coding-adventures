@@ -1,0 +1,11 @@
+{
+  "id": "UR-C229-trak",
+  "pathSegment": "UR-PATH-229-CHIZ229",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-229-CHIZ229",
+      "order": 1
+    }
+  ]
+}

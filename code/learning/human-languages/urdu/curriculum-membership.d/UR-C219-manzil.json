@@ -1,0 +1,11 @@
+{
+  "id": "UR-C219-manzil",
+  "pathSegment": "UR-PATH-219-JAGAH219",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-219-JAGAH219",
+      "order": 1
+    }
+  ]
+}

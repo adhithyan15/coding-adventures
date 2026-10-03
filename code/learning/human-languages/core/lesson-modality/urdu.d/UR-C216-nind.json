@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C216-nind",
+    "language": "urdu",
+    "chapter": 216,
+    "sequence": 12720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6821d1ee131ebc1b"
+  },
+  "findings": []
+}

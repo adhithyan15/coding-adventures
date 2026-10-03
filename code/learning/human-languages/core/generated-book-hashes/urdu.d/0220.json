@@ -1,0 +1,15 @@
+{
+  "language": "urdu",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:0d15a4983720d047",
+  "lessonIds": [
+    "UR-C220-khush-qismati-se",
+    "UR-C220-bad-qismati-se",
+    "UR-C220-vajah",
+    "UR-C220-natija",
+    "UR-C220-halanki",
+    "UR-R220-first-pass-words-from-chapters-212-215",
+    "UR-R220-second-pass-words-from-chapters-216-220"
+  ],
+  "tex": "urdu/book/chapters/ch220-fortunately-unfortunately-reason-result-although.tex"
+}

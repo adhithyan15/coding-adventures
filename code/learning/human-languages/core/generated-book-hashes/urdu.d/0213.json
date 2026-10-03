@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:bf9538e1ab351cdb",
+  "lessonIds": [
+    "UR-C213-pahunchana",
+    "UR-C213-uthana",
+    "UR-C213-girana",
+    "UR-C213-phenkna",
+    "UR-C213-khinchna"
+  ],
+  "tex": "urdu/book/chapters/ch213-to-deliver-to-lift-to-drop-to-throw-to-pull.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 213,
+  "title": "To deliver, To lift, To drop, To throw, To pull",
+  "label": "ch:ur-to-deliver-to-lift-to-drop-to-throw-to-pull",
+  "canDo": "I can say to deliver, to lift, to drop, to throw and to pull.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C213-khinchna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 213: I can say to deliver, to lift, to drop, to throw and to pull.",
+    "assesses": [
+      "UR-LEX-C213-ACT213-03",
+      "UR-LEX-C213-ACT213-04",
+      "UR-LEX-C213-ACT213-05"
+    ]
+  }
+}

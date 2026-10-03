@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:c3fdb53731c7a6f7",
+  "lessonIds": [
+    "UR-C218-sitambar",
+    "UR-C218-aktubar",
+    "UR-C218-navambar",
+    "UR-C218-disambar",
+    "UR-C218-somvar"
+  ],
+  "tex": "urdu/book/chapters/ch218-september-october-november-december-monday.tex"
+}

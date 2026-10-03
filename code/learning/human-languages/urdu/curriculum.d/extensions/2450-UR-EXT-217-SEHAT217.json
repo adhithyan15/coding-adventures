@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-217-SEHAT217",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a beard, a moustache, good health, a toothache and an itch.",
+  "prerequisites": []
+}

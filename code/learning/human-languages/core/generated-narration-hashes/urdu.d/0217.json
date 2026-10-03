@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:ebf2f3f994837832",
+  "lessonIds": [
+    "UR-C217-darhi",
+    "UR-C217-munchh",
+    "UR-C217-tandurusti",
+    "UR-C217-dant-dard",
+    "UR-C217-khujli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch217.txt",
+  "json": "urdu/narration/ch217.json",
+  "textHash": "fnv1a64:f38998aa053c77c2",
+  "jsonHash": "fnv1a64:a9b7a5547189c15e",
+  "findings": []
+}

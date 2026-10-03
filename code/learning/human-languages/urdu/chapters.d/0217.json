@@ -1,0 +1,19 @@
+{
+  "chapter": 217,
+  "title": "Beard, Moustache, Good health, Toothache, Itch",
+  "label": "ch:ur-beard-moustache-good-health-toothache-itch",
+  "canDo": "I can say a beard, a moustache, good health, a toothache and an itch.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "UR-C217-khujli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 217: I can say a beard, a moustache, good health, a toothache and an itch.",
+    "assesses": [
+      "UR-LEX-C217-SEHAT217-03",
+      "UR-LEX-C217-SEHAT217-04",
+      "UR-LEX-C217-SEHAT217-05"
+    ]
+  }
+}

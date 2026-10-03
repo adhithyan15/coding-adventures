@@ -1,0 +1,11 @@
+{
+  "id": "UR-C221-khamosh",
+  "pathSegment": "UR-PATH-221-SIFAT221",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-221-SIFAT221",
+      "order": 3
+    }
+  ]
+}

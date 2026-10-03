@@ -1,0 +1,19 @@
+{
+  "chapter": 223,
+  "title": "Cunning, Decent, Rude, Polite, Beautiful",
+  "label": "ch:ur-cunning-decent-rude-polite-beautiful",
+  "canDo": "I can say cunning, decent, rude, polite and beautiful.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "UR-C223-hasin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 223: I can say cunning, decent, rude, polite and beautiful.",
+    "assesses": [
+      "UR-LEX-C223-SIFAT223-03",
+      "UR-LEX-C223-SIFAT223-04",
+      "UR-LEX-C223-SIFAT223-05"
+    ]
+  }
+}

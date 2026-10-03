@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:c308888352f64304",
+  "lessonIds": [
+    "UR-C231-rae",
+    "UR-C231-jhut",
+    "UR-C231-raz",
+    "UR-C231-latifa",
+    "UR-C231-hasi"
+  ],
+  "tex": "urdu/book/chapters/ch231-opinion-lie-secret-joke-laughter.tex"
+}

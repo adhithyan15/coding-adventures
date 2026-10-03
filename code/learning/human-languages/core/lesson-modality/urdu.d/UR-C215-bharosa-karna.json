@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C215-bharosa-karna",
+    "language": "urdu",
+    "chapter": 215,
+    "sequence": 12670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c360ff01378b3a7"
+  },
+  "findings": []
+}

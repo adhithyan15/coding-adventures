@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:8a20cc182d51c6ce",
+  "lessonIds": [
+    "UR-C222-mazedar",
+    "UR-C222-bekar",
+    "UR-C222-anokha",
+    "UR-C222-naqli",
+    "UR-C222-sachcha"
+  ],
+  "tex": "urdu/book/chapters/ch222-tasty-useless-unusual-fake-truthful.tex"
+}

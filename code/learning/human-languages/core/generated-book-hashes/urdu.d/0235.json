@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:5213bc742ba7ff3c",
+  "lessonIds": [
+    "UR-C235-kira",
+    "UR-C235-jugnu",
+    "UR-C235-khatmal",
+    "UR-C235-kekra",
+    "UR-C235-jhinga"
+  ],
+  "tex": "urdu/book/chapters/ch235-insect-firefly-bedbug-crab-prawn.tex"
+}

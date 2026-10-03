@@ -1,0 +1,19 @@
+{
+  "chapter": 238,
+  "title": "Expert, Artist, Craftsman, Goldsmith, Potter",
+  "label": "ch:ur-expert-artist-craftsman-goldsmith-potter",
+  "canDo": "I can say an expert, an artist, a craftsman, a goldsmith and a potter.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-R238-second-pass-words-from-chapters-234-238",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 238: I can say an expert, an artist, a craftsman, a goldsmith and a potter.",
+    "assesses": [
+      "UR-LEX-C238-KAM238-03",
+      "UR-LEX-C238-KAM238-04",
+      "UR-LEX-C238-KAM238-05"
+    ]
+  }
+}

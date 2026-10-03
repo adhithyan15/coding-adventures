@@ -1,0 +1,11 @@
+{
+  "id": "UR-C228-khilari",
+  "pathSegment": "UR-PATH-228-CHIZ228",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-228-CHIZ228",
+      "order": 2
+    }
+  ]
+}

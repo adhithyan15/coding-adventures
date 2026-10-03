@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C217-khujli",
+    "language": "urdu",
+    "chapter": 217,
+    "sequence": 12790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62300c42a8013c92"
+  },
+  "findings": []
+}

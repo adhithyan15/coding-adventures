@@ -1,0 +1,19 @@
+{
+  "chapter": 228,
+  "title": "Swimming, Team, Player, Film, Play",
+  "label": "ch:ur-swimming-team-player-film-play",
+  "canDo": "I can say swimming, a team, a player, a film and a play.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C228-natak",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 228: I can say swimming, a team, a player, a film and a play.",
+    "assesses": [
+      "UR-LEX-C228-CHIZ228-03",
+      "UR-LEX-C228-CHIZ228-04",
+      "UR-LEX-C228-CHIZ228-05"
+    ]
+  }
+}

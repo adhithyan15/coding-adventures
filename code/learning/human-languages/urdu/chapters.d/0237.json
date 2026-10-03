@@ -1,0 +1,19 @@
+{
+  "chapter": 237,
+  "title": "Mechanic, Waiter, Watchman, Soldier, Army",
+  "label": "ch:ur-mechanic-waiter-watchman-soldier-army",
+  "canDo": "I can say a mechanic, a waiter, a watchman, a soldier and an army.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C237-fauj",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 237: I can say a mechanic, a waiter, a watchman, a soldier and an army.",
+    "assesses": [
+      "UR-LEX-C237-KAM237-03",
+      "UR-LEX-C237-KAM237-04",
+      "UR-LEX-C237-KAM237-05"
+    ]
+  }
+}

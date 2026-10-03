@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C228-tairaki",
+    "language": "urdu",
+    "chapter": 228,
+    "sequence": 13490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d82aae25a258aeee"
+  },
+  "findings": []
+}

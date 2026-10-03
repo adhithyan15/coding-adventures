@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C225-fail",
+    "language": "urdu",
+    "chapter": 225,
+    "sequence": 13380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98efb8c884494a64"
+  },
+  "findings": []
+}

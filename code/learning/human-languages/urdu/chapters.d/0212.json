@@ -1,0 +1,19 @@
+{
+  "chapter": 212,
+  "title": "To iron, To grind, To fry, To boil, To taste",
+  "label": "ch:ur-to-iron-to-grind-to-fry-to-boil-to-taste",
+  "canDo": "I can say to iron, to grind, to fry, to boil and to taste.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C212-chakhna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 212: I can say to iron, to grind, to fry, to boil and to taste.",
+    "assesses": [
+      "UR-LEX-C212-ACT212-03",
+      "UR-LEX-C212-ACT212-04",
+      "UR-LEX-C212-ACT212-05"
+    ]
+  }
+}

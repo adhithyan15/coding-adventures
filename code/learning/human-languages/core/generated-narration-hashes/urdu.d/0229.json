@@ -1,0 +1,21 @@
+{
+  "language": "urdu",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:4d96f86cf854e4e4",
+  "lessonIds": [
+    "UR-C229-motar-saikil",
+    "UR-C229-trak",
+    "UR-C229-petrol",
+    "UR-C229-petrol-pamp",
+    "UR-C229-sit",
+    "UR-R229-first-pass-words-from-chapters-221-224",
+    "UR-R229-second-pass-words-from-chapters-225-229"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "urdu/narration/ch229.txt",
+  "json": "urdu/narration/ch229.json",
+  "textHash": "fnv1a64:310f0dfe37d12b8e",
+  "jsonHash": "fnv1a64:8edd5d7965a0cff4",
+  "findings": []
+}

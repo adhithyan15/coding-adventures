@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-223-SIFAT223",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say cunning, decent, rude, polite and beautiful.",
+  "prerequisites": []
+}

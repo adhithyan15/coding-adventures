@@ -1,0 +1,19 @@
+{
+  "chapter": 220,
+  "title": "Fortunately, Unfortunately, Reason, Result, Although",
+  "label": "ch:ur-fortunately-unfortunately-reason-result-although",
+  "canDo": "I can say fortunately, unfortunately, a reason, a result and although.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "UR-R220-second-pass-words-from-chapters-216-220",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 220: I can say fortunately, unfortunately, a reason, a result and although.",
+    "assesses": [
+      "UR-LEX-C220-VAJAH220-03",
+      "UR-LEX-C220-VAJAH220-04",
+      "UR-LEX-C220-VAJAH220-05"
+    ]
+  }
+}

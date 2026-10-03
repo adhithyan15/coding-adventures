@@ -1,0 +1,11 @@
+{
+  "id": "UR-C222-anokha",
+  "pathSegment": "UR-PATH-222-SIFAT222",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-222-SIFAT222",
+      "order": 2
+    }
+  ]
+}

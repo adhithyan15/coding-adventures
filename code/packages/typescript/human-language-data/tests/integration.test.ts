@@ -312,7 +312,8 @@ describe("real curriculum", () => {
       // 146 -> 179: the first A2 vocabulary tranche, 165 headwords, twenty-five
       // of them verbs.
       // 179 -> 211: the second A2 vocabulary tranche, 160 headwords.
-      ...Array.from({ length: 124 }, (_, i) => 88 + i)]);
+      // 211 -> 238: the third A2 vocabulary tranche, 135 headwords.
+      ...Array.from({ length: 151 }, (_, i) => 88 + i)]);
     expect(
       books.books
         .find((book) => book.language === "russian")

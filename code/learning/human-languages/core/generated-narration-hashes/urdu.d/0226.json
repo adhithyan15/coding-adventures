@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:5df48330da4e54fd",
+  "lessonIds": [
+    "UR-C226-dhaniya",
+    "UR-C226-pudina",
+    "UR-C226-baingan",
+    "UR-C226-kaddu",
+    "UR-C226-palak2"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch226.txt",
+  "json": "urdu/narration/ch226.json",
+  "textHash": "fnv1a64:cbedec333be31682",
+  "jsonHash": "fnv1a64:f408e9f565ea0172",
+  "findings": []
+}

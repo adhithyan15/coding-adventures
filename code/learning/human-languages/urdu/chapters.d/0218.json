@@ -1,0 +1,19 @@
+{
+  "chapter": 218,
+  "title": "September, October, November, December, Monday",
+  "label": "ch:ur-september-october-november-december-monday",
+  "canDo": "I can say September, October, November, December and Monday.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "UR-C218-somvar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 218: I can say September, October, November, December and Monday.",
+    "assesses": [
+      "UR-LEX-C218-VAQT218-03",
+      "UR-LEX-C218-VAQT218-04",
+      "UR-LEX-C218-VAQT218-05"
+    ]
+  }
+}

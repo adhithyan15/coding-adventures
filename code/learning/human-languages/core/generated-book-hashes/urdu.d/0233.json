@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:8de8a453b3187dd9",
+  "lessonIds": [
+    "UR-C233-kohra",
+    "UR-C233-os",
+    "UR-C233-ole",
+    "UR-C233-zalzala",
+    "UR-C233-sailab"
+  ],
+  "tex": "urdu/book/chapters/ch233-fog-dew-hail-earthquake-flood.tex"
+}

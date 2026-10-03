@@ -1,0 +1,19 @@
+{
+  "chapter": 224,
+  "title": "Iron, Broom, Jug, Dinner plate, Small bowl",
+  "label": "ch:ur-iron-broom-jug-dinner-plate-small-bowl",
+  "canDo": "I can say an iron, a broom, a jug, a dinner plate and a small bowl.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C224-katori",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 224: I can say an iron, a broom, a jug, a dinner plate and a small bowl.",
+    "assesses": [
+      "UR-LEX-C224-CHIZ224-03",
+      "UR-LEX-C224-CHIZ224-04",
+      "UR-LEX-C224-CHIZ224-05"
+    ]
+  }
+}

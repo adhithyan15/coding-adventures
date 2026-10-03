@@ -1,0 +1,11 @@
+{
+  "id": "UR-C238-sunar",
+  "pathSegment": "UR-PATH-238-KAM238",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-238-KAM238",
+      "order": 3
+    }
+  ]
+}

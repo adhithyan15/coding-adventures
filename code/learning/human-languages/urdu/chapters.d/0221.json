@@ -1,0 +1,19 @@
+{
+  "chapter": 221,
+  "title": "Annoyed, Surprised, Shy, Quiet, Splendid",
+  "label": "ch:ur-annoyed-surprised-shy-quiet-splendid",
+  "canDo": "I can say annoyed, surprised, shy, quiet and splendid.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "UR-C221-shandar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 221: I can say annoyed, surprised, shy, quiet and splendid.",
+    "assesses": [
+      "UR-LEX-C221-SIFAT221-03",
+      "UR-LEX-C221-SIFAT221-04",
+      "UR-LEX-C221-SIFAT221-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 236,
+  "title": "Savings, Price, Shopkeeper, Customer, Business",
+  "label": "ch:ur-savings-price-shopkeeper-customer-business",
+  "canDo": "I can say savings, a price, a shopkeeper, a customer and business.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C236-karobar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 236: I can say savings, a price, a shopkeeper, a customer and business.",
+    "assesses": [
+      "UR-LEX-C236-KAM236-03",
+      "UR-LEX-C236-KAM236-04",
+      "UR-LEX-C236-KAM236-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:f4495e9937ffe1c3",
+  "lessonIds": [
+    "UR-C219-flait",
+    "UR-C219-manzil",
+    "UR-C219-zina",
+    "UR-C219-angan",
+    "UR-C219-balkani"
+  ],
+  "tex": "urdu/book/chapters/ch219-flat-storey-staircase-courtyard-balcony.tex"
+}

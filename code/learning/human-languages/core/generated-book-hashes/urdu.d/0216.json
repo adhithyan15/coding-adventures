@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:333e32171102ac8c",
+  "lessonIds": [
+    "UR-C216-nabz",
+    "UR-C216-sans",
+    "UR-C216-nind",
+    "UR-C216-khvab",
+    "UR-C216-kamzori"
+  ],
+  "tex": "urdu/book/chapters/ch216-pulse-breath-sleep-dream-weakness.tex"
+}

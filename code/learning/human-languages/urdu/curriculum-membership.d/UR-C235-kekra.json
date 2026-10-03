@@ -1,0 +1,11 @@
+{
+  "id": "UR-C235-kekra",
+  "pathSegment": "UR-PATH-235-CHIZ235",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-235-CHIZ235",
+      "order": 3
+    }
+  ]
+}

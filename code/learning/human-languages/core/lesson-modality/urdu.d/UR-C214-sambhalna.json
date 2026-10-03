@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C214-sambhalna",
+    "language": "urdu",
+    "chapter": 214,
+    "sequence": 12640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a2732bf54aec85a"
+  },
+  "findings": []
+}

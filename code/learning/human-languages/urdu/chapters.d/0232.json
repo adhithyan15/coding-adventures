@@ -1,0 +1,19 @@
+{
+  "chapter": 232,
+  "title": "Failure, Torch, Battery, Chain, Screw",
+  "label": "ch:ur-failure-torch-battery-chain-screw",
+  "canDo": "I can say failure, a torch, a battery, a chain and a screw.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C232-pech",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 232: I can say failure, a torch, a battery, a chain and a screw.",
+    "assesses": [
+      "UR-LEX-C232-CHIZ232-03",
+      "UR-LEX-C232-CHIZ232-04",
+      "UR-LEX-C232-CHIZ232-05"
+    ]
+  }
+}

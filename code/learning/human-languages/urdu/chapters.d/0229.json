@@ -1,0 +1,19 @@
+{
+  "chapter": 229,
+  "title": "Motorbike, Lorry, Petrol, Petrol station, Seat",
+  "label": "ch:ur-motorbike-lorry-petrol-petrol-station-seat",
+  "canDo": "I can say a motorbike, a lorry, petrol, a petrol station and a seat.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-R229-second-pass-words-from-chapters-225-229",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 229: I can say a motorbike, a lorry, petrol, a petrol station and a seat.",
+    "assesses": [
+      "UR-LEX-C229-CHIZ229-03",
+      "UR-LEX-C229-CHIZ229-04",
+      "UR-LEX-C229-CHIZ229-05"
+    ]
+  }
+}

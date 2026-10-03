@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C232-nakami",
+    "language": "urdu",
+    "chapter": 232,
+    "sequence": 13880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:039706663fccdd69"
+  },
+  "findings": []
+}

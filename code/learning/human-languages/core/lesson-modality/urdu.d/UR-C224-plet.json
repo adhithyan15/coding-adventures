@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C224-plet",
+    "language": "urdu",
+    "chapter": 224,
+    "sequence": 13320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0dafe39f7a20e4e0"
+  },
+  "findings": []
+}

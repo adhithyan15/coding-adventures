@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C233-os",
+    "language": "urdu",
+    "chapter": 233,
+    "sequence": 13940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:775a655057685a1a"
+  },
+  "findings": []
+}

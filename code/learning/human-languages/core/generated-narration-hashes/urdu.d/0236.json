@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:28718c00931abd7b",
+  "lessonIds": [
+    "UR-C236-bachat",
+    "UR-C236-qimat",
+    "UR-C236-dukandar",
+    "UR-C236-gahak",
+    "UR-C236-karobar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch236.txt",
+  "json": "urdu/narration/ch236.json",
+  "textHash": "fnv1a64:af049701bdf187ae",
+  "jsonHash": "fnv1a64:4cbb142abf0fb85a",
+  "findings": []
+}

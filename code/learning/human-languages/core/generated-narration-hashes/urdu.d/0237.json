@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:af7d0b1d150e525a",
+  "lessonIds": [
+    "UR-C237-mistri",
+    "UR-C237-bera",
+    "UR-C237-chaukidar",
+    "UR-C237-sipahi",
+    "UR-C237-fauj"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch237.txt",
+  "json": "urdu/narration/ch237.json",
+  "textHash": "fnv1a64:e6468e8a76c0d6af",
+  "jsonHash": "fnv1a64:ab6bb53ecabca073",
+  "findings": []
+}

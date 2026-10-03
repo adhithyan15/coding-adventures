@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C237-chaukidar",
+    "language": "urdu",
+    "chapter": 237,
+    "sequence": 14150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01ff3f8f64f015bb"
+  },
+  "findings": []
+}

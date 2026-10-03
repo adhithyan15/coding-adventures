@@ -1,0 +1,19 @@
+{
+  "chapter": 235,
+  "title": "Insect, Firefly, Bedbug, Crab, Prawn",
+  "label": "ch:ur-insect-firefly-bedbug-crab-prawn",
+  "canDo": "I can say an insect, a firefly, a bedbug, a crab and a prawn.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C235-jhinga",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 235: I can say an insect, a firefly, a bedbug, a crab and a prawn.",
+    "assesses": [
+      "UR-LEX-C235-CHIZ235-03",
+      "UR-LEX-C235-CHIZ235-04",
+      "UR-LEX-C235-CHIZ235-05"
+    ]
+  }
+}

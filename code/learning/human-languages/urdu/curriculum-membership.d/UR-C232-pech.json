@@ -1,0 +1,11 @@
+{
+  "id": "UR-C232-pech",
+  "pathSegment": "UR-PATH-232-CHIZ232",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-232-CHIZ232",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C227-bheriya",
+    "language": "urdu",
+    "chapter": 227,
+    "sequence": 13470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e57b7ffd2f68615"
+  },
+  "findings": []
+}

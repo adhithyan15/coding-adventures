@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:bad60479193a21be",
+  "lessonIds": [
+    "UR-C218-sitambar",
+    "UR-C218-aktubar",
+    "UR-C218-navambar",
+    "UR-C218-disambar",
+    "UR-C218-somvar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch218.txt",
+  "json": "urdu/narration/ch218.json",
+  "textHash": "fnv1a64:35d432fa26bfec27",
+  "jsonHash": "fnv1a64:ede1a8359bd33eea",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C214-der-karna",
+  "pathSegment": "UR-PATH-214-ACT214",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-214-ACT214",
+      "order": 1
+    }
+  ]
+}

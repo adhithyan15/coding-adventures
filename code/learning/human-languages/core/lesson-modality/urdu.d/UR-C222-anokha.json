@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C222-anokha",
+    "language": "urdu",
+    "chapter": 222,
+    "sequence": 13210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:668052d1b25037c7"
+  },
+  "findings": []
+}

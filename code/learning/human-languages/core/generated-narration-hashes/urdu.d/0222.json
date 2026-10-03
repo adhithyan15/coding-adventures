@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:a5bd911e976410c7",
+  "lessonIds": [
+    "UR-C222-mazedar",
+    "UR-C222-bekar",
+    "UR-C222-anokha",
+    "UR-C222-naqli",
+    "UR-C222-sachcha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch222.txt",
+  "json": "urdu/narration/ch222.json",
+  "textHash": "fnv1a64:c1a1a96bc9147bec",
+  "jsonHash": "fnv1a64:453e324fef98d861",
+  "findings": []
+}

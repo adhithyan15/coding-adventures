@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C230-dulha",
+    "language": "urdu",
+    "chapter": 230,
+    "sequence": 13810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77fb2e4f9ff0a806"
+  },
+  "findings": []
+}

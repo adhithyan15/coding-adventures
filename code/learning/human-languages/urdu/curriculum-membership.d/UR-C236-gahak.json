@@ -1,0 +1,11 @@
+{
+  "id": "UR-C236-gahak",
+  "pathSegment": "UR-PATH-236-KAM236",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-236-KAM236",
+      "order": 3
+    }
+  ]
+}
