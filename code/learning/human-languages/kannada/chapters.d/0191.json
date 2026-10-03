@@ -1,0 +1,19 @@
+{
+  "chapter": 191,
+  "title": "Picture, Sport, Match, Team, Cricket",
+  "label": "ch:ka-picture-sport-match-team-cricket",
+  "canDo": "I can say a picture, sport, a match, a team and cricket.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C191-kriket",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 191: I can say a picture, sport, a match, a team and cricket.",
+    "assesses": [
+      "KA-LEX-C191-VASTU191-03",
+      "KA-LEX-C191-VASTU191-04",
+      "KA-LEX-C191-VASTU191-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C168-himmadi",
+  "pathSegment": "KA-PATH-168-AROGYA168",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-168-AROGYA168",
+      "order": 2
+    }
+  ]
+}

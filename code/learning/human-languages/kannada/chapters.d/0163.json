@@ -1,0 +1,19 @@
+{
+  "chapter": 163,
+  "title": "To doubt, To put up with, To cheat, To get along, To plant",
+  "label": "ch:ka-to-doubt-to-put-up-with-to-cheat-to-get-along-to-plant",
+  "canDo": "I can say to doubt, to put up with, to cheat, to get along and to plant.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C163-nedu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 163: I can say to doubt, to put up with, to cheat, to get along and to plant.",
+    "assesses": [
+      "KA-LEX-C163-KRIYE163-03",
+      "KA-LEX-C163-KRIYE163-04",
+      "KA-LEX-C163-KRIYE163-05"
+    ]
+  }
+}

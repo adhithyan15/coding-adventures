@@ -1,0 +1,19 @@
+{
+  "chapter": 187,
+  "title": "Number, Rainbow, Snow, Shade, Darkness",
+  "label": "ch:ka-number-rainbow-snow-shade-darkness",
+  "canDo": "I can say a number, a rainbow, snow, shade and darkness.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C187-kattale",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 187: I can say a number, a rainbow, snow, shade and darkness.",
+    "assesses": [
+      "KA-LEX-C187-VASTU187-03",
+      "KA-LEX-C187-VASTU187-04",
+      "KA-LEX-C187-VASTU187-05"
+    ]
+  }
+}

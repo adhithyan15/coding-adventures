@@ -1,0 +1,19 @@
+{
+  "chapter": 179,
+  "title": "Fresh, Stale, Raw, Bland, Expensive",
+  "label": "ch:ka-fresh-stale-raw-bland-expensive",
+  "canDo": "I can say fresh, stale, raw, bland and expensive.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "KA-C179-dubari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 179: I can say fresh, stale, raw, bland and expensive.",
+    "assesses": [
+      "KA-LEX-C179-GUNA179-03",
+      "KA-LEX-C179-GUNA179-04",
+      "KA-LEX-C179-GUNA179-05"
+    ]
+  }
+}

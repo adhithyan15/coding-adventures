@@ -1,0 +1,19 @@
+{
+  "chapter": 178,
+  "title": "Deliberately, By chance, If you want, In case, By the way",
+  "label": "ch:ka-deliberately-by-chance-if-you-want-in-case-by-the-way",
+  "canDo": "I can say deliberately, by chance, if you want, in case and by the way.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "KA-C178-andahage",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 178: I can say deliberately, by chance, if you want, in case and by the way.",
+    "assesses": [
+      "KA-LEX-C178-KARANA178-03",
+      "KA-LEX-C178-KARANA178-04",
+      "KA-LEX-C178-KARANA178-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C167-sidi",
+  "pathSegment": "KA-PATH-167-KRIYE167",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-167-KRIYE167",
+      "order": 3
+    }
+  ]
+}

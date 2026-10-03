@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R175-second-pass-words-from-chapters-171-175",
+    "language": "kannada",
+    "chapter": 175,
+    "sequence": 7940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:238b57470735352e"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:809c13a920f353c0",
+  "lessonIds": [
+    "KA-C170-herige",
+    "KA-C170-drsti",
+    "KA-C170-sonku",
+    "KA-C170-bokke",
+    "KA-C170-paustika"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch170.txt",
+  "json": "kannada/narration/ch170.json",
+  "textHash": "fnv1a64:352b4653e173b5a0",
+  "jsonHash": "fnv1a64:1cc38d97bf7b0a02",
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:4419f3feb96847c4",
+  "lessonIds": [
+    "KA-C193-rattu",
+    "KA-C193-akara",
+    "KA-C193-vrtta",
+    "KA-C193-cauka",
+    "KA-C193-trikona",
+    "KA-R193-first-pass-words-from-chapters-185-188",
+    "KA-R193-second-pass-words-from-chapters-189-193"
+  ],
+  "tex": "kannada/book/chapters/ch193-cardboard-shape-circle-square-triangle.tex"
+}

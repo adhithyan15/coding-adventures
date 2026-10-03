@@ -1,0 +1,11 @@
+{
+  "id": "KA-C196-badagi",
+  "pathSegment": "KA-PATH-196-KELASA196",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-196-KELASA196",
+      "order": 4
+    }
+  ]
+}

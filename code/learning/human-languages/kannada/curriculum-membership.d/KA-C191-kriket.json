@@ -1,0 +1,11 @@
+{
+  "id": "KA-C191-kriket",
+  "pathSegment": "KA-PATH-191-VASTU191",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-191-VASTU191",
+      "order": 4
+    }
+  ]
+}

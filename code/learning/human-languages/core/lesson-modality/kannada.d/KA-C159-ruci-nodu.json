@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C159-ruci-nodu",
+    "language": "kannada",
+    "chapter": 159,
+    "sequence": 7090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21e5e9b56fe8e2ad"
+  },
+  "findings": []
+}

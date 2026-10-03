@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:e8af794a12a2997d",
+  "lessonIds": [
+    "KA-C172-aparupakke",
+    "KA-C172-pratidina",
+    "KA-C172-arambha",
+    "KA-C172-satamana",
+    "KA-C172-ksana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch172.txt",
+  "json": "kannada/narration/ch172.json",
+  "textHash": "fnv1a64:3f09c75a5fab6e23",
+  "jsonHash": "fnv1a64:d5865289c96af1ee",
+  "findings": []
+}

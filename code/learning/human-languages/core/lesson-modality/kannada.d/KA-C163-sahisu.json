@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C163-sahisu",
+    "language": "kannada",
+    "chapter": 163,
+    "sequence": 7270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d4e430f399af5bf"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C189-upavasa",
+    "language": "kannada",
+    "chapter": 189,
+    "sequence": 8660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6b3d4e23d6f430f2"
+  },
+  "findings": []
+}

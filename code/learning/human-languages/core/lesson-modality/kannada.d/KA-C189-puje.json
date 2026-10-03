@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C189-puje",
+    "language": "kannada",
+    "chapter": 189,
+    "sequence": 8640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09436bb7c6c100d6"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C163-hondiko",
+  "pathSegment": "KA-PATH-163-KRIYE163",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-163-KRIYE163",
+      "order": 3
+    }
+  ]
+}

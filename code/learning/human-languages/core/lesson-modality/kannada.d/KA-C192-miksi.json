@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C192-miksi",
+    "language": "kannada",
+    "chapter": 192,
+    "sequence": 8790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38a2d542be08a6d5"
+  },
+  "findings": []
+}

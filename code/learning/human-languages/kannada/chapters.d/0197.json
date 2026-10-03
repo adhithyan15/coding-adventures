@@ -1,0 +1,19 @@
+{
+  "chapter": 197,
+  "title": "Watchman, Daily wages, Bus conductor, Headmaster, Secretary",
+  "label": "ch:ka-watchman-daily-wages-bus-conductor-headmaster-secretary",
+  "canDo": "I can say a watchman, daily wages, a bus conductor, a headmaster and a secretary.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-R197-second-pass-words-from-chapters-196-197",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 197: I can say a watchman, daily wages, a bus conductor, a headmaster and a secretary.",
+    "assesses": [
+      "KA-LEX-C197-KELASA197-03",
+      "KA-LEX-C197-KELASA197-04",
+      "KA-LEX-C197-KELASA197-05"
+    ]
+  }
+}

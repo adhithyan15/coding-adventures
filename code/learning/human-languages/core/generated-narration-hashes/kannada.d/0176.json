@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:293315c0ed0f1642",
+  "lessonIds": [
+    "KA-C176-saluvagi",
+    "KA-C176-illadiddare",
+    "KA-C176-adaru",
+    "KA-C176-ondu-vele",
+    "KA-C176-badalu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch176.txt",
+  "json": "kannada/narration/ch176.json",
+  "textHash": "fnv1a64:1bf59b34fd9414d4",
+  "jsonHash": "fnv1a64:6a35e224028e817e",
+  "findings": []
+}

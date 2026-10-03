@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C161-tilisu",
+    "language": "kannada",
+    "chapter": 161,
+    "sequence": 7170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea627055488956ea"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C192-oralu",
+  "pathSegment": "KA-PATH-192-VASTU192",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-192-VASTU192",
+      "order": 0
+    }
+  ]
+}

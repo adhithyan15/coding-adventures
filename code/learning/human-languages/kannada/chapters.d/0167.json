@@ -1,0 +1,19 @@
+{
+  "chapter": 167,
+  "title": "To drop off, To improve, To support, To burst, To snore",
+  "label": "ch:ka-to-drop-off-to-improve-to-support-to-burst-to-snore",
+  "canDo": "I can say to drop off, to improve, to support, to burst and to snore.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C167-gorake-hode",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 167: I can say to drop off, to improve, to support, to burst and to snore.",
+    "assesses": [
+      "KA-LEX-C167-KRIYE167-03",
+      "KA-LEX-C167-KRIYE167-04",
+      "KA-LEX-C167-KRIYE167-05"
+    ]
+  }
+}

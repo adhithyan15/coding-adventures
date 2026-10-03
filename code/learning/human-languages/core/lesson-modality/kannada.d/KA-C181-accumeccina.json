@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C181-accumeccina",
+    "language": "kannada",
+    "chapter": 181,
+    "sequence": 8220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c4e2fa1abcd6c948"
+  },
+  "findings": []
+}

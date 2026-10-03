@@ -1,0 +1,11 @@
+{
+  "id": "KA-C185-nanya",
+  "pathSegment": "KA-PATH-185-VASTU185",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-185-VASTU185",
+      "order": 1
+    }
+  ]
+}

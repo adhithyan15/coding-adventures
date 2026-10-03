@@ -1,0 +1,11 @@
+{
+  "id": "KA-C170-herige",
+  "pathSegment": "KA-PATH-170-AROGYA170",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-170-AROGYA170",
+      "order": 0
+    }
+  ]
+}

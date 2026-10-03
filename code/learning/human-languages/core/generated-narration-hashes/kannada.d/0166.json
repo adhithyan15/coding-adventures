@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:6ffec9a5b75b56c6",
+  "lessonIds": [
+    "KA-C166-ulu",
+    "KA-C166-cimukisu",
+    "KA-C166-tottikku",
+    "KA-C166-soru",
+    "KA-C166-telu",
+    "KA-R166-first-pass-words-from-chapters-158-161",
+    "KA-R166-second-pass-words-from-chapters-162-166"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch166.txt",
+  "json": "kannada/narration/ch166.json",
+  "textHash": "fnv1a64:04fcfbe5b9125814",
+  "jsonHash": "fnv1a64:d729acd007683f65",
+  "findings": []
+}

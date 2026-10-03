@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C160-horu",
+    "language": "kannada",
+    "chapter": 160,
+    "sequence": 7120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f68631d44d1bea6"
+  },
+  "findings": []
+}

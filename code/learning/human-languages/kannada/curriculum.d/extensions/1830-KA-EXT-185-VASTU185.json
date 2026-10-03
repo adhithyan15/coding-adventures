@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-185-VASTU185",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a banknote, a coin, a discount, a kilogram and a purse.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:11ec19f2e952cbd7",
+  "lessonIds": [
+    "KA-C158-beyisu",
+    "KA-C158-aduge-madu",
+    "KA-C158-kharidisu",
+    "KA-C158-pavatisu",
+    "KA-C158-snana-madu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch158.txt",
+  "json": "kannada/narration/ch158.json",
+  "textHash": "fnv1a64:cd3107d39c1f1c4d",
+  "jsonHash": "fnv1a64:d006c0efecf61efc",
+  "findings": []
+}

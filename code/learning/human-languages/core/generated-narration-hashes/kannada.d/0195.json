@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:058cc5ee661163e1",
+  "lessonIds": [
+    "KA-C195-sulka",
+    "KA-C195-khate",
+    "KA-C195-baddi",
+    "KA-C195-terige",
+    "KA-C195-bil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch195.txt",
+  "json": "kannada/narration/ch195.json",
+  "textHash": "fnv1a64:a284c98a9469b699",
+  "jsonHash": "fnv1a64:b290b974fe23a5a6",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C158-snana-madu",
+    "language": "kannada",
+    "chapter": 158,
+    "sequence": 7050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4f3a48cecd2711b2"
+  },
+  "findings": []
+}

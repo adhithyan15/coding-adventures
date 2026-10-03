@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:222e2d4dc99ddd14",
+  "lessonIds": [
+    "KA-C185-notu",
+    "KA-C185-nanya",
+    "KA-C185-riyayiti",
+    "KA-C185-kilo",
+    "KA-C185-pars"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch185.txt",
+  "json": "kannada/narration/ch185.json",
+  "textHash": "fnv1a64:4d60fcd39ea76a08",
+  "jsonHash": "fnv1a64:2934a9a0ff5bcdfc",
+  "findings": []
+}

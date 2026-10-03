@@ -1,0 +1,792 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 197,
+  "title": "Watchman, Daily wages, Bus conductor, Headmaster, Secretary",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:c3ec63c587c53e85",
+  "lessons": [
+    {
+      "id": "KA-C197-kavalugara",
+      "sequence": 9040,
+      "title": "ಕಾವಲುಗಾರ (kāvalugāra) — a watchman, a security guard",
+      "headword": "ಕಾವಲುಗಾರ",
+      "romanization": "kāvalugāra",
+      "gloss": "a watchman, a security guard",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c662638fbe7cb732",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a spectator, then the Kannada for a carpenter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕಾವಲುಗಾರ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಾವಲುಗಾರ — kāvalugāra — \"a watchman, a security guard\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāvalugāra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāvalugāra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāvalugāra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāvalugāra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kāvalugāra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kāvalugāra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a spectator, then the Kannada for a carpenter, then say kāvalugāra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a spectator, then the Kannada for a carpenter, then say *kāvalugāra* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕಾವಲುಗಾರ (kāvalugāra) mean? (\"A watchman, a security guard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C197-kuli",
+      "sequence": 9050,
+      "title": "ಕೂಲಿ (kūli) — daily wages; a labourer",
+      "headword": "ಕೂಲಿ",
+      "romanization": "kūli",
+      "gloss": "daily wages; a labourer",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d6dbbbec4b01e78e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a carpenter, then the Kannada for a watchman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕೂಲಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೂಲಿ — kūli — \"daily wages; a labourer\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūli, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūli*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kūli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kūli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a carpenter, then the Kannada for a watchman, then say kūli again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a carpenter, then the Kannada for a watchman, then say *kūli* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕೂಲಿ (kūli) mean? (\"Daily wages; a labourer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C197-kandaktar",
+      "sequence": 9060,
+      "title": "ಕಂಡಕ್ಟರ್ (kaṇḍakṭar) — a bus conductor",
+      "headword": "ಕಂಡಕ್ಟರ್",
+      "romanization": "kaṇḍakṭar",
+      "gloss": "a bus conductor",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c8eb81cf96ea28d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a watchman, then the Kannada for daily wages."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕಂಡಕ್ಟರ್",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಂಡಕ್ಟರ್ — kaṇḍakṭar — \"a bus conductor\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇḍakṭar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇḍakṭar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇḍakṭar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇḍakṭar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kaṇḍakṭar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kaṇḍakṭar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a watchman, then the Kannada for daily wages, then say kaṇḍakṭar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a watchman, then the Kannada for daily wages, then say *kaṇḍakṭar* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕಂಡಕ್ಟರ್ (kaṇḍakṭar) mean? (\"A bus conductor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C197-mukhyopadhyaya",
+      "sequence": 9070,
+      "title": "ಮುಖ್ಯೋಪಾಧ್ಯಾಯ (mukhyōpādhyāya) — a headmaster",
+      "headword": "ಮುಖ್ಯೋಪಾಧ್ಯಾಯ",
+      "romanization": "mukhyōpādhyāya",
+      "gloss": "a headmaster",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f91c30e2f3ad7c57",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for daily wages, then the Kannada for a bus conductor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮುಖ್ಯೋಪಾಧ್ಯಾಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮುಖ್ಯೋಪಾಧ್ಯಾಯ — mukhyōpādhyāya — \"a headmaster\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukhyōpādhyāya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukhyōpādhyāya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukhyōpādhyāya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukhyōpādhyāya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say mukhyōpādhyāya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *mukhyōpādhyāya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for daily wages, then the Kannada for a bus conductor, then say mukhyōpādhyāya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for daily wages, then the Kannada for a bus conductor, then say *mukhyōpādhyāya* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮುಖ್ಯೋಪಾಧ್ಯಾಯ (mukhyōpādhyāya) mean? (\"A headmaster\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C197-karyadarsi",
+      "sequence": 9080,
+      "title": "ಕಾರ್ಯದರ್ಶಿ (kāryadarśi) — a secretary",
+      "headword": "ಕಾರ್ಯದರ್ಶಿ",
+      "romanization": "kāryadarśi",
+      "gloss": "a secretary",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cffdedbe748fe5d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a bus conductor, then the Kannada for a headmaster."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕಾರ್ಯದರ್ಶಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಾರ್ಯದರ್ಶಿ — kāryadarśi — \"a secretary\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāryadarśi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāryadarśi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāryadarśi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāryadarśi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kāryadarśi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kāryadarśi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a bus conductor, then the Kannada for a headmaster, then say kāryadarśi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a bus conductor, then the Kannada for a headmaster, then say *kāryadarśi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕಾರ್ಯದರ್ಶಿ (kāryadarśi) mean? (\"A secretary\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R197-first-pass-words-from-chapters-194-195",
+      "sequence": 9090,
+      "title": "Words from chapters 194-195 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 194-195",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ddb19547a40cae88",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a headmaster and a secretary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a salary, a customer, a tailor, housework, a boss",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a salary, a customer, a tailor, housework, a boss]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fee, an account, interest, tax, a bill",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fee, an account, interest, tax, a bill]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A salary? (ಸಂಬಳ, sambaḷa.) A customer? (ಗ್ರಾಹಕ, grāhaka.) A tailor? (ದರ್ಜಿ, darji.) Housework? (ಮನೆಗೆಲಸ, manegelasa.) A boss? (ಮೇಲಧಿಕಾರಿ, mēladhikāri.) A fee? (ಶುಲ್ಕ, śulka.) An account? (ಖಾತೆ, khāte.) Interest? (ಬಡ್ಡಿ, baḍḍi.) Tax? (ತೆರಿಗೆ, terige.) A bill? (ಬಿಲ್, bil.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R197-second-pass-words-from-chapters-196-197",
+      "sequence": 9100,
+      "title": "Words from chapters 196-197 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 196-197",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b0b855e65c28f9a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a writer and a director."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a writer, a director, a player, a spectator, a carpenter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a writer, a director, a player, a spectator, a carpenter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a watchman, daily wages, a bus conductor, a headmaster, a secretary",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a watchman, daily wages, a bus conductor, a headmaster, a secretary]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A writer? (ಲೇಖಕ, lēkhaka.) A director? (ನಿರ್ದೇಶಕ, nirdēśaka.) A player? (ಆಟಗಾರ, āṭagāra.) A spectator? (ಪ್ರೇಕ್ಷಕ, prēkṣaka.) A carpenter? (ಬಡಗಿ, baḍagi.) A watchman? (ಕಾವಲುಗಾರ, kāvalugāra.) Daily wages? (ಕೂಲಿ, kūli.) A bus conductor? (ಕಂಡಕ್ಟರ್, kaṇḍakṭar.) A headmaster? (ಮುಖ್ಯೋಪಾಧ್ಯಾಯ, mukhyōpādhyāya.) A secretary? (ಕಾರ್ಯದರ್ಶಿ, kāryadarśi.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

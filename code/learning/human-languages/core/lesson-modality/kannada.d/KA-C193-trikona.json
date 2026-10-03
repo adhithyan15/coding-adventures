@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C193-trikona",
+    "language": "kannada",
+    "chapter": 193,
+    "sequence": 8860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c08f15526321cef5"
+  },
+  "findings": []
+}

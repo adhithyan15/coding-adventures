@@ -1,0 +1,11 @@
+{
+  "id": "KA-C184-elaniru",
+  "pathSegment": "KA-PATH-184-VASTU184",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-184-VASTU184",
+      "order": 4
+    }
+  ]
+}

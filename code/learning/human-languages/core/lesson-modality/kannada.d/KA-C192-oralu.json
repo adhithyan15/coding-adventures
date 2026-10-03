@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C192-oralu",
+    "language": "kannada",
+    "chapter": 192,
+    "sequence": 8770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a3bf320a27f5043d"
+  },
+  "findings": []
+}

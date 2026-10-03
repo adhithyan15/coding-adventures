@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:8d6fa7bde7cd2432",
+  "lessonIds": [
+    "KA-C196-lekhaka",
+    "KA-C196-nirdesaka",
+    "KA-C196-atagara",
+    "KA-C196-preksaka",
+    "KA-C196-badagi"
+  ],
+  "tex": "kannada/book/chapters/ch196-writer-director-player-spectator-carpenter.tex"
+}

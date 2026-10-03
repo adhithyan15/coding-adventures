@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C186-imel",
+    "language": "kannada",
+    "chapter": 186,
+    "sequence": 8480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e7742d789386856"
+  },
+  "findings": []
+}

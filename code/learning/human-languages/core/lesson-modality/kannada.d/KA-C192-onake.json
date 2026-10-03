@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C192-onake",
+    "language": "kannada",
+    "chapter": 192,
+    "sequence": 8780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da9c949632d05a76"
+  },
+  "findings": []
+}

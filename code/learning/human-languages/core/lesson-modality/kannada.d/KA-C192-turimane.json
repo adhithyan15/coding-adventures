@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C192-turimane",
+    "language": "kannada",
+    "chapter": 192,
+    "sequence": 8810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fdc6c9ae0eaed6ae"
+  },
+  "findings": []
+}

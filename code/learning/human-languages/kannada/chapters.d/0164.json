@@ -1,0 +1,19 @@
+{
+  "chapter": 164,
+  "title": "To upload, To click, To delete, To switch on, To switch off",
+  "label": "ch:ka-to-upload-to-click-to-delete-to-switch-on-to-switch-off",
+  "canDo": "I can say to upload, to click, to delete, to switch on and to switch off.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C164-aph-madu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 164: I can say to upload, to click, to delete, to switch on and to switch off.",
+    "assesses": [
+      "KA-LEX-C164-KRIYE164-03",
+      "KA-LEX-C164-KRIYE164-04",
+      "KA-LEX-C164-KRIYE164-05"
+    ]
+  }
+}

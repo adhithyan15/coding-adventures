@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-183-VASTU183",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a frying pan, a pressure cooker, a bowl, a ladle and a bucket.",
+  "prerequisites": []
+}

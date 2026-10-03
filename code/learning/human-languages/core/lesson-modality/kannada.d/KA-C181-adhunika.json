@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C181-adhunika",
+    "language": "kannada",
+    "chapter": 181,
+    "sequence": 8230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:abdb713b4258f923"
+  },
+  "findings": []
+}

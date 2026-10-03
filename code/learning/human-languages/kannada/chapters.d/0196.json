@@ -1,0 +1,19 @@
+{
+  "chapter": 196,
+  "title": "Writer, Director, Player, Spectator, Carpenter",
+  "label": "ch:ka-writer-director-player-spectator-carpenter",
+  "canDo": "I can say a writer, a director, a player, a spectator and a carpenter.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C196-badagi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 196: I can say a writer, a director, a player, a spectator and a carpenter.",
+    "assesses": [
+      "KA-LEX-C196-KELASA196-03",
+      "KA-LEX-C196-KELASA196-04",
+      "KA-LEX-C196-KELASA196-05"
+    ]
+  }
+}

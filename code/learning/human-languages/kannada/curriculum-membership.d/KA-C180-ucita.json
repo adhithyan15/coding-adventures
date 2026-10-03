@@ -1,0 +1,11 @@
+{
+  "id": "KA-C180-ucita",
+  "pathSegment": "KA-PATH-180-GUNA180",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-180-GUNA180",
+      "order": 0
+    }
+  ]
+}

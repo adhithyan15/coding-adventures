@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C194-sambala",
+    "language": "kannada",
+    "chapter": 194,
+    "sequence": 8890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f8e12ab1184a0a4"
+  },
+  "findings": []
+}

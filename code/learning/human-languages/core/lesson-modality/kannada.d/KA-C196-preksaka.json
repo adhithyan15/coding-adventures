@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C196-preksaka",
+    "language": "kannada",
+    "chapter": 196,
+    "sequence": 9020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:814d74b1ef6f8d57"
+  },
+  "findings": []
+}

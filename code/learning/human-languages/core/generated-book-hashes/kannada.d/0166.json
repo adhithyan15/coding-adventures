@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:e853157f40507e95",
+  "lessonIds": [
+    "KA-C166-ulu",
+    "KA-C166-cimukisu",
+    "KA-C166-tottikku",
+    "KA-C166-soru",
+    "KA-C166-telu",
+    "KA-R166-first-pass-words-from-chapters-158-161",
+    "KA-R166-second-pass-words-from-chapters-162-166"
+  ],
+  "tex": "kannada/book/chapters/ch166-to-plough-to-sprinkle-to-drip-to-leak-to-float.tex"
+}

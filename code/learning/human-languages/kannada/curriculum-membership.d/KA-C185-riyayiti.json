@@ -1,0 +1,11 @@
+{
+  "id": "KA-C185-riyayiti",
+  "pathSegment": "KA-PATH-185-VASTU185",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-185-VASTU185",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:a2df7b5b5ed40340",
+  "lessonIds": [
+    "KA-C173-adugemane",
+    "KA-C173-snanada-mane",
+    "KA-C173-saucalaya",
+    "KA-C173-kone",
+    "KA-C173-angala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch173.txt",
+  "json": "kannada/narration/ch173.json",
+  "textHash": "fnv1a64:55e2e7ea6b4f9ce8",
+  "jsonHash": "fnv1a64:090efaccd0a499a1",
+  "findings": []
+}

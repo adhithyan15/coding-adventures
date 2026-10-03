@@ -1,0 +1,11 @@
+{
+  "id": "KA-C170-drsti",
+  "pathSegment": "KA-PATH-170-AROGYA170",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-170-AROGYA170",
+      "order": 1
+    }
+  ]
+}

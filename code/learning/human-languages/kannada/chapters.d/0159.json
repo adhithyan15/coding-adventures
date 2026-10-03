@@ -1,0 +1,19 @@
+{
+  "chapter": 159,
+  "title": "To peel, To grind, To serve, To taste, To chew",
+  "label": "ch:ka-to-peel-to-grind-to-serve-to-taste-to-chew",
+  "canDo": "I can say to peel, to grind, to serve, to taste and to chew.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C159-agi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 159: I can say to peel, to grind, to serve, to taste and to chew.",
+    "assesses": [
+      "KA-LEX-C159-KRIYE159-03",
+      "KA-LEX-C159-KRIYE159-04",
+      "KA-LEX-C159-KRIYE159-05"
+    ]
+  }
+}

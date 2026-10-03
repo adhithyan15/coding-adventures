@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:c3ec63c587c53e85",
+  "lessonIds": [
+    "KA-C197-kavalugara",
+    "KA-C197-kuli",
+    "KA-C197-kandaktar",
+    "KA-C197-mukhyopadhyaya",
+    "KA-C197-karyadarsi",
+    "KA-R197-first-pass-words-from-chapters-194-195",
+    "KA-R197-second-pass-words-from-chapters-196-197"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch197.txt",
+  "json": "kannada/narration/ch197.json",
+  "textHash": "fnv1a64:756ffcc63f5c366e",
+  "jsonHash": "fnv1a64:f5d0b857170def36",
+  "findings": []
+}

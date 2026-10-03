@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:ac12b27f734517f9",
+  "lessonIds": [
+    "KA-C164-aplod-madu",
+    "KA-C164-klik-madu",
+    "KA-C164-alisu",
+    "KA-C164-an-madu",
+    "KA-C164-aph-madu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch164.txt",
+  "json": "kannada/narration/ch164.json",
+  "textHash": "fnv1a64:e8566759c3a0f953",
+  "jsonHash": "fnv1a64:05cb649989c9b140",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C164-an-madu",
+    "language": "kannada",
+    "chapter": 164,
+    "sequence": 7340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:becdd4a6bc0d14f1"
+  },
+  "findings": []
+}

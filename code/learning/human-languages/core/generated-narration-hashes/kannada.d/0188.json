@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:21bb8823ab0a5889",
+  "lessonIds": [
+    "KA-C188-gudu",
+    "KA-C188-balli",
+    "KA-C188-moggu",
+    "KA-C188-mullu",
+    "KA-C188-tulasi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch188.txt",
+  "json": "kannada/narration/ch188.json",
+  "textHash": "fnv1a64:0ab960dcef98fa21",
+  "jsonHash": "fnv1a64:1af6d7372901d85d",
+  "findings": []
+}

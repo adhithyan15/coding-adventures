@@ -1,0 +1,19 @@
+{
+  "chapter": 161,
+  "title": "To stick, To inform, To meet, To reserve, To cancel",
+  "label": "ch:ka-to-stick-to-inform-to-meet-to-reserve-to-cancel",
+  "canDo": "I can say to stick, to inform, to meet, to reserve and to cancel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C161-raddu-madu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 161: I can say to stick, to inform, to meet, to reserve and to cancel.",
+    "assesses": [
+      "KA-LEX-C161-KRIYE161-03",
+      "KA-LEX-C161-KRIYE161-04",
+      "KA-LEX-C161-KRIYE161-05"
+    ]
+  }
+}

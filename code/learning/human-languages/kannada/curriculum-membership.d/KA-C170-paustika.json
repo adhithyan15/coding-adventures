@@ -1,0 +1,11 @@
+{
+  "id": "KA-C170-paustika",
+  "pathSegment": "KA-PATH-170-AROGYA170",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-170-AROGYA170",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C190-sopha",
+  "pathSegment": "KA-PATH-190-VASTU190",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-190-VASTU190",
+      "order": 0
+    }
+  ]
+}

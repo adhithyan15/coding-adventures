@@ -1,0 +1,19 @@
+{
+  "chapter": 195,
+  "title": "Fee, Account, Interest, Tax, Bill",
+  "label": "ch:ka-fee-account-interest-tax-bill",
+  "canDo": "I can say a fee, an account, interest, tax and a bill.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C195-bil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 195: I can say a fee, an account, interest, tax and a bill.",
+    "assesses": [
+      "KA-LEX-C195-KELASA195-03",
+      "KA-LEX-C195-KELASA195-04",
+      "KA-LEX-C195-KELASA195-05"
+    ]
+  }
+}

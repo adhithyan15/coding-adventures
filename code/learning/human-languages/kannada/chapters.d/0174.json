@@ -1,0 +1,19 @@
+{
+  "chapter": 174,
+  "title": "Tourist, Lake, Cave, Zoo, Palace",
+  "label": "ch:ka-tourist-lake-cave-zoo-palace",
+  "canDo": "I can say a tourist, a lake, a cave, a zoo and a palace.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "KA-C174-aramane",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 174: I can say a tourist, a lake, a cave, a zoo and a palace.",
+    "assesses": [
+      "KA-LEX-C174-STHALA174-03",
+      "KA-LEX-C174-STHALA174-04",
+      "KA-LEX-C174-STHALA174-05"
+    ]
+  }
+}
