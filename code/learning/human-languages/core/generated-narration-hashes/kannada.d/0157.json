@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 157,
+  "sourceHash": "fnv1a64:fdaac7f427fda523",
+  "lessonIds": [
+    "KA-C157-velapatti",
+    "KA-C157-suchane",
+    "KA-C157-badige",
+    "KA-C157-jahiratu",
+    "KA-C157-rasidi",
+    "KA-R157-first-pass-saying-no-and-looking-back",
+    "KA-R157-second-pass-looking-ahead-and-reading-signs"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch157.txt",
+  "json": "kannada/narration/ch157.json",
+  "textHash": "fnv1a64:fe4f28bd4d6e2463",
+  "jsonHash": "fnv1a64:8d8e1b2fdd3aa557",
+  "findings": []
+}

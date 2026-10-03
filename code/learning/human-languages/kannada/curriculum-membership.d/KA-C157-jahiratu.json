@@ -1,0 +1,11 @@
+{
+  "id": "KA-C157-jahiratu",
+  "pathSegment": "KA-PATH-157-ODU157",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-157-ODU157",
+      "order": 3
+    }
+  ]
+}

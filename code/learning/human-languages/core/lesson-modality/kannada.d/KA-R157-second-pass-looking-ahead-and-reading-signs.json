@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R157-second-pass-looking-ahead-and-reading-signs",
+    "language": "kannada",
+    "chapter": 157,
+    "sequence": 7000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8bb9a3048f3c7e1a"
+  },
+  "findings": []
+}

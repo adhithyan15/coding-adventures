@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-154-ILLA154",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "KA-EXT-154-ILLA154"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C157-suchane",
+    "language": "kannada",
+    "chapter": 157,
+    "sequence": 6950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e359dc018c584463"
+  },
+  "findings": []
+}

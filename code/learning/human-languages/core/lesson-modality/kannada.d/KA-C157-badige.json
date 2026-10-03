@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C157-badige",
+    "language": "kannada",
+    "chapter": 157,
+    "sequence": 6960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09646cb1032ea6df"
+  },
+  "findings": []
+}

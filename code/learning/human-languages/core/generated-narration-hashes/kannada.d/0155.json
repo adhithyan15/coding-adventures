@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 155,
+  "sourceHash": "fnv1a64:13ce412221309620",
+  "lessonIds": [
+    "KA-C155-ittichege",
+    "KA-C155-igagale",
+    "KA-C155-kaleda",
+    "KA-C155-omme",
+    "KA-C155-kale"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch155.txt",
+  "json": "kannada/narration/ch155.json",
+  "textHash": "fnv1a64:9b712cea3959de6a",
+  "jsonHash": "fnv1a64:b3d072099db1ab77",
+  "findings": []
+}

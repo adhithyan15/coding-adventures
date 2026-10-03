@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C155-ittichege",
+    "language": "kannada",
+    "chapter": 155,
+    "sequence": 6840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8822f12a3a9d6530"
+  },
+  "findings": []
+}
