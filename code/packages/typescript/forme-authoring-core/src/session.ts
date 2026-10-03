@@ -21,7 +21,15 @@ interface PersistedSession {
 }
 
 function abortIfNeeded(signal?: AbortSignal): void {
-  if (signal?.aborted) throw signal.reason ?? new DOMException("The operation was aborted", "AbortError");
+  if (signal?.aborted) throw new DOMException("The operation was aborted", "AbortError");
+}
+
+function storageFailure(error: unknown, signal?: AbortSignal): never {
+  if (signal?.aborted || (error !== null && typeof error === "object" && "name" in error && error.name === "AbortError")) {
+    throw new DOMException("The operation was aborted", "AbortError");
+  }
+  if (error instanceof AuthoringError && error.code === "STORAGE_CONFLICT") throw error;
+  throw new AuthoringError("STORAGE_ERROR", "The storage adapter operation failed.");
 }
 
 function validateRevision(value: unknown, source: "stored" | "adapter"): string {
@@ -34,20 +42,26 @@ function validateRevision(value: unknown, source: "stored" | "adapter"): string 
 function exactObject(value: unknown, keys: readonly string[]): Record<string, unknown> {
   if (value === null || typeof value !== "object") invalidState("expected a plain object");
   let prototype: object | null;
-  let descriptors: PropertyDescriptorMap;
+  let ownKeys: readonly PropertyKey[];
   try {
     prototype = Object.getPrototypeOf(value);
-    descriptors = Object.getOwnPropertyDescriptors(value);
+    ownKeys = Reflect.ownKeys(value);
   } catch {
     invalidState("object cannot be inspected safely");
   }
   if (prototype! !== Object.prototype) invalidState("expected a plain object");
-  if (Reflect.ownKeys(descriptors!).some((key) => typeof key !== "string")) invalidState("stored object contains a symbol field");
-  const actual = Object.keys(descriptors!).sort();
+  if (ownKeys!.length > keys.length || ownKeys!.some((key) => typeof key !== "string")) invalidState("stored object contains unknown or symbol fields");
+  const actual = [...ownKeys! as string[]].sort();
   const expected = [...keys].sort();
   if (actual.length !== expected.length || actual.some((key, index) => key !== expected[index])) invalidState("stored object has missing or unknown fields");
-  if (Object.values(descriptors!).some((item) => !("value" in item) || !item.enumerable)) invalidState("stored object contains an accessor or hidden field");
-  return Object.fromEntries(Object.entries(descriptors!).map(([key, descriptor]) => [key, descriptor.value]));
+  const result: Record<string, unknown> = {};
+  for (const key of actual) {
+    let descriptor: PropertyDescriptor | undefined;
+    try { descriptor = Object.getOwnPropertyDescriptor(value, key); } catch { invalidState("object cannot be inspected safely"); }
+    if (descriptor === undefined || !("value" in descriptor) || !descriptor.enumerable) invalidState("stored object contains an accessor or hidden field");
+    Object.defineProperty(result, key, { value: descriptor.value, enumerable: true });
+  }
+  return result;
 }
 
 function decodeStored(stored: StoredAuthoringState, limits: AuthoringLimits): { readonly state: PersistedSession; readonly revision: string } {
@@ -114,12 +128,21 @@ function validateCommand(value: unknown): AuthoringCommand {
     throw new AuthoringError("INVALID_COMMAND", "The authoring command cannot be inspected safely.");
   }
   if (prototype !== Object.prototype) throw new AuthoringError("INVALID_COMMAND", "Authoring commands must be plain objects.");
-  let descriptors: PropertyDescriptorMap;
-  try { descriptors = Object.getOwnPropertyDescriptors(value); } catch {
+  let ownKeys: readonly PropertyKey[];
+  try { ownKeys = Reflect.ownKeys(value); } catch {
     throw new AuthoringError("INVALID_COMMAND", "The authoring command cannot be inspected safely.");
   }
-  if (Reflect.ownKeys(descriptors).some((key) => typeof key !== "string")) {
+  if (ownKeys.length > 6 || ownKeys.some((key) => typeof key !== "string")) {
     throw new AuthoringError("INVALID_COMMAND", "The authoring command contains a symbol field.");
+  }
+  const descriptors: PropertyDescriptorMap = {};
+  for (const key of ownKeys as string[]) {
+    let descriptor: PropertyDescriptor | undefined;
+    try { descriptor = Object.getOwnPropertyDescriptor(value, key); } catch {
+      throw new AuthoringError("INVALID_COMMAND", "The authoring command cannot be inspected safely.");
+    }
+    if (descriptor === undefined) throw new AuthoringError("INVALID_COMMAND", "The authoring command changed while being inspected.");
+    Object.defineProperty(descriptors, key, { value: descriptor, enumerable: true });
   }
   const typeDescriptor = descriptors.type;
   if (typeDescriptor === undefined || !("value" in typeDescriptor) || typeof typeDescriptor.value !== "string") {
@@ -268,7 +291,10 @@ class Session implements AuthoringSession {
   async #persist(next: PersistedSession, signal?: AbortSignal): Promise<void> {
     canonicalJsonByteLength(next, this.#limits.maxJsonBytes);
     const bytes = encodeCanonicalJson(next);
-    const saved = await this.#storage.compareAndSwap(this.#revision, bytes, signal);
+    let saved: { readonly revision: string };
+    try { saved = await this.#storage.compareAndSwap(this.#revision, bytes, signal); } catch (error) {
+      storageFailure(error, signal);
+    }
     const revision = adapterRevision(saved);
     this.#state = next;
     this.#revision = revision;
@@ -277,19 +303,25 @@ class Session implements AuthoringSession {
 
 export async function openAuthoringSession(options: OpenAuthoringSessionOptions): Promise<AuthoringSession> {
   if (options === null || typeof options !== "object") throw new AuthoringError("INVALID_STATE", "Session options must be an object.");
-  let optionDescriptors: PropertyDescriptorMap;
-  try { optionDescriptors = Object.getOwnPropertyDescriptors(options); } catch { invalidState("session options cannot be inspected safely"); }
-  if (Object.values(optionDescriptors).some((item) => !("value" in item) || !item.enumerable)) invalidState("session options contain an accessor or hidden field");
-  if (Reflect.ownKeys(optionDescriptors).some((key) => typeof key !== "string")) invalidState("session options contain a symbol field");
-  const optionKeys = Object.keys(optionDescriptors);
-  if (!optionKeys.includes("storage") || optionKeys.some((key) => !["storage", "initialProject", "historyLimit", "limits", "signal"].includes(key))) invalidState("session options have missing or unknown fields");
-  const checked = Object.fromEntries(Object.entries(optionDescriptors).map(([key, descriptor]) => [key, descriptor.value])) as unknown as OpenAuthoringSessionOptions;
+  let optionKeys: readonly PropertyKey[];
+  try { optionKeys = Reflect.ownKeys(options); } catch { invalidState("session options cannot be inspected safely"); }
+  if (optionKeys.length > 5 || optionKeys.some((key) => typeof key !== "string")) invalidState("session options contain unknown or symbol fields");
+  const optionStringKeys = optionKeys as string[];
+  if (!optionStringKeys.includes("storage") || optionStringKeys.some((key) => !["storage", "initialProject", "historyLimit", "limits", "signal"].includes(key))) invalidState("session options have missing or unknown fields");
+  const optionSnapshot: Record<string, unknown> = {};
+  for (const key of optionStringKeys) {
+    let descriptor: PropertyDescriptor | undefined;
+    try { descriptor = Object.getOwnPropertyDescriptor(options, key); } catch { invalidState("session options cannot be inspected safely"); }
+    if (descriptor === undefined || !("value" in descriptor) || !descriptor.enumerable) invalidState("session options contain an accessor or hidden field");
+    Object.defineProperty(optionSnapshot, key, { value: descriptor.value, enumerable: true });
+  }
+  const checked = optionSnapshot as unknown as OpenAuthoringSessionOptions;
   abortIfNeeded(checked.signal);
   const limits = resolveLimits(checked.limits);
   const storage = snapshotStorage(checked.storage);
   let loaded: StoredAuthoringState | null | undefined;
-  try { loaded = await storage.load(checked.signal); } catch {
-    invalidState("storage adapter load failed");
+  try { loaded = await storage.load(checked.signal); } catch (error) {
+    storageFailure(error, checked.signal);
   }
   if (loaded === undefined || (loaded !== null && typeof loaded !== "object")) {
     invalidState("storage adapter returned an invalid loaded state");
@@ -309,6 +341,9 @@ export async function openAuthoringSession(options: OpenAuthoringSessionOptions)
   const state: PersistedSession = { schemaVersion: 1, historyLimit, cursor: 0, history: [project] };
   canonicalJsonByteLength(state, limits.maxJsonBytes);
   const bytes = encodeCanonicalJson(state);
-  const saved = await storage.compareAndSwap(null, bytes, checked.signal);
+  let saved: { readonly revision: string };
+  try { saved = await storage.compareAndSwap(null, bytes, checked.signal); } catch (error) {
+    storageFailure(error, checked.signal);
+  }
   return new Session(storage, state, adapterRevision(saved), limits);
 }

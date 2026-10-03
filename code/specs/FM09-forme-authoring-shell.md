@@ -146,6 +146,9 @@ Cancellation is honored only before the atomic commit point; once bytes are
 published the adapter must resolve successfully with the new revision even if
 the signal becomes aborted. A malformed success result is indeterminate rather
 than a rollback: the shell must reload before it retries.
+The core preserves stale-revision conflicts and standardized cancellation, but
+maps other adapter exceptions to a bounded storage error that does not expose
+host paths or arbitrary exception messages.
 
 Opening a missing store requires an explicit initial project and persists it
 through `expectedRevision: null`. Opening malformed or unsupported bytes fails

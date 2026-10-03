@@ -10,6 +10,7 @@ export type AuthoringErrorCode =
   | "NO_UNDO"
   | "NO_REDO"
   | "STORAGE_CONFLICT"
+  | "STORAGE_ERROR"
   | "STORAGE_INDETERMINATE";
 
 export class AuthoringError extends Error {

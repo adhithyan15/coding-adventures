@@ -66,18 +66,18 @@ function jsonStringBytes(value: string): number {
   return bytes;
 }
 
-function ownDataSnapshot(value: object, path: string): Record<PropertyKey, unknown> {
-  let descriptors: PropertyDescriptorMap;
-  try {
-    descriptors = Object.getOwnPropertyDescriptors(value);
-  } catch {
-    invalidProject(path, "cannot be inspected safely");
-  }
+function safeOwnKeys(value: object, path: string): readonly PropertyKey[] {
+  try { return Reflect.ownKeys(value); } catch { invalidProject(path, "cannot be inspected safely"); }
+}
+
+function ownDataSnapshot(value: object, path: string, keys = safeOwnKeys(value, path)): Record<PropertyKey, unknown> {
   let array = false;
   try { array = Array.isArray(value); } catch { invalidProject(path, "cannot be inspected safely"); }
   const result = Object.create(null) as Record<PropertyKey, unknown>;
-  for (const key of Reflect.ownKeys(descriptors!)) {
-    const descriptor = descriptors![key as keyof PropertyDescriptorMap]!;
+  for (const key of keys) {
+    let descriptor: PropertyDescriptor | undefined;
+    try { descriptor = Object.getOwnPropertyDescriptor(value, key); } catch { invalidProject(path, "cannot be inspected safely"); }
+    if (descriptor === undefined) invalidProject(path, "changed while being inspected");
     if (!('value' in descriptor)) invalidProject(path, "contains an accessor field");
     if (!descriptor.enumerable && !(array && key === "length")) invalidProject(path, "contains a hidden field");
     Object.defineProperty(result, key, { value: descriptor.value, enumerable: true, configurable: true, writable: true });
@@ -100,13 +100,23 @@ function preflightCanonicalSnapshot(value: unknown, limits: AuthoringLimits): un
     seen.add(item);
     let isArray: boolean;
     try { isArray = Array.isArray(item); } catch { invalidProject(path, "cannot be inspected safely"); }
-    const fields = ownDataSnapshot(item, path);
     if (isArray!) {
+      let lengthDescriptor: PropertyDescriptor | undefined;
+      try { lengthDescriptor = Object.getOwnPropertyDescriptor(item, "length"); } catch { invalidProject(path, "cannot be inspected safely"); }
+      if (lengthDescriptor === undefined || !("value" in lengthDescriptor)) invalidProject(path, "has an invalid array length");
+      const rawLength = lengthDescriptor.value;
+      if (!Number.isSafeInteger(rawLength) || rawLength < 0) invalidProject(path, "has an invalid array length");
+      if (rawLength > limits.maxNodesPerDocument) invalidProject(path, "exceeds the node or array-entry limit");
+      const structuralBytes = 2 + Math.max(0, rawLength - 1);
+      if (budget.used + structuralBytes + rawLength > budget.maximum) invalidProject(path, `exceeds ${budget.maximum} canonical JSON bytes`);
+      const inputKeys = safeOwnKeys(item, path);
+      if (inputKeys.length !== rawLength + 1) invalidProject(path, "has invalid array fields");
+      const fields = ownDataSnapshot(item, path, inputKeys);
       const length = fields.length;
       if (!Number.isSafeInteger(length) || (length as number) < 0) invalidProject(path, "has an invalid array length");
       const keys = Reflect.ownKeys(fields);
       if (keys.some((key) => typeof key !== "string") || keys.length !== (length as number) + 1) invalidProject(path, "has invalid array fields");
-      spendBytes(budget, 2 + Math.max(0, (length as number) - 1), path);
+      spendBytes(budget, structuralBytes, path);
       const result: unknown[] = [];
       for (let index = 0; index < (length as number); index += 1) {
         if (!Object.hasOwn(fields, String(index))) invalidProject(`${path}[${index}]`, "array is sparse");
@@ -117,7 +127,9 @@ function preflightCanonicalSnapshot(value: unknown, limits: AuthoringLimits): un
     let prototype: object | null;
     try { prototype = Object.getPrototypeOf(item); } catch { invalidProject(path, "cannot be inspected safely"); }
     if (prototype !== Object.prototype) invalidProject(path, "expected a plain object");
-    const keys = Reflect.ownKeys(fields);
+    const keys = safeOwnKeys(item, path);
+    if (keys.length > 6) invalidProject(path, "has too many fields");
+    const fields = ownDataSnapshot(item, path, keys);
     if (keys.some((key) => typeof key !== "string")) invalidProject(path, "contains a symbol field");
     const names = (keys as string[]).sort();
     spendBytes(budget, 2 + Math.max(0, names.length - 1), path);
@@ -125,7 +137,7 @@ function preflightCanonicalSnapshot(value: unknown, limits: AuthoringLimits): un
     for (const key of names) {
       spendBytes(budget, jsonStringBytes(key) + 1, path);
       Object.defineProperty(result, key, {
-        value: walk(fields[key], `${path}.${key}`, depth + 1),
+        value: walk(fields[key], `${path}.[field]`, depth + 1),
         enumerable: true,
         configurable: true,
         writable: true,
@@ -185,7 +197,9 @@ function plainObjectSnapshot(value: unknown, path: string, state?: WalkState): R
     if (state.seen.has(value)) invalidProject(path, "contains a cycle or shared object");
     state.seen.add(value);
   }
-  const snapshot = ownDataSnapshot(value, path);
+  const keys = safeOwnKeys(value, path);
+  if (keys.length > 6) invalidProject(path, "has too many fields");
+  const snapshot = ownDataSnapshot(value, path, keys);
   const ownKeys = Reflect.ownKeys(snapshot);
   if (ownKeys.some((key) => typeof key !== "string")) invalidProject(path, "contains a symbol field");
   return snapshot as Record<string, unknown>;
@@ -428,24 +442,31 @@ function resolveLimits(overrides: AuthoringLimitOverrides = {}): AuthoringLimits
     throw new AuthoringError("INVALID_LIMIT", "Authoring limits must be a plain object.");
   }
   let prototype: object | null;
-  let descriptors: PropertyDescriptorMap;
+  let keys: readonly PropertyKey[];
   try {
     prototype = Object.getPrototypeOf(overrides);
-    descriptors = Object.getOwnPropertyDescriptors(overrides);
+    keys = Reflect.ownKeys(overrides);
   } catch {
     throw new AuthoringError("INVALID_LIMIT", "Authoring limits cannot be inspected safely.");
   }
-  if (prototype! !== Object.prototype || Reflect.ownKeys(descriptors!).some((key) => typeof key !== "string")) {
+  if (keys!.length > LIMIT_KEYS.length || prototype! !== Object.prototype || keys!.some((key) => typeof key !== "string")) {
     throw new AuthoringError("INVALID_LIMIT", "Authoring limits must be a plain string-keyed object.");
   }
-  if (Object.values(descriptors!).some((descriptor) => !("value" in descriptor) || !descriptor.enumerable)) {
-    throw new AuthoringError("INVALID_LIMIT", "Authoring limits must contain enumerable data fields.");
+  const snapshot: Record<string, unknown> = {};
+  for (const key of keys! as string[]) {
+    let descriptor: PropertyDescriptor | undefined;
+    try { descriptor = Object.getOwnPropertyDescriptor(overrides, key); } catch {
+      throw new AuthoringError("INVALID_LIMIT", "Authoring limits cannot be inspected safely.");
+    }
+    if (descriptor === undefined || !("value" in descriptor) || !descriptor.enumerable) {
+      throw new AuthoringError("INVALID_LIMIT", "Authoring limits must contain enumerable data fields.");
+    }
+    Object.defineProperty(snapshot, key, { value: descriptor.value, enumerable: true });
   }
-  const snapshot = Object.fromEntries(Object.entries(descriptors!).map(([key, descriptor]) => [key, descriptor.value])) as AuthoringLimitOverrides;
   for (const key of Object.keys(snapshot)) {
     if (!LIMIT_KEYS.includes(key as keyof AuthoringLimits)) throw new AuthoringError("INVALID_LIMIT", "Authoring limits contain an unknown field.");
   }
-  const result = { ...HARD_AUTHORING_LIMITS, ...snapshot };
+  const result = { ...HARD_AUTHORING_LIMITS, ...snapshot } as AuthoringLimits;
   for (const key of LIMIT_KEYS) {
     const value = result[key];
     if (!Number.isSafeInteger(value) || value < 1 || value > HARD_AUTHORING_LIMITS[key]) {

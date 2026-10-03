@@ -127,6 +127,9 @@ publication an adapter must resolve successfully with the committed revision.
 If a successful commit returns a malformed result, the core reports
 `STORAGE_INDETERMINATE` and the shell must reload before retrying because
 durable state may have advanced.
+Rejected adapter operations surface as bounded `STORAGE_ERROR` diagnostics;
+stale-revision conflicts and standardized `AbortError` cancellation remain
+distinct without exposing host paths or exception messages.
 
 ## Development
 

@@ -180,7 +180,7 @@ describe("durable authoring sessions", () => {
     expect(session.project).toBe(before);
 
     storage.failNext = new Error("disk full");
-    await expect(session.dispatch({ type: "configure-site", title: "Lost", baseUrl: null, themeId: "forme-classless" })).rejects.toThrow("disk full");
+    await expect(session.dispatch({ type: "configure-site", title: "Lost", baseUrl: null, themeId: "forme-classless" })).rejects.toMatchObject({ code: "STORAGE_ERROR", message: "The storage adapter operation failed." });
     expect(session.project).toBe(before);
 
     storage.revision = "external-change";
@@ -189,7 +189,7 @@ describe("durable authoring sessions", () => {
 
     const controller = new AbortController();
     controller.abort(new Error("stop"));
-    await expect(session.dispatch({ type: "configure-site", title: "Cancelled", baseUrl: null, themeId: "forme-classless" }, controller.signal)).rejects.toThrow("stop");
+    await expect(session.dispatch({ type: "configure-site", title: "Cancelled", baseUrl: null, themeId: "forme-classless" }, controller.signal)).rejects.toMatchObject({ name: "AbortError", message: "The operation was aborted" });
     expect(session.project).toBe(before);
   });
 
@@ -361,7 +361,53 @@ describe("durable authoring sessions", () => {
       async load() { return revokedResult.proxy; },
       async compareAndSwap() { return { revision: "unused" }; },
     };
-    await expect(openAuthoringSession({ storage: hostileLoad })).rejects.toMatchObject({ code: "INVALID_STATE" });
+    await expect(openAuthoringSession({ storage: hostileLoad })).rejects.toMatchObject({ code: "STORAGE_ERROR" });
+
+    const failedLoad: AuthoringStorage = {
+      async load() { throw new Error("/secret/path"); },
+      async compareAndSwap() { return { revision: "unused" }; },
+    };
+    await expect(openAuthoringSession({ storage: failedLoad })).rejects.toMatchObject({ code: "STORAGE_ERROR", message: "The storage adapter operation failed." });
+    const cancelledLoad: AuthoringStorage = {
+      async load() { throw new DOMException("private reason", "AbortError"); },
+      async compareAndSwap() { return { revision: "unused" }; },
+    };
+    await expect(openAuthoringSession({ storage: cancelledLoad })).rejects.toMatchObject({ name: "AbortError", message: "The operation was aborted" });
+
+    const descriptorLoad: AuthoringStorage = {
+      async load() {
+        return new Proxy({ bytes: new Uint8Array(), revision: "x" }, {
+          getOwnPropertyDescriptor() { throw new Error("trap"); },
+        });
+      },
+      async compareAndSwap() { return { revision: "unused" }; },
+    };
+    await expect(openAuthoringSession({ storage: descriptorLoad })).rejects.toMatchObject({ code: "INVALID_STATE" });
+
+    const nonPlainLoad: AuthoringStorage = {
+      async load() {
+        const value = Object.create(null) as Record<string, unknown>;
+        value.bytes = new Uint8Array();
+        value.revision = "x";
+        return value as never;
+      },
+      async compareAndSwap() { return { revision: "unused" }; },
+    };
+    await expect(openAuthoringSession({ storage: nonPlainLoad })).rejects.toMatchObject({ code: "INVALID_STATE" });
+    const accessorLoad: AuthoringStorage = {
+      async load() {
+        const value = { revision: "x" } as Record<string, unknown>;
+        Object.defineProperty(value, "bytes", { enumerable: true, get: () => new Uint8Array() });
+        return value as never;
+      },
+      async compareAndSwap() { return { revision: "unused" }; },
+    };
+    await expect(openAuthoringSession({ storage: accessorLoad })).rejects.toMatchObject({ code: "INVALID_STATE" });
+    await expect(openAuthoringSession({ storage: null as never, initialProject: initial() })).rejects.toMatchObject({ code: "INVALID_STATE" });
+
+    const failedOpen = new MemoryStorage();
+    failedOpen.failNext = new Error("/secret/path");
+    await expect(openAuthoringSession({ storage: failedOpen, initialProject: initial() })).rejects.toMatchObject({ code: "STORAGE_ERROR" });
 
     const storage = new MemoryStorage();
     const session = await openAuthoringSession({ storage, initialProject: initial() });
@@ -373,10 +419,19 @@ describe("durable authoring sessions", () => {
     await expect(session.dispatch(revoked.proxy as never)).rejects.toMatchObject({ code: "INVALID_COMMAND" });
     const descriptorTrap = new Proxy({ type: "set-active-document", documentId: null }, { ownKeys() { throw new Error("trap"); } });
     await expect(session.dispatch(descriptorTrap as never)).rejects.toMatchObject({ code: "INVALID_COMMAND" });
+    const commandDescriptorTrap = new Proxy({ type: "set-active-document", documentId: null }, {
+      getOwnPropertyDescriptor() { throw new Error("trap"); },
+    });
+    await expect(session.dispatch(commandDescriptorTrap as never)).rejects.toMatchObject({ code: "INVALID_COMMAND" });
     const accessorCommand = {} as Record<string, unknown>;
     Object.defineProperty(accessorCommand, "type", { enumerable: true, value: "set-active-document" });
     Object.defineProperty(accessorCommand, "documentId", { enumerable: true, get: () => null });
     await expect(session.dispatch(accessorCommand as never)).rejects.toMatchObject({ code: "INVALID_COMMAND" });
+
+    const optionDescriptorTrap = new Proxy({ storage: new MemoryStorage() }, {
+      getOwnPropertyDescriptor() { throw new Error("trap"); },
+    });
+    await expect(openAuthoringSession(optionDescriptorTrap)).rejects.toMatchObject({ code: "INVALID_STATE" });
 
     expect(() => canonicalJson(undefined)).toThrow(/serialized/i);
     expect(() => canonicalJsonByteLength(undefined, 10)).toThrow(/serialized/i);

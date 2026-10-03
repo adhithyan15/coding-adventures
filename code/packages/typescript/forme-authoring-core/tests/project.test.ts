@@ -270,6 +270,17 @@ describe("the authoring project codec", () => {
     revoked.revoke();
     invalid(revoked.proxy);
     invalid(new Proxy(project(), { ownKeys() { throw new Error("trap"); } }));
+    invalid(new Proxy(project(), { getOwnPropertyDescriptor() { throw new Error("trap"); } }));
+    invalid(new Proxy({}, {
+      ownKeys() { return ["schemaVersion"]; },
+      getOwnPropertyDescriptor() { return undefined; },
+    }));
+    invalid({ ...project(), documents: new Proxy([], {
+      getOwnPropertyDescriptor(target, key) {
+        if (key === "length") throw new Error("trap");
+        return Reflect.getOwnPropertyDescriptor(target, key);
+      },
+    }) });
 
     let nested: unknown = { value: true };
     for (let index = 0; index < 150; index += 1) nested = { nested };
@@ -291,6 +302,9 @@ describe("the authoring project codec", () => {
     revokedLimits.revoke();
     expect(() => validateAuthoringProject(project(), revokedLimits.proxy)).toThrow(/inspected safely/i);
     expect(() => validateAuthoringProject(project(), Object.create(null))).toThrow(/plain string-keyed/i);
+    expect(() => validateAuthoringProject(project(), new Proxy({ maxDepth: 1 }, {
+      getOwnPropertyDescriptor() { throw new Error("trap"); },
+    }))).toThrow(/inspected safely/i);
     expect(() => createAuthoringProject(null as never)).toThrow(/plain object/i);
     expect(() => createAuthoringProject({ projectId: PROJECT_ID } as never)).toThrow(/missing/i);
     invalid({ ...project(), documents: [{ ...project().documents[0]!, body: { type: "document", children: [{ type: "paragraph", children: [{ type: "mystery" }] }] } }] });
