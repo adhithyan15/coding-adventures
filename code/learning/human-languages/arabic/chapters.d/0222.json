@@ -1,0 +1,19 @@
+{
+  "chapter": 222,
+  "title": "Science, Chemistry, Physics, Literature, Merchant",
+  "label": "ch:ar-science-chemistry-physics-literature-merchant",
+  "canDo": "I can say science, chemistry, physics, literature and a merchant.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-R222-second-pass-words-from-chapters-221-222",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 222: I can say science, chemistry, physics, literature and a merchant.",
+    "assesses": [
+      "AR-LEX-C222-AMAL222-03",
+      "AR-LEX-C222-AMAL222-04",
+      "AR-LEX-C222-AMAL222-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 198,
+  "title": "To allow, To prevent, To happen, To fall, To dig",
+  "label": "ch:ar-to-allow-to-prevent-to-happen-to-fall-to-dig",
+  "canDo": "I can say to allow, to prevent, to happen, to fall and to dig.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C198-hafara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 198: I can say to allow, to prevent, to happen, to fall and to dig.",
+    "assesses": [
+      "AR-LEX-C198-ACT198-03",
+      "AR-LEX-C198-ACT198-04",
+      "AR-LEX-C198-ACT198-05"
+    ]
+  }
+}

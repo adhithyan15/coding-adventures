@@ -1,0 +1,11 @@
+{
+  "id": "AR-C197-intabaha",
+  "pathSegment": "AR-PATH-197-ACT197",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-197-ACT197",
+      "order": 3
+    }
+  ]
+}

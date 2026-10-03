@@ -1,0 +1,11 @@
+{
+  "id": "AR-C200-hassasiyya",
+  "pathSegment": "AR-PATH-200-SIHHA200",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-200-SIHHA200",
+      "order": 2
+    }
+  ]
+}

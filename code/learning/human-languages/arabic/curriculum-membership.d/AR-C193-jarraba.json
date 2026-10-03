@@ -1,0 +1,11 @@
+{
+  "id": "AR-C193-jarraba",
+  "pathSegment": "AR-PATH-193-ACT193",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-193-ACT193",
+      "order": 1
+    }
+  ]
+}

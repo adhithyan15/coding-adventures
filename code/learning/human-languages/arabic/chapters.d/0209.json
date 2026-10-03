@@ -1,0 +1,19 @@
+{
+  "chapter": 209,
+  "title": "Grilled, Boiled, Burnt, Healthy, Broken",
+  "label": "ch:ar-grilled-boiled-burnt-healthy-broken",
+  "canDo": "I can say grilled, boiled, burnt, healthy and broken.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "AR-R209-second-pass-words-from-chapters-205-209",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 209: I can say grilled, boiled, burnt, healthy and broken.",
+    "assesses": [
+      "AR-LEX-C209-SIFA209-03",
+      "AR-LEX-C209-SIFA209-04",
+      "AR-LEX-C209-SIFA209-05"
+    ]
+  }
+}

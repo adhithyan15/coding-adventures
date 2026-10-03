@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:0d237cfe5e8038b7",
+  "lessonIds": [
+    "AR-C218-mitraqa",
+    "AR-C218-mawdu",
+    "AR-C218-mizan",
+    "AR-C218-qita",
+    "AR-C218-wazn",
+    "AR-R218-first-pass-words-from-chapters-210-213",
+    "AR-R218-second-pass-words-from-chapters-214-218"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch218.txt",
+  "json": "arabic/narration/ch218.json",
+  "textHash": "fnv1a64:f0e9bc7af10730c8",
+  "jsonHash": "fnv1a64:6c00d87d34a0b1d7",
+  "findings": []
+}

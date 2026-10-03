@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:9bb2609aee65f3da",
+  "lessonIds": [
+    "AR-C206-rubbama",
+    "AR-C206-mushkila",
+    "AR-C206-hall",
+    "AR-C206-bahja",
+    "AR-C206-khawf"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch206.txt",
+  "json": "arabic/narration/ch206.json",
+  "textHash": "fnv1a64:931230a97c808a2e",
+  "jsonHash": "fnv1a64:98e3f6dfc19ef102",
+  "findings": []
+}

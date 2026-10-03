@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:0455ad711863c3e9",
+  "lessonIds": [
+    "AR-C202-ghaliban",
+    "AR-C202-fawran",
+    "AR-C202-lahiqan",
+    "AR-C202-tarikh",
+    "AR-C202-lahza"
+  ],
+  "tex": "arabic/book/chapters/ch202-usually-immediately-later-date-moment.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C212-lazij",
+  "pathSegment": "AR-PATH-212-SIFA212",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-212-SIFA212",
+      "order": 1
+    }
+  ]
+}

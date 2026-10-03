@@ -1,0 +1,19 @@
+{
+  "chapter": 219,
+  "title": "Hose, Wood, Glass, Copper, Silk",
+  "label": "ch:ar-hose-wood-glass-copper-silk",
+  "canDo": "I can say a hose, wood, glass, copper and silk.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C219-harir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 219: I can say a hose, wood, glass, copper and silk.",
+    "assesses": [
+      "AR-LEX-C219-SHAY219-03",
+      "AR-LEX-C219-SHAY219-04",
+      "AR-LEX-C219-SHAY219-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C205-hudud",
+  "pathSegment": "AR-PATH-205-MAKAN205",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-205-MAKAN205",
+      "order": 3
+    }
+  ]
+}

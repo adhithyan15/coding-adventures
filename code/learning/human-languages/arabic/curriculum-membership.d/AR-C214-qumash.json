@@ -1,0 +1,11 @@
+{
+  "id": "AR-C214-qumash",
+  "pathSegment": "AR-PATH-214-SHAY214",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-214-SHAY214",
+      "order": 2
+    }
+  ]
+}

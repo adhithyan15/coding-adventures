@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-222-AMAL222",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say science, chemistry, physics, literature and a merchant.",
+  "prerequisites": []
+}

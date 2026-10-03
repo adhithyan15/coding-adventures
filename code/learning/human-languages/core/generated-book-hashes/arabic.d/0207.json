@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:0124a8817ec78ad1",
+  "lessonIds": [
+    "AR-C207-faqat",
+    "AR-C207-jiddan",
+    "AR-C207-hatta",
+    "AR-C207-idha",
+    "AR-C207-kama"
+  ],
+  "tex": "arabic/book/chapters/ch207-only-very-even-if-as.tex"
+}

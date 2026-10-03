@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C194-amsaka",
+    "language": "arabic",
+    "chapter": 194,
+    "sequence": 10010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e5cea2be1dd308e6"
+  },
+  "findings": []
+}

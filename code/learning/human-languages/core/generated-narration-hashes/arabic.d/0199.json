@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:998adf4c45176e26",
+  "lessonIds": [
+    "AR-C199-hazza",
+    "AR-C199-adda",
+    "AR-C199-nafakha",
+    "AR-C199-hamasa",
+    "AR-C199-hasada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch199.txt",
+  "json": "arabic/narration/ch199.json",
+  "textHash": "fnv1a64:bd1e44542cad3484",
+  "jsonHash": "fnv1a64:2edef3b73cc72802",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:8f6af68817fbd6c8",
+  "lessonIds": [
+    "AR-C217-dhayl",
+    "AR-C217-janah",
+    "AR-C217-kamira",
+    "AR-C217-sammaa",
+    "AR-C217-battariyya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch217.txt",
+  "json": "arabic/narration/ch217.json",
+  "textHash": "fnv1a64:152b19ed9ee5b45b",
+  "jsonHash": "fnv1a64:a9986f5eaf60fe3f",
+  "findings": []
+}

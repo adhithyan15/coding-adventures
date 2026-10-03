@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:8ad91ceb65aeea8f",
+  "lessonIds": [
+    "AR-C206-rubbama",
+    "AR-C206-mushkila",
+    "AR-C206-hall",
+    "AR-C206-bahja",
+    "AR-C206-khawf"
+  ],
+  "tex": "arabic/book/chapters/ch206-perhaps-problem-solution-joy-fear.tex"
+}

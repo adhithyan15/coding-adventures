@@ -1,0 +1,19 @@
+{
+  "chapter": 197,
+  "title": "To discuss, To compare, To notice, To pay attention, To consider",
+  "label": "ch:ar-to-discuss-to-compare-to-notice-to-pay-attention-to-consider",
+  "canDo": "I can say to discuss, to compare, to notice, to pay attention and to consider.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C197-itabara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 197: I can say to discuss, to compare, to notice, to pay attention and to consider.",
+    "assesses": [
+      "AR-LEX-C197-ACT197-03",
+      "AR-LEX-C197-ACT197-04",
+      "AR-LEX-C197-ACT197-05"
+    ]
+  }
+}

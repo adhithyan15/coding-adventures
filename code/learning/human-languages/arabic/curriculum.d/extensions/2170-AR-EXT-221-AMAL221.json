@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-221-AMAL221",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a report, a meeting, a contract, an exam and homework.",
+  "prerequisites": []
+}

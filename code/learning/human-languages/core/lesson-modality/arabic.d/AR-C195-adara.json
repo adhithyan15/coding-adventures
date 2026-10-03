@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C195-adara",
+    "language": "arabic",
+    "chapter": 195,
+    "sequence": 10030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a8660b8a7c4e875"
+  },
+  "findings": []
+}

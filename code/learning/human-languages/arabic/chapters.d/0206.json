@@ -1,0 +1,19 @@
+{
+  "chapter": 206,
+  "title": "Perhaps, Problem, Solution, Joy, Fear",
+  "label": "ch:ar-perhaps-problem-solution-joy-fear",
+  "canDo": "I can say perhaps, a problem, a solution, joy and fear.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "AR-C206-khawf",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 206: I can say perhaps, a problem, a solution, joy and fear.",
+    "assesses": [
+      "AR-LEX-C206-SABAB206-03",
+      "AR-LEX-C206-SABAB206-04",
+      "AR-LEX-C206-SABAB206-05"
+    ]
+  }
+}

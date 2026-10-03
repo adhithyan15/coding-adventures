@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R222-second-pass-words-from-chapters-221-222",
+    "language": "arabic",
+    "chapter": 222,
+    "sequence": 12000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f7b4e93639cfe11"
+  },
+  "findings": []
+}

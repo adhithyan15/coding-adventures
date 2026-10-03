@@ -1,0 +1,11 @@
+{
+  "id": "AR-C221-ijtima",
+  "pathSegment": "AR-PATH-221-AMAL221",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-221-AMAL221",
+      "order": 1
+    }
+  ]
+}

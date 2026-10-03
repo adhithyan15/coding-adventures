@@ -1,0 +1,19 @@
+{
+  "chapter": 196,
+  "title": "To plant, To pick, To rain, To congratulate, To trust",
+  "label": "ch:ar-to-plant-to-pick-to-rain-to-congratulate-to-trust",
+  "canDo": "I can say to plant, to pick, to rain, to congratulate and to trust.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C196-wathiqa2",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 196: I can say to plant, to pick, to rain, to congratulate and to trust.",
+    "assesses": [
+      "AR-LEX-C196-ACT196-03",
+      "AR-LEX-C196-ACT196-04",
+      "AR-LEX-C196-ACT196-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C217-dhayl",
+    "language": "arabic",
+    "chapter": 217,
+    "sequence": 11500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16d3ab7cbe7b7d6f"
+  },
+  "findings": []
+}

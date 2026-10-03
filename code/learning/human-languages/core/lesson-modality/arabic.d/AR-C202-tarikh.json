@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C202-tarikh",
+    "language": "arabic",
+    "chapter": 202,
+    "sequence": 10590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3581c3f43d83d91d"
+  },
+  "findings": []
+}

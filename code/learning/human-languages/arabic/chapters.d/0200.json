@@ -1,0 +1,19 @@
+{
+  "chapter": 200,
+  "title": "Cold, Cough, Allergy, Wound, Health",
+  "label": "ch:ar-cold-cough-allergy-wound-health",
+  "canDo": "I can say a cold, a cough, an allergy, a wound and health.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "AR-R200-second-pass-words-from-chapters-196-200",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 200: I can say a cold, a cough, an allergy, a wound and health.",
+    "assesses": [
+      "AR-LEX-C200-SIHHA200-03",
+      "AR-LEX-C200-SIHHA200-04",
+      "AR-LEX-C200-SIHHA200-05"
+    ]
+  }
+}

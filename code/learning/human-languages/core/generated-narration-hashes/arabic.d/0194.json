@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:0e662ba3622a1bda",
+  "lessonIds": [
+    "AR-C194-ibtalaa",
+    "AR-C194-madagha",
+    "AR-C194-lamasa",
+    "AR-C194-shamma",
+    "AR-C194-amsaka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch194.txt",
+  "json": "arabic/narration/ch194.json",
+  "textHash": "fnv1a64:fef27d9af82a1c76",
+  "jsonHash": "fnv1a64:f7ef6fa71f120612",
+  "findings": []
+}

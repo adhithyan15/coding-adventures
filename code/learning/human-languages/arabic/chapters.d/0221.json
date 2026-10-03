@@ -1,0 +1,19 @@
+{
+  "chapter": 221,
+  "title": "Report, Meeting, Contract, Exam, Homework",
+  "label": "ch:ar-report-meeting-contract-exam-homework",
+  "canDo": "I can say a report, a meeting, a contract, an exam and homework.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C221-wajib",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 221: I can say a report, a meeting, a contract, an exam and homework.",
+    "assesses": [
+      "AR-LEX-C221-AMAL221-03",
+      "AR-LEX-C221-AMAL221-04",
+      "AR-LEX-C221-AMAL221-05"
+    ]
+  }
+}

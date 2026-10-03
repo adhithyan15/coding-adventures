@@ -1,0 +1,11 @@
+{
+  "id": "AR-C220-hisab",
+  "pathSegment": "AR-PATH-220-AMAL220",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-220-AMAL220",
+      "order": 3
+    }
+  ]
+}

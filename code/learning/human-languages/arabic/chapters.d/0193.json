@@ -1,0 +1,19 @@
+{
+  "chapter": 193,
+  "title": "To take off, To try, To measure, To bargain, To go shopping",
+  "label": "ch:ar-to-take-off-to-try-to-measure-to-bargain-to-go-shopping",
+  "canDo": "I can say to take off, to try, to measure, to bargain and to go shopping.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C193-tasawwaqa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 193: I can say to take off, to try, to measure, to bargain and to go shopping.",
+    "assesses": [
+      "AR-LEX-C193-ACT193-03",
+      "AR-LEX-C193-ACT193-04",
+      "AR-LEX-C193-ACT193-05"
+    ]
+  }
+}

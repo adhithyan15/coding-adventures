@@ -1,0 +1,19 @@
+{
+  "chapter": 194,
+  "title": "To swallow, To chew, To touch, To smell, To hold",
+  "label": "ch:ar-to-swallow-to-chew-to-touch-to-smell-to-hold",
+  "canDo": "I can say to swallow, to chew, to touch, to smell and to hold.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C194-amsaka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 194: I can say to swallow, to chew, to touch, to smell and to hold.",
+    "assesses": [
+      "AR-LEX-C194-ACT194-03",
+      "AR-LEX-C194-ACT194-04",
+      "AR-LEX-C194-ACT194-05"
+    ]
+  }
+}

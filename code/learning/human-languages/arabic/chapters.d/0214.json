@@ -1,0 +1,19 @@
+{
+  "chapter": 214,
+  "title": "Suit, Sandals, Fabric, Cotton, Wool",
+  "label": "ch:ar-suit-sandals-fabric-cotton-wool",
+  "canDo": "I can say a suit, sandals, fabric, cotton and wool.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C214-suf",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 214: I can say a suit, sandals, fabric, cotton and wool.",
+    "assesses": [
+      "AR-LEX-C214-SHAY214-03",
+      "AR-LEX-C214-SHAY214-04",
+      "AR-LEX-C214-SHAY214-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C209-masluq",
+  "pathSegment": "AR-PATH-209-SIFA209",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-209-SIFA209",
+      "order": 1
+    }
+  ]
+}
