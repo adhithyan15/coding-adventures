@@ -1,0 +1,19 @@
+{
+  "chapter": 289,
+  "title": "Boy, Aunt, Niece, Mother-in-law, Father-in-law",
+  "label": "ch:ml-boy-aunt-niece-mother-in-law-father-in-law",
+  "canDo": "I can say a boy, an aunt, a niece, a mother-in-law and a father-in-law.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C289-ammayiyappan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 289: I can say a boy, an aunt, a niece, a mother-in-law and a father-in-law.",
+    "assesses": [
+      "ML-LEX-C289-VASTU289-03",
+      "ML-LEX-C289-VASTU289-04",
+      "ML-LEX-C289-VASTU289-05"
+    ]
+  }
+}

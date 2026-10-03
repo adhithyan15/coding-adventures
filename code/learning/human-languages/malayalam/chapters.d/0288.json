@@ -1,0 +1,19 @@
+{
+  "chapter": 288,
+  "title": "Parcel, Cheque, Interest, Amount, Form",
+  "label": "ch:ml-parcel-cheque-interest-amount-form",
+  "canDo": "I can say a parcel, a cheque, interest, an amount and a form.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C288-phom",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 288: I can say a parcel, a cheque, interest, an amount and a form.",
+    "assesses": [
+      "ML-LEX-C288-VASTU288-03",
+      "ML-LEX-C288-VASTU288-04",
+      "ML-LEX-C288-VASTU288-05"
+    ]
+  }
+}

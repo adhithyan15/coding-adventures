@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:e2fb64a8b3f16bad",
+  "lessonIds": [
+    "ML-C293-tivi",
+    "ML-C293-sanketikavidya",
+    "ML-C293-masika",
+    "ML-C293-canal",
+    "ML-C293-paripati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch293.txt",
+  "json": "malayalam/narration/ch293.json",
+  "textHash": "fnv1a64:8d35dcbdcfd676a2",
+  "jsonHash": "fnv1a64:bc49ddadd7c2db58",
+  "findings": []
+}

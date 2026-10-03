@@ -1,0 +1,19 @@
+{
+  "chapter": 300,
+  "title": "Actor, Poet, Weight, Profit, Loss",
+  "label": "ch:ml-actor-poet-weight-profit-loss",
+  "canDo": "I can say an actor, a poet, weight, profit and a loss.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C300-nastam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 300: I can say an actor, a poet, weight, profit and a loss.",
+    "assesses": [
+      "ML-LEX-C300-JOLI300-03",
+      "ML-LEX-C300-JOLI300-04",
+      "ML-LEX-C300-JOLI300-05"
+    ]
+  }
+}

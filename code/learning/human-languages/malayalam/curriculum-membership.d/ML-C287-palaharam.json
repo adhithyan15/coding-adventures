@@ -1,0 +1,11 @@
+{
+  "id": "ML-C287-palaharam",
+  "pathSegment": "ML-PATH-287-VASTU287",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ML-EXT-287-VASTU287",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:daecf290eb2bd144",
+  "lessonIds": [
+    "ML-C286-soks",
+    "ML-C286-sus",
+    "ML-C286-belrru",
+    "ML-C286-pelsu",
+    "ML-C286-pokkarru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch286.txt",
+  "json": "malayalam/narration/ch286.json",
+  "textHash": "fnv1a64:4c457c2e3d00d2b6",
+  "jsonHash": "fnv1a64:33ad59a9df2fbf64",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C276-mikkappolum",
+    "language": "malayalam",
+    "chapter": 276,
+    "sequence": 12840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5695a120e46d3323"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 294,
+  "title": "Point of view, Matchbox, Padlock, Chain, Stick",
+  "label": "ch:ml-point-of-view-matchbox-padlock-chain-stick",
+  "canDo": "I can say a point of view, a matchbox, a padlock, a chain and a stick.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C294-vati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 294: I can say a point of view, a matchbox, a padlock, a chain and a stick.",
+    "assesses": [
+      "ML-LEX-C294-VASTU294-03",
+      "ML-LEX-C294-VASTU294-04",
+      "ML-LEX-C294-VASTU294-05"
+    ]
+  }
+}

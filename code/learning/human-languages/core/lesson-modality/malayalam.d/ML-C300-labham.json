@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C300-labham",
+    "language": "malayalam",
+    "chapter": 300,
+    "sequence": 14100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01273388ed81176b"
+  },
+  "findings": []
+}

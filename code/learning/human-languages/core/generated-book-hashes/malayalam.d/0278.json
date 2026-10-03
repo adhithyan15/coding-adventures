@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:576069e1194b429c",
+  "lessonIds": [
+    "ML-C278-valavu",
+    "ML-C278-signal",
+    "ML-C278-traphiku",
+    "ML-C278-kettitam",
+    "ML-C278-jilla"
+  ],
+  "tex": "malayalam/book/chapters/ch278-bend-traffic-signal-traffic-building-district.tex"
+}

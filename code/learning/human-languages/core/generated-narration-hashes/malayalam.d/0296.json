@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:00c9530ad6d6a564",
+  "lessonIds": [
+    "ML-C296-kattila",
+    "ML-C296-toluttu",
+    "ML-C296-balbu",
+    "ML-C296-paravatani",
+    "ML-C296-virippu",
+    "ML-R296-first-pass-words-from-chapters-291-293",
+    "ML-R296-second-pass-words-from-chapters-294-296"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch296.txt",
+  "json": "malayalam/narration/ch296.json",
+  "textHash": "fnv1a64:9cff7df5adc05e98",
+  "jsonHash": "fnv1a64:8cd17a6920901e93",
+  "findings": []
+}

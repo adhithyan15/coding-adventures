@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:712eda1674a8871f",
+  "lessonIds": [
+    "ML-C282-pradhanyam",
+    "ML-C282-sambhavam",
+    "ML-C282-suraksa",
+    "ML-C282-sramam",
+    "ML-C282-vijayam"
+  ],
+  "tex": "malayalam/book/chapters/ch282-importance-event-safety-attempt-success.tex"
+}

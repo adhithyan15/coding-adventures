@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C285-manniya",
+    "language": "malayalam",
+    "chapter": 285,
+    "sequence": 13320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe6fda4e40308d7b"
+  },
+  "findings": []
+}

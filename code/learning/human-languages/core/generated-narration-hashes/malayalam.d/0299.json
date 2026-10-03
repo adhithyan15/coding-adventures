@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:b3fff531fa557005",
+  "lessonIds": [
+    "ML-C299-phaktari",
+    "ML-C299-sarkkar",
+    "ML-C299-niyamam",
+    "ML-C299-koleju",
+    "ML-C299-sarvakalasala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch299.txt",
+  "json": "malayalam/narration/ch299.json",
+  "textHash": "fnv1a64:03bd0332bcce3e49",
+  "jsonHash": "fnv1a64:854f0695a788c41b",
+  "findings": []
+}

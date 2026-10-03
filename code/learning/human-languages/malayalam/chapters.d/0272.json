@@ -1,0 +1,19 @@
+{
+  "chapter": 272,
+  "title": "To feed, To graze, To weave, To drill, To leak",
+  "label": "ch:ml-to-feed-to-graze-to-weave-to-drill-to-leak",
+  "canDo": "I can say to feed, to graze, to weave, to drill and to leak.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-R272-second-pass-words-from-chapters-268-272",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 272: I can say to feed, to graze, to weave, to drill and to leak.",
+    "assesses": [
+      "ML-LEX-C272-KRIYA272-03",
+      "ML-LEX-C272-KRIYA272-04",
+      "ML-LEX-C272-KRIYA272-05"
+    ]
+  }
+}

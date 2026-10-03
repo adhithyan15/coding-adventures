@@ -1,0 +1,19 @@
+{
+  "chapter": 280,
+  "title": "Region, Land around a house, Slope, Sacred grove, Lane",
+  "label": "ch:ml-region-land-around-a-house-slope-sacred-grove-lane",
+  "canDo": "I can say a region, the land around a house, a slope, a sacred grove and a lane.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ML-C280-itavali",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 280: I can say a region, the land around a house, a slope, a sacred grove and a lane.",
+    "assesses": [
+      "ML-LEX-C280-STHALAM280-03",
+      "ML-LEX-C280-STHALAM280-04",
+      "ML-LEX-C280-STHALAM280-05"
+    ]
+  }
+}

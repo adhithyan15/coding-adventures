@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C275-raktasammarddam",
+    "language": "malayalam",
+    "chapter": 275,
+    "sequence": 12800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3ce16e74a4d56c3"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C280-kavu",
+  "pathSegment": "ML-PATH-280-STHALAM280",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-280-STHALAM280",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 283,
+  "title": "Urgent, Important, Safe, Temporary, Directly",
+  "label": "ch:ml-urgent-important-safe-temporary-directly",
+  "canDo": "I can say urgent, important, safe, temporary and directly.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ML-C283-nerittu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 283: I can say urgent, important, safe, temporary and directly.",
+    "assesses": [
+      "ML-LEX-C283-GUNAM283-03",
+      "ML-LEX-C283-GUNAM283-04",
+      "ML-LEX-C283-GUNAM283-05"
+    ]
+  }
+}

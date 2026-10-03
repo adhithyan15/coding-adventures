@@ -1,0 +1,19 @@
+{
+  "chapter": 299,
+  "title": "Factory, Government, Law, College, University",
+  "label": "ch:ml-factory-government-law-college-university",
+  "canDo": "I can say a factory, the government, a law, a college and a university.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C299-sarvakalasala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 299: I can say a factory, the government, a law, a college and a university.",
+    "assesses": [
+      "ML-LEX-C299-JOLI299-03",
+      "ML-LEX-C299-JOLI299-04",
+      "ML-LEX-C299-JOLI299-05"
+    ]
+  }
+}

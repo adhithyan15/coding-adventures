@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:153eebfb89703c34",
+  "lessonIds": [
+    "ML-C294-kalcappatu",
+    "ML-C294-tippetti",
+    "ML-C294-talu",
+    "ML-C294-cannala",
+    "ML-C294-vati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch294.txt",
+  "json": "malayalam/narration/ch294.json",
+  "textHash": "fnv1a64:521678f635bc4141",
+  "jsonHash": "fnv1a64:d58e724e5b55d2d4",
+  "findings": []
+}

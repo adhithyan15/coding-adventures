@@ -1,0 +1,19 @@
+{
+  "chapter": 279,
+  "title": "Sports ground, Museum, Gym, Valley, Desert",
+  "label": "ch:ml-sports-ground-museum-gym-valley-desert",
+  "canDo": "I can say a sports ground, a museum, a gym, a valley and a desert.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ML-C279-marubhumi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 279: I can say a sports ground, a museum, a gym, a valley and a desert.",
+    "assesses": [
+      "ML-LEX-C279-STHALAM279-03",
+      "ML-LEX-C279-STHALAM279-04",
+      "ML-LEX-C279-STHALAM279-05"
+    ]
+  }
+}

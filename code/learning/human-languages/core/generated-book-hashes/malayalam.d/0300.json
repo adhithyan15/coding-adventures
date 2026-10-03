@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:fb401eee6ce0a43c",
+  "lessonIds": [
+    "ML-C300-natan",
+    "ML-C300-kavi",
+    "ML-C300-tukkam",
+    "ML-C300-labham",
+    "ML-C300-nastam"
+  ],
+  "tex": "malayalam/book/chapters/ch300-actor-poet-weight-profit-loss.tex"
+}

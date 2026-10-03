@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C274-otivu",
+    "language": "malayalam",
+    "chapter": 274,
+    "sequence": 12730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cdf64b04ca3e151d"
+  },
+  "findings": []
+}

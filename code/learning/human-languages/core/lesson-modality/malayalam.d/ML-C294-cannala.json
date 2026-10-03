@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C294-cannala",
+    "language": "malayalam",
+    "chapter": 294,
+    "sequence": 13780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09c0cbf7af80afb7"
+  },
+  "findings": []
+}

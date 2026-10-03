@@ -1,0 +1,19 @@
+{
+  "chapter": 284,
+  "title": "Huge, Size, Interesting, Boring, Dangerous",
+  "label": "ch:ml-huge-size-interesting-boring-dangerous",
+  "canDo": "I can say huge, size, interesting, boring and dangerous.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ML-C284-apakatakaramaya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 284: I can say huge, size, interesting, boring and dangerous.",
+    "assesses": [
+      "ML-LEX-C284-GUNAM284-03",
+      "ML-LEX-C284-GUNAM284-04",
+      "ML-LEX-C284-GUNAM284-05"
+    ]
+  }
+}

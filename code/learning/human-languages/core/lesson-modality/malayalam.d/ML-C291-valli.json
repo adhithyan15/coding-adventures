@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C291-valli",
+    "language": "malayalam",
+    "chapter": 291,
+    "sequence": 13600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0194a680923dda67"
+  },
+  "findings": []
+}

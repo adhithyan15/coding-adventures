@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C290-kathakali",
+    "language": "malayalam",
+    "chapter": 290,
+    "sequence": 13540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fab39ba7c1de629c"
+  },
+  "findings": []
+}

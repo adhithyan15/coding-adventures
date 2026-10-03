@@ -1,0 +1,19 @@
+{
+  "chapter": 274,
+  "title": "Swelling, Sprain, Fracture, Burn, Diabetes",
+  "label": "ch:ml-swelling-sprain-fracture-burn-diabetes",
+  "canDo": "I can say a swelling, a sprain, a fracture, a burn and diabetes.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ML-C274-prameham",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 274: I can say a swelling, a sprain, a fracture, a burn and diabetes.",
+    "assesses": [
+      "ML-LEX-C274-AROGYAM274-03",
+      "ML-LEX-C274-AROGYAM274-04",
+      "ML-LEX-C274-AROGYAM274-05"
+    ]
+  }
+}

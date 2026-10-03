@@ -1,0 +1,11 @@
+{
+  "id": "ML-C300-labham",
+  "pathSegment": "ML-PATH-300-JOLI300",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-300-JOLI300",
+      "order": 3
+    }
+  ]
+}

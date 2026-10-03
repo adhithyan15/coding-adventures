@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:5b8b22dc85c13ffc",
+  "lessonIds": [
+    "ML-C301-karar",
+    "ML-C301-nikuti",
+    "ML-C301-pila",
+    "ML-C301-srraplar",
+    "ML-C301-skeyil",
+    "ML-R301-first-pass-words-from-chapters-297-298",
+    "ML-R301-second-pass-words-from-chapters-299-301"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch301.txt",
+  "json": "malayalam/narration/ch301.json",
+  "textHash": "fnv1a64:9f2f68a59db58482",
+  "jsonHash": "fnv1a64:abfc2f94132ebdd9",
+  "findings": []
+}

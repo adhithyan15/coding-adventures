@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-295-VASTU295",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a pressure cooker, a mixer-grinder, a grinding stone, a mortar and a pestle.",
+  "prerequisites": []
+}

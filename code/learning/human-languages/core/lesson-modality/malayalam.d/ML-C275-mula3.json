@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C275-mula3",
+    "language": "malayalam",
+    "chapter": 275,
+    "sequence": 12770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f4ebc69c7939626"
+  },
+  "findings": []
+}

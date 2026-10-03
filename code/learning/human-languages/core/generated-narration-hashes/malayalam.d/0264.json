@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:59b3f0a3ee4c6a5b",
+  "lessonIds": [
+    "ML-C264-orunnuka",
+    "ML-C264-tekkuka",
+    "ML-C264-tutaykkuka",
+    "ML-C264-aticcuvaruka",
+    "ML-C264-matakkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch264.txt",
+  "json": "malayalam/narration/ch264.json",
+  "textHash": "fnv1a64:d8caaaa6ed0f05a9",
+  "jsonHash": "fnv1a64:92378095503215d9",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 298,
+  "title": "Groceries, Packet, Salary, Wages, Worker",
+  "label": "ch:ml-groceries-packet-salary-wages-worker",
+  "canDo": "I can say groceries, a packet, a salary, wages and a worker.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C298-tolilali",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 298: I can say groceries, a packet, a salary, wages and a worker.",
+    "assesses": [
+      "ML-LEX-C298-JOLI298-03",
+      "ML-LEX-C298-JOLI298-04",
+      "ML-LEX-C298-JOLI298-05"
+    ]
+  }
+}

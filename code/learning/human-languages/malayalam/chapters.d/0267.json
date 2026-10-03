@@ -1,0 +1,19 @@
+{
+  "chapter": 267,
+  "title": "To practise, To pass, To fail, To hand over, To earn",
+  "label": "ch:ml-to-practise-to-pass-to-fail-to-hand-over-to-earn",
+  "canDo": "I can say to practise, to pass, to fail, to hand over and to earn.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C267-sampadikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 267: I can say to practise, to pass, to fail, to hand over and to earn.",
+    "assesses": [
+      "ML-LEX-C267-KRIYA267-03",
+      "ML-LEX-C267-KRIYA267-04",
+      "ML-LEX-C267-KRIYA267-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 266,
+  "title": "To touch, To bite, To chew, To swallow, To smell",
+  "label": "ch:ml-to-touch-to-bite-to-chew-to-swallow-to-smell",
+  "canDo": "I can say to touch, to bite, to chew, to swallow and to smell.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C266-manakkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 266: I can say to touch, to bite, to chew, to swallow and to smell.",
+    "assesses": [
+      "ML-LEX-C266-KRIYA266-03",
+      "ML-LEX-C266-KRIYA266-04",
+      "ML-LEX-C266-KRIYA266-05"
+    ]
+  }
+}

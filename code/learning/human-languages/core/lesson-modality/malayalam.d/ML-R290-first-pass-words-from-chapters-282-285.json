@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R290-first-pass-words-from-chapters-282-285",
+    "language": "malayalam",
+    "chapter": 290,
+    "sequence": 13580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2395960ff55517e6"
+  },
+  "findings": []
+}

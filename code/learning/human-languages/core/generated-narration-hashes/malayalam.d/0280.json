@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:538f8c42effa358f",
+  "lessonIds": [
+    "ML-C280-pradesam",
+    "ML-C280-parampu",
+    "ML-C280-carivu",
+    "ML-C280-kavu",
+    "ML-C280-itavali"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch280.txt",
+  "json": "malayalam/narration/ch280.json",
+  "textHash": "fnv1a64:3b3a07df2da16c9b",
+  "jsonHash": "fnv1a64:553269a1efdf308c",
+  "findings": []
+}

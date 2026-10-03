@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C271-paniyuka",
+    "language": "malayalam",
+    "chapter": 271,
+    "sequence": 12560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01fe6f47eb0827fc"
+  },
+  "findings": []
+}

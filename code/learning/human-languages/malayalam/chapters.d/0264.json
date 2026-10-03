@@ -1,0 +1,19 @@
+{
+  "chapter": 264,
+  "title": "To get ready, To brush, To wipe, To sweep, To fold",
+  "label": "ch:ml-to-get-ready-to-brush-to-wipe-to-sweep-to-fold",
+  "canDo": "I can say to get ready, to brush, to wipe, to sweep and to fold.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C264-matakkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 264: I can say to get ready, to brush, to wipe, to sweep and to fold.",
+    "assesses": [
+      "ML-LEX-C264-KRIYA264-03",
+      "ML-LEX-C264-KRIYA264-04",
+      "ML-LEX-C264-KRIYA264-05"
+    ]
+  }
+}

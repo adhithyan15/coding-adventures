@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:49a0acfaa35f8bbc",
+  "lessonIds": [
+    "ML-C288-palsal",
+    "ML-C288-cekku",
+    "ML-C288-palisa",
+    "ML-C288-tuka",
+    "ML-C288-phom"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch288.txt",
+  "json": "malayalam/narration/ch288.json",
+  "textHash": "fnv1a64:06e3836dbf4f33f8",
+  "jsonHash": "fnv1a64:45aedccda9ed7e35",
+  "findings": []
+}

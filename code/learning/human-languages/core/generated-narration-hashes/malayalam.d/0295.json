@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:d4f2b4ffa869f308",
+  "lessonIds": [
+    "ML-C295-kukkar",
+    "ML-C295-miksi",
+    "ML-C295-ammi",
+    "ML-C295-ural",
+    "ML-C295-ulakka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch295.txt",
+  "json": "malayalam/narration/ch295.json",
+  "textHash": "fnv1a64:d06e88ff5d8099b4",
+  "jsonHash": "fnv1a64:c0c649258e3b8f66",
+  "findings": []
+}

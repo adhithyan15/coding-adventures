@@ -1,0 +1,19 @@
+{
+  "chapter": 297,
+  "title": "Refined white flour, Flattened rice, Mushroom, Guava, Indian gooseberry",
+  "label": "ch:ml-refined-white-flour-flattened-rice-mushroom-guava-indian-gooseberry",
+  "canDo": "I can say refined white flour, flattened rice, a mushroom, a guava and an Indian gooseberry.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C297-nellikka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 297: I can say refined white flour, flattened rice, a mushroom, a guava and an Indian gooseberry.",
+    "assesses": [
+      "ML-LEX-C297-VASTU297-03",
+      "ML-LEX-C297-VASTU297-04",
+      "ML-LEX-C297-VASTU297-05"
+    ]
+  }
+}

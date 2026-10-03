@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:9151549824782d9c",
+  "lessonIds": [
+    "ML-C283-atiyantara",
+    "ML-C283-pradhanappetta",
+    "ML-C283-suraksitamaya",
+    "ML-C283-talkkalika",
+    "ML-C283-nerittu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch283.txt",
+  "json": "malayalam/narration/ch283.json",
+  "textHash": "fnv1a64:d2b269cce3ff44d8",
+  "jsonHash": "fnv1a64:77f7bc1bb4583ed5",
+  "findings": []
+}

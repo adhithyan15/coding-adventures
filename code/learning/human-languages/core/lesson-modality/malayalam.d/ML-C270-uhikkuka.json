@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C270-uhikkuka",
+    "language": "malayalam",
+    "chapter": 270,
+    "sequence": 12500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:047261168a31b279"
+  },
+  "findings": []
+}

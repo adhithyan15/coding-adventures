@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C281-udaharanattinu",
+    "language": "malayalam",
+    "chapter": 281,
+    "sequence": 13080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:efcfe8b36a694d00"
+  },
+  "findings": []
+}

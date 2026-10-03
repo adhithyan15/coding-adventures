@@ -1,0 +1,19 @@
+{
+  "chapter": 282,
+  "title": "Importance, Event, Safety, Attempt, Success",
+  "label": "ch:ml-importance-event-safety-attempt-success",
+  "canDo": "I can say importance, an event, safety, an attempt and success.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "ML-C282-vijayam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 282: I can say importance, an event, safety, an attempt and success.",
+    "assesses": [
+      "ML-LEX-C282-KARANAM282-03",
+      "ML-LEX-C282-KARANAM282-04",
+      "ML-LEX-C282-KARANAM282-05"
+    ]
+  }
+}

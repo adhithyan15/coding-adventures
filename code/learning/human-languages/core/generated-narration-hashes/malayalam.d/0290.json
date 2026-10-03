@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:cfc65e006875ed4a",
+  "lessonIds": [
+    "ML-C290-onakkoti",
+    "ML-C290-kathakali",
+    "ML-C290-pulikali",
+    "ML-C290-centa",
+    "ML-C290-puram",
+    "ML-R290-first-pass-words-from-chapters-282-285",
+    "ML-R290-second-pass-words-from-chapters-286-290"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch290.txt",
+  "json": "malayalam/narration/ch290.json",
+  "textHash": "fnv1a64:9c026eff5779488a",
+  "jsonHash": "fnv1a64:1db82b73e3259173",
+  "findings": []
+}

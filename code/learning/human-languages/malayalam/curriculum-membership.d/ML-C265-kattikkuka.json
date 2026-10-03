@@ -1,0 +1,11 @@
+{
+  "id": "ML-C265-kattikkuka",
+  "pathSegment": "ML-PATH-265-KRIYA265",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-265-KRIYA265",
+      "order": 1
+    }
+  ]
+}

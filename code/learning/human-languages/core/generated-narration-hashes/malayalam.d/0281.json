@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:f665dab80c0ebf9b",
+  "lessonIds": [
+    "ML-C281-matramalla",
+    "ML-C281-kutate",
+    "ML-C281-udaharanattinu",
+    "ML-C281-atayatu",
+    "ML-C281-pratyekiccu",
+    "ML-R281-first-pass-words-from-chapters-273-276",
+    "ML-R281-second-pass-words-from-chapters-277-281"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch281.txt",
+  "json": "malayalam/narration/ch281.json",
+  "textHash": "fnv1a64:a3f56d9f43426244",
+  "jsonHash": "fnv1a64:57d7d18248bdc364",
+  "findings": []
+}

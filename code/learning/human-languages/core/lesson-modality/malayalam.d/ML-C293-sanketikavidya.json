@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C293-sanketikavidya",
+    "language": "malayalam",
+    "chapter": 293,
+    "sequence": 13710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4bb1ebd396bc7021"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:2f4928430b57d08b",
+  "lessonIds": [
+    "ML-C275-borati",
+    "ML-C275-mula3",
+    "ML-C275-catavu",
+    "ML-C275-mannappittam",
+    "ML-C275-raktasammarddam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch275.txt",
+  "json": "malayalam/narration/ch275.json",
+  "textHash": "fnv1a64:23c126b9737e1bfd",
+  "jsonHash": "fnv1a64:c8cb3036afec1379",
+  "findings": []
+}

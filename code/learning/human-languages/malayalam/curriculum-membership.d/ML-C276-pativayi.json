@@ -1,0 +1,11 @@
+{
+  "id": "ML-C276-pativayi",
+  "pathSegment": "ML-PATH-276-SAMAYAM276",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-276-SAMAYAM276",
+      "order": 1
+    }
+  ]
+}

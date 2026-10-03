@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:1592560903140d5b",
+  "lessonIds": [
+    "ML-C271-katam-vannuka",
+    "ML-C271-katam-kotukkuka",
+    "ML-C271-paniyuka",
+    "ML-C271-ketakuka",
+    "ML-C271-tutaruka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch271.txt",
+  "json": "malayalam/narration/ch271.json",
+  "textHash": "fnv1a64:400dab77da35b742",
+  "jsonHash": "fnv1a64:8ad673bcfefd38ed",
+  "findings": []
+}

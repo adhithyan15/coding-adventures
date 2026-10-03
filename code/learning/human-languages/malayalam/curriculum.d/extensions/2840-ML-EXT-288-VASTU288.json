@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-288-VASTU288",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a parcel, a cheque, interest, an amount and a form.",
+  "prerequisites": []
+}

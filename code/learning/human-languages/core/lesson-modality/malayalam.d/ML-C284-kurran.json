@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C284-kurran",
+    "language": "malayalam",
+    "chapter": 284,
+    "sequence": 13230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5eab013eb18e7ce2"
+  },
+  "findings": []
+}

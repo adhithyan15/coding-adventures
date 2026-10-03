@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:b6a680eaa160ea81",
+  "lessonIds": [
+    "ML-C276-eppolum",
+    "ML-C276-pativayi",
+    "ML-C276-palappolum",
+    "ML-C276-mikkappolum",
+    "ML-C276-apurvamayi"
+  ],
+  "tex": "malayalam/book/chapters/ch276-always-regularly-often-usually-rarely.tex"
+}

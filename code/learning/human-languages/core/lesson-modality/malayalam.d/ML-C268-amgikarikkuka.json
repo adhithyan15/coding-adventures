@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C268-amgikarikkuka",
+    "language": "malayalam",
+    "chapter": 268,
+    "sequence": 12400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78d6aa0623056218"
+  },
+  "findings": []
+}

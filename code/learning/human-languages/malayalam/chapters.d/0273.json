@@ -1,0 +1,19 @@
+{
+  "chapter": 273,
+  "title": "To pick up, To sow, To peck, To spin, To pinch",
+  "label": "ch:ml-to-pick-up-to-sow-to-peck-to-spin-to-pinch",
+  "canDo": "I can say to pick up, to sow, to peck, to spin and to pinch.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C273-nulluka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 273: I can say to pick up, to sow, to peck, to spin and to pinch.",
+    "assesses": [
+      "ML-LEX-C273-KRIYA273-03",
+      "ML-LEX-C273-KRIYA273-04",
+      "ML-LEX-C273-KRIYA273-05"
+    ]
+  }
+}

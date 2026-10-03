@@ -1,0 +1,11 @@
+{
+  "id": "ML-C292-sopha",
+  "pathSegment": "ML-PATH-292-VASTU292",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-292-VASTU292",
+      "order": 4
+    }
+  ]
+}

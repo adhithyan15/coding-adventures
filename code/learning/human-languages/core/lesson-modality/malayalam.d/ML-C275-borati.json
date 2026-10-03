@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C275-borati",
+    "language": "malayalam",
+    "chapter": 275,
+    "sequence": 12760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9af9248888bf0f08"
+  },
+  "findings": []
+}
