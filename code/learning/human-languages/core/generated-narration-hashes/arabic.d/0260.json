@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:e7e047f935f370e4",
+  "lessonIds": [
+    "AR-C260-rashsha",
+    "AR-C260-taraqa",
+    "AR-C260-alsaqa",
+    "AR-C260-harraka",
+    "AR-C260-laffa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch260.txt",
+  "json": "arabic/narration/ch260.json",
+  "textHash": "fnv1a64:4e46caa33203ecd8",
+  "jsonHash": "fnv1a64:bc12d09ed8770b7a",
+  "findings": []
+}

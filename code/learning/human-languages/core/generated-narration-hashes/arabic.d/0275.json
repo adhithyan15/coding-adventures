@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:ec041b496e0944fd",
+  "lessonIds": [
+    "AR-C275-arus",
+    "AR-C275-shakhs",
+    "AR-C275-nas",
+    "AR-C275-hafla",
+    "AR-C275-zifaf"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch275.txt",
+  "json": "arabic/narration/ch275.json",
+  "textHash": "fnv1a64:17ca8a3dfe8d87aa",
+  "jsonHash": "fnv1a64:8cf384620c23a469",
+  "findings": []
+}

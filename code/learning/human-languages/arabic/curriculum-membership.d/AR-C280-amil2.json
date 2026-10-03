@@ -1,0 +1,11 @@
+{
+  "id": "AR-C280-amil2",
+  "pathSegment": "AR-PATH-280-AMAL280",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "AR-EXT-280-AMAL280",
+      "order": 0
+    }
+  ]
+}

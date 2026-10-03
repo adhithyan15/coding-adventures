@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C282-miqlama",
+    "language": "arabic",
+    "chapter": 282,
+    "sequence": 16340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a3507aaadfd6e50f"
+  },
+  "findings": []
+}

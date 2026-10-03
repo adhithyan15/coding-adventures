@@ -1,0 +1,11 @@
+{
+  "id": "AR-C279-sharit",
+  "pathSegment": "AR-PATH-279-SHAY279",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-279-SHAY279",
+      "order": 3
+    }
+  ]
+}

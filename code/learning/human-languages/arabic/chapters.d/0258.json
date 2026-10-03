@@ -1,0 +1,19 @@
+{
+  "chapter": 258,
+  "title": "To respect, To forgive, To lie, To take part, To disagree",
+  "label": "ch:ar-to-respect-to-forgive-to-lie-to-take-part-to-disagree",
+  "canDo": "I can say to respect, to forgive, to lie, to take part and to disagree.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C258-ikhtalafa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 258: I can say to respect, to forgive, to lie, to take part and to disagree.",
+    "assesses": [
+      "AR-LEX-C258-ACT258-03",
+      "AR-LEX-C258-ACT258-04",
+      "AR-LEX-C258-ACT258-05"
+    ]
+  }
+}

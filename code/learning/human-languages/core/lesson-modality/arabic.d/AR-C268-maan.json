@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C268-maan",
+    "language": "arabic",
+    "chapter": 268,
+    "sequence": 15280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:33a36a02c22fa061"
+  },
+  "findings": []
+}

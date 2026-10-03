@@ -1,0 +1,11 @@
+{
+  "id": "AR-C277-riyada",
+  "pathSegment": "AR-PATH-277-SHAY277",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-277-SHAY277",
+      "order": 4
+    }
+  ]
+}

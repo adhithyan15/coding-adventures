@@ -1,0 +1,11 @@
+{
+  "id": "AR-C282-jumla",
+  "pathSegment": "AR-PATH-282-AMAL282",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-282-AMAL282",
+      "order": 3
+    }
+  ]
+}

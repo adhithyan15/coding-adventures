@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:8abd2fd13928a96b",
+  "lessonIds": [
+    "AR-C274-tabia2",
+    "AR-C274-hibr",
+    "AR-C274-sabbura",
+    "AR-C274-qamus",
+    "AR-C274-malaff"
+  ],
+  "tex": "arabic/book/chapters/ch274-printer-ink-blackboard-dictionary-file.tex"
+}

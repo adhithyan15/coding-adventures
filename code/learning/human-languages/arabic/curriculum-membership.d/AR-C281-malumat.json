@@ -1,0 +1,11 @@
+{
+  "id": "AR-C281-malumat",
+  "pathSegment": "AR-PATH-281-AMAL281",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-281-AMAL281",
+      "order": 2
+    }
+  ]
+}

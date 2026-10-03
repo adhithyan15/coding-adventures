@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R277-first-pass-words-from-chapters-272-274",
+    "language": "arabic",
+    "chapter": 277,
+    "sequence": 15970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3982d5493266a322"
+  },
+  "findings": []
+}

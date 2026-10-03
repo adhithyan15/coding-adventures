@@ -1,0 +1,11 @@
+{
+  "id": "AR-C282-miqlama",
+  "pathSegment": "AR-PATH-282-AMAL282",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-282-AMAL282",
+      "order": 1
+    }
+  ]
+}

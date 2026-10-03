@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:55b7f8c39efeed76",
+  "lessonIds": [
+    "AR-C282-hasiba",
+    "AR-C282-miqlama",
+    "AR-C282-safha",
+    "AR-C282-jumla",
+    "AR-C282-hallaq",
+    "AR-R282-first-pass-words-from-chapters-278-279",
+    "AR-R282-second-pass-words-from-chapters-280-282"
+  ],
+  "tex": "arabic/book/chapters/ch282-calculator-pencil-case-page-sentence-barber.tex"
+}

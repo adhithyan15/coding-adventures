@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C254-shawa",
+    "language": "arabic",
+    "chapter": 254,
+    "sequence": 14400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d16d03e0e7e6f499"
+  },
+  "findings": []
+}

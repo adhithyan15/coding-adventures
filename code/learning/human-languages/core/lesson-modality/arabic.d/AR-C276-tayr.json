@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C276-tayr",
+    "language": "arabic",
+    "chapter": 276,
+    "sequence": 15880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe740fc2d491bd79"
+  },
+  "findings": []
+}

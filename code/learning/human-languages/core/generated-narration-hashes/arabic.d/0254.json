@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:75ec4f94b2cd3308",
+  "lessonIds": [
+    "AR-C254-qala",
+    "AR-C254-shawa",
+    "AR-C254-ghala",
+    "AR-C254-khalata",
+    "AR-C254-qashshara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch254.txt",
+  "json": "arabic/narration/ch254.json",
+  "textHash": "fnv1a64:23121389e751a544",
+  "jsonHash": "fnv1a64:471ccc539e2bf179",
+  "findings": []
+}

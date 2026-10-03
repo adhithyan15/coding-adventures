@@ -1,0 +1,11 @@
+{
+  "id": "AR-C262-harara",
+  "pathSegment": "AR-PATH-262-SIHHA262",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-262-SIHHA262",
+      "order": 1
+    }
+  ]
+}

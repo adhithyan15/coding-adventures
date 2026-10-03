@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:2ff28a2af40511ed",
+  "lessonIds": [
+    "AR-C270-mumill",
+    "AR-C270-mahjuz",
+    "AR-C270-mutah",
+    "AR-C270-duwali",
+    "AR-C270-mahalli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch270.txt",
+  "json": "arabic/narration/ch270.json",
+  "textHash": "fnv1a64:cd5b1d3f2adab515",
+  "jsonHash": "fnv1a64:2df8e745e076d234",
+  "findings": []
+}

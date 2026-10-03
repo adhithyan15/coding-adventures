@@ -1,0 +1,19 @@
+{
+  "chapter": 259,
+  "title": "To publish, To broadcast, To follow, To jump, To press",
+  "label": "ch:ar-to-publish-to-broadcast-to-follow-to-jump-to-press",
+  "canDo": "I can say to publish, to broadcast, to follow, to jump and to press.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C259-daghata",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 259: I can say to publish, to broadcast, to follow, to jump and to press.",
+    "assesses": [
+      "AR-LEX-C259-ACT259-03",
+      "AR-LEX-C259-ACT259-04",
+      "AR-LEX-C259-ACT259-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C269-khutwa",
+  "pathSegment": "AR-PATH-269-SABAB269",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-269-SABAB269",
+      "order": 1
+    }
+  ]
+}

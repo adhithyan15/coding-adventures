@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:415c4214e2feaa32",
+  "lessonIds": [
+    "AR-C262-isaf",
+    "AR-C262-harara",
+    "AR-C262-dimada",
+    "AR-C262-hadith2",
+    "AR-C262-tawattur",
+    "AR-R262-first-pass-words-from-chapters-254-257",
+    "AR-R262-second-pass-words-from-chapters-258-262"
+  ],
+  "tex": "arabic/book/chapters/ch262-ambulance-temperature-bandage-accident-stress.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C272-muthir",
+    "language": "arabic",
+    "chapter": 272,
+    "sequence": 15690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7289c843df6fd15a"
+  },
+  "findings": []
+}

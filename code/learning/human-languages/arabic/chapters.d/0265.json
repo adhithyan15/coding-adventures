@@ -1,0 +1,19 @@
+{
+  "chapter": 265,
+  "title": "Theatre, Cinema, Club, Farm, Countryside",
+  "label": "ch:ar-theatre-cinema-club-farm-countryside",
+  "canDo": "I can say a theatre, a cinema, a club, a farm and the countryside.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "AR-C265-rif",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 265: I can say a theatre, a cinema, a club, a farm and the countryside.",
+    "assesses": [
+      "AR-LEX-C265-MAKAN265-03",
+      "AR-LEX-C265-MAKAN265-04",
+      "AR-LEX-C265-MAKAN265-05"
+    ]
+  }
+}

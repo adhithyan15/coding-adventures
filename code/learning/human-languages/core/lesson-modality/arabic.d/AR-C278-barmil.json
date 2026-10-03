@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C278-barmil",
+    "language": "arabic",
+    "chapter": 278,
+    "sequence": 16170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:13fdfc78eea7a990"
+  },
+  "findings": []
+}

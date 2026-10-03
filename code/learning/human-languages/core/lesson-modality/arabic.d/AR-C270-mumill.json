@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C270-mumill",
+    "language": "arabic",
+    "chapter": 270,
+    "sequence": 15380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f666a05a8be3bd0f"
+  },
+  "findings": []
+}

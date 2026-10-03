@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C272-muaqqad",
+    "language": "arabic",
+    "chapter": 272,
+    "sequence": 15700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:988151b506605ae9"
+  },
+  "findings": []
+}

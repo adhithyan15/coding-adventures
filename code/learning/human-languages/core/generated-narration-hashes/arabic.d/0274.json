@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:655e5570dc6cbba4",
+  "lessonIds": [
+    "AR-C274-tabia2",
+    "AR-C274-hibr",
+    "AR-C274-sabbura",
+    "AR-C274-qamus",
+    "AR-C274-malaff"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch274.txt",
+  "json": "arabic/narration/ch274.json",
+  "textHash": "fnv1a64:decf3377d43f3097",
+  "jsonHash": "fnv1a64:f1d3b5d7dc3fca33",
+  "findings": []
+}

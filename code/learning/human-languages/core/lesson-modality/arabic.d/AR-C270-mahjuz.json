@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C270-mahjuz",
+    "language": "arabic",
+    "chapter": 270,
+    "sequence": 15390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:808a977564934829"
+  },
+  "findings": []
+}

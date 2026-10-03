@@ -1,0 +1,11 @@
+{
+  "id": "AR-C280-tayyar",
+  "pathSegment": "AR-PATH-280-AMAL280",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-280-AMAL280",
+      "order": 3
+    }
+  ]
+}

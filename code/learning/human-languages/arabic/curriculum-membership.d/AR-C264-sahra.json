@@ -1,0 +1,11 @@
+{
+  "id": "AR-C264-sahra",
+  "pathSegment": "AR-PATH-264-WAQT264",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-264-WAQT264",
+      "order": 2
+    }
+  ]
+}

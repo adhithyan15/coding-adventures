@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:23346335f3f09908",
+  "lessonIds": [
+    "AR-C272-mudhish",
+    "AR-C272-mutaakkid",
+    "AR-C272-muthir",
+    "AR-C272-muaqqad",
+    "AR-C272-maqul"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch272.txt",
+  "json": "arabic/narration/ch272.json",
+  "textHash": "fnv1a64:daa1d8a70ae302cb",
+  "jsonHash": "fnv1a64:f94e930e8d5262d3",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C257-rafada",
+    "language": "arabic",
+    "chapter": 257,
+    "sequence": 14540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9531c3074206fc4"
+  },
+  "findings": []
+}

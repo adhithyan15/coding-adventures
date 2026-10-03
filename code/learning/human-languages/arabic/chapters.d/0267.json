@@ -1,0 +1,19 @@
+{
+  "chapter": 267,
+  "title": "Tradition, Culture, Religion, Prayer, Relationship",
+  "label": "ch:ar-tradition-culture-religion-prayer-relationship",
+  "canDo": "I can say a tradition, culture, religion, prayer and a relationship.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "AR-C267-alaqa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 267: I can say a tradition, culture, religion, prayer and a relationship.",
+    "assesses": [
+      "AR-LEX-C267-SABAB267-03",
+      "AR-LEX-C267-SABAB267-04",
+      "AR-LEX-C267-SABAB267-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:3cffa8845436379e",
+  "lessonIds": [
+    "AR-C270-mumill",
+    "AR-C270-mahjuz",
+    "AR-C270-mutah",
+    "AR-C270-duwali",
+    "AR-C270-mahalli"
+  ],
+  "tex": "arabic/book/chapters/ch270-boring-booked-available-international-local.tex"
+}

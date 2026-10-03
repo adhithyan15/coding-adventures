@@ -1,0 +1,19 @@
+{
+  "chapter": 273,
+  "title": "Chocolate, Sweets, Pasta, Flour, Spices",
+  "label": "ch:ar-chocolate-sweets-pasta-flour-spices",
+  "canDo": "I can say chocolate, sweets, pasta, flour and spices.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C273-tawabil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 273: I can say chocolate, sweets, pasta, flour and spices.",
+    "assesses": [
+      "AR-LEX-C273-SHAY273-03",
+      "AR-LEX-C273-SHAY273-04",
+      "AR-LEX-C273-SHAY273-05"
+    ]
+  }
+}

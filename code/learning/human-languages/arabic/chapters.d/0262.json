@@ -1,0 +1,19 @@
+{
+  "chapter": 262,
+  "title": "Ambulance, Temperature, Bandage, Accident, Stress",
+  "label": "ch:ar-ambulance-temperature-bandage-accident-stress",
+  "canDo": "I can say an ambulance, temperature, a bandage, an accident and stress.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "AR-R262-second-pass-words-from-chapters-258-262",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 262: I can say an ambulance, temperature, a bandage, an accident and stress.",
+    "assesses": [
+      "AR-LEX-C262-SIHHA262-03",
+      "AR-LEX-C262-SIHHA262-04",
+      "AR-LEX-C262-SIHHA262-05"
+    ]
+  }
+}

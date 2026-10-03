@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R271-second-pass-words-from-chapters-267-271",
+    "language": "arabic",
+    "chapter": 271,
+    "sequence": 15490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:246acc3045c445b9"
+  },
+  "findings": []
+}

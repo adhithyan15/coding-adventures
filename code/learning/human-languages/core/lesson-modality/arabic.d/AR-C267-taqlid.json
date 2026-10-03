@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C267-taqlid",
+    "language": "arabic",
+    "chapter": 267,
+    "sequence": 15230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca0448b0216104f3"
+  },
+  "findings": []
+}

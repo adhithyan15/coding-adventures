@@ -1,0 +1,11 @@
+{
+  "id": "AR-C254-qashshara",
+  "pathSegment": "AR-PATH-254-ACT254",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-254-ACT254",
+      "order": 4
+    }
+  ]
+}
