@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R280-second-pass-words-from-chapters-276-280",
+    "language": "kannada",
+    "chapter": 280,
+    "sequence": 13470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd3a48992e4c3fd9"
+  },
+  "findings": []
+}

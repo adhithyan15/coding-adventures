@@ -1,0 +1,19 @@
+{
+  "chapter": 285,
+  "title": "Three quarters, Next day, Childhood, New moon day, Interval",
+  "label": "ch:ka-three-quarters-next-day-childhood-new-moon-day-interval",
+  "canDo": "I can say three quarters, the next day, childhood, the new moon day and an interval.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "KA-C285-madhyantara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 285: I can say three quarters, the next day, childhood, the new moon day and an interval.",
+    "assesses": [
+      "KA-LEX-C285-KALA285-03",
+      "KA-LEX-C285-KALA285-04",
+      "KA-LEX-C285-KALA285-05"
+    ]
+  }
+}

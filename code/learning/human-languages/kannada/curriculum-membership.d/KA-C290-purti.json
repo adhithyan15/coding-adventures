@@ -1,0 +1,11 @@
+{
+  "id": "KA-C290-purti",
+  "pathSegment": "KA-PATH-290-GUNA290",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-290-GUNA290",
+      "order": 1
+    }
+  ]
+}

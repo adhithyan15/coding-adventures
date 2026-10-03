@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C305-kalavida",
+    "language": "kannada",
+    "chapter": 305,
+    "sequence": 14730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ccfece1157584442"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C283-murita",
+  "pathSegment": "KA-PATH-283-AROGYA283",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-283-AROGYA283",
+      "order": 2
+    }
+  ]
+}

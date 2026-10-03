@@ -1,0 +1,19 @@
+{
+  "chapter": 275,
+  "title": "To charge, To check, To translate, To apply, To compare",
+  "label": "ch:ka-to-charge-to-check-to-translate-to-apply-to-compare",
+  "canDo": "I can say to charge, to check, to translate, to apply and to compare.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C275-holisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 275: I can say to charge, to check, to translate, to apply and to compare.",
+    "assesses": [
+      "KA-LEX-C275-KRIYE275-03",
+      "KA-LEX-C275-KRIYE275-04",
+      "KA-LEX-C275-KRIYE275-05"
+    ]
+  }
+}

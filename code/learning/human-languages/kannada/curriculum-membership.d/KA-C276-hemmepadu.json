@@ -1,0 +1,11 @@
+{
+  "id": "KA-C276-hemmepadu",
+  "pathSegment": "KA-PATH-276-KRIYE276",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-276-KRIYE276",
+      "order": 4
+    }
+  ]
+}

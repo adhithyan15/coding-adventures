@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:cd9cd261d6eac5db",
+  "lessonIds": [
+    "KA-C283-nadi",
+    "KA-C283-seleta",
+    "KA-C283-murita",
+    "KA-C283-aparesan",
+    "KA-C283-garbhini"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch283.txt",
+  "json": "kannada/narration/ch283.json",
+  "textHash": "fnv1a64:45f50b8d9167fdb9",
+  "jsonHash": "fnv1a64:559109105c869d46",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C287-gode",
+    "language": "kannada",
+    "chapter": 287,
+    "sequence": 13820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:601d5743314c2c21"
+  },
+  "findings": []
+}

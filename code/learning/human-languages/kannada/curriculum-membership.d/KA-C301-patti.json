@@ -1,0 +1,11 @@
+{
+  "id": "KA-C301-patti",
+  "pathSegment": "KA-PATH-301-VASTU301",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-301-VASTU301",
+      "order": 3
+    }
+  ]
+}

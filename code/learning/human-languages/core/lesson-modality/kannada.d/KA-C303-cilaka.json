@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C303-cilaka",
+    "language": "kannada",
+    "chapter": 303,
+    "sequence": 14640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ecc1e1a6c83cd95"
+  },
+  "findings": []
+}

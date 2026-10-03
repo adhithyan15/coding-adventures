@@ -1,0 +1,11 @@
+{
+  "id": "KA-C295-anceciti",
+  "pathSegment": "KA-PATH-295-VASTU295",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-295-VASTU295",
+      "order": 3
+    }
+  ]
+}

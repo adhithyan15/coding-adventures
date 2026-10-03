@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:639c197784a08713",
+  "lessonIds": [
+    "KA-C286-kattada",
+    "KA-C286-mahadi",
+    "KA-C286-pravesa",
+    "KA-C286-vedike",
+    "KA-C286-videsa"
+  ],
+  "tex": "kannada/book/chapters/ch286-building-floor-entrance-platform-abroad.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C296-metro",
+  "pathSegment": "KA-PATH-296-VASTU296",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-296-VASTU296",
+      "order": 1
+    }
+  ]
+}

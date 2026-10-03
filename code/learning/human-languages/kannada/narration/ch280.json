@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 280,
+  "title": "To whisper, To clap, To shake hands, To deliver, To overtake",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:649a1beca9962cde",
+  "lessons": [
+    {
+      "id": "KA-C280-pisuguttu",
+      "sequence": 13410,
+      "title": "ಪಿಸುಗುಟ್ಟು (pisuguṭṭu) — to whisper",
+      "headword": "ಪಿಸುಗುಟ್ಟು",
+      "romanization": "pisuguṭṭu",
+      "gloss": "to whisper",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b822acba2d82a7d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to solve, then the Kannada for to dig."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪಿಸುಗುಟ್ಟು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪಿಸುಗುಟ್ಟು — pisuguṭṭu — \"to whisper\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pisuguṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pisuguṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pisuguṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pisuguṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say pisuguṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *pisuguṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to solve, then the Kannada for to dig, then say pisuguṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to solve, then the Kannada for to dig, then say *pisuguṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪಿಸುಗುಟ್ಟು (pisuguṭṭu) mean? (\"To whisper\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C280-cappale-tattu",
+      "sequence": 13420,
+      "title": "ಚಪ್ಪಾಳೆ ತಟ್ಟು (cappāḷe taṭṭu) — to clap",
+      "headword": "ಚಪ್ಪಾಳೆ ತಟ್ಟು",
+      "romanization": "cappāḷe taṭṭu",
+      "gloss": "to clap",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b222de45e232a6e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to dig, then the Kannada for to whisper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಚಪ್ಪಾಳೆ ತಟ್ಟು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಚಪ್ಪಾಳೆ ತಟ್ಟು — cappāḷe taṭṭu — \"to clap\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cappāḷe taṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cappāḷe taṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cappāḷe taṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cappāḷe taṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say cappāḷe taṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *cappāḷe taṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to dig, then the Kannada for to whisper, then say cappāḷe taṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to dig, then the Kannada for to whisper, then say *cappāḷe taṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಚಪ್ಪಾಳೆ ತಟ್ಟು (cappāḷe taṭṭu) mean? (\"To clap\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C280-kai-kuluku",
+      "sequence": 13430,
+      "title": "ಕೈ ಕುಲುಕು (kai kuluku) — to shake hands",
+      "headword": "ಕೈ ಕುಲುಕು",
+      "romanization": "kai kuluku",
+      "gloss": "to shake hands",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:476ef2a70faf0b52",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to whisper, then the Kannada for to clap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕೈ ಕುಲುಕು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೈ ಕುಲುಕು — kai kuluku — \"to shake hands\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kai kuluku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kai kuluku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kai kuluku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kai kuluku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kai kuluku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kai kuluku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to whisper, then the Kannada for to clap, then say kai kuluku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to whisper, then the Kannada for to clap, then say *kai kuluku* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕೈ ಕುಲುಕು (kai kuluku) mean? (\"To shake hands\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C280-talupisu",
+      "sequence": 13440,
+      "title": "ತಲುಪಿಸು (talupisu) — to deliver",
+      "headword": "ತಲುಪಿಸು",
+      "romanization": "talupisu",
+      "gloss": "to deliver",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d6e4b72ee706fad9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to clap, then the Kannada for to shake hands."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತಲುಪಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಲುಪಿಸು — talupisu — \"to deliver\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talupisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talupisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talupisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talupisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say talupisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *talupisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to clap, then the Kannada for to shake hands, then say talupisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to clap, then the Kannada for to shake hands, then say *talupisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತಲುಪಿಸು (talupisu) mean? (\"To deliver\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C280-hindikku",
+      "sequence": 13450,
+      "title": "ಹಿಂದಿಕ್ಕು (hindikku) — to overtake",
+      "headword": "ಹಿಂದಿಕ್ಕು",
+      "romanization": "hindikku",
+      "gloss": "to overtake",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:70f878601045891a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to shake hands, then the Kannada for to deliver."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹಿಂದಿಕ್ಕು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಿಂದಿಕ್ಕು — hindikku — \"to overtake\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hindikku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hindikku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hindikku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hindikku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say hindikku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *hindikku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to shake hands, then the Kannada for to deliver, then say hindikku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to shake hands, then the Kannada for to deliver, then say *hindikku* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹಿಂದಿಕ್ಕು (hindikku) mean? (\"To overtake\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R280-first-pass-words-from-chapters-272-275",
+      "sequence": 13460,
+      "title": "Words from chapters 272-275 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 272-275",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b47c18f8b546be4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to deliver and to overtake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to spill, to pour, to mix, to stir, to roast",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to spill, to pour, to mix, to stir, to roast]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to fly, to wander around, to cross, to drive, to slip",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to fly, to wander around, to cross, to drive, to slip]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to dance, to press, to deposit, to withdraw, to sign",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to dance, to press, to deposit, to withdraw, to sign]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to charge, to check, to translate, to apply, to compare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to charge, to check, to translate, to apply, to compare]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To spill? (ಚೆಲ್ಲು, cellu.) To pour? (ಸುರಿ, suri.) To mix? (ಬೆರೆಸು, beresu.) To stir? (ಕಲಕು, kalaku.) To roast? (ಹುರಿ, huri.) To fly? (ಹಾರು, hāru.) To wander around? (ಸುತ್ತಾಡು, suttāḍu.) To cross? (ದಾಟು, dāṭu.) To drive? (ಓಡಿಸು, ōḍisu.) To slip? (ಜಾರು, jāru.) To dance? (ಕುಣಿ, kuṇi.) To press? (ಒತ್ತು, ottu.) To deposit? (ಜಮಾ ಮಾಡು, jamā māḍu.) To withdraw? (ಹಿಂಪಡೆ, himpaḍe.) To sign? (ಸಹಿ ಮಾಡು, sahi māḍu.) To charge? (ಚಾರ್ಜ್ ಮಾಡು, cārj māḍu.) To check? (ಪರಿಶೀಲಿಸು, pariśīlisu.) To translate? (ಅನುವಾದಿಸು, anuvādisu.) To apply? (ಅರ್ಜಿ ಹಾಕು, arji hāku.) To compare? (ಹೋಲಿಸು, hōlisu.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R280-second-pass-words-from-chapters-276-280",
+      "sequence": 13470,
+      "title": "Words from chapters 276-280 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 276-280",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd3a48992e4c3fd9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to scold and to tease."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to scold, to tease, to quarrel, to console, to be proud",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to scold, to tease, to quarrel, to console, to be proud]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to guess, to seem, to practise, to paint, to download",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to guess, to seem, to practise, to paint, to download]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to lend, to give back, to come back, to prevent, to prepare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to lend, to give back, to come back, to prevent, to prepare]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to prick, to spit, to yawn, to solve, to dig",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to prick, to spit, to yawn, to solve, to dig]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to whisper, to clap, to shake hands, to deliver, to overtake",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to whisper, to clap, to shake hands, to deliver, to overtake]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To scold? (ಬೈ, bai.) To tease? (ರೇಗಿಸು, rēgisu.) To quarrel? (ಜಗಳವಾಡು, jagaḷavāḍu.) To console? (ಸಮಾಧಾನ ಮಾಡು, samādhāna māḍu.) To be proud? (ಹೆಮ್ಮೆಪಡು, hemmepaḍu.) To guess? (ಊಹಿಸು, ūhisu.) To seem? (ಅನಿಸು, anisu.) To practise? (ಅಭ್ಯಾಸ ಮಾಡು, abhyāsa māḍu.) To paint? (ಬಣ್ಣ ಹಚ್ಚು, baṇṇa haccu.) To download? (ಡೌನ್ಲೋಡ್ ಮಾಡು, ḍaunlōḍ māḍu.) To lend? (ಸಾಲ ಕೊಡು, sāla koḍu.) To give back? (ಹಿಂತಿರುಗಿಸು, hintirugisu.) To come back? (ಹಿಂತಿರುಗು, hintirugu.) To prevent? (ತಡೆ, taḍe.) To prepare? (ತಯಾರಿಸು, tayārisu.) To prick? (ಚುಚ್ಚು, cuccu.) To spit? (ಉಗುಳು, uguḷu.) To yawn? (ಆಕಳಿಸು, ākaḷisu.) To solve? (ಬಗೆಹರಿಸು, bageharisu.) To dig? (ಅಗೆ, age.) To whisper? (ಪಿಸುಗುಟ್ಟು, pisuguṭṭu.) To clap? (ಚಪ್ಪಾಳೆ ತಟ್ಟು, cappāḷe taṭṭu.) To shake hands? (ಕೈ ಕುಲುಕು, kai kuluku.) To deliver? (ತಲುಪಿಸು, talupisu.) To overtake? (ಹಿಂದಿಕ್ಕು, hindikku.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 287,
+  "title": "Riverbank, Drought, Earthquake, World, Wall",
+  "label": "ch:ka-riverbank-drought-earthquake-world-wall",
+  "canDo": "I can say a riverbank, a drought, an earthquake, the world and a wall.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "KA-C287-gode",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 287: I can say a riverbank, a drought, an earthquake, the world and a wall.",
+    "assesses": [
+      "KA-LEX-C287-STHALA287-03",
+      "KA-LEX-C287-STHALA287-04",
+      "KA-LEX-C287-STHALA287-05"
+    ]
+  }
+}

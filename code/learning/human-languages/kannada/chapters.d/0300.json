@@ -1,0 +1,19 @@
+{
+  "chapter": 300,
+  "title": "Photo, Camera, Programme, TV serial, Novel",
+  "label": "ch:ka-photo-camera-programme-tv-serial-novel",
+  "canDo": "I can say a photo, a camera, a programme, a TV serial and a novel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C300-kadambari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 300: I can say a photo, a camera, a programme, a TV serial and a novel.",
+    "assesses": [
+      "KA-LEX-C300-VASTU300-03",
+      "KA-LEX-C300-VASTU300-04",
+      "KA-LEX-C300-VASTU300-05"
+    ]
+  }
+}

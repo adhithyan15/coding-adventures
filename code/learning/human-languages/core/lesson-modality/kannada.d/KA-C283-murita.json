@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C283-murita",
+    "language": "kannada",
+    "chapter": 283,
+    "sequence": 13600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40ec7c20d5a31331"
+  },
+  "findings": []
+}

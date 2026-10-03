@@ -1,0 +1,11 @@
+{
+  "id": "KA-C299-manusya",
+  "pathSegment": "KA-PATH-299-VASTU299",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-299-VASTU299",
+      "order": 2
+    }
+  ]
+}

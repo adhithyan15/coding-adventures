@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:35f9f584418b5b3c",
+  "lessonIds": [
+    "KA-C293-sasive",
+    "KA-C293-kottambari",
+    "KA-C293-karibevu",
+    "KA-C293-tometo",
+    "KA-C293-kyaret"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch293.txt",
+  "json": "kannada/narration/ch293.json",
+  "textHash": "fnv1a64:9b801098b0f3bc8c",
+  "jsonHash": "fnv1a64:2a066b9033198258",
+  "findings": []
+}

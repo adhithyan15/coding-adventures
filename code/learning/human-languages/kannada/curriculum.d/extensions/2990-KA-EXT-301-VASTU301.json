@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-301-VASTU301",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say glass, plastic, a brick, a list and a griddle.",
+  "prerequisites": []
+}

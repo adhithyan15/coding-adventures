@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:f85e081c6c738e48",
+  "lessonIds": [
+    "KA-C301-gaju",
+    "KA-C301-plastik",
+    "KA-C301-ittige",
+    "KA-C301-patti",
+    "KA-C301-kavali"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch301.txt",
+  "json": "kannada/narration/ch301.json",
+  "textHash": "fnv1a64:4710d8289dece940",
+  "jsonHash": "fnv1a64:f7ef3d13676b13ee",
+  "findings": []
+}

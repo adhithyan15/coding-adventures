@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:f3f4e0d5853be264",
+  "lessonIds": [
+    "KA-C302-hittale",
+    "KA-C302-kattige",
+    "KA-C302-unne",
+    "KA-C302-siment",
+    "KA-C302-bidiru"
+  ],
+  "tex": "kannada/book/chapters/ch302-brass-firewood-wool-cement-bamboo.tex"
+}

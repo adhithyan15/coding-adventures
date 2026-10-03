@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:8c56172a400eaf4e",
+  "lessonIds": [
+    "KA-C298-ata",
+    "KA-C298-sinima",
+    "KA-C298-sangita",
+    "KA-C298-spardhe",
+    "KA-C298-bahumana",
+    "KA-R298-first-pass-words-from-chapters-290-293",
+    "KA-R298-second-pass-words-from-chapters-294-298"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch298.txt",
+  "json": "kannada/narration/ch298.json",
+  "textHash": "fnv1a64:059b4520a9d797b6",
+  "jsonHash": "fnv1a64:6f351e0bf9fcb7b3",
+  "findings": []
+}

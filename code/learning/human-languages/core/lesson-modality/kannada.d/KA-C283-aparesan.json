@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C283-aparesan",
+    "language": "kannada",
+    "chapter": 283,
+    "sequence": 13610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc3fc688abf8c12f"
+  },
+  "findings": []
+}

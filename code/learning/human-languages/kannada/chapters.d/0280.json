@@ -1,0 +1,19 @@
+{
+  "chapter": 280,
+  "title": "To whisper, To clap, To shake hands, To deliver, To overtake",
+  "label": "ch:ka-to-whisper-to-clap-to-shake-hands-to-deliver-to-overtake",
+  "canDo": "I can say to whisper, to clap, to shake hands, to deliver and to overtake.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-R280-second-pass-words-from-chapters-276-280",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 280: I can say to whisper, to clap, to shake hands, to deliver and to overtake.",
+    "assesses": [
+      "KA-LEX-C280-KRIYE280-03",
+      "KA-LEX-C280-KRIYE280-04",
+      "KA-LEX-C280-KRIYE280-05"
+    ]
+  }
+}

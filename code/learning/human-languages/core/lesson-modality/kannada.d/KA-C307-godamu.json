@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C307-godamu",
+    "language": "kannada",
+    "chapter": 307,
+    "sequence": 14820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50c1c6ce92ef17fb"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 293,
+  "title": "Mustard seeds, Coriander, Curry leaves, Tomato, Carrot",
+  "label": "ch:ka-mustard-seeds-coriander-curry-leaves-tomato-carrot",
+  "canDo": "I can say mustard seeds, coriander, curry leaves, a tomato and a carrot.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C293-kyaret",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 293: I can say mustard seeds, coriander, curry leaves, a tomato and a carrot.",
+    "assesses": [
+      "KA-LEX-C293-VASTU293-03",
+      "KA-LEX-C293-VASTU293-04",
+      "KA-LEX-C293-VASTU293-05"
+    ]
+  }
+}

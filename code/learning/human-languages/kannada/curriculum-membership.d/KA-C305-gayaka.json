@@ -1,0 +1,11 @@
+{
+  "id": "KA-C305-gayaka",
+  "pathSegment": "KA-PATH-305-KELASA305",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-305-KELASA305",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C281-pyak-madu",
+  "pathSegment": "KA-PATH-281-KRIYE281",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-281-KRIYE281",
+      "order": 1
+    }
+  ]
+}

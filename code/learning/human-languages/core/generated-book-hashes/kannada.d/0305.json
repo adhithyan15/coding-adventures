@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:4e2b2c52b858041d",
+  "lessonIds": [
+    "KA-C305-arcaka",
+    "KA-C305-kalavida",
+    "KA-C305-gayaka",
+    "KA-C305-nata",
+    "KA-C305-patrakarta"
+  ],
+  "tex": "kannada/book/chapters/ch305-temple-priest-artist-singer-actor-journalist.tex"
+}

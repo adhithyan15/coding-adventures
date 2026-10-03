@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:918687081ce99090",
+  "lessonIds": [
+    "KA-C281-mayavagu",
+    "KA-C281-pyak-madu",
+    "KA-C281-kalacu",
+    "KA-C281-phelagu",
+    "KA-C281-sikkihakikollu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch281.txt",
+  "json": "kannada/narration/ch281.json",
+  "textHash": "fnv1a64:588d69dbcbceabba",
+  "jsonHash": "fnv1a64:578c57065eb5a07f",
+  "findings": []
+}

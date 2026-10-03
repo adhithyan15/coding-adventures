@@ -1,0 +1,19 @@
+{
+  "chapter": 296,
+  "title": "Scooter, Metro, Petrol, Helmet, Dictionary",
+  "label": "ch:ka-scooter-metro-petrol-helmet-dictionary",
+  "canDo": "I can say a scooter, the metro, petrol, a helmet and a dictionary.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C296-sabdakosa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 296: I can say a scooter, the metro, petrol, a helmet and a dictionary.",
+    "assesses": [
+      "KA-LEX-C296-VASTU296-03",
+      "KA-LEX-C296-VASTU296-04",
+      "KA-LEX-C296-VASTU296-05"
+    ]
+  }
+}

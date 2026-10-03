@@ -1,0 +1,11 @@
+{
+  "id": "KA-C307-sayi",
+  "pathSegment": "KA-PATH-307-KELASA307",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-307-KELASA307",
+      "order": 2
+    }
+  ]
+}

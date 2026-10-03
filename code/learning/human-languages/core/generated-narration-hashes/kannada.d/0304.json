@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:96c22f31a53c3b9f",
+  "lessonIds": [
+    "KA-C304-patha",
+    "KA-C304-parikse",
+    "KA-C304-tarabeti",
+    "KA-C304-visaya",
+    "KA-C304-ganita"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch304.txt",
+  "json": "kannada/narration/ch304.json",
+  "textHash": "fnv1a64:e3323a404f71623a",
+  "jsonHash": "fnv1a64:c6e454930822ab49",
+  "findings": []
+}

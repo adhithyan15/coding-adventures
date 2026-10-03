@@ -1,0 +1,11 @@
+{
+  "id": "KA-C294-masale",
+  "pathSegment": "KA-PATH-294-VASTU294",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-294-VASTU294",
+      "order": 1
+    }
+  ]
+}

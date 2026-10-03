@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:cf031e5923cb6f50",
+  "lessonIds": [
+    "KA-C275-carj-madu",
+    "KA-C275-parisilisu",
+    "KA-C275-anuvadisu",
+    "KA-C275-arji-haku",
+    "KA-C275-holisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch275.txt",
+  "json": "kannada/narration/ch275.json",
+  "textHash": "fnv1a64:a7ab91fbcd44be7d",
+  "jsonHash": "fnv1a64:286d5c477e9e16f2",
+  "findings": []
+}

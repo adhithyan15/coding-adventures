@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C283-seleta",
+    "language": "kannada",
+    "chapter": 283,
+    "sequence": 13590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9bc6fd883cecf6e4"
+  },
+  "findings": []
+}

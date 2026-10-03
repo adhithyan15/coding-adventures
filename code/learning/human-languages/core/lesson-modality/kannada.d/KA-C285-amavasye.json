@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C285-amavasye",
+    "language": "kannada",
+    "chapter": 285,
+    "sequence": 13710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d70405e97a740b25"
+  },
+  "findings": []
+}

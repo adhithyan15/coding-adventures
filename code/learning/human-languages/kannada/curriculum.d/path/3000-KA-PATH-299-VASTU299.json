@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-299-VASTU299",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "KA-EXT-299-VASTU299"
+  ],
+  "after": []
+}

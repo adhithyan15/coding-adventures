@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C297-mosale",
+    "language": "kannada",
+    "chapter": 297,
+    "sequence": 14320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf310c05ced7d557"
+  },
+  "findings": []
+}

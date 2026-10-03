@@ -1,0 +1,19 @@
+{
+  "chapter": 294,
+  "title": "Peanut, Spices, Chutney, Money, Small change",
+  "label": "ch:ka-peanut-spices-chutney-money-small-change",
+  "canDo": "I can say a peanut, spices, chutney, money and small change.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C294-cillare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 294: I can say a peanut, spices, chutney, money and small change.",
+    "assesses": [
+      "KA-LEX-C294-VASTU294-03",
+      "KA-LEX-C294-VASTU294-04",
+      "KA-LEX-C294-VASTU294-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 291,
+  "title": "Cool, Warm, Strange, Wonderful, Interesting",
+  "label": "ch:ka-cool-warm-strange-wonderful-interesting",
+  "canDo": "I can say cool, warm, strange, wonderful and interesting.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "KA-C291-asaktikara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 291: I can say cool, warm, strange, wonderful and interesting.",
+    "assesses": [
+      "KA-LEX-C291-GUNA291-03",
+      "KA-LEX-C291-GUNA291-04",
+      "KA-LEX-C291-GUNA291-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:2d36140272092289",
+  "lessonIds": [
+    "KA-C307-godamu",
+    "KA-C307-phalaka",
+    "KA-C307-sayi",
+    "KA-C307-simesunna",
+    "KA-C307-skelu",
+    "KA-R307-first-pass-words-from-chapters-299-302",
+    "KA-R307-second-pass-words-from-chapters-303-307"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch307.txt",
+  "json": "kannada/narration/ch307.json",
+  "textHash": "fnv1a64:241a5b713d59ee52",
+  "jsonHash": "fnv1a64:4fdbb3b1c19e82a6",
+  "findings": []
+}

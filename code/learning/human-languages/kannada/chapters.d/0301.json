@@ -1,0 +1,19 @@
+{
+  "chapter": 301,
+  "title": "Glass, Plastic, Brick, List, Griddle",
+  "label": "ch:ka-glass-plastic-brick-list-griddle",
+  "canDo": "I can say glass, plastic, a brick, a list and a griddle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C301-kavali",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 301: I can say glass, plastic, a brick, a list and a griddle.",
+    "assesses": [
+      "KA-LEX-C301-VASTU301-03",
+      "KA-LEX-C301-VASTU301-04",
+      "KA-LEX-C301-VASTU301-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:aaf9473e49902b18",
+  "lessonIds": [
+    "KA-C274-kuni",
+    "KA-C274-ottu",
+    "KA-C274-jama-madu",
+    "KA-C274-himpade",
+    "KA-C274-sahi-madu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch274.txt",
+  "json": "kannada/narration/ch274.json",
+  "textHash": "fnv1a64:538f69d4cd716ef6",
+  "jsonHash": "fnv1a64:7d04404239f809af",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C306-plambar",
+  "pathSegment": "KA-PATH-306-KELASA306",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-306-KELASA306",
+      "order": 3
+    }
+  ]
+}

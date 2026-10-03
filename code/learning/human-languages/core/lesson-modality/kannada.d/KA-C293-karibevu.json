@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C293-karibevu",
+    "language": "kannada",
+    "chapter": 293,
+    "sequence": 14120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b84fd40ea4720fa"
+  },
+  "findings": []
+}
