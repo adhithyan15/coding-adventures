@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C160-arivippu",
+    "language": "tamil",
+    "chapter": 160,
+    "sequence": 7480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6297d863c5299b07"
+  },
+  "findings": []
+}

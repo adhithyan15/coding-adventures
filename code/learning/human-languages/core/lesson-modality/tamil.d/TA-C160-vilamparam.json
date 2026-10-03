@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C160-vilamparam",
+    "language": "tamil",
+    "chapter": 160,
+    "sequence": 7500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08eb7c0fdee5e47a"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-158-KALAM158",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "before": [],
+  "inline": [
+    "TA-EXT-158-KALAM158"
+  ],
+  "after": []
+}

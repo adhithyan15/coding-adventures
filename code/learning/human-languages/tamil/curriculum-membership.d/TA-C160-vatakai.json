@@ -1,0 +1,11 @@
+{
+  "id": "TA-C160-vatakai",
+  "pathSegment": "TA-PATH-160-PATI160",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-160-PATI160",
+      "order": 2
+    }
+  ]
+}
