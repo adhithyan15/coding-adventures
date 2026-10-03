@@ -1,0 +1,21 @@
+{
+  "language": "tamil",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:3dee3fb7bbeab31f",
+  "lessonIds": [
+    "TA-C271-kottamalli",
+    "TA-C271-kariveppilai",
+    "TA-C271-appil",
+    "TA-C271-arancu",
+    "TA-C271-pappali",
+    "TA-R271-first-pass-words-from-chapters-263-266",
+    "TA-R271-second-pass-words-from-chapters-267-271"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "tamil/narration/ch271.txt",
+  "json": "tamil/narration/ch271.json",
+  "textHash": "fnv1a64:97f6bfdab1459f73",
+  "jsonHash": "fnv1a64:061712bc6f2b6912",
+  "findings": []
+}

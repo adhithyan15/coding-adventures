@@ -1,0 +1,11 @@
+{
+  "id": "TA-C266-karanam",
+  "pathSegment": "TA-PATH-266-KARANAM266",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-266-KARANAM266",
+      "order": 4
+    }
+  ]
+}

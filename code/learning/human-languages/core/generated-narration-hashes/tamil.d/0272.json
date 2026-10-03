@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:b6343b774cf35cd8",
+  "lessonIds": [
+    "TA-C272-ataiyala-attai",
+    "TA-C272-vari",
+    "TA-C272-vinnappam",
+    "TA-C272-pukaippatam",
+    "TA-C272-nakal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch272.txt",
+  "json": "tamil/narration/ch272.json",
+  "textHash": "fnv1a64:70ed60d4d44fa548",
+  "jsonHash": "fnv1a64:7ffcee7a950987dc",
+  "findings": []
+}

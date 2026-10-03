@@ -1,0 +1,19 @@
+{
+  "chapter": 271,
+  "title": "Coriander, Curry leaves, Apple, Orange, Papaya",
+  "label": "ch:ta-coriander-curry-leaves-apple-orange-papaya",
+  "canDo": "I can say coriander, curry leaves, an apple, an orange and a papaya.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-R271-second-pass-words-from-chapters-267-271",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 271: I can say coriander, curry leaves, an apple, an orange and a papaya.",
+    "assesses": [
+      "TA-LEX-C271-PORUL271-03",
+      "TA-LEX-C271-PORUL271-04",
+      "TA-LEX-C271-PORUL271-05"
+    ]
+  }
+}

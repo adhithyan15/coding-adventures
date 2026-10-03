@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:1ed5cba645307d2e",
+  "lessonIds": [
+    "TA-C276-iruttu",
+    "TA-C276-nilal",
+    "TA-C276-iyantiram",
+    "TA-C276-copa",
+    "TA-C276-tiruppuli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch276.txt",
+  "json": "tamil/narration/ch276.json",
+  "textHash": "fnv1a64:c0d46f83f9754b72",
+  "jsonHash": "fnv1a64:ba6cae1bee949bac",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C256-tavaravitu",
+    "language": "tamil",
+    "chapter": 256,
+    "sequence": 14440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4133e3d024801b70"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 280,
+  "title": "Government, Rule, Fine, Complaint, Athlete",
+  "label": "ch:ta-government-rule-fine-complaint-athlete",
+  "canDo": "I can say the government, a rule, a fine, a complaint and an athlete.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-R280-second-pass-words-from-chapters-276-280",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 280: I can say the government, a rule, a fine, a complaint and an athlete.",
+    "assesses": [
+      "TA-LEX-C280-VELAI280-03",
+      "TA-LEX-C280-VELAI280-04",
+      "TA-LEX-C280-VELAI280-05"
+    ]
+  }
+}

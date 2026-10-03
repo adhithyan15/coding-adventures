@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:4ca66e3cec7c8c63",
+  "lessonIds": [
+    "TA-C279-tolilali",
+    "TA-C279-kuttam",
+    "TA-C279-melalar",
+    "TA-C279-poriyalar",
+    "TA-C279-valakkarinar"
+  ],
+  "tex": "tamil/book/chapters/ch279-worker-meeting-manager-engineer-lawyer.tex"
+}

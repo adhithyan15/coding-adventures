@@ -1,0 +1,19 @@
+{
+  "chapter": 254,
+  "title": "To borrow, To pay, To choose, To enter, To exit",
+  "label": "ch:ta-to-borrow-to-pay-to-choose-to-enter-to-exit",
+  "canDo": "I can say to borrow, to pay, to choose, to enter and to exit.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C254-veliyeru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 254: I can say to borrow, to pay, to choose, to enter and to exit.",
+    "assesses": [
+      "TA-LEX-C254-ACT254-03",
+      "TA-LEX-C254-ACT254-04",
+      "TA-LEX-C254-ACT254-05"
+    ]
+  }
+}

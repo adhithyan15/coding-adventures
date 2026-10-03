@@ -1,0 +1,8 @@
+{
+  "id": "TA-EXT-256-ACT256",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say to accept, to follow, to miss, to erase and to print.",
+  "prerequisites": []
+}

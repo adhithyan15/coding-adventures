@@ -1,0 +1,11 @@
+{
+  "id": "TA-C262-varantorum",
+  "pathSegment": "TA-PATH-262-NERAM262",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-262-NERAM262",
+      "order": 1
+    }
+  ]
+}

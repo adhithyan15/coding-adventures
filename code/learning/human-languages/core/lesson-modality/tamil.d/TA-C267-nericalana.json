@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C267-nericalana",
+    "language": "tamil",
+    "chapter": 267,
+    "sequence": 15190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82533462e880fbc2"
+  },
+  "findings": []
+}

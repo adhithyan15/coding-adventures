@@ -1,0 +1,11 @@
+{
+  "id": "TA-C267-nericalana",
+  "pathSegment": "TA-PATH-267-GUNAM267",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-267-GUNAM267",
+      "order": 3
+    }
+  ]
+}

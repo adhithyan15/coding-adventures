@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C254-veliyeru",
+    "language": "tamil",
+    "chapter": 254,
+    "sequence": 14360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d927ee05601cb435"
+  },
+  "findings": []
+}

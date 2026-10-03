@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C278-tarpucani",
+    "language": "tamil",
+    "chapter": 278,
+    "sequence": 15930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f021167bd1551d2"
+  },
+  "findings": []
+}

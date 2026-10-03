@@ -1,0 +1,19 @@
+{
+  "chapter": 264,
+  "title": "Opposite, Between, Way, Land, Valley",
+  "label": "ch:ta-opposite-between-way-land-valley",
+  "canDo": "I can say opposite, between, a way, land and a valley.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TA-C264-pallattakku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 264: I can say opposite, between, a way, land and a valley.",
+    "assesses": [
+      "TA-LEX-C264-IDAM264-03",
+      "TA-LEX-C264-IDAM264-04",
+      "TA-LEX-C264-IDAM264-05"
+    ]
+  }
+}

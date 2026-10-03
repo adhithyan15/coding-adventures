@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C262-varantorum",
+    "language": "tamil",
+    "chapter": 262,
+    "sequence": 14730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aeca14073e701a4f"
+  },
+  "findings": []
+}

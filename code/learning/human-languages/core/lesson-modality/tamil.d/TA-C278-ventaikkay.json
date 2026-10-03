@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C278-ventaikkay",
+    "language": "tamil",
+    "chapter": 278,
+    "sequence": 15910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c305a6d6a2ad751"
+  },
+  "findings": []
+}

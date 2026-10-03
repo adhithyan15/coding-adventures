@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C259-olunkupatuttu",
+    "language": "tamil",
+    "chapter": 259,
+    "sequence": 14610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:407bcd657a0d6d83"
+  },
+  "findings": []
+}

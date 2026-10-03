@@ -1,0 +1,11 @@
+{
+  "id": "TA-C276-copa",
+  "pathSegment": "TA-PATH-276-PORUL276",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-276-PORUL276",
+      "order": 3
+    }
+  ]
+}

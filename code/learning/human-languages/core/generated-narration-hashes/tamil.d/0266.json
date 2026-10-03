@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:aa72db9056c71028",
+  "lessonIds": [
+    "TA-C266-elitaka",
+    "TA-C266-ventumenre",
+    "TA-C266-tarceyalaka",
+    "TA-C266-atirstavacamaka",
+    "TA-C266-karanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch266.txt",
+  "json": "tamil/narration/ch266.json",
+  "textHash": "fnv1a64:67d677a3bb750081",
+  "jsonHash": "fnv1a64:b6236b918622353a",
+  "findings": []
+}

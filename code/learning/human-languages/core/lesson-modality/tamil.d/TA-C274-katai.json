@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C274-katai",
+    "language": "tamil",
+    "chapter": 274,
+    "sequence": 15720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:13fe858d1ec2fd99"
+  },
+  "findings": []
+}

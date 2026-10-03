@@ -1,0 +1,19 @@
+{
+  "chapter": 275,
+  "title": "Feather, Tail, Nest, Plant, Creeper",
+  "label": "ch:ta-feather-tail-nest-plant-creeper",
+  "canDo": "I can say a feather, a tail, a nest, a plant and a creeper.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C275-koti2",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 275: I can say a feather, a tail, a nest, a plant and a creeper.",
+    "assesses": [
+      "TA-LEX-C275-PORUL275-03",
+      "TA-LEX-C275-PORUL275-04",
+      "TA-LEX-C275-PORUL275-05"
+    ]
+  }
+}

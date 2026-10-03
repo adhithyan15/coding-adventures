@@ -1,0 +1,11 @@
+{
+  "id": "TA-C267-mukkiyamana",
+  "pathSegment": "TA-PATH-267-GUNAM267",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-267-GUNAM267",
+      "order": 1
+    }
+  ]
+}

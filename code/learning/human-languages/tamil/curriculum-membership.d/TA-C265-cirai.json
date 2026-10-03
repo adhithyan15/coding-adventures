@@ -1,0 +1,11 @@
+{
+  "id": "TA-C265-cirai",
+  "pathSegment": "TA-PATH-265-IDAM265",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-265-IDAM265",
+      "order": 3
+    }
+  ]
+}

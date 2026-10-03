@@ -1,0 +1,11 @@
+{
+  "id": "TA-C280-pukar",
+  "pathSegment": "TA-PATH-280-VELAI280",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-280-VELAI280",
+      "order": 3
+    }
+  ]
+}

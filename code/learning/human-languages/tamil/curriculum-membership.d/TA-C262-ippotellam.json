@@ -1,0 +1,11 @@
+{
+  "id": "TA-C262-ippotellam",
+  "pathSegment": "TA-PATH-262-NERAM262",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-262-NERAM262",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C265-kuticai",
+    "language": "tamil",
+    "chapter": 265,
+    "sequence": 15070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab547ca5d6e81c18"
+  },
+  "findings": []
+}

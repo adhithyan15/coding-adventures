@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:6963802b4a6b5b56",
+  "lessonIds": [
+    "TA-C265-mavattam",
+    "TA-C265-kuticai",
+    "TA-C265-kopuram",
+    "TA-C265-cirai",
+    "TA-C265-ulakam"
+  ],
+  "tex": "tamil/book/chapters/ch265-district-hut-tower-prison-world.tex"
+}

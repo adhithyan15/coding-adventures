@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C268-kanivana",
+    "language": "tamil",
+    "chapter": 268,
+    "sequence": 15240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:19608922ef5249be"
+  },
+  "findings": []
+}

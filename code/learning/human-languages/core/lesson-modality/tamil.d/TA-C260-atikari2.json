@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C260-atikari2",
+    "language": "tamil",
+    "chapter": 260,
+    "sequence": 14620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:85f22c12468bec11"
+  },
+  "findings": []
+}

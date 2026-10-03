@@ -1,0 +1,11 @@
+{
+  "id": "TA-C259-patam-etu",
+  "pathSegment": "TA-PATH-259-ACT259",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-259-ACT259",
+      "order": 0
+    }
+  ]
+}

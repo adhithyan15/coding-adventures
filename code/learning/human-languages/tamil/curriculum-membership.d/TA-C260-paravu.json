@@ -1,0 +1,11 @@
+{
+  "id": "TA-C260-paravu",
+  "pathSegment": "TA-PATH-260-ACT260",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-260-ACT260",
+      "order": 1
+    }
+  ]
+}

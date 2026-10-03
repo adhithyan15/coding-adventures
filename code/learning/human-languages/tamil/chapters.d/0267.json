@@ -1,0 +1,19 @@
+{
+  "chapter": 267,
+  "title": "Fat, Important, Urgent, Crowded, Easy",
+  "label": "ch:ta-fat-important-urgent-crowded-easy",
+  "canDo": "I can say fat, important, urgent, crowded and easy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TA-C267-elitana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 267: I can say fat, important, urgent, crowded and easy.",
+    "assesses": [
+      "TA-LEX-C267-GUNAM267-03",
+      "TA-LEX-C267-GUNAM267-04",
+      "TA-LEX-C267-GUNAM267-05"
+    ]
+  }
+}

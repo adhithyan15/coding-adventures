@@ -1,0 +1,19 @@
+{
+  "chapter": 278,
+  "title": "Sugarcane, Okra, Peanut, Watermelon, Murukku",
+  "label": "ch:ta-sugarcane-okra-peanut-watermelon-murukku",
+  "canDo": "I can say sugarcane, okra, a peanut, a watermelon and murukku.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C278-murukku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 278: I can say sugarcane, okra, a peanut, a watermelon and murukku.",
+    "assesses": [
+      "TA-LEX-C278-PORUL278-03",
+      "TA-LEX-C278-PORUL278-04",
+      "TA-LEX-C278-PORUL278-05"
+    ]
+  }
+}

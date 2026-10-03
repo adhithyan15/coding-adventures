@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C273-irattaiyar",
+    "language": "tamil",
+    "chapter": 273,
+    "sequence": 15680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f4f75f6d9eed1dfa"
+  },
+  "findings": []
+}

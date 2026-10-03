@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:5d9b79d888cd7426",
+  "lessonIds": [
+    "TA-C256-errukkol",
+    "TA-C256-pinparru",
+    "TA-C256-tavaravitu",
+    "TA-C256-ali",
+    "TA-C256-accitu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch256.txt",
+  "json": "tamil/narration/ch256.json",
+  "textHash": "fnv1a64:9df743a81a15d40e",
+  "jsonHash": "fnv1a64:4d47414b471008a9",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C273-utanpirantavar",
+  "pathSegment": "TA-PATH-273-PORUL273",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-273-PORUL273",
+      "order": 2
+    }
+  ]
+}

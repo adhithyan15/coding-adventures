@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C270-puri",
+    "language": "tamil",
+    "chapter": 270,
+    "sequence": 15350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:120ba50e0f1da8b8"
+  },
+  "findings": []
+}

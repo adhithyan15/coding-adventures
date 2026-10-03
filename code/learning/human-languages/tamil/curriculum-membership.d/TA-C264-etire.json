@@ -1,0 +1,11 @@
+{
+  "id": "TA-C264-etire",
+  "pathSegment": "TA-PATH-264-IDAM264",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-264-IDAM264",
+      "order": 0
+    }
+  ]
+}

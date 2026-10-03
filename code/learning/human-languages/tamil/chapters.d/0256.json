@@ -1,0 +1,19 @@
+{
+  "chapter": 256,
+  "title": "To accept, To follow, To miss, To erase, To print",
+  "label": "ch:ta-to-accept-to-follow-to-miss-to-erase-to-print",
+  "canDo": "I can say to accept, to follow, to miss, to erase and to print.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C256-accitu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 256: I can say to accept, to follow, to miss, to erase and to print.",
+    "assesses": [
+      "TA-LEX-C256-ACT256-03",
+      "TA-LEX-C256-ACT256-04",
+      "TA-LEX-C256-ACT256-05"
+    ]
+  }
+}

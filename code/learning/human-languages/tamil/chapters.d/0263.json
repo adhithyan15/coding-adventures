@@ -1,0 +1,19 @@
+{
+  "chapter": 263,
+  "title": "Traffic, Footpath, Aeroplane, Airport, Ship",
+  "label": "ch:ta-traffic-footpath-aeroplane-airport-ship",
+  "canDo": "I can say traffic, a footpath, an aeroplane, an airport and a ship.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TA-C263-kappal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 263: I can say traffic, a footpath, an aeroplane, an airport and a ship.",
+    "assesses": [
+      "TA-LEX-C263-IDAM263-03",
+      "TA-LEX-C263-IDAM263-04",
+      "TA-LEX-C263-IDAM263-05"
+    ]
+  }
+}

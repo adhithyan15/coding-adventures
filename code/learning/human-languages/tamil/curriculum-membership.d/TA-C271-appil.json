@@ -1,0 +1,11 @@
+{
+  "id": "TA-C271-appil",
+  "pathSegment": "TA-PATH-271-PORUL271",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-271-PORUL271",
+      "order": 2
+    }
+  ]
+}

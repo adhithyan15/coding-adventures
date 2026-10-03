@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C256-pinparru",
+    "language": "tamil",
+    "chapter": 256,
+    "sequence": 14430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38c3597f7e9eedd4"
+  },
+  "findings": []
+}

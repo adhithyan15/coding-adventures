@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C280-aracu",
+    "language": "tamil",
+    "chapter": 280,
+    "sequence": 16000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d867b5ae29dbad2"
+  },
+  "findings": []
+}

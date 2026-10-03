@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C277-karuttu",
+    "language": "tamil",
+    "chapter": 277,
+    "sequence": 15890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2fc7cdd583d9543d"
+  },
+  "findings": []
+}
