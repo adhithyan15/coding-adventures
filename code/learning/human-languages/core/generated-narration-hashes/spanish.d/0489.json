@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:f2e703368a05eb96",
+  "lessonIds": [
+    "ES-C489-aparcar",
+    "ES-C489-atasco",
+    "ES-C489-gasolina",
+    "ES-C489-ayuntamiento",
+    "ES-C489-buzon"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch489.txt",
+  "json": "spanish/narration/ch489.json",
+  "textHash": "fnv1a64:9fac3512d12d9269",
+  "jsonHash": "fnv1a64:7fb1be8e2d6d34ca",
+  "findings": []
+}

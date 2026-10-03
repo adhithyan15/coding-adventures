@@ -1,0 +1,11 @@
+{
+  "id": "ES-C490-huelga",
+  "pathSegment": "ES-PATH-490-EMPLEO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-490-EMPLEO",
+      "order": 3
+    }
+  ]
+}

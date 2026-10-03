@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:9c75874f75eda45f",
+  "lessonIds": [
+    "ES-C488-casarse",
+    "ES-C488-divorciarse",
+    "ES-C488-enamorarse",
+    "ES-C488-despedirse",
+    "ES-C488-saludar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch488.txt",
+  "json": "spanish/narration/ch488.json",
+  "textHash": "fnv1a64:748f09b496e344e5",
+  "jsonHash": "fnv1a64:c3c2456b8ec5413d",
+  "findings": []
+}

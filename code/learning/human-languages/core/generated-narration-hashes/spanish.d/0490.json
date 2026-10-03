@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:a08692fb313544dc",
+  "lessonIds": [
+    "ES-C490-empleo",
+    "ES-C490-sueldo",
+    "ES-C490-entrevista",
+    "ES-C490-huelga",
+    "ES-C490-negocio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch490.txt",
+  "json": "spanish/narration/ch490.json",
+  "textHash": "fnv1a64:2d2e7aac70d886b1",
+  "jsonHash": "fnv1a64:d0a4ed1124698bd2",
+  "findings": []
+}

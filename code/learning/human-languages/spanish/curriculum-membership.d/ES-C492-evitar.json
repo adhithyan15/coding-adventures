@@ -1,0 +1,11 @@
+{
+  "id": "ES-C492-evitar",
+  "pathSegment": "ES-PATH-492-LOGRO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-492-LOGRO",
+      "order": 2
+    }
+  ]
+}

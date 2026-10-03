@@ -1,0 +1,11 @@
+{
+  "id": "ES-C492-elegir",
+  "pathSegment": "ES-PATH-492-LOGRO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-492-LOGRO",
+      "order": 3
+    }
+  ]
+}

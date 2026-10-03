@@ -1,0 +1,19 @@
+{
+  "chapter": 489,
+  "title": "Por la ciudad",
+  "label": "ch:es-por-la-ciudad",
+  "canDo": "I can read a notice about parking, a traffic jam, petrol, the town hall and the postbox.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C489-buzon",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 489: I can read a notice about parking, a traffic jam, petrol, the town hall and the postbox.",
+    "assesses": [
+      "ES-LEX-C489-CIUDAD-03",
+      "ES-LEX-C489-CIUDAD-04",
+      "ES-LEX-C489-CIUDAD-05"
+    ]
+  }
+}

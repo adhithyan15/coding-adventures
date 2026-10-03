@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:8bbe55f3f9af9765",
+  "lessonIds": [
+    "ES-C489-aparcar",
+    "ES-C489-atasco",
+    "ES-C489-gasolina",
+    "ES-C489-ayuntamiento",
+    "ES-C489-buzon"
+  ],
+  "tex": "spanish/book/chapters/ch489-por-la-ciudad.tex"
+}

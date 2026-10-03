@@ -1,0 +1,11 @@
+{
+  "id": "ES-C486-toser",
+  "pathSegment": "ES-PATH-486-MEDICO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-486-MEDICO",
+      "order": 1
+    }
+  ]
+}

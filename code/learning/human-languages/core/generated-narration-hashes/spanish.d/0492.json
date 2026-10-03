@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:3f7f4143878b272e",
+  "lessonIds": [
+    "ES-C492-intentar",
+    "ES-C492-lograr",
+    "ES-C492-evitar",
+    "ES-C492-elegir",
+    "ES-C492-cumplir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch492.txt",
+  "json": "spanish/narration/ch492.json",
+  "textHash": "fnv1a64:0106445b84d0a6a8",
+  "jsonHash": "fnv1a64:9552498d982549a4",
+  "findings": []
+}

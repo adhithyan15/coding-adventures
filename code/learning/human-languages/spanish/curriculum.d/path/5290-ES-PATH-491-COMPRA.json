@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-491-COMPRA",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-491-COMPRA"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:60c6cf14f152125b",
+  "lessonIds": [
+    "ES-C491-recibo",
+    "ES-C491-oferta",
+    "ES-C491-cajero",
+    "ES-C491-cartera",
+    "ES-C491-propina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch491.txt",
+  "json": "spanish/narration/ch491.json",
+  "textHash": "fnv1a64:2a3fad0bc548caed",
+  "jsonHash": "fnv1a64:7b0f403af8208ee2",
+  "findings": []
+}

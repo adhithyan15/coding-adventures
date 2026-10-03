@@ -1,0 +1,662 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 490,
+  "title": "Buscar trabajo",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a08692fb313544dc",
+  "lessons": [
+    {
+      "id": "ES-C490-empleo",
+      "sequence": 14020,
+      "title": "el empleo — the job, employment",
+      "headword": "el empleo",
+      "romanization": "el empleo",
+      "gloss": "the job, employment",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3c42ffd83f902bec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the town hall, then the Spanish for the postbox."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el empleo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el empleo — \"the job, employment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Busco empleo como cocinero. I am looking for a job as a cook."
+            },
+            {
+              "kind": "speech",
+              "text": "Oficina de empleo — job centre."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices, forms and messages."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el empleo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el empleo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el empleo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el empleo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with el empleo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *el empleo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the town hall, then the Spanish for the postbox, then say el empleo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the town hall, then the Spanish for the postbox, then say *el empleo* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does el empleo mean? (\"The job, employment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C490-sueldo",
+      "sequence": 14030,
+      "title": "el sueldo — the salary, the pay",
+      "headword": "el sueldo",
+      "romanization": "el sueldo",
+      "gloss": "the salary, the pay",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d938e9884b8f5be3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the postbox, then the Spanish for the job."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el sueldo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el sueldo — \"the salary, the pay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "El sueldo es de mil quinientos euros. The salary is one thousand five hundred euros."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices, forms and messages."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el sueldo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el sueldo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el sueldo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el sueldo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with el sueldo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *el sueldo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the postbox, then the Spanish for the job, then say el sueldo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the postbox, then the Spanish for the job, then say *el sueldo* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does el sueldo mean? (\"The salary, the pay\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C490-entrevista",
+      "sequence": 14040,
+      "title": "la entrevista — the interview",
+      "headword": "la entrevista",
+      "romanization": "la entrevista",
+      "gloss": "the interview",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b67f5c250ca1153",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the job, then the Spanish for the salary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la entrevista",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la entrevista — \"the interview\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Tengo una entrevista el jueves. I have an interview on Thursday."
+            },
+            {
+              "kind": "speech",
+              "text": "Una entrevista de trabajo — a job interview."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices, forms and messages."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la entrevista",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la entrevista*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la entrevista, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la entrevista*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la entrevista",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la entrevista*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the job, then the Spanish for the salary, then say la entrevista again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the job, then the Spanish for the salary, then say *la entrevista* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la entrevista mean? (\"The interview\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C490-huelga",
+      "sequence": 14050,
+      "title": "la huelga — the strike",
+      "headword": "la huelga",
+      "romanization": "la huelga",
+      "gloss": "the strike",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5cfe4ee68e97f2e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the salary, then the Spanish for the interview."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la huelga",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la huelga — \"the strike\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mañana hay huelga de trenes. Tomorrow there is a train strike."
+            },
+            {
+              "kind": "speech",
+              "text": "Estar en huelga — to be on strike."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices, forms and messages."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la huelga",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la huelga*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la huelga, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la huelga*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la huelga",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la huelga*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the salary, then the Spanish for the interview, then say la huelga again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the salary, then the Spanish for the interview, then say *la huelga* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la huelga mean? (\"The strike\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C490-negocio",
+      "sequence": 14060,
+      "title": "el negocio — the business",
+      "headword": "el negocio",
+      "romanization": "el negocio",
+      "gloss": "the business",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b46b0bb7b59eb132",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the interview, then the Spanish for the strike."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el negocio",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el negocio — \"the business\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Tiene un negocio de ropa. He has a clothing business."
+            },
+            {
+              "kind": "speech",
+              "text": "Los negocios — business in general."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices, forms and messages."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el negocio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el negocio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el negocio, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el negocio*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with el negocio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *el negocio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the interview, then the Spanish for the strike, then say el negocio again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the interview, then the Spanish for the strike, then say *el negocio* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does el negocio mean? (\"The business\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

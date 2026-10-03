@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-486-MEDICO",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-486-MEDICO"
+  ],
+  "after": []
+}

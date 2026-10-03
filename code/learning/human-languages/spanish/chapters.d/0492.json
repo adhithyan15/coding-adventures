@@ -1,0 +1,19 @@
+{
+  "chapter": 492,
+  "title": "Intentarlo",
+  "label": "ch:es-intentarlo",
+  "canDo": "I can say that someone tries, manages, avoids, chooses or keeps a promise.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C492-cumplir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 492: I can say that someone tries, manages, avoids, chooses or keeps a promise.",
+    "assesses": [
+      "ES-LEX-C492-LOGRO-03",
+      "ES-LEX-C492-LOGRO-04",
+      "ES-LEX-C492-LOGRO-05"
+    ]
+  }
+}

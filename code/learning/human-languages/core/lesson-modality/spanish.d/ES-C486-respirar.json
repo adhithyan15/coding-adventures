@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C486-respirar",
+    "language": "spanish",
+    "chapter": 486,
+    "sequence": 13840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ada6cea30023a49"
+  },
+  "findings": []
+}

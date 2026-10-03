@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-486-MEDICO",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow a doctor's advice about coughing, breathing, an aspirin and a vaccine, and read a note about shaving before an operation.",
+  "prerequisites": []
+}

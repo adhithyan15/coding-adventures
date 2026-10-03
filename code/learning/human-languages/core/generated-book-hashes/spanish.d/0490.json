@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:16129a7a525a0b85",
+  "lessonIds": [
+    "ES-C490-empleo",
+    "ES-C490-sueldo",
+    "ES-C490-entrevista",
+    "ES-C490-huelga",
+    "ES-C490-negocio"
+  ],
+  "tex": "spanish/book/chapters/ch490-buscar-trabajo.tex"
+}

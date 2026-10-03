@@ -1,0 +1,11 @@
+{
+  "id": "ES-C485-secar",
+  "pathSegment": "ES-PATH-485-LIMPIEZA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-485-LIMPIEZA",
+      "order": 3
+    }
+  ]
+}
