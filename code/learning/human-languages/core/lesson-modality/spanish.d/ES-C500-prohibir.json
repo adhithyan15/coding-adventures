@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C500-prohibir",
+    "language": "spanish",
+    "chapter": 500,
+    "sequence": 14560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd500795ded468b2"
+  },
+  "findings": []
+}

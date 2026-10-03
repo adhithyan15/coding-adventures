@@ -1,0 +1,19 @@
+{
+  "chapter": 502,
+  "title": "Hablar con otros",
+  "label": "ch:es-hablar-con-otros",
+  "canDo": "I can introduce someone, mention something, chat, tell a joke and translate.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-R502-repaso-palabras-de-los-capitulos-499-502",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 502: I can introduce someone, mention something, chat, tell a joke and translate.",
+    "assesses": [
+      "ES-LEX-C502-HABLAR-03",
+      "ES-LEX-C502-HABLAR-04",
+      "ES-LEX-C502-HABLAR-05"
+    ]
+  }
+}

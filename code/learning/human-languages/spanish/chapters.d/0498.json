@@ -1,0 +1,19 @@
+{
+  "chapter": 498,
+  "title": "El deporte",
+  "label": "ch:es-el-deporte",
+  "canDo": "I can read about a championship: the sportsperson, competing, riding and drawing a poster for it.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C498-dibujar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 498: I can read about a championship: the sportsperson, competing, riding and drawing a poster for it.",
+    "assesses": [
+      "ES-LEX-C498-DEPORTE-03",
+      "ES-LEX-C498-DEPORTE-04",
+      "ES-LEX-C498-DEPORTE-05"
+    ]
+  }
+}

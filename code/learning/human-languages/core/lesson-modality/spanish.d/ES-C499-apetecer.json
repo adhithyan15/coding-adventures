@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C499-apetecer",
+    "language": "spanish",
+    "chapter": 499,
+    "sequence": 14520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9e78dce5761928b"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-502-HABLAR",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can introduce someone, mention something, chat, tell a joke and translate.",
+  "prerequisites": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C499-batido",
+    "language": "spanish",
+    "chapter": 499,
+    "sequence": 14500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4027b7bc827dee9a"
+  },
+  "findings": []
+}

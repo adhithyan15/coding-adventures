@@ -1,0 +1,11 @@
+{
+  "id": "ES-C496-colocar",
+  "pathSegment": "ES-PATH-496-HOGAR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-496-HOGAR",
+      "order": 2
+    }
+  ]
+}

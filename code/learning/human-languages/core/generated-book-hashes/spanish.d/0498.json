@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:3744738a119caee3",
+  "lessonIds": [
+    "ES-C498-campeonato",
+    "ES-C498-deportista",
+    "ES-C498-competir",
+    "ES-C498-montar",
+    "ES-C498-dibujar"
+  ],
+  "tex": "spanish/book/chapters/ch498-el-deporte.tex"
+}

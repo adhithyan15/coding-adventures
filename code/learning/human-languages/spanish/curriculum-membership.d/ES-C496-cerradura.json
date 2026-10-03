@@ -1,0 +1,11 @@
+{
+  "id": "ES-C496-cerradura",
+  "pathSegment": "ES-PATH-496-HOGAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-496-HOGAR",
+      "order": 1
+    }
+  ]
+}

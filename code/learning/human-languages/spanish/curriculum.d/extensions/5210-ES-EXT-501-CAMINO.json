@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-501-CAMINO",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a traveller who drives, follows the signs, comes back and stops at a fountain.",
+  "prerequisites": []
+}

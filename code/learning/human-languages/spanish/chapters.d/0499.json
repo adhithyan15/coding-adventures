@@ -1,0 +1,19 @@
+{
+  "chapter": 499,
+  "title": "Algo de comer",
+  "label": "ch:es-algo-de-comer",
+  "canDo": "I can order a snack, say what I feel like, add something and share.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C499-compartir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 499: I can order a snack, say what I feel like, add something and share.",
+    "assesses": [
+      "ES-LEX-C499-MERIENDA-03",
+      "ES-LEX-C499-MERIENDA-04",
+      "ES-LEX-C499-MERIENDA-05"
+    ]
+  }
+}

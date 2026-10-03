@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:5a7c3cb93dea3bc3",
+  "lessonIds": [
+    "ES-C501-viajero",
+    "ES-C501-conducir",
+    "ES-C501-regresar",
+    "ES-C501-senal",
+    "ES-C501-fuente"
+  ],
+  "tex": "spanish/book/chapters/ch501-de-viaje-otra-vez.tex"
+}

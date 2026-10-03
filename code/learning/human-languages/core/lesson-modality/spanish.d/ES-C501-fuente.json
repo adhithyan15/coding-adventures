@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C501-fuente",
+    "language": "spanish",
+    "chapter": 501,
+    "sequence": 14630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e5222f850254ae4"
+  },
+  "findings": []
+}

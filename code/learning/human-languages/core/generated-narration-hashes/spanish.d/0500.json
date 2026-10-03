@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:565303af6f4e8e2a",
+  "lessonIds": [
+    "ES-C500-respetar",
+    "ES-C500-molestar",
+    "ES-C500-prohibir",
+    "ES-C500-ley",
+    "ES-C500-libertad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch500.txt",
+  "json": "spanish/narration/ch500.json",
+  "textHash": "fnv1a64:40ec381f7611d40a",
+  "jsonHash": "fnv1a64:40059317d63c388a",
+  "findings": []
+}

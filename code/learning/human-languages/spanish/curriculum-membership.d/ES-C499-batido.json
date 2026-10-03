@@ -1,0 +1,11 @@
+{
+  "id": "ES-C499-batido",
+  "pathSegment": "ES-PATH-499-MERIENDA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-499-MERIENDA",
+      "order": 1
+    }
+  ]
+}

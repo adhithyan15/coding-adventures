@@ -1,0 +1,19 @@
+{
+  "chapter": 501,
+  "title": "De viaje otra vez",
+  "label": "ch:es-de-viaje-otra-vez",
+  "canDo": "I can talk about a traveller who drives, follows the signs, comes back and stops at a fountain.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C501-fuente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 501: I can talk about a traveller who drives, follows the signs, comes back and stops at a fountain.",
+    "assesses": [
+      "ES-LEX-C501-CAMINO-03",
+      "ES-LEX-C501-CAMINO-04",
+      "ES-LEX-C501-CAMINO-05"
+    ]
+  }
+}

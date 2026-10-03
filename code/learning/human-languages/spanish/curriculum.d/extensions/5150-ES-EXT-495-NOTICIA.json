@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-495-NOTICIA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow a short news item about something that happened, a dog that went missing and a thief.",
+  "prerequisites": []
+}

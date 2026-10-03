@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-499-MERIENDA",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-499-MERIENDA"
+  ],
+  "after": []
+}

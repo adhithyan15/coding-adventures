@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C502-traducir",
+    "language": "spanish",
+    "chapter": 502,
+    "sequence": 14680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:97bc9b2afe2a5a6b"
+  },
+  "findings": []
+}

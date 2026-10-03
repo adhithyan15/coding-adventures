@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:33ba74d98dbbb59e",
+  "lessonIds": [
+    "ES-C494-despertarse",
+    "ES-C494-arreglarse",
+    "ES-C494-bajar",
+    "ES-C494-encender",
+    "ES-C494-calentar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch494.txt",
+  "json": "spanish/narration/ch494.json",
+  "textHash": "fnv1a64:617398807b683f35",
+  "jsonHash": "fnv1a64:fa451ba64c820d72",
+  "findings": []
+}

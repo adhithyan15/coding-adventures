@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:4a9013cd7c8c50bc",
+  "lessonIds": [
+    "ES-C501-viajero",
+    "ES-C501-conducir",
+    "ES-C501-regresar",
+    "ES-C501-senal",
+    "ES-C501-fuente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch501.txt",
+  "json": "spanish/narration/ch501.json",
+  "textHash": "fnv1a64:7d93fe561118338a",
+  "jsonHash": "fnv1a64:e2fda387a1098197",
+  "findings": []
+}

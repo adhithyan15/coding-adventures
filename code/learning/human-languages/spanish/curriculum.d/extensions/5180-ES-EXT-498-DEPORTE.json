@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-498-DEPORTE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read about a championship: the sportsperson, competing, riding and drawing a poster for it.",
+  "prerequisites": []
+}

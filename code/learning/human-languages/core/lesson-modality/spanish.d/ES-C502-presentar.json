@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C502-presentar",
+    "language": "spanish",
+    "chapter": 502,
+    "sequence": 14640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d5e961fba003e0c"
+  },
+  "findings": []
+}
