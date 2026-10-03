@@ -18,6 +18,7 @@
 | AOT compiler | Static v0 implemented | [FM06](FM06-forme-aot-compiler.md) |
 | CLI and development server | Headless v0 implemented | [FM07](FM07-forme-cli-dev-server.md) |
 | Deploy runner | Headless v0 implemented | [FM08](FM08-forme-deploy-runner.md) |
+| Authoring shell | Durable project core implemented; editor active | [FM09](FM09-forme-authoring-shell.md) |
 
 ## What “complete” means
 
@@ -305,6 +306,7 @@ work.
 | 2026-10-02 | FM-B060 security review established that browser island modules execute with page-origin authority, not the FM02 native-plugin sandbox; a generic config mapping cannot honestly claim FM02 authentication. HTML identity also requires browser-equivalent tree construction, and emitted paths must remain collision-free on portable filesystems and replay. | Define this PR's boundary as explicit executable-output authority plus a reviewed package/export-to-exact-bytes allowlist; use HTML5 parsing with aggregate budgets, recompute script digests at the sink, snapshot bounded page usage, and reserve portable output keys in both initial materialization and replay. The live product uses a repository-reviewed, site-owned producer; optional FM02 provenance integration remains future work and would not reduce the island's browser page-origin authority. |
 | 2026-10-02 | FM-B060 merged after macOS, Windows, Linux, metadata, duplicate-push, CodeQL, and mandatory security review passed. The multi-page blog already uses the generic renderer and asset-aware emitter, so it can prove selected and zero-JavaScript routes without duplicating the new composition boundary. | Close FM-B060 and activate FM-B061. Enhance only the `Hello, Forme` article with a reviewed, exact-byte pipeline-step island; retain its complete ordered-list fallback, keep every other article script-free, and extend clean plus warm incremental product acceptance to assert the route/module split. |
 | 2026-10-02 | FM-B061 added an opt-in pipeline-step explorer to only the `Hello, Forme` article. Its full ordered list remains the no-JavaScript fallback; the product binds one stable script identity to reviewed SHA-256 bytes; clean and unchanged warm builds are byte-identical; and every other article remains script- and island-free. The source-input audit also added the module identity sidecar to the exact blog boundary and regenerated every checked digest projection. | Close FM-B061 and its FM-B013 completion milestone. Interactivity IR is implemented end to end. Activate FM-B016 as the highest-priority ready Authoring-v1 item; FM-B017 is independently ready but remains blocked so only one roadmap item is active. |
+| 2026-10-03 | Adding the canonical FM09 authoring-shell specification exposed that the always-on numbered-spec allowlist and roadmap status table still stopped at FM08. | Extend the metadata contract to FM09 and link the authoring shell from the roadmap status ledger so future additions cannot silently bypass either map. |
 
 ## Loop protocol
 
