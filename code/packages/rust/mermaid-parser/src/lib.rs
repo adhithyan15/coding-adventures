@@ -4593,6 +4593,7 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                 "lowercase" => diagram_ir::TreemapTextTransform::Lowercase,
                 "capitalize" => diagram_ir::TreemapTextTransform::Capitalize,
                 "full-width" => diagram_ir::TreemapTextTransform::FullWidth,
+                "full-size-kana" => diagram_ir::TreemapTextTransform::FullSizeKana,
                 _ => return Err(token_error(token, "unsupported treemap text-transform")),
             }),
             "text-decoration" => parse_treemap_text_decoration(token, value, &mut style)?,
@@ -14546,6 +14547,15 @@ B//-A: reverse stick top
             diagram.nodes[1].style.as_ref().and_then(|style| style.text_align),
             Some(diagram_ir::TreemapTextAlign::Justify),
         );
+    }
+
+    #[test]
+    fn treemap_parses_full_size_kana_text_transform() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-transform:full-size-kana",
+        ).expect("full-size-kana text transform must parse");
+        assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_transform),
+            Some(diagram_ir::TreemapTextTransform::FullSizeKana));
     }
 
     #[test]

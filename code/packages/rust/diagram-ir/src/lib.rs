@@ -1517,7 +1517,7 @@ pub enum TreemapTextAlignLast { Auto, Start, Center, End, Justify }
 pub enum TreemapTextJustify { Auto, None, InterWord, InterCharacter }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum TreemapTextTransform { None, Uppercase, Lowercase, Capitalize, FullWidth }
+pub enum TreemapTextTransform { None, Uppercase, Lowercase, Capitalize, FullWidth, FullSizeKana }
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub struct TreemapTextDecoration {

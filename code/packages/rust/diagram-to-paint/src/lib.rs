@@ -345,6 +345,7 @@ fn treemap_text_node(
             '!'..='~' => char::from_u32(character as u32 + 0xfee0).expect("ASCII full-width mapping is valid"),
             _ => character,
         }).collect(),
+        Some(diagram_ir::TreemapTextTransform::FullSizeKana) => full_size_kana(&whitespace_value),
         _ => whitespace_value,
     };
     let font_size = font.size;
@@ -1102,6 +1103,21 @@ fn capitalize_words(value: &str) -> String {
         }
     }
     result
+}
+
+fn full_size_kana(value: &str) -> String {
+    value.chars().map(|character| match character {
+        'ぁ' => 'あ', 'ぃ' => 'い', 'ぅ' => 'う', 'ぇ' => 'え', 'ぉ' => 'お',
+        'っ' => 'つ', 'ゃ' => 'や', 'ゅ' => 'ゆ', 'ょ' => 'よ', 'ゎ' => 'わ',
+        'ゕ' => 'か', 'ゖ' => 'け',
+        'ァ' => 'ア', 'ィ' => 'イ', 'ゥ' => 'ウ', 'ェ' => 'エ', 'ォ' => 'オ',
+        'ッ' => 'ツ', 'ャ' => 'ヤ', 'ュ' => 'ユ', 'ョ' => 'ヨ', 'ヮ' => 'ワ',
+        'ヵ' => 'カ', 'ヶ' => 'ケ',
+        'ㇰ' => 'ク', 'ㇱ' => 'シ', 'ㇲ' => 'ス', 'ㇳ' => 'ト', 'ㇴ' => 'ヌ',
+        'ㇵ' => 'ハ', 'ㇶ' => 'ヒ', 'ㇷ' => 'フ', 'ㇸ' => 'ヘ', 'ㇹ' => 'ホ',
+        'ㇺ' => 'ム', 'ㇻ' => 'ラ', 'ㇼ' => 'リ', 'ㇽ' => 'ル', 'ㇾ' => 'レ', 'ㇿ' => 'ロ',
+        _ => character,
+    }).collect()
 }
 
 fn with_opacity(color: &str, opacity: f64) -> String {
@@ -7133,6 +7149,14 @@ mod tests {
         );
         assert!(matches!(pre_capitalized_text.content,
             Some(Content::Text(TextContent { value, wrap: false, .. })) if value == "One  Two\nThree"));
+        whitespace_style.text_transform = Some(diagram_ir::TreemapTextTransform::FullSizeKana);
+        let full_size_kana_text = treemap_text_node(
+            "ゃャㇰ", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert!(matches!(full_size_kana_text.content,
+            Some(Content::Text(TextContent { value, .. })) if value == "やヤク"));
+        whitespace_style.text_transform = Some(diagram_ir::TreemapTextTransform::Capitalize);
         whitespace_style.white_space = Some(diagram_ir::TreemapWhiteSpace::BreakSpaces);
         let break_spaces_text = treemap_text_node(
             "one  two", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
