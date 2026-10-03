@@ -1,0 +1,8 @@
+{
+  "id": "BN-EXT-258-JINIS258",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an email, a message, a password, a battery and a switch.",
+  "prerequisites": []
+}

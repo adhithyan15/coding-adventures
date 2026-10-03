@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:7da7b1958a724c4e",
+  "lessonIds": [
+    "BN-C256-songskriti",
+    "BN-C256-itihas",
+    "BN-C256-bigyan",
+    "BN-C256-shilpo",
+    "BN-C256-sahityo"
+  ],
+  "tex": "bengali/book/chapters/ch256-culture-history-science-art-literature.tex"
+}

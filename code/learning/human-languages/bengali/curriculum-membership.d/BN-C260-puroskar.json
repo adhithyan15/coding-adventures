@@ -1,0 +1,11 @@
+{
+  "id": "BN-C260-puroskar",
+  "pathSegment": "BN-PATH-260-JINIS260",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-260-JINIS260",
+      "order": 1
+    }
+  ]
+}

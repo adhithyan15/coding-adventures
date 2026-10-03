@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 259,
+  "sourceHash": "fnv1a64:3e309d3596a63526",
+  "lessonIds": [
+    "BN-C259-dor",
+    "BN-C259-chhar",
+    "BN-C259-phorm",
+    "BN-C259-abedon",
+    "BN-C259-porichoypotro"
+  ],
+  "tex": "bengali/book/chapters/ch259-rate-discount-form-application-identity-card.tex"
+}

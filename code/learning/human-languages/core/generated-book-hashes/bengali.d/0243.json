@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:9f0b90089d5281eb",
+  "lessonIds": [
+    "BN-C243-bomi",
+    "BN-C243-chulkani",
+    "BN-C243-dari",
+    "BN-C243-goph",
+    "BN-C243-chibuk"
+  ],
+  "tex": "bengali/book/chapters/ch243-vomiting-itch-beard-moustache-chin.tex"
+}

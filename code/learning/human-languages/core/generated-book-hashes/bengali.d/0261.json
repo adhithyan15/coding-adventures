@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:bf0afec5b4e34cf4",
+  "lessonIds": [
+    "BN-C261-mistri",
+    "BN-C261-radhuni",
+    "BN-C261-oyetar",
+    "BN-C261-daroyan",
+    "BN-C261-senabahini"
+  ],
+  "tex": "bengali/book/chapters/ch261-mechanic-cook-waiter-gatekeeper-army.tex"
+}

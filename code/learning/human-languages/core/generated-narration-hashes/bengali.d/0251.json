@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:27ecb3495ca15c28",
+  "lessonIds": [
+    "BN-C251-nach",
+    "BN-C251-prodorshoni",
+    "BN-C251-mela",
+    "BN-C251-parti",
+    "BN-C251-jatra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch251.txt",
+  "json": "bengali/narration/ch251.json",
+  "textHash": "fnv1a64:9d35ad310557ac59",
+  "jsonHash": "fnv1a64:c59a42e7cb5ebff2",
+  "findings": []
+}

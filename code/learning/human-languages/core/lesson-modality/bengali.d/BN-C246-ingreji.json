@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C246-ingreji",
+    "language": "bengali",
+    "chapter": 246,
+    "sequence": 15440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e091650bd8fcaa4"
+  },
+  "findings": []
+}

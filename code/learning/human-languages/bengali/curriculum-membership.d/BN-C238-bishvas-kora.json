@@ -1,0 +1,11 @@
+{
+  "id": "BN-C238-bishvas-kora",
+  "pathSegment": "BN-PATH-238-ACT238",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-238-ACT238",
+      "order": 4
+    }
+  ]
+}

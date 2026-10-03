@@ -1,0 +1,11 @@
+{
+  "id": "BN-C258-barta",
+  "pathSegment": "BN-PATH-258-JINIS258",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-258-JINIS258",
+      "order": 1
+    }
+  ]
+}

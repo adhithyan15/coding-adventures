@@ -1,0 +1,11 @@
+{
+  "id": "BN-C239-mone-rakha",
+  "pathSegment": "BN-PATH-239-ACT239",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-239-ACT239",
+      "order": 4
+    }
+  ]
+}

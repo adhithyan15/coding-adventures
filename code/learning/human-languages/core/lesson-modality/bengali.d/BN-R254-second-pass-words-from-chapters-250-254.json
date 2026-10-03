@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R254-second-pass-words-from-chapters-250-254",
+    "language": "bengali",
+    "chapter": 254,
+    "sequence": 15890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e287042531b7ec3"
+  },
+  "findings": []
+}

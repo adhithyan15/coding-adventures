@@ -1,0 +1,11 @@
+{
+  "id": "BN-C237-berano",
+  "pathSegment": "BN-PATH-237-ACT237",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-237-ACT237",
+      "order": 4
+    }
+  ]
+}

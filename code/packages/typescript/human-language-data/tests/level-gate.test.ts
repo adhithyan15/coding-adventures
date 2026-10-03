@@ -289,6 +289,9 @@ describe("the gate that would have caught the A2 claim", () => {
     // Russian followed as the ninth, with chapters 136-257 (the negation, past,
     // future and practical-reading nodes, 610 headwords, 128 verbs), which moved
     // it from the A1 row of HELD to the A2 row.
+    // Bengali followed as the tenth, with chapters 145-262 (the past, future
+    // and practical-reading nodes, 590 headwords, 123 verbs), which moved it from
+    // the A1 row of HELD to the A2 row.
     expect(gate.summary.tracksWithAnyLevel).toBe(Object.values(ATTAINMENT).filter(Boolean).length);
     // Which rungs, and only those. Checking every level is the point: pinning one
     // level's count alone would pass on a gate that had also handed out a spurious
@@ -771,8 +774,16 @@ describe("etymology is a hook, not a skill", () => {
       const stage = stageOf.get(nodeOf.get(lessonId) ?? "");
       return stage !== undefined && levelRank(stage as CefrLevel) <= levelRank(level);
     };
+    // The witness also needs a lesson AT the level it is working on, to host the
+    // synthetic atom below. A track that has just climbed a rung is in progress at
+    // the next one (B1 for a new A2 track) before it has any lesson there, and an
+    // atom with no host is counted at no level at all.
+    const hasLessonAt = (language: string, level: CefrLevel) =>
+      e.lessons.some(
+        (l) => l.language === language && stageOf.get(nodeOf.get(l.realization.lessonId) ?? "") === level,
+      );
     const witness = baseline.tracks
-      .filter((t) => t.inProgressAt !== null)
+      .filter((t) => t.inProgressAt !== null && hasLessonAt(t.language, t.inProgressAt))
       .sort((a, b) => a.language.localeCompare(b.language))
       .find((t) =>
         base.reinforcement.some(

@@ -1,0 +1,19 @@
+{
+  "chapter": 261,
+  "title": "Mechanic, Cook, Waiter, Gatekeeper, Army",
+  "label": "ch:bn-mechanic-cook-waiter-gatekeeper-army",
+  "canDo": "I can say a mechanic, a cook, a waiter, a gatekeeper and an army.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C261-senabahini",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 261: I can say a mechanic, a cook, a waiter, a gatekeeper and an army.",
+    "assesses": [
+      "BN-LEX-C261-KAJ261-03",
+      "BN-LEX-C261-KAJ261-04",
+      "BN-LEX-C261-KAJ261-05"
+    ]
+  }
+}

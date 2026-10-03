@@ -1,0 +1,11 @@
+{
+  "id": "BN-C241-khuje-paoya",
+  "pathSegment": "BN-PATH-241-ACT241",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-241-ACT241",
+      "order": 1
+    }
+  ]
+}

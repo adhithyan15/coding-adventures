@@ -1,0 +1,21 @@
+{
+  "language": "bengali",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:d20d77ede129c4f5",
+  "lessonIds": [
+    "BN-C245-sinema-hol",
+    "BN-C245-jim",
+    "BN-C245-selun",
+    "BN-C245-bekari",
+    "BN-C245-laibreri",
+    "BN-R245-first-pass-words-from-chapters-237-240",
+    "BN-R245-second-pass-words-from-chapters-241-245"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "bengali/narration/ch245.txt",
+  "json": "bengali/narration/ch245.json",
+  "textHash": "fnv1a64:3ae22ada9ffc85d0",
+  "jsonHash": "fnv1a64:79445486b10d4f80",
+  "findings": []
+}

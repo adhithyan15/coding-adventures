@@ -1,0 +1,11 @@
+{
+  "id": "BN-C246-sonali",
+  "pathSegment": "BN-PATH-246-GUN246",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-246-GUN246",
+      "order": 3
+    }
+  ]
+}

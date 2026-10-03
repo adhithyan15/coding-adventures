@@ -1,0 +1,19 @@
+{
+  "chapter": 257,
+  "title": "Chhana, Paneer, Ice cream, Chira, Phuchka",
+  "label": "ch:bn-chhana-paneer-ice-cream-chira-phuchka",
+  "canDo": "I can say chhana, paneer, ice cream, chira and phuchka.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C257-phuchka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 257: I can say chhana, paneer, ice cream, chira and phuchka.",
+    "assesses": [
+      "BN-LEX-C257-JINIS257-03",
+      "BN-LEX-C257-JINIS257-04",
+      "BN-LEX-C257-JINIS257-05"
+    ]
+  }
+}

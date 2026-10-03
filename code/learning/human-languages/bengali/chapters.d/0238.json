@@ -1,0 +1,19 @@
+{
+  "chapter": 238,
+  "title": "To die, To increase, To reduce, To chase, To believe",
+  "label": "ch:bn-to-die-to-increase-to-reduce-to-chase-to-believe",
+  "canDo": "I can say to die, to increase, to reduce, to chase and to believe.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C238-bishvas-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 238: I can say to die, to increase, to reduce, to chase and to believe.",
+    "assesses": [
+      "BN-LEX-C238-ACT238-03",
+      "BN-LEX-C238-ACT238-04",
+      "BN-LEX-C238-ACT238-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C254-aoyaj",
+    "language": "bengali",
+    "chapter": 254,
+    "sequence": 15870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3469d36820ee5516"
+  },
+  "findings": []
+}

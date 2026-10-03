@@ -1,0 +1,11 @@
+{
+  "id": "BN-C248-parsel",
+  "pathSegment": "BN-PATH-248-JINIS248",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-248-JINIS248",
+      "order": 3
+    }
+  ]
+}

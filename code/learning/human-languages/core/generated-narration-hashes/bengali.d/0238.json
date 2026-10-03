@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 238,
+  "sourceHash": "fnv1a64:c3d4b7a44c5234e4",
+  "lessonIds": [
+    "BN-C238-mora",
+    "BN-C238-barano",
+    "BN-C238-komano",
+    "BN-C238-tara-kora",
+    "BN-C238-bishvas-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch238.txt",
+  "json": "bengali/narration/ch238.json",
+  "textHash": "fnv1a64:7524ced0affc9fae",
+  "jsonHash": "fnv1a64:4fe07ccfa95ba796",
+  "findings": []
+}

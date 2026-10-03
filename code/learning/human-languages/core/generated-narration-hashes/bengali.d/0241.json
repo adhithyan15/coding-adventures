@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:5f96d11c08dc6314",
+  "lessonIds": [
+    "BN-C241-hariye-jaoya",
+    "BN-C241-khuje-paoya",
+    "BN-C241-kheyal-kora",
+    "BN-C241-janano",
+    "BN-C241-golpo-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch241.txt",
+  "json": "bengali/narration/ch241.json",
+  "textHash": "fnv1a64:9c5558cb4c4e4d24",
+  "jsonHash": "fnv1a64:ba76ee36295c3add",
+  "findings": []
+}

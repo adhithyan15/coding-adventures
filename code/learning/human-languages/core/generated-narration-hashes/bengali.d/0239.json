@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:a09544f26eaea470",
+  "lessonIds": [
+    "BN-C239-chumu-khaoya",
+    "BN-C239-rong-kora",
+    "BN-C239-bajano",
+    "BN-C239-phiriye-deoya",
+    "BN-C239-mone-rakha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch239.txt",
+  "json": "bengali/narration/ch239.json",
+  "textHash": "fnv1a64:a27a1e71f699fb86",
+  "jsonHash": "fnv1a64:7fee3ada7b795820",
+  "findings": []
+}

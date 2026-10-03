@@ -1,0 +1,19 @@
+{
+  "chapter": 245,
+  "title": "Cinema hall, Gym, Hair salon, Bakery, Library",
+  "label": "ch:bn-cinema-hall-gym-hair-salon-bakery-library",
+  "canDo": "I can say a cinema hall, a gym, a hair salon, a bakery and a library.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "BN-R245-second-pass-words-from-chapters-241-245",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 245: I can say a cinema hall, a gym, a hair salon, a bakery and a library.",
+    "assesses": [
+      "BN-LEX-C245-JAYGA245-03",
+      "BN-LEX-C245-JAYGA245-04",
+      "BN-LEX-C245-JAYGA245-05"
+    ]
+  }
+}

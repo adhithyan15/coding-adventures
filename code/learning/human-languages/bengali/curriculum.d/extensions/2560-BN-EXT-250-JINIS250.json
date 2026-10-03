@@ -1,0 +1,8 @@
+{
+  "id": "BN-EXT-250-JINIS250",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a crocodile, a giraffe, a zebra, a spider and a kite.",
+  "prerequisites": []
+}

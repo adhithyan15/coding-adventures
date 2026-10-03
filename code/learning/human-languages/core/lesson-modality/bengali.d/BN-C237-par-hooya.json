@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C237-par-hooya",
+    "language": "bengali",
+    "chapter": 237,
+    "sequence": 14820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b934dd2b5779511"
+  },
+  "findings": []
+}

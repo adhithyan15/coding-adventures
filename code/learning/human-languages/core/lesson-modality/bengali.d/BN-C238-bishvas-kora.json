@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C238-bishvas-kora",
+    "language": "bengali",
+    "chapter": 238,
+    "sequence": 14880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0007f980298f8c80"
+  },
+  "findings": []
+}

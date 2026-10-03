@@ -1,0 +1,19 @@
+{
+  "chapter": 253,
+  "title": "Lie, Mystery, Joke, Smile, Friendship",
+  "label": "ch:bn-lie-mystery-joke-smile-friendship",
+  "canDo": "I can say a lie, a mystery, a joke, a smile and friendship.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C253-bondhutvo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 253: I can say a lie, a mystery, a joke, a smile and friendship.",
+    "assesses": [
+      "BN-LEX-C253-JINIS253-03",
+      "BN-LEX-C253-JINIS253-04",
+      "BN-LEX-C253-JINIS253-05"
+    ]
+  }
+}

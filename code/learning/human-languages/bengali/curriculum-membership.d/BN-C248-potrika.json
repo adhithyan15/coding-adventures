@@ -1,0 +1,11 @@
+{
+  "id": "BN-C248-potrika",
+  "pathSegment": "BN-PATH-248-JINIS248",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-248-JINIS248",
+      "order": 4
+    }
+  ]
+}
