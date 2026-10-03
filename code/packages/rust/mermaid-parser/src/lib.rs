@@ -4629,6 +4629,13 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                 "break-spaces" => diagram_ir::TreemapWhiteSpace::BreakSpaces,
                 _ => return Err(token_error(token, "unsupported treemap white-space")),
             }),
+            "white-space-collapse" => style.white_space = Some(match value.to_ascii_lowercase().as_str() {
+                "collapse" => diagram_ir::TreemapWhiteSpace::Normal,
+                "preserve" => diagram_ir::TreemapWhiteSpace::PreWrap,
+                "preserve-breaks" => diagram_ir::TreemapWhiteSpace::PreLine,
+                "break-spaces" => diagram_ir::TreemapWhiteSpace::BreakSpaces,
+                _ => return Err(token_error(token, "treemap white-space-collapse must be collapse, preserve, preserve-breaks, or break-spaces")),
+            }),
             "overflow-wrap" => style.overflow_wrap = Some(match value.to_ascii_lowercase().as_str() {
                 "normal" => diagram_ir::TreemapOverflowWrap::Normal,
                 "break-word" => diagram_ir::TreemapOverflowWrap::BreakWord,
@@ -14671,6 +14678,23 @@ B//-A: reverse stick top
         }
         assert!(parse_treemap(
             "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent white-space:collapse",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_white_space_collapse_modes() {
+        for (value, expected) in [
+            ("collapse", diagram_ir::TreemapWhiteSpace::Normal),
+            ("preserve", diagram_ir::TreemapWhiteSpace::PreWrap),
+            ("preserve-breaks", diagram_ir::TreemapWhiteSpace::PreLine),
+            ("break-spaces", diagram_ir::TreemapWhiteSpace::BreakSpaces),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent white-space-collapse:{value}");
+            let diagram = parse_treemap(&source).expect("supported whitespace collapsing must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.white_space), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent white-space-collapse:preserve-spaces",
         ).is_err());
     }
 

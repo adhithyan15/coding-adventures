@@ -549,7 +549,9 @@ the target after forced breaks. Subsequent lines otherwise retain the authored b
 nowrap, pre, pre-wrap, pre-line,
 and break-spaces white-space modes control collapsing, preservation, and native
 line wrapping. Break-spaces keeps every ASCII separator and exposes each one as
-a backend-neutral wrap opportunity. Auto, left/start, center, right/end, and
+a backend-neutral wrap opportunity. The white-space-collapse longhand composes
+collapse, preserve, preserve-breaks, and break-spaces into the same semantic
+modes; preserve-spaces remains explicitly unsupported. Auto, left/start, center, right/end, and
 justify last-line alignment overrides flow into backend-neutral line positioning
 and glyph spacing.
 Normal, break-word, and anywhere overflow wrapping preserve ordinary Unicode
