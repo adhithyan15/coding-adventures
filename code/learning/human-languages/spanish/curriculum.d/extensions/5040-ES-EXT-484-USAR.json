@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-484-USAR",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that someone uses, makes the most of, supports, thanks or saves.",
+  "prerequisites": []
+}

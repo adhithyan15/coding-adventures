@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:ab4004ae4136bdab",
+  "lessonIds": [
+    "ES-C480-afirmar",
+    "ES-C480-comunicar",
+    "ES-C480-interrumpir",
+    "ES-C480-prometer",
+    "ES-C480-quejarse"
+  ],
+  "tex": "spanish/book/chapters/ch480-lo-que-dice-la-gente.tex"
+}

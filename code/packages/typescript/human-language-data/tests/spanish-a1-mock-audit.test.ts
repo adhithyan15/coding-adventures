@@ -183,14 +183,21 @@ describe("Spanish A2 book-bounded mock audit", () => {
     //
     // The honest consequence: "the A2 vocabulary programme is complete" was
     // false. It was complete against an instrument that only read the passage.
-    expect(audit.objectiveFailed).toBe(48);
+    //
+    // 48 -> 7: chapters 475-484 teach the 46 words above that were not a
+    // headword at or below A2, plus four more (aprovechar, apoyar, agradecer,
+    // ahorrar). Every one of the seven items still failing turns on a word
+    // that IS taught but derives above A2 -- explicar (m1 p1 3, m2 p1 3, m2
+    // p1 25), problema (m1 p2 39), creer (m1 p2 43), mejor (m2 p1 5) and
+    // responder (m2 p1 21) -- so none of them is vocabulary work any more.
+    expect(audit.objectiveFailed).toBe(7);
     expect(audit.mocks.map(({ reading, listening, objectiveFailed }) => ({
       reading,
       listening,
       objectiveFailed,
     }))).toEqual([
-      { reading: 12, listening: 13, objectiveFailed: 25 },
-      { reading: 10, listening: 17, objectiveFailed: 23 },
+      { reading: 24, listening: 23, objectiveFailed: 3 },
+      { reading: 21, listening: 25, objectiveFailed: 4 },
     ]);
     // THIS NUMBER MUST ONLY EVER FALL, with one exception already spent above:
     // a rise is allowed when it is the MEASUREMENT being corrected to be
@@ -467,59 +474,18 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // note above: three rounds of review found 3, then 17, then 18 more, every
     // correction in the same direction. Do not read 51 as the answer; read it
     // as the largest number anyone has yet demonstrated.
-    expect(audit.missingObjectiveLexemes).toHaveLength(51);
+    //
+    // 51 -> 5. Chapters 475-484 taught all 46 words in the second group above,
+    // as A2 headwords on SPINE-READ-PRACTICAL-TEXTS. The five left are the
+    // first group: taught, but above this gate's ceiling, and decisions for
+    // HL-C418, HL-C420 and HL-C422 rather than vocabulary to write.
+    expect(audit.missingObjectiveLexemes).toHaveLength(5);
     expect(audit.missingObjectiveLexemes).toEqual([
-      "aburrido",
-      "acudir",
-      "adelantado",
-      "afirmar",
-      "ahorro",
-      "alquiler",
-      "alumno",
-      "calzado",
-      "cancelar",
-      "comprender",
-      "comunicar",
-      "concreto",
-      "costumbre",
       "creer",
-      "descartar",
-      "disponible",
-      "equipaje",
-      "error",
-      "espacio",
       "explicar",
-      "finalidad",
-      "ganar",
-      "infancia",
-      "iniciativa",
-      "inscribirse",
-      "interrumpir",
-      "jardinero",
-      "justo",
-      "material",
       "mejor",
-      "mejora",
-      "multa",
-      "obligatorio",
-      "parecido",
-      "practicar",
-      "prever",
       "problema",
-      "profesional",
-      "prometer",
-      "quejarse",
-      "recuperar",
-      "resolver",
       "responder",
-      "rápido",
-      "sitio",
-      "sustituir",
-      "trescientos",
-      "título",
-      "utilizar",
-      "variedad",
-      "vigilar",
     ]);
   });
 

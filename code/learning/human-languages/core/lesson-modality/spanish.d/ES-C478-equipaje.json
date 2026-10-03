@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C478-equipaje",
+    "language": "spanish",
+    "chapter": 478,
+    "sequence": 13400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f1a72b17b10822ec"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:70e73ed353a11d42",
+  "lessonIds": [
+    "ES-C477-ahorro",
+    "ES-C477-alquiler",
+    "ES-C477-multa",
+    "ES-C477-ganar",
+    "ES-C477-trescientos"
+  ],
+  "tex": "spanish/book/chapters/ch477-el-dinero-de-cada-mes.tex"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-479-TRAMITE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read a form that says what is compulsory, how to sign up or cancel, what to pay in advance and who stands in for whom.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C482-parecido",
+  "pathSegment": "ES-PATH-482-COMO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-482-COMO",
+      "order": 1
+    }
+  ]
+}

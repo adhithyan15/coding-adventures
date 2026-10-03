@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:4a8832e1bb6149d7",
+  "lessonIds": [
+    "ES-C479-inscribirse",
+    "ES-C479-cancelar",
+    "ES-C479-obligatorio",
+    "ES-C479-adelantado",
+    "ES-C479-sustituir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch479.txt",
+  "json": "spanish/narration/ch479.json",
+  "textHash": "fnv1a64:37df8495dc55da4d",
+  "jsonHash": "fnv1a64:3c4f101f5dcbdcf5",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 482,
+  "title": "Cómo son las cosas",
+  "label": "ch:es-como-son-las-cosas",
+  "canDo": "I can describe things as specific, similar, fair, fast or varied.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C482-variedad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 482: I can describe things as specific, similar, fair, fast or varied.",
+    "assesses": [
+      "ES-LEX-C482-COMO-03",
+      "ES-LEX-C482-COMO-04",
+      "ES-LEX-C482-COMO-05"
+    ]
+  }
+}

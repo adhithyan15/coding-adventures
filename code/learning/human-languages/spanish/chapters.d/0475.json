@@ -1,0 +1,19 @@
+{
+  "chapter": 475,
+  "title": "En el trabajo",
+  "label": "ch:es-en-el-trabajo",
+  "canDo": "I can read a job notice that asks for a professional with initiative and a qualification, and says who provides the materials.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C475-jardinero",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 475: I can read a job notice that asks for a professional with initiative and a qualification, and says who provides the materials.",
+    "assesses": [
+      "ES-LEX-C475-OFICIO-03",
+      "ES-LEX-C475-OFICIO-04",
+      "ES-LEX-C475-OFICIO-05"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-481-ARREGLO",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can understand how a problem is solved: what is ruled out, foreseen, got back or watched.",
+  "prerequisites": []
+}

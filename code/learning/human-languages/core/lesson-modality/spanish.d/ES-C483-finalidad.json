@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C483-finalidad",
+    "language": "spanish",
+    "chapter": 483,
+    "sequence": 13670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6589f2ca9735a0c2"
+  },
+  "findings": []
+}

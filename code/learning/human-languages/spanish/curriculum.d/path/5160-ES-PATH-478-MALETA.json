@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-478-MALETA",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-478-MALETA"
+  ],
+  "after": []
+}

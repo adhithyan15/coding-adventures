@@ -1,0 +1,19 @@
+{
+  "chapter": 476,
+  "title": "En clase",
+  "label": "ch:es-en-clase",
+  "canDo": "I can understand a teacher's note about a pupil who practises, understands, makes mistakes or is bored.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C476-aburrido",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 476: I can understand a teacher's note about a pupil who practises, understands, makes mistakes or is bored.",
+    "assesses": [
+      "ES-LEX-C476-AULA-03",
+      "ES-LEX-C476-AULA-04",
+      "ES-LEX-C476-AULA-05"
+    ]
+  }
+}

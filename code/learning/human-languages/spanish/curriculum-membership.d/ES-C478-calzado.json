@@ -1,0 +1,11 @@
+{
+  "id": "ES-C478-calzado",
+  "pathSegment": "ES-PATH-478-MALETA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-478-MALETA",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-480-DECIR",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow what people state, communicate, interrupt, promise or complain about.",
+  "prerequisites": []
+}

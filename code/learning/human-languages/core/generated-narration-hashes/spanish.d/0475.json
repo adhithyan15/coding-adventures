@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:26b70e11486fbd3d",
+  "lessonIds": [
+    "ES-C475-profesional",
+    "ES-C475-iniciativa",
+    "ES-C475-titulo",
+    "ES-C475-material",
+    "ES-C475-jardinero"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch475.txt",
+  "json": "spanish/narration/ch475.json",
+  "textHash": "fnv1a64:4d22534155555518",
+  "jsonHash": "fnv1a64:d6bd428edcd733d8",
+  "findings": []
+}

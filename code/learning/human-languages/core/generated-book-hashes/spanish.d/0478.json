@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:ddcd13031ef713c7",
+  "lessonIds": [
+    "ES-C478-equipaje",
+    "ES-C478-calzado",
+    "ES-C478-sitio",
+    "ES-C478-espacio",
+    "ES-C478-disponible"
+  ],
+  "tex": "spanish/book/chapters/ch478-antes-del-viaje.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C480-prometer",
+  "pathSegment": "ES-PATH-480-DECIR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-480-DECIR",
+      "order": 3
+    }
+  ]
+}

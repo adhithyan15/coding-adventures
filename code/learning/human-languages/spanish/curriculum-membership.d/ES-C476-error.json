@@ -1,0 +1,11 @@
+{
+  "id": "ES-C476-error",
+  "pathSegment": "ES-PATH-476-AULA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-476-AULA",
+      "order": 3
+    }
+  ]
+}

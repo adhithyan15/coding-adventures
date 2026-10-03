@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C478-espacio",
+    "language": "spanish",
+    "chapter": 478,
+    "sequence": 13430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:97888220d143c6e9"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:be6a0027af0e881b",
+  "lessonIds": [
+    "ES-C482-concreto",
+    "ES-C482-parecido",
+    "ES-C482-justo",
+    "ES-C482-rapido",
+    "ES-C482-variedad"
+  ],
+  "tex": "spanish/book/chapters/ch482-como-son-las-cosas.tex"
+}

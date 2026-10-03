@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-478-MALETA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read travel information about luggage, footwear, the place and the space available.",
+  "prerequisites": []
+}
