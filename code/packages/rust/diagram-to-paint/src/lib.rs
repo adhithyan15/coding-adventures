@@ -464,6 +464,13 @@ fn treemap_text_node(
         };
         node.ext.insert("text.hyphens".into(), ExtValue::Str(hyphens.into()));
     }
+    if let Some(character) = style.and_then(|style| style.hyphenate_character.as_ref()) {
+        let character = match character {
+            diagram_ir::TreemapHyphenateCharacter::Auto => "-",
+            diagram_ir::TreemapHyphenateCharacter::Character(value) => value,
+        };
+        node.ext.insert("text.hyphenate-character".into(), ExtValue::Str(character.into()));
+    }
     if let Some(text_overflow) = style.and_then(|style| style.text_overflow) {
         let text_overflow = match text_overflow {
             diagram_ir::TreemapTextOverflow::Clip => "clip",
@@ -7083,6 +7090,7 @@ mod tests {
                     word_break: None,
                     line_break: None,
                     hyphens: None,
+                    hyphenate_character: None,
                     text_overflow: None,
                     text_wrap_mode: None,
                     text_wrap_style: None,
@@ -7220,6 +7228,14 @@ mod tests {
             current_color, Some(&whitespace_style),
         );
         assert_eq!(hyphenated_text.ext.get("text.hyphens"), Some(&ExtValue::Str("manual".into())));
+        whitespace_style.hyphenate_character = Some(
+            diagram_ir::TreemapHyphenateCharacter::Character("‐".into()));
+        let custom_hyphen_text = treemap_text_node(
+            "extra\u{ad}ordinary", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(custom_hyphen_text.ext.get("text.hyphenate-character"),
+            Some(&ExtValue::Str("‐".into())));
         whitespace_style.text_overflow = Some(diagram_ir::TreemapTextOverflow::Ellipsis);
         let ellipsis_text = treemap_text_node(
             "overflow", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),

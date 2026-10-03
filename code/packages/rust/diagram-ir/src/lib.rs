@@ -1497,6 +1497,7 @@ pub struct TreemapStyle {
     pub word_break: Option<TreemapWordBreak>,
     pub line_break: Option<TreemapLineBreak>,
     pub hyphens: Option<TreemapHyphens>,
+    pub hyphenate_character: Option<TreemapHyphenateCharacter>,
     pub text_overflow: Option<TreemapTextOverflow>,
     pub text_wrap_mode: Option<TreemapTextWrapMode>,
     pub text_wrap_style: Option<TreemapTextWrapStyle>,
@@ -1561,6 +1562,9 @@ pub enum TreemapLineBreak { Auto, Loose, Normal, Strict, Anywhere }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum TreemapHyphens { None, Manual }
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum TreemapHyphenateCharacter { Auto, Character(String) }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum TreemapTextOverflow { Clip, Ellipsis }

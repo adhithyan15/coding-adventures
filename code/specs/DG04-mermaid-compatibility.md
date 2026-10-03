@@ -564,7 +564,8 @@ defaults, tailor small-kana opportunities, or add grapheme opportunities.
 None and manual hyphenation modes suppress discretionary breaks or expose
 authored soft hyphens as backend-neutral wrap opportunities. Manual soft
 hyphens remain invisible unless selected as a line ending; dictionary-backed
-automatic hyphenation remains explicitly unsupported.
+automatic hyphenation remains explicitly unsupported. Auto and quoted custom
+hyphenate-character values choose the glyph inserted at an authored break.
 Clip and ellipsis text-overflow modes truncate oversized labels at grapheme
 boundaries, with ellipsis insertion remaining backend-neutral until shaping.
 Wrap and nowrap text-wrap modes independently enable or suppress soft wrapping
