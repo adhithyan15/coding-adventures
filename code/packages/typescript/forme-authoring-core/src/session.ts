@@ -25,10 +25,17 @@ function abortIfNeeded(signal?: AbortSignal): void {
 }
 
 function storageFailure(error: unknown, signal?: AbortSignal): never {
-  if (signal?.aborted || (error !== null && typeof error === "object" && "name" in error && error.name === "AbortError")) {
-    throw new DOMException("The operation was aborted", "AbortError");
+  if (signal?.aborted) throw new DOMException("The operation was aborted", "AbortError");
+  let conflict = false;
+  try {
+    if (error !== null && typeof error === "object" && Object.getPrototypeOf(error) === AuthoringError.prototype) {
+      const descriptor = Object.getOwnPropertyDescriptor(error, "code");
+      conflict = descriptor !== undefined && "value" in descriptor && descriptor.value === "STORAGE_CONFLICT";
+    }
+  } catch {
+    conflict = false;
   }
-  if (error instanceof AuthoringError && error.code === "STORAGE_CONFLICT") throw error;
+  if (conflict) throw error;
   throw new AuthoringError("STORAGE_ERROR", "The storage adapter operation failed.");
 }
 
@@ -66,10 +73,13 @@ function exactObject(value: unknown, keys: readonly string[]): Record<string, un
 
 function decodeStored(stored: StoredAuthoringState, limits: AuthoringLimits): { readonly state: PersistedSession; readonly revision: string } {
   const storedFields = exactObject(stored, ["bytes", "revision"]);
-  if (!(storedFields.bytes instanceof Uint8Array)) invalidState("stored bytes are not a Uint8Array");
-  if (storedFields.bytes.byteLength > limits.maxJsonBytes) invalidState("stored bytes exceed the hard byte limit");
+  let bytes: Uint8Array;
+  try { bytes = Uint8Array.prototype.slice.call(storedFields.bytes) as Uint8Array; } catch {
+    invalidState("stored bytes are not a genuine Uint8Array");
+  }
+  if (bytes!.byteLength > limits.maxJsonBytes) invalidState("stored bytes exceed the hard byte limit");
   let text: string;
-  try { text = new TextDecoder("utf-8", { fatal: true }).decode(storedFields.bytes); } catch { invalidState("stored bytes are not valid UTF-8"); }
+  try { text = new TextDecoder("utf-8", { fatal: true }).decode(bytes!); } catch { invalidState("stored bytes are not valid UTF-8"); }
   let parsed: unknown;
   try { parsed = JSON.parse(text!); } catch { invalidState("stored bytes are not valid JSON"); }
   const node = exactObject(parsed, ["schemaVersion", "historyLimit", "cursor", "history"]);

@@ -368,11 +368,26 @@ describe("durable authoring sessions", () => {
       async compareAndSwap() { return { revision: "unused" }; },
     };
     await expect(openAuthoringSession({ storage: failedLoad })).rejects.toMatchObject({ code: "STORAGE_ERROR", message: "The storage adapter operation failed." });
+    const loadCancellation = new AbortController();
     const cancelledLoad: AuthoringStorage = {
-      async load() { throw new DOMException("private reason", "AbortError"); },
+      async load() {
+        loadCancellation.abort(new Error("private reason"));
+        throw new DOMException("private reason", "AbortError");
+      },
       async compareAndSwap() { return { revision: "unused" }; },
     };
-    await expect(openAuthoringSession({ storage: cancelledLoad })).rejects.toMatchObject({ name: "AbortError", message: "The operation was aborted" });
+    await expect(openAuthoringSession({ storage: cancelledLoad, signal: loadCancellation.signal })).rejects.toMatchObject({ name: "AbortError", message: "The operation was aborted" });
+
+    for (const hostileError of [
+      new Proxy({}, { getPrototypeOf() { throw new Error("leak one"); } }),
+      new Proxy(new AuthoringError("STORAGE_CONFLICT", "leak two"), { getOwnPropertyDescriptor() { throw new Error("leak two"); } }),
+    ]) {
+      const hostileFailure: AuthoringStorage = {
+        async load() { throw hostileError; },
+        async compareAndSwap() { return { revision: "unused" }; },
+      };
+      await expect(openAuthoringSession({ storage: hostileFailure })).rejects.toMatchObject({ code: "STORAGE_ERROR", message: "The storage adapter operation failed." });
+    }
 
     const descriptorLoad: AuthoringStorage = {
       async load() {
@@ -403,6 +418,11 @@ describe("durable authoring sessions", () => {
       async compareAndSwap() { return { revision: "unused" }; },
     };
     await expect(openAuthoringSession({ storage: accessorLoad })).rejects.toMatchObject({ code: "INVALID_STATE" });
+    const typedArrayProxyLoad: AuthoringStorage = {
+      async load() { return { bytes: new Proxy(new Uint8Array([1]), {}), revision: "x" } as never; },
+      async compareAndSwap() { return { revision: "unused" }; },
+    };
+    await expect(openAuthoringSession({ storage: typedArrayProxyLoad })).rejects.toMatchObject({ code: "INVALID_STATE" });
     await expect(openAuthoringSession({ storage: null as never, initialProject: initial() })).rejects.toMatchObject({ code: "INVALID_STATE" });
 
     const failedOpen = new MemoryStorage();
