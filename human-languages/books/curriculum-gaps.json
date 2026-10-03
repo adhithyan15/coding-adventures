@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 24752,
+    "totalLessons": 24925,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -40,7 +40,7 @@
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 192,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 22961,
+    "drivableLessons": 23134,
     "drivablePercent": 93,
     "chaptersWithoutDrivablePrefix": 278,
     "unexplainedModalityOverrides": 0
@@ -4379,7 +4379,40 @@
           157,
           158,
           159,
-          160
+          160,
+          161,
+          162,
+          163,
+          164,
+          165,
+          166,
+          167,
+          168,
+          169,
+          170,
+          171,
+          172,
+          173,
+          174,
+          175,
+          176,
+          177,
+          178,
+          179,
+          180,
+          181,
+          182,
+          183,
+          184,
+          185,
+          186,
+          187,
+          188,
+          189,
+          190,
+          191,
+          192,
+          193
         ],
         "bookChapters": [
           1,
@@ -4541,7 +4574,40 @@
           157,
           158,
           159,
-          160
+          160,
+          161,
+          162,
+          163,
+          164,
+          165,
+          166,
+          167,
+          168,
+          169,
+          170,
+          171,
+          172,
+          173,
+          174,
+          175,
+          176,
+          177,
+          178,
+          179,
+          180,
+          181,
+          182,
+          183,
+          184,
+          185,
+          186,
+          187,
+          188,
+          189,
+          190,
+          191,
+          192,
+          193
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -10876,9 +10942,9 @@
       {
         "language": "tamil",
         "status": "version-2",
-        "lessonCount": 801,
+        "lessonCount": 974,
         "versions": {
-          "2": 801
+          "2": 974
         }
       },
       {
@@ -11835,8 +11901,8 @@
       },
       {
         "language": "tamil",
-        "bookChapters": 160,
-        "declaredChapters": 160,
+        "bookChapters": 193,
+        "declaredChapters": 193,
         "missingCapability": 0,
         "findings": 10,
         "clean": false
@@ -11859,8 +11925,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 4938,
-      "declaredChapters": 4938,
+      "bookChapters": 4971,
+      "declaredChapters": 4971,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 94,
@@ -11872,10 +11938,10 @@
     }
   },
   "levels": {
-    "totalLessons": 24752,
+    "totalLessons": 24925,
     "byLevel": {
-      "pre-A1": 9148,
-      "A1": 14156,
+      "pre-A1": 9160,
+      "A1": 14317,
       "A2": 1364,
       "B1": 39,
       "B2": 17,
@@ -12187,10 +12253,10 @@
       },
       {
         "language": "tamil",
-        "lessonCount": 801,
+        "lessonCount": 974,
         "byLevel": {
-          "pre-A1": 422,
-          "A1": 341,
+          "pre-A1": 434,
+          "A1": 502,
           "A2": 38,
           "B1": 0,
           "B2": 0,
@@ -12837,8 +12903,8 @@
       },
       {
         "language": "tamil",
-        "lessonCount": 801,
-        "measurable": 799,
+        "lessonCount": 974,
+        "measurable": 972,
         "unmeasurable": 2,
         "lessonViolations": 0,
         "chapterViolations": 1
@@ -13403,7 +13469,7 @@
           "language": "tamil",
           "script": "tamil",
           "latinScript": false,
-          "lessonCount": 801,
+          "lessonCount": 974,
           "totalGlyphs": 52,
           "lessonViolations": 2,
           "systemViolations": 0,
@@ -80672,6 +80738,330 @@
           "R4"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C148-QUAL148-03",
+        "language": "tamil",
+        "introducedBy": "TA-C148-kurukiya",
+        "introducedAt": 732,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C148-QUAL148-04",
+        "language": "tamil",
+        "introducedBy": "TA-C148-kaynta",
+        "introducedAt": 733,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "TA-LEX-C148-QUAL148-05",
+        "language": "tamil",
+        "introducedBy": "TA-C148-nanainta",
+        "introducedAt": 734,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "TA-LEX-C154-ACT154-03",
+        "language": "tamil",
+        "introducedBy": "TA-C154-valar",
+        "introducedAt": 764,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C154-ACT154-04",
+        "language": "tamil",
+        "introducedBy": "TA-C154-ennu",
+        "introducedAt": 765,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C154-ACT154-05",
+        "language": "tamil",
+        "introducedBy": "TA-C154-kattu",
+        "introducedAt": 766,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C155-ACT155-01",
+        "language": "tamil",
+        "introducedBy": "TA-C155-tallu",
+        "introducedAt": 767,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C157-ACT157-03",
+        "language": "tamil",
+        "introducedBy": "TA-C157-utu",
+        "introducedAt": 779,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C157-ACT157-04",
+        "language": "tamil",
+        "introducedBy": "TA-C157-eri2",
+        "introducedAt": 780,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "TA-LEX-C157-ACT157-05",
+        "language": "tamil",
+        "introducedBy": "TA-C157-anai",
+        "introducedAt": 781,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "TA-LEX-C160-PATI160-03",
+        "language": "tamil",
+        "introducedBy": "TA-C160-vatakai",
+        "introducedAt": 796,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C160-PATI160-04",
+        "language": "tamil",
+        "introducedBy": "TA-C160-vilamparam",
+        "introducedAt": 797,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "TA-LEX-C160-PATI160-05",
+        "language": "tamil",
+        "introducedBy": "TA-C160-racitu",
+        "introducedAt": 798,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "TA-LEX-C166-ACT166-03",
+        "language": "tamil",
+        "introducedBy": "TA-C166-poruttukkol",
+        "introducedAt": 828,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C166-ACT166-04",
+        "language": "tamil",
+        "introducedBy": "TA-C166-camatanam-cey",
+        "introducedAt": 829,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C166-ACT166-05",
+        "language": "tamil",
+        "introducedBy": "TA-C166-yoci",
+        "introducedAt": 830,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C167-ACT167-01",
+        "language": "tamil",
+        "introducedBy": "TA-C167-totar",
+        "introducedAt": 831,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C169-NALAM169-03",
+        "language": "tamil",
+        "introducedBy": "TA-C169-tontai",
+        "introducedAt": 843,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C169-NALAM169-04",
+        "language": "tamil",
+        "introducedBy": "TA-C169-itayam",
+        "introducedAt": 844,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "TA-LEX-C169-NALAM169-05",
+        "language": "tamil",
+        "introducedBy": "TA-C169-irattam",
+        "introducedAt": 845,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "TA-LEX-C175-IDAM175-03",
+        "language": "tamil",
+        "introducedBy": "TA-C175-otai",
+        "introducedAt": 875,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C175-IDAM175-04",
+        "language": "tamil",
+        "introducedBy": "TA-C175-pannai",
+        "introducedAt": 876,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C175-IDAM175-05",
+        "language": "tamil",
+        "introducedBy": "TA-C175-mirukakkatcicalai",
+        "introducedAt": 877,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C176-KARANAM176-01",
+        "language": "tamil",
+        "introducedBy": "TA-C176-analum",
+        "introducedAt": 878,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C178-GUNAM178-03",
+        "language": "tamil",
+        "introducedBy": "TA-C178-vilaiyuyarnta",
+        "introducedAt": 890,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C178-GUNAM178-04",
+        "language": "tamil",
+        "introducedBy": "TA-C178-ilavacam",
+        "introducedAt": 891,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "TA-LEX-C178-GUNAM178-05",
+        "language": "tamil",
+        "introducedBy": "TA-C178-palutta",
+        "introducedAt": 892,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
       },
       {
         "atom": "TA-LEX-C37-AVAR-01",
@@ -237636,10 +238026,1517 @@
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C148-QUAL148-03",
+        "atom": "TA-LEX-C146-QUAL146-02",
         "language": "tamil",
-        "introducedBy": "TA-C148-kurukiya",
-        "introducedAt": 732,
+        "introducedBy": "TA-C146-pulippu",
+        "introducedAt": 721,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C146-QUAL146-03",
+        "language": "tamil",
+        "introducedBy": "TA-C146-karam",
+        "introducedAt": 722,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C146-QUAL146-04",
+        "language": "tamil",
+        "introducedBy": "TA-C146-panakkara",
+        "introducedAt": 723,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C146-QUAL146-05",
+        "language": "tamil",
+        "introducedBy": "TA-C146-elai",
+        "introducedAt": 724,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C147-QUAL147-01",
+        "language": "tamil",
+        "introducedBy": "TA-C147-ilaiya",
+        "introducedAt": 725,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C147-QUAL147-02",
+        "language": "tamil",
+        "introducedBy": "TA-C147-vayatana",
+        "introducedAt": 726,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C147-QUAL147-03",
+        "language": "tamil",
+        "introducedBy": "TA-C147-putticali",
+        "introducedAt": 727,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C147-QUAL147-04",
+        "language": "tamil",
+        "introducedBy": "TA-C147-comperi",
+        "introducedAt": 728,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C147-QUAL147-05",
+        "language": "tamil",
+        "introducedBy": "TA-C147-tairiyamana",
+        "introducedAt": 729,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C148-QUAL148-01",
+        "language": "tamil",
+        "introducedBy": "TA-C148-alamana",
+        "introducedAt": 730,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C148-QUAL148-02",
+        "language": "tamil",
+        "introducedBy": "TA-C148-akalamana",
+        "introducedAt": 731,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C149-QUAL149-01",
+        "language": "tamil",
+        "introducedBy": "TA-C149-pirapalamana",
+        "introducedAt": 737,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C149-QUAL149-02",
+        "language": "tamil",
+        "introducedBy": "TA-C149-apattana",
+        "introducedAt": 738,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C149-QUAL149-03",
+        "language": "tamil",
+        "introducedBy": "TA-C149-patukappana",
+        "introducedAt": 739,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C149-QUAL149-04",
+        "language": "tamil",
+        "introducedBy": "TA-C149-unmaiyana",
+        "introducedAt": 740,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C149-QUAL149-05",
+        "language": "tamil",
+        "introducedBy": "TA-C149-poyyana",
+        "introducedAt": 741,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C150-QUAL150-01",
+        "language": "tamil",
+        "introducedBy": "TA-C150-uta",
+        "introducedAt": 742,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C150-QUAL150-02",
+        "language": "tamil",
+        "introducedBy": "TA-C150-campal",
+        "introducedAt": 743,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C150-QUAL150-03",
+        "language": "tamil",
+        "introducedBy": "TA-C150-patu",
+        "introducedAt": 744,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C150-QUAL150-04",
+        "language": "tamil",
+        "introducedBy": "TA-C150-camai",
+        "introducedAt": 745,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C150-QUAL150-05",
+        "language": "tamil",
+        "introducedBy": "TA-C150-vettu",
+        "introducedAt": 746,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C151-ACT151-01",
+        "language": "tamil",
+        "introducedBy": "TA-C151-utai",
+        "introducedAt": 747,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C151-ACT151-02",
+        "language": "tamil",
+        "introducedBy": "TA-C151-vai",
+        "introducedAt": 748,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C151-ACT151-03",
+        "language": "tamil",
+        "introducedBy": "TA-C151-anuppu",
+        "introducedAt": 749,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C151-ACT151-04",
+        "language": "tamil",
+        "introducedBy": "TA-C151-tetu",
+        "introducedAt": 750,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C151-ACT151-05",
+        "language": "tamil",
+        "introducedBy": "TA-C151-karpi",
+        "introducedAt": 751,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C152-ACT152-01",
+        "language": "tamil",
+        "introducedBy": "TA-C152-mara",
+        "introducedAt": 752,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C152-ACT152-02",
+        "language": "tamil",
+        "introducedBy": "TA-C152-kuti",
+        "introducedAt": 753,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C152-ACT152-03",
+        "language": "tamil",
+        "introducedBy": "TA-C152-nintu",
+        "introducedAt": 754,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C152-ACT152-04",
+        "language": "tamil",
+        "introducedBy": "TA-C152-para",
+        "introducedAt": 755,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C152-ACT152-05",
+        "language": "tamil",
+        "introducedBy": "TA-C152-vilu",
+        "introducedAt": 756,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C153-ACT153-01",
+        "language": "tamil",
+        "introducedBy": "TA-C153-eru",
+        "introducedAt": 757,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C153-ACT153-02",
+        "language": "tamil",
+        "introducedBy": "TA-C153-iranku",
+        "introducedAt": 758,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C153-ACT153-03",
+        "language": "tamil",
+        "introducedBy": "TA-C153-tirumpu",
+        "introducedAt": 759,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C153-ACT153-04",
+        "language": "tamil",
+        "introducedBy": "TA-C153-cer",
+        "introducedAt": 760,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C153-ACT153-05",
+        "language": "tamil",
+        "introducedBy": "TA-C153-kuli",
+        "introducedAt": 761,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C154-ACT154-01",
+        "language": "tamil",
+        "introducedBy": "TA-C154-ani2",
+        "introducedAt": 762,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C154-ACT154-02",
+        "language": "tamil",
+        "introducedBy": "TA-C154-alai2",
+        "introducedAt": 763,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C155-ACT155-02",
+        "language": "tamil",
+        "introducedBy": "TA-C155-ilu",
+        "introducedAt": 768,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C155-ACT155-03",
+        "language": "tamil",
+        "introducedBy": "TA-C155-potu",
+        "introducedAt": 769,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C155-ACT155-04",
+        "language": "tamil",
+        "introducedBy": "TA-C155-kattu2",
+        "introducedAt": 770,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C155-ACT155-05",
+        "language": "tamil",
+        "introducedBy": "TA-C155-tuvai",
+        "introducedAt": 771,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C156-ACT156-01",
+        "language": "tamil",
+        "introducedBy": "TA-C156-tutai",
+        "introducedAt": 772,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C156-ACT156-02",
+        "language": "tamil",
+        "introducedBy": "TA-C156-perukku",
+        "introducedAt": 773,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C156-ACT156-03",
+        "language": "tamil",
+        "introducedBy": "TA-C156-karrukkol",
+        "introducedAt": 774,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C156-ACT156-04",
+        "language": "tamil",
+        "introducedBy": "TA-C156-vel",
+        "introducedAt": 775,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C156-ACT156-05",
+        "language": "tamil",
+        "introducedBy": "TA-C156-kantupiti",
+        "introducedAt": 776,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C157-ACT157-01",
+        "language": "tamil",
+        "introducedBy": "TA-C157-marai",
+        "introducedAt": 777,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C157-ACT157-02",
+        "language": "tamil",
+        "introducedBy": "TA-C157-kapparru",
+        "introducedAt": 778,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C158-KALAM158-01",
+        "language": "tamil",
+        "introducedBy": "TA-C158-camipattil",
+        "introducedAt": 784,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C158-KALAM158-02",
+        "language": "tamil",
+        "introducedBy": "TA-C158-erkanave",
+        "introducedAt": 785,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C158-KALAM158-03",
+        "language": "tamil",
+        "introducedBy": "TA-C158-pona",
+        "introducedAt": 786,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C158-KALAM158-04",
+        "language": "tamil",
+        "introducedBy": "TA-C158-oru-kalattil",
+        "introducedAt": 787,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C158-KALAM158-05",
+        "language": "tamil",
+        "introducedBy": "TA-C158-kali",
+        "introducedAt": 788,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C159-ETIR159-01",
+        "language": "tamil",
+        "introducedBy": "TA-C159-atutta",
+        "introducedAt": 789,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C159-ETIR159-02",
+        "language": "tamil",
+        "introducedBy": "TA-C159-inimel",
+        "introducedAt": 790,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C159-ETIR159-03",
+        "language": "tamil",
+        "introducedBy": "TA-C159-tittam",
+        "introducedAt": 791,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C159-ETIR159-04",
+        "language": "tamil",
+        "introducedBy": "TA-C159-mutivu-cey",
+        "introducedAt": 792,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C159-ETIR159-05",
+        "language": "tamil",
+        "introducedBy": "TA-C159-etirpar",
+        "introducedAt": 793,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C160-PATI160-01",
+        "language": "tamil",
+        "introducedBy": "TA-C160-kala-attavanai",
+        "introducedAt": 794,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C160-PATI160-02",
+        "language": "tamil",
+        "introducedBy": "TA-C160-arivippu",
+        "introducedAt": 795,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C161-ACT161-01",
+        "language": "tamil",
+        "introducedBy": "TA-C161-vil",
+        "introducedAt": 801,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C161-ACT161-02",
+        "language": "tamil",
+        "introducedBy": "TA-C161-koti",
+        "introducedAt": 802,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C161-ACT161-03",
+        "language": "tamil",
+        "introducedBy": "TA-C161-varu",
+        "introducedAt": 803,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C161-ACT161-04",
+        "language": "tamil",
+        "introducedBy": "TA-C161-arai",
+        "introducedAt": 804,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C161-ACT161-05",
+        "language": "tamil",
+        "introducedBy": "TA-C161-kalakku",
+        "introducedAt": 805,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C162-ACT162-01",
+        "language": "tamil",
+        "introducedBy": "TA-C162-kata",
+        "introducedAt": 806,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C162-ACT162-02",
+        "language": "tamil",
+        "introducedBy": "TA-C162-tanku",
+        "introducedAt": 807,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C162-ACT162-03",
+        "language": "tamil",
+        "introducedBy": "TA-C162-curru",
+        "introducedAt": 808,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C162-ACT162-04",
+        "language": "tamil",
+        "introducedBy": "TA-C162-nakar",
+        "introducedAt": 809,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C162-ACT162-05",
+        "language": "tamil",
+        "introducedBy": "TA-C162-tukku",
+        "introducedAt": 810,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C163-ACT163-01",
+        "language": "tamil",
+        "introducedBy": "TA-C163-tayar-cey",
+        "introducedAt": 811,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C163-ACT163-02",
+        "language": "tamil",
+        "introducedBy": "TA-C163-parimaru",
+        "introducedAt": 812,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C163-ACT163-03",
+        "language": "tamil",
+        "introducedBy": "TA-C163-pakir",
+        "introducedAt": 813,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C163-ACT163-04",
+        "language": "tamil",
+        "introducedBy": "TA-C163-peram-pecu",
+        "introducedAt": 814,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C163-ACT163-05",
+        "language": "tamil",
+        "introducedBy": "TA-C163-caripar",
+        "introducedAt": 815,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C164-ACT164-01",
+        "language": "tamil",
+        "introducedBy": "TA-C164-vivari",
+        "introducedAt": 816,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C164-ACT164-02",
+        "language": "tamil",
+        "introducedBy": "TA-C164-oppatai",
+        "introducedAt": 817,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C164-ACT164-03",
+        "language": "tamil",
+        "introducedBy": "TA-C164-payirci-cey",
+        "introducedAt": 818,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C164-ACT164-04",
+        "language": "tamil",
+        "introducedBy": "TA-C164-tercci-peru",
+        "introducedAt": 819,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C164-ACT164-05",
+        "language": "tamil",
+        "introducedBy": "TA-C164-kavani",
+        "introducedAt": 820,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C165-ACT165-01",
+        "language": "tamil",
+        "introducedBy": "TA-C165-palaku",
+        "introducedAt": 821,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C165-ACT165-02",
+        "language": "tamil",
+        "introducedBy": "TA-C165-kontatu",
+        "introducedAt": 822,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C165-ACT165-03",
+        "language": "tamil",
+        "introducedBy": "TA-C165-alankari",
+        "introducedAt": 823,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C165-ACT165-04",
+        "language": "tamil",
+        "introducedBy": "TA-C165-natanamatu",
+        "introducedAt": 824,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C165-ACT165-05",
+        "language": "tamil",
+        "introducedBy": "TA-C165-vananku",
+        "introducedAt": 825,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C166-ACT166-01",
+        "language": "tamil",
+        "introducedBy": "TA-C166-vilakkerru",
+        "introducedAt": 826,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C166-ACT166-02",
+        "language": "tamil",
+        "introducedBy": "TA-C166-veti",
+        "introducedAt": 827,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C167-ACT167-02",
+        "language": "tamil",
+        "introducedBy": "TA-C167-iyakku",
+        "introducedAt": 832,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C167-ACT167-03",
+        "language": "tamil",
+        "introducedBy": "TA-C167-ottu",
+        "introducedAt": 833,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C167-ACT167-04",
+        "language": "tamil",
+        "introducedBy": "TA-C167-tonku",
+        "introducedAt": 834,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C167-ACT167-05",
+        "language": "tamil",
+        "introducedBy": "TA-C167-uruttu",
+        "introducedAt": 835,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C168-ACT168-01",
+        "language": "tamil",
+        "introducedBy": "TA-C168-ulu",
+        "introducedAt": 836,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C168-ACT168-02",
+        "language": "tamil",
+        "introducedBy": "TA-C168-tontu",
+        "introducedAt": 837,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C168-ACT168-03",
+        "language": "tamil",
+        "introducedBy": "TA-C168-nittu",
+        "introducedAt": 838,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C168-ACT168-04",
+        "language": "tamil",
+        "introducedBy": "TA-C168-valukku",
+        "introducedAt": 839,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C168-ACT168-05",
+        "language": "tamil",
+        "introducedBy": "TA-C168-kottavi-vitu",
+        "introducedAt": 840,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C169-NALAM169-01",
+        "language": "tamil",
+        "introducedBy": "TA-C169-kanukkal",
+        "introducedAt": 841,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C169-NALAM169-02",
+        "language": "tamil",
+        "introducedBy": "TA-C169-ituppu",
+        "introducedAt": 842,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C170-NALAM170-01",
+        "language": "tamil",
+        "introducedBy": "TA-C170-ovvamai",
+        "introducedAt": 848,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C170-NALAM170-02",
+        "language": "tamil",
+        "introducedBy": "TA-C170-torru",
+        "introducedAt": 849,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C170-NALAM170-03",
+        "language": "tamil",
+        "introducedBy": "TA-C170-talumpu",
+        "introducedAt": 850,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C170-NALAM170-04",
+        "language": "tamil",
+        "introducedBy": "TA-C170-vayirruppokku",
+        "introducedAt": 851,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C170-NALAM170-05",
+        "language": "tamil",
+        "introducedBy": "TA-C170-mulai",
+        "introducedAt": 852,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C171-NERAM171-01",
+        "language": "tamil",
+        "introducedBy": "TA-C171-atikkati",
+        "introducedAt": 853,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C171-NERAM171-02",
+        "language": "tamil",
+        "introducedBy": "TA-C171-cila-nerankalil",
+        "introducedAt": 854,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C171-NERAM171-03",
+        "language": "tamil",
+        "introducedBy": "TA-C171-eppotum",
+        "introducedAt": 855,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C171-NERAM171-04",
+        "language": "tamil",
+        "introducedBy": "TA-C171-orupotum",
+        "introducedAt": 856,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C171-NERAM171-05",
+        "language": "tamil",
+        "introducedBy": "TA-C171-tamatam",
+        "introducedAt": 857,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C172-NERAM172-01",
+        "language": "tamil",
+        "introducedBy": "TA-C172-etirkalam",
+        "introducedAt": 858,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C172-NERAM172-02",
+        "language": "tamil",
+        "introducedBy": "TA-C172-inriravu",
+        "introducedAt": 859,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C172-NERAM172-03",
+        "language": "tamil",
+        "introducedBy": "TA-C172-titirenru",
+        "introducedAt": 860,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C172-NERAM172-04",
+        "language": "tamil",
+        "introducedBy": "TA-C172-munkuttiye",
+        "introducedAt": 861,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C172-NERAM172-05",
+        "language": "tamil",
+        "introducedBy": "TA-C172-natkatti",
+        "introducedAt": 862,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C173-IDAM173-01",
+        "language": "tamil",
+        "introducedBy": "TA-C173-camaiyalarai",
+        "introducedAt": 863,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C173-IDAM173-02",
+        "language": "tamil",
+        "introducedBy": "TA-C173-kuliyalarai",
+        "introducedAt": 864,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C173-IDAM173-03",
+        "language": "tamil",
+        "introducedBy": "TA-C173-patukkaiyarai",
+        "introducedAt": 865,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C173-IDAM173-04",
+        "language": "tamil",
+        "introducedBy": "TA-C173-kalipparai",
+        "introducedAt": 866,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C173-IDAM173-05",
+        "language": "tamil",
+        "introducedBy": "TA-C173-cannal",
+        "introducedAt": 867,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C174-IDAM174-01",
+        "language": "tamil",
+        "introducedBy": "TA-C174-pataku",
+        "introducedAt": 868,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C174-IDAM174-02",
+        "language": "tamil",
+        "introducedBy": "TA-C174-mitivanti",
+        "introducedAt": 869,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C174-IDAM174-03",
+        "language": "tamil",
+        "introducedBy": "TA-C174-kar",
+        "introducedAt": 870,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C174-IDAM174-04",
+        "language": "tamil",
+        "introducedBy": "TA-C174-atto",
+        "introducedAt": 871,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C174-IDAM174-05",
+        "language": "tamil",
+        "introducedBy": "TA-C174-payani",
+        "introducedAt": 872,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C175-IDAM175-01",
+        "language": "tamil",
+        "introducedBy": "TA-C175-palaivanam",
+        "introducedAt": 873,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C175-IDAM175-02",
+        "language": "tamil",
+        "introducedBy": "TA-C175-kukai",
+        "introducedAt": 874,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C176-KARANAM176-02",
+        "language": "tamil",
+        "introducedBy": "TA-C176-iruntalum",
+        "introducedAt": 879,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C176-KARANAM176-03",
+        "language": "tamil",
+        "introducedBy": "TA-C176-melum",
+        "introducedAt": 880,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C176-KARANAM176-04",
+        "language": "tamil",
+        "introducedBy": "TA-C176-utaranamaka",
+        "introducedAt": 881,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C176-KARANAM176-05",
+        "language": "tamil",
+        "introducedBy": "TA-C176-illavittal",
+        "introducedAt": 882,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C177-KARANAM177-01",
+        "language": "tamil",
+        "introducedBy": "TA-C177-vilaivu",
+        "introducedAt": 883,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C177-KARANAM177-02",
+        "language": "tamil",
+        "introducedBy": "TA-C177-piraccinai",
+        "introducedAt": 884,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C177-KARANAM177-03",
+        "language": "tamil",
+        "introducedBy": "TA-C177-tirvu",
+        "introducedAt": 885,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C177-KARANAM177-04",
+        "language": "tamil",
+        "introducedBy": "TA-C177-nokkam",
+        "introducedAt": 886,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C177-KARANAM177-05",
+        "language": "tamil",
+        "introducedBy": "TA-C177-anupavam",
+        "introducedAt": 887,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C178-GUNAM178-01",
+        "language": "tamil",
+        "introducedBy": "TA-C178-cuvaiyana",
+        "introducedAt": 888,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C178-GUNAM178-02",
+        "language": "tamil",
+        "introducedBy": "TA-C178-malivana",
+        "introducedAt": 889,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C184-PORUL184-03",
+        "language": "tamil",
+        "introducedBy": "TA-C184-matiya-unavu",
+        "introducedAt": 922,
         "missed": [
           "R2",
           "R3"
@@ -237647,10 +239544,54 @@
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C148-QUAL148-04",
+        "atom": "TA-LEX-C184-PORUL184-04",
         "language": "tamil",
-        "introducedBy": "TA-C148-kaynta",
-        "introducedAt": 733,
+        "introducedBy": "TA-C184-iravu-unavu",
+        "introducedAt": 923,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C184-PORUL184-05",
+        "language": "tamil",
+        "introducedBy": "TA-C184-kurippetu",
+        "introducedAt": 924,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C185-PORUL185-01",
+        "language": "tamil",
+        "introducedBy": "TA-C185-varicai",
+        "introducedAt": 925,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C187-PORUL187-03",
+        "language": "tamil",
+        "introducedBy": "TA-C187-kanru",
+        "introducedAt": 937,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C187-PORUL187-04",
+        "language": "tamil",
+        "introducedBy": "TA-C187-onay",
+        "introducedAt": 938,
         "missed": [
           "R2",
           "R3"
@@ -237658,10 +239599,10 @@
         "revisits": 4
       },
       {
-        "atom": "TA-LEX-C148-QUAL148-05",
+        "atom": "TA-LEX-C187-PORUL187-05",
         "language": "tamil",
-        "introducedBy": "TA-C148-nanainta",
-        "introducedAt": 734,
+        "introducedBy": "TA-C187-ciruttai",
+        "introducedAt": 939,
         "missed": [
           "R2",
           "R3"
@@ -237669,70 +239610,15 @@
         "revisits": 4
       },
       {
-        "atom": "TA-LEX-C154-ACT154-03",
+        "atom": "TA-LEX-C190-PORUL190-02",
         "language": "tamil",
-        "introducedBy": "TA-C154-valar",
-        "introducedAt": 764,
+        "introducedBy": "TA-C190-tippetti",
+        "introducedAt": 953,
         "missed": [
           "R2",
           "R3"
         ],
         "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C154-ACT154-04",
-        "language": "tamil",
-        "introducedBy": "TA-C154-ennu",
-        "introducedAt": 765,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C154-ACT154-05",
-        "language": "tamil",
-        "introducedBy": "TA-C154-kattu",
-        "introducedAt": 766,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C155-ACT155-01",
-        "language": "tamil",
-        "introducedBy": "TA-C155-tallu",
-        "introducedAt": 767,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C157-ACT157-03",
-        "language": "tamil",
-        "introducedBy": "TA-C157-utu",
-        "introducedAt": 779,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C157-ACT157-04",
-        "language": "tamil",
-        "introducedBy": "TA-C157-eri2",
-        "introducedAt": 780,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 4
       },
       {
         "atom": "TA-LEX-C40-DEIXIS-01",
@@ -280800,504 +282686,534 @@
         "revisits": 4
       },
       {
-        "atom": "TA-LEX-C146-QUAL146-02",
+        "atom": "TA-LEX-C179-GUNAM179-01",
         "language": "tamil",
-        "introducedBy": "TA-C146-pulippu",
-        "introducedAt": 721,
+        "introducedBy": "TA-C179-payanulla",
+        "introducedAt": 895,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C179-GUNAM179-02",
+        "language": "tamil",
+        "introducedBy": "TA-C179-ullur",
+        "introducedAt": 896,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C179-GUNAM179-03",
+        "language": "tamil",
+        "introducedBy": "TA-C179-velinattu",
+        "introducedAt": 897,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C179-GUNAM179-04",
+        "language": "tamil",
+        "introducedBy": "TA-C179-telivana",
+        "introducedAt": 898,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C179-GUNAM179-05",
+        "language": "tamil",
+        "introducedBy": "TA-C179-unarcci",
+        "introducedAt": 899,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C180-GUNAM180-01",
+        "language": "tamil",
+        "introducedBy": "TA-C180-curucuruppana",
+        "introducedAt": 900,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C180-GUNAM180-02",
+        "language": "tamil",
+        "introducedBy": "TA-C180-kurumpana",
+        "introducedAt": 901,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C180-GUNAM180-03",
+        "language": "tamil",
+        "introducedBy": "TA-C180-pitivatamana",
+        "introducedAt": 902,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C180-GUNAM180-04",
+        "language": "tamil",
+        "introducedBy": "TA-C180-nakaiccuvaiyana",
+        "introducedAt": 903,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C180-GUNAM180-05",
+        "language": "tamil",
+        "introducedBy": "TA-C180-cuvaraciyamana",
+        "introducedAt": 904,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C181-GUNAM181-01",
+        "language": "tamil",
+        "introducedBy": "TA-C181-pitittamana",
+        "introducedAt": 905,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C181-GUNAM181-02",
+        "language": "tamil",
+        "introducedBy": "TA-C181-mocamana",
+        "introducedAt": 906,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C181-GUNAM181-03",
+        "language": "tamil",
+        "introducedBy": "TA-C181-pala",
+        "introducedAt": 907,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C181-GUNAM181-04",
+        "language": "tamil",
+        "introducedBy": "TA-C181-ellam",
+        "introducedAt": 908,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C181-GUNAM181-05",
+        "language": "tamil",
+        "introducedBy": "TA-C181-tatimanana",
+        "introducedAt": 909,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C182-PORUL182-01",
+        "language": "tamil",
+        "introducedBy": "TA-C182-kulircatanap-petti",
+        "introducedAt": 910,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C182-PORUL182-02",
+        "language": "tamil",
+        "introducedBy": "TA-C182-kulay",
+        "introducedAt": 911,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C182-PORUL182-03",
+        "language": "tamil",
+        "introducedBy": "TA-C182-tamlar",
+        "introducedAt": 912,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C182-PORUL182-04",
+        "language": "tamil",
+        "introducedBy": "TA-C182-catti",
+        "introducedAt": 913,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C182-PORUL182-05",
+        "language": "tamil",
+        "introducedBy": "TA-C182-muti",
+        "introducedAt": 914,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C183-PORUL183-01",
+        "language": "tamil",
+        "introducedBy": "TA-C183-ponkal",
+        "introducedAt": 915,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C183-PORUL183-02",
+        "language": "tamil",
+        "introducedBy": "TA-C183-uppuma",
+        "introducedAt": 916,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C183-PORUL183-03",
+        "language": "tamil",
+        "introducedBy": "TA-C183-campar",
+        "introducedAt": 917,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C183-PORUL183-04",
+        "language": "tamil",
+        "introducedBy": "TA-C183-catni",
+        "introducedAt": 918,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C183-PORUL183-05",
+        "language": "tamil",
+        "introducedBy": "TA-C183-poriyal",
+        "introducedAt": 919,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C184-PORUL184-01",
+        "language": "tamil",
+        "introducedBy": "TA-C184-panikkatti",
+        "introducedAt": 920,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C184-PORUL184-02",
+        "language": "tamil",
+        "introducedBy": "TA-C184-kalai-unavu",
+        "introducedAt": 921,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C185-PORUL185-02",
+        "language": "tamil",
+        "introducedBy": "TA-C185-en",
+        "introducedAt": 926,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C146-QUAL146-03",
+        "atom": "TA-LEX-C185-PORUL185-03",
         "language": "tamil",
-        "introducedBy": "TA-C146-karam",
-        "introducedAt": 722,
+        "introducedBy": "TA-C185-kurunceyti",
+        "introducedAt": 927,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C146-QUAL146-04",
+        "atom": "TA-LEX-C185-PORUL185-04",
         "language": "tamil",
-        "introducedBy": "TA-C146-panakkara",
-        "introducedAt": 723,
+        "introducedBy": "TA-C185-ceyti",
+        "introducedAt": 928,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C146-QUAL146-05",
+        "atom": "TA-LEX-C185-PORUL185-05",
         "language": "tamil",
-        "introducedBy": "TA-C146-elai",
-        "introducedAt": 724,
+        "introducedBy": "TA-C185-minnancal",
+        "introducedAt": 929,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C147-QUAL147-01",
+        "atom": "TA-LEX-C186-PORUL186-01",
         "language": "tamil",
-        "introducedBy": "TA-C147-ilaiya",
-        "introducedAt": 725,
+        "introducedBy": "TA-C186-mamanar",
+        "introducedAt": 930,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C147-QUAL147-02",
+        "atom": "TA-LEX-C186-PORUL186-02",
         "language": "tamil",
-        "introducedBy": "TA-C147-vayatana",
-        "introducedAt": 726,
+        "introducedBy": "TA-C186-katalan",
+        "introducedAt": 931,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C147-QUAL147-03",
+        "atom": "TA-LEX-C186-PORUL186-03",
         "language": "tamil",
-        "introducedBy": "TA-C147-putticali",
-        "introducedAt": 727,
+        "introducedBy": "TA-C186-katali",
+        "introducedAt": 932,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C147-QUAL147-04",
+        "atom": "TA-LEX-C186-PORUL186-04",
         "language": "tamil",
-        "introducedBy": "TA-C147-comperi",
-        "introducedAt": 728,
+        "introducedBy": "TA-C186-katal",
+        "introducedAt": 933,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C147-QUAL147-05",
+        "atom": "TA-LEX-C186-PORUL186-05",
         "language": "tamil",
-        "introducedBy": "TA-C147-tairiyamana",
-        "introducedAt": 729,
+        "introducedBy": "TA-C186-natpu",
+        "introducedAt": 934,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C148-QUAL148-01",
+        "atom": "TA-LEX-C187-PORUL187-01",
         "language": "tamil",
-        "introducedBy": "TA-C148-alamana",
-        "introducedAt": 730,
+        "introducedBy": "TA-C187-cellappirani",
+        "introducedAt": 935,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C148-QUAL148-02",
+        "atom": "TA-LEX-C187-PORUL187-02",
         "language": "tamil",
-        "introducedBy": "TA-C148-akalamana",
-        "introducedAt": 731,
+        "introducedBy": "TA-C187-kalai",
+        "introducedAt": 936,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C149-QUAL149-01",
+        "atom": "TA-LEX-C188-PORUL188-01",
         "language": "tamil",
-        "introducedBy": "TA-C149-pirapalamana",
-        "introducedAt": 737,
+        "introducedBy": "TA-C188-mul",
+        "introducedAt": 942,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C149-QUAL149-02",
+        "atom": "TA-LEX-C188-PORUL188-02",
         "language": "tamil",
-        "introducedBy": "TA-C149-apattana",
-        "introducedAt": 738,
+        "introducedBy": "TA-C188-tamarai",
+        "introducedAt": 943,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C149-QUAL149-03",
+        "atom": "TA-LEX-C188-PORUL188-03",
         "language": "tamil",
-        "introducedBy": "TA-C149-patukappana",
-        "introducedAt": 739,
+        "introducedBy": "TA-C188-mallikai",
+        "introducedAt": 944,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C149-QUAL149-04",
+        "atom": "TA-LEX-C188-PORUL188-04",
         "language": "tamil",
-        "introducedBy": "TA-C149-unmaiyana",
-        "introducedAt": 740,
+        "introducedBy": "TA-C188-veppamaram",
+        "introducedAt": 945,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C149-QUAL149-05",
+        "atom": "TA-LEX-C188-PORUL188-05",
         "language": "tamil",
-        "introducedBy": "TA-C149-poyyana",
-        "introducedAt": 741,
+        "introducedBy": "TA-C188-tennaimaram",
+        "introducedAt": 946,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C150-QUAL150-01",
+        "atom": "TA-LEX-C189-PORUL189-01",
         "language": "tamil",
-        "introducedBy": "TA-C150-uta",
-        "introducedAt": 742,
+        "introducedBy": "TA-C189-pacai",
+        "introducedAt": 947,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C150-QUAL150-02",
+        "atom": "TA-LEX-C189-PORUL189-02",
         "language": "tamil",
-        "introducedBy": "TA-C150-campal",
-        "introducedAt": 743,
+        "introducedBy": "TA-C189-melukuvartti",
+        "introducedAt": 948,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C150-QUAL150-03",
+        "atom": "TA-LEX-C189-PORUL189-03",
         "language": "tamil",
-        "introducedBy": "TA-C150-patu",
-        "introducedAt": 744,
+        "introducedBy": "TA-C189-inaiyatalam",
+        "introducedAt": 949,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C150-QUAL150-04",
+        "atom": "TA-LEX-C189-PORUL189-04",
         "language": "tamil",
-        "introducedBy": "TA-C150-camai",
-        "introducedAt": 745,
+        "introducedBy": "TA-C189-ceyali",
+        "introducedAt": 950,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C150-QUAL150-05",
+        "atom": "TA-LEX-C189-PORUL189-05",
         "language": "tamil",
-        "introducedBy": "TA-C150-vettu",
-        "introducedAt": 746,
+        "introducedBy": "TA-C189-tirai",
+        "introducedAt": 951,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C151-ACT151-01",
+        "atom": "TA-LEX-C190-PORUL190-01",
         "language": "tamil",
-        "introducedBy": "TA-C151-utai",
-        "introducedAt": 747,
+        "introducedBy": "TA-C190-yocanai",
+        "introducedAt": 952,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C151-ACT151-02",
+        "atom": "TA-LEX-C190-PORUL190-03",
         "language": "tamil",
-        "introducedBy": "TA-C151-vai",
-        "introducedAt": 748,
+        "introducedBy": "TA-C190-panai",
+        "introducedAt": 954,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C151-ACT151-03",
+        "atom": "TA-LEX-C190-PORUL190-04",
         "language": "tamil",
-        "introducedBy": "TA-C151-anuppu",
-        "introducedAt": 749,
+        "introducedBy": "TA-C190-ammi",
+        "introducedAt": 955,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C151-ACT151-04",
+        "atom": "TA-LEX-C190-PORUL190-05",
         "language": "tamil",
-        "introducedBy": "TA-C151-tetu",
-        "introducedAt": 750,
+        "introducedBy": "TA-C190-totti",
+        "introducedAt": 956,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C151-ACT151-05",
+        "atom": "TA-LEX-C191-VELAI191-01",
         "language": "tamil",
-        "introducedBy": "TA-C151-karpi",
-        "introducedAt": 751,
+        "introducedBy": "TA-C191-kataikkarar",
+        "introducedAt": 957,
         "missed": [
           "R2"
         ],
         "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C152-ACT152-01",
-        "language": "tamil",
-        "introducedBy": "TA-C152-mara",
-        "introducedAt": 752,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C152-ACT152-02",
-        "language": "tamil",
-        "introducedBy": "TA-C152-kuti",
-        "introducedAt": 753,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C152-ACT152-03",
-        "language": "tamil",
-        "introducedBy": "TA-C152-nintu",
-        "introducedAt": 754,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C152-ACT152-04",
-        "language": "tamil",
-        "introducedBy": "TA-C152-para",
-        "introducedAt": 755,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C152-ACT152-05",
-        "language": "tamil",
-        "introducedBy": "TA-C152-vilu",
-        "introducedAt": 756,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C153-ACT153-01",
-        "language": "tamil",
-        "introducedBy": "TA-C153-eru",
-        "introducedAt": 757,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C153-ACT153-02",
-        "language": "tamil",
-        "introducedBy": "TA-C153-iranku",
-        "introducedAt": 758,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C153-ACT153-03",
-        "language": "tamil",
-        "introducedBy": "TA-C153-tirumpu",
-        "introducedAt": 759,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C153-ACT153-04",
-        "language": "tamil",
-        "introducedBy": "TA-C153-cer",
-        "introducedAt": 760,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C153-ACT153-05",
-        "language": "tamil",
-        "introducedBy": "TA-C153-kuli",
-        "introducedAt": 761,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C154-ACT154-01",
-        "language": "tamil",
-        "introducedBy": "TA-C154-ani2",
-        "introducedAt": 762,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C154-ACT154-02",
-        "language": "tamil",
-        "introducedBy": "TA-C154-alai2",
-        "introducedAt": 763,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C155-ACT155-02",
-        "language": "tamil",
-        "introducedBy": "TA-C155-ilu",
-        "introducedAt": 768,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C155-ACT155-03",
-        "language": "tamil",
-        "introducedBy": "TA-C155-potu",
-        "introducedAt": 769,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C155-ACT155-04",
-        "language": "tamil",
-        "introducedBy": "TA-C155-kattu2",
-        "introducedAt": 770,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C155-ACT155-05",
-        "language": "tamil",
-        "introducedBy": "TA-C155-tuvai",
-        "introducedAt": 771,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C156-ACT156-01",
-        "language": "tamil",
-        "introducedBy": "TA-C156-tutai",
-        "introducedAt": 772,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C156-ACT156-02",
-        "language": "tamil",
-        "introducedBy": "TA-C156-perukku",
-        "introducedAt": 773,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C156-ACT156-03",
-        "language": "tamil",
-        "introducedBy": "TA-C156-karrukkol",
-        "introducedAt": 774,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C156-ACT156-04",
-        "language": "tamil",
-        "introducedBy": "TA-C156-vel",
-        "introducedAt": 775,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C156-ACT156-05",
-        "language": "tamil",
-        "introducedBy": "TA-C156-kantupiti",
-        "introducedAt": 776,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C157-ACT157-01",
-        "language": "tamil",
-        "introducedBy": "TA-C157-marai",
-        "introducedAt": 777,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C157-ACT157-02",
-        "language": "tamil",
-        "introducedBy": "TA-C157-kapparru",
-        "introducedAt": 778,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "TA-LEX-C157-ACT157-05",
-        "language": "tamil",
-        "introducedBy": "TA-C157-anai",
-        "introducedAt": 781,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 4
       },
       {
         "atom": "TA-LEX-C40-DEIXIS-03",
@@ -295285,11 +297201,11 @@
       },
       {
         "language": "tamil",
-        "lessonCount": 801,
+        "lessonCount": 974,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 864,
+        "atomsTaught": 1029,
         "atomsNeverRevisited": 12,
         "forwardReferences": 8
       },
@@ -295319,14 +297235,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 25476,
+      "atomsTaught": 25641,
       "atomsNeverRevisited": 156,
       "neverRevisitedPercent": 1,
       "missedByWindow": {
         "R1": 1745,
-        "R2": 16860,
-        "R3": 13940,
-        "R4": 19951
+        "R2": 16981,
+        "R3": 14011,
+        "R4": 20115
       },
       "forwardReferences": 1185
     }
@@ -295518,7 +297434,7 @@
       {
         "language": "tamil",
         "script": "tamil",
-        "lessonCount": 801,
+        "lessonCount": 974,
         "scriptLessons": 96,
         "taughtGlyphs": 52,
         "shownGlyphs": 52,
@@ -317267,8 +319183,8 @@
       },
       {
         "language": "tamil",
-        "lessonCount": 801,
-        "atomMeasurableLessons": 799,
+        "lessonCount": 974,
+        "atomMeasurableLessons": 972,
         "atomMeasurementBlindLessons": 2,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -317283,14 +319199,14 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 8,
-        "atomsTaught": 864,
+        "atomsTaught": 1029,
         "atomsNeverRevisited": 12,
-        "reinforcementWindowMisses": 1919,
+        "reinforcementWindowMisses": 2275,
         "reinforcementMissesByWindow": {
           "R1": 153,
-          "R2": 457,
-          "R3": 626,
-          "R4": 683
+          "R2": 578,
+          "R3": 697,
+          "R4": 847
         },
         "payoffSurprises": 10,
         "writingPracticeLessons": 130,
@@ -317321,7 +319237,7 @@
           {
             "language": "tamil",
             "kind": "reinforcement",
-            "count": 1919,
+            "count": 2275,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -317995,7 +319911,7 @@
       {
         "language": "tamil",
         "kind": "reinforcement",
-        "count": 1919,
+        "count": 2275,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -318696,7 +320612,7 @@
             "shortfall": 2
           }
         ],
-        "vocabulary": 634
+        "vocabulary": 799
       },
       {
         "language": "telugu",
@@ -318768,11 +320684,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 24752,
-    "voice": 22383,
+    "totalLessons": 24925,
+    "voice": 22556,
     "sight": 1000,
     "pen": 1369,
-    "coreVoice": 22961,
+    "coreVoice": 23134,
     "lessonsWithWritingSegments": 886,
     "drivablePercent": 93,
     "tracks": [
@@ -380918,13 +382834,13 @@
       },
       {
         "language": "tamil",
-        "lessonCount": 801,
-        "voice": 654,
+        "lessonCount": 974,
+        "voice": 827,
         "sight": 49,
         "pen": 98,
-        "coreVoice": 686,
-        "drivablePercent": 86,
-        "drivablePrefixTotal": 598,
+        "coreVoice": 859,
+        "drivablePercent": 88,
+        "drivablePrefixTotal": 771,
         "chapters": [
           {
             "language": "tamil",
@@ -383252,6 +385168,468 @@
           {
             "language": "tamil",
             "chapter": 160,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 161,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 162,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 163,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 164,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 165,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 166,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 167,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 168,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 169,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 170,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 171,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 172,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 173,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 174,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 175,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 176,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 177,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 178,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 179,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 180,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 181,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 182,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 183,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 184,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 185,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 186,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 187,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 188,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 189,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 190,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 191,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 192,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "tamil",
+            "chapter": 193,
             "lessonCount": 7,
             "voice": 7,
             "sight": 0,
@@ -389709,7 +392087,7 @@
     "underspentPercent": 89
   },
   "infoDump": {
-    "lessons": 24752,
+    "lessons": 24925,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -389717,11 +392095,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 24752,
-    "measuredLessons": 20386,
-    "idiomMeasuredLessons": 20386,
-    "senseMeasuredLessons": 20387,
-    "cultureClaimMeasuredLessons": 20386,
+    "lessons": 24925,
+    "measuredLessons": 20559,
+    "idiomMeasuredLessons": 20559,
+    "senseMeasuredLessons": 20560,
+    "cultureClaimMeasuredLessons": 20559,
     "idioms": 101,
     "senses": 103,
     "cultureClaims": 208,
@@ -389730,14 +392108,14 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 23833,
-    "usesBeforeIntroduction": 41712,
-    "technicalUsesBeforeIntroduction": 6444,
-    "technicalLessons": 3658,
+    "lessonsUsingTerms": 24006,
+    "usesBeforeIntroduction": 41890,
+    "technicalUsesBeforeIntroduction": 6445,
+    "technicalLessons": 3659,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 2078
+        "lessons": 2079
       },
       {
         "term": "noun",
@@ -389762,12 +392140,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 24752,
+    "lessonsScanned": 24925,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 5007,
+    "filesScanned": 5040,
     "mainCharacters": 135,
     "scriptCharacters": 803,
     "gaps": 0
