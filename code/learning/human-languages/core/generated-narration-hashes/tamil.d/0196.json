@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:995d7cde76682a5c",
+  "lessonIds": [
+    "TA-C196-kili",
+    "TA-C196-ila",
+    "TA-C196-aluttu",
+    "TA-C196-unar",
+    "TA-C196-ura-vai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch196.txt",
+  "json": "tamil/narration/ch196.json",
+  "textHash": "fnv1a64:5fbe1fdfe36bf7fd",
+  "jsonHash": "fnv1a64:e8139f2019e90ea2",
+  "findings": []
+}

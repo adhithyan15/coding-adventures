@@ -1,0 +1,11 @@
+{
+  "id": "TA-C213-paltulakki",
+  "pathSegment": "TA-PATH-213-PORUL213",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-213-PORUL213",
+      "order": 4
+    }
+  ]
+}

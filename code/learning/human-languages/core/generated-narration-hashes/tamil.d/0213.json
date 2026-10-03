@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:571b34eff1e85143",
+  "lessonIds": [
+    "TA-C213-alamari",
+    "TA-C213-mincaram",
+    "TA-C213-kuppai",
+    "TA-C213-parpacai",
+    "TA-C213-paltulakki"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch213.txt",
+  "json": "tamil/narration/ch213.json",
+  "textHash": "fnv1a64:3a79b7e6224c9c1b",
+  "jsonHash": "fnv1a64:5e7cdee1b20e772a",
+  "findings": []
+}

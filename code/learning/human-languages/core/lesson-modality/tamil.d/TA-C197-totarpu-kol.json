@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C197-totarpu-kol",
+    "language": "tamil",
+    "chapter": 197,
+    "sequence": 10110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:51617af53074cab6"
+  },
+  "findings": []
+}

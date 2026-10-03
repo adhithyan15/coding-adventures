@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:466d514cd890ca85",
+  "lessonIds": [
+    "TA-C194-urru",
+    "TA-C194-narukku",
+    "TA-C194-uri",
+    "TA-C194-pori",
+    "TA-C194-picai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch194.txt",
+  "json": "tamil/narration/ch194.json",
+  "textHash": "fnv1a64:f88e7b47154cb63d",
+  "jsonHash": "fnv1a64:b0867d3fdf96d0c1",
+  "findings": []
+}

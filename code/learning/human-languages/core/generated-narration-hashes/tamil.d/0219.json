@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:df14274c1de864d5",
+  "lessonIds": [
+    "TA-C219-munkil",
+    "TA-C219-vanavil",
+    "TA-C219-mutupani",
+    "TA-C219-tenral",
+    "TA-C219-vellam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch219.txt",
+  "json": "tamil/narration/ch219.json",
+  "textHash": "fnv1a64:7d7511aa04bfc6bd",
+  "jsonHash": "fnv1a64:030e7896c3e834e3",
+  "findings": []
+}

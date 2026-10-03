@@ -1,0 +1,19 @@
+{
+  "chapter": 224,
+  "title": "Fisherman, Potter, Barber, Mason, Scientist",
+  "label": "ch:ta-fisherman-potter-barber-mason-scientist",
+  "canDo": "I can say a fisherman, a potter, a barber, a mason and a scientist.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-R224-second-pass-words-from-chapters-223-224",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 224: I can say a fisherman, a potter, a barber, a mason and a scientist.",
+    "assesses": [
+      "TA-LEX-C224-VELAI224-03",
+      "TA-LEX-C224-VELAI224-04",
+      "TA-LEX-C224-VELAI224-05"
+    ]
+  }
+}

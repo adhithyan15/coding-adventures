@@ -1,0 +1,19 @@
+{
+  "chapter": 196,
+  "title": "To tear, To lose, To press, To feel, To soak",
+  "label": "ch:ta-to-tear-to-lose-to-press-to-feel-to-soak",
+  "canDo": "I can say to tear, to lose, to press, to feel and to soak.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C196-ura-vai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 196: I can say to tear, to lose, to press, to feel and to soak.",
+    "assesses": [
+      "TA-LEX-C196-ACT196-03",
+      "TA-LEX-C196-ACT196-04",
+      "TA-LEX-C196-ACT196-05"
+    ]
+  }
+}

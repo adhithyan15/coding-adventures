@@ -1,0 +1,19 @@
+{
+  "chapter": 203,
+  "title": "Century, Until now, Deadline, Until then, Childhood",
+  "label": "ch:ta-century-until-now-deadline-until-then-childhood",
+  "canDo": "I can say a century, until now, a deadline, until then and childhood.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TA-C203-kulantaip-paruvam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 203: I can say a century, until now, a deadline, until then and childhood.",
+    "assesses": [
+      "TA-LEX-C203-NERAM203-03",
+      "TA-LEX-C203-NERAM203-04",
+      "TA-LEX-C203-NERAM203-05"
+    ]
+  }
+}

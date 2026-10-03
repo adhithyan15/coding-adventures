@@ -1,0 +1,11 @@
+{
+  "id": "TA-C220-vicaippalakai",
+  "pathSegment": "TA-PATH-220-PORUL220",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-220-PORUL220",
+      "order": 0
+    }
+  ]
+}

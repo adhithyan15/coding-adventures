@@ -1,0 +1,11 @@
+{
+  "id": "TA-C207-potuvaka",
+  "pathSegment": "TA-PATH-207-KARANAM207",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-207-KARANAM207",
+      "order": 3
+    }
+  ]
+}

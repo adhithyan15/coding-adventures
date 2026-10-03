@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:513fa26d795540fc",
+  "lessonIds": [
+    "TA-C223-nerkanal",
+    "TA-C223-niruvanam",
+    "TA-C223-tolircalai",
+    "TA-C223-patam",
+    "TA-C223-vittuppatam"
+  ],
+  "tex": "tamil/book/chapters/ch223-interview-company-factory-lesson-homework.tex"
+}

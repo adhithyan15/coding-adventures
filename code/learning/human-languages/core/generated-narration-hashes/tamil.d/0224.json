@@ -1,0 +1,21 @@
+{
+  "language": "tamil",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:a86d46f1bf0c90a0",
+  "lessonIds": [
+    "TA-C224-minavar",
+    "TA-C224-kuyavar",
+    "TA-C224-mutitiruttupavar",
+    "TA-C224-kottanar",
+    "TA-C224-vinnani",
+    "TA-R224-first-pass-words-from-chapters-221-222",
+    "TA-R224-second-pass-words-from-chapters-223-224"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "tamil/narration/ch224.txt",
+  "json": "tamil/narration/ch224.json",
+  "textHash": "fnv1a64:cc0d08dabc3a7bb4",
+  "jsonHash": "fnv1a64:570ef607823191a2",
+  "findings": []
+}

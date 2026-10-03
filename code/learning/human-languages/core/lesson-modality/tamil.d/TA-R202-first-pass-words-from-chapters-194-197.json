@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R202-first-pass-words-from-chapters-194-197",
+    "language": "tamil",
+    "chapter": 202,
+    "sequence": 10370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:56df2d4fc90bb2c3"
+  },
+  "findings": []
+}

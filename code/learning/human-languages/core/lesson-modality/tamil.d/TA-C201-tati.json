@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C201-tati",
+    "language": "tamil",
+    "chapter": 201,
+    "sequence": 10280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38a5424b7effcdb8"
+  },
+  "findings": []
+}

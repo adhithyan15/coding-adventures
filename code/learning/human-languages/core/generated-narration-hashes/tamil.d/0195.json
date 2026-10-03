@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:1617524e9547a971",
+  "lessonIds": [
+    "TA-C195-kontu-va",
+    "TA-C195-tiruppik-kotu",
+    "TA-C195-ottu2",
+    "TA-C195-payanpatuttu",
+    "TA-C195-muyarci-cey"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch195.txt",
+  "json": "tamil/narration/ch195.json",
+  "textHash": "fnv1a64:48a28cee97acb2ca",
+  "jsonHash": "fnv1a64:fb63c8fe2818cac0",
+  "findings": []
+}

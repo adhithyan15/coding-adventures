@@ -1,0 +1,11 @@
+{
+  "id": "TA-C206-maitanam",
+  "pathSegment": "TA-PATH-206-IDAM206",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-206-IDAM206",
+      "order": 3
+    }
+  ]
+}

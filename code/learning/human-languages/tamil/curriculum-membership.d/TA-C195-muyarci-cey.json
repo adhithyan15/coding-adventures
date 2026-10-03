@@ -1,0 +1,11 @@
+{
+  "id": "TA-C195-muyarci-cey",
+  "pathSegment": "TA-PATH-195-ACT195",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-195-ACT195",
+      "order": 4
+    }
+  ]
+}

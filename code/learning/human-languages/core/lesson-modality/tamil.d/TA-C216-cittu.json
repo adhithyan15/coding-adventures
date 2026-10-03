@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C216-cittu",
+    "language": "tamil",
+    "chapter": 216,
+    "sequence": 11430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9cbbba08329ff716"
+  },
+  "findings": []
+}

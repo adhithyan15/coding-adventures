@@ -1,0 +1,19 @@
+{
+  "chapter": 221,
+  "title": "Helmet, Wheel, Blackboard, Eraser, Uniform",
+  "label": "ch:ta-helmet-wheel-blackboard-eraser-uniform",
+  "canDo": "I can say a helmet, a wheel, a blackboard, an eraser and a uniform.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C221-cirutai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 221: I can say a helmet, a wheel, a blackboard, an eraser and a uniform.",
+    "assesses": [
+      "TA-LEX-C221-PORUL221-03",
+      "TA-LEX-C221-PORUL221-04",
+      "TA-LEX-C221-PORUL221-05"
+    ]
+  }
+}

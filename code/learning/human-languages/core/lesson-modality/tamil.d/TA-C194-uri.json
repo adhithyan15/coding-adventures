@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C194-uri",
+    "language": "tamil",
+    "chapter": 194,
+    "sequence": 9940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:13e9d6929f4a5f2e"
+  },
+  "findings": []
+}

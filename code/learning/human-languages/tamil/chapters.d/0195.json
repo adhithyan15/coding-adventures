@@ -1,0 +1,19 @@
+{
+  "chapter": 195,
+  "title": "To bring, To give back, To drive, To use, To try",
+  "label": "ch:ta-to-bring-to-give-back-to-drive-to-use-to-try",
+  "canDo": "I can say to bring, to give back, to drive, to use and to try.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C195-muyarci-cey",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 195: I can say to bring, to give back, to drive, to use and to try.",
+    "assesses": [
+      "TA-LEX-C195-ACT195-03",
+      "TA-LEX-C195-ACT195-04",
+      "TA-LEX-C195-ACT195-05"
+    ]
+  }
+}

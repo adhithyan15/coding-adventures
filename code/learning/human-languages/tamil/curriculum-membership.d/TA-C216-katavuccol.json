@@ -1,0 +1,11 @@
+{
+  "id": "TA-C216-katavuccol",
+  "pathSegment": "TA-PATH-216-PORUL216",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-216-PORUL216",
+      "order": 1
+    }
+  ]
+}

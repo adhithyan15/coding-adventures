@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:601077a68af7134f",
+  "lessonIds": [
+    "TA-C213-alamari",
+    "TA-C213-mincaram",
+    "TA-C213-kuppai",
+    "TA-C213-parpacai",
+    "TA-C213-paltulakki"
+  ],
+  "tex": "tamil/book/chapters/ch213-cupboard-electricity-rubbish-toothpaste-toothbrush.tex"
+}

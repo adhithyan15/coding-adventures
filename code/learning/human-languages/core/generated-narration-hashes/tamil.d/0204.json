@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:65adf6bf13c920e4",
+  "lessonIds": [
+    "TA-C204-patikkattu",
+    "TA-C204-maruntukkatai",
+    "TA-C204-unavakam",
+    "TA-C204-palporul-ankati",
+    "TA-C204-tunikkatai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch204.txt",
+  "json": "tamil/narration/ch204.json",
+  "textHash": "fnv1a64:f50c5baff3131e87",
+  "jsonHash": "fnv1a64:b84115971514fab4",
+  "findings": []
+}

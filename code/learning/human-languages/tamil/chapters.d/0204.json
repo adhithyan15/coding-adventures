@@ -1,0 +1,19 @@
+{
+  "chapter": 204,
+  "title": "Stairs, Pharmacy, Restaurant, Supermarket, Clothes shop",
+  "label": "ch:ta-stairs-pharmacy-restaurant-supermarket-clothes-shop",
+  "canDo": "I can say stairs, a pharmacy, a restaurant, a supermarket and a clothes shop.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TA-C204-tunikkatai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 204: I can say stairs, a pharmacy, a restaurant, a supermarket and a clothes shop.",
+    "assesses": [
+      "TA-LEX-C204-IDAM204-03",
+      "TA-LEX-C204-IDAM204-04",
+      "TA-LEX-C204-IDAM204-05"
+    ]
+  }
+}

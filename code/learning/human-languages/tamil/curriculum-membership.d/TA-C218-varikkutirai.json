@@ -1,0 +1,11 @@
+{
+  "id": "TA-C218-varikkutirai",
+  "pathSegment": "TA-PATH-218-PORUL218",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-218-PORUL218",
+      "order": 1
+    }
+  ]
+}

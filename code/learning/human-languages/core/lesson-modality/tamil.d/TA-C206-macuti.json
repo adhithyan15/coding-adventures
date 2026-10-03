@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C206-macuti",
+    "language": "tamil",
+    "chapter": 206,
+    "sequence": 10720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d97dda1a49f848f5"
+  },
+  "findings": []
+}

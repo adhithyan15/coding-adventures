@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:49664d5ad6c8029b",
+  "lessonIds": [
+    "TA-C222-tallupati",
+    "TA-C222-rupay",
+    "TA-C222-nanayam",
+    "TA-C222-celavu",
+    "TA-C222-campalam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch222.txt",
+  "json": "tamil/narration/ch222.json",
+  "textHash": "fnv1a64:79a7d1d5ef091a68",
+  "jsonHash": "fnv1a64:9fccbedf0e4628fc",
+  "findings": []
+}

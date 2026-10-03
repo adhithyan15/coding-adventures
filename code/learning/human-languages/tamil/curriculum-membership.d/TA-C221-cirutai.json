@@ -1,0 +1,11 @@
+{
+  "id": "TA-C221-cirutai",
+  "pathSegment": "TA-PATH-221-PORUL221",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-221-PORUL221",
+      "order": 4
+    }
+  ]
+}

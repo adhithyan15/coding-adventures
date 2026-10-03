@@ -1,0 +1,11 @@
+{
+  "id": "TA-C220-nikalcci",
+  "pathSegment": "TA-PATH-220-PORUL220",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-220-PORUL220",
+      "order": 3
+    }
+  ]
+}

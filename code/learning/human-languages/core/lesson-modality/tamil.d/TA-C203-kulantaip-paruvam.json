@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C203-kulantaip-paruvam",
+    "language": "tamil",
+    "chapter": 203,
+    "sequence": 10600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b4dcf968064df3c8"
+  },
+  "findings": []
+}

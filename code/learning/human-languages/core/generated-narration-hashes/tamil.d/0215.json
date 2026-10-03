@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:6b53c27e7d5c027f",
+  "lessonIds": [
+    "TA-C215-pencil",
+    "TA-C215-akarati",
+    "TA-C215-kattanam",
+    "TA-C215-katitam",
+    "TA-C215-urai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch215.txt",
+  "json": "tamil/narration/ch215.json",
+  "textHash": "fnv1a64:869abed54bda5c1c",
+  "jsonHash": "fnv1a64:e048126ca7f337ed",
+  "findings": []
+}

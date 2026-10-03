@@ -1,0 +1,19 @@
+{
+  "chapter": 206,
+  "title": "Church, Mosque, Hall, Playground, Swimming pool",
+  "label": "ch:ta-church-mosque-hall-playground-swimming-pool",
+  "canDo": "I can say a church, a mosque, a hall, a playground and a swimming pool.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TA-C206-niccal-kulam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 206: I can say a church, a mosque, a hall, a playground and a swimming pool.",
+    "assesses": [
+      "TA-LEX-C206-IDAM206-03",
+      "TA-LEX-C206-IDAM206-04",
+      "TA-LEX-C206-IDAM206-05"
+    ]
+  }
+}

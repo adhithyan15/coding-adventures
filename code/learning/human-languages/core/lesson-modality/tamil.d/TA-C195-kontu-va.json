@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C195-kontu-va",
+    "language": "tamil",
+    "chapter": 195,
+    "sequence": 9970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d069a1eaa15fe3bc"
+  },
+  "findings": []
+}

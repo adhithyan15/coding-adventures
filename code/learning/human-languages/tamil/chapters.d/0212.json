@@ -1,0 +1,19 @@
+{
+  "chapter": 212,
+  "title": "Weak, Selfish, Generous, Well-behaved, Ugly",
+  "label": "ch:ta-weak-selfish-generous-well-behaved-ugly",
+  "canDo": "I can say weak, selfish, generous, well-behaved and ugly.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TA-C212-acinkamana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 212: I can say weak, selfish, generous, well-behaved and ugly.",
+    "assesses": [
+      "TA-LEX-C212-GUNAM212-03",
+      "TA-LEX-C212-GUNAM212-04",
+      "TA-LEX-C212-GUNAM212-05"
+    ]
+  }
+}

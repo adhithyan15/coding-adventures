@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C220-nikalcci",
+    "language": "tamil",
+    "chapter": 220,
+    "sequence": 11630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8d01c3d0f6a7165"
+  },
+  "findings": []
+}

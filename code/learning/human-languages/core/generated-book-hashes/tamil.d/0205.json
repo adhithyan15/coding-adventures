@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:71e4c227fb4bb370",
+  "lessonIds": [
+    "TA-C205-currula",
+    "TA-C205-tiraiyarankam",
+    "TA-C205-kattitam",
+    "TA-C205-mati",
+    "TA-C205-kaval-nilaiyam"
+  ],
+  "tex": "tamil/book/chapters/ch205-tour-cinema-building-upper-floor-police-station.tex"
+}

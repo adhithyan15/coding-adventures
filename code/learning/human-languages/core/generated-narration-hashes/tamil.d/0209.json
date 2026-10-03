@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:db870fd66dd39e50",
+  "lessonIds": [
+    "TA-C209-kettuppona",
+    "TA-C209-nirainta",
+    "TA-C209-kaliyana",
+    "TA-C209-irukkamana",
+    "TA-C209-talarvana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch209.txt",
+  "json": "tamil/narration/ch209.json",
+  "textHash": "fnv1a64:42bf5b17590d9cad",
+  "jsonHash": "fnv1a64:f171c91a2a496716",
+  "findings": []
+}

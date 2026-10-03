@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C213-alamari",
+    "language": "tamil",
+    "chapter": 213,
+    "sequence": 11250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6be02f4af60db82"
+  },
+  "findings": []
+}

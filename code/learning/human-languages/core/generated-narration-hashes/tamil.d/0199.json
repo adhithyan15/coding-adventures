@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:9b351d15ef570832",
+  "lessonIds": [
+    "TA-C199-nampu",
+    "TA-C199-ottukkol",
+    "TA-C199-maru",
+    "TA-C199-vivati",
+    "TA-C199-oppitu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch199.txt",
+  "json": "tamil/narration/ch199.json",
+  "textHash": "fnv1a64:347b392aa604a3c1",
+  "jsonHash": "fnv1a64:c58c7debbe50aabc",
+  "findings": []
+}

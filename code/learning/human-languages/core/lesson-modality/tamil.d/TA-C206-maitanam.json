@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C206-maitanam",
+    "language": "tamil",
+    "chapter": 206,
+    "sequence": 10740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a18ea13f0dd5966"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C200-valai",
+  "pathSegment": "TA-PATH-200-ACT200",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-200-ACT200",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C212-palavinamana",
+    "language": "tamil",
+    "chapter": 212,
+    "sequence": 11200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc78a6702eb945b6"
+  },
+  "findings": []
+}

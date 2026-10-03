@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:24e4fc375d57c446",
+  "lessonIds": [
+    "TA-C214-mor",
+    "TA-C214-palaccaru",
+    "TA-C214-ilanir",
+    "TA-C214-mavu",
+    "TA-C214-rotti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch214.txt",
+  "json": "tamil/narration/ch214.json",
+  "textHash": "fnv1a64:348b3220ef406f26",
+  "jsonHash": "fnv1a64:4f71a1749f58ea31",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C205-kaval-nilaiyam",
+    "language": "tamil",
+    "chapter": 205,
+    "sequence": 10700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca3c14821cb77e6d"
+  },
+  "findings": []
+}
