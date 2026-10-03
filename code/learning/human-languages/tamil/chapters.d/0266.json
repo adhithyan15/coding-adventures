@@ -1,0 +1,19 @@
+{
+  "chapter": 266,
+  "title": "Easily, On purpose, By chance, Luckily, Reason",
+  "label": "ch:ta-easily-on-purpose-by-chance-luckily-reason",
+  "canDo": "I can say easily, on purpose, by chance, luckily and a reason.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "TA-C266-karanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 266: I can say easily, on purpose, by chance, luckily and a reason.",
+    "assesses": [
+      "TA-LEX-C266-KARANAM266-03",
+      "TA-LEX-C266-KARANAM266-04",
+      "TA-LEX-C266-KARANAM266-05"
+    ]
+  }
+}

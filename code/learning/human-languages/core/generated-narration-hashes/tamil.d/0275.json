@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:c7fe2272ef4d1eff",
+  "lessonIds": [
+    "TA-C275-iraku",
+    "TA-C275-val",
+    "TA-C275-kutu",
+    "TA-C275-ceti",
+    "TA-C275-koti2"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch275.txt",
+  "json": "tamil/narration/ch275.json",
+  "textHash": "fnv1a64:28af1067f35c17e9",
+  "jsonHash": "fnv1a64:d4fd542f81ee668e",
+  "findings": []
+}

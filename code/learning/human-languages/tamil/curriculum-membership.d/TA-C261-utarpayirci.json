@@ -1,0 +1,11 @@
+{
+  "id": "TA-C261-utarpayirci",
+  "pathSegment": "TA-PATH-261-NALAM261",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-261-NALAM261",
+      "order": 1
+    }
+  ]
+}

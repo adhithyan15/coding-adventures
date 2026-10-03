@@ -1,0 +1,19 @@
+{
+  "chapter": 260,
+  "title": "To increase, To spread, To sink, To float, To squeeze",
+  "label": "ch:ta-to-increase-to-spread-to-sink-to-float-to-squeeze",
+  "canDo": "I can say to increase, to spread, to sink, to float and to squeeze.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C260-pili",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 260: I can say to increase, to spread, to sink, to float and to squeeze.",
+    "assesses": [
+      "TA-LEX-C260-ACT260-03",
+      "TA-LEX-C260-ACT260-04",
+      "TA-LEX-C260-ACT260-05"
+    ]
+  }
+}

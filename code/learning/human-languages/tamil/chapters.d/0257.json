@@ -1,0 +1,19 @@
+{
+  "chapter": 257,
+  "title": "To hate, To be surprised, To feel shy, To be jealous, To kiss",
+  "label": "ch:ta-to-hate-to-be-surprised-to-feel-shy-to-be-jealous-to-kiss",
+  "canDo": "I can say to hate, to be surprised, to feel shy, to be jealous and to kiss.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C257-muttamitu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 257: I can say to hate, to be surprised, to feel shy, to be jealous and to kiss.",
+    "assesses": [
+      "TA-LEX-C257-ACT257-03",
+      "TA-LEX-C257-ACT257-04",
+      "TA-LEX-C257-ACT257-05"
+    ]
+  }
+}

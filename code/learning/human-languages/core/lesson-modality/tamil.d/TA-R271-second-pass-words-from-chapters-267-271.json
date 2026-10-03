@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R271-second-pass-words-from-chapters-267-271",
+    "language": "tamil",
+    "chapter": 271,
+    "sequence": 15420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5161a4b6f805095"
+  },
+  "findings": []
+}

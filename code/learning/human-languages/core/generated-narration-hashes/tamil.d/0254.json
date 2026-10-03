@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:9d727be13fb3799c",
+  "lessonIds": [
+    "TA-C254-katan-vanku",
+    "TA-C254-celuttu",
+    "TA-C254-terntetu",
+    "TA-C254-nulai",
+    "TA-C254-veliyeru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch254.txt",
+  "json": "tamil/narration/ch254.json",
+  "textHash": "fnv1a64:c5c68b4233ab6a2e",
+  "jsonHash": "fnv1a64:69a3e82aca869847",
+  "findings": []
+}

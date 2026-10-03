@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C279-tolilali",
+    "language": "tamil",
+    "chapter": 279,
+    "sequence": 15950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01a3dc5b05eb4e35"
+  },
+  "findings": []
+}

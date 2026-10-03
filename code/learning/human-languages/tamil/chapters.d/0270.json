@@ -1,0 +1,19 @@
+{
+  "chapter": 270,
+  "title": "Handkerchief, Earring, Chain, Chapati, Puri",
+  "label": "ch:ta-handkerchief-earring-chain-chapati-puri",
+  "canDo": "I can say a handkerchief, an earring, a chain, a chapati and a puri.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C270-puri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 270: I can say a handkerchief, an earring, a chain, a chapati and a puri.",
+    "assesses": [
+      "TA-LEX-C270-PORUL270-03",
+      "TA-LEX-C270-PORUL270-04",
+      "TA-LEX-C270-PORUL270-05"
+    ]
+  }
+}

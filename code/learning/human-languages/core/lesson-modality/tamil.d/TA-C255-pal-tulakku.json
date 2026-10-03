@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C255-pal-tulakku",
+    "language": "tamil",
+    "chapter": 255,
+    "sequence": 14410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:153c85e4d81ecfb3"
+  },
+  "findings": []
+}

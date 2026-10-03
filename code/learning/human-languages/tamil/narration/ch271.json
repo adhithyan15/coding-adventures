@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 271,
+  "title": "Coriander, Curry leaves, Apple, Orange, Papaya",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:3dee3fb7bbeab31f",
+  "lessons": [
+    {
+      "id": "TA-C271-kottamalli",
+      "sequence": 15360,
+      "title": "கொத்தமல்லி (kottamalli) — coriander",
+      "headword": "கொத்தமல்லி",
+      "romanization": "kottamalli",
+      "gloss": "coriander",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb72f415100d6118",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a chapati, then the Tamil for a puri."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கொத்தமல்லி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கொத்தமல்லி — kottamalli — \"coriander\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kottamalli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kottamalli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kottamalli, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kottamalli*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kottamalli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kottamalli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a chapati, then the Tamil for a puri, then say kottamalli again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a chapati, then the Tamil for a puri, then say *kottamalli* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கொத்தமல்லி (kottamalli) mean? (\"Coriander\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C271-kariveppilai",
+      "sequence": 15370,
+      "title": "கறிவேப்பிலை (kaṟivēppilai) — curry leaves",
+      "headword": "கறிவேப்பிலை",
+      "romanization": "kaṟivēppilai",
+      "gloss": "curry leaves",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:549f62a8350f3686",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a puri, then the Tamil for coriander."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கறிவேப்பிலை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கறிவேப்பிலை — kaṟivēppilai — \"curry leaves\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṟivēppilai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṟivēppilai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṟivēppilai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṟivēppilai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kaṟivēppilai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kaṟivēppilai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a puri, then the Tamil for coriander, then say kaṟivēppilai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a puri, then the Tamil for coriander, then say *kaṟivēppilai* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கறிவேப்பிலை (kaṟivēppilai) mean? (\"Curry leaves\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C271-appil",
+      "sequence": 15380,
+      "title": "ஆப்பிள் (āppiḷ) — an apple",
+      "headword": "ஆப்பிள்",
+      "romanization": "āppiḷ",
+      "gloss": "an apple",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c5c4ced2abeddba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for coriander, then the Tamil for curry leaves."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஆப்பிள்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆப்பிள் — āppiḷ — \"an apple\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āppiḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āppiḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āppiḷ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āppiḷ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say āppiḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *āppiḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for coriander, then the Tamil for curry leaves, then say āppiḷ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for coriander, then the Tamil for curry leaves, then say *āppiḷ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஆப்பிள் (āppiḷ) mean? (\"An apple\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C271-arancu",
+      "sequence": 15390,
+      "title": "ஆரஞ்சு (ārañcu) — an orange",
+      "headword": "ஆரஞ்சு",
+      "romanization": "ārañcu",
+      "gloss": "an orange",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:17119dfc4ad90076",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for curry leaves, then the Tamil for an apple."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஆரஞ்சு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆரஞ்சு — ārañcu — \"an orange\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārañcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārañcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārañcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārañcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ārañcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ārañcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for curry leaves, then the Tamil for an apple, then say ārañcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for curry leaves, then the Tamil for an apple, then say *ārañcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஆரஞ்சு (ārañcu) mean? (\"An orange\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C271-pappali",
+      "sequence": 15400,
+      "title": "பப்பாளி (pappāḷi) — a papaya",
+      "headword": "பப்பாளி",
+      "romanization": "pappāḷi",
+      "gloss": "a papaya",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6c06fd6db5c210a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an apple, then the Tamil for an orange."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பப்பாளி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பப்பாளி — pappāḷi — \"a papaya\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pappāḷi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pappāḷi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pappāḷi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pappāḷi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say pappāḷi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *pappāḷi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an apple, then the Tamil for an orange, then say pappāḷi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an apple, then the Tamil for an orange, then say *pappāḷi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பப்பாளி (pappāḷi) mean? (\"A papaya\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R271-first-pass-words-from-chapters-263-266",
+      "sequence": 15410,
+      "title": "Words from chapters 263-266 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 263-266",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00d443cfb9741cfc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for an orange and a papaya."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "traffic; transport, a footpath, an aeroplane, an airport, a ship",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: traffic; transport, a footpath, an aeroplane, an airport, a ship]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "opposite, between, a way, land, a valley",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: opposite, between, a way, land, a valley]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a district, a hut, a tower, a prison, the world",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a district, a hut, a tower, a prison, the world]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "easily, on purpose, by chance, luckily, a reason",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: easily, on purpose, by chance, luckily, a reason]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Traffic; transport? (போக்குவரத்து, pōkkuvarattu.) A footpath? (நடைபாதை, naṭaipātai.) An aeroplane? (விமானம், vimāṉam.) An airport? (விமான நிலையம், vimāṉa nilaiyam.) A ship? (கப்பல், kappal.) Opposite? (எதிரே, etirē.) Between? (இடையில், iṭaiyil.) A way? (வழி, vaḻi.) Land? (நிலம், nilam.) A valley? (பள்ளத்தாக்கு, paḷḷattākku.) A district? (மாவட்டம், māvaṭṭam.) A hut? (குடிசை, kuṭicai.) A tower? (கோபுரம், kōpuram.) A prison? (சிறை, ciṟai.) The world? (உலகம், ulakam.) Easily? (எளிதாக, eḷitāka.) On purpose? (வேண்டுமென்றே, vēṇṭumeṉṟē.) By chance? (தற்செயலாக, taṟceyalāka.) Luckily? (அதிர்ஷ்டவசமாக, atirṣṭavacamāka.) A reason? (காரணம், kāraṇam.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R271-second-pass-words-from-chapters-267-271",
+      "sequence": 15420,
+      "title": "Words from chapters 267-271 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 267-271",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5161a4b6f805095",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for fat and important."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fat, important, urgent, crowded, easy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: fat, important, urgent, crowded, easy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enthusiasm, confusion, a smile, gentle, honest",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: enthusiasm, confusion, a smile, gentle, honest]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "best, different, boring, simple, comfortable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: best, different, boring, simple, comfortable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a handkerchief, an earring, a chain, a chapati, a puri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a handkerchief, an earring, a chain, a chapati, a puri]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "coriander, curry leaves, an apple, an orange, a papaya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: coriander, curry leaves, an apple, an orange, a papaya]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Fat? (குண்டான, kuṇṭāṉa.) Important? (முக்கியமான, mukkiyamāṉa.) Urgent? (அவசரமான, avacaramāṉa.) Crowded? (நெரிசலான, nericalāṉa.) Easy? (எளிதான, eḷitāṉa.) Enthusiasm? (உற்சாகம், uṟcākam.) Confusion? (குழப்பம், kuḻappam.) A smile? (புன்னகை, puṉṉakai.) Gentle? (கனிவான, kaṉivāṉa.) Honest? (நேர்மையான, nērmaiyāṉa.) Best? (சிறந்த, ciṟanta.) Different? (வித்தியாசமான, vittiyācamāṉa.) Boring? (சலிப்பான, calippāṉa.) Simple? (எளிய, eḷiya.) Comfortable? (வசதியான, vacatiyāṉa.) A handkerchief? (கைக்குட்டை, kaikkuṭṭai.) An earring? (தோடு, tōṭu.) A chain? (சங்கிலி, caṅkili.) A chapati? (சப்பாத்தி, cappātti.) A puri? (பூரி, pūri.) Coriander? (கொத்தமல்லி, kottamalli.) Curry leaves? (கறிவேப்பிலை, kaṟivēppilai.) An apple? (ஆப்பிள், āppiḷ.) An orange? (ஆரஞ்சு, ārañcu.) A papaya? (பப்பாளி, pappāḷi.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

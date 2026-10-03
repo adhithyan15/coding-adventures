@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C276-copa",
+    "language": "tamil",
+    "chapter": 276,
+    "sequence": 15830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6b658f2db868bc51"
+  },
+  "findings": []
+}

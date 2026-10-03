@@ -1,0 +1,11 @@
+{
+  "id": "TA-C279-poriyalar",
+  "pathSegment": "TA-PATH-279-VELAI279",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-279-VELAI279",
+      "order": 3
+    }
+  ]
+}

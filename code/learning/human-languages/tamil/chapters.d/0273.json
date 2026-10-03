@@ -1,0 +1,19 @@
+{
+  "chapter": 273,
+  "title": "Person, Parents, Sibling, Twins, Brother-in-law",
+  "label": "ch:ta-person-parents-sibling-twins-brother-in-law",
+  "canDo": "I can say a person, parents, a sibling, twins and a brother-in-law.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C273-maittunan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 273: I can say a person, parents, a sibling, twins and a brother-in-law.",
+    "assesses": [
+      "TA-LEX-C273-PORUL273-03",
+      "TA-LEX-C273-PORUL273-04",
+      "TA-LEX-C273-PORUL273-05"
+    ]
+  }
+}

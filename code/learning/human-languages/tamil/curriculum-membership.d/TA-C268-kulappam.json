@@ -1,0 +1,11 @@
+{
+  "id": "TA-C268-kulappam",
+  "pathSegment": "TA-PATH-268-GUNAM268",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-268-GUNAM268",
+      "order": 1
+    }
+  ]
+}

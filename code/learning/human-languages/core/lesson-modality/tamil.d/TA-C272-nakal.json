@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C272-nakal",
+    "language": "tamil",
+    "chapter": 272,
+    "sequence": 15640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f838e02514819dd4"
+  },
+  "findings": []
+}

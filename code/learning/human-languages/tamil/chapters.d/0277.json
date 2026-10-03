@@ -1,0 +1,19 @@
+{
+  "chapter": 277,
+  "title": "Team, Victory, Defeat, Hobby, Opinion",
+  "label": "ch:ta-team-victory-defeat-hobby-opinion",
+  "canDo": "I can say a team, victory, defeat, a hobby and an opinion.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C277-karuttu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 277: I can say a team, victory, defeat, a hobby and an opinion.",
+    "assesses": [
+      "TA-LEX-C277-PORUL277-03",
+      "TA-LEX-C277-PORUL277-04",
+      "TA-LEX-C277-PORUL277-05"
+    ]
+  }
+}

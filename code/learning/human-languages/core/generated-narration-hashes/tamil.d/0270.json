@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:0f695da313dc7fee",
+  "lessonIds": [
+    "TA-C270-kaikkuttai",
+    "TA-C270-totu2",
+    "TA-C270-cankili",
+    "TA-C270-cappatti",
+    "TA-C270-puri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch270.txt",
+  "json": "tamil/narration/ch270.json",
+  "textHash": "fnv1a64:b44bf5aeb50c5909",
+  "jsonHash": "fnv1a64:b4a8acdcf481e5de",
+  "findings": []
+}

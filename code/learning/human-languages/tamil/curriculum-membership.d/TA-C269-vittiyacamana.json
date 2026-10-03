@@ -1,0 +1,11 @@
+{
+  "id": "TA-C269-vittiyacamana",
+  "pathSegment": "TA-PATH-269-GUNAM269",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-269-GUNAM269",
+      "order": 1
+    }
+  ]
+}

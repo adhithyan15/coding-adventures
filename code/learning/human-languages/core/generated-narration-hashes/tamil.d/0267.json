@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:9eb3fbae97b67a62",
+  "lessonIds": [
+    "TA-C267-kuntana",
+    "TA-C267-mukkiyamana",
+    "TA-C267-avacaramana",
+    "TA-C267-nericalana",
+    "TA-C267-elitana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch267.txt",
+  "json": "tamil/narration/ch267.json",
+  "textHash": "fnv1a64:e9912d8c6caf8a60",
+  "jsonHash": "fnv1a64:c995ceea3c403a49",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:710c616b51bc3fa5",
+  "lessonIds": [
+    "TA-C278-karumpu",
+    "TA-C278-ventaikkay",
+    "TA-C278-nilakkatalai",
+    "TA-C278-tarpucani",
+    "TA-C278-murukku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch278.txt",
+  "json": "tamil/narration/ch278.json",
+  "textHash": "fnv1a64:88bcefb678d28ec2",
+  "jsonHash": "fnv1a64:9209932bb40940cf",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C269-vacatiyana",
+  "pathSegment": "TA-PATH-269-GUNAM269",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-269-GUNAM269",
+      "order": 4
+    }
+  ]
+}

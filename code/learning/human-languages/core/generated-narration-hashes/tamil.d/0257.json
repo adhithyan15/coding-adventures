@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 257,
+  "sourceHash": "fnv1a64:0e9a9e768f422abc",
+  "lessonIds": [
+    "TA-C257-veru",
+    "TA-C257-accariyappatu",
+    "TA-C257-vetkappatu",
+    "TA-C257-poramaippatu",
+    "TA-C257-muttamitu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch257.txt",
+  "json": "tamil/narration/ch257.json",
+  "textHash": "fnv1a64:30fb482d2effb9f7",
+  "jsonHash": "fnv1a64:3dba1661cc9d8268",
+  "findings": []
+}

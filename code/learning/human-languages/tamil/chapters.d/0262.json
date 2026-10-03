@@ -1,0 +1,19 @@
+{
+  "chapter": 262,
+  "title": "Now and then, Every week, Late, Finally, These days",
+  "label": "ch:ta-now-and-then-every-week-late-finally-these-days",
+  "canDo": "I can say now and then, every week, late, finally and these days.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TA-R262-second-pass-words-from-chapters-258-262",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 262: I can say now and then, every week, late, finally and these days.",
+    "assesses": [
+      "TA-LEX-C262-NERAM262-03",
+      "TA-LEX-C262-NERAM262-04",
+      "TA-LEX-C262-NERAM262-05"
+    ]
+  }
+}

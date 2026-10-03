@@ -1,0 +1,11 @@
+{
+  "id": "TA-C256-tavaravitu",
+  "pathSegment": "TA-PATH-256-ACT256",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-256-ACT256",
+      "order": 2
+    }
+  ]
+}

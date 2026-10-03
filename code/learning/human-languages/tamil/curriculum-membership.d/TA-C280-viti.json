@@ -1,0 +1,11 @@
+{
+  "id": "TA-C280-viti",
+  "pathSegment": "TA-PATH-280-VELAI280",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-280-VELAI280",
+      "order": 1
+    }
+  ]
+}

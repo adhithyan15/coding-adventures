@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:8335d9a3e8adda0a",
+  "lessonIds": [
+    "TA-C279-tolilali",
+    "TA-C279-kuttam",
+    "TA-C279-melalar",
+    "TA-C279-poriyalar",
+    "TA-C279-valakkarinar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch279.txt",
+  "json": "tamil/narration/ch279.json",
+  "textHash": "fnv1a64:960e38d6407bcc34",
+  "jsonHash": "fnv1a64:7500409bc39c27c9",
+  "findings": []
+}

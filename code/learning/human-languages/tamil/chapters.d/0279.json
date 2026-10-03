@@ -1,0 +1,19 @@
+{
+  "chapter": 279,
+  "title": "Worker, Meeting, Manager, Engineer, Lawyer",
+  "label": "ch:ta-worker-meeting-manager-engineer-lawyer",
+  "canDo": "I can say a worker, a meeting, a manager, an engineer and a lawyer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C279-valakkarinar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 279: I can say a worker, a meeting, a manager, an engineer and a lawyer.",
+    "assesses": [
+      "TA-LEX-C279-VELAI279-03",
+      "TA-LEX-C279-VELAI279-04",
+      "TA-LEX-C279-VELAI279-05"
+    ]
+  }
+}

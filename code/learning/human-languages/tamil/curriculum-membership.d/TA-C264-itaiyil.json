@@ -1,0 +1,11 @@
+{
+  "id": "TA-C264-itaiyil",
+  "pathSegment": "TA-PATH-264-IDAM264",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-264-IDAM264",
+      "order": 1
+    }
+  ]
+}

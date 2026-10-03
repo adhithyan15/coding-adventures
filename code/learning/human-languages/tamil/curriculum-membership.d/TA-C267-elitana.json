@@ -1,0 +1,11 @@
+{
+  "id": "TA-C267-elitana",
+  "pathSegment": "TA-PATH-267-GUNAM267",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-267-GUNAM267",
+      "order": 4
+    }
+  ]
+}

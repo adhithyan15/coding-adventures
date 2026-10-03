@@ -1,0 +1,11 @@
+{
+  "id": "TA-C266-tarceyalaka",
+  "pathSegment": "TA-PATH-266-KARANAM266",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-266-KARANAM266",
+      "order": 2
+    }
+  ]
+}

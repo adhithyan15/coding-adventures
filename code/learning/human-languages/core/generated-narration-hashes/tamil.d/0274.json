@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:4b350d9780d3e1e0",
+  "lessonIds": [
+    "TA-C274-icai",
+    "TA-C274-patal",
+    "TA-C274-katai",
+    "TA-C274-katavul",
+    "TA-C274-vilanku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch274.txt",
+  "json": "tamil/narration/ch274.json",
+  "textHash": "fnv1a64:3611082e4a252ce2",
+  "jsonHash": "fnv1a64:9558bd632df81f02",
+  "findings": []
+}

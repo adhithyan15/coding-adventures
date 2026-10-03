@@ -1,0 +1,19 @@
+{
+  "chapter": 255,
+  "title": "To breathe, To recover, To swell, To wake, To brush one's teeth",
+  "label": "ch:ta-to-breathe-to-recover-to-swell-to-wake-to-brush-one-s-teeth",
+  "canDo": "I can say to breathe, to recover, to swell, to wake and to brush one's teeth.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C255-pal-tulakku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 255: I can say to breathe, to recover, to swell, to wake and to brush one's teeth.",
+    "assesses": [
+      "TA-LEX-C255-ACT255-03",
+      "TA-LEX-C255-ACT255-04",
+      "TA-LEX-C255-ACT255-05"
+    ]
+  }
+}

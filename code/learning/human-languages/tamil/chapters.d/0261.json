@@ -1,0 +1,19 @@
+{
+  "chapter": 261,
+  "title": "Diabetes, Exercise, Yoga, Itch, Dizziness",
+  "label": "ch:ta-diabetes-exercise-yoga-itch-dizziness",
+  "canDo": "I can say diabetes, exercise, yoga, an itch and dizziness.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TA-C261-talaiccurral",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 261: I can say diabetes, exercise, yoga, an itch and dizziness.",
+    "assesses": [
+      "TA-LEX-C261-NALAM261-03",
+      "TA-LEX-C261-NALAM261-04",
+      "TA-LEX-C261-NALAM261-05"
+    ]
+  }
+}

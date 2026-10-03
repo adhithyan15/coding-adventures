@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C255-kunamaku",
+    "language": "tamil",
+    "chapter": 255,
+    "sequence": 14380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5b88085a05f222e"
+  },
+  "findings": []
+}

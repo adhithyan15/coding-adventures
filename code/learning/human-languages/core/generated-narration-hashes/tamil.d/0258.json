@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:23166767cda26a90",
+  "lessonIds": [
+    "TA-C258-uruku",
+    "TA-C258-pari",
+    "TA-C258-kurai",
+    "TA-C258-terru",
+    "TA-C258-kai-kulukku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch258.txt",
+  "json": "tamil/narration/ch258.json",
+  "textHash": "fnv1a64:6a4c262affb0cdd9",
+  "jsonHash": "fnv1a64:9d38634d22e2eab4",
+  "findings": []
+}

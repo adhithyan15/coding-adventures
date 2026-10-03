@@ -1,0 +1,11 @@
+{
+  "id": "TA-C278-ventaikkay",
+  "pathSegment": "TA-PATH-278-PORUL278",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-278-PORUL278",
+      "order": 1
+    }
+  ]
+}

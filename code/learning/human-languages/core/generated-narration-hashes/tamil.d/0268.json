@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:32fb364cc1ff93e9",
+  "lessonIds": [
+    "TA-C268-urcakam",
+    "TA-C268-kulappam",
+    "TA-C268-punnakai",
+    "TA-C268-kanivana",
+    "TA-C268-nermaiyana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch268.txt",
+  "json": "tamil/narration/ch268.json",
+  "textHash": "fnv1a64:e47da42998bbbff5",
+  "jsonHash": "fnv1a64:2b4abb6edbdebcf4",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C263-kappal",
+    "language": "tamil",
+    "chapter": 263,
+    "sequence": 15000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8996cf27d691a2df"
+  },
+  "findings": []
+}

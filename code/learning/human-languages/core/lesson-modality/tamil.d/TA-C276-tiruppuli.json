@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C276-tiruppuli",
+    "language": "tamil",
+    "chapter": 276,
+    "sequence": 15840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab95d952ade1a302"
+  },
+  "findings": []
+}
