@@ -33,10 +33,10 @@ per-track ladder (HL09 §3.1), fewest criteria left first, every blocker listed 
   portuguese  touches A2     complete pre-A1 working A1     vocabulary 600/600 — 1 blocker: writing-stage 2
   russian     touches A2     complete pre-A1 working A1     vocabulary 600/600 — 1 blocker: writing-stage 2
   sanskrit    touches A2     complete pre-A1 working A1     vocabulary 600/600 — 1 blocker: writing-stage 2
+  spanish     touches C2     complete A1     working A2     vocabulary 1020/1200 — 1 blocker: vocabulary 180
   tamil       touches A2     complete pre-A1 working A1     vocabulary 600/600 — 1 blocker: writing-stage 2
   french      touches A2     complete A2     working B1     vocabulary 1226/2500 — 2 blockers: spine-nodes 5, vocabulary 1274
   latin       touches A2     complete A2     working B1     vocabulary 1235/2500 — 2 blockers: spine-nodes 5, vocabulary 1265
-  spanish     touches C2     complete A1     working A2     vocabulary 1020/1200 — 2 blockers: verb-vocabulary 29, vocabulary 180
   arabic      touches A2     complete A1     working A2     vocabulary 627/1200 — 3 blockers: spine-nodes 3, verb-vocabulary 51, vocabulary 573
   chinese     touches A2     complete none   working pre-A1 vocabulary 48/300 — 3 blockers: spine-nodes 1, verb-vocabulary 4, vocabulary 252
   german      touches A2     complete A2     working B1     vocabulary 1212/2500 — 3 blockers: spine-nodes 5, verb-vocabulary 1, vocabulary 1288

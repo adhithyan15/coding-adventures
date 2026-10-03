@@ -315593,11 +315593,6 @@
             "criterion": "vocabulary",
             "detail": "teaches 1020 distinct headwords at or below A2, against 1200",
             "shortfall": 180
-          },
-          {
-            "criterion": "verb-vocabulary",
-            "detail": "teaches 91 distinct verb headwords at or below A2, against 120",
-            "shortfall": 29
           }
         ],
         "vocabulary": 1069
