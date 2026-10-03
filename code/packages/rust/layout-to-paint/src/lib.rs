@@ -258,6 +258,7 @@ where
                     text_wrap_style(frame.node),
                     text_break_spaces(frame.node),
                     text_justifies(frame.node),
+                    text_justification(frame.node),
                     direction,
                     options,
                     &mut font_cache,
@@ -578,6 +579,17 @@ fn text_wrap_style(node: &PositionedNode) -> TextWrapStyle {
 
 fn text_break_spaces(node: &PositionedNode) -> bool {
     matches!(node.ext.get("text.break-spaces"), Some(ExtValue::Bool(true)))
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum TextJustify { None, InterWord, InterCharacter }
+
+fn text_justification(node: &PositionedNode) -> TextJustify {
+    match node.ext.get("text.justify-mode") {
+        Some(ExtValue::Str(value)) if value == "none" => TextJustify::None,
+        Some(ExtValue::Str(value)) if value == "inter-character" => TextJustify::InterCharacter,
+        _ => TextJustify::InterWord,
+    }
 }
 
 fn text_justifies(node: &PositionedNode) -> bool {
@@ -1363,6 +1375,7 @@ fn emit_text_content<S, M, R>(
     wrap_style: TextWrapStyle,
     break_spaces: bool,
     justify: bool,
+    justify_mode: TextJustify,
     direction: BaseDirection,
     options: &LayoutToPaintOptions<'_, S, M, R>,
     font_cache: &mut HashMap<FontCacheKey, CachedFont<S::Handle>>,
@@ -1456,7 +1469,9 @@ fn emit_text_content<S, M, R>(
                 continue;
             }
             let is_final_line = line_index + 1 == line_count;
-            let line_word_spacing = if (justify && !is_final_line) || (justify_last && is_final_line) {
+            let justify_line = justify_mode != TextJustify::None
+                && ((justify && !is_final_line) || (justify_last && is_final_line));
+            let line_word_spacing = if justify_line && justify_mode == TextJustify::InterWord {
                 let separator_count = line.chars().filter(|character| *character == ' ').count();
                 if separator_count == 0 {
                     word_spacing
@@ -1468,6 +1483,22 @@ fn emit_text_content<S, M, R>(
                 }
             } else {
                 word_spacing
+            };
+            let line_letter_spacing = if justify_line && justify_mode == TextJustify::InterCharacter {
+                let shaped = shape_visual_line(
+                    options.shaper, handle, &line, size_dpr, word_spacing, direction,
+                );
+                let base_width = shaped.as_ref().map(|shaped| shaped_advance(shaped, letter_spacing))
+                    .unwrap_or(line_max_width);
+                let gap_count = shaped.as_ref().map(|shaped| shaped.runs.iter()
+                    .map(|run| run.glyphs.len()).sum::<usize>().saturating_sub(1)).unwrap_or(0);
+                if gap_count == 0 {
+                    letter_spacing
+                } else {
+                    letter_spacing + ((line_max_width - base_width) / gap_count as f64).max(0.0)
+                }
+            } else {
+                letter_spacing
             };
             let shaped = match shape_visual_line(
                 options.shaper, handle, &line, size_dpr, line_word_spacing, direction,
@@ -1481,7 +1512,7 @@ fn emit_text_content<S, M, R>(
             };
 
             // Compute the starting x position based on text alignment.
-            let line_advance = shaped_advance(&shaped, letter_spacing);
+            let line_advance = shaped_advance(&shaped, line_letter_spacing);
             let alignment = if is_final_line {
                 text_align_last.unwrap_or(tc.text_align)
             } else {
@@ -1494,14 +1525,14 @@ fn emit_text_content<S, M, R>(
             };
 
             emit_glyph_runs_from_shaped(
-                &shaped, size_dpr, baseline_x, baseline_y, letter_spacing, &fill_css, out,
+                &shaped, size_dpr, baseline_x, baseline_y, line_letter_spacing, &fill_css, out,
             );
             emit_text_decorations(
                 tc,
                 handle,
                 options.metrics,
                 &shaped,
-                letter_spacing,
+                line_letter_spacing,
                 size_dpr,
                 baseline_x,
                 baseline_y,
@@ -3613,6 +3644,10 @@ mod tests {
         let normal = positioned_leaf(text_content("A A A A"), 0.0, 0.0, 48.0, 40.0);
         let mut justified = normal.clone();
         justified.ext.insert("text.justify".into(), ExtValue::Bool(true));
+        let mut inter_character = justified.clone();
+        inter_character.ext.insert("text.justify-mode".into(), ExtValue::Str("inter-character".into()));
+        let mut disabled = justified.clone();
+        disabled.ext.insert("text.justify-mode".into(), ExtValue::Str("none".into()));
         let shaper = FakeShaper;
         let metrics = FakeMetrics;
         let resolver = FakeResolver;
@@ -3631,5 +3666,7 @@ mod tests {
         };
         assert_eq!(first_line_x(&normal), vec![0.0, 8.0, 16.0, 24.0, 32.0]);
         assert_eq!(first_line_x(&justified), vec![0.0, 8.0, 20.0, 28.0, 40.0]);
+        assert_eq!(first_line_x(&inter_character), vec![0.0, 10.0, 20.0, 30.0, 40.0]);
+        assert_eq!(first_line_x(&disabled), first_line_x(&normal));
     }
 }
