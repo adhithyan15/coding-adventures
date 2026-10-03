@@ -1,0 +1,106 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TA-R220-first-pass-words-from-chapters-212-215
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 11650
+chapter: 220
+type: review
+headword: (dialogue)
+gloss: first pass over chapters 212-215
+concept_tag: REVIEW
+prerequisites: [TA-C212-palavinamana, TA-C212-cuyanalamana, TA-C212-peruntanmaiyana, TA-C212-olukkamana, TA-C212-acinkamana, TA-C213-alamari, TA-C213-mincaram, TA-C213-kuppai, TA-C213-parpacai, TA-C213-paltulakki, TA-C214-mor, TA-C214-palaccaru, TA-C214-ilanir, TA-C214-mavu, TA-C214-rotti, TA-C215-pencil, TA-C215-akarati, TA-C215-kattanam, TA-C215-katitam, TA-C215-urai, TA-C220-nikalcci, TA-C220-tiraippatam]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TA-LEX-C212-GUNAM212-01, TA-LEX-C212-GUNAM212-02, TA-LEX-C212-GUNAM212-03, TA-LEX-C212-GUNAM212-04, TA-LEX-C212-GUNAM212-05, TA-LEX-C213-PORUL213-01, TA-LEX-C213-PORUL213-02, TA-LEX-C213-PORUL213-03, TA-LEX-C213-PORUL213-04, TA-LEX-C213-PORUL213-05, TA-LEX-C214-PORUL214-01, TA-LEX-C214-PORUL214-02, TA-LEX-C214-PORUL214-03, TA-LEX-C214-PORUL214-04, TA-LEX-C214-PORUL214-05, TA-LEX-C215-PORUL215-01, TA-LEX-C215-PORUL215-02, TA-LEX-C215-PORUL215-03, TA-LEX-C215-PORUL215-04, TA-LEX-C215-PORUL215-05, TA-LEX-C220-PORUL220-04, TA-LEX-C220-PORUL220-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TA-LEX-C212-GUNAM212-01, TA-LEX-C212-GUNAM212-02, TA-LEX-C212-GUNAM212-03, TA-LEX-C212-GUNAM212-04, TA-LEX-C212-GUNAM212-05, TA-LEX-C213-PORUL213-01, TA-LEX-C213-PORUL213-02, TA-LEX-C213-PORUL213-03, TA-LEX-C213-PORUL213-04, TA-LEX-C213-PORUL213-05, TA-LEX-C214-PORUL214-01, TA-LEX-C214-PORUL214-02, TA-LEX-C214-PORUL214-03, TA-LEX-C214-PORUL214-04, TA-LEX-C214-PORUL214-05, TA-LEX-C215-PORUL215-01, TA-LEX-C215-PORUL215-02, TA-LEX-C215-PORUL215-03, TA-LEX-C215-PORUL215-04, TA-LEX-C215-PORUL215-05, TA-LEX-C220-PORUL220-04, TA-LEX-C220-PORUL220-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TA-C212-palavinamana, TA-C212-cuyanalamana, TA-C212-peruntanmaiyana, TA-C212-olukkamana, TA-C212-acinkamana, TA-C213-alamari, TA-C213-mincaram, TA-C213-kuppai, TA-C213-parpacai, TA-C213-paltulakki, TA-C214-mor, TA-C214-palaccaru, TA-C214-ilanir, TA-C214-mavu, TA-C214-rotti, TA-C215-pencil, TA-C215-akarati, TA-C215-kattanam, TA-C215-katitam, TA-C215-urai, TA-C220-nikalcci, TA-C220-tiraippatam]
+---
+
+# Words from chapters 212-215 — a first pass
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C220-PORUL220-04, TA-LEX-C220-PORUL220-05] -->
+
+[PAUSE 3s] Say the words for a programme and a film.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C212-GUNAM212-01, TA-LEX-C212-GUNAM212-02, TA-LEX-C212-GUNAM212-03, TA-LEX-C212-GUNAM212-04, TA-LEX-C212-GUNAM212-05, TA-LEX-C213-PORUL213-01, TA-LEX-C213-PORUL213-02, TA-LEX-C213-PORUL213-03, TA-LEX-C213-PORUL213-04, TA-LEX-C213-PORUL213-05, TA-LEX-C214-PORUL214-01, TA-LEX-C214-PORUL214-02, TA-LEX-C214-PORUL214-03, TA-LEX-C214-PORUL214-04, TA-LEX-C214-PORUL214-05, TA-LEX-C215-PORUL215-01, TA-LEX-C215-PORUL215-02, TA-LEX-C215-PORUL215-03, TA-LEX-C215-PORUL215-04, TA-LEX-C215-PORUL215-05, TA-LEX-C220-PORUL220-04, TA-LEX-C220-PORUL220-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: weak, selfish, generous, well-behaved, ugly]
+- [YOU SAY: a cupboard, electricity, rubbish, toothpaste, a toothbrush]
+- [YOU SAY: buttermilk, fruit juice, tender coconut water, flour; batter, bread]
+- [YOU SAY: a pencil, a dictionary, a fee, a letter, an envelope; a cover]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C212-GUNAM212-01, TA-LEX-C212-GUNAM212-02, TA-LEX-C212-GUNAM212-03, TA-LEX-C212-GUNAM212-04, TA-LEX-C212-GUNAM212-05, TA-LEX-C213-PORUL213-01, TA-LEX-C213-PORUL213-02, TA-LEX-C213-PORUL213-03, TA-LEX-C213-PORUL213-04, TA-LEX-C213-PORUL213-05, TA-LEX-C214-PORUL214-01, TA-LEX-C214-PORUL214-02, TA-LEX-C214-PORUL214-03, TA-LEX-C214-PORUL214-04, TA-LEX-C214-PORUL214-05, TA-LEX-C215-PORUL215-01, TA-LEX-C215-PORUL215-02, TA-LEX-C215-PORUL215-03, TA-LEX-C215-PORUL215-04, TA-LEX-C215-PORUL215-05, TA-LEX-C220-PORUL220-04, TA-LEX-C220-PORUL220-05] -->
+
+[PAUSE 3s] Weak? (**பலவீனமான**, *palavīṉamāṉa*.) Selfish? (**சுயநலமான**, *cuyanalamāṉa*.) Generous? (**பெருந்தன்மையான**, *peruntaṉmaiyāṉa*.) Well-behaved? (**ஒழுக்கமான**, *oḻukkamāṉa*.) Ugly? (**அசிங்கமான**, *aciṅkamāṉa*.) A cupboard? (**அலமாரி**, *alamāri*.) Electricity? (**மின்சாரம்**, *miṉcāram*.) Rubbish? (**குப்பை**, *kuppai*.) Toothpaste? (**பற்பசை**, *paṟpacai*.) A toothbrush? (**பல்துலக்கி**, *paltulakki*.) Buttermilk? (**மோர்**, *mōr*.) Fruit juice? (**பழச்சாறு**, *paḻaccāṟu*.) Tender coconut water? (**இளநீர்**, *iḷanīr*.) Flour; batter? (**மாவு**, *māvu*.) Bread? (**ரொட்டி**, *roṭṭi*.) A pencil? (**பென்சில்**, *peṉcil*.) A dictionary? (**அகராதி**, *akarāti*.) A fee? (**கட்டணம்**, *kaṭṭaṇam*.) A letter? (**கடிதம்**, *kaṭitam*.) An envelope; a cover? (**உறை**, *uṟai*.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TA-R220-second-pass-words-from-chapters-216-220
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 11660
+chapter: 220
+type: review
+headword: (dialogue)
+gloss: second pass over chapters 216-220
+concept_tag: REVIEW
+prerequisites: [TA-C216-inaiyam, TA-C216-katavuccol, TA-C216-nalital, TA-C216-cittu, TA-C216-varaipatam, TA-C217-manamakal, TA-C217-manamakan, TA-C217-niccayatarttam, TA-C217-viruntu, TA-C217-vila, TA-C218-ottakaccivinki, TA-C218-varikkutirai, TA-C218-mutalai, TA-C218-pattampucci, TA-C218-teni, TA-C219-munkil, TA-C219-vanavil, TA-C219-mutupani, TA-C219-tenral, TA-C219-vellam, TA-C220-vicaippalakai, TA-C220-kemara, TA-C220-vanoli, TA-C220-nikalcci, TA-C220-tiraippatam]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TA-LEX-C216-PORUL216-01, TA-LEX-C216-PORUL216-02, TA-LEX-C216-PORUL216-03, TA-LEX-C216-PORUL216-04, TA-LEX-C216-PORUL216-05, TA-LEX-C217-PORUL217-01, TA-LEX-C217-PORUL217-02, TA-LEX-C217-PORUL217-03, TA-LEX-C217-PORUL217-04, TA-LEX-C217-PORUL217-05, TA-LEX-C218-PORUL218-01, TA-LEX-C218-PORUL218-02, TA-LEX-C218-PORUL218-03, TA-LEX-C218-PORUL218-04, TA-LEX-C218-PORUL218-05, TA-LEX-C219-PORUL219-01, TA-LEX-C219-PORUL219-02, TA-LEX-C219-PORUL219-03, TA-LEX-C219-PORUL219-04, TA-LEX-C219-PORUL219-05, TA-LEX-C220-PORUL220-01, TA-LEX-C220-PORUL220-02, TA-LEX-C220-PORUL220-03, TA-LEX-C220-PORUL220-04, TA-LEX-C220-PORUL220-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TA-LEX-C216-PORUL216-01, TA-LEX-C216-PORUL216-02, TA-LEX-C216-PORUL216-03, TA-LEX-C216-PORUL216-04, TA-LEX-C216-PORUL216-05, TA-LEX-C217-PORUL217-01, TA-LEX-C217-PORUL217-02, TA-LEX-C217-PORUL217-03, TA-LEX-C217-PORUL217-04, TA-LEX-C217-PORUL217-05, TA-LEX-C218-PORUL218-01, TA-LEX-C218-PORUL218-02, TA-LEX-C218-PORUL218-03, TA-LEX-C218-PORUL218-04, TA-LEX-C218-PORUL218-05, TA-LEX-C219-PORUL219-01, TA-LEX-C219-PORUL219-02, TA-LEX-C219-PORUL219-03, TA-LEX-C219-PORUL219-04, TA-LEX-C219-PORUL219-05, TA-LEX-C220-PORUL220-01, TA-LEX-C220-PORUL220-02, TA-LEX-C220-PORUL220-03, TA-LEX-C220-PORUL220-04, TA-LEX-C220-PORUL220-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TA-C216-inaiyam, TA-C216-katavuccol, TA-C216-nalital, TA-C216-cittu, TA-C216-varaipatam, TA-C217-manamakal, TA-C217-manamakan, TA-C217-niccayatarttam, TA-C217-viruntu, TA-C217-vila, TA-C218-ottakaccivinki, TA-C218-varikkutirai, TA-C218-mutalai, TA-C218-pattampucci, TA-C218-teni, TA-C219-munkil, TA-C219-vanavil, TA-C219-mutupani, TA-C219-tenral, TA-C219-vellam, TA-C220-vicaippalakai, TA-C220-kemara, TA-C220-vanoli, TA-C220-nikalcci, TA-C220-tiraippatam]
+---
+
+# Words from chapters 216-220 — a second pass
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C216-PORUL216-01, TA-LEX-C216-PORUL216-02] -->
+
+[PAUSE 3s] Say the words for the internet and a password.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C216-PORUL216-01, TA-LEX-C216-PORUL216-02, TA-LEX-C216-PORUL216-03, TA-LEX-C216-PORUL216-04, TA-LEX-C216-PORUL216-05, TA-LEX-C217-PORUL217-01, TA-LEX-C217-PORUL217-02, TA-LEX-C217-PORUL217-03, TA-LEX-C217-PORUL217-04, TA-LEX-C217-PORUL217-05, TA-LEX-C218-PORUL218-01, TA-LEX-C218-PORUL218-02, TA-LEX-C218-PORUL218-03, TA-LEX-C218-PORUL218-04, TA-LEX-C218-PORUL218-05, TA-LEX-C219-PORUL219-01, TA-LEX-C219-PORUL219-02, TA-LEX-C219-PORUL219-03, TA-LEX-C219-PORUL219-04, TA-LEX-C219-PORUL219-05, TA-LEX-C220-PORUL220-01, TA-LEX-C220-PORUL220-02, TA-LEX-C220-PORUL220-03, TA-LEX-C220-PORUL220-04, TA-LEX-C220-PORUL220-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: the internet, a password, a newspaper, a ticket; a slip of paper, a map]
+- [YOU SAY: a bride, a bridegroom, an engagement, a feast, a festival]
+- [YOU SAY: a giraffe, a zebra, a crocodile, a butterfly, a bee]
+- [YOU SAY: bamboo, a rainbow, fog, a gentle breeze, a flood]
+- [YOU SAY: a keyboard, a camera, the radio, a programme, a film]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C216-PORUL216-01, TA-LEX-C216-PORUL216-02, TA-LEX-C216-PORUL216-03, TA-LEX-C216-PORUL216-04, TA-LEX-C216-PORUL216-05, TA-LEX-C217-PORUL217-01, TA-LEX-C217-PORUL217-02, TA-LEX-C217-PORUL217-03, TA-LEX-C217-PORUL217-04, TA-LEX-C217-PORUL217-05, TA-LEX-C218-PORUL218-01, TA-LEX-C218-PORUL218-02, TA-LEX-C218-PORUL218-03, TA-LEX-C218-PORUL218-04, TA-LEX-C218-PORUL218-05, TA-LEX-C219-PORUL219-01, TA-LEX-C219-PORUL219-02, TA-LEX-C219-PORUL219-03, TA-LEX-C219-PORUL219-04, TA-LEX-C219-PORUL219-05, TA-LEX-C220-PORUL220-01, TA-LEX-C220-PORUL220-02, TA-LEX-C220-PORUL220-03, TA-LEX-C220-PORUL220-04, TA-LEX-C220-PORUL220-05] -->
+
+[PAUSE 3s] The internet? (**இணையம்**, *iṇaiyam*.) A password? (**கடவுச்சொல்**, *kaṭavuccol*.) A newspaper? (**நாளிதழ்**, *nāḷitaḻ*.) A ticket; a slip of paper? (**சீட்டு**, *cīṭṭu*.) A map? (**வரைபடம்**, *varaipaṭam*.) A bride? (**மணமகள்**, *maṇamakaḷ*.) A bridegroom? (**மணமகன்**, *maṇamakaṉ*.) An engagement? (**நிச்சயதார்த்தம்**, *niccayatārttam*.) A feast? (**விருந்து**, *viruntu*.) A festival? (**விழா**, *viḻā*.) A giraffe? (**ஒட்டகச்சிவிங்கி**, *oṭṭakacciviṅki*.) A zebra? (**வரிக்குதிரை**, *varikkutirai*.) A crocodile? (**முதலை**, *mutalai*.) A butterfly? (**பட்டாம்பூச்சி**, *paṭṭāmpūcci*.) A bee? (**தேனீ**, *tēṉī*.) Bamboo? (**மூங்கில்**, *mūṅkil*.) A rainbow? (**வானவில்**, *vāṉavil*.) Fog? (**மூடுபனி**, *mūṭupaṉi*.) A gentle breeze? (**தென்றல்**, *teṉṟal*.) A flood? (**வெள்ளம்**, *veḷḷam*.) A keyboard? (**விசைப்பலகை**, *vicaippalakai*.) A camera? (**கேமரா**, *kēmarā*.) The radio? (**வானொலி**, *vāṉoli*.) A programme? (**நிகழ்ச்சி**, *nikaḻcci*.) A film? (**திரைப்படம்**, *tiraippaṭam*.)
+`;export{t as n,r as t};
