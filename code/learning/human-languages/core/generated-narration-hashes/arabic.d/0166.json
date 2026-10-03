@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:3b605a750c3e41b3",
+  "lessonIds": [
+    "AR-C166-sada",
+    "AR-C166-bana",
+    "AR-C166-hadama",
+    "AR-C166-dahana",
+    "AR-C166-khabbaa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch166.txt",
+  "json": "arabic/narration/ch166.json",
+  "textHash": "fnv1a64:dad1287a10a3a1a0",
+  "jsonHash": "fnv1a64:de0998fc1cd55b27",
+  "findings": []
+}

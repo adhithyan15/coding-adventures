@@ -1,0 +1,11 @@
+{
+  "id": "AR-C189-amil",
+  "pathSegment": "AR-PATH-189-AMAL189",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-189-AMAL189",
+      "order": 2
+    }
+  ]
+}

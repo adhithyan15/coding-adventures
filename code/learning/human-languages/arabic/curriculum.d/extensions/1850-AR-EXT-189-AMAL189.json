@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-189-AMAL189",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an accountant, a journalist, a worker, a translator and an interview.",
+  "prerequisites": []
+}

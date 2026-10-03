@@ -1,0 +1,11 @@
+{
+  "id": "AR-C176-baynama",
+  "pathSegment": "AR-PATH-176-SABAB176",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-176-SABAB176",
+      "order": 1
+    }
+  ]
+}

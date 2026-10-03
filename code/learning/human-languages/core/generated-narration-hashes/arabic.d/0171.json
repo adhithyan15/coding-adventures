@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 171,
+  "sourceHash": "fnv1a64:e831b3f100a6b49c",
+  "lessonIds": [
+    "AR-C171-mustaqbal",
+    "AR-C171-mudda",
+    "AR-C171-bidaya",
+    "AR-C171-nadiran",
+    "AR-C171-kathiran"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch171.txt",
+  "json": "arabic/narration/ch171.json",
+  "textHash": "fnv1a64:1437c9d4d9ab1d9e",
+  "jsonHash": "fnv1a64:6678b034993c580e",
+  "findings": []
+}

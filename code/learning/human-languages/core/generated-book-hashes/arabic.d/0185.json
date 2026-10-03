@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:05b51fec0c8e57cf",
+  "lessonIds": [
+    "AR-C185-dulfin",
+    "AR-C185-babbagha",
+    "AR-C185-namla",
+    "AR-C185-thawr",
+    "AR-C185-hashara",
+    "AR-R185-first-pass-words-from-chapters-177-180",
+    "AR-R185-second-pass-words-from-chapters-181-185"
+  ],
+  "tex": "arabic/book/chapters/ch185-dolphin-parrot-ant-bull-insect.tex"
+}

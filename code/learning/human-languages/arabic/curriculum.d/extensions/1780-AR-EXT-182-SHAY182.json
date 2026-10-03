@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-182-SHAY182",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a sauce, a sandwich, ice cream, a meal and a skirt.",
+  "prerequisites": []
+}

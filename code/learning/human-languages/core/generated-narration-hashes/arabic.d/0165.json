@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:fcdda845470f5588",
+  "lessonIds": [
+    "AR-C165-hadhafa",
+    "AR-C165-badaa",
+    "AR-C165-intaha",
+    "AR-C165-istamarra",
+    "AR-C165-anha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch165.txt",
+  "json": "arabic/narration/ch165.json",
+  "textHash": "fnv1a64:8e81f90851796024",
+  "jsonHash": "fnv1a64:5811e4ea3f1e5877",
+  "findings": []
+}

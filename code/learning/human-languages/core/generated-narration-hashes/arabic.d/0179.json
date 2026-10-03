@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:c6eca04e7e5b2c50",
+  "lessonIds": [
+    "AR-C179-ramadi",
+    "AR-C179-dhahabi",
+    "AR-C179-samik",
+    "AR-C179-ratb",
+    "AR-C179-mumtir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch179.txt",
+  "json": "arabic/narration/ch179.json",
+  "textHash": "fnv1a64:055b1a1fca61223d",
+  "jsonHash": "fnv1a64:77fc517b3f0c40f1",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 160,
+  "title": "To taste, To pour, To switch off, To fill, To bathe",
+  "label": "ch:ar-to-taste-to-pour-to-switch-off-to-fill-to-bathe",
+  "canDo": "I can say to taste, to pour, to switch off, to fill and to bathe.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C160-istahamma",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 160: I can say to taste, to pour, to switch off, to fill and to bathe.",
+    "assesses": [
+      "AR-LEX-C160-ACT160-03",
+      "AR-LEX-C160-ACT160-04",
+      "AR-LEX-C160-ACT160-05"
+    ]
+  }
+}

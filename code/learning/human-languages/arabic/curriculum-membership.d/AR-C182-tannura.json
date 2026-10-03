@@ -1,0 +1,11 @@
+{
+  "id": "AR-C182-tannura",
+  "pathSegment": "AR-PATH-182-SHAY182",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-182-SHAY182",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C190-mughanni",
+  "pathSegment": "AR-PATH-190-AMAL190",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "AR-EXT-190-AMAL190",
+      "order": 0
+    }
+  ]
+}

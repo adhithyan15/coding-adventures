@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:01b5337c4e77d6c2",
+  "lessonIds": [
+    "AR-C172-sala",
+    "AR-C172-makhbaz",
+    "AR-C172-maqha",
+    "AR-C172-ittijah",
+    "AR-C172-muqabil"
+  ],
+  "tex": "arabic/book/chapters/ch172-living-room-bakery-cafe-direction-opposite.tex"
+}

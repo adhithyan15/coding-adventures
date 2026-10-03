@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:b6e2c9ce552a4df6",
+  "lessonIds": [
+    "AR-C190-mughanni",
+    "AR-C190-laib",
+    "AR-C190-mudarrib",
+    "AR-C190-riyadiyyat",
+    "AR-C190-jughrafiya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch190.txt",
+  "json": "arabic/narration/ch190.json",
+  "textHash": "fnv1a64:0a5db502fc3f7db9",
+  "jsonHash": "fnv1a64:fe0e08f4dee52c68",
+  "findings": []
+}

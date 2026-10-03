@@ -1,0 +1,19 @@
+{
+  "chapter": 188,
+  "title": "Currency, Bill, Discount, Customer, Cashier",
+  "label": "ch:ar-currency-bill-discount-customer-cashier",
+  "canDo": "I can say a currency, a bill, a discount, a customer and a cashier.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C188-sarraf",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 188: I can say a currency, a bill, a discount, a customer and a cashier.",
+    "assesses": [
+      "AR-LEX-C188-AMAL188-03",
+      "AR-LEX-C188-AMAL188-04",
+      "AR-LEX-C188-AMAL188-05"
+    ]
+  }
+}

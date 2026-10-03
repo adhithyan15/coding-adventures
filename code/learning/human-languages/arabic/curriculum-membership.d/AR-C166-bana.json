@@ -1,0 +1,11 @@
+{
+  "id": "AR-C166-bana",
+  "pathSegment": "AR-PATH-166-ACT166",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-166-ACT166",
+      "order": 1
+    }
+  ]
+}

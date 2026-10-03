@@ -1,0 +1,19 @@
+{
+  "chapter": 176,
+  "title": "Then, While, More, Less, Difference",
+  "label": "ch:ar-then-while-more-less-difference",
+  "canDo": "I can say then, while, more, less and a difference.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "AR-R176-second-pass-words-from-chapters-172-176",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 176: I can say then, while, more, less and a difference.",
+    "assesses": [
+      "AR-LEX-C176-SABAB176-03",
+      "AR-LEX-C176-SABAB176-04",
+      "AR-LEX-C176-SABAB176-05"
+    ]
+  }
+}

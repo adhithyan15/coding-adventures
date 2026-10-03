@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:e67da31593654cfb",
+  "lessonIds": [
+    "AR-C170-mubakkiran",
+    "AR-C170-yawmiyyan",
+    "AR-C170-takhir",
+    "AR-C170-mutaakhkhiran",
+    "AR-C170-abadan"
+  ],
+  "tex": "arabic/book/chapters/ch170-early-daily-delay-late-never.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C172-maqha",
+  "pathSegment": "AR-PATH-172-MAKAN172",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-172-MAKAN172",
+      "order": 2
+    }
+  ]
+}

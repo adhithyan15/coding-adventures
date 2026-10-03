@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-191-AMAL191",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a plumber, a grocer, a fisherman, a workshop and a signature.",
+  "prerequisites": []
+}

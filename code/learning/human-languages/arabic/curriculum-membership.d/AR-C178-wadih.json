@@ -1,0 +1,11 @@
+{
+  "id": "AR-C178-wadih",
+  "pathSegment": "AR-PATH-178-SIFA178",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-178-SIFA178",
+      "order": 3
+    }
+  ]
+}

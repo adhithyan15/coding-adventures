@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:d872616d4f4ac5ce",
+  "lessonIds": [
+    "AR-C174-sabab",
+    "AR-C174-natija",
+    "AR-C174-li-dhalika",
+    "AR-C174-idhan",
+    "AR-C174-kay"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch174.txt",
+  "json": "arabic/narration/ch174.json",
+  "textHash": "fnv1a64:4ec0b07192d41137",
+  "jsonHash": "fnv1a64:7392ec685453bdd9",
+  "findings": []
+}

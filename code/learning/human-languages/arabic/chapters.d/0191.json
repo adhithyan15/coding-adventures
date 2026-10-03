@@ -1,0 +1,19 @@
+{
+  "chapter": 191,
+  "title": "Plumber, Grocer, Fisherman, Workshop, Signature",
+  "label": "ch:ar-plumber-grocer-fisherman-workshop-signature",
+  "canDo": "I can say a plumber, a grocer, a fisherman, a workshop and a signature.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-R191-second-pass-words-from-chapters-189-191",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 191: I can say a plumber, a grocer, a fisherman, a workshop and a signature.",
+    "assesses": [
+      "AR-LEX-C191-AMAL191-03",
+      "AR-LEX-C191-AMAL191-04",
+      "AR-LEX-C191-AMAL191-05"
+    ]
+  }
+}

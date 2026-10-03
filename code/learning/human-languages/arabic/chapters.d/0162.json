@@ -1,0 +1,19 @@
+{
+  "chapter": 162,
+  "title": "To print, To copy, To move, To register, To employ",
+  "label": "ch:ar-to-print-to-copy-to-move-to-register-to-employ",
+  "canDo": "I can say to print, to copy, to move, to register and to employ.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C162-wazzafa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 162: I can say to print, to copy, to move, to register and to employ.",
+    "assesses": [
+      "AR-LEX-C162-ACT162-03",
+      "AR-LEX-C162-ACT162-04",
+      "AR-LEX-C162-ACT162-05"
+    ]
+  }
+}

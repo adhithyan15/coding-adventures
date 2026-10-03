@@ -1,0 +1,19 @@
+{
+  "chapter": 178,
+  "title": "Official, Private, In a hurry, Clear, Hard-working",
+  "label": "ch:ar-official-private-in-a-hurry-clear-hard-working",
+  "canDo": "I can say official, private, in a hurry, clear and hard-working.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "AR-C178-mujtahid",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 178: I can say official, private, in a hurry, clear and hard-working.",
+    "assesses": [
+      "AR-LEX-C178-SIFA178-03",
+      "AR-LEX-C178-SIFA178-04",
+      "AR-LEX-C178-SIFA178-05"
+    ]
+  }
+}

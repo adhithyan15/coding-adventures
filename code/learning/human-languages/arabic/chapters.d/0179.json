@@ -1,0 +1,19 @@
+{
+  "chapter": 179,
+  "title": "Grey, Golden, Thick, Humid, Rainy",
+  "label": "ch:ar-grey-golden-thick-humid-rainy",
+  "canDo": "I can say grey, golden, thick, humid and rainy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "AR-C179-mumtir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 179: I can say grey, golden, thick, humid and rainy.",
+    "assesses": [
+      "AR-LEX-C179-SIFA179-03",
+      "AR-LEX-C179-SIFA179-04",
+      "AR-LEX-C179-SIFA179-05"
+    ]
+  }
+}

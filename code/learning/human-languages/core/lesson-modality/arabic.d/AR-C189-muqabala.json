@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C189-muqabala",
+    "language": "arabic",
+    "chapter": 189,
+    "sequence": 9600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f6f061b9e38f127a"
+  },
+  "findings": []
+}

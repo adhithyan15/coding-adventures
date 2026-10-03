@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:5abbf07437fa73b4",
+  "lessonIds": [
+    "AR-C189-muhasib",
+    "AR-C189-suhufi",
+    "AR-C189-amil",
+    "AR-C189-mutarjim",
+    "AR-C189-muqabala"
+  ],
+  "tex": "arabic/book/chapters/ch189-accountant-journalist-worker-translator-interview.tex"
+}

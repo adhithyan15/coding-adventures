@@ -1,0 +1,19 @@
+{
+  "chapter": 164,
+  "title": "To shout, To pray, To joke, To believe, To remember",
+  "label": "ch:ar-to-shout-to-pray-to-joke-to-believe-to-remember",
+  "canDo": "I can say to shout, to pray, to joke, to believe and to remember.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C164-tadhakkara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 164: I can say to shout, to pray, to joke, to believe and to remember.",
+    "assesses": [
+      "AR-LEX-C164-ACT164-03",
+      "AR-LEX-C164-ACT164-04",
+      "AR-LEX-C164-ACT164-05"
+    ]
+  }
+}

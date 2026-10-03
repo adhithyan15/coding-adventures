@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C172-makhbaz",
+    "language": "arabic",
+    "chapter": 172,
+    "sequence": 8340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1de4bfff3e5b433e"
+  },
+  "findings": []
+}

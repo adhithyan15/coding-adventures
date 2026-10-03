@@ -1,0 +1,11 @@
+{
+  "id": "AR-C175-mujtama",
+  "pathSegment": "AR-PATH-175-SABAB175",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-175-SABAB175",
+      "order": 1
+    }
+  ]
+}

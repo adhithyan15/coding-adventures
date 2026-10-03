@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C179-ratb",
+    "language": "arabic",
+    "chapter": 179,
+    "sequence": 8900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bce8bc5b5916bfb3"
+  },
+  "findings": []
+}

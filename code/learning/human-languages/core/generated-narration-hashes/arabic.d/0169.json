@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:96d409f707cb5f7e",
+  "lessonIds": [
+    "AR-C169-mizaj",
+    "AR-C169-tamrin",
+    "AR-C169-liyaqa",
+    "AR-C169-isaba",
+    "AR-C169-habba"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch169.txt",
+  "json": "arabic/narration/ch169.json",
+  "textHash": "fnv1a64:29e647f250f89555",
+  "jsonHash": "fnv1a64:9a93440471032bff",
+  "findings": []
+}

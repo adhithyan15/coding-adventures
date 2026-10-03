@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C165-anha",
+    "language": "arabic",
+    "chapter": 165,
+    "sequence": 7830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9bea4293559c74a8"
+  },
+  "findings": []
+}

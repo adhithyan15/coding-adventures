@@ -1,0 +1,19 @@
+{
+  "chapter": 170,
+  "title": "Early, Daily, Delay, Late, Never",
+  "label": "ch:ar-early-daily-delay-late-never",
+  "canDo": "I can say early, daily, a delay, late and never.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "AR-C170-abadan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 170: I can say early, daily, a delay, late and never.",
+    "assesses": [
+      "AR-LEX-C170-WAQT170-03",
+      "AR-LEX-C170-WAQT170-04",
+      "AR-LEX-C170-WAQT170-05"
+    ]
+  }
+}

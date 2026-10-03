@@ -1,0 +1,19 @@
+{
+  "chapter": 169,
+  "title": "Mood, Exercise, Fitness, Injury, Pill",
+  "label": "ch:ar-mood-exercise-fitness-injury-pill",
+  "canDo": "I can say a mood, an exercise, fitness, an injury and a pill.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "AR-C169-habba",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 169: I can say a mood, an exercise, fitness, an injury and a pill.",
+    "assesses": [
+      "AR-LEX-C169-SIHHA169-03",
+      "AR-LEX-C169-SIHHA169-04",
+      "AR-LEX-C169-SIHHA169-05"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-168-SIHHA168",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an arm, the body, an ankle, the throat and a headache.",
+  "prerequisites": []
+}

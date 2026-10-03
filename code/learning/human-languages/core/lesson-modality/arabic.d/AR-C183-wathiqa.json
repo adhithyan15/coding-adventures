@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C183-wathiqa",
+    "language": "arabic",
+    "chapter": 183,
+    "sequence": 9110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e67def0de8aec384"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-187-SHAY187",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a blender, a tap, a pipe, a wire and a rope.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:901ea237690c3c50",
+  "lessonIds": [
+    "AR-C163-ihtafala",
+    "AR-C163-daa",
+    "AR-C163-tazawwaja",
+    "AR-C163-safaha",
+    "AR-C163-anaqa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch163.txt",
+  "json": "arabic/narration/ch163.json",
+  "textHash": "fnv1a64:02b46a33783e56f5",
+  "jsonHash": "fnv1a64:95abbd17e00082a2",
+  "findings": []
+}

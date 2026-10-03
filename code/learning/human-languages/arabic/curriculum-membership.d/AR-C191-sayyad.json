@@ -1,0 +1,11 @@
+{
+  "id": "AR-C191-sayyad",
+  "pathSegment": "AR-PATH-191-AMAL191",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-191-AMAL191",
+      "order": 2
+    }
+  ]
+}

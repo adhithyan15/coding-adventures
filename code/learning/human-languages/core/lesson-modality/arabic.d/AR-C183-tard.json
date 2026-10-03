@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C183-tard",
+    "language": "arabic",
+    "chapter": 183,
+    "sequence": 9080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8052baef1c978a92"
+  },
+  "findings": []
+}

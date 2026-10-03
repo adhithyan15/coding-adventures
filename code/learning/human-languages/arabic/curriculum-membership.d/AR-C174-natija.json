@@ -1,0 +1,11 @@
+{
+  "id": "AR-C174-natija",
+  "pathSegment": "AR-PATH-174-SABAB174",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-174-SABAB174",
+      "order": 1
+    }
+  ]
+}
