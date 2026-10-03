@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:0b716accb22aac61",
+  "lessonIds": [
+    "KA-C223-namune",
+    "KA-C223-pramanapatra",
+    "KA-C223-pasport",
+    "KA-C223-gurutina-citi",
+    "KA-C223-cek"
+  ],
+  "tex": "kannada/book/chapters/ch223-form-certificate-passport-identity-card-cheque.tex"
+}

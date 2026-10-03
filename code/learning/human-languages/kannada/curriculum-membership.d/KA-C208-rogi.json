@@ -1,0 +1,11 @@
+{
+  "id": "KA-C208-rogi",
+  "pathSegment": "KA-PATH-208-AROGYA208",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-208-AROGYA208",
+      "order": 4
+    }
+  ]
+}

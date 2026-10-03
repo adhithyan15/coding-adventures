@@ -1,0 +1,11 @@
+{
+  "id": "KA-C230-guddali",
+  "pathSegment": "KA-PATH-230-VASTU230",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-230-VASTU230",
+      "order": 3
+    }
+  ]
+}

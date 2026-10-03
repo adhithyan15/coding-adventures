@@ -1,0 +1,19 @@
+{
+  "chapter": 217,
+  "title": "Cheap, Empty, Tight, Loose, Thick",
+  "label": "ch:ka-cheap-empty-tight-loose-thick",
+  "canDo": "I can say cheap, empty, tight, loose and thick.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "KA-C217-dappa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 217: I can say cheap, empty, tight, loose and thick.",
+    "assesses": [
+      "KA-LEX-C217-GUNA217-03",
+      "KA-LEX-C217-GUNA217-04",
+      "KA-LEX-C217-GUNA217-05"
+    ]
+  }
+}

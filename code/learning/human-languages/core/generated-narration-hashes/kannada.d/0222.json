@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:5975107fffb5907e",
+  "lessonIds": [
+    "KA-C222-pyant",
+    "KA-C222-langa",
+    "KA-C222-ravike",
+    "KA-C222-baniyan",
+    "KA-C222-butu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch222.txt",
+  "json": "kannada/narration/ch222.json",
+  "textHash": "fnv1a64:d3cd77ed8638b87f",
+  "jsonHash": "fnv1a64:d24877d843b92703",
+  "findings": []
+}

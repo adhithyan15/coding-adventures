@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:bca6f157aed50177",
+  "lessonIds": [
+    "KA-C233-dinasi",
+    "KA-C233-labha",
+    "KA-C233-nasta",
+    "KA-C233-vijnana",
+    "KA-C233-itihasa"
+  ],
+  "tex": "kannada/book/chapters/ch233-groceries-profit-loss-science-history.tex"
+}

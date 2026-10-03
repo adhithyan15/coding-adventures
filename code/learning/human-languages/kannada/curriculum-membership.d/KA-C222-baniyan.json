@@ -1,0 +1,11 @@
+{
+  "id": "KA-C222-baniyan",
+  "pathSegment": "KA-PATH-222-VASTU222",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-222-VASTU222",
+      "order": 3
+    }
+  ]
+}

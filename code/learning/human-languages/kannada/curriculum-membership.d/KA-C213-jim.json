@@ -1,0 +1,11 @@
+{
+  "id": "KA-C213-jim",
+  "pathSegment": "KA-PATH-213-STHALA213",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-213-STHALA213",
+      "order": 2
+    }
+  ]
+}

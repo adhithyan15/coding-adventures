@@ -1,0 +1,19 @@
+{
+  "chapter": 227,
+  "title": "Saw, Ladder, Glue, Torch, Machine",
+  "label": "ch:ka-saw-ladder-glue-torch-machine",
+  "canDo": "I can say a saw, a ladder, glue, a torch and a machine.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C227-yantra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 227: I can say a saw, a ladder, glue, a torch and a machine.",
+    "assesses": [
+      "KA-LEX-C227-VASTU227-03",
+      "KA-LEX-C227-VASTU227-04",
+      "KA-LEX-C227-VASTU227-05"
+    ]
+  }
+}

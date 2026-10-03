@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C215-bagge",
+    "language": "kannada",
+    "chapter": 215,
+    "sequence": 10000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6015cda54240a354"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:c8f18828fc463ed7",
+  "lessonIds": [
+    "KA-C227-garagasa",
+    "KA-C227-eni",
+    "KA-C227-antu",
+    "KA-C227-tarc",
+    "KA-C227-yantra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch227.txt",
+  "json": "kannada/narration/ch227.json",
+  "textHash": "fnv1a64:845c9d29f1b12ec4",
+  "jsonHash": "fnv1a64:a6e77e6db5608aec",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C232-kharcu",
+    "language": "kannada",
+    "chapter": 232,
+    "sequence": 10890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2364d82c953b45e"
+  },
+  "findings": []
+}

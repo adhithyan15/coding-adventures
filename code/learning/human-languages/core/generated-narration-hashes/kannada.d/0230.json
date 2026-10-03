@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:4528647af577e78f",
+  "lessonIds": [
+    "KA-C230-gere",
+    "KA-C230-hundi",
+    "KA-C230-sutkes",
+    "KA-C230-guddali",
+    "KA-C230-kudugolu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch230.txt",
+  "json": "kannada/narration/ch230.json",
+  "textHash": "fnv1a64:2fd5cef8ba5b20bd",
+  "jsonHash": "fnv1a64:ebdaef6480ee97b7",
+  "findings": []
+}

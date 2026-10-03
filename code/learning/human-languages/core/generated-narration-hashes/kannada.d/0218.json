@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:db2eb10123d32638",
+  "lessonIds": [
+    "KA-C218-siddha",
+    "KA-C218-labhya",
+    "KA-C218-spasta",
+    "KA-C218-pramanika",
+    "KA-C218-udara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch218.txt",
+  "json": "kannada/narration/ch218.json",
+  "textHash": "fnv1a64:9ecfdaacd87c0d45",
+  "jsonHash": "fnv1a64:e4d071e612295d26",
+  "findings": []
+}

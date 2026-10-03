@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:a77a66e10f70aa68",
+  "lessonIds": [
+    "KA-C201-mundudu",
+    "KA-C201-vivarisu",
+    "KA-C201-pasagu",
+    "KA-C201-nenapidu",
+    "KA-C201-mudrisu"
+  ],
+  "tex": "kannada/book/chapters/ch201-to-postpone-to-explain-to-pass-to-remember-to-print.tex"
+}

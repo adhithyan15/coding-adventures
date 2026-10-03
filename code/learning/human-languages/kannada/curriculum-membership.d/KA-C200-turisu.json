@@ -1,0 +1,11 @@
+{
+  "id": "KA-C200-turisu",
+  "pathSegment": "KA-PATH-200-KRIYE200",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-200-KRIYE200",
+      "order": 1
+    }
+  ]
+}

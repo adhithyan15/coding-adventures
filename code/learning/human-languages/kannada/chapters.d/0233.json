@@ -1,0 +1,19 @@
+{
+  "chapter": 233,
+  "title": "Groceries, Profit, Loss, Science, History",
+  "label": "ch:ka-groceries-profit-loss-science-history",
+  "canDo": "I can say groceries, profit, a loss, science and history.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C233-itihasa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 233: I can say groceries, profit, a loss, science and history.",
+    "assesses": [
+      "KA-LEX-C233-KELASA233-03",
+      "KA-LEX-C233-KELASA233-04",
+      "KA-LEX-C233-KELASA233-05"
+    ]
+  }
+}

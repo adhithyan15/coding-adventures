@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:500b4e4119eb734d",
+  "lessonIds": [
+    "KA-C229-hande",
+    "KA-C229-totti",
+    "KA-C229-tottilu",
+    "KA-C229-gantu",
+    "KA-C229-sarapali",
+    "KA-R229-first-pass-words-from-chapters-225-226",
+    "KA-R229-second-pass-words-from-chapters-227-229"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch229.txt",
+  "json": "kannada/narration/ch229.json",
+  "textHash": "fnv1a64:a7cecc18d14640cf",
+  "jsonHash": "fnv1a64:a99e8c37e59d3594",
+  "findings": []
+}

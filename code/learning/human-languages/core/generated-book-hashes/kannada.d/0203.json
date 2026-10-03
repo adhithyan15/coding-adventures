@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:99a0a40a7f94556b",
+  "lessonIds": [
+    "KA-C203-belesu",
+    "KA-C203-aralu",
+    "KA-C203-badu",
+    "KA-C203-bisu",
+    "KA-C203-karagu"
+  ],
+  "tex": "kannada/book/chapters/ch203-to-grow-to-bloom-to-wilt-to-blow-to-melt.tex"
+}

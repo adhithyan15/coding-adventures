@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:67ec2c7ceb5010b0",
+  "lessonIds": [
+    "KA-C228-phutbal",
+    "KA-C228-caduranga",
+    "KA-C228-havyasa",
+    "KA-C228-abhipraya",
+    "KA-C228-vicara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch228.txt",
+  "json": "kannada/narration/ch228.json",
+  "textHash": "fnv1a64:fafe8629166d349a",
+  "jsonHash": "fnv1a64:f58b445d09698a01",
+  "findings": []
+}

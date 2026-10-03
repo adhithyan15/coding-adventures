@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:8b9ef7477582677a",
+  "lessonIds": [
+    "KA-C220-muccala",
+    "KA-C220-biru",
+    "KA-C220-phrij",
+    "KA-C220-phyan",
+    "KA-C220-kasa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch220.txt",
+  "json": "kannada/narration/ch220.json",
+  "textHash": "fnv1a64:25020129d6681211",
+  "jsonHash": "fnv1a64:242008beb64f703f",
+  "findings": []
+}

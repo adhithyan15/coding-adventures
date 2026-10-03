@@ -1,0 +1,11 @@
+{
+  "id": "KA-C223-gurutina-citi",
+  "pathSegment": "KA-PATH-223-VASTU223",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-223-VASTU223",
+      "order": 3
+    }
+  ]
+}

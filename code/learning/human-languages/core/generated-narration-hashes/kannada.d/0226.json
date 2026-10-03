@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:760cdb6d9e026345",
+  "lessonIds": [
+    "KA-C226-kale",
+    "KA-C226-atte",
+    "KA-C226-sose",
+    "KA-C226-aliya",
+    "KA-C226-attige"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch226.txt",
+  "json": "kannada/narration/ch226.json",
+  "textHash": "fnv1a64:4cdf3060a6d59ca2",
+  "jsonHash": "fnv1a64:0ea208b38464aec1",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C205-kilu",
+  "pathSegment": "KA-PATH-205-KRIYE205",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-205-KRIYE205",
+      "order": 0
+    }
+  ]
+}

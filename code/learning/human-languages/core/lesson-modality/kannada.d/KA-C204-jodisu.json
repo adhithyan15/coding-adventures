@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C204-jodisu",
+    "language": "kannada",
+    "chapter": 204,
+    "sequence": 9420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2009e955a71f856a"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:4d8eb93a09b20662",
+  "lessonIds": [
+    "KA-C207-musu",
+    "KA-C207-netuhaku",
+    "KA-C207-kuttu",
+    "KA-C207-perisu",
+    "KA-C207-sangrahisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch207.txt",
+  "json": "kannada/narration/ch207.json",
+  "textHash": "fnv1a64:1970e9ec6a1afb51",
+  "jsonHash": "fnv1a64:bb3ad6c4ac6ec99f",
+  "findings": []
+}

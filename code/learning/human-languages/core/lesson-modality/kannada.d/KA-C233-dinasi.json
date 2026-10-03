@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C233-dinasi",
+    "language": "kannada",
+    "chapter": 233,
+    "sequence": 10940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa90d97e1f9e78c2"
+  },
+  "findings": []
+}

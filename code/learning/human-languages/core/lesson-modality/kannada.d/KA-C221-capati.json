@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C221-capati",
+    "language": "kannada",
+    "chapter": 221,
+    "sequence": 10340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c46749fae6af36d8"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:4b7d98c83f9f992f",
+  "lessonIds": [
+    "KA-C212-bandaru",
+    "KA-C212-karkhane",
+    "KA-C212-citramandira",
+    "KA-C212-maidana",
+    "KA-C212-dikku"
+  ],
+  "tex": "kannada/book/chapters/ch212-port-factory-cinema-hall-ground-direction.tex"
+}

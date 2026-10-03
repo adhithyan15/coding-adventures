@@ -1,0 +1,11 @@
+{
+  "id": "KA-C209-tamase",
+  "pathSegment": "KA-PATH-209-AROGYA209",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-209-AROGYA209",
+      "order": 2
+    }
+  ]
+}

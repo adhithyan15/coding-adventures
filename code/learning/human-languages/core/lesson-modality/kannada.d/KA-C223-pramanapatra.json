@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C223-pramanapatra",
+    "language": "kannada",
+    "chapter": 223,
+    "sequence": 10410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6c455596e085c077"
+  },
+  "findings": []
+}

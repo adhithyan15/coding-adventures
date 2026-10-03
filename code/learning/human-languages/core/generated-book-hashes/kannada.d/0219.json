@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:98dc4f3033fa81d8",
+  "lessonIds": [
+    "KA-C219-samanya",
+    "KA-C219-mondu",
+    "KA-C219-nunupu",
+    "KA-C219-oratu",
+    "KA-C219-jigutu"
+  ],
+  "tex": "kannada/book/chapters/ch219-ordinary-blunt-smooth-rough-sticky.tex"
+}

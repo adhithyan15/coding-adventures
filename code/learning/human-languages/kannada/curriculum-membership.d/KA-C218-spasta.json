@@ -1,0 +1,11 @@
+{
+  "id": "KA-C218-spasta",
+  "pathSegment": "KA-PATH-218-GUNA218",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-218-GUNA218",
+      "order": 2
+    }
+  ]
+}

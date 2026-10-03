@@ -1,0 +1,11 @@
+{
+  "id": "KA-C207-perisu",
+  "pathSegment": "KA-PATH-207-KRIYE207",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-207-KRIYE207",
+      "order": 3
+    }
+  ]
+}

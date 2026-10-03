@@ -1,0 +1,11 @@
+{
+  "id": "KA-C219-oratu",
+  "pathSegment": "KA-PATH-219-GUNA219",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-219-GUNA219",
+      "order": 3
+    }
+  ]
+}

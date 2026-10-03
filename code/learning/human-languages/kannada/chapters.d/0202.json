@@ -1,0 +1,19 @@
+{
+  "chapter": 202,
+  "title": "To complain, To register, To continue, To contact, To discuss",
+  "label": "ch:ka-to-complain-to-register-to-continue-to-contact-to-discuss",
+  "canDo": "I can say to complain, to register, to continue, to contact and to discuss.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C202-carcisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 202: I can say to complain, to register, to continue, to contact and to discuss.",
+    "assesses": [
+      "KA-LEX-C202-KRIYE202-03",
+      "KA-LEX-C202-KRIYE202-04",
+      "KA-LEX-C202-KRIYE202-05"
+    ]
+  }
+}

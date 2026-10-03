@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R206-first-pass-words-from-chapters-198-201",
+    "language": "kannada",
+    "chapter": 206,
+    "sequence": 9560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:66073c8273803d08"
+  },
+  "findings": []
+}

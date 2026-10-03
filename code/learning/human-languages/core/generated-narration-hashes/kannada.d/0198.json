@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:fe0fdf6bca7b24fb",
+  "lessonIds": [
+    "KA-C198-ujju",
+    "KA-C198-taru",
+    "KA-C198-oyyu",
+    "KA-C198-hidi",
+    "KA-C198-bidu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch198.txt",
+  "json": "kannada/narration/ch198.json",
+  "textHash": "fnv1a64:7397984de2e3bda1",
+  "jsonHash": "fnv1a64:27004145def97690",
+  "findings": []
+}

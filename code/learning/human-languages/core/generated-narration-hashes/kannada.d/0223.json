@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:044a48b9b59f3aa0",
+  "lessonIds": [
+    "KA-C223-namune",
+    "KA-C223-pramanapatra",
+    "KA-C223-pasport",
+    "KA-C223-gurutina-citi",
+    "KA-C223-cek"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch223.txt",
+  "json": "kannada/narration/ch223.json",
+  "textHash": "fnv1a64:9fb68304b7edfc80",
+  "jsonHash": "fnv1a64:6cf190c4d047b339",
+  "findings": []
+}

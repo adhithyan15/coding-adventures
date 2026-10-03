@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:a925d19bf7323bde",
+  "lessonIds": [
+    "KA-C205-kilu",
+    "KA-C205-turi",
+    "KA-C205-sosu",
+    "KA-C205-nadu",
+    "KA-C205-lattisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch205.txt",
+  "json": "kannada/narration/ch205.json",
+  "textHash": "fnv1a64:684781e2ed2c2881",
+  "jsonHash": "fnv1a64:ef02b7228a0297b1",
+  "findings": []
+}

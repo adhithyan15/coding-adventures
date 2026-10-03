@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C210-taksana",
+    "language": "kannada",
+    "chapter": 210,
+    "sequence": 9750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:485f66076581c432"
+  },
+  "findings": []
+}

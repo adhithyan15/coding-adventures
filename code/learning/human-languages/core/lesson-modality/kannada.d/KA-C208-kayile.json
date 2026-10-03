@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C208-kayile",
+    "language": "kannada",
+    "chapter": 208,
+    "sequence": 9660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73b028fa70f97e7b"
+  },
+  "findings": []
+}

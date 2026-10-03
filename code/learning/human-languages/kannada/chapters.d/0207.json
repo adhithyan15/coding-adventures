@@ -1,0 +1,19 @@
+{
+  "chapter": 207,
+  "title": "To sniff, To hang up, To pound, To stack, To collect",
+  "label": "ch:ka-to-sniff-to-hang-up-to-pound-to-stack-to-collect",
+  "canDo": "I can say to sniff, to hang up, to pound, to stack and to collect.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C207-sangrahisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 207: I can say to sniff, to hang up, to pound, to stack and to collect.",
+    "assesses": [
+      "KA-LEX-C207-KRIYE207-03",
+      "KA-LEX-C207-KRIYE207-04",
+      "KA-LEX-C207-KRIYE207-05"
+    ]
+  }
+}

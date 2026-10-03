@@ -1,0 +1,19 @@
+{
+  "chapter": 208,
+  "title": "Body, Injection, Ointment, Illness, Patient",
+  "label": "ch:ka-body-injection-ointment-illness-patient",
+  "canDo": "I can say the body, an injection, an ointment, an illness and a patient.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "KA-C208-rogi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 208: I can say the body, an injection, an ointment, an illness and a patient.",
+    "assesses": [
+      "KA-LEX-C208-AROGYA208-03",
+      "KA-LEX-C208-AROGYA208-04",
+      "KA-LEX-C208-AROGYA208-05"
+    ]
+  }
+}

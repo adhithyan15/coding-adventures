@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C213-jim",
+    "language": "kannada",
+    "chapter": 213,
+    "sequence": 9900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e6ccb407d24baaa"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 212,
+  "title": "Port, Factory, Cinema hall, Ground, Direction",
+  "label": "ch:ka-port-factory-cinema-hall-ground-direction",
+  "canDo": "I can say a port, a factory, a cinema hall, a ground and a direction.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "KA-C212-dikku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 212: I can say a port, a factory, a cinema hall, a ground and a direction.",
+    "assesses": [
+      "KA-LEX-C212-STHALA212-03",
+      "KA-LEX-C212-STHALA212-04",
+      "KA-LEX-C212-STHALA212-05"
+    ]
+  }
+}

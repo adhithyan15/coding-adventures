@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:d60f84dba22ad98b",
+  "lessonIds": [
+    "KA-C220-muccala",
+    "KA-C220-biru",
+    "KA-C220-phrij",
+    "KA-C220-phyan",
+    "KA-C220-kasa"
+  ],
+  "tex": "kannada/book/chapters/ch220-lid-cupboard-fridge-fan-rubbish.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C221-kallangadi",
+  "pathSegment": "KA-PATH-221-VASTU221",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-221-VASTU221",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C218-labhya",
+    "language": "kannada",
+    "chapter": 218,
+    "sequence": 10160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8955f0a3c7843cb9"
+  },
+  "findings": []
+}

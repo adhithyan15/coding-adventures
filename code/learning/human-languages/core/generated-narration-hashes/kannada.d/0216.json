@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:4573ef746e18a268",
+  "lessonIds": [
+    "KA-C216-yasassu",
+    "KA-C216-svatantrya",
+    "KA-C216-nyaya",
+    "KA-C216-javabdari",
+    "KA-C216-kartavya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch216.txt",
+  "json": "kannada/narration/ch216.json",
+  "textHash": "fnv1a64:d698380f98987fb6",
+  "jsonHash": "fnv1a64:fa8382dc98d332aa",
+  "findings": []
+}

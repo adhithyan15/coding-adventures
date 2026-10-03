@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C219-mondu",
+    "language": "kannada",
+    "chapter": 219,
+    "sequence": 10210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:022232a85a45f8f3"
+  },
+  "findings": []
+}

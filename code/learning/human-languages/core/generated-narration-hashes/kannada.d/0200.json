@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:2f2f65682b2e9d54",
+  "lessonIds": [
+    "KA-C200-gunavagu",
+    "KA-C200-turisu",
+    "KA-C200-sayu",
+    "KA-C200-mugisu",
+    "KA-C200-suru-madu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch200.txt",
+  "json": "kannada/narration/ch200.json",
+  "textHash": "fnv1a64:43c33f4dd73a06ec",
+  "jsonHash": "fnv1a64:91320627586ede8a",
+  "findings": []
+}

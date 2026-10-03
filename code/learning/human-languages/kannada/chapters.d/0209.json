@@ -1,0 +1,19 @@
+{
+  "chapter": 209,
+  "title": "Mind, Disappointment, Fun, Yoga, Meditation",
+  "label": "ch:ka-mind-disappointment-fun-yoga-meditation",
+  "canDo": "I can say the mind, disappointment, fun, yoga and meditation.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "KA-C209-dhyana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 209: I can say the mind, disappointment, fun, yoga and meditation.",
+    "assesses": [
+      "KA-LEX-C209-AROGYA209-03",
+      "KA-LEX-C209-AROGYA209-04",
+      "KA-LEX-C209-AROGYA209-05"
+    ]
+  }
+}

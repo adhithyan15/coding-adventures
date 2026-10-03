@@ -1,0 +1,11 @@
+{
+  "id": "KA-C224-pravaha",
+  "pathSegment": "KA-PATH-224-VASTU224",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-224-VASTU224",
+      "order": 2
+    }
+  ]
+}

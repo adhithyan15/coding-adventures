@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-224-VASTU224",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say smoke, dust, a flood, nature and an animal.",
+  "prerequisites": []
+}

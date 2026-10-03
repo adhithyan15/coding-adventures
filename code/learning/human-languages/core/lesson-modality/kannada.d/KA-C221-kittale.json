@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C221-kittale",
+    "language": "kannada",
+    "chapter": 221,
+    "sequence": 10310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db3c002591c7a00d"
+  },
+  "findings": []
+}

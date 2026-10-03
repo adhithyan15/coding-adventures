@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C231-sandarsana",
+    "language": "kannada",
+    "chapter": 231,
+    "sequence": 10860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:774c39c26c469137"
+  },
+  "findings": []
+}

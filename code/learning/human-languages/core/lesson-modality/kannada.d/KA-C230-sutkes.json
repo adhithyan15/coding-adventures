@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C230-sutkes",
+    "language": "kannada",
+    "chapter": 230,
+    "sequence": 10810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f5aa592fb022fe59"
+  },
+  "findings": []
+}

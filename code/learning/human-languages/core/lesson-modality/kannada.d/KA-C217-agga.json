@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C217-agga",
+    "language": "kannada",
+    "chapter": 217,
+    "sequence": 10100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0f92373926fdb85"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 204,
+  "title": "To publish, To arrange, To measure, To have fun, To compete",
+  "label": "ch:ka-to-publish-to-arrange-to-measure-to-have-fun-to-compete",
+  "canDo": "I can say to publish, to arrange, to measure, to have fun and to compete.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C204-spardhisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 204: I can say to publish, to arrange, to measure, to have fun and to compete.",
+    "assesses": [
+      "KA-LEX-C204-KRIYE204-03",
+      "KA-LEX-C204-KRIYE204-04",
+      "KA-LEX-C204-KRIYE204-05"
+    ]
+  }
+}

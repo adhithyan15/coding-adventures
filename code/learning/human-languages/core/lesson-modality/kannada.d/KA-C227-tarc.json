@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C227-tarc",
+    "language": "kannada",
+    "chapter": 227,
+    "sequence": 10650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6cd414a249d4243f"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 220,
+  "title": "Lid, Cupboard, Fridge, Fan, Rubbish",
+  "label": "ch:ka-lid-cupboard-fridge-fan-rubbish",
+  "canDo": "I can say a lid, a cupboard, a fridge, a fan and rubbish.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C220-kasa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 220: I can say a lid, a cupboard, a fridge, a fan and rubbish.",
+    "assesses": [
+      "KA-LEX-C220-VASTU220-03",
+      "KA-LEX-C220-VASTU220-04",
+      "KA-LEX-C220-VASTU220-05"
+    ]
+  }
+}

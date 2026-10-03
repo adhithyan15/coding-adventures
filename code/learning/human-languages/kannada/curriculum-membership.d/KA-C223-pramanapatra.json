@@ -1,0 +1,11 @@
+{
+  "id": "KA-C223-pramanapatra",
+  "pathSegment": "KA-PATH-223-VASTU223",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-223-VASTU223",
+      "order": 1
+    }
+  ]
+}

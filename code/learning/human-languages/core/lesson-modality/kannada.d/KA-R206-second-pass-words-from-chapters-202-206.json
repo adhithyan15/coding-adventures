@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R206-second-pass-words-from-chapters-202-206",
+    "language": "kannada",
+    "chapter": 206,
+    "sequence": 9570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd8f95a7263d5e97"
+  },
+  "findings": []
+}

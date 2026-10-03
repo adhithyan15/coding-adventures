@@ -1,0 +1,11 @@
+{
+  "id": "KA-C211-illiyavarege",
+  "pathSegment": "KA-PATH-211-KALA211",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-211-KALA211",
+      "order": 1
+    }
+  ]
+}

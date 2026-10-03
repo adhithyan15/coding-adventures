@@ -1,0 +1,19 @@
+{
+  "chapter": 224,
+  "title": "Smoke, Dust, Flood, Nature, Animal",
+  "label": "ch:ka-smoke-dust-flood-nature-animal",
+  "canDo": "I can say smoke, dust, a flood, nature and an animal.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-R224-second-pass-words-from-chapters-220-224",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 224: I can say smoke, dust, a flood, nature and an animal.",
+    "assesses": [
+      "KA-LEX-C224-VASTU224-03",
+      "KA-LEX-C224-VASTU224-04",
+      "KA-LEX-C224-VASTU224-05"
+    ]
+  }
+}
