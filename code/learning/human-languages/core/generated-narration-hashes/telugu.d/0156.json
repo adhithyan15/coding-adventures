@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 156,
+  "sourceHash": "fnv1a64:cd1f3c5f477be8af",
+  "lessonIds": [
+    "TE-C156-kalapattika",
+    "TE-C156-sucana",
+    "TE-C156-adde",
+    "TE-C156-prakatana",
+    "TE-C156-rasidu",
+    "TE-R156-first-pass-saying-no-and-looking-back",
+    "TE-R156-second-pass-looking-ahead-and-reading-signs"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch156.txt",
+  "json": "telugu/narration/ch156.json",
+  "textHash": "fnv1a64:5dea2a0ead7a9092",
+  "jsonHash": "fnv1a64:a65b237e4bbfe3c2",
+  "findings": []
+}

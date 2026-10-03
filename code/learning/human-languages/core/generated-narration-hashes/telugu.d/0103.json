@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 103,
-  "sourceHash": "fnv1a64:b1e9e8c7e463f8c5",
+  "sourceHash": "fnv1a64:32011acb02ef14dd",
   "lessonIds": [
     "TE-C103-gudi",
     "TE-C103-badi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch103.txt",
   "json": "telugu/narration/ch103.json",
-  "textHash": "fnv1a64:0bcf0dcfbdbc5930",
-  "jsonHash": "fnv1a64:b0f3b9cca09cb178",
+  "textHash": "fnv1a64:a3bfebc5c93b6ea0",
+  "jsonHash": "fnv1a64:a7bc7f251a24e6f3",
   "findings": []
 }

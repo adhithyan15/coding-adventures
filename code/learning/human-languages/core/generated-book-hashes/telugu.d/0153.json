@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:a3fcfbf86c9184fa",
+  "lessonIds": [
+    "TE-C153-evaru",
+    "TE-C153-eppudu",
+    "TE-C153-ekkada",
+    "TE-C153-evaraina",
+    "TE-C153-emaina"
+  ],
+  "tex": "telugu/book/chapters/ch153-nobody-never-nowhere-anyone-anything.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C154-gadupu",
+  "pathSegment": "TE-PATH-154-GATAM154",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-154-GATAM154",
+      "order": 4
+    }
+  ]
+}

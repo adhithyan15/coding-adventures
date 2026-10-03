@@ -1,0 +1,19 @@
+{
+  "chapter": 154,
+  "title": "Recently, Already, Last, Once, To Spend (Time)",
+  "label": "ch:te-recently-already-last-once-to-spend-time",
+  "canDo": "I can say what happened, and when: recently, already, last year.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "TE-C154-gadupu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 154: I can say what happened, and when: recently, already, last year.",
+    "assesses": [
+      "TE-LEX-C154-GATAM154-03",
+      "TE-LEX-C154-GATAM154-04",
+      "TE-LEX-C154-GATAM154-05"
+    ]
+  }
+}

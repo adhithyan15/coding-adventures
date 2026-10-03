@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-154-GATAM154",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "before": [],
+  "inline": [
+    "TE-EXT-154-GATAM154"
+  ],
+  "after": []
+}

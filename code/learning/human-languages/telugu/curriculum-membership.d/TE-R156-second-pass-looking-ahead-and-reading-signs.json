@@ -1,0 +1,11 @@
+{
+  "id": "TE-R156-second-pass-looking-ahead-and-reading-signs",
+  "pathSegment": "TE-PATH-156-CADUVU156",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "TE-EXT-156-CADUVU156",
+      "order": 6
+    }
+  ]
+}

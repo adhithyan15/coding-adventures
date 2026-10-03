@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R156-second-pass-looking-ahead-and-reading-signs",
+    "language": "telugu",
+    "chapter": 156,
+    "sequence": 6830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:150b2bedb2121fab"
+  },
+  "findings": []
+}
