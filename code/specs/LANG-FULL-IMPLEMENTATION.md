@@ -1089,8 +1089,9 @@ backend immediately) come before the enabler-dependent items.
   expressions and predicates of bounded `while` elements, finite step-loop
   header expressions, and values sequenced across bounded multi-element `for`
   lists, including mixed finite-step and single-value elements in either order,
-  real single-value snapshots that seed exactly simulated finite binary64
-  steps or bounded real `while` elements, exactly simulated finite binary64
+  adjacent real single-value elements, and real single-value snapshots that
+  seed exactly simulated finite binary64 steps or bounded real `while`
+  elements, exactly simulated finite binary64
   step exits that seed following
   single-value elements, and finite-step exits that seed following bounded
   `while` elements when the body only reads the controlled variable, including
