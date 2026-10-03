@@ -1,0 +1,11 @@
+{
+  "id": "TA-C159-etirpar",
+  "pathSegment": "TA-PATH-159-ETIR159",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-159-ETIR159",
+      "order": 4
+    }
+  ]
+}

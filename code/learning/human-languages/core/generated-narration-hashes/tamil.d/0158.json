@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:bd229cdd4ddfd71c",
+  "lessonIds": [
+    "TA-C158-camipattil",
+    "TA-C158-erkanave",
+    "TA-C158-pona",
+    "TA-C158-oru-kalattil",
+    "TA-C158-kali"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch158.txt",
+  "json": "tamil/narration/ch158.json",
+  "textHash": "fnv1a64:96476d3ea8581616",
+  "jsonHash": "fnv1a64:05baf4e1fa362af7",
+  "findings": []
+}

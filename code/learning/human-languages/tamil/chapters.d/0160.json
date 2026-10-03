@@ -1,0 +1,19 @@
+{
+  "chapter": 160,
+  "title": "A Timetable, a Notice, the Rent, an Advert, a Receipt",
+  "label": "ch:ta-a-timetable-a-notice-the-rent-an-advert-a-receipt",
+  "canDo": "I can read a timetable, a notice, an advert and a receipt, and act on what they say.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "TA-R160-second-pass-looking-ahead-and-reading-signs",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 160: I can read a timetable, a notice, an advert and a receipt, and act on what they say.",
+    "assesses": [
+      "TA-LEX-C160-PATI160-03",
+      "TA-LEX-C160-PATI160-04",
+      "TA-LEX-C160-PATI160-05"
+    ]
+  }
+}

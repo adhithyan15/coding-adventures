@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R160-second-pass-looking-ahead-and-reading-signs",
+    "language": "tamil",
+    "chapter": 160,
+    "sequence": 7530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad21a7e8f308025e"
+  },
+  "findings": []
+}

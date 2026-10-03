@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C159-atutta",
+    "language": "tamil",
+    "chapter": 159,
+    "sequence": 7420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cafe851a2c54794a"
+  },
+  "findings": []
+}
