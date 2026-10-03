@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C202-tanikhi-ceyu",
+    "language": "telugu",
+    "chapter": 202,
+    "sequence": 9210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:75fffb5822f1ca3e"
+  },
+  "findings": []
+}

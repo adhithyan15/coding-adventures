@@ -1,0 +1,19 @@
+{
+  "chapter": 214,
+  "title": "Bus stand, Airport, Junction, Capital city, District",
+  "label": "ch:te-bus-stand-airport-junction-capital-city-district",
+  "canDo": "I can say a bus stand, an airport, a junction, a capital city and a district.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TE-C214-jilla",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 214: I can say a bus stand, an airport, a junction, a capital city and a district.",
+    "assesses": [
+      "TE-LEX-C214-STHALAM214-03",
+      "TE-LEX-C214-STHALAM214-04",
+      "TE-LEX-C214-STHALAM214-05"
+    ]
+  }
+}

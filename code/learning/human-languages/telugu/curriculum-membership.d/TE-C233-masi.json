@@ -1,0 +1,11 @@
+{
+  "id": "TE-C233-masi",
+  "pathSegment": "TE-PATH-233-VASTUVU233",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-233-VASTUVU233",
+      "order": 3
+    }
+  ]
+}

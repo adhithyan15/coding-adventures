@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C216-selunu",
+    "language": "telugu",
+    "chapter": 216,
+    "sequence": 9950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:88b58dc0022d74e5"
+  },
+  "findings": []
+}

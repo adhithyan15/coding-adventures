@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R207-second-pass-words-from-chapters-203-207",
+    "language": "telugu",
+    "chapter": 207,
+    "sequence": 9500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1f01c011a65d9523"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 209,
+  "title": "Itch, Nurse, Test, Medical treatment, Forehead",
+  "label": "ch:te-itch-nurse-test-medical-treatment-forehead",
+  "canDo": "I can say an itch, a nurse, a test, medical treatment and the forehead.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TE-C209-nuduru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 209: I can say an itch, a nurse, a test, medical treatment and the forehead.",
+    "assesses": [
+      "TE-LEX-C209-AROGYAM209-03",
+      "TE-LEX-C209-AROGYAM209-04",
+      "TE-LEX-C209-AROGYAM209-05"
+    ]
+  }
+}

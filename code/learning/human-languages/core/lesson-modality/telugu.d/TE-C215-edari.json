@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C215-edari",
+    "language": "telugu",
+    "chapter": 215,
+    "sequence": 9860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:174749e117f23803"
+  },
+  "findings": []
+}

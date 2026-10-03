@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:d650f9ddd96ba619",
+  "lessonIds": [
+    "TE-C201-doruku",
+    "TE-C201-paduko",
+    "TE-C201-avalincu",
+    "TE-C201-vanuku",
+    "TE-C201-kadulu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch201.txt",
+  "json": "telugu/narration/ch201.json",
+  "textHash": "fnv1a64:6f4f1da25ad5a178",
+  "jsonHash": "fnv1a64:82ca2540836aad8b",
+  "findings": []
+}

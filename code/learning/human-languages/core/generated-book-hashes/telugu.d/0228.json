@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:162c9575dc0b61f6",
+  "lessonIds": [
+    "TE-C228-pita",
+    "TE-C228-telu",
+    "TE-C228-gabbilam",
+    "TE-C228-gudu",
+    "TE-C228-toka"
+  ],
+  "tex": "telugu/book/chapters/ch228-crab-scorpion-bat-nest-tail.tex"
+}

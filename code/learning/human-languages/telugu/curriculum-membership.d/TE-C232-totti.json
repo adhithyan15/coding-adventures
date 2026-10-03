@@ -1,0 +1,11 @@
+{
+  "id": "TE-C232-totti",
+  "pathSegment": "TE-PATH-232-VASTUVU232",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-232-VASTUVU232",
+      "order": 2
+    }
+  ]
+}

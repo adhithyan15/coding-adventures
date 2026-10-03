@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:f64e9523323977b1",
+  "lessonIds": [
+    "TE-C201-doruku",
+    "TE-C201-paduko",
+    "TE-C201-avalincu",
+    "TE-C201-vanuku",
+    "TE-C201-kadulu"
+  ],
+  "tex": "telugu/book/chapters/ch201-to-be-found-to-lie-down-to-yawn-to-shiver-to-move.tex"
+}

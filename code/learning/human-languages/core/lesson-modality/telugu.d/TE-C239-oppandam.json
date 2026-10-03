@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C239-oppandam",
+    "language": "telugu",
+    "chapter": 239,
+    "sequence": 11160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43a8649d6a619c4c"
+  },
+  "findings": []
+}

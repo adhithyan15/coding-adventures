@@ -1,0 +1,19 @@
+{
+  "chapter": 203,
+  "title": "To scold, To fight, To grow up, To bloom, To rain down",
+  "label": "ch:te-to-scold-to-fight-to-grow-up-to-bloom-to-rain-down",
+  "canDo": "I can say to scold, to fight, to grow up, to bloom and to rain down.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C203-kuriyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 203: I can say to scold, to fight, to grow up, to bloom and to rain down.",
+    "assesses": [
+      "TE-LEX-C203-KRIYA203-03",
+      "TE-LEX-C203-KRIYA203-04",
+      "TE-LEX-C203-KRIYA203-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C219-rujuvu",
+  "pathSegment": "TE-PATH-219-KARANAM219",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-219-KARANAM219",
+      "order": 2
+    }
+  ]
+}

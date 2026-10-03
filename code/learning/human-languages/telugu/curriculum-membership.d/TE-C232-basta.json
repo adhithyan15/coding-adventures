@@ -1,0 +1,11 @@
+{
+  "id": "TE-C232-basta",
+  "pathSegment": "TE-PATH-232-VASTUVU232",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-232-VASTUVU232",
+      "order": 1
+    }
+  ]
+}

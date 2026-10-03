@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C212-ventane",
+    "language": "telugu",
+    "chapter": 212,
+    "sequence": 9720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b922a088ca28880"
+  },
+  "findings": []
+}

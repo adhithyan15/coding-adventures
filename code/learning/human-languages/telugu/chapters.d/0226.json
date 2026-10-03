@@ -1,0 +1,19 @@
+{
+  "chapter": 226,
+  "title": "Map, Document, File, Form, Card",
+  "label": "ch:te-map-document-file-form-card",
+  "canDo": "I can say a map, a document, a file, a form and a card.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C226-kardu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 226: I can say a map, a document, a file, a form and a card.",
+    "assesses": [
+      "TE-LEX-C226-VASTUVU226-03",
+      "TE-LEX-C226-VASTUVU226-04",
+      "TE-LEX-C226-VASTUVU226-05"
+    ]
+  }
+}

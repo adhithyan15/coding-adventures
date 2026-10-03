@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-237-PANI237",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a police officer, a driver, a postman, a bus conductor and a lawyer.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 213,
+  "title": "Suddenly, Again and again, Little while, Second, Day before yesterday",
+  "label": "ch:te-suddenly-again-and-again-little-while-second-day-before-yesterday",
+  "canDo": "I can say suddenly, again and again, a little while, a second and the day before yesterday.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TE-C213-monna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 213: I can say suddenly, again and again, a little while, a second and the day before yesterday.",
+    "assesses": [
+      "TE-LEX-C213-SAMAYAM213-03",
+      "TE-LEX-C213-SAMAYAM213-04",
+      "TE-LEX-C213-SAMAYAM213-05"
+    ]
+  }
+}

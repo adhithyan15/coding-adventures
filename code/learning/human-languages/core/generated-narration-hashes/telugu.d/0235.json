@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:a3bde1b6a4aca365",
+  "lessonIds": [
+    "TE-C235-notu",
+    "TE-C235-cillara",
+    "TE-C235-jitam",
+    "TE-C235-labham",
+    "TE-C235-nastam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch235.txt",
+  "json": "telugu/narration/ch235.json",
+  "textHash": "fnv1a64:d0c2fe044422ba4c",
+  "jsonHash": "fnv1a64:66f152a34dbd9943",
+  "findings": []
+}

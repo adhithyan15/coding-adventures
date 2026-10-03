@@ -1,0 +1,11 @@
+{
+  "id": "TE-C237-postumanu",
+  "pathSegment": "TE-PATH-237-PANI237",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-237-PANI237",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:ba8427e6b451e9ff",
+  "lessonIds": [
+    "TE-C226-patam",
+    "TE-C226-patram",
+    "TE-C226-phailu",
+    "TE-C226-pharam",
+    "TE-C226-kardu"
+  ],
+  "tex": "telugu/book/chapters/ch226-map-document-file-form-card.tex"
+}

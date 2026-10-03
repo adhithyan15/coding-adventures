@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:76ef88dfcfa3609e",
+  "lessonIds": [
+    "TE-C210-anumanam",
+    "TE-C210-trpti",
+    "TE-C210-nirasa",
+    "TE-C210-visugu",
+    "TE-C210-benga"
+  ],
+  "tex": "telugu/book/chapters/ch210-doubt-contentment-disappointment-boredom-pining.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:7521249ebb3b1a66",
+  "lessonIds": [
+    "TE-C222-sarada",
+    "TE-C222-adhunika",
+    "TE-C222-spastamaina",
+    "TE-C222-bhinnamaina",
+    "TE-C222-nyayamaina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch222.txt",
+  "json": "telugu/narration/ch222.json",
+  "textHash": "fnv1a64:3ab87fbbe6183379",
+  "jsonHash": "fnv1a64:c4bb0fb94f53b445",
+  "findings": []
+}

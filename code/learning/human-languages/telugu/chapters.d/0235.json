@@ -1,0 +1,19 @@
+{
+  "chapter": 235,
+  "title": "Banknote, Loose change, Salary, Profit, Loss",
+  "label": "ch:te-banknote-loose-change-salary-profit-loss",
+  "canDo": "I can say a banknote, loose change, a salary, a profit and a loss.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C235-nastam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 235: I can say a banknote, loose change, a salary, a profit and a loss.",
+    "assesses": [
+      "TE-LEX-C235-PANI235-03",
+      "TE-LEX-C235-PANI235-04",
+      "TE-LEX-C235-PANI235-05"
+    ]
+  }
+}

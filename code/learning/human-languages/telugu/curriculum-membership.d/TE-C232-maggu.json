@@ -1,0 +1,11 @@
+{
+  "id": "TE-C232-maggu",
+  "pathSegment": "TE-PATH-232-VASTUVU232",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-232-VASTUVU232",
+      "order": 4
+    }
+  ]
+}

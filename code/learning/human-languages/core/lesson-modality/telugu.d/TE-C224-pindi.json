@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C224-pindi",
+    "language": "telugu",
+    "chapter": 224,
+    "sequence": 10370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b676957cc75e063"
+  },
+  "findings": []
+}

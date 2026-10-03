@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C200-podupu-ceyu",
+    "language": "telugu",
+    "chapter": 200,
+    "sequence": 9090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d58b32cd0009aea"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:846fb0d85c1e0df0",
+  "lessonIds": [
+    "TE-C209-durada",
+    "TE-C209-narsu",
+    "TE-C209-pariksa",
+    "TE-C209-vaidyam",
+    "TE-C209-nuduru"
+  ],
+  "tex": "telugu/book/chapters/ch209-itch-nurse-test-medical-treatment-forehead.tex"
+}

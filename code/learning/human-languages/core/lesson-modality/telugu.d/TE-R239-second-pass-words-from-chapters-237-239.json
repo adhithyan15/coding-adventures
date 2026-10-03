@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R239-second-pass-words-from-chapters-237-239",
+    "language": "telugu",
+    "chapter": 239,
+    "sequence": 11180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:99aa89cebade3c66"
+  },
+  "findings": []
+}

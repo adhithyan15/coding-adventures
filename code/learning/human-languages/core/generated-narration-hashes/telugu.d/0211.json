@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:643f096a8f74a250",
+  "lessonIds": [
+    "TE-C211-timmiri",
+    "TE-C211-ekkillu",
+    "TE-C211-guraka",
+    "TE-C211-vadadebba",
+    "TE-C211-aviri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch211.txt",
+  "json": "telugu/narration/ch211.json",
+  "textHash": "fnv1a64:3defc0b2231eafe7",
+  "jsonHash": "fnv1a64:fff2436cc0e3f9f8",
+  "findings": []
+}

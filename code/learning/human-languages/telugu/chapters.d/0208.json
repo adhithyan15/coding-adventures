@@ -1,0 +1,19 @@
+{
+  "chapter": 208,
+  "title": "To stick, To gargle, To die, To be born, To confront",
+  "label": "ch:te-to-stick-to-gargle-to-die-to-be-born-to-confront",
+  "canDo": "I can say to stick, to gargle, to die, to be born and to confront.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C208-edurkonu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 208: I can say to stick, to gargle, to die, to be born and to confront.",
+    "assesses": [
+      "TE-LEX-C208-KRIYA208-03",
+      "TE-LEX-C208-KRIYA208-04",
+      "TE-LEX-C208-KRIYA208-05"
+    ]
+  }
+}

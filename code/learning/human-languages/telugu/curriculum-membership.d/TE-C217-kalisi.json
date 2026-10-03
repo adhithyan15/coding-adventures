@@ -1,0 +1,11 @@
+{
+  "id": "TE-C217-kalisi",
+  "pathSegment": "TE-PATH-217-KARANAM217",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-217-KARANAM217",
+      "order": 0
+    }
+  ]
+}

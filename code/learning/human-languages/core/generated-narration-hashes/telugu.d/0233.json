@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:d80eaef55159d772",
+  "lessonIds": [
+    "TE-C233-kanduva",
+    "TE-C233-budaga",
+    "TE-C233-tuppu",
+    "TE-C233-masi",
+    "TE-C233-boggu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch233.txt",
+  "json": "telugu/narration/ch233.json",
+  "textHash": "fnv1a64:8f054687306d68e9",
+  "jsonHash": "fnv1a64:e19c2eb13a0f8d87",
+  "findings": []
+}

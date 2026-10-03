@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C220-lavu",
+    "language": "telugu",
+    "chapter": 220,
+    "sequence": 10150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d23e0a668c7715e5"
+  },
+  "findings": []
+}

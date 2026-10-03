@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C234-peda",
+    "language": "telugu",
+    "chapter": 234,
+    "sequence": 10870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8780d971c96a9751"
+  },
+  "findings": []
+}

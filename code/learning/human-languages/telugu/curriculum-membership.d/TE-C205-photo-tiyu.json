@@ -1,0 +1,11 @@
+{
+  "id": "TE-C205-photo-tiyu",
+  "pathSegment": "TE-PATH-205-KRIYA205",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-205-KRIYA205",
+      "order": 1
+    }
+  ]
+}

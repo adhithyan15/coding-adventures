@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C207-tempu",
+    "language": "telugu",
+    "chapter": 207,
+    "sequence": 9460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:353d0ca2a0964f5c"
+  },
+  "findings": []
+}

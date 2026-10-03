@@ -1,0 +1,11 @@
+{
+  "id": "TE-C220-nindu",
+  "pathSegment": "TE-PATH-220-GUNAM220",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-220-GUNAM220",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 216,
+  "title": "Bathroom, Foundation, Gate, Bakery, Hair salon",
+  "label": "ch:te-bathroom-foundation-gate-bakery-hair-salon",
+  "canDo": "I can say a bathroom, a foundation, a gate, a bakery and a hair salon.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TE-R216-second-pass-words-from-chapters-212-216",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 216: I can say a bathroom, a foundation, a gate, a bakery and a hair salon.",
+    "assesses": [
+      "TE-LEX-C216-STHALAM216-03",
+      "TE-LEX-C216-STHALAM216-04",
+      "TE-LEX-C216-STHALAM216-05"
+    ]
+  }
+}

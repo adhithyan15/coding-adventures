@@ -1,0 +1,11 @@
+{
+  "id": "TE-C203-kuriyu",
+  "pathSegment": "TE-PATH-203-KRIYA203",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-203-KRIYA203",
+      "order": 4
+    }
+  ]
+}

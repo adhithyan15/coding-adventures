@@ -1,0 +1,19 @@
+{
+  "chapter": 234,
+  "title": "Heap, Fertilizer, Cow dung, Plough, Sickle",
+  "label": "ch:te-heap-fertilizer-cow-dung-plough-sickle",
+  "canDo": "I can say a heap, fertilizer, cow dung, a plough and a sickle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-R234-second-pass-words-from-chapters-230-234",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 234: I can say a heap, fertilizer, cow dung, a plough and a sickle.",
+    "assesses": [
+      "TE-LEX-C234-VASTUVU234-03",
+      "TE-LEX-C234-VASTUVU234-04",
+      "TE-LEX-C234-VASTUVU234-05"
+    ]
+  }
+}

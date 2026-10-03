@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:a62503e696ac550f",
+  "lessonIds": [
+    "TE-C217-kalisi",
+    "TE-C217-tappa",
+    "TE-C217-sampradayam",
+    "TE-C217-acaram",
+    "TE-C217-alavatu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch217.txt",
+  "json": "telugu/narration/ch217.json",
+  "textHash": "fnv1a64:6ab8c789b36165f5",
+  "jsonHash": "fnv1a64:e58d464cd636c298",
+  "findings": []
+}

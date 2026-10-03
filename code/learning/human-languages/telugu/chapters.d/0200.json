@@ -1,0 +1,19 @@
+{
+  "chapter": 200,
+  "title": "To save, To choose, To try, To serve, To chew",
+  "label": "ch:te-to-save-to-choose-to-try-to-serve-to-chew",
+  "canDo": "I can say to save, to choose, to try, to serve and to chew.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C200-namalu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 200: I can say to save, to choose, to try, to serve and to chew.",
+    "assesses": [
+      "TE-LEX-C200-KRIYA200-03",
+      "TE-LEX-C200-KRIYA200-04",
+      "TE-LEX-C200-KRIYA200-05"
+    ]
+  }
+}

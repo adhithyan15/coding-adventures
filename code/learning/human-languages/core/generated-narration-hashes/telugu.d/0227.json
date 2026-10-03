@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:1982f5032ce90fad",
+  "lessonIds": [
+    "TE-C227-yuvakudu",
+    "TE-C227-peddalu",
+    "TE-C227-iruguporugu",
+    "TE-C227-satruvu",
+    "TE-C227-pellikoduku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch227.txt",
+  "json": "telugu/narration/ch227.json",
+  "textHash": "fnv1a64:da8a1287acf2ae14",
+  "jsonHash": "fnv1a64:5c418942686ee161",
+  "findings": []
+}

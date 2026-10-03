@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C199-madatapettu",
+    "language": "telugu",
+    "chapter": 199,
+    "sequence": 9070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc6ec639f701ee7b"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-221-GUNAM221",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say brown, silver, pale, round and sharp.",
+  "prerequisites": []
+}

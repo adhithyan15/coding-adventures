@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:a3249c61631d3c25",
+  "lessonIds": [
+    "TE-C203-tittu",
+    "TE-C203-potladu",
+    "TE-C203-edugu",
+    "TE-C203-puyu",
+    "TE-C203-kuriyu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch203.txt",
+  "json": "telugu/narration/ch203.json",
+  "textHash": "fnv1a64:f8302d671037399d",
+  "jsonHash": "fnv1a64:149048f4e2b1d10e",
+  "findings": []
+}

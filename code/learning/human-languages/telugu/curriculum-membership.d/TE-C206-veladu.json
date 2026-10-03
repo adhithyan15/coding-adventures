@@ -1,0 +1,11 @@
+{
+  "id": "TE-C206-veladu",
+  "pathSegment": "TE-PATH-206-KRIYA206",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-206-KRIYA206",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 225,
+  "title": "Leafy greens, Spinach, Papaya, Watermelon, Cashew nuts",
+  "label": "ch:te-leafy-greens-spinach-papaya-watermelon-cashew-nuts",
+  "canDo": "I can say leafy greens, spinach, a papaya, a watermelon and cashew nuts.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-R225-second-pass-words-from-chapters-221-225",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 225: I can say leafy greens, spinach, a papaya, a watermelon and cashew nuts.",
+    "assesses": [
+      "TE-LEX-C225-VASTUVU225-03",
+      "TE-LEX-C225-VASTUVU225-04",
+      "TE-LEX-C225-VASTUVU225-05"
+    ]
+  }
+}

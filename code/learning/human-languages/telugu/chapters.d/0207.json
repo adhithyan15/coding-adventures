@@ -1,0 +1,19 @@
+{
+  "chapter": 207,
+  "title": "To cool, To tap, To pluck, To till, To grow",
+  "label": "ch:te-to-cool-to-tap-to-pluck-to-till-to-grow",
+  "canDo": "I can say to cool, to tap, to pluck, to till and to grow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-R207-second-pass-words-from-chapters-203-207",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 207: I can say to cool, to tap, to pluck, to till and to grow.",
+    "assesses": [
+      "TE-LEX-C207-KRIYA207-03",
+      "TE-LEX-C207-KRIYA207-04",
+      "TE-LEX-C207-KRIYA207-05"
+    ]
+  }
+}

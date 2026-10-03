@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C231-phyanu",
+    "language": "telugu",
+    "chapter": 231,
+    "sequence": 10700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:695fe8ed39da9304"
+  },
+  "findings": []
+}

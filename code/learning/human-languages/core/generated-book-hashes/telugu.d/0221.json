@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:1e7eecca009e5884",
+  "lessonIds": [
+    "TE-C221-godhuma-rangu",
+    "TE-C221-vendi",
+    "TE-C221-leta",
+    "TE-C221-gundrani",
+    "TE-C221-padunaina"
+  ],
+  "tex": "telugu/book/chapters/ch221-brown-silver-pale-round-sharp.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:8d76ee08b6b2b43f",
+  "lessonIds": [
+    "TE-C202-carcincu",
+    "TE-C202-sampradincu",
+    "TE-C202-tanikhi-ceyu",
+    "TE-C202-namodu-ceyu",
+    "TE-C202-sadhana-ceyu"
+  ],
+  "tex": "telugu/book/chapters/ch202-to-discuss-to-contact-to-check-to-register-to-practise.tex"
+}

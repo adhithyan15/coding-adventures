@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:e95d070710163b73",
+  "lessonIds": [
+    "TE-C225-akukura",
+    "TE-C225-palakura",
+    "TE-C225-boppayi",
+    "TE-C225-puccakaya",
+    "TE-C225-jidipappu",
+    "TE-R225-first-pass-words-from-chapters-217-220",
+    "TE-R225-second-pass-words-from-chapters-221-225"
+  ],
+  "tex": "telugu/book/chapters/ch225-leafy-greens-spinach-papaya-watermelon-cashew-nuts.tex"
+}

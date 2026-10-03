@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C229-cinuku",
+    "language": "telugu",
+    "chapter": 229,
+    "sequence": 10630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d51dc2cd16683299"
+  },
+  "findings": []
+}

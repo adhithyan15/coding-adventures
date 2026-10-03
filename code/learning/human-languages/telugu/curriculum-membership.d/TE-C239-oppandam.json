@@ -1,0 +1,11 @@
+{
+  "id": "TE-C239-oppandam",
+  "pathSegment": "TE-PATH-239-PANI239",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-239-PANI239",
+      "order": 4
+    }
+  ]
+}

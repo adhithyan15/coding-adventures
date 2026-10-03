@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C231-kolabadda",
+    "language": "telugu",
+    "chapter": 231,
+    "sequence": 10740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe986e7ce6756eaf"
+  },
+  "findings": []
+}

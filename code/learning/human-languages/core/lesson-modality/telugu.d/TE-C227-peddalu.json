@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C227-peddalu",
+    "language": "telugu",
+    "chapter": 227,
+    "sequence": 10510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb6a5bc7cbe22dc6"
+  },
+  "findings": []
+}

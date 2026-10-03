@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C234-eruvu",
+    "language": "telugu",
+    "chapter": 234,
+    "sequence": 10860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1773329e93481bb0"
+  },
+  "findings": []
+}

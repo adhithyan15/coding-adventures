@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:a843079bd637e09d",
+  "lessonIds": [
+    "TE-C224-garite",
+    "TE-C224-cetta",
+    "TE-C224-nela",
+    "TE-C224-parupu",
+    "TE-C224-pindi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch224.txt",
+  "json": "telugu/narration/ch224.json",
+  "textHash": "fnv1a64:922db9e9c6f3d0e9",
+  "jsonHash": "fnv1a64:d672834bea23ecf0",
+  "findings": []
+}

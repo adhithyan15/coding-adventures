@@ -1,0 +1,19 @@
+{
+  "chapter": 206,
+  "title": "To roll, To slip, To hang, To tread on, To hit",
+  "label": "ch:te-to-roll-to-slip-to-hang-to-tread-on-to-hit",
+  "canDo": "I can say to roll, to slip, to hang, to tread on and to hit.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C206-kottu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 206: I can say to roll, to slip, to hang, to tread on and to hit.",
+    "assesses": [
+      "TE-LEX-C206-KRIYA206-03",
+      "TE-LEX-C206-KRIYA206-04",
+      "TE-LEX-C206-KRIYA206-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C232-maggu",
+    "language": "telugu",
+    "chapter": 232,
+    "sequence": 10790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2abc2094cecf3fdc"
+  },
+  "findings": []
+}

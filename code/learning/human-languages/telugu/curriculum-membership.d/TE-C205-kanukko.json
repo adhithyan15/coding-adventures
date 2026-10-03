@@ -1,0 +1,11 @@
+{
+  "id": "TE-C205-kanukko",
+  "pathSegment": "TE-PATH-205-KRIYA205",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-205-KRIYA205",
+      "order": 3
+    }
+  ]
+}
