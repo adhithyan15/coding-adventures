@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:e8dc50e450186723",
+  "lessonIds": [
+    "ES-C506-regalar",
+    "ES-C506-envolver",
+    "ES-C506-juguete",
+    "ES-C506-felicitar",
+    "ES-C506-abrazar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch506.txt",
+  "json": "spanish/narration/ch506.json",
+  "textHash": "fnv1a64:f6a9dc91deb4638b",
+  "jsonHash": "fnv1a64:8f0aec577fd5b6b7",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C510-fiarse",
+  "pathSegment": "ES-PATH-510-TRATO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-510-TRATO",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C508-independiente",
+    "language": "spanish",
+    "chapter": 508,
+    "sequence": 14970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a801c777b8dee30b"
+  },
+  "findings": []
+}

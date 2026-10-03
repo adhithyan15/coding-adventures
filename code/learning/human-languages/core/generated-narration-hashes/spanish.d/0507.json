@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:c344dd88ce1261fd",
+  "lessonIds": [
+    "ES-C507-votar",
+    "ES-C507-impuesto",
+    "ES-C507-poblacion",
+    "ES-C507-habitante",
+    "ES-C507-debate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch507.txt",
+  "json": "spanish/narration/ch507.json",
+  "textHash": "fnv1a64:3d99f40347d4ff61",
+  "jsonHash": "fnv1a64:0ffc70978005e654",
+  "findings": []
+}

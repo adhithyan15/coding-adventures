@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C511-mantener",
+    "language": "spanish",
+    "chapter": 511,
+    "sequence": 15120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c706251e583370c8"
+  },
+  "findings": []
+}

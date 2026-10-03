@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:462a5a014ba20df2",
+  "lessonIds": [
+    "ES-C506-regalar",
+    "ES-C506-envolver",
+    "ES-C506-juguete",
+    "ES-C506-felicitar",
+    "ES-C506-abrazar"
+  ],
+  "tex": "spanish/book/chapters/ch506-un-cumpleanos.tex"
+}

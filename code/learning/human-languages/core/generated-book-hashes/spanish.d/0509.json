@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:125483460e5c7fe9",
+  "lessonIds": [
+    "ES-C509-planear",
+    "ES-C509-desear",
+    "ES-C509-meta",
+    "ES-C509-esperanza",
+    "ES-C509-acuerdo"
+  ],
+  "tex": "spanish/book/chapters/ch509-planes-y-deseos.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C510-odiar",
+    "language": "spanish",
+    "chapter": 510,
+    "sequence": 15090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a3f929161fa6cf3e"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C510-fiarse",
+    "language": "spanish",
+    "chapter": 510,
+    "sequence": 15070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7bdbce8c1931382"
+  },
+  "findings": []
+}

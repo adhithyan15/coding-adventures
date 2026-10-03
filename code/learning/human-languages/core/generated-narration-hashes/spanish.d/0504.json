@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:2ec003533e655f49",
+  "lessonIds": [
+    "ES-C504-reciclar",
+    "ES-C504-contaminacion",
+    "ES-C504-proteger",
+    "ES-C504-fabrica",
+    "ES-C504-danar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch504.txt",
+  "json": "spanish/narration/ch504.json",
+  "textHash": "fnv1a64:d89c110de5c02512",
+  "jsonHash": "fnv1a64:78072938328e2a3e",
+  "findings": []
+}

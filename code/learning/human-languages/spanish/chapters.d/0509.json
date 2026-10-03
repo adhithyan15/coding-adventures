@@ -1,0 +1,19 @@
+{
+  "chapter": 509,
+  "title": "Planes y deseos",
+  "label": "ch:es-planes-y-deseos",
+  "canDo": "I can talk about plans, wishes, goals, hope and an agreement.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C509-acuerdo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 509: I can talk about plans, wishes, goals, hope and an agreement.",
+    "assesses": [
+      "ES-LEX-C509-META-03",
+      "ES-LEX-C509-META-04",
+      "ES-LEX-C509-META-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C505-educacion",
+  "pathSegment": "ES-PATH-505-ESTUDIO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-505-ESTUDIO",
+      "order": 0
+    }
+  ]
+}

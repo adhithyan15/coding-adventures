@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C510-pelear",
+    "language": "spanish",
+    "chapter": 510,
+    "sequence": 15080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f02cdf3688f7f825"
+  },
+  "findings": []
+}

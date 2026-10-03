@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-505-ESTUDIO",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-505-ESTUDIO"
+  ],
+  "after": []
+}

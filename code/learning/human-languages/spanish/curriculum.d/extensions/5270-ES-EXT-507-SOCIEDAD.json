@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-507-SOCIEDAD",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read about an election, taxes, the population, the inhabitants and a debate.",
+  "prerequisites": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C509-planear",
+    "language": "spanish",
+    "chapter": 509,
+    "sequence": 15010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4159307f3734cfd0"
+  },
+  "findings": []
+}

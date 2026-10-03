@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C508-aceptable",
+    "language": "spanish",
+    "chapter": 508,
+    "sequence": 15000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b269fb201aea479"
+  },
+  "findings": []
+}

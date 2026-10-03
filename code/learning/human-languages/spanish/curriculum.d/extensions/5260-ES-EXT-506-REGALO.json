@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-506-REGALO",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a birthday: giving a present, wrapping it, a toy, congratulating and hugging.",
+  "prerequisites": []
+}

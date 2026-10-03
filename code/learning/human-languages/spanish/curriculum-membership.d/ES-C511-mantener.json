@@ -1,0 +1,11 @@
+{
+  "id": "ES-C511-mantener",
+  "pathSegment": "ES-PATH-511-HACER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-511-HACER",
+      "order": 1
+    }
+  ]
+}

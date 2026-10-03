@@ -1,0 +1,11 @@
+{
+  "id": "ES-C509-acuerdo",
+  "pathSegment": "ES-PATH-509-META",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ES-EXT-509-META",
+      "order": 4
+    }
+  ]
+}

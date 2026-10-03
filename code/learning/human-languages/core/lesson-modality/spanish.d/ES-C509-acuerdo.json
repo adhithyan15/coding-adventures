@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C509-acuerdo",
+    "language": "spanish",
+    "chapter": 509,
+    "sequence": 15050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69b01292713f2a5a"
+  },
+  "findings": []
+}

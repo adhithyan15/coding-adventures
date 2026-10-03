@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-504-PLANETA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read a notice about recycling, pollution, protecting nature, a factory and damage.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C508-independiente",
+  "pathSegment": "ES-PATH-508-CUALIDAD",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-508-CUALIDAD",
+      "order": 1
+    }
+  ]
+}

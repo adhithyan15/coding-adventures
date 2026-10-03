@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:d8a36fba2bd2c2b7",
+  "lessonIds": [
+    "ES-C510-disculparse",
+    "ES-C510-fiarse",
+    "ES-C510-pelear",
+    "ES-C510-odiar",
+    "ES-C510-sorprender"
+  ],
+  "tex": "spanish/book/chapters/ch510-entre-personas.tex"
+}

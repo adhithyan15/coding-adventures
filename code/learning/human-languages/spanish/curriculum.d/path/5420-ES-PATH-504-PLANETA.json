@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-504-PLANETA",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-504-PLANETA"
+  ],
+  "after": []
+}
