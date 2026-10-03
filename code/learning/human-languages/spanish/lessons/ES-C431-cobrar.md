@@ -7,7 +7,7 @@ chapter: 431
 type: word
 headword: cobrar
 gloss: to charge, to be paid — the other side of pagar, and the verb that decides who owes whom
-concept_tag: ES-ACT-COBRAR
+concept_tag: ES-VERB-COBRAR
 prerequisites: [ES-C431-proveedor, ES-C382-pagar]
 sounds: []
 roots: []

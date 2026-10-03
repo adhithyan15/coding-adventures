@@ -7,7 +7,7 @@ chapter: 447
 type: word
 headword: comentar
 gloss: to comment, to mention — to turn a thing over in the mind, together
-concept_tag: ES-ACT-COMENTAR
+concept_tag: ES-VERB-COMENTAR
 prerequisites: [ES-C447-analisis, ES-C34-pensar]
 sounds: [stress-final, nasal-n]
 roots: [mente-latin]

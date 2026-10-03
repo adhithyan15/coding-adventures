@@ -4,7 +4,7 @@
   "chapter": 474,
   "title": "El curso que paga la empresa",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:3d038ded074e3eea",
+  "sourceHash": "fnv1a64:718d8670045a6d88",
   "lessons": [
     {
       "id": "ES-C474-invitar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b65b2f2e0b7c2b5d",
+      "sourceHash": "fnv1a64:348876476b0c7719",
       "notice": null,
       "blocks": [
         {
@@ -356,7 +356,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d7f10584c21877a",
+      "sourceHash": "fnv1a64:1a43489621064f16",
       "notice": null,
       "blocks": [
         {

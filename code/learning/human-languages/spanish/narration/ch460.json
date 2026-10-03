@@ -4,7 +4,7 @@
   "chapter": 460,
   "title": "La herramienta",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:98310057bf21cc47",
+  "sourceHash": "fnv1a64:3aab2f58482522e2",
   "lessons": [
     {
       "id": "ES-C460-herramienta",
@@ -181,7 +181,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c7386ffc872c0af",
+      "sourceHash": "fnv1a64:4d035af5c439a491",
       "notice": null,
       "blocks": [
         {

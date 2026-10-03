@@ -7,7 +7,7 @@ chapter: 462
 type: word
 headword: decidirse
 gloss: to make up your mind — *decidir* with the -se, and a cut underneath
-concept_tag: ES-WORK-DECIDIRSE
+concept_tag: ES-VERB-DECIDIRSE
 prerequisites: [ES-C462-reducir, ES-C437-decidir, ES-C449-acercar]
 sounds: [d-soft, soft-c, stress-final]
 roots: [caedere-latin]

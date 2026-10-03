@@ -4,7 +4,7 @@
   "chapter": 446,
   "title": "Mirar Y Moverse",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:676513caf618498c",
+  "sourceHash": "fnv1a64:ce0572e0d39747d5",
   "lessons": [
     {
       "id": "ES-C446-mirar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:109a7ee54f43bb0d",
+      "sourceHash": "fnv1a64:adb7a1e06a99683e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -202,7 +202,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:a9290df19fad5b0c",
+      "sourceHash": "fnv1a64:0d36074b2132631f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -368,7 +368,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a16cc5eee13b4e6e",
+      "sourceHash": "fnv1a64:fcfc1ed05a2c43f5",
       "notice": null,
       "blocks": [
         {

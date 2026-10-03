@@ -4,7 +4,7 @@
   "chapter": 464,
   "title": "La cita perdida",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a06625428586cbd3",
+  "sourceHash": "fnv1a64:f159f0fd23faad01",
   "lessons": [
     {
       "id": "ES-C464-recordar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc434c7ac940c490",
+      "sourceHash": "fnv1a64:bb78b04842b49653",
       "notice": null,
       "blocks": [
         {
@@ -349,7 +349,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f62a689347b9dc2c",
+      "sourceHash": "fnv1a64:1d382d5f97ac9be7",
       "notice": null,
       "blocks": [
         {

@@ -7,7 +7,7 @@ chapter: 437
 type: word
 headword: tardar
 gloss: to take time — the verb the delay chapter promised and did not give you
-concept_tag: ES-ACT-TARDAR
+concept_tag: ES-VERB-TARDAR
 prerequisites: [ES-C437-equivocarse, ES-C431-retraso]
 sounds: []
 roots: [tardus]

@@ -7,7 +7,7 @@ chapter: 444
 type: word
 headword: plantar
 gloss: to plant — to press in with the sole of the foot, which is what planta meant
-concept_tag: ES-ACT-PLANTAR
+concept_tag: ES-VERB-PLANTAR
 prerequisites: [ES-C444-madera, ES-C390-planta, ES-C354-jardin, ES-C362-tierra]
 sounds: [pl-cluster, stress-final]
 roots: [planta-latin]

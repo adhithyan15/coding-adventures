@@ -4,7 +4,7 @@
   "chapter": 439,
   "title": "Andenes Y Cierres",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:2332cdbab3ca16ca",
+  "sourceHash": "fnv1a64:25f0e82d61db461f",
   "lessons": [
     {
       "id": "ES-C439-anden",
@@ -149,7 +149,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a569a1811dacfc5",
+      "sourceHash": "fnv1a64:d4cf8092d0324a89",
       "notice": null,
       "blocks": [
         {
@@ -461,7 +461,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dad6abcebaaea6eb",
+      "sourceHash": "fnv1a64:9fcf19140ef97dd8",
       "notice": null,
       "blocks": [
         {
@@ -619,7 +619,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e9d05271fa993f8",
+      "sourceHash": "fnv1a64:24d0be7ba7a17107",
       "notice": null,
       "blocks": [
         {

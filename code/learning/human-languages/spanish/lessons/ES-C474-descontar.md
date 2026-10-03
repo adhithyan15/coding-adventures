@@ -7,7 +7,7 @@ chapter: 474
 type: word
 headword: descontar
 gloss: to deduct — contar with the des- that really does reverse, and the o breaks to ue
-concept_tag: ES-ASK-DESCONTAR
+concept_tag: ES-VERB-DESCONTAR
 prerequisites: [ES-C474-importe, ES-C38-contar, ES-C444-cubrir]
 sounds: [k-hard, nasal-n, stress-final]
 roots: [computare-latin]

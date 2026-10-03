@@ -7,7 +7,7 @@ chapter: 455
 type: word
 headword: tender
 gloss: to hang out the washing — to stretch something, and the verb inside *la tienda*
-concept_tag: ES-ROOM-TENDER
+concept_tag: ES-VERB-TENDER
 prerequisites: [ES-C455-claro, ES-C311-tienda, ES-C281-limpio]
 sounds: [nasal-n, d-soft, stress-final]
 roots: [tendere-latin]

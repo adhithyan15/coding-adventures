@@ -7,7 +7,7 @@ chapter: 457
 type: word
 headword: encargar
 gloss: to order in, to put somebody in charge — the cart again, with a prefix
-concept_tag: ES-PHARM-ENCARGAR
+concept_tag: ES-VERB-ENCARGAR
 prerequisites: [ES-C457-medicamento, ES-C456-cargo, ES-C431-pedido]
 sounds: [g-hard, rolled-rr, stress-final]
 roots: [carrus-latin]

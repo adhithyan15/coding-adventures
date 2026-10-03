@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 467,
-  "sourceHash": "fnv1a64:8ad73a47d877bcb9",
+  "sourceHash": "fnv1a64:21473c93421be13f",
   "lessonIds": [
     "ES-C467-producir",
     "ES-C467-suficiente",
@@ -15,6 +15,6 @@
   "text": "spanish/narration/ch467.txt",
   "json": "spanish/narration/ch467.json",
   "textHash": "fnv1a64:4249563c4817cc05",
-  "jsonHash": "fnv1a64:0475ee6a1dddaef8",
+  "jsonHash": "fnv1a64:35035e493364e0c9",
   "findings": []
 }

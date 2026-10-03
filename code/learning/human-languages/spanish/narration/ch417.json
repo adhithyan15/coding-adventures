@@ -4,7 +4,7 @@
   "chapter": 417,
   "title": "An Adult Swimming Course",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0ad9aa72e28f1a23",
+  "sourceHash": "fnv1a64:715a05f688ee2a96",
   "lessons": [
     {
       "id": "ES-C417-curso",
@@ -137,7 +137,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ef593d2f9a8fef52",
+      "sourceHash": "fnv1a64:6427bf764f516265",
       "notice": null,
       "blocks": [
         {

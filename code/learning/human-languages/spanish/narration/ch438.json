@@ -4,7 +4,7 @@
   "chapter": 438,
   "title": "El Cuerpo Y El Descanso",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:ac9e5efe6825ea59",
+  "sourceHash": "fnv1a64:dde5d312f8af0a18",
   "lessons": [
     {
       "id": "ES-C438-polideportivo",
@@ -313,7 +313,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9620cc8b8d344081",
+      "sourceHash": "fnv1a64:245cc1aa07487830",
       "notice": null,
       "blocks": [
         {
@@ -481,7 +481,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3cab75544de727c7",
+      "sourceHash": "fnv1a64:17fa98542137db7c",
       "notice": null,
       "blocks": [
         {
@@ -639,7 +639,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f85b2332ae87f5e1",
+      "sourceHash": "fnv1a64:46d8b6908b470050",
       "notice": null,
       "blocks": [
         {

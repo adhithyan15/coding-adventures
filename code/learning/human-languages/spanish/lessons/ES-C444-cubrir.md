@@ -7,7 +7,7 @@ chapter: 444
 type: word
 headword: cubrir
 gloss: to cover — an irregular participle that joins abierto, and the des- that really does reverse
-concept_tag: ES-ACT-CUBRIR
+concept_tag: ES-VERB-CUBRIR
 prerequisites: [ES-C444-plantar, ES-C37-abrir, ES-C439-cerrado, ES-C438-descansar]
 sounds: [b-soft, stress-final]
 roots: [cooperire-latin]

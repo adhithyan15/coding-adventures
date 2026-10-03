@@ -7,7 +7,7 @@ chapter: 474
 type: word
 headword: invitar
 gloss: to invite — the verb el invitado was named from, handed over now, and in Spanish it also means paying
-concept_tag: ES-ASK-INVITAR
+concept_tag: ES-VERB-INVITAR
 prerequisites: [ES-C473-sintesis-consejo, ES-C282-invitado, ES-C382-pagar]
 sounds: [v-b, t-dental, stress-final]
 roots: [invitare-latin]

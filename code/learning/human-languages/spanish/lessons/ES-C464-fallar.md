@@ -7,7 +7,7 @@ chapter: 464
 type: word
 headword: fallar
 gloss: to fail, to let somebody down — the deceiving inside *falso*
-concept_tag: ES-MISS-FALLAR
+concept_tag: ES-VERB-FALLAR
 prerequisites: [ES-C464-dentista, ES-C324-falso, ES-C448-estropear]
 sounds: [ll-y, stress-final]
 roots: [fallere-latin]

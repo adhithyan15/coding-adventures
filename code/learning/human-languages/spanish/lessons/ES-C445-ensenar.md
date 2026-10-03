@@ -7,7 +7,7 @@ chapter: 445
 type: word
 headword: enseñar
 gloss: to teach, and to show — to put a sign into somebody, which is one act in Spanish
-concept_tag: ES-ACT-ENSENAR
+concept_tag: ES-VERB-ENSENAR
 prerequisites: [ES-C445-exigente, ES-C396-aprender, ES-C358-clase]
 sounds: [enye, stress-final]
 roots: [signum-latin]

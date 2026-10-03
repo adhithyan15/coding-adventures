@@ -293,7 +293,14 @@ describe("corpus snapshot", () => {
     // not name yet", which is a question for the taxonomy, not a defect in the
     // track. It has now outgrown `covered`, which is the point at which the
     // question stops being rhetorical.
-    expect(spanish.extras.length).toBe(56); // A1 images adds permitir after media added apagar and shopping added costar to the namespaced everyday verbs; vocabulary tranche 7 previously moved 43 -> 53 with entrar, volver, llegar, perder, necesitar, aprender, cocinar, preferir, funcionar, and reparar. These remain ES-VERB-* rather than new canonical cross-language concepts, so extras is the intended measurement. // HL-C128 step 9: 6 -> 7 -- ch258 names subject-verb agreement, which adds one verb-adjacent extra beyond the paradigm set // HL-C152: +5 lessons, +1 chapter — Spanish realizes SPINE-NEGATE-AND-ASK, completing A2 at 5/5 // HL-C157: ayer + hablare close A2
+    // 56 -> 142. HL23 named Spanish's low verb count as "genuine tagging misses":
+    // 86 infinitive headwords taught at or below A2 (cenar, decidir, mirar,
+    // encontrar, recordar, ver and so on) carried concept tags such as ES-ACT-*,
+    // ES-ASK-* or ES-PLAN-*, which say what the chapter was about, not what the
+    // word is. They are now ES-VERB-<HEADWORD>, namespaced for the same reason as
+    // the others above: none was moved onto a canonical VERB-* concept, so no
+    // other track has to answer for them and no lesson changes spine node.
+    expect(spanish.extras.length).toBe(142); // A1 images adds permitir after media added apagar and shopping added costar to the namespaced everyday verbs; vocabulary tranche 7 previously moved 43 -> 53 with entrar, volver, llegar, perder, necesitar, aprender, cocinar, preferir, funcionar, and reparar. These remain ES-VERB-* rather than new canonical cross-language concepts, so extras is the intended measurement. // HL-C128 step 9: 6 -> 7 -- ch258 names subject-verb agreement, which adds one verb-adjacent extra beyond the paradigm set // HL-C152: +5 lessons, +1 chapter — Spanish realizes SPINE-NEGATE-AND-ASK, completing A2 at 5/5 // HL-C157: ayer + hablare close A2
 
     // THE EIGHT THAT NOBODY TAUGHT. Twenty-three of the forty core verbs were realized by
     // no track anywhere — everyday words like *think*, *read*, *write* and *ask*. Spanish,

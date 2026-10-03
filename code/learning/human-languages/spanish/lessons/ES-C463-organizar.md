@@ -7,7 +7,7 @@ chapter: 463
 type: word
 headword: organizar
 gloss: to organise — to fit the working parts together, from a Greek tool
-concept_tag: ES-TRIP-ORGANIZAR
+concept_tag: ES-VERB-ORGANIZAR
 prerequisites: [ES-C462-sintesis-jefe, ES-C349-agenda, ES-C457-encargar]
 sounds: [g-hard, z-as-th-or-s, stress-final]
 roots: [organon-greek, organum-latin]

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 409,
-  "sourceHash": "fnv1a64:40afcdabf84e731e",
+  "sourceHash": "fnv1a64:2b237d77b673d7d6",
   "lessonIds": [
     "ES-C409-terminar",
     "ES-C409-preparar",
@@ -16,6 +16,6 @@
   "text": "spanish/narration/ch409.txt",
   "json": "spanish/narration/ch409.json",
   "textHash": "fnv1a64:0173ff4e3028faf0",
-  "jsonHash": "fnv1a64:78547143ba3fa5d0",
+  "jsonHash": "fnv1a64:1dacad4150c518e3",
   "findings": []
 }

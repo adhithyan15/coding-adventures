@@ -7,7 +7,7 @@ chapter: 470
 type: word
 headword: encontrar
 gloss: to find — literally to come up against, and the o that breaks into ue exactly as mostrar's does
-concept_tag: ES-ASK-ENCONTRAR
+concept_tag: ES-VERB-ENCONTRAR
 prerequisites: [ES-C470-mango, ES-C451-mostrar, ES-C383-buscar]
 sounds: [nasal-n, stress-final, r-tap]
 roots: [contra-latin]

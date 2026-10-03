@@ -4,7 +4,7 @@
   "chapter": 457,
   "title": "La farmacia de guardia",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:42585d386ae7a5a1",
+  "sourceHash": "fnv1a64:6ebfd1167c1b4294",
   "lessons": [
     {
       "id": "ES-C457-medicamento",
@@ -177,7 +177,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c0c4582ba227124",
+      "sourceHash": "fnv1a64:5311fb8d70a225df",
       "notice": null,
       "blocks": [
         {

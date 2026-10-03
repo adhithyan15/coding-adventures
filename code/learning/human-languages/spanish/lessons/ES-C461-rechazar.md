@@ -7,7 +7,7 @@ chapter: 461
 type: word
 headword: rechazar
 gloss: to turn down — the opposite of *aceptar*, and its cousin
-concept_tag: ES-GIVE-RECHAZAR
+concept_tag: ES-VERB-RECHAZAR
 prerequisites: [ES-C461-peligroso, ES-C456-aceptar, ES-C458-admitir]
 sounds: [rolled-rr, ch-digraph, z-as-th-or-s, stress-final]
 roots: [capere-latin]

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 449,
-  "sourceHash": "fnv1a64:c4f7787ce489f4ab",
+  "sourceHash": "fnv1a64:d9a6542c93af680c",
   "lessonIds": [
     "ES-C449-arreglar",
     "ES-C449-freno",
@@ -16,6 +16,6 @@
   "text": "spanish/narration/ch449.txt",
   "json": "spanish/narration/ch449.json",
   "textHash": "fnv1a64:9b3913b6ab64a913",
-  "jsonHash": "fnv1a64:f45b695a270c9105",
+  "jsonHash": "fnv1a64:588d7fbc9b8c94cc",
   "findings": []
 }

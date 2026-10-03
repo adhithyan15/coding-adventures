@@ -7,7 +7,7 @@ chapter: 464
 type: word
 headword: recordar
 gloss: to remember, to remind — to pass a thing back through the heart
-concept_tag: ES-MISS-RECORDAR
+concept_tag: ES-VERB-RECORDAR
 prerequisites: [ES-C463-sintesis-guia, ES-C364-corazon, ES-C356-cita]
 sounds: [r-tap, d-soft, diphthong-ue, stress-final]
 roots: [cor-latin]

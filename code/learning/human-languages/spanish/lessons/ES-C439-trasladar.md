@@ -7,7 +7,7 @@ chapter: 439
 type: word
 headword: trasladar
 gloss: to move something across — built from a prefix and a participle that belongs to a different verb
-concept_tag: ES-MOVE-TRASLADAR
+concept_tag: ES-VERB-TRASLADAR
 prerequisites: [ES-C439-anden, ES-C346-oficina, ES-C355-piso]
 sounds: [stress-final]
 roots: [trans-latin, latus-latin]

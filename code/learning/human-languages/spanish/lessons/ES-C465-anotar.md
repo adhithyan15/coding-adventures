@@ -7,7 +7,7 @@ chapter: 465
 type: word
 headword: anotar
 gloss: to note down — Latin nota on a verb, and the quieter twin of apuntar
-concept_tag: ES-ASK-ANOTAR
+concept_tag: ES-VERB-ANOTAR
 prerequisites: [ES-C465-cuaderno, ES-C451-apuntar, ES-C429-nota]
 sounds: [stress-final, vowel-o]
 roots: [nota-latin]

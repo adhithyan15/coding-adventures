@@ -7,7 +7,7 @@ chapter: 437
 type: word
 headword: decidir
 gloss: to decide — to cut a question off, and the verb every notice uses when it stops offering options
-concept_tag: ES-ACT-DECIDIR
+concept_tag: ES-VERB-DECIDIR
 prerequisites: [ES-C436-recoger, ES-C436-ofrecer]
 sounds: []
 roots: [caedere-latin]

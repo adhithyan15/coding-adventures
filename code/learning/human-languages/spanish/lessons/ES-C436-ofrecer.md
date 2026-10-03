@@ -7,7 +7,7 @@ chapter: 436
 type: word
 headword: ofrecer
 gloss: to offer — to carry something toward somebody, and the verb a shop reaches for when it cannot give you what you asked
-concept_tag: ES-ACT-OFRECER
+concept_tag: ES-VERB-OFRECER
 prerequisites: [ES-C436-grupo, ES-C431-cobrar]
 sounds: []
 roots: []

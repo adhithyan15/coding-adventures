@@ -7,7 +7,7 @@ chapter: 467
 type: word
 headword: alimentar
 gloss: to feed — from a Latin verb wider than feeding, which is why the same root is inside adult and alumnus
-concept_tag: ES-ASK-ALIMENTAR
+concept_tag: ES-VERB-ALIMENTAR
 prerequisites: [ES-C467-suficiente, ES-C457-medicamento, ES-C467-producir]
 sounds: [stress-final, r-tap]
 roots: [alere-latin]

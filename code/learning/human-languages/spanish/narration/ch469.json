@@ -4,7 +4,7 @@
   "chapter": 469,
   "title": "La impresora de la sala 2",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:293a5c83296ab709",
+  "sourceHash": "fnv1a64:2b8a6909f303c539",
   "lessons": [
     {
       "id": "ES-C469-imprimir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec9ff59393a612ab",
+      "sourceHash": "fnv1a64:a7c9989f685478a7",
       "notice": null,
       "blocks": [
         {
@@ -355,7 +355,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f7058be420d16e4",
+      "sourceHash": "fnv1a64:c2f4edb89afd12d0",
       "notice": null,
       "blocks": [
         {

@@ -7,7 +7,7 @@ chapter: 419
 type: word
 headword: bailar
 gloss: to dance (bailar — infinitive)
-concept_tag: ES-ART-DANCE
+concept_tag: ES-VERB-BAILAR
 prerequisites: [ES-C413-musica, ES-C35-gustar]
 sounds: [b-soft, diphthong-ai, l-clear, r-tap]
 roots: [ballare]

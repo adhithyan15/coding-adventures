@@ -7,7 +7,7 @@ chapter: 469
 type: word
 headword: conectar
 gloss: to connect — the Academy's dictionary records it as taken from English to connect, which had itself been built out of Latin pieces
-concept_tag: ES-ASK-CONECTAR
+concept_tag: ES-VERB-CONECTAR
 prerequisites: [ES-C469-impresora, ES-C393-internet, ES-C469-imprimir]
 sounds: [k-hard, stress-final, r-tap]
 roots: [connect-english, nectere-latin]

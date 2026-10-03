@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 417,
-  "sourceHash": "fnv1a64:0ad9aa72e28f1a23",
+  "sourceHash": "fnv1a64:715a05f688ee2a96",
   "lessonIds": [
     "ES-C417-curso",
     "ES-C417-nadar",
@@ -14,6 +14,6 @@
   "text": "spanish/narration/ch417.txt",
   "json": "spanish/narration/ch417.json",
   "textHash": "fnv1a64:56a05c994ccd4f5b",
-  "jsonHash": "fnv1a64:cf26372ec606cf05",
+  "jsonHash": "fnv1a64:bd6f2b9f1b1dfee0",
   "findings": []
 }
