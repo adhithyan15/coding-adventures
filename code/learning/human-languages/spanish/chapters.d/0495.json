@@ -1,0 +1,19 @@
+{
+  "chapter": 495,
+  "title": "Las noticias",
+  "label": "ch:es-las-noticias",
+  "canDo": "I can follow a short news item about something that happened, a dog that went missing and a thief.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C495-ladron",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 495: I can follow a short news item about something that happened, a dog that went missing and a thief.",
+    "assesses": [
+      "ES-LEX-C495-NOTICIA-03",
+      "ES-LEX-C495-NOTICIA-04",
+      "ES-LEX-C495-NOTICIA-05"
+    ]
+  }
+}

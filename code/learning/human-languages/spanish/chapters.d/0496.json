@@ -1,0 +1,19 @@
+{
+  "chapter": 496,
+  "title": "Cosas de casa",
+  "label": "ch:es-cosas-de-casa",
+  "canDo": "I can talk about home: the lock, putting things in place, taking things away and filling something up.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C496-llenar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 496: I can talk about home: the lock, putting things in place, taking things away and filling something up.",
+    "assesses": [
+      "ES-LEX-C496-HOGAR-03",
+      "ES-LEX-C496-HOGAR-04",
+      "ES-LEX-C496-HOGAR-05"
+    ]
+  }
+}

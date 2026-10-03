@@ -1,0 +1,19 @@
+{
+  "chapter": 494,
+  "title": "Por la mañana",
+  "label": "ch:es-por-la-manana",
+  "canDo": "I can describe a morning: waking up, getting ready, going downstairs, switching on the light and heating up breakfast.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C494-calentar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 494: I can describe a morning: waking up, getting ready, going downstairs, switching on the light and heating up breakfast.",
+    "assesses": [
+      "ES-LEX-C494-MANANA-03",
+      "ES-LEX-C494-MANANA-04",
+      "ES-LEX-C494-MANANA-05"
+    ]
+  }
+}

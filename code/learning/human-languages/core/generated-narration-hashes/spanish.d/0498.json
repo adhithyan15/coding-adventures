@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:63cd7db09b2d0dd7",
+  "lessonIds": [
+    "ES-C498-campeonato",
+    "ES-C498-deportista",
+    "ES-C498-competir",
+    "ES-C498-montar",
+    "ES-C498-dibujar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch498.txt",
+  "json": "spanish/narration/ch498.json",
+  "textHash": "fnv1a64:ce4d427b93b7302d",
+  "jsonHash": "fnv1a64:ffedd21843bb8731",
+  "findings": []
+}

@@ -1,0 +1,873 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 502,
+  "title": "Hablar con otros",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:32bec1e00e61b311",
+  "lessons": [
+    {
+      "id": "ES-C502-presentar",
+      "sequence": 14640,
+      "title": "presentar — to introduce; to present",
+      "headword": "presentar",
+      "romanization": "presentar",
+      "gloss": "to introduce; to present",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7d5e961fba003e0c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the sign, then the Spanish for the fountain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: presentar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "presentar — \"to introduce; to present\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Te presento a mi amiga Ana. Let me introduce my friend Ana."
+            },
+            {
+              "kind": "speech",
+              "text": "Presentar un documento — to hand in a document."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices, forms and messages."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "presentar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *presentar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "presentar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *presentar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with presentar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *presentar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the sign, then the Spanish for the fountain, then say presentar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the sign, then the Spanish for the fountain, then say *presentar* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does presentar mean? (\"To introduce; to present\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C502-mencionar",
+      "sequence": 14650,
+      "title": "mencionar — to mention",
+      "headword": "mencionar",
+      "romanization": "mencionar",
+      "gloss": "to mention",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51e2cfa9ba12aba1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the fountain, then the Spanish for to introduce."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mencionar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mencionar — \"to mention\"."
+            },
+            {
+              "kind": "speech",
+              "text": "No mencionó el precio. He did not mention the price."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices, forms and messages."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mencionar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mencionar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mencionar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mencionar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with mencionar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *mencionar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the fountain, then the Spanish for to introduce, then say mencionar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the fountain, then the Spanish for to introduce, then say *mencionar* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mencionar mean? (\"To mention\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C502-charlar",
+      "sequence": 14660,
+      "title": "charlar — to chat",
+      "headword": "charlar",
+      "romanization": "charlar",
+      "gloss": "to chat",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c4493983a7f45299",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to introduce, then the Spanish for to mention."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: charlar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "charlar — \"to chat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Charlamos un rato en el bar. We chatted for a while in the bar."
+            },
+            {
+              "kind": "speech",
+              "text": "La charla is the chat, or a talk."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices, forms and messages."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "charlar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *charlar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "charlar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *charlar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with charlar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *charlar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to introduce, then the Spanish for to mention, then say charlar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to introduce, then the Spanish for to mention, then say *charlar* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does charlar mean? (\"To chat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C502-chiste",
+      "sequence": 14670,
+      "title": "el chiste — the joke",
+      "headword": "el chiste",
+      "romanization": "el chiste",
+      "gloss": "the joke",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aaa9f2d8b76efbef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to mention, then the Spanish for to chat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el chiste",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el chiste — \"the joke\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mi abuelo cuenta chistes muy malos. My grandfather tells very bad jokes."
+            },
+            {
+              "kind": "speech",
+              "text": "Contar un chiste — to tell a joke."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices, forms and messages."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el chiste",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el chiste*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el chiste, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el chiste*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with el chiste",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *el chiste*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to mention, then the Spanish for to chat, then say el chiste again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to mention, then the Spanish for to chat, then say *el chiste* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does el chiste mean? (\"The joke\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C502-traducir",
+      "sequence": 14680,
+      "title": "traducir — to translate",
+      "headword": "traducir",
+      "romanization": "traducir",
+      "gloss": "to translate",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:97bc9b2afe2a5a6b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to chat, then the Spanish for the joke."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: traducir",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "traducir — \"to translate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "¿Me traduces este mensaje? Can you translate this message for me?"
+            },
+            {
+              "kind": "speech",
+              "text": "It takes zc in the first person present: traduzco."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices, forms and messages."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "traducir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *traducir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "traducir, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *traducir*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with traducir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *traducir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to chat, then the Spanish for the joke, then say traducir again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to chat, then the Spanish for the joke, then say *traducir* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does traducir mean? (\"To translate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R502-repaso-palabras-de-los-capitulos-494-498",
+      "sequence": 14690,
+      "title": "Palabras de los capítulos 494-498 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "first pass over chapters 494-497",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5508dbfa81072de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Spanish for the joke and to translate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to wake up, to get ready, to go down, to switch on, to heat up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to wake up, to get ready, to go down, to switch on, to heat up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the piece of news, to happen, to happen, to disappear, the thief",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the piece of news, to happen, to happen, to disappear, the thief]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the home, the lock, to put, to take away, to fill",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the home, the lock, to put, to take away, to fill]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to be born, to pass away, to inherit, to look after, friendship",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to be born, to pass away, to inherit, to look after, friendship]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To wake up? (despertarse.) To get ready? (arreglarse.) To go down? (bajar.) To switch on? (encender.) To heat up? (calentar.) The piece of news? (la noticia.) To happen? (ocurrir.) To happen? (suceder.) To disappear? (desaparecer.) The thief? (el ladrón.) The home? (el hogar.) The lock? (la cerradura.) To put? (colocar.) To take away? (quitar.) To fill? (llenar.) To be born? (nacer.) To pass away? (fallecer.) To inherit? (heredar.) To look after? (cuidar.) Friendship? (la amistad.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R502-repaso-palabras-de-los-capitulos-499-502",
+      "sequence": 14700,
+      "title": "Palabras de los capítulos 499-502 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "second pass over chapters 498-502",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:48f6a23af9feea48",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Spanish for the championship and the sportsperson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the championship, the sportsperson, to compete, to ride, to draw",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the championship, the sportsperson, to compete, to ride, to draw]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the sandwich, the milkshake, to add, to feel like, to share",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the sandwich, the milkshake, to add, to feel like, to share]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to respect, to bother, to forbid, the law, freedom",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to respect, to bother, to forbid, the law, freedom]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the traveller, to drive, to come back, the sign, the fountain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the traveller, to drive, to come back, the sign, the fountain]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to introduce, to mention, to chat, the joke, to translate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to introduce, to mention, to chat, the joke, to translate]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The championship? (el campeonato.) The sportsperson? (el deportista.) To compete? (competir.) To ride? (montar.) To draw? (dibujar.) The sandwich? (el bocadillo.) The milkshake? (el batido.) To add? (añadir.) To feel like? (apetecer.) To share? (compartir.) To respect? (respetar.) To bother? (molestar.) To forbid? (prohibir.) The law? (la ley.) Freedom? (la libertad.) The traveller? (el viajero.) To drive? (conducir.) To come back? (regresar.) The sign? (la señal.) The fountain? (la fuente.) To introduce? (presentar.) To mention? (mencionar.) To chat? (charlar.) The joke? (el chiste.) To translate? (traducir.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

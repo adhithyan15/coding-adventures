@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:d2142f67be28225d",
+  "lessonIds": [
+    "ES-C495-noticia",
+    "ES-C495-ocurrir",
+    "ES-C495-suceder",
+    "ES-C495-desaparecer",
+    "ES-C495-ladron"
+  ],
+  "tex": "spanish/book/chapters/ch495-las-noticias.tex"
+}

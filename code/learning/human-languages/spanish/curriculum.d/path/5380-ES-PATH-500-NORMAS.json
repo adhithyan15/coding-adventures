@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-500-NORMAS",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-500-NORMAS"
+  ],
+  "after": []
+}

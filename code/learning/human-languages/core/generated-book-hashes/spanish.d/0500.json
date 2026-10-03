@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:5e2dbb7a3348e1c6",
+  "lessonIds": [
+    "ES-C500-respetar",
+    "ES-C500-molestar",
+    "ES-C500-prohibir",
+    "ES-C500-ley",
+    "ES-C500-libertad"
+  ],
+  "tex": "spanish/book/chapters/ch500-vivir-juntos.tex"
+}

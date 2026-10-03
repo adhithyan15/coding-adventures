@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 497,
+  "sourceHash": "fnv1a64:ccd74c4753e348bd",
+  "lessonIds": [
+    "ES-C497-nacer",
+    "ES-C497-fallecer",
+    "ES-C497-heredar",
+    "ES-C497-cuidar",
+    "ES-C497-amistad"
+  ],
+  "tex": "spanish/book/chapters/ch497-una-vida.tex"
+}

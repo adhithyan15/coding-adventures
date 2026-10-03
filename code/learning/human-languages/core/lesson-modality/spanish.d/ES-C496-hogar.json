@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C496-hogar",
+    "language": "spanish",
+    "chapter": 496,
+    "sequence": 14340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eac8f9eeb460507e"
+  },
+  "findings": []
+}

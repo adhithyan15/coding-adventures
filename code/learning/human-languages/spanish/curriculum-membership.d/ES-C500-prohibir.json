@@ -1,0 +1,11 @@
+{
+  "id": "ES-C500-prohibir",
+  "pathSegment": "ES-PATH-500-NORMAS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-500-NORMAS",
+      "order": 2
+    }
+  ]
+}

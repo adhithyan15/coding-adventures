@@ -1,0 +1,11 @@
+{
+  "id": "ES-C502-mencionar",
+  "pathSegment": "ES-PATH-502-HABLAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-502-HABLAR",
+      "order": 1
+    }
+  ]
+}

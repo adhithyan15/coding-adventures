@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C495-ocurrir",
+    "language": "spanish",
+    "chapter": 495,
+    "sequence": 14300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20c67fb47e48cbc9"
+  },
+  "findings": []
+}

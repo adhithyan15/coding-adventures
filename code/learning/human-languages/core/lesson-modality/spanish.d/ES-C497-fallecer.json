@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C497-fallecer",
+    "language": "spanish",
+    "chapter": 497,
+    "sequence": 14400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6c33b04578b60821"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C501-regresar",
+    "language": "spanish",
+    "chapter": 501,
+    "sequence": 14610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ba5fa78e151314ef"
+  },
+  "findings": []
+}

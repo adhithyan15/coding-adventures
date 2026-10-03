@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:d0a4c8960716ab71",
+  "lessonIds": [
+    "ES-C495-noticia",
+    "ES-C495-ocurrir",
+    "ES-C495-suceder",
+    "ES-C495-desaparecer",
+    "ES-C495-ladron"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch495.txt",
+  "json": "spanish/narration/ch495.json",
+  "textHash": "fnv1a64:000d20e1d16b7280",
+  "jsonHash": "fnv1a64:e0eb66aab68e039a",
+  "findings": []
+}

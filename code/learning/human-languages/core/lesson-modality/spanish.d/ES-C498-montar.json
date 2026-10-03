@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C498-montar",
+    "language": "spanish",
+    "chapter": 498,
+    "sequence": 14470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f442a6f09581ccb8"
+  },
+  "findings": []
+}

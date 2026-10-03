@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C499-anadir",
+    "language": "spanish",
+    "chapter": 499,
+    "sequence": 14510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8aa4041c52c489e"
+  },
+  "findings": []
+}

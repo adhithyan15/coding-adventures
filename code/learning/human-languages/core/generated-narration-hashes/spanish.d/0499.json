@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:697eb47d41933ebf",
+  "lessonIds": [
+    "ES-C499-bocadillo",
+    "ES-C499-batido",
+    "ES-C499-anadir",
+    "ES-C499-apetecer",
+    "ES-C499-compartir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch499.txt",
+  "json": "spanish/narration/ch499.json",
+  "textHash": "fnv1a64:0c348bfdaad48d46",
+  "jsonHash": "fnv1a64:3b29647c405d6e56",
+  "findings": []
+}

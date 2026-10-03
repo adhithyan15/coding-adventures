@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 497,
+  "sourceHash": "fnv1a64:4538f8431a5450fa",
+  "lessonIds": [
+    "ES-C497-nacer",
+    "ES-C497-fallecer",
+    "ES-C497-heredar",
+    "ES-C497-cuidar",
+    "ES-C497-amistad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch497.txt",
+  "json": "spanish/narration/ch497.json",
+  "textHash": "fnv1a64:1c3c1274040d859d",
+  "jsonHash": "fnv1a64:da02b91fd0b3d6c8",
+  "findings": []
+}
