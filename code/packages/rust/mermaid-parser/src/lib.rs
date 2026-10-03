@@ -4636,7 +4636,7 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                 "break-spaces" => diagram_ir::TreemapWhiteSpace::BreakSpaces,
                 _ => return Err(token_error(token, "treemap white-space-collapse must be collapse, preserve, preserve-breaks, or break-spaces")),
             }),
-            "overflow-wrap" => style.overflow_wrap = Some(match value.to_ascii_lowercase().as_str() {
+            "overflow-wrap" | "word-wrap" => style.overflow_wrap = Some(match value.to_ascii_lowercase().as_str() {
                 "normal" => diagram_ir::TreemapOverflowWrap::Normal,
                 "break-word" => diagram_ir::TreemapOverflowWrap::BreakWord,
                 "anywhere" => diagram_ir::TreemapOverflowWrap::Anywhere,
@@ -14765,6 +14765,22 @@ B//-A: reverse stick top
         }
         assert!(parse_treemap(
             "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent overflow-wrap:pretty",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_word_wrap_alias() {
+        for (value, expected) in [
+            ("normal", diagram_ir::TreemapOverflowWrap::Normal),
+            ("break-word", diagram_ir::TreemapOverflowWrap::BreakWord),
+            ("anywhere", diagram_ir::TreemapOverflowWrap::Anywhere),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent word-wrap:{value}");
+            let diagram = parse_treemap(&source).expect("supported word-wrap alias must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.overflow_wrap), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent word-wrap:pretty",
         ).is_err());
     }
 

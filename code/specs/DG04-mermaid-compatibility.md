@@ -555,7 +555,8 @@ modes; preserve-spaces remains explicitly unsupported. Auto, left/start, center,
 justify last-line alignment overrides flow into backend-neutral line positioning
 and glyph spacing.
 Normal, break-word, and anywhere overflow wrapping preserve ordinary Unicode
-line breaks and optionally split oversized words at grapheme boundaries.
+line breaks and optionally split oversized words at grapheme boundaries; the
+legacy `word-wrap` alias maps into the same typed modes.
 Normal, break-all, and keep-all word-breaking modes respectively preserve
 Unicode opportunities, add grapheme opportunities, or suppress CJK-internal breaks.
 Auto, loose, normal, strict, and anywhere line-breaking modes preserve Unicode
