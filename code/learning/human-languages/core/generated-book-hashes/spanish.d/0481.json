@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:1b946fde3628fc02",
+  "lessonIds": [
+    "ES-C481-resolver",
+    "ES-C481-recuperar",
+    "ES-C481-descartar",
+    "ES-C481-prever",
+    "ES-C481-vigilar"
+  ],
+  "tex": "spanish/book/chapters/ch481-problemas-y-soluciones.tex"
+}

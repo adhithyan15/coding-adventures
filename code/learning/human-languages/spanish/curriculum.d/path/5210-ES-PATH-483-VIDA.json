@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-483-VIDA",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-483-VIDA"
+  ],
+  "after": []
+}

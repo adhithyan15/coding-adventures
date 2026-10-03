@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-475-OFICIO",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read a job notice that asks for a professional with initiative and a qualification, and says who provides the materials.",
+  "prerequisites": []
+}

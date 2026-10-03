@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:d6adc3e8b8d498c2",
+  "lessonIds": [
+    "ES-C476-alumno",
+    "ES-C476-practicar",
+    "ES-C476-comprender",
+    "ES-C476-error",
+    "ES-C476-aburrido"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch476.txt",
+  "json": "spanish/narration/ch476.json",
+  "textHash": "fnv1a64:98b7e39edd954065",
+  "jsonHash": "fnv1a64:c69979480d357adc",
+  "findings": []
+}

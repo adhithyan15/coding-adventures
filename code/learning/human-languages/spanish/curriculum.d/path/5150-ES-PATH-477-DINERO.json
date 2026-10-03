@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-477-DINERO",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-477-DINERO"
+  ],
+  "after": []
+}

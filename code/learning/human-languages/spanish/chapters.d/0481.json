@@ -1,0 +1,19 @@
+{
+  "chapter": 481,
+  "title": "Problemas y soluciones",
+  "label": "ch:es-problemas-y-soluciones",
+  "canDo": "I can understand how a problem is solved: what is ruled out, foreseen, got back or watched.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C481-vigilar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 481: I can understand how a problem is solved: what is ruled out, foreseen, got back or watched.",
+    "assesses": [
+      "ES-LEX-C481-ARREGLO-03",
+      "ES-LEX-C481-ARREGLO-04",
+      "ES-LEX-C481-ARREGLO-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C479-adelantado",
+    "language": "spanish",
+    "chapter": 479,
+    "sequence": 13480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:17cc8935544b6705"
+  },
+  "findings": []
+}

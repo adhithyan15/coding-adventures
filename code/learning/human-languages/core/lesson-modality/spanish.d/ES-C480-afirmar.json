@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C480-afirmar",
+    "language": "spanish",
+    "chapter": 480,
+    "sequence": 13500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9bbcf6b66d714848"
+  },
+  "findings": []
+}

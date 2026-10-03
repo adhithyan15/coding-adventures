@@ -1,0 +1,11 @@
+{
+  "id": "ES-C475-iniciativa",
+  "pathSegment": "ES-PATH-475-OFICIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-475-OFICIO",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-480-DECIR",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-480-DECIR"
+  ],
+  "after": []
+}

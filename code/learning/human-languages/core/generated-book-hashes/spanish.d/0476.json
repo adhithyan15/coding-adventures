@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:903a17ca77ce1a0e",
+  "lessonIds": [
+    "ES-C476-alumno",
+    "ES-C476-practicar",
+    "ES-C476-comprender",
+    "ES-C476-error",
+    "ES-C476-aburrido"
+  ],
+  "tex": "spanish/book/chapters/ch476-en-clase.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "language": "spanish",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:3d63bf7eea37d692",
+  "lessonIds": [
+    "ES-C484-utilizar",
+    "ES-C484-aprovechar",
+    "ES-C484-apoyar",
+    "ES-C484-agradecer",
+    "ES-C484-ahorrar",
+    "ES-R484-repaso-palabras-de-los-capitulos-475-479",
+    "ES-R484-repaso-palabras-de-los-capitulos-480-484"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "spanish/narration/ch484.txt",
+  "json": "spanish/narration/ch484.json",
+  "textHash": "fnv1a64:46673d23f394d2a4",
+  "jsonHash": "fnv1a64:e7783ce5ced76f4f",
+  "findings": []
+}

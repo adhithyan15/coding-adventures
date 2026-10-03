@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-482-COMO",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-482-COMO"
+  ],
+  "after": []
+}

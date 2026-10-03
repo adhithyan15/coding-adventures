@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:7f21cae7e86723b3",
+  "lessonIds": [
+    "ES-C475-profesional",
+    "ES-C475-iniciativa",
+    "ES-C475-titulo",
+    "ES-C475-material",
+    "ES-C475-jardinero"
+  ],
+  "tex": "spanish/book/chapters/ch475-en-el-trabajo.tex"
+}

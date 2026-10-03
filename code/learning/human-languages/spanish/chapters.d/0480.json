@@ -1,0 +1,19 @@
+{
+  "chapter": 480,
+  "title": "Lo que dice la gente",
+  "label": "ch:es-lo-que-dice-la-gente",
+  "canDo": "I can follow what people state, communicate, interrupt, promise or complain about.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C480-quejarse",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 480: I can follow what people state, communicate, interrupt, promise or complain about.",
+    "assesses": [
+      "ES-LEX-C480-DECIR-03",
+      "ES-LEX-C480-DECIR-04",
+      "ES-LEX-C480-DECIR-05"
+    ]
+  }
+}

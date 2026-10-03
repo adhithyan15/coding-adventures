@@ -1,0 +1,11 @@
+{
+  "id": "ES-C481-recuperar",
+  "pathSegment": "ES-PATH-481-ARREGLO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-481-ARREGLO",
+      "order": 1
+    }
+  ]
+}

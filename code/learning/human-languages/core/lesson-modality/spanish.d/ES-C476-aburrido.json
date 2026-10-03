@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C476-aburrido",
+    "language": "spanish",
+    "chapter": 476,
+    "sequence": 13340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c0e609b5bdc3122"
+  },
+  "findings": []
+}

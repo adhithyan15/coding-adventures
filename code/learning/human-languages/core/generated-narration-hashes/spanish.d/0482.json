@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:be3264999c39d706",
+  "lessonIds": [
+    "ES-C482-concreto",
+    "ES-C482-parecido",
+    "ES-C482-justo",
+    "ES-C482-rapido",
+    "ES-C482-variedad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch482.txt",
+  "json": "spanish/narration/ch482.json",
+  "textHash": "fnv1a64:fc96c98752c93fbe",
+  "jsonHash": "fnv1a64:bcddb453d72b7d66",
+  "findings": []
+}

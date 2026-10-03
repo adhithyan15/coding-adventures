@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-484-USAR",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-484-USAR"
+  ],
+  "after": []
+}

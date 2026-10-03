@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-477-DINERO",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read a note about savings, rent, a fine and what someone earns.",
+  "prerequisites": []
+}

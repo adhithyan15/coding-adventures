@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C481-resolver",
+    "language": "spanish",
+    "chapter": 481,
+    "sequence": 13550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b369d499bb679f8"
+  },
+  "findings": []
+}

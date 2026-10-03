@@ -1,0 +1,19 @@
+{
+  "chapter": 484,
+  "title": "Sacar partido",
+  "label": "ch:es-sacar-partido",
+  "canDo": "I can say that someone uses, makes the most of, supports, thanks or saves.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-R484-repaso-palabras-de-los-capitulos-480-484",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 484: I can say that someone uses, makes the most of, supports, thanks or saves.",
+    "assesses": [
+      "ES-LEX-C484-USAR-03",
+      "ES-LEX-C484-USAR-04",
+      "ES-LEX-C484-USAR-05"
+    ]
+  }
+}

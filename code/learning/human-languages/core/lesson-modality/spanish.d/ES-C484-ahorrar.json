@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C484-ahorrar",
+    "language": "spanish",
+    "chapter": 484,
+    "sequence": 13740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0749a906f816ca4"
+  },
+  "findings": []
+}

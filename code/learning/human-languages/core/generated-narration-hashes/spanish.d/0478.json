@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:196535d9a2d3ee22",
+  "lessonIds": [
+    "ES-C478-equipaje",
+    "ES-C478-calzado",
+    "ES-C478-sitio",
+    "ES-C478-espacio",
+    "ES-C478-disponible"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch478.txt",
+  "json": "spanish/narration/ch478.json",
+  "textHash": "fnv1a64:3bd36243292249bb",
+  "jsonHash": "fnv1a64:9f1528e3c0c72fc2",
+  "findings": []
+}

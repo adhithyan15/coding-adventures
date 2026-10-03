@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:9172a335fb16f13e",
+  "lessonIds": [
+    "ES-C481-resolver",
+    "ES-C481-recuperar",
+    "ES-C481-descartar",
+    "ES-C481-prever",
+    "ES-C481-vigilar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch481.txt",
+  "json": "spanish/narration/ch481.json",
+  "textHash": "fnv1a64:b0eee348d77de218",
+  "jsonHash": "fnv1a64:7c19d2bcc3dc77af",
+  "findings": []
+}

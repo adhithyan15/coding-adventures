@@ -1,0 +1,19 @@
+{
+  "chapter": 477,
+  "title": "El dinero de cada mes",
+  "label": "ch:es-el-dinero-de-cada-mes",
+  "canDo": "I can read a note about savings, rent, a fine and what someone earns.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C477-trescientos",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 477: I can read a note about savings, rent, a fine and what someone earns.",
+    "assesses": [
+      "ES-LEX-C477-DINERO-03",
+      "ES-LEX-C477-DINERO-04",
+      "ES-LEX-C477-DINERO-05"
+    ]
+  }
+}
