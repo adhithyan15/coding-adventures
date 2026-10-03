@@ -1,0 +1,11 @@
+{
+  "id": "ML-C255-prinrar",
+  "pathSegment": "ML-PATH-255-VASTU255",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-255-VASTU255",
+      "order": 4
+    }
+  ]
+}

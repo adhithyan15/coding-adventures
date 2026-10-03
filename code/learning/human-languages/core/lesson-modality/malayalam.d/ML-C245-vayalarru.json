@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C245-vayalarru",
+    "language": "malayalam",
+    "chapter": 245,
+    "sequence": 11220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc0be03bf7533361"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-235-AROGYAM235",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "ML-EXT-235-AROGYAM235"
+  ],
+  "after": []
+}

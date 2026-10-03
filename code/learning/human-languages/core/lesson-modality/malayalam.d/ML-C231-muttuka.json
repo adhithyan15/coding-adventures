@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C231-muttuka",
+    "language": "malayalam",
+    "chapter": 231,
+    "sequence": 10450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8730f5b392df9952"
+  },
+  "findings": []
+}

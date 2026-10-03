@@ -1,0 +1,11 @@
+{
+  "id": "ML-C241-enkilum",
+  "pathSegment": "ML-PATH-241-KARANAM241",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-241-KARANAM241",
+      "order": 1
+    }
+  ]
+}

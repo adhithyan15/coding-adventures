@@ -1,0 +1,11 @@
+{
+  "id": "ML-C262-kalakaran",
+  "pathSegment": "ML-PATH-262-JOLI262",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-262-JOLI262",
+      "order": 2
+    }
+  ]
+}

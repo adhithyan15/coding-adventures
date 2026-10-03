@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C232-nivarttuka",
+    "language": "malayalam",
+    "chapter": 232,
+    "sequence": 10550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f43b328a58673a68"
+  },
+  "findings": []
+}

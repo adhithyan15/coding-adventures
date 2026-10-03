@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R240-first-pass-words-from-chapters-232-235",
+    "language": "malayalam",
+    "chapter": 240,
+    "sequence": 10960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6351f5e7743bb923"
+  },
+  "findings": []
+}

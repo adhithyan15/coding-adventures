@@ -1,0 +1,11 @@
+{
+  "id": "ML-C254-ciraku",
+  "pathSegment": "ML-PATH-254-VASTU254",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-254-VASTU254",
+      "order": 4
+    }
+  ]
+}

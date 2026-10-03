@@ -1,0 +1,11 @@
+{
+  "id": "ML-C240-kuruke",
+  "pathSegment": "ML-PATH-240-STHALAM240",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-240-STHALAM240",
+      "order": 1
+    }
+  ]
+}

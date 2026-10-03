@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:99ca687983d1477a",
+  "lessonIds": [
+    "ML-C234-utsaham",
+    "ML-C234-nirasa",
+    "ML-C234-atmavisvasam",
+    "ML-C234-avesam",
+    "ML-C234-asvasam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch234.txt",
+  "json": "malayalam/narration/ch234.json",
+  "textHash": "fnv1a64:4ac53c9b2b530366",
+  "jsonHash": "fnv1a64:87d0d9cfd4747b03",
+  "findings": []
+}

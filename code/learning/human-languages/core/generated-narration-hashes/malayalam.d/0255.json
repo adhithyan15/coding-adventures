@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:a50fc81ffa79c4b8",
+  "lessonIds": [
+    "ML-C255-laptoppu",
+    "ML-C255-skrin",
+    "ML-C255-vebsairru",
+    "ML-C255-kyamara",
+    "ML-C255-prinrar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch255.txt",
+  "json": "malayalam/narration/ch255.json",
+  "textHash": "fnv1a64:47dfd2956d1bdf2c",
+  "jsonHash": "fnv1a64:f070a504f3032ca1",
+  "findings": []
+}

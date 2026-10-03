@@ -1,0 +1,11 @@
+{
+  "id": "ML-C239-kayal",
+  "pathSegment": "ML-PATH-239-STHALAM239",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-239-STHALAM239",
+      "order": 2
+    }
+  ]
+}

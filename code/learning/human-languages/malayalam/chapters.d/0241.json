@@ -1,0 +1,19 @@
+{
+  "chapter": 241,
+  "title": "Regarding, Although, And yet, However, If so",
+  "label": "ch:ml-regarding-although-and-yet-however-if-so",
+  "canDo": "I can say regarding, although, and yet, however and if so.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "ML-C241-enkil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 241: I can say regarding, although, and yet, however and if so.",
+    "assesses": [
+      "ML-LEX-C241-KARANAM241-03",
+      "ML-LEX-C241-KARANAM241-04",
+      "ML-LEX-C241-KARANAM241-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C235-uppurri",
+    "language": "malayalam",
+    "chapter": 235,
+    "sequence": 10670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:04be6f6e48ce129a"
+  },
+  "findings": []
+}

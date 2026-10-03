@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C230-vimarsikkuka",
+    "language": "malayalam",
+    "chapter": 230,
+    "sequence": 10400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3bd5ebd385eafb5"
+  },
+  "findings": []
+}

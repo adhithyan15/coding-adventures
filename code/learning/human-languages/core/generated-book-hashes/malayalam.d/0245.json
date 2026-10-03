@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:e0fbd4810e17406c",
+  "lessonIds": [
+    "ML-C245-niram",
+    "ML-C245-tavittu",
+    "ML-C245-caraniram",
+    "ML-C245-pinku",
+    "ML-C245-vayalarru"
+  ],
+  "tex": "malayalam/book/chapters/ch245-colour-brown-grey-pink-violet.tex"
+}

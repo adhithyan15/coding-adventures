@@ -1,0 +1,19 @@
+{
+  "chapter": 234,
+  "title": "Enthusiasm, Disappointment, Self-confidence, Excitement, Relief",
+  "label": "ch:ml-enthusiasm-disappointment-self-confidence-excitement-relief",
+  "canDo": "I can say enthusiasm, disappointment, self-confidence, excitement and relief.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ML-C234-asvasam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 234: I can say enthusiasm, disappointment, self-confidence, excitement and relief.",
+    "assesses": [
+      "ML-LEX-C234-AROGYAM234-03",
+      "ML-LEX-C234-AROGYAM234-04",
+      "ML-LEX-C234-AROGYAM234-05"
+    ]
+  }
+}

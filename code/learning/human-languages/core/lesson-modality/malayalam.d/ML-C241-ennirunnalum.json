@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C241-ennirunnalum",
+    "language": "malayalam",
+    "chapter": 241,
+    "sequence": 11010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5af5d165d91aed6b"
+  },
+  "findings": []
+}

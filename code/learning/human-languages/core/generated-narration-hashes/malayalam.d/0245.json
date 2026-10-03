@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:ad1bc45062731539",
+  "lessonIds": [
+    "ML-C245-niram",
+    "ML-C245-tavittu",
+    "ML-C245-caraniram",
+    "ML-C245-pinku",
+    "ML-C245-vayalarru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch245.txt",
+  "json": "malayalam/narration/ch245.json",
+  "textHash": "fnv1a64:1b6ea07de0443a35",
+  "jsonHash": "fnv1a64:eb5a79db103f0652",
+  "findings": []
+}

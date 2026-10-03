@@ -1,0 +1,19 @@
+{
+  "chapter": 261,
+  "title": "Postman, Interview, Vacancy, Training, Report",
+  "label": "ch:ml-postman-interview-vacancy-training-report",
+  "canDo": "I can say a postman, an interview, a vacancy, training and a report.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C261-ripporttu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 261: I can say a postman, an interview, a vacancy, training and a report.",
+    "assesses": [
+      "ML-LEX-C261-JOLI261-03",
+      "ML-LEX-C261-JOLI261-04",
+      "ML-LEX-C261-JOLI261-05"
+    ]
+  }
+}

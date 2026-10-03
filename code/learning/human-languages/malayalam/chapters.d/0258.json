@@ -1,0 +1,19 @@
+{
+  "chapter": 258,
+  "title": "Paint, Shape, Circle, Square, Triangle",
+  "label": "ch:ml-paint-shape-circle-square-triangle",
+  "canDo": "I can say paint, a shape, a circle, a square and a triangle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-R258-second-pass-words-from-chapters-254-258",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 258: I can say paint, a shape, a circle, a square and a triangle.",
+    "assesses": [
+      "ML-LEX-C258-VASTU258-03",
+      "ML-LEX-C258-VASTU258-04",
+      "ML-LEX-C258-VASTU258-05"
+    ]
+  }
+}

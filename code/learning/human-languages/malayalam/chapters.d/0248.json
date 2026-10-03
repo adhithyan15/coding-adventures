@@ -1,0 +1,19 @@
+{
+  "chapter": 248,
+  "title": "Cooking gas, Tap, Carry bag, Skirt, Jeans",
+  "label": "ch:ml-cooking-gas-tap-carry-bag-skirt-jeans",
+  "canDo": "I can say cooking gas, a tap, a carry bag, a skirt and jeans.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C248-jins",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 248: I can say cooking gas, a tap, a carry bag, a skirt and jeans.",
+    "assesses": [
+      "ML-LEX-C248-VASTU248-03",
+      "ML-LEX-C248-VASTU248-04",
+      "ML-LEX-C248-VASTU248-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:c8f95d6aa94953fa",
+  "lessonIds": [
+    "ML-C251-kampyuttar",
+    "ML-C251-phayal",
+    "ML-C251-nottubukku",
+    "ML-C251-rabbar",
+    "ML-C251-vivaram"
+  ],
+  "tex": "malayalam/book/chapters/ch251-computer-file-notebook-eraser-information.tex"
+}

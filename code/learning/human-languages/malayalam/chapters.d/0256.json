@@ -1,0 +1,19 @@
+{
+  "chapter": 256,
+  "title": "Entertainment, Toy, Opinion, Idea, Advice",
+  "label": "ch:ml-entertainment-toy-opinion-idea-advice",
+  "canDo": "I can say entertainment, a toy, an opinion, an idea and advice.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C256-upadesam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 256: I can say entertainment, a toy, an opinion, an idea and advice.",
+    "assesses": [
+      "ML-LEX-C256-VASTU256-03",
+      "ML-LEX-C256-VASTU256-04",
+      "ML-LEX-C256-VASTU256-05"
+    ]
+  }
+}

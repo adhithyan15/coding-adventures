@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C240-kuruke",
+    "language": "malayalam",
+    "chapter": 240,
+    "sequence": 10920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:603ce24c412425ee"
+  },
+  "findings": []
+}

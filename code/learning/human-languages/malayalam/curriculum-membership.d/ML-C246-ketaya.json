@@ -1,0 +1,11 @@
+{
+  "id": "ML-C246-ketaya",
+  "pathSegment": "ML-PATH-246-GUNAM246",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-246-GUNAM246",
+      "order": 4
+    }
+  ]
+}

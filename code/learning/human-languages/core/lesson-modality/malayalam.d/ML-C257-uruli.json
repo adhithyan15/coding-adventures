@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C257-uruli",
+    "language": "malayalam",
+    "chapter": 257,
+    "sequence": 11840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0cf27537e6c60eaf"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-261-JOLI261",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a postman, an interview, a vacancy, training and a report.",
+  "prerequisites": []
+}

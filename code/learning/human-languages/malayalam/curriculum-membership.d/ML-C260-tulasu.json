@@ -1,0 +1,11 @@
+{
+  "id": "ML-C260-tulasu",
+  "pathSegment": "ML-PATH-260-JOLI260",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-260-JOLI260",
+      "order": 2
+    }
+  ]
+}

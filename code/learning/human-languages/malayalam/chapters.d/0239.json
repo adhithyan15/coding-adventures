@@ -1,0 +1,19 @@
+{
+  "chapter": 239,
+  "title": "Corner, Hill, Backwaters, Stream, Cave",
+  "label": "ch:ml-corner-hill-backwaters-stream-cave",
+  "canDo": "I can say a corner, a hill, the backwaters, a stream and a cave.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ML-C239-guha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 239: I can say a corner, a hill, the backwaters, a stream and a cave.",
+    "assesses": [
+      "ML-LEX-C239-STHALAM239-03",
+      "ML-LEX-C239-STHALAM239-04",
+      "ML-LEX-C239-STHALAM239-05"
+    ]
+  }
+}

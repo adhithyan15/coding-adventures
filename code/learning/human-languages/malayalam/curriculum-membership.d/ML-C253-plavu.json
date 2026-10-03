@@ -1,0 +1,11 @@
+{
+  "id": "ML-C253-plavu",
+  "pathSegment": "ML-PATH-253-VASTU253",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-253-VASTU253",
+      "order": 1
+    }
+  ]
+}

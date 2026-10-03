@@ -1,0 +1,15 @@
+{
+  "language": "malayalam",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:928008386edc295c",
+  "lessonIds": [
+    "ML-C240-arram",
+    "ML-C240-kuruke",
+    "ML-C240-annottu",
+    "ML-C240-innottu",
+    "ML-C240-vasam",
+    "ML-R240-first-pass-words-from-chapters-232-235",
+    "ML-R240-second-pass-words-from-chapters-236-240"
+  ],
+  "tex": "malayalam/book/chapters/ch240-end-across-to-there-to-here-side.tex"
+}

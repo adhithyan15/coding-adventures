@@ -1,0 +1,19 @@
+{
+  "chapter": 226,
+  "title": "To discuss, To explain, To prepare, To finish, To check",
+  "label": "ch:ml-to-discuss-to-explain-to-prepare-to-finish-to-check",
+  "canDo": "I can say to discuss, to explain, to prepare, to finish and to check.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C226-parisodhikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 226: I can say to discuss, to explain, to prepare, to finish and to check.",
+    "assesses": [
+      "ML-LEX-C226-KRIYA226-03",
+      "ML-LEX-C226-KRIYA226-04",
+      "ML-LEX-C226-KRIYA226-05"
+    ]
+  }
+}

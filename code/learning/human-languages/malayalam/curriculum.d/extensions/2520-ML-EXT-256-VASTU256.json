@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-256-VASTU256",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say entertainment, a toy, an opinion, an idea and advice.",
+  "prerequisites": []
+}

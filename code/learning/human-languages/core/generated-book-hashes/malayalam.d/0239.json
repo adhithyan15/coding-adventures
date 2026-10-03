@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:00db59a93e2b3237",
+  "lessonIds": [
+    "ML-C239-mula2",
+    "ML-C239-kunnu",
+    "ML-C239-kayal",
+    "ML-C239-totu",
+    "ML-C239-guha"
+  ],
+  "tex": "malayalam/book/chapters/ch239-corner-hill-backwaters-stream-cave.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C247-cittayulla",
+  "pathSegment": "ML-PATH-247-GUNAM247",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-247-GUNAM247",
+      "order": 4
+    }
+  ]
+}

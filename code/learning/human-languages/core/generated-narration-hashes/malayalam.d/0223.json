@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:3a6009090abdd400",
+  "lessonIds": [
+    "ML-C223-cumakkuka",
+    "ML-C223-vaykkuka",
+    "ML-C223-dharikkuka",
+    "ML-C223-uruka",
+    "ML-C223-marruka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch223.txt",
+  "json": "malayalam/narration/ch223.json",
+  "textHash": "fnv1a64:bebea7478dc4bf15",
+  "jsonHash": "fnv1a64:9bcd514601516ef1",
+  "findings": []
+}

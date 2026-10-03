@@ -1,0 +1,19 @@
+{
+  "chapter": 247,
+  "title": "Double, Elderly, Bald, Curly, Orderly",
+  "label": "ch:ml-double-elderly-bald-curly-orderly",
+  "canDo": "I can say double, elderly, bald, curly and orderly.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ML-C247-cittayulla",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 247: I can say double, elderly, bald, curly and orderly.",
+    "assesses": [
+      "ML-LEX-C247-GUNAM247-03",
+      "ML-LEX-C247-GUNAM247-04",
+      "ML-LEX-C247-GUNAM247-05"
+    ]
+  }
+}

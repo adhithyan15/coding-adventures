@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:7f7769b91d44a46d",
+  "lessonIds": [
+    "ML-C233-kanankal",
+    "ML-C233-cora",
+    "ML-C233-svasam",
+    "ML-C233-vayarilakkam",
+    "ML-C233-alarji"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch233.txt",
+  "json": "malayalam/narration/ch233.json",
+  "textHash": "fnv1a64:db664f841d718d8a",
+  "jsonHash": "fnv1a64:def6eee31f8d53bb",
+  "findings": []
+}

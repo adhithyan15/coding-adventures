@@ -1,0 +1,19 @@
+{
+  "chapter": 259,
+  "title": "Bitter gourd, Okra, Drumstick, Maize, Chickpeas",
+  "label": "ch:ml-bitter-gourd-okra-drumstick-maize-chickpeas",
+  "canDo": "I can say a bitter gourd, okra, a drumstick, maize and chickpeas.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C259-katala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 259: I can say a bitter gourd, okra, a drumstick, maize and chickpeas.",
+    "assesses": [
+      "ML-LEX-C259-VASTU259-03",
+      "ML-LEX-C259-VASTU259-04",
+      "ML-LEX-C259-VASTU259-05"
+    ]
+  }
+}

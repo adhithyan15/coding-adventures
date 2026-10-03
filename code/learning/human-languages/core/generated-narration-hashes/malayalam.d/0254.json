@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:7a575f3947da8703",
+  "lessonIds": [
+    "ML-C254-kuruvi",
+    "ML-C254-annan",
+    "ML-C254-nantu",
+    "ML-C254-val",
+    "ML-C254-ciraku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch254.txt",
+  "json": "malayalam/narration/ch254.json",
+  "textHash": "fnv1a64:596ce38dcaab7c35",
+  "jsonHash": "fnv1a64:19647e74ca3099fb",
+  "findings": []
+}

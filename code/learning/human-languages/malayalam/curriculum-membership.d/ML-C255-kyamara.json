@@ -1,0 +1,11 @@
+{
+  "id": "ML-C255-kyamara",
+  "pathSegment": "ML-PATH-255-VASTU255",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-255-VASTU255",
+      "order": 3
+    }
+  ]
+}

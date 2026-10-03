@@ -1,0 +1,11 @@
+{
+  "id": "ML-C248-jins",
+  "pathSegment": "ML-PATH-248-VASTU248",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-248-VASTU248",
+      "order": 4
+    }
+  ]
+}

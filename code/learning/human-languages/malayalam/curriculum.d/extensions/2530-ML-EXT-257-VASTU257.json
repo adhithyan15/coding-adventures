@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-257-VASTU257",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a roof tile, a pillar, a corridor, a bedroom and a wide bronze cooking vessel.",
+  "prerequisites": []
+}

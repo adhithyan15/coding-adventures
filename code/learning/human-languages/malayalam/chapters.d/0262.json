@@ -1,0 +1,19 @@
+{
+  "chapter": 262,
+  "title": "Note, Example, Artist, Temple priest, Singer",
+  "label": "ch:ml-note-example-artist-temple-priest-singer",
+  "canDo": "I can say a note, an example, an artist, a temple priest and a singer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C262-gayakan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 262: I can say a note, an example, an artist, a temple priest and a singer.",
+    "assesses": [
+      "ML-LEX-C262-JOLI262-03",
+      "ML-LEX-C262-JOLI262-04",
+      "ML-LEX-C262-JOLI262-05"
+    ]
+  }
+}

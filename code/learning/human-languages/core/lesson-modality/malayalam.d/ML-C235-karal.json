@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C235-karal",
+    "language": "malayalam",
+    "chapter": 235,
+    "sequence": 10690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e3762467c558c34"
+  },
+  "findings": []
+}

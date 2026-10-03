@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R240-second-pass-words-from-chapters-236-240",
+    "language": "malayalam",
+    "chapter": 240,
+    "sequence": 10970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ad6e2dce9da0856"
+  },
+  "findings": []
+}

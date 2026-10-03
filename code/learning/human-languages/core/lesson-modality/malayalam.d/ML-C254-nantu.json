@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C254-nantu",
+    "language": "malayalam",
+    "chapter": 254,
+    "sequence": 11670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e705304c4325f36"
+  },
+  "findings": []
+}

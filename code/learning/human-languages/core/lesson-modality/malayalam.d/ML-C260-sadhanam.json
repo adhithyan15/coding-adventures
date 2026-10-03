@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C260-sadhanam",
+    "language": "malayalam",
+    "chapter": 260,
+    "sequence": 12010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a8773c0d25ace4f"
+  },
+  "findings": []
+}

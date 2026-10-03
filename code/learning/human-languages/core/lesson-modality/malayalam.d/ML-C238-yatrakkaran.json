@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C238-yatrakkaran",
+    "language": "malayalam",
+    "chapter": 238,
+    "sequence": 10840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:389223d8e07f9a5a"
+  },
+  "findings": []
+}

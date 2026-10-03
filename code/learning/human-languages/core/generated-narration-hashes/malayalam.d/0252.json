@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:f57673ce86047cc4",
+  "lessonIds": [
+    "ML-C252-tamasa",
+    "ML-C252-vallamkali",
+    "ML-C252-kani",
+    "ML-C252-kainittam",
+    "ML-C252-patakkam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch252.txt",
+  "json": "malayalam/narration/ch252.json",
+  "textHash": "fnv1a64:b49abe08dad47eb5",
+  "jsonHash": "fnv1a64:e43041068b093c3f",
+  "findings": []
+}

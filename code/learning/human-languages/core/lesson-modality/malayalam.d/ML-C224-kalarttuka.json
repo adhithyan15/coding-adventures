@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C224-kalarttuka",
+    "language": "malayalam",
+    "chapter": 224,
+    "sequence": 10090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58f350f3d3dfae22"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 251,
+  "title": "Computer, File, Notebook, Eraser, Information",
+  "label": "ch:ml-computer-file-notebook-eraser-information",
+  "canDo": "I can say a computer, a file, a notebook, an eraser and information.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C251-vivaram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 251: I can say a computer, a file, a notebook, an eraser and information.",
+    "assesses": [
+      "ML-LEX-C251-VASTU251-03",
+      "ML-LEX-C251-VASTU251-04",
+      "ML-LEX-C251-VASTU251-05"
+    ]
+  }
+}

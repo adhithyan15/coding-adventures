@@ -1,0 +1,11 @@
+{
+  "id": "ML-C249-gotambu",
+  "pathSegment": "ML-PATH-249-VASTU249",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-249-VASTU249",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:3e0cba12f67d187f",
+  "lessonIds": [
+    "ML-C256-vinodam",
+    "ML-C256-kalippattam",
+    "ML-C256-abhiprayam",
+    "ML-C256-asayam",
+    "ML-C256-upadesam"
+  ],
+  "tex": "malayalam/book/chapters/ch256-entertainment-toy-opinion-idea-advice.tex"
+}

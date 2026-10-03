@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C232-kutirkkuka",
+    "language": "malayalam",
+    "chapter": 232,
+    "sequence": 10510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0bb796a70e96f24"
+  },
+  "findings": []
+}

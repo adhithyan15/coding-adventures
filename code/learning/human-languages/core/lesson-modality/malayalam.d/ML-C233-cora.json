@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C233-cora",
+    "language": "malayalam",
+    "chapter": 233,
+    "sequence": 10570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91a857289127e9d2"
+  },
+  "findings": []
+}

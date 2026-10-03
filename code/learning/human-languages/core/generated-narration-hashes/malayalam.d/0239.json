@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:0fd5436efbb14d7a",
+  "lessonIds": [
+    "ML-C239-mula2",
+    "ML-C239-kunnu",
+    "ML-C239-kayal",
+    "ML-C239-totu",
+    "ML-C239-guha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch239.txt",
+  "json": "malayalam/narration/ch239.json",
+  "textHash": "fnv1a64:7d386ddf4f68577c",
+  "jsonHash": "fnv1a64:f8c9958c923c14cf",
+  "findings": []
+}

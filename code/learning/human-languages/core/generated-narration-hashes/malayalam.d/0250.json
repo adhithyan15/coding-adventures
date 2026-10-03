@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:482d3b0ddfdacaa9",
+  "lessonIds": [
+    "ML-C250-nampar",
+    "ML-C250-appu",
+    "ML-C250-vartta",
+    "ML-C250-patram",
+    "ML-C250-srrampu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch250.txt",
+  "json": "malayalam/narration/ch250.json",
+  "textHash": "fnv1a64:2cc509c82e001278",
+  "jsonHash": "fnv1a64:e5a10b695d934624",
+  "findings": []
+}
