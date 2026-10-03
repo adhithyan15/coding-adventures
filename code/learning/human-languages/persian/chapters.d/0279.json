@@ -1,0 +1,19 @@
+{
+  "chapter": 279,
+  "title": "Cypress, Plane tree, Palm tree, Tulip, Jasmine",
+  "label": "ch:fa-cypress-plane-tree-palm-tree-tulip-jasmine",
+  "canDo": "I can say a cypress, a plane tree, a palm tree, a tulip and jasmine.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-R279-second-pass-words-from-chapters-275-279",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 279: I can say a cypress, a plane tree, a palm tree, a tulip and jasmine.",
+    "assesses": [
+      "FA-LEX-C279-CHIZ279-03",
+      "FA-LEX-C279-CHIZ279-04",
+      "FA-LEX-C279-CHIZ279-05"
+    ]
+  }
+}

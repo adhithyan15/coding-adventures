@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C279-nakhl",
+    "language": "persian",
+    "chapter": 279,
+    "sequence": 14430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e0840a5d25fe7cc5"
+  },
+  "findings": []
+}

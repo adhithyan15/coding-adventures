@@ -1,0 +1,11 @@
+{
+  "id": "FA-C270-bahane",
+  "pathSegment": "FA-PATH-270-CHERA270",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-270-CHERA270",
+      "order": 4
+    }
+  ]
+}

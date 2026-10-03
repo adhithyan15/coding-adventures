@@ -1,0 +1,19 @@
+{
+  "chapter": 273,
+  "title": "Boring, Useful, Traditional, Suitable, Possible",
+  "label": "ch:fa-boring-useful-traditional-suitable-possible",
+  "canDo": "I can say boring, useful, traditional, suitable and possible.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FA-C273-momken",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 273: I can say boring, useful, traditional, suitable and possible.",
+    "assesses": [
+      "FA-LEX-C273-SEFAT273-03",
+      "FA-LEX-C273-SEFAT273-04",
+      "FA-LEX-C273-SEFAT273-05"
+    ]
+  }
+}

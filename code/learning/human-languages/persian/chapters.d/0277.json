@@ -1,0 +1,19 @@
+{
+  "chapter": 277,
+  "title": "Parents, Fiancé, Bridegroom, Relatives, Teenager",
+  "label": "ch:fa-parents-fiance-bridegroom-relatives-teenager",
+  "canDo": "I can say parents, a fiancé, a bridegroom, relatives and a teenager.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C277-nojavan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 277: I can say parents, a fiancé, a bridegroom, relatives and a teenager.",
+    "assesses": [
+      "FA-LEX-C277-CHIZ277-03",
+      "FA-LEX-C277-CHIZ277-04",
+      "FA-LEX-C277-CHIZ277-05"
+    ]
+  }
+}

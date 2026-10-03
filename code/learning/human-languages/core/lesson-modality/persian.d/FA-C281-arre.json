@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C281-arre",
+    "language": "persian",
+    "chapter": 281,
+    "sequence": 14540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e7397b24caf8fe9"
+  },
+  "findings": []
+}

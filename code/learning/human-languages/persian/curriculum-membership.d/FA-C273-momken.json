@@ -1,0 +1,11 @@
+{
+  "id": "FA-C273-momken",
+  "pathSegment": "FA-PATH-273-SEFAT273",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-273-SEFAT273",
+      "order": 4
+    }
+  ]
+}

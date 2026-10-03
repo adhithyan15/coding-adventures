@@ -1,0 +1,11 @@
+{
+  "id": "FA-C255-vazn-kardan",
+  "pathSegment": "FA-PATH-255-KONESH255",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-255-KONESH255",
+      "order": 2
+    }
+  ]
+}

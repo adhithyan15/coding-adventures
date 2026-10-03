@@ -1,0 +1,11 @@
+{
+  "id": "FA-C277-famil",
+  "pathSegment": "FA-PATH-277-CHIZ277",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-277-CHIZ277",
+      "order": 3
+    }
+  ]
+}

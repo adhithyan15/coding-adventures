@@ -1,0 +1,19 @@
+{
+  "chapter": 263,
+  "title": "Injury, Dizziness, Headache, Stomach ache, Bruise",
+  "label": "ch:fa-injury-dizziness-headache-stomach-ache-bruise",
+  "canDo": "I can say an injury, dizziness, a headache, a stomach ache and a bruise.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FA-C263-kabudi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 263: I can say an injury, dizziness, a headache, a stomach ache and a bruise.",
+    "assesses": [
+      "FA-LEX-C263-SALAMAT263-03",
+      "FA-LEX-C263-SALAMAT263-04",
+      "FA-LEX-C263-SALAMAT263-05"
+    ]
+  }
+}

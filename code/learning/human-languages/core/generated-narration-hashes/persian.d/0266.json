@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:565032423e845b75",
+  "lessonIds": [
+    "FA-C266-chaharrah",
+    "FA-C266-mahalle",
+    "FA-C266-sakhteman",
+    "FA-C266-vorudi",
+    "FA-C266-khoruji"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch266.txt",
+  "json": "persian/narration/ch266.json",
+  "textHash": "fnv1a64:e25af9330ea4bc5f",
+  "jsonHash": "fnv1a64:ea5f94cb993fccfd",
+  "findings": []
+}

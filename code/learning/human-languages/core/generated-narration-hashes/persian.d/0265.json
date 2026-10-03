@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:802db02df8be6adc",
+  "lessonIds": [
+    "FA-C265-pishapish",
+    "FA-C265-hamzaman",
+    "FA-C265-dahe",
+    "FA-C265-qarn",
+    "FA-C265-term"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch265.txt",
+  "json": "persian/narration/ch265.json",
+  "textHash": "fnv1a64:38003c5f256c8bba",
+  "jsonHash": "fnv1a64:25612790686f47f3",
+  "findings": []
+}

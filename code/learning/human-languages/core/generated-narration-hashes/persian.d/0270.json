@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:07127dc207f20046",
+  "lessonIds": [
+    "FA-C270-shekl",
+    "FA-C270-howsele",
+    "FA-C270-az-anja-ke",
+    "FA-C270-ba-vojud-e",
+    "FA-C270-bahane",
+    "FA-R270-first-pass-words-from-chapters-262-265",
+    "FA-R270-second-pass-words-from-chapters-266-270"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "persian/narration/ch270.txt",
+  "json": "persian/narration/ch270.json",
+  "textHash": "fnv1a64:6efb1e66619735ed",
+  "jsonHash": "fnv1a64:3f1ef1ffa7fddccc",
+  "findings": []
+}

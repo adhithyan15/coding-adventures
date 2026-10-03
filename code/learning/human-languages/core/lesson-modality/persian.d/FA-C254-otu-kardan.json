@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C254-otu-kardan",
+    "language": "persian",
+    "chapter": 254,
+    "sequence": 13140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2ed77831aea2717"
+  },
+  "findings": []
+}

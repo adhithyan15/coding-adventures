@@ -1,0 +1,19 @@
+{
+  "chapter": 258,
+  "title": "To search, To phone, To fix, To agree, To imagine",
+  "label": "ch:fa-to-search-to-phone-to-fix-to-agree-to-imagine",
+  "canDo": "I can say to search, to phone, to fix, to agree and to imagine.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C258-tasavvor-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 258: I can say to search, to phone, to fix, to agree and to imagine.",
+    "assesses": [
+      "FA-LEX-C258-KONESH258-03",
+      "FA-LEX-C258-KONESH258-04",
+      "FA-LEX-C258-KONESH258-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C260-sut-zadan",
+  "pathSegment": "FA-PATH-260-KONESH260",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-260-KONESH260",
+      "order": 4
+    }
+  ]
+}

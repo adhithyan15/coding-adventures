@@ -1,0 +1,19 @@
+{
+  "chapter": 272,
+  "title": "Honest, Cheeky, Sensitive, Pink, Dark",
+  "label": "ch:fa-honest-cheeky-sensitive-pink-dark",
+  "canDo": "I can say honest, cheeky, sensitive, pink and dark.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FA-C272-tarik",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 272: I can say honest, cheeky, sensitive, pink and dark.",
+    "assesses": [
+      "FA-LEX-C272-SEFAT272-03",
+      "FA-LEX-C272-SEFAT272-04",
+      "FA-LEX-C272-SEFAT272-05"
+    ]
+  }
+}

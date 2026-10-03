@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C259-dozdidan",
+    "language": "persian",
+    "chapter": 259,
+    "sequence": 13390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94fed9afe7517035"
+  },
+  "findings": []
+}

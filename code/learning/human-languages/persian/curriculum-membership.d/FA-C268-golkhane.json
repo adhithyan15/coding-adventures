@@ -1,0 +1,11 @@
+{
+  "id": "FA-C268-golkhane",
+  "pathSegment": "FA-PATH-268-MAKAN268",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-268-MAKAN268",
+      "order": 2
+    }
+  ]
+}

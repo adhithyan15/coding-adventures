@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C269-hatta",
+    "language": "persian",
+    "chapter": 269,
+    "sequence": 13900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b791ce5f38bae77e"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:41c746c2946cac3e",
+  "lessonIds": [
+    "FA-C279-sarv",
+    "FA-C279-chenar",
+    "FA-C279-nakhl",
+    "FA-C279-lale",
+    "FA-C279-yas",
+    "FA-R279-first-pass-words-from-chapters-271-274",
+    "FA-R279-second-pass-words-from-chapters-275-279"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "persian/narration/ch279.txt",
+  "json": "persian/narration/ch279.json",
+  "textHash": "fnv1a64:bde045e685f8787d",
+  "jsonHash": "fnv1a64:de671ec962281d8e",
+  "findings": []
+}

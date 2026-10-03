@@ -1,0 +1,19 @@
+{
+  "chapter": 261,
+  "title": "To dress, To be admitted to hospital, To lean, To lie down, To move house",
+  "label": "ch:fa-to-dress-to-be-admitted-to-hospital-to-lean-to-lie-down-to-move-house",
+  "canDo": "I can say to dress, to be admitted to hospital, to lean, to lie down and to move house.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-R261-second-pass-words-from-chapters-257-261",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 261: I can say to dress, to be admitted to hospital, to lean, to lie down and to move house.",
+    "assesses": [
+      "FA-LEX-C261-KONESH261-03",
+      "FA-LEX-C261-KONESH261-04",
+      "FA-LEX-C261-KONESH261-05"
+    ]
+  }
+}

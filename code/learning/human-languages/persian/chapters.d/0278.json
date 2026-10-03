@@ -1,0 +1,19 @@
+{
+  "chapter": 278,
+  "title": "Spread cloth, Secret, Team, Prize, Respect",
+  "label": "ch:fa-spread-cloth-secret-team-prize-respect",
+  "canDo": "I can say a spread cloth, a secret, a team, a prize and respect.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C278-ehteram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 278: I can say a spread cloth, a secret, a team, a prize and respect.",
+    "assesses": [
+      "FA-LEX-C278-CHIZ278-03",
+      "FA-LEX-C278-CHIZ278-04",
+      "FA-LEX-C278-CHIZ278-05"
+    ]
+  }
+}

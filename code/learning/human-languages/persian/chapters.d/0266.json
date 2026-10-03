@@ -1,0 +1,19 @@
+{
+  "chapter": 266,
+  "title": "Crossroads, Neighbourhood, Building, Entrance, Exit",
+  "label": "ch:fa-crossroads-neighbourhood-building-entrance-exit",
+  "canDo": "I can say a crossroads, a neighbourhood, a building, an entrance and an exit.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "FA-C266-khoruji",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 266: I can say a crossroads, a neighbourhood, a building, an entrance and an exit.",
+    "assesses": [
+      "FA-LEX-C266-MAKAN266-03",
+      "FA-LEX-C266-MAKAN266-04",
+      "FA-LEX-C266-MAKAN266-05"
+    ]
+  }
+}

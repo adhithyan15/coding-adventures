@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C254-ta-kardan",
+    "language": "persian",
+    "chapter": 254,
+    "sequence": 13150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:51389a75eda895d3"
+  },
+  "findings": []
+}

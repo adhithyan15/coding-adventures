@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C276-shomare",
+    "language": "persian",
+    "chapter": 276,
+    "sequence": 14280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:71c39dcacf4f5ef6"
+  },
+  "findings": []
+}

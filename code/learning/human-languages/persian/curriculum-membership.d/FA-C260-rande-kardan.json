@@ -1,0 +1,11 @@
+{
+  "id": "FA-C260-rande-kardan",
+  "pathSegment": "FA-PATH-260-KONESH260",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-260-KONESH260",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 264,
+  "title": "Anniversary, Festival, Childhood, Youth, Day after tomorrow",
+  "label": "ch:fa-anniversary-festival-childhood-youth-day-after-tomorrow",
+  "canDo": "I can say an anniversary, a festival, childhood, youth and the day after tomorrow.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "FA-C264-pas-farda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 264: I can say an anniversary, a festival, childhood, youth and the day after tomorrow.",
+    "assesses": [
+      "FA-LEX-C264-ZAMAN264-03",
+      "FA-LEX-C264-ZAMAN264-04",
+      "FA-LEX-C264-ZAMAN264-05"
+    ]
+  }
+}

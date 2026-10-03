@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:8a9df81a8fbb4e3f",
+  "lessonIds": [
+    "FA-C269-faqat",
+    "FA-C269-hatta",
+    "FA-C269-kamelan",
+    "FA-C269-daqiqan",
+    "FA-C269-khoshbakhtane"
+  ],
+  "tex": "persian/book/chapters/ch269-only-even-completely-exactly-fortunately.tex"
+}

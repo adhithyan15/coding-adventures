@@ -1,0 +1,19 @@
+{
+  "chapter": 257,
+  "title": "To miss, To grow up, To feel, To promise, To complain",
+  "label": "ch:fa-to-miss-to-grow-up-to-feel-to-promise-to-complain",
+  "canDo": "I can say to miss, to grow up, to feel, to promise and to complain.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C257-shekayat-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 257: I can say to miss, to grow up, to feel, to promise and to complain.",
+    "assesses": [
+      "FA-LEX-C257-KONESH257-03",
+      "FA-LEX-C257-KONESH257-04",
+      "FA-LEX-C257-KONESH257-05"
+    ]
+  }
+}

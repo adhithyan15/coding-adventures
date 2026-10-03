@@ -1,0 +1,11 @@
+{
+  "id": "FA-C260-dar-zadan",
+  "pathSegment": "FA-PATH-260-KONESH260",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-260-KONESH260",
+      "order": 3
+    }
+  ]
+}

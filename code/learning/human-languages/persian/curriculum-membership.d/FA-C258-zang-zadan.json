@@ -1,0 +1,11 @@
+{
+  "id": "FA-C258-zang-zadan",
+  "pathSegment": "FA-PATH-258-KONESH258",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-258-KONESH258",
+      "order": 1
+    }
+  ]
+}

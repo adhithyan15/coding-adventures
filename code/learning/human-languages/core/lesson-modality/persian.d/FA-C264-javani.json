@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C264-javani",
+    "language": "persian",
+    "chapter": 264,
+    "sequence": 13670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be2fed08abdc8a7f"
+  },
+  "findings": []
+}

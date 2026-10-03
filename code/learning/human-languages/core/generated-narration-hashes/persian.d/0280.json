@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:67589c408062f12d",
+  "lessonIds": [
+    "FA-C280-shatranj",
+    "FA-C280-kuhnavardi",
+    "FA-C280-konsert",
+    "FA-C280-honar",
+    "FA-C280-naqqashi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch280.txt",
+  "json": "persian/narration/ch280.json",
+  "textHash": "fnv1a64:7b2a07d13fedc338",
+  "jsonHash": "fnv1a64:16ea450b59f3049b",
+  "findings": []
+}

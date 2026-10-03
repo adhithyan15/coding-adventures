@@ -6,6 +6,7 @@
   140-252 bring it to 1,202 headwords and 218 verbs at or below A2, so no
   blocker remains below B1.
 - `tests/level-gate.test.ts`: the climb history records Persian's climb to A2.
-- `tests/corpus/persian.test.ts`: the lesson pin moves 689 -> 1304, and
-  `tests/integration.test.ts` the Persian chapter list 135 -> 252, across the
-  spine chapters and three tranches.
+- `tests/corpus/persian.test.ts`: the lesson pin moves 689 -> 1482, and
+  `tests/integration.test.ts` the Persian chapter list 135 -> 286, across the
+  spine chapters and four tranches. The fourth tranche (chapters 253-286)
+  lifts Persian to 1,372 headwords and 268 verbs at or below A2.

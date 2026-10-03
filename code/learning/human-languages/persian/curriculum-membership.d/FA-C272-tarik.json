@@ -1,0 +1,11 @@
+{
+  "id": "FA-C272-tarik",
+  "pathSegment": "FA-PATH-272-SEFAT272",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-272-SEFAT272",
+      "order": 4
+    }
+  ]
+}

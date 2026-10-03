@@ -1,0 +1,19 @@
+{
+  "chapter": 268,
+  "title": "Gate, Awning, Greenhouse, Street gutter, Pavement",
+  "label": "ch:fa-gate-awning-greenhouse-street-gutter-pavement",
+  "canDo": "I can say a gate, an awning, a greenhouse, a street gutter and a pavement.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "FA-C268-piyaderow",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 268: I can say a gate, an awning, a greenhouse, a street gutter and a pavement.",
+    "assesses": [
+      "FA-LEX-C268-MAKAN268-03",
+      "FA-LEX-C268-MAKAN268-04",
+      "FA-LEX-C268-MAKAN268-05"
+    ]
+  }
+}

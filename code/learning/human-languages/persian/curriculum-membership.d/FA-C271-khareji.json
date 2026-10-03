@@ -1,0 +1,11 @@
+{
+  "id": "FA-C271-khareji",
+  "pathSegment": "FA-PATH-271-SEFAT271",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-271-SEFAT271",
+      "order": 1
+    }
+  ]
+}

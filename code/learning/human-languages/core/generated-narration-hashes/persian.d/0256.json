@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:055a3e9fc6a502e1",
+  "lessonIds": [
+    "FA-C256-danlod-kardan",
+    "FA-C256-estefade-kardan",
+    "FA-C256-talash-kardan",
+    "FA-C256-mosaferat-kardan",
+    "FA-C256-bazneshaste-shodan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch256.txt",
+  "json": "persian/narration/ch256.json",
+  "textHash": "fnv1a64:f3efc19291e361d3",
+  "jsonHash": "fnv1a64:8489b23725ab3eb7",
+  "findings": []
+}

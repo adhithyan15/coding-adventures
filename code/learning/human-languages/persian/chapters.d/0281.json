@@ -1,0 +1,19 @@
+{
+  "chapter": 281,
+  "title": "Screw, Saw, Spade, Glue, Wood",
+  "label": "ch:fa-screw-saw-spade-glue-wood",
+  "canDo": "I can say a screw, a saw, a spade, glue and wood.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C281-chub",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 281: I can say a screw, a saw, a spade, glue and wood.",
+    "assesses": [
+      "FA-LEX-C281-CHIZ281-03",
+      "FA-LEX-C281-CHIZ281-04",
+      "FA-LEX-C281-CHIZ281-05"
+    ]
+  }
+}

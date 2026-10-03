@@ -1,0 +1,19 @@
+{
+  "chapter": 282,
+  "title": "Pipe, Frame, Mattress, Tap, Handle",
+  "label": "ch:fa-pipe-frame-mattress-tap-handle",
+  "canDo": "I can say a pipe, a frame, a mattress, a tap and a handle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C282-dastgire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 282: I can say a pipe, a frame, a mattress, a tap and a handle.",
+    "assesses": [
+      "FA-LEX-C282-CHIZ282-03",
+      "FA-LEX-C282-CHIZ282-04",
+      "FA-LEX-C282-CHIZ282-05"
+    ]
+  }
+}
