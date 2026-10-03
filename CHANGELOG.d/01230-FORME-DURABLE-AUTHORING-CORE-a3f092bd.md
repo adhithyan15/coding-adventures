@@ -6,3 +6,6 @@
   persistence and hostile-input validation.
 - Add immutable semantic edits, atomic compare-and-swap autosave, serialized
   concurrent commands, and bounded undo/redo that survives restarts.
+- Bound hostile input before allocation, consume descriptor snapshots without
+  invoking getters, and define cancellation and indeterminate adapter behavior
+  at the atomic storage commit point.

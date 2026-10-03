@@ -150,6 +150,16 @@ describe("the authoring project codec", () => {
     invalid({ ...sparse, documents });
     invalid({ ...project(), surprise: true });
     invalid({ ...project(), site: { ...project().site, token: "secret" } });
+
+    let reads = 0;
+    const text = new Proxy({ type: "text", value: "safe" }, {
+      get(target, key, receiver) { reads += 1; return Reflect.get(target, key, receiver); },
+    });
+    const proxied = project({
+      documents: [{ ...project().documents[0]!, body: { type: "document", children: [{ type: "paragraph", children: [text] }] } }],
+    });
+    expect(validateAuthoringProject(proxied).documents[0]!.body.children).toHaveLength(1);
+    expect(reads).toBe(0);
   });
 
   it("rejects malformed identities, strings, slugs, URLs, and references", () => {
@@ -237,5 +247,52 @@ describe("the authoring project codec", () => {
     })).toThrow(/limit/i);
     expect(() => validateAuthoringProject(project(), null as never)).toThrow(/plain object/i);
     expect(() => validateAuthoringProject(project(), { surprise: 1 } as never)).toThrow(/unknown field/i);
+  });
+
+  it("bounds hostile descriptor and canonical-byte preflight shapes", () => {
+    const withSymbol = project() as unknown as Record<PropertyKey, unknown>;
+    withSymbol[Symbol("hidden")] = true;
+    invalid(withSymbol);
+
+    const hidden = project() as unknown as Record<string, unknown>;
+    Object.defineProperty(hidden, "hidden", { value: true });
+    invalid(hidden);
+
+    invalid({ ...project(), title: (() => "not JSON") as never });
+    invalid({ ...project(), schemaVersion: Number.NaN });
+    invalid({ ...project(), title: "line\nbreak" });
+
+    const decorated = project().documents.slice() as unknown[] & { extra?: boolean };
+    decorated.extra = true;
+    invalid({ ...project(), documents: decorated });
+
+    const revoked = Proxy.revocable(project(), {});
+    revoked.revoke();
+    invalid(revoked.proxy);
+    invalid(new Proxy(project(), { ownKeys() { throw new Error("trap"); } }));
+
+    let nested: unknown = { value: true };
+    for (let index = 0; index < 150; index += 1) nested = { nested };
+    invalid({ ...project(), extra: nested });
+
+    const unicode = project({ title: "A\"\\©€😀" });
+    expect(validateAuthoringProject(unicode).title).toBe("A\"\\©€😀");
+    expect(() => validateAuthoringProject(project({ title: "x".repeat(300) }), { maxJsonBytes: 200 })).toThrow(/bytes/i);
+
+    const input = {} as Record<string, unknown>;
+    Object.defineProperty(input, "projectId", { enumerable: true, value: PROJECT_ID });
+    Object.defineProperty(input, "title", { enumerable: true, get: () => "trap" });
+    expect(() => createAuthoringProject(input as never)).toThrow(/accessor/i);
+
+    const limitAccessor = {} as Record<string, unknown>;
+    Object.defineProperty(limitAccessor, "maxDepth", { enumerable: true, get: () => 1 });
+    expect(() => validateAuthoringProject(project(), limitAccessor as never)).toThrow(/enumerable data/i);
+    const revokedLimits = Proxy.revocable({}, {});
+    revokedLimits.revoke();
+    expect(() => validateAuthoringProject(project(), revokedLimits.proxy)).toThrow(/inspected safely/i);
+    expect(() => validateAuthoringProject(project(), Object.create(null))).toThrow(/plain string-keyed/i);
+    expect(() => createAuthoringProject(null as never)).toThrow(/plain object/i);
+    expect(() => createAuthoringProject({ projectId: PROJECT_ID } as never)).toThrow(/missing/i);
+    invalid({ ...project(), documents: [{ ...project().documents[0]!, body: { type: "document", children: [{ type: "paragraph", children: [{ type: "mystery" }] }] } }] });
   });
 });

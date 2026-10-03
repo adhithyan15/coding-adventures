@@ -14,5 +14,8 @@ All notable changes to this package will be documented in this file.
 - Added bounded persistent undo/redo with exact restart recovery.
 - Added fail-closed handling for malformed, unsupported, oversized,
   non-canonical, conflicting, cancelled, and failed storage operations.
+- Added allocation-bounded canonical byte preflight, descriptor-only hostile
+  input snapshots, strict command scalars, and an explicit storage commit-point
+  contract with indeterminate-result recovery.
 - Added 95%+ statement/line and 90%+ branch coverage across hostile inputs,
   every command, persistence failures, history truncation, and recovery.

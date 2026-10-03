@@ -9,7 +9,8 @@ export type AuthoringErrorCode =
   | "DOCUMENT_NOT_FOUND"
   | "NO_UNDO"
   | "NO_REDO"
-  | "STORAGE_CONFLICT";
+  | "STORAGE_CONFLICT"
+  | "STORAGE_INDETERMINATE";
 
 export class AuthoringError extends Error {
   readonly code: AuthoringErrorCode;

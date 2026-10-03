@@ -1,6 +1,6 @@
 /** Atomic authoring transactions with persistent bounded undo and redo. */
 
-import { canonicalJson, encodeCanonicalJson } from "./canonical.js";
+import { canonicalJson, canonicalJsonByteLength, encodeCanonicalJson } from "./canonical.js";
 import { AuthoringError, invalidState } from "./error.js";
 import { resolveLimits, validateAuthoringProject } from "./project.js";
 import type {
@@ -32,20 +32,30 @@ function validateRevision(value: unknown, source: "stored" | "adapter"): string 
 }
 
 function exactObject(value: unknown, keys: readonly string[]): Record<string, unknown> {
-  if (value === null || typeof value !== "object" || Object.getPrototypeOf(value) !== Object.prototype) invalidState("expected a plain object");
-  const descriptors = Object.getOwnPropertyDescriptors(value);
-  const actual = Object.keys(descriptors).sort();
+  if (value === null || typeof value !== "object") invalidState("expected a plain object");
+  let prototype: object | null;
+  let descriptors: PropertyDescriptorMap;
+  try {
+    prototype = Object.getPrototypeOf(value);
+    descriptors = Object.getOwnPropertyDescriptors(value);
+  } catch {
+    invalidState("object cannot be inspected safely");
+  }
+  if (prototype! !== Object.prototype) invalidState("expected a plain object");
+  if (Reflect.ownKeys(descriptors!).some((key) => typeof key !== "string")) invalidState("stored object contains a symbol field");
+  const actual = Object.keys(descriptors!).sort();
   const expected = [...keys].sort();
   if (actual.length !== expected.length || actual.some((key, index) => key !== expected[index])) invalidState("stored object has missing or unknown fields");
-  if (Object.values(descriptors).some((item) => !("value" in item) || !item.enumerable)) invalidState("stored object contains an accessor or hidden field");
-  return value as Record<string, unknown>;
+  if (Object.values(descriptors!).some((item) => !("value" in item) || !item.enumerable)) invalidState("stored object contains an accessor or hidden field");
+  return Object.fromEntries(Object.entries(descriptors!).map(([key, descriptor]) => [key, descriptor.value]));
 }
 
-function decodeStored(stored: StoredAuthoringState, limits: AuthoringLimits): PersistedSession {
-  if (!(stored.bytes instanceof Uint8Array)) invalidState("stored bytes are not a Uint8Array");
-  if (stored.bytes.byteLength > limits.maxJsonBytes) invalidState("stored bytes exceed the hard byte limit");
+function decodeStored(stored: StoredAuthoringState, limits: AuthoringLimits): { readonly state: PersistedSession; readonly revision: string } {
+  const storedFields = exactObject(stored, ["bytes", "revision"]);
+  if (!(storedFields.bytes instanceof Uint8Array)) invalidState("stored bytes are not a Uint8Array");
+  if (storedFields.bytes.byteLength > limits.maxJsonBytes) invalidState("stored bytes exceed the hard byte limit");
   let text: string;
-  try { text = new TextDecoder("utf-8", { fatal: true }).decode(stored.bytes); } catch { invalidState("stored bytes are not valid UTF-8"); }
+  try { text = new TextDecoder("utf-8", { fatal: true }).decode(storedFields.bytes); } catch { invalidState("stored bytes are not valid UTF-8"); }
   let parsed: unknown;
   try { parsed = JSON.parse(text!); } catch { invalidState("stored bytes are not valid JSON"); }
   const node = exactObject(parsed, ["schemaVersion", "historyLimit", "cursor", "history"]);
@@ -63,8 +73,30 @@ function decodeStored(stored: StoredAuthoringState, limits: AuthoringLimits): Pe
     history,
   };
   if (canonicalJson(result) !== text!) invalidState("stored JSON is not canonical");
-  validateRevision(stored.revision, "stored");
-  return result;
+  return { state: result, revision: validateRevision(storedFields.revision, "stored") };
+}
+
+function snapshotStorage(value: unknown): AuthoringStorage {
+  if (value === null || typeof value !== "object") invalidState("storage adapter must be an object");
+  const method = (name: "load" | "compareAndSwap"): Function => {
+    let cursor: object | null = value;
+    for (let depth = 0; cursor !== null && depth < 16; depth += 1) {
+      let descriptor: PropertyDescriptor | undefined;
+      try { descriptor = Object.getOwnPropertyDescriptor(cursor, name); } catch { invalidState("storage adapter cannot be inspected safely"); }
+      if (descriptor !== undefined) {
+        if (!("value" in descriptor) || typeof descriptor.value !== "function") invalidState(`storage adapter ${name} must be a data method`);
+        return descriptor.value;
+      }
+      try { cursor = Object.getPrototypeOf(cursor); } catch { invalidState("storage adapter cannot be inspected safely"); }
+    }
+    invalidState(`storage adapter is missing ${name}`);
+  };
+  const load = method("load") as AuthoringStorage["load"];
+  const compareAndSwap = method("compareAndSwap") as AuthoringStorage["compareAndSwap"];
+  return {
+    load: load.bind(value),
+    compareAndSwap: compareAndSwap.bind(value),
+  };
 }
 
 function findDocument(project: AuthoringProject, id: string): number {
@@ -74,10 +106,21 @@ function findDocument(project: AuthoringProject, id: string): number {
 }
 
 function validateCommand(value: unknown): AuthoringCommand {
-  if (value === null || typeof value !== "object" || Object.getPrototypeOf(value) !== Object.prototype) {
+  if (value === null || typeof value !== "object") {
     throw new AuthoringError("INVALID_COMMAND", "Authoring commands must be plain objects.");
   }
-  const descriptors = Object.getOwnPropertyDescriptors(value);
+  let prototype: object | null;
+  try { prototype = Object.getPrototypeOf(value); } catch {
+    throw new AuthoringError("INVALID_COMMAND", "The authoring command cannot be inspected safely.");
+  }
+  if (prototype !== Object.prototype) throw new AuthoringError("INVALID_COMMAND", "Authoring commands must be plain objects.");
+  let descriptors: PropertyDescriptorMap;
+  try { descriptors = Object.getOwnPropertyDescriptors(value); } catch {
+    throw new AuthoringError("INVALID_COMMAND", "The authoring command cannot be inspected safely.");
+  }
+  if (Reflect.ownKeys(descriptors).some((key) => typeof key !== "string")) {
+    throw new AuthoringError("INVALID_COMMAND", "The authoring command contains a symbol field.");
+  }
   const typeDescriptor = descriptors.type;
   if (typeDescriptor === undefined || !("value" in typeDescriptor) || typeof typeDescriptor.value !== "string") {
     throw new AuthoringError("INVALID_COMMAND", "The authoring command type must be a data field.");
@@ -100,7 +143,27 @@ function validateCommand(value: unknown): AuthoringCommand {
   if (Object.values(descriptors).some((item) => !("value" in item) || !item.enumerable)) {
     throw new AuthoringError("INVALID_COMMAND", "The authoring command contains an accessor or hidden field.");
   }
-  return value as AuthoringCommand;
+  const snapshot = Object.fromEntries(Object.entries(descriptors).map(([key, descriptor]) => [key, descriptor.value])) as unknown as AuthoringCommand;
+  if (snapshot.type === "create-document" && typeof snapshot.activate !== "boolean") {
+    throw new AuthoringError("INVALID_COMMAND", "The create-document activate field must be a boolean.");
+  }
+  return snapshot;
+}
+
+function adapterRevision(value: unknown): string {
+  let fields: Record<string, unknown>;
+  try { fields = exactObject(value, ["revision"]); } catch {
+    throw new AuthoringError(
+      "STORAGE_INDETERMINATE",
+      "The storage adapter returned an invalid result after the commit point; reload before retrying.",
+    );
+  }
+  try { return validateRevision(fields.revision, "adapter"); } catch {
+    throw new AuthoringError(
+      "STORAGE_INDETERMINATE",
+      "The storage adapter returned an invalid revision after the commit point; reload before retrying.",
+    );
+  }
 }
 
 function applyCommand(project: AuthoringProject, command: AuthoringCommand, limits: AuthoringLimits): AuthoringProject {
@@ -203,10 +266,10 @@ class Session implements AuthoringSession {
   }
 
   async #persist(next: PersistedSession, signal?: AbortSignal): Promise<void> {
+    canonicalJsonByteLength(next, this.#limits.maxJsonBytes);
     const bytes = encodeCanonicalJson(next);
-    if (bytes.byteLength > this.#limits.maxJsonBytes) invalidState("session history exceeds the canonical byte limit");
     const saved = await this.#storage.compareAndSwap(this.#revision, bytes, signal);
-    const revision = validateRevision(saved?.revision, "adapter");
+    const revision = adapterRevision(saved);
     this.#state = next;
     this.#revision = revision;
   }
@@ -214,27 +277,38 @@ class Session implements AuthoringSession {
 
 export async function openAuthoringSession(options: OpenAuthoringSessionOptions): Promise<AuthoringSession> {
   if (options === null || typeof options !== "object") throw new AuthoringError("INVALID_STATE", "Session options must be an object.");
-  abortIfNeeded(options.signal);
-  const limits = resolveLimits(options.limits);
-  const loaded = await options.storage.load(options.signal);
+  let optionDescriptors: PropertyDescriptorMap;
+  try { optionDescriptors = Object.getOwnPropertyDescriptors(options); } catch { invalidState("session options cannot be inspected safely"); }
+  if (Object.values(optionDescriptors).some((item) => !("value" in item) || !item.enumerable)) invalidState("session options contain an accessor or hidden field");
+  if (Reflect.ownKeys(optionDescriptors).some((key) => typeof key !== "string")) invalidState("session options contain a symbol field");
+  const optionKeys = Object.keys(optionDescriptors);
+  if (!optionKeys.includes("storage") || optionKeys.some((key) => !["storage", "initialProject", "historyLimit", "limits", "signal"].includes(key))) invalidState("session options have missing or unknown fields");
+  const checked = Object.fromEntries(Object.entries(optionDescriptors).map(([key, descriptor]) => [key, descriptor.value])) as unknown as OpenAuthoringSessionOptions;
+  abortIfNeeded(checked.signal);
+  const limits = resolveLimits(checked.limits);
+  const storage = snapshotStorage(checked.storage);
+  let loaded: StoredAuthoringState | null | undefined;
+  try { loaded = await storage.load(checked.signal); } catch {
+    invalidState("storage adapter load failed");
+  }
   if (loaded === undefined || (loaded !== null && typeof loaded !== "object")) {
     invalidState("storage adapter returned an invalid loaded state");
   }
   if (loaded !== null) {
-    const state = decodeStored(loaded, limits);
-    return new Session(options.storage, state, validateRevision(loaded.revision, "stored"), limits);
+    const decoded = decodeStored(loaded, limits);
+    return new Session(storage, decoded.state, decoded.revision, limits);
   }
-  if (options.initialProject === undefined) {
+  if (checked.initialProject === undefined) {
     throw new AuthoringError("MISSING_INITIAL_PROJECT", "A missing authoring store requires an explicit initial project.");
   }
-  const historyLimit = options.historyLimit ?? 100;
+  const historyLimit = checked.historyLimit ?? 100;
   if (!Number.isSafeInteger(historyLimit) || historyLimit < 1 || historyLimit > limits.maxHistoryEntries) {
     throw new AuthoringError("INVALID_LIMIT", "The history limit must be a positive safe integer within the authoring limit.");
   }
-  const project = validateAuthoringProject(options.initialProject, limits);
+  const project = validateAuthoringProject(checked.initialProject, limits);
   const state: PersistedSession = { schemaVersion: 1, historyLimit, cursor: 0, history: [project] };
+  canonicalJsonByteLength(state, limits.maxJsonBytes);
   const bytes = encodeCanonicalJson(state);
-  if (bytes.byteLength > limits.maxJsonBytes) invalidState("initial session exceeds the canonical byte limit");
-  const saved = await options.storage.compareAndSwap(null, bytes, options.signal);
-  return new Session(options.storage, state, validateRevision(saved?.revision, "adapter"), limits);
+  const saved = await storage.compareAndSwap(null, bytes, checked.signal);
+  return new Session(storage, state, adapterRevision(saved), limits);
 }

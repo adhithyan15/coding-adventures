@@ -121,6 +121,13 @@ capabilities. Revisions are opaque to the core. An acknowledged adapter write
 must already be durable; debounced persistence belongs above semantic input
 coalescing, not below it.
 
+Adapter rejection strictly guarantees that no publication occurred.
+Cancellation is observed only before the atomic commit point; after
+publication an adapter must resolve successfully with the committed revision.
+If a successful commit returns a malformed result, the core reports
+`STORAGE_INDETERMINATE` and the shell must reload before retrying because
+durable state may have advanced.
+
 ## Development
 
 ```bash

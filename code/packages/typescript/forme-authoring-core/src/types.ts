@@ -103,6 +103,11 @@ export interface StoredAuthoringState {
 
 export interface AuthoringStorage {
   load(signal?: AbortSignal): Promise<StoredAuthoringState | null>;
+  /**
+   * Rejection guarantees no publication. Cancellation is honored only before
+   * the atomic commit point; after publication the adapter resolves with the
+   * new revision even if the signal becomes aborted.
+   */
   compareAndSwap(
     expectedRevision: string | null,
     bytes: Uint8Array,

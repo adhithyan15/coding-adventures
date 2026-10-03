@@ -141,6 +141,12 @@ stale expected revision; it must never silently overwrite another session.
 Adapters own filesystem, OPFS, or platform capabilities and must publish new
 bytes atomically. The core performs no ambient I/O.
 
+Any adapter rejection guarantees that no durable publication occurred.
+Cancellation is honored only before the atomic commit point; once bytes are
+published the adapter must resolve successfully with the new revision even if
+the signal becomes aborted. A malformed success result is indeterminate rather
+than a rollback: the shell must reload before it retries.
+
 Opening a missing store requires an explicit initial project and persists it
 through `expectedRevision: null`. Opening malformed or unsupported bytes fails
 closed without replacement. There is no "recover by resetting" behavior in

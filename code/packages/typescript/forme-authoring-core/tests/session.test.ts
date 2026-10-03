@@ -8,6 +8,7 @@ import {
   type AuthoringStorage,
   type StoredAuthoringState,
 } from "../src/index.js";
+import { canonicalJson, canonicalJsonByteLength } from "../src/canonical.js";
 
 const PROJECT_ID = "01952c0d-7e63-7000-8000-000000000001";
 const DOC_A = "01952c0d-7e63-7000-8000-000000000002";
@@ -269,7 +270,23 @@ describe("durable authoring sessions", () => {
 
     const invalidAdapterRevision = new MemoryStorage();
     invalidAdapterRevision.returnedRevision = "bad\u0007revision";
-    await expect(openAuthoringSession({ storage: invalidAdapterRevision, initialProject: initial() })).rejects.toMatchObject({ code: "INVALID_STATE" });
+    await expect(openAuthoringSession({ storage: invalidAdapterRevision, initialProject: initial() })).rejects.toMatchObject({ code: "STORAGE_INDETERMINATE" });
+  });
+
+  it("accepts cancellation only before the storage commit point", async () => {
+    const controller = new AbortController();
+    class CommitPointStorage extends MemoryStorage {
+      override async compareAndSwap(expectedRevision: string | null, bytes: Uint8Array): Promise<{ readonly revision: string }> {
+        const saved = await super.compareAndSwap(expectedRevision, bytes);
+        if (this.writes > 1) controller.abort(new Error("too late"));
+        return saved;
+      }
+    }
+    const storage = new CommitPointStorage();
+    const session = await openAuthoringSession({ storage, initialProject: initial() });
+    await session.dispatch({ type: "configure-site", title: "Committed", baseUrl: null, themeId: "forme-classless" }, controller.signal);
+    expect(session.project.title).toBe("Committed");
+    expect(controller.signal.aborted).toBe(true);
   });
 
   it("rejects an aborted open and a command that makes retained history too large", async () => {
@@ -301,6 +318,7 @@ describe("durable authoring sessions", () => {
     await expect(session.dispatch({ type: "remove-document", documentId: DOC_A })).rejects.toMatchObject({ code: "DOCUMENT_NOT_FOUND" });
     await expect(session.dispatch(null as never)).rejects.toMatchObject({ code: "INVALID_COMMAND" });
     await expect(session.dispatch({ type: "mystery" } as never)).rejects.toMatchObject({ code: "INVALID_COMMAND" });
+    await expect(session.dispatch({ type: "create-document", document: document(), activate: "false" } as never)).rejects.toMatchObject({ code: "INVALID_COMMAND" });
     await expect(session.dispatch({ type: "set-active-document", documentId: null, extra: true } as never)).rejects.toMatchObject({ code: "INVALID_COMMAND" });
     await expect(session.dispatch(Object.create({ type: "set-active-document", documentId: null }) as never)).rejects.toMatchObject({ code: "INVALID_COMMAND" });
     let reads = 0;
@@ -312,5 +330,55 @@ describe("durable authoring sessions", () => {
     await session.dispatch({ type: "create-document", document: document(), activate: false });
     await expect(session.dispatch({ type: "create-document", document: document(), activate: false })).rejects.toMatchObject({ code: "INVALID_PROJECT" });
     await expect(openAuthoringSession({ storage: new MemoryStorage(), initialProject: initial(), historyLimit: 0 })).rejects.toMatchObject({ code: "INVALID_LIMIT" });
+  });
+
+  it("fails closed on hostile option, command, storage, and adapter result shapes", async () => {
+    const accessorOptions = {} as Record<string, unknown>;
+    Object.defineProperty(accessorOptions, "storage", { enumerable: true, get: () => new MemoryStorage() });
+    await expect(openAuthoringSession(accessorOptions as never)).rejects.toMatchObject({ code: "INVALID_STATE" });
+    await expect(openAuthoringSession({ initialProject: initial() } as never)).rejects.toMatchObject({ code: "INVALID_STATE" });
+    await expect(openAuthoringSession({ storage: new MemoryStorage(), surprise: true } as never)).rejects.toMatchObject({ code: "INVALID_STATE" });
+
+    const symbolOptions = { storage: new MemoryStorage() } as Record<PropertyKey, unknown>;
+    symbolOptions[Symbol("hidden")] = true;
+    await expect(openAuthoringSession(symbolOptions as never)).rejects.toMatchObject({ code: "INVALID_STATE" });
+
+    await expect(openAuthoringSession({ storage: {} as never, initialProject: initial() })).rejects.toMatchObject({ code: "INVALID_STATE" });
+    const accessorStorage = {} as Record<string, unknown>;
+    Object.defineProperty(accessorStorage, "load", { get: () => async () => null });
+    Object.defineProperty(accessorStorage, "compareAndSwap", { value: async () => ({ revision: "x" }) });
+    await expect(openAuthoringSession({ storage: accessorStorage as never, initialProject: initial() })).rejects.toMatchObject({ code: "INVALID_STATE" });
+
+    const badResult: AuthoringStorage = {
+      async load() { return null; },
+      async compareAndSwap() { return null as never; },
+    };
+    await expect(openAuthoringSession({ storage: badResult, initialProject: initial() })).rejects.toMatchObject({ code: "STORAGE_INDETERMINATE" });
+
+    const revokedResult = Proxy.revocable({ bytes: new Uint8Array(), revision: "x" }, {});
+    revokedResult.revoke();
+    const hostileLoad: AuthoringStorage = {
+      async load() { return revokedResult.proxy; },
+      async compareAndSwap() { return { revision: "unused" }; },
+    };
+    await expect(openAuthoringSession({ storage: hostileLoad })).rejects.toMatchObject({ code: "INVALID_STATE" });
+
+    const storage = new MemoryStorage();
+    const session = await openAuthoringSession({ storage, initialProject: initial() });
+    const symbolCommand = { type: "set-active-document", documentId: null } as Record<PropertyKey, unknown>;
+    symbolCommand[Symbol("hidden")] = true;
+    await expect(session.dispatch(symbolCommand as never)).rejects.toMatchObject({ code: "INVALID_COMMAND" });
+    const revoked = Proxy.revocable({ type: "set-active-document", documentId: null }, {});
+    revoked.revoke();
+    await expect(session.dispatch(revoked.proxy as never)).rejects.toMatchObject({ code: "INVALID_COMMAND" });
+    const descriptorTrap = new Proxy({ type: "set-active-document", documentId: null }, { ownKeys() { throw new Error("trap"); } });
+    await expect(session.dispatch(descriptorTrap as never)).rejects.toMatchObject({ code: "INVALID_COMMAND" });
+    const accessorCommand = {} as Record<string, unknown>;
+    Object.defineProperty(accessorCommand, "type", { enumerable: true, value: "set-active-document" });
+    Object.defineProperty(accessorCommand, "documentId", { enumerable: true, get: () => null });
+    await expect(session.dispatch(accessorCommand as never)).rejects.toMatchObject({ code: "INVALID_COMMAND" });
+
+    expect(() => canonicalJson(undefined)).toThrow(/serialized/i);
+    expect(() => canonicalJsonByteLength(undefined, 10)).toThrow(/serialized/i);
   });
 });

@@ -37,6 +37,105 @@ interface WalkState {
   readonly limits: AuthoringLimits;
 }
 
+interface ByteBudget {
+  used: number;
+  readonly maximum: number;
+}
+
+function spendBytes(budget: ByteBudget, count: number, path: string): void {
+  budget.used += count;
+  if (budget.used > budget.maximum) invalidProject(path, `exceeds ${budget.maximum} canonical JSON bytes`);
+}
+
+function jsonStringBytes(value: string): number {
+  let bytes = 2;
+  for (let index = 0; index < value.length; index += 1) {
+    const unit = value.charCodeAt(index);
+    if (unit === 0x22 || unit === 0x5c || unit === 0x08 || unit === 0x09 || unit === 0x0a || unit === 0x0c || unit === 0x0d) bytes += 2;
+    else if (unit < 0x20) bytes += 6;
+    else if (unit < 0x80) bytes += 1;
+    else if (unit < 0x800) bytes += 2;
+    else if (unit >= 0xd800 && unit <= 0xdbff) {
+      const next = value.charCodeAt(index + 1);
+      if (next < 0xdc00 || next > 0xdfff) invalidProject("$", "contains a lone surrogate");
+      bytes += 4;
+      index += 1;
+    } else if (unit >= 0xdc00 && unit <= 0xdfff) invalidProject("$", "contains a lone surrogate");
+    else bytes += 3;
+  }
+  return bytes;
+}
+
+function ownDataSnapshot(value: object, path: string): Record<PropertyKey, unknown> {
+  let descriptors: PropertyDescriptorMap;
+  try {
+    descriptors = Object.getOwnPropertyDescriptors(value);
+  } catch {
+    invalidProject(path, "cannot be inspected safely");
+  }
+  let array = false;
+  try { array = Array.isArray(value); } catch { invalidProject(path, "cannot be inspected safely"); }
+  const result = Object.create(null) as Record<PropertyKey, unknown>;
+  for (const key of Reflect.ownKeys(descriptors!)) {
+    const descriptor = descriptors![key as keyof PropertyDescriptorMap]!;
+    if (!('value' in descriptor)) invalidProject(path, "contains an accessor field");
+    if (!descriptor.enumerable && !(array && key === "length")) invalidProject(path, "contains a hidden field");
+    Object.defineProperty(result, key, { value: descriptor.value, enumerable: true, configurable: true, writable: true });
+  }
+  return result;
+}
+
+/** Exact, allocation-bounded canonical JSON measurement and descriptor snapshot. */
+function preflightCanonicalSnapshot(value: unknown, limits: AuthoringLimits): unknown {
+  const budget: ByteBudget = { used: 0, maximum: limits.maxJsonBytes };
+  const seen = new WeakSet<object>();
+  const walk = (item: unknown, path: string, depth: number): unknown => {
+    if (depth > limits.maxDepth * 2 + 16) invalidProject(path, "exceeds the structural depth limit");
+    if (item === null) { spendBytes(budget, 4, path); return null; }
+    if (typeof item === "string") { spendBytes(budget, jsonStringBytes(item), path); return item; }
+    if (typeof item === "boolean") { spendBytes(budget, item ? 4 : 5, path); return item; }
+    if (typeof item === "number" && Number.isFinite(item)) { spendBytes(budget, JSON.stringify(item).length, path); return item; }
+    if (typeof item !== "object") invalidProject(path, "contains a non-JSON value");
+    if (seen.has(item)) invalidProject(path, "contains a cycle or shared object");
+    seen.add(item);
+    let isArray: boolean;
+    try { isArray = Array.isArray(item); } catch { invalidProject(path, "cannot be inspected safely"); }
+    const fields = ownDataSnapshot(item, path);
+    if (isArray!) {
+      const length = fields.length;
+      if (!Number.isSafeInteger(length) || (length as number) < 0) invalidProject(path, "has an invalid array length");
+      const keys = Reflect.ownKeys(fields);
+      if (keys.some((key) => typeof key !== "string") || keys.length !== (length as number) + 1) invalidProject(path, "has invalid array fields");
+      spendBytes(budget, 2 + Math.max(0, (length as number) - 1), path);
+      const result: unknown[] = [];
+      for (let index = 0; index < (length as number); index += 1) {
+        if (!Object.hasOwn(fields, String(index))) invalidProject(`${path}[${index}]`, "array is sparse");
+        result.push(walk(fields[String(index)], `${path}[${index}]`, depth + 1));
+      }
+      return result;
+    }
+    let prototype: object | null;
+    try { prototype = Object.getPrototypeOf(item); } catch { invalidProject(path, "cannot be inspected safely"); }
+    if (prototype !== Object.prototype) invalidProject(path, "expected a plain object");
+    const keys = Reflect.ownKeys(fields);
+    if (keys.some((key) => typeof key !== "string")) invalidProject(path, "contains a symbol field");
+    const names = (keys as string[]).sort();
+    spendBytes(budget, 2 + Math.max(0, names.length - 1), path);
+    const result: Record<string, unknown> = {};
+    for (const key of names) {
+      spendBytes(budget, jsonStringBytes(key) + 1, path);
+      Object.defineProperty(result, key, {
+        value: walk(fields[key], `${path}.${key}`, depth + 1),
+        enumerable: true,
+        configurable: true,
+        writable: true,
+      });
+    }
+    return result;
+  };
+  return walk(value, "$", 0);
+}
+
 function scalarLength(value: string): number {
   let length = 0;
   for (let index = 0; index < value.length; index += 1) {
@@ -75,34 +174,55 @@ function stringValue(
   return value;
 }
 
-function plainObject(value: unknown, path: string, keys: readonly string[], state?: WalkState): Record<string, unknown> {
-  if (value === null || typeof value !== "object" || Object.getPrototypeOf(value) !== Object.prototype) {
+function plainObjectSnapshot(value: unknown, path: string, state?: WalkState): Record<string, unknown> {
+  if (value === null || typeof value !== "object") {
     invalidProject(path, "expected a plain object");
   }
+  let prototype: object | null;
+  try { prototype = Object.getPrototypeOf(value); } catch { invalidProject(path, "cannot be inspected safely"); }
+  if (prototype !== Object.prototype) invalidProject(path, "expected a plain object");
   if (state !== undefined) {
     if (state.seen.has(value)) invalidProject(path, "contains a cycle or shared object");
     state.seen.add(value);
   }
-  const descriptors = Object.getOwnPropertyDescriptors(value);
-  const actual = Object.keys(descriptors).sort();
+  const snapshot = ownDataSnapshot(value, path);
+  const ownKeys = Reflect.ownKeys(snapshot);
+  if (ownKeys.some((key) => typeof key !== "string")) invalidProject(path, "contains a symbol field");
+  return snapshot as Record<string, unknown>;
+}
+
+function exactFields(snapshot: Record<string, unknown>, path: string, keys: readonly string[]): Record<string, unknown> {
+  const ownKeys = Reflect.ownKeys(snapshot);
+  const actual = (ownKeys as string[]).sort();
   const expected = [...keys].sort();
   if (actual.length !== expected.length || actual.some((key, index) => key !== expected[index])) {
     invalidProject(path, "has missing or unknown fields");
   }
-  for (const descriptor of Object.values(descriptors)) {
-    if (!("value" in descriptor) || !descriptor.enumerable) invalidProject(path, "contains an accessor or hidden field");
-  }
-  return value as Record<string, unknown>;
+  return snapshot as Record<string, unknown>;
+}
+
+function plainObject(value: unknown, path: string, keys: readonly string[], state?: WalkState): Record<string, unknown> {
+  return exactFields(plainObjectSnapshot(value, path, state), path, keys);
 }
 
 function denseArray(value: unknown, path: string, state: WalkState): readonly unknown[] {
-  if (!Array.isArray(value)) invalidProject(path, "expected an array");
-  if (state.seen.has(value)) invalidProject(path, "contains a cycle or shared array");
-  state.seen.add(value);
-  for (let index = 0; index < value.length; index += 1) {
-    if (!Object.hasOwn(value, index)) invalidProject(`${path}[${index}]`, "array is sparse");
+  let isArray: boolean;
+  try { isArray = Array.isArray(value); } catch { invalidProject(path, "cannot be inspected safely"); }
+  if (!isArray) invalidProject(path, "expected an array");
+  const array = value as object;
+  if (state.seen.has(array)) invalidProject(path, "contains a cycle or shared array");
+  state.seen.add(array);
+  const snapshot = ownDataSnapshot(array, path);
+  const length = snapshot.length;
+  if (!Number.isSafeInteger(length) || (length as number) < 0) invalidProject(path, "has an invalid array length");
+  const ownKeys = Reflect.ownKeys(snapshot);
+  if (ownKeys.some((key) => typeof key !== "string") || ownKeys.length !== (length as number) + 1) invalidProject(path, "has invalid array fields");
+  const result: unknown[] = [];
+  for (let index = 0; index < (length as number); index += 1) {
+    if (!Object.hasOwn(snapshot, String(index))) invalidProject(`${path}[${index}]`, "array is sparse");
+    result.push(snapshot[String(index)]);
   }
-  return value;
+  return result;
 }
 
 function uuid(value: unknown, path: string, limits: AuthoringLimits): string {
@@ -143,26 +263,26 @@ function inlineNodes(value: unknown, path: string, depth: number, state: WalkSta
 
 function inlineNode(value: unknown, path: string, depth: number, state: WalkState, inLink: boolean): InlineNode {
   countNode(state, path, depth);
-  if (value === null || typeof value !== "object") invalidProject(path, "expected an inline node");
-  const type = (value as { type?: unknown }).type;
+  const probe = plainObjectSnapshot(value, path, state);
+  const type = probe.type;
   switch (type) {
     case "text": {
-      const node = plainObject(value, path, ["type", "value"], state);
+      const node = exactFields(probe, path, ["type", "value"]);
       return { type, value: stringValue(node.value, `${path}.value`, state.limits.maxStringScalars, { allowNewline: true }) };
     }
     case "emphasis":
     case "strong":
     case "strikethrough": {
-      const node = plainObject(value, path, ["type", "children"], state);
+      const node = exactFields(probe, path, ["type", "children"]);
       return { type, children: inlineNodes(node.children, `${path}.children`, depth + 1, state, inLink) };
     }
     case "code_span": {
-      const node = plainObject(value, path, ["type", "value"], state);
+      const node = exactFields(probe, path, ["type", "value"]);
       return { type, value: stringValue(node.value, `${path}.value`, state.limits.maxStringScalars, { allowNewline: true }) };
     }
     case "link": {
       if (inLink) invalidProject(path, "links must not be nested");
-      const node = plainObject(value, path, ["type", "destination", "title", "children"], state);
+      const node = exactFields(probe, path, ["type", "destination", "title", "children"]);
       return {
         type,
         destination: safeDestination(node.destination, `${path}.destination`, state.limits),
@@ -171,7 +291,7 @@ function inlineNode(value: unknown, path: string, depth: number, state: WalkStat
       };
     }
     case "image": {
-      const node = plainObject(value, path, ["type", "destination", "title", "alt"], state);
+      const node = exactFields(probe, path, ["type", "destination", "title", "alt"]);
       return {
         type,
         destination: safeDestination(node.destination, `${path}.destination`, state.limits),
@@ -180,7 +300,7 @@ function inlineNode(value: unknown, path: string, depth: number, state: WalkStat
       };
     }
     case "autolink": {
-      const node = plainObject(value, path, ["type", "destination", "isEmail"], state);
+      const node = exactFields(probe, path, ["type", "destination", "isEmail"]);
       if (typeof node.isEmail !== "boolean") invalidProject(`${path}.isEmail`, "expected a boolean");
       return {
         type,
@@ -190,7 +310,7 @@ function inlineNode(value: unknown, path: string, depth: number, state: WalkStat
     }
     case "hard_break":
     case "soft_break":
-      plainObject(value, path, ["type"], state);
+      exactFields(probe, path, ["type"]);
       return { type };
     case "raw_inline":
       invalidProject(path, "raw inline nodes are not authorable");
@@ -215,22 +335,22 @@ function listChildren(value: unknown, path: string, depth: number, state: WalkSt
 
 function blockNode(value: unknown, path: string, depth: number, state: WalkState): BlockNode {
   countNode(state, path, depth);
-  if (value === null || typeof value !== "object") invalidProject(path, "expected a block node");
-  const type = (value as { type?: unknown }).type;
+  const probe = plainObjectSnapshot(value, path, state);
+  const type = probe.type;
   switch (type) {
     case "document":
       invalidProject(path, "a document node may appear only at the root");
     case "heading": {
-      const node = plainObject(value, path, ["type", "level", "children"], state);
+      const node = exactFields(probe, path, ["type", "level", "children"]);
       if (![1, 2, 3, 4, 5, 6].includes(node.level as number)) invalidProject(`${path}.level`, "expected a heading level from 1 through 6");
       return { type, level: node.level as 1 | 2 | 3 | 4 | 5 | 6, children: inlineNodes(node.children, `${path}.children`, depth + 1, state) };
     }
     case "paragraph": {
-      const node = plainObject(value, path, ["type", "children"], state);
+      const node = exactFields(probe, path, ["type", "children"]);
       return { type, children: inlineNodes(node.children, `${path}.children`, depth + 1, state) };
     }
     case "code_block": {
-      const node = plainObject(value, path, ["type", "language", "value"], state);
+      const node = exactFields(probe, path, ["type", "language", "value"]);
       const literal = stringValue(node.value, `${path}.value`, state.limits.maxStringScalars, { allowNewline: true });
       if (!literal.endsWith("\n")) invalidProject(`${path}.value`, "code blocks must end with a newline");
       return {
@@ -241,16 +361,16 @@ function blockNode(value: unknown, path: string, depth: number, state: WalkState
     }
     case "blockquote":
     case "list_item": {
-      const node = plainObject(value, path, ["type", "children"], state);
+      const node = exactFields(probe, path, ["type", "children"]);
       return { type, children: blockNodes(node.children, `${path}.children`, depth + 1, state) };
     }
     case "task_item": {
-      const node = plainObject(value, path, ["type", "checked", "children"], state);
+      const node = exactFields(probe, path, ["type", "checked", "children"]);
       if (typeof node.checked !== "boolean") invalidProject(`${path}.checked`, "expected a boolean");
       return { type, checked: node.checked, children: blockNodes(node.children, `${path}.children`, depth + 1, state) };
     }
     case "list": {
-      const node = plainObject(value, path, ["type", "ordered", "start", "tight", "children"], state);
+      const node = exactFields(probe, path, ["type", "ordered", "start", "tight", "children"]);
       if (typeof node.ordered !== "boolean") invalidProject(`${path}.ordered`, "expected a boolean");
       if (typeof node.tight !== "boolean") invalidProject(`${path}.tight`, "expected a boolean");
       if (node.ordered) {
@@ -265,10 +385,10 @@ function blockNode(value: unknown, path: string, depth: number, state: WalkState
       };
     }
     case "thematic_break":
-      plainObject(value, path, ["type"], state);
+      exactFields(probe, path, ["type"]);
       return { type };
     case "table": {
-      const node = plainObject(value, path, ["type", "align", "children"], state);
+      const node = exactFields(probe, path, ["type", "align", "children"]);
       const align = denseArray(node.align, `${path}.align`, state).map((item, index) => {
         if (item !== null && item !== "left" && item !== "right" && item !== "center") invalidProject(`${path}.align[${index}]`, "expected a table alignment");
         return item as TableAlignment;
@@ -304,13 +424,28 @@ function documentNode(value: unknown, path: string, state: WalkState): DocumentN
 }
 
 function resolveLimits(overrides: AuthoringLimitOverrides = {}): AuthoringLimits {
-  if (overrides === null || typeof overrides !== "object" || Object.getPrototypeOf(overrides) !== Object.prototype) {
+  if (overrides === null || typeof overrides !== "object") {
     throw new AuthoringError("INVALID_LIMIT", "Authoring limits must be a plain object.");
   }
-  for (const key of Object.keys(overrides)) {
+  let prototype: object | null;
+  let descriptors: PropertyDescriptorMap;
+  try {
+    prototype = Object.getPrototypeOf(overrides);
+    descriptors = Object.getOwnPropertyDescriptors(overrides);
+  } catch {
+    throw new AuthoringError("INVALID_LIMIT", "Authoring limits cannot be inspected safely.");
+  }
+  if (prototype! !== Object.prototype || Reflect.ownKeys(descriptors!).some((key) => typeof key !== "string")) {
+    throw new AuthoringError("INVALID_LIMIT", "Authoring limits must be a plain string-keyed object.");
+  }
+  if (Object.values(descriptors!).some((descriptor) => !("value" in descriptor) || !descriptor.enumerable)) {
+    throw new AuthoringError("INVALID_LIMIT", "Authoring limits must contain enumerable data fields.");
+  }
+  const snapshot = Object.fromEntries(Object.entries(descriptors!).map(([key, descriptor]) => [key, descriptor.value])) as AuthoringLimitOverrides;
+  for (const key of Object.keys(snapshot)) {
     if (!LIMIT_KEYS.includes(key as keyof AuthoringLimits)) throw new AuthoringError("INVALID_LIMIT", "Authoring limits contain an unknown field.");
   }
-  const result = { ...HARD_AUTHORING_LIMITS, ...overrides };
+  const result = { ...HARD_AUTHORING_LIMITS, ...snapshot };
   for (const key of LIMIT_KEYS) {
     const value = result[key];
     if (!Number.isSafeInteger(value) || value < 1 || value > HARD_AUTHORING_LIMITS[key]) {
@@ -344,8 +479,9 @@ function authoringDocument(value: unknown, path: string, limits: AuthoringLimits
 
 export function validateAuthoringProject(value: unknown, overrides: AuthoringLimitOverrides = {}): AuthoringProject {
   const limits = resolveLimits(overrides);
+  const snapshot = preflightCanonicalSnapshot(value, limits);
   const seen = new WeakSet<object>();
-  const node = plainObject(value, "$", ["schemaVersion", "projectId", "title", "site", "documents", "activeDocumentId"], { nodes: 0, seen, limits });
+  const node = plainObject(snapshot, "$", ["schemaVersion", "projectId", "title", "site", "documents", "activeDocumentId"], { nodes: 0, seen, limits });
   if (node.schemaVersion !== 1) invalidProject("$.schemaVersion", "expected version 1");
   const site = plainObject(node.site, "$.site", ["baseUrl", "themeId"], { nodes: 0, seen, limits });
   let baseUrl: string | null = null;
@@ -382,17 +518,21 @@ export function validateAuthoringProject(value: unknown, overrides: AuthoringLim
     documents,
     activeDocumentId,
   };
-  const byteLength = new TextEncoder().encode(canonicalJson(project)).byteLength;
-  if (byteLength > limits.maxJsonBytes) invalidProject("$", `exceeds ${limits.maxJsonBytes} canonical JSON bytes`);
   return deepFreeze(project);
 }
 
 export function createAuthoringProject(input: CreateAuthoringProjectInput, overrides: AuthoringLimitOverrides = {}): AuthoringProject {
+  if (input === null || typeof input !== "object") invalidProject("$input", "expected a plain object");
+  const snapshot = plainObjectSnapshot(input, "$input");
+  const keys = Object.keys(snapshot);
+  if (!keys.includes("projectId") || !keys.includes("title") || keys.some((key) => !["projectId", "title", "themeId"].includes(key))) {
+    invalidProject("$input", "has missing or unknown fields");
+  }
   return validateAuthoringProject({
     schemaVersion: 1,
-    projectId: input.projectId,
-    title: input.title,
-    site: { baseUrl: null, themeId: input.themeId ?? "forme-classless" },
+    projectId: snapshot.projectId,
+    title: snapshot.title,
+    site: { baseUrl: null, themeId: snapshot.themeId ?? "forme-classless" },
     documents: [],
     activeDocumentId: null,
   }, overrides);
