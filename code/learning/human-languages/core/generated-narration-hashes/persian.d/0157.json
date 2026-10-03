@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 157,
+  "sourceHash": "fnv1a64:62e27acd4ca9bf09",
+  "lessonIds": [
+    "FA-C157-bonbast",
+    "FA-C157-khabgah",
+    "FA-C157-zendan",
+    "FA-C157-bandar",
+    "FA-C157-dudkesh",
+    "FA-R157-first-pass-words-from-chapters-149-152",
+    "FA-R157-second-pass-words-from-chapters-153-157"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "persian/narration/ch157.txt",
+  "json": "persian/narration/ch157.json",
+  "textHash": "fnv1a64:651ebbc460cb435d",
+  "jsonHash": "fnv1a64:24c86f23b9a4bf65",
+  "findings": []
+}

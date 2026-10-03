@@ -1,0 +1,19 @@
+{
+  "chapter": 152,
+  "title": "This year, Daily, Monthly, Last, After",
+  "label": "ch:fa-this-year-daily-monthly-last-after",
+  "canDo": "I can say this year, daily, monthly, last and after.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "FA-C152-pas-az",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 152: I can say this year, daily, monthly, last and after.",
+    "assesses": [
+      "FA-LEX-C152-ZAMAN152-03",
+      "FA-LEX-C152-ZAMAN152-04",
+      "FA-LEX-C152-ZAMAN152-05"
+    ]
+  }
+}

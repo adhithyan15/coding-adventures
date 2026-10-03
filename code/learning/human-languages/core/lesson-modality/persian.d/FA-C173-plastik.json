@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C173-plastik",
+    "language": "persian",
+    "chapter": 173,
+    "sequence": 8890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b7c7eb6837ee3542"
+  },
+  "findings": []
+}

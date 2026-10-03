@@ -1,0 +1,11 @@
+{
+  "id": "FA-C146-negaran-budan",
+  "pathSegment": "FA-PATH-146-KONESH146",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-146-KONESH146",
+      "order": 4
+    }
+  ]
+}

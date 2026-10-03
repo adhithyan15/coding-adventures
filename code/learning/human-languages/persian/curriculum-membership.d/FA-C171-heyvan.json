@@ -1,0 +1,11 @@
+{
+  "id": "FA-C171-heyvan",
+  "pathSegment": "FA-PATH-171-CHIZ171",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-171-CHIZ171",
+      "order": 2
+    }
+  ]
+}

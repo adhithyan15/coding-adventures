@@ -1,0 +1,19 @@
+{
+  "chapter": 170,
+  "title": "Affection, Anger, Tears, Temper, Personality",
+  "label": "ch:fa-affection-anger-tears-temper-personality",
+  "canDo": "I can say affection, anger, tears, temper and personality.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C170-shakhsiyat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 170: I can say affection, anger, tears, temper and personality.",
+    "assesses": [
+      "FA-LEX-C170-CHIZ170-03",
+      "FA-LEX-C170-CHIZ170-04",
+      "FA-LEX-C170-CHIZ170-05"
+    ]
+  }
+}

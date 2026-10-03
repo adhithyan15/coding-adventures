@@ -1,0 +1,11 @@
+{
+  "id": "FA-C174-kabinet",
+  "pathSegment": "FA-PATH-174-CHIZ174",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-174-CHIZ174",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:8e6e41100f296f77",
+  "lessonIds": [
+    "FA-C158-agar",
+    "FA-C158-vali",
+    "FA-C158-be-khater-e",
+    "FA-C158-natije",
+    "FA-C158-moshkel"
+  ],
+  "tex": "persian/book/chapters/ch158-if-but-because-of-result-problem.tex"
+}

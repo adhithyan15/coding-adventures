@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:e33a4eb690940bd1",
+  "lessonIds": [
+    "FA-C168-sayt",
+    "FA-C168-ramz",
+    "FA-C168-pasport",
+    "FA-C168-viza",
+    "FA-C168-form"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch168.txt",
+  "json": "persian/narration/ch168.json",
+  "textHash": "fnv1a64:059f942f565b3a90",
+  "jsonHash": "fnv1a64:078bcda009ed7c4d",
+  "findings": []
+}

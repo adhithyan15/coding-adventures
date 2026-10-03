@@ -1,0 +1,19 @@
+{
+  "chapter": 174,
+  "title": "Kitchen cabinet, Kitchen sink, Colander, Sugar bowl, Salt cellar",
+  "label": "ch:fa-kitchen-cabinet-kitchen-sink-colander-sugar-bowl-salt-cellar",
+  "canDo": "I can say a kitchen cabinet, a kitchen sink, a colander, a sugar bowl and a salt cellar.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C174-namakdan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 174: I can say a kitchen cabinet, a kitchen sink, a colander, a sugar bowl and a salt cellar.",
+    "assesses": [
+      "FA-LEX-C174-CHIZ174-03",
+      "FA-LEX-C174-CHIZ174-04",
+      "FA-LEX-C174-CHIZ174-05"
+    ]
+  }
+}

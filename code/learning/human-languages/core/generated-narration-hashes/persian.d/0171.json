@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 171,
+  "sourceHash": "fnv1a64:4355be907533a0df",
+  "lessonIds": [
+    "FA-C171-narges",
+    "FA-C171-goldan",
+    "FA-C171-heyvan",
+    "FA-C171-khorus",
+    "FA-C171-gonjeshk"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch171.txt",
+  "json": "persian/narration/ch171.json",
+  "textHash": "fnv1a64:6351a087ae36426b",
+  "jsonHash": "fnv1a64:2214f3018f162d1a",
+  "findings": []
+}

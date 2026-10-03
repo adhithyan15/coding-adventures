@@ -1,0 +1,11 @@
+{
+  "id": "FA-C173-parche",
+  "pathSegment": "FA-PATH-173-CHIZ173",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-173-CHIZ173",
+      "order": 3
+    }
+  ]
+}

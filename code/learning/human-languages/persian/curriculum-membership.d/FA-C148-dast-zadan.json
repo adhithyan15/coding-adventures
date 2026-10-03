@@ -1,0 +1,11 @@
+{
+  "id": "FA-C148-dast-zadan",
+  "pathSegment": "FA-PATH-148-KONESH148",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-148-KONESH148",
+      "order": 0
+    }
+  ]
+}

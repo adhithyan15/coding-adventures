@@ -1,0 +1,19 @@
+{
+  "chapter": 146,
+  "title": "To remember, To guess, To prefer, To seem, To be worried",
+  "label": "ch:fa-to-remember-to-guess-to-prefer-to-seem-to-be-worried",
+  "canDo": "I can say to remember, to guess, to prefer, to seem and to be worried.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C146-negaran-budan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 146: I can say to remember, to guess, to prefer, to seem and to be worried.",
+    "assesses": [
+      "FA-LEX-C146-KONESH146-03",
+      "FA-LEX-C146-KONESH146-04",
+      "FA-LEX-C146-KONESH146-05"
+    ]
+  }
+}

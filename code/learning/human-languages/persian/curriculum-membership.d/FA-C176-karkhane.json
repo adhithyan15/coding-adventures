@@ -1,0 +1,11 @@
+{
+  "id": "FA-C176-karkhane",
+  "pathSegment": "FA-PATH-176-KAR176",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-176-KAR176",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 150,
+  "title": "Body, Heel, Throat, Wound, Pill",
+  "label": "ch:fa-body-heel-throat-wound-pill",
+  "canDo": "I can say the body, a heel, the throat, a wound and a pill.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FA-C150-qors",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 150: I can say the body, a heel, the throat, a wound and a pill.",
+    "assesses": [
+      "FA-LEX-C150-SALAMAT150-03",
+      "FA-LEX-C150-SALAMAT150-04",
+      "FA-LEX-C150-SALAMAT150-05"
+    ]
+  }
+}

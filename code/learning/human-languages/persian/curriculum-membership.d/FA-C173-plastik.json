@@ -1,0 +1,11 @@
+{
+  "id": "FA-C173-plastik",
+  "pathSegment": "FA-PATH-173-CHIZ173",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-173-CHIZ173",
+      "order": 2
+    }
+  ]
+}

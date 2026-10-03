@@ -1,0 +1,11 @@
+{
+  "id": "FA-C146-tarjih-dadan",
+  "pathSegment": "FA-PATH-146-KONESH146",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-146-KONESH146",
+      "order": 2
+    }
+  ]
+}

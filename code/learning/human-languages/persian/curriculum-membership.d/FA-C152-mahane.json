@@ -1,0 +1,11 @@
+{
+  "id": "FA-C152-mahane",
+  "pathSegment": "FA-PATH-152-ZAMAN152",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-152-ZAMAN152",
+      "order": 2
+    }
+  ]
+}

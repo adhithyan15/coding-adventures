@@ -1,0 +1,19 @@
+{
+  "chapter": 175,
+  "title": "Lighter, Dustpan, Socket, Vacuum cleaner, Washing machine",
+  "label": "ch:fa-lighter-dustpan-socket-vacuum-cleaner-washing-machine",
+  "canDo": "I can say a lighter, a dustpan, a socket, a vacuum cleaner and a washing machine.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C175-lebasshuyi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 175: I can say a lighter, a dustpan, a socket, a vacuum cleaner and a washing machine.",
+    "assesses": [
+      "FA-LEX-C175-CHIZ175-03",
+      "FA-LEX-C175-CHIZ175-04",
+      "FA-LEX-C175-CHIZ175-05"
+    ]
+  }
+}

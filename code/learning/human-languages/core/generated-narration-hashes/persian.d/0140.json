@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:5f49d5a0be0d9960",
+  "lessonIds": [
+    "FA-C140-baz-kardan",
+    "FA-C140-pak-kardan",
+    "FA-C140-roshan-kardan",
+    "FA-C140-khamush-kardan",
+    "FA-C140-bidar-shodan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch140.txt",
+  "json": "persian/narration/ch140.json",
+  "textHash": "fnv1a64:df5cd72d76f3d22e",
+  "jsonHash": "fnv1a64:9d86dddfe9728101",
+  "findings": []
+}

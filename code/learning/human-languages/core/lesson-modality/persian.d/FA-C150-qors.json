@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C150-qors",
+    "language": "persian",
+    "chapter": 150,
+    "sequence": 7700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9afaf370e6e5ff30"
+  },
+  "findings": []
+}

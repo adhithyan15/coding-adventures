@@ -1,0 +1,11 @@
+{
+  "id": "FA-C168-pasport",
+  "pathSegment": "FA-PATH-168-CHIZ168",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-168-CHIZ168",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:db3f8602ba43a51d",
+  "lessonIds": [
+    "FA-C154-forushgah",
+    "FA-C154-supermarket",
+    "FA-C154-qassabi",
+    "FA-C154-kafe",
+    "FA-C154-matab"
+  ],
+  "tex": "persian/book/chapters/ch154-store-supermarket-butcher-s-shop-cafe-doctor-s-surgery.tex"
+}

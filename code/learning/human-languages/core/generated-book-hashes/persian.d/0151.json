@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:3c18bd7abdd8c5b7",
+  "lessonIds": [
+    "FA-C151-taval",
+    "FA-C151-jush",
+    "FA-C151-pomad",
+    "FA-C151-qatre",
+    "FA-C151-kapsul"
+  ],
+  "tex": "persian/book/chapters/ch151-blister-pimple-ointment-drop-capsule.tex"
+}

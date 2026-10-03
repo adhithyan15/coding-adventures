@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:0722127ffc12510f",
+  "lessonIds": [
+    "FA-C167-bastani",
+    "FA-C167-shokolat",
+    "FA-C167-biskuit",
+    "FA-C167-nushabe",
+    "FA-C167-morabba"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch167.txt",
+  "json": "persian/narration/ch167.json",
+  "textHash": "fnv1a64:8fdd82097a1b021f",
+  "jsonHash": "fnv1a64:462dde7e525b7eac",
+  "findings": []
+}

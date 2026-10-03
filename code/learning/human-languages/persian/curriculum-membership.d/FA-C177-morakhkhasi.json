@@ -1,0 +1,11 @@
+{
+  "id": "FA-C177-morakhkhasi",
+  "pathSegment": "FA-PATH-177-KAR177",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-177-KAR177",
+      "order": 2
+    }
+  ]
+}

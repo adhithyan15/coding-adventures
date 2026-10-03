@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:8f4bb819baf145b8",
+  "lessonIds": [
+    "FA-C173-noqre",
+    "FA-C173-mes",
+    "FA-C173-plastik",
+    "FA-C173-parche",
+    "FA-C173-charm"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch173.txt",
+  "json": "persian/narration/ch173.json",
+  "textHash": "fnv1a64:c744b774492fa209",
+  "jsonHash": "fnv1a64:8600a7990dfb2614",
+  "findings": []
+}

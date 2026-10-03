@@ -1,0 +1,11 @@
+{
+  "id": "FA-C144-edame-dadan",
+  "pathSegment": "FA-PATH-144-KONESH144",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-144-KONESH144",
+      "order": 3
+    }
+  ]
+}

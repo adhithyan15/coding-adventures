@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:2c709d5f0905c809",
+  "lessonIds": [
+    "FA-C150-badan",
+    "FA-C150-pashne",
+    "FA-C150-galu",
+    "FA-C150-zakhm",
+    "FA-C150-qors"
+  ],
+  "tex": "persian/book/chapters/ch150-body-heel-throat-wound-pill.tex"
+}

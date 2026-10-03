@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:9d81924c54272730",
+  "lessonIds": [
+    "FA-C153-nime-shab",
+    "FA-C153-pish",
+    "FA-C153-sepas",
+    "FA-C153-balakhare",
+    "FA-C153-haftegi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch153.txt",
+  "json": "persian/narration/ch153.json",
+  "textHash": "fnv1a64:e003e6c92cb2a92f",
+  "jsonHash": "fnv1a64:55efbe8fb3476945",
+  "findings": []
+}

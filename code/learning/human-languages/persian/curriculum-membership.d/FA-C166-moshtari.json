@@ -1,0 +1,11 @@
+{
+  "id": "FA-C166-moshtari",
+  "pathSegment": "FA-PATH-166-CHIZ166",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-166-CHIZ166",
+      "order": 1
+    }
+  ]
+}

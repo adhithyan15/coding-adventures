@@ -1,0 +1,11 @@
+{
+  "id": "FA-C159-makhsusan",
+  "pathSegment": "FA-PATH-159-CHERA159",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-159-CHERA159",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 156,
+  "title": "Well, Hut, Mill, Underground water channel, Small shop",
+  "label": "ch:fa-well-hut-mill-underground-water-channel-small-shop",
+  "canDo": "I can say a well, a hut, a mill, an underground water channel and a small shop.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "FA-C156-dokkan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 156: I can say a well, a hut, a mill, an underground water channel and a small shop.",
+    "assesses": [
+      "FA-LEX-C156-MAKAN156-03",
+      "FA-LEX-C156-MAKAN156-04",
+      "FA-LEX-C156-MAKAN156-05"
+    ]
+  }
+}

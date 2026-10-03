@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C140-pak-kardan",
+    "language": "persian",
+    "chapter": 140,
+    "sequence": 7150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8952d0fc9646fb0d"
+  },
+  "findings": []
+}

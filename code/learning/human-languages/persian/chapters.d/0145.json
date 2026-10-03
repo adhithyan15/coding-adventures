@@ -1,0 +1,19 @@
+{
+  "chapter": 145,
+  "title": "To apologise, To look after, To accompany, To believe, To call",
+  "label": "ch:fa-to-apologise-to-look-after-to-accompany-to-believe-to-call",
+  "canDo": "I can say to apologise, to look after, to accompany, to believe and to call.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C145-seda-zadan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 145: I can say to apologise, to look after, to accompany, to believe and to call.",
+    "assesses": [
+      "FA-LEX-C145-KONESH145-03",
+      "FA-LEX-C145-KONESH145-04",
+      "FA-LEX-C145-KONESH145-05"
+    ]
+  }
+}

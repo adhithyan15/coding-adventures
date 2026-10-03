@@ -1,0 +1,11 @@
+{
+  "id": "FA-C170-akhlaq",
+  "pathSegment": "FA-PATH-170-CHIZ170",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-170-CHIZ170",
+      "order": 3
+    }
+  ]
+}

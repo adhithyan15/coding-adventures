@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:28ef66bd04e1c8ee",
+  "lessonIds": [
+    "FA-C150-badan",
+    "FA-C150-pashne",
+    "FA-C150-galu",
+    "FA-C150-zakhm",
+    "FA-C150-qors"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch150.txt",
+  "json": "persian/narration/ch150.json",
+  "textHash": "fnv1a64:4c08340d57eac351",
+  "jsonHash": "fnv1a64:53d742aed08de3c1",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 164,
+  "title": "Better, Successful, Blunt, Rough, Uncrowded",
+  "label": "ch:fa-better-successful-blunt-rough-uncrowded",
+  "canDo": "I can say better, successful, blunt, rough and uncrowded.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FA-C164-khalvat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 164: I can say better, successful, blunt, rough and uncrowded.",
+    "assesses": [
+      "FA-LEX-C164-SEFAT164-03",
+      "FA-LEX-C164-SEFAT164-04",
+      "FA-LEX-C164-SEFAT164-05"
+    ]
+  }
+}

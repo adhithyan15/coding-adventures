@@ -1,0 +1,19 @@
+{
+  "chapter": 173,
+  "title": "Silver, Copper, Plastic, Cloth, Leather",
+  "label": "ch:fa-silver-copper-plastic-cloth-leather",
+  "canDo": "I can say silver, copper, plastic, cloth and leather.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C173-charm",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 173: I can say silver, copper, plastic, cloth and leather.",
+    "assesses": [
+      "FA-LEX-C173-CHIZ173-03",
+      "FA-LEX-C173-CHIZ173-04",
+      "FA-LEX-C173-CHIZ173-05"
+    ]
+  }
+}

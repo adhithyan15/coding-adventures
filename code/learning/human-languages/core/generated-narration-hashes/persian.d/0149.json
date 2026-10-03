@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:321d89244019f61f",
+  "lessonIds": [
+    "FA-C149-hadar-dadan",
+    "FA-C149-sarfejuyi-kardan",
+    "FA-C149-taqsim-kardan",
+    "FA-C149-moqayese-kardan",
+    "FA-C149-entezar-dashtan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch149.txt",
+  "json": "persian/narration/ch149.json",
+  "textHash": "fnv1a64:3e7b14fd468b0d2b",
+  "jsonHash": "fnv1a64:3c92ca37e39c9067",
+  "findings": []
+}

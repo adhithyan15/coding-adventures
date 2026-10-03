@@ -1,0 +1,11 @@
+{
+  "id": "FA-C140-pak-kardan",
+  "pathSegment": "FA-PATH-140-KONESH140",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-140-KONESH140",
+      "order": 1
+    }
+  ]
+}

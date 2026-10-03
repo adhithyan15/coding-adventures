@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C144-edame-dadan",
+    "language": "persian",
+    "chapter": 144,
+    "sequence": 7370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15935c4e4e4e7f9c"
+  },
+  "findings": []
+}

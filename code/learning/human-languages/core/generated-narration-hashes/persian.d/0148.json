@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:fdba0681b574dfff",
+  "lessonIds": [
+    "FA-C148-dast-zadan",
+    "FA-C148-chort-zadan",
+    "FA-C148-tormoz-gereftan",
+    "FA-C148-panchar-shodan",
+    "FA-C148-gir-kardan",
+    "FA-R148-first-pass-words-from-chapters-140-143",
+    "FA-R148-second-pass-words-from-chapters-144-148"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "persian/narration/ch148.txt",
+  "json": "persian/narration/ch148.json",
+  "textHash": "fnv1a64:c6a8d8941e43eaf3",
+  "jsonHash": "fnv1a64:3abbe9d6398a37e2",
+  "findings": []
+}

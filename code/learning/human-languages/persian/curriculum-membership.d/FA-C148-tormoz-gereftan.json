@@ -1,0 +1,11 @@
+{
+  "id": "FA-C148-tormoz-gereftan",
+  "pathSegment": "FA-PATH-148-KONESH148",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-148-KONESH148",
+      "order": 2
+    }
+  ]
+}

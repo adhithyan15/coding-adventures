@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C158-agar",
+    "language": "persian",
+    "chapter": 158,
+    "sequence": 8080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:222f533c0d888f20"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:ec6c850e06b0e4d8",
+  "lessonIds": [
+    "FA-C174-kabinet",
+    "FA-C174-zarfshuyi",
+    "FA-C174-abkesh",
+    "FA-C174-qandan",
+    "FA-C174-namakdan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch174.txt",
+  "json": "persian/narration/ch174.json",
+  "textHash": "fnv1a64:0f40f9d79b65c073",
+  "jsonHash": "fnv1a64:6373da10b362f1bc",
+  "findings": []
+}

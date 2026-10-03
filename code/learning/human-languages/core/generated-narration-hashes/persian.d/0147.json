@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 147,
+  "sourceHash": "fnv1a64:c5fb010f55d4c106",
+  "lessonIds": [
+    "FA-C147-gerdgiri-kardan",
+    "FA-C147-pahn-kardan",
+    "FA-C147-kubidan",
+    "FA-C147-malidan",
+    "FA-C147-pashidan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch147.txt",
+  "json": "persian/narration/ch147.json",
+  "textHash": "fnv1a64:c4a7c8c947b223e2",
+  "jsonHash": "fnv1a64:96dce141998abaf5",
+  "findings": []
+}

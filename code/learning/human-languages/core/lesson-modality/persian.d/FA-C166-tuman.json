@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C166-tuman",
+    "language": "persian",
+    "chapter": 166,
+    "sequence": 8480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9c4abe55f87e74f"
+  },
+  "findings": []
+}

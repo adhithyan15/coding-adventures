@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C177-dowre",
+    "language": "persian",
+    "chapter": 177,
+    "sequence": 9110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f7d8b148c61a5a07"
+  },
+  "findings": []
+}

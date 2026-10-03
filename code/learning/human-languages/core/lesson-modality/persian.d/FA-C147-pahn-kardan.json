@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C147-pahn-kardan",
+    "language": "persian",
+    "chapter": 147,
+    "sequence": 7500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b89831c8c6138435"
+  },
+  "findings": []
+}

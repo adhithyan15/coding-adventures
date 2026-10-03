@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 143,
+  "sourceHash": "fnv1a64:bd66d67a8ab944f1",
+  "lessonIds": [
+    "FA-C143-qurt-dadan",
+    "FA-C143-faramush-kardan",
+    "FA-C143-yad-dadan",
+    "FA-C143-por-kardan",
+    "FA-C143-tahvil-dadan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch143.txt",
+  "json": "persian/narration/ch143.json",
+  "textHash": "fnv1a64:719421b96b2dd0e9",
+  "jsonHash": "fnv1a64:c6456d8ed83ad5bd",
+  "findings": []
+}

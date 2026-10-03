@@ -1,0 +1,11 @@
+{
+  "id": "FA-C144-tayp-kardan",
+  "pathSegment": "FA-PATH-144-KONESH144",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-144-KONESH144",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:8ac07cb9b485cbc4",
+  "lessonIds": [
+    "FA-C145-puzesh-khastan",
+    "FA-C145-negahdari-kardan",
+    "FA-C145-hamrahi-kardan",
+    "FA-C145-bavar-kardan",
+    "FA-C145-seda-zadan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch145.txt",
+  "json": "persian/narration/ch145.json",
+  "textHash": "fnv1a64:aab999df7df08756",
+  "jsonHash": "fnv1a64:222af05bf34da04a",
+  "findings": []
+}

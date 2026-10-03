@@ -1,0 +1,11 @@
+{
+  "id": "FA-C178-karname",
+  "pathSegment": "FA-PATH-178-KAR178",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-178-KAR178",
+      "order": 4
+    }
+  ]
+}

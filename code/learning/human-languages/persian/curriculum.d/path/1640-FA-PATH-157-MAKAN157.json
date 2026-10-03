@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-157-MAKAN157",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "FA-EXT-157-MAKAN157"
+  ],
+  "after": []
+}

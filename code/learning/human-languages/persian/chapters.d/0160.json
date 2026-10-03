@@ -1,0 +1,19 @@
+{
+  "chapter": 160,
+  "title": "Motive, Meaning, Intention, Event, Luck",
+  "label": "ch:fa-motive-meaning-intention-event-luck",
+  "canDo": "I can say a motive, a meaning, an intention, an event and luck.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "FA-C160-shans",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 160: I can say a motive, a meaning, an intention, an event and luck.",
+    "assesses": [
+      "FA-LEX-C160-CHERA160-03",
+      "FA-LEX-C160-CHERA160-04",
+      "FA-LEX-C160-CHERA160-05"
+    ]
+  }
+}

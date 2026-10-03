@@ -1,0 +1,19 @@
+{
+  "chapter": 148,
+  "title": "To touch, To doze, To brake, To get a flat tyre, To get stuck",
+  "label": "ch:fa-to-touch-to-doze-to-brake-to-get-a-flat-tyre-to-get-stuck",
+  "canDo": "I can say to touch, to doze, to brake, to get a flat tyre and to get stuck.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-R148-second-pass-words-from-chapters-144-148",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 148: I can say to touch, to doze, to brake, to get a flat tyre and to get stuck.",
+    "assesses": [
+      "FA-LEX-C148-KONESH148-03",
+      "FA-LEX-C148-KONESH148-04",
+      "FA-LEX-C148-KONESH148-05"
+    ]
+  }
+}

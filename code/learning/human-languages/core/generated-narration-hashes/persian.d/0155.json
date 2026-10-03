@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 155,
+  "sourceHash": "fnv1a64:7dccb6b464e347a2",
+  "lessonIds": [
+    "FA-C155-dabirestan",
+    "FA-C155-kalantari",
+    "FA-C155-shahrdari",
+    "FA-C155-sefarat",
+    "FA-C155-gomrok"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch155.txt",
+  "json": "persian/narration/ch155.json",
+  "textHash": "fnv1a64:1402866e25b93cb3",
+  "jsonHash": "fnv1a64:cd885581e3ed0994",
+  "findings": []
+}

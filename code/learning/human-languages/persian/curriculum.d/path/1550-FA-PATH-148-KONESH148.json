@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-148-KONESH148",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "before": [],
+  "inline": [
+    "FA-EXT-148-KONESH148"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:4e768be178fbdb44",
+  "lessonIds": [
+    "FA-C163-rangarang",
+    "FA-C163-nazok",
+    "FA-C163-saf",
+    "FA-C163-kharab",
+    "FA-C163-mokhtalef"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch163.txt",
+  "json": "persian/narration/ch163.json",
+  "textHash": "fnv1a64:e6cc91da09c8ec13",
+  "jsonHash": "fnv1a64:16806f3d6f330507",
+  "findings": []
+}

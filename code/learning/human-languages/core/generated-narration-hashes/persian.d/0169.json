@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:309f4d4abc04c305",
+  "lessonIds": [
+    "FA-C169-bozorgsal",
+    "FA-C169-hamkelasi",
+    "FA-C169-mizban",
+    "FA-C169-doshman",
+    "FA-C169-mardom"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch169.txt",
+  "json": "persian/narration/ch169.json",
+  "textHash": "fnv1a64:6096d76fde5c651c",
+  "jsonHash": "fnv1a64:9d26ed82e8bfb382",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C154-matab",
+  "pathSegment": "FA-PATH-154-MAKAN154",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-154-MAKAN154",
+      "order": 4
+    }
+  ]
+}

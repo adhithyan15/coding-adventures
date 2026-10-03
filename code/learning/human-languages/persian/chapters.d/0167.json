@@ -1,0 +1,19 @@
+{
+  "chapter": 167,
+  "title": "Ice cream, Chocolate, Biscuit, Soft drink, Jam",
+  "label": "ch:fa-ice-cream-chocolate-biscuit-soft-drink-jam",
+  "canDo": "I can say ice cream, chocolate, a biscuit, a soft drink and jam.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C167-morabba",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 167: I can say ice cream, chocolate, a biscuit, a soft drink and jam.",
+    "assesses": [
+      "FA-LEX-C167-CHIZ167-03",
+      "FA-LEX-C167-CHIZ167-04",
+      "FA-LEX-C167-CHIZ167-05"
+    ]
+  }
+}

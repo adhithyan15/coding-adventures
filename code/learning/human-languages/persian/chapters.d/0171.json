@@ -1,0 +1,19 @@
+{
+  "chapter": 171,
+  "title": "Narcissus, Vase, Animal, Rooster, Sparrow",
+  "label": "ch:fa-narcissus-vase-animal-rooster-sparrow",
+  "canDo": "I can say a narcissus, a vase, an animal, a rooster and a sparrow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C171-gonjeshk",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 171: I can say a narcissus, a vase, an animal, a rooster and a sparrow.",
+    "assesses": [
+      "FA-LEX-C171-CHIZ171-03",
+      "FA-LEX-C171-CHIZ171-04",
+      "FA-LEX-C171-CHIZ171-05"
+    ]
+  }
+}
