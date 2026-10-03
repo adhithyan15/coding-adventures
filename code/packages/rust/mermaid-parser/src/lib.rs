@@ -4656,6 +4656,11 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                 "anywhere" => diagram_ir::TreemapLineBreak::Anywhere,
                 _ => return Err(token_error(token, "treemap line-break must be auto, loose, normal, strict, or anywhere")),
             }),
+            "hyphens" => style.hyphens = Some(match value.to_ascii_lowercase().as_str() {
+                "none" => diagram_ir::TreemapHyphens::None,
+                "manual" => diagram_ir::TreemapHyphens::Manual,
+                _ => return Err(token_error(token, "treemap hyphens must be none or manual")),
+            }),
             "text-overflow" => style.text_overflow = Some(match value.to_ascii_lowercase().as_str() {
                 "clip" => diagram_ir::TreemapTextOverflow::Clip,
                 "ellipsis" => diagram_ir::TreemapTextOverflow::Ellipsis,
@@ -14815,6 +14820,21 @@ B//-A: reverse stick top
         }
         assert!(parse_treemap(
             "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent line-break:initial",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_manual_hyphenation_modes() {
+        for (value, expected) in [
+            ("none", diagram_ir::TreemapHyphens::None),
+            ("manual", diagram_ir::TreemapHyphens::Manual),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent hyphens:{value}");
+            let diagram = parse_treemap(&source).expect("supported hyphenation mode must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.hyphens), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent hyphens:auto",
         ).is_err());
     }
 

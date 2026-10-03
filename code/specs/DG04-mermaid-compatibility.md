@@ -561,6 +561,10 @@ Normal, break-all, and keep-all word-breaking modes respectively preserve
 Unicode opportunities, add grapheme opportunities, or suppress CJK-internal breaks.
 Auto, loose, normal, strict, and anywhere line-breaking modes preserve Unicode
 defaults, tailor small-kana opportunities, or add grapheme opportunities.
+None and manual hyphenation modes suppress discretionary breaks or expose
+authored soft hyphens as backend-neutral wrap opportunities. Manual soft
+hyphens remain invisible unless selected as a line ending; dictionary-backed
+automatic hyphenation remains explicitly unsupported.
 Clip and ellipsis text-overflow modes truncate oversized labels at grapheme
 boundaries, with ellipsis insertion remaining backend-neutral until shaping.
 Wrap and nowrap text-wrap modes independently enable or suppress soft wrapping

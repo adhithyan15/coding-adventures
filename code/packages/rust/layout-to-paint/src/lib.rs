@@ -252,6 +252,7 @@ where
                     text_breaks_anywhere(frame.node),
                     text_word_break(frame.node),
                     text_line_break(frame.node),
+                    text_hyphens(frame.node),
                     text_overflow(frame.node),
                     text_wraps(frame.node, tc.wrap),
                     text_wrap_style(frame.node),
@@ -531,6 +532,16 @@ fn text_line_break(node: &PositionedNode) -> TextLineBreak {
         Some(ExtValue::Str(value)) if value == "strict" => TextLineBreak::Strict,
         Some(ExtValue::Str(value)) if value == "anywhere" => TextLineBreak::Anywhere,
         _ => TextLineBreak::Auto,
+    }
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum TextHyphens { None, Manual }
+
+fn text_hyphens(node: &PositionedNode) -> TextHyphens {
+    match node.ext.get("text.hyphens") {
+        Some(ExtValue::Str(value)) if value == "none" => TextHyphens::None,
+        _ => TextHyphens::Manual,
     }
 }
 
@@ -1346,6 +1357,7 @@ fn emit_text_content<S, M, R>(
     breaks_anywhere: bool,
     word_break: TextWordBreak,
     line_break: TextLineBreak,
+    hyphens: TextHyphens,
     text_overflow: Option<TextOverflow>,
     wrap: bool,
     wrap_style: TextWrapStyle,
@@ -1408,12 +1420,13 @@ fn emit_text_content<S, M, R>(
                 breaks_anywhere,
                 word_break,
                 line_break,
+                hyphens,
                 wrap_style,
                 break_spaces,
                 direction,
             )
         } else {
-            vec![segment.to_string()]
+            vec![segment.replace('\u{ad}', "")]
         };
         let line_count = wrapped.len();
         for (line_index, line) in wrapped.into_iter().enumerate() {
@@ -1760,6 +1773,7 @@ fn wrap_line<S: TextShaper>(
     breaks_anywhere: bool,
     word_break: TextWordBreak,
     line_break: TextLineBreak,
+    hyphens: TextHyphens,
     wrap_style: TextWrapStyle,
     break_spaces: bool,
     direction: BaseDirection,
@@ -1767,17 +1781,19 @@ fn wrap_line<S: TextShaper>(
     if segment.is_empty() {
         return vec![String::new()];
     }
+    let visible_segment = segment.replace('\u{ad}', "");
     if max_width <= 0.0 {
-        return vec![segment.to_string()];
+        return vec![visible_segment];
     }
+    let wrapping_segment = if hyphens == TextHyphens::Manual { segment } else { &visible_segment };
     if break_spaces {
         return wrap_preserved_spaces(
-            shaper, handle, segment, size, max_width, letter_spacing, word_spacing, direction,
+            shaper, handle, &visible_segment, size, max_width, letter_spacing, word_spacing, direction,
         );
     }
     if word_break == TextWordBreak::BreakAll || line_break == TextLineBreak::Anywhere {
         return break_line_anywhere(
-            shaper, handle, segment, size, max_width, letter_spacing, word_spacing, direction,
+            shaper, handle, &visible_segment, size, max_width, letter_spacing, word_spacing, direction,
         );
     }
 
@@ -1785,9 +1801,9 @@ fn wrap_line<S: TextShaper>(
     // The greedy wrapper below intentionally collapses whitespace for paragraph
     // text, but ASCII art/code-like content should not be rewritten just because
     // it passed through UI04.
-    if let Ok(shaped) = shape_visual_line(shaper, handle, segment, size, word_spacing, direction) {
+    if let Ok(shaped) = shape_visual_line(shaper, handle, &visible_segment, size, word_spacing, direction) {
         if shaped_advance(&shaped, letter_spacing) <= max_width {
-            return vec![segment.to_string()];
+            return vec![visible_segment];
         }
     }
 
@@ -1795,11 +1811,13 @@ fn wrap_line<S: TextShaper>(
     let mut current = String::new();
     let mut current_width: f64 = 0.0;
 
+    let mut current_hyphen = false;
     for piece in paint_wrap_pieces(
-        segment,
+        wrapping_segment,
         direction,
         word_break == TextWordBreak::KeepAll,
         line_break,
+        hyphens == TextHyphens::Manual,
     ) {
         let word_width = shape_visual_line(shaper, handle, piece.value, size, word_spacing, direction)
             .map(|r| shaped_advance(&r, letter_spacing))
@@ -1807,6 +1825,7 @@ fn wrap_line<S: TextShaper>(
         if current.is_empty() {
             current.push_str(piece.value);
             current_width = word_width;
+            current_hyphen = piece.hyphen_after;
         } else {
             let separator = if piece.leading_space { " " } else { "" };
             let candidate = format!("{current}{separator}{}", piece.value);
@@ -1816,10 +1835,15 @@ fn wrap_line<S: TextShaper>(
             if candidate_width <= max_width {
                 current = candidate;
                 current_width = candidate_width;
+                current_hyphen = piece.hyphen_after;
             } else {
+                if current_hyphen {
+                    current.push('-');
+                }
                 lines.push(std::mem::take(&mut current));
                 current.push_str(piece.value);
                 current_width = word_width;
+                current_hyphen = piece.hyphen_after;
             }
         }
     }
@@ -1831,7 +1855,7 @@ fn wrap_line<S: TextShaper>(
         lines.push(String::new());
     }
     if wrap_style == TextWrapStyle::Balance && lines.len() > 1 {
-        let full_width = shape_visual_line(shaper, handle, segment, size, word_spacing, direction)
+        let full_width = shape_visual_line(shaper, handle, &visible_segment, size, word_spacing, direction)
             .map(|shaped| shaped_advance(&shaped, letter_spacing))
             .unwrap_or(max_width);
         let balanced_width = (full_width / lines.len() as f64).min(max_width);
@@ -1846,6 +1870,7 @@ fn wrap_line<S: TextShaper>(
             breaks_anywhere,
             word_break,
             line_break,
+            hyphens,
             TextWrapStyle::Auto,
             false,
             direction,
@@ -1992,6 +2017,7 @@ fn fit_text_overflow<S: TextShaper>(
 struct PaintWrapPiece<'a> {
     value: &'a str,
     leading_space: bool,
+    hyphen_after: bool,
 }
 
 fn paint_wrap_pieces(
@@ -1999,21 +2025,26 @@ fn paint_wrap_pieces(
     direction: BaseDirection,
     keep_all: bool,
     line_break: TextLineBreak,
+    manual_hyphens: bool,
 ) -> Vec<PaintWrapPiece<'_>> {
-    if keep_all {
-        return segment.split_whitespace().enumerate().map(|(index, value)| PaintWrapPiece {
-            value,
-            leading_space: index > 0,
-        }).collect();
-    }
     let flow = TextFlow::analyze(segment, direction);
-    let mut boundaries: Vec<_> = flow
-        .breaks
-        .iter()
-        .filter(|opportunity| opportunity.kind == text_flow::BreakKind::Allowed)
-        .map(|opportunity| opportunity.byte_index)
-        .collect();
-    if line_break == TextLineBreak::Loose {
+    let mut boundaries: Vec<_> = if keep_all {
+        segment.char_indices().filter_map(|(index, character)| {
+            character.is_whitespace().then_some(index + character.len_utf8())
+        }).collect()
+    } else {
+        flow.breaks
+            .iter()
+            .filter(|opportunity| opportunity.kind == text_flow::BreakKind::Allowed)
+            .map(|opportunity| opportunity.byte_index)
+            .collect()
+    };
+    if manual_hyphens {
+        boundaries.extend(segment.char_indices().filter_map(|(index, character)| {
+            (character == '\u{ad}').then_some(index + character.len_utf8())
+        }));
+    }
+    if !keep_all && line_break == TextLineBreak::Loose {
         boundaries.extend(flow.graphemes.iter().filter_map(|grapheme| {
             let start = grapheme.bytes.start;
             segment[start..].chars().next()
@@ -2021,7 +2052,7 @@ fn paint_wrap_pieces(
                 .filter(|character| is_small_kana_or_iteration_mark(*character))
                 .map(|_| start)
         }));
-    } else if line_break == TextLineBreak::Strict {
+    } else if !keep_all && line_break == TextLineBreak::Strict {
         boundaries.retain(|boundary| segment[*boundary..].chars().next()
             .is_none_or(|character| !is_small_kana_or_iteration_mark(character)));
     }
@@ -2036,7 +2067,8 @@ fn paint_wrap_pieces(
     for end in boundaries {
         let source = &segment[start..end];
         start = end;
-        let value = source.trim_matches(char::is_whitespace);
+        let hyphen_after = manual_hyphens && source.ends_with('\u{ad}');
+        let value = source.trim_matches(char::is_whitespace).trim_end_matches('\u{ad}');
         if value.is_empty() {
             pending_space = true;
             continue;
@@ -2044,6 +2076,7 @@ fn paint_wrap_pieces(
         pieces.push(PaintWrapPiece {
             value,
             leading_space: pending_space || source.chars().next().is_some_and(char::is_whitespace),
+            hyphen_after,
         });
         pending_space = source.chars().last().is_some_and(char::is_whitespace);
     }
@@ -3420,6 +3453,28 @@ mod tests {
             .filter(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))).count();
         assert_eq!(count(&normal_scene), 1);
         assert_eq!(count(&anywhere_scene), 3);
+    }
+
+    #[test]
+    fn manual_hyphens_render_only_at_authored_wrap_opportunities() {
+        let content = text_content("extra\u{ad}ordinary");
+        let mut manual = positioned_leaf(content.clone(), 0.0, 0.0, 48.0, 60.0);
+        manual.ext.insert("text.hyphens".into(), ExtValue::Str("manual".into()));
+        let mut none = positioned_leaf(content, 0.0, 0.0, 48.0, 60.0);
+        none.ext.insert("text.hyphens".into(), ExtValue::Str("none".into()));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let options = make_options(&shaper, &metrics, &resolver);
+        let glyph_lines = |node: &PositionedNode| layout_to_paint(node, &options).instructions
+            .into_iter().filter_map(|instruction| match instruction {
+                PaintInstruction::GlyphRun(run) => Some(run.glyphs.into_iter()
+                    .map(|glyph| char::from_u32(glyph.glyph_id).expect("fake glyph is a character"))
+                    .collect::<String>()),
+                _ => None,
+            }).collect::<Vec<_>>();
+        assert_eq!(glyph_lines(&manual), vec!["extra-", "ordinary"]);
+        assert_eq!(glyph_lines(&none), vec!["extraordinary"]);
     }
 
     #[test]
