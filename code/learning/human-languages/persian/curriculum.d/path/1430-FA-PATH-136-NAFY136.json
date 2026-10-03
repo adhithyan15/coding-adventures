@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-136-NAFY136",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "FA-EXT-136-NAFY136"
+  ],
+  "after": []
+}

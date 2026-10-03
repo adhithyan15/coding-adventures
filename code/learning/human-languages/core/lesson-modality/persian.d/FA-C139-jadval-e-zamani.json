@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C139-jadval-e-zamani",
+    "language": "persian",
+    "chapter": 139,
+    "sequence": 7070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:678a5bdacca087e4"
+  },
+  "findings": []
+}

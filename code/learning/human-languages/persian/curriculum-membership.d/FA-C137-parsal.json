@@ -1,0 +1,11 @@
+{
+  "id": "FA-C137-parsal",
+  "pathSegment": "FA-PATH-137-GOZASHTE137",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-137-GOZASHTE137",
+      "order": 2
+    }
+  ]
+}

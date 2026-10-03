@@ -1,0 +1,11 @@
+{
+  "id": "FA-C138-az-hala",
+  "pathSegment": "FA-PATH-138-AYANDE138",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-138-AYANDE138",
+      "order": 1
+    }
+  ]
+}

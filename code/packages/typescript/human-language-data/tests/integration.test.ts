@@ -237,7 +237,8 @@ describe("real curriculum", () => {
       // 78 -> 135: the A1 tranche, fifty-seven chapters of five words in six
       // runs (time, this and that, places, can, want, why, things, describing
       // words and verbs), each run closed by two reviews.
-    ).toEqual(Array.from({ length: 135 }, (_, i) => i + 1));
+      // 135 -> 139: chapters 136-139 realize the last four A2 spine nodes (negation and questions, the past, the future, practical texts).
+    ).toEqual(Array.from({ length: 139 }, (_, i) => i + 1));
     expect(
       books.books
         .find((book) => book.language === "urdu")

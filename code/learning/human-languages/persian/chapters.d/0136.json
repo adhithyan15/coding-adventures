@@ -1,0 +1,19 @@
+{
+  "chapter": 136,
+  "title": "Still, A Question Word, At All, Surely Not, When",
+  "label": "ch:fa-still-a-question-word-at-all-surely-not-when",
+  "canDo": "I can say what is not so, and ask yes-or-no and when questions.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "FA-C136-che-vaqt",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 136: I can say what is not so, and ask yes-or-no and when questions.",
+    "assesses": [
+      "FA-LEX-C136-NAFY136-03",
+      "FA-LEX-C136-NAFY136-04",
+      "FA-LEX-C136-NAFY136-05"
+    ]
+  }
+}

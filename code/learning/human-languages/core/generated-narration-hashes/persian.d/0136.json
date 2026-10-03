@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:217116fc7f4e0007",
+  "lessonIds": [
+    "FA-C136-hanuz",
+    "FA-C136-aya",
+    "FA-C136-aslan",
+    "FA-C136-magar",
+    "FA-C136-che-vaqt"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch136.txt",
+  "json": "persian/narration/ch136.json",
+  "textHash": "fnv1a64:4eb0a7d2403986c8",
+  "jsonHash": "fnv1a64:634f6829beb026bd",
+  "findings": []
+}

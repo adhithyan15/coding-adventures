@@ -1,0 +1,19 @@
+{
+  "chapter": 137,
+  "title": "Recently, Already, Last Year, Once, To Spend (Time)",
+  "label": "ch:fa-recently-already-last-year-once-to-spend-time",
+  "canDo": "I can say what happened, and when: recently, already, last year.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "FA-C137-separi-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 137: I can say what happened, and when: recently, already, last year.",
+    "assesses": [
+      "FA-LEX-C137-GOZASHTE137-03",
+      "FA-LEX-C137-GOZASHTE137-04",
+      "FA-LEX-C137-GOZASHTE137-05"
+    ]
+  }
+}
