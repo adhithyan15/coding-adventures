@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:62994451d6c58f40",
+  "lessonIds": [
+    "TE-C304-prakrti",
+    "TE-C304-krida",
+    "TE-C304-atagadu",
+    "TE-C304-kriket",
+    "TE-C304-cadarangam",
+    "TE-R304-first-pass-words-from-chapters-296-299",
+    "TE-R304-second-pass-words-from-chapters-300-304"
+  ],
+  "tex": "telugu/book/chapters/ch304-nature-sport-player-cricket-chess.tex"
+}

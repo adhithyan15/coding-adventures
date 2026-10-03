@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:dff20cf2a0a68398",
+  "lessonIds": [
+    "TE-C285-bedirincu",
+    "TE-C285-heccarincu",
+    "TE-C285-gamanincu",
+    "TE-C285-tarumu",
+    "TE-C285-karugu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch285.txt",
+  "json": "telugu/narration/ch285.json",
+  "textHash": "fnv1a64:cd8f8f725760499d",
+  "jsonHash": "fnv1a64:dbda5b7e2a547716",
+  "findings": []
+}

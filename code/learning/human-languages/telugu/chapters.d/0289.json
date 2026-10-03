@@ -1,0 +1,19 @@
+{
+  "chapter": 289,
+  "title": "Bhogi, Festival, Village fair, Celebration, Sunrise",
+  "label": "ch:te-bhogi-festival-village-fair-celebration-sunrise",
+  "canDo": "I can say Bhogi, a festival, a village fair, a celebration and sunrise.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TE-C289-suryodayam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 289: I can say Bhogi, a festival, a village fair, a celebration and sunrise.",
+    "assesses": [
+      "TE-LEX-C289-SAMAYAM289-03",
+      "TE-LEX-C289-SAMAYAM289-04",
+      "TE-LEX-C289-SAMAYAM289-05"
+    ]
+  }
+}

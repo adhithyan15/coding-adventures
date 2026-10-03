@@ -1,0 +1,11 @@
+{
+  "id": "TE-C280-jama-ceyu",
+  "pathSegment": "TE-PATH-280-KRIYA280",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-280-KRIYA280",
+      "order": 4
+    }
+  ]
+}

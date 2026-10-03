@@ -1,0 +1,11 @@
+{
+  "id": "TE-R314-first-pass-words-from-chapters-310-311",
+  "pathSegment": "TE-PATH-314-PANI314",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "TE-EXT-314-PANI314",
+      "order": 5
+    }
+  ]
+}

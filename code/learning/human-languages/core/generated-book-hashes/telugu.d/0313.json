@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:6a23aa47d64e9236",
+  "lessonIds": [
+    "TE-C313-suddamukka",
+    "TE-C313-palaka",
+    "TE-C313-balapam",
+    "TE-C313-sira",
+    "TE-C313-hajaru"
+  ],
+  "tex": "telugu/book/chapters/ch313-piece-of-chalk-slate-slate-pencil-ink-attendance.tex"
+}

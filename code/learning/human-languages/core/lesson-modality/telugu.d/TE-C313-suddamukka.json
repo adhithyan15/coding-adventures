@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C313-suddamukka",
+    "language": "telugu",
+    "chapter": 313,
+    "sequence": 15020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:627c930999248f62"
+  },
+  "findings": []
+}

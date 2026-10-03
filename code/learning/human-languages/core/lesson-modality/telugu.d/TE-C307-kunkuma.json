@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C307-kunkuma",
+    "language": "telugu",
+    "chapter": 307,
+    "sequence": 14740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6417cfda3ee6d55d"
+  },
+  "findings": []
+}

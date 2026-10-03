@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:eb2484028c0d0ce1",
+  "lessonIds": [
+    "TE-C305-yap",
+    "TE-C305-kibordu",
+    "TE-C305-lyaptap",
+    "TE-C305-byatari",
+    "TE-C305-vidiyo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch305.txt",
+  "json": "telugu/narration/ch305.json",
+  "textHash": "fnv1a64:6c90b5d8c2ad3ad3",
+  "jsonHash": "fnv1a64:4186233279f4812f",
+  "findings": []
+}

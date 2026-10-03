@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C302-mosali",
+    "language": "telugu",
+    "chapter": 302,
+    "sequence": 14470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9a88008c6e8abc7"
+  },
+  "findings": []
+}

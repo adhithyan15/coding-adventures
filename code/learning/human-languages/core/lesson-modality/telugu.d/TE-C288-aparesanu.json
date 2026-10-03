@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C288-aparesanu",
+    "language": "telugu",
+    "chapter": 288,
+    "sequence": 13710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:676d7779c8b1169b"
+  },
+  "findings": []
+}

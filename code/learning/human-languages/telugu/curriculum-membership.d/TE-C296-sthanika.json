@@ -1,0 +1,11 @@
+{
+  "id": "TE-C296-sthanika",
+  "pathSegment": "TE-PATH-296-GUNAM296",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-296-GUNAM296",
+      "order": 4
+    }
+  ]
+}

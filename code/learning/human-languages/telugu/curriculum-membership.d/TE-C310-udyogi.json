@@ -1,0 +1,11 @@
+{
+  "id": "TE-C310-udyogi",
+  "pathSegment": "TE-PATH-310-PANI310",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-310-PANI310",
+      "order": 4
+    }
+  ]
+}

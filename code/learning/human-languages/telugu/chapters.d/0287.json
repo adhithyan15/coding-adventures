@@ -1,0 +1,19 @@
+{
+  "chapter": 287,
+  "title": "Chest, Accident, Ambulance, Insurance, Emergency",
+  "label": "ch:te-chest-accident-ambulance-insurance-emergency",
+  "canDo": "I can say the chest, an accident, an ambulance, insurance and an emergency.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TE-C287-atyavasaram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 287: I can say the chest, an accident, an ambulance, insurance and an emergency.",
+    "assesses": [
+      "TE-LEX-C287-AROGYAM287-03",
+      "TE-LEX-C287-AROGYAM287-04",
+      "TE-LEX-C287-AROGYAM287-05"
+    ]
+  }
+}

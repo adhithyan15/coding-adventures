@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:56bff0347cc489f3",
+  "lessonIds": [
+    "TE-C299-sanagalu",
+    "TE-C299-avalu",
+    "TE-C299-kottimira",
+    "TE-C299-karivepaku",
+    "TE-C299-majjiga"
+  ],
+  "tex": "telugu/book/chapters/ch299-chickpeas-mustard-seeds-coriander-leaves-curry-leaves-buttermilk.tex"
+}

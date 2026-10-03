@@ -1,0 +1,19 @@
+{
+  "chapter": 310,
+  "title": "Purse, List, Half, Daily wages, Employee",
+  "label": "ch:te-purse-list-half-daily-wages-employee",
+  "canDo": "I can say a purse, a list, half, daily wages and an employee.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C310-udyogi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 310: I can say a purse, a list, half, daily wages and an employee.",
+    "assesses": [
+      "TE-LEX-C310-PANI310-03",
+      "TE-LEX-C310-PANI310-04",
+      "TE-LEX-C310-PANI310-05"
+    ]
+  }
+}

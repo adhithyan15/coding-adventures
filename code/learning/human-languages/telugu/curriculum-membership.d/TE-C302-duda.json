@@ -1,0 +1,11 @@
+{
+  "id": "TE-C302-duda",
+  "pathSegment": "TE-PATH-302-VASTUVU302",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-302-VASTUVU302",
+      "order": 1
+    }
+  ]
+}

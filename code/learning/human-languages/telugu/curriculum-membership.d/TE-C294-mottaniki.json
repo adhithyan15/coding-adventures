@@ -1,0 +1,11 @@
+{
+  "id": "TE-C294-mottaniki",
+  "pathSegment": "TE-PATH-294-KARANAM294",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-294-KARANAM294",
+      "order": 4
+    }
+  ]
+}

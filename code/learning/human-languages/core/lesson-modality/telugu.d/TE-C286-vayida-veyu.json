@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C286-vayida-veyu",
+    "language": "telugu",
+    "chapter": 286,
+    "sequence": 13590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2116fb34ab6a2c7"
+  },
+  "findings": []
+}

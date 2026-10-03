@@ -1,0 +1,11 @@
+{
+  "id": "TE-C308-varusa",
+  "pathSegment": "TE-PATH-308-VASTUVU308",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-308-VASTUVU308",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C298-masaka",
+  "pathSegment": "TE-PATH-298-GUNAM298",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-298-GUNAM298",
+      "order": 4
+    }
+  ]
+}

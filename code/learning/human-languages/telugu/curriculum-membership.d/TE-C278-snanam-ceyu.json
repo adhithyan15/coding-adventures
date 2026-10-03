@@ -1,0 +1,11 @@
+{
+  "id": "TE-C278-snanam-ceyu",
+  "pathSegment": "TE-PATH-278-KRIYA278",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-278-KRIYA278",
+      "order": 1
+    }
+  ]
+}

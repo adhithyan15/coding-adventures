@@ -6,3 +6,5 @@
   157-277 bring it to 1,245 headwords and 211 verbs at or below A2, so no
   blocker remains below B1.
 - `tests/level-gate.test.ts`: the climb history records Telugu's climb to A2.
+- The fourth tranche (chapters 278-314) lifts Telugu to 1,430 headwords and
+  256 verbs at or below A2.

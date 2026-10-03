@@ -1,0 +1,19 @@
+{
+  "chapter": 309,
+  "title": "Bund, Cattle, Pillar, Water tap, Flag",
+  "label": "ch:te-bund-cattle-pillar-water-tap-flag",
+  "canDo": "I can say a bund, cattle, a pillar, a water tap and a flag.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-R309-second-pass-words-from-chapters-307-309",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 309: I can say a bund, cattle, a pillar, a water tap and a flag.",
+    "assesses": [
+      "TE-LEX-C309-VASTUVU309-03",
+      "TE-LEX-C309-VASTUVU309-04",
+      "TE-LEX-C309-VASTUVU309-05"
+    ]
+  }
+}

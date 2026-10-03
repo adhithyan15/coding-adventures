@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C305-kibordu",
+    "language": "telugu",
+    "chapter": 305,
+    "sequence": 14610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:679ec0f5d69e111a"
+  },
+  "findings": []
+}

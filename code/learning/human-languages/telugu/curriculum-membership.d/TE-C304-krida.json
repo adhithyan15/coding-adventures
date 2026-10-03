@@ -1,0 +1,11 @@
+{
+  "id": "TE-C304-krida",
+  "pathSegment": "TE-PATH-304-VASTUVU304",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-304-VASTUVU304",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R295-second-pass-words-from-chapters-291-295",
+    "language": "telugu",
+    "chapter": 295,
+    "sequence": 14120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db97fe1301a8bb0c"
+  },
+  "findings": []
+}

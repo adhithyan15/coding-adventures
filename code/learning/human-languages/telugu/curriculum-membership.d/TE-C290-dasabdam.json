@@ -1,0 +1,11 @@
+{
+  "id": "TE-C290-dasabdam",
+  "pathSegment": "TE-PATH-290-SAMAYAM290",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-290-SAMAYAM290",
+      "order": 2
+    }
+  ]
+}

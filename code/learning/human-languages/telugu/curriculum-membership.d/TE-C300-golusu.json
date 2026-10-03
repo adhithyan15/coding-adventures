@@ -1,0 +1,11 @@
+{
+  "id": "TE-C300-golusu",
+  "pathSegment": "TE-PATH-300-VASTUVU300",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-300-VASTUVU300",
+      "order": 1
+    }
+  ]
+}

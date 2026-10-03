@@ -1,0 +1,19 @@
+{
+  "chapter": 313,
+  "title": "Piece of chalk, Slate, Slate pencil, Ink, Attendance",
+  "label": "ch:te-piece-of-chalk-slate-slate-pencil-ink-attendance",
+  "canDo": "I can say a piece of chalk, a slate, a slate pencil, ink and attendance.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C313-hajaru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 313: I can say a piece of chalk, a slate, a slate pencil, ink and attendance.",
+    "assesses": [
+      "TE-LEX-C313-PANI313-03",
+      "TE-LEX-C313-PANI313-04",
+      "TE-LEX-C313-PANI313-05"
+    ]
+  }
+}

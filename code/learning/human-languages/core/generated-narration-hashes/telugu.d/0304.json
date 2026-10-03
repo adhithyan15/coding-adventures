@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:1fff8c2479cf935b",
+  "lessonIds": [
+    "TE-C304-prakrti",
+    "TE-C304-krida",
+    "TE-C304-atagadu",
+    "TE-C304-kriket",
+    "TE-C304-cadarangam",
+    "TE-R304-first-pass-words-from-chapters-296-299",
+    "TE-R304-second-pass-words-from-chapters-300-304"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch304.txt",
+  "json": "telugu/narration/ch304.json",
+  "textHash": "fnv1a64:0a506ddec9c268d7",
+  "jsonHash": "fnv1a64:10a8099603a10e19",
+  "findings": []
+}

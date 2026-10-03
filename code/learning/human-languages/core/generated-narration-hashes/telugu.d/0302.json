@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:41d275d9578dc3a5",
+  "lessonIds": [
+    "TE-C302-eddu",
+    "TE-C302-duda",
+    "TE-C302-gorre",
+    "TE-C302-todelu",
+    "TE-C302-mosali"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch302.txt",
+  "json": "telugu/narration/ch302.json",
+  "textHash": "fnv1a64:b61b33ccc9aa2b18",
+  "jsonHash": "fnv1a64:8b8abe4294791e64",
+  "findings": []
+}

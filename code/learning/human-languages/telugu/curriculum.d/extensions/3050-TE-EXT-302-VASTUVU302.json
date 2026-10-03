@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-302-VASTUVU302",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an ox, a calf, a sheep, a wolf and a crocodile.",
+  "prerequisites": []
+}

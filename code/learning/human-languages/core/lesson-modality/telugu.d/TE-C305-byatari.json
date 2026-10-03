@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C305-byatari",
+    "language": "telugu",
+    "chapter": 305,
+    "sequence": 14630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e4aaa516f932efe0"
+  },
+  "findings": []
+}

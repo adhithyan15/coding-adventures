@@ -1,0 +1,19 @@
+{
+  "chapter": 281,
+  "title": "To cancel, To submit, To press, To get lost, To love",
+  "label": "ch:te-to-cancel-to-submit-to-press-to-get-lost-to-love",
+  "canDo": "I can say to cancel, to submit, to press, to get lost and to love.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C281-premincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 281: I can say to cancel, to submit, to press, to get lost and to love.",
+    "assesses": [
+      "TE-LEX-C281-KRIYA281-03",
+      "TE-LEX-C281-KRIYA281-04",
+      "TE-LEX-C281-KRIYA281-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C292-gudise",
+    "language": "telugu",
+    "chapter": 292,
+    "sequence": 13910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d7590584d533cd7"
+  },
+  "findings": []
+}

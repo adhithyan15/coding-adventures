@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:5d721e56aecf65d2",
+  "lessonIds": [
+    "TE-C280-ruddu",
+    "TE-C280-anduko",
+    "TE-C280-ceppu",
+    "TE-C280-cercu",
+    "TE-C280-jama-ceyu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch280.txt",
+  "json": "telugu/narration/ch280.json",
+  "textHash": "fnv1a64:5a967eb4cd07b709",
+  "jsonHash": "fnv1a64:1651e7ea374f1d1e",
+  "findings": []
+}

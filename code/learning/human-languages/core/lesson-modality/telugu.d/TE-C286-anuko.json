@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C286-anuko",
+    "language": "telugu",
+    "chapter": 286,
+    "sequence": 13630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:90c1753f55b67e57"
+  },
+  "findings": []
+}

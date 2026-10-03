@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:d1e490b9c136a879",
+  "lessonIds": [
+    "TE-C278-pattuko",
+    "TE-C278-snanam-ceyu",
+    "TE-C278-tayaru-ceyu",
+    "TE-C278-datu",
+    "TE-C278-nadupu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch278.txt",
+  "json": "telugu/narration/ch278.json",
+  "textHash": "fnv1a64:d2c0d80900c847f9",
+  "jsonHash": "fnv1a64:366ec0a37c6c85d7",
+  "findings": []
+}

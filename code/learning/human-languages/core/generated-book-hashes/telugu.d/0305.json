@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:e841b2248e751b2a",
+  "lessonIds": [
+    "TE-C305-yap",
+    "TE-C305-kibordu",
+    "TE-C305-lyaptap",
+    "TE-C305-byatari",
+    "TE-C305-vidiyo"
+  ],
+  "tex": "telugu/book/chapters/ch305-app-keyboard-laptop-battery-video.tex"
+}

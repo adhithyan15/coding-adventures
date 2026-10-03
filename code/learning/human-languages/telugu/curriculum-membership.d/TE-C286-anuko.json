@@ -1,0 +1,11 @@
+{
+  "id": "TE-C286-anuko",
+  "pathSegment": "TE-PATH-286-KRIYA286",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-286-KRIYA286",
+      "order": 4
+    }
+  ]
+}

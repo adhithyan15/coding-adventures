@@ -1,0 +1,19 @@
+{
+  "chapter": 303,
+  "title": "Thorn, Creeper, Bamboo, Sugarcane, Worship",
+  "label": "ch:te-thorn-creeper-bamboo-sugarcane-worship",
+  "canDo": "I can say a thorn, a creeper, bamboo, sugarcane and worship.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C303-puja",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 303: I can say a thorn, a creeper, bamboo, sugarcane and worship.",
+    "assesses": [
+      "TE-LEX-C303-VASTUVU303-03",
+      "TE-LEX-C303-VASTUVU303-04",
+      "TE-LEX-C303-VASTUVU303-05"
+    ]
+  }
+}

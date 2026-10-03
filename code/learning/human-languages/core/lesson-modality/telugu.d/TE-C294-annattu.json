@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C294-annattu",
+    "language": "telugu",
+    "chapter": 294,
+    "sequence": 14030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc468bd9aa6c9a0d"
+  },
+  "findings": []
+}

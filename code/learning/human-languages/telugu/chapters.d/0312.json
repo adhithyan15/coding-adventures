@@ -1,0 +1,19 @@
+{
+  "chapter": 312,
+  "title": "Story, Game, Film, Coach, Engineer",
+  "label": "ch:te-story-game-film-coach-engineer",
+  "canDo": "I can say a story, a game, a film, a coach and an engineer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C312-injaniru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 312: I can say a story, a game, a film, a coach and an engineer.",
+    "assesses": [
+      "TE-LEX-C312-PANI312-03",
+      "TE-LEX-C312-PANI312-04",
+      "TE-LEX-C312-PANI312-05"
+    ]
+  }
+}

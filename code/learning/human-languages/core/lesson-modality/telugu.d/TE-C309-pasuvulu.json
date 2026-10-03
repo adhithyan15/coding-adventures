@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C309-pasuvulu",
+    "language": "telugu",
+    "chapter": 309,
+    "sequence": 14810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fc6b3e1468b87b97"
+  },
+  "findings": []
+}

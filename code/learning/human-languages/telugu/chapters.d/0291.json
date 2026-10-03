@@ -1,0 +1,19 @@
+{
+  "chapter": 291,
+  "title": "South, Place, Border, Opposite, Around",
+  "label": "ch:te-south-place-border-opposite-around",
+  "canDo": "I can say south, a place, a border, opposite and around.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TE-C291-cuttu2",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 291: I can say south, a place, a border, opposite and around.",
+    "assesses": [
+      "TE-LEX-C291-STHALAM291-03",
+      "TE-LEX-C291-STHALAM291-04",
+      "TE-LEX-C291-STHALAM291-05"
+    ]
+  }
+}

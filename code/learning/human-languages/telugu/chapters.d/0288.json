@@ -1,0 +1,19 @@
+{
+  "chapter": 288,
+  "title": "Operation, Indigestion, Constipation, Diabetes, Blood pressure",
+  "label": "ch:te-operation-indigestion-constipation-diabetes-blood-pressure",
+  "canDo": "I can say an operation, indigestion, constipation, diabetes and blood pressure.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TE-C288-raktapotu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 288: I can say an operation, indigestion, constipation, diabetes and blood pressure.",
+    "assesses": [
+      "TE-LEX-C288-AROGYAM288-03",
+      "TE-LEX-C288-AROGYAM288-04",
+      "TE-LEX-C288-AROGYAM288-05"
+    ]
+  }
+}

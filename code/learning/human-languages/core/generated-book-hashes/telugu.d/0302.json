@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:041030ae1cd57486",
+  "lessonIds": [
+    "TE-C302-eddu",
+    "TE-C302-duda",
+    "TE-C302-gorre",
+    "TE-C302-todelu",
+    "TE-C302-mosali"
+  ],
+  "tex": "telugu/book/chapters/ch302-ox-calf-sheep-wolf-crocodile.tex"
+}

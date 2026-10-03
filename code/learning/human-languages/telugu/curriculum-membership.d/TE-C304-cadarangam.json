@@ -1,0 +1,11 @@
+{
+  "id": "TE-C304-cadarangam",
+  "pathSegment": "TE-PATH-304-VASTUVU304",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-304-VASTUVU304",
+      "order": 4
+    }
+  ]
+}

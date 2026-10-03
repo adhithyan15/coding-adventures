@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:f4de475c9197101d",
+  "lessonIds": [
+    "TE-C301-nighantuvu",
+    "TE-C301-bandi",
+    "TE-C301-ato",
+    "TE-C301-taksi",
+    "TE-C301-petrolu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch301.txt",
+  "json": "telugu/narration/ch301.json",
+  "textHash": "fnv1a64:1d8e26cc91acbd67",
+  "jsonHash": "fnv1a64:3dc472afef26f212",
+  "findings": []
+}

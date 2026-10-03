@@ -1,0 +1,19 @@
+{
+  "chapter": 285,
+  "title": "To threaten, To warn, To take note of, To chase, To melt",
+  "label": "ch:te-to-threaten-to-warn-to-take-note-of-to-chase-to-melt",
+  "canDo": "I can say to threaten, to warn, to take note of, to chase and to melt.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C285-karugu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 285: I can say to threaten, to warn, to take note of, to chase and to melt.",
+    "assesses": [
+      "TE-LEX-C285-KRIYA285-03",
+      "TE-LEX-C285-KRIYA285-04",
+      "TE-LEX-C285-KRIYA285-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C297-mondi",
+    "language": "telugu",
+    "chapter": 297,
+    "sequence": 14180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ac6b209922ffc556"
+  },
+  "findings": []
+}

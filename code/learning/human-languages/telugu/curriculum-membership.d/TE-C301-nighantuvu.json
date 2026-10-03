@@ -1,0 +1,11 @@
+{
+  "id": "TE-C301-nighantuvu",
+  "pathSegment": "TE-PATH-301-VASTUVU301",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-301-VASTUVU301",
+      "order": 0
+    }
+  ]
+}

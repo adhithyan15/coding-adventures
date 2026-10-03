@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C313-balapam",
+    "language": "telugu",
+    "chapter": 313,
+    "sequence": 15040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe2ce14e100a9d39"
+  },
+  "findings": []
+}

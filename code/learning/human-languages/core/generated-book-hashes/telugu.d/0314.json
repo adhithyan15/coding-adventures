@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:71ff32a86e41cdea",
+  "lessonIds": [
+    "TE-C314-mestri",
+    "TE-C314-plambaru",
+    "TE-C314-mekanikku",
+    "TE-C314-kapaladaru",
+    "TE-C314-palavadu",
+    "TE-R314-first-pass-words-from-chapters-310-311",
+    "TE-R314-second-pass-words-from-chapters-312-314"
+  ],
+  "tex": "telugu/book/chapters/ch314-mason-plumber-mechanic-watchman-milkman.tex"
+}

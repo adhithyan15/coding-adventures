@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-314-PANI314",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a mason, a plumber, a mechanic, a watchman and a milkman.",
+  "prerequisites": []
+}

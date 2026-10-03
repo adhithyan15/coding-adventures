@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:1f3aa01c8e345efc",
+  "lessonIds": [
+    "TE-C295-vijayam",
+    "TE-C295-akaram",
+    "TE-C295-endukaina",
+    "TE-C295-enduko",
+    "TE-C295-elagaina",
+    "TE-R295-first-pass-words-from-chapters-287-290",
+    "TE-R295-second-pass-words-from-chapters-291-295"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch295.txt",
+  "json": "telugu/narration/ch295.json",
+  "textHash": "fnv1a64:c586a8c660d381ba",
+  "jsonHash": "fnv1a64:387dc22d05a63b9e",
+  "findings": []
+}

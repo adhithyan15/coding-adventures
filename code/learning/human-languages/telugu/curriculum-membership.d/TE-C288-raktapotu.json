@@ -1,0 +1,11 @@
+{
+  "id": "TE-C288-raktapotu",
+  "pathSegment": "TE-PATH-288-AROGYAM288",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-288-AROGYAM288",
+      "order": 4
+    }
+  ]
+}

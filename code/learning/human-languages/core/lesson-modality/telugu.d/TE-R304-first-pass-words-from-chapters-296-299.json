@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R304-first-pass-words-from-chapters-296-299",
+    "language": "telugu",
+    "chapter": 304,
+    "sequence": 14580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69b3e74428054633"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:aa415dc517decaee",
+  "lessonIds": [
+    "TE-C314-mestri",
+    "TE-C314-plambaru",
+    "TE-C314-mekanikku",
+    "TE-C314-kapaladaru",
+    "TE-C314-palavadu",
+    "TE-R314-first-pass-words-from-chapters-310-311",
+    "TE-R314-second-pass-words-from-chapters-312-314"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch314.txt",
+  "json": "telugu/narration/ch314.json",
+  "textHash": "fnv1a64:495f253516af5693",
+  "jsonHash": "fnv1a64:2a49372b6fd9acd9",
+  "findings": []
+}

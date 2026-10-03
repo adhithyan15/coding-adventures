@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:616475778ab359b1",
+  "lessonIds": [
+    "TE-C303-mullu",
+    "TE-C303-tiga",
+    "TE-C303-veduru",
+    "TE-C303-ceraku",
+    "TE-C303-puja"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch303.txt",
+  "json": "telugu/narration/ch303.json",
+  "textHash": "fnv1a64:3e75b4c057904934",
+  "jsonHash": "fnv1a64:446974dd8430a502",
+  "findings": []
+}

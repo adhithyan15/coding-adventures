@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C299-sanagalu",
+    "language": "telugu",
+    "chapter": 299,
+    "sequence": 14280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8ea1b53467419c7"
+  },
+  "findings": []
+}

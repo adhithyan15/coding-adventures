@@ -1,0 +1,11 @@
+{
+  "id": "TE-C303-ceraku",
+  "pathSegment": "TE-PATH-303-VASTUVU303",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-303-VASTUVU303",
+      "order": 3
+    }
+  ]
+}

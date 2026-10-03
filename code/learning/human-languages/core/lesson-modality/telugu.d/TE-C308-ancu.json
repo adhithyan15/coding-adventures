@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C308-ancu",
+    "language": "telugu",
+    "chapter": 308,
+    "sequence": 14770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ff1b8aaf7873aed"
+  },
+  "findings": []
+}

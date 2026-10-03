@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:d82d3bb014fbc588",
+  "lessonIds": [
+    "TE-C279-koluko",
+    "TE-C279-ubbu",
+    "TE-C279-kallu-tirugu",
+    "TE-C279-taku",
+    "TE-C279-olucu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch279.txt",
+  "json": "telugu/narration/ch279.json",
+  "textHash": "fnv1a64:17d023da2714f7d9",
+  "jsonHash": "fnv1a64:cba6fc059ccef395",
+  "findings": []
+}

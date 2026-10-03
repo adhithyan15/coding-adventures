@@ -1,0 +1,19 @@
+{
+  "chapter": 306,
+  "title": "Steel, Cement, Leather, Cotton, Wool",
+  "label": "ch:te-steel-cement-leather-cotton-wool",
+  "canDo": "I can say steel, cement, leather, cotton and wool.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C306-unni",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 306: I can say steel, cement, leather, cotton and wool.",
+    "assesses": [
+      "TE-LEX-C306-VASTUVU306-03",
+      "TE-LEX-C306-VASTUVU306-04",
+      "TE-LEX-C306-VASTUVU306-05"
+    ]
+  }
+}

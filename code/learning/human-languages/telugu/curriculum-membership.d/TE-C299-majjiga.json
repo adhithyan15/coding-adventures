@@ -1,0 +1,11 @@
+{
+  "id": "TE-C299-majjiga",
+  "pathSegment": "TE-PATH-299-VASTUVU299",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-299-VASTUVU299",
+      "order": 4
+    }
+  ]
+}

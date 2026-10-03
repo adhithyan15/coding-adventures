@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:77aae4f0cbac01f6",
+  "lessonIds": [
+    "TE-C308-gunta",
+    "TE-C308-mukka",
+    "TE-C308-ancu",
+    "TE-C308-mudi",
+    "TE-C308-varusa"
+  ],
+  "tex": "telugu/book/chapters/ch308-pit-piece-edge-knot-row.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C298-cadunaina",
+  "pathSegment": "TE-PATH-298-GUNAM298",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-298-GUNAM298",
+      "order": 2
+    }
+  ]
+}

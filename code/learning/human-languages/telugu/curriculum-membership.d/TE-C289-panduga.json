@@ -1,0 +1,11 @@
+{
+  "id": "TE-C289-panduga",
+  "pathSegment": "TE-PATH-289-SAMAYAM289",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-289-SAMAYAM289",
+      "order": 1
+    }
+  ]
+}
