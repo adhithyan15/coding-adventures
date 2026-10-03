@@ -1,0 +1,11 @@
+{
+  "id": "ML-C220-vakkil",
+  "pathSegment": "ML-PATH-220-JOLI220",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-220-JOLI220",
+      "order": 4
+    }
+  ]
+}

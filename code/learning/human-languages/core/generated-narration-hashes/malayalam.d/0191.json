@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:decc39a05ded853a",
+  "lessonIds": [
+    "ML-C191-citaruka",
+    "ML-C191-tulayuka",
+    "ML-C191-urukuka",
+    "ML-C191-piriyuka",
+    "ML-C191-cuntuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch191.txt",
+  "json": "malayalam/narration/ch191.json",
+  "textHash": "fnv1a64:cbe1a52b69eb6b10",
+  "jsonHash": "fnv1a64:801e3475f9660cc2",
+  "findings": []
+}

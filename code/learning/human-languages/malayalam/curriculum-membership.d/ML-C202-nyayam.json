@@ -1,0 +1,11 @@
+{
+  "id": "ML-C202-nyayam",
+  "pathSegment": "ML-PATH-202-KARANAM202",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-202-KARANAM202",
+      "order": 4
+    }
+  ]
+}

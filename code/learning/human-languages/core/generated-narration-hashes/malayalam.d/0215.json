@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:21ae24a6d11ea996",
+  "lessonIds": [
+    "ML-C215-pantu",
+    "ML-C215-kalikkaran",
+    "ML-C215-tim",
+    "ML-C215-samanila",
+    "ML-C215-hobi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch215.txt",
+  "json": "malayalam/narration/ch215.json",
+  "textHash": "fnv1a64:58255c6c67376dbc",
+  "jsonHash": "fnv1a64:af9bd73ae170929b",
+  "findings": []
+}

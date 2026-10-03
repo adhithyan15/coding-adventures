@@ -1,0 +1,19 @@
+{
+  "chapter": 199,
+  "title": "Rubbish, Between, Beyond, On this side, At the foot of",
+  "label": "ch:ml-rubbish-between-beyond-on-this-side-at-the-foot-of",
+  "canDo": "I can say rubbish, between, beyond, on this side and at the foot of.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ML-C199-cuvattil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 199: I can say rubbish, between, beyond, on this side and at the foot of.",
+    "assesses": [
+      "ML-LEX-C199-STHALAM199-03",
+      "ML-LEX-C199-STHALAM199-04",
+      "ML-LEX-C199-STHALAM199-05"
+    ]
+  }
+}

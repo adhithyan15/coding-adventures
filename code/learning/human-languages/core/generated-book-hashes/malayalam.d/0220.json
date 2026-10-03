@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:c2ac089aa33875bc",
+  "lessonIds": [
+    "ML-C220-sahapravarttakan",
+    "ML-C220-udyogasthan",
+    "ML-C220-gumastan",
+    "ML-C220-enciniyar",
+    "ML-C220-vakkil"
+  ],
+  "tex": "malayalam/book/chapters/ch220-colleague-official-clerk-engineer-lawyer.tex"
+}

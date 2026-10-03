@@ -1,0 +1,11 @@
+{
+  "id": "ML-C205-upayogapradamaya",
+  "pathSegment": "ML-PATH-205-GUNAM205",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-205-GUNAM205",
+      "order": 1
+    }
+  ]
+}

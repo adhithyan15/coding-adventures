@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C191-tulayuka",
+    "language": "malayalam",
+    "chapter": 191,
+    "sequence": 8370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f00f599abc0ac74a"
+  },
+  "findings": []
+}

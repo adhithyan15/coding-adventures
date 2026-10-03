@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C222-vyakaranam",
+    "language": "malayalam",
+    "chapter": 222,
+    "sequence": 9990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e4a99ac401669164"
+  },
+  "findings": []
+}

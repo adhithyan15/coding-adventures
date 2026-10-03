@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C200-pariharam",
+    "language": "malayalam",
+    "chapter": 200,
+    "sequence": 8860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:90b1d61211bbda38"
+  },
+  "findings": []
+}

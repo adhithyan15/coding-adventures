@@ -1,0 +1,19 @@
+{
+  "chapter": 214,
+  "title": "Torch, Battery, Glue, Switch, Saw",
+  "label": "ch:ml-torch-battery-glue-switch-saw",
+  "canDo": "I can say a torch, a battery, glue, a switch and a saw.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C214-arakkaval",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 214: I can say a torch, a battery, glue, a switch and a saw.",
+    "assesses": [
+      "ML-LEX-C214-VASTU214-03",
+      "ML-LEX-C214-VASTU214-04",
+      "ML-LEX-C214-VASTU214-05"
+    ]
+  }
+}

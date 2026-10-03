@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:a0f5b3a2d25af3ab",
+  "lessonIds": [
+    "ML-C215-pantu",
+    "ML-C215-kalikkaran",
+    "ML-C215-tim",
+    "ML-C215-samanila",
+    "ML-C215-hobi"
+  ],
+  "tex": "malayalam/book/chapters/ch215-ball-player-team-draw-hobby.tex"
+}

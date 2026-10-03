@@ -1,0 +1,11 @@
+{
+  "id": "ML-C218-cena",
+  "pathSegment": "ML-PATH-218-VASTU218",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-218-VASTU218",
+      "order": 3
+    }
+  ]
+}

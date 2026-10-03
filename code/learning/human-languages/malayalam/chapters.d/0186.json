@@ -1,0 +1,19 @@
+{
+  "chapter": 186,
+  "title": "To share, To hug, To quarrel, To sulk, To tease",
+  "label": "ch:ml-to-share-to-hug-to-quarrel-to-sulk-to-tease",
+  "canDo": "I can say to share, to hug, to quarrel, to sulk and to tease.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C186-kaliyakkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 186: I can say to share, to hug, to quarrel, to sulk and to tease.",
+    "assesses": [
+      "ML-LEX-C186-KRIYA186-03",
+      "ML-LEX-C186-KRIYA186-04",
+      "ML-LEX-C186-KRIYA186-05"
+    ]
+  }
+}

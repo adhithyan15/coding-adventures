@@ -1,0 +1,19 @@
+{
+  "chapter": 181,
+  "title": "To lie down, To turn, To cross, To pull, To push",
+  "label": "ch:ml-to-lie-down-to-turn-to-cross-to-pull-to-push",
+  "canDo": "I can say to lie down, to turn, to cross, to pull and to push.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C181-talluka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 181: I can say to lie down, to turn, to cross, to pull and to push.",
+    "assesses": [
+      "ML-LEX-C181-KRIYA181-03",
+      "ML-LEX-C181-KRIYA181-04",
+      "ML-LEX-C181-KRIYA181-05"
+    ]
+  }
+}

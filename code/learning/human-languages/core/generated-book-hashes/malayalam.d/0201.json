@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:d4809a5cef61a583",
+  "lessonIds": [
+    "ML-C201-atupole",
+    "ML-C201-olike",
+    "ML-C201-bhagyavasal",
+    "ML-C201-nirbhagyavasal",
+    "ML-C201-ennaneyenkilum"
+  ],
+  "tex": "malayalam/book/chapters/ch201-likewise-except-fortunately-unfortunately-somehow.tex"
+}

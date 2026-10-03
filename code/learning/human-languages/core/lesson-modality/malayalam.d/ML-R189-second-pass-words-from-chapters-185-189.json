@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R189-second-pass-words-from-chapters-185-189",
+    "language": "malayalam",
+    "chapter": 189,
+    "sequence": 8300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3cd67146b4d1b802"
+  },
+  "findings": []
+}

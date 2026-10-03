@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C198-patinnaru",
+    "language": "malayalam",
+    "chapter": 198,
+    "sequence": 8730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d6d2e388426b172d"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C220-enciniyar",
+  "pathSegment": "ML-PATH-220-JOLI220",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-220-JOLI220",
+      "order": 3
+    }
+  ]
+}

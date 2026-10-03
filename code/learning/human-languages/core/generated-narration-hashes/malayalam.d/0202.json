@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:f66c17036bae056f",
+  "lessonIds": [
+    "ML-C202-prerana",
+    "ML-C202-nirbandham",
+    "ML-C202-gunam",
+    "ML-C202-dosam",
+    "ML-C202-nyayam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch202.txt",
+  "json": "malayalam/narration/ch202.json",
+  "textHash": "fnv1a64:484503038a407455",
+  "jsonHash": "fnv1a64:f352f2ce33cb2f4e",
+  "findings": []
+}

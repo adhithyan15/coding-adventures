@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:da93fcced3f9db23",
+  "lessonIds": [
+    "ML-C205-lalitamaya",
+    "ML-C205-upayogapradamaya",
+    "ML-C205-mikacca",
+    "ML-C205-vicitramaya",
+    "ML-C205-adhunika"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch205.txt",
+  "json": "malayalam/narration/ch205.json",
+  "textHash": "fnv1a64:758fdd04be1fbd20",
+  "jsonHash": "fnv1a64:17a5ed86ecdf4341",
+  "findings": []
+}

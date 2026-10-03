@@ -1,0 +1,19 @@
+{
+  "chapter": 221,
+  "title": "Word, Sentence, Fees, Classmate, Education",
+  "label": "ch:ml-word-sentence-fees-classmate-education",
+  "canDo": "I can say a word, a sentence, fees, a classmate and education.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C221-vidyabhyasam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 221: I can say a word, a sentence, fees, a classmate and education.",
+    "assesses": [
+      "ML-LEX-C221-JOLI221-03",
+      "ML-LEX-C221-JOLI221-04",
+      "ML-LEX-C221-JOLI221-05"
+    ]
+  }
+}

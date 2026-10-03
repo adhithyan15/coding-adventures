@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:56c174e4118ebc35",
+  "lessonIds": [
+    "ML-C214-torccu",
+    "ML-C214-barrari",
+    "ML-C214-pasa",
+    "ML-C214-sviccu",
+    "ML-C214-arakkaval"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch214.txt",
+  "json": "malayalam/narration/ch214.json",
+  "textHash": "fnv1a64:34a05b75404f9522",
+  "jsonHash": "fnv1a64:19756ce202b5bc95",
+  "findings": []
+}

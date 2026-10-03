@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C215-kalikkaran",
+    "language": "malayalam",
+    "chapter": 215,
+    "sequence": 9610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:31eb4fd3fa25a4ba"
+  },
+  "findings": []
+}

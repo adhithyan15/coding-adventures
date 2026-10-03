@@ -1,0 +1,19 @@
+{
+  "chapter": 187,
+  "title": "To blow, To bloom, To plant, To bark, To rise",
+  "label": "ch:ml-to-blow-to-bloom-to-plant-to-bark-to-rise",
+  "canDo": "I can say to blow, to bloom, to plant, to bark and to rise.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C187-udikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 187: I can say to blow, to bloom, to plant, to bark and to rise.",
+    "assesses": [
+      "ML-LEX-C187-KRIYA187-03",
+      "ML-LEX-C187-KRIYA187-04",
+      "ML-LEX-C187-KRIYA187-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 196,
+  "title": "So far, Still, Finally, On time, Free time",
+  "label": "ch:ml-so-far-still-finally-on-time-free-time",
+  "canDo": "I can say so far, still, finally, on time and free time.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ML-C196-olivusamayam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 196: I can say so far, still, finally, on time and free time.",
+    "assesses": [
+      "ML-LEX-C196-SAMAYAM196-03",
+      "ML-LEX-C196-SAMAYAM196-04",
+      "ML-LEX-C196-SAMAYAM196-05"
+    ]
+  }
+}

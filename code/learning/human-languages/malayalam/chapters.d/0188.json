@@ -1,0 +1,19 @@
+{
+  "chapter": 188,
+  "title": "To erase, To switch on, To switch off, To publish, To repair",
+  "label": "ch:ml-to-erase-to-switch-on-to-switch-off-to-publish-to-repair",
+  "canDo": "I can say to erase, to switch on, to switch off, to publish and to repair.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C188-nannakkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 188: I can say to erase, to switch on, to switch off, to publish and to repair.",
+    "assesses": [
+      "ML-LEX-C188-KRIYA188-03",
+      "ML-LEX-C188-KRIYA188-04",
+      "ML-LEX-C188-KRIYA188-05"
+    ]
+  }
+}

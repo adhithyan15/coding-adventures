@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:1c12303bb110c181",
+  "lessonIds": [
+    "ML-C204-pavam",
+    "ML-C204-alukkulla",
+    "ML-C204-minusamulla",
+    "ML-C204-parukkan",
+    "ML-C204-urunta"
+  ],
+  "tex": "malayalam/book/chapters/ch204-poor-dirty-smooth-rough-round.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C222-barbar",
+  "pathSegment": "ML-PATH-222-JOLI222",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-222-JOLI222",
+      "order": 3
+    }
+  ]
+}

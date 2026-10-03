@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C189-kulukkuka",
+    "language": "malayalam",
+    "chapter": 189,
+    "sequence": 8260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ae31f8480a98c8b6"
+  },
+  "findings": []
+}

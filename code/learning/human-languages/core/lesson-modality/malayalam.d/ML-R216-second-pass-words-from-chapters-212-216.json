@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R216-second-pass-words-from-chapters-212-216",
+    "language": "malayalam",
+    "chapter": 216,
+    "sequence": 9710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24f3f736aebfb3f4"
+  },
+  "findings": []
+}

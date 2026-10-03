@@ -1,0 +1,19 @@
+{
+  "chapter": 192,
+  "title": "Face, Body, Throat, Thigh, Waist",
+  "label": "ch:ml-face-body-throat-thigh-waist",
+  "canDo": "I can say the face, the body, the throat, the thigh and the waist.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ML-C192-ara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 192: I can say the face, the body, the throat, the thigh and the waist.",
+    "assesses": [
+      "ML-LEX-C192-AROGYAM192-03",
+      "ML-LEX-C192-AROGYAM192-04",
+      "ML-LEX-C192-AROGYAM192-05"
+    ]
+  }
+}

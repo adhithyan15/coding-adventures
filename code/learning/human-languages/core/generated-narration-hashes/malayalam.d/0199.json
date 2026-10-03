@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:c6b9841a732881c0",
+  "lessonIds": [
+    "ML-C199-malinyam",
+    "ML-C199-itayil",
+    "ML-C199-appuram",
+    "ML-C199-ippuram",
+    "ML-C199-cuvattil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch199.txt",
+  "json": "malayalam/narration/ch199.json",
+  "textHash": "fnv1a64:2949c5829ccfd70a",
+  "jsonHash": "fnv1a64:8e54523aff6dca9b",
+  "findings": []
+}

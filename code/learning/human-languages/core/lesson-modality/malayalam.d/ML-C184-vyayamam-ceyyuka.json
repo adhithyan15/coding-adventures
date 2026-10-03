@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C184-vyayamam-ceyyuka",
+    "language": "malayalam",
+    "chapter": 184,
+    "sequence": 8010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9eba2a2c9f0bc613"
+  },
+  "findings": []
+}

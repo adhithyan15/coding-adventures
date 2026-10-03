@@ -1,0 +1,19 @@
+{
+  "chapter": 215,
+  "title": "Ball, Player, Team, Draw, Hobby",
+  "label": "ch:ml-ball-player-team-draw-hobby",
+  "canDo": "I can say a ball, a player, a team, a draw and a hobby.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C215-hobi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 215: I can say a ball, a player, a team, a draw and a hobby.",
+    "assesses": [
+      "ML-LEX-C215-VASTU215-03",
+      "ML-LEX-C215-VASTU215-04",
+      "ML-LEX-C215-VASTU215-05"
+    ]
+  }
+}

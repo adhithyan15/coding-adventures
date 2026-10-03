@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:55c7f01d8518a56f",
+  "lessonIds": [
+    "ML-C219-nanayam",
+    "ML-C219-nottu",
+    "ML-C219-cillara",
+    "ML-C219-bakki",
+    "ML-C219-kilivu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch219.txt",
+  "json": "malayalam/narration/ch219.json",
+  "textHash": "fnv1a64:d043aab058a758e0",
+  "jsonHash": "fnv1a64:1beb6660feaebc16",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C207-tavi",
+    "language": "malayalam",
+    "chapter": 207,
+    "sequence": 9210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2fdb2f75f4db0ad"
+  },
+  "findings": []
+}

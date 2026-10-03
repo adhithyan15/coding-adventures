@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:59cc56d1586b3cde",
+  "lessonIds": [
+    "ML-C187-visuka",
+    "ML-C187-viriyuka",
+    "ML-C187-natuka",
+    "ML-C187-kuraykkuka",
+    "ML-C187-udikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch187.txt",
+  "json": "malayalam/narration/ch187.json",
+  "textHash": "fnv1a64:cb9b86f38581b0fe",
+  "jsonHash": "fnv1a64:fe4bedb3766d55f9",
+  "findings": []
+}

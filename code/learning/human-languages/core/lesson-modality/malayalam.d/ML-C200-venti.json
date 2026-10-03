@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C200-venti",
+    "language": "malayalam",
+    "chapter": 200,
+    "sequence": 8830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c7c69742c3f493b"
+  },
+  "findings": []
+}

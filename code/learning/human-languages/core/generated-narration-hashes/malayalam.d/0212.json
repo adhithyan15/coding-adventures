@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:8af59823434ba2eb",
+  "lessonIds": [
+    "ML-C212-kala",
+    "ML-C212-samgitam",
+    "ML-C212-matsaram",
+    "ML-C212-daivam",
+    "ML-C212-mula"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch212.txt",
+  "json": "malayalam/narration/ch212.json",
+  "textHash": "fnv1a64:feea5c381d3e624d",
+  "jsonHash": "fnv1a64:6b05358e1e9a27e3",
+  "findings": []
+}

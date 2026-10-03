@@ -1,0 +1,19 @@
+{
+  "chapter": 213,
+  "title": "Worm, Bat, Koel, Kite, Crane",
+  "label": "ch:ml-worm-bat-koel-kite-crane",
+  "canDo": "I can say a worm, a bat, a koel, a kite and a crane.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C213-kokku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 213: I can say a worm, a bat, a koel, a kite and a crane.",
+    "assesses": [
+      "ML-LEX-C213-VASTU213-03",
+      "ML-LEX-C213-VASTU213-04",
+      "ML-LEX-C213-VASTU213-05"
+    ]
+  }
+}

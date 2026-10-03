@@ -1,0 +1,19 @@
+{
+  "chapter": 193,
+  "title": "Accident, Jealousy, Shyness, Pride, Wonder",
+  "label": "ch:ml-accident-jealousy-shyness-pride-wonder",
+  "canDo": "I can say an accident, jealousy, shyness, pride and wonder.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ML-C193-atbhutam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 193: I can say an accident, jealousy, shyness, pride and wonder.",
+    "assesses": [
+      "ML-LEX-C193-AROGYAM193-03",
+      "ML-LEX-C193-AROGYAM193-04",
+      "ML-LEX-C193-AROGYAM193-05"
+    ]
+  }
+}

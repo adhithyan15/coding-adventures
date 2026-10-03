@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C220-vakkil",
+    "language": "malayalam",
+    "chapter": 220,
+    "sequence": 9910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c6734ddeb270062"
+  },
+  "findings": []
+}

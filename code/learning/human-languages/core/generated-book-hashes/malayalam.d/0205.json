@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:2f85e506126e978d",
+  "lessonIds": [
+    "ML-C205-lalitamaya",
+    "ML-C205-upayogapradamaya",
+    "ML-C205-mikacca",
+    "ML-C205-vicitramaya",
+    "ML-C205-adhunika"
+  ],
+  "tex": "malayalam/book/chapters/ch205-simple-useful-excellent-strange-modern.tex"
+}

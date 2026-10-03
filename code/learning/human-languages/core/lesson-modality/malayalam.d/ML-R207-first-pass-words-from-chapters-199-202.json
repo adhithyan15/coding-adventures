@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R207-first-pass-words-from-chapters-199-202",
+    "language": "malayalam",
+    "chapter": 207,
+    "sequence": 9230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2d8e9e50cf6c0a7"
+  },
+  "findings": []
+}

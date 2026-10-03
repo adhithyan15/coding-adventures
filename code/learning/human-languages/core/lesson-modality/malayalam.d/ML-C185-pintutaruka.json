@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C185-pintutaruka",
+    "language": "malayalam",
+    "chapter": 185,
+    "sequence": 8080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9321413d1e82976"
+  },
+  "findings": []
+}
