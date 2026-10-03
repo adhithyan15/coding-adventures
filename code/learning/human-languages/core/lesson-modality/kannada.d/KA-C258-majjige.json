@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C258-majjige",
+    "language": "kannada",
+    "chapter": 258,
+    "sequence": 12250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:964faf700abf7722"
+  },
+  "findings": []
+}

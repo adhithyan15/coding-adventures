@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C270-vakya",
+    "language": "kannada",
+    "chapter": 270,
+    "sequence": 12910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:026d06d3bd5535da"
+  },
+  "findings": []
+}

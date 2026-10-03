@@ -1,0 +1,11 @@
+{
+  "id": "KA-C265-pottana",
+  "pathSegment": "KA-PATH-265-VASTU265",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-265-VASTU265",
+      "order": 3
+    }
+  ]
+}

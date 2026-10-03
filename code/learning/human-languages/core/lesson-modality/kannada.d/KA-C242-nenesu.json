@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C242-nenesu",
+    "language": "kannada",
+    "chapter": 242,
+    "sequence": 11420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec34a2b5a6dab136"
+  },
+  "findings": []
+}

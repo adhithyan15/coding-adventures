@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:f64b152233c6fb82",
+  "lessonIds": [
+    "KA-C261-sakuprani",
+    "KA-C261-karu",
+    "KA-C261-alilu",
+    "KA-C261-halli",
+    "KA-C261-jirale",
+    "KA-R261-first-pass-words-from-chapters-253-256",
+    "KA-R261-second-pass-words-from-chapters-257-261"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch261.txt",
+  "json": "kannada/narration/ch261.json",
+  "textHash": "fnv1a64:e2a71baf1b1ae15b",
+  "jsonHash": "fnv1a64:b0e61c0f27a7083e",
+  "findings": []
+}

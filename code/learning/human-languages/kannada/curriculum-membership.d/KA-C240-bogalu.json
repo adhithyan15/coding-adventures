@@ -1,0 +1,11 @@
+{
+  "id": "KA-C240-bogalu",
+  "pathSegment": "KA-PATH-240-KRIYE240",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-240-KRIYE240",
+      "order": 0
+    }
+  ]
+}

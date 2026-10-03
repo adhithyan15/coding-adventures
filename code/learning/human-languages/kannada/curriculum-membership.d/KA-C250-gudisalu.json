@@ -1,0 +1,11 @@
+{
+  "id": "KA-C250-gudisalu",
+  "pathSegment": "KA-PATH-250-STHALA250",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-250-STHALA250",
+      "order": 1
+    }
+  ]
+}

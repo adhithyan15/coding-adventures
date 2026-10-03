@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C239-acarisu",
+    "language": "kannada",
+    "chapter": 239,
+    "sequence": 11260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08695f877c289011"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 249,
+  "title": "East, West, South, Opposite, District",
+  "label": "ch:ka-east-west-south-opposite-district",
+  "canDo": "I can say east, west, south, opposite and a district.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "KA-C249-jille",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 249: I can say east, west, south, opposite and a district.",
+    "assesses": [
+      "KA-LEX-C249-STHALA249-03",
+      "KA-LEX-C249-STHALA249-04",
+      "KA-LEX-C249-STHALA249-05"
+    ]
+  }
+}

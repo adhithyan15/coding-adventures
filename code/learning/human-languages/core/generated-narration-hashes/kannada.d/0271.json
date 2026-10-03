@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:1696c8d0f578f2ed",
+  "lessonIds": [
+    "KA-C271-pincani",
+    "KA-C271-danda",
+    "KA-C271-muskara",
+    "KA-C271-samsthe",
+    "KA-C271-ilakhe",
+    "KA-R271-first-pass-words-from-chapters-267-268",
+    "KA-R271-second-pass-words-from-chapters-269-271"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch271.txt",
+  "json": "kannada/narration/ch271.json",
+  "textHash": "fnv1a64:7b33de359400558e",
+  "jsonHash": "fnv1a64:6f7207bdd57f4b42",
+  "findings": []
+}

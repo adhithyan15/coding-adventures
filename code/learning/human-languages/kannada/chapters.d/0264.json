@@ -1,0 +1,19 @@
+{
+  "chapter": 264,
+  "title": "Internet, Website, Password, App, Video",
+  "label": "ch:ka-internet-website-password-app-video",
+  "canDo": "I can say the internet, a website, a password, an app and a video.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C264-vidiyo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 264: I can say the internet, a website, a password, an app and a video.",
+    "assesses": [
+      "KA-LEX-C264-VASTU264-03",
+      "KA-LEX-C264-VASTU264-04",
+      "KA-LEX-C264-VASTU264-05"
+    ]
+  }
+}

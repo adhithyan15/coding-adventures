@@ -1,0 +1,11 @@
+{
+  "id": "KA-C254-kandu",
+  "pathSegment": "KA-PATH-254-GUNA254",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-254-GUNA254",
+      "order": 3
+    }
+  ]
+}

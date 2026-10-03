@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C261-sakuprani",
+    "language": "kannada",
+    "chapter": 261,
+    "sequence": 12400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24930073e1a6c6e5"
+  },
+  "findings": []
+}

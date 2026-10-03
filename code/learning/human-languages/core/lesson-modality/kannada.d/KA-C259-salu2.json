@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C259-salu2",
+    "language": "kannada",
+    "chapter": 259,
+    "sequence": 12320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d41a79b19f60c5d"
+  },
+  "findings": []
+}

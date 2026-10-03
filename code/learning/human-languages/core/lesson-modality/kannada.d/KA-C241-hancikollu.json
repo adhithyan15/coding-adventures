@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C241-hancikollu",
+    "language": "kannada",
+    "chapter": 241,
+    "sequence": 11370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d0388721eb7e16f1"
+  },
+  "findings": []
+}

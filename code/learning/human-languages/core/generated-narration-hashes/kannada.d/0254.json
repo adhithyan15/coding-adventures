@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:d13b2c94858f4bfd",
+  "lessonIds": [
+    "KA-C254-telu2",
+    "KA-C254-asvastha",
+    "KA-C254-cupada",
+    "KA-C254-kandu",
+    "KA-C254-gulabi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch254.txt",
+  "json": "kannada/narration/ch254.json",
+  "textHash": "fnv1a64:8711c4a167d55b17",
+  "jsonHash": "fnv1a64:bc3f8c189b44321e",
+  "findings": []
+}

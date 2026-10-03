@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C253-nenapu",
+    "language": "kannada",
+    "chapter": 253,
+    "sequence": 12020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b526d5a3b5cd8f4"
+  },
+  "findings": []
+}

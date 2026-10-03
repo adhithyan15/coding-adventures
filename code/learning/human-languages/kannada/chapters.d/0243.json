@@ -1,0 +1,19 @@
+{
+  "chapter": 243,
+  "title": "To recognise, To pronounce, To add up, To manage, To shake",
+  "label": "ch:ka-to-recognise-to-pronounce-to-add-up-to-manage-to-shake",
+  "canDo": "I can say to recognise, to pronounce, to add up, to manage and to shake.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-R243-second-pass-words-from-chapters-239-243",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 243: I can say to recognise, to pronounce, to add up, to manage and to shake.",
+    "assesses": [
+      "KA-LEX-C243-KRIYE243-03",
+      "KA-LEX-C243-KRIYE243-04",
+      "KA-LEX-C243-KRIYE243-05"
+    ]
+  }
+}

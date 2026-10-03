@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:3a32be508615c301",
+  "lessonIds": [
+    "KA-C244-sarisu",
+    "KA-C244-kuggu",
+    "KA-C244-nekku",
+    "KA-C244-hiru",
+    "KA-C244-alavadisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch244.txt",
+  "json": "kannada/narration/ch244.json",
+  "textHash": "fnv1a64:f7788afb6d5ec14f",
+  "jsonHash": "fnv1a64:ca036ccee80e58db",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C265-pottana",
+    "language": "kannada",
+    "chapter": 265,
+    "sequence": 12650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6042b9cc1d9656d"
+  },
+  "findings": []
+}

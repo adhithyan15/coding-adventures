@@ -1,0 +1,11 @@
+{
+  "id": "KA-C247-sankranti",
+  "pathSegment": "KA-PATH-247-KALA247",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-247-KALA247",
+      "order": 2
+    }
+  ]
+}

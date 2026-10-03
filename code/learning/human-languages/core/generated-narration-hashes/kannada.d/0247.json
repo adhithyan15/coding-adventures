@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:243d5eba0b7e5c1d",
+  "lessonIds": [
+    "KA-C247-dasara",
+    "KA-C247-dipavali",
+    "KA-C247-sankranti",
+    "KA-C247-ganesa-caturthi",
+    "KA-C247-rajyotsava"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch247.txt",
+  "json": "kannada/narration/ch247.json",
+  "textHash": "fnv1a64:504e79f824db87cb",
+  "jsonHash": "fnv1a64:2847e0b9fda3604e",
+  "findings": []
+}

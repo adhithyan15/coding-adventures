@@ -1,0 +1,19 @@
+{
+  "chapter": 247,
+  "title": "Dasara, Deepavali, Sankranti, Ganesha Chaturthi, Rajyotsava",
+  "label": "ch:ka-dasara-deepavali-sankranti-ganesha-chaturthi-rajyotsava",
+  "canDo": "I can say Dasara, Deepavali, Sankranti, Ganesha Chaturthi and Rajyotsava.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "KA-C247-rajyotsava",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 247: I can say Dasara, Deepavali, Sankranti, Ganesha Chaturthi and Rajyotsava.",
+    "assesses": [
+      "KA-LEX-C247-KALA247-03",
+      "KA-LEX-C247-KALA247-04",
+      "KA-LEX-C247-KALA247-05"
+    ]
+  }
+}

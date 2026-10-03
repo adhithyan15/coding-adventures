@@ -1,0 +1,19 @@
+{
+  "chapter": 239,
+  "title": "To celebrate, To decorate, To share out, To pay a visit, To hug",
+  "label": "ch:ka-to-celebrate-to-decorate-to-share-out-to-pay-a-visit-to-hug",
+  "canDo": "I can say to celebrate, to decorate, to share out, to pay a visit and to hug.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C239-appiko",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 239: I can say to celebrate, to decorate, to share out, to pay a visit and to hug.",
+    "assesses": [
+      "KA-LEX-C239-KRIYE239-03",
+      "KA-LEX-C239-KRIYE239-04",
+      "KA-LEX-C239-KRIYE239-05"
+    ]
+  }
+}

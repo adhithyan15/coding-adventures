@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C238-taip-madu",
+    "language": "kannada",
+    "chapter": 238,
+    "sequence": 11210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d53e5cdafe0af569"
+  },
+  "findings": []
+}

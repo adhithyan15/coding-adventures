@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R243-first-pass-words-from-chapters-235-238",
+    "language": "kannada",
+    "chapter": 243,
+    "sequence": 11510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4f31650288d85da"
+  },
+  "findings": []
+}

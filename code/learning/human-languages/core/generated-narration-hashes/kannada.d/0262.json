@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:8768b580557c2da2",
+  "lessonIds": [
+    "KA-C262-torana",
+    "KA-C262-kunkuma",
+    "KA-C262-holige",
+    "KA-C262-prasada",
+    "KA-C262-abharana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch262.txt",
+  "json": "kannada/narration/ch262.json",
+  "textHash": "fnv1a64:3df018a3b607e829",
+  "jsonHash": "fnv1a64:b6755ee503242fde",
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:385211d3d3b0c616",
+  "lessonIds": [
+    "KA-C243-gurutisu",
+    "KA-C243-uccarisu",
+    "KA-C243-kudisu",
+    "KA-C243-nibhayisu",
+    "KA-C243-alladisu",
+    "KA-R243-first-pass-words-from-chapters-235-238",
+    "KA-R243-second-pass-words-from-chapters-239-243"
+  ],
+  "tex": "kannada/book/chapters/ch243-to-recognise-to-pronounce-to-add-up-to-manage-to-shake.tex"
+}

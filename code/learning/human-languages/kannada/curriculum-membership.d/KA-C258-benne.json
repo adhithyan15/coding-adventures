@@ -1,0 +1,11 @@
+{
+  "id": "KA-C258-benne",
+  "pathSegment": "KA-PATH-258-VASTU258",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-258-VASTU258",
+      "order": 1
+    }
+  ]
+}

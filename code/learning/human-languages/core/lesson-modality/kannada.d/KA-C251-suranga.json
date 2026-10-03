@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C251-suranga",
+    "language": "kannada",
+    "chapter": 251,
+    "sequence": 11900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d810debf5bf9838"
+  },
+  "findings": []
+}

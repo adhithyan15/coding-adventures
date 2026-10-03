@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:fd61b000316a040e",
+  "lessonIds": [
+    "KA-C235-bilu",
+    "KA-C235-hindirugu",
+    "KA-C235-muttu",
+    "KA-C235-ettu",
+    "KA-C235-ese"
+  ],
+  "tex": "kannada/book/chapters/ch235-to-fall-to-return-to-touch-to-lift-to-throw.tex"
+}

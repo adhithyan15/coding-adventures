@@ -1,0 +1,11 @@
+{
+  "id": "KA-C264-pasvard",
+  "pathSegment": "KA-PATH-264-VASTU264",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-264-VASTU264",
+      "order": 2
+    }
+  ]
+}

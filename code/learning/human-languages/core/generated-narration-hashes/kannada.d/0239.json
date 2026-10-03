@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:e776a663f5281c4a",
+  "lessonIds": [
+    "KA-C239-acarisu",
+    "KA-C239-alankarisu",
+    "KA-C239-hancu",
+    "KA-C239-bheti-kodu",
+    "KA-C239-appiko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch239.txt",
+  "json": "kannada/narration/ch239.json",
+  "textHash": "fnv1a64:97a3bfe6467bfe88",
+  "jsonHash": "fnv1a64:4c30c2de6ab14aa4",
+  "findings": []
+}

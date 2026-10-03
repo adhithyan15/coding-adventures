@@ -1,0 +1,19 @@
+{
+  "chapter": 242,
+  "title": "To temper, To soak, To wring, To dip, To tear",
+  "label": "ch:ka-to-temper-to-soak-to-wring-to-dip-to-tear",
+  "canDo": "I can say to temper, to soak, to wring, to dip and to tear.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C242-hari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 242: I can say to temper, to soak, to wring, to dip and to tear.",
+    "assesses": [
+      "KA-LEX-C242-KRIYE242-03",
+      "KA-LEX-C242-KRIYE242-04",
+      "KA-LEX-C242-KRIYE242-05"
+    ]
+  }
+}

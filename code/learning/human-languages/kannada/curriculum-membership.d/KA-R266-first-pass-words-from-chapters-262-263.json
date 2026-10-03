@@ -1,0 +1,11 @@
+{
+  "id": "KA-R266-first-pass-words-from-chapters-262-263",
+  "pathSegment": "KA-PATH-266-VASTU266",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "KA-EXT-266-VASTU266",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C260-vahana",
+    "language": "kannada",
+    "chapter": 260,
+    "sequence": 12380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a0156f8bb36bcf3"
+  },
+  "findings": []
+}

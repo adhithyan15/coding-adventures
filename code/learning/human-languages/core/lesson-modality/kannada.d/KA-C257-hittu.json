@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C257-hittu",
+    "language": "kannada",
+    "chapter": 257,
+    "sequence": 12220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e561e4b213a4c43"
+  },
+  "findings": []
+}

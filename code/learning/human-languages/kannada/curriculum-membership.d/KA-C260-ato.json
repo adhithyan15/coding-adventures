@@ -1,0 +1,11 @@
+{
+  "id": "KA-C260-ato",
+  "pathSegment": "KA-PATH-260-VASTU260",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-260-VASTU260",
+      "order": 4
+    }
+  ]
+}

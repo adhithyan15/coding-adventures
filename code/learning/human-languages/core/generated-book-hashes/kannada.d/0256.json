@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:6f80b5993b6e50ae",
+  "lessonIds": [
+    "KA-C256-tollu",
+    "KA-C256-cappate",
+    "KA-C256-donku",
+    "KA-C256-masuku",
+    "KA-C256-kikkirida"
+  ],
+  "tex": "kannada/book/chapters/ch256-hollow-flat-crooked-blurred-crowded.tex"
+}

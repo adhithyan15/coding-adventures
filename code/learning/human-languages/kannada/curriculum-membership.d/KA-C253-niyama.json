@@ -1,0 +1,11 @@
+{
+  "id": "KA-C253-niyama",
+  "pathSegment": "KA-PATH-253-KARANA253",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-253-KARANA253",
+      "order": 4
+    }
+  ]
+}

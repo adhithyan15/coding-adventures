@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:d62694654c65f87c",
+  "lessonIds": [
+    "KA-C240-bogalu",
+    "KA-C240-kugu",
+    "KA-C240-mulugu",
+    "KA-C240-vadisu",
+    "KA-C240-kalpisiko"
+  ],
+  "tex": "kannada/book/chapters/ch240-to-bark-to-shout-to-sink-to-argue-to-imagine.tex"
+}

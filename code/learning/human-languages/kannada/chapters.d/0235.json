@@ -1,0 +1,19 @@
+{
+  "chapter": 235,
+  "title": "To fall, To return, To touch, To lift, To throw",
+  "label": "ch:ka-to-fall-to-return-to-touch-to-lift-to-throw",
+  "canDo": "I can say to fall, to return, to touch, to lift and to throw.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C235-ese",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 235: I can say to fall, to return, to touch, to lift and to throw.",
+    "assesses": [
+      "KA-LEX-C235-KRIYE235-03",
+      "KA-LEX-C235-KRIYE235-04",
+      "KA-LEX-C235-KRIYE235-05"
+    ]
+  }
+}

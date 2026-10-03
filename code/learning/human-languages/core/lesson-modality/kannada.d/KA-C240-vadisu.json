@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C240-vadisu",
+    "language": "kannada",
+    "chapter": 240,
+    "sequence": 11340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b491876cd9faa90c"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C271-samsthe",
+    "language": "kannada",
+    "chapter": 271,
+    "sequence": 12970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a5cd4c5bcf3c41e"
+  },
+  "findings": []
+}

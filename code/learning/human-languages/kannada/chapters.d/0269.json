@@ -1,0 +1,19 @@
+{
+  "chapter": 269,
+  "title": "Report, Problem, News, Information, Mark",
+  "label": "ch:ka-report-problem-news-information-mark",
+  "canDo": "I can say a report, a problem, news, information and a mark.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C269-anka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 269: I can say a report, a problem, news, information and a mark.",
+    "assesses": [
+      "KA-LEX-C269-KELASA269-03",
+      "KA-LEX-C269-KELASA269-04",
+      "KA-LEX-C269-KELASA269-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:17e734b824903184",
+  "lessonIds": [
+    "KA-C270-bhugola",
+    "KA-C270-pada",
+    "KA-C270-vakya",
+    "KA-C270-ksaurika",
+    "KA-C270-dhobi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch270.txt",
+  "json": "kannada/narration/ch270.json",
+  "textHash": "fnv1a64:95ba70a50babc84a",
+  "jsonHash": "fnv1a64:a850b372dccc7d2f",
+  "findings": []
+}

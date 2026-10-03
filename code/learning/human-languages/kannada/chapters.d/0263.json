@@ -1,0 +1,19 @@
+{
+  "chapter": 263,
+  "title": "Boy, Girl, Man, Woman, Old man",
+  "label": "ch:ka-boy-girl-man-woman-old-man",
+  "canDo": "I can say a boy, a girl, a man, a woman and an old man.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C263-muduka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 263: I can say a boy, a girl, a man, a woman and an old man.",
+    "assesses": [
+      "KA-LEX-C263-VASTU263-03",
+      "KA-LEX-C263-VASTU263-04",
+      "KA-LEX-C263-VASTU263-05"
+    ]
+  }
+}

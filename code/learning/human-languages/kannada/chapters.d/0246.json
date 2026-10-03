@@ -1,0 +1,19 @@
+{
+  "chapter": 246,
+  "title": "Sprain, Indigestion, Sore, Bandage, Diabetes",
+  "label": "ch:ka-sprain-indigestion-sore-bandage-diabetes",
+  "canDo": "I can say a sprain, indigestion, a sore, a bandage and diabetes.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "KA-C246-madhumeha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 246: I can say a sprain, indigestion, a sore, a bandage and diabetes.",
+    "assesses": [
+      "KA-LEX-C246-AROGYA246-03",
+      "KA-LEX-C246-AROGYA246-04",
+      "KA-LEX-C246-AROGYA246-05"
+    ]
+  }
+}

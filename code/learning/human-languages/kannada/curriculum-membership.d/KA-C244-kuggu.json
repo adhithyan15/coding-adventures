@@ -1,0 +1,11 @@
+{
+  "id": "KA-C244-kuggu",
+  "pathSegment": "KA-PATH-244-KRIYE244",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-244-KRIYE244",
+      "order": 1
+    }
+  ]
+}

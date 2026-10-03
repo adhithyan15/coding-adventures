@@ -1,0 +1,19 @@
+{
+  "chapter": 252,
+  "title": "Luck, Advice, Approximately, Along with, Together",
+  "label": "ch:ka-luck-advice-approximately-along-with-together",
+  "canDo": "I can say luck, advice, approximately, along with and together.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "KA-R252-second-pass-words-from-chapters-248-252",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 252: I can say luck, advice, approximately, along with and together.",
+    "assesses": [
+      "KA-LEX-C252-KARANA252-03",
+      "KA-LEX-C252-KARANA252-04",
+      "KA-LEX-C252-KARANA252-05"
+    ]
+  }
+}

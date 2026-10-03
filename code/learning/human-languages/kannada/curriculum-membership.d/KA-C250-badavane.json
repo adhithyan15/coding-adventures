@@ -1,0 +1,11 @@
+{
+  "id": "KA-C250-badavane",
+  "pathSegment": "KA-PATH-250-STHALA250",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-250-STHALA250",
+      "order": 2
+    }
+  ]
+}

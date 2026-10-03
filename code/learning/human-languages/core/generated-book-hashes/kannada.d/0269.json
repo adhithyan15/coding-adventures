@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:d1236c6eee843b87",
+  "lessonIds": [
+    "KA-C269-varadi",
+    "KA-C269-samasye",
+    "KA-C269-suddi",
+    "KA-C269-mahiti",
+    "KA-C269-anka"
+  ],
+  "tex": "kannada/book/chapters/ch269-report-problem-news-information-mark.tex"
+}

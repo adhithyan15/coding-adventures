@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:310b3f2f7c53b8c1",
+  "lessonIds": [
+    "KA-C265-dabbi",
+    "KA-C265-bindige",
+    "KA-C265-jadi",
+    "KA-C265-pottana",
+    "KA-C265-ukku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch265.txt",
+  "json": "kannada/narration/ch265.json",
+  "textHash": "fnv1a64:d4b7f6e4675bf5f8",
+  "jsonHash": "fnv1a64:80751fc549088946",
+  "findings": []
+}
