@@ -1,0 +1,11 @@
+{
+  "id": "UR-C244-patti",
+  "pathSegment": "UR-PATH-244-SEHAT244",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-244-SEHAT244",
+      "order": 2
+    }
+  ]
+}

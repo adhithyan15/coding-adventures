@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C253-zarafa",
+    "language": "urdu",
+    "chapter": 253,
+    "sequence": 15340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e039957f9a92b039"
+  },
+  "findings": []
+}

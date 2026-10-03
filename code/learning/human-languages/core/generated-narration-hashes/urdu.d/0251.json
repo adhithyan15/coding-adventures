@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:4c89a3c39b2132f7",
+  "lessonIds": [
+    "UR-C251-guriya",
+    "UR-C251-phuldan",
+    "UR-C251-jinz",
+    "UR-C251-nekar",
+    "UR-C251-barsati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch251.txt",
+  "json": "urdu/narration/ch251.json",
+  "textHash": "fnv1a64:573b3dd8f64eac55",
+  "jsonHash": "fnv1a64:ad366bb1467cd50f",
+  "findings": []
+}

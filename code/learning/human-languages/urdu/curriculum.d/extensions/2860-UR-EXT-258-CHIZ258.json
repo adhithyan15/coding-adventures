@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-258-CHIZ258",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a screwdriver, a tool, a pipe, a tap and a shower.",
+  "prerequisites": []
+}

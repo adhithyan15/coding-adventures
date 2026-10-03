@@ -1,0 +1,11 @@
+{
+  "id": "UR-C254-gitar",
+  "pathSegment": "UR-PATH-254-CHIZ254",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-254-CHIZ254",
+      "order": 3
+    }
+  ]
+}

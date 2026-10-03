@@ -1,0 +1,11 @@
+{
+  "id": "UR-R256-second-pass-words-from-chapters-252-256",
+  "pathSegment": "UR-PATH-256-CHIZ256",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "UR-EXT-256-CHIZ256",
+      "order": 6
+    }
+  ]
+}

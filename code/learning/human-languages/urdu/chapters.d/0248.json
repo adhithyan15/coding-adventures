@@ -1,0 +1,19 @@
+{
+  "chapter": 248,
+  "title": "False, Alive, Dead, Healthy, Present",
+  "label": "ch:ur-false-alive-dead-healthy-present",
+  "canDo": "I can say false, alive, dead, healthy and present.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "UR-C248-maujud",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 248: I can say false, alive, dead, healthy and present.",
+    "assesses": [
+      "UR-LEX-C248-SIFAT248-03",
+      "UR-LEX-C248-SIFAT248-04",
+      "UR-LEX-C248-SIFAT248-05"
+    ]
+  }
+}

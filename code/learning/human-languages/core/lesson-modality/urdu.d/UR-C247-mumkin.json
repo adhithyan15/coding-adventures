@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C247-mumkin",
+    "language": "urdu",
+    "chapter": 247,
+    "sequence": 14830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d8d706e697b9916"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 241,
+  "title": "To bring up, To sow, To cultivate, To sweep, To wipe",
+  "label": "ch:ur-to-bring-up-to-sow-to-cultivate-to-sweep-to-wipe",
+  "canDo": "I can say to bring up, to sow, to cultivate, to sweep and to wipe.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C241-ponchhna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 241: I can say to bring up, to sow, to cultivate, to sweep and to wipe.",
+    "assesses": [
+      "UR-LEX-C241-ACT241-03",
+      "UR-LEX-C241-ACT241-04",
+      "UR-LEX-C241-ACT241-05"
+    ]
+  }
+}

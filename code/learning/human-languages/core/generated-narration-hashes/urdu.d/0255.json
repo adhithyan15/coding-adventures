@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:e1c0606602528149",
+  "lessonIds": [
+    "UR-C255-pletfarm",
+    "UR-C255-traifik",
+    "UR-C255-jurmana",
+    "UR-C255-laisans",
+    "UR-C255-parking"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch255.txt",
+  "json": "urdu/narration/ch255.json",
+  "textHash": "fnv1a64:5ecf56579e4fcd43",
+  "jsonHash": "fnv1a64:275894318138a7a2",
+  "findings": []
+}

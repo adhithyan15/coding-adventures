@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:19009346d0f9752c",
+  "lessonIds": [
+    "UR-C243-thakan",
+    "UR-C243-taqat",
+    "UR-C243-vazan",
+    "UR-C243-qad",
+    "UR-C243-klinik"
+  ],
+  "tex": "urdu/book/chapters/ch243-tiredness-strength-weight-height-clinic.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:f88e67b2de68c563",
+  "lessonIds": [
+    "UR-C255-pletfarm",
+    "UR-C255-traifik",
+    "UR-C255-jurmana",
+    "UR-C255-laisans",
+    "UR-C255-parking"
+  ],
+  "tex": "urdu/book/chapters/ch255-platform-traffic-penalty-licence-parking.tex"
+}

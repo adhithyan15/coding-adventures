@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-256-CHIZ256",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a wedding, a relative, a female friend, a host and people.",
+  "prerequisites": []
+}

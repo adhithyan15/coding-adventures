@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C253-kachhua",
+    "language": "urdu",
+    "chapter": 253,
+    "sequence": 15320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:65d9e9d91c214f94"
+  },
+  "findings": []
+}

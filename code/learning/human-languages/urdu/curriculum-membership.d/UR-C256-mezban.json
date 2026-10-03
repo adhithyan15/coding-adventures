@@ -1,0 +1,11 @@
+{
+  "id": "UR-C256-mezban",
+  "pathSegment": "UR-PATH-256-CHIZ256",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-256-CHIZ256",
+      "order": 3
+    }
+  ]
+}

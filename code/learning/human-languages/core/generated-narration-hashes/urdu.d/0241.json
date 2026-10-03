@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:bbd8ba18b08f9f62",
+  "lessonIds": [
+    "UR-C241-palna",
+    "UR-C241-bona",
+    "UR-C241-ugana",
+    "UR-C241-jharu-lagana",
+    "UR-C241-ponchhna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch241.txt",
+  "json": "urdu/narration/ch241.json",
+  "textHash": "fnv1a64:e2996da13c03d384",
+  "jsonHash": "fnv1a64:b569c6db606ccc70",
+  "findings": []
+}

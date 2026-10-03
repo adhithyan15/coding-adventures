@@ -1,0 +1,11 @@
+{
+  "id": "UR-C248-murda",
+  "pathSegment": "UR-PATH-248-SIFAT248",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-248-SIFAT248",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C257-dosti",
+  "pathSegment": "UR-PATH-257-CHIZ257",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-257-CHIZ257",
+      "order": 3
+    }
+  ]
+}

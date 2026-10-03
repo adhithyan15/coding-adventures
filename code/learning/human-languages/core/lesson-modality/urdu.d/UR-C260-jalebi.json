@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C260-jalebi",
+    "language": "urdu",
+    "chapter": 260,
+    "sequence": 15880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d40eed4b3ae873f"
+  },
+  "findings": []
+}

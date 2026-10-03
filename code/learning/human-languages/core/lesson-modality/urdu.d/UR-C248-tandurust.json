@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C248-tandurust",
+    "language": "urdu",
+    "chapter": 248,
+    "sequence": 15090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73f4d83a56112986"
+  },
+  "findings": []
+}

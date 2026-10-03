@@ -1,0 +1,11 @@
+{
+  "id": "UR-C260-gulab-jamun",
+  "pathSegment": "UR-PATH-260-CHIZ260",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-260-CHIZ260",
+      "order": 4
+    }
+  ]
+}

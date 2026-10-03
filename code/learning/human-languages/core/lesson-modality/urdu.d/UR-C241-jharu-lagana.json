@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C241-jharu-lagana",
+    "language": "urdu",
+    "chapter": 241,
+    "sequence": 14550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:65284944c196bac1"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C247-namumkin",
+  "pathSegment": "UR-PATH-247-SIFAT247",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-247-SIFAT247",
+      "order": 2
+    }
+  ]
+}

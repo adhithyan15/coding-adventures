@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:ff529a4eb7e7191f",
+  "lessonIds": [
+    "UR-C250-degchi",
+    "UR-C250-tava",
+    "UR-C250-karahi",
+    "UR-C250-tandur",
+    "UR-C250-ketli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch250.txt",
+  "json": "urdu/narration/ch250.json",
+  "textHash": "fnv1a64:b05032685a71534a",
+  "jsonHash": "fnv1a64:03367d8d276d40af",
+  "findings": []
+}

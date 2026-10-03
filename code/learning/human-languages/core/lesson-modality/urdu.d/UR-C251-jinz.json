@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C251-jinz",
+    "language": "urdu",
+    "chapter": 251,
+    "sequence": 15230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b60eece5cde64b67"
+  },
+  "findings": []
+}

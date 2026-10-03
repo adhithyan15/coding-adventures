@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-253-CHIZ253",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a lizard, a tortoise, a crocodile, a giraffe and a spider.",
+  "prerequisites": []
+}

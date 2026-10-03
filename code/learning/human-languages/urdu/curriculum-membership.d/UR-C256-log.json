@@ -1,0 +1,11 @@
+{
+  "id": "UR-C256-log",
+  "pathSegment": "UR-PATH-256-CHIZ256",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-256-CHIZ256",
+      "order": 4
+    }
+  ]
+}

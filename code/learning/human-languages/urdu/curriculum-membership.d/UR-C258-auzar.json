@@ -1,0 +1,11 @@
+{
+  "id": "UR-C258-auzar",
+  "pathSegment": "UR-PATH-258-CHIZ258",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-258-CHIZ258",
+      "order": 1
+    }
+  ]
+}

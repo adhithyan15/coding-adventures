@@ -1,0 +1,19 @@
+{
+  "chapter": 262,
+  "title": "Judge, Pupil, Engineer, Scientist, Actor",
+  "label": "ch:ur-judge-pupil-engineer-scientist-actor",
+  "canDo": "I can say a judge, a pupil, an engineer, a scientist and an actor.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C262-adakar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 262: I can say a judge, a pupil, an engineer, a scientist and an actor.",
+    "assesses": [
+      "UR-LEX-C262-KAM262-03",
+      "UR-LEX-C262-KAM262-04",
+      "UR-LEX-C262-KAM262-05"
+    ]
+  }
+}

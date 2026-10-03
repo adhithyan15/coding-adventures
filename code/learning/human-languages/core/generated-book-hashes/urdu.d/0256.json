@@ -1,0 +1,15 @@
+{
+  "language": "urdu",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:d18df2fd50ac21e7",
+  "lessonIds": [
+    "UR-C256-shadi",
+    "UR-C256-rishtedar",
+    "UR-C256-saheli",
+    "UR-C256-mezban",
+    "UR-C256-log",
+    "UR-R256-first-pass-words-from-chapters-248-251",
+    "UR-R256-second-pass-words-from-chapters-252-256"
+  ],
+  "tex": "urdu/book/chapters/ch256-wedding-relative-female-friend-host-people.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 246,
+  "title": "Garage, Everywhere, Ahead, Border, Government",
+  "label": "ch:ur-garage-everywhere-ahead-border-government",
+  "canDo": "I can say a garage, everywhere, ahead, a border and a government.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "UR-C246-hukumat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 246: I can say a garage, everywhere, ahead, a border and a government.",
+    "assesses": [
+      "UR-LEX-C246-JAGAH246-03",
+      "UR-LEX-C246-JAGAH246-04",
+      "UR-LEX-C246-JAGAH246-05"
+    ]
+  }
+}

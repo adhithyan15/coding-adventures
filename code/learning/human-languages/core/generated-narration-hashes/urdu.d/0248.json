@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:1a84dda4548e2db3",
+  "lessonIds": [
+    "UR-C248-jhuta",
+    "UR-C248-zinda",
+    "UR-C248-murda",
+    "UR-C248-tandurust",
+    "UR-C248-maujud"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch248.txt",
+  "json": "urdu/narration/ch248.json",
+  "textHash": "fnv1a64:60eb60f05ff3ad31",
+  "jsonHash": "fnv1a64:f5422181ca1e9b31",
+  "findings": []
+}

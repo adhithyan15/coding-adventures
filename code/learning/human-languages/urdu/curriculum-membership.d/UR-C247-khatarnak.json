@@ -1,0 +1,11 @@
+{
+  "id": "UR-C247-khatarnak",
+  "pathSegment": "UR-PATH-247-SIFAT247",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-247-SIFAT247",
+      "order": 4
+    }
+  ]
+}

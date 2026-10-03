@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C252-nariyal",
+    "language": "urdu",
+    "chapter": 252,
+    "sequence": 15290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:858a3e3c68db45e9"
+  },
+  "findings": []
+}

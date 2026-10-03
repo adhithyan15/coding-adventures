@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:de82195a4bfe66fe",
+  "lessonIds": [
+    "UR-C240-dhakelna",
+    "UR-C240-bujhana",
+    "UR-C240-chalana",
+    "UR-C240-rukna",
+    "UR-C240-murna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch240.txt",
+  "json": "urdu/narration/ch240.json",
+  "textHash": "fnv1a64:3668ac44f14aaa56",
+  "jsonHash": "fnv1a64:1ab42fc597aafa5b",
+  "findings": []
+}

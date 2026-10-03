@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:6725bf2897b163d0",
+  "lessonIds": [
+    "UR-C244-chhala",
+    "UR-C244-nishan",
+    "UR-C244-patti",
+    "UR-C244-marham",
+    "UR-C244-dava-khana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch244.txt",
+  "json": "urdu/narration/ch244.json",
+  "textHash": "fnv1a64:75497bb50b57343d",
+  "jsonHash": "fnv1a64:69201a3f15f1d891",
+  "findings": []
+}

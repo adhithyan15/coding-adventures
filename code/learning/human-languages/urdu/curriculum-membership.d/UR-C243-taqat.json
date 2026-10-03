@@ -1,0 +1,11 @@
+{
+  "id": "UR-C243-taqat",
+  "pathSegment": "UR-PATH-243-SEHAT243",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-243-SEHAT243",
+      "order": 1
+    }
+  ]
+}

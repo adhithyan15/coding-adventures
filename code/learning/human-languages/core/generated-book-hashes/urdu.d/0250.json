@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:47e624a5589534ba",
+  "lessonIds": [
+    "UR-C250-degchi",
+    "UR-C250-tava",
+    "UR-C250-karahi",
+    "UR-C250-tandur",
+    "UR-C250-ketli"
+  ],
+  "tex": "urdu/book/chapters/ch250-cooking-pot-griddle-wok-clay-oven-kettle.tex"
+}

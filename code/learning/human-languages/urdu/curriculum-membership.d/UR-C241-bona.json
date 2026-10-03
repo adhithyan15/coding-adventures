@@ -1,0 +1,11 @@
+{
+  "id": "UR-C241-bona",
+  "pathSegment": "UR-PATH-241-ACT241",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-241-ACT241",
+      "order": 1
+    }
+  ]
+}

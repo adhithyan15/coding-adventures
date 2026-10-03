@@ -1,0 +1,11 @@
+{
+  "id": "UR-C249-dubla",
+  "pathSegment": "UR-PATH-249-SIFAT249",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-249-SIFAT249",
+      "order": 0
+    }
+  ]
+}

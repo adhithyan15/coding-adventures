@@ -1,0 +1,11 @@
+{
+  "id": "UR-C263-nanbai",
+  "pathSegment": "UR-PATH-263-KAM263",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-263-KAM263",
+      "order": 0
+    }
+  ]
+}

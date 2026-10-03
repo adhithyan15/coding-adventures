@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-262-KAM262",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a judge, a pupil, an engineer, a scientist and an actor.",
+  "prerequisites": []
+}

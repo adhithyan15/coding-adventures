@@ -1,0 +1,19 @@
+{
+  "chapter": 255,
+  "title": "Platform, Traffic, Penalty, Licence, Parking",
+  "label": "ch:ur-platform-traffic-penalty-licence-parking",
+  "canDo": "I can say a platform, traffic, a penalty, a licence and parking.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C255-parking",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 255: I can say a platform, traffic, a penalty, a licence and parking.",
+    "assesses": [
+      "UR-LEX-C255-CHIZ255-03",
+      "UR-LEX-C255-CHIZ255-04",
+      "UR-LEX-C255-CHIZ255-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C256-rishtedar",
+    "language": "urdu",
+    "chapter": 256,
+    "sequence": 15470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:653ea9ab4df0085a"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:11a5405694e48674",
+  "lessonIds": [
+    "UR-C243-thakan",
+    "UR-C243-taqat",
+    "UR-C243-vazan",
+    "UR-C243-qad",
+    "UR-C243-klinik"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch243.txt",
+  "json": "urdu/narration/ch243.json",
+  "textHash": "fnv1a64:c8acf0e7812d71b9",
+  "jsonHash": "fnv1a64:568a1c811b58838b",
+  "findings": []
+}

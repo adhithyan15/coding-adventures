@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C260-kofta",
+    "language": "urdu",
+    "chapter": 260,
+    "sequence": 15850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1921c14fb68fd380"
+  },
+  "findings": []
+}
