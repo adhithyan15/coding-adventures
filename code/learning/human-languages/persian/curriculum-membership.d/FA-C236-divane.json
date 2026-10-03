@@ -1,0 +1,11 @@
+{
+  "id": "FA-C236-divane",
+  "pathSegment": "FA-PATH-236-SEFAT236",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-236-SEFAT236",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C236-divane",
+    "language": "persian",
+    "chapter": 236,
+    "sequence": 12210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:493bb76ba93475fe"
+  },
+  "findings": []
+}

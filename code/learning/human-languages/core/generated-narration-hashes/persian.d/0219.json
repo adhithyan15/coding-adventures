@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:5f86a1bd3c7b43f1",
+  "lessonIds": [
+    "FA-C219-tavaqqof-kardan",
+    "FA-C219-negah-dashtan",
+    "FA-C219-tamrin-kardan",
+    "FA-C219-busidan",
+    "FA-C219-labkhand-zadan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch219.txt",
+  "json": "persian/narration/ch219.json",
+  "textHash": "fnv1a64:8852f481872ea752",
+  "jsonHash": "fnv1a64:baea2f4a721ed2e8",
+  "findings": []
+}

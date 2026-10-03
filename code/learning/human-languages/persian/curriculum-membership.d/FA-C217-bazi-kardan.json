@@ -1,0 +1,11 @@
+{
+  "id": "FA-C217-bazi-kardan",
+  "pathSegment": "FA-PATH-217-KONESH217",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-217-KONESH217",
+      "order": 2
+    }
+  ]
+}

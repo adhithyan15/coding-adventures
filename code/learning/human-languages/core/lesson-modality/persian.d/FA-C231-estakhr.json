@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C231-estakhr",
+    "language": "persian",
+    "chapter": 231,
+    "sequence": 11930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3922711fcf7eec62"
+  },
+  "findings": []
+}

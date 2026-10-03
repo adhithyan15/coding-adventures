@@ -1,0 +1,15 @@
+{
+  "language": "persian",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:d985fc70c92c1150",
+  "lessonIds": [
+    "FA-C243-marasem",
+    "FA-C243-mosabeqe",
+    "FA-C243-film",
+    "FA-C243-sargarmi",
+    "FA-C243-khatere",
+    "FA-R243-first-pass-words-from-chapters-235-238",
+    "FA-R243-second-pass-words-from-chapters-239-243"
+  ],
+  "tex": "persian/book/chapters/ch243-ceremony-competition-film-hobby-memory.tex"
+}

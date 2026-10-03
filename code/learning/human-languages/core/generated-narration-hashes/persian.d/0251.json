@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:22b5891da8823180",
+  "lessonIds": [
+    "FA-C251-honarmand",
+    "FA-C251-davar",
+    "FA-C251-morabbi",
+    "FA-C251-bazikon",
+    "FA-C251-tarikh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch251.txt",
+  "json": "persian/narration/ch251.json",
+  "textHash": "fnv1a64:8f5aaa44b95fff50",
+  "jsonHash": "fnv1a64:0670133f08511df0",
+  "findings": []
+}

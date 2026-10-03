@@ -1,0 +1,11 @@
+{
+  "id": "FA-C230-jonub",
+  "pathSegment": "FA-PATH-230-MAKAN230",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-230-MAKAN230",
+      "order": 1
+    }
+  ]
+}

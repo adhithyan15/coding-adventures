@@ -1,0 +1,19 @@
+{
+  "chapter": 238,
+  "title": "Crisp, Juicy, Curious, Strict, Hard-working",
+  "label": "ch:fa-crisp-juicy-curious-strict-hard-working",
+  "canDo": "I can say crisp, juicy, curious, strict and hard-working.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FA-C238-zahmatkesh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 238: I can say crisp, juicy, curious, strict and hard-working.",
+    "assesses": [
+      "FA-LEX-C238-SEFAT238-03",
+      "FA-LEX-C238-SEFAT238-04",
+      "FA-LEX-C238-SEFAT238-05"
+    ]
+  }
+}

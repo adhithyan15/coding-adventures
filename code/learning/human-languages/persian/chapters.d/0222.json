@@ -1,0 +1,19 @@
+{
+  "chapter": 222,
+  "title": "To water, To bark, To dream, To doubt, To take",
+  "label": "ch:fa-to-water-to-bark-to-dream-to-doubt-to-take",
+  "canDo": "I can say to water, to bark, to dream, to doubt and to take.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C222-tul-keshidan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 222: I can say to water, to bark, to dream, to doubt and to take.",
+    "assesses": [
+      "FA-LEX-C222-KONESH222-03",
+      "FA-LEX-C222-KONESH222-04",
+      "FA-LEX-C222-KONESH222-05"
+    ]
+  }
+}

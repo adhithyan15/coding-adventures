@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:80100ad0b62fb5a5",
+  "lessonIds": [
+    "FA-C224-kharandan",
+    "FA-C224-feshar-dadan",
+    "FA-C224-vasl-kardan",
+    "FA-C224-joda-kardan",
+    "FA-C224-pust-kandan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch224.txt",
+  "json": "persian/narration/ch224.json",
+  "textHash": "fnv1a64:5fd71fdedd17746e",
+  "jsonHash": "fnv1a64:34c5bae6a08fa1c7",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C247-samavar",
+  "pathSegment": "FA-PATH-247-CHIZ247",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-247-CHIZ247",
+      "order": 3
+    }
+  ]
+}

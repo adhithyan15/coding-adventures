@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 238,
+  "sourceHash": "fnv1a64:f7adf720558ad2d3",
+  "lessonIds": [
+    "FA-C238-tord",
+    "FA-C238-abdar",
+    "FA-C238-konjkav",
+    "FA-C238-sakhtgir",
+    "FA-C238-zahmatkesh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch238.txt",
+  "json": "persian/narration/ch238.json",
+  "textHash": "fnv1a64:6cbda430957e4a42",
+  "jsonHash": "fnv1a64:cf4dcce41efa95f2",
+  "findings": []
+}

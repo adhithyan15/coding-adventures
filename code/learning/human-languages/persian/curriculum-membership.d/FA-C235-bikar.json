@@ -1,0 +1,11 @@
+{
+  "id": "FA-C235-bikar",
+  "pathSegment": "FA-PATH-235-SEFAT235",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-235-SEFAT235",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:4f670b1eef710e2d",
+  "lessonIds": [
+    "FA-C230-shomal",
+    "FA-C230-jonub",
+    "FA-C230-sharq",
+    "FA-C230-mostaqim",
+    "FA-C230-rubaru"
+  ],
+  "tex": "persian/book/chapters/ch230-north-south-east-straight-ahead-opposite.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 218,
+  "title": "To brew, To cough, To rest, To exercise, To swim",
+  "label": "ch:fa-to-brew-to-cough-to-rest-to-exercise-to-swim",
+  "canDo": "I can say to brew, to cough, to rest, to exercise and to swim.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C218-shena-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 218: I can say to brew, to cough, to rest, to exercise and to swim.",
+    "assesses": [
+      "FA-LEX-C218-KONESH218-03",
+      "FA-LEX-C218-KONESH218-04",
+      "FA-LEX-C218-KONESH218-05"
+    ]
+  }
+}

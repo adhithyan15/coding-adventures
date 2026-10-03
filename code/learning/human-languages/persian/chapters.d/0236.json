@@ -1,0 +1,19 @@
+{
+  "chapter": 236,
+  "title": "Stingy, Funny, Interesting, Crazy, Loyal",
+  "label": "ch:fa-stingy-funny-interesting-crazy-loyal",
+  "canDo": "I can say stingy, funny, interesting, crazy and loyal.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FA-C236-vafadar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 236: I can say stingy, funny, interesting, crazy and loyal.",
+    "assesses": [
+      "FA-LEX-C236-SEFAT236-03",
+      "FA-LEX-C236-SEFAT236-04",
+      "FA-LEX-C236-SEFAT236-05"
+    ]
+  }
+}

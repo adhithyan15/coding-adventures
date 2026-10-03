@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C251-morabbi",
+    "language": "persian",
+    "chapter": 251,
+    "sequence": 12970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e49954d29a43726"
+  },
+  "findings": []
+}

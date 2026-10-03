@@ -1,0 +1,11 @@
+{
+  "id": "FA-C252-negahban",
+  "pathSegment": "FA-PATH-252-KAR252",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-252-KAR252",
+      "order": 3
+    }
+  ]
+}

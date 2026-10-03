@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C250-monshi",
+    "language": "persian",
+    "chapter": 250,
+    "sequence": 12900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a72d399cc446ddb"
+  },
+  "findings": []
+}

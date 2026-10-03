@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:30f3ac046afc4dbe",
+  "lessonIds": [
+    "FA-C233-shayad",
+    "FA-C233-hatman",
+    "FA-C233-albatte",
+    "FA-C233-ehtemalan",
+    "FA-C233-kheyli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch233.txt",
+  "json": "persian/narration/ch233.json",
+  "textHash": "fnv1a64:572895f887af411b",
+  "jsonHash": "fnv1a64:9087385f5147b1f5",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 242,
+  "title": "Loan, Cheque, Petrol, Sentence, Dictionary",
+  "label": "ch:fa-loan-cheque-petrol-sentence-dictionary",
+  "canDo": "I can say a loan, a cheque, petrol, a sentence and a dictionary.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C242-farhang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 242: I can say a loan, a cheque, petrol, a sentence and a dictionary.",
+    "assesses": [
+      "FA-LEX-C242-CHIZ242-03",
+      "FA-LEX-C242-CHIZ242-04",
+      "FA-LEX-C242-CHIZ242-05"
+    ]
+  }
+}

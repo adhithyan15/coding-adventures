@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C229-sahar",
+    "language": "persian",
+    "chapter": 229,
+    "sequence": 11850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb9cc4f582fc4dfb"
+  },
+  "findings": []
+}

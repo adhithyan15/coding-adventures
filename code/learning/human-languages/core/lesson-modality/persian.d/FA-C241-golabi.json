@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C241-golabi",
+    "language": "persian",
+    "chapter": 241,
+    "sequence": 12430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a7b6ef7d26408e4"
+  },
+  "findings": []
+}

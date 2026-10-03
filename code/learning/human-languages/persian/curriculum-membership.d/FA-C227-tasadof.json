@@ -1,0 +1,11 @@
+{
+  "id": "FA-C227-tasadof",
+  "pathSegment": "FA-PATH-227-SALAMAT227",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-227-SALAMAT227",
+      "order": 3
+    }
+  ]
+}

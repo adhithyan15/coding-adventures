@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C239-quri",
+    "language": "persian",
+    "chapter": 239,
+    "sequence": 12340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b4a3c626941fc4a"
+  },
+  "findings": []
+}

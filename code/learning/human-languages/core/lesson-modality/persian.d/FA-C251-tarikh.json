@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C251-tarikh",
+    "language": "persian",
+    "chapter": 251,
+    "sequence": 12990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ab7ca1b51e23a0b"
+  },
+  "findings": []
+}

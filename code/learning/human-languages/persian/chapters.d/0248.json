@@ -1,0 +1,19 @@
+{
+  "chapter": 248,
+  "title": "Coat hanger, Clip, Shoelace, Cement, Plaster",
+  "label": "ch:fa-coat-hanger-clip-shoelace-cement-plaster",
+  "canDo": "I can say a coat hanger, a clip, a shoelace, cement and plaster.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C248-gach",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 248: I can say a coat hanger, a clip, a shoelace, cement and plaster.",
+    "assesses": [
+      "FA-LEX-C248-CHIZ248-03",
+      "FA-LEX-C248-CHIZ248-04",
+      "FA-LEX-C248-CHIZ248-05"
+    ]
+  }
+}

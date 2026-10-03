@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C244-zelzele",
+    "language": "persian",
+    "chapter": 244,
+    "sequence": 12600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e0c581be285b32b"
+  },
+  "findings": []
+}

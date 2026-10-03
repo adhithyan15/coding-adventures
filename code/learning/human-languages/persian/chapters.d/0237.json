@@ -1,0 +1,19 @@
+{
+  "chapter": 237,
+  "title": "Snowy, Wild, Tame, Alive, Dead",
+  "label": "ch:fa-snowy-wild-tame-alive-dead",
+  "canDo": "I can say snowy, wild, tame, alive and dead.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FA-C237-morde",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 237: I can say snowy, wild, tame, alive and dead.",
+    "assesses": [
+      "FA-LEX-C237-SEFAT237-03",
+      "FA-LEX-C237-SEFAT237-04",
+      "FA-LEX-C237-SEFAT237-05"
+    ]
+  }
+}

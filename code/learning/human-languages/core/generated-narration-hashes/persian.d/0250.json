@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:b757cff8eb6076e6",
+  "lessonIds": [
+    "FA-C250-monshi",
+    "FA-C250-mohandes",
+    "FA-C250-vakil",
+    "FA-C250-ostad",
+    "FA-C250-khalaban"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch250.txt",
+  "json": "persian/narration/ch250.json",
+  "textHash": "fnv1a64:29b94786d863f726",
+  "jsonHash": "fnv1a64:6328bb0c28a3cffe",
+  "findings": []
+}

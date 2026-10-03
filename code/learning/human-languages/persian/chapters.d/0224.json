@@ -1,0 +1,19 @@
+{
+  "chapter": 224,
+  "title": "To scratch, To press, To connect, To separate, To peel",
+  "label": "ch:fa-to-scratch-to-press-to-connect-to-separate-to-peel",
+  "canDo": "I can say to scratch, to press, to connect, to separate and to peel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C224-pust-kandan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 224: I can say to scratch, to press, to connect, to separate and to peel.",
+    "assesses": [
+      "FA-LEX-C224-KONESH224-03",
+      "FA-LEX-C224-KONESH224-04",
+      "FA-LEX-C224-KONESH224-05"
+    ]
+  }
+}

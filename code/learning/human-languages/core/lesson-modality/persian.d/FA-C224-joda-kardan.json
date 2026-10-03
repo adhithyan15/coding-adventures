@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C224-joda-kardan",
+    "language": "persian",
+    "chapter": 224,
+    "sequence": 11570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e49a7fd94f31a1fa"
+  },
+  "findings": []
+}

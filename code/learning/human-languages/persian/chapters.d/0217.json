@@ -1,0 +1,19 @@
+{
+  "chapter": 217,
+  "title": "To speak, To work, To play, To walk, To get on",
+  "label": "ch:fa-to-speak-to-work-to-play-to-walk-to-get-on",
+  "canDo": "I can say to speak, to work, to play, to walk and to get on.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C217-savar-shodan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 217: I can say to speak, to work, to play, to walk and to get on.",
+    "assesses": [
+      "FA-LEX-C217-KONESH217-03",
+      "FA-LEX-C217-KONESH217-04",
+      "FA-LEX-C217-KONESH217-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C230-sharq",
+  "pathSegment": "FA-PATH-230-MAKAN230",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-230-MAKAN230",
+      "order": 2
+    }
+  ]
+}

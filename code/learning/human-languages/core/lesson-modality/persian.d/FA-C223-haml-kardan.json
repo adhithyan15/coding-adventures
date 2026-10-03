@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C223-haml-kardan",
+    "language": "persian",
+    "chapter": 223,
+    "sequence": 11520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:103ec822462180c2"
+  },
+  "findings": []
+}

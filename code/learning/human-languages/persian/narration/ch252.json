@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 252,
+  "title": "Grocer, Pastry shop, Firefighter, Guard, Street sweeper",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:1f461f3b35618091",
+  "lessons": [
+    {
+      "id": "FA-C252-baqqal",
+      "sequence": 13000,
+      "title": "بقال (baqqâl) — a grocer",
+      "headword": "بقال",
+      "romanization": "baqqâl",
+      "gloss": "a grocer",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b83d4d62b4cb4811",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a player, then the Persian for history."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بقال",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بقال — baqqâl — \"a grocer\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baqqâl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baqqâl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baqqâl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baqqâl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say baqqâl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *baqqâl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a player, then the Persian for history, then say baqqâl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a player, then the Persian for history, then say *baqqâl* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بقال (baqqâl) mean? (\"A grocer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C252-qannadi",
+      "sequence": 13010,
+      "title": "قنادی (qannâdi) — a pastry shop",
+      "headword": "قنادی",
+      "romanization": "qannâdi",
+      "gloss": "a pastry shop",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ae331a7448454bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for history, then the Persian for a grocer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: قنادی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قنادی — qannâdi — \"a pastry shop\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qannâdi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qannâdi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qannâdi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qannâdi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say qannâdi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *qannâdi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for history, then the Persian for a grocer, then say qannâdi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for history, then the Persian for a grocer, then say *qannâdi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does قنادی (qannâdi) mean? (\"A pastry shop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C252-atashneshan",
+      "sequence": 13020,
+      "title": "آتش نشان (âtashneshân) — a firefighter",
+      "headword": "آتش نشان",
+      "romanization": "âtashneshân",
+      "gloss": "a firefighter",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:95d177d7f658b2d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a grocer, then the Persian for a pastry shop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: آتش نشان",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "آتش نشان — âtashneshân — \"a firefighter\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "âtashneshân",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *âtashneshân*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "âtashneshân, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *âtashneshân*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say âtashneshân",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *âtashneshân*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a grocer, then the Persian for a pastry shop, then say âtashneshân again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a grocer, then the Persian for a pastry shop, then say *âtashneshân* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does آتش نشان (âtashneshân) mean? (\"A firefighter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C252-negahban",
+      "sequence": 13030,
+      "title": "نگهبان (negahbân) — a guard",
+      "headword": "نگهبان",
+      "romanization": "negahbân",
+      "gloss": "a guard",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:696b03c1d28bf617",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a pastry shop, then the Persian for a firefighter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نگهبان",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نگهبان — negahbân — \"a guard\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "negahbân",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *negahbân*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "negahbân, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *negahbân*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say negahbân",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *negahbân*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a pastry shop, then the Persian for a firefighter, then say negahbân again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a pastry shop, then the Persian for a firefighter, then say *negahbân* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نگهبان (negahbân) mean? (\"A guard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C252-roftegar",
+      "sequence": 13040,
+      "title": "رفتگر (roftegar) — a street sweeper",
+      "headword": "رفتگر",
+      "romanization": "roftegar",
+      "gloss": "a street sweeper",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:713735ee4182cfe8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a firefighter, then the Persian for a guard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: رفتگر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رفتگر — roftegar — \"a street sweeper\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "roftegar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *roftegar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "roftegar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *roftegar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say roftegar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *roftegar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a firefighter, then the Persian for a guard, then say roftegar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a firefighter, then the Persian for a guard, then say *roftegar* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does رفتگر (roftegar) mean? (\"A street sweeper\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R252-first-pass-words-from-chapters-244-247",
+      "sequence": 13050,
+      "title": "Words from chapters 244-247 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 244-247",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:613632ca1dbfc892",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a guard and a street sweeper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an earthquake, a flood, a bush, a branch, a pine tree",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an earthquake, a flood, a bush, a branch, a pine tree]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a swan, a nest, a wing, a horn, football",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a swan, a nest, a wing, a horn, football]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a page, a message, a drawer, an electric fan, electricity",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a page, a message, a drawer, an electric fan, electricity]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tin, spices, scales, a samovar, a wire",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tin, spices, scales, a samovar, a wire]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An earthquake? (زلزله, zelzele.) A flood? (سیل, sel.) A bush? (بوته, bute.) A branch? (شاخه, shâkhe.) A pine tree? (کاج, kâj.) A swan? (قو, qu.) A nest? (لانه, lâne.) A wing? (بال, bâl.) A horn? (شاخ, shâkh.) Football? (فوتبال, futbâl.) A page? (صفحه, safhe.) A message? (پیام, payâm.) A drawer? (کشو, keshow.) An electric fan? (پنکه, panke.) Electricity? (برق, barq.) A tin? (قوطی, quti.) Spices? (ادویه, adviye.) Scales? (ترازو, tarâzu.) A samovar? (سماور, samâvar.) A wire? (سیم, sim.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R252-second-pass-words-from-chapters-248-252",
+      "sequence": 13060,
+      "title": "Words from chapters 248-252 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 248-252",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:07948a493a64b911",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a coat hanger and a clip."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a coat hanger, a clip, a shoelace, cement, plaster",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a coat hanger, a clip, a shoelace, cement, plaster]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a piece, turmeric, crispy rice from the bottom of the pot, celery, a sour cherry",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a piece, turmeric, crispy rice from the bottom of the pot, celery, a sour cherry]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a secretary, an engineer, a lawyer, a university lecturer, a pilot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a secretary, an engineer, a lawyer, a university lecturer, a pilot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an artist, a referee, a coach, a player, history",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an artist, a referee, a coach, a player, history]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a grocer, a pastry shop, a firefighter, a guard, a street sweeper",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a grocer, a pastry shop, a firefighter, a guard, a street sweeper]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A coat hanger? (چوب لباسی, chub-lebâsi.) A clip? (گیره, gire.) A shoelace? (بند کفش, band-e kafsh.) Cement? (سیمان, simân.) Plaster? (گچ, gach.) A piece? (تکه, tekke.) Turmeric? (زردچوبه, zardchube.) Crispy rice from the bottom of the pot? (ته دیگ, tahdig.) Celery? (کرفس, karafs.) A sour cherry? (آلبالو, âlbâlu.) A secretary? (منشی, monshi.) An engineer? (مهندس, mohandes.) A lawyer? (وکیل, vakil.) A university lecturer? (استاد, ostâd.) A pilot? (خلبان, khalabân.) An artist? (هنرمند, honarmand.) A referee? (داور, dâvar.) A coach? (مربی, morabbi.) A player? (بازیکن, bâzikon.) History? (تاریخ, târikh.) A grocer? (بقال, baqqâl.) A pastry shop? (قنادی, qannâdi.) A firefighter? (آتش نشان, âtashneshân.) A guard? (نگهبان, negahbân.) A street sweeper? (رفتگر, roftegar.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

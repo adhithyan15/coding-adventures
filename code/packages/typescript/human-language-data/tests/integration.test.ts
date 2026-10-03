@@ -243,7 +243,9 @@ describe("real curriculum", () => {
       // reviews.
       // 178 -> 216: the second A2 vocabulary tranche, chapters 179-216: 190
       // headwords, fifty of them verbs.
-    ).toEqual(Array.from({ length: 216 }, (_, i) => i + 1));
+      // 216 -> 252: the third A2 vocabulary tranche, chapters 217-252: 180
+      // headwords, fifty of them verbs, which brings Persian to A2.
+    ).toEqual(Array.from({ length: 252 }, (_, i) => i + 1));
     expect(
       books.books
         .find((book) => book.language === "urdu")

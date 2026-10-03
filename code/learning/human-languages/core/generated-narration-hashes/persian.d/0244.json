@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:3c6dd344efded486",
+  "lessonIds": [
+    "FA-C244-zelzele",
+    "FA-C244-sel",
+    "FA-C244-bute",
+    "FA-C244-shakhe",
+    "FA-C244-kaj2"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch244.txt",
+  "json": "persian/narration/ch244.json",
+  "textHash": "fnv1a64:02c9b1781f4955bd",
+  "jsonHash": "fnv1a64:f257cfdc29ac926d",
+  "findings": []
+}

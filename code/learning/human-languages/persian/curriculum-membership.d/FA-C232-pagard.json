@@ -1,0 +1,11 @@
+{
+  "id": "FA-C232-pagard",
+  "pathSegment": "FA-PATH-232-MAKAN232",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-232-MAKAN232",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C247-tarazu",
+  "pathSegment": "FA-PATH-247-CHIZ247",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-247-CHIZ247",
+      "order": 2
+    }
+  ]
+}

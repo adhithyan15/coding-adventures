@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:b61ba690fdddfdfc",
+  "lessonIds": [
+    "FA-C232-kashi",
+    "FA-C232-zirzamin",
+    "FA-C232-rahpelle",
+    "FA-C232-pagard",
+    "FA-C232-narde"
+  ],
+  "tex": "persian/book/chapters/ch232-tile-basement-stairwell-landing-railing.tex"
+}

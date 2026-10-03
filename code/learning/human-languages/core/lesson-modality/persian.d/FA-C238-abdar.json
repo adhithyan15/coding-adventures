@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C238-abdar",
+    "language": "persian",
+    "chapter": 238,
+    "sequence": 12290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2bc5d60b1e3f824c"
+  },
+  "findings": []
+}

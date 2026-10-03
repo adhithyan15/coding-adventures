@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:b021228eda78c6e7",
+  "lessonIds": [
+    "FA-C245-qu",
+    "FA-C245-lane",
+    "FA-C245-bal",
+    "FA-C245-shakh",
+    "FA-C245-futbal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch245.txt",
+  "json": "persian/narration/ch245.json",
+  "textHash": "fnv1a64:05b438e05b7e7a3d",
+  "jsonHash": "fnv1a64:566c7d491bd2b849",
+  "findings": []
+}

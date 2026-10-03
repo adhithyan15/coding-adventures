@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C219-negah-dashtan",
+    "language": "persian",
+    "chapter": 219,
+    "sequence": 11300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6b018e4031ce579"
+  },
+  "findings": []
+}

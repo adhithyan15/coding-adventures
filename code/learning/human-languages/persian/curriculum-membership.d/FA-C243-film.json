@@ -1,0 +1,11 @@
+{
+  "id": "FA-C243-film",
+  "pathSegment": "FA-PATH-243-CHIZ243",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-243-CHIZ243",
+      "order": 2
+    }
+  ]
+}
