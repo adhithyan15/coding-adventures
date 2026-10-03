@@ -1,0 +1,11 @@
+{
+  "id": "TA-C236-turaimukam",
+  "pathSegment": "TA-PATH-236-IDAM236",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-236-IDAM236",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 243,
+  "title": "Wheat, Potato, Aubergine, Fragrance, Cucumber",
+  "label": "ch:ta-wheat-potato-aubergine-fragrance-cucumber",
+  "canDo": "I can say wheat, a potato, an aubergine, a fragrance and a cucumber.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C243-vellarikkay",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 243: I can say wheat, a potato, an aubergine, a fragrance and a cucumber.",
+    "assesses": [
+      "TA-LEX-C243-PORUL243-03",
+      "TA-LEX-C243-PORUL243-04",
+      "TA-LEX-C243-PORUL243-05"
+    ]
+  }
+}

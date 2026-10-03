@@ -1,0 +1,19 @@
+{
+  "chapter": 252,
+  "title": "Mark, University, Education, Mathematics, Science",
+  "label": "ch:ta-mark-university-education-mathematics-science",
+  "canDo": "I can say a mark, a university, education, mathematics and science.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C252-ariviyal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 252: I can say a mark, a university, education, mathematics and science.",
+    "assesses": [
+      "TA-LEX-C252-VELAI252-03",
+      "TA-LEX-C252-VELAI252-04",
+      "TA-LEX-C252-VELAI252-05"
+    ]
+  }
+}

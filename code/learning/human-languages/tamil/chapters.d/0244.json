@@ -1,0 +1,19 @@
+{
+  "chapter": 244,
+  "title": "Postage stamp, Parcel, Form, Document, Passport",
+  "label": "ch:ta-postage-stamp-parcel-form-document-passport",
+  "canDo": "I can say a postage stamp, a parcel, a form, a document and a passport.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C244-katavuccittu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 244: I can say a postage stamp, a parcel, a form, a document and a passport.",
+    "assesses": [
+      "TA-LEX-C244-PORUL244-03",
+      "TA-LEX-C244-PORUL244-04",
+      "TA-LEX-C244-PORUL244-05"
+    ]
+  }
+}

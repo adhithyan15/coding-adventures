@@ -1,0 +1,11 @@
+{
+  "id": "TA-C252-matippen",
+  "pathSegment": "TA-PATH-252-VELAI252",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-252-VELAI252",
+      "order": 0
+    }
+  ]
+}

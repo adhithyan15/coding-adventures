@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:a297f68e5ae9ab13",
+  "lessonIds": [
+    "TA-C231-mayanku",
+    "TA-C231-vatu",
+    "TA-C231-eccari",
+    "TA-C231-kencu",
+    "TA-C231-camali"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch231.txt",
+  "json": "tamil/narration/ch231.json",
+  "textHash": "fnv1a64:f0711802adece45d",
+  "jsonHash": "fnv1a64:c6ea40a10bc998b2",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C225-cuvai-par",
+    "language": "tamil",
+    "chapter": 225,
+    "sequence": 12180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ced302e05d108a70"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:0e12cc208ec4ac06",
+  "lessonIds": [
+    "TA-C240-urutiyana",
+    "TA-C240-vattamana",
+    "TA-C240-caturamana",
+    "TA-C240-kurmaiyana",
+    "TA-C240-arumaiyana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch240.txt",
+  "json": "tamil/narration/ch240.json",
+  "textHash": "fnv1a64:c6c7190a6695958c",
+  "jsonHash": "fnv1a64:780674b80493047e",
+  "findings": []
+}

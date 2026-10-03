@@ -1,0 +1,11 @@
+{
+  "id": "TA-C236-aranmanai",
+  "pathSegment": "TA-PATH-236-IDAM236",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-236-IDAM236",
+      "order": 4
+    }
+  ]
+}

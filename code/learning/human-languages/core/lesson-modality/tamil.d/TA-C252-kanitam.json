@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C252-kanitam",
+    "language": "tamil",
+    "chapter": 252,
+    "sequence": 14100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:935768356a9b06c0"
+  },
+  "findings": []
+}

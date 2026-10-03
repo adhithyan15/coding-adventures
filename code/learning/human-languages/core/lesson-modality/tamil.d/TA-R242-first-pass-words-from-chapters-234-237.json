@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R242-first-pass-words-from-chapters-234-237",
+    "language": "tamil",
+    "chapter": 242,
+    "sequence": 13270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:746417951ab73770"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C236-turaimukam",
+    "language": "tamil",
+    "chapter": 236,
+    "sequence": 12940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e585acb78abc0d4"
+  },
+  "findings": []
+}

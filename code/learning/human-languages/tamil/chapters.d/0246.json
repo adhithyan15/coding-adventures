@@ -1,0 +1,19 @@
+{
+  "chapter": 246,
+  "title": "Celebration, Firecrackers, Culture, Habit, Tradition",
+  "label": "ch:ta-celebration-firecrackers-culture-habit-tradition",
+  "canDo": "I can say celebration, firecrackers, culture, a habit and tradition.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C246-parampariyam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 246: I can say celebration, firecrackers, culture, a habit and tradition.",
+    "assesses": [
+      "TA-LEX-C246-PORUL246-03",
+      "TA-LEX-C246-PORUL246-04",
+      "TA-LEX-C246-PORUL246-05"
+    ]
+  }
+}

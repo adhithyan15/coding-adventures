@@ -1,0 +1,11 @@
+{
+  "id": "TA-C230-pativirakku",
+  "pathSegment": "TA-PATH-230-ACT230",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-230-ACT230",
+      "order": 3
+    }
+  ]
+}

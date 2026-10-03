@@ -1,0 +1,11 @@
+{
+  "id": "TA-C231-mayanku",
+  "pathSegment": "TA-PATH-231-ACT231",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-231-ACT231",
+      "order": 0
+    }
+  ]
+}

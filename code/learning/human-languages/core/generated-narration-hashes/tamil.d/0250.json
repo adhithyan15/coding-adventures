@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:27409b7d68dd737d",
+  "lessonIds": [
+    "TA-C250-kutaram",
+    "TA-C250-uncal",
+    "TA-C250-alamaram",
+    "TA-C250-taracu",
+    "TA-C250-vaikkol"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch250.txt",
+  "json": "tamil/narration/ch250.json",
+  "textHash": "fnv1a64:c60f9c7d95bb5f5d",
+  "jsonHash": "fnv1a64:adf20baf2b69f9b3",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C249-vilaiyattu",
+    "language": "tamil",
+    "chapter": 249,
+    "sequence": 13920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b6ec01a169324e2"
+  },
+  "findings": []
+}

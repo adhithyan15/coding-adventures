@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:7bb7a709f041aacd",
+  "lessonIds": [
+    "TA-C250-kutaram",
+    "TA-C250-uncal",
+    "TA-C250-alamaram",
+    "TA-C250-taracu",
+    "TA-C250-vaikkol"
+  ],
+  "tex": "tamil/book/chapters/ch250-tent-swing-banyan-tree-pair-of-scales-straw.tex"
+}

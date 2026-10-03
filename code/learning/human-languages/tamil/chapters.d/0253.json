@@ -1,0 +1,19 @@
+{
+  "chapter": 253,
+  "title": "Artist, Officer, Judge, Pension, Certificate",
+  "label": "ch:ta-artist-officer-judge-pension-certificate",
+  "canDo": "I can say an artist, an officer, a judge, a pension and a certificate.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-R253-second-pass-words-from-chapters-251-253",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 253: I can say an artist, an officer, a judge, a pension and a certificate.",
+    "assesses": [
+      "TA-LEX-C253-VELAI253-03",
+      "TA-LEX-C253-VELAI253-04",
+      "TA-LEX-C253-VELAI253-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C225-mati2",
+    "language": "tamil",
+    "chapter": 225,
+    "sequence": 12200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:efb799bf66b39c4d"
+  },
+  "findings": []
+}

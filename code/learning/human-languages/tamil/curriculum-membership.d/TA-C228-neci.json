@@ -1,0 +1,11 @@
+{
+  "id": "TA-C228-neci",
+  "pathSegment": "TA-PATH-228-ACT228",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-228-ACT228",
+      "order": 4
+    }
+  ]
+}

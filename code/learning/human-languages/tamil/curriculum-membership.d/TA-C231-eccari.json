@@ -1,0 +1,11 @@
+{
+  "id": "TA-C231-eccari",
+  "pathSegment": "TA-PATH-231-ACT231",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-231-ACT231",
+      "order": 2
+    }
+  ]
+}

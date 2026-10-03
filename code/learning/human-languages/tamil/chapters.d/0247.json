@@ -1,0 +1,19 @@
+{
+  "chapter": 247,
+  "title": "Sparrow, Eagle, Puppy, Squirrel, Worm",
+  "label": "ch:ta-sparrow-eagle-puppy-squirrel-worm",
+  "canDo": "I can say a sparrow, an eagle, a puppy, a squirrel and a worm.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C247-pulu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 247: I can say a sparrow, an eagle, a puppy, a squirrel and a worm.",
+    "assesses": [
+      "TA-LEX-C247-PORUL247-03",
+      "TA-LEX-C247-PORUL247-04",
+      "TA-LEX-C247-PORUL247-05"
+    ]
+  }
+}

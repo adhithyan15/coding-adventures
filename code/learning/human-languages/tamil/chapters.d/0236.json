@@ -1,0 +1,19 @@
+{
+  "chapter": 236,
+  "title": "Museum, Lane, Harbour, Fort, Palace",
+  "label": "ch:ta-museum-lane-harbour-fort-palace",
+  "canDo": "I can say a museum, a lane, a harbour, a fort and a palace.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TA-C236-aranmanai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 236: I can say a museum, a lane, a harbour, a fort and a palace.",
+    "assesses": [
+      "TA-LEX-C236-IDAM236-03",
+      "TA-LEX-C236-IDAM236-04",
+      "TA-LEX-C236-IDAM236-05"
+    ]
+  }
+}

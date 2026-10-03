@@ -1,0 +1,11 @@
+{
+  "id": "TA-C250-vaikkol",
+  "pathSegment": "TA-PATH-250-PORUL250",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-250-PORUL250",
+      "order": 4
+    }
+  ]
+}

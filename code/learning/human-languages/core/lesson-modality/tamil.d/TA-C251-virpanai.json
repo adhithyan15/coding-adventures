@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C251-virpanai",
+    "language": "tamil",
+    "chapter": 251,
+    "sequence": 14050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6fb2771a91a0abfc"
+  },
+  "findings": []
+}

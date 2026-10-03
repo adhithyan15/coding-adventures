@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C253-atikari",
+    "language": "tamil",
+    "chapter": 253,
+    "sequence": 14130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:59cc5c318a4cda44"
+  },
+  "findings": []
+}

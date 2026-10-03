@@ -1,0 +1,19 @@
+{
+  "chapter": 241,
+  "title": "Ordinary, Rare, Equal, Rough, Lukewarm",
+  "label": "ch:ta-ordinary-rare-equal-rough-lukewarm",
+  "canDo": "I can say ordinary, rare, equal, rough and lukewarm.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TA-C241-vetuvetuppana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 241: I can say ordinary, rare, equal, rough and lukewarm.",
+    "assesses": [
+      "TA-LEX-C241-GUNAM241-03",
+      "TA-LEX-C241-GUNAM241-04",
+      "TA-LEX-C241-GUNAM241-05"
+    ]
+  }
+}

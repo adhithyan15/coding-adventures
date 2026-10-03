@@ -1,0 +1,19 @@
+{
+  "chapter": 238,
+  "title": "Colour, Size, Weight, Healthy, Thin",
+  "label": "ch:ta-colour-size-weight-healthy-thin",
+  "canDo": "I can say a colour, a size, weight, healthy and thin.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TA-C238-olliyana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 238: I can say a colour, a size, weight, healthy and thin.",
+    "assesses": [
+      "TA-LEX-C238-GUNAM238-03",
+      "TA-LEX-C238-GUNAM238-04",
+      "TA-LEX-C238-GUNAM238-05"
+    ]
+  }
+}

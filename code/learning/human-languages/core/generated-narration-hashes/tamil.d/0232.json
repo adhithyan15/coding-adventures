@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:c316f03cdf5cbb3c",
+  "lessonIds": [
+    "TA-C232-palvali",
+    "TA-C232-kayam",
+    "TA-C232-mattirai",
+    "TA-C232-noyali",
+    "TA-C232-ceviliyar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch232.txt",
+  "json": "tamil/narration/ch232.json",
+  "textHash": "fnv1a64:fbaa08a622afcca8",
+  "jsonHash": "fnv1a64:21abe80d150a39f1",
+  "findings": []
+}

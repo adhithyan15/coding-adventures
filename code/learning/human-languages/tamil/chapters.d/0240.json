@@ -1,0 +1,19 @@
+{
+  "chapter": 240,
+  "title": "Firm, Round, Square, Sharp, Wonderful",
+  "label": "ch:ta-firm-round-square-sharp-wonderful",
+  "canDo": "I can say firm, round, square, sharp and wonderful.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TA-C240-arumaiyana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 240: I can say firm, round, square, sharp and wonderful.",
+    "assesses": [
+      "TA-LEX-C240-GUNAM240-03",
+      "TA-LEX-C240-GUNAM240-04",
+      "TA-LEX-C240-GUNAM240-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:df939bf0a5fa7bbd",
+  "lessonIds": [
+    "TA-C245-cumai",
+    "TA-C245-kural",
+    "TA-C245-uraiyatal",
+    "TA-C245-an",
+    "TA-C245-pen"
+  ],
+  "tex": "tamil/book/chapters/ch245-load-voice-conversation-man-woman.tex"
+}

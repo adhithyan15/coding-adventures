@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R233-first-pass-words-from-chapters-225-228",
+    "language": "tamil",
+    "chapter": 233,
+    "sequence": 12630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bfc1467b64d7b60c"
+  },
+  "findings": []
+}

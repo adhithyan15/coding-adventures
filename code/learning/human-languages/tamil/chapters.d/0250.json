@@ -1,0 +1,19 @@
+{
+  "chapter": 250,
+  "title": "Tent, Swing, Banyan tree, Pair of scales, Straw",
+  "label": "ch:ta-tent-swing-banyan-tree-pair-of-scales-straw",
+  "canDo": "I can say a tent, a swing, a banyan tree, a pair of scales and straw.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C250-vaikkol",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 250: I can say a tent, a swing, a banyan tree, a pair of scales and straw.",
+    "assesses": [
+      "TA-LEX-C250-PORUL250-03",
+      "TA-LEX-C250-PORUL250-04",
+      "TA-LEX-C250-PORUL250-05"
+    ]
+  }
+}

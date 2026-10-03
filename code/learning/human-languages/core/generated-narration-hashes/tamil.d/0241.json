@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:d894f135ba5e8058",
+  "lessonIds": [
+    "TA-C241-cataranamana",
+    "TA-C241-apurvamana",
+    "TA-C241-camamana",
+    "TA-C241-karatumuratana",
+    "TA-C241-vetuvetuppana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch241.txt",
+  "json": "tamil/narration/ch241.json",
+  "textHash": "fnv1a64:56d0ffc3f38194bc",
+  "jsonHash": "fnv1a64:933d6d1167d83053",
+  "findings": []
+}

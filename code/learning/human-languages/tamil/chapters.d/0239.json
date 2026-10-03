@@ -1,0 +1,19 @@
+{
+  "chapter": 239,
+  "title": "Disappointment, Pride, Satisfaction, Pity, Loneliness",
+  "label": "ch:ta-disappointment-pride-satisfaction-pity-loneliness",
+  "canDo": "I can say disappointment, pride, satisfaction, pity and loneliness.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TA-C239-tanimai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 239: I can say disappointment, pride, satisfaction, pity and loneliness.",
+    "assesses": [
+      "TA-LEX-C239-GUNAM239-03",
+      "TA-LEX-C239-GUNAM239-04",
+      "TA-LEX-C239-GUNAM239-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C232-kayam",
+  "pathSegment": "TA-PATH-232-NALAM232",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-232-NALAM232",
+      "order": 1
+    }
+  ]
+}

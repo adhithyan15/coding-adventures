@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:98fd63357ffc9389",
+  "lessonIds": [
+    "TA-C234-ancalakam",
+    "TA-C234-nakaram",
+    "TA-C234-natu",
+    "TA-C234-talainakaram",
+    "TA-C234-narcanti"
+  ],
+  "tex": "tamil/book/chapters/ch234-post-office-city-country-capital-city-crossroads.tex"
+}

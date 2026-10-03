@@ -1,0 +1,8 @@
+{
+  "id": "TA-EXT-235-IDAM235",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a direction, north, south, east and west.",
+  "prerequisites": []
+}

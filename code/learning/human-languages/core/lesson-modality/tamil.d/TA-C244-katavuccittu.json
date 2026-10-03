@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C244-katavuccittu",
+    "language": "tamil",
+    "chapter": 244,
+    "sequence": 13550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57c3e9f8194f71ac"
+  },
+  "findings": []
+}
