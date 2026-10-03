@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:e7125f2448443f9a",
+  "lessonIds": [
+    "TE-C175-gumpu",
+    "TE-C175-prapancam",
+    "TE-C175-bhukampam",
+    "TE-C175-dummu",
+    "TE-C175-poga"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch175.txt",
+  "json": "telugu/narration/ch175.json",
+  "textHash": "fnv1a64:815614d2fca2060e",
+  "jsonHash": "fnv1a64:3be0f6ce021eb5cf",
+  "findings": []
+}

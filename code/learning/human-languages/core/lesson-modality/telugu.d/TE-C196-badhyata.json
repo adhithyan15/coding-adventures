@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C196-badhyata",
+    "language": "telugu",
+    "chapter": 196,
+    "sequence": 8900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:494bc5c5d1ec93e2"
+  },
+  "findings": []
+}

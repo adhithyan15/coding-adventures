@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-183-VASTUVU183",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a kitchen, a bedroom, a bucket, a lid and a frying pan.",
+  "prerequisites": []
+}

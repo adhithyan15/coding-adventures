@@ -1,0 +1,11 @@
+{
+  "id": "TE-C190-uyyala",
+  "pathSegment": "TE-PATH-190-VASTUVU190",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-190-VASTUVU190",
+      "order": 3
+    }
+  ]
+}

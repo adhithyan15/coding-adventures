@@ -1,0 +1,19 @@
+{
+  "chapter": 173,
+  "title": "Veranda, Backyard, Restaurant, Beside, Post office",
+  "label": "ch:te-veranda-backyard-restaurant-beside-post-office",
+  "canDo": "I can say a veranda, a backyard, a restaurant, beside and a post office.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TE-C173-postaphisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 173: I can say a veranda, a backyard, a restaurant, beside and a post office.",
+    "assesses": [
+      "TE-LEX-C173-STHALAM173-03",
+      "TE-LEX-C173-STHALAM173-04",
+      "TE-LEX-C173-STHALAM173-05"
+    ]
+  }
+}

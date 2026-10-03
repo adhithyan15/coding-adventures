@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:d40de39d7a9852ba",
+  "lessonIds": [
+    "TE-C195-adhikari",
+    "TE-C195-gumasta",
+    "TE-C195-menejaru",
+    "TE-C195-sahodyogi",
+    "TE-C195-samavesam"
+  ],
+  "tex": "telugu/book/chapters/ch195-officer-clerk-manager-colleague-meeting.tex"
+}

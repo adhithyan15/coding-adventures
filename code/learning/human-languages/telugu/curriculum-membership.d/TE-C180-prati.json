@@ -1,0 +1,11 @@
+{
+  "id": "TE-C180-prati",
+  "pathSegment": "TE-PATH-180-GUNAM180",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-180-GUNAM180",
+      "order": 2
+    }
+  ]
+}

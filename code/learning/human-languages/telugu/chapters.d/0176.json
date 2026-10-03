@@ -1,0 +1,19 @@
+{
+  "chapter": 176,
+  "title": "Otherwise, Even so, Through, About, Without",
+  "label": "ch:te-otherwise-even-so-through-about-without",
+  "canDo": "I can say otherwise, even so, through, about and without.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "TE-C176-lekunda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 176: I can say otherwise, even so, through, about and without.",
+    "assesses": [
+      "TE-LEX-C176-KARANAM176-03",
+      "TE-LEX-C176-KARANAM176-04",
+      "TE-LEX-C176-KARANAM176-05"
+    ]
+  }
+}

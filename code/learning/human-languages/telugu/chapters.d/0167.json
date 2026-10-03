@@ -1,0 +1,19 @@
+{
+  "chapter": 167,
+  "title": "Headache, Diarrhoea, Tablet, Sweat, Swelling",
+  "label": "ch:te-headache-diarrhoea-tablet-sweat-swelling",
+  "canDo": "I can say a headache, diarrhoea, a tablet, sweat and a swelling.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TE-C167-vapu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 167: I can say a headache, diarrhoea, a tablet, sweat and a swelling.",
+    "assesses": [
+      "TE-LEX-C167-AROGYAM167-03",
+      "TE-LEX-C167-AROGYAM167-04",
+      "TE-LEX-C167-AROGYAM167-05"
+    ]
+  }
+}

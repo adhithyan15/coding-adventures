@@ -1,0 +1,19 @@
+{
+  "chapter": 166,
+  "title": "To continue, To observe, To correct, To mutter, To separate",
+  "label": "ch:te-to-continue-to-observe-to-correct-to-mutter-to-separate",
+  "canDo": "I can say to continue, to observe, to correct, to mutter and to separate.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C166-vidipovu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 166: I can say to continue, to observe, to correct, to mutter and to separate.",
+    "assesses": [
+      "TE-LEX-C166-KRIYA166-03",
+      "TE-LEX-C166-KRIYA166-04",
+      "TE-LEX-C166-KRIYA166-05"
+    ]
+  }
+}

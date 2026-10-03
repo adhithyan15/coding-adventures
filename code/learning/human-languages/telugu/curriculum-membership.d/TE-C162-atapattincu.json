@@ -1,0 +1,11 @@
+{
+  "id": "TE-C162-atapattincu",
+  "pathSegment": "TE-PATH-162-KRIYA162",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-162-KRIYA162",
+      "order": 2
+    }
+  ]
+}

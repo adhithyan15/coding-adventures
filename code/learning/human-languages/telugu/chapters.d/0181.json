@@ -1,0 +1,19 @@
+{
+  "chapter": 181,
+  "title": "Great, Smell, Interesting, Wonderful, Ordinary",
+  "label": "ch:te-great-smell-interesting-wonderful-ordinary",
+  "canDo": "I can say great, a smell, interesting, wonderful and ordinary.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TE-C181-mamulu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 181: I can say great, a smell, interesting, wonderful and ordinary.",
+    "assesses": [
+      "TE-LEX-C181-GUNAM181-03",
+      "TE-LEX-C181-GUNAM181-04",
+      "TE-LEX-C181-GUNAM181-05"
+    ]
+  }
+}

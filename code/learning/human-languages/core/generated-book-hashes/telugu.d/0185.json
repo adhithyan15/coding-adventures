@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:343da868a5e90e93",
+  "lessonIds": [
+    "TE-C185-kavaru",
+    "TE-C185-stampu",
+    "TE-C185-parselu",
+    "TE-C185-tapala",
+    "TE-C185-pensilu"
+  ],
+  "tex": "telugu/book/chapters/ch185-envelope-postage-stamp-parcel-post-pencil.tex"
+}

@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:7f9e6f08f3865386",
+  "lessonIds": [
+    "TE-C165-cindu",
+    "TE-C165-gorugu",
+    "TE-C165-bigincu",
+    "TE-C165-guccu",
+    "TE-C165-allu",
+    "TE-R165-first-pass-words-from-chapters-157-160",
+    "TE-R165-second-pass-words-from-chapters-161-165"
+  ],
+  "tex": "telugu/book/chapters/ch165-to-spill-to-shave-to-tighten-to-prick-to-knit.tex"
+}

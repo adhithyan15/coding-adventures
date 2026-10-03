@@ -1,0 +1,11 @@
+{
+  "id": "TE-C166-gonugu",
+  "pathSegment": "TE-PATH-166-KRIYA166",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-166-KRIYA166",
+      "order": 3
+    }
+  ]
+}

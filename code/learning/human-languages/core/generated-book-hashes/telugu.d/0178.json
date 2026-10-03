@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:fb30265c2a09d22b",
+  "lessonIds": [
+    "TE-C178-kavalani",
+    "TE-C178-porapatuna",
+    "TE-C178-poni",
+    "TE-C178-saratu",
+    "TE-C178-saku"
+  ],
+  "tex": "telugu/book/chapters/ch178-on-purpose-by-mistake-never-mind-condition-excuse.tex"
+}

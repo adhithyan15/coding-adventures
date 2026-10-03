@@ -1,0 +1,11 @@
+{
+  "id": "TE-C192-gollem",
+  "pathSegment": "TE-PATH-192-VASTUVU192",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-192-VASTUVU192",
+      "order": 1
+    }
+  ]
+}

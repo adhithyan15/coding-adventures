@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:6634656c79212bd6",
+  "lessonIds": [
+    "TE-C172-yavvanam",
+    "TE-C172-vrddhapyam",
+    "TE-C172-intalo",
+    "TE-C172-eta",
+    "TE-C172-eppatiki"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch172.txt",
+  "json": "telugu/narration/ch172.json",
+  "textHash": "fnv1a64:b512102ae74a87be",
+  "jsonHash": "fnv1a64:6a8a0c0bf593b810",
+  "findings": []
+}

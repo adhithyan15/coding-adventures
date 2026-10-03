@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:75739054894506fc",
+  "lessonIds": [
+    "TE-C180-pradhana",
+    "TE-C180-mottam",
+    "TE-C180-prati",
+    "TE-C180-gulabi-rangu",
+    "TE-C180-narinja-rangu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch180.txt",
+  "json": "telugu/narration/ch180.json",
+  "textHash": "fnv1a64:f5504b2fa659fd06",
+  "jsonHash": "fnv1a64:8cc6241fa4684791",
+  "findings": []
+}

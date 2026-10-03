@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C162-varnincu",
+    "language": "telugu",
+    "chapter": 162,
+    "sequence": 7130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e67fe52551e4401"
+  },
+  "findings": []
+}

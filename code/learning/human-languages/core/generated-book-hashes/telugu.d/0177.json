@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:9436ef40065534ad",
+  "lessonIds": [
+    "TE-C177-okavela",
+    "TE-C177-badulu",
+    "TE-C177-prakaram",
+    "TE-C177-asalu",
+    "TE-C177-edemaina"
+  ],
+  "tex": "telugu/book/chapters/ch177-if-by-chance-instead-of-according-to-actually-anyway.tex"
+}

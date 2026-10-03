@@ -1,0 +1,19 @@
+{
+  "chapter": 188,
+  "title": "Prasadam, Rice-flour sweets, Festoon of mango leaves hung over a doorway, Bindi, Henna",
+  "label": "ch:te-prasadam-rice-flour-sweets-festoon-of-mango-leaves-hung-over-a-doorway-bindi-henna",
+  "canDo": "I can say prasadam, rice-flour sweets, a festoon of mango leaves hung over a doorway, a bindi and henna.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C188-gorintaku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 188: I can say prasadam, rice-flour sweets, a festoon of mango leaves hung over a doorway, a bindi and henna.",
+    "assesses": [
+      "TE-LEX-C188-VASTUVU188-03",
+      "TE-LEX-C188-VASTUVU188-04",
+      "TE-LEX-C188-VASTUVU188-05"
+    ]
+  }
+}

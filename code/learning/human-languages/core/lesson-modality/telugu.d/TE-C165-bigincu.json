@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C165-bigincu",
+    "language": "telugu",
+    "chapter": 165,
+    "sequence": 7260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce750693ec15be03"
+  },
+  "findings": []
+}

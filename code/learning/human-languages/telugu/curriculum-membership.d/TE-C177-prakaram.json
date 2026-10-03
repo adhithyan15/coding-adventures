@@ -1,0 +1,11 @@
+{
+  "id": "TE-C177-prakaram",
+  "pathSegment": "TE-PATH-177-KARANAM177",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-177-KARANAM177",
+      "order": 2
+    }
+  ]
+}

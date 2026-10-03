@@ -1,0 +1,19 @@
+{
+  "chapter": 157,
+  "title": "To pay, To fry, To boil, To mix, To grind",
+  "label": "ch:te-to-pay-to-fry-to-boil-to-mix-to-grind",
+  "canDo": "I can say to pay, to fry, to boil, to mix and to grind.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C157-rubbu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 157: I can say to pay, to fry, to boil, to mix and to grind.",
+    "assesses": [
+      "TE-LEX-C157-KRIYA157-03",
+      "TE-LEX-C157-KRIYA157-04",
+      "TE-LEX-C157-KRIYA157-05"
+    ]
+  }
+}

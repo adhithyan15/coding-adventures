@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C178-poni",
+    "language": "telugu",
+    "chapter": 178,
+    "sequence": 7950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6887f3ba8e52bed4"
+  },
+  "findings": []
+}

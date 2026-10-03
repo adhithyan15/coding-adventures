@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:5837cceb5723d2c6",
+  "lessonIds": [
+    "TE-C162-muddupettu",
+    "TE-C162-kaugilincu",
+    "TE-C162-atapattincu",
+    "TE-C162-pogadu",
+    "TE-C162-varnincu"
+  ],
+  "tex": "telugu/book/chapters/ch162-to-kiss-to-hug-to-tease-to-praise-to-describe.tex"
+}

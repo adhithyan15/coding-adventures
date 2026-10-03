@@ -1,0 +1,11 @@
+{
+  "id": "TE-C193-vrttam",
+  "pathSegment": "TE-PATH-193-VASTUVU193",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-193-VASTUVU193",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C175-dummu",
+  "pathSegment": "TE-PATH-175-STHALAM175",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-175-STHALAM175",
+      "order": 3
+    }
+  ]
+}

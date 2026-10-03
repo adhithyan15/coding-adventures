@@ -1,0 +1,19 @@
+{
+  "chapter": 198,
+  "title": "Tuition, Interview, Work shift, Uniform, Staff",
+  "label": "ch:te-tuition-interview-work-shift-uniform-staff",
+  "canDo": "I can say tuition, an interview, a work shift, a uniform and staff.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-R198-second-pass-words-from-chapters-196-198",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 198: I can say tuition, an interview, a work shift, a uniform and staff.",
+    "assesses": [
+      "TE-LEX-C198-PANI198-03",
+      "TE-LEX-C198-PANI198-04",
+      "TE-LEX-C198-PANI198-05"
+    ]
+  }
+}

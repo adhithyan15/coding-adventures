@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:112858d5581d861e",
+  "lessonIds": [
+    "TE-C187-tenetiga",
+    "TE-C187-balli",
+    "TE-C187-purugu",
+    "TE-C187-piccuka",
+    "TE-C187-kokila"
+  ],
+  "tex": "telugu/book/chapters/ch187-bee-lizard-insect-sparrow-koel.tex"
+}

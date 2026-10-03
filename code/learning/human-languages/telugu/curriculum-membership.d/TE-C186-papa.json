@@ -1,0 +1,11 @@
+{
+  "id": "TE-C186-papa",
+  "pathSegment": "TE-PATH-186-VASTUVU186",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-186-VASTUVU186",
+      "order": 4
+    }
+  ]
+}

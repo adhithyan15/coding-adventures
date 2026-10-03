@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C166-konasagu",
+    "language": "telugu",
+    "chapter": 166,
+    "sequence": 7310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e29d3c35aefa3021"
+  },
+  "findings": []
+}

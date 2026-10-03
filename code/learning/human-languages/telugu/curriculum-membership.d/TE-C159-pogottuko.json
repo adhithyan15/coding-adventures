@@ -1,0 +1,11 @@
+{
+  "id": "TE-C159-pogottuko",
+  "pathSegment": "TE-PATH-159-KRIYA159",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-159-KRIYA159",
+      "order": 4
+    }
+  ]
+}

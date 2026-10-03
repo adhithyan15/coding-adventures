@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:68759e5ce682ec74",
+  "lessonIds": [
+    "TE-C160-sampadincu",
+    "TE-C160-vivarincu",
+    "TE-C160-anuvadincu",
+    "TE-C160-gurtupettuko",
+    "TE-C160-oppuko"
+  ],
+  "tex": "telugu/book/chapters/ch160-to-earn-to-explain-to-translate-to-remember-to-agree.tex"
+}

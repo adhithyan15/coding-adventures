@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:a5c9ffb22d40e7cf",
+  "lessonIds": [
+    "TE-C176-lekapote",
+    "TE-C176-ayina",
+    "TE-C176-dvara",
+    "TE-C176-gurinci",
+    "TE-C176-lekunda"
+  ],
+  "tex": "telugu/book/chapters/ch176-otherwise-even-so-through-about-without.tex"
+}

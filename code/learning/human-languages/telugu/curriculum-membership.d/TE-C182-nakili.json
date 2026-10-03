@@ -1,0 +1,11 @@
+{
+  "id": "TE-C182-nakili",
+  "pathSegment": "TE-PATH-182-GUNAM182",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-182-GUNAM182",
+      "order": 2
+    }
+  ]
+}

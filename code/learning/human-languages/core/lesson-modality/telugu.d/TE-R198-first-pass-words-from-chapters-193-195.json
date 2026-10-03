@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R198-first-pass-words-from-chapters-193-195",
+    "language": "telugu",
+    "chapter": 198,
+    "sequence": 9020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c568dc9c9bf20b4"
+  },
+  "findings": []
+}

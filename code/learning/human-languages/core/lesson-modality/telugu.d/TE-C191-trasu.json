@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C191-trasu",
+    "language": "telugu",
+    "chapter": 191,
+    "sequence": 8640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7864f9cda645d3ae"
+  },
+  "findings": []
+}

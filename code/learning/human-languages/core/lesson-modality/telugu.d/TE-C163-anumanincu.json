@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C163-anumanincu",
+    "language": "telugu",
+    "chapter": 163,
+    "sequence": 7140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7faf3892d42ff66e"
+  },
+  "findings": []
+}

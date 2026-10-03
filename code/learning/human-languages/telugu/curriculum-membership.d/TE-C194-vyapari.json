@@ -1,0 +1,11 @@
+{
+  "id": "TE-C194-vyapari",
+  "pathSegment": "TE-PATH-194-PANI194",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-194-PANI194",
+      "order": 3
+    }
+  ]
+}

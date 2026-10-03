@@ -1,0 +1,11 @@
+{
+  "id": "TE-C194-nanem",
+  "pathSegment": "TE-PATH-194-PANI194",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-194-PANI194",
+      "order": 4
+    }
+  ]
+}

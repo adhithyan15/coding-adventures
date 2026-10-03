@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:6bcdb6b0a72908d4",
+  "lessonIds": [
+    "TE-C164-turumu",
+    "TE-C164-vadakattu",
+    "TE-C164-muncu",
+    "TE-C164-cimpu",
+    "TE-C164-cuttu"
+  ],
+  "tex": "telugu/book/chapters/ch164-to-grate-to-strain-to-dip-to-tear-to-wrap.tex"
+}

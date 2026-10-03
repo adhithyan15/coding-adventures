@@ -1,0 +1,19 @@
+{
+  "chapter": 177,
+  "title": "If by chance, Instead of, According to, Actually, Anyway",
+  "label": "ch:te-if-by-chance-instead-of-according-to-actually-anyway",
+  "canDo": "I can say if by chance, instead of, according to, actually and anyway.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "TE-C177-edemaina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 177: I can say if by chance, instead of, according to, actually and anyway.",
+    "assesses": [
+      "TE-LEX-C177-KARANAM177-03",
+      "TE-LEX-C177-KARANAM177-04",
+      "TE-LEX-C177-KARANAM177-05"
+    ]
+  }
+}

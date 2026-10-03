@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C179-kammani",
+    "language": "telugu",
+    "chapter": 179,
+    "sequence": 7980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c0744a99c838aa3"
+  },
+  "findings": []
+}

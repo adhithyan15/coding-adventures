@@ -1,0 +1,11 @@
+{
+  "id": "TE-C188-ariselu",
+  "pathSegment": "TE-PATH-188-VASTUVU188",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-188-VASTUVU188",
+      "order": 1
+    }
+  ]
+}

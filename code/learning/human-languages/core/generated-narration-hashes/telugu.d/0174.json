@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:3e5fc3543f065795",
+  "lessonIds": [
+    "TE-C174-avatala",
+    "TE-C174-atu",
+    "TE-C174-itu",
+    "TE-C174-guha",
+    "TE-C174-loya",
+    "TE-R174-first-pass-words-from-chapters-166-169",
+    "TE-R174-second-pass-words-from-chapters-170-174"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch174.txt",
+  "json": "telugu/narration/ch174.json",
+  "textHash": "fnv1a64:3d66ffe17efb1e6c",
+  "jsonHash": "fnv1a64:f1254b6e0bda2cce",
+  "findings": []
+}

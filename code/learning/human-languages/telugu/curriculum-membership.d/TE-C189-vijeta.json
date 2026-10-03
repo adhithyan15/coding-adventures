@@ -1,0 +1,11 @@
+{
+  "id": "TE-C189-vijeta",
+  "pathSegment": "TE-PATH-189-VASTUVU189",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-189-VASTUVU189",
+      "order": 1
+    }
+  ]
+}

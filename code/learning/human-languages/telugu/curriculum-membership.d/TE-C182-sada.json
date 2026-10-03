@@ -1,0 +1,11 @@
+{
+  "id": "TE-C182-sada",
+  "pathSegment": "TE-PATH-182-GUNAM182",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-182-GUNAM182",
+      "order": 3
+    }
+  ]
+}

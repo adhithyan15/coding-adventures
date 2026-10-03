@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C181-asaktikaramaina",
+    "language": "telugu",
+    "chapter": 181,
+    "sequence": 8100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f3597b85d7a93f8"
+  },
+  "findings": []
+}

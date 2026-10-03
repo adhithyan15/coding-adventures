@@ -1,0 +1,19 @@
+{
+  "chapter": 169,
+  "title": "Sore, Blister, Rash, Scar, Sprain",
+  "label": "ch:te-sore-blister-rash-scar-sprain",
+  "canDo": "I can say a sore, a blister, a rash, a scar and a sprain.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TE-C169-benuku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 169: I can say a sore, a blister, a rash, a scar and a sprain.",
+    "assesses": [
+      "TE-LEX-C169-AROGYAM169-03",
+      "TE-LEX-C169-AROGYAM169-04",
+      "TE-LEX-C169-AROGYAM169-05"
+    ]
+  }
+}

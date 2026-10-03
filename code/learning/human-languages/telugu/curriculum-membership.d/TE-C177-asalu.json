@@ -1,0 +1,11 @@
+{
+  "id": "TE-C177-asalu",
+  "pathSegment": "TE-PATH-177-KARANAM177",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-177-KARANAM177",
+      "order": 3
+    }
+  ]
+}

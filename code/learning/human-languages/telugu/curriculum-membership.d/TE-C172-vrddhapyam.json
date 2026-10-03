@@ -1,0 +1,11 @@
+{
+  "id": "TE-C172-vrddhapyam",
+  "pathSegment": "TE-PATH-172-SAMAYAM172",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-172-SAMAYAM172",
+      "order": 1
+    }
+  ]
+}

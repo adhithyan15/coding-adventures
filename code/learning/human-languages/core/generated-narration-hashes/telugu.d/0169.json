@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:5c7f72069e0d5874",
+  "lessonIds": [
+    "TE-C169-pundu",
+    "TE-C169-bobba",
+    "TE-C169-daddurlu",
+    "TE-C169-macca",
+    "TE-C169-benuku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch169.txt",
+  "json": "telugu/narration/ch169.json",
+  "textHash": "fnv1a64:615daf15152d28d9",
+  "jsonHash": "fnv1a64:9b030c89d08c67c7",
+  "findings": []
+}

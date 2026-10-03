@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C172-vrddhapyam",
+    "language": "telugu",
+    "chapter": 172,
+    "sequence": 7620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:788553022c96a365"
+  },
+  "findings": []
+}

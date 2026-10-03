@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C189-vijeta",
+    "language": "telugu",
+    "chapter": 189,
+    "sequence": 8510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6eeabaaa92a6e6b0"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C159-nanabettu",
+  "pathSegment": "TE-PATH-159-KRIYA159",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-159-KRIYA159",
+      "order": 1
+    }
+  ]
+}

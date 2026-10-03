@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:568112217ee8e78b",
+  "lessonIds": [
+    "TE-C193-gita",
+    "TE-C193-vrttam",
+    "TE-C193-caturasram",
+    "TE-C193-tribhujam",
+    "TE-C193-cakram"
+  ],
+  "tex": "telugu/book/chapters/ch193-line-circle-square-triangle-wheel.tex"
+}

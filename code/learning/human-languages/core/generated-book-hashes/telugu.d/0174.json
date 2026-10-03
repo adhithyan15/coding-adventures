@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:06f7f18751f55641",
+  "lessonIds": [
+    "TE-C174-avatala",
+    "TE-C174-atu",
+    "TE-C174-itu",
+    "TE-C174-guha",
+    "TE-C174-loya",
+    "TE-R174-first-pass-words-from-chapters-166-169",
+    "TE-R174-second-pass-words-from-chapters-170-174"
+  ],
+  "tex": "telugu/book/chapters/ch174-on-the-other-side-that-way-this-way-cave-valley.tex"
+}

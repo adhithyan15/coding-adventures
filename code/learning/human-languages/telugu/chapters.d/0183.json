@@ -1,0 +1,19 @@
+{
+  "chapter": 183,
+  "title": "Kitchen, Bedroom, Bucket, Lid, Frying pan",
+  "label": "ch:te-kitchen-bedroom-bucket-lid-frying-pan",
+  "canDo": "I can say a kitchen, a bedroom, a bucket, a lid and a frying pan.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-R183-second-pass-words-from-chapters-179-183",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 183: I can say a kitchen, a bedroom, a bucket, a lid and a frying pan.",
+    "assesses": [
+      "TE-LEX-C183-VASTUVU183-03",
+      "TE-LEX-C183-VASTUVU183-04",
+      "TE-LEX-C183-VASTUVU183-05"
+    ]
+  }
+}

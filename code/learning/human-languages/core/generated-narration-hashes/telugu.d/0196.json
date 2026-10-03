@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:2bc26da39009bd3d",
+  "lessonIds": [
+    "TE-C196-phiju",
+    "TE-C196-jarimana",
+    "TE-C196-gaduvu",
+    "TE-C196-badhyata",
+    "TE-C196-darakhastu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch196.txt",
+  "json": "telugu/narration/ch196.json",
+  "textHash": "fnv1a64:f444d1971e5f87fb",
+  "jsonHash": "fnv1a64:279c2fd0a0e11bbe",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 157,
+  "sourceHash": "fnv1a64:e279ad549e256f0b",
+  "lessonIds": [
+    "TE-C157-cellincu",
+    "TE-C157-veyincu",
+    "TE-C157-udikincu",
+    "TE-C157-kalupu",
+    "TE-C157-rubbu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch157.txt",
+  "json": "telugu/narration/ch157.json",
+  "textHash": "fnv1a64:5ec87e350a9ca506",
+  "jsonHash": "fnv1a64:5eecc176b3577820",
+  "findings": []
+}

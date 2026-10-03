@@ -1,0 +1,11 @@
+{
+  "id": "TE-C183-muta",
+  "pathSegment": "TE-PATH-183-VASTUVU183",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-183-VASTUVU183",
+      "order": 3
+    }
+  ]
+}

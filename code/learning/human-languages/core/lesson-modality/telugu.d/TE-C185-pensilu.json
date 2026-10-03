@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C185-pensilu",
+    "language": "telugu",
+    "chapter": 185,
+    "sequence": 8340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3eb7d1e83ea4e567"
+  },
+  "findings": []
+}

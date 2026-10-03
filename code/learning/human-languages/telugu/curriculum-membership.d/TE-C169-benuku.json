@@ -1,0 +1,11 @@
+{
+  "id": "TE-C169-benuku",
+  "pathSegment": "TE-PATH-169-AROGYAM169",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-169-AROGYAM169",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 185,
+  "title": "Envelope, Postage stamp, Parcel, Post, Pencil",
+  "label": "ch:te-envelope-postage-stamp-parcel-post-pencil",
+  "canDo": "I can say an envelope, a postage stamp, a parcel, the post and a pencil.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C185-pensilu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 185: I can say an envelope, a postage stamp, a parcel, the post and a pencil.",
+    "assesses": [
+      "TE-LEX-C185-VASTUVU185-03",
+      "TE-LEX-C185-VASTUVU185-04",
+      "TE-LEX-C185-VASTUVU185-05"
+    ]
+  }
+}

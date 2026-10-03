@@ -1,0 +1,11 @@
+{
+  "id": "TE-C169-daddurlu",
+  "pathSegment": "TE-PATH-169-AROGYAM169",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-169-AROGYAM169",
+      "order": 2
+    }
+  ]
+}

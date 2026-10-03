@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C196-jarimana",
+    "language": "telugu",
+    "chapter": 196,
+    "sequence": 8880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:969382d78977e730"
+  },
+  "findings": []
+}

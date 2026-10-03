@@ -1,0 +1,11 @@
+{
+  "id": "TE-C188-toranam",
+  "pathSegment": "TE-PATH-188-VASTUVU188",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-188-VASTUVU188",
+      "order": 2
+    }
+  ]
+}

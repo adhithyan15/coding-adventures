@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:4ef32da6265a940e",
+  "lessonIds": [
+    "TE-C178-kavalani",
+    "TE-C178-porapatuna",
+    "TE-C178-poni",
+    "TE-C178-saratu",
+    "TE-C178-saku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch178.txt",
+  "json": "telugu/narration/ch178.json",
+  "textHash": "fnv1a64:87bea10cc1bbde61",
+  "jsonHash": "fnv1a64:8ddb470361e96fb4",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 184,
+  "title": "Butter, Chutney, Sweet milk pudding, Cucumber, Okra",
+  "label": "ch:te-butter-chutney-sweet-milk-pudding-cucumber-okra",
+  "canDo": "I can say butter, a chutney, a sweet milk pudding, a cucumber and okra.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C184-bendakaya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 184: I can say butter, a chutney, a sweet milk pudding, a cucumber and okra.",
+    "assesses": [
+      "TE-LEX-C184-VASTUVU184-03",
+      "TE-LEX-C184-VASTUVU184-04",
+      "TE-LEX-C184-VASTUVU184-05"
+    ]
+  }
+}

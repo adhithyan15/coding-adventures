@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:1f55e1fc7d7b4d25",
+  "lessonIds": [
+    "TE-C198-tyusanu",
+    "TE-C198-intarvyu",
+    "TE-C198-siphtu",
+    "TE-C198-yunipharam",
+    "TE-C198-sibbandi",
+    "TE-R198-first-pass-words-from-chapters-193-195",
+    "TE-R198-second-pass-words-from-chapters-196-198"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch198.txt",
+  "json": "telugu/narration/ch198.json",
+  "textHash": "fnv1a64:b165a0d556e12425",
+  "jsonHash": "fnv1a64:ebdcdc43ab04a522",
+  "findings": []
+}
