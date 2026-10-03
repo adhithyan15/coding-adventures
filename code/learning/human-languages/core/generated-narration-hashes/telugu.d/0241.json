@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:2a4aef473b1ee1c5",
+  "lessonIds": [
+    "TE-C241-mingu",
+    "TE-C241-koruku",
+    "TE-C241-pilcu",
+    "TE-C241-tummu",
+    "TE-C241-vanti-cesuko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch241.txt",
+  "json": "telugu/narration/ch241.json",
+  "textHash": "fnv1a64:d2ec87bcd0b309a4",
+  "jsonHash": "fnv1a64:07c1264cb722d229",
+  "findings": []
+}

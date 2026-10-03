@@ -1,0 +1,11 @@
+{
+  "id": "TE-C276-vyakaranam",
+  "pathSegment": "TE-PATH-276-PANI276",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-276-PANI276",
+      "order": 3
+    }
+  ]
+}

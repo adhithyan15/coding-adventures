@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:7f08113f73785bff",
+  "lessonIds": [
+    "TE-C275-pujari",
+    "TE-C275-kalakarudu",
+    "TE-C275-kavi",
+    "TE-C275-sangitam",
+    "TE-C275-natakam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch275.txt",
+  "json": "telugu/narration/ch275.json",
+  "textHash": "fnv1a64:88838d86583e74e3",
+  "jsonHash": "fnv1a64:5bcedc4aaf37940f",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:c020a78bea7e731c",
+  "lessonIds": [
+    "TE-C265-pellikuturu",
+    "TE-C265-janam",
+    "TE-C265-devudu",
+    "TE-C265-donga",
+    "TE-C265-jantuvu"
+  ],
+  "tex": "telugu/book/chapters/ch265-bride-people-god-thief-animal.tex"
+}

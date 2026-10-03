@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:a385aa9b4f27d76c",
+  "lessonIds": [
+    "TE-C268-pradarsana",
+    "TE-C268-rediyo",
+    "TE-C268-karyakramam",
+    "TE-C268-intarnet",
+    "TE-C268-vebsait"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch268.txt",
+  "json": "telugu/narration/ch268.json",
+  "textHash": "fnv1a64:1376887db7552ae9",
+  "jsonHash": "fnv1a64:d012da2d853fcce8",
+  "findings": []
+}

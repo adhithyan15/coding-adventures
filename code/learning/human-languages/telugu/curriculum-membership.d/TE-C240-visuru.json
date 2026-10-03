@@ -1,0 +1,11 @@
+{
+  "id": "TE-C240-visuru",
+  "pathSegment": "TE-PATH-240-KRIYA240",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-240-KRIYA240",
+      "order": 4
+    }
+  ]
+}

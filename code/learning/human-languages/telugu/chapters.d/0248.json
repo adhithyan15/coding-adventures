@@ -1,0 +1,19 @@
+{
+  "chapter": 248,
+  "title": "To sprout, To milk, To cheat, To rob, To hand over",
+  "label": "ch:te-to-sprout-to-milk-to-cheat-to-rob-to-hand-over",
+  "canDo": "I can say to sprout, to milk, to cheat, to rob and to hand over.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-R248-second-pass-words-from-chapters-244-248",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 248: I can say to sprout, to milk, to cheat, to rob and to hand over.",
+    "assesses": [
+      "TE-LEX-C248-KRIYA248-03",
+      "TE-LEX-C248-KRIYA248-04",
+      "TE-LEX-C248-KRIYA248-05"
+    ]
+  }
+}

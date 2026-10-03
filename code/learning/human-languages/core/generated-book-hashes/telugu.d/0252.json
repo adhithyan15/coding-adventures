@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:26d1153a9f29ff22",
+  "lessonIds": [
+    "TE-C252-ugadi",
+    "TE-C252-dipavali",
+    "TE-C252-dasara",
+    "TE-C252-vinayaka-caviti",
+    "TE-C252-batukamma"
+  ],
+  "tex": "telugu/book/chapters/ch252-ugadi-diwali-dasara-vinayaka-chavithi-bathukamma.tex"
+}

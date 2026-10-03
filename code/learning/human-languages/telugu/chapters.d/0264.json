@@ -1,0 +1,19 @@
+{
+  "chapter": 264,
+  "title": "Cheque, Visa, Luggage, Newspaper, Number",
+  "label": "ch:te-cheque-visa-luggage-newspaper-number",
+  "canDo": "I can say a cheque, a visa, luggage, a newspaper and a number.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C264-nambaru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 264: I can say a cheque, a visa, luggage, a newspaper and a number.",
+    "assesses": [
+      "TE-LEX-C264-VASTUVU264-03",
+      "TE-LEX-C264-VASTUVU264-04",
+      "TE-LEX-C264-VASTUVU264-05"
+    ]
+  }
+}

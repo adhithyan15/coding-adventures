@@ -1,0 +1,19 @@
+{
+  "chapter": 263,
+  "title": "Peanuts, Taste, Trousers, Shorts, Vest",
+  "label": "ch:te-peanuts-taste-trousers-shorts-vest",
+  "canDo": "I can say peanuts, taste, trousers, shorts and a vest.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C263-baninu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 263: I can say peanuts, taste, trousers, shorts and a vest.",
+    "assesses": [
+      "TE-LEX-C263-VASTUVU263-03",
+      "TE-LEX-C263-VASTUVU263-04",
+      "TE-LEX-C263-VASTUVU263-05"
+    ]
+  }
+}

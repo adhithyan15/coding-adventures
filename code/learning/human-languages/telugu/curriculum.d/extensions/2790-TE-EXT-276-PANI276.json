@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-276-PANI276",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say chemistry, biology, economics, grammar and a blackboard.",
+  "prerequisites": []
+}

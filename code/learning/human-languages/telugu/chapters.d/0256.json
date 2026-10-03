@@ -1,0 +1,19 @@
+{
+  "chapter": 256,
+  "title": "Lane, Tunnel, Outskirts, Warehouse, Court",
+  "label": "ch:te-lane-tunnel-outskirts-warehouse-court",
+  "canDo": "I can say a lane, a tunnel, the outskirts, a warehouse and a court.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TE-C256-kortu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 256: I can say a lane, a tunnel, the outskirts, a warehouse and a court.",
+    "assesses": [
+      "TE-LEX-C256-STHALAM256-03",
+      "TE-LEX-C256-STHALAM256-04",
+      "TE-LEX-C256-STHALAM256-05"
+    ]
+  }
+}

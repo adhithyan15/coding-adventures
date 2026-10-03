@@ -1,0 +1,19 @@
+{
+  "chapter": 265,
+  "title": "Bride, People, God, Thief, Animal",
+  "label": "ch:te-bride-people-god-thief-animal",
+  "canDo": "I can say a bride, people, God, a thief and an animal.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C265-jantuvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 265: I can say a bride, people, God, a thief and an animal.",
+    "assesses": [
+      "TE-LEX-C265-VASTUVU265-03",
+      "TE-LEX-C265-VASTUVU265-04",
+      "TE-LEX-C265-VASTUVU265-05"
+    ]
+  }
+}

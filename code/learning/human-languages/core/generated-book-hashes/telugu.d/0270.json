@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:12a04c2e047e58f5",
+  "lessonIds": [
+    "TE-C270-tapela",
+    "TE-C270-kundi",
+    "TE-C270-penam",
+    "TE-C270-rolu",
+    "TE-C270-rokali"
+  ],
+  "tex": "telugu/book/chapters/ch270-saucepan-flowerpot-griddle-mortar-pestle.tex"
+}

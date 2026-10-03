@@ -1,0 +1,19 @@
+{
+  "chapter": 255,
+  "title": "Museum, Gym, Stage, City, Village meeting platform",
+  "label": "ch:te-museum-gym-stage-city-village-meeting-platform",
+  "canDo": "I can say a museum, a gym, a stage, a city and the village meeting platform.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TE-C255-raccabanda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 255: I can say a museum, a gym, a stage, a city and the village meeting platform.",
+    "assesses": [
+      "TE-LEX-C255-STHALAM255-03",
+      "TE-LEX-C255-STHALAM255-04",
+      "TE-LEX-C255-STHALAM255-05"
+    ]
+  }
+}

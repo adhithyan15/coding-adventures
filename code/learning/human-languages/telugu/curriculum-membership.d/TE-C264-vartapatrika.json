@@ -1,0 +1,11 @@
+{
+  "id": "TE-C264-vartapatrika",
+  "pathSegment": "TE-PATH-264-VASTUVU264",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-264-VASTUVU264",
+      "order": 3
+    }
+  ]
+}

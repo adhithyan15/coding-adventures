@@ -1,0 +1,19 @@
+{
+  "chapter": 268,
+  "title": "Show, Radio, Programme, Internet, Website",
+  "label": "ch:te-show-radio-programme-internet-website",
+  "canDo": "I can say a show, the radio, a programme, the internet and a website.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C268-vebsait",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 268: I can say a show, the radio, a programme, the internet and a website.",
+    "assesses": [
+      "TE-LEX-C268-VASTUVU268-03",
+      "TE-LEX-C268-VASTUVU268-04",
+      "TE-LEX-C268-VASTUVU268-05"
+    ]
+  }
+}

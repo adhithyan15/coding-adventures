@@ -1,0 +1,19 @@
+{
+  "chapter": 262,
+  "title": "Bread, Chapati, Upma, Breakfast, Green gram",
+  "label": "ch:te-bread-chapati-upma-breakfast-green-gram",
+  "canDo": "I can say bread, a chapati, upma, breakfast and green gram.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C262-pesalu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 262: I can say bread, a chapati, upma, breakfast and green gram.",
+    "assesses": [
+      "TE-LEX-C262-VASTUVU262-03",
+      "TE-LEX-C262-VASTUVU262-04",
+      "TE-LEX-C262-VASTUVU262-05"
+    ]
+  }
+}

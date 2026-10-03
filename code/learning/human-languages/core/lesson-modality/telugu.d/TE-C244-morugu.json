@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C244-morugu",
+    "language": "telugu",
+    "chapter": 244,
+    "sequence": 11430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:257f837affba9756"
+  },
+  "findings": []
+}

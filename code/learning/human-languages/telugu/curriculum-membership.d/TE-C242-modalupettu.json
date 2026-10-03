@@ -1,0 +1,11 @@
+{
+  "id": "TE-C242-modalupettu",
+  "pathSegment": "TE-PATH-242-KRIYA242",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-242-KRIYA242",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 267,
+  "title": "Rainbow, Flood, Drought, Moonlight, Darkness",
+  "label": "ch:te-rainbow-flood-drought-moonlight-darkness",
+  "canDo": "I can say a rainbow, a flood, a drought, moonlight and darkness.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C267-cikati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 267: I can say a rainbow, a flood, a drought, moonlight and darkness.",
+    "assesses": [
+      "TE-LEX-C267-VASTUVU267-03",
+      "TE-LEX-C267-VASTUVU267-04",
+      "TE-LEX-C267-VASTUVU267-05"
+    ]
+  }
+}

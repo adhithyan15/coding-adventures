@@ -1,0 +1,11 @@
+{
+  "id": "TE-C264-visa",
+  "pathSegment": "TE-PATH-264-VASTUVU264",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-264-VASTUVU264",
+      "order": 1
+    }
+  ]
+}

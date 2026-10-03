@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:edc4906089d527b8",
+  "lessonIds": [
+    "TE-C258-paddhati",
+    "TE-C258-niyamam",
+    "TE-C258-prabhavam",
+    "TE-C258-abhivrddhi",
+    "TE-C258-paristhiti"
+  ],
+  "tex": "telugu/book/chapters/ch258-method-rule-effect-development-situation.tex"
+}

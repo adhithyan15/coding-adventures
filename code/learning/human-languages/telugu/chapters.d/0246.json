@@ -1,0 +1,19 @@
+{
+  "chapter": 246,
+  "title": "To lend, To give back, To empty, To decrease, To refuse",
+  "label": "ch:te-to-lend-to-give-back-to-empty-to-decrease-to-refuse",
+  "canDo": "I can say to lend, to give back, to empty, to decrease and to refuse.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C246-nirakarincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 246: I can say to lend, to give back, to empty, to decrease and to refuse.",
+    "assesses": [
+      "TE-LEX-C246-KRIYA246-03",
+      "TE-LEX-C246-KRIYA246-04",
+      "TE-LEX-C246-KRIYA246-05"
+    ]
+  }
+}

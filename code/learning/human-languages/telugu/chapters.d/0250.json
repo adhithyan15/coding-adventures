@@ -1,0 +1,19 @@
+{
+  "chapter": 250,
+  "title": "Palm of the hand, Heel, Ankle, Thigh, Waist",
+  "label": "ch:te-palm-of-the-hand-heel-ankle-thigh-waist",
+  "canDo": "I can say the palm of the hand, the heel, the ankle, the thigh and the waist.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TE-C250-nadumu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 250: I can say the palm of the hand, the heel, the ankle, the thigh and the waist.",
+    "assesses": [
+      "TE-LEX-C250-AROGYAM250-03",
+      "TE-LEX-C250-AROGYAM250-04",
+      "TE-LEX-C250-AROGYAM250-05"
+    ]
+  }
+}

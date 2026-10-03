@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:97248b576acd93df",
+  "lessonIds": [
+    "TE-C248-molakettu",
+    "TE-C248-pituku",
+    "TE-C248-mosam-ceyu",
+    "TE-C248-docuko",
+    "TE-C248-appagincu",
+    "TE-R248-first-pass-words-from-chapters-240-243",
+    "TE-R248-second-pass-words-from-chapters-244-248"
+  ],
+  "tex": "telugu/book/chapters/ch248-to-sprout-to-milk-to-cheat-to-rob-to-hand-over.tex"
+}

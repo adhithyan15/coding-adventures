@@ -1,0 +1,19 @@
+{
+  "chapter": 251,
+  "title": "Mind, Breathlessness, Muscle, Injection, Vaccination",
+  "label": "ch:te-mind-breathlessness-muscle-injection-vaccination",
+  "canDo": "I can say the mind, breathlessness, a muscle, an injection and a vaccination.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TE-C251-tika",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 251: I can say the mind, breathlessness, a muscle, an injection and a vaccination.",
+    "assesses": [
+      "TE-LEX-C251-AROGYAM251-03",
+      "TE-LEX-C251-AROGYAM251-04",
+      "TE-LEX-C251-AROGYAM251-05"
+    ]
+  }
+}

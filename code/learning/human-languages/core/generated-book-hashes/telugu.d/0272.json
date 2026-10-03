@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:3cc3cd9bcc98d5dc",
+  "lessonIds": [
+    "TE-C272-pandiri",
+    "TE-C272-kance",
+    "TE-C272-poda",
+    "TE-C272-kandam",
+    "TE-C272-rekka",
+    "TE-R272-first-pass-words-from-chapters-267-269",
+    "TE-R272-second-pass-words-from-chapters-270-272"
+  ],
+  "tex": "telugu/book/chapters/ch272-trellis-fence-bush-stem-wing.tex"
+}

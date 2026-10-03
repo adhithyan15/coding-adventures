@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C270-kundi",
+    "language": "telugu",
+    "chapter": 270,
+    "sequence": 12760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b4df17c1c0986c3"
+  },
+  "findings": []
+}

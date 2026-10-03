@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C241-pilcu",
+    "language": "telugu",
+    "chapter": 241,
+    "sequence": 11260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e276e86df64173c5"
+  },
+  "findings": []
+}

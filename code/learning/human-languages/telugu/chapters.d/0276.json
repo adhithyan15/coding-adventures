@@ -1,0 +1,19 @@
+{
+  "chapter": 276,
+  "title": "Chemistry, Biology, Economics, Grammar, Blackboard",
+  "label": "ch:te-chemistry-biology-economics-grammar-blackboard",
+  "canDo": "I can say chemistry, biology, economics, grammar and a blackboard.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C276-nallaballa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 276: I can say chemistry, biology, economics, grammar and a blackboard.",
+    "assesses": [
+      "TE-LEX-C276-PANI276-03",
+      "TE-LEX-C276-PANI276-04",
+      "TE-LEX-C276-PANI276-05"
+    ]
+  }
+}

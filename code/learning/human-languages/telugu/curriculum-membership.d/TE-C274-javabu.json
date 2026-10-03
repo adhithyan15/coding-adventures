@@ -1,0 +1,11 @@
+{
+  "id": "TE-C274-javabu",
+  "pathSegment": "TE-PATH-274-PANI274",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-274-PANI274",
+      "order": 2
+    }
+  ]
+}

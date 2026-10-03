@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:f87508ec2ac88674",
+  "lessonIds": [
+    "TE-C251-manasu",
+    "TE-C251-ayasam",
+    "TE-C251-kandaram",
+    "TE-C251-injeksanu",
+    "TE-C251-tika"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch251.txt",
+  "json": "telugu/narration/ch251.json",
+  "textHash": "fnv1a64:7969adf63c603843",
+  "jsonHash": "fnv1a64:fa8b9aa6c5d4617d",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C243-pencu",
+    "language": "telugu",
+    "chapter": 243,
+    "sequence": 11360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea784cdea4e04eb3"
+  },
+  "findings": []
+}

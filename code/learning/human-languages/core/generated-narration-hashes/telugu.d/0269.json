@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:19834880d1b5ff22",
+  "lessonIds": [
+    "TE-C269-dabba",
+    "TE-C269-kancam",
+    "TE-C269-jalleda",
+    "TE-C269-cekka",
+    "TE-C269-ittadi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch269.txt",
+  "json": "telugu/narration/ch269.json",
+  "textHash": "fnv1a64:831f21f6d5c70a2d",
+  "jsonHash": "fnv1a64:6a45bedbe7715170",
+  "findings": []
+}

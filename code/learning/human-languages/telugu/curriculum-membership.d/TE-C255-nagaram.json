@@ -1,0 +1,11 @@
+{
+  "id": "TE-C255-nagaram",
+  "pathSegment": "TE-PATH-255-STHALAM255",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-255-STHALAM255",
+      "order": 3
+    }
+  ]
+}

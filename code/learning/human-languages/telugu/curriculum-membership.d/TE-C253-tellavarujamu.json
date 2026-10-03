@@ -1,0 +1,11 @@
+{
+  "id": "TE-C253-tellavarujamu",
+  "pathSegment": "TE-PATH-253-SAMAYAM253",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-253-SAMAYAM253",
+      "order": 4
+    }
+  ]
+}

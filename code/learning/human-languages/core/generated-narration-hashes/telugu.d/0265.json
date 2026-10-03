@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:0ea83893dde27f45",
+  "lessonIds": [
+    "TE-C265-pellikuturu",
+    "TE-C265-janam",
+    "TE-C265-devudu",
+    "TE-C265-donga",
+    "TE-C265-jantuvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch265.txt",
+  "json": "telugu/narration/ch265.json",
+  "textHash": "fnv1a64:b474ad0510481c70",
+  "jsonHash": "fnv1a64:4c77afda7590db1d",
+  "findings": []
+}

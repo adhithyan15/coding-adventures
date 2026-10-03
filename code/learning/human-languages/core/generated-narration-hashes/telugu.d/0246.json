@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:38b64602b4a567d2",
+  "lessonIds": [
+    "TE-C246-appu-ivvu",
+    "TE-C246-tirigi-ivvu",
+    "TE-C246-khali-ceyu",
+    "TE-C246-taggu",
+    "TE-C246-nirakarincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch246.txt",
+  "json": "telugu/narration/ch246.json",
+  "textHash": "fnv1a64:f1da9a79b781988a",
+  "jsonHash": "fnv1a64:0291cd9a0b7f91b8",
+  "findings": []
+}

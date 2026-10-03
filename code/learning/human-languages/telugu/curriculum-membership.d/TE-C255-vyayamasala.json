@@ -1,0 +1,11 @@
+{
+  "id": "TE-C255-vyayamasala",
+  "pathSegment": "TE-PATH-255-STHALAM255",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-255-STHALAM255",
+      "order": 1
+    }
+  ]
+}

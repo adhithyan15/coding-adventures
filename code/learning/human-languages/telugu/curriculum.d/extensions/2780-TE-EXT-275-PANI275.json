@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-275-PANI275",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a priest, an artist, a poet, music and a play.",
+  "prerequisites": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C275-sangitam",
+    "language": "telugu",
+    "chapter": 275,
+    "sequence": 13050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8816cb2fc6904238"
+  },
+  "findings": []
+}

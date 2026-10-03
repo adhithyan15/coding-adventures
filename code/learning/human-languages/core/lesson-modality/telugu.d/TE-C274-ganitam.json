@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C274-ganitam",
+    "language": "telugu",
+    "chapter": 274,
+    "sequence": 13010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:258b1bb2f48538a1"
+  },
+  "findings": []
+}

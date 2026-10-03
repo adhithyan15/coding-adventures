@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C248-mosam-ceyu",
+    "language": "telugu",
+    "chapter": 248,
+    "sequence": 11610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:19dad6fa5e6b2f69"
+  },
+  "findings": []
+}

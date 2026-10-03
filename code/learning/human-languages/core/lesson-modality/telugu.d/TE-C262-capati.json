@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C262-capati",
+    "language": "telugu",
+    "chapter": 262,
+    "sequence": 12340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3dd52008c00734b4"
+  },
+  "findings": []
+}

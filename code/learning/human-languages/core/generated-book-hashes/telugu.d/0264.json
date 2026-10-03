@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:ec01fc8c90b60489",
+  "lessonIds": [
+    "TE-C264-cekku",
+    "TE-C264-visa",
+    "TE-C264-samanu",
+    "TE-C264-vartapatrika",
+    "TE-C264-nambaru"
+  ],
+  "tex": "telugu/book/chapters/ch264-cheque-visa-luggage-newspaper-number.tex"
+}

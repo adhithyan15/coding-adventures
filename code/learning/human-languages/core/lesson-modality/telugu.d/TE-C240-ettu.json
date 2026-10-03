@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C240-ettu",
+    "language": "telugu",
+    "chapter": 240,
+    "sequence": 11190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2bc6845686cbce51"
+  },
+  "findings": []
+}

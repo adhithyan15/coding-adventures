@@ -1,0 +1,19 @@
+{
+  "chapter": 273,
+  "title": "Interest, Bill, Discount, Groceries, Purchase",
+  "label": "ch:te-interest-bill-discount-groceries-purchase",
+  "canDo": "I can say interest, a bill, a discount, groceries and a purchase.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C273-konugolu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 273: I can say interest, a bill, a discount, groceries and a purchase.",
+    "assesses": [
+      "TE-LEX-C273-PANI273-03",
+      "TE-LEX-C273-PANI273-04",
+      "TE-LEX-C273-PANI273-05"
+    ]
+  }
+}

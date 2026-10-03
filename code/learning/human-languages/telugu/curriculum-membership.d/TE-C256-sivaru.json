@@ -1,0 +1,11 @@
+{
+  "id": "TE-C256-sivaru",
+  "pathSegment": "TE-PATH-256-STHALAM256",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-256-STHALAM256",
+      "order": 2
+    }
+  ]
+}

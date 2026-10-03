@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:2251c5020dc9a273",
+  "lessonIds": [
+    "TE-C245-sekarincu",
+    "TE-C245-prasaram-ceyu",
+    "TE-C245-mudrincu",
+    "TE-C245-daunlod-ceyu",
+    "TE-C245-taip-ceyu"
+  ],
+  "tex": "telugu/book/chapters/ch245-to-collect-to-broadcast-to-print-to-download-to-type.tex"
+}

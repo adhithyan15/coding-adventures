@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C270-tapela",
+    "language": "telugu",
+    "chapter": 270,
+    "sequence": 12750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e4bd5e7e75c5dbcc"
+  },
+  "findings": []
+}

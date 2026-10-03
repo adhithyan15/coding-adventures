@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C247-goku",
+    "language": "telugu",
+    "chapter": 247,
+    "sequence": 11550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:242c3e7c431396be"
+  },
+  "findings": []
+}

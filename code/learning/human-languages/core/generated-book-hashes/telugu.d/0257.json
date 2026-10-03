@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 257,
+  "sourceHash": "fnv1a64:043ebb388ae69664",
+  "lessonIds": [
+    "TE-C257-vagdanam",
+    "TE-C257-rahasyam",
+    "TE-C257-sneham",
+    "TE-C257-godava",
+    "TE-C257-samskrti",
+    "TE-R257-first-pass-words-from-chapters-249-252",
+    "TE-R257-second-pass-words-from-chapters-253-257"
+  ],
+  "tex": "telugu/book/chapters/ch257-promise-secret-friendship-quarrel-culture.tex"
+}

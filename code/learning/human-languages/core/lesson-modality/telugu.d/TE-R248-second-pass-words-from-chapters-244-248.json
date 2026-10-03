@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R248-second-pass-words-from-chapters-244-248",
+    "language": "telugu",
+    "chapter": 248,
+    "sequence": 11650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aca1c46556c14548"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C260-nunupaina",
+    "language": "telugu",
+    "chapter": 260,
+    "sequence": 12230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0255c429d89ebc8"
+  },
+  "findings": []
+}

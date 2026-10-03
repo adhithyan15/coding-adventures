@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:0055e12302bc3243",
+  "lessonIds": [
+    "TE-C258-paddhati",
+    "TE-C258-niyamam",
+    "TE-C258-prabhavam",
+    "TE-C258-abhivrddhi",
+    "TE-C258-paristhiti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch258.txt",
+  "json": "telugu/narration/ch258.json",
+  "textHash": "fnv1a64:8033087404cdba2e",
+  "jsonHash": "fnv1a64:35db504fd54f7927",
+  "findings": []
+}

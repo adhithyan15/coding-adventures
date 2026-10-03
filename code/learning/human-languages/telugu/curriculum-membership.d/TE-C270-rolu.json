@@ -1,0 +1,11 @@
+{
+  "id": "TE-C270-rolu",
+  "pathSegment": "TE-PATH-270-VASTUVU270",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-270-VASTUVU270",
+      "order": 3
+    }
+  ]
+}

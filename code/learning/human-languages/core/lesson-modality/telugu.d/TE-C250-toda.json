@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C250-toda",
+    "language": "telugu",
+    "chapter": 250,
+    "sequence": 11740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3d0d06cdffc2aaac"
+  },
+  "findings": []
+}

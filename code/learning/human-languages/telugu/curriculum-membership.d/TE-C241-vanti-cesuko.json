@@ -1,0 +1,11 @@
+{
+  "id": "TE-C241-vanti-cesuko",
+  "pathSegment": "TE-PATH-241-KRIYA241",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-241-KRIYA241",
+      "order": 4
+    }
+  ]
+}

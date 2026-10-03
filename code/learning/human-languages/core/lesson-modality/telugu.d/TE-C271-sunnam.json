@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C271-sunnam",
+    "language": "telugu",
+    "chapter": 271,
+    "sequence": 12800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:270a761e97ab9a2d"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C241-mingu",
+    "language": "telugu",
+    "chapter": 241,
+    "sequence": 11240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4df54a47d9860f60"
+  },
+  "findings": []
+}

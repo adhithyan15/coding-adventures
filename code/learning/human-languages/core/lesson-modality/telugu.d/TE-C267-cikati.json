@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C267-cikati",
+    "language": "telugu",
+    "chapter": 267,
+    "sequence": 12640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:057f961be7234410"
+  },
+  "findings": []
+}

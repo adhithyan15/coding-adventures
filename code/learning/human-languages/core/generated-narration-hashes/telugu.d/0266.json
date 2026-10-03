@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:c1d0334c4fe7d9bc",
+  "lessonIds": [
+    "TE-C266-mallepuvvu",
+    "TE-C266-vepa",
+    "TE-C266-marri",
+    "TE-C266-tulasi",
+    "TE-C266-mogga",
+    "TE-R266-first-pass-words-from-chapters-258-261",
+    "TE-R266-second-pass-words-from-chapters-262-266"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch266.txt",
+  "json": "telugu/narration/ch266.json",
+  "textHash": "fnv1a64:54026512b46d7de5",
+  "jsonHash": "fnv1a64:63aee14a80f3dafc",
+  "findings": []
+}

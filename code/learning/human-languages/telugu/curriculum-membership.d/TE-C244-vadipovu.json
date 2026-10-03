@@ -1,0 +1,11 @@
+{
+  "id": "TE-C244-vadipovu",
+  "pathSegment": "TE-PATH-244-KRIYA244",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-244-KRIYA244",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C265-janam",
+    "language": "telugu",
+    "chapter": 265,
+    "sequence": 12490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ce5dac69e2ba761"
+  },
+  "findings": []
+}

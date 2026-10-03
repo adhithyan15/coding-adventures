@@ -1,0 +1,11 @@
+{
+  "id": "TE-C252-dipavali",
+  "pathSegment": "TE-PATH-252-SAMAYAM252",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-252-SAMAYAM252",
+      "order": 1
+    }
+  ]
+}

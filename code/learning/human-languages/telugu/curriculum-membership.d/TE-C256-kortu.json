@@ -1,0 +1,11 @@
+{
+  "id": "TE-C256-kortu",
+  "pathSegment": "TE-PATH-256-STHALAM256",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-256-STHALAM256",
+      "order": 4
+    }
+  ]
+}

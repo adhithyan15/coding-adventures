@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 259,
+  "sourceHash": "fnv1a64:f80abead151aff81",
+  "lessonIds": [
+    "TE-C259-raddi",
+    "TE-C259-mukhyamaina",
+    "TE-C259-sonta",
+    "TE-C259-biji",
+    "TE-C259-tappanisari"
+  ],
+  "tex": "telugu/book/chapters/ch259-crowded-important-own-busy-compulsory.tex"
+}

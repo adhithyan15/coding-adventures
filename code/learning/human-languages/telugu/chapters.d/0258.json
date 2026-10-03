@@ -1,0 +1,19 @@
+{
+  "chapter": 258,
+  "title": "Method, Rule, Effect, Development, Situation",
+  "label": "ch:te-method-rule-effect-development-situation",
+  "canDo": "I can say a method, a rule, an effect, development and a situation.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "TE-C258-paristhiti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 258: I can say a method, a rule, an effect, development and a situation.",
+    "assesses": [
+      "TE-LEX-C258-KARANAM258-03",
+      "TE-LEX-C258-KARANAM258-04",
+      "TE-LEX-C258-KARANAM258-05"
+    ]
+  }
+}

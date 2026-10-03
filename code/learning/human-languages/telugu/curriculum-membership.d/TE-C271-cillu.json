@@ -1,0 +1,11 @@
+{
+  "id": "TE-C271-cillu",
+  "pathSegment": "TE-PATH-271-VASTUVU271",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-271-VASTUVU271",
+      "order": 4
+    }
+  ]
+}

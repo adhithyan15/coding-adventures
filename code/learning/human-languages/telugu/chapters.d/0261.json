@@ -1,0 +1,19 @@
+{
+  "chapter": 261,
+  "title": "Natural, Thick, Greasy, Sticky, Rough",
+  "label": "ch:te-natural-thick-greasy-sticky-rough",
+  "canDo": "I can say natural, thick, greasy, sticky and rough.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TE-C261-garuku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 261: I can say natural, thick, greasy, sticky and rough.",
+    "assesses": [
+      "TE-LEX-C261-GUNAM261-03",
+      "TE-LEX-C261-GUNAM261-04",
+      "TE-LEX-C261-GUNAM261-05"
+    ]
+  }
+}

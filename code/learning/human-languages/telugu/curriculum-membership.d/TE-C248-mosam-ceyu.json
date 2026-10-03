@@ -1,0 +1,11 @@
+{
+  "id": "TE-C248-mosam-ceyu",
+  "pathSegment": "TE-PATH-248-KRIYA248",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-248-KRIYA248",
+      "order": 2
+    }
+  ]
+}

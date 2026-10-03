@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C265-donga",
+    "language": "telugu",
+    "chapter": 265,
+    "sequence": 12510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d873d54b0b3d32ef"
+  },
+  "findings": []
+}

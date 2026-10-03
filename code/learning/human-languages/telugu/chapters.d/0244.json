@@ -1,0 +1,19 @@
+{
+  "chapter": 244,
+  "title": "To blow, To shine, To freeze, To wilt, To bark",
+  "label": "ch:te-to-blow-to-shine-to-freeze-to-wilt-to-bark",
+  "canDo": "I can say to blow, to shine, to freeze, to wilt and to bark.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C244-morugu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 244: I can say to blow, to shine, to freeze, to wilt and to bark.",
+    "assesses": [
+      "TE-LEX-C244-KRIYA244-03",
+      "TE-LEX-C244-KRIYA244-04",
+      "TE-LEX-C244-KRIYA244-05"
+    ]
+  }
+}
