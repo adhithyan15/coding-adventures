@@ -579,6 +579,9 @@ The text-wrap shorthand composes wrap, nowrap, balance, pretty, and stable into 
 same typed mode and style fields before backend-neutral lowering.
 Justified text alignment distributes remaining line width across ASCII word
 separators on non-final lines before backend-neutral glyph placement.
+Auto and inter-word justification use those separator advances,
+inter-character justification distributes the width across shaped glyph gaps,
+and none suppresses expansion while retaining the authored alignment.
 Justified last-line alignment applies that distribution to the final line while
 preserving the authored alignment of earlier lines.
 Normal and positive or negative pixel/em letter spacing adjusts shaped glyph

@@ -421,6 +421,15 @@ fn treemap_text_node(
         };
         node.ext.insert("text.align-last".into(), ExtValue::Str(align.into()));
     }
+    if let Some(justify) = style.and_then(|style| style.text_justify) {
+        let justify = match justify {
+            diagram_ir::TreemapTextJustify::Auto => "auto",
+            diagram_ir::TreemapTextJustify::None => "none",
+            diagram_ir::TreemapTextJustify::InterWord => "inter-word",
+            diagram_ir::TreemapTextJustify::InterCharacter => "inter-character",
+        };
+        node.ext.insert("text.justify-mode".into(), ExtValue::Str(justify.into()));
+    }
     if let Some(wrap) = style.and_then(|style| style.overflow_wrap) {
         let wrap = match wrap {
             diagram_ir::TreemapOverflowWrap::Normal => "normal",
@@ -7040,6 +7049,7 @@ mod tests {
                     opacity: Some(0.8), fill_opacity: Some(0.5), stroke_opacity: Some(0.5), stroke_dash_offset: Some(-1.0),
                     text_align: Some(diagram_ir::TreemapTextAlign::End),
                     text_align_last: None,
+                    text_justify: None,
                     text_transform: Some(diagram_ir::TreemapTextTransform::FullWidth),
                     text_decoration: Some(diagram_ir::TreemapTextDecoration {
                         underline: true, overline: true, line_through: true,
@@ -7155,6 +7165,13 @@ mod tests {
             current_color, Some(&whitespace_style),
         );
         assert_eq!(last_justified_text.ext.get("text.align-last"), Some(&ExtValue::Str("justify".into())));
+        whitespace_style.text_justify = Some(diagram_ir::TreemapTextJustify::InterCharacter);
+        let character_justified_text = treemap_text_node(
+            "last line", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
+            current_color, Some(&whitespace_style),
+        );
+        assert_eq!(character_justified_text.ext.get("text.justify-mode"),
+            Some(&ExtValue::Str("inter-character".into())));
         whitespace_style.overflow_wrap = Some(diagram_ir::TreemapOverflowWrap::Anywhere);
         let anywhere_text = treemap_text_node(
             "unbreakable", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
