@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:fdc3bb6f130630d7",
+  "lessonIds": [
+    "TA-C175-palaivanam",
+    "TA-C175-kukai",
+    "TA-C175-otai",
+    "TA-C175-pannai",
+    "TA-C175-mirukakkatcicalai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch175.txt",
+  "json": "tamil/narration/ch175.json",
+  "textHash": "fnv1a64:12c5777718a7029b",
+  "jsonHash": "fnv1a64:23a867fdc9fda58f",
+  "findings": []
+}

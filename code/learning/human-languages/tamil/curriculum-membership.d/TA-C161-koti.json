@@ -1,0 +1,11 @@
+{
+  "id": "TA-C161-koti",
+  "pathSegment": "TA-PATH-161-ACT161",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-161-ACT161",
+      "order": 1
+    }
+  ]
+}

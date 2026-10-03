@@ -1,0 +1,11 @@
+{
+  "id": "TA-C171-eppotum",
+  "pathSegment": "TA-PATH-171-NERAM171",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-171-NERAM171",
+      "order": 2
+    }
+  ]
+}

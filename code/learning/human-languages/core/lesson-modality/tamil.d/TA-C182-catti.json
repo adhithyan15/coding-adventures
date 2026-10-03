@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C182-catti",
+    "language": "tamil",
+    "chapter": 182,
+    "sequence": 9000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a288c2d7fa090d67"
+  },
+  "findings": []
+}

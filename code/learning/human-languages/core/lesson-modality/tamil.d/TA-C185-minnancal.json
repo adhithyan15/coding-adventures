@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C185-minnancal",
+    "language": "tamil",
+    "chapter": 185,
+    "sequence": 9160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:59f5632d6db94964"
+  },
+  "findings": []
+}

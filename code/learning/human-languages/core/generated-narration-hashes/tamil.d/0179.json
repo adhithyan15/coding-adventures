@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:382e8fef072229fe",
+  "lessonIds": [
+    "TA-C179-payanulla",
+    "TA-C179-ullur",
+    "TA-C179-velinattu",
+    "TA-C179-telivana",
+    "TA-C179-unarcci"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch179.txt",
+  "json": "tamil/narration/ch179.json",
+  "textHash": "fnv1a64:fb0a58ac47747b54",
+  "jsonHash": "fnv1a64:11a65897ab90eeeb",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C181-tatimanana",
+    "language": "tamil",
+    "chapter": 181,
+    "sequence": 8960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09263b1a1a6fdb11"
+  },
+  "findings": []
+}

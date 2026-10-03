@@ -1,0 +1,19 @@
+{
+  "chapter": 161,
+  "title": "To sell, To boil, To fry, To grind, To mix",
+  "label": "ch:ta-to-sell-to-boil-to-fry-to-grind-to-mix",
+  "canDo": "I can say to sell, to boil, to fry, to grind and to mix.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C161-kalakku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 161: I can say to sell, to boil, to fry, to grind and to mix.",
+    "assesses": [
+      "TA-LEX-C161-ACT161-03",
+      "TA-LEX-C161-ACT161-04",
+      "TA-LEX-C161-ACT161-05"
+    ]
+  }
+}

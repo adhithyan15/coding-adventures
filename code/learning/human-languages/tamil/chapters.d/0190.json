@@ -1,0 +1,19 @@
+{
+  "chapter": 190,
+  "title": "Idea, Matchbox, Clay pot, Grinding stone, Tank",
+  "label": "ch:ta-idea-matchbox-clay-pot-grinding-stone-tank",
+  "canDo": "I can say an idea, a matchbox, a clay pot, a grinding stone and a tank.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C190-totti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 190: I can say an idea, a matchbox, a clay pot, a grinding stone and a tank.",
+    "assesses": [
+      "TA-LEX-C190-PORUL190-03",
+      "TA-LEX-C190-PORUL190-04",
+      "TA-LEX-C190-PORUL190-05"
+    ]
+  }
+}

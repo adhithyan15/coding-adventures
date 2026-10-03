@@ -1,0 +1,11 @@
+{
+  "id": "TA-C172-munkuttiye",
+  "pathSegment": "TA-PATH-172-NERAM172",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-172-NERAM172",
+      "order": 3
+    }
+  ]
+}

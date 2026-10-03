@@ -1,0 +1,19 @@
+{
+  "chapter": 182,
+  "title": "Refrigerator, Tap, Tumbler, Pan, Lid",
+  "label": "ch:ta-refrigerator-tap-tumbler-pan-lid",
+  "canDo": "I can say a refrigerator, a tap, a tumbler, a pan and a lid.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C182-muti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 182: I can say a refrigerator, a tap, a tumbler, a pan and a lid.",
+    "assesses": [
+      "TA-LEX-C182-PORUL182-03",
+      "TA-LEX-C182-PORUL182-04",
+      "TA-LEX-C182-PORUL182-05"
+    ]
+  }
+}

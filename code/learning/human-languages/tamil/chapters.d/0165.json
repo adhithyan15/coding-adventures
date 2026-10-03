@@ -1,0 +1,19 @@
+{
+  "chapter": 165,
+  "title": "To get to know, To celebrate, To decorate, To dance, To worship",
+  "label": "ch:ta-to-get-to-know-to-celebrate-to-decorate-to-dance-to-worship",
+  "canDo": "I can say to get to know, to celebrate, to decorate, to dance and to worship.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C165-vananku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 165: I can say to get to know, to celebrate, to decorate, to dance and to worship.",
+    "assesses": [
+      "TA-LEX-C165-ACT165-03",
+      "TA-LEX-C165-ACT165-04",
+      "TA-LEX-C165-ACT165-05"
+    ]
+  }
+}

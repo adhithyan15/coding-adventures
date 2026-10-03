@@ -1,0 +1,11 @@
+{
+  "id": "TA-C180-nakaiccuvaiyana",
+  "pathSegment": "TA-PATH-180-GUNAM180",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-180-GUNAM180",
+      "order": 3
+    }
+  ]
+}

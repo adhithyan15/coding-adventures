@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-170-NALAM170",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "TA-EXT-170-NALAM170"
+  ],
+  "after": []
+}

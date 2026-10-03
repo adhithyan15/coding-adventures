@@ -1,0 +1,11 @@
+{
+  "id": "TA-C176-melum",
+  "pathSegment": "TA-PATH-176-KARANAM176",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-176-KARANAM176",
+      "order": 2
+    }
+  ]
+}

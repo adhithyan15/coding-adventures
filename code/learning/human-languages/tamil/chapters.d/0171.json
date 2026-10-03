@@ -1,0 +1,19 @@
+{
+  "chapter": 171,
+  "title": "Often, Sometimes, Always, Never, Delay",
+  "label": "ch:ta-often-sometimes-always-never-delay",
+  "canDo": "I can say often, sometimes, always, never and a delay.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TA-C171-tamatam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 171: I can say often, sometimes, always, never and a delay.",
+    "assesses": [
+      "TA-LEX-C171-NERAM171-03",
+      "TA-LEX-C171-NERAM171-04",
+      "TA-LEX-C171-NERAM171-05"
+    ]
+  }
+}

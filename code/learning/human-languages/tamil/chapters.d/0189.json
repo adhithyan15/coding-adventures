@@ -1,0 +1,19 @@
+{
+  "chapter": 189,
+  "title": "Glue, Candle, Website, App, Screen",
+  "label": "ch:ta-glue-candle-website-app-screen",
+  "canDo": "I can say glue, a candle, a website, an app and a screen.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C189-tirai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 189: I can say glue, a candle, a website, an app and a screen.",
+    "assesses": [
+      "TA-LEX-C189-PORUL189-03",
+      "TA-LEX-C189-PORUL189-04",
+      "TA-LEX-C189-PORUL189-05"
+    ]
+  }
+}

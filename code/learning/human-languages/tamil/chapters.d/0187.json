@@ -1,0 +1,19 @@
+{
+  "chapter": 187,
+  "title": "Pet, Bull, Calf, Wolf, Leopard",
+  "label": "ch:ta-pet-bull-calf-wolf-leopard",
+  "canDo": "I can say a pet, a bull, a calf, a wolf and a leopard.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-R187-second-pass-words-from-chapters-183-187",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 187: I can say a pet, a bull, a calf, a wolf and a leopard.",
+    "assesses": [
+      "TA-LEX-C187-PORUL187-03",
+      "TA-LEX-C187-PORUL187-04",
+      "TA-LEX-C187-PORUL187-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C182-kulircatanap-petti",
+  "pathSegment": "TA-PATH-182-PORUL182",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-182-PORUL182",
+      "order": 0
+    }
+  ]
+}

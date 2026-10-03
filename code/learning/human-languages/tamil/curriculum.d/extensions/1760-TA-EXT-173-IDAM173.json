@@ -1,0 +1,8 @@
+{
+  "id": "TA-EXT-173-IDAM173",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a kitchen, a bathroom, a bedroom, a toilet and a window.",
+  "prerequisites": []
+}

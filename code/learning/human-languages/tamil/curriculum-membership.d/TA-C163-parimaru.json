@@ -1,0 +1,11 @@
+{
+  "id": "TA-C163-parimaru",
+  "pathSegment": "TA-PATH-163-ACT163",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-163-ACT163",
+      "order": 1
+    }
+  ]
+}

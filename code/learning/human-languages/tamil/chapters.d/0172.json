@@ -1,0 +1,19 @@
+{
+  "chapter": 172,
+  "title": "Future, Tonight, Suddenly, In advance, Calendar",
+  "label": "ch:ta-future-tonight-suddenly-in-advance-calendar",
+  "canDo": "I can say the future, tonight, suddenly, in advance and a calendar.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TA-C172-natkatti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 172: I can say the future, tonight, suddenly, in advance and a calendar.",
+    "assesses": [
+      "TA-LEX-C172-NERAM172-03",
+      "TA-LEX-C172-NERAM172-04",
+      "TA-LEX-C172-NERAM172-05"
+    ]
+  }
+}

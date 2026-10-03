@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:15642af3210f7d86",
+  "lessonIds": [
+    "TA-C176-analum",
+    "TA-C176-iruntalum",
+    "TA-C176-melum",
+    "TA-C176-utaranamaka",
+    "TA-C176-illavittal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch176.txt",
+  "json": "tamil/narration/ch176.json",
+  "textHash": "fnv1a64:5071185f9164a04c",
+  "jsonHash": "fnv1a64:ab09724ba5f52849",
+  "findings": []
+}

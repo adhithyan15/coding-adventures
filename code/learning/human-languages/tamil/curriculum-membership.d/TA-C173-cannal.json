@@ -1,0 +1,11 @@
+{
+  "id": "TA-C173-cannal",
+  "pathSegment": "TA-PATH-173-IDAM173",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-173-IDAM173",
+      "order": 4
+    }
+  ]
+}

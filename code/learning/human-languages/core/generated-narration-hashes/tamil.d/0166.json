@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:535d8395231b9374",
+  "lessonIds": [
+    "TA-C166-vilakkerru",
+    "TA-C166-veti",
+    "TA-C166-poruttukkol",
+    "TA-C166-camatanam-cey",
+    "TA-C166-yoci"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch166.txt",
+  "json": "tamil/narration/ch166.json",
+  "textHash": "fnv1a64:61eebb14d772c993",
+  "jsonHash": "fnv1a64:ee975531f0e4a9e0",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C180-kurumpana",
+  "pathSegment": "TA-PATH-180-GUNAM180",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-180-GUNAM180",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C180-curucuruppana",
+    "language": "tamil",
+    "chapter": 180,
+    "sequence": 8870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76f344ce9c69c4a5"
+  },
+  "findings": []
+}

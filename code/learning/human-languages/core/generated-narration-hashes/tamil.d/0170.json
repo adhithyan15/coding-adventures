@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:f13db96932bc47a2",
+  "lessonIds": [
+    "TA-C170-ovvamai",
+    "TA-C170-torru",
+    "TA-C170-talumpu",
+    "TA-C170-vayirruppokku",
+    "TA-C170-mulai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch170.txt",
+  "json": "tamil/narration/ch170.json",
+  "textHash": "fnv1a64:e1f18fb34c4e7265",
+  "jsonHash": "fnv1a64:299d360a4c96d257",
+  "findings": []
+}

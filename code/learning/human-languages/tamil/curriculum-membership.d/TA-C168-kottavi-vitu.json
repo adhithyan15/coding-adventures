@@ -1,0 +1,11 @@
+{
+  "id": "TA-C168-kottavi-vitu",
+  "pathSegment": "TA-PATH-168-ACT168",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-168-ACT168",
+      "order": 4
+    }
+  ]
+}

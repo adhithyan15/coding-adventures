@@ -1,0 +1,11 @@
+{
+  "id": "TA-C163-pakir",
+  "pathSegment": "TA-PATH-163-ACT163",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-163-ACT163",
+      "order": 2
+    }
+  ]
+}

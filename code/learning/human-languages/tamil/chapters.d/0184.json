@@ -1,0 +1,19 @@
+{
+  "chapter": 184,
+  "title": "Ice, Breakfast, Lunch, Dinner, Notebook",
+  "label": "ch:ta-ice-breakfast-lunch-dinner-notebook",
+  "canDo": "I can say ice, breakfast, lunch, dinner and a notebook.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C184-kurippetu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 184: I can say ice, breakfast, lunch, dinner and a notebook.",
+    "assesses": [
+      "TA-LEX-C184-PORUL184-03",
+      "TA-LEX-C184-PORUL184-04",
+      "TA-LEX-C184-PORUL184-05"
+    ]
+  }
+}

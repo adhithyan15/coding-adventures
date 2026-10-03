@@ -1,0 +1,8 @@
+{
+  "id": "TA-EXT-175-IDAM175",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a desert, a cave, a stream, a farm and a zoo.",
+  "prerequisites": []
+}

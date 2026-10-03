@@ -1,0 +1,19 @@
+{
+  "chapter": 192,
+  "title": "Police officer, Driver, Postman, Trader, Colleague",
+  "label": "ch:ta-police-officer-driver-postman-trader-colleague",
+  "canDo": "I can say a police officer, a driver, a postman, a trader and a colleague.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C192-caka-uliyar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 192: I can say a police officer, a driver, a postman, a trader and a colleague.",
+    "assesses": [
+      "TA-LEX-C192-VELAI192-03",
+      "TA-LEX-C192-VELAI192-04",
+      "TA-LEX-C192-VELAI192-05"
+    ]
+  }
+}

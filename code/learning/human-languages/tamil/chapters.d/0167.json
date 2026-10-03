@@ -1,0 +1,19 @@
+{
+  "chapter": 167,
+  "title": "To continue, To operate, To stick, To hang, To roll",
+  "label": "ch:ta-to-continue-to-operate-to-stick-to-hang-to-roll",
+  "canDo": "I can say to continue, to operate, to stick, to hang and to roll.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C167-uruttu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 167: I can say to continue, to operate, to stick, to hang and to roll.",
+    "assesses": [
+      "TA-LEX-C167-ACT167-03",
+      "TA-LEX-C167-ACT167-04",
+      "TA-LEX-C167-ACT167-05"
+    ]
+  }
+}

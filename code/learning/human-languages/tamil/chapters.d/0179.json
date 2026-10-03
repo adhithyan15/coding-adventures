@@ -1,0 +1,19 @@
+{
+  "chapter": 179,
+  "title": "Useful, Local, Foreign, Clear, Feeling",
+  "label": "ch:ta-useful-local-foreign-clear-feeling",
+  "canDo": "I can say useful, local, foreign, clear and a feeling.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TA-C179-unarcci",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 179: I can say useful, local, foreign, clear and a feeling.",
+    "assesses": [
+      "TA-LEX-C179-GUNAM179-03",
+      "TA-LEX-C179-GUNAM179-04",
+      "TA-LEX-C179-GUNAM179-05"
+    ]
+  }
+}

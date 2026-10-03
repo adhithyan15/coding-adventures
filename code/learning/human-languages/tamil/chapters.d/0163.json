@@ -1,0 +1,19 @@
+{
+  "chapter": 163,
+  "title": "To prepare, To serve, To share, To bargain, To check",
+  "label": "ch:ta-to-prepare-to-serve-to-share-to-bargain-to-check",
+  "canDo": "I can say to prepare, to serve, to share, to bargain and to check.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C163-caripar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 163: I can say to prepare, to serve, to share, to bargain and to check.",
+    "assesses": [
+      "TA-LEX-C163-ACT163-03",
+      "TA-LEX-C163-ACT163-04",
+      "TA-LEX-C163-ACT163-05"
+    ]
+  }
+}

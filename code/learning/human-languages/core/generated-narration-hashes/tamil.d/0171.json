@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 171,
+  "sourceHash": "fnv1a64:3b841a4b44700ce1",
+  "lessonIds": [
+    "TA-C171-atikkati",
+    "TA-C171-cila-nerankalil",
+    "TA-C171-eppotum",
+    "TA-C171-orupotum",
+    "TA-C171-tamatam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch171.txt",
+  "json": "tamil/narration/ch171.json",
+  "textHash": "fnv1a64:7723d2179c1cb08b",
+  "jsonHash": "fnv1a64:1eec432347f8a502",
+  "findings": []
+}

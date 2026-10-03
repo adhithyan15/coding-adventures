@@ -1,0 +1,19 @@
+{
+  "chapter": 188,
+  "title": "Thorn, Lotus, Jasmine, Neem tree, Coconut palm",
+  "label": "ch:ta-thorn-lotus-jasmine-neem-tree-coconut-palm",
+  "canDo": "I can say a thorn, a lotus, jasmine, a neem tree and a coconut palm.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C188-tennaimaram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 188: I can say a thorn, a lotus, jasmine, a neem tree and a coconut palm.",
+    "assesses": [
+      "TA-LEX-C188-PORUL188-03",
+      "TA-LEX-C188-PORUL188-04",
+      "TA-LEX-C188-PORUL188-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 170,
+  "title": "Allergy, Infection, Scar, Diarrhoea, Brain",
+  "label": "ch:ta-allergy-infection-scar-diarrhoea-brain",
+  "canDo": "I can say an allergy, an infection, a scar, diarrhoea and the brain.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TA-C170-mulai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 170: I can say an allergy, an infection, a scar, diarrhoea and the brain.",
+    "assesses": [
+      "TA-LEX-C170-NALAM170-03",
+      "TA-LEX-C170-NALAM170-04",
+      "TA-LEX-C170-NALAM170-05"
+    ]
+  }
+}

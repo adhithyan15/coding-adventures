@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C193-payirciyalar",
+    "language": "tamil",
+    "chapter": 193,
+    "sequence": 9740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:31d9ab4e12e7268f"
+  },
+  "findings": []
+}

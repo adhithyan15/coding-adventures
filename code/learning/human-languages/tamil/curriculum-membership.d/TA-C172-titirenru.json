@@ -1,0 +1,11 @@
+{
+  "id": "TA-C172-titirenru",
+  "pathSegment": "TA-PATH-172-NERAM172",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-172-NERAM172",
+      "order": 2
+    }
+  ]
+}

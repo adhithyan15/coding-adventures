@@ -1,0 +1,11 @@
+{
+  "id": "TA-C178-palutta",
+  "pathSegment": "TA-PATH-178-GUNAM178",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-178-GUNAM178",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C178-ilavacam",
+  "pathSegment": "TA-PATH-178-GUNAM178",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-178-GUNAM178",
+      "order": 3
+    }
+  ]
+}
