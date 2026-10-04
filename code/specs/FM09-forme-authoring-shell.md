@@ -221,13 +221,46 @@ workflow.
 
 ## 6. Preview
 
-FM-B064 materializes a validated draft snapshot into an isolated project input
-and runs the same FM03/FM07 pipeline used by product builds. Preview inherits
-FM07's coalescing, cancellation, server-sent reload, and last-good-output
-semantics. It may cache aggressively, but it may not substitute a separate DOM
-renderer for pipeline output. Preview artifacts and diagnostics are bound to
-the exact authoring revision that produced them so stale success cannot be
-mistaken for the active draft.
+FM-B064 supplies `forme-authoring-preview`, a capability-free coordinator over
+the durable authoring core and the existing FM03/FM07 watch path. A preview
+request snapshots both `AuthoringSession.project` and
+`AuthoringSession.storageRevision`, validates a private copy of the project,
+and gives an injected host materializer only that frozen pair plus a bounded
+abort signal. The materializer must create a new isolated project input and
+return the real typed `Pipeline` for that input. It may not reuse a mutable
+input tree across authoring revisions. Filesystem paths, configuration loading,
+plugin discovery, and cache ownership remain host capabilities and never cross
+back into the editor or authoring project value.
+
+The coordinator runs every prepared pipeline through `Orchestrator.watch`, not
+through a second renderer or a direct call to an emitter. Each persisted edit
+requests a new preview. A short bounded debounce window coalesces bursts to the
+latest requested revision. When a newer revision supersedes preparation or an
+active build, the coordinator aborts preparation or stops the watch session,
+waits for cancellation to settle, disposes the isolated materialization, and
+then starts only the latest request. Disposal is idempotent and stops pending
+work before releasing the host materialization. The host must make preparation
+and release safe under cancellation and must retire non-cooperative work.
+
+Only a successful, still-current watch result is converted with FM07's
+`snapshotFromOutputs` contract and sent to the injected preview publisher. A
+failed, cancelled, malformed-output, or superseded result never replaces the
+last good output. The publisher receives the exact authoring revision together
+with the build ID and static artifact snapshot, or a bounded failure record for
+that same revision. This preserves FM07's server-sent reload and last-good-site
+behavior while making the authoring revision visible to the shell. A success
+from revision N is stale as soon as N+1 is requested, even if N finishes before
+its cancellation is observed.
+
+Preview diagnostics are closed data: severity, code, stage identity, and a
+plain message. The coordinator admits at most 64 diagnostics, limits every
+scalar, rejects controls and bidi formatting, removes arbitrary fields and
+adapter errors, and emits one generic bounded diagnostic if a result is not
+safe to inspect. Public result objects, status snapshots, projects, and
+diagnostics are private deeply frozen copies. A caller receives one terminal
+attempt result (`ready`, `failed`, `cancelled`, or `superseded`) for every
+request; state for the last good revision is reported separately from the
+active revision so the UI cannot label stale output as current.
 
 ## 7. Publish
 
@@ -271,6 +304,16 @@ dispatch rollback, and declarative plugin-slot activation. They also prove the
 plugin bridge receives only the frozen request and that hostile contribution
 descriptors are rejected. The package must exceed 95% statement and line
 coverage and 90% branch coverage.
+
+FM-B064 tests use a real `Orchestrator.watch`-shaped session boundary and prove
+initial success, exact persisted-revision attribution, burst coalescing,
+superseded preparation and active-build cancellation, last-good retention,
+malformed artifact refusal, bounded/redacted diagnostics, hostile host result
+handling, materialization cleanup, double disposal, and rejection after
+disposal. The package must exceed 95% statement and line coverage and 90%
+branch coverage. One composition test must pass real FM03 `RunResult` output
+through FM07 `snapshotFromOutputs`; a mock DOM renderer is not an acceptable
+preview proof.
 
 ## 10. Related specifications
 
