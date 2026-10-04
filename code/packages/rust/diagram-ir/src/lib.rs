@@ -1488,6 +1488,7 @@ pub struct TreemapStyle {
     pub text_decoration_style: Option<TreemapTextDecorationStyle>,
     pub text_decoration_thickness: Option<TreemapTextDecorationThickness>,
     pub text_underline_offset: Option<TreemapTextUnderlineOffset>,
+    pub text_underline_position: Option<TreemapTextUnderlinePosition>,
     pub line_height: Option<TreemapLineHeight>,
     pub text_indent: Option<TreemapTextIndent>,
     pub text_indent_hanging: bool,
@@ -1538,6 +1539,9 @@ pub enum TreemapTextDecorationThickness { Auto, FromFont, Pixels(f64), Factor(f6
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum TreemapTextUnderlineOffset { Auto, Pixels(f64), Factor(f64) }
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TreemapTextUnderlinePosition { Auto, FromFont, Under }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum TreemapLineHeight {

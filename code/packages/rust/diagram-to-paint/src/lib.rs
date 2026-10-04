@@ -46,7 +46,7 @@ use diagram_ir::{
 };
 use layout_ir::{
     Color, Content, ExtValue, FontSpec, PositionedNode, TextAlign, TextContent, TextDecoration,
-    TextDecorationLines, TextDecorationStyle,
+    TextDecorationLines, TextDecorationStyle, TextUnderlinePosition,
 };
 use layout_effects::{EffectColor, EffectFilter, EffectStyle};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
@@ -323,6 +323,11 @@ fn treemap_text_node(
         diagram_ir::TreemapTextUnderlineOffset::Factor(value) => Some(font.size * value),
         diagram_ir::TreemapTextUnderlineOffset::Auto => None,
     });
+    let underline_position = match style.and_then(|style| style.text_underline_position) {
+        Some(diagram_ir::TreemapTextUnderlinePosition::FromFont) => TextUnderlinePosition::FromFont,
+        Some(diagram_ir::TreemapTextUnderlinePosition::Under) => TextUnderlinePosition::Under,
+        Some(diagram_ir::TreemapTextUnderlinePosition::Auto) | None => TextUnderlinePosition::Auto,
+    };
     let white_space = style.and_then(|style| style.white_space);
     let whitespace_value = match white_space {
         None | Some(diagram_ir::TreemapWhiteSpace::Normal | diagram_ir::TreemapWhiteSpace::NoWrap) =>
@@ -384,6 +389,7 @@ fn treemap_text_node(
                 lines, style: decoration_style, color: decoration_color,
                 thickness: decoration_thickness,
                 underline_offset,
+                underline_position,
             })
         });
     }
@@ -7092,6 +7098,7 @@ mod tests {
                     text_decoration_style: Some(diagram_ir::TreemapTextDecorationStyle::Wavy),
                     text_decoration_thickness: Some(diagram_ir::TreemapTextDecorationThickness::Factor(0.25)),
                     text_underline_offset: Some(diagram_ir::TreemapTextUnderlineOffset::Factor(0.25)),
+                    text_underline_position: Some(diagram_ir::TreemapTextUnderlinePosition::Under),
                     line_height: Some(diagram_ir::TreemapLineHeight::Pixels(24.0)),
                     text_indent: Some(diagram_ir::TreemapTextIndent::Factor(0.1)),
                     text_indent_hanging: true,
@@ -7121,7 +7128,8 @@ mod tests {
         assert!(matches!(styled_text.content,
             Some(Content::Text(TextContent { value, wrap: false, text_align: TextAlign::End,
                 decoration: Some(TextDecoration { lines, color: Some(decoration_color),
-                    style: TextDecorationStyle::Wavy, thickness: Some(3.5), underline_offset: Some(3.5) }), .. }))
+                    style: TextDecorationStyle::Wavy, thickness: Some(3.5), underline_offset: Some(3.5),
+                    underline_position: TextUnderlinePosition::Under }), .. }))
                 if value == "\u{ff33}\u{ff54}\u{ff59}\u{ff4c}\u{ff45}\u{ff44}\u{3000}\u{ff4e}\u{ff4f}\u{ff44}\u{ff45}"
                     && lines.contains(TextDecorationLines::UNDERLINE)
                     && lines.contains(TextDecorationLines::OVERLINE)
