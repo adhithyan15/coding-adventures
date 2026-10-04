@@ -1723,6 +1723,16 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — runtime-real formatter provenance follows a straight-line
+    // local scalar copy. Reassigning the source afterwards does not change the
+    // copied value or require a general dynamic-expression formatter.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; real x, y; x := pick(); y := x; x := 1.0; output(y) end",
+        expect: Expect::Stdout("2.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — static integer-valued functions may feed checked snapshots and widen into
     // bounded static real expressions. Copying preserves the destination when
     // the source is reassigned; overflow, control flow, calls, captures,
@@ -12033,6 +12043,29 @@ fn algol_runtime_real_scalar_output_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but runtime real scalar output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_copied_runtime_real_scalar_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("y := x; x := 1.0; output(y)")
+        })
+        .expect("the ALGOL copied-runtime-real-scalar program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but copied runtime real scalar output did not complete"
             );
             continue;
         };

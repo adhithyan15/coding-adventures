@@ -1295,7 +1295,8 @@ backend immediately) come before the enabler-dependent items.
   element keeps snapshot tracking disabled. Each plain element updates the
   controlled local's snapshot before its body is analyzed. Labels, gotos, calls, dynamic
   reassignment, differing branches, and captured globals invalidate the tracked value. Direct zero-argument
-  real-procedure results use the portable six-significant-digit IIR formatter
+  real-procedure results and their straight-line bare local copies use the
+  portable six-significant-digit IIR formatter
   shared with Dartmouth BASIC on native/LLVM/WASM/JVM/CLR/VM/JIT; general
   computed scalar `f64` formatting remains a follow-up.
   Unicode-aware BEAM strings remain.

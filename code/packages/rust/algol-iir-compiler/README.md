@@ -192,11 +192,13 @@ binary64's exact integer range; larger widenings remain unsupported.
 Labels, branches, loops,
 gotos, calls, dynamic reassignment, and captured globals invalidate that shortcut.
 Direct zero-argument real-procedure results and local real scalar variables whose
-latest straight-line assignment is such a result call the portable six-significant-digit
+latest straight-line assignment is such a result or a bare copy of another
+provenance-backed local call the portable six-significant-digit
 IIR formatter shared with Dartmouth BASIC; its helper
 functions use only typed arithmetic, control flow, calls, conversions, and
 `putchar`, so the same path runs on every standard backend. A runtime procedure
-result may therefore be assigned to a real local and printed later. Reassignment,
+result may therefore migrate through local real copies and be printed later.
+Reassignment,
 control flow, intervening calls, and composed dynamic real expressions remain
 conservative while their analysis tests are migrated.
 For definite string initialization, a `step`/`until` element may establish an
