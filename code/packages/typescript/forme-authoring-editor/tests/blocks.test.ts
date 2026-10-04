@@ -16,6 +16,7 @@ const projectBase: Omit<AuthoringProject, "documents" | "activeDocumentId"> = {
   projectId: "018f47a0-9b6c-7def-9234-56789abcdef0",
   title: "Demo",
   site: { baseUrl: null, themeId: "forme-classless" },
+  workflow: { lastPublication: null },
 };
 
 describe("immutable default block operations", () => {

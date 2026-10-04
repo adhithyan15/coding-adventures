@@ -23,12 +23,15 @@ import {
   type AuthoringDocumentStatus,
   type AuthoringLimitOverrides,
   type AuthoringLimits,
+  type AuthoringPublicationRecord,
   type AuthoringProject,
   type CreateAuthoringProjectInput,
 } from "./types.js";
 
 const UUID_V7 = /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 const PORTABLE_NAME = /^[a-z0-9]+(?:[._-][a-z0-9]+)*$/;
+const SHA256_BASE64 = /^[A-Za-z0-9+/]{43}=$/;
+const UNSAFE_IDENTITY = /[\u0000-\u001f\u007f-\u009f\u061c\u200e\u200f\u202a-\u202e\u2066-\u2069]/u;
 const LIMIT_KEYS = Object.freeze(Object.keys(HARD_AUTHORING_LIMITS) as (keyof AuthoringLimits)[]);
 
 interface WalkState {
@@ -128,7 +131,7 @@ function preflightCanonicalSnapshot(value: unknown, limits: AuthoringLimits): un
     try { prototype = Object.getPrototypeOf(item); } catch { invalidProject(path, "cannot be inspected safely"); }
     if (prototype !== Object.prototype) invalidProject(path, "expected a plain object");
     const keys = safeOwnKeys(item, path);
-    if (keys.length > 6) invalidProject(path, "has too many fields");
+    if (keys.length > 7) invalidProject(path, "has too many fields");
     const fields = ownDataSnapshot(item, path, keys);
     if (keys.some((key) => typeof key !== "string")) invalidProject(path, "contains a symbol field");
     const names = (keys as string[]).sort();
@@ -198,7 +201,7 @@ function plainObjectSnapshot(value: unknown, path: string, state?: WalkState): R
     state.seen.add(value);
   }
   const keys = safeOwnKeys(value, path);
-  if (keys.length > 6) invalidProject(path, "has too many fields");
+  if (keys.length > 7) invalidProject(path, "has too many fields");
   const snapshot = ownDataSnapshot(value, path, keys);
   const ownKeys = Reflect.ownKeys(snapshot);
   if (ownKeys.some((key) => typeof key !== "string")) invalidProject(path, "contains a symbol field");
@@ -249,6 +252,33 @@ function portableName(value: unknown, path: string, maximum: number): string {
   const result = stringValue(value, path, maximum, { nonEmpty: true, trimmed: true });
   if (!PORTABLE_NAME.test(result)) invalidProject(path, "expected a portable lowercase name");
   return result;
+}
+
+function publicationRevision(value: unknown, path: string): string {
+  const result = stringValue(value, path, 1_024, { nonEmpty: true });
+  if (UNSAFE_IDENTITY.test(result)) invalidProject(path, "contains unsafe identity formatting");
+  return result;
+}
+
+function publicationRecord(
+  value: unknown,
+  path: string,
+  limits: AuthoringLimits,
+  seen: WeakSet<object>,
+): AuthoringPublicationRecord {
+  const node = plainObject(
+    value,
+    path,
+    ["authoringRevision", "manifestSha256", "targetId"],
+    { nodes: 0, seen, limits },
+  );
+  const manifestSha256 = stringValue(node.manifestSha256, `${path}.manifestSha256`, 44, { nonEmpty: true });
+  if (!SHA256_BASE64.test(manifestSha256)) invalidProject(`${path}.manifestSha256`, "expected base64 SHA-256");
+  return {
+    authoringRevision: publicationRevision(node.authoringRevision, `${path}.authoringRevision`),
+    manifestSha256,
+    targetId: portableName(node.targetId, `${path}.targetId`, limits.maxSlugScalars),
+  };
 }
 
 function safeDestination(value: unknown, path: string, limits: AuthoringLimits, email = false): string {
@@ -502,9 +532,13 @@ export function validateAuthoringProject(value: unknown, overrides: AuthoringLim
   const limits = resolveLimits(overrides);
   const snapshot = preflightCanonicalSnapshot(value, limits);
   const seen = new WeakSet<object>();
-  const node = plainObject(snapshot, "$", ["schemaVersion", "projectId", "title", "site", "documents", "activeDocumentId"], { nodes: 0, seen, limits });
+  const node = plainObject(snapshot, "$", ["schemaVersion", "projectId", "title", "site", "workflow", "documents", "activeDocumentId"], { nodes: 0, seen, limits });
   if (node.schemaVersion !== 1) invalidProject("$.schemaVersion", "expected version 1");
   const site = plainObject(node.site, "$.site", ["baseUrl", "themeId"], { nodes: 0, seen, limits });
+  const workflow = plainObject(node.workflow, "$.workflow", ["lastPublication"], { nodes: 0, seen, limits });
+  const lastPublication = workflow.lastPublication === null
+    ? null
+    : publicationRecord(workflow.lastPublication, "$.workflow.lastPublication", limits, seen);
   let baseUrl: string | null = null;
   if (site.baseUrl !== null) {
     const candidate = safeDestination(site.baseUrl, "$.site.baseUrl", limits);
@@ -536,6 +570,7 @@ export function validateAuthoringProject(value: unknown, overrides: AuthoringLim
       baseUrl,
       themeId: portableName(site.themeId, "$.site.themeId", limits.maxSlugScalars),
     },
+    workflow: { lastPublication },
     documents,
     activeDocumentId,
   };
@@ -554,6 +589,7 @@ export function createAuthoringProject(input: CreateAuthoringProjectInput, overr
     projectId: snapshot.projectId,
     title: snapshot.title,
     site: { baseUrl: null, themeId: snapshot.themeId ?? "forme-classless" },
+    workflow: { lastPublication: null },
     documents: [],
     activeDocumentId: null,
   }, overrides);

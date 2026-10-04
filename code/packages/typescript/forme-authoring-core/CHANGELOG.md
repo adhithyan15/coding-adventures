@@ -2,6 +2,16 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- Added closed `workflow.lastPublication` metadata for exact authoring,
+  canonical manifest, and reviewed target identities.
+- Added the semantic `record-publication` command and serialized
+  `dispatchAtRevision` transaction so stale queued edits cannot acknowledge an
+  older deployment or mark newer documents published.
+
 ## [0.1.0] - 2026-10-02
 
 ### Added

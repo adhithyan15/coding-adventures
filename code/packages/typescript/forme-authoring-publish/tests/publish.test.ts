@@ -9,6 +9,7 @@ import type {
 import type { ContentStore, DeployManifest } from "@coding-adventures/forme-deploy-runner-core";
 import {
   createAuthoringPublisher,
+  type AuthoringPublicationBuilder,
   type AuthoringPublishAttempt,
   type AuthoringPublishTarget,
   type PreparedAuthoringPublication,
@@ -118,7 +119,7 @@ function target(
 }
 
 function coordinator(
-  build: () => Promise<PreparedAuthoringPublication> = async () => prepared(),
+  build: AuthoringPublicationBuilder["build"] = async () => prepared(),
   publishTarget = target(),
 ) {
   return createAuthoringPublisher({
@@ -200,10 +201,11 @@ describe("reviewed authoring publication", () => {
   });
 
   it("fails closed and redacts build, manifest, and content errors", async () => {
+    const releases = [vi.fn(async () => {}), vi.fn(async () => {})];
     const cases: Array<() => Promise<PreparedAuthoringPublication>> = [
       async () => { throw new Error("builder secret"); },
-      async () => prepared({ manifest: { version: 999 } }),
-      async () => prepared({ contentStore: store(new TextEncoder().encode("wrong")) }),
+      async () => prepared({ manifest: { version: 999 }, release: releases[0] }),
+      async () => prepared({ contentStore: store(new TextEncoder().encode("wrong")), release: releases[1] }),
     ];
     for (const build of cases) {
       const session = new Session();
@@ -213,6 +215,17 @@ describe("reviewed authoring publication", () => {
       expect(JSON.stringify(result)).not.toContain("secret");
       expect(session.records).toEqual([]);
     }
+    expect(releases[0]).toHaveBeenCalledOnce();
+    expect(releases[1]).toHaveBeenCalledOnce();
+  });
+
+  it("poisons when invalid prepared output cannot be retired", async () => {
+    const result = await coordinator(async () => prepared({
+      manifest: { version: 999 },
+      async release() { throw new Error("cleanup secret"); },
+    })).publish(new Session());
+    expect(result).toMatchObject({ outcome: "indeterminate", diagnostics: [{ code: "E_PUBLISH_CLEANUP" }] });
+    expect(JSON.stringify(result)).not.toContain("secret");
   });
 
   it("allows retry after a known pre-commit target failure", async () => {
@@ -229,13 +242,13 @@ describe("reviewed authoring publication", () => {
   });
 
   it("poisons retry after an indeterminate or malformed target acknowledgement", async () => {
-    for (const result of [
-      { outcome: "indeterminate", manifestSha256: DIGEST },
-      { outcome: "success", manifestSha256: "wrong" },
-      { outcome: "mystery", manifestSha256: DIGEST },
+    for (const makeResult of [
+      (identity: string) => ({ outcome: "indeterminate", manifestSha256: identity }),
+      () => ({ outcome: "success", manifestSha256: "wrong" }),
+      (identity: string) => ({ outcome: "mystery", manifestSha256: identity }),
     ]) {
       const session = new Session();
-      const publisher = coordinator(undefined, target(async () => result as never));
+      const publisher = coordinator(undefined, target(async (input) => makeResult(input.manifestSha256) as never));
       await expect(publisher.publish(session)).resolves.toMatchObject({ outcome: "indeterminate" });
       await expect(publisher.publish(session)).resolves.toMatchObject({
         outcome: "indeterminate",
@@ -263,6 +276,57 @@ describe("reviewed authoring publication", () => {
     expect(recordSession.project.documents[0]!.status).toBe("draft");
   });
 
+  it("handles target rejection, cancellation, stale cleanup failure, and malformed results", async () => {
+    const rejected = await coordinator(undefined, target(async () => { throw new Error("target secret"); })).publish(new Session());
+    expect(rejected).toMatchObject({ outcome: "failed", diagnostics: [{ code: "E_PUBLISH_TARGET" }] });
+    expect(JSON.stringify(rejected)).not.toContain("secret");
+
+    const rejectedCleanup = await coordinator(
+      async () => prepared({ async release() { throw new Error("cleanup"); } }),
+      target(async () => { throw new Error("target"); }),
+    ).publish(new Session());
+    expect(rejectedCleanup).toMatchObject({ outcome: "indeterminate", diagnostics: [{ code: "E_PUBLISH_CLEANUP" }] });
+
+    const controller = new AbortController();
+    controller.abort();
+    await expect(coordinator().publish(new Session(), controller.signal)).resolves.toMatchObject({
+      outcome: "cancelled",
+      diagnostics: [{ code: "E_PUBLISH_CANCELLED" }],
+    });
+
+    const stale = new Session();
+    const stalePublisher = coordinator(async () => {
+      stale.storageRevision = "revision-newer";
+      return prepared({ async release() { throw new Error("cleanup"); } });
+    });
+    await expect(stalePublisher.publish(stale)).resolves.toMatchObject({
+      outcome: "indeterminate",
+      diagnostics: [{ code: "E_PUBLISH_CLEANUP" }],
+    });
+
+    const malformedPublisher = coordinator(undefined, target(async () => null as never));
+    await expect(malformedPublisher.publish(new Session())).resolves.toMatchObject({ outcome: "indeterminate" });
+
+    const malformedCleanup = coordinator(
+      async () => prepared({ async release() { throw new Error("cleanup"); } }),
+      target(async () => null as never),
+    );
+    await expect(malformedCleanup.publish(new Session())).resolves.toMatchObject({
+      outcome: "indeterminate",
+      diagnostics: [{ code: "E_PUBLISH_CLEANUP" }],
+    });
+
+    const invalidRevision = new Session();
+    const invalidRevisionPublisher = coordinator(async () => {
+      invalidRevision.storageRevision = " bad";
+      return prepared({ async release() { throw new Error("cleanup"); } });
+    });
+    await expect(invalidRevisionPublisher.publish(invalidRevision)).resolves.toMatchObject({
+      outcome: "indeterminate",
+      diagnostics: [{ code: "E_PUBLISH_CLEANUP" }],
+    });
+  });
+
   it("rejects overlapping explicit actions and disposes without a hidden retry", async () => {
     const session = new Session();
     let finish!: (value: PreparedAuthoringPublication) => void;
@@ -276,7 +340,83 @@ describe("reviewed authoring publication", () => {
     finish(prepared());
     await expect(first).resolves.toMatchObject({ outcome: "published" });
     await publisher.dispose();
+    await publisher.dispose();
     await expect(publisher.publish(session)).rejects.toThrow("disposed");
+  });
+
+  it("aborts active work during disposal and reports cancellation", async () => {
+    const session = new Session();
+    const publisher = coordinator(async (_input, signal) => {
+      await new Promise<void>((resolve, reject) => {
+        signal.addEventListener("abort", () => reject(new Error("aborted")), { once: true });
+      });
+      return prepared();
+    });
+    const action = publisher.publish(session);
+    await publisher.dispose();
+    await expect(action).resolves.toMatchObject({ outcome: "cancelled" });
+    expect(publisher.state.phase).toBe("disposed");
+  });
+
+  it("forwards a later caller cancellation to active build work", async () => {
+    const controller = new AbortController();
+    const publisher = coordinator(async (_input, signal) => {
+      await new Promise<void>((_resolve, reject) => {
+        signal.addEventListener("abort", () => reject(new Error("aborted")), { once: true });
+      });
+      return prepared();
+    });
+    const action = publisher.publish(new Session(), controller.signal);
+    controller.abort();
+    await expect(action).resolves.toMatchObject({ outcome: "cancelled" });
+  });
+
+  it("rejects unsafe construction and hostile session or prepared shapes generically", async () => {
+    const invalidOptions: unknown[] = [
+      null,
+      {},
+      { builder: null, target: target() },
+      { builder: {}, target: target() },
+      { builder: { build: 1 }, target: target() },
+      { builder: { build: async () => prepared() }, target: { ...target(), extra: true } },
+      { builder: { build: async () => prepared() }, target: { ...target(), review: { ...target().review, targetId: "UPPER" } } },
+      { builder: { build: async () => prepared() }, target: { ...target(), review: { ...target().review, label: " bad" } } },
+      { builder: { build: async () => prepared() }, target: { ...target(), review: { ...target().review, destination: "bad\u202e" } } },
+    ];
+    for (const options of invalidOptions) {
+      expect(() => createAuthoringPublisher(options as never)).toThrow();
+    }
+
+    const accessor = {} as Record<string, unknown>;
+    Object.defineProperty(accessor, "builder", { enumerable: true, get() { throw new Error("secret"); } });
+    Object.defineProperty(accessor, "target", { enumerable: true, value: target() });
+    expect(() => createAuthoringPublisher(accessor as never)).toThrow();
+
+    const symbolOptions = { builder: { build: async () => prepared() }, target: target(), [Symbol("secret")]: true };
+    expect(() => createAuthoringPublisher(symbolOptions as never)).toThrow();
+
+    const publisher = coordinator();
+    await expect(publisher.publish(null as never)).rejects.toThrow("inspected safely");
+    await expect(publisher.publish({ project: project(), storageRevision: "bad\u202e" } as never)).rejects.toThrow("inspected safely");
+    await expect(coordinator(async () => ({ manifest: manifest(), contentStore: store() } as never)).publish(new Session()))
+      .resolves.toMatchObject({ outcome: "failed", diagnostics: [{ code: "E_PUBLISH_BUILD" }] });
+    await expect(coordinator(async () => ({ ...prepared(), release: 1 } as never)).publish(new Session()))
+      .resolves.toMatchObject({ outcome: "failed" });
+    const extraRelease = vi.fn(async () => {});
+    await expect(coordinator(async () => ({ ...prepared(), release: extraRelease, extra: true } as never)).publish(new Session()))
+      .resolves.toMatchObject({ outcome: "failed" });
+    expect(extraRelease).toHaveBeenCalledOnce();
+    await expect(coordinator(async () => prepared({ contentStore: {} as never })).publish(new Session()))
+      .resolves.toMatchObject({ outcome: "failed" });
+
+    const hiddenReview = target();
+    Object.defineProperty(hiddenReview.review, "token", { value: "secret" });
+    expect(() => createAuthoringPublisher({ builder: { async build() { return prepared(); } }, target: hiddenReview })).toThrow(
+      "could not be inspected safely",
+    );
+
+    const hostile = new Proxy({}, { getPrototypeOf() { throw new Error("secret"); } });
+    expect(() => createAuthoringPublisher(hostile as never)).toThrow("could not be inspected safely");
   });
 
   it("returns immutable closed attempts and state", async () => {

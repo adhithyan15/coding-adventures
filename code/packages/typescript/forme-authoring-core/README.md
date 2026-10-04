@@ -35,8 +35,8 @@ publish snapshot          retain old snapshot
 
 ## Project shape
 
-Projects contain a title, theme selection, optional HTTP(S) base URL, and
-ordered documents. Document bodies are the repository's backend-neutral
+Projects contain a title, theme selection, optional HTTP(S) base URL, closed
+publication workflow metadata, and ordered documents. Document bodies are the repository's backend-neutral
 `DocumentNode` Content IR. The codec accepts the normal authorable block and
 inline vocabulary but rejects raw backend nodes, unsafe URL schemes, cycles,
 shared objects, prototypes, accessors, sparse arrays, unknown fields, duplicate
@@ -80,10 +80,17 @@ replaced. Recovery or reset must therefore be an explicit shell workflow.
 - `replace-document-body`
 - `configure-site`
 - `set-active-document`
+- `record-publication` (only through `dispatchAtRevision`)
 
 Commands run sequentially even when callers dispatch concurrently. A new edit
 after undo discards the redo branch. Retained history defaults to 100 snapshots
 and can be lowered or raised to the hard maximum of 200.
+
+The publication command records the exact authoring revision, canonical
+manifest SHA-256, and reviewed target identity while marking every document in
+that unchanged snapshot published. `dispatchAtRevision` rejects stale queued
+edits before persistence so an older external deployment cannot label newer
+content as published.
 
 ## Hard limits
 

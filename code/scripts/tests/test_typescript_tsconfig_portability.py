@@ -431,17 +431,18 @@ console.log(prose, nested);
         # +1: forme-authoring-core, the durable FM09 project/session boundary.
         # +1: forme-authoring-editor, the accessible FM09 React editor boundary.
         # +1: forme-authoring-preview, the exact FM09 pipeline preview boundary.
+        # +1: forme-authoring-publish, the exact FM09 reviewed publication boundary.
         # -1: the standalone checklist-app was retired; checklists live in
         # Trestle (mosaic-pkg-checklist).
-        self.assertEqual(summary.total_projects, 488)
+        self.assertEqual(summary.total_projects, 489)
         self.assertEqual(summary.shared_projects, 301)
         self.assertEqual(summary.inherited_root_dir, 130)
         self.assertEqual(summary.inherited_out_dir, 133)
         # forme-authoring-core, forme-authoring-editor, and
-        # forme-authoring-preview are isolated standalone emitters, adding
-        # three to both standalone inventories.
-        self.assertEqual(summary.standalone_emit_projects, 158)
-        self.assertEqual(summary.isolated_standalone_projects, 158)
+        # forme-authoring-preview, and forme-authoring-publish are isolated
+        # standalone emitters, adding four to both standalone inventories.
+        self.assertEqual(summary.standalone_emit_projects, 159)
+        self.assertEqual(summary.isolated_standalone_projects, 159)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
         # 94: +1 for script-ductus. Nothing the package SHIPS touches a Node
@@ -491,8 +492,9 @@ console.log(prose, nested);
         # interactivity composition and reviewed module-map config.
         # +1: forme-authoring-preview uses the same detector before bounded
         # enumeration of hostile pipeline output tables.
+        # +1: forme-authoring-publish owns canonical manifest hashing.
         # -1: the retired checklist-app (its Electron shell used Node APIs).
-        self.assertEqual(summary.node_api_projects, 84)
+        self.assertEqual(summary.node_api_projects, 85)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
         # +1: chief-of-staff-channel-store owns the test-only Node provider.
@@ -521,8 +523,9 @@ console.log(prose, nested);
         # +1: forme-interactivity-ir owns the Node util type provider.
         # +1: forme-render-static owns the Node util type provider.
         # +1: forme-authoring-preview owns the Node util type provider.
+        # +1: forme-authoring-publish owns the Node crypto type provider.
         # -1: the retired checklist-app (its Electron shell used Node APIs).
-        self.assertEqual(summary.node_provider_projects, 84)
+        self.assertEqual(summary.node_provider_projects, 85)
         self.assertEqual(summary.missing_node_provider_projects, 0)
         self.assertEqual(summary.stale_node_provider_locks, 0)
         self.assertEqual(summary.node_lock_exemptions, 1)
@@ -563,8 +566,9 @@ console.log(prose, nested);
         # +1: forme-authoring-core locks its compiler and test graph.
         # +1: forme-authoring-editor locks its React compiler and browser tests.
         # +1: forme-authoring-preview locks its compiler and lifecycle tests.
+        # +1: forme-authoring-publish locks its compiler and lifecycle tests.
         # -1: the retired checklist-app took its lockfile with it.
-        self.assertEqual(summary.locked_compilers, 487)
+        self.assertEqual(summary.locked_compilers, 488)
 
 
 if __name__ == "__main__":

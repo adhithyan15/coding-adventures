@@ -175,6 +175,23 @@ describe("durable authoring sessions", () => {
     expect(session.project.workflow.lastPublication).toBeNull();
   });
 
+  it("rejects malformed publication commands before persistence", async () => {
+    const storage = new MemoryStorage();
+    const session = await openAuthoringSession({ storage, initialProject: initial() });
+    const revision = session.storageRevision;
+    const malformed: unknown[] = [
+      null,
+      { type: "other", publication: {} },
+      { type: "record-publication", publication: null },
+      { type: "record-publication", publication: { authoringRevision: revision, manifestSha256: "x" } },
+      { type: "record-publication", publication: { authoringRevision: "another-revision", manifestSha256: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=", targetId: "github-pages" } },
+    ];
+    for (const command of malformed) {
+      await expect(session.dispatchAtRevision(revision, command as never)).rejects.toMatchObject({ code: "INVALID_COMMAND" });
+    }
+    expect(storage.writes).toBe(1);
+  });
+
   it("persists undo and redo across restarts", async () => {
     const storage = new MemoryStorage();
     const session = await openAuthoringSession({ storage, initialProject: initial() });
