@@ -336,12 +336,18 @@ shape the rest:
   lane against TaskApp's generated files, so the save's move runs on NTFS.
   The WinUI half is compiled for real only by that lane's TaskApp build.
 
-**Known gap, the host's rather than the library's:** the XAML host has no
-props-changed notification (Compose's `propsChangedHandler`, SwiftUI's
-equivalent), so an answer given after deferral reaches the runtime at once
-but the window only at the next dispatch (or environment report, which
-re-applies a newer revision). The photo-picker handler this replaces had the
-same limit. Closing it is a host change.
+**Props after a deferred answer.** An answer given after deferral moves the
+app with no call from the window, so the host tells it, as Compose's
+`propsChangedHandler` and Flutter's `setPropsChangedHandler` do:
+`MosaicRuntimeHost.PropsChanged` is raised once per deferred effect
+answered, on the thread that answered, after the host's lock is released
+(an answer given inside the handler that was offered the effect is returned
+by the dispatch that minted it, and raises nothing). The runtime-backed
+window sets it right after `LoadRequired` and re-applies the required props
+from its `DispatcherQueue` -- to the root showing, in a window that switches
+layouts. Closing the runtime drops the handler; a retried start sets it
+again. The XAML effect driver checks it is raised once for a deferred answer
+and not for a deferral or an answer in the handler.
 
 ### 7.7 Flutter, as built
 
@@ -386,8 +392,8 @@ Kotlin file. What differs is how Dart and Flutter shape the rest:
   base64-encoded, or written and flushed, in a short-lived background isolate
   (`Isolate.run`, from top-level functions that capture only a path and the
   bytes), so a 50 MiB file never stalls a frame; the answer is given back on
-  the UI isolate, and the host's props-changed handler redraws -- Flutter has
-  no equivalent of XAML's known gap. A scheduler that throws and a dialog
+  the UI isolate, and the host's props-changed handler redraws, as XAML's
+  `PropsChanged` does (§7.6). A scheduler that throws and a dialog
   that throws are both `failed { "the file dialog failed" }`; a disposed host
   swallows the answer; nothing escapes.
 - **Dialogs.** `file_selector` (published by the Flutter team), pinned

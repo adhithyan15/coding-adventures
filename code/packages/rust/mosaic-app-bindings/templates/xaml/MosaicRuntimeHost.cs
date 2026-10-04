@@ -218,6 +218,23 @@ public static class MosaicRuntimeHost
         set { if (State is { } runtime) runtime.EffectHandler = value; }
     }
 
+    /// <summary>
+    /// Called after an effect that was deferred is answered: the app moved
+    /// with no call from the window, so the window has to be told (UI87 §7.6).
+    /// Compose's and Flutter's <c>setPropsChangedHandler</c>. Raised on the
+    /// thread that answered, after the host's lock is released, so a handler
+    /// should marshal to its <c>DispatcherQueue</c> and re-apply props there.
+    /// An answer given inside the handler that was offered the effect is not
+    /// deferred and raises nothing: the dispatch that minted it returns it.
+    /// Setting it with no runtime loaded is a no-op, as for
+    /// <see cref="EffectHandler"/>; a retried start sets it again.
+    /// </summary>
+    public static Action? PropsChanged
+    {
+        get => State?.PropsChanged;
+        set { if (State is { } runtime) runtime.PropsChanged = value; }
+    }
+
     /// <summary>Answer an effect the app is waiting on.</summary>
     public static void CompleteEffect(ulong id, object result) =>
         RequiredRuntime().CompleteEffect(id, result);
@@ -398,6 +415,9 @@ public static class MosaicRuntimeHost
         /// instead.
         /// </remarks>
         public Action<ulong, string, JsonElement, string>? EffectHandler { get; set; }
+
+        /// <summary>See <see cref="MosaicRuntimeHost.PropsChanged"/>.</summary>
+        public Action? PropsChanged { get; set; }
 
         /// <summary>Awaited effect ids nothing has answered yet.</summary>
         private readonly HashSet<ulong> awaiting = new();
@@ -717,7 +737,35 @@ public static class MosaicRuntimeHost
         /// </remarks>
         public void CompleteEffect(ulong id, object result)
         {
+            Action? notify;
             lock (gate)
+            {
+                notify = CompleteEffectLocked(id, result);
+            }
+            // Outside the lock: the window's handler runs window code, and a
+            // handler that re-applied props inline would otherwise take the
+            // host's lock from inside it on another thread's behalf.
+            if (notify is null) return;
+            try
+            {
+                notify();
+            }
+            catch (Exception error)
+            {
+                // The answer is already the runtime's; a window that failed to
+                // hear about it must not turn that into a failed answer.
+                System.Diagnostics.Debug.WriteLine($"Mosaic props-changed handler failed: {error}");
+            }
+        }
+
+        /// <summary>
+        /// The answer itself, under the host's lock. Returns the props-changed
+        /// handler to raise once the lock is released: only for an effect that
+        /// was deferred, and only when no settle is running (an answer inside a
+        /// settle is returned by the call that started it).
+        /// </summary>
+        private Action? CompleteEffectLocked(ulong id, object result)
+        {
             {
                 EnsureOpen();
                 var complete = completeEffect
@@ -731,7 +779,7 @@ public static class MosaicRuntimeHost
                 // Cleared only once the runtime accepted the answer: clearing on
                 // the way in would drop the obligation if the call failed.
                 awaiting.Remove(id);
-                deferred.Remove(id);
+                var wasDeferred = deferred.Remove(id);
                 if (settling > 0 && carriedEffects is { } carrier)
                 {
                     // Inside a settle: hand this to the loop already running
@@ -740,10 +788,13 @@ public static class MosaicRuntimeHost
                     carrier.AddRange(EffectsOf(update));
                     latestAnswer = update;
                     answered = true;
-                    return;
+                    return null;
                 }
                 latestUpdate = KeepShowingProps(SettleEffects(update));
                 PersistSnapshot();
+                // A deferred answer is the return value of no call the window
+                // made, so the window has to be told even though nothing asked.
+                return wasDeferred ? PropsChanged : null;
             }
         }
 
@@ -1170,6 +1221,8 @@ public static class MosaicRuntimeHost
             {
                 if (app != IntPtr.Zero) destroy(app);
                 app = IntPtr.Zero;
+                // Drop the window: a closed runtime answers nothing more.
+                PropsChanged = null;
                 if (settling > 0)
                 {
                     // A callback below us is still running, and its caller will
