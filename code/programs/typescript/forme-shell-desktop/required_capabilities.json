@@ -1,0 +1,80 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "typescript/forme-shell-desktop",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "Tauri application data, bundled worker resources, and one user-reviewed local publication target",
+      "justification": "Loads the fixed native authoring profile, exact bundled executables, private build output, and the selected target identity/content before preview or atomic publication."
+    },
+    {
+      "category": "fs",
+      "action": "list",
+      "target": "private product workspaces and one user-reviewed local publication target",
+      "justification": "Validates bounded product output trees and confirms that a publication directory is empty or already owned by the same opaque target."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "Tauri application data, private product workspaces, and sibling publication staging directories",
+      "justification": "Creates owner-only durable project storage, one fresh contained workspace per product build, and one owner-only complete-tree publication stage."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "Tauri application data, private product workspaces, and one user-reviewed local publication target",
+      "justification": "Commits canonical project bytes, materializes validated product output, and atomically exchanges a fully staged local publication tree."
+    },
+    {
+      "category": "fs",
+      "action": "delete",
+      "target": "private product workspaces and superseded owned publication trees",
+      "justification": "Retires every bounded native build workspace and removes the previous owned tree only after a successful atomic directory exchange."
+    },
+    {
+      "category": "net",
+      "action": "listen",
+      "target": "127.0.0.1:0",
+      "justification": "Serves the last validated preview snapshot on a randomly assigned loopback port behind an unguessable capability path."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "bundled forme-sandbox-macos and identity-pinned forme-product-worker",
+      "justification": "Executes only the bundled audited macOS sandbox supervisor, which verifies and launches the copied single-operation Forme product worker."
+    },
+    {
+      "category": "proc",
+      "action": "signal",
+      "target": "the current private product-worker process group",
+      "justification": "Kills and reaps the bounded worker process tree on deadline, protocol failure, output-budget failure, or native wait failure."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "FORME_SEA_NODE",
+      "justification": "The build-only SEA packager accepts an explicit injectible Node executable when the active Node distribution cannot receive a SEA blob."
+    },
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "macOS libc filesystem, process, descriptor, and atomic rename primitives",
+      "justification": "Uses descriptor-relative no-follow file operations, owner checks, resource-safe process setup, and macOS atomic directory exchange unavailable through portable APIs."
+    },
+    {
+      "category": "time",
+      "action": "read",
+      "target": "monotonic and wall clocks",
+      "justification": "Generates UUIDv7 identities and enforces product-worker wall-clock deadlines without exposing clock access to the webview or worker protocol."
+    },
+    {
+      "category": "time",
+      "action": "sleep",
+      "target": "bounded product-worker supervision loop",
+      "justification": "Paces native child-state and scratch-budget checks while the audited product worker runs under a fixed hard deadline."
+    }
+  ],
+  "justification": "This macOS desktop leaf owns the narrow native authority intentionally absent from every Forme authoring library: durable local storage, loopback preview, one reviewed local target, and an identity-pinned sandboxed product process. The Tauri webview receives only closed application commands and no ambient OS capability."
+}

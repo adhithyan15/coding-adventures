@@ -1,9 +1,8 @@
 # FM09 — Forme Authoring Shell
 
-> **Status:** Authoring v1 in progress. The durable authoring core, default
-> editor, exact pipeline preview, reviewed publication, and capability-free
-> first-run shell composition are implemented; native packaging follows as a
-> separately reviewable product boundary.
+> **Status:** Implemented for the Authoring v1 desktop boundary. The durable
+> authoring core, default editor, exact pipeline preview, reviewed publication,
+> capability-free first-run shell, and contained native Tauri host are complete.
 > **Scope:** Project state, editing transactions, persistent history, editor
 > composition, live preview, publish composition, and the local desktop shell.
 > **Packages:** `forme-authoring-core`, `forme-authoring-editor`,
@@ -20,7 +19,7 @@
 | Pipeline-backed preview | Implemented | `forme-authoring-preview` runs exact persisted revisions through the real FM03/FM07 watch and artifact path with cancellation, last-good retention, and bounded diagnostics. |
 | Reviewed publish workflow | Implemented | `forme-authoring-publish` composes exact-revision product builds with FM08 validation, closed target review, cleanup, and durable acknowledgement without exposing host authority. |
 | First-run shell composition | Implemented | `forme-authoring-shell` composes the proven layers through bounded injected handles, explicit preview and publish actions, complete target review, fixed failures, and shared disposal. |
-| Installable desktop shell | Active | FM-B068 adds the native Tauri host; FM-B066 closes after packaging and clean-profile acceptance. |
+| Installable desktop shell | Implemented | `forme-shell-desktop` packages the capability-free React shell with crash-safe native storage, an exact bundled worker under the audited macOS launcher, loopback capability preview, reviewed atomic local publication, and clean-profile product acceptance. |
 
 ## 1. Purpose and delivery boundary
 
