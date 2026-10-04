@@ -1,8 +1,8 @@
 Bengali, chapter 37: Here, There, and Where.
-5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 5.
+Lesson 1 of 6.
 থ (thô) — the breathy dental.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -38,7 +38,7 @@ Where is থ (thô) made? (On the teeth, like ত.) What is added? (Breath.) Is 
 Source: Unicode Bengali chart.
 
 
-Lesson 2 of 5.
+Lesson 2 of 6.
 এখানে (ekhāne) — here.
 
 Warm-up.
@@ -84,7 +84,7 @@ Which head is inside এখানে (ekhāne)? (এ-, the near one.) Is there a
 Source: Unicode Bengali chart.
 
 
-Lesson 3 of 5.
+Lesson 3 of 6.
 ওখানে (okhāne) — there.
 
 Warm-up.
@@ -128,7 +128,7 @@ What is the only difference between এখানে (ekhāne) and ওখান�
 Source: Unicode Bengali chart.
 
 
-Lesson 4 of 5.
+Lesson 4 of 6.
 কোথায় (kothāy) — where?
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -175,7 +175,30 @@ Which head opens কোথায় (kothāy)? (ক-, the asking one.) Which two
 Source: Unicode Bengali chart.
 
 
-Lesson 5 of 5.
+Lesson 5 of 6.
+Your first question from meaning — assemble one familiar Bengali location question from meaning, with no visible answer.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Close the earlier lessons. Recall tea and the place question where? without writing either word yet.
+
+Writing: assemble one familiar question.
+From meaning alone, write Where is the tea? There is no word bank, romanization, or copyable sentence. Choose the two familiar pieces, put them in Bengali order, and add the Bengali question mark. This first composition is untimed: finish before opening the answer key.
+[question — say your answer, then pause 40 seconds]
+With no word bank, romanization, or copyable answer, write the Bengali question meaning: Where is the tea?
+
+Guided Practice: repair one difference.
+Check the thing, place question, word boundary, and punctuation separately. Repair the first difference and write the whole question once more from meaning.
+
+Wrap-up recall.
+[pause 2 seconds]
+What made this composition rather than copying? (You selected and ordered two known pieces from meaning, with no visible Bengali answer.)
+One controlled line proves this rung, not the later timed A1 writing task.
+
+
+Lesson 6 of 6.
 Here, there, and where — nine cells, three heads, and seven chapters of grammar that all turn out to have been one idea.
 
 Warm-up.

@@ -1,19 +1,20 @@
 {
   "language": "bengali",
   "chapter": 37,
-  "sourceHash": "fnv1a64:02885a90457bacd3",
+  "sourceHash": "fnv1a64:414e3cd7050eebe2",
   "lessonIds": [
     "BN-W05-tha",
     "BN-C26-ekhane",
     "BN-C26-okhane",
     "BN-C26-kothay",
+    "BN-W26-kothay-controlled-question",
     "BN-R26-here-there-where"
   ],
   "voiceLessons": 3,
   "drivablePrefix": 0,
   "text": "bengali/narration/ch37.txt",
   "json": "bengali/narration/ch37.json",
-  "textHash": "fnv1a64:2a8085e2e440ca4f",
-  "jsonHash": "fnv1a64:ad53f39ee93c4b78",
+  "textHash": "fnv1a64:77e50ad2780cfce7",
+  "jsonHash": "fnv1a64:0cec10da7ae68b47",
   "findings": []
 }
