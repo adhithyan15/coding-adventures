@@ -1,0 +1,11 @@
+{
+  "id": "JA-C131-toshokan",
+  "pathSegment": "JA-PATH-131-WRITE131",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "JA-EXT-131-WRITE131",
+      "order": 5
+    }
+  ]
+}

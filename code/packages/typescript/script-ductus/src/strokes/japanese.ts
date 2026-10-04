@@ -1497,4 +1497,254 @@ export const entries: DuctusEntry[] = [
       source: strokeSource("や"),
     },
   ],
+  // Small ゃ and ょ take や's and よ's movements, exactly as small ゅ takes ゆ's.
+  // Each path is the full-size glyph's own verified pen path mapped through the
+  // two glyphs' bounding boxes and then snapped to the SMALL glyph's medial line
+  // (no point lies more than 34 units from the mapped path), so the order is the
+  // full-size sign's citation and the geometry is the small glyph's own outline.
+  // The captions are the full-size sign's, verbatim.
+  [
+    "japanese:ゃ",
+    {
+      script: "japanese",
+      glyph: "ゃ",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "sweep right from the left and curl into the hook",
+              path: [
+                { x: 129, y: 314 },
+                { x: 189, y: 306 },
+                { x: 247, y: 331 },
+                { x: 305, y: 355 },
+                { x: 359, y: 387 },
+                { x: 418, y: 408 },
+                { x: 477, y: 431 },
+                { x: 537, y: 449 },
+                { x: 597, y: 465 },
+                { x: 660, y: 469 },
+                { x: 722, y: 457 },
+                { x: 772, y: 422 },
+                { x: 796, y: 364 },
+                { x: 794, y: 302 },
+                { x: 765, y: 247 },
+                { x: 711, y: 216 },
+                { x: 649, y: 206 },
+                { x: 587, y: 213 },
+                { x: 533, y: 242 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "add the separate short tick at the top",
+              path: [
+                { x: 441, y: 594 },
+                { x: 481, y: 581 },
+                { x: 514, y: 553 },
+                { x: 553, y: 542 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the long descender across the sweep to the lower right",
+              path: [
+                { x: 221, y: 526 },
+                { x: 274, y: 486 },
+                { x: 305, y: 424 },
+                { x: 330, y: 360 },
+                { x: 364, y: 300 },
+                { x: 391, y: 236 },
+                { x: 417, y: 172 },
+                { x: 440, y: 106 },
+                { x: 462, y: 41 },
+                { x: 481, y: -26 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("ゃ"),
+    },
+  ],
+  [
+    "japanese:ょ",
+    {
+      script: "japanese",
+      glyph: "ょ",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the short upper horizontal from left to right",
+              path: [
+                { x: 499, y: 432 },
+                { x: 585, y: 435 },
+                { x: 671, y: 439 },
+                { x: 755, y: 452 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "descend through the upper bar and turn left",
+              path: [
+                { x: 527, y: 612 },
+                { x: 491, y: 537 },
+                { x: 504, y: 453 },
+                { x: 491, y: 377 },
+                { x: 495, y: 290 },
+                { x: 482, y: 207 },
+                { x: 407, y: 176 },
+              ],
+            },
+            {
+              label:
+                "continue clockwise around the broad lower loop to the rightward finish",
+              path: [
+                { x: 407, y: 176 },
+                { x: 336, y: 169 },
+                { x: 268, y: 144 },
+                { x: 229, y: 87 },
+                { x: 246, y: 19 },
+                { x: 307, y: -18 },
+                { x: 378, y: -28 },
+                { x: 449, y: -18 },
+                { x: 497, y: 32 },
+                { x: 526, y: 94 },
+                { x: 582, y: 136 },
+                { x: 647, y: 105 },
+                { x: 706, y: 65 },
+                { x: 747, y: 8 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("ょ"),
+    },
+  ],
+  // を is fitted from KanjiVG's three directed stroke paths for U+3092. KanjiVG
+  // supplies only the ORDER and DIRECTION: its paths were scaled onto the bundled
+  // Noto Sans JP outline and every sample was snapped to that outline's skeleton,
+  // so the coordinates below are the print glyph's medial line. Stroke 2 is one
+  // run with a sharp turn at its foot; the turn is the boundary between its two
+  // labelled segments.
+  [
+    "japanese:を",
+    {
+      script: "japanese",
+      glyph: "を",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the short upper bar from left to right",
+              path: [
+                { x: 139, y: 651 },
+                { x: 221, y: 639 },
+                { x: 304, y: 635 },
+                { x: 384, y: 655 },
+                { x: 463, y: 645 },
+                { x: 546, y: 647 },
+                { x: 630, y: 654 },
+                { x: 713, y: 664 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "start above the bar and cut down-left through it",
+              path: [
+                { x: 435, y: 775 },
+                { x: 405, y: 719 },
+                { x: 388, y: 658 },
+                { x: 356, y: 603 },
+                { x: 332, y: 543 },
+                { x: 300, y: 488 },
+                { x: 270, y: 431 },
+                { x: 230, y: 382 },
+                { x: 185, y: 336 },
+                { x: 130, y: 303 },
+              ],
+            },
+            {
+              label:
+                "turn up and right into the arch, then down the stem",
+              path: [
+                { x: 130, y: 303 },
+                { x: 186, y: 336 },
+                { x: 231, y: 383 },
+                { x: 282, y: 423 },
+                { x: 345, y: 436 },
+                { x: 409, y: 448 },
+                { x: 474, y: 445 },
+                { x: 525, y: 407 },
+                { x: 537, y: 345 },
+                { x: 546, y: 282 },
+                { x: 555, y: 218 },
+                { x: 555, y: 153 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "start at the right and sweep down-left across the middle",
+              path: [
+                { x: 847, y: 503 },
+                { x: 796, y: 450 },
+                { x: 725, y: 420 },
+                { x: 655, y: 390 },
+                { x: 583, y: 364 },
+                { x: 520, y: 321 },
+                { x: 452, y: 286 },
+                { x: 390, y: 241 },
+                { x: 340, y: 183 },
+                { x: 323, y: 110 },
+              ],
+            },
+            {
+              label:
+                "round the lower left and finish along the base to the right",
+              path: [
+                { x: 323, y: 110 },
+                { x: 332, y: 62 },
+                { x: 366, y: 27 },
+                { x: 410, y: 6 },
+                { x: 458, y: -3 },
+                { x: 506, y: -7 },
+                { x: 555, y: -9 },
+                { x: 604, y: -8 },
+                { x: 653, y: -5 },
+                { x: 702, y: -1 },
+                { x: 750, y: 5 },
+                { x: 794, y: 25 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("を"),
+    },
+  ],
 ];

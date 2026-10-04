@@ -327,5 +327,52 @@ export const scriptInventoryEvidence = {
     );
     expect(missingJapanese.has("ゅ")).toBe(false);
     expect(affected.get("ゅ") ?? 0).toBe(0);
+    // Chapter 131: small ゃ and small ょ follow the ゅ rule exactly -- the
+    // full-size sign's observed movement, its citation, and an explicit
+    // statement that the size adaptation is not independent evidence. Both also
+    // name KanjiVG's own file for the small code point, which holds the same
+    // strokes in the same order. を has no Sirgazil animation in the record: its
+    // order and direction come from KanjiVG's three directed paths, and the
+    // variation says the coordinates are the font's, not KanjiVG's.
+    //
+    // Phrase by phrase with toContain rather than one regex with greedy gaps,
+    // for the backtracking reason recorded in script-ductus's japanese test.
+    for (const [glyph, full, name, lifts] of [
+      ["ゃ", "や", "SMALL YA", 2],
+      ["ょ", "よ", "SMALL YO", 1],
+    ] as const) {
+      const small = scripts.japanese!.letters.find((entry) => entry.glyph === glyph)!;
+      const fullSize = scripts.japanese!.letters.find((entry) => entry.glyph === full)!;
+      expect(small.role).toBe("hiragana");
+      expect(small.sound).toContain("joins to the preceding sign and makes one mora");
+      expect(small.penLifts).toBe(lifts);
+      expect(small.penLifts).toBe(fullSize.penLifts);
+      expect(small.strokeOrder).toHaveLength(fullSize.strokeOrder.length);
+      expect(small.strokeOrderSource?.url).toBe(fullSize.strokeOrderSource?.url);
+      for (const phrase of ["Sirgazil", `Hiragana ${full} stroke order animation.gif`, "KanjiVG", `HIRAGANA LETTER ${name}`]) {
+        expect(small.strokeOrderSource?.citation, phrase).toContain(phrase);
+      }
+      for (const phrase of ["scaling", "explicit rather than presented as independent handwriting evidence"]) {
+        expect(small.strokeOrderSource?.variation, phrase).toContain(phrase);
+      }
+      expect(missingJapanese.has(glyph)).toBe(false);
+      expect(affected.get(glyph) ?? 0).toBe(0);
+    }
+    const japaneseWo = scripts.japanese!.letters.find((entry) => entry.glyph === "を")!;
+    expect(japaneseWo.role).toBe("hiragana");
+    expect(japaneseWo.sound).toContain("only the particle");
+    expect(japaneseWo.penLifts).toBe(2);
+    expect(japaneseWo.strokeOrder).toHaveLength(3);
+    expect(japaneseWo.strokeOrderSource?.url).toBe(
+      "https://github.com/KanjiVG/kanjivg/blob/master/kanji/03092.svg",
+    );
+    for (const phrase of ["KanjiVG", "U+3092 HIRAGANA LETTER WO", "CC BY-SA 3.0"]) {
+      expect(japaneseWo.strokeOrderSource?.citation, phrase).toContain(phrase);
+    }
+    for (const phrase of ["Only the order and direction", "Noto Sans JP outline's own medial line"]) {
+      expect(japaneseWo.strokeOrderSource?.variation, phrase).toContain(phrase);
+    }
+    expect(missingJapanese.has("を")).toBe(false);
+    expect(affected.get("を") ?? 0).toBe(0);
   },
 };

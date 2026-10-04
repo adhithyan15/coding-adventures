@@ -37,6 +37,9 @@ const JAPANESE_FU = DUCTUS[ductusKey("japanese", "ふ")];
 const JAPANESE_HO = DUCTUS[ductusKey("japanese", "ほ")];
 const JAPANESE_MU = DUCTUS[ductusKey("japanese", "む")];
 const JAPANESE_YA = DUCTUS[ductusKey("japanese", "や")];
+const JAPANESE_SMALL_YA = DUCTUS[ductusKey("japanese", "ゃ")];
+const JAPANESE_SMALL_YO = DUCTUS[ductusKey("japanese", "ょ")];
+const JAPANESE_WO = DUCTUS[ductusKey("japanese", "を")];
 
 const OWNER_SCRIPTS = new Set(["japanese"]);
 const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
@@ -428,6 +431,105 @@ describe("handwriting ductus", () => {
     const right = (points: Point[]) => Math.max(...points.map((p) => p.x));
     expect(top(smallPoints)).toBeLessThan(top(yuPoints));
     expect(right(smallPoints)).toBeLessThan(right(yuPoints));
+  });
+
+  // Small ゃ and ょ follow the rule small ゅ set: the movement and captions are
+  // the full-size sign's, the coordinates are the small glyph's own. Both are
+  // pinned the same way, and both must sit inside a smaller box than their
+  // full-size twin so neither can be the big path wearing a small caption.
+  for (const [small, full, name, url, lifts] of [
+    [
+      JAPANESE_SMALL_YA,
+      JAPANESE_YA,
+      "small ya",
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%84_stroke_order_animation.gif",
+      2,
+    ],
+    [
+      JAPANESE_SMALL_YO,
+      JAPANESE_YO,
+      "small yo",
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%88_stroke_order_animation.gif",
+      1,
+    ],
+  ] as const) {
+    it(`Japanese ${small.glyph} scales ${full.glyph}'s movement to its own glyph`, () => {
+      expect(penLifts(small)).toBe(lifts);
+      expect(penLifts(full)).toBe(lifts);
+      expect(
+        small.strokes.map((stroke) =>
+          stroke.segments.map((segment) => segment.label),
+        ),
+      ).toEqual(
+        full.strokes.map((stroke) =>
+          stroke.segments.map((segment) => segment.label),
+        ),
+      );
+      expect(small.source.url).toBe(url);
+      // Phrase by phrase, for the reason given in the small ゅ test above.
+      for (const phrase of [
+        "Sirgazil",
+        "KanjiVG",
+        `HIRAGANA LETTER ${name.toUpperCase()}`,
+      ]) {
+        expect(small.source.citation, phrase).toContain(phrase);
+      }
+      for (const phrase of [
+        name,
+        "scaling",
+        "explicit rather than presented as independent handwriting evidence",
+      ]) {
+        expect(small.source.variation, phrase).toContain(phrase);
+      }
+      const points = (letter: LetterDuctus) =>
+        letter.strokes.flatMap((stroke) =>
+          stroke.segments.flatMap((segment) => segment.path),
+        );
+      const top = (list: Point[]) => Math.max(...list.map((p) => p.y));
+      const right = (list: Point[]) => Math.max(...list.map((p) => p.x));
+      expect(top(points(small))).toBeLessThan(top(points(full)));
+      expect(right(points(small))).toBeLessThan(right(points(full)));
+    });
+  }
+
+  it("Japanese を draws bar, diagonal-and-arch, then the separate lower curve", () => {
+    // KanjiVG's 03092 file is three directed paths, so three runs and two
+    // lifts. Stroke 2 does not lift at its sharp foot: the turn is a segment
+    // boundary, and the join between the two segments is exact.
+    expect(penLifts(JAPANESE_WO)).toBe(2);
+    expect(
+      JAPANESE_WO.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      ["draw the short upper bar from left to right"],
+      [
+        "start above the bar and cut down-left through it",
+        "turn up and right into the arch, then down the stem",
+      ],
+      [
+        "start at the right and sweep down-left across the middle",
+        "round the lower left and finish along the base to the right",
+      ],
+    ]);
+    for (const stroke of JAPANESE_WO.strokes) {
+      for (const gap of joinGaps(stroke)) expect(gap).toBe(0);
+    }
+    expect(JAPANESE_WO.source.url).toBe(
+      "https://github.com/KanjiVG/kanjivg/blob/master/kanji/03092.svg",
+    );
+    for (const phrase of ["KanjiVG", "U+3092 HIRAGANA LETTER WO", "CC BY-SA 3.0"]) {
+      expect(JAPANESE_WO.source.citation, phrase).toContain(phrase);
+    }
+    // The bar is drawn left to right, the diagonal starts ABOVE the bar, and
+    // the lower curve starts on the right and ends on the right after rounding
+    // the left: the three directional claims the caption makes.
+    const [bar, hook, curve] = JAPANESE_WO.strokes.map((stroke) => penPath(stroke));
+    expect(bar[0].x).toBeLessThan(bar[bar.length - 1].x);
+    expect(hook[0].y).toBeGreaterThan(Math.max(...bar.map((p) => p.y)));
+    const curveLeft = Math.min(...curve.map((p) => p.x));
+    expect(curve[0].x).toBeGreaterThan(curveLeft + 400);
+    expect(curve[curve.length - 1].x).toBeGreaterThan(curveLeft + 400);
   });
 
   it("Japanese counter hiragana preserve the cited stroke and lift counts", () => {

@@ -1,0 +1,23 @@
+{
+  "glyph": "を",
+  "sound": "o, written wo; in modern Japanese it spells only the particle that marks the object of a verb",
+  "role": "hiragana",
+  "components": [
+    "a short upper bar",
+    "a long diagonal that turns sharply back into an arch and a short stem",
+    "a separate lower curve that opens to the right and finishes along the base"
+  ],
+  "strokeOrder": [
+    "draw the short upper bar from left to right",
+    "lift, begin above the bar, cut down and left through it in a long diagonal, then turn sharply back up and right into the arch and curve down to the short stem",
+    "lift, begin at the right, sweep down and left across the middle, round the lower left and finish along the base to the right"
+  ],
+  "strokeOrderNote": "KanjiVG's 03092 file records を as three stroke paths in this order and direction: the bar, then the diagonal with its sharp return into the arch, then the separate lower curve; so there are two pen lifts.",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/03092.svg",
+    "citation": "KanjiVG, kanji/03092.svg, hiragana を (U+3092 HIRAGANA LETTER WO), three stroke paths kvg:03092-s1 to s3 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is the short bar drawn left to right; s2 starts above the bar, descends left through it, turns back sharply without lifting and runs up and right into the arch and down its short stem; s3 starts at the right, sweeps down and left across the middle and rounds the lower left into the rightward base. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs."
+  },
+  "notes": "Pronounced o, exactly like お, and used for nothing but the object particle: おちゃを ください, tea, please. The particle は is the same kind of survival, a spelling kept for a grammatical word after the sound changed."
+}

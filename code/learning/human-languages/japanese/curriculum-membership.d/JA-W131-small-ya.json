@@ -1,0 +1,11 @@
+{
+  "id": "JA-W131-small-ya",
+  "pathSegment": "JA-PATH-131-WRITE131",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-131-WRITE131",
+      "order": 1
+    }
+  ]
+}

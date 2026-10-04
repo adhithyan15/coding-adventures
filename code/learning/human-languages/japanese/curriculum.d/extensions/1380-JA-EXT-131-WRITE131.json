@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-131-WRITE131",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write small ya, small yo and wo, read words that use them, and ask for tea politely.",
+  "prerequisites": []
+}

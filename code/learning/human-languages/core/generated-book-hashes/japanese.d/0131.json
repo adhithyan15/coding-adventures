@@ -1,0 +1,17 @@
+{
+  "language": "japanese",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:eef8ba2489ea85d5",
+  "lessonIds": [
+    "JA-C131-ocha",
+    "JA-W131-small-ya",
+    "JA-C131-isha",
+    "JA-C131-chotto",
+    "JA-W131-small-yo",
+    "JA-C131-toshokan",
+    "JA-C131-ocha-o-kudasai",
+    "JA-W131-wo",
+    "JA-R131-tea-please"
+  ],
+  "tex": "japanese/book/chapters/ch131-tea-please-small-ya-small-yo-wo.tex"
+}
