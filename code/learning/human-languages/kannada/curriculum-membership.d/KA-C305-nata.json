@@ -1,0 +1,11 @@
+{
+  "id": "KA-C305-nata",
+  "pathSegment": "KA-PATH-305-KELASA305",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-305-KELASA305",
+      "order": 3
+    }
+  ]
+}

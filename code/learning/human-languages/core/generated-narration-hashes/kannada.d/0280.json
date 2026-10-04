@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:649a1beca9962cde",
+  "lessonIds": [
+    "KA-C280-pisuguttu",
+    "KA-C280-cappale-tattu",
+    "KA-C280-kai-kuluku",
+    "KA-C280-talupisu",
+    "KA-C280-hindikku",
+    "KA-R280-first-pass-words-from-chapters-272-275",
+    "KA-R280-second-pass-words-from-chapters-276-280"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch280.txt",
+  "json": "kannada/narration/ch280.json",
+  "textHash": "fnv1a64:f4b87206085b3189",
+  "jsonHash": "fnv1a64:49258c903d82761f",
+  "findings": []
+}

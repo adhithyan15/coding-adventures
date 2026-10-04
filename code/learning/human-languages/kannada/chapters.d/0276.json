@@ -1,0 +1,19 @@
+{
+  "chapter": 276,
+  "title": "To scold, To tease, To quarrel, To console, To be proud",
+  "label": "ch:ka-to-scold-to-tease-to-quarrel-to-console-to-be-proud",
+  "canDo": "I can say to scold, to tease, to quarrel, to console and to be proud.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C276-hemmepadu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 276: I can say to scold, to tease, to quarrel, to console and to be proud.",
+    "assesses": [
+      "KA-LEX-C276-KRIYE276-03",
+      "KA-LEX-C276-KRIYE276-04",
+      "KA-LEX-C276-KRIYE276-05"
+    ]
+  }
+}

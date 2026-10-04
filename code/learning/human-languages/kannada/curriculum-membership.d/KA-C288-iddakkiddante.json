@@ -1,0 +1,11 @@
+{
+  "id": "KA-C288-iddakkiddante",
+  "pathSegment": "KA-PATH-288-KARANA288",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-288-KARANA288",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C277-anisu",
+    "language": "kannada",
+    "chapter": 277,
+    "sequence": 13270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:de718ca4976e33ee"
+  },
+  "findings": []
+}

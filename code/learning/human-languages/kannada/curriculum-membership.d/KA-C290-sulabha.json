@@ -1,0 +1,11 @@
+{
+  "id": "KA-C290-sulabha",
+  "pathSegment": "KA-PATH-290-GUNA290",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-290-GUNA290",
+      "order": 3
+    }
+  ]
+}

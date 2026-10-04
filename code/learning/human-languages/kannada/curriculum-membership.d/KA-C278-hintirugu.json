@@ -1,0 +1,11 @@
+{
+  "id": "KA-C278-hintirugu",
+  "pathSegment": "KA-PATH-278-KRIYE278",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-278-KRIYE278",
+      "order": 2
+    }
+  ]
+}

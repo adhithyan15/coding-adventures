@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:f68a402da560f783",
+  "lessonIds": [
+    "KA-C282-apaghata",
+    "KA-C282-ambyulens",
+    "KA-C282-ottada",
+    "KA-C282-dadi",
+    "KA-C282-ascarya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch282.txt",
+  "json": "kannada/narration/ch282.json",
+  "textHash": "fnv1a64:e017060be1ec1fc9",
+  "jsonHash": "fnv1a64:c5a2d1d7a2499e28",
+  "findings": []
+}

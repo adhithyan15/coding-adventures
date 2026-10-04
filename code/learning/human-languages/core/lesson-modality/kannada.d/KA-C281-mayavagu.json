@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C281-mayavagu",
+    "language": "kannada",
+    "chapter": 281,
+    "sequence": 13480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee175432a440f349"
+  },
+  "findings": []
+}

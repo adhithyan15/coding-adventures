@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:fadf43d02d784da3",
+  "lessonIds": [
+    "KA-C286-kattada",
+    "KA-C286-mahadi",
+    "KA-C286-pravesa",
+    "KA-C286-vedike",
+    "KA-C286-videsa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch286.txt",
+  "json": "kannada/narration/ch286.json",
+  "textHash": "fnv1a64:ec09781120b1890a",
+  "jsonHash": "fnv1a64:2a625673440bd12e",
+  "findings": []
+}

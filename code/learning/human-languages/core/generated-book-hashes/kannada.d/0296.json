@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:8ee629a08ac469b1",
+  "lessonIds": [
+    "KA-C296-skutar",
+    "KA-C296-metro",
+    "KA-C296-petrol",
+    "KA-C296-helmet",
+    "KA-C296-sabdakosa"
+  ],
+  "tex": "kannada/book/chapters/ch296-scooter-metro-petrol-helmet-dictionary.tex"
+}

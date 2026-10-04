@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-303-VASTU303",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a raised veranda, a loft, a door latch, a handle and a smell.",
+  "prerequisites": []
+}

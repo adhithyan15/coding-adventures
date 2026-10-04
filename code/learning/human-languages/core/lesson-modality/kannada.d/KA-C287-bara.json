@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C287-bara",
+    "language": "kannada",
+    "chapter": 287,
+    "sequence": 13790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76287ea673552db9"
+  },
+  "findings": []
+}

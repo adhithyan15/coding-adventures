@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:27a87f4e0f8e3aec",
+  "lessonIds": [
+    "KA-C280-pisuguttu",
+    "KA-C280-cappale-tattu",
+    "KA-C280-kai-kuluku",
+    "KA-C280-talupisu",
+    "KA-C280-hindikku",
+    "KA-R280-first-pass-words-from-chapters-272-275",
+    "KA-R280-second-pass-words-from-chapters-276-280"
+  ],
+  "tex": "kannada/book/chapters/ch280-to-whisper-to-clap-to-shake-hands-to-deliver-to-overtake.tex"
+}

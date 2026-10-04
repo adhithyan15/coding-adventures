@@ -1,0 +1,19 @@
+{
+  "chapter": 297,
+  "title": "Bee, Sparrow, Crocodile, Leopard, Tail",
+  "label": "ch:ka-bee-sparrow-crocodile-leopard-tail",
+  "canDo": "I can say a bee, a sparrow, a crocodile, a leopard and a tail.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C297-bala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 297: I can say a bee, a sparrow, a crocodile, a leopard and a tail.",
+    "assesses": [
+      "KA-LEX-C297-VASTU297-03",
+      "KA-LEX-C297-VASTU297-04",
+      "KA-LEX-C297-VASTU297-05"
+    ]
+  }
+}

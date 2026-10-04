@@ -1,0 +1,19 @@
+{
+  "chapter": 272,
+  "title": "To spill, To pour, To mix, To stir, To roast",
+  "label": "ch:ka-to-spill-to-pour-to-mix-to-stir-to-roast",
+  "canDo": "I can say to spill, to pour, to mix, to stir and to roast.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C272-huri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 272: I can say to spill, to pour, to mix, to stir and to roast.",
+    "assesses": [
+      "KA-LEX-C272-KRIYE272-03",
+      "KA-LEX-C272-KRIYE272-04",
+      "KA-LEX-C272-KRIYE272-05"
+    ]
+  }
+}

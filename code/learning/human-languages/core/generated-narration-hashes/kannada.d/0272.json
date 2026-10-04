@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:a77b8971cbec7559",
+  "lessonIds": [
+    "KA-C272-cellu",
+    "KA-C272-suri",
+    "KA-C272-beresu",
+    "KA-C272-kalaku",
+    "KA-C272-huri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch272.txt",
+  "json": "kannada/narration/ch272.json",
+  "textHash": "fnv1a64:bad6985d4145b17b",
+  "jsonHash": "fnv1a64:2d650ce566963ca7",
+  "findings": []
+}

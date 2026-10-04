@@ -1,0 +1,11 @@
+{
+  "id": "KA-C304-visaya",
+  "pathSegment": "KA-PATH-304-KELASA304",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-304-KELASA304",
+      "order": 3
+    }
+  ]
+}

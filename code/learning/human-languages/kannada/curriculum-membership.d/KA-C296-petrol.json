@@ -1,0 +1,11 @@
+{
+  "id": "KA-C296-petrol",
+  "pathSegment": "KA-PATH-296-VASTU296",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-296-VASTU296",
+      "order": 2
+    }
+  ]
+}

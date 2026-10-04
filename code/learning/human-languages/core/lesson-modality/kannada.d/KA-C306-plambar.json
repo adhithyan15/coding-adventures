@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C306-plambar",
+    "language": "kannada",
+    "chapter": 306,
+    "sequence": 14800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e1204d0e1fdecd1"
+  },
+  "findings": []
+}

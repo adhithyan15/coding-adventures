@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:fcf3b46e087d6e63",
+  "lessonIds": [
+    "KA-C284-hunnime",
+    "KA-C284-suryasta",
+    "KA-C284-ninne",
+    "KA-C284-samaya",
+    "KA-C284-kelavomme"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch284.txt",
+  "json": "kannada/narration/ch284.json",
+  "textHash": "fnv1a64:126d9cb19bfc07e2",
+  "jsonHash": "fnv1a64:842d959afcedc264",
+  "findings": []
+}

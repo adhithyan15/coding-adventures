@@ -1,0 +1,19 @@
+{
+  "chapter": 277,
+  "title": "To guess, To seem, To practise, To paint, To download",
+  "label": "ch:ka-to-guess-to-seem-to-practise-to-paint-to-download",
+  "canDo": "I can say to guess, to seem, to practise, to paint and to download.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C277-daunlod-madu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 277: I can say to guess, to seem, to practise, to paint and to download.",
+    "assesses": [
+      "KA-LEX-C277-KRIYE277-03",
+      "KA-LEX-C277-KRIYE277-04",
+      "KA-LEX-C277-KRIYE277-05"
+    ]
+  }
+}

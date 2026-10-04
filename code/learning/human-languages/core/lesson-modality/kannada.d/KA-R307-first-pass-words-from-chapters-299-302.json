@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R307-first-pass-words-from-chapters-299-302",
+    "language": "kannada",
+    "chapter": 307,
+    "sequence": 14870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd6a8838cee74544"
+  },
+  "findings": []
+}

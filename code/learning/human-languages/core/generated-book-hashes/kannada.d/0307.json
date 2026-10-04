@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:22299546af97f051",
+  "lessonIds": [
+    "KA-C307-godamu",
+    "KA-C307-phalaka",
+    "KA-C307-sayi",
+    "KA-C307-simesunna",
+    "KA-C307-skelu",
+    "KA-R307-first-pass-words-from-chapters-299-302",
+    "KA-R307-second-pass-words-from-chapters-303-307"
+  ],
+  "tex": "kannada/book/chapters/ch307-warehouse-signboard-ink-chalk-ruler.tex"
+}

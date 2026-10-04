@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:28ae91a076cc9e30",
+  "lessonIds": [
+    "KA-C287-dada",
+    "KA-C287-bara",
+    "KA-C287-bhukampa",
+    "KA-C287-prapanca",
+    "KA-C287-gode"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch287.txt",
+  "json": "kannada/narration/ch287.json",
+  "textHash": "fnv1a64:ec5b2063835092cb",
+  "jsonHash": "fnv1a64:6bb9d54d1990931e",
+  "findings": []
+}

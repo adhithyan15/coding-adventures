@@ -1,0 +1,11 @@
+{
+  "id": "KA-C297-bala",
+  "pathSegment": "KA-PATH-297-VASTU297",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-297-VASTU297",
+      "order": 4
+    }
+  ]
+}

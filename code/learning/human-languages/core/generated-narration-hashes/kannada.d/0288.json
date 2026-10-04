@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:23865c3b386bd42a",
+  "lessonIds": [
+    "KA-C288-allade",
+    "KA-C288-iddakkiddante",
+    "KA-C288-horatu",
+    "KA-C288-illade",
+    "KA-C288-hegu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch288.txt",
+  "json": "kannada/narration/ch288.json",
+  "textHash": "fnv1a64:5427f01581e4ced6",
+  "jsonHash": "fnv1a64:6bea54f97a85f0fe",
+  "findings": []
+}

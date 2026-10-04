@@ -1,0 +1,19 @@
+{
+  "chapter": 286,
+  "title": "Building, Floor, Entrance, Platform, Abroad",
+  "label": "ch:ka-building-floor-entrance-platform-abroad",
+  "canDo": "I can say a building, a floor, an entrance, a platform and abroad.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "KA-C286-videsa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 286: I can say a building, a floor, an entrance, a platform and abroad.",
+    "assesses": [
+      "KA-LEX-C286-STHALA286-03",
+      "KA-LEX-C286-STHALA286-04",
+      "KA-LEX-C286-STHALA286-05"
+    ]
+  }
+}

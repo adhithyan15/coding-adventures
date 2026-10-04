@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C274-ottu",
+    "language": "kannada",
+    "chapter": 274,
+    "sequence": 13120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:771ed5c2621add41"
+  },
+  "findings": []
+}

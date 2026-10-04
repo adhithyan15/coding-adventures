@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C304-patha",
+    "language": "kannada",
+    "chapter": 304,
+    "sequence": 14670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a8e4712fd78597d"
+  },
+  "findings": []
+}

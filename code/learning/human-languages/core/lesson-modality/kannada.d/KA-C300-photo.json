@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C300-photo",
+    "language": "kannada",
+    "chapter": 300,
+    "sequence": 14470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7d10bd072dda8ab"
+  },
+  "findings": []
+}

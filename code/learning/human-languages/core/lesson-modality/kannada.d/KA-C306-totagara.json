@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C306-totagara",
+    "language": "kannada",
+    "chapter": 306,
+    "sequence": 14810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7b7d021419b52338"
+  },
+  "findings": []
+}

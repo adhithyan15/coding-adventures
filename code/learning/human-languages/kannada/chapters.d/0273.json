@@ -1,0 +1,19 @@
+{
+  "chapter": 273,
+  "title": "To fly, To wander around, To cross, To drive, To slip",
+  "label": "ch:ka-to-fly-to-wander-around-to-cross-to-drive-to-slip",
+  "canDo": "I can say to fly, to wander around, to cross, to drive and to slip.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C273-jaru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 273: I can say to fly, to wander around, to cross, to drive and to slip.",
+    "assesses": [
+      "KA-LEX-C273-KRIYE273-03",
+      "KA-LEX-C273-KRIYE273-04",
+      "KA-LEX-C273-KRIYE273-05"
+    ]
+  }
+}

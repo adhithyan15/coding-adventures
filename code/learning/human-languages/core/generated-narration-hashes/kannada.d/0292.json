@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:0b41507a88b055ba",
+  "lessonIds": [
+    "KA-C292-nirjana",
+    "KA-C292-garigari",
+    "KA-C292-accukattada",
+    "KA-C292-astavyasta",
+    "KA-C292-anukula"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch292.txt",
+  "json": "kannada/narration/ch292.json",
+  "textHash": "fnv1a64:b76b36cb73a030db",
+  "jsonHash": "fnv1a64:fc3515e171189253",
+  "findings": []
+}

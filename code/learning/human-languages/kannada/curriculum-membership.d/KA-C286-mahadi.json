@@ -1,0 +1,11 @@
+{
+  "id": "KA-C286-mahadi",
+  "pathSegment": "KA-PATH-286-STHALA286",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-286-STHALA286",
+      "order": 1
+    }
+  ]
+}

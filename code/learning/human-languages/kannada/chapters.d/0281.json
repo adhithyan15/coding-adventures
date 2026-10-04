@@ -1,0 +1,19 @@
+{
+  "chapter": 281,
+  "title": "To vanish, To pack, To take off, To fail, To get stuck",
+  "label": "ch:ka-to-vanish-to-pack-to-take-off-to-fail-to-get-stuck",
+  "canDo": "I can say to vanish, to pack, to take off, to fail and to get stuck.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C281-sikkihakikollu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 281: I can say to vanish, to pack, to take off, to fail and to get stuck.",
+    "assesses": [
+      "KA-LEX-C281-KRIYE281-03",
+      "KA-LEX-C281-KRIYE281-04",
+      "KA-LEX-C281-KRIYE281-05"
+    ]
+  }
+}

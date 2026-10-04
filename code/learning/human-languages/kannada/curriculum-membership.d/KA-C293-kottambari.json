@@ -1,0 +1,11 @@
+{
+  "id": "KA-C293-kottambari",
+  "pathSegment": "KA-PATH-293-VASTU293",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-293-VASTU293",
+      "order": 1
+    }
+  ]
+}

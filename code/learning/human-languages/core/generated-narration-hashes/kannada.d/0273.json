@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:0ac66b0ae5b2cad5",
+  "lessonIds": [
+    "KA-C273-haru",
+    "KA-C273-suttadu",
+    "KA-C273-datu",
+    "KA-C273-odisu",
+    "KA-C273-jaru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch273.txt",
+  "json": "kannada/narration/ch273.json",
+  "textHash": "fnv1a64:15ea7db871c492e6",
+  "jsonHash": "fnv1a64:6f11d5ac41403463",
+  "findings": []
+}

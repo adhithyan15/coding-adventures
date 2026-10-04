@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:cc3e78f0396d3c73",
+  "lessonIds": [
+    "KA-C302-hittale",
+    "KA-C302-kattige",
+    "KA-C302-unne",
+    "KA-C302-siment",
+    "KA-C302-bidiru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch302.txt",
+  "json": "kannada/narration/ch302.json",
+  "textHash": "fnv1a64:1b5d83b70f515164",
+  "jsonHash": "fnv1a64:b7040af3abbeedde",
+  "findings": []
+}

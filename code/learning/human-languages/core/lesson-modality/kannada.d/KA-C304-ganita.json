@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C304-ganita",
+    "language": "kannada",
+    "chapter": 304,
+    "sequence": 14710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d274e5f05d23a89"
+  },
+  "findings": []
+}

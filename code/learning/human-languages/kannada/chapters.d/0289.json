@@ -1,0 +1,19 @@
+{
+  "chapter": 289,
+  "title": "Somehow, That is to say, Excuse, Basis, Evidence",
+  "label": "ch:ka-somehow-that-is-to-say-excuse-basis-evidence",
+  "canDo": "I can say somehow, that is to say, an excuse, a basis and evidence.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "KA-R289-second-pass-words-from-chapters-285-289",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 289: I can say somehow, that is to say, an excuse, a basis and evidence.",
+    "assesses": [
+      "KA-LEX-C289-KARANA289-03",
+      "KA-LEX-C289-KARANA289-04",
+      "KA-LEX-C289-KARANA289-05"
+    ]
+  }
+}

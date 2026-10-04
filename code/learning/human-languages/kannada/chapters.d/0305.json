@@ -1,0 +1,19 @@
+{
+  "chapter": 305,
+  "title": "Temple priest, Artist, Singer, Actor, Journalist",
+  "label": "ch:ka-temple-priest-artist-singer-actor-journalist",
+  "canDo": "I can say a temple priest, an artist, a singer, an actor and a journalist.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C305-patrakarta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 305: I can say a temple priest, an artist, a singer, an actor and a journalist.",
+    "assesses": [
+      "KA-LEX-C305-KELASA305-03",
+      "KA-LEX-C305-KELASA305-04",
+      "KA-LEX-C305-KELASA305-05"
+    ]
+  }
+}

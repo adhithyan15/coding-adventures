@@ -1,0 +1,19 @@
+{
+  "chapter": 299,
+  "title": "Old woman, People, Human being, Stranger, Elders",
+  "label": "ch:ka-old-woman-people-human-being-stranger-elders",
+  "canDo": "I can say an old woman, people, a human being, a stranger and elders.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C299-hiriyaru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 299: I can say an old woman, people, a human being, a stranger and elders.",
+    "assesses": [
+      "KA-LEX-C299-VASTU299-03",
+      "KA-LEX-C299-VASTU299-04",
+      "KA-LEX-C299-VASTU299-05"
+    ]
+  }
+}

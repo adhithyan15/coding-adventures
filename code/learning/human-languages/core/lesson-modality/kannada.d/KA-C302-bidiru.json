@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C302-bidiru",
+    "language": "kannada",
+    "chapter": 302,
+    "sequence": 14610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2538f6dc8887971"
+  },
+  "findings": []
+}

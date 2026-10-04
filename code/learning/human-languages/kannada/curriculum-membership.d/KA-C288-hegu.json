@@ -1,0 +1,11 @@
+{
+  "id": "KA-C288-hegu",
+  "pathSegment": "KA-PATH-288-KARANA288",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-288-KARANA288",
+      "order": 4
+    }
+  ]
+}
