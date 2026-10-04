@@ -56,5 +56,11 @@ and notarization are release responsibilities outside this package gate. Set
 Node.js 20+ executable when the active Node distribution uses a separate
 `libnode` and therefore cannot receive a SEA blob.
 
+On macOS, worker assembly inspects the selected Node executable's Mach-O
+architectures before preparing the injection copy. A thin executable for the
+current architecture is copied byte-for-byte; a universal executable is
+thinned to the current architecture; and an executable that lacks the current
+architecture is rejected before blob injection.
+
 On non-macOS builders, `sh BUILD` runs the portable TypeScript build, tests,
 and coverage gate, then explicitly skips the unsupported native product gate.
