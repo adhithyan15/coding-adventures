@@ -204,9 +204,9 @@ when the selector contains no procedure call and every reachable value branch
 is a direct runtime real result or a provenance-backed local. One-sided
 reassignment, selector calls, intervening calls without a subsequent proven
 assignment and loops remain conservative. Unary plus, unary minus, additive
-composition, and multiplication whose operands are proven runtime-real values
-or finite static numeric expressions preserve the same provenance; division
-and powers remain gated.
+composition, multiplication, and division whose operands are proven
+runtime-real values or finite static numeric expressions preserve the same
+provenance; powers remain gated.
 For definite string initialization, a `step`/`until` element may establish an
 initialized local when finite static start, step, and limit values prove that
 its body executes at least once; zero-trip and dynamic bounds fail closed.
