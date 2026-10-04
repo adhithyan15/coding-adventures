@@ -17,6 +17,7 @@
 | Manifest validation | Implemented | `forme-manifest` validates first-party manifest data; FM02 owns host enforcement. |
 | Shared diagnostics | Implemented | `forme-errors` supplies the common error surface. |
 | Interactivity shape | Placeholder active for compatibility | [FM05](FM05-forme-interactivity-ir.md) defines the normative v1 contract; FM-B059 supplies its dedicated package before a later kernel migration. |
+| Terminal output shape | Specified for v1 | `TerminalBuffer` carries ANSI text, exact usage, provenance, and explicit non-web degradation records for FM-B017. |
 
 ---
 
@@ -129,7 +130,7 @@ the orchestrator must check compatibility with runtime data.
 
 ### 2.2 Kind taxonomy
 
-The kernel defines exactly twelve built-in kinds. Everything downstream
+The kernel defines the built-in kinds below. Everything downstream
 either targets one of these or registers a new kind at manifest-load
 time (§2.5).
 
@@ -142,6 +143,7 @@ export const KINDS = [
   "Document",
   "RenderedPage",
   "PrintForme",
+  "TerminalBuffer",
   "RequestHandler",
   "SearchIndex",
   "Feed",
@@ -611,7 +613,34 @@ export interface DeployAssetEntry {
 }
 ```
 
-#### 2.3.12 `Stream<K>`
+#### 2.3.12 `TerminalBuffer`
+
+The immutable per-route output of a terminal renderer. Terminal backends
+preserve authored fallback text and expose unsupported backend features as
+data, so tests and packagers never need to scrape logs.
+
+```typescript
+export type TerminalDegradation =
+  | { readonly code: "style-property-dropped"; readonly ruleId: StyleRuleId; readonly propertyKind: string; readonly message: string }
+  | { readonly code: "interactivity-dropped"; readonly islandId: IslandId; readonly message: string }
+  | { readonly code: "raw-node-dropped"; readonly format: string; readonly nodePath: readonly number[]; readonly message: string }
+  | { readonly code: "asset-reference-dropped"; readonly asset: LogicalId; readonly nodePath: readonly number[]; readonly message: string };
+
+export interface TerminalBuffer {
+  readonly route: string;
+  readonly text: string;
+  readonly usedStyle: readonly StyleRuleId[];
+  readonly usedAssets: readonly LogicalId[];
+  readonly degradations: readonly TerminalDegradation[];
+  readonly provenance: OutputProvenance;
+}
+```
+
+`text` may contain only renderer-generated ANSI SGR sequences; authored text
+and raw nodes must never inject terminal controls. Degradations are ordered by
+document traversal and then Style IR source order. The kind is version `1.0`.
+
+#### 2.3.13 `Stream<K>`
 
 A meta-kind wrapping another kind to represent a lazy stream of values.
 Stages declaring `Stream<K>` as input are called once per value
@@ -659,6 +688,7 @@ export const Kinds = {
   Document:        { name: "Document",        version: "1.0" },
   RenderedPage:    { name: "RenderedPage",    version: "1.1" },
   PrintForme:      { name: "PrintForme",      version: "1.0" },
+  TerminalBuffer:  { name: "TerminalBuffer",  version: "1.0" },
   RequestHandler:  { name: "RequestHandler",  version: "1.0" },
   SearchIndex:     { name: "SearchIndex",     version: "1.0" },
   Feed:            { name: "Feed",            version: "1.0" },
@@ -2204,6 +2234,7 @@ export type KindPayload<K extends KindDescriptor> =
   K extends { name: "Document" }        ? Document       :
   K extends { name: "RenderedPage" }    ? RenderedPage   :
   K extends { name: "PrintForme" }      ? PrintForme     :
+  K extends { name: "TerminalBuffer" }  ? TerminalBuffer :
   K extends { name: "RequestHandler" }  ? RequestHandler :
   K extends { name: "SearchIndex" }     ? SearchIndex    :
   K extends { name: "Feed" }            ? Feed           :

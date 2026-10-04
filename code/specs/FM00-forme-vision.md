@@ -524,6 +524,7 @@ outputs in this vocabulary.
 | `Asset`           | image / video / font / binary with metadata and references     |
 | `RenderedPage`    | HTML/CSS/JS bundle + metadata for one output page              |
 | `PrintForme`      | backend-neutral composed page ready for a print backend        |
+| `TerminalBuffer`  | ANSI text plus explicit style/interactivity degradation records |
 | `RequestHandler`  | executable handler for dynamic per-request rendering           |
 | `SearchIndex`     | serialised search index (format depends on indexer)            |
 | `Feed`            | serialised feed (RSS, JSON Feed, Atom, sitemap, …)             |
@@ -757,6 +758,18 @@ an ESP or a `notify-email` for a mailing list backend.
 
 Consumes content + minimal style (ANSI colors + dim/bold). Produces a
 buffer of styled text for CLI help, man pages, terminal-based readers.
+
+The v1 terminal boundary is deliberately observable. `render-terminal`
+produces one `TerminalBuffer` per routed document. The buffer carries the ANSI
+text, exact Style IR rule usage, source provenance, and deterministic
+degradation records for unsupported style, interactivity, raw nodes, and asset
+references. Authored fallback content remains in the text.
+
+`package-terminal` collects those buffers into a capability-free
+`DeployArtifact` containing one `.ansi` file and one canonical
+`.degradations.json` file per route. The Coding Adventures blog is the first
+product proof: its routed Markdown stream fans out to HTML and terminal
+renderers that receive the same resolved theme and per-route Interactivity IR.
 
 ### 6.7 Slides
 
