@@ -2021,6 +2021,12 @@ fn parse_css_color(css: &str) -> Option<Color> {
     if let Some(color) = parse_css_lch_function(css) {
         return Some(color);
     }
+    if let Some(color) = parse_css_oklab_function(css) {
+        return Some(color);
+    }
+    if let Some(color) = parse_css_oklch_function(css) {
+        return Some(color);
+    }
     if let Some(color) = parse_css_named_color(css) {
         return Some(color);
     }
@@ -2166,6 +2172,26 @@ fn parse_css_lch_function(css: &str) -> Option<Color> {
     Some(css_lab_to_color(lightness, chroma * hue.cos(), chroma * hue.sin(), alpha))
 }
 
+fn parse_css_oklab_function(css: &str) -> Option<Color> {
+    let source = css.trim().to_ascii_lowercase();
+    let inner = source.strip_prefix("oklab(")?.strip_suffix(')')?.trim();
+    let (components, alpha) = parse_css_modern_color_components(inner)?;
+    let lightness = parse_css_oklab_lightness(&components[0])?;
+    let a = parse_css_oklab_axis(&components[1])?;
+    let b = parse_css_oklab_axis(&components[2])?;
+    Some(css_oklab_to_color(lightness, a, b, alpha))
+}
+
+fn parse_css_oklch_function(css: &str) -> Option<Color> {
+    let source = css.trim().to_ascii_lowercase();
+    let inner = source.strip_prefix("oklch(")?.strip_suffix(')')?.trim();
+    let (components, alpha) = parse_css_modern_color_components(inner)?;
+    let lightness = parse_css_oklab_lightness(&components[0])?;
+    let chroma = parse_css_oklch_chroma(&components[1])?;
+    let hue = parse_css_hue(&components[2])?.to_radians();
+    Some(css_oklab_to_color(lightness, chroma * hue.cos(), chroma * hue.sin(), alpha))
+}
+
 fn parse_css_modern_color_components(inner: &str) -> Option<([String; 3], u8)> {
     let normalized = inner.replace('/', " / ");
     let parts = normalized.split_whitespace().collect::<Vec<_>>();
@@ -2198,6 +2224,23 @@ fn parse_css_lch_chroma(value: &str) -> Option<f64> {
     chroma.is_finite().then(|| chroma.max(0.0))
 }
 
+fn parse_css_oklab_lightness(value: &str) -> Option<f64> {
+    let (number, scale) = value.strip_suffix('%').map_or((value, 1.0), |value| (value, 0.01));
+    let lightness = number.parse::<f64>().ok()? * scale;
+    lightness.is_finite().then(|| lightness.clamp(0.0, 1.0))
+}
+
+fn parse_css_oklab_axis(value: &str) -> Option<f64> {
+    let (number, scale) = value.strip_suffix('%').map_or((value, 1.0), |value| (value, 0.004));
+    let axis = number.parse::<f64>().ok()? * scale;
+    axis.is_finite().then_some(axis)
+}
+
+fn parse_css_oklch_chroma(value: &str) -> Option<f64> {
+    let chroma = parse_css_oklab_axis(value)?;
+    Some(chroma.max(0.0))
+}
+
 fn css_lab_to_color(lightness: f64, a: f64, b: f64, alpha: u8) -> Color {
     let f1 = (lightness + 16.0) / 116.0;
     let f0 = a / 500.0 + f1;
@@ -2212,6 +2255,27 @@ fn css_lab_to_color(lightness: f64, a: f64, b: f64, alpha: u8) -> Color {
     let x65 = 0.9554734 * x50 - 0.0230985 * y50 + 0.0632593 * z50;
     let y65 = -0.0283697 * x50 + 1.0099955 * y50 + 0.0210414 * z50;
     let z65 = 0.0123140 * x50 - 0.0205077 * y50 + 1.3303659 * z50;
+    linear_srgb_to_color(
+        3.2406 * x65 - 1.5372 * y65 - 0.4986 * z65,
+        -0.9689 * x65 + 1.8758 * y65 + 0.0415 * z65,
+        0.0557 * x65 - 0.2040 * y65 + 1.0570 * z65,
+        alpha,
+    )
+}
+
+fn css_oklab_to_color(lightness: f64, a: f64, b: f64, alpha: u8) -> Color {
+    let l = (lightness + 0.3963377774 * a + 0.2158037573 * b).powi(3);
+    let m = (lightness - 0.1055613458 * a - 0.0638541728 * b).powi(3);
+    let s = (lightness - 0.0894841775 * a - 1.2914855480 * b).powi(3);
+    linear_srgb_to_color(
+        4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+        -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+        -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s,
+        alpha,
+    )
+}
+
+fn linear_srgb_to_color(r: f64, g: f64, b: f64, alpha: u8) -> Color {
     let encode = |linear: f64| {
         let value = if linear <= 0.0031308 {
             12.92 * linear
@@ -2221,9 +2285,9 @@ fn css_lab_to_color(lightness: f64, a: f64, b: f64, alpha: u8) -> Color {
         (value.clamp(0.0, 1.0) * 255.0).round() as u8
     };
     Color {
-        r: encode(3.2406 * x65 - 1.5372 * y65 - 0.4986 * z65),
-        g: encode(-0.9689 * x65 + 1.8758 * y65 + 0.0415 * z65),
-        b: encode(0.0557 * x65 - 0.2040 * y65 + 1.0570 * z65),
+        r: encode(r),
+        g: encode(g),
+        b: encode(b),
         a: alpha,
     }
 }
@@ -7553,6 +7617,17 @@ mod tests {
         assert_eq!(css_to_color("lch(0% 0 0)"), Color { r: 0, g: 0, b: 0, a: 255 });
         assert_eq!(with_opacity("lab(29.2345% 39.3825 20.0664 / 80%)", 0.5), "rgba(125,35,41,0.4)");
         assert_eq!(normalize_css_paint("lch(29.2345% 44.2 27 / 80%)".into()), "rgba(125,35,41,0.8)");
+    }
+
+    #[test]
+    fn css_colors_parse_oklab_and_oklch_functions() {
+        let expected = Color { r: 125, g: 36, b: 41, a: 204 };
+        assert_eq!(css_to_color("oklab(40.1% 0.1143 0.045 / 80%)"), expected);
+        assert_eq!(css_to_color("oklch(40.1% 0.123 21.57 / 0.8)"), expected);
+        assert_eq!(css_to_color("oklab(1 0 0)"), Color { r: 255, g: 255, b: 255, a: 255 });
+        assert_eq!(css_to_color("oklch(0 0 0)"), Color { r: 0, g: 0, b: 0, a: 255 });
+        assert_eq!(with_opacity("oklab(40.1% 0.1143 0.045 / 80%)", 0.5), "rgba(125,36,41,0.4)");
+        assert_eq!(normalize_css_paint("oklch(40.1% 0.123 21.57 / 80%)".into()), "rgba(125,36,41,0.8)");
     }
 
     #[test]

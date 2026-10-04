@@ -15395,6 +15395,16 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn treemap_preserves_css_oklab_colors() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:oklab(40.1% 0.1143 0.045 / 80%),fill:oklch(62% 0.1442 326.31 / 75%)",
+        ).expect("CSS OKLab colors must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("oklab(40.1% 0.1143 0.045 / 80%)"));
+        assert_eq!(style.node.fill.as_deref(), Some("oklch(62% 0.1442 326.31 / 75%)"));
+    }
+
+    #[test]
     fn treemap_preserves_basic_named_colors() {
         let diagram = parse_treemap(
             "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:teal,fill:orange,stroke:navy",
