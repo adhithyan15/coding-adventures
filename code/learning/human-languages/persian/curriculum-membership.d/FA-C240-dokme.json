@@ -1,0 +1,11 @@
+{
+  "id": "FA-C240-dokme",
+  "pathSegment": "FA-PATH-240-CHIZ240",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-240-CHIZ240",
+      "order": 0
+    }
+  ]
+}

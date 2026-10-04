@@ -1,0 +1,11 @@
+{
+  "id": "FA-C220-kopi-gereftan",
+  "pathSegment": "FA-PATH-220-KONESH220",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-220-KONESH220",
+      "order": 4
+    }
+  ]
+}

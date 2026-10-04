@@ -1,0 +1,11 @@
+{
+  "id": "FA-C232-zirzamin",
+  "pathSegment": "FA-PATH-232-MAKAN232",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-232-MAKAN232",
+      "order": 1
+    }
+  ]
+}

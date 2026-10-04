@@ -1,0 +1,11 @@
+{
+  "id": "FA-C252-roftegar",
+  "pathSegment": "FA-PATH-252-KAR252",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-252-KAR252",
+      "order": 4
+    }
+  ]
+}

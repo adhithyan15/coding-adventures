@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C241-anjir",
+    "language": "persian",
+    "chapter": 241,
+    "sequence": 12440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:465b365216e50250"
+  },
+  "findings": []
+}

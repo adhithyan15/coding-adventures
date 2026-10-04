@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-R252-first-pass-words-from-chapters-244-247",
+    "language": "persian",
+    "chapter": 252,
+    "sequence": 13050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:613632ca1dbfc892"
+  },
+  "findings": []
+}

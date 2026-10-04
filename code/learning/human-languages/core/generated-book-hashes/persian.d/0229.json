@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:2709ef890c5908e6",
+  "lessonIds": [
+    "FA-C229-moddat",
+    "FA-C229-taqvim",
+    "FA-C229-lahze",
+    "FA-C229-digar",
+    "FA-C229-sahar"
+  ],
+  "tex": "persian/book/chapters/ch229-period-calendar-moment-any-more-dawn.tex"
+}

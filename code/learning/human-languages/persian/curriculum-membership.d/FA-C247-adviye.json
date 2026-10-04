@@ -1,0 +1,11 @@
+{
+  "id": "FA-C247-adviye",
+  "pathSegment": "FA-PATH-247-CHIZ247",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-247-CHIZ247",
+      "order": 1
+    }
+  ]
+}

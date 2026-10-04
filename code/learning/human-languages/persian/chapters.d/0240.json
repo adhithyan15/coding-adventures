@@ -1,0 +1,19 @@
+{
+  "chapter": 240,
+  "title": "Button, Sleeve, Umbrella, Chick, Herbs",
+  "label": "ch:fa-button-sleeve-umbrella-chick-herbs",
+  "canDo": "I can say a button, a sleeve, an umbrella, a chick and herbs.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C240-sabzi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 240: I can say a button, a sleeve, an umbrella, a chick and herbs.",
+    "assesses": [
+      "FA-LEX-C240-CHIZ240-03",
+      "FA-LEX-C240-CHIZ240-04",
+      "FA-LEX-C240-CHIZ240-05"
+    ]
+  }
+}

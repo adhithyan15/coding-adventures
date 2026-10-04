@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:af5566db131212a9",
+  "lessonIds": [
+    "FA-C222-ab-dadan",
+    "FA-C222-pars-kardan",
+    "FA-C222-khab-didan",
+    "FA-C222-shak-kardan",
+    "FA-C222-tul-keshidan"
+  ],
+  "tex": "persian/book/chapters/ch222-to-water-to-bark-to-dream-to-doubt-to-take.tex"
+}

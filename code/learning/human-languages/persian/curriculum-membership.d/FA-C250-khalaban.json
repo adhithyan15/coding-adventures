@@ -1,0 +1,11 @@
+{
+  "id": "FA-C250-khalaban",
+  "pathSegment": "FA-PATH-250-KAR250",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-250-KAR250",
+      "order": 4
+    }
+  ]
+}

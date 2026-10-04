@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:fe01695210044fb7",
+  "lessonIds": [
+    "FA-C246-safhe",
+    "FA-C246-payam",
+    "FA-C246-keshow",
+    "FA-C246-panke",
+    "FA-C246-barq"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch246.txt",
+  "json": "persian/narration/ch246.json",
+  "textHash": "fnv1a64:1215f458bdf52212",
+  "jsonHash": "fnv1a64:0f1d547ed5ec6d46",
+  "findings": []
+}

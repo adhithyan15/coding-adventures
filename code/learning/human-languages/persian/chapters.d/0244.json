@@ -1,0 +1,19 @@
+{
+  "chapter": 244,
+  "title": "Earthquake, Flood, Bush, Branch, Pine tree",
+  "label": "ch:fa-earthquake-flood-bush-branch-pine-tree",
+  "canDo": "I can say an earthquake, a flood, a bush, a branch and a pine tree.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C244-kaj2",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 244: I can say an earthquake, a flood, a bush, a branch and a pine tree.",
+    "assesses": [
+      "FA-LEX-C244-CHIZ244-03",
+      "FA-LEX-C244-CHIZ244-04",
+      "FA-LEX-C244-CHIZ244-05"
+    ]
+  }
+}

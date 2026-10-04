@@ -1,0 +1,19 @@
+{
+  "chapter": 245,
+  "title": "Swan, Nest, Wing, Horn, Football",
+  "label": "ch:fa-swan-nest-wing-horn-football",
+  "canDo": "I can say a swan, a nest, a wing, a horn and football.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C245-futbal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 245: I can say a swan, a nest, a wing, a horn and football.",
+    "assesses": [
+      "FA-LEX-C245-CHIZ245-03",
+      "FA-LEX-C245-CHIZ245-04",
+      "FA-LEX-C245-CHIZ245-05"
+    ]
+  }
+}

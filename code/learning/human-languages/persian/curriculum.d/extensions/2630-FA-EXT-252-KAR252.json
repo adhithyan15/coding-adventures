@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-252-KAR252",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a grocer, a pastry shop, a firefighter, a guard and a street sweeper.",
+  "prerequisites": []
+}

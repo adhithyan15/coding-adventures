@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:1f461f3b35618091",
+  "lessonIds": [
+    "FA-C252-baqqal",
+    "FA-C252-qannadi",
+    "FA-C252-atashneshan",
+    "FA-C252-negahban",
+    "FA-C252-roftegar",
+    "FA-R252-first-pass-words-from-chapters-244-247",
+    "FA-R252-second-pass-words-from-chapters-248-252"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "persian/narration/ch252.txt",
+  "json": "persian/narration/ch252.json",
+  "textHash": "fnv1a64:97542a7ef62007aa",
+  "jsonHash": "fnv1a64:859d6c9dbb60d2f3",
+  "findings": []
+}

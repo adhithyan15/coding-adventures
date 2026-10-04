@@ -1,0 +1,19 @@
+{
+  "chapter": 234,
+  "title": "Method, Freedom, War, Life, Part",
+  "label": "ch:fa-method-freedom-war-life-part",
+  "canDo": "I can say a method, freedom, a war, life and a part.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "FA-R234-second-pass-words-from-chapters-230-234",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 234: I can say a method, freedom, a war, life and a part.",
+    "assesses": [
+      "FA-LEX-C234-CHERA234-03",
+      "FA-LEX-C234-CHERA234-04",
+      "FA-LEX-C234-CHERA234-05"
+    ]
+  }
+}

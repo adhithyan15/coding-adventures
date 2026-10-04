@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:6e0a86759f7531d7",
+  "lessonIds": [
+    "FA-C248-chub-lebasi",
+    "FA-C248-gire",
+    "FA-C248-band-e-kafsh",
+    "FA-C248-siman",
+    "FA-C248-gach"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch248.txt",
+  "json": "persian/narration/ch248.json",
+  "textHash": "fnv1a64:7b24a14376e615e0",
+  "jsonHash": "fnv1a64:1731aee5eb2bc058",
+  "findings": []
+}

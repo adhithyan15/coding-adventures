@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:7fd2b0b92714c569",
+  "lessonIds": [
+    "FA-C237-barfi",
+    "FA-C237-vahshi",
+    "FA-C237-ahli",
+    "FA-C237-zende",
+    "FA-C237-morde"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch237.txt",
+  "json": "persian/narration/ch237.json",
+  "textHash": "fnv1a64:cd73324f2da8c783",
+  "jsonHash": "fnv1a64:a2cdac77b7eac038",
+  "findings": []
+}

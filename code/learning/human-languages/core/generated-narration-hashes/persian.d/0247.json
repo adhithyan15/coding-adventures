@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:6c64bbb28d803a03",
+  "lessonIds": [
+    "FA-C247-quti",
+    "FA-C247-adviye",
+    "FA-C247-tarazu",
+    "FA-C247-samavar",
+    "FA-C247-sim"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch247.txt",
+  "json": "persian/narration/ch247.json",
+  "textHash": "fnv1a64:378ff9aef37ab2d4",
+  "jsonHash": "fnv1a64:6a944bee707fdad9",
+  "findings": []
+}

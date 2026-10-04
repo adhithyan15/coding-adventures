@@ -42,7 +42,9 @@ it("pins Persian lesson-content budgets", () =>
     // reviews.
     // 916 -> 1116: the second A2 vocabulary tranche, chapters 179-216: 190
     // headwords, fifty of them verbs.
-    lessons: 1116,
+    // 1116 -> 1304: the third A2 vocabulary tranche, chapters 217-252: 180
+    // headwords, fifty of them verbs, which brings Persian to A2.
+    lessons: 1304,
     idioms: 4,
     senses: 4,
     cultureClaims: 4,

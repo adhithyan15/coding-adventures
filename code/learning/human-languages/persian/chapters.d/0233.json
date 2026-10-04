@@ -1,0 +1,19 @@
+{
+  "chapter": 233,
+  "title": "Maybe, Definitely, Of course, Probably, Very",
+  "label": "ch:fa-maybe-definitely-of-course-probably-very",
+  "canDo": "I can say maybe, definitely, of course, probably and very.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "FA-C233-kheyli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 233: I can say maybe, definitely, of course, probably and very.",
+    "assesses": [
+      "FA-LEX-C233-CHERA233-03",
+      "FA-LEX-C233-CHERA233-04",
+      "FA-LEX-C233-CHERA233-05"
+    ]
+  }
+}

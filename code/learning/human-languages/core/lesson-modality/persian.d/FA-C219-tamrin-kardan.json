@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C219-tamrin-kardan",
+    "language": "persian",
+    "chapter": 219,
+    "sequence": 11310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab0c594ef37f3039"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 251,
+  "title": "Artist, Referee, Coach, Player, History",
+  "label": "ch:fa-artist-referee-coach-player-history",
+  "canDo": "I can say an artist, a referee, a coach, a player and history.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C251-tarikh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 251: I can say an artist, a referee, a coach, a player and history.",
+    "assesses": [
+      "FA-LEX-C251-KAR251-03",
+      "FA-LEX-C251-KAR251-04",
+      "FA-LEX-C251-KAR251-05"
+    ]
+  }
+}

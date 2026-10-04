@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:2097819eab3447e0",
+  "lessonIds": [
+    "FA-C220-ejaze-dadan",
+    "FA-C220-tamam-kardan",
+    "FA-C220-qabul-shodan",
+    "FA-C220-chap-kardan",
+    "FA-C220-kopi-gereftan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch220.txt",
+  "json": "persian/narration/ch220.json",
+  "textHash": "fnv1a64:b9993da1cf84c644",
+  "jsonHash": "fnv1a64:abee09cc1d022afe",
+  "findings": []
+}

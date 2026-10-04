@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C245-bal",
+    "language": "persian",
+    "chapter": 245,
+    "sequence": 12670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9715ed043c11c7ff"
+  },
+  "findings": []
+}

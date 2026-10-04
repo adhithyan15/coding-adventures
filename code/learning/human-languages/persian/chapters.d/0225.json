@@ -1,0 +1,19 @@
+{
+  "chapter": 225,
+  "title": "To memorise, To moan, To yawn, To vomit, To swell up",
+  "label": "ch:fa-to-memorise-to-moan-to-yawn-to-vomit-to-swell-up",
+  "canDo": "I can say to memorise, to moan, to yawn, to vomit and to swell up.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-R225-second-pass-words-from-chapters-221-225",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 225: I can say to memorise, to moan, to yawn, to vomit and to swell up.",
+    "assesses": [
+      "FA-LEX-C225-KONESH225-03",
+      "FA-LEX-C225-KONESH225-04",
+      "FA-LEX-C225-KONESH225-05"
+    ]
+  }
+}

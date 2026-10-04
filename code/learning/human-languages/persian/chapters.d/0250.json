@@ -1,0 +1,19 @@
+{
+  "chapter": 250,
+  "title": "Secretary, Engineer, Lawyer, University lecturer, Pilot",
+  "label": "ch:fa-secretary-engineer-lawyer-university-lecturer-pilot",
+  "canDo": "I can say a secretary, an engineer, a lawyer, a university lecturer and a pilot.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C250-khalaban",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 250: I can say a secretary, an engineer, a lawyer, a university lecturer and a pilot.",
+    "assesses": [
+      "FA-LEX-C250-KAR250-03",
+      "FA-LEX-C250-KAR250-04",
+      "FA-LEX-C250-KAR250-05"
+    ]
+  }
+}

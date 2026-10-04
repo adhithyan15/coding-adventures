@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:5c4852df0aa5de55",
+  "lessonIds": [
+    "FA-C239-ketri",
+    "FA-C239-quri",
+    "FA-C239-dastmal",
+    "FA-C239-sabad",
+    "FA-C239-zobale"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch239.txt",
+  "json": "persian/narration/ch239.json",
+  "textHash": "fnv1a64:54f45473dd89305f",
+  "jsonHash": "fnv1a64:7a1d98fe307fb936",
+  "findings": []
+}

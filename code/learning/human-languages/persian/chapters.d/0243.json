@@ -1,0 +1,19 @@
+{
+  "chapter": 243,
+  "title": "Ceremony, Competition, Film, Hobby, Memory",
+  "label": "ch:fa-ceremony-competition-film-hobby-memory",
+  "canDo": "I can say a ceremony, a competition, a film, a hobby and a memory.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-R243-second-pass-words-from-chapters-239-243",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 243: I can say a ceremony, a competition, a film, a hobby and a memory.",
+    "assesses": [
+      "FA-LEX-C243-CHIZ243-03",
+      "FA-LEX-C243-CHIZ243-04",
+      "FA-LEX-C243-CHIZ243-05"
+    ]
+  }
+}

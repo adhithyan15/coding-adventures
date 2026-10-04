@@ -1,0 +1,19 @@
+{
+  "chapter": 226,
+  "title": "To fertilise, To shovel, To let go, To scrub, To rinse",
+  "label": "ch:fa-to-fertilise-to-shovel-to-let-go-to-scrub-to-rinse",
+  "canDo": "I can say to fertilise, to shovel, to let go, to scrub and to rinse.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C226-abkeshi-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 226: I can say to fertilise, to shovel, to let go, to scrub and to rinse.",
+    "assesses": [
+      "FA-LEX-C226-KONESH226-03",
+      "FA-LEX-C226-KONESH226-04",
+      "FA-LEX-C226-KONESH226-05"
+    ]
+  }
+}

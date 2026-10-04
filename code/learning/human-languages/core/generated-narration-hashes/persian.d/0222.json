@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:e58ea5a27ffad4b1",
+  "lessonIds": [
+    "FA-C222-ab-dadan",
+    "FA-C222-pars-kardan",
+    "FA-C222-khab-didan",
+    "FA-C222-shak-kardan",
+    "FA-C222-tul-keshidan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch222.txt",
+  "json": "persian/narration/ch222.json",
+  "textHash": "fnv1a64:84f21fa4a8759181",
+  "jsonHash": "fnv1a64:49390f174a8e1281",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:84fcf00b78d2c883",
+  "lessonIds": [
+    "FA-C217-harf-zadan",
+    "FA-C217-kar-kardan",
+    "FA-C217-bazi-kardan",
+    "FA-C217-rah-raftan",
+    "FA-C217-savar-shodan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch217.txt",
+  "json": "persian/narration/ch217.json",
+  "textHash": "fnv1a64:45fdc0f13c5e463e",
+  "jsonHash": "fnv1a64:18a57063c58b4a6e",
+  "findings": []
+}

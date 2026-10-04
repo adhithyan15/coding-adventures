@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C220-kopi-gereftan",
+    "language": "persian",
+    "chapter": 220,
+    "sequence": 11380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40be70e8c7ead434"
+  },
+  "findings": []
+}

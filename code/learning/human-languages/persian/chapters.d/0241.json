@@ -1,0 +1,19 @@
+{
+  "chapter": 241,
+  "title": "Pear, Fig, Tangerine, Mixed nuts, Dessert",
+  "label": "ch:fa-pear-fig-tangerine-mixed-nuts-dessert",
+  "canDo": "I can say a pear, a fig, a tangerine, mixed nuts and a dessert.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C241-deser",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 241: I can say a pear, a fig, a tangerine, mixed nuts and a dessert.",
+    "assesses": [
+      "FA-LEX-C241-CHIZ241-03",
+      "FA-LEX-C241-CHIZ241-04",
+      "FA-LEX-C241-CHIZ241-05"
+    ]
+  }
+}

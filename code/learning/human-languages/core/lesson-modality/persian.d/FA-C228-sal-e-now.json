@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C228-sal-e-now",
+    "language": "persian",
+    "chapter": 228,
+    "sequence": 11780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf760d2806c75068"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C242-benzin",
+  "pathSegment": "FA-PATH-242-CHIZ242",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-242-CHIZ242",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C233-kheyli",
+  "pathSegment": "FA-PATH-233-CHERA233",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-233-CHERA233",
+      "order": 4
+    }
+  ]
+}

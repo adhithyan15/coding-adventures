@@ -1,0 +1,11 @@
+{
+  "id": "FA-C245-futbal",
+  "pathSegment": "FA-PATH-245-CHIZ245",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-245-CHIZ245",
+      "order": 4
+    }
+  ]
+}

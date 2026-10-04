@@ -1,0 +1,15 @@
+{
+  "language": "persian",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:212be40e18d3203e",
+  "lessonIds": [
+    "FA-C252-baqqal",
+    "FA-C252-qannadi",
+    "FA-C252-atashneshan",
+    "FA-C252-negahban",
+    "FA-C252-roftegar",
+    "FA-R252-first-pass-words-from-chapters-244-247",
+    "FA-R252-second-pass-words-from-chapters-248-252"
+  ],
+  "tex": "persian/book/chapters/ch252-grocer-pastry-shop-firefighter-guard-street-sweeper.tex"
+}

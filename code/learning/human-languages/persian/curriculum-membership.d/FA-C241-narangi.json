@@ -1,0 +1,11 @@
+{
+  "id": "FA-C241-narangi",
+  "pathSegment": "FA-PATH-241-CHIZ241",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-241-CHIZ241",
+      "order": 2
+    }
+  ]
+}

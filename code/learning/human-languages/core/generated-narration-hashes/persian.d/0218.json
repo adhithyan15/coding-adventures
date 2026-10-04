@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:64e3ab1933968d07",
+  "lessonIds": [
+    "FA-C218-dam-kardan",
+    "FA-C218-sorfe-kardan",
+    "FA-C218-esterahat-kardan",
+    "FA-C218-varzesh-kardan",
+    "FA-C218-shena-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch218.txt",
+  "json": "persian/narration/ch218.json",
+  "textHash": "fnv1a64:9fe1e1f3db5a58cc",
+  "jsonHash": "fnv1a64:ff604fbf3c83958f",
+  "findings": []
+}

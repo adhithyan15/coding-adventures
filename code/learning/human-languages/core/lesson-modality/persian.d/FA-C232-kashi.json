@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C232-kashi",
+    "language": "persian",
+    "chapter": 232,
+    "sequence": 11960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:426091a80f34c604"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 246,
+  "title": "Page, Message, Drawer, Electric fan, Electricity",
+  "label": "ch:fa-page-message-drawer-electric-fan-electricity",
+  "canDo": "I can say a page, a message, a drawer, an electric fan and electricity.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C246-barq",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 246: I can say a page, a message, a drawer, an electric fan and electricity.",
+    "assesses": [
+      "FA-LEX-C246-CHIZ246-03",
+      "FA-LEX-C246-CHIZ246-04",
+      "FA-LEX-C246-CHIZ246-05"
+    ]
+  }
+}

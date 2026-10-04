@@ -1,0 +1,11 @@
+{
+  "id": "FA-C246-payam",
+  "pathSegment": "FA-PATH-246-CHIZ246",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-246-CHIZ246",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 229,
+  "title": "Period, Calendar, Moment, Any more, Dawn",
+  "label": "ch:fa-period-calendar-moment-any-more-dawn",
+  "canDo": "I can say a period, a calendar, a moment, any more and dawn.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "FA-C229-sahar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 229: I can say a period, a calendar, a moment, any more and dawn.",
+    "assesses": [
+      "FA-LEX-C229-ZAMAN229-03",
+      "FA-LEX-C229-ZAMAN229-04",
+      "FA-LEX-C229-ZAMAN229-05"
+    ]
+  }
+}

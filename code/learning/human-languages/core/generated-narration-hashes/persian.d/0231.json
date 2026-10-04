@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:cecc0989af4a451d",
+  "lessonIds": [
+    "FA-C231-aramgah",
+    "FA-C231-talar",
+    "FA-C231-estakhr",
+    "FA-C231-vatan",
+    "FA-C231-zadgah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch231.txt",
+  "json": "persian/narration/ch231.json",
+  "textHash": "fnv1a64:bf6fced5a86f5993",
+  "jsonHash": "fnv1a64:a585e3e0fac2d1b4",
+  "findings": []
+}

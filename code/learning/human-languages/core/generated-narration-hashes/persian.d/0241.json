@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:4b09784627d0b43b",
+  "lessonIds": [
+    "FA-C241-golabi",
+    "FA-C241-anjir",
+    "FA-C241-narangi",
+    "FA-C241-ajil",
+    "FA-C241-deser"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch241.txt",
+  "json": "persian/narration/ch241.json",
+  "textHash": "fnv1a64:abf13ad13aa86d79",
+  "jsonHash": "fnv1a64:1f3a2ce47128802f",
+  "findings": []
+}

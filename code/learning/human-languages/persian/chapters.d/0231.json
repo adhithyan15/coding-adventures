@@ -1,0 +1,19 @@
+{
+  "chapter": 231,
+  "title": "Tomb, Hall, Swimming pool, Homeland, Birthplace",
+  "label": "ch:fa-tomb-hall-swimming-pool-homeland-birthplace",
+  "canDo": "I can say a tomb, a hall, a swimming pool, homeland and birthplace.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "FA-C231-zadgah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 231: I can say a tomb, a hall, a swimming pool, homeland and birthplace.",
+    "assesses": [
+      "FA-LEX-C231-MAKAN231-03",
+      "FA-LEX-C231-MAKAN231-04",
+      "FA-LEX-C231-MAKAN231-05"
+    ]
+  }
+}

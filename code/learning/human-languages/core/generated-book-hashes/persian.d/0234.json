@@ -1,0 +1,15 @@
+{
+  "language": "persian",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:24a1eeec356e930b",
+  "lessonIds": [
+    "FA-C234-ravesh",
+    "FA-C234-azadi",
+    "FA-C234-jang",
+    "FA-C234-zendegi",
+    "FA-C234-qesmat",
+    "FA-R234-first-pass-words-from-chapters-226-229",
+    "FA-R234-second-pass-words-from-chapters-230-234"
+  ],
+  "tex": "persian/book/chapters/ch234-method-freedom-war-life-part.tex"
+}
