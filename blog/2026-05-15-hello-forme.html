@@ -217,6 +217,11 @@ by date while preserving that canonical route.</li>
 <li><strong><code>forme-render-static</code></strong> matched the reusable classless Style IR theme,
 recorded <code>usedStyle</code>, compiled the page slice through the AOT path, and
 emitted a <code>RenderedPage</code> with exact island usage and asset placeholders.</li>
+<li><strong><code>forme-render-terminal</code></strong> compiled the same routed content and classless
+Style IR theme to safe ANSI text, preserved fallback content, and recorded
+every unsupported style, asset, raw node, and island as explicit data.</li>
+<li><strong><code>forme-render-terminal/package</code></strong> assembled those terminal buffers into a
+deterministic capability-free artifact with <code>.ansi</code> and degradation files.</li>
 <li><strong><code>forme-load-assets-fs</code></strong> loaded and hashed the SVG and JavaScript bytes
 while enforcing canonical storage-root containment.</li>
 <li><strong><code>blog-surface</code></strong> rendered the chronological collection into the blog

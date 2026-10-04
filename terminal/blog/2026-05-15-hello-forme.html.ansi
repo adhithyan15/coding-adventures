@@ -1,0 +1,29 @@
+[1mHello, Forme
+
+[0mThis is the inaugural post of the [1mCoding Adventures blog[0m, and the first piece of content shipped end-to-end through the [4mForme <https://github.com/adhithyan15/coding-adventures>[0m universal authoring pipeline.
+
+The path it took from data/2026-05-15-hello-forme.md to /coding-adventures/blog/2026-05-15-hello-forme.html is exactly the shape laid out in the FM00 spec:
+
+The complete pipeline is listed below. With JavaScript enabled, optional controls can focus one step at a time.
+
+1. [1mforme-source-fs[0m walked data/, found this file, and emitted a ContentSource.
+2. [1mforme-parse-markdown[0m split off the frontmatter you see above, parsed the body as GFM, and emitted a ContentNode.
+3. [1mblog-attach-interactivity[0m attached the one reviewed pipeline-step module to this post and left every other post without a script asset.
+4. [1mforme-resolve-asset-refs-fs[0m discovered the local diagram below, assigned its stable logical identity, and preserved its fragment target.
+5. [1mforme-router[0m assigned one canonical route, then fanned the routed node out to the page and collection branches.
+6. [1mforme-collect-chronological[0m sorted this and the other posts by date while preserving that canonical route.
+7. [1mforme-render-static[0m matched the reusable classless Style IR theme, recorded usedStyle, compiled the page slice through the AOT path, and emitted a RenderedPage with exact island usage and asset placeholders.
+8. [1mforme-render-terminal[0m compiled the same routed content and classless Style IR theme to safe ANSI text, preserved fallback content, and recorded every unsupported style, asset, raw node, and island as explicit data.
+9. [1mforme-render-terminal/package[0m assembled those terminal buffers into a deterministic capability-free artifact with .ansi and degradation files.
+10. [1mforme-load-assets-fs[0m loaded and hashed the SVG and JavaScript bytes while enforcing canonical storage-root containment.
+11. [1mblog-surface[0m rendered the chronological collection into the blog index, RSS, Atom, and sitemap artifacts.
+12. [1mforme-emit-site-fs[0m joined the rendered page and asset streams, replaced placeholders with fingerprinted public URLs, emitted only the selected script, and recorded the article DeployArtifact manifest.
+13. [1mforme-emit-fs[0m wrote the index, feeds, and sitemap through the independent surface branch.
+
+[image: Forme turns source content into reusable IR and many output surfaces.]
+
+The point isn't the post — it's that everything between the parser and the deployer is [3mplug-compatible[0m. Want a different theme? Pass a different resolved StyleDocument; the renderer does not change. Want to ship to S3 instead of disk? Replace forme-emit-site-fs. The rest of the DAG stays put.
+
+> One pipeline, many surfaces. That's the Forme bet.
+
+The next few posts will work through what the kernel + orchestrator gives you, and how collection outputs grow into indexes and feeds.

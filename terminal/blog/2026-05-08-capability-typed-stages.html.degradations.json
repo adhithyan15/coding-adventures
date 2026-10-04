@@ -1,0 +1,224 @@
+[
+  {
+    "code": "style-property-dropped",
+    "ruleId": "shell-html",
+    "propertyKind": "align",
+    "message": "align: no terminal equivalent (terminals don't have a layout box model)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "shell-body",
+    "propertyKind": "display",
+    "message": "display: no terminal equivalent (use `visible: false` if you mean SGR conceal)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "shell-body",
+    "propertyKind": "max-width",
+    "message": "max-width: no terminal equivalent (terminals don't have a layout box model)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "shell-body",
+    "propertyKind": "align",
+    "message": "align: no terminal equivalent (terminals don't have a layout box model)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "shell-body",
+    "propertyKind": "font-family",
+    "message": "font-family: no terminal equivalent (terminal renders in its configured font)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "shell-body",
+    "propertyKind": "font-size",
+    "message": "font-size: no terminal equivalent (terminal uses its configured cell size)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "shell-body",
+    "propertyKind": "leading",
+    "message": "leading: no terminal equivalent (line-height / letter-spacing not expressible at SGR level)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "shell-body",
+    "propertyKind": "color",
+    "message": "color: model not expressible as terminal RGB"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "shell-body",
+    "propertyKind": "background",
+    "message": "background: model not expressible as terminal RGB"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "shell-body",
+    "propertyKind": "padding",
+    "message": "padding: no terminal equivalent (terminals don't have a layout box model)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "shell-main",
+    "propertyKind": "max-width",
+    "message": "max-width: no terminal equivalent (terminals don't have a layout box model)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "headings",
+    "propertyKind": "leading",
+    "message": "leading: no terminal equivalent (line-height / letter-spacing not expressible at SGR level)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "headings",
+    "propertyKind": "space-before",
+    "message": "space-before: no terminal equivalent (terminals don't have a layout box model)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "headings",
+    "propertyKind": "space-after",
+    "message": "space-after: no terminal equivalent (terminals don't have a layout box model)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "heading-h1",
+    "propertyKind": "font-size",
+    "message": "font-size: no terminal equivalent (terminal uses its configured cell size)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "heading-h1",
+    "propertyKind": "space-before",
+    "message": "space-before: no terminal equivalent (terminals don't have a layout box model)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "heading-h2",
+    "propertyKind": "font-size",
+    "message": "font-size: no terminal equivalent (terminal uses its configured cell size)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "heading-h2",
+    "propertyKind": "border",
+    "message": "border: no terminal equivalent (decorative properties require a graphics-capable backend)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "heading-h2",
+    "propertyKind": "padding",
+    "message": "padding: no terminal equivalent (terminals don't have a layout box model)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "paragraph",
+    "propertyKind": "space-after",
+    "message": "space-after: no terminal equivalent (terminals don't have a layout box model)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "inline-code",
+    "propertyKind": "font-family",
+    "message": "font-family: no terminal equivalent (terminal renders in its configured font)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "inline-code",
+    "propertyKind": "font-size",
+    "message": "font-size: no terminal equivalent (terminal uses its configured cell size)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "inline-code",
+    "propertyKind": "padding",
+    "message": "padding: no terminal equivalent (terminals don't have a layout box model)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "inline-code",
+    "propertyKind": "background",
+    "message": "background: model not expressible as terminal RGB"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "inline-code",
+    "propertyKind": "border-radius",
+    "message": "border-radius: no terminal equivalent (decorative properties require a graphics-capable backend)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "code-block",
+    "propertyKind": "font-size",
+    "message": "font-size: no terminal equivalent (terminal uses its configured cell size)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "code-block",
+    "propertyKind": "leading",
+    "message": "leading: no terminal equivalent (line-height / letter-spacing not expressible at SGR level)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "code-block",
+    "propertyKind": "padding",
+    "message": "padding: no terminal equivalent (terminals don't have a layout box model)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "code-block",
+    "propertyKind": "background",
+    "message": "background: model not expressible as terminal RGB"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "code-block",
+    "propertyKind": "border-radius",
+    "message": "border-radius: no terminal equivalent (decorative properties require a graphics-capable backend)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "lists",
+    "propertyKind": "padding",
+    "message": "padding: no terminal equivalent (terminals don't have a layout box model)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "lists",
+    "propertyKind": "space-after",
+    "message": "space-after: no terminal equivalent (terminals don't have a layout box model)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "list-item",
+    "propertyKind": "space-after",
+    "message": "space-after: no terminal equivalent (terminals don't have a layout box model)"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "dark-shell",
+    "propertyKind": "color",
+    "message": "color: model not expressible as terminal RGB"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "dark-shell",
+    "propertyKind": "background",
+    "message": "background: model not expressible as terminal RGB"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "dark-soft-surface",
+    "propertyKind": "background",
+    "message": "background: model not expressible as terminal RGB"
+  },
+  {
+    "code": "style-property-dropped",
+    "ruleId": "dark-borders",
+    "propertyKind": "border-color",
+    "message": "border-color: no terminal equivalent (terminals have no border / outline model)"
+  }
+]
