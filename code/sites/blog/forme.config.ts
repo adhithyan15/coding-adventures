@@ -1,7 +1,7 @@
 /**
  * forme.config.ts — pipeline config for the Coding Adventures blog.
  *
- * Eleven stages with explicit fan-out after asset resolution, routing, and collection.
+ * Thirteen stages with explicit fan-out after asset resolution, routing, and collection.
  * See `build.ts` for the driver that verifies both deploy sinks.
  *
  * Roll call:
@@ -39,6 +39,7 @@ import resolveAssetRefsFs from "@coding-adventures/forme-resolve-asset-refs-fs";
 import router         from "@coding-adventures/forme-router";
 import collectChronological from "@coding-adventures/forme-collect-chronological";
 import renderStatic   from "@coding-adventures/forme-render-static";
+import renderTerminal, { packageTerminal } from "@coding-adventures/forme-render-terminal";
 import classlessTheme from "@coding-adventures/forme-theme-classless";
 import loadAssetsFs   from "@coding-adventures/forme-load-assets-fs";
 import emitFs         from "@coding-adventures/forme-emit-fs";
@@ -133,6 +134,23 @@ const config: PipelineConfig = {
       },
     },
     {
+      id: "render-terminal",
+      stage: renderTerminal,
+      config: {
+        style: classlessTheme,
+        activeStyleContexts: ["screen", "dark"],
+        interactivity: [{
+          route: "/blog/2026-05-15-hello-forme.html",
+          document: pipelineStepsInteractivity,
+        }],
+      },
+    },
+    {
+      id: "package-terminal",
+      stage: packageTerminal,
+      config: { root: "terminal" },
+    },
+    {
       id: "load-assets",
       stage: loadAssetsFs,
       config: { root: "data" },
@@ -172,6 +190,8 @@ const config: PipelineConfig = {
     { from: { id: "resolve-assets" }, to: { id: "route" } },
     { from: { id: "route" },        to: { id: "collect-posts" } },
     { from: { id: "route" },        to: { id: "render-pages" } },
+    { from: { id: "route" },        to: { id: "render-terminal" } },
+    { from: { id: "render-terminal" }, to: { id: "package-terminal" } },
     { from: { id: "route" },        to: { id: "load-assets" } },
     { from: { id: "collect-posts" }, to: { id: "render-surface" } },
     { from: { id: "render-pages" }, to: { id: "emit-articles" } },
@@ -181,6 +201,7 @@ const config: PipelineConfig = {
   outputs: [
     { fromInstance: "emit-articles", name: "articles" },
     { fromInstance: "emit-surface", name: "surface" },
+    { fromInstance: "package-terminal", name: "terminal" },
   ],
 };
 

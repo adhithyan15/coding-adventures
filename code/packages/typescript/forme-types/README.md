@@ -13,12 +13,12 @@ See [code/specs/FM01-forme-kernel.md](../../../specs/FM01-forme-kernel.md) §2 f
 | `utility.ts`  | `JsonValue`, `ReadonlyRecord`                                            |
 | `identity.ts` | `LogicalId`, `RevisionId` branded type aliases                           |
 | `kinds.ts`    | `KIND` constants, `KindDescriptor`, canonical `Kinds` object, `streamOf` |
-| `shapes.ts`   | TypeScript interfaces for all 12 built-in kinds + stub style/interactivity |
+| `shapes.ts`   | TypeScript interfaces for the built-in kinds + stub style/interactivity |
 | `payload.ts`  | `KindPayload<K>` mapped type — descriptor → value type                    |
 
 ## Quick reference
 
-### The 12 built-in Kinds
+### Built-in Kinds
 
 ```
 Void                  → no payload (source-stage input, sink-stage output)
@@ -29,6 +29,7 @@ Asset                 → image / video / font / script / binary with metadata
 Document              → (content, style, interactivity) triple ready to render
 RenderedPage          → HTML + metadata + revision-aware input provenance
 PrintForme            → backend-neutral page for LaTeX / PDF / EPUB
+TerminalBuffer        → ANSI text + explicit degradation evidence
 RequestHandler        → per-request handler (Workers, Node, Deno, Bun)
 SearchIndex           → serialised search index
 Feed                  → RSS / Atom / JSON Feed / sitemap

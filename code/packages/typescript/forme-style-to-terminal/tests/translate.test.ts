@@ -87,6 +87,15 @@ describe("compileTerminalStyles — runtime renderer boundary", () => {
     expect(compiled.emittedRules).toEqual(["body"]);
     expect(compiled.warnings).toMatchObject([{ code: "PROPERTY_SKIPPED", ruleId: "body", propertyKind: "padding" }]);
   });
+
+  it("preserves exact in-memory keys, including scope and source punctuation", () => {
+    const doc: StyleDocument = {
+      ...baseDoc(),
+      rules: [rule(`he"llo\\world`, sel.type("paragraph"), [{ kind: "font-weight", value: 700 }])],
+    };
+    const compiled = compileTerminalStyles(doc, { activeContexts: [], scope: "page." });
+    expect(compiled.styles.get(`page.he"llo\\world`)).toEqual({ prefix: "\u001b[1m", suffix: "\u001b[0m" });
+  });
 });
 
 describe("translateToTerminal — filtering", () => {

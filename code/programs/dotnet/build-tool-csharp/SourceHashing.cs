@@ -226,7 +226,7 @@ public static partial class Hasher
     public const string LanguageSourceInputRegistryDigest =
         "5201a045ea3e2086fd9be316f2692743ca329f1d84f1c0983a0da47e96b3f621";
     public const string RepositorySourceInputBoundaryDigest =
-        "c69e97fc384c7d63d32148269023f1ea34fa9906df265fe63ede9a0486c6e3e6";
+        "220436e5989c1d3b46770da00de3d5c7d55cc0c4d0535f2940daa9c6daa6d6e3";
 
     private static readonly JsonSerializerOptions RegistryJsonOptions = new()
     {

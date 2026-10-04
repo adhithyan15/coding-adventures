@@ -383,6 +383,25 @@ export interface PrintForme {
   readonly usedAssets: readonly LogicalId[];
 }
 
+// ─── TerminalBuffer ──────────────────────────────────────────────────────
+
+/** One explicit loss at the terminal backend boundary. */
+export type TerminalDegradation =
+  | { readonly code: "style-property-dropped"; readonly ruleId: StyleRuleId; readonly propertyKind: string; readonly message: string }
+  | { readonly code: "interactivity-dropped"; readonly islandId: IslandId | null; readonly message: string }
+  | { readonly code: "raw-node-dropped"; readonly format: string; readonly nodePath: readonly number[]; readonly message: string }
+  | { readonly code: "asset-reference-dropped"; readonly asset: LogicalId; readonly nodePath: readonly number[]; readonly message: string };
+
+/** ANSI terminal output for one route, before artifact packaging. */
+export interface TerminalBuffer {
+  readonly route: string;
+  readonly text: string;
+  readonly usedStyle: readonly StyleRuleId[];
+  readonly usedAssets: readonly LogicalId[];
+  readonly degradations: readonly TerminalDegradation[];
+  readonly provenance: OutputProvenance;
+}
+
 // ─── RequestHandler ───────────────────────────────────────────────────────
 
 /**

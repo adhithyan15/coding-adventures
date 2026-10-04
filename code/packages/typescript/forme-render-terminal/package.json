@@ -18,7 +18,8 @@
     "@coding-adventures/forme-stage": "file:../forme-stage",
     "@coding-adventures/forme-style-ir": "file:../forme-style-ir",
     "@coding-adventures/forme-style-to-terminal": "file:../forme-style-to-terminal",
-    "@coding-adventures/forme-types": "file:../forme-types"
+    "@coding-adventures/forme-types": "file:../forme-types",
+    "parse5": "^7.3.0"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

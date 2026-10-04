@@ -43,6 +43,8 @@
 
 export { translateToTerminal } from "./translate.js";
 export type { TranslateOptions, TranslateResult } from "./translate.js";
+export { compileTerminalStyles } from "./compile.js";
+export type { AnsiStyle, CompileTerminalResult } from "./compile.js";
 
 // Mappers re-exported so plugins can compose them when building
 // extension-property translators of their own.

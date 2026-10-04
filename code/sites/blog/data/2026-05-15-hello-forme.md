@@ -34,14 +34,19 @@ shape laid out in the FM00 spec:
 7. **`forme-render-static`** matched the reusable classless Style IR theme,
    recorded `usedStyle`, compiled the page slice through the AOT path, and
    emitted a `RenderedPage` with exact island usage and asset placeholders.
-8. **`forme-load-assets-fs`** loaded and hashed the SVG and JavaScript bytes
+8. **`forme-render-terminal`** compiled the same routed content and classless
+   Style IR theme to safe ANSI text, preserved fallback content, and recorded
+   every unsupported style, asset, raw node, and island as explicit data.
+9. **`forme-render-terminal/package`** assembled those terminal buffers into a
+   deterministic capability-free artifact with `.ansi` and degradation files.
+10. **`forme-load-assets-fs`** loaded and hashed the SVG and JavaScript bytes
    while enforcing canonical storage-root containment.
-9. **`blog-surface`** rendered the chronological collection into the blog
+11. **`blog-surface`** rendered the chronological collection into the blog
    index, RSS, Atom, and sitemap artifacts.
-10. **`forme-emit-site-fs`** joined the rendered page and asset streams,
+12. **`forme-emit-site-fs`** joined the rendered page and asset streams,
     replaced placeholders with fingerprinted public URLs, emitted only the
     selected script, and recorded the article `DeployArtifact` manifest.
-11. **`forme-emit-fs`** wrote the index, feeds, and sitemap through the
+13. **`forme-emit-fs`** wrote the index, feeds, and sitemap through the
     independent surface branch.
 
 ![Forme turns source content into reusable IR and many output surfaces.](assets/forme-pipeline.svg#pipeline)

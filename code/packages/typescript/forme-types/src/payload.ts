@@ -32,7 +32,7 @@
 import type {
   Asset, Collection, ContentNode, ContentSource,
   DeployArtifact, Document, Feed,
-  PrintForme, RenderedPage, RequestHandler, SearchIndex,
+  PrintForme, RenderedPage, RequestHandler, SearchIndex, TerminalBuffer,
 } from "./shapes.js";
 import type { KindDescriptor } from "./kinds.js";
 
@@ -49,6 +49,7 @@ export interface KindPayloadMap {
   Document:       Document;
   RenderedPage:   RenderedPage;
   PrintForme:     PrintForme;
+  TerminalBuffer: TerminalBuffer;
   RequestHandler: RequestHandler;
   SearchIndex:    SearchIndex;
   Feed:           Feed;
