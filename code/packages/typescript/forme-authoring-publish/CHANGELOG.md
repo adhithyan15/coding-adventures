@@ -14,5 +14,7 @@ here.
 - Added fail-closed cancellation, overlap rejection, idempotent preparation
   retirement, redacted diagnostics, and poisoned retry after uncertain
   external, cleanup, or persistence outcomes.
-- Added hostile-input and lifecycle tests with 99%+ statements, 100% lines and
-  functions, and 95%+ branch coverage.
+- Added hostile-input and lifecycle tests with 97%+ statements, 99%+ lines,
+  100% functions, and 90%+ branch coverage.
+- Hardened synchronous adapter re-entry and replaced the raw builder store with
+  a revocable manifest-restricted wrapper that re-verifies every target read.

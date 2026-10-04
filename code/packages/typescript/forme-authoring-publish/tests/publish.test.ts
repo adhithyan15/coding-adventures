@@ -69,6 +69,12 @@ function store(bytes = BYTES): ContentStore {
   });
 }
 
+async function collect(values: AsyncIterable<string>): Promise<string[]> {
+  const result: string[] = [];
+  for await (const value of values) result.push(value);
+  return result;
+}
+
 class Session implements AuthoringSession {
   project: AuthoringProject = project();
   storageRevision = "revision-1";
@@ -183,6 +189,35 @@ describe("reviewed authoring publication", () => {
     expect(JSON.stringify({ review, buildInput })).not.toMatch(/token|credential|environment|filesystem|network/i);
   });
 
+  it("installs active state before an untrusted builder can re-enter", async () => {
+    const session = new Session();
+    let publisher!: ReturnType<typeof coordinator>;
+    let nested!: AuthoringPublishAttempt;
+    publisher = coordinator(async () => {
+      nested = await publisher.publish(session);
+      return prepared();
+    });
+
+    await expect(publisher.publish(session)).resolves.toMatchObject({ outcome: "published" });
+    expect(nested).toMatchObject({ outcome: "failed", diagnostics: [{ code: "E_PUBLISH_BUSY" }] });
+    expect(session.records).toHaveLength(1);
+  });
+
+  it("honors disposal re-entered synchronously by the builder", async () => {
+    const session = new Session();
+    let publisher!: ReturnType<typeof coordinator>;
+    let disposal!: Promise<void>;
+    publisher = coordinator(async () => {
+      disposal = publisher.dispose();
+      return prepared();
+    });
+
+    await expect(publisher.publish(session)).resolves.toMatchObject({ outcome: "cancelled" });
+    await disposal;
+    expect(publisher.state.phase).toBe("disposed");
+    expect(session.records).toEqual([]);
+  });
+
   it("retires without deploying when the exact session revision changes during build", async () => {
     const session = new Session();
     const release = vi.fn(async () => {});
@@ -217,6 +252,38 @@ describe("reviewed authoring publication", () => {
     }
     expect(releases[0]).toHaveBeenCalledOnce();
     expect(releases[1]).toHaveBeenCalledOnce();
+  });
+
+  it("re-verifies every target content read after preflight and retires the view", async () => {
+    let reads = 0;
+    const swappingStore: ContentStore = Object.freeze({
+      async get() {
+        reads += 1;
+        return reads === 1 ? BYTES.slice() : new TextEncoder().encode("wrong");
+      },
+      async has(digest: string) { return digest === DIGEST; },
+      async *hashes() { yield DIGEST; },
+    });
+    const session = new Session();
+    const swapped = await coordinator(
+      async () => prepared({ contentStore: swappingStore }),
+      target(async (input) => {
+        await input.contentStore.get(DIGEST);
+        return { outcome: "success", manifestSha256: input.manifestSha256 };
+      }),
+    ).publish(session);
+    expect(swapped).toMatchObject({ outcome: "failed", diagnostics: [{ code: "E_PUBLISH_TARGET" }] });
+    expect(session.records).toEqual([]);
+
+    let retained!: ContentStore;
+    const published = await coordinator(undefined, target(async (input) => {
+      retained = input.contentStore;
+      expect(await retained.has(DIGEST)).toBe(true);
+      expect(await collect(retained.hashes())).toEqual([DIGEST]);
+      return { outcome: "success", manifestSha256: input.manifestSha256 };
+    })).publish(new Session());
+    expect(published.outcome).toBe("published");
+    await expect(retained.get(DIGEST)).rejects.toThrow("retired");
   });
 
   it("poisons when invalid prepared output cannot be retired", async () => {

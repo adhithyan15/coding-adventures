@@ -340,7 +340,10 @@ parses and freezes the manifest through FM08, computes the identity from its
 canonical bytes, preflights every referenced content digest, confirms the
 session revision is still exact, and then closes the build boundary. The
 coordinator never accepts a target-selected manifest identity or silently
-substitutes preview output.
+substitutes preview output. The target receives a manifest-restricted store,
+not the raw builder store: every target read re-verifies size and digest, and
+retirement revokes the wrapper, so mutable or retained builder content cannot
+escape the reviewed manifest.
 
 The reviewed target resolves one closed result: `success`, `failed`, or
 `indeterminate`, always attributed to the supplied manifest identity. `failed`

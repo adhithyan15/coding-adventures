@@ -208,6 +208,7 @@ describe("the authoring project codec", () => {
 
     invalid({ ...project(), workflow: {} });
     invalid({ ...project(), workflow: { lastPublication: { authoringRevision: "revision", manifestSha256: "bad", targetId: "github-pages" } } });
+    invalid({ ...project(), workflow: { lastPublication: { authoringRevision: "revision", manifestSha256: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB=", targetId: "github-pages" } } });
     invalid({ ...project(), workflow: { lastPublication: { authoringRevision: "revision", manifestSha256: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=", targetId: "../secret" } } });
     invalid({ ...project(), workflow: { lastPublication: { authoringRevision: "bad\u202erevision", manifestSha256: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=", targetId: "github-pages" } } });
     invalid({ ...project(), workflow: { lastPublication: { authoringRevision: "revision", manifestSha256: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=", targetId: "github-pages", token: "secret" } } });

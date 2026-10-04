@@ -22,6 +22,12 @@ pre-commit failure may be retried. A malformed or indeterminate target result,
 post-deploy cleanup failure, or local acknowledgement failure poisons the
 coordinator until the shell reloads and reconciles external state.
 
+The target receives a manifest-restricted content store. Every `get` is
+re-verified against the owned manifest entry, enumeration exposes only owned
+digests, and retirement revokes later reads. Synchronous builder re-entry also
+observes the action as active because adapter work starts only after the active
+record is installed.
+
 ## Usage
 
 ```ts

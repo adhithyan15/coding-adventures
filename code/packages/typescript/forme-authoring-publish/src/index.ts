@@ -116,6 +116,11 @@ interface SafePrepared {
   release(): Promise<void>;
 }
 
+interface ManifestBoundStore {
+  readonly store: ContentStore;
+  revoke(): void;
+}
+
 const PREPARATION_CLEANUP_FAILED = Symbol("preparation cleanup failed");
 
 interface ActiveAction {
@@ -179,7 +184,11 @@ class Publisher implements AuthoringPublisher {
     const abort = new AbortController();
     const unlink = forwardAbort(signal, abort);
     this.currentState = state("building", snapshot.revision, null, []);
-    const promise = this.run(snapshot, abort.signal).finally(() => {
+    // Defer all untrusted adapter work until the active record is installed.
+    // A builder may synchronously re-enter publish or dispose before its
+    // returned promise settles; both must observe this action as active.
+    const started = Promise.resolve().then(async () => await this.run(snapshot, abort.signal));
+    const promise = started.finally(() => {
       unlink();
       if (this.active?.promise === promise) this.active = null;
     });
@@ -324,17 +333,65 @@ async function safePrepared(value: unknown, signal: AbortSignal): Promise<SafePr
   try {
     const fields = exactDataObject(value, ["manifest", "contentStore", "release"], "prepared publication");
     const manifest = parseDeployManifest(fields.manifest);
-    const contentStore = safeContentStore(fields.contentStore);
-    await createVerifiedContentReader(manifest, contentStore, { signal }).preflight();
+    const rawContentStore = safeContentStore(fields.contentStore);
+    const boundStore = await createManifestBoundStore(manifest, rawContentStore, signal);
     return Object.freeze({
       manifest,
-      contentStore,
-      release: retireOnce,
+      contentStore: boundStore.store,
+      release: async () => {
+        boundStore.revoke();
+        await retireOnce();
+      },
     });
   } catch (error) {
     try { await retireOnce(); } catch { throw PREPARATION_CLEANUP_FAILED; }
     throw error;
   }
+}
+
+async function createManifestBoundStore(
+  manifest: DeployManifest,
+  source: ContentStore,
+  signal: AbortSignal,
+): Promise<ManifestBoundStore> {
+  const reader = createVerifiedContentReader(manifest, source, { signal });
+  await reader.preflight();
+  const pathByDigest = new Map<string, string>();
+  for (const outputPath of Object.keys(manifest.files).sort()) {
+    const entry = manifest.files[outputPath];
+    if (entry !== undefined && !pathByDigest.has(entry.sha256)) pathByDigest.set(entry.sha256, outputPath);
+  }
+  const hashes = Object.freeze([...pathByDigest.keys()].sort());
+  let revoked = false;
+  const assertLive = (): void => {
+    if (revoked) throw new Error("publication content store is retired");
+  };
+  const store = Object.freeze({
+    async get(sha256: string, requestSignal?: AbortSignal): Promise<Uint8Array> {
+      assertLive();
+      if (requestSignal !== undefined && isAborted(requestSignal)) throw new DOMException("The operation was aborted", "AbortError");
+      const outputPath = pathByDigest.get(sha256);
+      if (outputPath === undefined) throw new TypeError("content digest is not owned by the publication manifest");
+      return await reader.read(outputPath);
+    },
+    async has(sha256: string, requestSignal?: AbortSignal): Promise<boolean> {
+      assertLive();
+      if (requestSignal !== undefined && isAborted(requestSignal)) throw new DOMException("The operation was aborted", "AbortError");
+      return pathByDigest.has(sha256);
+    },
+    hashes(): AsyncIterable<string> {
+      assertLive();
+      return Object.freeze({
+        async *[Symbol.asyncIterator]() {
+          for (const sha256 of hashes) {
+            assertLive();
+            yield sha256;
+          }
+        },
+      });
+    },
+  });
+  return Object.freeze({ store, revoke: () => { revoked = true; } });
 }
 
 function safeContentStore(value: unknown): ContentStore {

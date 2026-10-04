@@ -30,7 +30,9 @@ import {
 
 const UUID_V7 = /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 const PORTABLE_NAME = /^[a-z0-9]+(?:[._-][a-z0-9]+)*$/;
-const SHA256_BASE64 = /^[A-Za-z0-9+/]{43}=$/;
+// A 32-byte digest leaves two padding bits in its final base64 data character.
+// Requiring an index divisible by four rejects alternate non-canonical spellings.
+const SHA256_BASE64 = /^[A-Za-z0-9+/]{42}[AEIMQUYcgkosw048]=$/;
 const UNSAFE_IDENTITY = /[\u0000-\u001f\u007f-\u009f\u061c\u200e\u200f\u202a-\u202e\u2066-\u2069]/u;
 const LIMIT_KEYS = Object.freeze(Object.keys(HARD_AUTHORING_LIMITS) as (keyof AuthoringLimits)[]);
 
