@@ -198,7 +198,7 @@ fn compile_program(ast: &GrammarASTNode, module_name: &str)
     // user-defined functions purely for readability; order doesn't matter
     // because every `call` resolves the callee by name.
     if comp.needs_print_helpers {
-        for func in print_helper_functions() {
+        for func in portable_numeric_print_helpers() {
             module.functions.push(func);
         }
     }
@@ -2681,7 +2681,7 @@ fn rnd_helper_function() -> IIRFunction {
 /// reversal buffer: the deepest call prints the most-significant digit first.
 /// (`0 - n` for the sign overflows only at `i64::MIN`, a value no BA2 program
 /// can express; a saturating negate is a later refinement.)
-fn print_helper_functions() -> Vec<IIRFunction> {
+pub fn portable_numeric_print_helpers() -> Vec<IIRFunction> {
     fn var(s: &str) -> Operand { Operand::Var(s.to_string()) }
     let mk = |op: &str, dest: Option<&str>, srcs: Vec<Operand>, ty: &str| {
         IIRInstr::new(op, dest.map(|s| s.to_string()), srcs, ty)
@@ -2879,6 +2879,18 @@ fn print_helper_functions() -> Vec<IIRFunction> {
         mk("const", Some("ten_thousand_r"), vec![Operand::Float(10_000.0)], "f64"),
         mk("const", Some("hundred_thousand_r"), vec![Operand::Float(100_000.0)], "f64"),
         mk("const", Some("e_high_r"), vec![Operand::Float(999_999.5)], "f64"),
+        // Fail closed for non-finite runtime values before the decimal
+        // normalization loops. NaN is the only value unequal to itself.
+        mk("cmp_ne", Some("is_nan"), vec![var("x"), var("x")], "f64"),
+        mk("jmp_if_false", None, vec![var("is_nan"), var("real_not_nan")], "void"),
+        mk("const", Some("nan_n1"), vec![Operand::Int(b'N' as i64)], "i64"),
+        mk("const", Some("nan_a"), vec![Operand::Int(b'a' as i64)], "i64"),
+        mk("const", Some("nan_n2"), vec![Operand::Int(b'N' as i64)], "i64"),
+        mk("call_builtin", None, vec![var("putchar"), var("nan_n1")], "void"),
+        mk("call_builtin", None, vec![var("putchar"), var("nan_a")], "void"),
+        mk("call_builtin", None, vec![var("putchar"), var("nan_n2")], "void"),
+        mk("jmp", None, vec![var("real_done")], "void"),
+        mk("label", None, vec![var("real_not_nan")], "void"),
         mk("cmp_lt", Some("neg"), vec![var("x"), var("zero_r")], "f64"),
         mk("jmp_if_false", None, vec![var("neg"), var("real_nonneg")], "void"),
         mk("const", Some("minus"), vec![Operand::Int(b'-' as i64)], "i64"),
@@ -2888,6 +2900,17 @@ fn print_helper_functions() -> Vec<IIRFunction> {
         mk("label", None, vec![var("real_nonneg")], "void"),
         mk("add", Some("mag"), vec![var("x"), var("zero_r")], "f64"),
         mk("label", None, vec![var("real_abs_done")], "void"),
+        mk("const", Some("max_finite"), vec![Operand::Float(f64::MAX)], "f64"),
+        mk("cmp_gt", Some("is_inf"), vec![var("mag"), var("max_finite")], "f64"),
+        mk("jmp_if_false", None, vec![var("is_inf"), var("real_finite")], "void"),
+        mk("const", Some("inf_i"), vec![Operand::Int(b'i' as i64)], "i64"),
+        mk("const", Some("inf_n"), vec![Operand::Int(b'n' as i64)], "i64"),
+        mk("const", Some("inf_f"), vec![Operand::Int(b'f' as i64)], "i64"),
+        mk("call_builtin", None, vec![var("putchar"), var("inf_i")], "void"),
+        mk("call_builtin", None, vec![var("putchar"), var("inf_n")], "void"),
+        mk("call_builtin", None, vec![var("putchar"), var("inf_f")], "void"),
+        mk("jmp", None, vec![var("real_done")], "void"),
+        mk("label", None, vec![var("real_finite")], "void"),
         mk("cmp_eq", Some("is_zero"), vec![var("mag"), var("zero_r")], "f64"),
         mk("jmp_if_false", None, vec![var("is_zero"), var("real_nonzero")], "void"),
         mk("call", Some("_zero"),
@@ -3067,6 +3090,24 @@ mod tests {
         assert!(m.functions.iter().any(|f| f.name == "__basic_print_real"
             && f.params == vec![("x".to_string(), "f64".to_string())]),
             "module should include f64 real print helper");
+    }
+
+    #[test]
+    fn portable_real_formatter_guards_non_finite_values() {
+        let helper = portable_numeric_print_helpers()
+            .into_iter()
+            .find(|function| function.name == "__basic_print_real")
+            .expect("real formatter helper");
+        assert!(helper.instructions.iter().any(|instr| {
+            instr.op == "cmp_ne"
+                && instr.dest.as_deref() == Some("is_nan")
+                && instr.type_hint == "f64"
+        }));
+        assert!(helper.instructions.iter().any(|instr| {
+            instr.op == "cmp_gt"
+                && instr.dest.as_deref() == Some("is_inf")
+                && instr.type_hint == "f64"
+        }));
     }
 
     /// BA7-1b: integer-spelled scalar literals are real values too, so mixed

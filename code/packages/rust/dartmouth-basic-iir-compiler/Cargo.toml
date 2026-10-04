@@ -1,8 +1,8 @@
 [package]
 name = "dartmouth-basic-iir-compiler"
-version = "0.40.0"
+version = "0.41.0"
 edition = "2021"
-description = "Dartmouth BASIC frontend for the LANG VM AOT chain — lowers parsed BASIC into interpreter_ir::IIRModule. v0.40.0 (VM-018): deterministic portable RND semantics over a Park–Miller generator shared through typed module globals. v0.39.0: mixed numeric/string DATA, READ, and RESTORE. v0.38.0: deterministic transcendental builtins."
+description = "Dartmouth BASIC frontend for the LANG VM AOT chain — lowers parsed BASIC into interpreter_ir::IIRModule. v0.41.0: exports the portable numeric formatter and guards its decimal loops against non-finite values. v0.40.0 (VM-018): deterministic portable RND semantics over a Park–Miller generator shared through typed module globals. v0.39.0: mixed numeric/string DATA, READ, and RESTORE."
 
 [dependencies]
 coding-adventures-dartmouth-basic-parser = { path = "../dartmouth-basic-parser" }

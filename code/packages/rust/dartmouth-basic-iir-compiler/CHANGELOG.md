@@ -1,5 +1,13 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## [0.41.0] — 2026-10-04 (shared portable numeric formatter)
+
+The existing typed-IIR numeric print helper family is now a public frontend
+utility. ALGOL 60 reuses the same already proven formatter for direct zero-argument
+real-procedure output, with no change to BASIC's finite-value formatting.
+The shared formatter now also renders NaN and infinities directly, preventing
+non-finite values from entering its decimal-normalization loops.
+
 ## [0.40.0] — 2026-08-31 (portable deterministic RND)
 
 `RND` now uses a documented Park–Miller generator with multiplier 48,271 and
