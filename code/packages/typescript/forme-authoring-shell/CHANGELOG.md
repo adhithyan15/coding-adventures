@@ -22,9 +22,10 @@ here.
   indeterminate, malformed, or rejected publisher settlement rather than
   exposing an unsafe publication retry.
 - Made one captured workspace-level disposal method authoritative for failed
-  admission, replacement, and unmount, serialized replacement behind its
-  successful settlement on a persistent retirement chain, and kept poison
-  sticky across rapid host changes after missing, failed, or stale retirement.
+  admission, replacement, and unmount, serialized the complete open/create,
+  admission, and stale-retirement lifecycle on a persistent producer chain,
+  and kept poison sticky across rapid host changes after missing, failed, or
+  stale retirement.
 - Poisoned the workspace after a committed session mutation cannot be safely
   resnapshotted, preventing a stale facade from reporting unsaved state or
   accepting later mutations before reload.

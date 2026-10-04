@@ -411,6 +411,7 @@ export function AuthoringShell(props: AuthoringShellProps): ReactNode {
   const mounted = useRef(true);
   const poisoned = useRef(false);
   const retirementChain = useRef<Promise<void>>(Promise.resolve());
+  const producerChain = useRef<Promise<void>>(Promise.resolve());
 
   const retireWorkspace = (workspace: SafeWorkspace): Promise<void> => {
     const disposal = retirementChain.current.then(
@@ -478,7 +479,7 @@ export function AuthoringShell(props: AuthoringShellProps): ReactNode {
     const previous = workspaceRef.current;
     workspaceRef.current = null;
     const retirement = previous === null ? retirementChain.current : retireWorkspace(previous);
-    void (async () => {
+    const lifecycle = producerChain.current.then(async () => {
       try {
         await retirement;
         await retirementChain.current;
@@ -504,7 +505,8 @@ export function AuthoringShell(props: AuthoringShellProps): ReactNode {
         if (error instanceof WorkspacePoisonedError) enterPoisonedState();
         else if (live) setView({ phase: "error" });
       }
-    })();
+    });
+    producerChain.current = lifecycle;
     return () => {
       live = false;
       APPLY(ABORT, abort, []);
@@ -527,12 +529,12 @@ export function AuthoringShell(props: AuthoringShellProps): ReactNode {
     action.current = token;
     setBusy(true);
     setMessage("");
-    void Promise.resolve().then(async () => await host.create(input, token.abort.signal))
-      .then(async (raw) => await admitWorkspace(raw)).then(async (admitted) => {
+    const creation = producerChain.current.then(async () => {
+      if (!mounted.current || poisoned.current || action.current !== token || token.abort.signal.aborted) return;
+      const raw = await Promise.resolve().then(async () => await host.create(input, token.abort.signal));
+      const admitted = await admitWorkspace(raw);
       if (!mounted.current || poisoned.current || action.current !== token || token.abort.signal.aborted) {
-        try { await retireWorkspace(admitted); } catch {
-          enterPoisonedState();
-        }
+        try { await retireWorkspace(admitted); } catch { enterPoisonedState(); }
         return;
       }
       activateWorkspace(admitted);
@@ -545,6 +547,7 @@ export function AuthoringShell(props: AuthoringShellProps): ReactNode {
         if (mounted.current) setBusy(false);
       }
     });
+    producerChain.current = creation;
   };
 
   const runPreview = (): void => {

@@ -817,26 +817,22 @@ describe("AuthoringShell", () => {
     expect(openThird).toHaveBeenCalledOnce();
   });
 
-  it("keeps poison sticky when stale retirement fails while the current open is pending", async () => {
+  it("retires a stale pending open before invoking the replacement open", async () => {
     let resolveStale!: (workspace: AuthoringShellWorkspace) => void;
-    let resolveCurrent!: (workspace: AuthoringShellWorkspace) => void;
     const stalePending = new Promise<AuthoringShellWorkspace>((resolve) => { resolveStale = resolve; });
-    const currentPending = new Promise<AuthoringShellWorkspace>((resolve) => { resolveCurrent = resolve; });
-    const stale = await workspaceFixture({ dispose: vi.fn(async () => { throw new Error("/secret/stale-retirement"); }) });
+    const stale = await workspaceFixture();
     const current = await workspaceFixture({ previewUrl: "http://localhost:4994/pending/" });
     const openStale = vi.fn(async () => await stalePending);
-    const openCurrent = vi.fn(async () => await currentPending);
+    const openCurrent = vi.fn(async () => current);
     const view = render(<AuthoringShell host={host(openStale)} />);
     await waitFor(() => expect(openStale).toHaveBeenCalledOnce());
     view.rerender(<AuthoringShell host={host(openCurrent)} />);
-    await waitFor(() => expect(openCurrent).toHaveBeenCalledOnce());
+    expect(openCurrent).not.toHaveBeenCalled();
 
     resolveStale(stale);
-    expect(await screen.findByText("Workspace state could not be retired or verified safely. Reload before continuing.")).toBeInTheDocument();
-    resolveCurrent(current);
-    await waitFor(() => expect(current.dispose).toHaveBeenCalledOnce());
-    expect(screen.getByText("Workspace state could not be retired or verified safely. Reload before continuing.")).toBeInTheDocument();
-    expect(screen.queryByTitle("Site preview")).not.toBeInTheDocument();
+    await waitFor(() => expect(stale.dispose).toHaveBeenCalledOnce());
+    expect(await screen.findByTitle("Site preview")).toHaveAttribute("src", current.previewUrl);
+    expect(openCurrent).toHaveBeenCalledOnce();
   });
 
   it("poisons an active replacement when stale workspace retirement fails", async () => {
@@ -845,15 +841,16 @@ describe("AuthoringShell", () => {
     const stale = await workspaceFixture({ dispose: vi.fn(async () => { throw new Error("/secret/stale-retirement"); }) });
     const active = await workspaceFixture({ previewUrl: "http://localhost:4997/active/" });
     const openStale = vi.fn(async () => await stalePending);
+    const openActive = vi.fn(async () => active);
     const view = render(<AuthoringShell host={host(openStale)} />);
     await waitFor(() => expect(openStale).toHaveBeenCalledOnce());
-    view.rerender(<AuthoringShell host={host(async () => active)} />);
-    expect(await screen.findByTitle("Site preview")).toHaveAttribute("src", active.previewUrl);
+    view.rerender(<AuthoringShell host={host(openActive)} />);
+    expect(openActive).not.toHaveBeenCalled();
 
     resolveStale(stale);
     await waitFor(() => expect(stale.dispose).toHaveBeenCalledOnce());
     expect(await screen.findByText("Workspace state could not be retired or verified safely. Reload before continuing.")).toBeInTheDocument();
-    await waitFor(() => expect(active.dispose).toHaveBeenCalledOnce());
+    expect(openActive).not.toHaveBeenCalled();
     expect(screen.queryByText(/secret/)).not.toBeInTheDocument();
   });
 
@@ -930,6 +927,27 @@ describe("AuthoringShell", () => {
     expect(workspace.publishers[0]!.dispose).toHaveBeenCalledOnce();
   });
 
+  it("retires a stale pending creation before invoking the replacement open", async () => {
+    let resolve!: (workspace: AuthoringShellWorkspace) => void;
+    const pending = new Promise<AuthoringShellWorkspace>((done) => { resolve = done; });
+    const stale = await workspaceFixture();
+    const active = await workspaceFixture({ previewUrl: "http://localhost:4993/active-after-create/" });
+    const create = vi.fn(async () => await pending);
+    const openActive = vi.fn(async () => active);
+    const view = render(<AuthoringShell host={host(async () => null, create)} />);
+    await screen.findByRole("heading", { name: "Create your Forme site" });
+    fireEvent.change(screen.getByLabelText("Site title"), { target: { value: "Stale site" } });
+    fireEvent.click(screen.getByRole("button", { name: "Create site" }));
+    await waitFor(() => expect(create).toHaveBeenCalledOnce());
+
+    view.rerender(<AuthoringShell host={host(openActive)} />);
+    expect(openActive).not.toHaveBeenCalled();
+    resolve(stale);
+    await waitFor(() => expect(stale.dispose).toHaveBeenCalledOnce());
+    expect(await screen.findByTitle("Site preview")).toHaveAttribute("src", active.previewUrl);
+    expect(openActive).toHaveBeenCalledOnce();
+  });
+
   it("poisons the shell when stale created-workspace retirement fails while mounted", async () => {
     let resolve!: (workspace: AuthoringShellWorkspace) => void;
     const pending = new Promise<AuthoringShellWorkspace>((done) => { resolve = done; });
@@ -937,17 +955,20 @@ describe("AuthoringShell", () => {
       dispose: vi.fn(async () => { throw new Error("/secret/create-retirement"); }),
     });
     const active = await workspaceFixture({ previewUrl: "http://localhost:4996/active-after-create/" });
-    const firstHost = host(async () => null, async () => await pending);
+    const create = vi.fn(async () => await pending);
+    const openActive = vi.fn(async () => active);
+    const firstHost = host(async () => null, create);
     const view = render(<AuthoringShell host={firstHost} />);
     await screen.findByRole("heading", { name: "Create your Forme site" });
     fireEvent.change(screen.getByLabelText("Site title"), { target: { value: "Stale site" } });
     fireEvent.click(screen.getByRole("button", { name: "Create site" }));
-    view.rerender(<AuthoringShell host={host(async () => active)} />);
-    expect(await screen.findByTitle("Site preview")).toHaveAttribute("src", active.previewUrl);
+    await waitFor(() => expect(create).toHaveBeenCalledOnce());
+    view.rerender(<AuthoringShell host={host(openActive)} />);
+    expect(openActive).not.toHaveBeenCalled();
 
     resolve(stale);
     expect(await screen.findByText("Workspace state could not be retired or verified safely. Reload before continuing.")).toBeInTheDocument();
-    await waitFor(() => expect(active.dispose).toHaveBeenCalledOnce());
+    expect(openActive).not.toHaveBeenCalled();
     expect(screen.queryByText(/secret/)).not.toBeInTheDocument();
   });
 });

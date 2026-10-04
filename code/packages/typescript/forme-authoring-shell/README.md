@@ -55,11 +55,13 @@ from this package; `required_capabilities.json` remains empty.
   resnapshot the committed project, history flags, and storage revision. If
   that resnapshot fails, the workspace is poisoned and all interaction is
   removed until the product reloads from durable state.
-- Workspace replacement is serialized behind one persistent retirement chain,
-  including rapid host changes, failed admission, and late completion. A
-  missing, rejected, or stale retirement boundary permanently poisons that
-  mounted shell, retires any active or later-resolving replacement, and
-  requires a reload rather than allowing possibly overlapping host graphs.
+- Workspace replacement is serialized behind one persistent producer chain:
+  every prior open or create must settle, pass admission, and retire any stale
+  workspace before the next host can open. This includes rapid host changes,
+  failed admission, and late completion. A missing, rejected, or stale
+  retirement boundary permanently poisons that mounted shell, retires any
+  active or later-resolving replacement, and requires a reload rather than
+  allowing possibly overlapping host graphs.
 
 ## Verification
 
