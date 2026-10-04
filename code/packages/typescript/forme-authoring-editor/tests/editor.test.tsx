@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 
-import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import {
   createAuthoringProject,
@@ -106,6 +106,8 @@ describe("AuthoringEditor", () => {
     fireEvent.click(screen.getByRole("button", { name: "Remove current document" }));
     await screen.findByText("Document removed.");
     expect(session.project.documents.map((document) => document.title)).toEqual(["Second"]);
+    expect(session.project.activeDocumentId).toBe(SECOND_DOCUMENT_ID);
+    expect(screen.getByRole("heading", { name: "Editing Second" })).toHaveFocus();
   });
 
   it("inserts every required block and supports no-pointer reordering and removal", async () => {
@@ -132,7 +134,13 @@ describe("AuthoringEditor", () => {
     expect(screen.getByRole("heading", { name: "Block 7: Link" })).toHaveFocus();
 
     const movedLink = screen.getByRole("group", { name: "Block 7: Link" });
-    fireEvent.click(within(movedLink).getByRole("button", { name: "Remove block" }));
+    fireEvent.click(within(movedLink).getByRole("button", { name: "Move down" }));
+    await waitFor(() => expect(screen.getByRole("heading", { name: "Block 8: Link" })).toHaveFocus());
+    fireEvent.click(within(screen.getByRole("group", { name: "Block 8: Link" })).getByRole("button", { name: "Move up" }));
+    await waitFor(() => expect(screen.getByRole("heading", { name: "Block 7: Link" })).toHaveFocus());
+
+    const restoredLink = screen.getByRole("group", { name: "Block 7: Link" });
+    fireEvent.click(within(restoredLink).getByRole("button", { name: "Remove block" }));
     await screen.findByText("Block removed.");
     expect(session.project.documents[0]!.body.children).toHaveLength(7);
   });
@@ -162,15 +170,24 @@ describe("AuthoringEditor", () => {
     await screen.findByText("Heading saved.");
 
     fireEvent.change(screen.getByLabelText("List items, one per line"), { target: { value: "One\nTwo" } });
+    fireEvent.click(screen.getByRole("button", { name: "Save list" }));
+    await waitFor(() => expect(session.project.documents[0]!.body.children[2]).toMatchObject({ ordered: false, start: null }));
     fireEvent.click(screen.getByLabelText("Ordered list"));
     fireEvent.click(screen.getByRole("button", { name: "Save list" }));
     await screen.findByText("List saved.");
 
+    fireEvent.click(screen.getByRole("button", { name: "Save image" }));
+    await waitFor(() => expect(session.project.documents[0]!.body.children[3]).toMatchObject({
+      children: [{ type: "image", title: null }],
+    }));
     fireEvent.change(screen.getByLabelText("Image URL"), { target: { value: "/photo.png" } });
     fireEvent.change(screen.getByLabelText("Image alternative text"), { target: { value: "A photo" } });
+    fireEvent.change(screen.getByLabelText("Image title"), { target: { value: "Photo title" } });
     fireEvent.click(screen.getByRole("button", { name: "Save image" }));
     await screen.findByText("Image saved.");
 
+    fireEvent.click(screen.getByRole("button", { name: "Save code block" }));
+    await waitFor(() => expect(session.project.documents[0]!.body.children[4]).toMatchObject({ language: null, value: "\n" }));
     fireEvent.change(screen.getByLabelText("Code language"), { target: { value: "typescript" } });
     fireEvent.change(screen.getByLabelText("Code"), { target: { value: "const answer = 42;" } });
     fireEvent.click(screen.getByRole("button", { name: "Save code block" }));
@@ -186,6 +203,7 @@ describe("AuthoringEditor", () => {
 
     fireEvent.change(screen.getByLabelText("Link text"), { target: { value: "Example" } });
     fireEvent.change(screen.getByLabelText("Link URL"), { target: { value: "https://example.com" } });
+    fireEvent.change(screen.getByLabelText("Link title"), { target: { value: "Example title" } });
     fireEvent.click(screen.getByRole("button", { name: "Save link" }));
     await screen.findByText("Link saved.");
 
@@ -198,6 +216,11 @@ describe("AuthoringEditor", () => {
     expect(blocks[5]).toMatchObject({ type: "blockquote" });
     expect(blocks[6]).toMatchObject({ type: "table", align: [null, null] });
     expect(blocks[7]).toMatchObject({ type: "paragraph", children: [{ type: "link", destination: "https://example.com" }] });
+
+    fireEvent.click(within(screen.getByRole("group", { name: "Block 1: Paragraph" })).getByRole("button", { name: "Remove block" }));
+    await screen.findByText("Block removed.");
+    expect(session.project.documents[0]!.body.children).toHaveLength(7);
+    expect(screen.getByRole("heading", { name: "Block 1: Heading" })).toHaveFocus();
   });
 
   it("persists undo and redo and announces a bounded failure without advancing state", async () => {
@@ -220,6 +243,7 @@ describe("AuthoringEditor", () => {
     const alert = await screen.findByRole("alert");
     expect(alert).toHaveTextContent("The change could not be saved.");
     expect(alert).not.toHaveTextContent("token");
+    expect(screen.getByRole("status")).toBeEmptyDOMElement();
     expect(session.project.title).toBe("Changed");
   });
 
@@ -242,7 +266,7 @@ describe("AuthoringEditor", () => {
       pluginBridge={{ execute }}
     />);
 
-    fireEvent.click(screen.getByRole("button", { name: "Summarize document" }));
+    fireEvent.click(screen.getByRole("button", { name: "Summarize document — word-count" }));
     await screen.findByText("Plugin action saved.");
     expect(execute).toHaveBeenCalledOnce();
     expect(request).toBeDefined();
@@ -251,12 +275,16 @@ describe("AuthoringEditor", () => {
     expect(Object.isFrozen(request!.project)).toBe(true);
     expect(request!.target).toEqual({ documentId: FIRST_DOCUMENT_ID, blockIndex: null });
 
+    fireEvent.click(screen.getByRole("button", { name: "Audit site — site-tools" }));
+    await waitFor(() => expect(execute).toHaveBeenCalledTimes(2));
+
     fireEvent.change(screen.getByLabelText("Block type"), { target: { value: "paragraph" } });
     fireEvent.click(screen.getByRole("button", { name: "Add block" }));
     await screen.findByText("Paragraph block added.");
     const block = screen.getByRole("group", { name: "Block 1: Paragraph" });
-    expect(within(block).getByRole("button", { name: "Inspect block" })).toBeEnabled();
-    expect(screen.getByRole("button", { name: "Audit site" })).toBeEnabled();
+    fireEvent.click(within(block).getByRole("button", { name: "Inspect block — block-tools" }));
+    await waitFor(() => expect(execute).toHaveBeenCalledTimes(3));
+    expect(request!.target).toEqual({ documentId: FIRST_DOCUMENT_ID, blockIndex: 0 });
   });
 
   it("exposes busy and live-region semantics while persistence is pending", async () => {
@@ -275,5 +303,152 @@ describe("AuthoringEditor", () => {
     expect(screen.getByRole("status")).toHaveAttribute("aria-live", "polite");
     release!();
     await waitFor(() => expect(screen.getByRole("region", { name: "Forme authoring editor" })).toHaveAttribute("aria-busy", "false"));
+  });
+
+  it("renders rich inline fallbacks and preserves unsupported blocks as structural entries", async () => {
+    const { session } = await sessionFixture();
+    await session.dispatch({
+      type: "replace-document-body",
+      documentId: FIRST_DOCUMENT_ID,
+      body: {
+        type: "document",
+        children: [
+          {
+            type: "paragraph",
+            children: [
+              { type: "text", value: "Text " },
+              { type: "code_span", value: "code" },
+              { type: "emphasis", children: [{ type: "text", value: " emphasis" }] },
+              { type: "strong", children: [{ type: "text", value: " strong" }] },
+              { type: "strikethrough", children: [{ type: "text", value: " strike" }] },
+              { type: "link", destination: "/", title: null, children: [{ type: "text", value: " link" }] },
+              { type: "image", destination: "/image.png", title: null, alt: " image" },
+              { type: "autolink", destination: "https://example.com", isEmail: false },
+              { type: "hard_break" },
+              { type: "soft_break" },
+            ],
+          },
+          { type: "thematic_break" },
+          {
+            type: "list",
+            ordered: false,
+            start: null,
+            tight: false,
+            children: [{ type: "list_item", children: [{ type: "code_block", language: null, value: "x\n" }] }],
+          },
+          { type: "blockquote", children: [{ type: "thematic_break" }] },
+        ],
+      },
+    });
+
+    render(<AuthoringEditor session={session} themeOptions={themes} createDocumentIdentity={() => SECOND_DOCUMENT_ID} />);
+    expect((screen.getByLabelText("Paragraph text") as HTMLTextAreaElement).value)
+      .toContain("Text code emphasis strong strike link imagehttps://example.com");
+    expect(screen.getByRole("group", { name: "Block 2: Unsupported block" })).toHaveTextContent("not editable");
+    expect(screen.getByLabelText("List items, one per line")).toHaveValue("");
+    expect(screen.getByLabelText("Quote text")).toHaveValue("");
+  });
+
+  it("rejects executable-looking contributions without an injected bridge", async () => {
+    const { session } = await sessionFixture();
+    expect(() => render(<AuthoringEditor
+      session={session}
+      themeOptions={themes}
+      createDocumentIdentity={() => SECOND_DOCUMENT_ID}
+      pluginContributions={[
+        { pluginId: "unsafe", actionId: "run", slot: "site-toolbar", label: "Run" },
+      ]}
+    />)).toThrow(/plugin bridge/);
+  });
+
+  it("bounds list and ragged-table expansion before dispatch", async () => {
+    const { session } = await sessionFixture();
+    render(<AuthoringEditor session={session} themeOptions={themes} createDocumentIdentity={() => SECOND_DOCUMENT_ID} />);
+
+    for (const kind of ["list", "table"] as const) {
+      fireEvent.change(screen.getByLabelText("Block type"), { target: { value: kind } });
+      fireEvent.click(screen.getByRole("button", { name: "Add block" }));
+      await screen.findByText(kind === "list" ? "List block added." : "Table block added.");
+    }
+    const original = session.storageRevision;
+    fireEvent.change(screen.getByLabelText("List items, one per line"), { target: { value: "\n".repeat(10_000) } });
+    fireEvent.click(screen.getByRole("button", { name: "Save list" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("The change could not be saved.");
+    expect(session.storageRevision).toBe(original);
+
+    fireEvent.change(screen.getByLabelText("Table cells as tab-separated rows"), {
+      target: { value: `${"\n".repeat(100)}${"\t".repeat(500)}` },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Save table" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("The change could not be saved.");
+    expect(session.storageRevision).toBe(original);
+
+    fireEvent.change(screen.getByLabelText("Table cells as tab-separated rows"), {
+      target: { value: "\t".repeat(1_000) },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Save table" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("The change could not be saved.");
+
+    fireEvent.change(screen.getByLabelText("List items, one per line"), {
+      target: { value: "x".repeat(1_048_577) },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Save list" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("The change could not be saved.");
+  });
+
+  it("times out plugin work, aborts it on unmount, and synchronously excludes duplicates", async () => {
+    const { session } = await sessionFixture();
+    let timeoutSignal: AbortSignal | undefined;
+    const hanging = vi.fn((_request: EditorPluginRequest, signal?: AbortSignal) => {
+      timeoutSignal = signal;
+      return new Promise<never>(() => undefined);
+    });
+    const contribution = [{ pluginId: "slow", actionId: "run", slot: "site-toolbar" as const, label: "Run slowly" }];
+    const first = render(<AuthoringEditor
+      session={session}
+      themeOptions={themes}
+      createDocumentIdentity={() => SECOND_DOCUMENT_ID}
+      pluginContributions={contribution}
+      pluginBridge={{ execute: hanging }}
+      pluginActionTimeoutMs={1}
+    />);
+    fireEvent.click(screen.getByRole("button", { name: "Run slowly — slow" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("The change could not be saved.");
+    expect(timeoutSignal?.aborted).toBe(true);
+    expect(screen.getByRole("region", { name: "Forme authoring editor" })).toHaveAttribute("aria-busy", "false");
+    first.unmount();
+
+    let unmountSignal: AbortSignal | undefined;
+    const pending = vi.fn((_request: EditorPluginRequest, signal?: AbortSignal) => {
+      unmountSignal = signal;
+      return new Promise<{ readonly type: "set-active-document"; readonly documentId: string }>(() => undefined);
+    });
+    const second = render(<AuthoringEditor
+      session={session}
+      themeOptions={themes}
+      createDocumentIdentity={() => SECOND_DOCUMENT_ID}
+      pluginContributions={contribution}
+      pluginBridge={{ execute: pending }}
+      pluginActionTimeoutMs={60_000}
+    />);
+    const button = screen.getByRole("button", { name: "Run slowly — slow" });
+    act(() => {
+      button.click();
+      button.click();
+    });
+    expect(pending).toHaveBeenCalledOnce();
+    second.unmount();
+    expect(unmountSignal?.aborted).toBe(true);
+    await act(async () => undefined);
+  });
+
+  it("rejects plugin deadlines outside the bounded host contract", async () => {
+    const { session } = await sessionFixture();
+    expect(() => render(<AuthoringEditor
+      session={session}
+      themeOptions={themes}
+      createDocumentIdentity={() => SECOND_DOCUMENT_ID}
+      pluginActionTimeoutMs={0}
+    />)).toThrow(/timeout/);
   });
 });

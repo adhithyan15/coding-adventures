@@ -1,7 +1,7 @@
 # FM09 — Forme Authoring Shell
 
-> **Status:** Authoring v1 in progress. The durable authoring core is the first
-> delivery slice; editor, preview, publish, and desktop packaging follow as
+> **Status:** Authoring v1 in progress. The durable authoring core and default
+> editor are implemented; preview, publish, and desktop packaging follow as
 > separately reviewable product boundaries.
 > **Scope:** Project state, editing transactions, persistent history, editor
 > composition, live preview, publish composition, and the local desktop shell.
@@ -14,8 +14,8 @@
 |---|---|---|
 | Bounded project codec | Implemented | `forme-authoring-core` validates the closed v1 project and authorable Content IR subset with hard recursive limits. |
 | Crash-safe autosave and persistent undo/redo | Implemented | The injected compare-and-swap adapter, immutable transactions, and canonical persisted history pass failure, conflict, cancellation, and restart tests. |
-| Accessible block editor and configuration UI | Active | FM-B063 composes the core through editor slots. |
-| Pipeline-backed preview | Pending | FM-B064 uses the real FM07 watch path and last-good output. |
+| Accessible block editor and configuration UI | Implemented | `forme-authoring-editor` provides keyboard-complete settings, document, block, history, and declarative plugin-slot controls over the durable core. |
+| Pipeline-backed preview | Active | FM-B064 uses the real FM07 watch path and last-good output. |
 | Reviewed publish workflow | Pending | FM-B065 composes FM08 without exposing tokens or target files to editor plugins. |
 | Installable desktop shell | Pending | FM-B066 packages the proven workflow and first-run experience. |
 
@@ -171,6 +171,8 @@ The default editor owns document-order controls and authoring forms for
 paragraph, heading, ordered or unordered list, image, code block, blockquote,
 table, and link blocks. Insert, replace, move, and remove operations construct
 one complete `replace-document-body` command; they never mutate a retained AST.
+List and table forms cap rows, columns, and padded cells before allocating AST
+nodes, keeping editor-side expansion below the core's authoring node budget.
 Hosts provide the reviewed theme choices as identifier/label data, so the
 primary settings flow cannot introduce raw CSS or an unreviewed theme
 identifier. Document identities are supplied by a host callback because UUID
@@ -183,13 +185,16 @@ React components. A bounded contribution names one of three fixed slots
 (`document-toolbar`, `block-toolbar`, or `site-toolbar`) and carries only a
 portable plugin/action identity plus a short plain-text label. Contributions
 are exact-key, plain-object data; duplicate identities, accessors, prototypes,
-symbols, over-count arrays, control characters, and over-limit strings are
-rejected before rendering. React escapes every displayed label.
+symbols, over-count arrays, control or bidi-format characters, and over-limit
+strings are rejected before rendering. React escapes every displayed label.
 
 Activating a contribution calls one injected `EditorPluginBridge` with a
-deeply frozen request containing the contribution identity, slot target, and
-current frozen project snapshot. The bridge represents the already-sandboxed
-FM02 plugin boundary. It returns exactly one `AuthoringCommand`; the editor
+deeply frozen request containing the contribution identity, slot target, and a
+private validated snapshot of the current project. Each action also shows its
+validated plugin identity. The bridge represents the already-sandboxed FM02
+plugin boundary. It receives a bounded cancellation signal that expires or
+aborts on editor unmount; the host must retire non-cooperative sandbox work. It
+returns exactly one `AuthoringCommand`; the editor
 dispatches that command through `AuthoringSession` and refreshes only after the
 core accepts and persists it. The request contains no storage adapter, session,
 DOM object, preview or publish handle, credential, filesystem path, network
