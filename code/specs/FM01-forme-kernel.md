@@ -622,7 +622,7 @@ data, so tests and packagers never need to scrape logs.
 ```typescript
 export type TerminalDegradation =
   | { readonly code: "style-property-dropped"; readonly ruleId: StyleRuleId; readonly propertyKind: string; readonly message: string }
-  | { readonly code: "interactivity-dropped"; readonly islandId: IslandId; readonly message: string }
+  | { readonly code: "interactivity-dropped"; readonly islandId: IslandId | null; readonly message: string }
   | { readonly code: "raw-node-dropped"; readonly format: string; readonly nodePath: readonly number[]; readonly message: string }
   | { readonly code: "asset-reference-dropped"; readonly asset: LogicalId; readonly nodePath: readonly number[]; readonly message: string };
 
