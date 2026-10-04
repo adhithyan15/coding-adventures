@@ -2027,6 +2027,9 @@ fn parse_css_color(css: &str) -> Option<Color> {
     if let Some(color) = parse_css_oklch_function(css) {
         return Some(color);
     }
+    if let Some(color) = parse_css_color_function(css) {
+        return Some(color);
+    }
     if let Some(color) = parse_css_named_color(css) {
         return Some(color);
     }
@@ -2192,6 +2195,27 @@ fn parse_css_oklch_function(css: &str) -> Option<Color> {
     Some(css_oklab_to_color(lightness, chroma * hue.cos(), chroma * hue.sin(), alpha))
 }
 
+fn parse_css_color_function(css: &str) -> Option<Color> {
+    let source = css.trim().to_ascii_lowercase();
+    let inner = source.strip_prefix("color(")?.strip_suffix(')')?.trim();
+    let profile_end = inner.find(char::is_whitespace)?;
+    let (profile, components) = inner.split_at(profile_end);
+    let (components, alpha) = parse_css_modern_color_components(components.trim())?;
+    let r = parse_css_unit_interval(&components[0])?;
+    let g = parse_css_unit_interval(&components[1])?;
+    let b = parse_css_unit_interval(&components[2])?;
+    match profile {
+        "srgb" => Some(Color {
+            r: (r * 255.0).round() as u8,
+            g: (g * 255.0).round() as u8,
+            b: (b * 255.0).round() as u8,
+            a: alpha,
+        }),
+        "srgb-linear" => Some(linear_srgb_to_color(r, g, b, alpha)),
+        _ => None,
+    }
+}
+
 fn parse_css_modern_color_components(inner: &str) -> Option<([String; 3], u8)> {
     let normalized = inner.replace('/', " / ");
     let parts = normalized.split_whitespace().collect::<Vec<_>>();
@@ -2239,6 +2263,12 @@ fn parse_css_oklab_axis(value: &str) -> Option<f64> {
 fn parse_css_oklch_chroma(value: &str) -> Option<f64> {
     let chroma = parse_css_oklab_axis(value)?;
     Some(chroma.max(0.0))
+}
+
+fn parse_css_unit_interval(value: &str) -> Option<f64> {
+    let (number, scale) = value.strip_suffix('%').map_or((value, 1.0), |value| (value, 0.01));
+    let component = number.parse::<f64>().ok()? * scale;
+    component.is_finite().then(|| component.clamp(0.0, 1.0))
 }
 
 fn css_lab_to_color(lightness: f64, a: f64, b: f64, alpha: u8) -> Color {
@@ -7628,6 +7658,19 @@ mod tests {
         assert_eq!(css_to_color("oklch(0 0 0)"), Color { r: 0, g: 0, b: 0, a: 255 });
         assert_eq!(with_opacity("oklab(40.1% 0.1143 0.045 / 80%)", 0.5), "rgba(125,36,41,0.4)");
         assert_eq!(normalize_css_paint("oklch(40.1% 0.123 21.57 / 80%)".into()), "rgba(125,36,41,0.8)");
+    }
+
+    #[test]
+    fn css_colors_parse_color_srgb_profiles() {
+        let expected = Color { r: 51, g: 102, b: 153, a: 204 };
+        assert_eq!(css_to_color("color(srgb 0.2 0.4 0.6 / 0.8)"), expected);
+        assert_eq!(css_to_color("color(srgb 20% 40% 60% / 80%)"), expected);
+        assert_eq!(
+            css_to_color("color(srgb-linear 0.0331047666 0.1328683216 0.3185467781 / 80%)"),
+            expected,
+        );
+        assert_eq!(with_opacity("color(srgb 0.2 0.4 0.6 / 80%)", 0.5), "rgba(51,102,153,0.4)");
+        assert_eq!(normalize_css_paint("color(srgb 20% 40% 60% / 80%)".into()), "rgba(51,102,153,0.8)");
     }
 
     #[test]

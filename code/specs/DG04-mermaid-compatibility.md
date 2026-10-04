@@ -543,7 +543,9 @@ through the same semantic and backend-neutral conversion path. Perceptual
 `lab()` and cylindrical `lch()` colors preserve their components and alpha through
 semantic IR before conversion from D50 Lab to backend-neutral sRGB paint. The
 corresponding `oklab()` and `oklch()` forms preserve their perceptual components
-and alpha before direct linear-sRGB lowering. The complete CSS named-color set likewise resolves to explicit
+and alpha before direct linear-sRGB lowering. CSS `color()` supports both encoded
+`srgb` and linear-light `srgb-linear` profiles through the same semantic and
+backend-neutral path. The complete CSS named-color set likewise resolves to explicit
 backend-neutral RGB paint for node fills, strokes, labels, and opacity composition,
 including gray/grey aliases and `rebeccapurple`.
 The SVG/CSS `none` paint keyword remains distinct from text color semantics and
