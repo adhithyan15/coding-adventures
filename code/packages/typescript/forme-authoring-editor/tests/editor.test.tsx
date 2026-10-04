@@ -131,7 +131,7 @@ describe("AuthoringEditor", () => {
     fireEvent.click(within(linkBlock).getByRole("button", { name: "Move up" }));
     await screen.findByText("Block moved.");
     expect(session.project.documents[0]!.body.children[6]!.type).toBe("paragraph");
-    expect(screen.getByRole("heading", { name: "Block 7: Link" })).toHaveFocus();
+    await waitFor(() => expect(screen.getByRole("heading", { name: "Block 7: Link" })).toHaveFocus());
 
     const movedLink = screen.getByRole("group", { name: "Block 7: Link" });
     fireEvent.click(within(movedLink).getByRole("button", { name: "Move down" }));
