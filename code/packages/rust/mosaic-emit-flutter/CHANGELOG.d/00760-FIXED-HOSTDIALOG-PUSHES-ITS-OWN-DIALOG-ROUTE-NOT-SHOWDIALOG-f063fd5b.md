@@ -22,7 +22,9 @@
   nine widget tests in `conformance/dialog-host/` (barrier, Escape,
   in-dialog pop, host close, a route above the dialog, reopening, a double
   open, a non-dismissible barrier, disposal). It skips without `flutter`
-  unless `MOSAIC_REQUIRE_FLUTTER` is set, as CI's Flutter lane now does.
+  unless `MOSAIC_REQUIRE_FLUTTER` is set, as CI's Flutter lane now does,
+  and names `--reporter expanded`, since under GitHub Actions `flutter test`
+  would pick a reporter whose summary differs.
   `emit_dialog_helper` is public for it.
 - The module docs no longer describe a `flutter_hooks` design that was
   never built. Spec: UI29-1 §3.3 now describes the Flutter lowering.

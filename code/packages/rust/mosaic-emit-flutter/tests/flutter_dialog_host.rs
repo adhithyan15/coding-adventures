@@ -95,7 +95,10 @@ fn the_dialog_host_passes_its_widget_tests() {
             String::from_utf8_lossy(&online.stderr)
         );
     }
-    let test = run(project, &["test", "--no-pub"]);
+    // The reporter named, not left to `flutter test`'s choice: under GitHub
+    // Actions it picks a reporter whose summary never says "All tests
+    // passed", which the check below relies on to know tests really ran.
+    let test = run(project, &["test", "--no-pub", "--reporter", "expanded"]);
     let report = format!(
         "{}{}",
         String::from_utf8_lossy(&test.stdout),
