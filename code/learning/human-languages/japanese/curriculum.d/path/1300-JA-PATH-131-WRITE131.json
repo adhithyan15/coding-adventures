@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-131-WRITE131",
+  "spine_node": "SPINE-SAY-WHAT-I-WANT",
+  "before": [],
+  "inline": [
+    "JA-EXT-131-WRITE131"
+  ],
+  "after": []
+}

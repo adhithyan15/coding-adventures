@@ -311,12 +311,17 @@ describe("stroke ownership migration baseline", () => {
       //
       // Telugu ళ follows with four sourced paths. Keys move 411 -> 412 and
       // Telugu 42 -> 43; shared-identity values remain unchanged.
+      //
+      // Japanese chapter 131 writes small ゃ (U+3083), small ょ (U+3087) and
+      // を (U+3092). Keys move 412 -> 415 and Japanese 23 -> 26, with the
+      // ordered key hash and the non-Tamil data hash; Tamil and both
+      // shared-identity values remain unchanged.
     }).toEqual({
-      keys: 412,
+      keys: 415,
       keyHash:
-        "9546176e3cb674b61198b7fa0d7ce3336bb47c518eea6300f3940b101b71db28",
+        "6357958aef9fb62732f270ebd05148148b2974120a98c66cd315732277b03809",
       nonTamilDataHash:
-        "9fe524400c1fc4188e3c006d86cfe0aaa77ac2f624d6ed2ae1efafb23f4b4058",
+        "04862eea8eec0682574d409f3763ea0363876bb858e0e2886d03b68ce5ca2445",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -327,7 +332,7 @@ describe("stroke ownership migration baseline", () => {
         devanagari: 44,
         gujarati: 44,
         hebrew: 22,
-        japanese: 23,
+        japanese: 26,
         kannada: 13,
         malayalam: 14,
         "perso-arabic": 24,
