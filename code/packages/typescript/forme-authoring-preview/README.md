@@ -65,7 +65,9 @@ await preview.dispose();
   released. Release is the host's final retirement boundary if stop fails.
   Cancellation is raced against a watch stream that may never settle. If stop
   or release fails, the coordinator is poisoned and blocks every pending or
-  later build rather than overlapping it with work whose retirement is unknown.
+  later build rather than overlapping it with work whose retirement is unknown;
+  retirement poison is surfaced directly without opening a stale publisher
+  guard.
 - Successful outputs pass through FM07's `snapshotFromOutputs`, including its
   collision and portable-path checks, after a descriptor-only snapshot enforces
   file-count, portable case-fold/prefix collision, path, per-file, and

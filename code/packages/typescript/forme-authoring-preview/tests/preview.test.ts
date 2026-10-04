@@ -13,6 +13,7 @@ import {
   type AuthoringPreviewCoordinator,
   type AuthoringPreviewInput,
   type AuthoringPreviewPublisher,
+  type CreateAuthoringPreviewOptions,
   type PreparedAuthoringPreview,
 } from "../src/index.js";
 
@@ -167,7 +168,16 @@ describe("pipeline-backed authoring preview", () => {
     expect(Object.isFrozen(h.inputs[0])).toBe(true);
     expect(Object.isFrozen(h.inputs[0]!.project)).toBe(true);
     expect(h.watchCalls).toHaveLength(1);
-    h.watches[0]!.settle(result("success", "build-1"));
+    const nullPrototypeOutputs = Object.assign(Object.create(null), {
+      site: {
+        variant: { kind: "dist-tree" },
+        files: {
+          "index.html": encoder.encode("<h1>build-1</h1>"),
+          "deep/nested/file.txt": encoder.encode("nested"),
+        },
+      },
+    }) as RunResult["outputs"];
+    h.watches[0]!.settle(result("success", "build-1", { outputs: nullPrototypeOutputs }));
 
     await expect(pending).resolves.toEqual({
       outcome: "ready",
@@ -272,6 +282,47 @@ describe("pipeline-backed authoring preview", () => {
     await expect(second).resolves.toMatchObject({ outcome: "ready", revision: "rev-new" });
     expect(stop).toHaveBeenCalledOnce();
     expect(release).toHaveBeenCalledOnce();
+  });
+
+  it("observes cancellation triggered reentrantly by the first result iterator", async () => {
+    vi.useFakeTimers();
+    let coordinator!: AuthoringPreviewCoordinator;
+    let second!: Promise<AuthoringPreviewAttempt>;
+    let watchCalls = 0;
+    const coordinatorOptions: CreateAuthoringPreviewOptions = {
+      debounceMs: 0,
+      orchestrator: {
+        watch() {
+          watchCalls += 1;
+          if (watchCalls > 1) return immediateWatch({ done: false, value: result("success", "build-reentrant-result") });
+          return {
+            results() {
+              return {
+                [Symbol.asyncIterator]: () => ({
+                  next() {
+                    second = coordinator.request(session("rev-reentrant-result"));
+                    return new Promise<IteratorResult<RunResult>>(() => {});
+                  },
+                }),
+              };
+            },
+            async rebuild() { return result("cancelled", "unused"); },
+            async stop() {},
+          };
+        },
+      },
+      materializer: { async prepare() { return { pipeline: {} as Pipeline, async release() {} }; } },
+      publisher: {
+        publish(_snapshot, commit) { commit(() => {}); },
+        publishFailure(_failure, commit) { commit(() => {}); },
+      },
+    };
+    coordinator = createAuthoringPreview(coordinatorOptions);
+    const first = coordinator.request(session("rev-before-reentrant-result"));
+    await flushDebounce();
+    await expect(first).resolves.toMatchObject({ outcome: "superseded" });
+    await flushDebounce();
+    await expect(second).resolves.toMatchObject({ outcome: "ready", buildId: "build-reentrant-result" });
   });
 
   it("poisons later builds when a superseded materialization cannot retire", async () => {
@@ -1055,8 +1106,59 @@ describe("pipeline-backed authoring preview", () => {
     const attempt = await pending;
     expect(attempt).toMatchObject({ outcome: "failed", diagnostics: [{ code: "E_PREVIEW_CLEANUP" }] });
     expect(JSON.stringify(attempt)).not.toContain("secret");
-    expect(failures[0]).toBe("Preview pipeline could not be retired safely.");
+    expect(failures).toEqual([]);
     expect(release).toHaveBeenCalledTimes(1);
+  });
+
+  it("never opens a failure-publisher guard after retirement poisons the coordinator", async () => {
+    vi.useFakeTimers();
+    let publishFailureCalls = 0;
+    let lateCommit: ((mutation: () => void) => boolean) | undefined;
+    const coordinator = createAuthoringPreview({
+      debounceMs: 0,
+      orchestrator: {
+        watch() {
+          return {
+            results() {
+              return {
+                [Symbol.asyncIterator]: () => ({
+                  next: async () => ({ done: false, value: result("failed", "build-poison-publisher") }),
+                }),
+              };
+            },
+            async rebuild() { return result("cancelled", "unused"); },
+            async stop() { throw new Error("retirement secret"); },
+          };
+        },
+      },
+      materializer: { async prepare() { return { pipeline: {} as Pipeline, async release() {} }; } },
+      publisher: {
+        publish(_snapshot, commit) { commit(() => {}); },
+        publishFailure(_failure, commit) {
+          publishFailureCalls += 1;
+          lateCommit = commit;
+          return new Promise<void>(() => {});
+        },
+      },
+    });
+    const poisoned = coordinator.request(session("rev-poison-publisher"));
+    await flushDebounce();
+    await expect(poisoned).resolves.toMatchObject({
+      outcome: "failed",
+      diagnostics: [{ code: "E_PREVIEW_CLEANUP" }],
+    });
+    const later = await coordinator.request(session("rev-after-poison-publisher"));
+    expect(later).toMatchObject({
+      outcome: "failed",
+      diagnostics: [{ code: "E_PREVIEW_CLEANUP" }],
+    });
+    expect(publishFailureCalls).toBe(0);
+    expect(lateCommit).toBeUndefined();
+    expect(coordinator.state).toMatchObject({
+      phase: "failed",
+      activeRevision: "rev-after-poison-publisher",
+      diagnostics: [{ code: "E_PREVIEW_CLEANUP" }],
+    });
   });
 
   it("fails closed when cleanup or failure publication does not complete safely", async () => {

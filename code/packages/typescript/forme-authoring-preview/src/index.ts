@@ -228,6 +228,8 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
       return Promise.reject(new TypeError("authoring session could not be inspected safely"));
     }
     if (this.poisoned !== null) {
+      this.generation += 1;
+      if (this.active !== null) this.active.abort.abort();
       const attempt = failedAttempt(input.revision, this.poisoned.code, this.poisoned.message);
       this.currentState = freezeState({
         ...this.currentState,
@@ -570,7 +572,7 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
           lastGoodBuildId: attempt.buildId,
         });
       }
-    } else if (attempt.outcome === "failed" && this.isCurrent(active)) {
+    } else if (this.isCurrent(active)) {
       this.currentState = freezeState({
         ...this.currentState,
         phase: "failed",
@@ -583,6 +585,9 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
   private poisonAfterRetirementFailure(active: ActiveTask, failure: AuthoringPreviewAttempt): void {
     const diagnostic = failure.diagnostics[0]!;
     this.poisoned = { code: diagnostic.code, message: diagnostic.message };
+    this.generation += 1;
+    active.abort.abort();
+    this.finishWithAttempt(active.task, failure);
     if (this.timer !== null) clearTimeout(this.timer);
     this.timer = null;
     this.ready = false;
@@ -612,6 +617,7 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
       && active.task.generation === this.generation
       && !active.task.settled
       && !this.disposed
+      && this.poisoned === null
       && !active.abort.signal.aborted;
   }
 
@@ -784,17 +790,18 @@ async function firstResultUntilAbort(
   | { readonly kind: "aborted" }
 > {
   if (signal.aborted) return { kind: "aborted" };
-  const result = firstResult(stream).then(
-    next => ({ kind: "result" as const, next }),
-    () => ({ kind: "rejected" as const }),
-  );
-  let abortListener: (() => void) | null = null;
+  let abortListener!: () => void;
   const aborted = new Promise<{ readonly kind: "aborted" }>(resolve => {
     abortListener = () => resolve({ kind: "aborted" });
     signal.addEventListener("abort", abortListener, { once: true });
+    if (signal.aborted) abortListener();
   });
+  const result = Promise.resolve().then(() => firstResult(stream)).then(
+    next => ({ kind: "result" as const, next }),
+    () => ({ kind: "rejected" as const }),
+  );
   const outcome = await Promise.race([result, aborted]);
-  if (abortListener !== null) signal.removeEventListener("abort", abortListener);
+  signal.removeEventListener("abort", abortListener);
   return outcome;
 }
 

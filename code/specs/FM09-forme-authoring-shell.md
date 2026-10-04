@@ -281,7 +281,9 @@ session cannot retain the pump merely by leaving its result stream open. Stop
 and release are invoked through captured call intrinsics. If either final
 retirement step fails, the coordinator enters a failed poisoned state, blocks
 all pending and later builds with a bounded retirement diagnostic, and never
-runs a newer pipeline alongside work whose retirement is unknown.
+runs a newer pipeline alongside work whose retirement is unknown. Poisoning
+also settles and invalidates the active task without opening a publisher guard,
+so delayed failure publication cannot overwrite a later poisoned request.
 
 Preview diagnostics are closed data: severity, code, stage identity, and a
 plain message. The coordinator admits at most 64 diagnostics, limits every
