@@ -276,6 +276,12 @@ returns.
 Publisher settlement is raced against the same abort signal, so a stale
 non-cooperative publisher cannot block a newer revision or disposal; its late
 rejection remains observed but its closed guard can no longer commit.
+The initial watch result is likewise raced against cancellation, so a stopped
+session cannot retain the pump merely by leaving its result stream open. Stop
+and release are invoked through captured call intrinsics. If either final
+retirement step fails, the coordinator enters a failed poisoned state, blocks
+all pending and later builds with a bounded retirement diagnostic, and never
+runs a newer pipeline alongside work whose retirement is unknown.
 
 Preview diagnostics are closed data: severity, code, stage identity, and a
 plain message. The coordinator admits at most 64 diagnostics, limits every

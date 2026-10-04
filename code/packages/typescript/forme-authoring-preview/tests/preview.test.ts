@@ -234,6 +234,97 @@ describe("pipeline-backed authoring preview", () => {
     expect(h.successes.map(item => item.revision)).toEqual(["rev-2"]);
   });
 
+  it("does not wait for a stopped watch stream to settle before building the latest revision", async () => {
+    vi.useFakeTimers();
+    const stop = vi.fn(async () => {});
+    const release = vi.fn(async () => {});
+    let watchCalls = 0;
+    const coordinator = createAuthoringPreview({
+      debounceMs: 0,
+      orchestrator: {
+        watch() {
+          watchCalls += 1;
+          if (watchCalls > 1) return immediateWatch({ done: false, value: result("success", "build-new") });
+          return {
+            results() {
+              return { [Symbol.asyncIterator]: () => ({ next: () => new Promise<IteratorResult<RunResult>>(() => {}) }) };
+            },
+            async rebuild() { return result("cancelled", "unused"); },
+            stop,
+          };
+        },
+      },
+      materializer: {
+        async prepare(input) {
+          return { pipeline: {} as Pipeline, release: input.revision === "rev-hung" ? release : async () => {} };
+        },
+      },
+      publisher: {
+        publish(_snapshot, commit) { commit(() => {}); },
+        publishFailure(_failure, commit) { commit(() => {}); },
+      },
+    });
+    const first = coordinator.request(session("rev-hung"));
+    await flushDebounce();
+    const second = coordinator.request(session("rev-new"));
+    await flushDebounce();
+    await expect(first).resolves.toMatchObject({ outcome: "superseded" });
+    await expect(second).resolves.toMatchObject({ outcome: "ready", revision: "rev-new" });
+    expect(stop).toHaveBeenCalledOnce();
+    expect(release).toHaveBeenCalledOnce();
+  });
+
+  it("poisons later builds when a superseded materialization cannot retire", async () => {
+    vi.useFakeTimers();
+    let prepareCalls = 0;
+    const coordinator = createAuthoringPreview({
+      debounceMs: 0,
+      orchestrator: {
+        watch() {
+          return {
+            results() {
+              return { [Symbol.asyncIterator]: () => ({ next: () => new Promise<IteratorResult<RunResult>>(() => {}) }) };
+            },
+            async rebuild() { return result("cancelled", "unused"); },
+            async stop() {},
+          };
+        },
+      },
+      materializer: {
+        async prepare() {
+          prepareCalls += 1;
+          return {
+            pipeline: {} as Pipeline,
+            async release() { throw new Error("retirement secret"); },
+          };
+        },
+      },
+      publisher: {
+        publish(_snapshot, commit) { commit(() => {}); },
+        publishFailure(_failure, commit) { commit(() => {}); },
+      },
+    });
+    const first = coordinator.request(session("rev-poison-old"));
+    await flushDebounce();
+    const blocked = coordinator.request(session("rev-poison-blocked"));
+    await flushDebounce();
+    await expect(first).resolves.toMatchObject({ outcome: "superseded" });
+    await expect(blocked).resolves.toMatchObject({
+      outcome: "failed",
+      revision: "rev-poison-blocked",
+      diagnostics: [{ code: "E_PREVIEW_RELEASE" }],
+    });
+    const later = await coordinator.request(session("rev-poison-later"));
+    expect(later).toMatchObject({
+      outcome: "failed",
+      revision: "rev-poison-later",
+      diagnostics: [{ code: "E_PREVIEW_RELEASE" }],
+    });
+    expect(prepareCalls).toBe(1);
+    expect(JSON.stringify(later)).not.toContain("secret");
+    expect(coordinator.state).toMatchObject({ phase: "failed", activeRevision: "rev-poison-later" });
+  });
+
   it("prevents an async publisher from committing after a newer revision is requested", async () => {
     vi.useFakeTimers();
     const committed: string[] = [];
@@ -636,6 +727,43 @@ describe("pipeline-backed authoring preview", () => {
     await expect(h.coordinator.request(session("rev-late"))).rejects.toThrow("disposed");
   });
 
+  it("reports failed final retirement in disposed state without waiting for the watch stream", async () => {
+    vi.useFakeTimers();
+    const coordinator = createAuthoringPreview({
+      debounceMs: 0,
+      orchestrator: {
+        watch() {
+          return {
+            results() {
+              return { [Symbol.asyncIterator]: () => ({ next: () => new Promise<IteratorResult<RunResult>>(() => {}) }) };
+            },
+            async rebuild() { return result("cancelled", "unused"); },
+            async stop() {},
+          };
+        },
+      },
+      materializer: {
+        async prepare() {
+          return { pipeline: {} as Pipeline, async release() { throw new Error("dispose retirement secret"); } };
+        },
+      },
+      publisher: {
+        publish(_snapshot, commit) { commit(() => {}); },
+        publishFailure(_failure, commit) { commit(() => {}); },
+      },
+    });
+    const pending = coordinator.request(session("rev-dispose-retirement"));
+    await flushDebounce();
+    await coordinator.dispose();
+    await expect(pending).resolves.toMatchObject({ outcome: "cancelled" });
+    expect(coordinator.state).toMatchObject({
+      phase: "disposed",
+      activeRevision: null,
+      diagnostics: [{ code: "E_PREVIEW_RELEASE" }],
+    });
+    expect(JSON.stringify(coordinator.state)).not.toContain("secret");
+  });
+
   it("rejects unsafe revisions and invalid debounce bounds before host work", async () => {
     const h = harness();
     await expect(h.coordinator.request(session("bad\u202erevision"))).rejects.toThrow("could not be inspected safely");
@@ -687,8 +815,44 @@ describe("pipeline-backed authoring preview", () => {
     await withDefault.dispose();
   });
 
+  it("invokes captured cleanup functions through intrinsics instead of shadowed call helpers", async () => {
+    vi.useFakeTimers();
+    const release = vi.fn(async () => {});
+    const stop = vi.fn(async () => {});
+    const results = vi.fn(() => ({
+      [Symbol.asyncIterator]: () => ({
+        next: async () => ({ done: false, value: result("success", "build-intrinsic") }),
+      }),
+    }));
+    Object.defineProperty(release, "call", { value: () => Promise.resolve() });
+    Object.defineProperty(stop, "bind", { value: () => () => Promise.resolve() });
+    Object.defineProperty(results, "bind", { value: () => () => undefined });
+    const coordinator = createAuthoringPreview({
+      debounceMs: 0,
+      orchestrator: {
+        watch() {
+          return { results, stop, async rebuild() { return result("cancelled", "unused"); } };
+        },
+      },
+      materializer: { async prepare() { return { pipeline: {} as Pipeline, release }; } },
+      publisher: {
+        publish(_snapshot, commit) { commit(() => {}); },
+        publishFailure(_failure, commit) { commit(() => {}); },
+      },
+    });
+    const pending = coordinator.request(session("rev-intrinsic"));
+    await flushDebounce();
+    await expect(pending).resolves.toMatchObject({ outcome: "ready", buildId: "build-intrinsic" });
+    expect(results).toHaveBeenCalledOnce();
+    expect(stop).toHaveBeenCalledOnce();
+    expect(release).toHaveBeenCalledOnce();
+  });
+
   it("redacts hostile session and adapter inspection errors", async () => {
     const h = harness();
+    await expect(h.coordinator.request({ project: session("present").project } as AuthoringSession)).rejects.toThrow(
+      "authoring session could not be inspected safely",
+    );
     const hostileSession = {};
     Object.defineProperty(hostileSession, "project", {
       enumerable: true,

@@ -117,6 +117,7 @@ const PROTOTYPE_SEGMENTS = new Set(["__proto__", "constructor", "prototype"]);
 const TYPED_ARRAY_PROTOTYPE = Object.getPrototypeOf(Uint8Array.prototype) as object;
 const TYPED_ARRAY_BYTE_LENGTH = Object.getOwnPropertyDescriptor(TYPED_ARRAY_PROTOTYPE, "byteLength")?.get;
 const UINT8_SET = Uint8Array.prototype.set;
+const APPLY = Reflect.apply;
 
 interface RequestTask {
   readonly input: AuthoringPreviewInput;
@@ -183,6 +184,7 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
   private disposed = false;
   private disposePromise: Promise<void> | null = null;
   private generation = 0;
+  private poisoned: { readonly code: string; readonly message: string } | null = null;
 
   constructor(options: CreateAuthoringPreviewOptions) {
     if (options === null || typeof options !== "object") throw new TypeError("preview options must be an object");
@@ -224,6 +226,16 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
       input = snapshotSession(session);
     } catch {
       return Promise.reject(new TypeError("authoring session could not be inspected safely"));
+    }
+    if (this.poisoned !== null) {
+      const attempt = failedAttempt(input.revision, this.poisoned.code, this.poisoned.message);
+      this.currentState = freezeState({
+        ...this.currentState,
+        phase: "failed",
+        activeRevision: input.revision,
+        diagnostics: attempt.diagnostics,
+      });
+      return Promise.resolve(attempt);
     }
     return new Promise(resolve => {
       const task: RequestTask = { input, generation: ++this.generation, resolve, settled: false };
@@ -267,7 +279,9 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
       ...this.currentState,
       phase: "disposed",
       activeRevision: null,
-      diagnostics: [],
+      diagnostics: this.poisoned === null
+        ? []
+        : genericDiagnostic(this.poisoned.code, this.poisoned.message),
     });
   }
 
@@ -352,14 +366,13 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
         return;
       }
 
-      let next: { readonly done: boolean; readonly value?: unknown };
-      try {
-        next = await firstResult(active.watch.results());
-      } catch {
-        if (task.settled || this.disposed || active.abort.signal.aborted) return;
+      const first = await firstResultUntilAbort(active.watch.results(), active.abort.signal);
+      if (first.kind === "aborted") return;
+      if (first.kind === "rejected") {
         attempt = failedAttempt(task.input.revision, "E_PREVIEW_RUN", "Preview pipeline did not complete safely.");
         return;
       }
+      const next = first.next;
       if (task.settled || this.disposed || active.abort.signal.aborted) return;
       if (next.done) {
         attempt = failedAttempt(task.input.revision, "E_PREVIEW_RUN", "Preview pipeline ended without a result.");
@@ -407,14 +420,19 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
         }
       }
 
+      let retirementFailure: AuthoringPreviewAttempt | null = null;
+      if (!stopped) {
+        retirementFailure = failedAttempt(task.input.revision, "E_PREVIEW_CLEANUP", "Preview pipeline could not be retired safely.");
+      } else if (!released) {
+        retirementFailure = failedAttempt(task.input.revision, "E_PREVIEW_RELEASE", "Preview input could not be released safely.");
+      }
+      if (retirementFailure !== null) {
+        attempt = retirementFailure;
+        snapshot = null;
+        this.poisonAfterRetirementFailure(active, retirementFailure);
+      }
+
       if (!task.settled && !this.disposed) {
-        if (!stopped) {
-          attempt = failedAttempt(task.input.revision, "E_PREVIEW_CLEANUP", "Preview pipeline could not be retired safely.");
-          snapshot = null;
-        } else if (!released) {
-          attempt = failedAttempt(task.input.revision, "E_PREVIEW_RELEASE", "Preview input could not be released safely.");
-          snapshot = null;
-        }
         if (attempt === null) {
           attempt = makeAttempt(active.abort.signal.aborted ? "cancelled" : "failed", task.input.revision, null, []);
         }
@@ -469,7 +487,7 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
         activeRevision: task.input.revision,
         diagnostics: finalAttempt.diagnostics,
       });
-    } else if (finalAttempt.outcome === "cancelled") {
+    } else {
       this.currentState = freezeState({
         ...this.currentState,
         phase: "idle",
@@ -558,6 +576,33 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
         phase: "failed",
         activeRevision: task.input.revision,
         diagnostics: attempt.diagnostics,
+      });
+    }
+  }
+
+  private poisonAfterRetirementFailure(active: ActiveTask, failure: AuthoringPreviewAttempt): void {
+    const diagnostic = failure.diagnostics[0]!;
+    this.poisoned = { code: diagnostic.code, message: diagnostic.message };
+    if (this.timer !== null) clearTimeout(this.timer);
+    this.timer = null;
+    this.ready = false;
+    const blocked = this.pending;
+    this.pending = null;
+    if (blocked !== null) {
+      const blockedAttempt = failedAttempt(blocked.input.revision, diagnostic.code, diagnostic.message);
+      this.finishWithAttempt(blocked, blockedAttempt);
+      this.currentState = freezeState({
+        ...this.currentState,
+        phase: "failed",
+        activeRevision: blocked.input.revision,
+        diagnostics: blockedAttempt.diagnostics,
+      });
+    } else {
+      this.currentState = freezeState({
+        ...this.currentState,
+        phase: "failed",
+        activeRevision: active.task.input.revision,
+        diagnostics: failure.diagnostics,
       });
     }
   }
@@ -656,7 +701,7 @@ function safePrepared(value: unknown): SafePrepared {
     async release() {
       if (released) return;
       released = true;
-      await release.call(value);
+      await APPLY(release, value, []);
     },
   };
 }
@@ -670,7 +715,8 @@ function captureMethod<T extends object, K extends keyof T>(value: T, key: K, la
       if (!("value" in descriptor) || typeof descriptor.value !== "function") {
         throw new TypeError(`${label} ${String(key)} must be a data method`);
       }
-      return descriptor.value.bind(value) as T[K];
+      const method = descriptor.value;
+      return ((...args: readonly unknown[]) => APPLY(method, value, args)) as T[K];
     }
     cursor = Object.getPrototypeOf(cursor);
   }
@@ -686,7 +732,8 @@ function captureCallable(value: unknown, key: PropertyKey, label: string): (...a
       if (!("value" in descriptor) || typeof descriptor.value !== "function") {
         throw new TypeError(`${label} ${String(key)} must be a data method`);
       }
-      return descriptor.value.bind(value) as (...args: readonly unknown[]) => unknown;
+      const method = descriptor.value;
+      return (...args: readonly unknown[]) => APPLY(method, value, args);
     }
     cursor = Object.getPrototypeOf(cursor);
   }
@@ -726,6 +773,29 @@ async function firstResult(stream: unknown): Promise<{ readonly done: boolean; r
   if (typeof done !== "boolean") throw new TypeError("iterator result done must be a boolean");
   if (done) return Object.freeze({ done: true });
   return Object.freeze({ done: false, value: dataField(raw, "value") });
+}
+
+async function firstResultUntilAbort(
+  stream: unknown,
+  signal: AbortSignal,
+): Promise<
+  | { readonly kind: "result"; readonly next: { readonly done: boolean; readonly value?: unknown } }
+  | { readonly kind: "rejected" }
+  | { readonly kind: "aborted" }
+> {
+  if (signal.aborted) return { kind: "aborted" };
+  const result = firstResult(stream).then(
+    next => ({ kind: "result" as const, next }),
+    () => ({ kind: "rejected" as const }),
+  );
+  let abortListener: (() => void) | null = null;
+  const aborted = new Promise<{ readonly kind: "aborted" }>(resolve => {
+    abortListener = () => resolve({ kind: "aborted" });
+    signal.addEventListener("abort", abortListener, { once: true });
+  });
+  const outcome = await Promise.race([result, aborted]);
+  if (abortListener !== null) signal.removeEventListener("abort", abortListener);
+  return outcome;
 }
 
 function safeRunResult(value: unknown): SafeRunResult {

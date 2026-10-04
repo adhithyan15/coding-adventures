@@ -63,6 +63,9 @@ await preview.dispose();
 - Superseded preparation receives an aborted signal; superseded builds are
   stopped through the real watch session before their isolated input is
   released. Release is the host's final retirement boundary if stop fails.
+  Cancellation is raced against a watch stream that may never settle. If stop
+  or release fails, the coordinator is poisoned and blocks every pending or
+  later build rather than overlapping it with work whose retirement is unknown.
 - Successful outputs pass through FM07's `snapshotFromOutputs`, including its
   collision and portable-path checks, after a descriptor-only snapshot enforces
   file-count, portable case-fold/prefix collision, path, per-file, and
@@ -80,7 +83,8 @@ await preview.dispose();
   can honestly say that stale output remains visible while the current draft
   is building or failed.
 - Public attempts and state snapshots are frozen. Disposal is idempotent and
-  later requests are rejected.
+  later requests are rejected. Captured host functions are dispatched through
+  call intrinsics, so shadowed `call` or `bind` properties cannot bypass them.
 
 ## Verification
 
