@@ -1832,7 +1832,7 @@ pub fn from_pipeline_variant(
 /// |------------------------------------|-----------------------------------------|
 /// | `main.dart`                        | `MosaicApp`, `MosaicHostLoader`, `MosaicValueDecoder` |
 /// | `mosaic_host.dart`                 | `MosaicHost`, `MosaicRuntimeException`, `MosaicEffectHandler`, `MosaicOpenFlags` |
-/// | `mosaic_platform_effects(_core).dart` | `MosaicFileDialogs`, `MosaicFileSelectorDialogs`, `MosaicPlatformEffectHost`, `MosaicHostEffects`, `MosaicPlatformRouter` |
+/// | `mosaic_platform_effects(_core).dart` | `MosaicFileDialogs`, `MosaicFileSelectorDialogs`, `MosaicReplaceQuestion`, `MosaicPlatformEffectHost`, `MosaicHostEffects`, `MosaicPlatformRouter` |
 ///
 /// A layout variant's widget must not take one (component `Mosaic` +
 /// variant `host` would name `MosaicHost`): `main.dart` imports both, so
@@ -1850,6 +1850,7 @@ pub const SHELL_RESERVED_NAMES: &[&str] = &[
     "MosaicOpenFlags",
     "MosaicFileDialogs",
     "MosaicFileSelectorDialogs",
+    "MosaicReplaceQuestion",
     "MosaicPlatformEffectHost",
     "MosaicHostEffects",
     "MosaicPlatformRouter",

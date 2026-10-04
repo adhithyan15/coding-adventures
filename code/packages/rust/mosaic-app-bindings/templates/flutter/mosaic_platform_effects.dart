@@ -16,8 +16,16 @@
 // `com.apple.security.files.user-selected.read-write` entitlement for them;
 // without it the panel fails and the request is answered
 // `failed { "the file dialog failed" }`.
+//
+// On Linux GTK's chooser does not ask before saving over a file (the plugin
+// never turns that on), so this library asks itself, in a Material dialog on
+// the app's root navigator; see `mosaicConfirmReplacing`. With no navigator to
+// ask through, the save fails rather than replacing a file unasked.
+
+import 'dart:io' show Platform;
 
 import 'package:file_selector/file_selector.dart';
+import 'package:flutter/material.dart';
 
 import 'mosaic_host.dart';
 import 'mosaic_platform_effects_core.dart';
@@ -45,7 +53,11 @@ final class MosaicFileSelectorDialogs implements MosaicFileDialogs {
       suggestedName: suggestedName,
       acceptedTypeGroups: _groups(extensions),
     );
-    return location == null ? null : _localPath(location.path);
+    return mosaicConfirmReplacing(
+      location == null ? null : _localPath(location.path),
+      dialogAsked: !Platform.isLinux,
+      ask: mosaicAskToReplace,
+    );
   }
 
   /// One group of the accepted extensions, or none at all -- "any file",
@@ -63,6 +75,57 @@ final class MosaicFileSelectorDialogs implements MosaicFileDialogs {
     }
     return path;
   }
+}
+
+/// "Replace it?", asked in a Material dialog on the app's root navigator
+/// (UI87 §7.7). True replaces; Cancel, or dismissing the question, keeps the
+/// file. With no navigator to ask through it throws, which fails the save
+/// ("the file dialog failed") rather than replacing a file nobody was asked
+/// about.
+Future<bool> mosaicAskToReplace(String fileName) async {
+  final navigator = mosaicRootNavigator();
+  if (navigator == null) {
+    throw StateError('no window to ask whether to replace the file');
+  }
+  final replace = await showDialog<bool>(
+    context: navigator.context,
+    builder: (context) => AlertDialog(
+      title: Text('Replace "$fileName"?'),
+      content: const Text(
+        'A file with that name already exists. Replacing it overwrites '
+        'its contents.',
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(true),
+          child: const Text('Replace'),
+        ),
+      ],
+    ),
+  );
+  return replace ?? false;
+}
+
+/// The first navigator below the root of the widget tree -- the one the
+/// generated `MaterialApp` builds -- found without asking `main.dart` for a
+/// key, so a forked entry point works too. Null before the app is running.
+NavigatorState? mosaicRootNavigator() {
+  NavigatorState? found;
+  void visit(Element element) {
+    if (found != null) return;
+    if (element is StatefulElement && element.state is NavigatorState) {
+      found = element.state as NavigatorState;
+      return;
+    }
+    element.visitChildren(visit);
+  }
+
+  WidgetsBinding.instance.rootElement?.visitChildren(visit);
+  return found;
 }
 
 /// Install the platform library on [host], after the package's own

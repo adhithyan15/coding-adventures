@@ -127,6 +127,38 @@ abstract interface class MosaicFileDialogs {
   );
 }
 
+/// Asks the person whether to replace the existing file called [fileName].
+/// True replaces it; false (or a dismissed question) keeps it, and the save is
+/// a cancel.
+typedef MosaicReplaceQuestion = Future<bool> Function(String fileName);
+
+/// The save dialog's choice, after asking before replacing an existing file
+/// where the dialog itself did not (UI87 §7.7).
+///
+/// NSSavePanel and the Windows dialog ask before a person saves over a file.
+/// GTK's chooser can, but `file_selector_linux` never turns that on, so on
+/// Linux the library asks itself:
+///
+///     dialog asked?   something at the path?   result
+///     yes             (not checked)            the choice
+///     no              no                       the choice
+///     no              yes                      [ask]: the choice, or null
+///     --              (cancelled: null)        null
+///
+/// Anything at the path counts -- a link, even a dangling one, is a name the
+/// save would replace. The save itself still replaces atomically and refuses
+/// what it must; this only adds the question a person expects.
+Future<String?> mosaicConfirmReplacing(
+  String? chosen, {
+  required bool dialogAsked,
+  required MosaicReplaceQuestion ask,
+}) async {
+  if (chosen == null || dialogAsked) return chosen;
+  final existing = FileSystemEntity.typeSync(chosen, followLinks: false);
+  if (existing == FileSystemEntityType.notFound) return chosen;
+  return await ask(_mosaicBaseName(chosen)) ? chosen : null;
+}
+
 /// What the router needs from a host: the handler slot, deferral and the
 /// answer. [MosaicHostEffects] adapts the generated [MosaicHost]; a test
 /// supplies a fake, so routing and deferral run without a Rust runtime.

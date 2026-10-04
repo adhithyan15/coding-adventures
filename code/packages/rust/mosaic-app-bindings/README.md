@@ -61,7 +61,10 @@ coordinate for a package the project already declares is left out rather
 than duplicated. `conformance/flutter-platform-effects/` runs the core on the
 plain Dart VM with a fake host and fake dialogs, and
 `tests/flutter_platform_effects.rs` runs it wherever `dart` is installed. On
-Android and iOS each request fails with a message until UI89.
+Linux the library asks "Replace it?" before a save goes onto an existing name,
+because GTK's chooser (as `file_selector` opens it) does not;
+`conformance/flutter-replace-dialog/` drives that dialog with the widget
+tester. On Android and iOS each request fails with a message until UI89.
 
 ## Persistence
 
