@@ -1679,6 +1679,17 @@ mod tests {
         // file_selector opens it, does not; the other two dialogs do.
         assert!(effects.library.contains("dialogAsked: !Platform.isLinux,"));
         assert!(effects.library.contains("ask: mosaicAskToReplace,"));
+        // The question is a pushed DialogRoute, never showDialog: showDialog
+        // reaches Flutter's desktop windowing code, whose macOS FFI structs
+        // abort the AOT snapshotter for every app carrying this library.
+        assert!(effects.library.contains("navigator.push<bool>(DialogRoute<bool>("));
+        let code: String = effects
+            .library
+            .lines()
+            .filter(|line| !line.trim_start().starts_with("//"))
+            .collect::<Vec<_>>()
+            .join("\n");
+        assert!(!code.contains("showDialog") && !code.contains("showRawDialog"));
         assert!(effects
             .core
             .contains("FileSystemEntity.typeSync(chosen, followLinks: false)"));

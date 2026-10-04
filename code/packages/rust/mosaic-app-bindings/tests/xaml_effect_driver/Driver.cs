@@ -121,6 +121,8 @@ internal static class Driver
         // swaps roots, so it must be true exactly while the effect loop runs
         // -- which is when the handler is called -- and false around it.
         var settlingInHandler = false;
+        var propsChanged = 0;
+        MosaicRuntimeHost.PropsChanged = () => propsChanged++;
         Check(!MosaicRuntimeHost.IsSettling, "nothing is settling before a dispatch");
         MosaicRuntimeHost.EffectHandler = (id, kind, payload, delivery) =>
         {
@@ -136,6 +138,10 @@ internal static class Driver
         Check(Counted(component, "handled") == 5, "the handler's value reached the app");
         Check(settlingInHandler, "an effect handler runs inside a settle (IsSettling)");
         Check(!MosaicRuntimeHost.IsSettling, "the settle is over once the dispatch returns");
+        // Answered inside the handler: the dispatch that minted it returns
+        // the update, so the window is not told twice (UI87 §7.6).
+        Check(propsChanged == 0, "an answer inside the handler raises no props-changed");
+        MosaicRuntimeHost.PropsChanged = null;
     }
 
     /// A batch where the handler answers BOTH, each chaining.
@@ -287,7 +293,11 @@ internal static class Driver
             MosaicRuntimeHost.DeferEffect(id); // "the dialog is open"
         };
 
+        var propsChanged = 0;
+        MosaicRuntimeHost.PropsChanged = () => System.Threading.Interlocked.Increment(ref propsChanged);
+
         var (component, runtimeStatus) = await Request();
+        Check(propsChanged == 0, "deferring an effect raises no props-changed");
         // Deferring something the runtime is not waiting on must be refused, or
         // the fail sweep is switched off for an effect nothing will ever answer.
         Check(
@@ -313,6 +323,10 @@ internal static class Driver
         var finished = await Task.WhenAny(answering, Task.Delay(TimeSpan.FromSeconds(5)));
         Check(finished == answering, "answering from another thread does not deadlock");
         await answering;
+        // UI87 §7.6: the late answer moved the app with no call from the
+        // window, so the window is told -- once.
+        Check(propsChanged == 1, "a deferred answer raises props-changed once");
+        MosaicRuntimeHost.PropsChanged = null;
 
         var settled = new EffectComponent();
         var settledStatus = MosaicRuntimeHost.ApplyProps(settled) ?? string.Empty;

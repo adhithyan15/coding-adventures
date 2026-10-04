@@ -7572,6 +7572,23 @@ fn main_window_cs_with_layout_variants(
             "MosaicRuntimeHost.ReportEnvironment(this.Component, report, RequiredProps)",
             "MosaicRuntimeHost.ReportEnvironment(component, report, RequiredProps)",
         );
+        // A deferred answer refreshes the root showing, not the default.
+        source = replace_exactly_once(
+            &source,
+            concat!(
+                "        try\n",
+                "        {\n",
+                "            MosaicRuntimeHost.ApplyRequiredProps(this.Component, RequiredProps);\n",
+                "        }\n",
+            ),
+            concat!(
+                "        if (this.layoutRoot is not { } component) return;\n",
+                "        try\n",
+                "        {\n",
+                "            MosaicRuntimeHost.ApplyRequiredProps(component, RequiredProps);\n",
+                "        }\n",
+            ),
+        );
     } else {
         source = replace_exactly_once(
             &source,
@@ -8532,6 +8549,9 @@ public sealed partial class MainWindow : Window
         try
         {{
             MosaicRuntimeHost.LoadRequired();
+            // UI87 §7.6: an effect answered after it was deferred (a file
+            // dialog's answer) moves the app with no call from this window.
+            MosaicRuntimeHost.PropsChanged = QueuePropsRefresh;
             MosaicRuntimeHost.ApplyRequiredProps(this.Component, RequiredProps);
             this.StatusText.Text = "Status: Mosaic runtime props loaded";
             if (!this.dispatchWired)
@@ -8582,6 +8602,29 @@ public sealed partial class MainWindow : Window
         var result = await MosaicRuntimeHost.HandleRequiredEvent(
             this.Component, mosaicEvent, RequiredProps);
         this.StatusText.Text = result.Status;
+    }}
+
+    // UI87 §7.6: the host raises this on whichever thread answered a deferred
+    // effect, after releasing its lock. The props are re-applied from the
+    // dispatcher queue -- the UI thread, and never inside the host's call.
+    private void QueuePropsRefresh()
+    {{
+        this.DispatcherQueue.TryEnqueue(RefreshProps);
+    }}
+
+    private void RefreshProps()
+    {{
+        // An answer that raced a Close() arrives after the runtime is gone:
+        // there are no props to apply, and nothing to report.
+        if (!MosaicRuntimeHost.IsAvailable) return;
+        try
+        {{
+            MosaicRuntimeHost.ApplyRequiredProps(this.Component, RequiredProps);
+        }}
+        catch (System.Exception error)
+        {{
+            this.StatusText.Text = $"Mosaic host failed: {{error.GetType().Name}}: {{error.Message}}";
+        }}
     }}
 
     // UI48 ENV4: tell the runtime the window's size class, orientation and
@@ -19611,6 +19654,22 @@ mod tests {
         assert!(p
             .main_window_cs
             .contains("MosaicRuntimeHost.ApplyRequiredProps(this.Component, RequiredProps)"));
+        // UI87 §7.6: a deferred effect's answer reaches the window through
+        // the host's props-changed handler, set as soon as the runtime loads
+        // and re-applied from the dispatcher queue, never inside the host.
+        let cs = &p.main_window_cs;
+        let load = cs.find("MosaicRuntimeHost.LoadRequired();").unwrap();
+        let wired = cs
+            .find("MosaicRuntimeHost.PropsChanged = QueuePropsRefresh;")
+            .unwrap();
+        let first = cs
+            .find("MosaicRuntimeHost.ApplyRequiredProps(this.Component, RequiredProps);")
+            .unwrap();
+        assert!(load < wired && wired < first, "{cs}");
+        assert!(
+            cs.contains("        this.DispatcherQueue.TryEnqueue(RefreshProps);\n"),
+            "{cs}"
+        );
         assert!(p
             .main_window_xaml
             .contains("AutomationProperties.AutomationId=\"mosaic-startup-loading\""));
@@ -20024,7 +20083,28 @@ mod tests {
         let apply = mount.find("MosaicRuntimeHost.ApplyRequiredProps(next, RequiredProps);").unwrap();
         let replace = mount.find("ShowLayoutRoot(next, variant);").unwrap();
         assert!(apply < replace, "{mount}");
-        assert_eq!(source.matches("ApplyRequiredProps(").count(), 1, "one strict path: {source}");
+        // One strict MOUNT path: every root is created and first applied in
+        // MountLayout. The only other call refreshes the root already showing
+        // after a deferred effect's answer (UI87 §7.6), as an event does.
+        assert_eq!(source.matches("ApplyRequiredProps(").count(), 2, "{source}");
+        assert!(
+            source.contains(concat!(
+                "    private void RefreshProps()\n",
+                "    {\n",
+                "        // An answer that raced a Close() arrives after the runtime is gone:\n",
+                "        // there are no props to apply, and nothing to report.\n",
+                "        if (!MosaicRuntimeHost.IsAvailable) return;\n",
+                "        if (this.layoutRoot is not { } component) return;\n",
+                "        try\n",
+                "        {\n",
+                "            MosaicRuntimeHost.ApplyRequiredProps(component, RequiredProps);\n",
+            )),
+            "{source}"
+        );
+        let wired = source
+            .find("MosaicRuntimeHost.PropsChanged = QueuePropsRefresh;")
+            .unwrap();
+        assert!(load < wired && wired < first, "{source}");
         // Events and reports go to the root showing.
         assert!(source.contains("        if (this.layoutRoot is not { } component) return;\n        var result = await MosaicRuntimeHost.HandleRequiredEvent(\n            component, mosaicEvent, RequiredProps);"));
         assert!(source.contains("MosaicRuntimeHost.ReportEnvironment(component, report, RequiredProps)"));

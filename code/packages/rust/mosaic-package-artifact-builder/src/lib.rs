@@ -13326,7 +13326,13 @@ layout NativeEvents {
         let main = fs::read_to_string(xaml.join("MainWindow.xaml.cs")).unwrap();
         assert!(main.contains("private static readonly string[] RequiredProps = new[] { \"label\" };"), "{main}");
         assert!(main.contains("        MosaicRuntimeHost.ApplyRequiredProps(next, RequiredProps);\n"), "{main}");
-        assert_eq!(main.matches("ApplyRequiredProps(").count(), 1, "{main}");
+        // Every root is mounted strictly in MountLayout; the one other call
+        // refreshes the root showing after a deferred answer (UI87 §7.6).
+        assert_eq!(main.matches("ApplyRequiredProps(").count(), 2, "{main}");
+        assert!(
+            main.contains("            MosaicRuntimeHost.ApplyRequiredProps(component, RequiredProps);\n"),
+            "{main}"
+        );
         let install = main.find("MosaicPlatformEffects.Install(this").expect("platform library");
         let first = main.find("            MountLayout(WindowEnvironment() is { } environment\n").unwrap();
         assert!(install < first, "effects are installed before the first root is mounted");

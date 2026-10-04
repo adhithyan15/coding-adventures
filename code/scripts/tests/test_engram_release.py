@@ -31,6 +31,17 @@ class WorkflowTests(unittest.TestCase):
         self.assertIn("'release-engram-publish'", workflow)
         self.assertIn("cancel-in-progress: false", workflow)
 
+    def test_flutter_is_pinned_like_every_other_lane(self) -> None:
+        # The unpinned stable channel moved to a Flutter whose AOT snapshotter
+        # aborts macOS builds; a release must build with the Flutter that
+        # ci.yml tests.
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        ci = (REPOSITORY_ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+
+        self.assertIn("flutter-version: '3.44.0'", workflow)
+        self.assertIn("flutter-version: '3.44.0'", ci)
+        self.assertEqual(workflow.count("subosito/flutter-action@"), workflow.count("flutter-version:"))
+
 
 class ValidateIdentifiersTests(unittest.TestCase):
     def test_accepts_a_matching_version_and_tag(self) -> None:
