@@ -15355,6 +15355,16 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn treemap_preserves_css_rgb_colors() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:rgb(20% 40% 60% / 80%),fill:rgb(51 102 153 / 80%)",
+        ).expect("CSS rgb colors must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("rgb(20% 40% 60% / 80%)"));
+        assert_eq!(style.node.fill.as_deref(), Some("rgb(51 102 153 / 80%)"));
+    }
+
+    #[test]
     fn treemap_rejects_unsupported_font_style() {
         let error = parse_treemap(
             "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-style:slanted",
