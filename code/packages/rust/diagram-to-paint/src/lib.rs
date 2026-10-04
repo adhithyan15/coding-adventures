@@ -512,21 +512,20 @@ fn treemap_text_node(
             ("dir".into(), ExtValue::Str(value.into())),
         ])));
     }
-    if let Some(diagram_ir::TreemapTextShadow::Shadow {
-        offset_x, offset_y, blur_radius, color: shadow_color,
-    }) = style.and_then(|style| style.text_shadow.as_ref()) {
-        let shadow_color = color_with_opacity(
-            css_to_color(shadow_color), style.and_then(|style| style.opacity).unwrap_or(1.0),
-        );
+    if let Some(diagram_ir::TreemapTextShadow::Shadows(shadows)) =
+        style.and_then(|style| style.text_shadow.as_ref())
+    {
+        let opacity = style.and_then(|style| style.opacity).unwrap_or(1.0);
         let effects = EffectStyle {
-            filters: vec![EffectFilter::DropShadow {
-                dx: *offset_x,
-                dy: *offset_y,
-                blur: *blur_radius,
-                color: EffectColor {
-                    r: shadow_color.r, g: shadow_color.g, b: shadow_color.b, a: shadow_color.a,
-                },
-            }],
+            filters: shadows.iter().map(|shadow| {
+                let color = color_with_opacity(css_to_color(&shadow.color), opacity);
+                EffectFilter::DropShadow {
+                    dx: shadow.offset_x,
+                    dy: shadow.offset_y,
+                    blur: shadow.blur_radius,
+                    color: EffectColor { r: color.r, g: color.g, b: color.b, a: color.a },
+                }
+            }).collect(),
             ..EffectStyle::default()
         };
         node.ext.insert("effects".into(), effects.to_ext());
@@ -7293,16 +7292,23 @@ mod tests {
         );
         assert!(matches!(rtl_text.ext.get("html"),
             Some(ExtValue::Map(html)) if html.get("dir") == Some(&ExtValue::Str("rtl".into()))));
-        whitespace_style.text_shadow = Some(diagram_ir::TreemapTextShadow::Shadow {
-            offset_x: 2.0, offset_y: 3.0, blur_radius: 4.0, color: "#334155".into(),
-        });
+        whitespace_style.text_shadow = Some(diagram_ir::TreemapTextShadow::Shadows(vec![
+            diagram_ir::TreemapTextShadowLayer {
+                offset_x: 2.0, offset_y: 3.0, blur_radius: 4.0, color: "#334155".into(),
+            },
+            diagram_ir::TreemapTextShadowLayer {
+                offset_x: -1.0, offset_y: 0.0, blur_radius: 0.0, color: "#f8fafc".into(),
+            },
+        ]));
         let shadowed_text = treemap_text_node(
             "shadowed", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
             current_color, Some(&whitespace_style),
         );
         assert!(matches!(EffectStyle::from_positioned(&shadowed_text).filters.as_slice(),
             [EffectFilter::DropShadow { dx: 2.0, dy: 3.0, blur: 4.0,
-                color: EffectColor { r: 51, g: 65, b: 85, a: 204 } }]));
+                color: EffectColor { r: 51, g: 65, b: 85, a: 204 } },
+             EffectFilter::DropShadow { dx: -1.0, dy: 0.0, blur: 0.0,
+                color: EffectColor { r: 248, g: 250, b: 252, a: 204 } }]));
         whitespace_style.white_space = Some(diagram_ir::TreemapWhiteSpace::Pre);
         whitespace_style.tab_size = Some(3);
         whitespace_style.text_transform = Some(diagram_ir::TreemapTextTransform::None);

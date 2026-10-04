@@ -593,7 +593,7 @@ Normal and positive or negative pixel/em word spacing likewise adjusts ASCII
 word-separator advances, line measurement, wrapping, and alignment before paint.
 Left-to-right and right-to-left class directions select the corresponding
 Unicode text-flow analysis and native shaping direction before glyph lowering.
-Single colored text shadows with pixel offsets and optional blur lower to
+Ordered colored text-shadow lists with pixel offsets and optional blur lower to
 backend-neutral drop-shadow filter layers around the shaped glyph instructions.
 Integer tab sizes from zero through 256 expand preserved tabs before shaping;
 normal/default and pre-line whitespace continue to collapse tabs as CSS spaces.

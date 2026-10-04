@@ -1587,7 +1587,15 @@ pub enum TreemapTextDirection { LeftToRight, RightToLeft }
 #[derive(Clone, Debug, PartialEq)]
 pub enum TreemapTextShadow {
     None,
-    Shadow { offset_x: f64, offset_y: f64, blur_radius: f64, color: String },
+    Shadows(Vec<TreemapTextShadowLayer>),
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct TreemapTextShadowLayer {
+    pub offset_x: f64,
+    pub offset_y: f64,
+    pub blur_radius: f64,
+    pub color: String,
 }
 
 #[derive(Clone, Debug, PartialEq)]

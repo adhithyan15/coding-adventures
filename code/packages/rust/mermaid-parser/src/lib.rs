@@ -4551,7 +4551,7 @@ pub fn parse_treemap(source: &str) -> Result<TreemapDiagram, ParseError> {
 
 fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::TreemapStyle, ParseError> {
     let mut style = diagram_ir::TreemapStyle::default();
-    for declaration in source.split(',').map(str::trim).filter(|value| !value.is_empty()) {
+    for declaration in split_treemap_style_declarations(source) {
         let (property, value) = declaration.split_once(':')
             .ok_or_else(|| token_error(token, format!("invalid treemap style {declaration:?}")))?;
         let value = value.trim().trim_matches(['\'', '"']);
@@ -4737,6 +4737,37 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
     Ok(style)
 }
 
+fn split_treemap_style_declarations(source: &str) -> Vec<&str> {
+    let mut declarations = Vec::new();
+    let mut start = 0;
+    let mut depth = 0_u32;
+    let mut quote = None;
+    for (index, character) in source.char_indices() {
+        if let Some(delimiter) = quote {
+            if character == delimiter {
+                quote = None;
+            }
+            continue;
+        }
+        match character {
+            '\'' | '"' => quote = Some(character),
+            '(' => depth += 1,
+            ')' => depth = depth.saturating_sub(1),
+            ',' if depth == 0 => {
+                let next = source[index + 1..].trim_start();
+                let property = next.split_ascii_whitespace().next().unwrap_or_default();
+                if property.contains(':') {
+                    declarations.push(source[start..index].trim());
+                    start = index + 1;
+                }
+            }
+            _ => {}
+        }
+    }
+    declarations.push(source[start..].trim());
+    declarations.into_iter().filter(|value| !value.is_empty()).collect()
+}
+
 fn parse_treemap_opacity(token: &Token, source: &str) -> Result<f64, ParseError> {
     source.parse::<f64>().ok().filter(|value| value.is_finite() && (0.0..=1.0).contains(value))
         .ok_or_else(|| token_error(token, "treemap opacity must be between 0 and 1"))
@@ -4796,6 +4827,21 @@ fn parse_treemap_text_shadow(
     if source.eq_ignore_ascii_case("none") {
         return Ok(diagram_ir::TreemapTextShadow::None);
     }
+    if source.split(',').any(|shadow| shadow.trim().eq_ignore_ascii_case("none")) {
+        return Err(token_error(token, "treemap text-shadow none cannot be combined with shadow layers"));
+    }
+    let shadows = source.split(',').map(|shadow| parse_treemap_text_shadow_layer(token, shadow.trim()))
+        .collect::<Result<Vec<_>, _>>()?;
+    if shadows.is_empty() {
+        return Err(token_error(token, "treemap text-shadow requires at least one layer"));
+    }
+    Ok(diagram_ir::TreemapTextShadow::Shadows(shadows))
+}
+
+fn parse_treemap_text_shadow_layer(
+    token: &Token,
+    source: &str,
+) -> Result<diagram_ir::TreemapTextShadowLayer, ParseError> {
     let mut lengths = Vec::new();
     let mut color = None;
     for value in source.split_ascii_whitespace() {
@@ -4817,7 +4863,7 @@ fn parse_treemap_text_shadow(
     if blur_radius < 0.0 {
         return Err(token_error(token, "treemap text-shadow blur radius cannot be negative"));
     }
-    Ok(diagram_ir::TreemapTextShadow::Shadow {
+    Ok(diagram_ir::TreemapTextShadowLayer {
         offset_x: lengths[0],
         offset_y: lengths[1],
         blur_radius,
@@ -14982,21 +15028,29 @@ B//-A: reverse stick top
     }
 
     #[test]
-    fn treemap_parses_single_text_shadow() {
+    fn treemap_parses_text_shadow_layers() {
         for (value, expected) in [
             ("none", diagram_ir::TreemapTextShadow::None),
-            ("#334155 2px -3px", diagram_ir::TreemapTextShadow::Shadow {
-                offset_x: 2.0, offset_y: -3.0, blur_radius: 0.0, color: "#334155".into(),
-            }),
-            ("1px 2px 4px navy", diagram_ir::TreemapTextShadow::Shadow {
-                offset_x: 1.0, offset_y: 2.0, blur_radius: 4.0, color: "navy".into(),
-            }),
+            ("#334155 2px -3px", diagram_ir::TreemapTextShadow::Shadows(vec![
+                diagram_ir::TreemapTextShadowLayer {
+                    offset_x: 2.0, offset_y: -3.0, blur_radius: 0.0, color: "#334155".into(),
+                },
+            ])),
+            ("1px 2px 4px navy, -2px 0 #f8fafc", diagram_ir::TreemapTextShadow::Shadows(vec![
+                diagram_ir::TreemapTextShadowLayer {
+                    offset_x: 1.0, offset_y: 2.0, blur_radius: 4.0, color: "navy".into(),
+                },
+                diagram_ir::TreemapTextShadowLayer {
+                    offset_x: -2.0, offset_y: 0.0, blur_radius: 0.0, color: "#f8fafc".into(),
+                },
+            ])),
         ] {
-            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-shadow:{value}");
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-shadow:{value},color:#123456");
             let diagram = parse_treemap(&source).expect("supported text shadow must parse");
             assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_shadow.clone()), Some(expected));
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.node.text_color.as_deref()), Some("#123456"));
         }
-        for value in ["2px red", "1px 2px -3px red", "1px 2px red blue"] {
+        for value in ["2px red", "1px 2px -3px red", "1px 2px red blue", "none, 1px 2px red"] {
             let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-shadow:{value}");
             assert!(parse_treemap(&source).is_err());
         }
