@@ -1,0 +1,11 @@
+{
+  "id": "TE-C216-punadi",
+  "pathSegment": "TE-PATH-216-STHALAM216",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-216-STHALAM216",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:accf46340b34eed6",
+  "lessonIds": [
+    "TE-C230-kavita",
+    "TE-C230-citram",
+    "TE-C230-kemera",
+    "TE-C230-vinodam",
+    "TE-C230-natudu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch230.txt",
+  "json": "telugu/narration/ch230.json",
+  "textHash": "fnv1a64:25d442c1a68feac3",
+  "jsonHash": "fnv1a64:4ea2ddb8dc82cfa8",
+  "findings": []
+}

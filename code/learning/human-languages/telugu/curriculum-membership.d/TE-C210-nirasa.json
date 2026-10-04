@@ -1,0 +1,11 @@
+{
+  "id": "TE-C210-nirasa",
+  "pathSegment": "TE-PATH-210-AROGYAM210",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-210-AROGYAM210",
+      "order": 2
+    }
+  ]
+}

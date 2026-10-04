@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:1629baea2d934dcb",
+  "lessonIds": [
+    "TE-C232-jadi",
+    "TE-C232-basta",
+    "TE-C232-totti",
+    "TE-C232-pipa",
+    "TE-C232-maggu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch232.txt",
+  "json": "telugu/narration/ch232.json",
+  "textHash": "fnv1a64:cab5bdd1883a4d00",
+  "jsonHash": "fnv1a64:d54b26b50b94cde4",
+  "findings": []
+}

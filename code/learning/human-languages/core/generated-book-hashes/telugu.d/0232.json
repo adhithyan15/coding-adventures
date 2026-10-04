@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:37630a6c7d11fc4c",
+  "lessonIds": [
+    "TE-C232-jadi",
+    "TE-C232-basta",
+    "TE-C232-totti",
+    "TE-C232-pipa",
+    "TE-C232-maggu"
+  ],
+  "tex": "telugu/book/chapters/ch232-jar-sack-tub-barrel-mug.tex"
+}

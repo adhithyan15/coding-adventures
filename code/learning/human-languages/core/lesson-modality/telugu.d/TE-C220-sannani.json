@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C220-sannani",
+    "language": "telugu",
+    "chapter": 220,
+    "sequence": 10160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9614e8043e09d6f1"
+  },
+  "findings": []
+}

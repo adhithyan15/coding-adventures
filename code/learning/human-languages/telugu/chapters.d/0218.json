@@ -1,0 +1,19 @@
+{
+  "chapter": 218,
+  "title": "Result, Goal, Example, Difference, Effort",
+  "label": "ch:te-result-goal-example-difference-effort",
+  "canDo": "I can say a result, a goal, an example, a difference and effort.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "TE-C218-srama",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 218: I can say a result, a goal, an example, a difference and effort.",
+    "assesses": [
+      "TE-LEX-C218-KARANAM218-03",
+      "TE-LEX-C218-KARANAM218-04",
+      "TE-LEX-C218-KARANAM218-05"
+    ]
+  }
+}

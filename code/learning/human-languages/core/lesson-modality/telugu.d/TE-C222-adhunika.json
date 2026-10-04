@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C222-adhunika",
+    "language": "telugu",
+    "chapter": 222,
+    "sequence": 10240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:af17ff0b271ce3fe"
+  },
+  "findings": []
+}

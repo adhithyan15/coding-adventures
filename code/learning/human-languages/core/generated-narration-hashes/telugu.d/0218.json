@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:f547081f21340252",
+  "lessonIds": [
+    "TE-C218-phalitam",
+    "TE-C218-laksyam",
+    "TE-C218-udaharana",
+    "TE-C218-teda",
+    "TE-C218-srama"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch218.txt",
+  "json": "telugu/narration/ch218.json",
+  "textHash": "fnv1a64:733956500d64f22b",
+  "jsonHash": "fnv1a64:8d02a9f49ede8981",
+  "findings": []
+}

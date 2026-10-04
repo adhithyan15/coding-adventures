@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:22fee42bcd78613d",
+  "lessonIds": [
+    "TE-C231-phyanu",
+    "TE-C231-patakaru",
+    "TE-C231-niccena",
+    "TE-C231-jiguru",
+    "TE-C231-kolabadda"
+  ],
+  "tex": "telugu/book/chapters/ch231-fan-pliers-ladder-glue-ruler.tex"
+}

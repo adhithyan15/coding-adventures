@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C204-ralu",
+    "language": "telugu",
+    "chapter": 204,
+    "sequence": 9300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c3ede56d9985994"
+  },
+  "findings": []
+}

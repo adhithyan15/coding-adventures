@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:51e2f9979a7b3fba",
+  "lessonIds": [
+    "TE-C219-ninda",
+    "TE-C219-adharam",
+    "TE-C219-rujuvu",
+    "TE-C219-parinamam",
+    "TE-C219-prerana"
+  ],
+  "tex": "telugu/book/chapters/ch219-blame-basis-proof-development-motivation.tex"
+}

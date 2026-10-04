@@ -1,0 +1,11 @@
+{
+  "id": "TE-C239-samstha",
+  "pathSegment": "TE-PATH-239-PANI239",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-239-PANI239",
+      "order": 1
+    }
+  ]
+}

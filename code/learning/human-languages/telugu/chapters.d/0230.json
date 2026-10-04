@@ -1,0 +1,19 @@
+{
+  "chapter": 230,
+  "title": "Poem, Painting, Camera, Entertainment, Actor",
+  "label": "ch:te-poem-painting-camera-entertainment-actor",
+  "canDo": "I can say a poem, a painting, a camera, entertainment and an actor.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C230-natudu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 230: I can say a poem, a painting, a camera, entertainment and an actor.",
+    "assesses": [
+      "TE-LEX-C230-VASTUVU230-03",
+      "TE-LEX-C230-VASTUVU230-04",
+      "TE-LEX-C230-VASTUVU230-05"
+    ]
+  }
+}

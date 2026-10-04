@@ -1,0 +1,11 @@
+{
+  "id": "TE-C229-cinuku",
+  "pathSegment": "TE-PATH-229-VASTUVU229",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-229-VASTUVU229",
+      "order": 3
+    }
+  ]
+}

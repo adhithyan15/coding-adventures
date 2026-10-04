@@ -1,0 +1,11 @@
+{
+  "id": "TE-C217-tappa",
+  "pathSegment": "TE-PATH-217-KARANAM217",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-217-KARANAM217",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C199-nimpu",
+  "pathSegment": "TE-PATH-199-KRIYA199",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-199-KRIYA199",
+      "order": 1
+    }
+  ]
+}

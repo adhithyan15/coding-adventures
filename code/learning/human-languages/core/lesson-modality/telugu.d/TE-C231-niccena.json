@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C231-niccena",
+    "language": "telugu",
+    "chapter": 231,
+    "sequence": 10720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c87311a48ff2bbd7"
+  },
+  "findings": []
+}

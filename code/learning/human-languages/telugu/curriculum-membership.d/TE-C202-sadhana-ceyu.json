@@ -1,0 +1,11 @@
+{
+  "id": "TE-C202-sadhana-ceyu",
+  "pathSegment": "TE-PATH-202-KRIYA202",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-202-KRIYA202",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:05ac360d40ba4d19",
+  "lessonIds": [
+    "TE-C204-polcu",
+    "TE-C204-ralu",
+    "TE-C204-vyayamam-ceyu",
+    "TE-C204-natincu",
+    "TE-C204-giyu"
+  ],
+  "tex": "telugu/book/chapters/ch204-to-compare-to-fall-to-exercise-to-act-to-draw.tex"
+}

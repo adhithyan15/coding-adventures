@@ -1,0 +1,11 @@
+{
+  "id": "TE-C200-vaddincu",
+  "pathSegment": "TE-PATH-200-KRIYA200",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-200-KRIYA200",
+      "order": 3
+    }
+  ]
+}

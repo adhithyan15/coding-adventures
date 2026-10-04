@@ -1,0 +1,11 @@
+{
+  "id": "TE-C208-pukkilincu",
+  "pathSegment": "TE-PATH-208-KRIYA208",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-208-KRIYA208",
+      "order": 1
+    }
+  ]
+}

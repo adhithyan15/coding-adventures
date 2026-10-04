@@ -1,0 +1,11 @@
+{
+  "id": "TE-C231-kolabadda",
+  "pathSegment": "TE-PATH-231-VASTUVU231",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-231-VASTUVU231",
+      "order": 4
+    }
+  ]
+}

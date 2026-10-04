@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C207-callarcu",
+    "language": "telugu",
+    "chapter": 207,
+    "sequence": 9440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:51af858398a28202"
+  },
+  "findings": []
+}

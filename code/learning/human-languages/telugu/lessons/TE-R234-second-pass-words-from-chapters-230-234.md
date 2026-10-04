@@ -1,0 +1,53 @@
+---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TE-R234-second-pass-words-from-chapters-230-234
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 10910
+chapter: 234
+type: review
+headword: (dialogue)
+gloss: second pass over chapters 230-234
+concept_tag: REVIEW
+prerequisites: [TE-C230-kavita, TE-C230-citram, TE-C230-kemera, TE-C230-vinodam, TE-C230-natudu, TE-C231-phyanu, TE-C231-patakaru, TE-C231-niccena, TE-C231-jiguru, TE-C231-kolabadda, TE-C232-jadi, TE-C232-basta, TE-C232-totti, TE-C232-pipa, TE-C232-maggu, TE-C233-kanduva, TE-C233-budaga, TE-C233-tuppu, TE-C233-masi, TE-C233-boggu, TE-C234-kuppa, TE-C234-eruvu, TE-C234-peda, TE-C234-nagali, TE-C234-kodavali]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TE-LEX-C230-VASTUVU230-01, TE-LEX-C230-VASTUVU230-02, TE-LEX-C230-VASTUVU230-03, TE-LEX-C230-VASTUVU230-04, TE-LEX-C230-VASTUVU230-05, TE-LEX-C231-VASTUVU231-01, TE-LEX-C231-VASTUVU231-02, TE-LEX-C231-VASTUVU231-03, TE-LEX-C231-VASTUVU231-04, TE-LEX-C231-VASTUVU231-05, TE-LEX-C232-VASTUVU232-01, TE-LEX-C232-VASTUVU232-02, TE-LEX-C232-VASTUVU232-03, TE-LEX-C232-VASTUVU232-04, TE-LEX-C232-VASTUVU232-05, TE-LEX-C233-VASTUVU233-01, TE-LEX-C233-VASTUVU233-02, TE-LEX-C233-VASTUVU233-03, TE-LEX-C233-VASTUVU233-04, TE-LEX-C233-VASTUVU233-05, TE-LEX-C234-VASTUVU234-01, TE-LEX-C234-VASTUVU234-02, TE-LEX-C234-VASTUVU234-03, TE-LEX-C234-VASTUVU234-04, TE-LEX-C234-VASTUVU234-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TE-LEX-C230-VASTUVU230-01, TE-LEX-C230-VASTUVU230-02, TE-LEX-C230-VASTUVU230-03, TE-LEX-C230-VASTUVU230-04, TE-LEX-C230-VASTUVU230-05, TE-LEX-C231-VASTUVU231-01, TE-LEX-C231-VASTUVU231-02, TE-LEX-C231-VASTUVU231-03, TE-LEX-C231-VASTUVU231-04, TE-LEX-C231-VASTUVU231-05, TE-LEX-C232-VASTUVU232-01, TE-LEX-C232-VASTUVU232-02, TE-LEX-C232-VASTUVU232-03, TE-LEX-C232-VASTUVU232-04, TE-LEX-C232-VASTUVU232-05, TE-LEX-C233-VASTUVU233-01, TE-LEX-C233-VASTUVU233-02, TE-LEX-C233-VASTUVU233-03, TE-LEX-C233-VASTUVU233-04, TE-LEX-C233-VASTUVU233-05, TE-LEX-C234-VASTUVU234-01, TE-LEX-C234-VASTUVU234-02, TE-LEX-C234-VASTUVU234-03, TE-LEX-C234-VASTUVU234-04, TE-LEX-C234-VASTUVU234-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C230-kavita, TE-C230-citram, TE-C230-kemera, TE-C230-vinodam, TE-C230-natudu, TE-C231-phyanu, TE-C231-patakaru, TE-C231-niccena, TE-C231-jiguru, TE-C231-kolabadda, TE-C232-jadi, TE-C232-basta, TE-C232-totti, TE-C232-pipa, TE-C232-maggu, TE-C233-kanduva, TE-C233-budaga, TE-C233-tuppu, TE-C233-masi, TE-C233-boggu, TE-C234-kuppa, TE-C234-eruvu, TE-C234-peda, TE-C234-nagali, TE-C234-kodavali]
+---
+
+# Words from chapters 230-234 — a second pass
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C230-VASTUVU230-01, TE-LEX-C230-VASTUVU230-02] -->
+
+[PAUSE 3s] Say the words for a poem and a painting.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C230-VASTUVU230-01, TE-LEX-C230-VASTUVU230-02, TE-LEX-C230-VASTUVU230-03, TE-LEX-C230-VASTUVU230-04, TE-LEX-C230-VASTUVU230-05, TE-LEX-C231-VASTUVU231-01, TE-LEX-C231-VASTUVU231-02, TE-LEX-C231-VASTUVU231-03, TE-LEX-C231-VASTUVU231-04, TE-LEX-C231-VASTUVU231-05, TE-LEX-C232-VASTUVU232-01, TE-LEX-C232-VASTUVU232-02, TE-LEX-C232-VASTUVU232-03, TE-LEX-C232-VASTUVU232-04, TE-LEX-C232-VASTUVU232-05, TE-LEX-C233-VASTUVU233-01, TE-LEX-C233-VASTUVU233-02, TE-LEX-C233-VASTUVU233-03, TE-LEX-C233-VASTUVU233-04, TE-LEX-C233-VASTUVU233-05, TE-LEX-C234-VASTUVU234-01, TE-LEX-C234-VASTUVU234-02, TE-LEX-C234-VASTUVU234-03, TE-LEX-C234-VASTUVU234-04, TE-LEX-C234-VASTUVU234-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a poem, a painting, a camera, entertainment, an actor]
+- [YOU SAY: a fan, pliers, a ladder, glue, a ruler]
+- [YOU SAY: a jar, a sack, a tub, a barrel, a mug]
+- [YOU SAY: a shoulder cloth, a bubble, rust, soot, charcoal]
+- [YOU SAY: a heap, fertilizer, cow dung, a plough, a sickle]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C230-VASTUVU230-01, TE-LEX-C230-VASTUVU230-02, TE-LEX-C230-VASTUVU230-03, TE-LEX-C230-VASTUVU230-04, TE-LEX-C230-VASTUVU230-05, TE-LEX-C231-VASTUVU231-01, TE-LEX-C231-VASTUVU231-02, TE-LEX-C231-VASTUVU231-03, TE-LEX-C231-VASTUVU231-04, TE-LEX-C231-VASTUVU231-05, TE-LEX-C232-VASTUVU232-01, TE-LEX-C232-VASTUVU232-02, TE-LEX-C232-VASTUVU232-03, TE-LEX-C232-VASTUVU232-04, TE-LEX-C232-VASTUVU232-05, TE-LEX-C233-VASTUVU233-01, TE-LEX-C233-VASTUVU233-02, TE-LEX-C233-VASTUVU233-03, TE-LEX-C233-VASTUVU233-04, TE-LEX-C233-VASTUVU233-05, TE-LEX-C234-VASTUVU234-01, TE-LEX-C234-VASTUVU234-02, TE-LEX-C234-VASTUVU234-03, TE-LEX-C234-VASTUVU234-04, TE-LEX-C234-VASTUVU234-05] -->
+
+[PAUSE 3s] A poem? (**కవిత**, *kavita*.) A painting? (**చిత్రం**, *citraṁ*.) A camera? (**కెమెరా**, *kemerā*.) Entertainment? (**వినోదం**, *vinōdaṁ*.) An actor? (**నటుడు**, *naṭuḍu*.) A fan? (**ఫ్యాను**, *phyānu*.) Pliers? (**పటకారు**, *paṭakāru*.) A ladder? (**నిచ్చెన**, *niccena*.) Glue? (**జిగురు**, *jiguru*.) A ruler? (**కొలబద్ద**, *kolabadda*.) A jar? (**జాడీ**, *jāḍī*.) A sack? (**బస్తా**, *bastā*.) A tub? (**తొట్టి**, *toṭṭi*.) A barrel? (**పీపా**, *pīpā*.) A mug? (**మగ్గు**, *maggu*.) A shoulder cloth? (**కండువా**, *kaṇḍuvā*.) A bubble? (**బుడగ**, *buḍaga*.) Rust? (**తుప్పు**, *tuppu*.) Soot? (**మసి**, *masi*.) Charcoal? (**బొగ్గు**, *boggu*.) A heap? (**కుప్ప**, *kuppa*.) Fertilizer? (**ఎరువు**, *eruvu*.) Cow dung? (**పేడ**, *pēḍa*.) A plough? (**నాగలి**, *nāgali*.) A sickle? (**కొడవలి**, *koḍavali*.)

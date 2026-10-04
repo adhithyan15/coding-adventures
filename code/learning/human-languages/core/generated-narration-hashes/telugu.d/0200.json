@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:6a3af4b9a573de4c",
+  "lessonIds": [
+    "TE-C200-podupu-ceyu",
+    "TE-C200-encuko",
+    "TE-C200-prayatnincu",
+    "TE-C200-vaddincu",
+    "TE-C200-namalu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch200.txt",
+  "json": "telugu/narration/ch200.json",
+  "textHash": "fnv1a64:641f9877cbb25e24",
+  "jsonHash": "fnv1a64:1474547d2f403f99",
+  "findings": []
+}

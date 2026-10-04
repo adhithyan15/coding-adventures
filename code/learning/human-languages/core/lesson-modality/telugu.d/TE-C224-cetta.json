@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C224-cetta",
+    "language": "telugu",
+    "chapter": 224,
+    "sequence": 10340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:755ad2ed54e88789"
+  },
+  "findings": []
+}

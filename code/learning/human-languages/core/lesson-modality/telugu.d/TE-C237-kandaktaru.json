@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C237-kandaktaru",
+    "language": "telugu",
+    "chapter": 237,
+    "sequence": 11050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f525a2ce3fed536d"
+  },
+  "findings": []
+}

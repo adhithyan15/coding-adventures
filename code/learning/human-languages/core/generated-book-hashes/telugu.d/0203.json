@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:70a0f31a73d23ca5",
+  "lessonIds": [
+    "TE-C203-tittu",
+    "TE-C203-potladu",
+    "TE-C203-edugu",
+    "TE-C203-puyu",
+    "TE-C203-kuriyu"
+  ],
+  "tex": "telugu/book/chapters/ch203-to-scold-to-fight-to-grow-up-to-bloom-to-rain-down.tex"
+}

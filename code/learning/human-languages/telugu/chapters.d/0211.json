@@ -1,0 +1,19 @@
+{
+  "chapter": 211,
+  "title": "Numbness, Hiccups, Snoring, Sunstroke, Steam",
+  "label": "ch:te-numbness-hiccups-snoring-sunstroke-steam",
+  "canDo": "I can say numbness, hiccups, snoring, sunstroke and steam.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TE-C211-aviri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 211: I can say numbness, hiccups, snoring, sunstroke and steam.",
+    "assesses": [
+      "TE-LEX-C211-AROGYAM211-03",
+      "TE-LEX-C211-AROGYAM211-04",
+      "TE-LEX-C211-AROGYAM211-05"
+    ]
+  }
+}

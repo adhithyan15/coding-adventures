@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:31e8d68f3548ab18",
+  "lessonIds": [
+    "TE-C199-dancu",
+    "TE-C199-nimpu",
+    "TE-C199-arabettu",
+    "TE-C199-madatapettu",
+    "TE-C199-sardu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch199.txt",
+  "json": "telugu/narration/ch199.json",
+  "textHash": "fnv1a64:e25d9d7b5328f381",
+  "jsonHash": "fnv1a64:58bc595d2d4f43bd",
+  "findings": []
+}

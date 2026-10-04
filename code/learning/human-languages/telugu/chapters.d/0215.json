@@ -1,0 +1,19 @@
+{
+  "chapter": 215,
+  "title": "Desert, Rock, Open ground, Theatre, Stadium",
+  "label": "ch:te-desert-rock-open-ground-theatre-stadium",
+  "canDo": "I can say a desert, a rock, an open ground, a theatre and a stadium.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TE-C215-stediyam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 215: I can say a desert, a rock, an open ground, a theatre and a stadium.",
+    "assesses": [
+      "TE-LEX-C215-STHALAM215-03",
+      "TE-LEX-C215-STHALAM215-04",
+      "TE-LEX-C215-STHALAM215-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 228,
+  "title": "Crab, Scorpion, Bat, Nest, Tail",
+  "label": "ch:te-crab-scorpion-bat-nest-tail",
+  "canDo": "I can say a crab, a scorpion, a bat, a nest and a tail.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C228-toka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 228: I can say a crab, a scorpion, a bat, a nest and a tail.",
+    "assesses": [
+      "TE-LEX-C228-VASTUVU228-03",
+      "TE-LEX-C228-VASTUVU228-04",
+      "TE-LEX-C228-VASTUVU228-05"
+    ]
+  }
+}

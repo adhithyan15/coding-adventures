@@ -1,0 +1,11 @@
+{
+  "id": "TE-C222-spastamaina",
+  "pathSegment": "TE-PATH-222-GUNAM222",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-222-GUNAM222",
+      "order": 2
+    }
+  ]
+}

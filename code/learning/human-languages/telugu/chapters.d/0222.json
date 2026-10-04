@@ -1,0 +1,19 @@
+{
+  "chapter": 222,
+  "title": "Fun, Modern, Clear, Different, Fair",
+  "label": "ch:te-fun-modern-clear-different-fair",
+  "canDo": "I can say fun, modern, clear, different and fair.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TE-C222-nyayamaina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 222: I can say fun, modern, clear, different and fair.",
+    "assesses": [
+      "TE-LEX-C222-GUNAM222-03",
+      "TE-LEX-C222-GUNAM222-04",
+      "TE-LEX-C222-GUNAM222-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:1fe65a19672f71b5",
+  "lessonIds": [
+    "TE-C226-patam",
+    "TE-C226-patram",
+    "TE-C226-phailu",
+    "TE-C226-pharam",
+    "TE-C226-kardu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch226.txt",
+  "json": "telugu/narration/ch226.json",
+  "textHash": "fnv1a64:bf13843e12926fec",
+  "jsonHash": "fnv1a64:4be87c5e85de6b7e",
+  "findings": []
+}

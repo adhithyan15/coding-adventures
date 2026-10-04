@@ -1,0 +1,11 @@
+{
+  "id": "TE-C210-trpti",
+  "pathSegment": "TE-PATH-210-AROGYAM210",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-210-AROGYAM210",
+      "order": 1
+    }
+  ]
+}

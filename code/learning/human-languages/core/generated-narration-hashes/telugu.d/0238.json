@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 238,
+  "sourceHash": "fnv1a64:0b8f266ac76c24c8",
+  "lessonIds": [
+    "TE-C238-jnapakam",
+    "TE-C238-caritra",
+    "TE-C238-bhugolasastram",
+    "TE-C238-vijnanasastram",
+    "TE-C238-bhautikasastram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch238.txt",
+  "json": "telugu/narration/ch238.json",
+  "textHash": "fnv1a64:36f08eeeeb09eb0a",
+  "jsonHash": "fnv1a64:3a0f0d44496b8500",
+  "findings": []
+}

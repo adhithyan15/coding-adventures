@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:0180c5fb59d83f55",
+  "lessonIds": [
+    "TE-C223-vyaktigata",
+    "TE-C223-praivetu",
+    "TE-C223-panikirani",
+    "TE-C223-cindaravandara",
+    "TE-C223-moratu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch223.txt",
+  "json": "telugu/narration/ch223.json",
+  "textHash": "fnv1a64:0844545374196feb",
+  "jsonHash": "fnv1a64:a0c8597403e382fa",
+  "findings": []
+}

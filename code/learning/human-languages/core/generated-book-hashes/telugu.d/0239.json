@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:1cc2e9ab7dc81d3d",
+  "lessonIds": [
+    "TE-C239-nivedika",
+    "TE-C239-samstha",
+    "TE-C239-citi",
+    "TE-C239-pinchanu",
+    "TE-C239-oppandam",
+    "TE-R239-first-pass-words-from-chapters-235-236",
+    "TE-R239-second-pass-words-from-chapters-237-239"
+  ],
+  "tex": "telugu/book/chapters/ch239-report-organization-chit-pension-agreement.tex"
+}

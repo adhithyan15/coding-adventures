@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:dacf596df3187f67",
+  "lessonIds": [
+    "TE-C221-godhuma-rangu",
+    "TE-C221-vendi",
+    "TE-C221-leta",
+    "TE-C221-gundrani",
+    "TE-C221-padunaina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch221.txt",
+  "json": "telugu/narration/ch221.json",
+  "textHash": "fnv1a64:91c9c7c04876e61d",
+  "jsonHash": "fnv1a64:24ee68e057c7fed9",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-235-PANI235",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a banknote, loose change, a salary, a profit and a loss.",
+  "prerequisites": []
+}

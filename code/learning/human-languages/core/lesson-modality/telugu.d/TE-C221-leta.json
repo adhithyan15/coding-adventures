@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C221-leta",
+    "language": "telugu",
+    "chapter": 221,
+    "sequence": 10200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0bbe0934f4c7c5c6"
+  },
+  "findings": []
+}

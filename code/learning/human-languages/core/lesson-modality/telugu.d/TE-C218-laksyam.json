@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C218-laksyam",
+    "language": "telugu",
+    "chapter": 218,
+    "sequence": 10040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:27209d2894dfc115"
+  },
+  "findings": []
+}

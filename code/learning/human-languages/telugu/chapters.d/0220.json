@@ -1,0 +1,19 @@
+{
+  "chapter": 220,
+  "title": "Free, Full, Fat, Thin, Raw",
+  "label": "ch:te-free-full-fat-thin-raw",
+  "canDo": "I can say free, full, fat, thin and raw.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TE-C220-pacci",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 220: I can say free, full, fat, thin and raw.",
+    "assesses": [
+      "TE-LEX-C220-GUNAM220-03",
+      "TE-LEX-C220-GUNAM220-04",
+      "TE-LEX-C220-GUNAM220-05"
+    ]
+  }
+}

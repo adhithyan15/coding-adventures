@@ -1,0 +1,19 @@
+{
+  "chapter": 219,
+  "title": "Blame, Basis, Proof, Development, Motivation",
+  "label": "ch:te-blame-basis-proof-development-motivation",
+  "canDo": "I can say blame, a basis, proof, a development and motivation.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "TE-C219-prerana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 219: I can say blame, a basis, proof, a development and motivation.",
+    "assesses": [
+      "TE-LEX-C219-KARANAM219-03",
+      "TE-LEX-C219-KARANAM219-04",
+      "TE-LEX-C219-KARANAM219-05"
+    ]
+  }
+}

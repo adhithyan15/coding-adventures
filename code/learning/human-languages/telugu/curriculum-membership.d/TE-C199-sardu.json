@@ -1,0 +1,11 @@
+{
+  "id": "TE-C199-sardu",
+  "pathSegment": "TE-PATH-199-KRIYA199",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-199-KRIYA199",
+      "order": 4
+    }
+  ]
+}

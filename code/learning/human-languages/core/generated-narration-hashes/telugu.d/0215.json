@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:851659e4d03d172d",
+  "lessonIds": [
+    "TE-C215-edari",
+    "TE-C215-banda",
+    "TE-C215-maidanam",
+    "TE-C215-thiyetaru",
+    "TE-C215-stediyam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch215.txt",
+  "json": "telugu/narration/ch215.json",
+  "textHash": "fnv1a64:b0f4da04f2536d91",
+  "jsonHash": "fnv1a64:4b7580244eceac2a",
+  "findings": []
+}

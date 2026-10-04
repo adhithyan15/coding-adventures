@@ -1,0 +1,19 @@
+{
+  "chapter": 202,
+  "title": "To discuss, To contact, To check, To register, To practise",
+  "label": "ch:te-to-discuss-to-contact-to-check-to-register-to-practise",
+  "canDo": "I can say to discuss, to contact, to check, to register and to practise.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C202-sadhana-ceyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 202: I can say to discuss, to contact, to check, to register and to practise.",
+    "assesses": [
+      "TE-LEX-C202-KRIYA202-03",
+      "TE-LEX-C202-KRIYA202-04",
+      "TE-LEX-C202-KRIYA202-05"
+    ]
+  }
+}

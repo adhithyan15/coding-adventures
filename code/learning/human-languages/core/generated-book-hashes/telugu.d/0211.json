@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:042b412a46bb1c93",
+  "lessonIds": [
+    "TE-C211-timmiri",
+    "TE-C211-ekkillu",
+    "TE-C211-guraka",
+    "TE-C211-vadadebba",
+    "TE-C211-aviri"
+  ],
+  "tex": "telugu/book/chapters/ch211-numbness-hiccups-snoring-sunstroke-steam.tex"
+}

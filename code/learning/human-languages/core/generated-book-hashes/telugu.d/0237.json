@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:2cf18cf7be5251c7",
+  "lessonIds": [
+    "TE-C237-polisu",
+    "TE-C237-draivaru",
+    "TE-C237-postumanu",
+    "TE-C237-kandaktaru",
+    "TE-C237-vakilu"
+  ],
+  "tex": "telugu/book/chapters/ch237-police-officer-driver-postman-bus-conductor-lawyer.tex"
+}

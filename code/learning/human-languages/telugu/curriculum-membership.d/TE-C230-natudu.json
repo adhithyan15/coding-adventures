@@ -1,0 +1,11 @@
+{
+  "id": "TE-C230-natudu",
+  "pathSegment": "TE-PATH-230-VASTUVU230",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-230-VASTUVU230",
+      "order": 4
+    }
+  ]
+}

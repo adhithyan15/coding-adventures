@@ -1,0 +1,11 @@
+{
+  "id": "TE-C237-draivaru",
+  "pathSegment": "TE-PATH-237-PANI237",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-237-PANI237",
+      "order": 1
+    }
+  ]
+}

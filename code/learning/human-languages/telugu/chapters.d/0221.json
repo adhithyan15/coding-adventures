@@ -1,0 +1,19 @@
+{
+  "chapter": 221,
+  "title": "Brown, Silver, Pale, Round, Sharp",
+  "label": "ch:te-brown-silver-pale-round-sharp",
+  "canDo": "I can say brown, silver, pale, round and sharp.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TE-C221-padunaina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 221: I can say brown, silver, pale, round and sharp.",
+    "assesses": [
+      "TE-LEX-C221-GUNAM221-03",
+      "TE-LEX-C221-GUNAM221-04",
+      "TE-LEX-C221-GUNAM221-05"
+    ]
+  }
+}

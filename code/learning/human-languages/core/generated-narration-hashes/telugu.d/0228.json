@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:b1cb4b3bca54c60f",
+  "lessonIds": [
+    "TE-C228-pita",
+    "TE-C228-telu",
+    "TE-C228-gabbilam",
+    "TE-C228-gudu",
+    "TE-C228-toka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch228.txt",
+  "json": "telugu/narration/ch228.json",
+  "textHash": "fnv1a64:496d4829153a69b8",
+  "jsonHash": "fnv1a64:9abd26c01ee47e71",
+  "findings": []
+}

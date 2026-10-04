@@ -1,0 +1,11 @@
+{
+  "id": "TE-C221-vendi",
+  "pathSegment": "TE-PATH-221-GUNAM221",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-221-GUNAM221",
+      "order": 1
+    }
+  ]
+}

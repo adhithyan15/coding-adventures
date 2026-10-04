@@ -1,0 +1,19 @@
+{
+  "chapter": 223,
+  "title": "Personal, Private, Useless, Messy, Rude",
+  "label": "ch:te-personal-private-useless-messy-rude",
+  "canDo": "I can say personal, private, useless, messy and rude.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TE-C223-moratu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 223: I can say personal, private, useless, messy and rude.",
+    "assesses": [
+      "TE-LEX-C223-GUNAM223-03",
+      "TE-LEX-C223-GUNAM223-04",
+      "TE-LEX-C223-GUNAM223-05"
+    ]
+  }
+}

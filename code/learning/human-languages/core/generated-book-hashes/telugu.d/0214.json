@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:70fa88b73d4db74d",
+  "lessonIds": [
+    "TE-C214-bastandu",
+    "TE-C214-vimanasrayam",
+    "TE-C214-kudali",
+    "TE-C214-rajadhani",
+    "TE-C214-jilla"
+  ],
+  "tex": "telugu/book/chapters/ch214-bus-stand-airport-junction-capital-city-district.tex"
+}

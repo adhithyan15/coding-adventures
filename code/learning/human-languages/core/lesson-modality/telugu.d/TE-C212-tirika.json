@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C212-tirika",
+    "language": "telugu",
+    "chapter": 212,
+    "sequence": 9710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14ff8a3984a9b9f9"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C227-pellikoduku",
+  "pathSegment": "TE-PATH-227-VASTUVU227",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-227-VASTUVU227",
+      "order": 4
+    }
+  ]
+}

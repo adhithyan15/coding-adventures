@@ -1,0 +1,19 @@
+{
+  "chapter": 217,
+  "title": "Together, Except, Tradition, Custom, Habit",
+  "label": "ch:te-together-except-tradition-custom-habit",
+  "canDo": "I can say together, except, a tradition, a custom and a habit.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "TE-C217-alavatu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 217: I can say together, except, a tradition, a custom and a habit.",
+    "assesses": [
+      "TE-LEX-C217-KARANAM217-03",
+      "TE-LEX-C217-KARANAM217-04",
+      "TE-LEX-C217-KARANAM217-05"
+    ]
+  }
+}

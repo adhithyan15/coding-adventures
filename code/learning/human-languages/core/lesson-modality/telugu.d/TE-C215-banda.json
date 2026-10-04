@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C215-banda",
+    "language": "telugu",
+    "chapter": 215,
+    "sequence": 9870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7744f06b62b13dc1"
+  },
+  "findings": []
+}

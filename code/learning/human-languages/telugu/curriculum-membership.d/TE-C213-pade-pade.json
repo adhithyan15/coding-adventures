@@ -1,0 +1,11 @@
+{
+  "id": "TE-C213-pade-pade",
+  "pathSegment": "TE-PATH-213-SAMAYAM213",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-213-SAMAYAM213",
+      "order": 1
+    }
+  ]
+}

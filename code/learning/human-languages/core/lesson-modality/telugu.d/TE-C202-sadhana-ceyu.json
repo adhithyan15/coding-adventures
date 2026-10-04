@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C202-sadhana-ceyu",
+    "language": "telugu",
+    "chapter": 202,
+    "sequence": 9230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b482eadf86ac5ade"
+  },
+  "findings": []
+}

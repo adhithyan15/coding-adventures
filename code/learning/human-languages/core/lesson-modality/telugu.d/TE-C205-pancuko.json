@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C205-pancuko",
+    "language": "telugu",
+    "chapter": 205,
+    "sequence": 9360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:70782b063569cb5c"
+  },
+  "findings": []
+}

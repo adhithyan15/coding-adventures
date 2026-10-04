@@ -1,0 +1,11 @@
+{
+  "id": "TE-C230-citram",
+  "pathSegment": "TE-PATH-230-VASTUVU230",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-230-VASTUVU230",
+      "order": 1
+    }
+  ]
+}

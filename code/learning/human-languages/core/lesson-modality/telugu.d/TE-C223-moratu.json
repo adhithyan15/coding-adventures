@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C223-moratu",
+    "language": "telugu",
+    "chapter": 223,
+    "sequence": 10320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3daa228ba45774d0"
+  },
+  "findings": []
+}

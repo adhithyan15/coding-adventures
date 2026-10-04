@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:41ad59a3df5c3543",
+  "lessonIds": [
+    "TE-C212-tirika",
+    "TE-C212-ventane",
+    "TE-C212-civaraku",
+    "TE-C212-varaku",
+    "TE-C212-sankranti"
+  ],
+  "tex": "telugu/book/chapters/ch212-free-time-immediately-finally-until-sankranti.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:5cd0e89b8e52aeec",
+  "lessonIds": [
+    "TE-C236-jattu",
+    "TE-C236-vyaparam",
+    "TE-C236-kampeni",
+    "TE-C236-prabhutvam",
+    "TE-C236-markulu"
+  ],
+  "tex": "telugu/book/chapters/ch236-team-business-company-government-marks.tex"
+}

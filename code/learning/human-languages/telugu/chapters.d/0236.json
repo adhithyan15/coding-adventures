@@ -1,0 +1,19 @@
+{
+  "chapter": 236,
+  "title": "Team, Business, Company, Government, Marks",
+  "label": "ch:te-team-business-company-government-marks",
+  "canDo": "I can say a team, business, a company, the government and marks.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C236-markulu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 236: I can say a team, business, a company, the government and marks.",
+    "assesses": [
+      "TE-LEX-C236-PANI236-03",
+      "TE-LEX-C236-PANI236-04",
+      "TE-LEX-C236-PANI236-05"
+    ]
+  }
+}

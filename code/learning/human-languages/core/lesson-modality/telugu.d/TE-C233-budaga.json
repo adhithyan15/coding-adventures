@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C233-budaga",
+    "language": "telugu",
+    "chapter": 233,
+    "sequence": 10810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ccbbb3b977e1aefd"
+  },
+  "findings": []
+}

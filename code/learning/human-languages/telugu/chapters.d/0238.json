@@ -1,0 +1,19 @@
+{
+  "chapter": 238,
+  "title": "Memory, History, Geography, Science, Physics",
+  "label": "ch:te-memory-history-geography-science-physics",
+  "canDo": "I can say a memory, history, geography, science and physics.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C238-bhautikasastram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 238: I can say a memory, history, geography, science and physics.",
+    "assesses": [
+      "TE-LEX-C238-PANI238-03",
+      "TE-LEX-C238-PANI238-04",
+      "TE-LEX-C238-PANI238-05"
+    ]
+  }
+}

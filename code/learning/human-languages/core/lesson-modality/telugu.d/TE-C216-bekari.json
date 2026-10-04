@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C216-bekari",
+    "language": "telugu",
+    "chapter": 216,
+    "sequence": 9940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3bd7033d17b9c02"
+  },
+  "findings": []
+}

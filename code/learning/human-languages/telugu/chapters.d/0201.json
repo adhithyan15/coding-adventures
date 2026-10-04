@@ -1,0 +1,19 @@
+{
+  "chapter": 201,
+  "title": "To be found, To lie down, To yawn, To shiver, To move",
+  "label": "ch:te-to-be-found-to-lie-down-to-yawn-to-shiver-to-move",
+  "canDo": "I can say to be found, to lie down, to yawn, to shiver and to move.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C201-kadulu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 201: I can say to be found, to lie down, to yawn, to shiver and to move.",
+    "assesses": [
+      "TE-LEX-C201-KRIYA201-03",
+      "TE-LEX-C201-KRIYA201-04",
+      "TE-LEX-C201-KRIYA201-05"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-226-VASTUVU226",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a map, a document, a file, a form and a card.",
+  "prerequisites": []
+}

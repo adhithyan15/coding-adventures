@@ -1,0 +1,11 @@
+{
+  "id": "TE-C235-nastam",
+  "pathSegment": "TE-PATH-235-PANI235",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-235-PANI235",
+      "order": 4
+    }
+  ]
+}

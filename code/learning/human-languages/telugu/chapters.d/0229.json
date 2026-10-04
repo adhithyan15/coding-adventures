@@ -1,0 +1,19 @@
+{
+  "chapter": 229,
+  "title": "Firecrackers, Decorated performing bull seen at Sankranti, Sunshine, Raindrop, Fog",
+  "label": "ch:te-firecrackers-decorated-performing-bull-seen-at-sankranti-sunshine-raindrop-fog",
+  "canDo": "I can say firecrackers, a decorated performing bull seen at Sankranti, sunshine, a raindrop and fog.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C229-pogamancu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 229: I can say firecrackers, a decorated performing bull seen at Sankranti, sunshine, a raindrop and fog.",
+    "assesses": [
+      "TE-LEX-C229-VASTUVU229-03",
+      "TE-LEX-C229-VASTUVU229-04",
+      "TE-LEX-C229-VASTUVU229-05"
+    ]
+  }
+}

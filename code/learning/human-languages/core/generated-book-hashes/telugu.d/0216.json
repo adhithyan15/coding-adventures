@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:0bd10e2b1d429a67",
+  "lessonIds": [
+    "TE-C216-snanapu-gadi",
+    "TE-C216-punadi",
+    "TE-C216-getu",
+    "TE-C216-bekari",
+    "TE-C216-selunu",
+    "TE-R216-first-pass-words-from-chapters-208-211",
+    "TE-R216-second-pass-words-from-chapters-212-216"
+  ],
+  "tex": "telugu/book/chapters/ch216-bathroom-foundation-gate-bakery-hair-salon.tex"
+}

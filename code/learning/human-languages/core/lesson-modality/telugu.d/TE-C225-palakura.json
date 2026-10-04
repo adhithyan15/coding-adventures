@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C225-palakura",
+    "language": "telugu",
+    "chapter": 225,
+    "sequence": 10390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e5bdeff190a61b88"
+  },
+  "findings": []
+}
