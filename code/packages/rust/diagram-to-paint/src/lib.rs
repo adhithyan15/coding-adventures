@@ -159,6 +159,7 @@ where
         if node.width >= 44.0 && node.height >= 22.0 {
             let mut label_font = options.label_font.clone();
             label_font.size = node.style.as_ref().and_then(|style| style.node.font_size).unwrap_or(diagram.config.label_font_size);
+            apply_treemap_font_size(&mut label_font, node.style.as_ref());
             if let Some(style) = &node.style {
                 label_font.weight = style.node.font_weight.unwrap_or(label_font.weight);
                 label_font.italic = style.node.font_italic.unwrap_or(label_font.italic);
@@ -185,6 +186,7 @@ where
             if diagram.config.show_values && node.height >= 42.0 {
                 let mut value_font = options.label_font.clone();
                 value_font.size = node.style.as_ref().and_then(|style| style.node.font_size).unwrap_or(diagram.config.value_font_size);
+                apply_treemap_font_size(&mut value_font, node.style.as_ref());
                 if let Some(style) = &node.style {
                     value_font.weight = style.node.font_weight.unwrap_or(value_font.weight);
                     value_font.italic = style.node.font_italic.unwrap_or(value_font.italic);
@@ -577,6 +579,14 @@ fn apply_treemap_line_height(font: &mut FontSpec, style: Option<&diagram_ir::Tre
         Some(diagram_ir::TreemapLineHeight::Factor(value)) => value,
         Some(diagram_ir::TreemapLineHeight::Pixels(value)) => value / font.size.max(1.0),
         None => font.line_height,
+    };
+}
+
+fn apply_treemap_font_size(font: &mut FontSpec, style: Option<&diagram_ir::TreemapStyle>) {
+    font.size = match style.and_then(|style| style.font_size) {
+        Some(diagram_ir::TreemapFontSize::Pixels(value)) => value,
+        Some(diagram_ir::TreemapFontSize::Factor(value)) => font.size * value,
+        None => font.size,
     };
 }
 
@@ -7114,6 +7124,7 @@ mod tests {
                         stroke_dash: Some(vec![5.0, 2.0]), text_color: Some("#78350f".into()), font_size: Some(17.0),
                         font_weight: Some(700), font_italic: Some(true), font_family: Some("Avenir".into()), corner_radius: Some(9.0),
                     },
+                    font_size: Some(diagram_ir::TreemapFontSize::Factor(1.25)),
                     opacity: Some(0.8), fill_opacity: Some(0.5), stroke_opacity: Some(0.5), stroke_dash_offset: Some(-1.0),
                     text_align: Some(diagram_ir::TreemapTextAlign::End),
                     text_align_last: None,
@@ -7149,6 +7160,11 @@ mod tests {
                 }),
             }],
         };
+
+        let mut relative_font = opts.label_font.clone();
+        relative_font.size = 17.0;
+        apply_treemap_font_size(&mut relative_font, layout.nodes[0].style.as_ref());
+        assert_eq!(relative_font.size, 21.25);
 
         let styled_text = treemap_text_node(
             "Styled node", 0.0, 0.0, 100.0, 20.0, opts.label_font.clone(),
@@ -7383,7 +7399,7 @@ mod tests {
                 && rect.stroke_dash.as_deref() == Some(&[5.0, 2.0][..])
                 && rect.stroke_dash_offset == Some(-1.0))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
-            PaintInstruction::GlyphRun(run) if run.font_size == 17.0)));
+            PaintInstruction::GlyphRun(run) if run.font_size == 21.25)));
         assert_eq!(format_treemap_value(12345.0, "$0,0"), "$12,345");
         assert_eq!(format_treemap_value(12.5, ".2f"), "12.50");
         assert_eq!(format_treemap_value(12345.0, "$0,0.00"), "$12,345.00");

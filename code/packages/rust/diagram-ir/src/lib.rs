@@ -1475,6 +1475,7 @@ impl Default for TreemapConfig {
 #[derive(Clone, Debug, PartialEq, Default)]
 pub struct TreemapStyle {
     pub node: DiagramStyle,
+    pub font_size: Option<TreemapFontSize>,
     pub opacity: Option<f64>,
     pub fill_opacity: Option<f64>,
     pub stroke_opacity: Option<f64>,
@@ -1509,6 +1510,9 @@ pub struct TreemapStyle {
     pub tab_size: Option<u16>,
     pub font_stretch: Option<TreemapFontStretch>,
 }
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum TreemapFontSize { Pixels(f64), Factor(f64) }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum TreemapTextAlign { Start, Center, End, Justify }

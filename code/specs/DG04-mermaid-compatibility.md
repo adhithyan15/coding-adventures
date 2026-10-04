@@ -532,7 +532,9 @@ through semantic IR and backend-neutral paint. Class border radii likewise
 reach backend-neutral rectangle geometry, while relative `bolder` and `lighter`
 font weights resolve against the default weight, integer weights from 1 through
 1000 survive into native variable-font matching, and `oblique` font style lowers
-through the existing backend-neutral italic face selection. Nine named font-stretch widths and positive percentages
+through the existing backend-neutral italic face selection. Positive pixel,
+em, rem, and percentage font sizes retain their authored absolute or relative
+semantics through label and value layout. Nine named font-stretch widths and positive percentages
 flow through nearest-width native font matching without introducing backend-specific paint behavior. Class text alignment and
 none/upper/lower/capitalize/full-width/full-size-kana transforms and none/underline/overline/line-through
 decoration combinations, including independently authored decoration colors,
