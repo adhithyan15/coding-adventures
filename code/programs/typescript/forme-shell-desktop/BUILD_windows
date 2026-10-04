@@ -1,5 +1,3 @@
-$ErrorActionPreference = 'Stop'
-
 npm ci --quiet --prefix ../../../packages/typescript/document-ast
 npm ci --quiet --prefix ../../../packages/typescript/forme-types
 npm ci --quiet --prefix ../../../packages/typescript/forme-interactivity-ir

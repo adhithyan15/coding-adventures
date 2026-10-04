@@ -36,7 +36,13 @@ class TypeScriptFrontendBuildDirectoryTests(unittest.TestCase):
 
         self.assertIn("npm run build", source)
         self.assertIn("npm run test:coverage", source)
-        for native_command in ("uname", "worker:sea", "cargo ", "tauri:build"):
+        for native_command in (
+            "$ErrorActionPreference",
+            "uname",
+            "worker:sea",
+            "cargo ",
+            "tauri:build",
+        ):
             self.assertNotIn(native_command, source)
         canonical_prerequisites = set(
             re.findall(r"packages/typescript/([a-z0-9-]+)", canonical)
