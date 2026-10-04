@@ -17,7 +17,7 @@ shared directory's `src` and `dist` rather than its own. A clean build of
 `typescript/transistors` therefore failed with TS6059 because
 `transistors/src/index.ts` was outside `code/packages/typescript/src`.
 
-The repository has 458 TypeScript package/program configs with build scripts.
+The repository has 487 TypeScript package/program configs with build scripts.
 Of those, 129 directly extend the shared base without overriding either path;
 three more override only `rootDir` and still inherit `outDir`; 155 directly
 extend it and override both paths; and the remaining configs do not consume

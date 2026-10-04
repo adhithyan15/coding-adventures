@@ -1,7 +1,7 @@
 # FM09 — Forme Authoring Shell
 
-> **Status:** Authoring v1 in progress. The durable authoring core is the first
-> delivery slice; editor, preview, publish, and desktop packaging follow as
+> **Status:** Authoring v1 in progress. The durable authoring core and default
+> editor are implemented; preview, publish, and desktop packaging follow as
 > separately reviewable product boundaries.
 > **Scope:** Project state, editing transactions, persistent history, editor
 > composition, live preview, publish composition, and the local desktop shell.
@@ -14,8 +14,8 @@
 |---|---|---|
 | Bounded project codec | Implemented | `forme-authoring-core` validates the closed v1 project and authorable Content IR subset with hard recursive limits. |
 | Crash-safe autosave and persistent undo/redo | Implemented | The injected compare-and-swap adapter, immutable transactions, and canonical persisted history pass failure, conflict, cancellation, and restart tests. |
-| Accessible block editor and configuration UI | Active | FM-B063 composes the core through editor slots. |
-| Pipeline-backed preview | Pending | FM-B064 uses the real FM07 watch path and last-good output. |
+| Accessible block editor and configuration UI | Implemented | `forme-authoring-editor` provides keyboard-complete settings, document, block, history, and declarative plugin-slot controls over the durable core. |
+| Pipeline-backed preview | Active | FM-B064 uses the real FM07 watch path and last-good output. |
 | Reviewed publish workflow | Pending | FM-B065 composes FM08 without exposing tokens or target files to editor plugins. |
 | Installable desktop shell | Pending | FM-B066 packages the proven workflow and first-run experience. |
 
@@ -157,13 +157,63 @@ the core; a shell may offer an explicit export-and-reset flow later.
 
 ## 5. Editor composition
 
-FM-B063 supplies the accessible default block editor and project settings UI.
-Editor plugins receive frozen snapshots and dispatch semantic core commands.
-They cannot mutate storage, invoke preview or publish, read tokens, or obtain a
-DOM node outside their registered slot. The default editor supports keyboard
-operation, visible focus, labelled controls, status announcements, and a
-complete no-pointer workflow. It includes at least paragraph, heading, list,
-image, code block, blockquote, table, and link authoring.
+FM-B063 supplies `forme-authoring-editor`, the accessible React block editor
+and project-settings surface. The component is controlled by an
+`AuthoringSession`: it reads only the session's frozen project snapshot and
+changes state only by dispatching the semantic commands defined in section 3.
+Document selection, creation, metadata, removal, site configuration, undo,
+redo, and every block edit therefore cross the same validated persistence
+boundary as non-UI callers. A failed, cancelled, or conflicting dispatch does
+not advance the rendered snapshot and is announced without exposing adapter
+error text.
+
+The default editor owns document-order controls and authoring forms for
+paragraph, heading, ordered or unordered list, image, code block, blockquote,
+table, and link blocks. Insert, replace, move, and remove operations construct
+one complete `replace-document-body` command; they never mutate a retained AST.
+List and table forms cap rows, columns, and padded cells before allocating AST
+nodes, keeping editor-side expansion below the core's authoring node budget.
+Hosts provide the reviewed theme choices as identifier/label data, so the
+primary settings flow cannot introduce raw CSS or an unreviewed theme
+identifier. Document identities are supplied by a host callback because UUID
+creation is a host concern, but the callback receives no session or adapter.
+
+### 5.1 Declarative plugin slots
+
+Third-party editor extensions are data across this boundary, not same-realm
+React components. A bounded contribution names one of three fixed slots
+(`document-toolbar`, `block-toolbar`, or `site-toolbar`) and carries only a
+portable plugin/action identity plus a short plain-text label. Contributions
+are exact-key, plain-object data; duplicate identities, accessors, prototypes,
+symbols, over-count arrays, control or bidi-format characters, and over-limit
+strings are rejected before rendering. React escapes every displayed label.
+
+Activating a contribution calls one injected `EditorPluginBridge` with a
+deeply frozen request containing the contribution identity, slot target, and a
+private validated snapshot of the current project. Each action also shows its
+validated plugin identity. The bridge represents the already-sandboxed FM02
+plugin boundary. It receives a bounded cancellation signal that expires or
+aborts on editor unmount; the host must retire non-cooperative sandbox work. It
+returns exactly one `AuthoringCommand`; the editor
+dispatches that command through `AuthoringSession` and refreshes only after the
+core accepts and persists it. The request contains no storage adapter, session,
+DOM object, preview or publish handle, credential, filesystem path, network
+client, or host callback. Arbitrary plugin JSX, event handlers, and DOM nodes
+are deliberately outside the v1 slot contract.
+
+### 5.2 Accessibility contract
+
+Every operation is reachable through native labelled form controls and
+buttons. Block reordering uses explicit Move up / Move down buttons rather than
+drag-only behavior. Focus moves to a newly inserted block, to the nearest
+surviving block after removal, and to the selected document heading after
+document changes. A polite status region announces saves and failures; an
+assertive alert reports the current failure. Busy controls expose
+`aria-busy`/disabled state, visible `:focus-visible` styling ships with the
+component, and no operation requires a pointer, hover, or `contenteditable`.
+Browser tests must drive the same labelled controls a keyboard or assistive
+technology user reaches; direct calls into component internals do not satisfy
+this contract.
 
 Style and interactivity configuration operate on the validated FM04 and FM05
 IRs. They do not introduce raw CSS or handwritten JavaScript into the primary
@@ -213,6 +263,14 @@ Later slices add browser accessibility tests, exact preview/build parity,
 deploy dry-run and failure tests, native capability tests, and a product test
 that starts from an empty profile and publishes a first site without editing a
 source or configuration file.
+
+FM-B063 browser tests cover every default block form, metadata and site
+configuration, host-supplied theme choices, selection, create/remove, undo and
+redo, keyboard-only reordering, focus restoration, live announcements,
+dispatch rollback, and declarative plugin-slot activation. They also prove the
+plugin bridge receives only the frozen request and that hostile contribution
+descriptors are rejected. The package must exceed 95% statement and line
+coverage and 90% branch coverage.
 
 ## 10. Related specifications
 

@@ -1,6 +1,6 @@
 # Forme Completion Roadmap
 
-> **Status:** Living delivery backlog, last prioritized 2026-10-02.
+> **Status:** Living delivery backlog, last prioritized 2026-10-03.
 > This roadmap turns the north-star in [FM00](FM00-forme-vision.md) into
 > merge-sized work. Update it whenever implementation work discovers a new
 > gap, and reprioritize it after every merged Forme pull request.
@@ -18,7 +18,7 @@
 | AOT compiler | Static v0 implemented | [FM06](FM06-forme-aot-compiler.md) |
 | CLI and development server | Headless v0 implemented | [FM07](FM07-forme-cli-dev-server.md) |
 | Deploy runner | Headless v0 implemented | [FM08](FM08-forme-deploy-runner.md) |
-| Authoring shell | Durable project core implemented; editor active | [FM09](FM09-forme-authoring-shell.md) |
+| Authoring shell | Durable project core and accessible default editor implemented; pipeline-backed preview active | [FM09](FM09-forme-authoring-shell.md) |
 
 ## What “complete” means
 
@@ -45,7 +45,7 @@ stays visible so a local optimization cannot quietly close the project early.
 
 The implementation now forms a complete headless v0 product:
 
-- 76 TypeScript `forme-*` packages and 231 package test files cover the kernel,
+- 77 TypeScript `forme-*` packages and 235 package test files cover the kernel,
   stage contracts, a bounded concurrent orchestrator, Style IR, AOT emitters, document
   transforms, collections, feeds, routing, and static output.
 - The plugin runtime boundary also includes Python and Rust SDK packages. All
@@ -180,8 +180,8 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 55 | FM-B061 | done | Prove progressive enhancement in a live Forme site | Depends on FM-B060. One dogfood page ships a useful no-JavaScript fallback plus one declarative enhanced interaction; clean and incremental builds prove only that page receives its bounded island module. |
 | 56 | FM-B013 | done | Complete Interactivity IR | Completion milestone depending on FM-B059–FM-B061. The normative schema, validator, exact per-page island selection, zero-JavaScript static path, and live progressive-enhancement proof close the FM05 delivery gate. |
 | 57 | FM-B062 | done | Implement the durable authoring project core | Depends on FM-B013 and FM-B015. A bounded closed project codec, semantic immutable transactions, compare-and-swap autosave, and persistent bounded undo/redo pass hostile-input, failure, conflict, cancellation, and restart tests without ambient I/O. |
-| 58 | FM-B063 | active | Build the accessible default block editor | Depends on FM-B062. A keyboard-complete editor and configuration UI create and edit the default Content IR block set through plugin slots and core commands without exposing storage or host authority. |
-| 59 | FM-B064 | blocked | Run exact pipeline-backed live preview | Depends on FM-B009 and FM-B063. The active persisted draft revision runs through the real pipeline with coalescing, cancellation, last-good output, bounded diagnostics, and exact revision attribution. |
+| 58 | FM-B063 | done | Build the accessible default block editor | Depends on FM-B062. A keyboard-complete editor and configuration UI create and edit the default Content IR block set through exact declarative plugin slots and durable core commands without exposing storage or host authority. |
+| 59 | FM-B064 | active | Run exact pipeline-backed live preview | Depends on FM-B009 and FM-B063. The active persisted draft revision runs through the real pipeline with coalescing, cancellation, last-good output, bounded diagnostics, and exact revision attribution. |
 | 60 | FM-B065 | blocked | Compose the reviewed authoring publish workflow | Depends on FM-B012 and FM-B064. The shell builds the exact persisted revision and publishes through one reviewed FM08 target without exposing credentials or silently marking failed/indeterminate work as published. |
 | 61 | FM-B066 | blocked | Package the first-run desktop authoring product | Depends on FM-B065. An installable local shell creates a project, selects a theme, edits and previews a first post, configures a supported target, and publishes without source/config editing, git, or a command line. |
 | 62 | FM-B016 | blocked | Complete the authoring shell | Completion milestone depending on FM-B062–FM-B066. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
@@ -307,6 +307,7 @@ work.
 | 2026-10-02 | FM-B060 merged after macOS, Windows, Linux, metadata, duplicate-push, CodeQL, and mandatory security review passed. The multi-page blog already uses the generic renderer and asset-aware emitter, so it can prove selected and zero-JavaScript routes without duplicating the new composition boundary. | Close FM-B060 and activate FM-B061. Enhance only the `Hello, Forme` article with a reviewed, exact-byte pipeline-step island; retain its complete ordered-list fallback, keep every other article script-free, and extend clean plus warm incremental product acceptance to assert the route/module split. |
 | 2026-10-02 | FM-B061 added an opt-in pipeline-step explorer to only the `Hello, Forme` article. Its full ordered list remains the no-JavaScript fallback; the product binds one stable script identity to reviewed SHA-256 bytes; clean and unchanged warm builds are byte-identical; and every other article remains script- and island-free. The source-input audit also added the module identity sidecar to the exact blog boundary and regenerated every checked digest projection. | Close FM-B061 and its FM-B013 completion milestone. Interactivity IR is implemented end to end. Activate FM-B016 as the highest-priority ready Authoring-v1 item; FM-B017 is independently ready but remains blocked so only one roadmap item is active. |
 | 2026-10-03 | Adding the canonical FM09 authoring-shell specification and its TypeScript core exposed that the numbered-spec allowlist, roadmap status table, and TypeScript project inventory still stopped before the new surfaces. | Extend all three metadata contracts to FM09 and `forme-authoring-core` so future additions cannot silently bypass the canonical maps. |
+| 2026-10-03 | A same-realm React plugin component could read ambient DOM and host globals regardless of the props omitted from its nominal interface, so passing JSX through an “editor slot” would not satisfy FM09's authority claim. | Make FM-B063 slots bounded declarative data and route activation through one injected bridge representing the already-sandboxed FM02 boundary. The bridge receives only a frozen snapshot and returns one core command; arbitrary plugin code and DOM nodes never enter the editor realm. |
 
 ## Loop protocol
 
