@@ -2012,6 +2012,9 @@ fn parse_css_color(css: &str) -> Option<Color> {
     if let Some(color) = parse_css_hsl_function(css) {
         return Some(color);
     }
+    if let Some(color) = parse_css_hwb_function(css) {
+        return Some(color);
+    }
     if let Some(color) = parse_css_named_color(css) {
         return Some(color);
     }
@@ -2080,28 +2083,9 @@ fn parse_css_hsl_function(css: &str) -> Option<Color> {
     if color_parts.len() != 3 {
         return None;
     }
-    let hue = |value: &str| -> Option<f64> {
-        let (number, scale) = if let Some(value) = value.strip_suffix("deg") {
-            (value, 1.0)
-        } else if let Some(value) = value.strip_suffix("grad") {
-            (value, 0.9)
-        } else if let Some(value) = value.strip_suffix("rad") {
-            (value, 180.0 / std::f64::consts::PI)
-        } else if let Some(value) = value.strip_suffix("turn") {
-            (value, 360.0)
-        } else {
-            (value, 1.0)
-        };
-        number.parse::<f64>().ok().filter(|value| value.is_finite())
-            .map(|value| (value * scale).rem_euclid(360.0))
-    };
-    let percentage = |value: &str| -> Option<f64> {
-        value.strip_suffix('%')?.parse::<f64>().ok().filter(|value| value.is_finite())
-            .map(|value| (value / 100.0).clamp(0.0, 1.0))
-    };
-    let hue = hue(color_parts[0])?;
-    let saturation = percentage(color_parts[1])?;
-    let lightness = percentage(color_parts[2])?;
+    let hue = parse_css_hue(color_parts[0])?;
+    let saturation = parse_css_percentage(color_parts[1])?;
+    let lightness = parse_css_percentage(color_parts[2])?;
     let chroma = (1.0 - (2.0 * lightness - 1.0).abs()) * saturation;
     let sector = hue / 60.0;
     let x = chroma * (1.0 - (sector.rem_euclid(2.0) - 1.0).abs());
@@ -2119,6 +2103,62 @@ fn parse_css_hsl_function(css: &str) -> Option<Color> {
         .or_else(|| legacy_alpha.then(|| parts[3]));
     let alpha = alpha_source.map_or(Some(255), |value| parse_css_byte(value, 255.0))?;
     Some(Color { r: channel(r), g: channel(g), b: channel(b), a: alpha })
+}
+
+fn parse_css_hwb_function(css: &str) -> Option<Color> {
+    let source = css.trim().to_ascii_lowercase();
+    let inner = source.strip_prefix("hwb(")?.strip_suffix(')')?.trim();
+    let normalized = inner.replace('/', " / ");
+    let parts = normalized.split_whitespace().collect::<Vec<_>>();
+    let slash = parts.iter().position(|part| *part == "/");
+    let color_parts = slash.map_or(&parts[..], |index| &parts[..index]);
+    if color_parts.len() != 3 {
+        return None;
+    }
+    let hue = parse_css_hue(color_parts[0])?;
+    let mut whiteness = parse_css_percentage(color_parts[1])?;
+    let mut blackness = parse_css_percentage(color_parts[2])?;
+    let sum = whiteness + blackness;
+    if sum > 1.0 {
+        whiteness /= sum;
+        blackness /= sum;
+    }
+    let sector = hue / 60.0;
+    let x = 1.0 - (sector.rem_euclid(2.0) - 1.0).abs();
+    let (r, g, b) = match sector as u8 {
+        0 => (1.0, x, 0.0),
+        1 => (x, 1.0, 0.0),
+        2 => (0.0, 1.0, x),
+        3 => (0.0, x, 1.0),
+        4 => (x, 0.0, 1.0),
+        _ => (1.0, 0.0, x),
+    };
+    let factor = 1.0 - whiteness - blackness;
+    let channel = |value: f64| ((value * factor + whiteness) * 255.0).clamp(0.0, 255.0).round() as u8;
+    let alpha = slash.and_then(|index| parts.get(index + 1).copied())
+        .map_or(Some(255), |value| parse_css_byte(value, 255.0))?;
+    Some(Color { r: channel(r), g: channel(g), b: channel(b), a: alpha })
+}
+
+fn parse_css_hue(value: &str) -> Option<f64> {
+    let (number, scale) = if let Some(value) = value.strip_suffix("deg") {
+        (value, 1.0)
+    } else if let Some(value) = value.strip_suffix("grad") {
+        (value, 0.9)
+    } else if let Some(value) = value.strip_suffix("rad") {
+        (value, 180.0 / std::f64::consts::PI)
+    } else if let Some(value) = value.strip_suffix("turn") {
+        (value, 360.0)
+    } else {
+        (value, 1.0)
+    };
+    number.parse::<f64>().ok().filter(|value| value.is_finite())
+        .map(|value| (value * scale).rem_euclid(360.0))
+}
+
+fn parse_css_percentage(value: &str) -> Option<f64> {
+    value.strip_suffix('%')?.parse::<f64>().ok().filter(|value| value.is_finite())
+        .map(|value| (value / 100.0).clamp(0.0, 1.0))
 }
 
 fn parse_css_byte(value: &str, numeric_scale: f64) -> Option<u8> {
@@ -2278,10 +2318,19 @@ fn parse_css_named_color(css: &str) -> Option<Color> {
 }
 
 fn normalize_css_paint(css: String) -> String {
-    if css.eq_ignore_ascii_case("none") || css.eq_ignore_ascii_case("transparent") {
+    if css.eq_ignore_ascii_case("none") {
         return "rgba(0,0,0,0)".into();
     }
-    parse_css_named_color(&css).map_or(css, |color| format!("rgb({},{},{})", color.r, color.g, color.b))
+    if css.starts_with('#') {
+        return css;
+    }
+    parse_css_color(&css).map_or(css, |color| {
+        if color.a == 255 {
+            format!("rgb({},{},{})", color.r, color.g, color.b)
+        } else {
+            format!("rgba({},{},{},{})", color.r, color.g, color.b, css_alpha(f64::from(color.a) / 255.0))
+        }
+    })
 }
 
 fn text_node(
@@ -7395,6 +7444,16 @@ mod tests {
         assert_eq!(css_to_color("hsl(0.5turn 100% 50%)"), cyan);
         assert_eq!(css_to_color("hsl(200grad 100% 50%)"), cyan);
         assert_eq!(css_to_color("hsl(3.141592653589793rad 100% 50%)"), cyan);
+    }
+
+    #[test]
+    fn css_colors_parse_hwb_functions() {
+        let expected = Color { r: 51, g: 102, b: 153, a: 204 };
+        assert_eq!(css_to_color("hwb(210 20% 40% / 80%)"), expected);
+        assert_eq!(css_to_color("hwb(-150deg 20% 40% / 0.8)"), expected);
+        assert_eq!(with_opacity("hwb(210 20% 40% / 80%)", 0.5), "rgba(51,102,153,0.4)");
+        assert_eq!(css_to_color("hwb(0 80% 80%)"), Color { r: 128, g: 128, b: 128, a: 255 });
+        assert_eq!(normalize_css_paint("hwb(210 20% 40% / 80%)".into()), "rgba(51,102,153,0.8)");
     }
 
     #[test]

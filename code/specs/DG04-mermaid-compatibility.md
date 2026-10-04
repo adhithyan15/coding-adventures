@@ -538,7 +538,8 @@ modern space/slash `rgb()`/`rgba()` colors survive Mermaid style parsing, while
 backend-neutral color lowering also accepts legacy comma forms. Modern
 space/slash `hsl()`/`hsla()` styles preserve hue units and alpha through semantic
 IR before backend-neutral RGB conversion; lowering also accepts legacy comma
-forms. The complete CSS named-color set likewise resolves to explicit
+forms. Modern `hwb()` colors preserve hue units, whiteness, blackness, and alpha
+through the same semantic and backend-neutral conversion path. The complete CSS named-color set likewise resolves to explicit
 backend-neutral RGB paint for node fills, strokes, labels, and opacity composition,
 including gray/grey aliases and `rebeccapurple`.
 The SVG/CSS `none` paint keyword remains distinct from text color semantics and
