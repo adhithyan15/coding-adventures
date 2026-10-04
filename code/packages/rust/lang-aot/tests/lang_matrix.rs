@@ -1714,6 +1714,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — the same runtime result may migrate through a direct real
+    // scalar slot before the shared portable formatter consumes it.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; real x; x := pick(); output(x) end",
+        expect: Expect::Stdout("2.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — static integer-valued functions may feed checked snapshots and widen into
     // bounded static real expressions. Copying preserves the destination when
     // the source is reassigned; overflow, control flow, calls, captures,
@@ -12001,6 +12010,29 @@ fn algol_runtime_real_output_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_runtime_real_scalar_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("x := pick(); output(x)")
+        })
+        .expect("the ALGOL runtime-real-scalar-output program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but runtime real scalar output did not complete"
             );
             continue;
         };
