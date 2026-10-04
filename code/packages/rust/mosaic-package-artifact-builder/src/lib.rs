@@ -3459,11 +3459,13 @@ fn android_strings_xml(label: &str) -> String {
 fn build_android_activity_kt(require_runtime: bool) -> String {
     // The host loads inside `MosaicStartup` (strict) or `remember` (sample),
     // and the platform library is installed on it as it loads, with the
-    // document picker the activity registered in onCreate (UI89 §3.8).
+    // document picker the activity registered in onCreate (UI89 §3.8). The
+    // content sits inside `MosaicDragEndWatcher`, so every drag's end reaches
+    // its source, even one no component wanted (UI89 §3.5).
     let (imports, content, loader) = if require_runtime {
         (
             "import MosaicComposeHost\nimport MosaicRuntimeHost\nimport MosaicStartup\n",
-            "        setContent { MosaicStartup(::loadMosaicHost) }\n",
+            "        setContent { MosaicDragEndWatcher { MosaicStartup(::loadMosaicHost) } }\n",
             concat!(
                 "\n",
                 "    private fun loadMosaicHost(): MosaicComposeHost =\n",
@@ -3482,7 +3484,7 @@ fn build_android_activity_kt(require_runtime: bool) -> String {
                 "                    ?.also { platformRouter = installMosaicPlatformEffects(it, documentPicker) }\n",
                 "                    ?: MosaicComposeHostBridge.load()\n",
                 "            }\n",
-                "            MosaicApp(mosaicHost)\n",
+                "            MosaicDragEndWatcher { MosaicApp(mosaicHost) }\n",
                 "        }\n",
             ),
             "",
@@ -3496,6 +3498,7 @@ fn build_android_activity_kt(require_runtime: bool) -> String {
             "package mosaic.android\n\n",
             "{imports}",
             "import MosaicAndroidDocumentPicker\n",
+            "import MosaicDragEndWatcher\n",
             "import MosaicPlatformRouter\n",
             "import installMosaicPlatformEffects\n",
             "import android.os.Bundle\n",
@@ -5978,8 +5981,9 @@ const SWIFTUI_NAMESPACE: LayoutNamespace = LayoutNamespace {
 /// | `MosaicRuntimeHost.kt`            | `MosaicRuntimeHost`, `MosaicRuntimeException`, `MosaicNativeApi`, `MosaicSizeT`, `MosaicBuffer`, `MosaicBytes`, `MosaicPlatformEffectHost` |
 /// | `MosaicFileEffects.kt`            | `MosaicPlatformRouter`, `MosaicAccept`, `MosaicFileFailure`, `MosaicOpenedDocument`, `MosaicSaveTarget`, `MosaicDocumentPicker`, `MosaicSaveRequest` |
 /// | `MosaicPlatformEffects.kt`        | desktop: `MosaicFileDialogs`, `AwtMosaicFileDialogs`, `MosaicDialogPicker`; Android: `MosaicAndroidDocumentPicker` |
+/// | `MosaicPlatform.kt`               | Android: `MosaicDragEndWatcher` (UI89 §3.5) |
 ///
-/// `Main.kt`, both halves of `MosaicPlatform.kt` and the rest declare only
+/// `Main.kt`, the desktop half of `MosaicPlatform.kt` and the rest declare only
 /// `main`, camelCase helpers or `private` names; `MosaicActivity` lives in
 /// its own package (`mosaic.android`). A variant composable may not take
 /// one (`Mosaic` + `app` would be a second `MosaicApp`). Pinned by
@@ -6008,6 +6012,7 @@ const COMPOSE_SHELL_RESERVED_NAMES: &[&str] = &[
     "MosaicFileDialogs",
     "AwtMosaicFileDialogs",
     "MosaicDialogPicker",
+    "MosaicDragEndWatcher",
     "MosaicAndroidDocumentPicker",
 ];
 
@@ -14515,7 +14520,24 @@ layout NativeEvents {
         let android = out.path().join("compose/android");
         let activity =
             fs::read_to_string(android.join("src/main/kotlin/mosaic/android/MosaicActivity.kt")).unwrap();
-        assert!(activity.contains("setContent { MosaicStartup(::loadMosaicHost) }"), "{activity}");
+        // Inside the window-wide drag-end watcher (UI89 §3.5), which the
+        // Android half of MosaicPlatform.kt defines.
+        assert!(
+            activity.contains(
+                "setContent { MosaicDragEndWatcher { MosaicStartup(::loadMosaicHost) } }"
+            ),
+            "{activity}"
+        );
+        assert!(
+            activity.contains("import MosaicDragEndWatcher\n"),
+            "{activity}"
+        );
+        let platform =
+            fs::read_to_string(android.join("src/main/kotlin/MosaicPlatform.kt")).unwrap();
+        assert!(
+            platform.contains("internal fun MosaicDragEndWatcher(content: @Composable () -> Unit)"),
+            "{platform}"
+        );
         // The platform library is installed on the host as it loads (UI89 §3.8).
         assert!(
             activity.contains("        }.also { platformRouter = installMosaicPlatformEffects(it, documentPicker) }\n"),

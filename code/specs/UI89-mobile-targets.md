@@ -221,8 +221,17 @@ What step 4 changed from §3.4, and why:
   drag carries it), so a target accepts, enters and hovers as on desktop; and
   a fourth seam, `mosaicDragEnded(event)`, which every target's `onEnded`
   calls, runs the source's completion once (desktop: nothing to do -- AWT
-  reports the end itself). A drag no target was interested in never reports
-  its end; nothing was dropped.
+  reports the end itself). Android tells a drag's end only to the targets
+  that were interested in it, so a drag no component wanted -- let go over
+  empty space, or over targets of another kind -- would never reach its
+  source, which would stay mid-drag. `MosaicActivity` therefore wraps the
+  app in `MosaicDragEndWatcher` (Android's `MosaicPlatform.kt`): one target
+  over the whole window, interested in every Mosaic drag (its `localState`
+  is Mosaic's), that accepts no drop and whose `onEnded` calls
+  `mosaicDragEnded`. The components' own targets still decide every drop;
+  the completion's once-only guard absorbs the second report when one of
+  them was interested too. The wrapper passes the window's constraints
+  through unchanged (`propagateMinConstraints`), so layout is as before.
 - **Dependencies.** Compose through the same JetBrains coordinates the desktop
   build resolves (each is an `androidx.compose` artifact on Android), so both
   compile against one API; JNA from its `aar`. Pinned: Android Gradle Plugin
