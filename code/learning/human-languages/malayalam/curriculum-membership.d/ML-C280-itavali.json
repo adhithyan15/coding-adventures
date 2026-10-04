@@ -1,0 +1,11 @@
+{
+  "id": "ML-C280-itavali",
+  "pathSegment": "ML-PATH-280-STHALAM280",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-280-STHALAM280",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "language": "malayalam",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:19b2ec6444b5b614",
+  "lessonIds": [
+    "ML-C301-karar",
+    "ML-C301-nikuti",
+    "ML-C301-pila",
+    "ML-C301-srraplar",
+    "ML-C301-skeyil",
+    "ML-R301-first-pass-words-from-chapters-297-298",
+    "ML-R301-second-pass-words-from-chapters-299-301"
+  ],
+  "tex": "malayalam/book/chapters/ch301-contract-tax-fine-stapler-ruler.tex"
+}

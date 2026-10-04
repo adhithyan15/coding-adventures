@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:8348fbb7b44ca11f",
+  "lessonIds": [
+    "ML-C266-totuka",
+    "ML-C266-katikkuka",
+    "ML-C266-cavaykkuka",
+    "ML-C266-vilunnuka",
+    "ML-C266-manakkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch266.txt",
+  "json": "malayalam/narration/ch266.json",
+  "textHash": "fnv1a64:80867839c5ec7c85",
+  "jsonHash": "fnv1a64:785d38d2dfe7f600",
+  "findings": []
+}

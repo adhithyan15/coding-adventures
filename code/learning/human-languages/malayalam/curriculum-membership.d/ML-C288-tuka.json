@@ -1,0 +1,11 @@
+{
+  "id": "ML-C288-tuka",
+  "pathSegment": "ML-PATH-288-VASTU288",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-288-VASTU288",
+      "order": 3
+    }
+  ]
+}

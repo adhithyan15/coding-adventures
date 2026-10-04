@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C300-nastam",
+    "language": "malayalam",
+    "chapter": 300,
+    "sequence": 14110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e93f67d828e9c6cd"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C277-ikkalattu",
+  "pathSegment": "ML-PATH-277-SAMAYAM277",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-277-SAMAYAM277",
+      "order": 2
+    }
+  ]
+}

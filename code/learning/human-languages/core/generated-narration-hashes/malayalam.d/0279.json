@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:c782270c273f1762",
+  "lessonIds": [
+    "ML-C279-maitanam",
+    "ML-C279-myusiyam",
+    "ML-C279-jim",
+    "ML-C279-talvara",
+    "ML-C279-marubhumi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch279.txt",
+  "json": "malayalam/narration/ch279.json",
+  "textHash": "fnv1a64:a9a45558226246d5",
+  "jsonHash": "fnv1a64:7752609021f2e40e",
+  "findings": []
+}

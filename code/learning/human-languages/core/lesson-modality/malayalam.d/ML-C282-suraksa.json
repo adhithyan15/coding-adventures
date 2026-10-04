@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C282-suraksa",
+    "language": "malayalam",
+    "chapter": 282,
+    "sequence": 13150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:71aa262f8db45c2d"
+  },
+  "findings": []
+}

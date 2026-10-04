@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-291-VASTU291",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a creeper, an animal, a deer, a bull and a wolf.",
+  "prerequisites": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C279-maitanam",
+    "language": "malayalam",
+    "chapter": 279,
+    "sequence": 12960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32497fc3298e5745"
+  },
+  "findings": []
+}

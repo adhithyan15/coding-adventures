@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C265-kettuka",
+    "language": "malayalam",
+    "chapter": 265,
+    "sequence": 12270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa6da5301fe0c5cb"
+  },
+  "findings": []
+}

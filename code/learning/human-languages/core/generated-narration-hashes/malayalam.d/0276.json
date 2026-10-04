@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:84711f401a032100",
+  "lessonIds": [
+    "ML-C276-eppolum",
+    "ML-C276-pativayi",
+    "ML-C276-palappolum",
+    "ML-C276-mikkappolum",
+    "ML-C276-apurvamayi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch276.txt",
+  "json": "malayalam/narration/ch276.json",
+  "textHash": "fnv1a64:524e9e146e64ca20",
+  "jsonHash": "fnv1a64:61c8506241a2b5df",
+  "findings": []
+}

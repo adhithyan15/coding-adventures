@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:4be52a8879c28d26",
+  "lessonIds": [
+    "ML-C277-muhurttam",
+    "ML-C277-varsikam",
+    "ML-C277-ikkalattu",
+    "ML-C277-annu",
+    "ML-C277-itinite"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch277.txt",
+  "json": "malayalam/narration/ch277.json",
+  "textHash": "fnv1a64:a29bec5efc6bb4fd",
+  "jsonHash": "fnv1a64:3a1bdb8a33ed4bed",
+  "findings": []
+}

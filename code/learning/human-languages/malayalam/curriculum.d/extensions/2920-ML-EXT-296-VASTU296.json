@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-296-VASTU296",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a door frame, a cowshed, a light bulb, a carpet and a bedsheet.",
+  "prerequisites": []
+}

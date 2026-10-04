@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-300-JOLI300",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "ML-EXT-300-JOLI300"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C292-kotunkarru",
+  "pathSegment": "ML-PATH-292-VASTU292",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-292-VASTU292",
+      "order": 2
+    }
+  ]
+}

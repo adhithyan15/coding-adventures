@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:1d7e7689ff61ce1b",
+  "lessonIds": [
+    "ML-C278-valavu",
+    "ML-C278-signal",
+    "ML-C278-traphiku",
+    "ML-C278-kettitam",
+    "ML-C278-jilla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch278.txt",
+  "json": "malayalam/narration/ch278.json",
+  "textHash": "fnv1a64:58d7914d4469ef9c",
+  "jsonHash": "fnv1a64:185c9db8c837f1c4",
+  "findings": []
+}

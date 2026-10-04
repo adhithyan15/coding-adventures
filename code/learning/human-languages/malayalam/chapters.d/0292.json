@@ -1,0 +1,19 @@
+{
+  "chapter": 292,
+  "title": "Wave, Moonlight, Storm, Flood, Sofa",
+  "label": "ch:ml-wave-moonlight-storm-flood-sofa",
+  "canDo": "I can say a wave, moonlight, a storm, a flood and a sofa.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C292-sopha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 292: I can say a wave, moonlight, a storm, a flood and a sofa.",
+    "assesses": [
+      "ML-LEX-C292-VASTU292-03",
+      "ML-LEX-C292-VASTU292-04",
+      "ML-LEX-C292-VASTU292-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C296-virippu",
+  "pathSegment": "ML-PATH-296-VASTU296",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-296-VASTU296",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:0936a1a11116f615",
+  "lessonIds": [
+    "ML-C298-palacarakku",
+    "ML-C298-pakkarru",
+    "ML-C298-sambalam",
+    "ML-C298-kuli",
+    "ML-C298-tolilali"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch298.txt",
+  "json": "malayalam/narration/ch298.json",
+  "textHash": "fnv1a64:1bbbf4b01e19d34d",
+  "jsonHash": "fnv1a64:a83bc97d28d5c695",
+  "findings": []
+}

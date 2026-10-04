@@ -1,0 +1,11 @@
+{
+  "id": "ML-C296-paravatani",
+  "pathSegment": "ML-PATH-296-VASTU296",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-296-VASTU296",
+      "order": 3
+    }
+  ]
+}

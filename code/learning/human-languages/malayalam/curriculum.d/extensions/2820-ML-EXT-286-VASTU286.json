@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-286-VASTU286",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say socks, shoes, a belt, a purse and a pocket.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:a355c5d599079d69",
+  "lessonIds": [
+    "ML-C269-asvasippikkuka",
+    "ML-C269-prartthikkuka",
+    "ML-C269-alankarikkuka",
+    "ML-C269-janikkuka",
+    "ML-C269-marikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch269.txt",
+  "json": "malayalam/narration/ch269.json",
+  "textHash": "fnv1a64:2592216b6b706390",
+  "jsonHash": "fnv1a64:5f84604f24df9718",
+  "findings": []
+}

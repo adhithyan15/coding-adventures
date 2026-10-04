@@ -1,0 +1,11 @@
+{
+  "id": "ML-C292-vellappokkam",
+  "pathSegment": "ML-PATH-292-VASTU292",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-292-VASTU292",
+      "order": 3
+    }
+  ]
+}

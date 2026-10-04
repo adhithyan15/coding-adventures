@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C267-sampadikkuka",
+    "language": "malayalam",
+    "chapter": 267,
+    "sequence": 12380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:92b150a0ac73cd25"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 293,
+  "title": "Television, Technology, Magazine, Channel, Programme",
+  "label": "ch:ml-television-technology-magazine-channel-programme",
+  "canDo": "I can say a television, technology, a magazine, a channel and a programme.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C293-paripati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 293: I can say a television, technology, a magazine, a channel and a programme.",
+    "assesses": [
+      "ML-LEX-C293-VASTU293-03",
+      "ML-LEX-C293-VASTU293-04",
+      "ML-LEX-C293-VASTU293-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C278-traphiku",
+  "pathSegment": "ML-PATH-278-STHALAM278",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-278-STHALAM278",
+      "order": 2
+    }
+  ]
+}

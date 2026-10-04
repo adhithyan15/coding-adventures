@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:6c2f04767eaabbe7",
+  "lessonIds": [
+    "ML-C292-tira",
+    "ML-C292-nilavu",
+    "ML-C292-kotunkarru",
+    "ML-C292-vellappokkam",
+    "ML-C292-sopha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch292.txt",
+  "json": "malayalam/narration/ch292.json",
+  "textHash": "fnv1a64:0f20ff033089e2c9",
+  "jsonHash": "fnv1a64:87378616c34f2d6f",
+  "findings": []
+}

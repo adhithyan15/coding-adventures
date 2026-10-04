@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:ac8972824481db54",
+  "lessonIds": [
+    "ML-C268-nirasikkuka",
+    "ML-C268-amgikarikkuka",
+    "ML-C268-putukkuka",
+    "ML-C268-rajisrrar-ceyyuka",
+    "ML-C268-ettikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch268.txt",
+  "json": "malayalam/narration/ch268.json",
+  "textHash": "fnv1a64:78796ac7a5bc1217",
+  "jsonHash": "fnv1a64:248f280375a3bf17",
+  "findings": []
+}

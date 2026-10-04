@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C274-niru",
+    "language": "malayalam",
+    "chapter": 274,
+    "sequence": 12710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89db64ed98632ba3"
+  },
+  "findings": []
+}

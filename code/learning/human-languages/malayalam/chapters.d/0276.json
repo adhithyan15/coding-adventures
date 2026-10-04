@@ -1,0 +1,19 @@
+{
+  "chapter": 276,
+  "title": "Always, Regularly, Often, Usually, Rarely",
+  "label": "ch:ml-always-regularly-often-usually-rarely",
+  "canDo": "I can say always, regularly, often, usually and rarely.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ML-C276-apurvamayi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 276: I can say always, regularly, often, usually and rarely.",
+    "assesses": [
+      "ML-LEX-C276-SAMAYAM276-03",
+      "ML-LEX-C276-SAMAYAM276-04",
+      "ML-LEX-C276-SAMAYAM276-05"
+    ]
+  }
+}

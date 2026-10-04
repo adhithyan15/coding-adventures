@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C279-jim",
+    "language": "malayalam",
+    "chapter": 279,
+    "sequence": 12980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18d254937d157acf"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C289-ammayiyamma",
+  "pathSegment": "ML-PATH-289-VASTU289",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-289-VASTU289",
+      "order": 3
+    }
+  ]
+}

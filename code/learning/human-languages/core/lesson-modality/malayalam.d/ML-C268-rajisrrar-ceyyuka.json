@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C268-rajisrrar-ceyyuka",
+    "language": "malayalam",
+    "chapter": 268,
+    "sequence": 12420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:359b5b5b3aa4be89"
+  },
+  "findings": []
+}

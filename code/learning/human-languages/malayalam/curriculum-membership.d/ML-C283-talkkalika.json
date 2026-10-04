@@ -1,0 +1,11 @@
+{
+  "id": "ML-C283-talkkalika",
+  "pathSegment": "ML-PATH-283-GUNAM283",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-283-GUNAM283",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 290,
+  "title": "New clothes given for Onam, Kathakali, Tiger dance of Onam, Chenda drum, Pooram",
+  "label": "ch:ml-new-clothes-given-for-onam-kathakali-tiger-dance-of-onam-chenda-drum-pooram",
+  "canDo": "I can say new clothes given for Onam, Kathakali, the tiger dance of Onam, a chenda drum and a pooram.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-R290-second-pass-words-from-chapters-286-290",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 290: I can say new clothes given for Onam, Kathakali, the tiger dance of Onam, a chenda drum and a pooram.",
+    "assesses": [
+      "ML-LEX-C290-VASTU290-03",
+      "ML-LEX-C290-VASTU290-04",
+      "ML-LEX-C290-VASTU290-05"
+    ]
+  }
+}

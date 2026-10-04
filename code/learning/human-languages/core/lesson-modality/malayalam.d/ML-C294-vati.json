@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C294-vati",
+    "language": "malayalam",
+    "chapter": 294,
+    "sequence": 13790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32745c82bf63bc58"
+  },
+  "findings": []
+}

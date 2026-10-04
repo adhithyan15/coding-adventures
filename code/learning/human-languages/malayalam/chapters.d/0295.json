@@ -1,0 +1,19 @@
+{
+  "chapter": 295,
+  "title": "Pressure cooker, Mixer-grinder, Grinding stone, Mortar, Pestle",
+  "label": "ch:ml-pressure-cooker-mixer-grinder-grinding-stone-mortar-pestle",
+  "canDo": "I can say a pressure cooker, a mixer-grinder, a grinding stone, a mortar and a pestle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C295-ulakka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 295: I can say a pressure cooker, a mixer-grinder, a grinding stone, a mortar and a pestle.",
+    "assesses": [
+      "ML-LEX-C295-VASTU295-03",
+      "ML-LEX-C295-VASTU295-04",
+      "ML-LEX-C295-VASTU295-05"
+    ]
+  }
+}

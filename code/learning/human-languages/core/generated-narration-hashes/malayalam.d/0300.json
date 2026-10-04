@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:c68ec0370a65f946",
+  "lessonIds": [
+    "ML-C300-natan",
+    "ML-C300-kavi",
+    "ML-C300-tukkam",
+    "ML-C300-labham",
+    "ML-C300-nastam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch300.txt",
+  "json": "malayalam/narration/ch300.json",
+  "textHash": "fnv1a64:5e591889a095a086",
+  "jsonHash": "fnv1a64:fd8546641d66bb6b",
+  "findings": []
+}

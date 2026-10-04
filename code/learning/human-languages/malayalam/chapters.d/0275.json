@@ -1,0 +1,19 @@
+{
+  "chapter": 275,
+  "title": "Boredom, Lump, Bruise, Jaundice, Blood pressure",
+  "label": "ch:ml-boredom-lump-bruise-jaundice-blood-pressure",
+  "canDo": "I can say boredom, a lump, a bruise, jaundice and blood pressure.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ML-C275-raktasammarddam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 275: I can say boredom, a lump, a bruise, jaundice and blood pressure.",
+    "assesses": [
+      "ML-LEX-C275-AROGYAM275-03",
+      "ML-LEX-C275-AROGYAM275-04",
+      "ML-LEX-C275-AROGYAM275-05"
+    ]
+  }
+}

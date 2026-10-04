@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:ee919c9646097765",
+  "lessonIds": [
+    "ML-C272-tirruka",
+    "ML-C272-meyuka",
+    "ML-C272-neyyuka",
+    "ML-C272-tulaykkuka",
+    "ML-C272-coruka",
+    "ML-R272-first-pass-words-from-chapters-264-267",
+    "ML-R272-second-pass-words-from-chapters-268-272"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch272.txt",
+  "json": "malayalam/narration/ch272.json",
+  "textHash": "fnv1a64:6565a07b01b66257",
+  "jsonHash": "fnv1a64:cca58aed53c7c6f7",
+  "findings": []
+}

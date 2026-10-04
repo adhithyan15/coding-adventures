@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C298-kuli",
+    "language": "malayalam",
+    "chapter": 298,
+    "sequence": 14000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:84bb1029a745539c"
+  },
+  "findings": []
+}

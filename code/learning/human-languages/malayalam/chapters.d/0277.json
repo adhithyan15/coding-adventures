@@ -1,0 +1,19 @@
+{
+  "chapter": 277,
+  "title": "Auspicious moment, Anniversary, Nowadays, On that day, Meanwhile",
+  "label": "ch:ml-auspicious-moment-anniversary-nowadays-on-that-day-meanwhile",
+  "canDo": "I can say an auspicious moment, an anniversary, nowadays, on that day and meanwhile.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ML-C277-itinite",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 277: I can say an auspicious moment, an anniversary, nowadays, on that day and meanwhile.",
+    "assesses": [
+      "ML-LEX-C277-SAMAYAM277-03",
+      "ML-LEX-C277-SAMAYAM277-04",
+      "ML-LEX-C277-SAMAYAM277-05"
+    ]
+  }
+}

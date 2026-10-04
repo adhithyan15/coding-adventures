@@ -1,0 +1,19 @@
+{
+  "chapter": 287,
+  "title": "Snack, Banana fritter, Papaya, Orange, Apple",
+  "label": "ch:ml-snack-banana-fritter-papaya-orange-apple",
+  "canDo": "I can say a snack, a banana fritter, a papaya, an orange and an apple.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C287-appil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 287: I can say a snack, a banana fritter, a papaya, an orange and an apple.",
+    "assesses": [
+      "ML-LEX-C287-VASTU287-03",
+      "ML-LEX-C287-VASTU287-04",
+      "ML-LEX-C287-VASTU287-05"
+    ]
+  }
+}

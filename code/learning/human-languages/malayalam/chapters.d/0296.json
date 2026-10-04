@@ -1,0 +1,19 @@
+{
+  "chapter": 296,
+  "title": "Door frame, Cowshed, Light bulb, Carpet, Bedsheet",
+  "label": "ch:ml-door-frame-cowshed-light-bulb-carpet-bedsheet",
+  "canDo": "I can say a door frame, a cowshed, a light bulb, a carpet and a bedsheet.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-R296-second-pass-words-from-chapters-294-296",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 296: I can say a door frame, a cowshed, a light bulb, a carpet and a bedsheet.",
+    "assesses": [
+      "ML-LEX-C296-VASTU296-03",
+      "ML-LEX-C296-VASTU296-04",
+      "ML-LEX-C296-VASTU296-05"
+    ]
+  }
+}
