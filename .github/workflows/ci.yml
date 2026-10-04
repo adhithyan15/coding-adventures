@@ -3527,7 +3527,13 @@ jobs:
           test -f "$android_project/src/main/kotlin/mosaic/android/MosaicActivity.kt"
           test -f "$android_project/src/main/kotlin/TaskApp.kt"
           test ! -e "$android_project/src/main/kotlin/Main.kt"
-          test ! -e "$android_project/src/main/kotlin/MosaicPlatformEffects.kt"
+          # UI89 §3.8: the platform library's shared half, and Android's own
+          # half in place of the desktop's AWT dialogs.
+          test -f "$android_project/src/main/kotlin/MosaicFileEffects.kt"
+          if ! grep -q 'class MosaicAndroidDocumentPicker' "$android_project/src/main/kotlin/MosaicPlatformEffects.kt"; then
+            echo "::error::the Android project's MosaicPlatformEffects.kt is not Android's"
+            exit 1
+          fi
           if grep -rl 'java\.awt' "$android_project/src"; then
             echo "::error::desktop-only AWT reached the Android sources"
             exit 1
@@ -3585,7 +3591,8 @@ jobs:
           dex="$RUNNER_TEMP/mosaic-trestle-android-dex"
           rm -rf "$dex"
           unzip -q -o "$apk" 'classes*.dex' 'lib/*' -d "$dex"
-          for class in 'Lmosaic/android/MosaicActivity;' 'LTaskAppKt;' 'LMosaicAppShellKt;' 'LMosaicRuntimeHost;' 'LMosaicPlatformKt;'; do
+          for class in 'Lmosaic/android/MosaicActivity;' 'LTaskAppKt;' 'LMosaicAppShellKt;' 'LMosaicRuntimeHost;' 'LMosaicPlatformKt;' \
+            'LMosaicPlatformRouter;' 'LMosaicFileEffectsKt;' 'LMosaicAndroidDocumentPicker;'; do
             if ! grep -a -q -F "$class" "$dex"/classes*.dex; then
               echo "::error::no $class in the APK's dex"
               ls -l "$dex"

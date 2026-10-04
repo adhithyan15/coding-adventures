@@ -3157,6 +3157,12 @@ fn write_android_app_project(project: AndroidProject<'_>) -> Result<Vec<PathBuf>
             "src/main/kotlin/MosaicPlatform.kt".to_string(),
             mosaic_emit_compose::pipeline::ANDROID_PLATFORM_KT.to_string(),
         ),
+        // Android's half of the platform library (UI89 §3.8): the document
+        // picker. The shared half, MosaicFileEffects.kt, is copied below.
+        (
+            "src/main/kotlin/MosaicPlatformEffects.kt".to_string(),
+            mosaic_app_bindings::compose_android_platform_effects(),
+        ),
         ("README.md".to_string(), android_readme(&application_id)),
     ];
     for shared in android_shared_sources(src_dir, components)? {
@@ -3180,7 +3186,11 @@ fn write_android_app_project(project: AndroidProject<'_>) -> Result<Vec<PathBuf>
 /// shell, the runtime host, and every exported component with its layout
 /// variants (UI48 §7.5).
 fn android_shared_sources(src_dir: &Path, components: &[String]) -> Result<Vec<String>, BuildError> {
-    let mut shared = vec!["MosaicAppShell.kt".to_string(), "MosaicRuntimeHost.kt".to_string()];
+    let mut shared = vec![
+        "MosaicAppShell.kt".to_string(),
+        "MosaicRuntimeHost.kt".to_string(),
+        "MosaicFileEffects.kt".to_string(),
+    ];
     for component in components {
         shared.push(format!("{component}.kt"));
         for variant in discover_variants(src_dir, component)?.into_iter().flatten() {
@@ -3406,15 +3416,19 @@ fn android_strings_xml(label: &str) -> String {
 /// cannot name a class in the root one; the shared sources stay in the root
 /// package, which Kotlin (unlike Java) can import from.
 fn build_android_activity_kt(require_runtime: bool) -> String {
+    // The host loads inside `MosaicStartup` (strict) or `remember` (sample),
+    // and the platform library is installed on it as it loads, with the
+    // document picker the activity registered in onCreate (UI89 §3.8).
     let (imports, content, loader) = if require_runtime {
         (
             "import MosaicComposeHost\nimport MosaicRuntimeHost\nimport MosaicStartup\n",
             "        setContent { MosaicStartup(::loadMosaicHost) }\n",
             concat!(
-                "\nprivate fun loadMosaicHost(): MosaicComposeHost =\n",
-                "    requireNotNull(MosaicRuntimeHost.load()) {\n",
-                "        \"native-complete requires the Mosaic Rust application runtime\"\n",
-                "    }\n",
+                "\n",
+                "    private fun loadMosaicHost(): MosaicComposeHost =\n",
+                "        requireNotNull(MosaicRuntimeHost.load()) {\n",
+                "            \"native-complete requires the Mosaic Rust application runtime\"\n",
+                "        }.also { platformRouter = installMosaicPlatformEffects(it, documentPicker) }\n",
             ),
         )
     } else {
@@ -3422,7 +3436,11 @@ fn build_android_activity_kt(require_runtime: bool) -> String {
             "import MosaicApp\nimport MosaicComposeHostBridge\nimport MosaicRuntimeHost\nimport androidx.compose.runtime.remember\n",
             concat!(
                 "        setContent {\n",
-                "            val mosaicHost = remember { MosaicRuntimeHost.load() ?: MosaicComposeHostBridge.load() }\n",
+                "            val mosaicHost = remember {\n",
+                "                MosaicRuntimeHost.load()\n",
+                "                    ?.also { platformRouter = installMosaicPlatformEffects(it, documentPicker) }\n",
+                "                    ?: MosaicComposeHostBridge.load()\n",
+                "            }\n",
                 "            MosaicApp(mosaicHost)\n",
                 "        }\n",
             ),
@@ -3436,19 +3454,38 @@ fn build_android_activity_kt(require_runtime: bool) -> String {
             "// loader, as Main.kt is the desktop's. Everything else is shared.\n",
             "package mosaic.android\n\n",
             "{imports}",
+            "import MosaicAndroidDocumentPicker\n",
+            "import MosaicPlatformRouter\n",
+            "import installMosaicPlatformEffects\n",
             "import android.os.Bundle\n",
             "import androidx.activity.ComponentActivity\n",
             "import androidx.activity.compose.setContent\n\n",
             "class MosaicActivity : ComponentActivity() {{\n",
+            "    // The document picker registers with the activity before it starts,\n",
+            "    // as the result registry requires; the platform library is installed\n",
+            "    // on the host as it loads (UI89 §3.8).\n",
+            "    private lateinit var documentPicker: MosaicAndroidDocumentPicker\n\n",
+            "    @Volatile\n",
+            "    private var platformRouter: MosaicPlatformRouter? = null\n\n",
             "    override fun onCreate(savedInstanceState: Bundle?) {{\n",
             "        super.onCreate(savedInstanceState)\n",
             "        // State lives in the app's own storage, not a home directory\n",
             "        // (UI89 §3.3). Set before the host loads, which reads it.\n",
             "        MosaicRuntimeHost.stateDirectory = filesDir\n",
+            "        documentPicker = MosaicAndroidDocumentPicker(this)\n",
             "{content}",
+            "    }}\n\n",
+            "    override fun onDestroy() {{\n",
+            "        // A picker still open answers this activity's registry, which is\n",
+            "        // going away: fail its request rather than leave the app awaiting\n",
+            "        // an answer that can no longer arrive.\n",
+            "        if (::documentPicker.isInitialized && documentPicker.isWaiting) {{\n",
+            "            platformRouter?.failPending(\"the window closed before the file picker answered\")\n",
+            "        }}\n",
+            "        super.onDestroy()\n",
             "    }}\n",
-            "}}\n",
             "{loader}",
+            "}}\n",
         ),
         imports = imports,
         content = content,
@@ -3470,9 +3507,11 @@ fn android_readme(application_id: &str) -> String {
             "gradle wrapper --gradle-version {gradle}   # once; any Gradle can write the wrapper\n",
             "./gradlew assembleDebug\n",
             "```\n\n",
-            "The Rust runtime is not bundled yet (UI89 step 5): an app that needs it\n",
-            "shows its startup failure screen, and a sample app runs on sample props.\n",
-            "Host effects (files, photos) arrive in UI89 step 6.\n",
+            "Built with `--runtime-library <jniLibs dir>`, the Rust runtime is in\n",
+            "`src/main/jniLibs` (UI89 §3.6); without it, an app that needs it shows its\n",
+            "startup failure screen, and a sample app runs on sample props.\n",
+            "`files.open` and `files.save` go through the system's document picker\n",
+            "(UI89 §3.8); a package's own `[host_effects]` handlers are desktop-only.\n",
         ),
         application_id = application_id,
         gradle = ANDROID_GRADLE_VERSION,
@@ -5872,7 +5911,7 @@ const SWIFTUI_NAMESPACE: LayoutNamespace = LayoutNamespace {
 /// | `MosaicAppShell.kt`               | `MosaicApp`, `MosaicComposeHost`, `MosaicComposeHostBridge`, and a native-complete shell's `MosaicStartup` |
 /// | `MosaicRuntimeHost.kt`            | `MosaicRuntimeHost`, `MosaicRuntimeException`, `MosaicNativeApi`, `MosaicSizeT`, `MosaicBuffer`, `MosaicBytes`, `MosaicPlatformEffectHost` |
 /// | `MosaicFileEffects.kt`            | `MosaicPlatformRouter`, `MosaicAccept`, `MosaicFileFailure`, `MosaicOpenedDocument`, `MosaicSaveTarget`, `MosaicDocumentPicker`, `MosaicSaveRequest` |
-/// | `MosaicPlatformEffects.kt`        | `MosaicFileDialogs`, `AwtMosaicFileDialogs`, `MosaicDialogPicker` |
+/// | `MosaicPlatformEffects.kt`        | desktop: `MosaicFileDialogs`, `AwtMosaicFileDialogs`, `MosaicDialogPicker`; Android: `MosaicAndroidDocumentPicker` |
 ///
 /// `Main.kt`, both halves of `MosaicPlatform.kt` and the rest declare only
 /// `main`, camelCase helpers or `private` names; `MosaicActivity` lives in
@@ -5903,6 +5942,7 @@ const COMPOSE_SHELL_RESERVED_NAMES: &[&str] = &[
     "MosaicFileDialogs",
     "AwtMosaicFileDialogs",
     "MosaicDialogPicker",
+    "MosaicAndroidDocumentPicker",
 ];
 
 const COMPOSE_NAMESPACE: LayoutNamespace = LayoutNamespace {
@@ -14096,26 +14136,30 @@ layout NativeEvents {
         let android = out.path().join("compose/android");
         let kotlin = android.join("src/main/kotlin");
 
-        // The shared sources, as the desktop project has them.
-        for shared in ["MosaicAppShell.kt", "MosaicRuntimeHost.kt", "Card.kt", "Card.touch.kt"] {
+        // The shared sources, as the desktop project has them -- the platform
+        // library's shared half among them (UI89 §3.8).
+        for shared in ["MosaicAppShell.kt", "MosaicRuntimeHost.kt", "MosaicFileEffects.kt", "Card.kt", "Card.touch.kt"] {
             assert_eq!(
                 fs::read_to_string(kotlin.join(shared)).unwrap(),
                 fs::read_to_string(out.path().join("compose/src/main/kotlin").join(shared)).unwrap(),
                 "{shared} is the desktop's"
             );
         }
-        // Never the desktop-only ones: the window, AWT, the file dialogs.
+        // Never the desktop-only ones: the window and the AWT dialogs.
+        // Android's half of the platform library takes the dialogs' place.
         assert!(!kotlin.join("Main.kt").exists());
-        assert!(!kotlin.join("MosaicPlatformEffects.kt").exists());
-        // The desktop has both halves of the platform library; the shared one
-        // reaches Android with Android's own picker (UI89 §3.8), not before.
         let desktop = out.path().join("compose/src/main/kotlin");
         assert_eq!(
             fs::read_to_string(desktop.join("MosaicFileEffects.kt")).unwrap(),
             mosaic_app_bindings::compose_file_effects()
         );
-        assert!(desktop.join("MosaicPlatformEffects.kt").is_file());
-        assert!(!kotlin.join("MosaicFileEffects.kt").exists());
+        assert_eq!(
+            fs::read_to_string(desktop.join("MosaicPlatformEffects.kt")).unwrap(),
+            mosaic_app_bindings::compose_platform_effects()
+        );
+        let android_effects = fs::read_to_string(kotlin.join("MosaicPlatformEffects.kt")).unwrap();
+        assert_eq!(android_effects, mosaic_app_bindings::compose_android_platform_effects());
+        assert!(!android_effects.contains("java.awt") && !android_effects.contains("javax.swing"));
         assert_eq!(
             fs::read_to_string(kotlin.join("MosaicPlatform.kt")).unwrap(),
             mosaic_emit_compose::pipeline::ANDROID_PLATFORM_KT
@@ -14127,10 +14171,28 @@ layout NativeEvents {
         assert!(activity.contains("package mosaic.android\n"), "{activity}");
         assert!(activity.contains("MosaicRuntimeHost.stateDirectory = filesDir\n"), "{activity}");
         assert!(
-            activity.contains("remember { MosaicRuntimeHost.load() ?: MosaicComposeHostBridge.load() }"),
+            activity.contains(concat!(
+                "            val mosaicHost = remember {\n",
+                "                MosaicRuntimeHost.load()\n",
+                "                    ?.also { platformRouter = installMosaicPlatformEffects(it, documentPicker) }\n",
+                "                    ?: MosaicComposeHostBridge.load()\n",
+                "            }\n",
+            )),
             "{activity}"
         );
         assert!(activity.find("stateDirectory").unwrap() < activity.find("load()").unwrap());
+        // UI89 §3.8: the picker registers in onCreate, before the activity
+        // starts and before the content (and so the host) exists; a request
+        // whose picker can no longer answer is failed when it is destroyed.
+        let registered = activity.find("documentPicker = MosaicAndroidDocumentPicker(this)\n").unwrap();
+        assert!(activity.find("super.onCreate(savedInstanceState)").unwrap() < registered);
+        assert!(registered < activity.find("setContent {").unwrap());
+        assert!(activity.contains(concat!(
+            "        if (::documentPicker.isInitialized && documentPicker.isWaiting) {\n",
+            "            platformRouter?.failPending(\"the window closed before the file picker answered\")\n",
+            "        }\n",
+            "        super.onDestroy()\n",
+        )), "{activity}");
 
         let manifest = fs::read_to_string(android.join("src/main/AndroidManifest.xml")).unwrap();
         // XML forbids `--` inside a comment; aapt refuses the file outright.
@@ -14196,6 +14258,11 @@ layout NativeEvents {
         let activity =
             fs::read_to_string(android.join("src/main/kotlin/mosaic/android/MosaicActivity.kt")).unwrap();
         assert!(activity.contains("setContent { MosaicStartup(::loadMosaicHost) }"), "{activity}");
+        // The platform library is installed on the host as it loads (UI89 §3.8).
+        assert!(
+            activity.contains("        }.also { platformRouter = installMosaicPlatformEffects(it, documentPicker) }\n"),
+            "{activity}"
+        );
         assert!(activity.contains("requireNotNull(MosaicRuntimeHost.load())"), "{activity}");
         assert!(!activity.contains("MosaicComposeHostBridge"), "{activity}");
         // The strict shell defines what the activity calls.

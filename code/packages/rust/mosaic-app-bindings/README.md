@@ -21,9 +21,11 @@ first is Compose's, in two files. `MosaicFileEffects.kt`
 a request must meet, the MIME table, a router that sends each effect to the
 app's own `[host_effects]` handler or to this library by kind, and the
 asynchronous path from a picker's answer to the effect's outcome (UI89 §3.8).
-`MosaicPlatformEffects.kt` (`compose_platform_effects()`) is the desktop's:
-`files.open` and `files.save` through the native file dialog. Both are tested
-with fake dialogs and fake pickers by
+`MosaicPlatformEffects.kt` is each target's own half: the desktop's
+(`compose_platform_effects()`) answers through the native file dialog,
+Android's (`compose_android_platform_effects()`) through the Storage Access
+Framework's document picker. The shared half and the desktop's are tested with
+fake dialogs, pickers and hosts by
 `conformance/compose/MosaicPlatformEffectsTest.kt`.
 
 SwiftUI's `MosaicPlatformEffects.swift` (`swift_platform_effects()`) answers
