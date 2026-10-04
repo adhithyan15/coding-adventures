@@ -1549,7 +1549,7 @@ pub enum TreemapLineHeight {
 pub enum TreemapTextIndent { Pixels(f64), Factor(f64) }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum TreemapWhiteSpace { Normal, NoWrap, Pre, PreWrap, PreLine, BreakSpaces }
+pub enum TreemapWhiteSpace { Normal, NoWrap, Pre, PreWrap, PreLine, PreserveSpaces, BreakSpaces }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum TreemapOverflowWrap { Normal, BreakWord, Anywhere }

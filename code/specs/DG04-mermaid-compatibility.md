@@ -550,8 +550,10 @@ nowrap, pre, pre-wrap, pre-line,
 and break-spaces white-space modes control collapsing, preservation, and native
 line wrapping. Break-spaces keeps every ASCII separator and exposes each one as
 a backend-neutral wrap opportunity. The white-space-collapse longhand composes
-collapse, preserve, preserve-breaks, and break-spaces into the same semantic
-modes; preserve-spaces remains explicitly unsupported. Auto, left/start, center, right/end, and
+collapse, preserve, preserve-breaks, preserve-spaces, and break-spaces into the
+same semantic modes. Preserve-spaces converts tabs and segment breaks to spaces,
+retains authored space runs, and wraps only after a complete preserved sequence.
+Auto, left/start, center, right/end, and
 justify last-line alignment overrides flow into backend-neutral line positioning
 and glyph spacing.
 Normal, break-word, and anywhere overflow wrapping preserve ordinary Unicode

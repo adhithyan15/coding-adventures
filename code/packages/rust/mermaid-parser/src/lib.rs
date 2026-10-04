@@ -4641,8 +4641,9 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                 "collapse" => diagram_ir::TreemapWhiteSpace::Normal,
                 "preserve" => diagram_ir::TreemapWhiteSpace::PreWrap,
                 "preserve-breaks" => diagram_ir::TreemapWhiteSpace::PreLine,
+                "preserve-spaces" => diagram_ir::TreemapWhiteSpace::PreserveSpaces,
                 "break-spaces" => diagram_ir::TreemapWhiteSpace::BreakSpaces,
-                _ => return Err(token_error(token, "treemap white-space-collapse must be collapse, preserve, preserve-breaks, or break-spaces")),
+                _ => return Err(token_error(token, "treemap white-space-collapse must be collapse, preserve, preserve-breaks, preserve-spaces, or break-spaces")),
             }),
             "overflow-wrap" | "word-wrap" => style.overflow_wrap = Some(match value.to_ascii_lowercase().as_str() {
                 "normal" => diagram_ir::TreemapOverflowWrap::Normal,
@@ -14719,6 +14720,7 @@ B//-A: reverse stick top
             ("collapse", diagram_ir::TreemapWhiteSpace::Normal),
             ("preserve", diagram_ir::TreemapWhiteSpace::PreWrap),
             ("preserve-breaks", diagram_ir::TreemapWhiteSpace::PreLine),
+            ("preserve-spaces", diagram_ir::TreemapWhiteSpace::PreserveSpaces),
             ("break-spaces", diagram_ir::TreemapWhiteSpace::BreakSpaces),
         ] {
             let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent white-space-collapse:{value}");
@@ -14726,7 +14728,7 @@ B//-A: reverse stick top
             assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.white_space), Some(expected));
         }
         assert!(parse_treemap(
-            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent white-space-collapse:preserve-spaces",
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent white-space-collapse:discard",
         ).is_err());
     }
 

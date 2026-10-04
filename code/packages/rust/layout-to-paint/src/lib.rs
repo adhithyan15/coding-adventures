@@ -257,7 +257,7 @@ where
                     text_overflow(frame.node),
                     text_wraps(frame.node, tc.wrap),
                     text_wrap_style(frame.node),
-                    text_break_spaces(frame.node),
+                    text_space_wrapping(frame.node),
                     text_justifies(frame.node),
                     text_justification(frame.node),
                     direction,
@@ -585,8 +585,17 @@ fn text_wrap_style(node: &PositionedNode) -> TextWrapStyle {
     }
 }
 
-fn text_break_spaces(node: &PositionedNode) -> bool {
-    matches!(node.ext.get("text.break-spaces"), Some(ExtValue::Bool(true)))
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum TextSpaceWrapping { Collapse, PreserveSequences, BreakEverySpace }
+
+fn text_space_wrapping(node: &PositionedNode) -> TextSpaceWrapping {
+    if matches!(node.ext.get("text.break-spaces"), Some(ExtValue::Bool(true))) {
+        TextSpaceWrapping::BreakEverySpace
+    } else if matches!(node.ext.get("text.preserve-spaces"), Some(ExtValue::Bool(true))) {
+        TextSpaceWrapping::PreserveSequences
+    } else {
+        TextSpaceWrapping::Collapse
+    }
 }
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -1382,7 +1391,7 @@ fn emit_text_content<S, M, R>(
     text_overflow: Option<TextOverflow>,
     wrap: bool,
     wrap_style: TextWrapStyle,
-    break_spaces: bool,
+    space_wrapping: TextSpaceWrapping,
     justify: bool,
     justify_mode: TextJustify,
     direction: BaseDirection,
@@ -1445,7 +1454,7 @@ fn emit_text_content<S, M, R>(
                 hyphens,
                 hyphenate_character,
                 wrap_style,
-                break_spaces,
+                space_wrapping,
                 direction,
             )
         } else {
@@ -1817,7 +1826,7 @@ fn wrap_line<S: TextShaper>(
     hyphens: TextHyphens,
     hyphenate_character: &str,
     wrap_style: TextWrapStyle,
-    break_spaces: bool,
+    space_wrapping: TextSpaceWrapping,
     direction: BaseDirection,
 ) -> Vec<String> {
     if segment.is_empty() {
@@ -1828,9 +1837,10 @@ fn wrap_line<S: TextShaper>(
         return vec![visible_segment];
     }
     let wrapping_segment = if hyphens == TextHyphens::Manual { segment } else { &visible_segment };
-    if break_spaces {
+    if space_wrapping != TextSpaceWrapping::Collapse {
         return wrap_preserved_spaces(
-            shaper, handle, &visible_segment, size, max_width, letter_spacing, word_spacing, direction,
+            shaper, handle, &visible_segment, size, max_width, letter_spacing, word_spacing,
+            space_wrapping == TextSpaceWrapping::BreakEverySpace, direction,
         );
     }
     if word_break == TextWordBreak::BreakAll || line_break == TextLineBreak::Anywhere {
@@ -1915,7 +1925,7 @@ fn wrap_line<S: TextShaper>(
             hyphens,
             hyphenate_character,
             TextWrapStyle::Auto,
-            false,
+            TextSpaceWrapping::Collapse,
             direction,
         );
         if balanced.len() == lines.len() {
@@ -1961,6 +1971,7 @@ fn wrap_preserved_spaces<S: TextShaper>(
     max_width: f64,
     letter_spacing: f64,
     word_spacing: f64,
+    break_every_space: bool,
     direction: BaseDirection,
 ) -> Vec<String> {
     let measure = |value: &str| shape_visual_line(
@@ -1971,7 +1982,25 @@ fn wrap_preserved_spaces<S: TextShaper>(
     }
     let mut lines = Vec::new();
     let mut current = String::new();
-    for piece in segment.split_inclusive(' ') {
+    let mut sequence_pieces = Vec::new();
+    if !break_every_space {
+        let mut start = 0;
+        let mut previous_was_space = false;
+        for (index, character) in segment.char_indices() {
+            if previous_was_space && character != ' ' {
+                sequence_pieces.push(&segment[start..index]);
+                start = index;
+            }
+            previous_was_space = character == ' ';
+        }
+        sequence_pieces.push(&segment[start..]);
+    }
+    let pieces: Box<dyn Iterator<Item = &str>> = if break_every_space {
+        Box::new(segment.split_inclusive(' '))
+    } else {
+        Box::new(sequence_pieces.into_iter())
+    };
+    for piece in pieces {
         let candidate = format!("{current}{piece}");
         if !current.is_empty() && measure(&candidate) > max_width {
             lines.push(std::mem::take(&mut current));
@@ -2698,6 +2727,24 @@ mod tests {
         assert_eq!(runs[1].glyphs.len(), 1);
         assert_eq!(runs[0].glyphs[0].x, 0.0);
         assert_eq!(runs[1].glyphs[0].x, 0.0);
+        assert!(runs[1].glyphs[0].y > runs[0].glyphs[0].y);
+    }
+
+    #[test]
+    fn preserve_spaces_wraps_after_each_space_sequence() {
+        let mut leaf = positioned_leaf(text_content("A  B"), 0.0, 0.0, 16.0, 40.0);
+        leaf.ext.insert("text.preserve-spaces".into(), ExtValue::Bool(true));
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let scene = layout_to_paint(&leaf, &make_options(&shaper, &metrics, &resolver));
+        let runs: Vec<_> = scene.instructions.iter().filter_map(|instruction| match instruction {
+            PaintInstruction::GlyphRun(run) => Some(run),
+            _ => None,
+        }).collect();
+        assert_eq!(runs.len(), 2);
+        assert_eq!(runs[0].glyphs.len(), 3);
+        assert_eq!(runs[1].glyphs.len(), 1);
         assert!(runs[1].glyphs[0].y > runs[0].glyphs[0].y);
     }
 
