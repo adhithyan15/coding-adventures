@@ -1,0 +1,11 @@
+{
+  "id": "KA-W77-a1-timed-production",
+  "pathSegment": "KA-PATH-77-MARKS",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "KA-EXT-77-MARKS",
+      "order": 5
+    }
+  ]
+}

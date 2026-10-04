@@ -1,18 +1,20 @@
 {
   "chapter": 77,
-  "title": "Marks on the Page, and Your First Question",
+  "title": "Marks on the Page, Your First Question, and Timed Writing",
   "label": "ch:ka-viraama-chihne",
-  "canDo": "I can name Kannada punctuation and independently compose a familiar yes-or-no question from meaning.",
+  "canDo": "I can name Kannada punctuation, compose a familiar question, and complete the A1 writing paper within 20 minutes.",
   "payoff": {
-    "lesson": "KA-W77-gotta-controlled-question",
+    "lesson": "KA-W77-a1-timed-production",
     "kind": "production",
-    "summary": "Compose a familiar Kannada yes-or-no question from meaning without a visible model, then check its ending and final question mark.",
+    "summary": "Complete the chapter's final lesson: fill a six-field form and write a 20–30 word named-reader message within the A1 paper's 20-minute limit.",
     "assesses": [
       "KA-SCRIPT-RECOG-152",
       "KA-SCRIPT-RECOG-153",
       "KA-SCRIPT-RECOG-154",
       "KA-LEX-C32-GOTTU-01",
-      "KA-GRAMMAR-C69-ASK-02"
+      "KA-GRAMMAR-C69-ASK-02",
+      "KA-LEX-C02-NANNA-HESARU-01",
+      "KA-LEX-C05-KANNADA-01"
     ],
     "note": "The chapter introduces exactly these three atoms and the payoff assesses all three, with nothing open in front of the reader."
   }

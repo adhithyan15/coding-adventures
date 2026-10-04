@@ -27,10 +27,8 @@ it("builds Kannada's first A1 controlled question without a visible model", () =
   expect(activity?.answer).toBe("ನಿಮಗೆ ಗೊತ್ತಾ?");
 });
 
-it("leaves only timed assessment production missing from Kannada A1", () => {
+it("keeps Kannada A1 writing complete after the controlled question's successor lands", () => {
   const kannada = languageWritingStages("kannada");
   expect(kannada.defects).toEqual([]);
-  expect(kannada.levels.find((level) => level.level === "A1")?.missingStages).toEqual([
-    "timed-assessment-production",
-  ]);
+  expect(kannada.levels.find((level) => level.level === "A1")?.missingStages).toEqual([]);
 });
