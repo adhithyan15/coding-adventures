@@ -18,7 +18,7 @@
 | AOT compiler | Static v0 implemented | [FM06](FM06-forme-aot-compiler.md) |
 | CLI and development server | Headless v0 implemented | [FM07](FM07-forme-cli-dev-server.md) |
 | Deploy runner | Headless v0 implemented | [FM08](FM08-forme-deploy-runner.md) |
-| Authoring shell | Durable core, accessible editor, exact pipeline-backed preview, and reviewed publication implemented; first-run desktop product active | [FM09](FM09-forme-authoring-shell.md) |
+| Authoring shell | Capability-free first-run product composition implemented; native desktop host active | [FM09](FM09-forme-authoring-shell.md) |
 
 ## What “complete” means
 
@@ -45,7 +45,7 @@ stays visible so a local optimization cannot quietly close the project early.
 
 The implementation now forms a complete headless v0 product:
 
-- 78 TypeScript `forme-*` packages and 236 package test files cover the kernel,
+- 79 TypeScript `forme-*` packages and 237 package test files cover the kernel,
   stage contracts, a bounded concurrent orchestrator, Style IR, AOT emitters, document
   transforms, collections, feeds, routing, and static output.
 - The plugin runtime boundary also includes Python and Rust SDK packages. All
@@ -77,7 +77,7 @@ The implementation now forms a complete headless v0 product:
   prefixes through non-forced ref updates. Installed third-party plugins now
   share that product path through persistent least-authority grants, native
   sandboxes, three runner SDKs, and bounded live storage watches. The
-  authoring shell remains.
+  native authoring host and installable desktop acceptance remain.
 - The CLI now persists per-invocation cache entries and topology-scoped
   materialized checkpoints through a containment-checked project cache.
   Filesystem sources publish validated external-state manifests, and successful
@@ -183,8 +183,8 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 58 | FM-B063 | done | Build the accessible default block editor | Depends on FM-B062. A keyboard-complete editor and configuration UI create and edit the default Content IR block set through exact declarative plugin slots and durable core commands without exposing storage or host authority. |
 | 59 | FM-B064 | done | Run exact pipeline-backed live preview | Depends on FM-B009 and FM-B063. `forme-authoring-preview` validates and freezes each persisted revision, materializes it through a narrow isolated host boundary, runs the real FM03/FM07 watch path, cancels/coalesces stale work, retains last-good output, and emits bounded revision-bound diagnostics. |
 | 60 | FM-B065 | done | Compose the reviewed authoring publish workflow | Depends on FM-B012 and FM-B064. `forme-authoring-publish` snapshots and builds one exact persisted revision, validates and preflights its FM08 manifest/content set, publishes through one closed reviewed target without exposing credentials, retires preparation, and atomically records the revision/manifest/target while marking only that unchanged snapshot published. Failed or indeterminate work never changes publication metadata; uncertainty poisons retries until reconciliation. |
-| 61 | FM-B067 | active | Compose the capability-free first-run authoring shell | Depends on completed FM-B065. `forme-authoring-shell` owns the accessible first-run, workspace, preview, target-review, explicit-publish, failure, and disposal UI state while accepting only bounded reviewed data plus injected session/preview/publish handles; the editor never receives host capabilities. |
-| 62 | FM-B068 | blocked | Package the Tauri authoring host | Depends on FM-B067. Add the installable Tauri window and narrow native commands for contained crash-safe project storage, exact product materialization/preview, reviewed target configuration/publication, first-draft identity creation, and clean-profile product acceptance without a CLI. |
+| 61 | FM-B067 | done | Compose the capability-free first-run authoring shell | Depends on completed FM-B065. `forme-authoring-shell` owns the accessible first-run, workspace, preview, target-review, explicit-publish, failure, and disposal UI state while accepting only bounded reviewed data plus injected session/preview/publish handles; the editor never receives host capabilities. |
+| 62 | FM-B068 | active | Package the Tauri authoring host | Depends on FM-B067. Add the installable Tauri window and narrow native commands for contained crash-safe project storage, exact product materialization/preview, reviewed target configuration/publication, first-draft identity creation, and clean-profile product acceptance without a CLI. |
 | 63 | FM-B066 | blocked | Package the first-run desktop authoring product | Completion milestone depending on FM-B067 and FM-B068. An installable local shell creates a project, selects a theme, edits and previews a first post, configures a supported target, and publishes without source/config editing, git, or a command line. |
 | 64 | FM-B016 | blocked | Complete the authoring shell | Completion milestone depending on FM-B062–FM-B066. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
 | 65 | FM-B017 | blocked | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
@@ -316,6 +316,7 @@ work.
 | 2026-10-04 | Final FM-B065 adversarial review found that caller-controlled session getters ran before action admission, concurrent disposal did not share cleanup settlement, revision tokens were validated differently at build and record boundaries, and proxy or oversized hostile shapes could reach trapping or unbounded reflection. | Reserve admission before session inspection, share one disposal promise, validate opaque revisions once across core and publisher, reject proxies and accessors through bounded descriptor snapshots, and cap hostile text before scalar work. |
 | 2026-10-04 | A resolved builder value without a valid own retirement method was classified as a retryable build failure even though it could already own privileged preparation resources that the coordinator could not release. | Treat any resolved preparation without a capturable retirement hook as indeterminate cleanup, poison retries, and retain retryable build failure only for rejected builder promises before a preparation is returned. |
 | 2026-10-04 | FM-B066 still combined a hostile browser-facing lifecycle and explicit-publication UI with native filesystem durability, product-pipeline process authority, credential custody, Tauri IPC containment, packaging, and clean-profile installation acceptance. No Tauri package or dependency exists yet, while the four capability-free authoring layers are ready to compose and test independently. | Split FM-B066 into FM-B067 (bounded injected first-run shell UI) and FM-B068 (native Tauri host plus installable product acceptance), retain FM-B066 as their completion milestone, and activate only FM-B067. |
+| 2026-10-04 | FM-B067 composed the four capability-free layers without acquiring host authority. Local file-linked React packages each installed their own peer copy during dependency bootstrap, which would create invalid cross-package hooks in tests unless the browser bundler selected one realm. | Close FM-B067 after adding bounded host/workspace admission, explicit exact-session preview, complete two-step target review, shared late-settlement disposal, adversarial coverage, and React/React DOM deduplication. Activate FM-B068 as the only native product boundary. |
 
 ## Loop protocol
 

@@ -1,13 +1,14 @@
 # FM09 — Forme Authoring Shell
 
 > **Status:** Authoring v1 in progress. The durable authoring core, default
-> editor, exact pipeline preview, and reviewed publication are implemented;
-> shell composition and native packaging follow as
-> separately reviewable product boundaries.
+> editor, exact pipeline preview, reviewed publication, and capability-free
+> first-run shell composition are implemented; native packaging follows as a
+> separately reviewable product boundary.
 > **Scope:** Project state, editing transactions, persistent history, editor
 > composition, live preview, publish composition, and the local desktop shell.
-> **Packages:** `forme-authoring-core`, the editor packages, and
-> `forme-shell-desktop`.
+> **Packages:** `forme-authoring-core`, `forme-authoring-editor`,
+> `forme-authoring-preview`, `forme-authoring-publish`,
+> `forme-authoring-shell`, and `forme-shell-desktop`.
 
 ## Implementation status
 
@@ -18,8 +19,8 @@
 | Accessible block editor and configuration UI | Implemented | `forme-authoring-editor` provides keyboard-complete settings, document, block, history, and declarative plugin-slot controls over the durable core. |
 | Pipeline-backed preview | Implemented | `forme-authoring-preview` runs exact persisted revisions through the real FM03/FM07 watch and artifact path with cancellation, last-good retention, and bounded diagnostics. |
 | Reviewed publish workflow | Implemented | `forme-authoring-publish` composes exact-revision product builds with FM08 validation, closed target review, cleanup, and durable acknowledgement without exposing host authority. |
-| First-run shell composition | Pending | FM-B067 composes the proven capability-free layers through injected handles. |
-| Installable desktop shell | Pending | FM-B068 adds the native Tauri host; FM-B066 closes after both slices. |
+| First-run shell composition | Implemented | `forme-authoring-shell` composes the proven layers through bounded injected handles, explicit preview and publish actions, complete target review, fixed failures, and shared disposal. |
+| Installable desktop shell | Active | FM-B068 adds the native Tauri host; FM-B066 closes after packaging and clean-profile acceptance. |
 
 ## 1. Purpose and delivery boundary
 
@@ -423,10 +424,13 @@ transaction rollback, write failure, cancellation, stale-revision conflict,
 history truncation, persisted undo/redo, and restart recovery. Coverage for the
 new core package must exceed 95% statements and lines and 90% branches.
 
-Later slices add browser accessibility tests, exact preview/build parity,
-deploy dry-run and failure tests, native capability tests, and a product test
-that starts from an empty profile and publishes a first site without editing a
-source or configuration file.
+FM-B067 proves browser accessibility, first-run creation, exact session
+preview, complete reviewed-target confirmation, bounded failures, hostile
+admission data, and late lifecycle settlement above 95% statements/lines and
+90% branches. FM-B068 adds exact preview/build parity, deploy dry-run and
+failure tests, native capability tests, and a product test that starts from an
+empty profile and publishes a first site without editing a source or
+configuration file.
 
 FM-B063 browser tests cover every default block form, metadata and site
 configuration, host-supplied theme choices, selection, create/remove, undo and
