@@ -1093,8 +1093,8 @@ backend immediately) come before the enabler-dependent items.
   seed exactly simulated finite binary64 steps or bounded real `while`
   elements, including a three-element real chain that traverses single-value,
   finite-step, and bounded `while` shapes in either direction, plus a
-  finite-step-to-single-value-to-bounded-`while` permutation, exactly simulated
-  finite binary64
+  finite-step-to-single-value-to-bounded-`while` permutation and its reverse,
+  exactly simulated finite binary64
   step exits that seed following
   single-value elements, and finite-step exits that seed following bounded
   `while` elements when the body only reads the controlled variable, including
