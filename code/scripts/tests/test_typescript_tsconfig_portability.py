@@ -430,16 +430,18 @@ console.log(prose, nested);
         # +1: forme-interactivity-ir, the bounded FM05 data contract.
         # +1: forme-authoring-core, the durable FM09 project/session boundary.
         # +1: forme-authoring-editor, the accessible FM09 React editor boundary.
+        # +1: forme-authoring-preview, the exact FM09 pipeline preview boundary.
         # -1: the standalone checklist-app was retired; checklists live in
         # Trestle (mosaic-pkg-checklist).
-        self.assertEqual(summary.total_projects, 487)
+        self.assertEqual(summary.total_projects, 488)
         self.assertEqual(summary.shared_projects, 301)
         self.assertEqual(summary.inherited_root_dir, 130)
         self.assertEqual(summary.inherited_out_dir, 133)
-        # forme-authoring-core and forme-authoring-editor are isolated
-        # standalone emitters, adding two to both standalone inventories.
-        self.assertEqual(summary.standalone_emit_projects, 157)
-        self.assertEqual(summary.isolated_standalone_projects, 157)
+        # forme-authoring-core, forme-authoring-editor, and
+        # forme-authoring-preview are isolated standalone emitters, adding
+        # three to both standalone inventories.
+        self.assertEqual(summary.standalone_emit_projects, 158)
+        self.assertEqual(summary.isolated_standalone_projects, 158)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
         # 94: +1 for script-ductus. Nothing the package SHIPS touches a Node
@@ -557,8 +559,9 @@ console.log(prose, nested);
         # +1: forme-interactivity-ir locks its compiler and test graph.
         # +1: forme-authoring-core locks its compiler and test graph.
         # +1: forme-authoring-editor locks its React compiler and browser tests.
+        # +1: forme-authoring-preview locks its compiler and lifecycle tests.
         # -1: the retired checklist-app took its lockfile with it.
-        self.assertEqual(summary.locked_compilers, 486)
+        self.assertEqual(summary.locked_compilers, 487)
 
 
 if __name__ == "__main__":

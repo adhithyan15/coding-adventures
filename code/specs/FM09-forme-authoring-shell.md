@@ -1,7 +1,7 @@
 # FM09 — Forme Authoring Shell
 
-> **Status:** Authoring v1 in progress. The durable authoring core and default
-> editor are implemented; preview, publish, and desktop packaging follow as
+> **Status:** Authoring v1 in progress. The durable authoring core, default
+> editor, and exact pipeline preview are implemented; publish and packaging follow as
 > separately reviewable product boundaries.
 > **Scope:** Project state, editing transactions, persistent history, editor
 > composition, live preview, publish composition, and the local desktop shell.
@@ -15,8 +15,8 @@
 | Bounded project codec | Implemented | `forme-authoring-core` validates the closed v1 project and authorable Content IR subset with hard recursive limits. |
 | Crash-safe autosave and persistent undo/redo | Implemented | The injected compare-and-swap adapter, immutable transactions, and canonical persisted history pass failure, conflict, cancellation, and restart tests. |
 | Accessible block editor and configuration UI | Implemented | `forme-authoring-editor` provides keyboard-complete settings, document, block, history, and declarative plugin-slot controls over the durable core. |
-| Pipeline-backed preview | Active | FM-B064 uses the real FM07 watch path and last-good output. |
-| Reviewed publish workflow | Pending | FM-B065 composes FM08 without exposing tokens or target files to editor plugins. |
+| Pipeline-backed preview | Implemented | `forme-authoring-preview` runs exact persisted revisions through the real FM03/FM07 watch and artifact path with cancellation, last-good retention, and bounded diagnostics. |
+| Reviewed publish workflow | Active | FM-B065 composes FM08 without exposing tokens or target files to editor plugins. |
 | Installable desktop shell | Pending | FM-B066 packages the proven workflow and first-run experience. |
 
 ## 1. Purpose and delivery boundary

@@ -15,4 +15,4 @@ cd ../forme-identity && npm install --silent
 cd ../forme-cache && npm install --silent
 cd ../forme-orchestrator && npm install --silent
 cd ../forme-dev-server && npm install --silent
-npm install --silent && npx vitest run --coverage
+npm ci --silent && npm run build && npm run test:coverage

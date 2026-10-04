@@ -12,7 +12,7 @@ const encoder = new TextEncoder();
 
 function session(revision: string, title = revision): AuthoringSession {
   return {
-    project: createAuthoringProject({ projectId: "project", title }),
+    project: createAuthoringProject({ projectId: "01952c0d-7e63-7000-8000-000000000064", title }),
     storageRevision: revision,
     canUndo: false,
     canRedo: false,
@@ -64,6 +64,23 @@ class ControlledWatch implements WatchSession {
     this.settled = true;
     this.resolve({ done: false, value });
   }
+}
+
+function immediateWatch(value: IteratorResult<RunResult> | Error): WatchSession {
+  return {
+    results() {
+      return {
+        [Symbol.asyncIterator]: () => ({
+          next: async () => {
+            if (value instanceof Error) throw value;
+            return value;
+          },
+        }),
+      };
+    },
+    async rebuild() { throw new Error("rebuild is not used"); },
+    async stop() {},
+  };
 }
 
 function harness(debounceMs = 0) {
@@ -268,8 +285,30 @@ describe("pipeline-backed authoring preview", () => {
     });
 
     const h = harness();
-    h.publisher.publish = () => { throw new Error("publisher secret"); };
-    const publishing = h.coordinator.request(session("rev-publish"));
+    const publishingCoordinator = createAuthoringPreview({
+      debounceMs: 0,
+      orchestrator: {
+        watch(pipeline, options) {
+          h.watchCalls.push({ pipeline, options });
+          const controlled = new ControlledWatch();
+          h.watches.push(controlled);
+          return controlled;
+        },
+      },
+      materializer: {
+        async prepare(input) {
+          h.inputs.push(input);
+          const release = vi.fn(async () => {});
+          h.releases.push(release);
+          return { pipeline: {} as Pipeline, release };
+        },
+      },
+      publisher: {
+        publish() { throw new Error("publisher secret"); },
+        publishFailure() {},
+      },
+    });
+    const publishing = publishingCoordinator.request(session("rev-publish"));
     await flushDebounce();
     h.watches[0]!.settle(result("success", "build-publish"));
     await expect(publishing).resolves.toMatchObject({
@@ -288,6 +327,11 @@ describe("pipeline-backed authoring preview", () => {
     await expect(pending).resolves.toMatchObject({ outcome: "cancelled", revision: "rev-cancelled" });
     expect(h.successes).toEqual([]);
     expect(h.failures).toEqual([]);
+    expect(h.coordinator.state).toMatchObject({
+      phase: "idle",
+      activeRevision: "rev-cancelled",
+      diagnostics: [],
+    });
   });
 
   it("disposes idempotently, releases active work, and rejects later requests", async () => {
@@ -309,5 +353,241 @@ describe("pipeline-backed authoring preview", () => {
     await expect(h.coordinator.request(session("bad\u202erevision"))).rejects.toThrow("revision");
     expect(h.inputs).toEqual([]);
     expect(() => harness(60_001)).toThrow("debounceMs");
+  });
+
+  it("validates construction and captures only data methods", async () => {
+    const valid = {
+      orchestrator: { watch() { return immediateWatch({ done: true, value: undefined }); } },
+      materializer: { async prepare() { return { pipeline: {} as Pipeline, async release() {} }; } },
+      publisher: { publish() {}, publishFailure() {} },
+    };
+    expect(() => createAuthoringPreview(null as never)).toThrow("options");
+    expect(() => createAuthoringPreview({ ...valid, orchestrator: null as never })).toThrow("orchestrator");
+    expect(() => createAuthoringPreview({ ...valid, publisher: {} as never })).toThrow("publish");
+    const accessor = {} as Record<string, unknown>;
+    Object.defineProperty(accessor, "prepare", { get() { return async () => {}; } });
+    expect(() => createAuthoringPreview({ ...valid, materializer: accessor as never })).toThrow("data method");
+    for (const debounceMs of [-1, 0.5, Number.NaN]) {
+      expect(() => createAuthoringPreview({ ...valid, debounceMs })).toThrow("debounceMs");
+    }
+    const withDefault = createAuthoringPreview(valid);
+    await withDefault.dispose();
+  });
+
+  it("cancels a request that is still waiting in the debounce window", async () => {
+    vi.useFakeTimers();
+    const h = harness(100);
+    const pending = h.coordinator.request(session("rev-pending"));
+    await h.coordinator.dispose();
+    await expect(pending).resolves.toMatchObject({ outcome: "cancelled", revision: "rev-pending" });
+    expect(h.inputs).toEqual([]);
+  });
+
+  it("rejects malformed materializer results before starting watch", async () => {
+    vi.useFakeTimers();
+    const malformed: unknown[] = [
+      null,
+      {},
+      { pipeline: null, async release() {} },
+      { pipeline: {}, release: "no" },
+      { pipeline: {}, async release() {}, extra: true },
+      Object.assign(Object.create(null), { pipeline: {}, async release() {} }),
+    ];
+    for (const prepared of malformed) {
+      let watched = false;
+      const coordinator = createAuthoringPreview({
+        debounceMs: 0,
+        orchestrator: { watch() { watched = true; return immediateWatch({ done: true, value: undefined }); } },
+        materializer: { async prepare() { return prepared as PreparedAuthoringPreview; } },
+        publisher: { publish() {}, publishFailure() {} },
+      });
+      const pending = coordinator.request(session(`rev-${malformed.indexOf(prepared)}`));
+      await flushDebounce();
+      await expect(pending).resolves.toMatchObject({
+        outcome: "failed",
+        diagnostics: [{ code: "E_PREVIEW_PREPARE" }],
+      });
+      expect(watched).toBe(false);
+    }
+  });
+
+  it("releases preparation that resolves after its request was superseded", async () => {
+    vi.useFakeTimers();
+    let resolvePrepare!: (value: PreparedAuthoringPreview) => void;
+    let prepareCalls = 0;
+    const release = vi.fn(async () => {});
+    const coordinator = createAuthoringPreview({
+      debounceMs: 0,
+      orchestrator: { watch() { return immediateWatch({ done: true, value: undefined }); } },
+      materializer: {
+        prepare() {
+          prepareCalls += 1;
+          if (prepareCalls > 1) return Promise.resolve({ pipeline: {} as Pipeline, async release() {} });
+          return new Promise(resolve => { resolvePrepare = resolve; });
+        },
+      },
+      publisher: { publish() {}, publishFailure() {} },
+    });
+    const first = coordinator.request(session("rev-old"));
+    await flushDebounce();
+    const second = coordinator.request(session("rev-new"));
+    resolvePrepare({ pipeline: {} as Pipeline, release });
+    await flushDebounce();
+    await expect(first).resolves.toMatchObject({ outcome: "superseded" });
+    expect(release).toHaveBeenCalledTimes(1);
+    await expect(second).resolves.toMatchObject({ outcome: "failed" });
+    await coordinator.dispose();
+  });
+
+  it("ignores malformed preparation that resolves after supersession", async () => {
+    vi.useFakeTimers();
+    let resolvePrepare!: (value: PreparedAuthoringPreview) => void;
+    let prepareCalls = 0;
+    const coordinator = createAuthoringPreview({
+      debounceMs: 0,
+      orchestrator: { watch() { return immediateWatch({ done: true, value: undefined }); } },
+      materializer: {
+        prepare() {
+          prepareCalls += 1;
+          if (prepareCalls > 1) return Promise.resolve({ pipeline: {} as Pipeline, async release() {} });
+          return new Promise(resolve => { resolvePrepare = resolve; });
+        },
+      },
+      publisher: { publish() {}, publishFailure() {} },
+    });
+    const first = coordinator.request(session("rev-old-malformed"));
+    await flushDebounce();
+    const second = coordinator.request(session("rev-new-after-malformed"));
+    resolvePrepare({ pipeline: null, release: "invalid" } as never);
+    await flushDebounce();
+    await expect(first).resolves.toMatchObject({ outcome: "superseded" });
+    await expect(second).resolves.toMatchObject({ outcome: "failed" });
+    await coordinator.dispose();
+  });
+
+  it("maps watch startup, stream, empty-stream, and malformed-result failures", async () => {
+    vi.useFakeTimers();
+    const cases: Array<{ readonly expected: string; readonly watch: () => WatchSession }> = [
+      { expected: "started", watch: () => { throw new Error("start secret"); } },
+      { expected: "complete", watch: () => immediateWatch(new Error("stream secret")) },
+      { expected: "without a result", watch: () => immediateWatch({ done: true, value: undefined }) },
+      { expected: "invalid result", watch: () => immediateWatch({ done: false, value: {} as RunResult }) },
+      { expected: "invalid", watch: () => immediateWatch({
+        done: false,
+        value: result("success", "bad\u202eid"),
+      }) },
+    ];
+    for (const [index, item] of cases.entries()) {
+      const failures: Array<{ readonly diagnostics: readonly { readonly message: string }[] }> = [];
+      const coordinator = createAuthoringPreview({
+        debounceMs: 0,
+        orchestrator: { watch: item.watch },
+        materializer: { async prepare() { return { pipeline: {} as Pipeline, async release() {} }; } },
+        publisher: { publish() {}, publishFailure(failure) { failures.push(failure); } },
+      });
+      const pending = coordinator.request(session(`rev-watch-${index}`));
+      await flushDebounce();
+      const attempt = await pending;
+      expect(attempt.outcome).toBe("failed");
+      expect(failures[0]!.diagnostics[0]!.message).toContain(item.expected);
+      expect(JSON.stringify(attempt)).not.toContain("secret");
+    }
+  });
+
+  it("fails closed when cleanup or failure publication does not complete safely", async () => {
+    vi.useFakeTimers();
+    const releaseCoordinator = createAuthoringPreview({
+      debounceMs: 0,
+      orchestrator: { watch() { return immediateWatch({ done: false, value: result("success", "build") }); } },
+      materializer: {
+        async prepare() { return { pipeline: {} as Pipeline, async release() { throw new Error("release secret"); } }; },
+      },
+      publisher: { publish() { throw new Error("must not publish"); }, publishFailure() {} },
+    });
+    const releasePending = releaseCoordinator.request(session("rev-release"));
+    await flushDebounce();
+    await expect(releasePending).resolves.toMatchObject({
+      outcome: "failed",
+      diagnostics: [{ code: "E_PREVIEW_RELEASE" }],
+    });
+
+    const failurePublisher = createAuthoringPreview({
+      debounceMs: 0,
+      orchestrator: { watch() { return immediateWatch({ done: false, value: result("failed", "build", { errors: [] }) }); } },
+      materializer: { async prepare() { return { pipeline: {} as Pipeline, async release() {} }; } },
+      publisher: { publish() {}, publishFailure() { throw new Error("failure publisher secret"); } },
+    });
+    const publishPending = failurePublisher.request(session("rev-failure-publish"));
+    await flushDebounce();
+    await expect(publishPending).resolves.toMatchObject({
+      outcome: "failed",
+      diagnostics: [{ code: "E_PREVIEW_PUBLISH" }],
+    });
+  });
+
+  it("normalizes empty, malformed, and unsafe diagnostic fields", async () => {
+    vi.useFakeTimers();
+    const attempts = [
+      result("failed", "bad\u202eid", { errors: [] }),
+      { ...result("failed", "build"), errors: null as never },
+      result("failed", "build", { errors: [{
+        code: "bad\u202ecode",
+        stageName: 7 as never,
+        instanceId: "instance",
+        message: "bad\u0000message",
+        recoverable: false,
+        fields: {},
+      }] }),
+    ];
+    for (const [index, runResult] of attempts.entries()) {
+      const coordinator = createAuthoringPreview({
+        debounceMs: 0,
+        orchestrator: { watch() { return immediateWatch({ done: false, value: runResult }); } },
+        materializer: { async prepare() { return { pipeline: {} as Pipeline, async release() {} }; } },
+        publisher: { publish() {}, publishFailure() {} },
+      });
+      const pending = coordinator.request(session(`rev-diagnostic-${index}`));
+      await flushDebounce();
+      const attempt = await pending;
+      expect(attempt.buildId).toBe(index === 0 ? null : "build");
+      if (index === 0) expect(attempt.diagnostics[0]!.code).toBe("E_PREVIEW_BUILD");
+      if (index === 1) expect(attempt.diagnostics[0]!.code).toBe("E_PREVIEW_DIAGNOSTIC");
+      if (index === 2) expect(attempt.diagnostics[0]).toMatchObject({
+        code: "E_PREVIEW_DIAGNOSTIC",
+        stageName: "unknown-stage",
+        message: "Preview build failed.",
+      });
+    }
+  });
+
+  it("closes the idle change stream used by the real watch boundary", async () => {
+    vi.useFakeTimers();
+    let changes: WatchOptions["changes"] | null = null;
+    let iterator: AsyncIterator<unknown> | null = null;
+    const coordinator = createAuthoringPreview({
+      debounceMs: 0,
+      orchestrator: {
+        watch(_pipeline, options) {
+          changes = options.changes;
+          iterator = changes[Symbol.asyncIterator]();
+          void iterator.next();
+          return immediateWatch({ done: false, value: result("success", "build-idle") });
+        },
+      },
+      materializer: { async prepare() { return { pipeline: {} as Pipeline, async release() {} }; } },
+      publisher: { publish() {}, publishFailure() {} },
+    });
+    const pending = coordinator.request(session("rev-idle"));
+    await flushDebounce();
+    await expect(pending).resolves.toMatchObject({ outcome: "ready" });
+    expect(changes).not.toBeNull();
+    await expect(iterator!.next()).resolves.toEqual({ done: true, value: undefined });
+  });
+
+  it("rejects null sessions and empty revisions without scheduling host work", async () => {
+    const h = harness();
+    await expect(h.coordinator.request(null as never)).rejects.toThrow("session");
+    await expect(h.coordinator.request(session("", "Valid title"))).rejects.toThrow("revision");
+    expect(h.inputs).toEqual([]);
   });
 });
