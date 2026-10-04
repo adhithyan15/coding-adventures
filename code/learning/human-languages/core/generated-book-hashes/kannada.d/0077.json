@@ -1,13 +1,14 @@
 {
   "language": "kannada",
   "chapter": 77,
-  "sourceHash": "fnv1a64:950aa4dce182b002",
+  "sourceHash": "fnv1a64:ddd9017247023f42",
   "lessonIds": [
     "KA-S152-full-stop-and-comma",
     "KA-S153-question-mark",
     "KA-S154-other-marks",
     "KA-R77-marks-recall",
-    "KA-W77-gotta-controlled-question"
+    "KA-W77-gotta-controlled-question",
+    "KA-W77-a1-timed-production"
   ],
   "tex": "kannada/book/chapters/ch77-marks-on-the-page.tex"
 }

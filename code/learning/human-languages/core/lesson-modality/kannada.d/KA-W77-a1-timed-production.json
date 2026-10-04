@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "KA-W77-a1-timed-production",
+    "language": "kannada",
+    "chapter": 77,
+    "sequence": 2737,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b06777b979047771",
+    "detachableSegments": [
+      "Writing — timed assessment production"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
