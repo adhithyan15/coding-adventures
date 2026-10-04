@@ -252,6 +252,18 @@ behavior while making the authoring revision visible to the shell. A success
 from revision N is stale as soon as N+1 is requested, even if N finishes before
 its cancellation is observed.
 
+Before conversion, the coordinator descriptor-snapshots at most 256 named
+outputs and 10,000 total files. Output names are limited to 256 Unicode
+scalars, portable artifact paths to 4,096 scalars, each file to 16 MiB, and the
+complete snapshot to 128 MiB. It copies every byte array and publishes a
+non-mutating view so producer mutation cannot change validated output. Revision
+and build identities are exact tokens of at most 1,024 Unicode scalars; they
+are rejected rather than truncated. The publisher may prepare asynchronously,
+but every externally visible mutation must run inside the coordinator's
+one-shot synchronous generation guard. A successful publish requires exactly
+one guarded commit. Rejection after a commit is reported as indeterminate, and
+no delayed guard can commit after its publisher call returns.
+
 Preview diagnostics are closed data: severity, code, stage identity, and a
 plain message. The coordinator admits at most 64 diagnostics, limits every
 scalar, rejects controls and bidi formatting, removes arbitrary fields and
@@ -309,8 +321,9 @@ FM-B064 tests use a real `Orchestrator.watch`-shaped session boundary and prove
 initial success, exact persisted-revision attribution, burst coalescing,
 superseded preparation and active-build cancellation, last-good retention,
 malformed artifact refusal, bounded/redacted diagnostics, hostile host result
-handling, materialization cleanup, double disposal, and rejection after
-disposal. The package must exceed 95% statement and line coverage and 90%
+handling, generation-guarded asynchronous publication, immutable bounded
+artifact snapshots, materialization cleanup, concurrent double disposal, and
+rejection after disposal. The package must exceed 95% statement and line coverage and 90%
 branch coverage. One composition test must pass real FM03 `RunResult` output
 through FM07 `snapshotFromOutputs`; a mock DOM renderer is not an acceptable
 preview proof.

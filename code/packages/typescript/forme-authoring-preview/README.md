@@ -35,13 +35,15 @@ const preview = createAuthoringPreview({
     },
   },
   publisher: {
-    publish(snapshot) {
+    publish(snapshot, commitIfCurrent) {
       // snapshot.revision and snapshot.buildId identify the exact output.
-      devServer.publish(snapshot);
+      commitIfCurrent(() => { devServer.publish(snapshot); });
     },
-    publishFailure(failure) {
-      devServer.publishFailure({
-        message: failure.diagnostics.map(item => item.message).join("\n"),
+    publishFailure(failure, commitIfCurrent) {
+      commitIfCurrent(() => {
+        devServer.publishFailure({
+          message: failure.diagnostics.map(item => item.message).join("\n"),
+        });
       });
     },
   },
@@ -62,7 +64,11 @@ await preview.dispose();
   stopped through the real watch session before their isolated input is
   released.
 - Successful outputs pass through FM07's `snapshotFromOutputs`, including its
-  collision and portable-path checks.
+  collision and portable-path checks, after a descriptor-only snapshot enforces
+  file-count, path, per-file, and aggregate-byte limits and copies all bytes.
+- Async publishers may prepare work before committing, but every visible
+  mutation must occur inside the supplied one-shot synchronous commit guard.
+  The guard rejects stale generations and closes when the publisher returns.
 - Diagnostics are capped at 64 closed records. Arbitrary fields, controls,
   bidi formatting, adapter error strings, and over-limit text do not escape.
 - `state.lastGoodRevision` is distinct from `state.activeRevision`, so a shell

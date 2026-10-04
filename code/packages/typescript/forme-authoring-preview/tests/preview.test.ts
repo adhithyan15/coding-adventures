@@ -91,8 +91,8 @@ function harness(debounceMs = 0) {
   const successes: Array<{ readonly revision: string; readonly buildId: string; readonly files: ReadonlyMap<string, Uint8Array> }> = [];
   const failures: Array<{ readonly revision: string; readonly diagnostics: readonly unknown[] }> = [];
   const publisher: AuthoringPreviewPublisher = {
-    publish(snapshot) { successes.push(snapshot); },
-    publishFailure(failure) { failures.push(failure); },
+    publish(snapshot, commit) { commit(() => { successes.push(snapshot); }); },
+    publishFailure(failure, commit) { commit(() => { failures.push(failure); }); },
   };
   const coordinator = createAuthoringPreview({
     debounceMs,
@@ -189,6 +189,52 @@ describe("pipeline-backed authoring preview", () => {
     expect(h.successes.map(item => item.revision)).toEqual(["rev-2"]);
   });
 
+  it("prevents an async publisher from committing after a newer revision is requested", async () => {
+    vi.useFakeTimers();
+    const committed: string[] = [];
+    let finishPublish!: () => void;
+    let staleCommit!: (mutation: () => void) => boolean;
+    let markPublishStarted!: () => void;
+    const publishStarted = new Promise<void>(resolve => { markPublishStarted = resolve; });
+    const watches: ControlledWatch[] = [];
+    const coordinator = createAuthoringPreview({
+      debounceMs: 0,
+      orchestrator: {
+        watch() {
+          const watch = new ControlledWatch();
+          watches.push(watch);
+          return watch;
+        },
+      },
+      materializer: {
+        async prepare() { return { pipeline: {} as Pipeline, async release() {} }; },
+      },
+      publisher: {
+        publish(snapshot, commit) {
+          if (snapshot.revision !== "rev-old") return void commit(() => { committed.push(snapshot.revision); });
+          staleCommit = commit;
+          markPublishStarted();
+          return new Promise<void>(resolve => { finishPublish = resolve; });
+        },
+        publishFailure(_failure, commit) { commit(() => {}); },
+      },
+    });
+    const first = coordinator.request(session("rev-old"));
+    await flushDebounce();
+    watches[0]!.settle(result("success", "build-old"));
+    await publishStarted;
+
+    const second = coordinator.request(session("rev-new"));
+    expect(coordinator.state).toMatchObject({ phase: "building", activeRevision: "rev-new" });
+    expect(staleCommit(() => { committed.push("rev-old"); })).toBe(false);
+    finishPublish();
+    await expect(first).resolves.toMatchObject({ outcome: "superseded" });
+    await flushDebounce();
+    watches[1]!.settle(result("success", "build-new"));
+    await expect(second).resolves.toMatchObject({ outcome: "ready", revision: "rev-new" });
+    expect(committed).toEqual(["rev-new"]);
+  });
+
   it("retains last-good output and binds bounded diagnostics to the failed revision", async () => {
     vi.useFakeTimers();
     const h = harness();
@@ -250,6 +296,70 @@ describe("pipeline-backed authoring preview", () => {
     });
     expect(h.successes).toHaveLength(1);
     expect(h.coordinator.state).toMatchObject({ lastGoodRevision: "rev-good" });
+
+    const accessorFiles = {};
+    Object.defineProperty(accessorFiles, "index.html", {
+      enumerable: true,
+      get() { throw new Error("artifact secret"); },
+    });
+    const hostile = h.coordinator.request(session("rev-hostile-artifact"));
+    await flushDebounce();
+    h.watches[2]!.settle(result("success", "build-hostile-artifact", {
+      outputs: { site: { variant: { kind: "dist-tree" }, files: accessorFiles } },
+    }));
+    await expect(hostile).resolves.toMatchObject({
+      outcome: "failed",
+      diagnostics: [{ code: "E_PREVIEW_OUTPUT" }],
+    });
+    expect(JSON.stringify(await hostile)).not.toContain("secret");
+  });
+
+  it("copies artifact bytes, exposes a non-mutating view, and enforces byte limits", async () => {
+    vi.useFakeTimers();
+    const h = harness();
+    const producerBytes = encoder.encode("stable");
+    const pending = h.coordinator.request(session("rev-copy"));
+    await flushDebounce();
+    h.watches[0]!.settle(result("success", "build-copy", {
+      outputs: { site: { variant: { kind: "dist-tree" }, files: { "index.html": producerBytes } } },
+    }));
+    await expect(pending).resolves.toMatchObject({ outcome: "ready" });
+    producerBytes.fill(0);
+    const published = h.successes[0]!.files;
+    expect(typeof (published as unknown as { set?: unknown }).set).toBe("undefined");
+    expect(published.size).toBe(1);
+    expect(published.has("index.html")).toBe(true);
+    expect(published.has("missing.html")).toBe(false);
+    expect([...published.keys()]).toEqual(["index.html"]);
+    expect([...published.values()].map(bytes => new TextDecoder().decode(bytes))).toEqual(["stable"]);
+    expect([...published.entries()].map(([path]) => path)).toEqual(["index.html"]);
+    expect([...published].map(([path]) => path)).toEqual(["index.html"]);
+    const visited: string[] = [];
+    published.forEach((_bytes, path, map) => {
+      expect(map).toBe(published);
+      visited.push(path);
+    });
+    expect(visited).toEqual(["index.html"]);
+    expect(published.get("missing.html")).toBeUndefined();
+    const firstRead = published.get("index.html")!;
+    firstRead.fill(0);
+    expect(new TextDecoder().decode(published.get("index.html"))).toBe("stable");
+
+    const oversized = h.coordinator.request(session("rev-oversized"));
+    await flushDebounce();
+    h.watches[1]!.settle(result("success", "build-oversized", {
+      outputs: {
+        site: {
+          variant: { kind: "dist-tree" },
+          files: { "large.bin": new Uint8Array(16 * 1024 * 1024 + 1) },
+        },
+      },
+    }));
+    await expect(oversized).resolves.toMatchObject({
+      outcome: "failed",
+      diagnostics: [{ code: "E_PREVIEW_OUTPUT" }],
+    });
+    expect(h.successes).toHaveLength(1);
   });
 
   it("fails closed on hostile diagnostics and never exposes thrown adapter text", async () => {
@@ -275,7 +385,10 @@ describe("pipeline-backed authoring preview", () => {
       debounceMs: 0,
       orchestrator: { watch() { throw new Error("watch must not run"); } },
       materializer: { async prepare() { throw new Error("filesystem secret"); } },
-      publisher: { publish() {}, publishFailure() {} },
+      publisher: {
+        publish(_snapshot, commit) { commit(() => {}); },
+        publishFailure(_failure, commit) { commit(() => {}); },
+      },
     });
     const pending = prepareFailure.request(session("rev-prepare"));
     await flushDebounce();
@@ -305,7 +418,7 @@ describe("pipeline-backed authoring preview", () => {
       },
       publisher: {
         publish() { throw new Error("publisher secret"); },
-        publishFailure() {},
+        publishFailure(_failure, commit) { commit(() => {}); },
       },
     });
     const publishing = publishingCoordinator.request(session("rev-publish"));
@@ -339,8 +452,10 @@ describe("pipeline-backed authoring preview", () => {
     const h = harness();
     const pending = h.coordinator.request(session("rev-active"));
     await flushDebounce();
-    await h.coordinator.dispose();
-    await h.coordinator.dispose();
+    const firstDispose = h.coordinator.dispose();
+    const secondDispose = h.coordinator.dispose();
+    expect(secondDispose).toBe(firstDispose);
+    await firstDispose;
     await expect(pending).resolves.toMatchObject({ outcome: "cancelled", revision: "rev-active" });
     expect(h.watches[0]!.stop).toHaveBeenCalledTimes(1);
     expect(h.releases[0]).toHaveBeenCalledTimes(1);
@@ -350,28 +465,80 @@ describe("pipeline-backed authoring preview", () => {
 
   it("rejects unsafe revisions and invalid debounce bounds before host work", async () => {
     const h = harness();
-    await expect(h.coordinator.request(session("bad\u202erevision"))).rejects.toThrow("revision");
+    await expect(h.coordinator.request(session("bad\u202erevision"))).rejects.toThrow("could not be inspected safely");
     expect(h.inputs).toEqual([]);
     expect(() => harness(60_001)).toThrow("debounceMs");
+  });
+
+  it("rejects over-limit exact identities instead of truncating them", async () => {
+    vi.useFakeTimers();
+    const h = harness();
+    await expect(h.coordinator.request(session("r".repeat(1_025), "Valid title"))).rejects.toThrow(
+      "could not be inspected safely",
+    );
+    expect(h.inputs).toEqual([]);
+
+    const pending = h.coordinator.request(session("rev-build-id"));
+    await flushDebounce();
+    h.watches[0]!.settle(result("success", "b".repeat(1_025)));
+    await expect(pending).resolves.toMatchObject({
+      outcome: "failed",
+      diagnostics: [{ code: "E_PREVIEW_OUTPUT" }],
+    });
   });
 
   it("validates construction and captures only data methods", async () => {
     const valid = {
       orchestrator: { watch() { return immediateWatch({ done: true, value: undefined }); } },
       materializer: { async prepare() { return { pipeline: {} as Pipeline, async release() {} }; } },
-      publisher: { publish() {}, publishFailure() {} },
+      publisher: {
+        publish(_snapshot, commit) { commit(() => {}); },
+        publishFailure(_failure, commit) { commit(() => {}); },
+      },
     };
     expect(() => createAuthoringPreview(null as never)).toThrow("options");
-    expect(() => createAuthoringPreview({ ...valid, orchestrator: null as never })).toThrow("orchestrator");
-    expect(() => createAuthoringPreview({ ...valid, publisher: {} as never })).toThrow("publish");
+    expect(() => createAuthoringPreview({ ...valid, orchestrator: null as never })).toThrow("adapter methods");
+    expect(() => createAuthoringPreview({ ...valid, publisher: {} as never })).toThrow("adapter methods");
     const accessor = {} as Record<string, unknown>;
     Object.defineProperty(accessor, "prepare", { get() { return async () => {}; } });
-    expect(() => createAuthoringPreview({ ...valid, materializer: accessor as never })).toThrow("data method");
+    expect(() => createAuthoringPreview({ ...valid, materializer: accessor as never })).toThrow("adapter methods");
     for (const debounceMs of [-1, 0.5, Number.NaN]) {
       expect(() => createAuthoringPreview({ ...valid, debounceMs })).toThrow("debounceMs");
     }
     const withDefault = createAuthoringPreview(valid);
     await withDefault.dispose();
+  });
+
+  it("redacts hostile session and adapter inspection errors", async () => {
+    const h = harness();
+    const hostileSession = {};
+    Object.defineProperty(hostileSession, "project", {
+      enumerable: true,
+      get() { throw new Error("session secret"); },
+    });
+    await expect(h.coordinator.request(hostileSession as AuthoringSession)).rejects.toThrow(
+      "authoring session could not be inspected safely",
+    );
+
+    const hostileAdapter = new Proxy({}, {
+      getOwnPropertyDescriptor() { throw new Error("adapter secret"); },
+    });
+    expect(() => createAuthoringPreview({
+      debounceMs: 0,
+      orchestrator: hostileAdapter as never,
+      materializer: { async prepare() { throw new Error("unused"); } },
+      publisher: {
+        publish(_snapshot, commit) { commit(() => {}); },
+        publishFailure(_failure, commit) { commit(() => {}); },
+      },
+    })).toThrow("preview adapter methods could not be inspected safely");
+
+    const hostileOptions = new Proxy({}, {
+      getOwnPropertyDescriptor() { throw new Error("options secret"); },
+    });
+    expect(() => createAuthoringPreview(hostileOptions as never)).toThrow(
+      "preview options could not be inspected safely",
+    );
   });
 
   it("cancels a request that is still waiting in the debounce window", async () => {
@@ -399,7 +566,10 @@ describe("pipeline-backed authoring preview", () => {
         debounceMs: 0,
         orchestrator: { watch() { watched = true; return immediateWatch({ done: true, value: undefined }); } },
         materializer: { async prepare() { return prepared as PreparedAuthoringPreview; } },
-        publisher: { publish() {}, publishFailure() {} },
+        publisher: {
+          publish(_snapshot, commit) { commit(() => {}); },
+          publishFailure(_failure, commit) { commit(() => {}); },
+        },
       });
       const pending = coordinator.request(session(`rev-${malformed.indexOf(prepared)}`));
       await flushDebounce();
@@ -426,7 +596,10 @@ describe("pipeline-backed authoring preview", () => {
           return new Promise(resolve => { resolvePrepare = resolve; });
         },
       },
-      publisher: { publish() {}, publishFailure() {} },
+      publisher: {
+        publish(_snapshot, commit) { commit(() => {}); },
+        publishFailure(_failure, commit) { commit(() => {}); },
+      },
     });
     const first = coordinator.request(session("rev-old"));
     await flushDebounce();
@@ -453,7 +626,10 @@ describe("pipeline-backed authoring preview", () => {
           return new Promise(resolve => { resolvePrepare = resolve; });
         },
       },
-      publisher: { publish() {}, publishFailure() {} },
+      publisher: {
+        publish(_snapshot, commit) { commit(() => {}); },
+        publishFailure(_failure, commit) { commit(() => {}); },
+      },
     });
     const first = coordinator.request(session("rev-old-malformed"));
     await flushDebounce();
@@ -469,9 +645,15 @@ describe("pipeline-backed authoring preview", () => {
     vi.useFakeTimers();
     const cases: Array<{ readonly expected: string; readonly watch: () => WatchSession }> = [
       { expected: "started", watch: () => { throw new Error("start secret"); } },
+      { expected: "started", watch: () => ({ results() {}, rebuild() {}, get stop() { throw new Error("stop getter secret"); } }) as never },
+      { expected: "started", watch: () => ({ results() {}, rebuild() {} }) as never },
       { expected: "complete", watch: () => immediateWatch(new Error("stream secret")) },
       { expected: "without a result", watch: () => immediateWatch({ done: true, value: undefined }) },
       { expected: "invalid result", watch: () => immediateWatch({ done: false, value: {} as RunResult }) },
+      { expected: "invalid result", watch: () => immediateWatch({
+        done: false,
+        value: { ...result("success", "build"), outcome: "bogus" } as never,
+      }) },
       { expected: "invalid", watch: () => immediateWatch({
         done: false,
         value: result("success", "bad\u202eid"),
@@ -483,7 +665,10 @@ describe("pipeline-backed authoring preview", () => {
         debounceMs: 0,
         orchestrator: { watch: item.watch },
         materializer: { async prepare() { return { pipeline: {} as Pipeline, async release() {} }; } },
-        publisher: { publish() {}, publishFailure(failure) { failures.push(failure); } },
+        publisher: {
+          publish(_snapshot, commit) { commit(() => {}); },
+          publishFailure(failure, commit) { commit(() => { failures.push(failure); }); },
+        },
       });
       const pending = coordinator.request(session(`rev-watch-${index}`));
       await flushDebounce();
@@ -494,6 +679,42 @@ describe("pipeline-backed authoring preview", () => {
     }
   });
 
+  it("settles and releases when iterator descriptors are hostile and stop throws synchronously", async () => {
+    vi.useFakeTimers();
+    const release = vi.fn(async () => {});
+    const failures: string[] = [];
+    const hostileResult = {};
+    Object.defineProperty(hostileResult, "done", { enumerable: true, get() { throw new Error("iterator secret"); } });
+    const coordinator = createAuthoringPreview({
+      debounceMs: 0,
+      orchestrator: {
+        watch() {
+          return {
+            results() {
+              return { [Symbol.asyncIterator]: () => ({ next: async () => hostileResult }) };
+            },
+            rebuild: async () => result("cancelled", "unused"),
+            stop() { throw new Error("stop secret"); },
+          } as WatchSession;
+        },
+      },
+      materializer: { async prepare() { return { pipeline: {} as Pipeline, release }; } },
+      publisher: {
+        publish(_snapshot, commit) { commit(() => {}); },
+        publishFailure(failure, commit) {
+          commit(() => { failures.push(failure.diagnostics[0]!.message); });
+        },
+      },
+    });
+    const pending = coordinator.request(session("rev-hostile-iterator"));
+    await flushDebounce();
+    const attempt = await pending;
+    expect(attempt).toMatchObject({ outcome: "failed", diagnostics: [{ code: "E_PREVIEW_RUN" }] });
+    expect(JSON.stringify(attempt)).not.toContain("secret");
+    expect(failures[0]).toBe("Preview pipeline did not complete safely.");
+    expect(release).toHaveBeenCalledTimes(1);
+  });
+
   it("fails closed when cleanup or failure publication does not complete safely", async () => {
     vi.useFakeTimers();
     const releaseCoordinator = createAuthoringPreview({
@@ -502,7 +723,10 @@ describe("pipeline-backed authoring preview", () => {
       materializer: {
         async prepare() { return { pipeline: {} as Pipeline, async release() { throw new Error("release secret"); } }; },
       },
-      publisher: { publish() { throw new Error("must not publish"); }, publishFailure() {} },
+      publisher: {
+        publish() { throw new Error("must not publish"); },
+        publishFailure(_failure, commit) { commit(() => {}); },
+      },
     });
     const releasePending = releaseCoordinator.request(session("rev-release"));
     await flushDebounce();
@@ -515,7 +739,10 @@ describe("pipeline-backed authoring preview", () => {
       debounceMs: 0,
       orchestrator: { watch() { return immediateWatch({ done: false, value: result("failed", "build", { errors: [] }) }); } },
       materializer: { async prepare() { return { pipeline: {} as Pipeline, async release() {} }; } },
-      publisher: { publish() {}, publishFailure() { throw new Error("failure publisher secret"); } },
+      publisher: {
+        publish(_snapshot, commit) { commit(() => {}); },
+        publishFailure() { throw new Error("failure publisher secret"); },
+      },
     });
     const publishPending = failurePublisher.request(session("rev-failure-publish"));
     await flushDebounce();
@@ -523,6 +750,42 @@ describe("pipeline-backed authoring preview", () => {
       outcome: "failed",
       diagnostics: [{ code: "E_PREVIEW_PUBLISH" }],
     });
+  });
+
+  it("requires one synchronous guarded publisher commit and reports post-commit failure as indeterminate", async () => {
+    vi.useFakeTimers();
+    const cases: Array<{ readonly code: string; readonly publish: AuthoringPreviewPublisher["publish"] }> = [
+      { code: "E_PREVIEW_PUBLISH", publish() {} },
+      {
+        code: "E_PREVIEW_PUBLISH_INDETERMINATE",
+        publish(_snapshot, commit) {
+          commit(() => {});
+          throw new Error("after commit secret");
+        },
+      },
+      {
+        code: "E_PREVIEW_PUBLISH_INDETERMINATE",
+        publish(_snapshot, commit) { commit(async () => {}); },
+      },
+    ];
+    for (const [index, item] of cases.entries()) {
+      const watch = new ControlledWatch();
+      const coordinator = createAuthoringPreview({
+        debounceMs: 0,
+        orchestrator: { watch() { return watch; } },
+        materializer: { async prepare() { return { pipeline: {} as Pipeline, async release() {} }; } },
+        publisher: {
+          publish: item.publish,
+          publishFailure(_failure, commit) { commit(() => {}); },
+        },
+      });
+      const pending = coordinator.request(session(`rev-guard-${index}`));
+      await flushDebounce();
+      watch.settle(result("success", `build-guard-${index}`));
+      const attempt = await pending;
+      expect(attempt).toMatchObject({ outcome: "failed", diagnostics: [{ code: item.code }] });
+      expect(JSON.stringify(attempt)).not.toContain("secret");
+    }
   });
 
   it("normalizes empty, malformed, and unsafe diagnostic fields", async () => {
@@ -544,7 +807,10 @@ describe("pipeline-backed authoring preview", () => {
         debounceMs: 0,
         orchestrator: { watch() { return immediateWatch({ done: false, value: runResult }); } },
         materializer: { async prepare() { return { pipeline: {} as Pipeline, async release() {} }; } },
-        publisher: { publish() {}, publishFailure() {} },
+        publisher: {
+          publish(_snapshot, commit) { commit(() => {}); },
+          publishFailure(_failure, commit) { commit(() => {}); },
+        },
       });
       const pending = coordinator.request(session(`rev-diagnostic-${index}`));
       await flushDebounce();
@@ -575,7 +841,10 @@ describe("pipeline-backed authoring preview", () => {
         },
       },
       materializer: { async prepare() { return { pipeline: {} as Pipeline, async release() {} }; } },
-      publisher: { publish() {}, publishFailure() {} },
+      publisher: {
+        publish(_snapshot, commit) { commit(() => {}); },
+        publishFailure(_failure, commit) { commit(() => {}); },
+      },
     });
     const pending = coordinator.request(session("rev-idle"));
     await flushDebounce();
@@ -587,7 +856,7 @@ describe("pipeline-backed authoring preview", () => {
   it("rejects null sessions and empty revisions without scheduling host work", async () => {
     const h = harness();
     await expect(h.coordinator.request(null as never)).rejects.toThrow("session");
-    await expect(h.coordinator.request(session("", "Valid title"))).rejects.toThrow("revision");
+    await expect(h.coordinator.request(session("", "Valid title"))).rejects.toThrow("could not be inspected safely");
     expect(h.inputs).toEqual([]);
   });
 });

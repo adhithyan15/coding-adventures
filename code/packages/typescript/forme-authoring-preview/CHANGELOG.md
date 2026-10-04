@@ -19,5 +19,8 @@ here.
   superseded builds while reporting active and last-good revisions separately.
 - Added closed, capped, redacted diagnostic records and defensive handling for
   hostile or malformed host results.
-- Added adversarial lifecycle tests with 96%+ statement, 99%+ line, and 92%+
-  branch coverage.
+- Added a generation-bound synchronous publisher commit gate, bounded immutable
+  artifact snapshots, exact identifier rejection, and shared concurrent
+  disposal so stale or malformed host activity fails closed.
+- Added adversarial lifecycle tests with 95%+ statement, 99%+ line, 100%
+  function, and 90%+ branch coverage.
