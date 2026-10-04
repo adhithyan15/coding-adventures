@@ -22,5 +22,8 @@ here.
 - Added a generation-bound synchronous publisher commit gate, bounded immutable
   artifact snapshots, exact identifier rejection, and shared concurrent
   disposal so stale or malformed host activity fails closed.
+- Hardened production `Session` accessor snapshots, typed-array intrinsic
+  sizing/copying, portable path collisions, proxy rejection, watch-retirement
+  failures, and publisher abort races.
 - Added adversarial lifecycle tests with 95%+ statement, 99%+ line, 100%
   function, and 90%+ branch coverage.

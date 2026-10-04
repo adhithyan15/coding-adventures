@@ -62,13 +62,16 @@ await preview.dispose();
 - At most the latest debounced request starts after an edit burst.
 - Superseded preparation receives an aborted signal; superseded builds are
   stopped through the real watch session before their isolated input is
-  released.
+  released. Release is the host's final retirement boundary if stop fails.
 - Successful outputs pass through FM07's `snapshotFromOutputs`, including its
   collision and portable-path checks, after a descriptor-only snapshot enforces
-  file-count, path, per-file, and aggregate-byte limits and copies all bytes.
+  file-count, portable case-fold/prefix collision, path, per-file, and
+  aggregate-byte limits and copies all bytes through typed-array intrinsics.
 - Async publishers may prepare work before committing, but every visible
   mutation must occur inside the supplied one-shot synchronous commit guard.
-  The guard rejects stale generations and closes when the publisher returns.
+  The guard rejects stale generations and closes when the publisher returns or
+  its abort signal fires, so a non-cooperative stale publisher cannot block the
+  next revision.
 - Diagnostics are capped at 64 closed records. Arbitrary fields, controls,
   bidi formatting, adapter error strings, and over-limit text do not escape.
 - `state.lastGoodRevision` is distinct from `state.activeRevision`, so a shell

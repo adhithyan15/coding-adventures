@@ -1,4 +1,10 @@
-import { createAuthoringProject, type AuthoringSession } from "@coding-adventures/forme-authoring-core";
+import {
+  createAuthoringProject,
+  openAuthoringSession,
+  type AuthoringSession,
+  type AuthoringStorage,
+  type StoredAuthoringState,
+} from "@coding-adventures/forme-authoring-core";
 import type { Pipeline, RunResult, WatchOptions, WatchSession } from "@coding-adventures/forme-orchestrator";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
@@ -9,6 +15,26 @@ import {
 } from "../src/index.js";
 
 const encoder = new TextEncoder();
+
+class MemoryStorage implements AuthoringStorage {
+  private stored: StoredAuthoringState | null = null;
+  private revision = 0;
+
+  async load(): Promise<StoredAuthoringState | null> {
+    return this.stored === null
+      ? null
+      : { bytes: new Uint8Array(this.stored.bytes), revision: this.stored.revision };
+  }
+
+  async compareAndSwap(expectedRevision: string | null, bytes: Uint8Array): Promise<{ readonly revision: string }> {
+    if (expectedRevision !== this.stored?.revision && !(expectedRevision === null && this.stored === null)) {
+      throw new Error("conflict");
+    }
+    const revision = `storage-${++this.revision}`;
+    this.stored = { bytes: new Uint8Array(bytes), revision };
+    return { revision };
+  }
+}
 
 function session(revision: string, title = revision): AuthoringSession {
   return {
@@ -158,6 +184,23 @@ describe("pipeline-backed authoring preview", () => {
     });
   });
 
+  it("accepts the real authoring-core Session prototype accessors", async () => {
+    vi.useFakeTimers();
+    const realSession = await openAuthoringSession({
+      storage: new MemoryStorage(),
+      initialProject: createAuthoringProject({
+        projectId: "01952c0d-7e63-7000-8000-000000000065",
+        title: "Real session",
+      }),
+    });
+    const h = harness();
+    const pending = h.coordinator.request(realSession);
+    await flushDebounce();
+    expect(h.inputs[0]).toMatchObject({ revision: "storage-1", project: { title: "Real session" } });
+    h.watches[0]!.settle(result("success", "build-real-session"));
+    await expect(pending).resolves.toMatchObject({ outcome: "ready", revision: "storage-1" });
+  });
+
   it("coalesces a burst before preparation and resolves displaced requests as superseded", async () => {
     vi.useFakeTimers();
     const h = harness(25);
@@ -192,7 +235,6 @@ describe("pipeline-backed authoring preview", () => {
   it("prevents an async publisher from committing after a newer revision is requested", async () => {
     vi.useFakeTimers();
     const committed: string[] = [];
-    let finishPublish!: () => void;
     let staleCommit!: (mutation: () => void) => boolean;
     let markPublishStarted!: () => void;
     const publishStarted = new Promise<void>(resolve => { markPublishStarted = resolve; });
@@ -214,7 +256,7 @@ describe("pipeline-backed authoring preview", () => {
           if (snapshot.revision !== "rev-old") return void commit(() => { committed.push(snapshot.revision); });
           staleCommit = commit;
           markPublishStarted();
-          return new Promise<void>(resolve => { finishPublish = resolve; });
+          return new Promise<void>(() => {});
         },
         publishFailure(_failure, commit) { commit(() => {}); },
       },
@@ -227,7 +269,6 @@ describe("pipeline-backed authoring preview", () => {
     const second = coordinator.request(session("rev-new"));
     expect(coordinator.state).toMatchObject({ phase: "building", activeRevision: "rev-new" });
     expect(staleCommit(() => { committed.push("rev-old"); })).toBe(false);
-    finishPublish();
     await expect(first).resolves.toMatchObject({ outcome: "superseded" });
     await flushDebounce();
     watches[1]!.settle(result("success", "build-new"));
@@ -345,13 +386,15 @@ describe("pipeline-backed authoring preview", () => {
     firstRead.fill(0);
     expect(new TextDecoder().decode(published.get("index.html"))).toBe("stable");
 
+    const spoofedBytes = new Uint8Array(16 * 1024 * 1024 + 1);
+    Object.defineProperty(spoofedBytes, "byteLength", { value: 1 });
     const oversized = h.coordinator.request(session("rev-oversized"));
     await flushDebounce();
     h.watches[1]!.settle(result("success", "build-oversized", {
       outputs: {
         site: {
           variant: { kind: "dist-tree" },
-          files: { "large.bin": new Uint8Array(16 * 1024 * 1024 + 1) },
+          files: { "large.bin": spoofedBytes },
         },
       },
     }));
@@ -360,6 +403,36 @@ describe("pipeline-backed authoring preview", () => {
       diagnostics: [{ code: "E_PREVIEW_OUTPUT" }],
     });
     expect(h.successes).toHaveLength(1);
+  });
+
+  it("rejects non-portable paths, folded and prefix collisions, and proxied output tables", async () => {
+    vi.useFakeTimers();
+    const h = harness();
+    const byte = encoder.encode("x");
+    const proxiedBytes = new Proxy(byte, {});
+    const invalidOutputs: RunResult["outputs"][] = [
+      { site: { variant: { kind: "dist-tree" }, files: { "/absolute.txt": byte } } },
+      { site: { variant: { kind: "dist-tree" }, files: { "dir\\file.txt": byte } } },
+      { site: { variant: { kind: "dist-tree" }, files: { "CON.txt": byte } } },
+      { site: { variant: { kind: "dist-tree" }, files: { "bad:name": byte } } },
+      { site: { variant: { kind: "dist-tree" }, files: { "trailing.": byte } } },
+      { site: { variant: { kind: "dist-tree" }, files: { "__proto__/x": byte } } },
+      { site: { variant: { kind: "dist-tree" }, files: { "bad\ud800.txt": byte } } },
+      { site: { variant: { kind: "dist-tree" }, files: { "wrong.bin": "not bytes" } } },
+      { site: { variant: { kind: "dist-tree" }, files: { "proxy.bin": proxiedBytes } } },
+      { site: { variant: { kind: "dist-tree" }, files: { "A.txt": byte, "a.txt": byte } } },
+      { site: { variant: { kind: "dist-tree" }, files: { assets: byte, "assets/app.js": byte } } },
+      new Proxy({}, { ownKeys() { throw new Error("proxy secret"); } }),
+    ];
+    for (const [index, outputs] of invalidOutputs.entries()) {
+      const pending = h.coordinator.request(session(`rev-portable-${index}`));
+      await flushDebounce();
+      h.watches[index]!.settle(result("success", `build-portable-${index}`, { outputs }));
+      const attempt = await pending;
+      expect(attempt).toMatchObject({ outcome: "failed", diagnostics: [{ code: "E_PREVIEW_OUTPUT" }] });
+      expect(JSON.stringify(attempt)).not.toContain("secret");
+    }
+    expect(h.successes).toEqual([]);
   });
 
   it("fails closed on hostile diagnostics and never exposes thrown adapter text", async () => {
@@ -470,21 +543,26 @@ describe("pipeline-backed authoring preview", () => {
     expect(() => harness(60_001)).toThrow("debounceMs");
   });
 
-  it("rejects over-limit exact identities instead of truncating them", async () => {
+  it("rejects over-limit, empty, and malformed exact identities instead of truncating them", async () => {
     vi.useFakeTimers();
     const h = harness();
     await expect(h.coordinator.request(session("r".repeat(1_025), "Valid title"))).rejects.toThrow(
       "could not be inspected safely",
     );
+    await expect(h.coordinator.request(session("\ud800", "Valid title"))).rejects.toThrow(
+      "could not be inspected safely",
+    );
     expect(h.inputs).toEqual([]);
 
-    const pending = h.coordinator.request(session("rev-build-id"));
-    await flushDebounce();
-    h.watches[0]!.settle(result("success", "b".repeat(1_025)));
-    await expect(pending).resolves.toMatchObject({
-      outcome: "failed",
-      diagnostics: [{ code: "E_PREVIEW_OUTPUT" }],
-    });
+    for (const [index, buildId] of ["b".repeat(1_025), "", "\ud800"].entries()) {
+      const pending = h.coordinator.request(session(`rev-build-id-${index}`));
+      await flushDebounce();
+      h.watches[index]!.settle(result("success", buildId));
+      await expect(pending).resolves.toMatchObject({
+        outcome: "failed",
+        diagnostics: [{ code: "E_PREVIEW_OUTPUT" }],
+      });
+    }
   });
 
   it("validates construction and captures only data methods", async () => {
@@ -709,9 +787,9 @@ describe("pipeline-backed authoring preview", () => {
     const pending = coordinator.request(session("rev-hostile-iterator"));
     await flushDebounce();
     const attempt = await pending;
-    expect(attempt).toMatchObject({ outcome: "failed", diagnostics: [{ code: "E_PREVIEW_RUN" }] });
+    expect(attempt).toMatchObject({ outcome: "failed", diagnostics: [{ code: "E_PREVIEW_CLEANUP" }] });
     expect(JSON.stringify(attempt)).not.toContain("secret");
-    expect(failures[0]).toBe("Preview pipeline did not complete safely.");
+    expect(failures[0]).toBe("Preview pipeline could not be retired safely.");
     expect(release).toHaveBeenCalledTimes(1);
   });
 

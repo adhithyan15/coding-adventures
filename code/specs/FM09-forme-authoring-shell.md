@@ -240,7 +240,10 @@ active build, the coordinator aborts preparation or stops the watch session,
 waits for cancellation to settle, disposes the isolated materialization, and
 then starts only the latest request. Disposal is idempotent and stops pending
 work before releasing the host materialization. The host must make preparation
-and release safe under cancellation and must retire non-cooperative work.
+and release safe under cancellation. Release is the final retirement boundary:
+it must retire all prepared work even when watch stop reports failure, and the
+coordinator reports that cleanup failure rather than treating stop as settled.
+The host must retire non-cooperative preparation and release work.
 
 Only a successful, still-current watch result is converted with FM07's
 `snapshotFromOutputs` contract and sent to the injected preview publisher. A
@@ -254,8 +257,11 @@ its cancellation is observed.
 
 Before conversion, the coordinator descriptor-snapshots at most 256 named
 outputs and 10,000 total files. Output names are limited to 256 Unicode
-scalars, portable artifact paths to 4,096 scalars, each file to 16 MiB, and the
-complete snapshot to 128 MiB. It copies every byte array and publishes a
+scalars, portable artifact paths to 2,048 characters with 255-byte ASCII
+segments, each file to 16 MiB, and the complete snapshot to 128 MiB. It rejects
+proxies before incrementally enumerating bounded plain records, copies every byte array using
+typed-array intrinsics, rejects portable case-fold and file/ancestor
+collisions, and publishes a
 non-mutating view so producer mutation cannot change validated output. Revision
 and build identities are exact tokens of at most 1,024 Unicode scalars; they
 are rejected rather than truncated. The publisher may prepare asynchronously,
@@ -263,6 +269,9 @@ but every externally visible mutation must run inside the coordinator's
 one-shot synchronous generation guard. A successful publish requires exactly
 one guarded commit. Rejection after a commit is reported as indeterminate, and
 no delayed guard can commit after its publisher call returns.
+Publisher settlement is raced against the same abort signal, so a stale
+non-cooperative publisher cannot block a newer revision or disposal; its late
+rejection remains observed but its closed guard can no longer commit.
 
 Preview diagnostics are closed data: severity, code, stage identity, and a
 plain message. The coordinator admits at most 64 diagnostics, limits every

@@ -13,6 +13,7 @@ import {
   type AuthoringSession,
 } from "@coding-adventures/forme-authoring-core";
 import { snapshotFromOutputs, type PreviewSnapshot } from "@coding-adventures/forme-dev-server";
+import { types as nodeTypes } from "node:util";
 import type {
   Orchestrator,
   Pipeline,
@@ -106,10 +107,16 @@ const MAX_MESSAGE_SCALARS = 2_048;
 const MAX_OUTPUTS = 256;
 const MAX_OUTPUT_NAME_SCALARS = 256;
 const MAX_FILES = 10_000;
-const MAX_PATH_SCALARS = 4_096;
+const MAX_PATH_SCALARS = 2_048;
 const MAX_FILE_BYTES = 16 * 1024 * 1024;
 const MAX_TOTAL_OUTPUT_BYTES = 128 * 1024 * 1024;
 const UNSAFE_TEXT = /[\u0000-\u001f\u007f-\u009f\u061c\u200e\u200f\u202a-\u202e\u2066-\u2069]/u;
+const PATH_SEGMENT = /^[A-Za-z0-9._~!$&'()*+,;=@-]+$/;
+const WINDOWS_RESERVED = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?$/i;
+const PROTOTYPE_SEGMENTS = new Set(["__proto__", "constructor", "prototype"]);
+const TYPED_ARRAY_PROTOTYPE = Object.getPrototypeOf(Uint8Array.prototype) as object;
+const TYPED_ARRAY_BYTE_LENGTH = Object.getOwnPropertyDescriptor(TYPED_ARRAY_PROTOTYPE, "byteLength")?.get;
+const UINT8_SET = Uint8Array.prototype.set;
 
 interface RequestTask {
   readonly input: AuthoringPreviewInput;
@@ -122,7 +129,7 @@ interface ActiveTask {
   readonly task: RequestTask;
   readonly abort: AbortController;
   watch: SafeWatch | null;
-  stopPromise: Promise<void> | null;
+  stopPromise: Promise<boolean> | null;
 }
 
 interface SafePrepared {
@@ -390,9 +397,10 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
       attempt = makeAttempt("ready", task.input.revision, buildId, []);
     } finally {
       idle?.close();
+      let stopped = true;
       let released = true;
       try {
-        if (active.watch !== null) await this.stopWatch(active);
+        if (active.watch !== null) stopped = await this.stopWatch(active);
       } finally {
         if (prepared !== null) {
           try { await prepared.release(); } catch { released = false; }
@@ -400,7 +408,10 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
       }
 
       if (!task.settled && !this.disposed) {
-        if (!released) {
+        if (!stopped) {
+          attempt = failedAttempt(task.input.revision, "E_PREVIEW_CLEANUP", "Preview pipeline could not be retired safely.");
+          snapshot = null;
+        } else if (!released) {
           attempt = failedAttempt(task.input.revision, "E_PREVIEW_RELEASE", "Preview input could not be released safely.");
           snapshot = null;
         }
@@ -488,16 +499,29 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
       committed = true;
       return true;
     };
-    try {
-      await publish(commit);
-    } catch {
+    const publisher = Promise.resolve().then(() => publish(commit)).then(
+      () => ({ kind: "settled" as const }),
+      () => ({ kind: "rejected" as const }),
+    );
+    let abortListener: (() => void) | null = null;
+    const aborted = new Promise<{ readonly kind: "aborted" }>(resolve => {
+      abortListener = () => {
+        open = false;
+        resolve({ kind: "aborted" });
+      };
+      if (active.abort.signal.aborted) abortListener();
+      else active.abort.signal.addEventListener("abort", abortListener, { once: true });
+    });
+    const result = await Promise.race([publisher, aborted]);
+    if (abortListener !== null) active.abort.signal.removeEventListener("abort", abortListener);
+    open = false;
+    if (result.kind === "aborted") return success;
+    if (result.kind === "rejected") {
       return failedAttempt(
         active.task.input.revision,
         commitStarted ? "E_PREVIEW_PUBLISH_INDETERMINATE" : "E_PREVIEW_PUBLISH",
         commitStarted ? "Preview publication completed indeterminately." : failureMessage,
       );
-    } finally {
-      open = false;
     }
     if (!this.isCurrent(active)) return success;
     if (!committed) {
@@ -519,9 +543,9 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
     if (active.watch !== null) void this.stopWatch(active);
   }
 
-  private stopWatch(active: ActiveTask): Promise<void> {
+  private stopWatch(active: ActiveTask): Promise<boolean> {
     if (active.stopPromise === null) {
-      active.stopPromise = Promise.resolve().then(() => active.watch?.stop()).then(() => {}, () => {});
+      active.stopPromise = Promise.resolve().then(() => active.watch?.stop()).then(() => true, () => false);
     }
     return active.stopPromise;
   }
@@ -544,10 +568,28 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
 
 function snapshotSession(session: AuthoringSession): AuthoringPreviewInput {
   if (session === null || typeof session !== "object") throw new TypeError("authoring session must be an object");
-  const project = validateAuthoringProject(dataField(session, "project"));
-  const revision = exactBoundedText(dataField(session, "storageRevision"), MAX_REVISION_SCALARS, "revision");
+  const project = validateAuthoringProject(snapshotProperty(session, "project", "authoring session"));
+  const revision = exactBoundedText(
+    snapshotProperty(session, "storageRevision", "authoring session"),
+    MAX_REVISION_SCALARS,
+    "revision",
+  );
   if (revision.length === 0) throw new TypeError("authoring revision must not be empty");
   return Object.freeze({ revision, project });
+}
+
+function snapshotProperty(value: object, key: PropertyKey, label: string): unknown {
+  let cursor: object | null = value;
+  for (let depth = 0; cursor !== null && depth < 16; depth += 1) {
+    const descriptor = Object.getOwnPropertyDescriptor(cursor, key);
+    if (descriptor !== undefined) {
+      if ("value" in descriptor) return descriptor.value;
+      if (typeof descriptor.get !== "function") throw new TypeError(`${label} ${String(key)} is unreadable`);
+      return Reflect.apply(descriptor.get, value, []);
+    }
+    cursor = Object.getPrototypeOf(cursor);
+  }
+  throw new TypeError(`${label} is missing ${String(key)}`);
 }
 
 function safePrepared(value: unknown): SafePrepared {
@@ -657,7 +699,8 @@ function safeRunResult(value: unknown): SafeRunResult {
 
 function safeBuildId(value: unknown): string | null {
   try {
-    return exactBoundedText(value, MAX_REVISION_SCALARS, "build ID");
+    const buildId = exactBoundedText(value, MAX_REVISION_SCALARS, "build ID");
+    return buildId.length === 0 ? null : buildId;
   } catch {
     return null;
   }
@@ -698,7 +741,9 @@ function exactBoundedText(value: unknown, limit: number, label: string): string 
   if (typeof value !== "string") throw new TypeError(`${label} is invalid`);
   let count = 0;
   for (const scalar of value) {
-    if (UNSAFE_TEXT.test(scalar) || ++count > limit) throw new TypeError(`${label} is invalid`);
+    const codeUnit = scalar.charCodeAt(0);
+    const loneSurrogate = scalar.length === 1 && codeUnit >= 0xd800 && codeUnit <= 0xdfff;
+    if (loneSurrogate || UNSAFE_TEXT.test(scalar) || ++count > limit) throw new TypeError(`${label} is invalid`);
   }
   return value;
 }
@@ -709,7 +754,10 @@ function truncateDiagnosticText(value: unknown, limit: number): string {
   let count = 0;
   for (const scalar of value) {
     if (count === limit) break;
-    if (UNSAFE_TEXT.test(scalar)) throw new TypeError("diagnostic is invalid");
+    const codeUnit = scalar.charCodeAt(0);
+    if ((scalar.length === 1 && codeUnit >= 0xd800 && codeUnit <= 0xdfff) || UNSAFE_TEXT.test(scalar)) {
+      throw new TypeError("diagnostic is invalid");
+    }
     result += scalar;
     count += 1;
   }
@@ -719,6 +767,7 @@ function truncateDiagnosticText(value: unknown, limit: number): string {
 function safeSnapshotFromOutputs(buildId: string, value: unknown): PreviewSnapshot {
   const outputNames = boundedRecordKeys(value, MAX_OUTPUTS, "preview outputs");
   const copiedOutputs: Record<string, unknown> = Object.create(null) as Record<string, unknown>;
+  const portablePaths: string[] = [];
   let fileCount = 0;
   let totalBytes = 0;
   for (const outputName of outputNames) {
@@ -732,31 +781,32 @@ function safeSnapshotFromOutputs(buildId: string, value: unknown): PreviewSnapsh
     for (const path of paths) {
       fileCount += 1;
       exactBoundedText(path, MAX_PATH_SCALARS, "artifact path");
+      validatePortablePath(path);
       const bytes = dataField(files, path);
-      if (!(bytes instanceof Uint8Array) || bytes.byteLength > MAX_FILE_BYTES) {
-        throw new TypeError("preview file bytes are invalid");
-      }
-      totalBytes += bytes.byteLength;
+      const copied = copyBoundedBytes(bytes);
+      totalBytes += copied.byteLength;
       if (!Number.isSafeInteger(totalBytes) || totalBytes > MAX_TOTAL_OUTPUT_BYTES) {
         throw new TypeError("preview output exceeds the aggregate byte limit");
       }
-      copiedFiles[path] = new Uint8Array(bytes);
+      portablePaths.push(path);
+      copiedFiles[path] = copied;
     }
     copiedOutputs[outputName] = { variant: { kind: "dist-tree" }, files: copiedFiles };
   }
+  rejectPortableCollisions(portablePaths);
   const snapshot = snapshotFromOutputs(buildId, copiedOutputs);
   return Object.freeze({ buildId: snapshot.buildId, files: new ImmutableSnapshotFiles(snapshot.files) });
 }
 
 function boundedRecordKeys(value: unknown, limit: number, label: string): readonly string[] {
   if (value === null || typeof value !== "object") throw new TypeError(`${label} must be an object`);
+  if (nodeTypes.isProxy(value)) throw new TypeError(`${label} must not be a proxy`);
   const prototype = Object.getPrototypeOf(value);
   if (prototype !== Object.prototype && prototype !== null) throw new TypeError(`${label} must be a plain record`);
-  const keys = Reflect.ownKeys(value);
-  if (keys.length > limit) throw new TypeError(`${label} exceeds its entry limit`);
   const strings: string[] = [];
-  for (const key of keys) {
-    if (typeof key !== "string") throw new TypeError(`${label} contains a symbol key`);
+  for (const key in value) {
+    if (!Object.hasOwn(value, key)) continue;
+    if (strings.length === limit) throw new TypeError(`${label} exceeds its entry limit`);
     const descriptor = Object.getOwnPropertyDescriptor(value, key);
     if (descriptor === undefined || !("value" in descriptor) || !descriptor.enumerable) {
       throw new TypeError(`${label} contains a non-data field`);
@@ -764,6 +814,51 @@ function boundedRecordKeys(value: unknown, limit: number, label: string): readon
     strings.push(key);
   }
   return strings;
+}
+
+function copyBoundedBytes(value: unknown): Uint8Array {
+  if (!(value instanceof Uint8Array) || TYPED_ARRAY_BYTE_LENGTH === undefined) {
+    throw new TypeError("preview file bytes are invalid");
+  }
+  let byteLength: number;
+  try {
+    byteLength = Reflect.apply(TYPED_ARRAY_BYTE_LENGTH, value, []) as number;
+  } catch {
+    throw new TypeError("preview file bytes are invalid");
+  }
+  if (byteLength > MAX_FILE_BYTES) throw new TypeError("preview file bytes are invalid");
+  const copy = new Uint8Array(byteLength);
+  try {
+    Reflect.apply(UINT8_SET, copy, [value]);
+  } catch {
+    throw new TypeError("preview file bytes are invalid");
+  }
+  return copy;
+}
+
+function validatePortablePath(path: string): void {
+  if (path.length === 0 || path.length > 2_048 || path.startsWith("/") || path.startsWith("\\") || /^[A-Za-z]:/.test(path)) {
+    throw new TypeError("artifact path must be a portable relative path");
+  }
+  if (path.includes("\\")) throw new TypeError("artifact path must use '/' separators");
+  for (const segment of path.split("/")) {
+    if (segment.length === 0 || segment === "." || segment === "..") throw new TypeError("artifact path has an unsafe segment");
+    if (!PATH_SEGMENT.test(segment) || segment.length > 255) throw new TypeError("artifact path has a non-portable segment");
+    if (segment.endsWith(".") || segment.endsWith(" ")) throw new TypeError("artifact path has an unsafe suffix");
+    if (WINDOWS_RESERVED.test(segment)) throw new TypeError("artifact path uses a reserved device name");
+    if (PROTOTYPE_SEGMENTS.has(segment)) throw new TypeError("artifact path uses a reserved object name");
+  }
+}
+
+function rejectPortableCollisions(paths: readonly string[]): void {
+  const folded = paths.map(path => path.toLowerCase()).sort();
+  for (let index = 1; index < folded.length; index += 1) {
+    const previous = folded[index - 1]!;
+    const current = folded[index]!;
+    if (current === previous || current.startsWith(`${previous}/`)) {
+      throw new TypeError("preview outputs contain a non-portable path collision");
+    }
+  }
 }
 
 class ImmutableSnapshotFiles implements ReadonlyMap<string, Uint8Array> {

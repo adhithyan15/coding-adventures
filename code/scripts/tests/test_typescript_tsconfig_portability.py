@@ -489,8 +489,10 @@ console.log(prose, nested);
         # before reflecting over hostile validation input.
         # +1: forme-render-static uses the same detector for hostile
         # interactivity composition and reviewed module-map config.
+        # +1: forme-authoring-preview uses the same detector before bounded
+        # enumeration of hostile pipeline output tables.
         # -1: the retired checklist-app (its Electron shell used Node APIs).
-        self.assertEqual(summary.node_api_projects, 83)
+        self.assertEqual(summary.node_api_projects, 84)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
         # +1: chief-of-staff-channel-store owns the test-only Node provider.
@@ -518,8 +520,9 @@ console.log(prose, nested);
         # +4: each sandbox package directly owns its Node type provider.
         # +1: forme-interactivity-ir owns the Node util type provider.
         # +1: forme-render-static owns the Node util type provider.
+        # +1: forme-authoring-preview owns the Node util type provider.
         # -1: the retired checklist-app (its Electron shell used Node APIs).
-        self.assertEqual(summary.node_provider_projects, 83)
+        self.assertEqual(summary.node_provider_projects, 84)
         self.assertEqual(summary.missing_node_provider_projects, 0)
         self.assertEqual(summary.stale_node_provider_locks, 0)
         self.assertEqual(summary.node_lock_exemptions, 1)
