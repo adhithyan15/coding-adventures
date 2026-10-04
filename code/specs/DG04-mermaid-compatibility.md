@@ -535,7 +535,10 @@ and `currentColor` node fills and strokes resolve against the final label color
 before opacity composition. Three/four/eight-digit CSS hex colors and transparent
 text colors preserve authored alpha through glyph and node opacity composition;
 modern space/slash `rgb()`/`rgba()` colors survive Mermaid style parsing, while
-backend-neutral color lowering also accepts legacy comma forms.
+backend-neutral color lowering also accepts legacy comma forms. Modern
+space/slash `hsl()`/`hsla()` styles preserve hue units and alpha through semantic
+IR before backend-neutral RGB conversion; lowering also accepts legacy comma
+forms.
 Relative `bolder` and `lighter`
 font weights resolve against the default weight, integer weights from 1 through
 1000 survive into native variable-font matching, and `oblique` font style lowers

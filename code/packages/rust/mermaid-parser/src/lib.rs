@@ -15365,6 +15365,16 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn treemap_preserves_css_hsl_colors() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:hsl(210deg 50% 40% / 80%),fill:hsl(0.5turn 60% 70% / 75%)",
+        ).expect("CSS hsl colors must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("hsl(210deg 50% 40% / 80%)"));
+        assert_eq!(style.node.fill.as_deref(), Some("hsl(0.5turn 60% 70% / 75%)"));
+    }
+
+    #[test]
     fn treemap_rejects_unsupported_font_style() {
         let error = parse_treemap(
             "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-style:slanted",
