@@ -10,7 +10,28 @@ import type {
   PipelineConfig,
   StageInstanceSpec,
 } from "@coding-adventures/forme-pipeline-config";
-import { BENCHMARK_ROOT } from "./release-benchmark.js";
+import { lstatSync, realpathSync } from "node:fs";
+import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const suppliedRoot = process.env.FORME_RELEASE_BENCHMARK_ROOT;
+if (suppliedRoot === undefined || !isAbsolute(suppliedRoot)) {
+  throw new Error("FORME_RELEASE_BENCHMARK_ROOT must name an absolute private temporary directory");
+}
+const suppliedRootInfo = lstatSync(suppliedRoot);
+if (!suppliedRootInfo.isDirectory() || suppliedRootInfo.isSymbolicLink()) {
+  throw new Error("FORME_RELEASE_BENCHMARK_ROOT must be a real directory");
+}
+const BENCHMARK_ROOT = realpathSync(resolve(suppliedRoot));
+const projectRoot = realpathSync(dirname(fileURLToPath(import.meta.url)));
+const relativeToProject = relative(projectRoot, BENCHMARK_ROOT);
+if (relativeToProject === "" || isAbsolute(relativeToProject)
+    || relativeToProject === ".." || relativeToProject.startsWith(`..${sep}`)
+    || !relativeToProject.split(sep)[0]?.startsWith(".forme-release-benchmark-")) {
+  throw new Error(
+    "FORME_RELEASE_BENCHMARK_ROOT must be a private Forme benchmark directory inside the blog project",
+  );
+}
 
 function relocate(stage: StageInstanceSpec): StageInstanceSpec {
   const config = typeof stage.config === "object" && stage.config !== null

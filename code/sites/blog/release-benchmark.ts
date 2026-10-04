@@ -8,8 +8,20 @@
  * catches accidental full rebuilds without inventing a machine-speed SLA.
  */
 import { execFile } from "node:child_process";
-import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
-import { dirname, resolve } from "node:path";
+import { randomUUID } from "node:crypto";
+import {
+  lstat,
+  mkdir,
+  mkdtemp,
+  open,
+  readFile,
+  realpath,
+  rename,
+  rm,
+  unlink,
+  writeFile,
+} from "node:fs/promises";
+import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
 import { performance } from "node:perf_hooks";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
@@ -17,10 +29,9 @@ import { promisify } from "node:util";
 const execFileAsync = promisify(execFile);
 const here = dirname(fileURLToPath(import.meta.url));
 const forme = resolve(here, "../../packages/typescript/forme-cli/bin/forme.mjs");
-export const BENCHMARK_ROOT = ".forme/release-benchmark";
-const benchmarkRoot = resolve(here, BENCHMARK_ROOT);
-const dataRoot = resolve(benchmarkRoot, "data");
 const summaryPath = resolve(here, "dist/.forme-release-benchmark.json");
+const BUILD_TIMEOUT_MS = 180_000;
+const BENCHMARK_ROOT_ENV = "FORME_RELEASE_BENCHMARK_ROOT";
 
 export const BENCHMARK_PAGE_COUNT = 1_000;
 const EDITED_PAGE = Math.floor(BENCHMARK_PAGE_COUNT / 2);
@@ -120,29 +131,35 @@ export function evaluateBenchmark(
 }
 
 async function main(): Promise<void> {
-  await rm(benchmarkRoot, { recursive: true, force: true });
+  const benchmarkRoot = await realpath(await mkdtemp(
+    resolve(here, ".forme-release-benchmark-"),
+  ));
   try {
-    await writeCorpus();
-    await runForme("clean", "--config", "release-benchmark.config.ts");
+    await writeCorpus(benchmarkRoot);
+    await runForme(benchmarkRoot, "clean", "--config", "release-benchmark.config.ts");
 
-    const cleanResult = await measuredBuild("clean.json");
-    await writeFile(pagePath(EDITED_PAGE), benchmarkSource(EDITED_PAGE, true), "utf8");
-    const incrementalResult = await measuredBuild("incremental.json");
+    const cleanResult = await measuredBuild(benchmarkRoot, "clean.json");
+    await writeFile(
+      pagePath(benchmarkRoot, EDITED_PAGE),
+      benchmarkSource(EDITED_PAGE, true),
+      "utf8",
+    );
+    const incrementalResult = await measuredBuild(benchmarkRoot, "incremental.json");
     const summary = evaluateBenchmark(cleanResult.build, incrementalResult.build, {
       cleanElapsedMs: cleanResult.elapsedMs,
       incrementalElapsedMs: incrementalResult.elapsedMs,
     });
 
-    await mkdir(dirname(summaryPath), { recursive: true });
     const text = `${JSON.stringify(summary, null, 2)}\n`;
-    await writeFile(summaryPath, text, "utf8");
+    await writeBenchmarkSummary(text);
     process.stdout.write(text);
   } finally {
     await rm(benchmarkRoot, { recursive: true, force: true });
   }
 }
 
-async function writeCorpus(): Promise<void> {
+async function writeCorpus(benchmarkRoot: string): Promise<void> {
+  const dataRoot = resolve(benchmarkRoot, "data");
   await mkdir(dataRoot, { recursive: true });
   // Small batches avoid turning the benchmark generator itself into an open
   // file-descriptor stress test on Windows.
@@ -150,18 +167,25 @@ async function writeCorpus(): Promise<void> {
     const end = Math.min(start + 32, BENCHMARK_PAGE_COUNT);
     await Promise.all(Array.from({ length: end - start }, (_, offset) => {
       const index = start + offset;
-      return writeFile(pagePath(index), benchmarkSource(index, false), "utf8");
+      return writeFile(pagePath(benchmarkRoot, index), benchmarkSource(index, false), "utf8");
     }));
   }
 }
 
-async function measuredBuild(reportName: string): Promise<{
+async function measuredBuild(benchmarkRoot: string, reportName: string): Promise<{
   readonly build: BenchmarkBuild;
   readonly elapsedMs: number;
 }> {
   const reportPath = resolve(benchmarkRoot, reportName);
   const start = performance.now();
-  await runForme("build", "--config", "release-benchmark.config.ts", "--report", reportPath);
+  await runForme(
+    benchmarkRoot,
+    "build",
+    "--config",
+    "release-benchmark.config.ts",
+    "--report",
+    reportPath,
+  );
   const elapsedMs = performance.now() - start;
   return {
     build: JSON.parse(await readFile(reportPath, "utf8")) as BenchmarkBuild,
@@ -169,16 +193,67 @@ async function measuredBuild(reportName: string): Promise<{
   };
 }
 
-async function runForme(...args: string[]): Promise<void> {
+async function runForme(benchmarkRoot: string, ...args: string[]): Promise<void> {
   const result = await execFileAsync(process.execPath, [forme, ...args], {
     cwd: here,
+    env: { ...process.env, [BENCHMARK_ROOT_ENV]: benchmarkRoot },
     maxBuffer: 16 * 1024 * 1024,
+    timeout: BUILD_TIMEOUT_MS,
+    killSignal: "SIGKILL",
   });
   if (result.stderr !== "") throw new Error(`forme benchmark stderr: ${result.stderr.slice(0, 4_096)}`);
 }
 
-function pagePath(index: number): string {
-  return resolve(dataRoot, `release-benchmark-${String(index).padStart(4, "0")}.md`);
+function pagePath(benchmarkRoot: string, index: number): string {
+  return resolve(
+    benchmarkRoot,
+    "data",
+    `release-benchmark-${String(index).padStart(4, "0")}.md`,
+  );
+}
+
+/** Atomically replace the public evidence file without following a target symlink. */
+export async function writeBenchmarkSummary(text: string): Promise<void> {
+  await atomicWriteBenchmarkSummary(summaryPath, here, text);
+}
+
+export async function atomicWriteBenchmarkSummary(
+  targetPath: string,
+  allowedRoot: string,
+  text: string,
+): Promise<void> {
+  const outputDir = dirname(targetPath);
+  await mkdir(outputDir, { recursive: true });
+  const directory = await lstat(outputDir);
+  if (!directory.isDirectory() || directory.isSymbolicLink()) {
+    throw new Error("release benchmark output directory must be a real directory");
+  }
+  const canonicalHere = await realpath(allowedRoot);
+  const canonicalOutput = await realpath(outputDir);
+  requireContainedPath(canonicalHere, canonicalOutput);
+
+  const temporaryPath = resolve(outputDir, `.forme-release-benchmark-${randomUUID()}.tmp`);
+  let handle: Awaited<ReturnType<typeof open>> | null = await open(temporaryPath, "wx", 0o600);
+  try {
+    await handle.writeFile(text, "utf8");
+    await handle.sync();
+    await handle.close();
+    handle = null;
+    // rename(2) replaces a pre-existing file or symlink entry rather than
+    // opening its destination, so a hostile summary symlink is never followed.
+    await rename(temporaryPath, targetPath);
+  } finally {
+    if (handle !== null) await handle.close().catch(() => {});
+    await unlink(temporaryPath).catch(() => {});
+  }
+}
+
+function requireContainedPath(parent: string, candidate: string): void {
+  const suffix = relative(parent, candidate);
+  if (suffix === "" || (!isAbsolute(suffix) && suffix !== ".." && !suffix.startsWith(`..${sep}`))) {
+    return;
+  }
+  throw new Error("release benchmark output escaped the blog directory");
 }
 
 function requireSuccessfulBuild(label: string, build: BenchmarkBuild): void {

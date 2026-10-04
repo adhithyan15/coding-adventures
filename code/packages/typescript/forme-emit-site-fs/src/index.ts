@@ -42,6 +42,11 @@ interface PageSnapshot {
   readonly islandModules: readonly NonNullable<RenderedPage["islandModules"]>[number][];
 }
 
+interface PageCollectionBudget {
+  contentBytes: number;
+  usageEntries: number;
+}
+
 const encoder = new TextEncoder();
 const PLACEHOLDER_PREFIX = "forme-asset:";
 
@@ -177,12 +182,13 @@ const emitSiteFs = defineStage({
     })();
     const collectPages = (async () => {
       const pages: PageSnapshot[] = [];
+      const budget: PageCollectionBudget = { contentBytes: 0, usageEntries: 0 };
       for await (const page of { [Symbol.asyncIterator]: () => pageIterator }) {
         ctx.cancellation.throwIfCancelled();
         if (pages.length >= MAX_SITE_PAGES) {
           throw new Error(`forme-emit-site-fs: site exceeds the ${MAX_SITE_PAGES}-page safety limit`);
         }
-        pages.push(snapshotPage(page));
+        pages.push(snapshotPage(page, budget));
       }
       return pages;
     })();
@@ -527,11 +533,17 @@ function islandModuleTags(
 const MAX_PAGE_ISLANDS = 256;
 const MAX_PAGE_ASSETS = 65_536;
 const MAX_SITE_PAGES = 65_536;
+const MAX_PAGE_CONTENT_BYTES = 16 * 1024 * 1024;
+const MAX_SITE_CONTENT_BYTES = 32 * 1024 * 1024;
+const MAX_SITE_USAGE_ENTRIES = 65_536;
 const PACKAGE_NAME = /^(?:@[a-z0-9][a-z0-9._-]*\/[a-z0-9][a-z0-9._-]*|[a-z0-9][a-z0-9._-]*)$/;
 const EXPORT_NAME = /^[A-Za-z_][A-Za-z0-9_]{0,63}$/;
 const SHA256 = /^[0-9a-f]{64}$/;
 
-function snapshotPage(page: RenderedPage): PageSnapshot {
+function snapshotPage(
+  page: RenderedPage,
+  budget?: PageCollectionBudget,
+): PageSnapshot {
   if (typeof page !== "object" || page === null || utilTypes.isProxy(page)) {
     throw new TypeError("forme-emit-site-fs: page must be a non-proxy object");
   }
@@ -541,10 +553,36 @@ function snapshotPage(page: RenderedPage): PageSnapshot {
     throw new TypeError("forme-emit-site-fs: page.route must be a non-empty string of at most 2048 characters");
   }
   if (typeof html !== "string") throw new TypeError("forme-emit-site-fs: page.html must be a string");
-  const usedAssets = logicalIdArray(dataProperty(page, "usedAssets"), "page.usedAssets", MAX_PAGE_ASSETS);
-  const usedIslands = islandIdArray(dataProperty(page, "usedIslands"), "page.usedIslands");
+  const rawAssets = dataProperty(page, "usedAssets");
+  const rawIslands = dataProperty(page, "usedIslands");
   const rawModules = dataProperty(page, "islandModules", false);
-  const islandModules = moduleUseArray(rawModules === undefined ? [] : rawModules);
+  const modules = rawModules === undefined ? [] : rawModules;
+  const contentBytes = Buffer.byteLength(route, "utf8") + Buffer.byteLength(html, "utf8");
+  if (contentBytes > MAX_PAGE_CONTENT_BYTES) {
+    throw new TypeError(
+      `forme-emit-site-fs: page content exceeds the ${MAX_PAGE_CONTENT_BYTES}-byte UTF-8 limit`,
+    );
+  }
+  const usageEntries = validatedExactArrayLength(rawAssets, "page.usedAssets", MAX_PAGE_ASSETS)
+    + validatedExactArrayLength(rawIslands, "page.usedIslands", MAX_PAGE_ISLANDS)
+    + validatedExactArrayLength(modules, "page.islandModules", MAX_PAGE_ISLANDS);
+  if (budget !== undefined) {
+    if (budget.contentBytes > MAX_SITE_CONTENT_BYTES - contentBytes) {
+      throw new TypeError(
+        `forme-emit-site-fs: site page content exceeds the ${MAX_SITE_CONTENT_BYTES}-byte UTF-8 limit`,
+      );
+    }
+    if (budget.usageEntries > MAX_SITE_USAGE_ENTRIES - usageEntries) {
+      throw new TypeError(
+        `forme-emit-site-fs: site page usage exceeds the ${MAX_SITE_USAGE_ENTRIES}-entry limit`,
+      );
+    }
+    budget.contentBytes += contentBytes;
+    budget.usageEntries += usageEntries;
+  }
+  const usedAssets = logicalIdArray(rawAssets, "page.usedAssets", MAX_PAGE_ASSETS);
+  const usedIslands = islandIdArray(rawIslands, "page.usedIslands");
+  const islandModules = moduleUseArray(modules);
   return Object.freeze({ route, html, usedAssets, usedIslands, islandModules });
 }
 
@@ -559,18 +597,27 @@ function dataProperty(value: object, key: string, required = true): unknown {
 }
 
 function exactArray(value: unknown, path: string, maximum: number): readonly unknown[] {
+  validatedExactArrayLength(value, path, maximum);
+  const array = value as readonly unknown[];
+  const copy: unknown[] = [];
+  for (let index = 0; index < array.length; index++) {
+    const descriptor = Object.getOwnPropertyDescriptor(array, String(index))!;
+    copy.push((descriptor as PropertyDescriptor & { value: unknown }).value);
+  }
+  return copy;
+}
+
+function validatedExactArrayLength(value: unknown, path: string, maximum: number): number {
   if (!Array.isArray(value) || utilTypes.isProxy(value) || value.length > maximum) {
     throw new TypeError(`forme-emit-site-fs: ${path} must be an array of at most ${maximum} entries`);
   }
   if (Object.getOwnPropertySymbols(value).length !== 0) {
     throw new TypeError(`forme-emit-site-fs: ${path} must not contain symbol keys`);
   }
-  const copy: unknown[] = [];
   for (let index = 0; index < value.length; index++) {
     const descriptor = Object.getOwnPropertyDescriptor(value, String(index));
     if (descriptor === undefined) throw new TypeError(`forme-emit-site-fs: ${path}[${index}] is sparse`);
     if (!("value" in descriptor)) throw new TypeError(`forme-emit-site-fs: ${path}[${index}] must not be an accessor`);
-    copy.push(descriptor.value);
   }
   for (const key of Object.getOwnPropertyNames(value)) {
     if (key === "length") continue;
@@ -579,7 +626,7 @@ function exactArray(value: unknown, path: string, maximum: number): readonly unk
       throw new TypeError(`forme-emit-site-fs: ${path} has an unknown property`);
     }
   }
-  return copy;
+  return value.length;
 }
 
 function logicalIdArray(value: unknown, path: string, maximum: number): readonly LogicalId[] {

@@ -168,6 +168,136 @@ describe("live stream scheduler integration", () => {
     await orchestrator.dispose();
   });
 
+  it("rejects overlapping pulls on one named-input iterator", async () => {
+    const source = defineStage({
+      name: "@test/bounded-input-source",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "finite source for hostile input-pull coverage",
+      consumes: Kinds.Void,
+      produces: streamOf(Kinds.ContentSource),
+      capabilities: [],
+      configSchema: null,
+      async *run() {
+        yield content("a");
+        yield content("b");
+      },
+    });
+    const join = defineStage({
+      name: "@test/bounded-input-join",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "attempts two simultaneous pulls from one iterator",
+      consumes: streamOf(Kinds.ContentSource),
+      inputPorts: { side: streamOf(Kinds.ContentSource) },
+      produces: Kinds.Collection,
+      capabilities: [],
+      configSchema: null,
+      async run(input) {
+        const iterator = (input.default as AsyncIterable<unknown>)[Symbol.asyncIterator]();
+        const first = iterator.next();
+        let rejection = "";
+        try {
+          await iterator.next();
+        } catch (error) {
+          rejection = error instanceof Error ? error.message : String(error);
+        }
+        await first;
+        return collection("bounded", [rejection]);
+      },
+    });
+    const orchestrator = createOrchestrator({ logger: silentLogger() });
+    const pipeline = await orchestrator.buildPipeline(config([
+      { id: "source", stage: source },
+      { id: "join", stage: join },
+    ], 2, [
+      { from: { id: "source" }, to: { id: "join" } },
+      { from: { id: "source" }, to: { id: "join", port: "side" } },
+    ]));
+
+    const result = await orchestrator.runOnce(pipeline);
+
+    expect(result.outcome).toBe("success");
+    expect(result.outputs.join).toMatchObject({
+      meta: { paths: [expect.stringContaining("one pending operation")] },
+    });
+    await orchestrator.dispose();
+  });
+
+  it("retires a stalled sibling when one named input rejects", async () => {
+    let stalledRetired = false;
+    const broken = defineStage({
+      name: "@test/rejecting-sibling-source",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "rejects its first pull",
+      consumes: Kinds.Void,
+      produces: streamOf(Kinds.ContentSource),
+      capabilities: [],
+      configSchema: null,
+      async *run() {
+        throw new Error("named sibling failed");
+      },
+    });
+    const stalled = defineStage({
+      name: "@test/stalled-sibling-source",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "waits for cancellation before retiring",
+      consumes: Kinds.Void,
+      produces: streamOf(Kinds.ContentSource),
+      capabilities: [],
+      configSchema: null,
+      async *run(_input, _config, ctx) {
+        try {
+          await new Promise<void>(resolve => {
+            if (ctx.cancellation.cancelled) resolve();
+            else ctx.cancellation.signal.addEventListener("abort", () => resolve(), { once: true });
+          });
+          ctx.cancellation.throwIfCancelled();
+        } finally {
+          stalledRetired = true;
+        }
+      },
+    });
+    const join = defineStage({
+      name: "@test/rejecting-sibling-join",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "starts both named input pulls together",
+      consumes: streamOf(Kinds.ContentSource),
+      inputPorts: { side: streamOf(Kinds.ContentSource) },
+      produces: Kinds.Collection,
+      capabilities: [],
+      configSchema: null,
+      async run(input) {
+        const primary = (input.default as AsyncIterable<unknown>)[Symbol.asyncIterator]();
+        const side = (input.side as AsyncIterable<unknown>)[Symbol.asyncIterator]();
+        await Promise.all([primary.next(), side.next()]);
+        return collection("unreachable", []);
+      },
+    });
+    const orchestrator = createOrchestrator({ logger: silentLogger() });
+    const pipeline = await orchestrator.buildPipeline(config([
+      { id: "broken", stage: broken },
+      { id: "stalled", stage: stalled },
+      { id: "join", stage: join },
+    ], 3, [
+      { from: { id: "broken" }, to: { id: "join" } },
+      { from: { id: "stalled" }, to: { id: "join", port: "side" } },
+    ]));
+
+    const result = await Promise.race([
+      orchestrator.runOnce(pipeline),
+      new Promise<never>((_resolve, reject) =>
+        setTimeout(() => reject(new Error("failed named sibling did not retire")), 2_000)),
+    ]);
+
+    expect(result.outcome).toBe("failed");
+    expect(stalledRetired).toBe(true);
+    await orchestrator.dispose();
+  });
+
   it("backpressures one traversal across fast, slow, and checkpoint branches", async () => {
     const releaseSlow = deferred<void>();
     let pulls = 0;

@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
+import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { resolve } from "node:path";
 import {
   BENCHMARK_PAGE_COUNT,
+  atomicWriteBenchmarkSummary,
   benchmarkSource,
   evaluateBenchmark,
   type BenchmarkBuild,
@@ -60,6 +64,27 @@ describe("Forme release benchmark", () => {
       cleanElapsedMs: 1,
       incrementalElapsedMs: 1,
     })).toThrow();
+  });
+
+  it("atomically replaces a hostile report symlink without following it", async () => {
+    const root = await mkdtemp(resolve(tmpdir(), "forme-release-report-test-"));
+    try {
+      const victim = resolve(root, "victim.json");
+      const output = resolve(root, "dist/report.json");
+      await writeFile(victim, "untouched\n", "utf8");
+      await symlink(victim, output).catch(async error => {
+        if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+        await mkdir(resolve(root, "dist"));
+        await symlink(victim, output);
+      });
+
+      await atomicWriteBenchmarkSummary(output, root, "safe\n");
+
+      expect(await readFile(victim, "utf8")).toBe("untouched\n");
+      expect(await readFile(output, "utf8")).toBe("safe\n");
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
   });
 });
 

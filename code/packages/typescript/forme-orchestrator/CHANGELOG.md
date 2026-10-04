@@ -8,6 +8,12 @@
   permit yield. Multi-input collectors can now drain sibling bounded branches
   concurrently without either exceeding the pipeline permit budget or
   deadlocking when both 64-value windows fill.
+- Permit at most one pending operation per iterator, 64 active iterators per
+  wrapped input, and 256 pending operations per stage invocation. Pending
+  outcomes remain withheld during direct iterator cleanup yields until the
+  scheduler permit is reacquired.
+- Retire started sibling reads when a batched input fails, then cancel internal
+  observers only after started consumers drain their bounded error prefixes.
 - Preserve an already-requested cancellation as the run outcome when awaited
   iterator cleanup subsequently rejects.
 

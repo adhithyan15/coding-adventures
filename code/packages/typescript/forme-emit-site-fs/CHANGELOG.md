@@ -6,7 +6,8 @@
 
 - Drain live page and asset inputs concurrently before asset-dependent page
   rewriting, avoiding a bounded sibling-stream deadlock at 128 shared-source
-  pages. Page snapshots now have an explicit 65,536-page safety limit.
+  pages. Page snapshots now have explicit page-count, per-page/aggregate UTF-8
+  byte, and aggregate nested-usage safety limits.
 
 ### Added
 

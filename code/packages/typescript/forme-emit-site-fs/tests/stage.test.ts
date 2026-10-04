@@ -313,6 +313,26 @@ describe("fingerprinted static-site emission", () => {
 });
 
 describe("validation and safety", () => {
+  it("bounds retained page bytes and aggregate usage before snapshot copies", async () => {
+    await expect(runSite([page({
+      html: "x".repeat(16 * 1024 * 1024 + 1),
+      usedAssets: [],
+    })], [])).rejects.toThrow(/UTF-8 limit/);
+
+    const twelveMiB = "y".repeat(12 * 1024 * 1024);
+    await expect(runSite([
+      page({ route: "/a.html", html: twelveMiB, usedAssets: [] }),
+      page({ route: "/b.html", html: twelveMiB, usedAssets: [] }),
+      page({ route: "/c.html", html: twelveMiB, usedAssets: [] }),
+    ], [])).rejects.toThrow(/site page content.*UTF-8 limit/);
+
+    const manyUses = Array<LogicalId>(32_769).fill(ID_A);
+    await expect(runSite([
+      page({ route: "/a.html", html: "a", usedAssets: manyUses }),
+      page({ route: "/b.html", html: "b", usedAssets: manyUses }),
+    ], [])).rejects.toThrow(/site page usage.*entry limit/);
+  });
+
   it("validates config, source paths, sha256 helpers, and byte lengths", async () => {
     expect(fingerprintedAssetFilename("images/cat.png", "a".repeat(64)))
       .toBe(`cat.${"a".repeat(64)}.png`);

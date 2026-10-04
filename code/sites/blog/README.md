@@ -89,6 +89,10 @@ the pass/fail contract uses portable work evidence: both HTML and terminal
 backends retain 1,000 routes, the clean parser handles all 1,000 pages, and the
 incremental parser reuses 999 entries while rebuilding one. No absolute
 millisecond threshold mistakes hosted-runner load for a Forme regression.
+Each CLI phase has a three-minute liveness deadline and forced child
+retirement. The disposable source/cache/output tree lives in a freshly created
+private project-temporary directory and is removed in `finally` on both success and failure;
+the retained summary is replaced atomically without following a target symlink.
 
 The installed `forme` launcher registers `tsx` for TypeScript-first packages;
 the site uses `tsx` directly only for its post-build verifier and unit tests.
