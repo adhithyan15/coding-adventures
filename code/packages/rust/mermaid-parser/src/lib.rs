@@ -4564,7 +4564,7 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                     .filter(|value| value.is_finite())
                     .ok_or_else(|| token_error(token, "invalid treemap stroke dash offset"))?);
             }
-            "border-radius" => style.node.corner_radius = Some(parse_block_style_number(token, value)?),
+            "border-radius" => style.border_radius = Some(parse_treemap_border_radius(token, value)?),
             "text-align" => style.text_align = Some(match value.to_ascii_lowercase().as_str() {
                 "left" | "start" => diagram_ir::TreemapTextAlign::Start,
                 "center" => diagram_ir::TreemapTextAlign::Center,
@@ -4804,6 +4804,24 @@ fn parse_treemap_font_size(
         diagram_ir::TreemapFontSize::Pixels(value) | diagram_ir::TreemapFontSize::Factor(value) =>
             value.is_finite() && *value > 0.0,
     }).ok_or_else(|| token_error(token, "unsupported treemap font-size"))
+}
+
+fn parse_treemap_border_radius(
+    token: &Token,
+    source: &str,
+) -> Result<diagram_ir::TreemapBorderRadius, ParseError> {
+    let source = source.trim();
+    let radius = if let Some(value) = source.strip_suffix('%') {
+        value.trim().parse::<f64>().ok()
+            .map(|value| diagram_ir::TreemapBorderRadius::Factor(value / 100.0))
+    } else {
+        source.strip_suffix("px").unwrap_or(source).trim().parse::<f64>().ok()
+            .map(diagram_ir::TreemapBorderRadius::Pixels)
+    };
+    radius.filter(|radius| match radius {
+        diagram_ir::TreemapBorderRadius::Pixels(value) | diagram_ir::TreemapBorderRadius::Factor(value) =>
+            value.is_finite() && *value >= 0.0,
+    }).ok_or_else(|| token_error(token, "treemap border-radius must be a non-negative pixel or percentage value"))
 }
 
 fn split_treemap_style_declarations(source: &str) -> Vec<&str> {
@@ -14665,7 +14683,8 @@ B//-A: reverse stick top
         assert_eq!(style.node.font_weight, Some(700));
         assert_eq!(style.node.font_italic, Some(true));
         assert_eq!(style.node.font_family.as_deref(), Some("Avenir"));
-        assert_eq!(style.node.corner_radius, Some(9.0));
+        assert_eq!(style.border_radius, Some(diagram_ir::TreemapBorderRadius::Pixels(9.0)));
+        assert_eq!(style.node.corner_radius, None);
         assert_eq!((style.opacity, style.fill_opacity, style.stroke_opacity), (Some(0.8), Some(0.7), Some(0.5)));
         assert_eq!(style.stroke_dash_offset, Some(-1.0));
         assert_eq!(style.text_align, Some(diagram_ir::TreemapTextAlign::End));
@@ -15287,6 +15306,27 @@ B//-A: reverse stick top
         for value in ["-1%", "101%", "50px"] {
             let source = format!(
                 "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent opacity:{value}"
+            );
+            assert!(parse_treemap(&source).is_err());
+        }
+    }
+
+    #[test]
+    fn treemap_parses_percentage_border_radii() {
+        for (value, expected) in [
+            ("9px", diagram_ir::TreemapBorderRadius::Pixels(9.0)),
+            ("0", diagram_ir::TreemapBorderRadius::Pixels(0.0)),
+            ("25%", diagram_ir::TreemapBorderRadius::Factor(0.25)),
+        ] {
+            let source = format!(
+                "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent border-radius:{value}"
+            );
+            let diagram = parse_treemap(&source).expect("border radius must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.border_radius), Some(expected));
+        }
+        for value in ["-1px", "-1%", "round"] {
+            let source = format!(
+                "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent border-radius:{value}"
             );
             assert!(parse_treemap(&source).is_err());
         }
