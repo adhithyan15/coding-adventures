@@ -528,7 +528,8 @@ pinned Mermaid diagnostic. Deterministic alternating partitions
 lower through backend-neutral rectangles and glyph runs, with native
 Metal-to-PNG validation. Named `classDef` declarations resolve fill, stroke,
 dash, dash offset, fill/stroke/overall opacity, text color, and font styling
-through semantic IR and backend-neutral paint. Class border radii likewise
+through semantic IR and backend-neutral paint, including CSS percentage opacity
+values. Class border radii likewise
 reach backend-neutral rectangle geometry, while relative `bolder` and `lighter`
 font weights resolve against the default weight, integer weights from 1 through
 1000 survive into native variable-font matching, and `oblique` font style lowers
