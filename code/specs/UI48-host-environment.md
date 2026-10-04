@@ -1101,9 +1101,17 @@ holding both, and a window choosing between them.
   files or the export, is the one a package build reports; the emitter's
   remains for callers that are not the builder. A dependency package's
   components add no names: the builder composes them into the layout that
-  mounts them. Known gap: a caller that passes the emitter a
-  `ComponentRegistry` (`mosaic-compile`'s single-file mode) references
-  controls declared elsewhere, whose names are not checked.
+  mounts them. A caller that passes the emitter a `ComponentRegistry`
+  (`mosaic-compile`'s single-file mode registers the package's sibling
+  exports) has each registered component in the generated namespace treated
+  as an owner, exactly like an export: its name, its union and its support
+  names are refused for a variant, by `from_pipeline` among the shell's
+  choices and by `from_pipeline_variant`. A component registered in another
+  namespace is reached only through its own XAML prefix (`<grid:Card/>`),
+  never by a bare C# name, so its names stay free. A registry lists
+  components, not their variants, so two single-file builds whose variants
+  spell one type (`Ab` + `c-d` and `AbC` + `d`) are caught only by the
+  package builder, which sees every variant.
 - **A component with variants needs its default layout.** The variants
   raise `<C>Event`, which only the default declares, so a XAML build of a
   component with `<C>.<variant>.mll` files and no `<C>.mll` fails, saying so,
@@ -1176,11 +1184,20 @@ holding both, and a window choosing between them.
   is unsubscribed from the window's handler.
 - The first root: the native-complete window mounts the one the window
   selects in `StartRuntime` (after `LoadRequired` and the platform
-  library's install), or the default when the window has not been laid out
-  yet, in which case the first `SizeChanged` switches it. A sample window
-  mounts the default in its constructor and switches the same way. Unlike
-  Flutter and Qt, a window that opens already narrow can therefore show the
-  default for one frame before switching.
+  library's install). It starts the runtime only once the window has been
+  laid out: a start queued before the first layout pass waits for the
+  content's first `SizeChanged` (unsubscribing as it fires) and queues
+  `StartRuntime` from there, so until then the loading view shows, never the
+  default about to be replaced. A window that opens already narrow shows
+  its compact layout first, as on Flutter and Qt. A retried start finds the
+  window laid out and starts at once; a window with no size even then
+  mounts the default, which the first `SizeChanged` switches. The runtime,
+  and so anything the app does at start, therefore begins only once the
+  window has been laid out (a window launched minimized waits, showing
+  the loading view, until it is). A sample
+  window (a preview, with no runtime to wait for) still mounts the default
+  in its constructor and switches the same way, so it can show the default
+  for one frame.
 - **A dialog-root window does not select.** It shows only the button that
   opens its dialog, so it ignores the choices; its variants still compile.
   A `ContentDialog` cannot stand in the window's tree in place of a control,
