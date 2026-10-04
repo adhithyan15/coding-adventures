@@ -336,7 +336,15 @@ class Publisher implements AuthoringPublisher {
 }
 
 async function safePrepared(value: unknown, signal: AbortSignal): Promise<SafePrepared> {
-  const release = captureOwnMethod<PreparedAuthoringPublication["release"]>(value, "release", "prepared publication");
+  let release: PreparedAuthoringPublication["release"];
+  try {
+    release = captureOwnMethod<PreparedAuthoringPublication["release"]>(value, "release", "prepared publication");
+  } catch {
+    // A resolved preparation may already own host resources. Without a
+    // capturable retirement hook their cleanup state is unknowable, so retry
+    // must be poisoned rather than classified as an ordinary build failure.
+    throw PREPARATION_CLEANUP_FAILED;
+  }
   let released = false;
   const retireOnce = async (): Promise<void> => {
     if (released) return;

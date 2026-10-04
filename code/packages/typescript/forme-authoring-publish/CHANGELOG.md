@@ -23,3 +23,5 @@ here.
   disposal share one cleanup settlement.
 - Reused the core's exact opaque revision validator across snapshot, staleness,
   and durable-record phases so a deployed token cannot fail only at persistence.
+- Treated resolved preparations without a capturable own retirement method as
+  indeterminate cleanup and poisoned retry instead of allowing resource overlap.

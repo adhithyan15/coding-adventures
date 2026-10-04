@@ -546,12 +546,15 @@ describe("reviewed authoring publication", () => {
     Object.defineProperty(writeOnlyRevision, "storageRevision", { set() {}, configurable: true });
     await expect(publisher.publish(writeOnlyRevision as never)).rejects.toThrow("inspected safely");
     await expect(publisher.publish({ project: project(), storageRevision: "bad\u202e" } as never)).rejects.toThrow("inspected safely");
+    const missingRelease = coordinator(async () => ({ manifest: manifest(), contentStore: store() } as never));
+    await expect(missingRelease.publish(new Session()))
+      .resolves.toMatchObject({ outcome: "indeterminate", diagnostics: [{ code: "E_PUBLISH_CLEANUP" }] });
+    await expect(missingRelease.publish(new Session()))
+      .resolves.toMatchObject({ outcome: "indeterminate", diagnostics: [{ code: "E_PUBLISH_RECONCILE" }] });
     await expect(coordinator(async () => null as never).publish(new Session()))
-      .resolves.toMatchObject({ outcome: "failed" });
-    await expect(coordinator(async () => ({ manifest: manifest(), contentStore: store() } as never)).publish(new Session()))
-      .resolves.toMatchObject({ outcome: "failed", diagnostics: [{ code: "E_PUBLISH_BUILD" }] });
+      .resolves.toMatchObject({ outcome: "indeterminate", diagnostics: [{ code: "E_PUBLISH_CLEANUP" }] });
     await expect(coordinator(async () => ({ ...prepared(), release: 1 } as never)).publish(new Session()))
-      .resolves.toMatchObject({ outcome: "failed" });
+      .resolves.toMatchObject({ outcome: "indeterminate", diagnostics: [{ code: "E_PUBLISH_CLEANUP" }] });
     const extraRelease = vi.fn(async () => {});
     await expect(coordinator(async () => ({ ...prepared(), release: extraRelease, extra: true } as never)).publish(new Session()))
       .resolves.toMatchObject({ outcome: "failed" });

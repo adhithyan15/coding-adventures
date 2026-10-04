@@ -359,6 +359,11 @@ not the raw builder store: every target read re-verifies size and digest, and
 retirement revokes the wrapper, so mutable or retained builder content cannot
 escape the reviewed manifest.
 
+A rejected build promise is a known pre-preparation failure. Once the builder
+resolves, however, an absent or malformed own retirement method leaves cleanup
+unknown; the coordinator classifies that result as indeterminate and poisons
+retry just like an invoked retirement failure.
+
 The reviewed target resolves one closed result: `success`, `failed`, or
 `indeterminate`, always attributed to the supplied manifest identity. `failed`
 is permitted only when the adapter knows no external commit occurred;

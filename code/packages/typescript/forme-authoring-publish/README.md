@@ -66,6 +66,9 @@ releasable FM08 manifest/content preparation. Target rejection is a known
 failure only under the adapter contract that rejection occurs before its
 external commit point; uncertain post-commit work must resolve
 `indeterminate`.
+Once a builder resolves, a missing or malformed own `release` method is also
+indeterminate because the coordinator cannot prove that preparation resources
+were retired; subsequent publication is blocked pending reconciliation.
 
 ## Verification
 
