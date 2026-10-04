@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:dc731e296f89cb54",
+  "lessonIds": [
+    "FA-C203-pelle",
+    "FA-C203-saqf",
+    "FA-C203-kaf",
+    "FA-C203-asansor",
+    "FA-C203-zarf"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch203.txt",
+  "json": "persian/narration/ch203.json",
+  "textHash": "fnv1a64:577fbaf9762322fa",
+  "jsonHash": "fnv1a64:1ec1535e40c03999",
+  "findings": []
+}

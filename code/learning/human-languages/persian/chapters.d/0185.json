@@ -1,0 +1,19 @@
+{
+  "chapter": 185,
+  "title": "To pay attention, To solve, To make a mistake, To borrow, To lend",
+  "label": "ch:fa-to-pay-attention-to-solve-to-make-a-mistake-to-borrow-to-lend",
+  "canDo": "I can say to pay attention, to solve, to make a mistake, to borrow and to lend.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C185-amanat-dadan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 185: I can say to pay attention, to solve, to make a mistake, to borrow and to lend.",
+    "assesses": [
+      "FA-LEX-C185-KONESH185-03",
+      "FA-LEX-C185-KONESH185-04",
+      "FA-LEX-C185-KONESH185-05"
+    ]
+  }
+}

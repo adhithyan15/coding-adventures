@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C207-mehmani",
+    "language": "persian",
+    "chapter": 207,
+    "sequence": 10680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3bc9b1d8f483fe5c"
+  },
+  "findings": []
+}

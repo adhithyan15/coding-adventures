@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C192-salane",
+    "language": "persian",
+    "chapter": 192,
+    "sequence": 9860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e5815edae298a01"
+  },
+  "findings": []
+}

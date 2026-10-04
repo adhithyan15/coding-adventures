@@ -1,0 +1,865 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 196,
+  "title": "Drainpipe, Column, Surroundings, Edge, Ground floor",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:593918f7fc8390d2",
+  "lessons": [
+    {
+      "id": "FA-C196-navdan",
+      "sequence": 10060,
+      "title": "ناودان (nâvdân) — a drainpipe",
+      "headword": "ناودان",
+      "romanization": "nâvdân",
+      "gloss": "a drainpipe",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:59a084f7dba6963a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a corridor, then the Persian for a dome."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ناودان",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ناودان — nâvdân — \"a drainpipe\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nâvdân",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nâvdân*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nâvdân, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nâvdân*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say nâvdân",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *nâvdân*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a corridor, then the Persian for a dome, then say nâvdân again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a corridor, then the Persian for a dome, then say *nâvdân* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ناودان (nâvdân) mean? (\"A drainpipe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C196-sotun",
+      "sequence": 10070,
+      "title": "ستون (sotun) — a column, a pillar",
+      "headword": "ستون",
+      "romanization": "sotun",
+      "gloss": "a column, a pillar",
+      "script": "perso-arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:2275e137d1736c66",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a dome, then the Persian for a drainpipe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ستون",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ستون — sotun — \"a column, a pillar\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sotun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sotun*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sotun, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sotun*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say sotun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *sotun*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a dome, then the Persian for a drainpipe, then say sotun again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a dome, then the Persian for a drainpipe, then say *sotun* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ستون (sotun) mean? (\"A column, a pillar\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C196-atraf",
+      "sequence": 10080,
+      "title": "اطراف (atrâf) — the surroundings",
+      "headword": "اطراف",
+      "romanization": "atrâf",
+      "gloss": "the surroundings",
+      "script": "perso-arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:e675130ae21005c3",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a drainpipe, then the Persian for a column."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اطراف",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اطراف — atrâf — \"the surroundings\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atrâf",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atrâf*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atrâf, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atrâf*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say atrâf",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *atrâf*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a drainpipe, then the Persian for a column, then say atrâf again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a drainpipe, then the Persian for a column, then say *atrâf* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اطراف (atrâf) mean? (\"The surroundings\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C196-labe",
+      "sequence": 10090,
+      "title": "لبه (labe) — an edge, a rim",
+      "headword": "لبه",
+      "romanization": "labe",
+      "gloss": "an edge, a rim",
+      "script": "perso-arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:63b9d1903d2b2f3d",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a column, then the Persian for the surroundings."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: لبه",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لبه — labe — \"an edge, a rim\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "labe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *labe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "labe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *labe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say labe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *labe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a column, then the Persian for the surroundings, then say labe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a column, then the Persian for the surroundings, then say *labe* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does لبه (labe) mean? (\"An edge, a rim\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C196-hamkaf",
+      "sequence": 10100,
+      "title": "همکف (hamkaf) — the ground floor",
+      "headword": "همکف",
+      "romanization": "hamkaf",
+      "gloss": "the ground floor",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d19e6d8416018897",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for the surroundings, then the Persian for an edge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: همکف",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "همکف — hamkaf — \"the ground floor\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hamkaf",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hamkaf*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hamkaf, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hamkaf*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say hamkaf",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *hamkaf*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for the surroundings, then the Persian for an edge, then say hamkaf again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for the surroundings, then the Persian for an edge, then say *hamkaf* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does همکف (hamkaf) mean? (\"The ground floor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R196-first-pass-words-from-chapters-188-191",
+      "sequence": 10110,
+      "title": "Words from chapters 188-191 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 188-191",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3732640f41d8510c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for an edge and the ground floor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to note down, to pronounce, to spell, to swing, to install",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to note down, to pronounce, to spell, to swing, to install]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an injection, a prescription, a medical test, an ambulance, height",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an injection, a prescription, a medical test, an ambulance, height]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a face mask, a thermometer, hygiene, blood pressure, listless",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a face mask, a thermometer, hygiene, blood pressure, listless]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "on time, an appointment, a deadline, Nowruz, Yalda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: on time, an appointment, a deadline, Nowruz, Yalda]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To note down? (یادداشت کردن, yâddâsht kardan.) To pronounce? (تلفظ کردن, talaffoz kardan.) To spell? (هجی کردن, hejji kardan.) To swing? (تاب خوردن, tâb khordan.) To install? (نصب کردن, nasb kardan.) An injection? (آمپول, âmpul.) A prescription? (نسخه, noskhe.) A medical test? (آزمایش, âzmâyesh.) An ambulance? (آمبولانس, âmbulâns.) Height? (قد, qad.) A face mask? (ماسک, mâsk.) A thermometer? (تب سنج, tabsanj.) Hygiene? (بهداشت, behdâsht.) Blood pressure? (فشار خون, feshâr-e khun.) Listless? (بیحال, bihâl.) On time? (سر وقت, sar-e vaqt.) An appointment? (قرار, qarâr.) A deadline? (مهلت, mohlat.) Nowruz? (نوروز, nowruz.) Yalda? (یلدا, yaldâ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R196-second-pass-words-from-chapters-192-196",
+      "sequence": 10120,
+      "title": "Words from chapters 192-196 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 192-196",
+      "script": "perso-arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:517acd560efccad7",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for yearly and gradually."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yearly, gradually, again, immediately, soon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: yearly, gradually, again, immediately, soon]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a clinic, a gym, a yard, a place, a distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a clinic, a gym, a yard, a place, a distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a coach terminal, the post, a counter window, a valley, a peak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a coach terminal, the post, a counter window, a valley, a peak]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a flat, a roof, a balcony, a corridor, a dome",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a flat, a roof, a balcony, a corridor, a dome]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a drainpipe, a column, the surroundings, an edge, the ground floor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a drainpipe, a column, the surroundings, an edge, the ground floor]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Yearly? (سالانه, sâlâne.) Gradually? (کم کم, kam-kam.) Again? (دوباره, dobâre.) Immediately? (فورا, fowran.) Soon? (به زودی, be-zudi.) A clinic? (درمانگاه, darmângâh.) A gym? (باشگاه, bâshgâh.) A yard? (حیاط, hayât.) A place? (جا, jâ.) A distance? (فاصله, fâsele.) A coach terminal? (ترمینال, terminâl.) The post? (پست, post.) A counter window? (باجه, bâje.) A valley? (دره, dare.) A peak? (قله, qolle.) A flat? (آپارتمان, âpârtemân.) A roof? (بام, bâm.) A balcony? (بالکن, bâlkon.) A corridor? (راهرو, râhrow.) A dome? (گنبد, gonbad.) A drainpipe? (ناودان, nâvdân.) A column? (ستون, sotun.) The surroundings? (اطراف, atrâf.) An edge? (لبه, labe.) The ground floor? (همکف, hamkaf.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

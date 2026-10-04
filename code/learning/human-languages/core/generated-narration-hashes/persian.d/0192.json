@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:51848ef479dad4d5",
+  "lessonIds": [
+    "FA-C192-salane",
+    "FA-C192-kam-kam",
+    "FA-C192-dobare",
+    "FA-C192-fowran",
+    "FA-C192-be-zudi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch192.txt",
+  "json": "persian/narration/ch192.json",
+  "textHash": "fnv1a64:2ac3aa6167a6c14a",
+  "jsonHash": "fnv1a64:d764b3f8b848b566",
+  "findings": []
+}

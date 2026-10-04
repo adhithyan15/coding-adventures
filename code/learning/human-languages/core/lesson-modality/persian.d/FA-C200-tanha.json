@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C200-tanha",
+    "language": "persian",
+    "chapter": 200,
+    "sequence": 10310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a85bf390338e78d1"
+  },
+  "findings": []
+}

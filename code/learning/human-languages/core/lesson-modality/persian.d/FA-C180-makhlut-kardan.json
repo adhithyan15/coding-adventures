@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C180-makhlut-kardan",
+    "language": "persian",
+    "chapter": 180,
+    "sequence": 9240,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:280c170dcc3ddd15"
+  },
+  "findings": []
+}

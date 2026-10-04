@@ -1,0 +1,19 @@
+{
+  "chapter": 209,
+  "title": "Nightingale, Crocodile, Zebra, Lamb, Crab",
+  "label": "ch:fa-nightingale-crocodile-zebra-lamb-crab",
+  "canDo": "I can say a nightingale, a crocodile, a zebra, a lamb and a crab.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C209-kharchang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 209: I can say a nightingale, a crocodile, a zebra, a lamb and a crab.",
+    "assesses": [
+      "FA-LEX-C209-CHIZ209-03",
+      "FA-LEX-C209-CHIZ209-04",
+      "FA-LEX-C209-CHIZ209-05"
+    ]
+  }
+}

@@ -40,7 +40,9 @@ it("pins Persian lesson-content budgets", () =>
     // 711 -> 916: the first A2 vocabulary tranche, chapters 140-178: 195
     // headwords, fifty of them verbs, in five runs each closed by two
     // reviews.
-    lessons: 916,
+    // 916 -> 1116: the second A2 vocabulary tranche, chapters 179-216: 190
+    // headwords, fifty of them verbs.
+    lessons: 1116,
     idioms: 4,
     senses: 4,
     cultureClaims: 4,

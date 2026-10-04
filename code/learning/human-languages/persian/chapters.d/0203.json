@@ -1,0 +1,19 @@
+{
+  "chapter": 203,
+  "title": "Stair, Ceiling, Floor, Lift, Dish",
+  "label": "ch:fa-stair-ceiling-floor-lift-dish",
+  "canDo": "I can say a stair, a ceiling, a floor, a lift and a dish.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C203-zarf",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 203: I can say a stair, a ceiling, a floor, a lift and a dish.",
+    "assesses": [
+      "FA-LEX-C203-CHIZ203-03",
+      "FA-LEX-C203-CHIZ203-04",
+      "FA-LEX-C203-CHIZ203-05"
+    ]
+  }
+}

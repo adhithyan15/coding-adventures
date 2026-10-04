@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:01cb51c24b44dfd6",
+  "lessonIds": [
+    "FA-C211-panbe",
+    "FA-C211-pashm",
+    "FA-C211-abrisham",
+    "FA-C211-ajor",
+    "FA-C211-felez",
+    "FA-R211-first-pass-words-from-chapters-206-208",
+    "FA-R211-second-pass-words-from-chapters-209-211"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "persian/narration/ch211.txt",
+  "json": "persian/narration/ch211.json",
+  "textHash": "fnv1a64:dc57205b18767ad5",
+  "jsonHash": "fnv1a64:6814ef9775c82d09",
+  "findings": []
+}

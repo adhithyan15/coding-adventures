@@ -1,0 +1,19 @@
+{
+  "chapter": 199,
+  "title": "Polluted, Greasy, Strong, Comfortable, Smart",
+  "label": "ch:fa-polluted-greasy-strong-comfortable-smart",
+  "canDo": "I can say polluted, greasy, strong, comfortable and smart.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FA-C199-shik",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 199: I can say polluted, greasy, strong, comfortable and smart.",
+    "assesses": [
+      "FA-LEX-C199-SEFAT199-03",
+      "FA-LEX-C199-SEFAT199-04",
+      "FA-LEX-C199-SEFAT199-05"
+    ]
+  }
+}

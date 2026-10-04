@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C212-darpush",
+    "language": "persian",
+    "chapter": 212,
+    "sequence": 10920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd126b897aae5b5b"
+  },
+  "findings": []
+}

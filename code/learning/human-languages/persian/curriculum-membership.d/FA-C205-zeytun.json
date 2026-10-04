@@ -1,0 +1,11 @@
+{
+  "id": "FA-C205-zeytun",
+  "pathSegment": "FA-PATH-205-CHIZ205",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-205-CHIZ205",
+      "order": 4
+    }
+  ]
+}

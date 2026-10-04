@@ -1,0 +1,19 @@
+{
+  "chapter": 216,
+  "title": "Workshop, Carpenter, Plumber, Electrician, Tailor",
+  "label": "ch:fa-workshop-carpenter-plumber-electrician-tailor",
+  "canDo": "I can say a workshop, a carpenter, a plumber, an electrician and a tailor.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-R216-second-pass-words-from-chapters-214-216",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 216: I can say a workshop, a carpenter, a plumber, an electrician and a tailor.",
+    "assesses": [
+      "FA-LEX-C216-KAR216-03",
+      "FA-LEX-C216-KAR216-04",
+      "FA-LEX-C216-KAR216-05"
+    ]
+  }
+}

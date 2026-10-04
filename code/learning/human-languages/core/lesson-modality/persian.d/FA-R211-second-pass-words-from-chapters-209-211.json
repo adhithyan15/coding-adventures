@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-R211-second-pass-words-from-chapters-209-211",
+    "language": "persian",
+    "chapter": 211,
+    "sequence": 10910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7bd7659686ad578"
+  },
+  "findings": []
+}

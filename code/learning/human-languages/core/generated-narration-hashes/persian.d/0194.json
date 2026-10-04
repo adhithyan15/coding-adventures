@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:55bd1452a59155fd",
+  "lessonIds": [
+    "FA-C194-terminal",
+    "FA-C194-post",
+    "FA-C194-baje",
+    "FA-C194-dare",
+    "FA-C194-qolle"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch194.txt",
+  "json": "persian/narration/ch194.json",
+  "textHash": "fnv1a64:ff73001f3076adc8",
+  "jsonHash": "fnv1a64:d857842f1c3e7cd0",
+  "findings": []
+}

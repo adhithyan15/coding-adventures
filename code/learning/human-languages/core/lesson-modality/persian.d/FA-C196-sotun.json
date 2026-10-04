@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C196-sotun",
+    "language": "persian",
+    "chapter": 196,
+    "sequence": 10070,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2275e137d1736c66"
+  },
+  "findings": []
+}

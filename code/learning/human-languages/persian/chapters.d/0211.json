@@ -1,0 +1,19 @@
+{
+  "chapter": 211,
+  "title": "Cotton, Wool, Silk, Brick, Metal",
+  "label": "ch:fa-cotton-wool-silk-brick-metal",
+  "canDo": "I can say cotton, wool, silk, a brick and metal.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-R211-second-pass-words-from-chapters-209-211",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 211: I can say cotton, wool, silk, a brick and metal.",
+    "assesses": [
+      "FA-LEX-C211-CHIZ211-03",
+      "FA-LEX-C211-CHIZ211-04",
+      "FA-LEX-C211-CHIZ211-05"
+    ]
+  }
+}

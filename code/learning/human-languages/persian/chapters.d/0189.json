@@ -1,0 +1,19 @@
+{
+  "chapter": 189,
+  "title": "Injection, Prescription, Medical test, Ambulance, Height",
+  "label": "ch:fa-injection-prescription-medical-test-ambulance-height",
+  "canDo": "I can say an injection, a prescription, a medical test, an ambulance and height.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FA-C189-qad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 189: I can say an injection, a prescription, a medical test, an ambulance and height.",
+    "assesses": [
+      "FA-LEX-C189-SALAMAT189-03",
+      "FA-LEX-C189-SALAMAT189-04",
+      "FA-LEX-C189-SALAMAT189-05"
+    ]
+  }
+}

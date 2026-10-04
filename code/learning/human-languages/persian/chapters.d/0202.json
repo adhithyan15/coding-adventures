@@ -1,0 +1,19 @@
+{
+  "chapter": 202,
+  "title": "Torn, Crooked, Stylish, Pale, Bland",
+  "label": "ch:fa-torn-crooked-stylish-pale-bland",
+  "canDo": "I can say torn, crooked, stylish, pale and bland.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FA-C202-bimaze",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 202: I can say torn, crooked, stylish, pale and bland.",
+    "assesses": [
+      "FA-LEX-C202-SEFAT202-03",
+      "FA-LEX-C202-SEFAT202-04",
+      "FA-LEX-C202-SEFAT202-05"
+    ]
+  }
+}

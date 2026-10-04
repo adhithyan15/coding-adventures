@@ -1,0 +1,11 @@
+{
+  "id": "FA-C216-khayyat",
+  "pathSegment": "FA-PATH-216-KAR216",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-216-KAR216",
+      "order": 4
+    }
+  ]
+}

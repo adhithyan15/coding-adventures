@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-R211-first-pass-words-from-chapters-206-208",
+    "language": "persian",
+    "chapter": 211,
+    "sequence": 10900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c06e33d3511c093"
+  },
+  "findings": []
+}

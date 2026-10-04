@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:314c2438582c42cf",
+  "lessonIds": [
+    "FA-C190-mask",
+    "FA-C190-tabsanj",
+    "FA-C190-behdasht",
+    "FA-C190-feshar-e-khun",
+    "FA-C190-bihal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch190.txt",
+  "json": "persian/narration/ch190.json",
+  "textHash": "fnv1a64:2c7d907fa5cb5e80",
+  "jsonHash": "fnv1a64:032e4f2d70d1051f",
+  "findings": []
+}

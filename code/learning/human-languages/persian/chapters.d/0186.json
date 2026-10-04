@@ -1,0 +1,19 @@
+{
+  "chapter": 186,
+  "title": "To knit, To shave, To drip, To shiver, To crawl",
+  "label": "ch:fa-to-knit-to-shave-to-drip-to-shiver-to-crawl",
+  "canDo": "I can say to knit, to shave, to drip, to shiver and to crawl.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C186-khazidan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 186: I can say to knit, to shave, to drip, to shiver and to crawl.",
+    "assesses": [
+      "FA-LEX-C186-KONESH186-03",
+      "FA-LEX-C186-KONESH186-04",
+      "FA-LEX-C186-KONESH186-05"
+    ]
+  }
+}

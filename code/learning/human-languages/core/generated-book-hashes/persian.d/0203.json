@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:d656a2ff044288dd",
+  "lessonIds": [
+    "FA-C203-pelle",
+    "FA-C203-saqf",
+    "FA-C203-kaf",
+    "FA-C203-asansor",
+    "FA-C203-zarf"
+  ],
+  "tex": "persian/book/chapters/ch203-stair-ceiling-floor-lift-dish.tex"
+}

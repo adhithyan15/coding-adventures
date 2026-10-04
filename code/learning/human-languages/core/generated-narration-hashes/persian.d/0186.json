@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 186,
+  "sourceHash": "fnv1a64:58688ba17e6a4d08",
+  "lessonIds": [
+    "FA-C186-baftan",
+    "FA-C186-tarashidan",
+    "FA-C186-chekidan",
+    "FA-C186-larzidan",
+    "FA-C186-khazidan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch186.txt",
+  "json": "persian/narration/ch186.json",
+  "textHash": "fnv1a64:37ae007a3c80d1ff",
+  "jsonHash": "fnv1a64:12115dd8bd0b201d",
+  "findings": []
+}

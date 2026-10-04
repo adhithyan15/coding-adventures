@@ -1,0 +1,19 @@
+{
+  "chapter": 215,
+  "title": "Mark, Homework, Journalist, Actor, Singer",
+  "label": "ch:fa-mark-homework-journalist-actor-singer",
+  "canDo": "I can say a mark, homework, a journalist, an actor and a singer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C215-khanande",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 215: I can say a mark, homework, a journalist, an actor and a singer.",
+    "assesses": [
+      "FA-LEX-C215-KAR215-03",
+      "FA-LEX-C215-KAR215-04",
+      "FA-LEX-C215-KAR215-05"
+    ]
+  }
+}

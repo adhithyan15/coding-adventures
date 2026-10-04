@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:4f42ec611521e2d3",
+  "lessonIds": [
+    "FA-C187-liz-khordan",
+    "FA-C187-gaz-dadan",
+    "FA-C187-derow-kardan",
+    "FA-C187-pasandaz-kardan",
+    "FA-C187-variz-kardan",
+    "FA-R187-first-pass-words-from-chapters-179-182",
+    "FA-R187-second-pass-words-from-chapters-183-187"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch187.txt",
+  "json": "persian/narration/ch187.json",
+  "textHash": "fnv1a64:8e69140a50cbcafd",
+  "jsonHash": "fnv1a64:cc561ecf02b0ed72",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:95dedc5b511ac59d",
+  "lessonIds": [
+    "FA-C180-makhlut-kardan",
+    "FA-C180-ham-zadan",
+    "FA-C180-jushandan",
+    "FA-C180-sorkh-kardan",
+    "FA-C180-khord-kardan"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 0,
+  "text": "persian/narration/ch180.txt",
+  "json": "persian/narration/ch180.json",
+  "textHash": "fnv1a64:af53eaa0a544fb96",
+  "jsonHash": "fnv1a64:24eb0872acae133c",
+  "findings": []
+}

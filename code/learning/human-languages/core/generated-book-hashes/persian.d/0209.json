@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:c0f14dc05c8b8df3",
+  "lessonIds": [
+    "FA-C209-bolbol",
+    "FA-C209-tamsah",
+    "FA-C209-gurekhar",
+    "FA-C209-bare",
+    "FA-C209-kharchang"
+  ],
+  "tex": "persian/book/chapters/ch209-nightingale-crocodile-zebra-lamb-crab.tex"
+}

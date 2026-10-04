@@ -1,0 +1,11 @@
+{
+  "id": "FA-C196-labe",
+  "pathSegment": "FA-PATH-196-MAKAN196",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-196-MAKAN196",
+      "order": 3
+    }
+  ]
+}

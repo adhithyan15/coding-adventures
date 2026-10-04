@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C199-rahat",
+    "language": "persian",
+    "chapter": 199,
+    "sequence": 10260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b1c219bb61f7583"
+  },
+  "findings": []
+}

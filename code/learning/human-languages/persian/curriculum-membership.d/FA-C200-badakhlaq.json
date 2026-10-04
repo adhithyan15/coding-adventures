@@ -1,0 +1,11 @@
+{
+  "id": "FA-C200-badakhlaq",
+  "pathSegment": "FA-PATH-200-SEFAT200",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-200-SEFAT200",
+      "order": 1
+    }
+  ]
+}

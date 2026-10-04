@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C212-kuze",
+    "language": "persian",
+    "chapter": 212,
+    "sequence": 10950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:787f900aedc63004"
+  },
+  "findings": []
+}

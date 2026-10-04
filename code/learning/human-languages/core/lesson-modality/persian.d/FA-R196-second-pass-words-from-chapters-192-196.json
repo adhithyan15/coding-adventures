@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-R196-second-pass-words-from-chapters-192-196",
+    "language": "persian",
+    "chapter": 196,
+    "sequence": 10120,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:517acd560efccad7"
+  },
+  "findings": []
+}

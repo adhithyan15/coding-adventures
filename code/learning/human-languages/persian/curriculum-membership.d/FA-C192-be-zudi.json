@@ -1,0 +1,11 @@
+{
+  "id": "FA-C192-be-zudi",
+  "pathSegment": "FA-PATH-192-ZAMAN192",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-192-ZAMAN192",
+      "order": 4
+    }
+  ]
+}

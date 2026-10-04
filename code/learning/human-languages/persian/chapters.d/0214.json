@@ -1,0 +1,19 @@
+{
+  "chapter": 214,
+  "title": "Experience, Employer, Employee, Colleague, Manager",
+  "label": "ch:fa-experience-employer-employee-colleague-manager",
+  "canDo": "I can say experience, an employer, an employee, a colleague and a manager.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C214-modir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 214: I can say experience, an employer, an employee, a colleague and a manager.",
+    "assesses": [
+      "FA-LEX-C214-KAR214-03",
+      "FA-LEX-C214-KAR214-04",
+      "FA-LEX-C214-KAR214-05"
+    ]
+  }
+}

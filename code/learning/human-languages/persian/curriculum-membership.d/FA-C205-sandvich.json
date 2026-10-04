@@ -1,0 +1,11 @@
+{
+  "id": "FA-C205-sandvich",
+  "pathSegment": "FA-PATH-205-CHIZ205",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-205-CHIZ205",
+      "order": 1
+    }
+  ]
+}

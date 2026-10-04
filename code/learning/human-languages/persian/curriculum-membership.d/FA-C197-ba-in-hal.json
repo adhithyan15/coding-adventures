@@ -1,0 +1,11 @@
+{
+  "id": "FA-C197-ba-in-hal",
+  "pathSegment": "FA-PATH-197-CHERA197",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-197-CHERA197",
+      "order": 2
+    }
+  ]
+}

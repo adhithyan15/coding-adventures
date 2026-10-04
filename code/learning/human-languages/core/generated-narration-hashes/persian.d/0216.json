@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:b04cbede2e248a81",
+  "lessonIds": [
+    "FA-C216-kargah",
+    "FA-C216-najjar",
+    "FA-C216-lulekesh",
+    "FA-C216-barqkar",
+    "FA-C216-khayyat",
+    "FA-R216-first-pass-words-from-chapters-212-213",
+    "FA-R216-second-pass-words-from-chapters-214-216"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "persian/narration/ch216.txt",
+  "json": "persian/narration/ch216.json",
+  "textHash": "fnv1a64:87d3a11e5f2afe1c",
+  "jsonHash": "fnv1a64:3d16e4c805ef06b8",
+  "findings": []
+}

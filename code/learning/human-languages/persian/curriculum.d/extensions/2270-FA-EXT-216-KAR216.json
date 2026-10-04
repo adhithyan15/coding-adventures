@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-216-KAR216",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a workshop, a carpenter, a plumber, an electrician and a tailor.",
+  "prerequisites": []
+}

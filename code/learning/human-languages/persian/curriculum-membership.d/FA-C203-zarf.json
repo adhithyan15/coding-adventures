@@ -1,0 +1,11 @@
+{
+  "id": "FA-C203-zarf",
+  "pathSegment": "FA-PATH-203-CHIZ203",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-203-CHIZ203",
+      "order": 4
+    }
+  ]
+}

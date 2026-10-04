@@ -1,0 +1,19 @@
+{
+  "chapter": 204,
+  "title": "Overcoat, Manteau, Headscarf, Jeans, Pullover",
+  "label": "ch:fa-overcoat-manteau-headscarf-jeans-pullover",
+  "canDo": "I can say an overcoat, a manteau, a headscarf, jeans and a pullover.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C204-poliver",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 204: I can say an overcoat, a manteau, a headscarf, jeans and a pullover.",
+    "assesses": [
+      "FA-LEX-C204-CHIZ204-03",
+      "FA-LEX-C204-CHIZ204-04",
+      "FA-LEX-C204-CHIZ204-05"
+    ]
+  }
+}

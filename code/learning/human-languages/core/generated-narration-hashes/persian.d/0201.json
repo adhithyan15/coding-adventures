@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:575b95d2dc91dd7d",
+  "lessonIds": [
+    "FA-C201-shabih",
+    "FA-C201-khoshbu",
+    "FA-C201-aftabi",
+    "FA-C201-abri",
+    "FA-C201-barani"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch201.txt",
+  "json": "persian/narration/ch201.json",
+  "textHash": "fnv1a64:e7ae955ba5b04597",
+  "jsonHash": "fnv1a64:a6cc989314456da1",
+  "findings": []
+}

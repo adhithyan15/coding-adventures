@@ -1,0 +1,11 @@
+{
+  "id": "FA-C212-kuze",
+  "pathSegment": "FA-PATH-212-CHIZ212",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-212-CHIZ212",
+      "order": 3
+    }
+  ]
+}

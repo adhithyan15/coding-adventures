@@ -1,0 +1,19 @@
+{
+  "chapter": 210,
+  "title": "Radio, Media, Interview, Internet, Mobile phone",
+  "label": "ch:fa-radio-media-interview-internet-mobile-phone",
+  "canDo": "I can say a radio, the media, an interview, the internet and a mobile phone.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C210-mobayl",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 210: I can say a radio, the media, an interview, the internet and a mobile phone.",
+    "assesses": [
+      "FA-LEX-C210-CHIZ210-03",
+      "FA-LEX-C210-CHIZ210-04",
+      "FA-LEX-C210-CHIZ210-05"
+    ]
+  }
+}

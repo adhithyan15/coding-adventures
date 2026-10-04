@@ -1,0 +1,19 @@
+{
+  "chapter": 207,
+  "title": "Haft-sin, Present, Tradition, Party, Musical instrument",
+  "label": "ch:fa-haft-sin-present-tradition-party-musical-instrument",
+  "canDo": "I can say the haft-sin, a present, a tradition, a party and a musical instrument.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C207-saz",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 207: I can say the haft-sin, a present, a tradition, a party and a musical instrument.",
+    "assesses": [
+      "FA-LEX-C207-CHIZ207-03",
+      "FA-LEX-C207-CHIZ207-04",
+      "FA-LEX-C207-CHIZ207-05"
+    ]
+  }
+}

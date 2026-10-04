@@ -1,0 +1,11 @@
+{
+  "id": "FA-C201-abri",
+  "pathSegment": "FA-PATH-201-SEFAT201",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-201-SEFAT201",
+      "order": 3
+    }
+  ]
+}

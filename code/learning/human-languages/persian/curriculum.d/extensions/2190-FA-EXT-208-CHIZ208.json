@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-208-CHIZ208",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say weather, ice, hail, shade and temperature.",
+  "prerequisites": []
+}

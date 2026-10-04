@@ -1,0 +1,11 @@
+{
+  "id": "FA-C206-parvande",
+  "pathSegment": "FA-PATH-206-CHIZ206",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-206-CHIZ206",
+      "order": 2
+    }
+  ]
+}

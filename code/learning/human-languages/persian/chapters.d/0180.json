@@ -1,0 +1,19 @@
+{
+  "chapter": 180,
+  "title": "To mix, To stir, To boil, To fry, To chop",
+  "label": "ch:fa-to-mix-to-stir-to-boil-to-fry-to-chop",
+  "canDo": "I can say to mix, to stir, to boil, to fry and to chop.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C180-khord-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 180: I can say to mix, to stir, to boil, to fry and to chop.",
+    "assesses": [
+      "FA-LEX-C180-KONESH180-03",
+      "FA-LEX-C180-KONESH180-04",
+      "FA-LEX-C180-KONESH180-05"
+    ]
+  }
+}

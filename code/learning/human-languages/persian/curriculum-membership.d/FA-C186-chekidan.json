@@ -1,0 +1,11 @@
+{
+  "id": "FA-C186-chekidan",
+  "pathSegment": "FA-PATH-186-KONESH186",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-186-KONESH186",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 183,
+  "title": "To marry, To celebrate, To congratulate, To meet, To get to know",
+  "label": "ch:fa-to-marry-to-celebrate-to-congratulate-to-meet-to-get-to-know",
+  "canDo": "I can say to marry, to celebrate, to congratulate, to meet and to get to know.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C183-ashna-shodan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 183: I can say to marry, to celebrate, to congratulate, to meet and to get to know.",
+    "assesses": [
+      "FA-LEX-C183-KONESH183-03",
+      "FA-LEX-C183-KONESH183-04",
+      "FA-LEX-C183-KONESH183-05"
+    ]
+  }
+}
