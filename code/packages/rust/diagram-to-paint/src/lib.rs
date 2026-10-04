@@ -318,6 +318,7 @@ fn treemap_text_node(
         Some(diagram_ir::TreemapFontStretch::Expanded) => FontStretch::Expanded,
         Some(diagram_ir::TreemapFontStretch::ExtraExpanded) => FontStretch::ExtraExpanded,
         Some(diagram_ir::TreemapFontStretch::UltraExpanded) => FontStretch::UltraExpanded,
+        Some(diagram_ir::TreemapFontStretch::Percentage(value)) => font_stretch_from_percentage(value),
         Some(diagram_ir::TreemapFontStretch::Normal) | None => FontStretch::Normal,
     };
     let text_indent = match style.and_then(|style| style.text_indent) {
@@ -555,6 +556,20 @@ fn treemap_text_node(
         node.ext.insert("effects".into(), effects.to_ext());
     }
     node
+}
+
+fn font_stretch_from_percentage(value: f64) -> FontStretch {
+    match value {
+        value if value <= 56.25 => FontStretch::UltraCondensed,
+        value if value <= 68.75 => FontStretch::ExtraCondensed,
+        value if value <= 81.25 => FontStretch::Condensed,
+        value if value <= 93.75 => FontStretch::SemiCondensed,
+        value if value <= 106.25 => FontStretch::Normal,
+        value if value <= 118.75 => FontStretch::SemiExpanded,
+        value if value <= 137.5 => FontStretch::Expanded,
+        value if value <= 175.0 => FontStretch::ExtraExpanded,
+        _ => FontStretch::UltraExpanded,
+    }
 }
 
 fn apply_treemap_line_height(font: &mut FontSpec, style: Option<&diagram_ir::TreemapStyle>) {
@@ -7130,7 +7145,7 @@ mod tests {
                     direction: None,
                     text_shadow: None,
                     tab_size: None,
-                    font_stretch: Some(diagram_ir::TreemapFontStretch::Condensed),
+                    font_stretch: Some(diagram_ir::TreemapFontStretch::Percentage(80.0)),
                 }),
             }],
         };

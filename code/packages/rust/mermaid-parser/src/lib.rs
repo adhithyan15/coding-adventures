@@ -4743,7 +4743,11 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                 "expanded" => diagram_ir::TreemapFontStretch::Expanded,
                 "extra-expanded" => diagram_ir::TreemapFontStretch::ExtraExpanded,
                 "ultra-expanded" => diagram_ir::TreemapFontStretch::UltraExpanded,
-                _ => return Err(token_error(token, "unsupported treemap font-stretch")),
+                _ => diagram_ir::TreemapFontStretch::Percentage(
+                    value.strip_suffix('%').and_then(|value| value.trim().parse::<f64>().ok())
+                        .filter(|value| value.is_finite() && *value > 0.0)
+                        .ok_or_else(|| token_error(token, "unsupported treemap font-stretch"))?
+                ),
             }),
             "text-shadow" => style.text_shadow = Some(parse_treemap_text_shadow(token, value)?),
             "tab-size" => style.tab_size = Some(value.parse::<u16>().ok()
@@ -15093,6 +15097,14 @@ B//-A: reverse stick top
         }
         assert!(parse_treemap(
             "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-stretch:wide",
+        ).is_err());
+        let percentage = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-stretch:80%",
+        ).expect("positive percentage font stretch must parse");
+        assert_eq!(percentage.nodes[1].style.as_ref().and_then(|style| style.font_stretch),
+            Some(diagram_ir::TreemapFontStretch::Percentage(80.0)));
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-stretch:0%",
         ).is_err());
     }
 
