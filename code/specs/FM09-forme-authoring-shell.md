@@ -392,19 +392,27 @@ disposal. Its host input is a closed list of theme descriptors and narrow
 methods that open or create one workspace. A workspace exposes an
 `AuthoringSession`, one `AuthoringPreviewCoordinator`, closed reviewed target
 data paired with opaque `AuthoringPublisher` handles, and one bounded loopback
-preview URL. The shell copies and freezes descriptors at admission, rejects
-proxies/accessors/duplicates/unsafe text, invokes no ambient capability, and
-passes only the session, theme descriptors, document-identity callback, and
-optional declarative plugin boundary into `AuthoringEditor`.
+preview URL. Every resolved workspace also exposes one own idempotent disposal
+method; the shell captures that method before inspecting any other workspace
+field so a later admission failure can retire the whole host-owned graph. The
+shell copies and freezes bounded data-descriptor snapshots at admission, fails
+closed when descriptor or proxy traps prevent safe inspection, rejects
+accessor-backed display records, sparse arrays, duplicates, and unsafe text,
+invokes no ambient capability, and passes only a validated session facade,
+theme descriptors, an unbound document-identity callback, and the optional
+declarative plugin boundary into `AuthoringEditor`.
 
 Opening a missing profile shows the first-run form. Creation selects one
 reviewed theme and must return a workspace with one active draft before the
 editor is mounted. Preview is an explicit cancellable action over the exact
-persisted session revision. Publication renders the selected target label and
-destination, requires a separate confirmation action, disables overlapping
-actions, and reports only the coordinator's bounded diagnostics. Unmount,
-workspace replacement, or failed admission disposes every supplied coordinator
-exactly once and waits for the same settlement.
+persisted session revision. The shell validates the returned outcome, revision,
+build identity, and bounded diagnostics before rendering it. Publication
+renders the selected target label and destination, requires a separate
+confirmation action, admits only one action synchronously, and validates the
+returned outcome, revision, target identity, manifest digest, and bounded
+diagnostics. Unmount, workspace replacement, or failed admission invokes the
+captured workspace disposal boundary exactly once and observes the same
+settlement; the host owns coordinator retirement behind that boundary.
 
 FM-B068 then packages that shell as the default local desktop product. Tauri
 remains the target unless the packaging slice documents and reviews a

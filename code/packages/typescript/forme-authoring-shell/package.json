@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "description": "Capability-free first-run workspace shell for Forme authoring",
   "type": "module",
-  "main": "src/index.ts",
+  "main": "src/index.tsx",
+  "exports": "./src/index.tsx",
   "files": [
     "src",
     "README.md",

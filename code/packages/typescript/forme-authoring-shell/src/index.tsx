@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent, ReactNode } from "react";
 import {
+  validateAuthoringRevision,
   validateAuthoringProject,
   type AuthoringSession,
 } from "@coding-adventures/forme-authoring-core";
@@ -33,6 +34,7 @@ export interface AuthoringShellWorkspace {
   readonly previewUrl: string;
   readonly publishers: readonly AuthoringPublisher[];
   createDocumentIdentity(): string | Promise<string>;
+  dispose(): Promise<void>;
 }
 
 export interface AuthoringShellHost {
@@ -63,13 +65,11 @@ const ABORT = AbortController.prototype.abort;
 
 interface SafePreview {
   request(session: AuthoringSession): Promise<AuthoringPreviewAttempt>;
-  dispose(): Promise<void>;
 }
 
 interface SafePublisher {
   readonly review: AuthoringPublishTargetReview;
-  publish(session: AuthoringSession): Promise<AuthoringPublishAttempt>;
-  dispose(): Promise<void>;
+  publish(session: AuthoringSession, signal?: AbortSignal): Promise<AuthoringPublishAttempt>;
 }
 
 interface SafeWorkspace {
@@ -93,6 +93,11 @@ type ViewState =
   | { readonly phase: "error" }
   | { readonly phase: "ready"; readonly workspace: SafeWorkspace };
 
+interface ActionToken {
+  readonly abort: AbortController;
+  readonly workspace: SafeWorkspace | null;
+}
+
 function captureMethod<T extends Function>(value: unknown, name: string, label: string): T {
   if (value === null || (typeof value !== "object" && typeof value !== "function")) throw new TypeError(`${label} is invalid`);
   let cursor: object | null = value as object;
@@ -108,11 +113,54 @@ function captureMethod<T extends Function>(value: unknown, name: string, label: 
   throw new TypeError(`${label} is missing ${name}`);
 }
 
+/** A callback handed to the editor must not receive the workspace as `this`. */
+function captureOwnCallback<T extends Function>(value: unknown, name: string, label: string): T {
+  if (value === null || typeof value !== "object") throw new TypeError(`${label} is invalid`);
+  const descriptor = Object.getOwnPropertyDescriptor(value, name);
+  if (descriptor === undefined || !("value" in descriptor) || typeof descriptor.value !== "function") {
+    throw new TypeError(`${label} ${name} is invalid`);
+  }
+  const callback = descriptor.value as T;
+  return ((...args: unknown[]) => APPLY(callback, undefined, args)) as unknown as T;
+}
+
+function captureReader(value: unknown, name: string, label: string): () => unknown {
+  if (value === null || (typeof value !== "object" && typeof value !== "function")) throw new TypeError(`${label} is invalid`);
+  let cursor: object | null = value as object;
+  for (let depth = 0; cursor !== null && depth < 16; depth += 1) {
+    const descriptor = Object.getOwnPropertyDescriptor(cursor, name);
+    if (descriptor !== undefined) {
+      if ("value" in descriptor) {
+        const captured = descriptor.value;
+        return () => captured;
+      }
+      if (typeof descriptor.get !== "function") throw new TypeError(`${label} ${name} is invalid`);
+      const getter = descriptor.get;
+      return () => APPLY(getter, value, []);
+    }
+    cursor = Object.getPrototypeOf(cursor);
+  }
+  throw new TypeError(`${label} is missing ${name}`);
+}
+
 function dataField(value: unknown, name: string, label: string): unknown {
   if (value === null || typeof value !== "object") throw new TypeError(`${label} is invalid`);
   const descriptor = Object.getOwnPropertyDescriptor(value, name);
   if (descriptor === undefined || !("value" in descriptor) || !descriptor.enumerable) throw new TypeError(`${label} ${name} is invalid`);
   return descriptor.value;
+}
+
+function denseArray(value: unknown, maximum: number, label: string): readonly unknown[] {
+  if (!Array.isArray(value) || value.length > maximum) throw new TypeError(`${label} is invalid`);
+  const result: unknown[] = [];
+  for (let index = 0; index < value.length; index += 1) {
+    const descriptor = Object.getOwnPropertyDescriptor(value, String(index));
+    if (descriptor === undefined || !("value" in descriptor) || !descriptor.enumerable) {
+      throw new TypeError(`${label} is sparse or accessor-backed`);
+    }
+    result.push(descriptor.value);
+  }
+  return Object.freeze(result);
 }
 
 function safeText(value: unknown, maximum: number, label: string): string {
@@ -148,6 +196,56 @@ function safeReview(value: unknown): AuthoringPublishTargetReview {
   });
 }
 
+interface SessionSnapshot {
+  readonly project: AuthoringSession["project"];
+  readonly canUndo: boolean;
+  readonly canRedo: boolean;
+  readonly storageRevision: string;
+}
+
+/**
+ * The editor and coordinators share this narrow facade. A raw host session is
+ * never retained in React props: its state is sampled once at admission and
+ * again only after a captured mutation settles.
+ */
+function admitSession(value: unknown): AuthoringSession {
+  const readProject = captureReader(value, "project", "authoring session");
+  const readCanUndo = captureReader(value, "canUndo", "authoring session");
+  const readCanRedo = captureReader(value, "canRedo", "authoring session");
+  const readRevision = captureReader(value, "storageRevision", "authoring session");
+  const dispatch = captureMethod<AuthoringSession["dispatch"]>(value, "dispatch", "authoring session");
+  const dispatchAtRevision = captureMethod<AuthoringSession["dispatchAtRevision"]>(value, "dispatchAtRevision", "authoring session");
+  const undo = captureMethod<AuthoringSession["undo"]>(value, "undo", "authoring session");
+  const redo = captureMethod<AuthoringSession["redo"]>(value, "redo", "authoring session");
+  const snapshot = (): SessionSnapshot => {
+    const canUndo = readCanUndo();
+    const canRedo = readCanRedo();
+    if (typeof canUndo !== "boolean" || typeof canRedo !== "boolean") throw new TypeError("authoring session flags are invalid");
+    return Object.freeze({
+      project: validateAuthoringProject(readProject()),
+      canUndo,
+      canRedo,
+      storageRevision: validateAuthoringRevision(readRevision()),
+    });
+  };
+  let current = snapshot();
+  const mutate = async (operation: () => Promise<void>): Promise<void> => {
+    await Promise.resolve().then(operation);
+    current = snapshot();
+  };
+  const facade: AuthoringSession = {
+    get project() { return current.project; },
+    get canUndo() { return current.canUndo; },
+    get canRedo() { return current.canRedo; },
+    get storageRevision() { return current.storageRevision; },
+    dispatch: (command, signal) => mutate(async () => await dispatch(command, signal)),
+    dispatchAtRevision: (revision, command, signal) => mutate(async () => await dispatchAtRevision(revision, command, signal)),
+    undo: (signal) => mutate(async () => await undo(signal)),
+    redo: (signal) => mutate(async () => await redo(signal)),
+  };
+  return Object.freeze(facade);
+}
+
 function prepareHost(value: AuthoringShellHost): SafeHost {
   try {
     const themes = validateThemeOptions(dataField(value, "themes", "authoring shell host"));
@@ -159,19 +257,26 @@ function prepareHost(value: AuthoringShellHost): SafeHost {
   }
 }
 
-function admitWorkspace(value: AuthoringShellWorkspace): SafeWorkspace {
+async function admitWorkspace(value: AuthoringShellWorkspace): Promise<SafeWorkspace> {
+  let retirement: (() => Promise<void>) | null = null;
   try {
-    const session = dataField(value, "session", "workspace") as AuthoringSession;
-    const project = validateAuthoringProject(session.project);
+    const dispose = captureOwnCallback<AuthoringShellWorkspace["dispose"]>(value, "dispose", "workspace");
+    let retirementPromise: Promise<void> | null = null;
+    retirement = () => {
+      if (retirementPromise !== null) return retirementPromise;
+      retirementPromise = Promise.resolve().then(async () => await dispose());
+      return retirementPromise;
+    };
+    const session = admitSession(dataField(value, "session", "workspace"));
+    const project = session.project;
     const active = project.documents.find((document) => document.id === project.activeDocumentId);
     if (active === undefined || active.status !== "draft") throw new TypeError("workspace must contain an active draft");
     const rawPreview = dataField(value, "preview", "workspace");
     const preview: SafePreview = Object.freeze({
       request: captureMethod<AuthoringPreviewCoordinator["request"]>(rawPreview, "request", "preview"),
-      dispose: captureMethod<AuthoringPreviewCoordinator["dispose"]>(rawPreview, "dispose", "preview"),
     });
-    const rawPublishers = dataField(value, "publishers", "workspace");
-    if (!Array.isArray(rawPublishers) || rawPublishers.length < 1 || rawPublishers.length > MAX_TARGETS) {
+    const rawPublishers = denseArray(dataField(value, "publishers", "workspace"), MAX_TARGETS, "workspace publishers");
+    if (rawPublishers.length < 1) {
       throw new TypeError("workspace publishers are invalid");
     }
     const identities = new Set<string>();
@@ -182,29 +287,23 @@ function admitWorkspace(value: AuthoringShellWorkspace): SafeWorkspace {
       return Object.freeze({
         review,
         publish: captureMethod<AuthoringPublisher["publish"]>(publisher, "publish", "publisher"),
-        dispose: captureMethod<AuthoringPublisher["dispose"]>(publisher, "dispose", "publisher"),
       });
     });
-    const createDocumentIdentity = captureMethod<AuthoringShellWorkspace["createDocumentIdentity"]>(
+    const createDocumentIdentity = captureOwnCallback<AuthoringShellWorkspace["createDocumentIdentity"]>(
       value, "createDocumentIdentity", "workspace",
     );
-    let disposePromise: Promise<void> | null = null;
     return Object.freeze({
       session,
       preview,
       previewUrl: safePreviewUrl(dataField(value, "previewUrl", "workspace")),
       publishers: Object.freeze(publishers),
       createDocumentIdentity,
-      dispose() {
-        if (disposePromise !== null) return disposePromise;
-        disposePromise = Promise.allSettled([
-          preview.dispose(),
-          ...publishers.map(async (publisher) => await publisher.dispose()),
-        ]).then(() => undefined);
-        return disposePromise;
-      },
+      dispose: retirement,
     });
   } catch {
+    if (retirement !== null) {
+      try { await retirement(); } catch { /* The fixed admission failure remains authoritative. */ }
+    }
     throw new TypeError("authoring workspace could not be inspected safely");
   }
 }
@@ -217,21 +316,60 @@ function creationInput(form: HTMLFormElement, themes: readonly EditorThemeOption
   return Object.freeze({ title, themeId });
 }
 
-function outcomeMessage(attempt: AuthoringPreviewAttempt): string {
-  switch (attempt.outcome) {
+function diagnosticMessage(value: unknown, preview: boolean): string {
+  const diagnostics = denseArray(value, 64, "action diagnostics");
+  if (diagnostics.length === 0) return "";
+  const diagnostic = diagnostics[0];
+  if (dataField(diagnostic, "severity", "action diagnostic") !== "error") throw new TypeError("action diagnostic severity is invalid");
+  safeText(dataField(diagnostic, "code", "action diagnostic"), 128, "diagnostic code");
+  if (preview) {
+    safeText(dataField(diagnostic, "stageName", "preview diagnostic"), 256, "diagnostic stage");
+    safeText(dataField(diagnostic, "instanceId", "preview diagnostic"), 256, "diagnostic instance");
+  }
+  return safeText(dataField(diagnostic, "message", "action diagnostic"), 2_048, "diagnostic message");
+}
+
+function outcomeMessage(value: unknown, expectedRevision: string): string {
+  const outcome = dataField(value, "outcome", "preview attempt");
+  if (validateAuthoringRevision(dataField(value, "revision", "preview attempt")) !== expectedRevision) {
+    throw new TypeError("preview attempt revision is stale");
+  }
+  const buildId = dataField(value, "buildId", "preview attempt");
+  if (buildId !== null) safeText(buildId, 1_024, "preview build identity");
+  if ((outcome === "ready") !== (buildId !== null)) throw new TypeError("preview build identity does not match its outcome");
+  const diagnostic = diagnosticMessage(dataField(value, "diagnostics", "preview attempt"), true);
+  switch (outcome) {
     case "ready": return "Preview is ready.";
     case "cancelled": return "Preview was cancelled.";
     case "superseded": return "Preview was superseded by a newer revision.";
-    case "failed": return attempt.diagnostics[0]?.message ?? "Preview could not be prepared.";
+    case "failed": return diagnostic || "Preview could not be prepared.";
+    default: throw new TypeError("preview attempt outcome is invalid");
   }
 }
 
-function publicationMessage(attempt: AuthoringPublishAttempt): string {
-  switch (attempt.outcome) {
+function publicationMessage(value: unknown, expectedRevision: string, expectedTargetId: string): string {
+  const outcome = dataField(value, "outcome", "publication attempt");
+  if (validateAuthoringRevision(dataField(value, "revision", "publication attempt")) !== expectedRevision) {
+    throw new TypeError("publication attempt revision is stale");
+  }
+  if (dataField(value, "targetId", "publication attempt") !== expectedTargetId) {
+    throw new TypeError("publication attempt target is stale");
+  }
+  const manifestSha256 = dataField(value, "manifestSha256", "publication attempt");
+  if (manifestSha256 !== null && (typeof manifestSha256 !== "string" || !/^[0-9a-f]{64}$/.test(manifestSha256))) {
+    throw new TypeError("publication digest is invalid");
+  }
+  if (outcome === "published" && manifestSha256 === null) throw new TypeError("published attempt is missing its digest");
+  if ((outcome === "cancelled" || outcome === "failed") && manifestSha256 !== null) {
+    throw new TypeError("uncommitted publication attempt has a digest");
+  }
+  const diagnostic = diagnosticMessage(dataField(value, "diagnostics", "publication attempt"), false);
+  switch (outcome) {
     case "published": return "Site published.";
     case "cancelled": return "Publication was cancelled.";
-    case "failed": return attempt.diagnostics[0]?.message ?? "Publication failed.";
-    case "indeterminate": return attempt.diagnostics[0]?.message ?? "Publication state must be reconciled.";
+    case "failed": return diagnostic || "Publication failed.";
+    case "indeterminate": return diagnostic || "Publication state must be reconciled.";
+    default: throw new TypeError("publication attempt outcome is invalid");
   }
 }
 
@@ -243,39 +381,54 @@ export function AuthoringShell(props: AuthoringShellProps): ReactNode {
   const [message, setMessage] = useState("");
   const [targetId, setTargetId] = useState("");
   const [confirming, setConfirming] = useState(false);
-  const actionAbort = useRef<AbortController | null>(null);
+  const action = useRef<ActionToken | null>(null);
   const mounted = useRef(true);
 
   useEffect(() => {
     mounted.current = true;
     return () => {
       mounted.current = false;
-      if (actionAbort.current !== null) APPLY(ABORT, actionAbort.current, []);
+      if (action.current !== null) APPLY(ABORT, action.current.abort, []);
+      action.current = null;
     };
   }, []);
 
   useEffect(() => {
     const abort = new AbortController();
     let live = true;
+    if (action.current !== null) APPLY(ABORT, action.current.abort, []);
+    action.current = null;
+    setBusy(false);
+    setConfirming(false);
+    setMessage("");
     setView({ phase: "loading" });
-    void host.open(abort.signal).then((raw) => {
+    void Promise.resolve().then(async () => await host.open(abort.signal)).then(async (raw) => {
       if (raw === null) {
         if (live) setView({ phase: "first-run" });
         return;
       }
-      const workspace = admitWorkspace(raw);
+      const workspace = await admitWorkspace(raw);
       if (!live) void workspace.dispose();
       else {
         setTargetId(workspace.publishers[0]!.review.targetId);
         setView({ phase: "ready", workspace });
       }
     }).catch(() => { if (live) setView({ phase: "error" }); });
-    return () => { live = false; APPLY(ABORT, abort, []); };
+    return () => {
+      live = false;
+      APPLY(ABORT, abort, []);
+      if (action.current !== null) APPLY(ABORT, action.current.abort, []);
+      action.current = null;
+    };
   }, [host, generation]);
 
   const workspace = view.phase === "ready" ? view.workspace : null;
   useEffect(() => () => {
-    if (workspace !== null) void workspace.dispose();
+    if (workspace !== null) {
+      void workspace.dispose().catch(() => {
+        if (mounted.current) setMessage("Workspace cleanup did not complete; reload before continuing.");
+      });
+    }
   }, [workspace]);
 
   const create = (event: FormEvent<HTMLFormElement>): void => {
@@ -285,49 +438,76 @@ export function AuthoringShell(props: AuthoringShellProps): ReactNode {
       setMessage("Enter a valid site title and select a reviewed theme.");
       return;
     }
+    if (action.current !== null) return;
+    const token: ActionToken = { abort: new AbortController(), workspace: null };
+    action.current = token;
     setBusy(true);
     setMessage("");
-    const abort = new AbortController();
-    actionAbort.current = abort;
-    void host.create(input, abort.signal).then((raw) => {
-      const admitted = admitWorkspace(raw);
-      if (!mounted.current || abort.signal.aborted) {
-        void admitted.dispose();
+    void Promise.resolve().then(async () => await host.create(input, token.abort.signal))
+      .then(async (raw) => await admitWorkspace(raw)).then((admitted) => {
+      if (!mounted.current || action.current !== token || token.abort.signal.aborted) {
+        void admitted.dispose().catch(() => undefined);
         return;
       }
       setTargetId(admitted.publishers[0]!.review.targetId);
       setView({ phase: "ready", workspace: admitted });
     }).catch(() => {
-      if (mounted.current) setMessage("The authoring workspace could not be created.");
+      if (mounted.current && action.current === token) setMessage("The authoring workspace could not be created.");
     }).finally(() => {
-      if (mounted.current) setBusy(false);
-      if (actionAbort.current === abort) actionAbort.current = null;
+      if (action.current === token) {
+        action.current = null;
+        if (mounted.current) setBusy(false);
+      }
     });
   };
 
   const runPreview = (): void => {
-    if (workspace === null) return;
+    if (workspace === null || action.current !== null) return;
+    const token: ActionToken = { abort: new AbortController(), workspace };
+    action.current = token;
+    const revision = workspace.session.storageRevision;
     setBusy(true);
     setMessage("");
-    void workspace.preview.request(workspace.session)
-      .then((attempt) => { if (mounted.current) setMessage(outcomeMessage(attempt)); })
-      .catch(() => { if (mounted.current) setMessage("Preview could not be prepared."); })
-      .finally(() => { if (mounted.current) setBusy(false); });
+    void Promise.resolve().then(async () => await workspace.preview.request(workspace.session))
+      .then((attempt) => {
+        const nextMessage = outcomeMessage(attempt, revision);
+        if (mounted.current && action.current === token) setMessage(nextMessage);
+      })
+      .catch(() => {
+        if (mounted.current && action.current === token) setMessage("Preview could not be prepared.");
+      }).finally(() => {
+        if (action.current === token) {
+          action.current = null;
+          if (mounted.current) setBusy(false);
+        }
+      });
   };
 
   const selected = workspace?.publishers.find((publisher) => publisher.review.targetId === targetId)
     ?? workspace?.publishers[0] ?? null;
   const publish = (): void => {
-    if (workspace === null || selected === null) return;
+    if (workspace === null || selected === null || action.current !== null) return;
+    const token: ActionToken = { abort: new AbortController(), workspace };
+    action.current = token;
+    const revision = workspace.session.storageRevision;
+    const selectedTargetId = selected.review.targetId;
     setBusy(true);
     setMessage("");
-    void selected.publish(workspace.session)
-      .then((attempt) => { if (mounted.current) setMessage(publicationMessage(attempt)); })
-      .catch(() => { if (mounted.current) setMessage("Publication failed before its commit point."); })
+    void Promise.resolve().then(async () => await selected.publish(workspace.session, token.abort.signal))
+      .then((attempt) => {
+        const nextMessage = publicationMessage(attempt, revision, selectedTargetId);
+        if (mounted.current && action.current === token) setMessage(nextMessage);
+      })
+      .catch(() => {
+        if (mounted.current && action.current === token) setMessage("Publication failed before its commit point.");
+      })
       .finally(() => {
-        if (mounted.current) {
-          setBusy(false);
-          setConfirming(false);
+        if (action.current === token) {
+          action.current = null;
+          if (mounted.current) {
+            setBusy(false);
+            setConfirming(false);
+          }
         }
       });
   };
