@@ -29,6 +29,8 @@ describe("live product scheduling", () => {
         ["route", "success"],
         ["collect-posts", "success"],
         ["render-pages", "success"],
+        ["render-terminal", "success"],
+        ["package-terminal", "success"],
         ["load-assets", "success"],
         ["render-surface", "success"],
         ["emit-articles", "success"],
@@ -42,6 +44,8 @@ describe("live product scheduling", () => {
         ["route", "skipped"],
         ["collect-posts", "skipped"],
         ["render-pages", "skipped"],
+        ["render-terminal", "skipped"],
+        ["package-terminal", "skipped"],
         ["load-assets", "success"],
         ["render-surface", "skipped"],
         ["emit-articles", "skipped"],
@@ -51,10 +55,11 @@ describe("live product scheduling", () => {
       expect(warm.stages.filter(stage => stage.outcome === "skipped")
         .every(stage => stage.cacheHits === 1 && stage.cacheMisses === 0)).toBe(true);
       expect(warm.buildId).toBe(clean.buildId);
-      expect(Object.keys(clean.outputs)).toEqual(["articles", "surface"]);
+      expect(Object.keys(clean.outputs)).toEqual(["articles", "surface", "terminal"]);
       expect(JSON.stringify(warm.outputs)).toBe(JSON.stringify(clean.outputs));
       await expectInteractivityOutput(clean);
-      await expectFilesMatchReport(warm);
+      expectTerminalOutput(clean);
+      await expectFilesMatchReport(warm, ["articles", "surface"]);
     } finally {
       await rm(reports, { recursive: true, force: true });
     }
@@ -90,6 +95,8 @@ async function expectInteractivityOutput(report: BuildReport): Promise<void> {
       "forme-router",
       "forme-collect-chronological",
       "forme-render-static",
+      "forme-render-terminal",
+      "forme-render-terminal/package",
       "forme-load-assets-fs",
       "blog-surface",
       "forme-emit-site-fs",
@@ -97,13 +104,29 @@ async function expectInteractivityOutput(report: BuildReport): Promise<void> {
     ]);
 }
 
+function expectTerminalOutput(report: BuildReport): void {
+  const terminal = report.outputs.terminal;
+  expect(terminal).toBeDefined();
+  expect(terminal?.manifest.routes).toHaveLength(3);
+  expect(terminal?.files.map(file => file.path)).toEqual([
+    "terminal/blog/2026-05-08-capability-typed-stages.html.ansi",
+    "terminal/blog/2026-05-08-capability-typed-stages.html.degradations.json",
+    "terminal/blog/2026-05-12-why-forme.html.ansi",
+    "terminal/blog/2026-05-12-why-forme.html.degradations.json",
+    "terminal/blog/2026-05-15-hello-forme.html.ansi",
+    "terminal/blog/2026-05-15-hello-forme.html.degradations.json",
+  ]);
+  expect(terminal?.files.every(file => file.sha256 !== null)).toBe(true);
+}
+
 async function runForme(...args: string[]): Promise<void> {
   const result = await execFileAsync(process.execPath, [forme, ...args], { cwd: here });
   expect(result.stderr).toBe("");
 }
 
-async function expectFilesMatchReport(report: BuildReport): Promise<void> {
-  for (const output of Object.values(report.outputs)) {
+async function expectFilesMatchReport(report: BuildReport, names: readonly string[]): Promise<void> {
+  for (const name of names) {
+    const output = report.outputs[name]!;
     expect(output.manifest.buildTime).toBe("1970-01-01T00:00:00.000Z");
     for (const file of output.files) {
       const bytes = await readFile(resolve(here, "dist", file.path));

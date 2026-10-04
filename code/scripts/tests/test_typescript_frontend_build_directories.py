@@ -7,6 +7,9 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 TYPESCRIPT_PACKAGES = REPO_ROOT / "code" / "packages" / "typescript"
+FORME_DESKTOP = (
+    REPO_ROOT / "code" / "programs" / "typescript" / "forme-shell-desktop"
+)
 BUILD_FRONTS = ("BUILD", "BUILD_windows")
 ALGOL_OWNED_PACKAGES = {"algol-lexer", "algol-parser"}
 STATEFUL_SIBLING_CD = re.compile(r"^\s*cd\s+\.\.[/\\]")
@@ -27,6 +30,28 @@ def stateful_sibling_cd_lines(source: str) -> list[int]:
 
 
 class TypeScriptFrontendBuildDirectoryTests(unittest.TestCase):
+    def test_forme_desktop_windows_front_is_portable_only(self) -> None:
+        source = (FORME_DESKTOP / "BUILD_windows").read_text(encoding="utf-8")
+        canonical = (FORME_DESKTOP / "BUILD").read_text(encoding="utf-8")
+
+        self.assertIn("npm run build", source)
+        self.assertIn("npm run test:coverage", source)
+        for native_command in (
+            "$ErrorActionPreference",
+            "uname",
+            "worker:sea",
+            "cargo ",
+            "tauri:build",
+        ):
+            self.assertNotIn(native_command, source)
+        canonical_prerequisites = set(
+            re.findall(r"packages/typescript/([a-z0-9-]+)", canonical)
+        )
+        windows_prerequisites = set(
+            re.findall(r"packages/typescript/([a-z0-9-]+)", source)
+        )
+        self.assertEqual(windows_prerequisites, canonical_prerequisites)
+
     def test_detector_distinguishes_stateful_and_subshell_directory_changes(
         self,
     ) -> None:

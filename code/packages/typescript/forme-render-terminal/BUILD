@@ -1,0 +1,11 @@
+cd ../document-ast && npm install --silent
+cd ../blake2b && npm install --silent
+cd ../forme-capability && npm install --silent
+cd ../forme-errors && npm install --silent
+cd ../forme-types && npm install --silent
+cd ../forme-identity && npm install --silent
+cd ../forme-stage && npm install --silent
+cd ../forme-style-ir && npm install --silent
+cd ../forme-style-to-terminal && npm install --silent
+cd ../forme-interactivity-ir && npm install --silent
+npm install --silent && npm run build && npx vitest run --coverage

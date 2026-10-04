@@ -1,5 +1,13 @@
 # Changelog — @coding-adventures/forme-style-to-terminal
 
+## Unreleased
+
+### Added
+
+- `compileTerminalStyles` returns immutable runtime ANSI wrappers, emitted
+  rule ids, and the same explicit warnings used by generated modules. Terminal
+  renderers no longer need to parse or evaluate generated TypeScript.
+
 ## 0.1.0 — 2026-05-17
 
 Initial release.  Fifth package of the FM04 Style IR family —

@@ -16,7 +16,7 @@
 | Bounded validation and canonical bytes | Implemented | FM-B059 rejects hostile values and emits deterministic JSON. |
 | Per-page island tracking | Implemented | FM-B060 composes validated documents with rendered pages and records exact `usedIslands`. |
 | Progressive-enhancement proof | Implemented | FM-B061 ships a live fallback plus one bounded enhancement. |
-| Non-web degradation | Pending | FM-B017 owns explicit terminal/print/email behavior. |
+| Non-web degradation | Implemented | FM-B017's terminal renderer validates the same per-route IR, preserves fallback content, emits no executable module, and records one deterministic degradation per dropped island. |
 
 ## 1. Purpose and authority
 
@@ -356,6 +356,16 @@ provenance in a future product integration, but the implemented boundary is the
 explicit product-config allowlist of reviewed executable bytes. Interactivity
 IR itself does not confer authority. Backends must not resolve a package path,
 import an island, or emit its module before that explicit authorization.
+
+### 12.1 Terminal degradation
+
+A terminal backend validates configured Interactivity IR but never resolves or
+executes an island module. For each island on a rendered route it MUST preserve
+the target's authored fallback content in the terminal text and append one
+`interactivity-dropped` record naming the island. Missing or ambiguous fallback
+targets remain validation/render errors rather than silent loss. State,
+bindings, and handlers outside islands are reported by one route-level
+degradation record; they do not grant terminal authority.
 
 ## 13. Delivery plan
 

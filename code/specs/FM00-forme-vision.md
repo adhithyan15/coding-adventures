@@ -15,7 +15,7 @@
 | Headless deployment | Implemented | [FM08](FM08-forme-deploy-runner.md) and FM-B044–FM-B047 close the FM-B012 milestone with live product publication. |
 | Third-party plugin runtime | Implemented | [FM02](FM02-forme-plugin-host.md)'s host, runners, installation, grants, sandboxes, product composition, and live storage-watch mediation close FM-B015 and Extensible v1. |
 | Interactivity IR | Implemented | [FM05](FM05-forme-interactivity-ir.md) defines the normative v1 contract; FM-B059–FM-B061 deliver validation, exact per-page selection, and the live progressive-enhancement proof. |
-| Authoring shell and multi-backend proof | Desktop authoring implemented; backend proof active | [FM09](FM09-forme-authoring-shell.md) defines the completed authoring product boundary; FM-B017 and FM-B018 remain. |
+| Authoring shell and multi-backend proof | Implemented; release gates active | [FM09](FM09-forme-authoring-shell.md) defines the completed authoring product boundary; FM-B017 proves the live HTML/terminal fan-out, and FM-B018 owns the remaining release gates. |
 
 This document remains the long-range vision. The implementation ledger and
 ordered delivery state live in the companion completion roadmap; numbered
@@ -524,6 +524,7 @@ outputs in this vocabulary.
 | `Asset`           | image / video / font / binary with metadata and references     |
 | `RenderedPage`    | HTML/CSS/JS bundle + metadata for one output page              |
 | `PrintForme`      | backend-neutral composed page ready for a print backend        |
+| `TerminalBuffer`  | ANSI text plus explicit style/interactivity degradation records |
 | `RequestHandler`  | executable handler for dynamic per-request rendering           |
 | `SearchIndex`     | serialised search index (format depends on indexer)            |
 | `Feed`            | serialised feed (RSS, JSON Feed, Atom, sitemap, …)             |
@@ -757,6 +758,19 @@ an ESP or a `notify-email` for a mailing list backend.
 
 Consumes content + minimal style (ANSI colors + dim/bold). Produces a
 buffer of styled text for CLI help, man pages, terminal-based readers.
+
+The v1 terminal boundary is deliberately observable. `render-terminal`
+produces one `TerminalBuffer` per routed document. The buffer carries the ANSI
+text, an exact content/config revision, exact Style IR rule usage, canonical
+source provenance, and deterministic degradation records for unsupported
+style, interactivity, raw nodes, and asset references. Authored fallback
+content remains in the text.
+
+`package-terminal` collects those buffers into a capability-free
+`DeployArtifact` containing one `.ansi` file and one canonical
+`.degradations.json` file per route. The Coding Adventures blog is the first
+product proof: its routed Markdown stream fans out to HTML and terminal
+renderers that receive the same resolved theme and per-route Interactivity IR.
 
 ### 6.7 Slides
 

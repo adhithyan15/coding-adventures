@@ -31,3 +31,11 @@
 - Added the React host adapter for target discovery/configuration, closed
   publication results, and durable `lastPublication` recording only after the
   native commit succeeds.
+
+### Fixed
+
+- Fixed macOS single-executable worker assembly for thin Node distributions by
+  copying matching thin Mach-O executables directly while retaining universal
+  binary thinning and rejecting architecture mismatches.
+- Added a portable-only Windows build front so unsupported macOS native gates
+  are never parsed or invoked by Windows package builds.

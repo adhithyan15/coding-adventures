@@ -27,6 +27,7 @@ blog-attach-interactivity Stream<ContentNode> → Stream<ContentNode>
 forme-resolve-asset-refs  Stream<ContentNode> → Stream<ContentNode>
 forme-router              Stream<ContentNode> → Stream<ContentNode>
                          ├→ forme-render-static ───────────┐
+                         ├→ forme-render-terminal → package-terminal (`terminal`)
                          ├→ forme-load-assets-fs ──────────┴→ forme-emit-site-fs (`articles`)
                          └→ forme-collect-chronological
                               → blog-surface → forme-emit-fs (`surface`)
@@ -36,8 +37,10 @@ forme-router              Stream<ContentNode> → Stream<ContentNode>
 materializes its routed-node stream once and fans it out: the article renderer
 uses each canonical route, while the chronological collector feeds an aggregate
 surface stage built from the existing Forme index, RSS, Atom, sitemap, metadata,
-and feed-discovery generators. Two named deploy sinks write disjoint route sets
-to the same `dist/` tree.
+and feed-discovery generators. Two filesystem deploy sinks write disjoint route
+sets to the same `dist/` tree. A third capability-free sink packages those
+same routed articles as ANSI plus canonical degradation evidence, proving the
+backend attach point without acquiring filesystem authority.
 
 ## Local build
 
@@ -91,9 +94,9 @@ last good blog when an edit produces a build error.
 - `data/` — Markdown posts. Frontmatter is `key: value` only (the v0
   parser is grammar-restricted; see
   `code/packages/typescript/forme-parse-markdown/README.md`).
-- `forme.config.ts` — `PipelineConfig` literal wiring eleven named stage
+- `forme.config.ts` — `PipelineConfig` literal wiring thirteen named stage
   instances, including routed content/asset fan-out, named asset fan-in, and
-  two deploy outputs.
+  three deploy outputs.
 - `interactivity-stage.ts` — the narrow product authority boundary that
   attaches the reviewed pipeline-step module identity and source to the one
   article allowed to use it.

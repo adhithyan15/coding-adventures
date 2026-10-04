@@ -2,7 +2,7 @@
   "name": "@coding-adventures/blog-site",
   "version": "0.1.0",
   "private": true,
-  "description": "The Coding Adventures blog — an eleven-stage Forme surface with fingerprinted assets and exact per-page progressive enhancement.",
+  "description": "The Coding Adventures blog — a thirteen-stage HTML and terminal Forme surface with explicit degradation evidence.",
   "type": "module",
   "scripts": {
     "bootstrap": "node ../../packages/typescript/forme-cli/bin/bootstrap.mjs .",
@@ -29,6 +29,7 @@
     "@coding-adventures/forme-router":               "file:../../packages/typescript/forme-router",
     "@coding-adventures/forme-collect-chronological":"file:../../packages/typescript/forme-collect-chronological",
     "@coding-adventures/forme-render-static":        "file:../../packages/typescript/forme-render-static",
+    "@coding-adventures/forme-render-terminal":      "file:../../packages/typescript/forme-render-terminal",
     "@coding-adventures/forme-load-assets-fs":       "file:../../packages/typescript/forme-load-assets-fs",
     "@coding-adventures/forme-theme-classless":      "file:../../packages/typescript/forme-theme-classless",
     "@coding-adventures/forme-aot-css-slicer":       "file:../../packages/typescript/forme-aot-css-slicer",

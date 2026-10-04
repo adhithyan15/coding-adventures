@@ -22,7 +22,7 @@
 | CSS, LaTeX, and terminal translation | Implemented | Backend translators have focused package coverage. |
 | Per-page CSS slicing | Implemented | [FM06](FM06-forme-aot-compiler.md) is exercised by both live sites. |
 | Live theme persistence/editor UX | Pending | The FM07 authoring surface and FM-B016 own it. |
-| Cross-backend product proof | Pending | FM-B017 owns explicit degradation and parity tests. |
+| Cross-backend product proof | Implemented | FM-B017 wires the blog's resolved theme through HTML and terminal renderers, preserving exact ANSI rule usage and explicit skipped-property records. |
 
 ---
 
@@ -903,7 +903,7 @@ doesn't have a selector system at all — every style change is a
 command. The translator emits a per-environment style preamble
 plus per-element command wrappers.
 
-### 9.4 The terminal translator (sketch)
+### 9.4 The terminal translator
 
 `forme-style-to-terminal`. Maps:
 - `color: <rgb>` → ANSI 24-bit color escape
@@ -912,7 +912,11 @@ plus per-element command wrappers.
 - `font-style: italic` → ANSI italic (terminal-dependent)
 - `text-decoration: { line: underline }` → ANSI underline
 
-Most other properties drop silently.
+Every other kernel property produces a `StyleWarning` with the rule id and
+property kind. The runtime compiler exposes the same deterministic per-rule
+`{ prefix, suffix }` data used to generate the TypeScript module, so a renderer
+never parses generated source. `render-terminal` records each warning as a
+`style-property-dropped` degradation on its `TerminalBuffer`.
 
 ### 9.5 The PDF translator (sketch)
 

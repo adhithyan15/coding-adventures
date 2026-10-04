@@ -22,7 +22,7 @@ import type {
   DeployArtifact, DeployManifest,
   Document, Feed,
   IslandId, LogicalId,
-  OutputProvenance, PrintForme, RenderedPage, RequestHandler, RevisionId,
+  OutputProvenance, PrintForme, RenderedPage, RequestHandler, RevisionId, TerminalBuffer,
   SearchIndex, Stream,
   StyleRuleId,
 } from "../src/index.js";
@@ -273,6 +273,29 @@ describe("RenderedPage", () => {
       source: SAMPLE_ID,
     };
     expect(page.source).toBe(SAMPLE_ID);
+  });
+});
+
+describe("TerminalBuffer", () => {
+  it("carries ANSI text and explicit backend degradations", () => {
+    const buffer: TerminalBuffer = {
+      route: "/posts/hello",
+      text: "\u001b[1mHello\u001b[0m\n",
+      usedStyle: ["heading" as StyleRuleId],
+      usedAssets: [SAMPLE_ID],
+      degradations: [{
+        code: "interactivity-dropped",
+        islandId: "search" as IslandId,
+        message: "terminal output preserves fallback content",
+      }],
+      revision: SAMPLE_REV,
+      provenance: {
+        contributors: [{ identity: SAMPLE_ID, revision: SAMPLE_REV }],
+        revision: SAMPLE_REV,
+      },
+    };
+    expect(buffer.text).toContain("Hello");
+    expect(buffer.degradations[0]?.code).toBe("interactivity-dropped");
   });
 });
 

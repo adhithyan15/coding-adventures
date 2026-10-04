@@ -4,6 +4,9 @@
 
 ### Added
 
+- `TerminalBuffer` v1.0 and `TerminalDegradation` make ANSI output,
+  backend losses, exact style usage, assets, a content/config revision, and
+  canonical source provenance first-class.
 - `AssetRef.sourcePath` optionally carries the normalized storage-root-relative
   locator produced by filesystem reference resolvers.
 - `AssetRef.urlSuffix` preserves authored query strings and fragments across
@@ -22,7 +25,7 @@ Initial release. Implements the FM01 §2 kernel types.
 ### Added
 
 - `KERNEL_API_VERSION = 1` — the kernel-API stability marker.
-- `KINDS` tuple and `KindName` union covering all 13 built-in kind names.
+- `KINDS` tuple and `KindName` union covering the original 13 built-in kind names.
 - `KindDescriptor` interface — the runtime type tag for a kind.
 - `Kinds` canonical descriptor object (one per built-in non-Stream kind).
 - `streamOf(inner)` and `isStreamDescriptor(d)` — Stream meta-kind helpers.

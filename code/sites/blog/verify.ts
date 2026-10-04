@@ -9,13 +9,23 @@ const reportPath = resolve(here, "dist/.forme-build-report.json");
 const report = JSON.parse(await readFile(reportPath, "utf8")) as BuildReport;
 const articles = report.outputs.articles;
 const surface = report.outputs.surface;
+const terminal = report.outputs.terminal;
 if (
   report.schemaVersion !== 1 ||
   report.outcome !== "success" ||
   articles?.kind !== "DeployArtifact" ||
-  surface?.kind !== "DeployArtifact"
+  surface?.kind !== "DeployArtifact" ||
+  terminal?.kind !== "DeployArtifact"
 ) {
   throw new Error("Blog Forme build report is missing its successful named artifacts");
+}
+const terminalPaths = terminal.files.map(file => file.path);
+if (
+  terminal.manifest.routes.length !== 3 ||
+  terminalPaths.length !== 6 ||
+  terminalPaths.some(path => !path.startsWith("terminal/blog/") || (!path.endsWith(".ansi") && !path.endsWith(".degradations.json")))
+) {
+  throw new Error(`Blog terminal artifact differs: ${JSON.stringify(terminalPaths)}`);
 }
 const expectedSurface = ["atom.xml", "index.html", "rss.xml", "sitemap.xml"];
 for (const file of expectedSurface) await readFile(resolve(blogRoot, file));
@@ -164,5 +174,6 @@ interface BuildReport {
   readonly outputs: {
     readonly articles?: ReportArtifact;
     readonly surface?: ReportArtifact;
+    readonly terminal?: ReportArtifact;
   };
 }

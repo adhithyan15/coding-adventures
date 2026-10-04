@@ -18,7 +18,7 @@
 | AOT compiler | Static v0 implemented | [FM06](FM06-forme-aot-compiler.md) |
 | CLI and development server | Headless v0 implemented | [FM07](FM07-forme-cli-dev-server.md) |
 | Deploy runner | Headless v0 implemented | [FM08](FM08-forme-deploy-runner.md) |
-| Authoring shell | First-run native desktop product implemented; backend proof active | [FM09](FM09-forme-authoring-shell.md) |
+| Authoring shell | First-run native desktop product and backend proof implemented; release gates active | [FM09](FM09-forme-authoring-shell.md) |
 
 ## What “complete” means
 
@@ -188,8 +188,8 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 62 | FM-B068 | done | Package the Tauri authoring host | Depends on FM-B067. The installable Tauri window exposes only narrow commands for contained crash-safe project storage, exact sandboxed product materialization/preview, reviewed atomic local publication, first-draft identity creation, and clean-profile product acceptance without a CLI. |
 | 63 | FM-B066 | done | Package the first-run desktop authoring product | Completion milestone depending on FM-B067 and FM-B068. The installable local shell creates a project, selects a theme, edits and previews a first post, configures a supported target, and publishes without source/config editing, git, or a command line. |
 | 64 | FM-B016 | done | Complete the authoring shell | Completion milestone depending on FM-B062–FM-B066. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
-| 65 | FM-B017 | active | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
-| 66 | FM-B018 | blocked | Close release-quality gates | Depends on FM-B016 and FM-B017. Add 1,000-page clean/incremental benchmarks, Lighthouse/accessibility budgets, package/API versioning, migration docs, security review, and supported-platform CI. |
+| 65 | FM-B017 | done | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
+| 66 | FM-B018 | active | Close release-quality gates | Depends on FM-B016 and FM-B017. Add 1,000-page clean/incremental benchmarks, Lighthouse/accessibility budgets, package/API versioning, migration docs, security review, and supported-platform CI. |
 | 67 | FM-B029 | later | Make duplicate PR CI cancellation and merge state unambiguous | One commit has one authoritative required CI suite; branch updates cancel obsolete runs completely; cancelling a redundant push suite cannot leave a stale final gate or misleading failed rollup; babysitting tooling identifies required checks and the current head. |
 
 ## Dependency path
@@ -207,8 +207,8 @@ FM-B049/FM-B050 → FM-B053 → FM-B054 → FM-B055 → FM-B051 → FM-B052 →
 FM-B056 → FM-B057 → FM-B058 → FM-B015. Interactivity is complete through
 FM-B059 → FM-B060 → FM-B061 → FM-B013. The authoring path is complete through
 FM-B062 → FM-B063 → FM-B064 → FM-B065 → FM-B067 → FM-B068 → FM-B066 →
-FM-B016. The shortest remaining path to Authoring v1 is FM-B017's backend proof
-followed by the FM-B018 release-quality gate.
+FM-B016. FM-B017 completes the backend proof. The only remaining path to
+Authoring v1 is the FM-B018 release-quality gate.
 
 ## Discovery log
 
@@ -319,6 +319,8 @@ work.
 | 2026-10-04 | FM-B066 still combined a hostile browser-facing lifecycle and explicit-publication UI with native filesystem durability, product-pipeline process authority, credential custody, Tauri IPC containment, packaging, and clean-profile installation acceptance. No Tauri package or dependency exists yet, while the four capability-free authoring layers are ready to compose and test independently. | Split FM-B066 into FM-B067 (bounded injected first-run shell UI) and FM-B068 (native Tauri host plus installable product acceptance), retain FM-B066 as their completion milestone, and activate only FM-B067. |
 | 2026-10-04 | FM-B067 composed the four capability-free layers without acquiring host authority. Local file-linked React packages each installed their own peer copy during dependency bootstrap, which would create invalid cross-package hooks in tests unless the browser bundler selected one realm. | Close FM-B067 after adding bounded host/workspace admission, explicit exact-session preview, complete two-step target review, shared late-settlement disposal, adversarial coverage, and React/React DOM deduplication. Activate FM-B068 as the only native product boundary. |
 | 2026-10-04 | FM-B068's native boundary had to preserve the capability-free shell while owning durable bytes, isolated product execution, loopback serving, target selection, and atomic publication. Security review additionally exposed ACL, identity-race, cleanup-state, process-budget, and Rust/TypeScript validation-parity requirements that ordinary happy-path packaging would miss. | Close FM-B068, FM-B066, and FM-B016 after adding the installable Tauri product, exact bundled worker plus audited macOS launcher, canonical shared storage corpus, lifecycle admission, capability-only preview, descriptor-relative identity-bound local publication, ACL/resource/cleanup hardening, clean-profile product acceptance, and mandatory security review. Activate FM-B017 as the only highest-priority ready item. |
+| 2026-10-04 | The terminal Style IR translator generated TypeScript source but no renderer consumed it, the kernel had no `TerminalBuffer`, and live products could not expose non-web degradation as testable data. | Keep FM-B017 active. Add the versioned buffer kind, a pure terminal renderer and artifact packager, then fan the blog's routed content into HTML and terminal using the same resolved theme and Interactivity IR. Require exact ANSI, unsupported-style, raw-node/asset, and dropped-island acceptance tests before closing the item. |
+| 2026-10-04 | FM-B017's terminal boundary had to distinguish canonical source provenance from backend-content revision, admit only SGR terminal escapes, cap descriptor snapshots and artifact resources, reject portable path and ancestor collisions, exclude script/style fallback content, and keep every hostile diagnostic bounded and ASCII. | Close FM-B017 after the shared `TerminalBuffer`, pure renderer/packager, live 13-stage HTML/terminal fan-out, exact degradation evidence, proportional coverage, and mandatory security review pass. Activate FM-B018 as the only remaining Authoring-v1 item. |
 
 ## Loop protocol
 
