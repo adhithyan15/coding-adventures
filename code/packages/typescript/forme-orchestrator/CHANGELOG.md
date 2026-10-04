@@ -14,6 +14,8 @@
   scheduler permit is reacquired.
 - Retire started sibling reads when a batched input fails, then cancel internal
   observers only after started consumers drain their bounded error prefixes.
+- Reject and retire queued reads before a cancelled direct-cleanup yield clears
+  its delivery guard, preventing late input delivery without a held permit.
 - Preserve an already-requested cancellation as the run outcome when awaited
   iterator cleanup subsequently rejects.
 

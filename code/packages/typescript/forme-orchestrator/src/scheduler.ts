@@ -1819,8 +1819,11 @@ function permitAwareIterable<T>(
     try {
       return await permit.yieldWhile(operation);
     } catch (error) {
-      context.inputFailed ??= { error };
-      context.transportFailure ??= { error };
+      // Cancellation can reject yieldWhile without reacquiring the released
+      // permit. Reject and retire the whole batch before the direct-yield
+      // guard is cleared, so no queued fulfilled result can resume stage code
+      // outside the shared concurrency budget.
+      failInputOperations(context, error);
       throw error;
     } finally {
       context.inputDirectYieldActive = false;

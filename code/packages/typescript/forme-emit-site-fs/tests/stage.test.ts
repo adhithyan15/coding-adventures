@@ -331,6 +331,14 @@ describe("validation and safety", () => {
       page({ route: "/a.html", html: "a", usedAssets: manyUses }),
       page({ route: "/b.html", html: "b", usedAssets: manyUses }),
     ], [])).rejects.toThrow(/site page usage.*entry limit/);
+
+    await expect(runSite([page({
+      usedAssets: [],
+      islandModules: [{
+        ...moduleUse("Search", ID_A, new Uint8Array([1])),
+        packageName: `@scope/${"a".repeat(208)}`,
+      }] as never,
+    })], [])).rejects.toThrow(/reviewed island-module binding/);
   });
 
   it("validates config, source paths, sha256 helpers, and byte lengths", async () => {

@@ -27,6 +27,7 @@ upstream source while preserving the resolver/loader split without
 frontmatter, event-bus, or hidden-filesystem side channels.
 Before retaining a page, the collector enforces a 16 MiB per-page and 32 MiB
 aggregate UTF-8 content budget plus 65,536 aggregate asset/island/module uses.
+Island-module package names retain the FM05 214-character ceiling at this sink.
 
 ## Output policy
 

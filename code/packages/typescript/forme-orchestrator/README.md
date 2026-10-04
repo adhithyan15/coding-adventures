@@ -60,7 +60,8 @@ These limits remain after the concurrent scheduler milestone:
   progress without exceeding the stage's single scheduler permit
 - Input wrappers reject overlapping operations on one iterator and cap active
   iterators plus pending operations; no result is delivered while either a
-  batched read or direct cleanup has yielded the stage permit
+  batched read or direct cleanup has yielded the stage permit, and cancellation
+  retires queued reads before a non-reacquired cleanup yield releases its guard
 - Per-stage `StageContext` construction with denied-by-default capability APIs
 - `init` / `dispose` lifecycle hooks (init failure aborts before any `run`; dispose always runs)
 - Fail-fast and best-effort error handling

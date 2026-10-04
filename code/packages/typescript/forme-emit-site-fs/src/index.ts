@@ -536,6 +536,7 @@ const MAX_SITE_PAGES = 65_536;
 const MAX_PAGE_CONTENT_BYTES = 16 * 1024 * 1024;
 const MAX_SITE_CONTENT_BYTES = 32 * 1024 * 1024;
 const MAX_SITE_USAGE_ENTRIES = 65_536;
+const MAX_PACKAGE_NAME_LENGTH = 214;
 const PACKAGE_NAME = /^(?:@[a-z0-9][a-z0-9._-]*\/[a-z0-9][a-z0-9._-]*|[a-z0-9][a-z0-9._-]*)$/;
 const EXPORT_NAME = /^[A-Za-z_][A-Za-z0-9_]{0,63}$/;
 const SHA256 = /^[0-9a-f]{64}$/;
@@ -670,7 +671,8 @@ function moduleUseArray(value: unknown): readonly NonNullable<RenderedPage["isla
     const sha256 = dataField(entry, "sha256", path);
     if (typeof island !== "string" || !/^[A-Za-z_][A-Za-z0-9_-]{0,63}$/.test(island) ||
         typeof asset !== "string" || !isLogicalIdShape(asset) ||
-        typeof packageName !== "string" || !PACKAGE_NAME.test(packageName) ||
+        typeof packageName !== "string" || packageName.length > MAX_PACKAGE_NAME_LENGTH ||
+        !PACKAGE_NAME.test(packageName) ||
         typeof exportName !== "string" || !EXPORT_NAME.test(exportName) ||
         typeof sha256 !== "string" || !SHA256.test(sha256)) {
       throw new TypeError(`forme-emit-site-fs: ${path} is not a reviewed island-module binding`);

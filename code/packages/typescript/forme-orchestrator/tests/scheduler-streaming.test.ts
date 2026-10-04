@@ -298,6 +298,106 @@ describe("live stream scheduler integration", () => {
     await orchestrator.dispose();
   });
 
+  it("fails pending reads when cancellation interrupts a direct cleanup yield", async () => {
+    const cancellation = createCancellationTokenSource();
+    let pendingOutcome = "not-started";
+    let stalledRetired = false;
+    const fast = defineStage({
+      name: "@test/direct-cleanup-fast-source",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "settles the first read in a named-input batch",
+      consumes: Kinds.Void,
+      produces: streamOf(Kinds.ContentSource),
+      capabilities: [],
+      configSchema: null,
+      async *run() { yield content("fast"); },
+    });
+    const stalled = defineStage({
+      name: "@test/direct-cleanup-stalled-source",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "keeps the second batched read pending until cancellation",
+      consumes: Kinds.Void,
+      produces: streamOf(Kinds.ContentSource),
+      capabilities: [],
+      configSchema: null,
+      async *run(_input, _config, ctx) {
+        try {
+          await new Promise<void>(resolve => {
+            if (ctx.cancellation.cancelled) resolve();
+            else ctx.cancellation.signal.addEventListener("abort", () => resolve(), { once: true });
+          });
+          ctx.cancellation.throwIfCancelled();
+        } finally {
+          stalledRetired = true;
+        }
+      },
+    });
+    const cleanup = defineStage({
+      name: "@test/direct-cleanup-spare-source",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "provides an iterator for direct cleanup",
+      consumes: Kinds.Void,
+      produces: streamOf(Kinds.ContentSource),
+      capabilities: [],
+      configSchema: null,
+      async *run() { yield content("cleanup"); },
+    });
+    const join = defineStage({
+      name: "@test/direct-cleanup-cancelled-join",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "interleaves a pending read, direct cleanup, and cancellation",
+      consumes: streamOf(Kinds.ContentSource),
+      inputPorts: {
+        side: streamOf(Kinds.ContentSource),
+        cleanup: streamOf(Kinds.ContentSource),
+      },
+      produces: Kinds.Collection,
+      capabilities: [],
+      configSchema: null,
+      async run(input) {
+        const primary = (input.default as AsyncIterable<unknown>)[Symbol.asyncIterator]();
+        const side = (input.side as AsyncIterable<unknown>)[Symbol.asyncIterator]();
+        const spare = (input.cleanup as AsyncIterable<unknown>)[Symbol.asyncIterator]();
+        const first = primary.next();
+        const pending = side.next().then(
+          () => { pendingOutcome = "fulfilled"; },
+          error => { pendingOutcome = error instanceof Error ? error.name : "rejected"; },
+        );
+        await first;
+        const closing = spare.return?.();
+        cancellation.cancel("cancel during direct input cleanup");
+        await Promise.allSettled([closing, pending]);
+        return collection("unreachable", []);
+      },
+    });
+    const orchestrator = createOrchestrator({ logger: silentLogger() });
+    const pipeline = await orchestrator.buildPipeline(config([
+      { id: "fast", stage: fast },
+      { id: "stalled", stage: stalled },
+      { id: "cleanup", stage: cleanup },
+      { id: "join", stage: join },
+    ], 4, [
+      { from: { id: "fast" }, to: { id: "join" } },
+      { from: { id: "stalled" }, to: { id: "join", port: "side" } },
+      { from: { id: "cleanup" }, to: { id: "join", port: "cleanup" } },
+    ]));
+
+    const result = await Promise.race([
+      orchestrator.runOnce(pipeline, { cancellation: cancellation.token }),
+      new Promise<never>((_resolve, reject) =>
+        setTimeout(() => reject(new Error("direct cleanup cancellation did not settle")), 2_000)),
+    ]);
+
+    expect(result.outcome).toBe("cancelled");
+    expect(pendingOutcome).not.toBe("fulfilled");
+    expect(stalledRetired).toBe(true);
+    await orchestrator.dispose();
+  });
+
   it("backpressures one traversal across fast, slow, and checkpoint branches", async () => {
     const releaseSlow = deferred<void>();
     let pulls = 0;
