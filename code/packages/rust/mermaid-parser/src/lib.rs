@@ -15385,6 +15385,16 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn treemap_preserves_css_lab_colors() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:lab(29.2345% 39.3825 20.0664 / 80%),fill:lch(52.2345% 72.2 56.2 / 75%)",
+        ).expect("CSS Lab colors must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("lab(29.2345% 39.3825 20.0664 / 80%)"));
+        assert_eq!(style.node.fill.as_deref(), Some("lch(52.2345% 72.2 56.2 / 75%)"));
+    }
+
+    #[test]
     fn treemap_preserves_basic_named_colors() {
         let diagram = parse_treemap(
             "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:teal,fill:orange,stroke:navy",

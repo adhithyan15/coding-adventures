@@ -2015,6 +2015,12 @@ fn parse_css_color(css: &str) -> Option<Color> {
     if let Some(color) = parse_css_hwb_function(css) {
         return Some(color);
     }
+    if let Some(color) = parse_css_lab_function(css) {
+        return Some(color);
+    }
+    if let Some(color) = parse_css_lch_function(css) {
+        return Some(color);
+    }
     if let Some(color) = parse_css_named_color(css) {
         return Some(color);
     }
@@ -2138,6 +2144,88 @@ fn parse_css_hwb_function(css: &str) -> Option<Color> {
     let alpha = slash.and_then(|index| parts.get(index + 1).copied())
         .map_or(Some(255), |value| parse_css_byte(value, 255.0))?;
     Some(Color { r: channel(r), g: channel(g), b: channel(b), a: alpha })
+}
+
+fn parse_css_lab_function(css: &str) -> Option<Color> {
+    let source = css.trim().to_ascii_lowercase();
+    let inner = source.strip_prefix("lab(")?.strip_suffix(')')?.trim();
+    let (components, alpha) = parse_css_modern_color_components(inner)?;
+    let lightness = parse_css_lab_lightness(&components[0])?;
+    let a = parse_css_lab_axis(&components[1])?;
+    let b = parse_css_lab_axis(&components[2])?;
+    Some(css_lab_to_color(lightness, a, b, alpha))
+}
+
+fn parse_css_lch_function(css: &str) -> Option<Color> {
+    let source = css.trim().to_ascii_lowercase();
+    let inner = source.strip_prefix("lch(")?.strip_suffix(')')?.trim();
+    let (components, alpha) = parse_css_modern_color_components(inner)?;
+    let lightness = parse_css_lab_lightness(&components[0])?;
+    let chroma = parse_css_lch_chroma(&components[1])?;
+    let hue = parse_css_hue(&components[2])?.to_radians();
+    Some(css_lab_to_color(lightness, chroma * hue.cos(), chroma * hue.sin(), alpha))
+}
+
+fn parse_css_modern_color_components(inner: &str) -> Option<([String; 3], u8)> {
+    let normalized = inner.replace('/', " / ");
+    let parts = normalized.split_whitespace().collect::<Vec<_>>();
+    let slash = parts.iter().position(|part| *part == "/");
+    let color_parts = slash.map_or(&parts[..], |index| &parts[..index]);
+    let components = color_parts.iter().map(|part| (*part).to_owned()).collect::<Vec<_>>()
+        .try_into().ok()?;
+    let alpha = slash.and_then(|index| parts.get(index + 1).copied())
+        .map_or(Some(255), |value| parse_css_byte(value, 255.0))?;
+    if slash.is_some_and(|index| index + 2 != parts.len()) {
+        return None;
+    }
+    Some((components, alpha))
+}
+
+fn parse_css_lab_lightness(value: &str) -> Option<f64> {
+    let lightness = value.strip_suffix('%').unwrap_or(value).parse::<f64>().ok()?;
+    lightness.is_finite().then(|| lightness.clamp(0.0, 100.0))
+}
+
+fn parse_css_lab_axis(value: &str) -> Option<f64> {
+    let (number, scale) = value.strip_suffix('%').map_or((value, 1.0), |value| (value, 1.25));
+    let axis = number.parse::<f64>().ok()? * scale;
+    axis.is_finite().then_some(axis)
+}
+
+fn parse_css_lch_chroma(value: &str) -> Option<f64> {
+    let (number, scale) = value.strip_suffix('%').map_or((value, 1.0), |value| (value, 1.5));
+    let chroma = number.parse::<f64>().ok()? * scale;
+    chroma.is_finite().then(|| chroma.max(0.0))
+}
+
+fn css_lab_to_color(lightness: f64, a: f64, b: f64, alpha: u8) -> Color {
+    let f1 = (lightness + 16.0) / 116.0;
+    let f0 = a / 500.0 + f1;
+    let f2 = f1 - b / 200.0;
+    let to_xyz = |value: f64| {
+        let cube = value.powi(3);
+        if cube > 216.0 / 24_389.0 { cube } else { (116.0 * value - 16.0) / (24_389.0 / 27.0) }
+    };
+    let x50 = to_xyz(f0) * 0.96422;
+    let y50 = to_xyz(f1);
+    let z50 = to_xyz(f2) * 0.82521;
+    let x65 = 0.9554734 * x50 - 0.0230985 * y50 + 0.0632593 * z50;
+    let y65 = -0.0283697 * x50 + 1.0099955 * y50 + 0.0210414 * z50;
+    let z65 = 0.0123140 * x50 - 0.0205077 * y50 + 1.3303659 * z50;
+    let encode = |linear: f64| {
+        let value = if linear <= 0.0031308 {
+            12.92 * linear
+        } else {
+            1.055 * linear.powf(1.0 / 2.4) - 0.055
+        };
+        (value.clamp(0.0, 1.0) * 255.0).round() as u8
+    };
+    Color {
+        r: encode(3.2406 * x65 - 1.5372 * y65 - 0.4986 * z65),
+        g: encode(-0.9689 * x65 + 1.8758 * y65 + 0.0415 * z65),
+        b: encode(0.0557 * x65 - 0.2040 * y65 + 1.0570 * z65),
+        a: alpha,
+    }
 }
 
 fn parse_css_hue(value: &str) -> Option<f64> {
@@ -7454,6 +7542,17 @@ mod tests {
         assert_eq!(with_opacity("hwb(210 20% 40% / 80%)", 0.5), "rgba(51,102,153,0.4)");
         assert_eq!(css_to_color("hwb(0 80% 80%)"), Color { r: 128, g: 128, b: 128, a: 255 });
         assert_eq!(normalize_css_paint("hwb(210 20% 40% / 80%)".into()), "rgba(51,102,153,0.8)");
+    }
+
+    #[test]
+    fn css_colors_parse_lab_and_lch_functions() {
+        let expected = Color { r: 125, g: 35, b: 41, a: 204 };
+        assert_eq!(css_to_color("lab(29.2345% 39.3825 20.0664 / 80%)"), expected);
+        assert_eq!(css_to_color("lch(29.2345% 44.2 27 / 0.8)"), expected);
+        assert_eq!(css_to_color("lab(100% 0 0)"), Color { r: 255, g: 255, b: 255, a: 255 });
+        assert_eq!(css_to_color("lch(0% 0 0)"), Color { r: 0, g: 0, b: 0, a: 255 });
+        assert_eq!(with_opacity("lab(29.2345% 39.3825 20.0664 / 80%)", 0.5), "rgba(125,35,41,0.4)");
+        assert_eq!(normalize_css_paint("lch(29.2345% 44.2 27 / 80%)".into()), "rgba(125,35,41,0.8)");
     }
 
     #[test]
