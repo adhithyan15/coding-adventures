@@ -1589,10 +1589,11 @@ pub enum TreemapWordSpacing { Normal, Pixels(f64), Factor(f64) }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum TreemapTextDirection { LeftToRight, RightToLeft }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum TreemapFontStretch {
     UltraCondensed, ExtraCondensed, Condensed, SemiCondensed, Normal,
     SemiExpanded, Expanded, ExtraExpanded, UltraExpanded,
+    Percentage(f64),
 }
 
 #[derive(Clone, Debug, PartialEq)]
