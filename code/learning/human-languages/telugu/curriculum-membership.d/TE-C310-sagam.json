@@ -1,0 +1,11 @@
+{
+  "id": "TE-C310-sagam",
+  "pathSegment": "TE-PATH-310-PANI310",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-310-PANI310",
+      "order": 2
+    }
+  ]
+}

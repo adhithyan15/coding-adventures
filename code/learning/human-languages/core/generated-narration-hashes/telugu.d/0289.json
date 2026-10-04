@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:0172af7d3baf0350",
+  "lessonIds": [
+    "TE-C289-bhogi",
+    "TE-C289-panduga",
+    "TE-C289-jatara",
+    "TE-C289-veduka",
+    "TE-C289-suryodayam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch289.txt",
+  "json": "telugu/narration/ch289.json",
+  "textHash": "fnv1a64:87630e572e1d00c3",
+  "jsonHash": "fnv1a64:0359cbf73a6b1f5e",
+  "findings": []
+}

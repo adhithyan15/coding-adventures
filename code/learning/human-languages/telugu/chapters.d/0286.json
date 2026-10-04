@@ -1,0 +1,19 @@
+{
+  "chapter": 286,
+  "title": "To postpone, To hesitate, To escape, To drain, To lean",
+  "label": "ch:te-to-postpone-to-hesitate-to-escape-to-drain-to-lean",
+  "canDo": "I can say to postpone, to hesitate, to escape, to drain and to lean.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-R286-second-pass-words-from-chapters-282-286",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 286: I can say to postpone, to hesitate, to escape, to drain and to lean.",
+    "assesses": [
+      "TE-LEX-C286-KRIYA286-03",
+      "TE-LEX-C286-KRIYA286-04",
+      "TE-LEX-C286-KRIYA286-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 297,
+  "title": "Stubborn, Stingy, Active, Naughty, Honesty",
+  "label": "ch:te-stubborn-stingy-active-naughty-honesty",
+  "canDo": "I can say stubborn, stingy, active, naughty and honesty.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TE-C297-nijayiti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 297: I can say stubborn, stingy, active, naughty and honesty.",
+    "assesses": [
+      "TE-LEX-C297-GUNAM297-03",
+      "TE-LEX-C297-GUNAM297-04",
+      "TE-LEX-C297-GUNAM297-05"
+    ]
+  }
+}

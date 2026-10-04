@@ -1,0 +1,11 @@
+{
+  "id": "TE-C284-jarugu",
+  "pathSegment": "TE-PATH-284-KRIYA284",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-284-KRIYA284",
+      "order": 2
+    }
+  ]
+}

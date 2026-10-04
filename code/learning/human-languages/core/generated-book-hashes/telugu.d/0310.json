@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:925a43adcddfb101",
+  "lessonIds": [
+    "TE-C310-parsu",
+    "TE-C310-jabita",
+    "TE-C310-sagam",
+    "TE-C310-kuli",
+    "TE-C310-udyogi"
+  ],
+  "tex": "telugu/book/chapters/ch310-purse-list-half-daily-wages-employee.tex"
+}

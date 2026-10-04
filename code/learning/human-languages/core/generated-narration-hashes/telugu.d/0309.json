@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:ea1d99c12eff196f",
+  "lessonIds": [
+    "TE-C309-gattu",
+    "TE-C309-pasuvulu",
+    "TE-C309-stambham",
+    "TE-C309-kulayi",
+    "TE-C309-jenda",
+    "TE-R309-first-pass-words-from-chapters-305-306",
+    "TE-R309-second-pass-words-from-chapters-307-309"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch309.txt",
+  "json": "telugu/narration/ch309.json",
+  "textHash": "fnv1a64:54cca29c01b74b39",
+  "jsonHash": "fnv1a64:f1c538dc3b4c3d0a",
+  "findings": []
+}

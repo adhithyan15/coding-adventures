@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C281-tappipovu",
+    "language": "telugu",
+    "chapter": 281,
+    "sequence": 13370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf4589d2ca30fb41"
+  },
+  "findings": []
+}

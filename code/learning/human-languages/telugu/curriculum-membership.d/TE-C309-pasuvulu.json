@@ -1,0 +1,11 @@
+{
+  "id": "TE-C309-pasuvulu",
+  "pathSegment": "TE-PATH-309-VASTUVU309",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-309-VASTUVU309",
+      "order": 1
+    }
+  ]
+}

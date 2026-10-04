@@ -1,0 +1,11 @@
+{
+  "id": "TE-C313-balapam",
+  "pathSegment": "TE-PATH-313-PANI313",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-313-PANI313",
+      "order": 2
+    }
+  ]
+}

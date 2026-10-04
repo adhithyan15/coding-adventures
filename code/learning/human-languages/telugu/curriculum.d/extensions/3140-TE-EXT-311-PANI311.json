@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-311-PANI311",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a college, a university, a degree, experience and an account.",
+  "prerequisites": []
+}

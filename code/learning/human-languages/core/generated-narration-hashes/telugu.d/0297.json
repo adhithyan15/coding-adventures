@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:0548230e0dce720f",
+  "lessonIds": [
+    "TE-C297-mondi",
+    "TE-C297-pisinari",
+    "TE-C297-curukaina",
+    "TE-C297-allari",
+    "TE-C297-nijayiti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch297.txt",
+  "json": "telugu/narration/ch297.json",
+  "textHash": "fnv1a64:b528dc51a199fb62",
+  "jsonHash": "fnv1a64:392a461b93c33904",
+  "findings": []
+}

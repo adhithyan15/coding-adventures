@@ -1,0 +1,11 @@
+{
+  "id": "TE-C294-dadapu",
+  "pathSegment": "TE-PATH-294-KARANAM294",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-294-KARANAM294",
+      "order": 3
+    }
+  ]
+}

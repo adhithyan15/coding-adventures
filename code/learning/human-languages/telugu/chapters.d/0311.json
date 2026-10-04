@@ -1,0 +1,19 @@
+{
+  "chapter": 311,
+  "title": "College, University, Degree, Experience, Account",
+  "label": "ch:te-college-university-degree-experience-account",
+  "canDo": "I can say a college, a university, a degree, experience and an account.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C311-khata",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 311: I can say a college, a university, a degree, experience and an account.",
+    "assesses": [
+      "TE-LEX-C311-PANI311-03",
+      "TE-LEX-C311-PANI311-04",
+      "TE-LEX-C311-PANI311-05"
+    ]
+  }
+}

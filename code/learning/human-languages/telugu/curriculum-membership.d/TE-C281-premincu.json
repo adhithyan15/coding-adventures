@@ -1,0 +1,11 @@
+{
+  "id": "TE-C281-premincu",
+  "pathSegment": "TE-PATH-281-KRIYA281",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-281-KRIYA281",
+      "order": 4
+    }
+  ]
+}

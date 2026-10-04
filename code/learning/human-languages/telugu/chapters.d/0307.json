@@ -1,0 +1,19 @@
+{
+  "chapter": 307,
+  "title": "Fridge, Mixer-grinder, Dirty dishes, Incense stick, Kumkum",
+  "label": "ch:te-fridge-mixer-grinder-dirty-dishes-incense-stick-kumkum",
+  "canDo": "I can say a fridge, a mixer-grinder, dirty dishes, an incense stick and kumkum.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C307-kunkuma",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 307: I can say a fridge, a mixer-grinder, dirty dishes, an incense stick and kumkum.",
+    "assesses": [
+      "TE-LEX-C307-VASTUVU307-03",
+      "TE-LEX-C307-VASTUVU307-04",
+      "TE-LEX-C307-VASTUVU307-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 284,
+  "title": "To let go, To dig, To happen, To sweep, To knead",
+  "label": "ch:te-to-let-go-to-dig-to-happen-to-sweep-to-knead",
+  "canDo": "I can say to let go, to dig, to happen, to sweep and to knead.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C284-pisuku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 284: I can say to let go, to dig, to happen, to sweep and to knead.",
+    "assesses": [
+      "TE-LEX-C284-KRIYA284-03",
+      "TE-LEX-C284-KRIYA284-04",
+      "TE-LEX-C284-KRIYA284-05"
+    ]
+  }
+}

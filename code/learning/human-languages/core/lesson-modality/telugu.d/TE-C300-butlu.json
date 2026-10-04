@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C300-butlu",
+    "language": "telugu",
+    "chapter": 300,
+    "sequence": 14330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6565e6f39c277feb"
+  },
+  "findings": []
+}

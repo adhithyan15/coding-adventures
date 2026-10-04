@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-289-SAMAYAM289",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "before": [],
+  "inline": [
+    "TE-EXT-289-SAMAYAM289"
+  ],
+  "after": []
+}

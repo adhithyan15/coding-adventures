@@ -1,0 +1,11 @@
+{
+  "id": "TE-C287-ambulensu",
+  "pathSegment": "TE-PATH-287-AROGYAM287",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-287-AROGYAM287",
+      "order": 2
+    }
+  ]
+}

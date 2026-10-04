@@ -1,0 +1,11 @@
+{
+  "id": "TE-C292-karkhana",
+  "pathSegment": "TE-PATH-292-STHALAM292",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-292-STHALAM292",
+      "order": 4
+    }
+  ]
+}

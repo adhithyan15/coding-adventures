@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:456d9817bd2557b3",
+  "lessonIds": [
+    "TE-C306-ukku",
+    "TE-C306-simentu",
+    "TE-C306-tolu",
+    "TE-C306-patti",
+    "TE-C306-unni"
+  ],
+  "tex": "telugu/book/chapters/ch306-steel-cement-leather-cotton-wool.tex"
+}

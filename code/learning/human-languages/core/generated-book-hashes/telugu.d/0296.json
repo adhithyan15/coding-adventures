@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:1f4c10535b522e04",
+  "lessonIds": [
+    "TE-C296-kathinamaina",
+    "TE-C296-pratyeka",
+    "TE-C296-anukulamaina",
+    "TE-C296-upayogakaramaina",
+    "TE-C296-sthanika"
+  ],
+  "tex": "telugu/book/chapters/ch296-hard-special-convenient-useful-local.tex"
+}

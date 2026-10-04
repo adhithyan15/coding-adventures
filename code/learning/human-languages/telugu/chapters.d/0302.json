@@ -1,0 +1,19 @@
+{
+  "chapter": 302,
+  "title": "Ox, Calf, Sheep, Wolf, Crocodile",
+  "label": "ch:te-ox-calf-sheep-wolf-crocodile",
+  "canDo": "I can say an ox, a calf, a sheep, a wolf and a crocodile.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C302-mosali",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 302: I can say an ox, a calf, a sheep, a wolf and a crocodile.",
+    "assesses": [
+      "TE-LEX-C302-VASTUVU302-03",
+      "TE-LEX-C302-VASTUVU302-04",
+      "TE-LEX-C302-VASTUVU302-05"
+    ]
+  }
+}

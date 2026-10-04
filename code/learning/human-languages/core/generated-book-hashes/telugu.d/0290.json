@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:b836cf1a312413e9",
+  "lessonIds": [
+    "TE-C290-pagalu",
+    "TE-C290-puta",
+    "TE-C290-dasabdam",
+    "TE-C290-satabdam",
+    "TE-C290-balyam"
+  ],
+  "tex": "telugu/book/chapters/ch290-daytime-half-of-the-day-decade-century-childhood.tex"
+}

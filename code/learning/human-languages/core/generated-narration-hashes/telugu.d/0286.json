@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:7613f5659b29b403",
+  "lessonIds": [
+    "TE-C286-vayida-veyu",
+    "TE-C286-venakadu",
+    "TE-C286-tappincuko",
+    "TE-C286-varcu",
+    "TE-C286-anuko",
+    "TE-R286-first-pass-words-from-chapters-278-281",
+    "TE-R286-second-pass-words-from-chapters-282-286"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch286.txt",
+  "json": "telugu/narration/ch286.json",
+  "textHash": "fnv1a64:4242342cf7e7ccc1",
+  "jsonHash": "fnv1a64:1d3f8f0c089a60d9",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C295-elagaina",
+    "language": "telugu",
+    "chapter": 295,
+    "sequence": 14100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f9a8820dbc47666f"
+  },
+  "findings": []
+}

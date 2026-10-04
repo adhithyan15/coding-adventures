@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C312-katha",
+    "language": "telugu",
+    "chapter": 312,
+    "sequence": 14970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a32332e3fefb800"
+  },
+  "findings": []
+}

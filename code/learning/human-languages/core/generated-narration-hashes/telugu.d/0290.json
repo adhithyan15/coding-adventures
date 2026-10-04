@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:63457919826a81fd",
+  "lessonIds": [
+    "TE-C290-pagalu",
+    "TE-C290-puta",
+    "TE-C290-dasabdam",
+    "TE-C290-satabdam",
+    "TE-C290-balyam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch290.txt",
+  "json": "telugu/narration/ch290.json",
+  "textHash": "fnv1a64:867caacade870bab",
+  "jsonHash": "fnv1a64:f15876d645dc9e2c",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-291-STHALAM291",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "TE-EXT-291-STHALAM291"
+  ],
+  "after": []
+}

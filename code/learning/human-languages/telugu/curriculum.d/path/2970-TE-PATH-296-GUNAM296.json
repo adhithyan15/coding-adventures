@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-296-GUNAM296",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "TE-EXT-296-GUNAM296"
+  ],
+  "after": []
+}

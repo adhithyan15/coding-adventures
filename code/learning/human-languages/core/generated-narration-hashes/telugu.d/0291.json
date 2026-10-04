@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:05a1e80990fdafbe",
+  "lessonIds": [
+    "TE-C291-daksinam",
+    "TE-C291-pradesam",
+    "TE-C291-sarihaddu",
+    "TE-C291-eduruga",
+    "TE-C291-cuttu2"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch291.txt",
+  "json": "telugu/narration/ch291.json",
+  "textHash": "fnv1a64:14a349bc373cb476",
+  "jsonHash": "fnv1a64:991b4f1ac26bfd8c",
+  "findings": []
+}

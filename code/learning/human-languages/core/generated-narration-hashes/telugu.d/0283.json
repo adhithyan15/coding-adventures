@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:a3ed1b1fa21789e9",
+  "lessonIds": [
+    "TE-C283-charj-ceyu",
+    "TE-C283-tolagincu",
+    "TE-C283-gurtupattu",
+    "TE-C283-vyatirekincu",
+    "TE-C283-vadincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch283.txt",
+  "json": "telugu/narration/ch283.json",
+  "textHash": "fnv1a64:f3b9a92400ea8c9c",
+  "jsonHash": "fnv1a64:397edc6d5383db14",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 279,
+  "title": "To recover, To swell, To feel dizzy, To touch, To peel",
+  "label": "ch:te-to-recover-to-swell-to-feel-dizzy-to-touch-to-peel",
+  "canDo": "I can say to recover, to swell, to feel dizzy, to touch and to peel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C279-olucu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 279: I can say to recover, to swell, to feel dizzy, to touch and to peel.",
+    "assesses": [
+      "TE-LEX-C279-KRIYA279-03",
+      "TE-LEX-C279-KRIYA279-04",
+      "TE-LEX-C279-KRIYA279-05"
+    ]
+  }
+}

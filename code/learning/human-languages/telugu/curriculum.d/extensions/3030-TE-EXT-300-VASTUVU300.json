@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-300-VASTUVU300",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say shoes, a chain, earrings, a button and a handkerchief.",
+  "prerequisites": []
+}

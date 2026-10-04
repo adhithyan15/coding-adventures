@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:aec24a5418853c80",
+  "lessonIds": [
+    "TE-C312-katha",
+    "TE-C312-ata",
+    "TE-C312-sinima",
+    "TE-C312-siksakudu",
+    "TE-C312-injaniru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch312.txt",
+  "json": "telugu/narration/ch312.json",
+  "textHash": "fnv1a64:21303e7312bca1e9",
+  "jsonHash": "fnv1a64:f92ad604d1abbee2",
+  "findings": []
+}

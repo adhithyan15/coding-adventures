@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:96986323b0211127",
+  "lessonIds": [
+    "TE-C296-kathinamaina",
+    "TE-C296-pratyeka",
+    "TE-C296-anukulamaina",
+    "TE-C296-upayogakaramaina",
+    "TE-C296-sthanika"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch296.txt",
+  "json": "telugu/narration/ch296.json",
+  "textHash": "fnv1a64:13a9d7164c33e998",
+  "jsonHash": "fnv1a64:c531d4be7a01699e",
+  "findings": []
+}

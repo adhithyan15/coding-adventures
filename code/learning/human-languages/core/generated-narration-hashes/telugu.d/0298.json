@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:9398accc5d483e10",
+  "lessonIds": [
+    "TE-C298-moddu",
+    "TE-C298-vankara",
+    "TE-C298-cadunaina",
+    "TE-C298-bolu",
+    "TE-C298-masaka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch298.txt",
+  "json": "telugu/narration/ch298.json",
+  "textHash": "fnv1a64:eafc30f1a7a23e6a",
+  "jsonHash": "fnv1a64:4147e3243d794310",
+  "findings": []
+}

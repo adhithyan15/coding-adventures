@@ -1,0 +1,11 @@
+{
+  "id": "TE-C282-pancu",
+  "pathSegment": "TE-PATH-282-KRIYA282",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-282-KRIYA282",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C288-madhumeham",
+  "pathSegment": "TE-PATH-288-AROGYAM288",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-288-AROGYAM288",
+      "order": 3
+    }
+  ]
+}

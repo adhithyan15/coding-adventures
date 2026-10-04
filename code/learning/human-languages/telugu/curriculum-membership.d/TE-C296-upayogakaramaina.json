@@ -1,0 +1,11 @@
+{
+  "id": "TE-C296-upayogakaramaina",
+  "pathSegment": "TE-PATH-296-GUNAM296",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-296-GUNAM296",
+      "order": 3
+    }
+  ]
+}

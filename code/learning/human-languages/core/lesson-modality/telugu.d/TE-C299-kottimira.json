@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C299-kottimira",
+    "language": "telugu",
+    "chapter": 299,
+    "sequence": 14300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c29be64110e65ba7"
+  },
+  "findings": []
+}

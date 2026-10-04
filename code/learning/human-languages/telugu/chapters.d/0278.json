@@ -1,0 +1,19 @@
+{
+  "chapter": 278,
+  "title": "To hold, To bathe, To prepare, To cross, To drive",
+  "label": "ch:te-to-hold-to-bathe-to-prepare-to-cross-to-drive",
+  "canDo": "I can say to hold, to bathe, to prepare, to cross and to drive.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C278-nadupu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 278: I can say to hold, to bathe, to prepare, to cross and to drive.",
+    "assesses": [
+      "TE-LEX-C278-KRIYA278-03",
+      "TE-LEX-C278-KRIYA278-04",
+      "TE-LEX-C278-KRIYA278-05"
+    ]
+  }
+}

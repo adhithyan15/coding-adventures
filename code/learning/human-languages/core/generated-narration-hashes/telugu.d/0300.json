@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:b75137b5132682b9",
+  "lessonIds": [
+    "TE-C300-butlu",
+    "TE-C300-golusu",
+    "TE-C300-cevipogulu",
+    "TE-C300-gundi",
+    "TE-C300-cetirumalu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch300.txt",
+  "json": "telugu/narration/ch300.json",
+  "textHash": "fnv1a64:6f592a18edc766c6",
+  "jsonHash": "fnv1a64:a8712f9be5562f6d",
+  "findings": []
+}

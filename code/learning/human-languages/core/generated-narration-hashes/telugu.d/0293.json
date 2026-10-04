@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:5c46fe779036d7aa",
+  "lessonIds": [
+    "TE-C293-jailu",
+    "TE-C293-masidu",
+    "TE-C293-carci",
+    "TE-C293-pancayati",
+    "TE-C293-ataka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch293.txt",
+  "json": "telugu/narration/ch293.json",
+  "textHash": "fnv1a64:5044837fe3bcee67",
+  "jsonHash": "fnv1a64:2b958e2e546c8069",
+  "findings": []
+}

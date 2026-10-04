@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C298-bolu",
+    "language": "telugu",
+    "chapter": 298,
+    "sequence": 14260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2df28478179ce397"
+  },
+  "findings": []
+}

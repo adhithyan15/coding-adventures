@@ -1,0 +1,19 @@
+{
+  "chapter": 308,
+  "title": "Pit, Piece, Edge, Knot, Row",
+  "label": "ch:te-pit-piece-edge-knot-row",
+  "canDo": "I can say a pit, a piece, an edge, a knot and a row.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C308-varusa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 308: I can say a pit, a piece, an edge, a knot and a row.",
+    "assesses": [
+      "TE-LEX-C308-VASTUVU308-03",
+      "TE-LEX-C308-VASTUVU308-04",
+      "TE-LEX-C308-VASTUVU308-05"
+    ]
+  }
+}

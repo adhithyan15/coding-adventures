@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:37af6d140abea9d0",
+  "lessonIds": [
+    "TE-C292-gudise",
+    "TE-C292-kaluva",
+    "TE-C292-bhavanam",
+    "TE-C292-kota",
+    "TE-C292-karkhana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch292.txt",
+  "json": "telugu/narration/ch292.json",
+  "textHash": "fnv1a64:2ebc9bdf78840fce",
+  "jsonHash": "fnv1a64:b7707b3c604bd77e",
+  "findings": []
+}

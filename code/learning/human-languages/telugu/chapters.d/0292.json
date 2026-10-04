@@ -1,0 +1,19 @@
+{
+  "chapter": 292,
+  "title": "Hut, Canal, Building, Fort, Factory",
+  "label": "ch:te-hut-canal-building-fort-factory",
+  "canDo": "I can say a hut, a canal, a building, a fort and a factory.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TE-C292-karkhana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 292: I can say a hut, a canal, a building, a fort and a factory.",
+    "assesses": [
+      "TE-LEX-C292-STHALAM292-03",
+      "TE-LEX-C292-STHALAM292-04",
+      "TE-LEX-C292-STHALAM292-05"
+    ]
+  }
+}

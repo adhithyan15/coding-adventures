@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C288-malabaddhakam",
+    "language": "telugu",
+    "chapter": 288,
+    "sequence": 13730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ecebdbe14d14c326"
+  },
+  "findings": []
+}

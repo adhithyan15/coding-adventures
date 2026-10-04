@@ -1,0 +1,11 @@
+{
+  "id": "TE-C291-eduruga",
+  "pathSegment": "TE-PATH-291-STHALAM291",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-291-STHALAM291",
+      "order": 3
+    }
+  ]
+}

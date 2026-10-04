@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C311-khata",
+    "language": "telugu",
+    "chapter": 311,
+    "sequence": 14960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e72d49b2e7b314fd"
+  },
+  "findings": []
+}

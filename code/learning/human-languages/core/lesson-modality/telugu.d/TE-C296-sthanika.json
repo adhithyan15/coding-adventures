@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C296-sthanika",
+    "language": "telugu",
+    "chapter": 296,
+    "sequence": 14170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be1126aaf3d591c3"
+  },
+  "findings": []
+}

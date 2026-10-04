@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C299-majjiga",
+    "language": "telugu",
+    "chapter": 299,
+    "sequence": 14320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30f752ebed93fff6"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C307-phrijju",
+    "language": "telugu",
+    "chapter": 307,
+    "sequence": 14700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12fcb33000c70587"
+  },
+  "findings": []
+}

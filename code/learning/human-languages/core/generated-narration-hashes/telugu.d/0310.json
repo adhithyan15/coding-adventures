@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:79ebf0ec7211cf5a",
+  "lessonIds": [
+    "TE-C310-parsu",
+    "TE-C310-jabita",
+    "TE-C310-sagam",
+    "TE-C310-kuli",
+    "TE-C310-udyogi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch310.txt",
+  "json": "telugu/narration/ch310.json",
+  "textHash": "fnv1a64:a02c9f62d777f683",
+  "jsonHash": "fnv1a64:97475e019116db5f",
+  "findings": []
+}

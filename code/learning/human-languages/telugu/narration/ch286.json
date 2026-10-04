@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 286,
+  "title": "To postpone, To hesitate, To escape, To drain, To lean",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:7613f5659b29b403",
+  "lessons": [
+    {
+      "id": "TE-C286-vayida-veyu",
+      "sequence": 13590,
+      "title": "వాయిదా వేయు (vāyidā vēyu) — to postpone",
+      "headword": "వాయిదా వేయు",
+      "romanization": "vāyidā vēyu",
+      "gloss": "to postpone",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2116fb34ab6a2c7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to chase, then the Telugu for to melt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వాయిదా వేయు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వాయిదా వేయు — vāyidā vēyu — \"to postpone\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāyidā vēyu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāyidā vēyu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāyidā vēyu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāyidā vēyu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say vāyidā vēyu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *vāyidā vēyu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to chase, then the Telugu for to melt, then say vāyidā vēyu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to chase, then the Telugu for to melt, then say *vāyidā vēyu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వాయిదా వేయు (vāyidā vēyu) mean? (\"To postpone\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C286-venakadu",
+      "sequence": 13600,
+      "title": "వెనకాడు (venakāḍu) — to hesitate",
+      "headword": "వెనకాడు",
+      "romanization": "venakāḍu",
+      "gloss": "to hesitate",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d2d4d3abbe3ba6b4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to melt, then the Telugu for to postpone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వెనకాడు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వెనకాడు — venakāḍu — \"to hesitate\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "venakāḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *venakāḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "venakāḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *venakāḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say venakāḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *venakāḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to melt, then the Telugu for to postpone, then say venakāḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to melt, then the Telugu for to postpone, then say *venakāḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వెనకాడు (venakāḍu) mean? (\"To hesitate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C286-tappincuko",
+      "sequence": 13610,
+      "title": "తప్పించుకో (tappiñcukō) — to escape",
+      "headword": "తప్పించుకో",
+      "romanization": "tappiñcukō",
+      "gloss": "to escape",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7cd95d08ee75baf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to postpone, then the Telugu for to hesitate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తప్పించుకో",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తప్పించుకో — tappiñcukō — \"to escape\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tappiñcukō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tappiñcukō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tappiñcukō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tappiñcukō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tappiñcukō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tappiñcukō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to postpone, then the Telugu for to hesitate, then say tappiñcukō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to postpone, then the Telugu for to hesitate, then say *tappiñcukō* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తప్పించుకో (tappiñcukō) mean? (\"To escape\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C286-varcu",
+      "sequence": 13620,
+      "title": "వార్చు (vārcu) — to drain (cooked rice)",
+      "headword": "వార్చు",
+      "romanization": "vārcu",
+      "gloss": "to drain (cooked rice)",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:613ca1f5ddc8eeb2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to hesitate, then the Telugu for to escape."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వార్చు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వార్చు — vārcu — \"to drain (cooked rice)\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vārcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vārcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vārcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vārcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say vārcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *vārcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to hesitate, then the Telugu for to escape, then say vārcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to hesitate, then the Telugu for to escape, then say *vārcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వార్చు (vārcu) mean? (\"To drain (cooked rice)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C286-anuko",
+      "sequence": 13630,
+      "title": "ఆనుకో (ānukō) — to lean (against)",
+      "headword": "ఆనుకో",
+      "romanization": "ānukō",
+      "gloss": "to lean (against)",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90c1753f55b67e57",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to escape, then the Telugu for to drain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఆనుకో",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆనుకో — ānukō — \"to lean (against)\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ānukō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ānukō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ānukō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ānukō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ānukō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ānukō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to escape, then the Telugu for to drain, then say ānukō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to escape, then the Telugu for to drain, then say *ānukō* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఆనుకో (ānukō) mean? (\"To lean (against)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R286-first-pass-words-from-chapters-278-281",
+      "sequence": 13640,
+      "title": "Words from chapters 278-281 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 278-281",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f71c2553cf32c087",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to drain and to lean."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to hold, to bathe, to prepare, to cross, to drive",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to hold, to bathe, to prepare, to cross, to drive]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to recover, to swell, to feel dizzy, to touch, to peel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to recover, to swell, to feel dizzy, to touch, to peel]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to rub, to receive, to tell, to admit, to deposit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to rub, to receive, to tell, to admit, to deposit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to cancel, to submit, to press, to get lost, to love",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to cancel, to submit, to press, to get lost, to love]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To hold? (పట్టుకో, paṭṭukō.) To bathe? (స్నానం చేయు, snānaṁ cēyu.) To prepare? (తయారు చేయు, tayāru cēyu.) To cross? (దాటు, dāṭu.) To drive? (నడుపు, naḍupu.) To recover? (కోలుకో, kōlukō.) To swell? (ఉబ్బు, ubbu.) To feel dizzy? (కళ్ళు తిరుగు, kaḷḷu tirugu.) To touch? (తాకు, tāku.) To peel? (ఒలుచు, olucu.) To rub? (రుద్దు, ruddu.) To receive? (అందుకో, andukō.) To tell? (చెప్పు, ceppu.) To admit? (చేర్చు, cērcu.) To deposit? (జమ చేయు, jama cēyu.) To cancel? (రద్దు చేయు, raddu cēyu.) To submit? (సమర్పించు, samarpiñcu.) To press? (నొక్కు, nokku.) To get lost? (తప్పిపోవు, tappipōvu.) To love? (ప్రేమించు, prēmiñcu.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R286-second-pass-words-from-chapters-282-286",
+      "sequence": 13650,
+      "title": "Words from chapters 282-286 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 282-286",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51e7db6f3fbf6cf2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to graze and to plant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to graze, to plant, to decorate, to share out, to visit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to graze, to plant, to decorate, to share out, to visit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to charge, to remove, to recognize, to oppose, to argue",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to charge, to remove, to recognize, to oppose, to argue]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to let go, to dig, to happen, to sweep, to knead",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to let go, to dig, to happen, to sweep, to knead]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to threaten, to warn, to take note of, to chase, to melt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to threaten, to warn, to take note of, to chase, to melt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to postpone, to hesitate, to escape, to drain, to lean",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to postpone, to hesitate, to escape, to drain, to lean]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To graze? (మేయు, mēyu.) To plant? (నాటు, nāṭu.) To decorate? (అలంకరించు, alaṅkariñcu.) To share out? (పంచు, pañcu.) To visit? (సందర్శించు, sandarśiñcu.) To charge? (ఛార్జ్ చేయు, chārj cēyu.) To remove? (తొలగించు, tolagiñcu.) To recognize? (గుర్తుపట్టు, gurtupaṭṭu.) To oppose? (వ్యతిరేకించు, vyatirēkiñcu.) To argue? (వాదించు, vādiñcu.) To let go? (వదులు, vadulu.) To dig? (తవ్వు, tavvu.) To happen? (జరుగు, jarugu.) To sweep? (చిమ్ము, cimmu.) To knead? (పిసుకు, pisuku.) To threaten? (బెదిరించు, bediriñcu.) To warn? (హెచ్చరించు, heccariñcu.) To take note of? (గమనించు, gamaniñcu.) To chase? (తరుము, tarumu.) To melt? (కరుగు, karugu.) To postpone? (వాయిదా వేయు, vāyidā vēyu.) To hesitate? (వెనకాడు, venakāḍu.) To escape? (తప్పించుకో, tappiñcukō.) To drain? (వార్చు, vārcu.) To lean? (ఆనుకో, ānukō.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

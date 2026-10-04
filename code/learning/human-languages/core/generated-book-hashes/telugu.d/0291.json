@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:6f7a8349cc0af6df",
+  "lessonIds": [
+    "TE-C291-daksinam",
+    "TE-C291-pradesam",
+    "TE-C291-sarihaddu",
+    "TE-C291-eduruga",
+    "TE-C291-cuttu2"
+  ],
+  "tex": "telugu/book/chapters/ch291-south-place-border-opposite-around.tex"
+}

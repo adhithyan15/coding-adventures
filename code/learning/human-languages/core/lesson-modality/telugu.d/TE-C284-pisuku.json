@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C284-pisuku",
+    "language": "telugu",
+    "chapter": 284,
+    "sequence": 13530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f3e239042f79d1c5"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:c8c4361724e289d0",
+  "lessonIds": [
+    "TE-C313-suddamukka",
+    "TE-C313-palaka",
+    "TE-C313-balapam",
+    "TE-C313-sira",
+    "TE-C313-hajaru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch313.txt",
+  "json": "telugu/narration/ch313.json",
+  "textHash": "fnv1a64:6b6f01c3c4fb0079",
+  "jsonHash": "fnv1a64:eb10f146222f5c2c",
+  "findings": []
+}

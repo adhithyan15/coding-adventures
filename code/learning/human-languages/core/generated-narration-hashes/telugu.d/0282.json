@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:0f015b94a8db33ad",
+  "lessonIds": [
+    "TE-C282-meyu",
+    "TE-C282-natu",
+    "TE-C282-alankarincu",
+    "TE-C282-pancu",
+    "TE-C282-sandarsincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch282.txt",
+  "json": "telugu/narration/ch282.json",
+  "textHash": "fnv1a64:30d73286b1457f5d",
+  "jsonHash": "fnv1a64:1a170232a05fb3df",
+  "findings": []
+}

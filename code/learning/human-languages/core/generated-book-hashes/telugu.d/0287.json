@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:a4a4b86c9185ff2c",
+  "lessonIds": [
+    "TE-C287-chati",
+    "TE-C287-pramadam",
+    "TE-C287-ambulensu",
+    "TE-C287-bima",
+    "TE-C287-atyavasaram"
+  ],
+  "tex": "telugu/book/chapters/ch287-chest-accident-ambulance-insurance-emergency.tex"
+}

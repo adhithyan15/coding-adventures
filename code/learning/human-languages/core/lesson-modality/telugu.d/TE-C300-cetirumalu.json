@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C300-cetirumalu",
+    "language": "telugu",
+    "chapter": 300,
+    "sequence": 14370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cdafa0ffa2930b13"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C300-gundi",
+  "pathSegment": "TE-PATH-300-VASTUVU300",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-300-VASTUVU300",
+      "order": 3
+    }
+  ]
+}

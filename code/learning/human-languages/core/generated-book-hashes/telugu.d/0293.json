@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:ef633c91a8c09b54",
+  "lessonIds": [
+    "TE-C293-jailu",
+    "TE-C293-masidu",
+    "TE-C293-carci",
+    "TE-C293-pancayati",
+    "TE-C293-ataka"
+  ],
+  "tex": "telugu/book/chapters/ch293-jail-mosque-church-village-council-loft.tex"
+}

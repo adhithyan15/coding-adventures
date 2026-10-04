@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C304-atagadu",
+    "language": "telugu",
+    "chapter": 304,
+    "sequence": 14550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d6ba282887014ca1"
+  },
+  "findings": []
+}

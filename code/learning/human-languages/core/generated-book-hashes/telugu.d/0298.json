@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:4c555ce1eb2dabc3",
+  "lessonIds": [
+    "TE-C298-moddu",
+    "TE-C298-vankara",
+    "TE-C298-cadunaina",
+    "TE-C298-bolu",
+    "TE-C298-masaka"
+  ],
+  "tex": "telugu/book/chapters/ch298-blunt-crooked-flat-hollow-dim.tex"
+}

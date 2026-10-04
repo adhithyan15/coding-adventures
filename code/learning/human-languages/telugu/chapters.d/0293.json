@@ -1,0 +1,19 @@
+{
+  "chapter": 293,
+  "title": "Jail, Mosque, Church, Village council, Loft",
+  "label": "ch:te-jail-mosque-church-village-council-loft",
+  "canDo": "I can say a jail, a mosque, a church, the village council and a loft.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TE-C293-ataka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 293: I can say a jail, a mosque, a church, the village council and a loft.",
+    "assesses": [
+      "TE-LEX-C293-STHALAM293-03",
+      "TE-LEX-C293-STHALAM293-04",
+      "TE-LEX-C293-STHALAM293-05"
+    ]
+  }
+}

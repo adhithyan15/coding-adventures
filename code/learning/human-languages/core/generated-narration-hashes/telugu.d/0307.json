@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:606a064bf46538e3",
+  "lessonIds": [
+    "TE-C307-phrijju",
+    "TE-C307-miksi",
+    "TE-C307-antlu",
+    "TE-C307-agarubatti",
+    "TE-C307-kunkuma"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch307.txt",
+  "json": "telugu/narration/ch307.json",
+  "textHash": "fnv1a64:29b6cab9ae1b3068",
+  "jsonHash": "fnv1a64:c4c29b01688c280e",
+  "findings": []
+}

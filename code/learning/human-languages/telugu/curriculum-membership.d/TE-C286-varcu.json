@@ -1,0 +1,11 @@
+{
+  "id": "TE-C286-varcu",
+  "pathSegment": "TE-PATH-286-KRIYA286",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-286-KRIYA286",
+      "order": 3
+    }
+  ]
+}

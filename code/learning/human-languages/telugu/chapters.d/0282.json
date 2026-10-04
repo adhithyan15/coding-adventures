@@ -1,0 +1,19 @@
+{
+  "chapter": 282,
+  "title": "To graze, To plant, To decorate, To share out, To visit",
+  "label": "ch:te-to-graze-to-plant-to-decorate-to-share-out-to-visit",
+  "canDo": "I can say to graze, to plant, to decorate, to share out and to visit.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C282-sandarsincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 282: I can say to graze, to plant, to decorate, to share out and to visit.",
+    "assesses": [
+      "TE-LEX-C282-KRIYA282-03",
+      "TE-LEX-C282-KRIYA282-04",
+      "TE-LEX-C282-KRIYA282-05"
+    ]
+  }
+}

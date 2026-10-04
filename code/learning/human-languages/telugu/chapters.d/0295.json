@@ -1,0 +1,19 @@
+{
+  "chapter": 295,
+  "title": "Success, Shape, In case, For some reason, Somehow",
+  "label": "ch:te-success-shape-in-case-for-some-reason-somehow",
+  "canDo": "I can say success, a shape, in case, for some reason and somehow.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "TE-R295-second-pass-words-from-chapters-291-295",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 295: I can say success, a shape, in case, for some reason and somehow.",
+    "assesses": [
+      "TE-LEX-C295-KARANAM295-03",
+      "TE-LEX-C295-KARANAM295-04",
+      "TE-LEX-C295-KARANAM295-05"
+    ]
+  }
+}

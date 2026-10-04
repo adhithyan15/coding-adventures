@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:e2e279df89badbbd",
+  "lessonIds": [
+    "TE-C295-vijayam",
+    "TE-C295-akaram",
+    "TE-C295-endukaina",
+    "TE-C295-enduko",
+    "TE-C295-elagaina",
+    "TE-R295-first-pass-words-from-chapters-287-290",
+    "TE-R295-second-pass-words-from-chapters-291-295"
+  ],
+  "tex": "telugu/book/chapters/ch295-success-shape-in-case-for-some-reason-somehow.tex"
+}

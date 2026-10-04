@@ -1,0 +1,11 @@
+{
+  "id": "TE-C311-digri",
+  "pathSegment": "TE-PATH-311-PANI311",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-311-PANI311",
+      "order": 2
+    }
+  ]
+}
