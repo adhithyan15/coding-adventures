@@ -16,7 +16,7 @@
 | `forme deploy` | Implemented in FM-B047/FM-B012 | Uses CLI Builder for one manifest, exactly one content-store shape, one explicit target config, target-aware dry-run, and publication through the FM08 adapters. |
 | `forme install` and trust UX | Implemented in FM-B056 | Composes the completed FM02 authority and atomic-installer cores for bounded local package directories. |
 | Installed plugin runtime | Implemented in FM-B057/FM-B058/FM-B015 | Manifest-bound grants, language selection, native platform sandboxes, and bounded live storage watches compose into CLI/orchestrator execution. |
-| Authoring shell integration | Blocked | FM-B016 owns the non-developer product shell. |
+| Authoring shell integration | In progress | FM09 and FM-B062–FM-B066 compose the non-developer product shell; FM07 remains the preview boundary. |
 
 ## 1. Purpose
 
@@ -142,3 +142,4 @@ and build IDs remain stable inputs to automation.
 - [FM03](FM03-forme-orchestrator.md) — pipeline execution contract
 - [FM06](FM06-forme-aot-compiler.md) — static artifact production
 - [FM08](FM08-forme-deploy-runner.md) — deploy content, adapter, bootstrap, and publication contract
+- [FM09](FM09-forme-authoring-shell.md) — durable authoring, editor, preview, publish, and desktop composition

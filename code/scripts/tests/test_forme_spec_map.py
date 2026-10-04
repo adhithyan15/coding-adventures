@@ -19,6 +19,7 @@ NUMBERED_SPECS = {
     "FM06": "FM06-forme-aot-compiler.md",
     "FM07": "FM07-forme-cli-dev-server.md",
     "FM08": "FM08-forme-deploy-runner.md",
+    "FM09": "FM09-forme-authoring-shell.md",
 }
 
 MARKDOWN_LINK = re.compile(r"\[[^\]]+\]\(([^)]+\.md(?:#[^)]+)?)\)")
