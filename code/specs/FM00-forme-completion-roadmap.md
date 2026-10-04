@@ -189,8 +189,12 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 63 | FM-B066 | done | Package the first-run desktop authoring product | Completion milestone depending on FM-B067 and FM-B068. The installable local shell creates a project, selects a theme, edits and previews a first post, configures a supported target, and publishes without source/config editing, git, or a command line. |
 | 64 | FM-B016 | done | Complete the authoring shell | Completion milestone depending on FM-B062–FM-B066. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
 | 65 | FM-B017 | done | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
-| 66 | FM-B018 | active | Close release-quality gates | Depends on FM-B016 and FM-B017. Add 1,000-page clean/incremental benchmarks, Lighthouse/accessibility budgets, package/API versioning, migration docs, security review, and supported-platform CI. |
-| 67 | FM-B029 | later | Make duplicate PR CI cancellation and merge state unambiguous | One commit has one authoritative required CI suite; branch updates cancel obsolete runs completely; cancelling a redundant push suite cannot leave a stale final gate or misleading failed rollup; babysitting tooling identifies required checks and the current head. |
+| 66 | FM-B069 | active | Prove 1,000-page clean and incremental scale | Run the live blog's complete HTML/terminal product DAG over exactly 1,000 generated pages, then edit one page and run it again through the persistent cache. A portable benchmark report records both elapsed times and deterministic per-stage work. The gate rejects missing outputs, incomplete clean work, or an incremental run that fails to reuse the unaffected page work; wall-clock values remain evidence rather than host-specific pass/fail thresholds. |
+| 67 | FM-B070 | ready | Enforce web performance and accessibility budgets | Depends on FM-B069. Run the built live sites through pinned browser tooling with explicit Lighthouse and automated accessibility budgets, retain useful static fallbacks, and publish bounded diagnostics for every regression. |
+| 68 | FM-B071 | ready | Version the public package and kernel APIs | Remove the legacy `RenderedPage.source` producer branch, advance its kind/API contract with a tested compatibility refusal, align publishable Forme package versions, and ship a migration guide for every breaking change. |
+| 69 | FM-B072 | blocked | Compose the supported-platform release gate | Depends on FM-B069–FM-B071. Run the release benchmark, web budgets, package/API compatibility checks, complete product builds, and mandatory security review on every supported host with one documented release verdict. |
+| 70 | FM-B018 | blocked | Close release-quality gates | Completion milestone depending on FM-B069–FM-B072. The 1,000-page benchmark, Lighthouse/accessibility budgets, versioned package/API migration, security review, and supported-platform CI all pass on the same release contract. |
+| 71 | FM-B029 | later | Make duplicate PR CI cancellation and merge state unambiguous | One commit has one authoritative required CI suite; branch updates cancel obsolete runs completely; cancelling a redundant push suite cannot leave a stale final gate or misleading failed rollup; babysitting tooling identifies required checks and the current head. |
 
 ## Dependency path
 
@@ -207,8 +211,8 @@ FM-B049/FM-B050 → FM-B053 → FM-B054 → FM-B055 → FM-B051 → FM-B052 →
 FM-B056 → FM-B057 → FM-B058 → FM-B015. Interactivity is complete through
 FM-B059 → FM-B060 → FM-B061 → FM-B013. The authoring path is complete through
 FM-B062 → FM-B063 → FM-B064 → FM-B065 → FM-B067 → FM-B068 → FM-B066 →
-FM-B016. FM-B017 completes the backend proof. The only remaining path to
-Authoring v1 is the FM-B018 release-quality gate.
+FM-B016. FM-B017 completes the backend proof. The remaining Authoring-v1 path
+is FM-B069 → FM-B070 alongside FM-B071, then FM-B072 → FM-B018.
 
 ## Discovery log
 
@@ -321,6 +325,7 @@ work.
 | 2026-10-04 | FM-B068's native boundary had to preserve the capability-free shell while owning durable bytes, isolated product execution, loopback serving, target selection, and atomic publication. Security review additionally exposed ACL, identity-race, cleanup-state, process-budget, and Rust/TypeScript validation-parity requirements that ordinary happy-path packaging would miss. | Close FM-B068, FM-B066, and FM-B016 after adding the installable Tauri product, exact bundled worker plus audited macOS launcher, canonical shared storage corpus, lifecycle admission, capability-only preview, descriptor-relative identity-bound local publication, ACL/resource/cleanup hardening, clean-profile product acceptance, and mandatory security review. Activate FM-B017 as the only highest-priority ready item. |
 | 2026-10-04 | The terminal Style IR translator generated TypeScript source but no renderer consumed it, the kernel had no `TerminalBuffer`, and live products could not expose non-web degradation as testable data. | Keep FM-B017 active. Add the versioned buffer kind, a pure terminal renderer and artifact packager, then fan the blog's routed content into HTML and terminal using the same resolved theme and Interactivity IR. Require exact ANSI, unsupported-style, raw-node/asset, and dropped-island acceptance tests before closing the item. |
 | 2026-10-04 | FM-B017's terminal boundary had to distinguish canonical source provenance from backend-content revision, admit only SGR terminal escapes, cap descriptor snapshots and artifact resources, reject portable path and ancestor collisions, exclude script/style fallback content, and keep every hostile diagnostic bounded and ASCII. | Close FM-B017 after the shared `TerminalBuffer`, pure renderer/packager, live 13-stage HTML/terminal fan-out, exact degradation evidence, proportional coverage, and mandatory security review pass. Activate FM-B018 as the only remaining Authoring-v1 item. |
+| 2026-10-04 | FM-B018 combined scale, browser quality, a breaking public API migration, platform composition, and final security evidence in one gate. Absolute benchmark deadlines would additionally measure hosted-runner load rather than Forme's incremental work. | Split FM-B018 into FM-B069–FM-B072 and retain it as the completion milestone. Activate FM-B069 first: exercise the existing 13-stage live product over 1,000 generated pages, record same-run timings, and gate deterministic output and cache-work counters instead of host-specific milliseconds. |
 
 ## Loop protocol
 
