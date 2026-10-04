@@ -761,9 +761,10 @@ buffer of styled text for CLI help, man pages, terminal-based readers.
 
 The v1 terminal boundary is deliberately observable. `render-terminal`
 produces one `TerminalBuffer` per routed document. The buffer carries the ANSI
-text, exact Style IR rule usage, source provenance, and deterministic
-degradation records for unsupported style, interactivity, raw nodes, and asset
-references. Authored fallback content remains in the text.
+text, an exact content/config revision, exact Style IR rule usage, canonical
+source provenance, and deterministic degradation records for unsupported
+style, interactivity, raw nodes, and asset references. Authored fallback
+content remains in the text.
 
 `package-terminal` collects those buffers into a capability-free
 `DeployArtifact` containing one `.ansi` file and one canonical

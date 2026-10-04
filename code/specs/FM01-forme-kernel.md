@@ -632,13 +632,20 @@ export interface TerminalBuffer {
   readonly usedStyle: readonly StyleRuleId[];
   readonly usedAssets: readonly LogicalId[];
   readonly degradations: readonly TerminalDegradation[];
+  /** Content/config revision of this exact terminal payload. */
+  readonly revision: RevisionId;
+  /** Canonical source-contributor provenance; its revision is not repurposed. */
   readonly provenance: OutputProvenance;
 }
 ```
 
 `text` may contain only renderer-generated ANSI SGR sequences; authored text
 and raw nodes must never inject terminal controls. Degradations are ordered by
-document traversal and then Style IR source order. The kind is version `1.0`.
+document traversal and then Style IR source order. `revision` hashes the source
+revision, resolved backend configuration, route, terminal text, exact usage,
+and degradation data. `provenance` retains the ordinary FM01 contributor-set
+semantics: its revision hashes only the normalized source contributors. The
+kind is version `1.0`.
 
 #### 2.3.13 `Stream<K>`
 
