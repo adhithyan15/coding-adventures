@@ -535,12 +535,12 @@ through the existing backend-neutral italic face selection. Class text alignment
 none/upper/lower/capitalize/full-width/full-size-kana transforms and none/underline/overline/line-through
 decoration combinations, including independently authored decoration colors,
 solid/double/dotted/dashed/wavy decoration styles, and auto, from-font, pixel,
-and percentage decoration thicknesses also survive into shaped
+em, and percentage decoration thicknesses also survive into shaped
 glyph runs. The CSS decoration shorthand composes those line, style, color, and
 thickness values into the same semantic representation, and the
 `text-decoration-line` longhand supports none and composable underline,
 overline, and line-through values. Decoration `currentColor` remains semantic
-until it resolves against the final label color. Auto, pixel, and percentage underline offsets follow the same
+until it resolves against the final label color. Auto, pixel, em, and percentage underline offsets follow the same
 backend-neutral geometry path. Normal, unitless,
 percentage, and pixel line heights flow through the same text layout path.
 Pixel and percentage text indents adjust only the first backend-neutral line box
