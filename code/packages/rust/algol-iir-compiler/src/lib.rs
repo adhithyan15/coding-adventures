@@ -2279,7 +2279,7 @@ impl Compiler {
                 continue;
             }
 
-            if let Some(var_name) = expr_variable_name(actual) {
+            if let Some(var_name) = exact_bare_variable_expression_name(actual) {
                 let binding = self.require_var(&var_name)?;
                 if binding.ty == ScalarType::Real && !binding.is_global {
                     if let Some(text) = self.static_real_slots.get(&binding.slot).cloned() {
@@ -3782,7 +3782,7 @@ impl Compiler {
             return true;
         }
         if let Some((sign, child)) = single_signed_child(node) {
-            return sign == "+" && self.is_runtime_real_assignment_value(child);
+            return matches!(sign, "+" | "-") && self.is_runtime_real_assignment_value(child);
         }
         if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
             if self.contains_procedure_call(condition) {
@@ -12189,26 +12189,31 @@ mod tests {
     }
 
     #[test]
-    fn al4_runtime_real_provenance_crosses_unary_plus() {
-        let module = compile_source(
-            "begin real procedure pick; pick := 2.25; real x; x := +pick(); output(+x) end",
-            "test",
-        )
-        .expect("unary plus preserves runtime-real formatter provenance");
-        let main = module.get_function("main").expect("has main");
-        assert!(main.instructions.iter().any(|instr| {
-            instr.op == "call"
-                && instr.srcs.first().and_then(Operand::as_var)
-                    == Some("__basic_print_real")
-        }));
+    fn al4_runtime_real_provenance_crosses_unary_signs() {
+        for source in [
+            "begin real procedure pick; pick := 2.25; output(-pick()) end",
+            "begin real procedure pick; pick := 2.25; real x; x := -pick(); output(x) end",
+            "begin real procedure pick; pick := 2.25; real x; x := pick(); output(-x) end",
+            "begin real procedure pick; pick := 2.25; real x, y; x := pick(); y := -x; output(y) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "unary minus must preserve runtime-real formatter provenance for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
     }
 
     #[test]
     fn al4_runtime_real_scalar_copy_provenance_does_not_admit_wrappers() {
         for source in [
             "begin real procedure pick; pick := 2.25; real x, y; x := pick(); y := x + 0.0; output(y) end",
-            "begin real procedure pick; pick := 2.25; real x, y; x := pick(); y := -x; output(y) end",
-            "begin real procedure pick; pick := 2.25; output(-pick()) end",
             "begin real procedure pick; pick := 2.25; real x, y; procedure capture; y := x; x := pick(); y := x; output(y) end",
             "begin real procedure pick; pick := 2.25; boolean flag; real x; x := if flag then pick() else 1.0; output(x) end",
             "begin real procedure pick; pick := 2.25; boolean procedure choose; choose := true; real x; x := pick(); output(if choose() then x else x) end",
