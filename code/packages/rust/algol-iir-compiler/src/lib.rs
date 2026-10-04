@@ -3767,6 +3767,12 @@ impl Compiler {
                     sig.params.is_empty() && sig.ret == Some(ScalarType::Real)
                 });
         }
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.is_direct_declared_real_procedure_call(child);
+        }
+        if !direct_tokens(node).is_empty() {
+            return false;
+        }
         let children = direct_nodes(node);
         children.len() == 1 && self.is_direct_declared_real_procedure_call(children[0])
     }
@@ -3774,6 +3780,9 @@ impl Compiler {
     fn is_runtime_real_assignment_value(&self, node: &GrammarASTNode) -> bool {
         if self.is_direct_declared_real_procedure_call(node) {
             return true;
+        }
+        if let Some((sign, child)) = single_signed_child(node) {
+            return sign == "+" && self.is_runtime_real_assignment_value(child);
         }
         if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
             if self.contains_procedure_call(condition) {
@@ -3787,6 +3796,12 @@ impl Compiler {
                         && self.is_runtime_real_assignment_value(else_node)
                 }
             };
+        }
+        if direct_tokens(node).is_empty() {
+            let children = direct_nodes(node);
+            if children.len() == 1 {
+                return self.is_runtime_real_assignment_value(children[0]);
+            }
         }
         let Some(source_name) = exact_bare_variable_expression_name(node) else {
             return false;
@@ -12174,10 +12189,26 @@ mod tests {
     }
 
     #[test]
+    fn al4_runtime_real_provenance_crosses_unary_plus() {
+        let module = compile_source(
+            "begin real procedure pick; pick := 2.25; real x; x := +pick(); output(+x) end",
+            "test",
+        )
+        .expect("unary plus preserves runtime-real formatter provenance");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var)
+                    == Some("__basic_print_real")
+        }));
+    }
+
+    #[test]
     fn al4_runtime_real_scalar_copy_provenance_does_not_admit_wrappers() {
         for source in [
             "begin real procedure pick; pick := 2.25; real x, y; x := pick(); y := x + 0.0; output(y) end",
             "begin real procedure pick; pick := 2.25; real x, y; x := pick(); y := -x; output(y) end",
+            "begin real procedure pick; pick := 2.25; output(-pick()) end",
             "begin real procedure pick; pick := 2.25; real x, y; procedure capture; y := x; x := pick(); y := x; output(y) end",
             "begin real procedure pick; pick := 2.25; boolean flag; real x; x := if flag then pick() else 1.0; output(x) end",
             "begin real procedure pick; pick := 2.25; boolean procedure choose; choose := true; real x; x := pick(); output(if choose() then x else x) end",
