@@ -10,5 +10,6 @@
   degradation records plus exact provenance.
 - Capability-free terminal artifact packager emitting deterministic `.ansi`
   and canonical `.degradations.json` files.
-- Bounded hostile-data snapshots, AST/HTML/output limits, portable path and
-  case-collision checks, adversarial coverage, and live blog product proof.
+- Bounded descriptor snapshots, AST/HTML/output/artifact limits, renderer- and
+  artifact-content-bound identity, ANSI/bidi hardening, portable file/ancestor
+  collision checks, adversarial coverage, and live blog product proof.

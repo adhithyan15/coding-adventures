@@ -167,14 +167,43 @@ describe("render-terminal stage", () => {
     const accessor = {} as Record<string, unknown>;
     Object.defineProperty(accessor, "style", { get: () => theme });
     await expect(drain(accessor)).rejects.toThrow(/accessor/);
-    const symbol = { [Symbol("hidden")]: true };
-    await expect(drain(symbol)).rejects.toThrow(/symbol keys/);
+    const symbolConfig = {};
+    Object.defineProperty(symbolConfig, Symbol("hidden"), { get: () => { throw new Error("must not run"); } });
+    await expect(drain(symbolConfig)).resolves.toBeUndefined();
     const sparse = new Array(1);
     await expect(drain({ activeStyleContexts: sparse })).rejects.toThrow(/data element/);
     const arrayAccessor: unknown[] = [];
     Object.defineProperty(arrayAccessor, "0", { get: () => "screen" });
     Object.defineProperty(arrayAccessor, "length", { value: 1 });
     await expect(drain({ activeStyleContexts: arrayAccessor })).rejects.toThrow(/data element/);
+    await expect(drain({ activeStyleContexts: ["screen"] })).resolves.toBeUndefined();
+    const cycle: any = {};
+    cycle.self = cycle;
+    await expect(drain({ style: cycle })).rejects.toThrow(/cycles/);
+    await expect(drain({ style: new Date() })).rejects.toThrow(/plain objects/);
+  });
+
+  it("rejects malformed ContentNode and Document AST shapes at the boundary", async () => {
+    const drain = async (input: unknown) => {
+      for await (const _ of renderTerminal.run(values([input]) as never, {} as never, context()) as AsyncIterable<unknown>) { /* drain */ }
+    };
+    const invalid: unknown[] = [
+      { ...node(), identity: "bad" },
+      { ...node(), revision: "bad" },
+      { ...node(), route: 3 },
+      { ...node(), sourcePath: 3 },
+      { ...node(), frontmatter: [] },
+      { ...node(), frontmatter: { value: NaN } },
+      { ...node(), assetRefs: [{ ...node().assetRefs[0], id: "bad" }] },
+      { ...node(), assetRefs: [{ ...node().assetRefs[0], nodePath: [-1] }] },
+      { ...node(), assetRefs: [{ ...node().assetRefs[0], role: "bad" }] },
+      { ...node(), assetRefs: [{ ...node().assetRefs[0], sourcePath: 4 }] },
+      { ...node(), document: { type: "unknown" } },
+      { ...node(), document: { type: "heading", level: 9, children: [] } },
+      { ...node(), document: { type: "table", align: ["diagonal"], children: [] } },
+      { ...node(), document: { type: "autolink", destination: "x", isEmail: "yes" } },
+    ];
+    for (const value of invalid) await expect(drain(value)).rejects.toThrow(/forme-render-terminal/);
   });
 
   it("bounds adversarial document and raw-HTML structure", async () => {
@@ -195,6 +224,45 @@ describe("render-terminal stage", () => {
       for await (const _ of renderTerminal.run(values([{ ...node(), document: { type: "document", children: [] } }]) as never, { interactivity } as never, context()) as AsyncIterable<unknown>) { /* drain */ }
     };
     await expect(drain()).rejects.toThrow(/fallback id.*0 matches/);
+  });
+
+  it("does not count removed script or style elements as island fallbacks", async () => {
+    const scripted = { ...node(), document: { type: "document", children: [
+      { type: "raw_block", format: "html", value: "<script id=\"fallback\">bad()</script>" },
+    ] } } as ContentNode;
+    const drain = async () => {
+      for await (const _ of renderTerminal.run(values([scripted]) as never, { interactivity } as never, context()) as AsyncIterable<unknown>) { /* drain */ }
+    };
+    await expect(drain()).rejects.toThrow(/fallback id.*0 matches/);
+  });
+
+  it("snapshots hostile content without invoking accessors and strips presentation controls", async () => {
+    const getter = { ...node() } as Record<string, unknown>;
+    Object.defineProperty(getter, "route", { enumerable: true, get: () => { throw new Error("must not run"); } });
+    const drain = async (input: unknown) => {
+      for await (const _ of renderTerminal.run(values([input]) as never, {} as never, context()) as AsyncIterable<unknown>) { /* drain */ }
+    };
+    await expect(drain(getter)).rejects.toThrow(/accessor/);
+    await expect(drain(new Proxy(node(), {}))).rejects.toThrow(/descriptor-safe JSON/);
+
+    const controlled = { ...node(), assetRefs: [], document: { type: "document", children: [
+      { type: "text", value: "before\roverwrite\u202Eafter\u2066" },
+    ] } } as ContentNode;
+    const results: TerminalBuffer[] = [];
+    for await (const item of renderTerminal.run(values([controlled]) as never, {} as never, context()) as AsyncIterable<TerminalBuffer>) results.push(item);
+    expect(results[0]!.text).toBe("before\noverwriteafter\n");
+  });
+
+  it("binds output provenance to style and terminal bytes", async () => {
+    const plain: TerminalBuffer[] = [];
+    const styled: TerminalBuffer[] = [];
+    for await (const item of renderTerminal.run(values([node()]) as never, {} as never, context()) as AsyncIterable<TerminalBuffer>) plain.push(item);
+    for await (const item of renderTerminal.run(values([node()]) as never, { style: theme } as never, context()) as AsyncIterable<TerminalBuffer>) styled.push(item);
+    expect(styled[0]!.text).not.toBe(plain[0]!.text);
+    expect(styled[0]!.provenance.revision).not.toBe(plain[0]!.provenance.revision);
+    const plainArtifact = await packageTerminal.run(values(plain) as never, {} as never, context()) as any;
+    const styledArtifact = await packageTerminal.run(values(styled) as never, {} as never, context()) as any;
+    expect(styledArtifact.manifest.buildId).not.toBe(plainArtifact.manifest.buildId);
   });
 });
 
@@ -224,8 +292,24 @@ describe("package-terminal stage", () => {
     await expect(packageTerminal.run(values([{ ...buffer, route: "/trail." }]) as never, {} as never, context())).rejects.toThrow(/unsafe portable path/);
     await expect(packageTerminal.run(values([{ ...buffer, route: `/${"x".repeat(240)}` }]) as never, {} as never, context())).rejects.toThrow(/unsafe portable path/);
     await expect(packageTerminal.run(values([{ ...buffer, route: "/Same" }, { ...buffer, route: "/same" }]) as never, {} as never, context())).rejects.toThrow(/portable path collision/);
+    await expect(packageTerminal.run(values([{ ...buffer, route: "/foo" }, { ...buffer, route: "/foo.ansi/bar" }]) as never, {} as never, context())).rejects.toThrow(/portable path collision/);
     await expect(packageTerminal.run(values([buffer]) as never, { root: "NUL" } as never, context())).rejects.toThrow(/unsafe portable path/);
     await expect(packageTerminal.run(values([buffer]) as never, { extra: true } as never, context())).rejects.toThrow(/unknown/);
+  });
+
+  it("snapshots hostile buffers and enforces per-file limits before packaging", async () => {
+    const buffer: TerminalBuffer = {
+      route: "/safe", text: "x", usedStyle: [], usedAssets: [], degradations: [],
+      provenance: { contributors: [{ identity: ID, revision: REV }], revision: REV },
+    };
+    const hostile: any = { ...buffer, degradations: [{ code: "raw-node-dropped", format: "html", nodePath: [], message: "x" }] };
+    Object.defineProperty(hostile.degradations[0], "toJSON", { enumerable: true, value: () => { throw new Error("must not run"); } });
+    await expect(packageTerminal.run(values([hostile]) as never, {} as never, context())).rejects.toThrow(/descriptor-safe JSON/);
+    await expect(packageTerminal.run(values([{ ...buffer, text: "x".repeat(8_388_609) }]) as never, {} as never, context())).rejects.toThrow(/8 MiB limit/);
+    await expect(packageTerminal.run(values([{ ...buffer, usedStyle: [3] }]) as never, {} as never, context())).rejects.toThrow(/usedStyle/);
+    await expect(packageTerminal.run(values([{ ...buffer, usedAssets: ["bad"] }]) as never, {} as never, context())).rejects.toThrow(/usedAssets/);
+    await expect(packageTerminal.run(values([{ ...buffer, degradations: [{ code: "unknown", message: "x" }] }]) as never, {} as never, context())).rejects.toThrow(/code is unknown/);
+    await expect(packageTerminal.run(values([{ ...buffer, provenance: { ...buffer.provenance, revision: "bad" } }]) as never, {} as never, context())).rejects.toThrow(/revision is invalid/);
   });
 
   it("supports an empty default-root artifact", async () => {

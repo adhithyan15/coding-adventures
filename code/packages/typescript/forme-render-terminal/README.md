@@ -15,16 +15,21 @@ renderer-owned ANSI SGR, strips authored terminal control bytes, preserves
 portable text and HTML fallback text, and reports every unsupported style
 property, raw node, asset reference, and dropped island in deterministic
 `TerminalDegradation` data. It never resolves or executes island modules.
-Hostile inputs fail closed: configuration snapshots reject proxies, accessors,
-sparse arrays, and symbol keys; AST and raw-HTML traversal is bounded; authored
-control bytes are removed; and terminal text is capped at 8 MiB per route.
+Hostile inputs fail closed: bounded descriptor snapshots reject proxies,
+accessors, sparse arrays, cycles, and malformed AST/buffer shapes without
+traversing symbol metadata; AST and raw-HTML traversal is bounded; authored
+control and Unicode-format characters are removed; and terminal text is capped
+at 8 MiB per route.
 
 The packager emits `<root>/<route>.ansi` and
 `<root>/<route>.degradations.json` entries. It performs no I/O and declares no
 capabilities; an emitter or deploy runner decides whether to persist or publish
 the artifact. Routes and roots are checked as portable filesystem paths,
 including Windows device names, segment limits, traversal, prototype-pollution
-sink names, and case-insensitive collisions.
+sink names, and case-insensitive file/ancestor collisions. Per-file, buffer,
+file-count, and 64 MiB aggregate limits bound packaging. Buffer provenance
+hashes source identity plus backend configuration and rendered evidence; the
+artifact build ID hashes the canonical ordered file paths and exact contents.
 
 The Coding Adventures blog fans the router stream into both HTML and terminal
 renderers with the same classless theme. Its clean and warm product acceptance

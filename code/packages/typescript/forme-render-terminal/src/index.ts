@@ -3,7 +3,12 @@
 import { types as utilTypes } from "node:util";
 import { parseFragment } from "parse5";
 import type { Node } from "@coding-adventures/document-ast";
-import { createOutputProvenance, computeRevisionId } from "@coding-adventures/forme-identity";
+import {
+  createOutputProvenance,
+  computeRevisionId,
+  isLogicalIdShape,
+  isRevisionIdShape,
+} from "@coding-adventures/forme-identity";
 import {
   validateInteractivityDocument,
   type InteractivityDocument,
@@ -22,6 +27,7 @@ import {
   streamOf,
   type ContentNode,
   type DeployArtifact,
+  type JsonValue,
   type StyleRuleId,
   type TerminalBuffer,
   type TerminalDegradation,
@@ -59,11 +65,23 @@ interface RenderState {
   htmlNodes: number;
 }
 
-const MAX_AST_DEPTH = 512;
-const MAX_AST_NODES = 100_000;
+interface SnapshotBudget {
+  nodes: number;
+  stringCodeUnits: number;
+  readonly seen: WeakSet<object>;
+  readonly maxNodes: number;
+  readonly maxStringCodeUnits: number;
+}
+
+const MAX_AST_DEPTH = 256;
+const MAX_AST_NODES = 20_000;
+const MAX_STYLE_RULES = 256;
 const MAX_RAW_HTML_BYTES = 1_048_576;
 const MAX_TERMINAL_TEXT_BYTES = 8_388_608;
-const MAX_HTML_NODES = 100_000;
+const MAX_HTML_NODES = 20_000;
+const MAX_PACKAGE_BUFFERS = 1_000;
+const MAX_EVIDENCE_BYTES = 1_048_576;
+const MAX_ARTIFACT_BYTES = 67_108_864;
 const PATH_SEGMENT_RE = /^[A-Za-z0-9._~!$&'()*+,;=@\-]+$/;
 const WIN_RESERVED_RE = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?$/i;
 
@@ -86,13 +104,23 @@ const renderTerminal = defineStage({
   async *run(rawInput, rawConfig, ctx) {
     const config = snapshotRenderConfig(rawConfig);
     const validated = validateStyleDocument(config.style ?? emptyStyleDocument());
+    if (validated.document.rules.length > MAX_STYLE_RULES) {
+      throw new Error(`forme-render-terminal: StyleDocument exceeds the ${MAX_STYLE_RULES}-rule limit`);
+    }
     if (validated.document.theme !== null) {
       throw new Error(`forme-render-terminal: StyleDocument theme ${JSON.stringify(validated.document.theme)} is unresolved`);
     }
     const interactivity = prepareInteractivity(config.interactivity);
-    const input = rawInput as AsyncIterable<ContentNode>;
-    for await (const node of input) {
+    const backendConfigRevision = computeRevisionId({
+      domain: "forme-terminal-backend-config-v1",
+      style: (config.style ?? emptyStyleDocument()) as unknown as JsonValue,
+      activeStyleContexts: [...(config.activeStyleContexts ?? ["screen", "dark"])],
+      interactivity: (config.interactivity ?? []) as unknown as JsonValue,
+    });
+    const input = rawInput as AsyncIterable<unknown>;
+    for await (const rawNode of input) {
       ctx.cancellation.throwIfCancelled();
+      const node = snapshotContentNode(rawNode);
       if (node.route === null) {
         throw new Error(`forme-render-terminal: ContentNode ${node.identity} (${node.sourcePath}) has no route`);
       }
@@ -113,7 +141,7 @@ const renderTerminal = defineStage({
         htmlNodes: 0,
       };
       const main: MatchNode = { type: "main", parent: { type: "body", parent: { type: "html", parent: null } } };
-      let text = renderNode(node.document, [], main, state).replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trimEnd() + "\n";
+      let text = boundedConcat([renderNode(node.document, [], main, state).replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trimEnd(), "\n"]);
       text = wrapSynthetic(main.parent!.parent!, wrapSynthetic(main.parent!, wrapSynthetic(main, text, state), state), state);
       if (new TextEncoder().encode(text).byteLength > MAX_TERMINAL_TEXT_BYTES) {
         throw new Error("forme-render-terminal: rendered terminal text exceeds the 8 MiB limit");
@@ -139,13 +167,31 @@ const renderTerminal = defineStage({
       const document = interactivity.get(node.route);
       if (document !== undefined) appendInteractivityDegradations(node.route, document, state);
 
+      const usedStyle = Object.freeze(compiled.emittedRules.filter(id => state.used.has(id)));
+      const usedAssets = Object.freeze([...new Set(node.assetRefs.map(ref => ref.id))]);
+      const degradations = Object.freeze(state.degradations);
+      const sourceProvenance = createOutputProvenance([{ identity: node.identity, revision: node.revision }]);
+      const outputRevision = computeRevisionId({
+        domain: "forme-terminal-buffer-v1",
+        sourceRevision: node.revision,
+        backendConfigRevision,
+        route: node.route,
+        text,
+        usedStyle: [...usedStyle],
+        usedAssets: [...usedAssets],
+        degradations: degradations as unknown as JsonValue,
+      });
+      const provenance = Object.freeze({
+        contributors: sourceProvenance.contributors,
+        revision: outputRevision,
+      });
       yield Object.freeze({
         route: node.route,
         text,
-        usedStyle: Object.freeze(compiled.emittedRules.filter(id => state.used.has(id))),
-        usedAssets: Object.freeze([...new Set(node.assetRefs.map(ref => ref.id))]),
-        degradations: Object.freeze(state.degradations),
-        provenance: createOutputProvenance([node]),
+        usedStyle,
+        usedAssets,
+        degradations,
+        provenance,
       }) satisfies TerminalBuffer;
     }
   },
@@ -165,32 +211,48 @@ export const packageTerminal = defineStage({
     const files: Record<string, Uint8Array> = {};
     const routes: Array<{ pattern: string; target: { kind: "file"; path: string }; islands: []; css: [] }> = [];
     const seen = new Set<string>();
-    const seenPaths = new Map<string, string>();
-    const revisions: Array<{ route: string; revision: string }> = [];
+    const filePaths = new Map<string, string>();
+    const directoryPaths = new Set<string>();
+    const identityFiles: Array<{ path: string; content: string }> = [];
     const encoder = new TextEncoder();
-    for await (const buffer of rawInput as AsyncIterable<TerminalBuffer>) {
+    let bufferCount = 0;
+    let artifactBytes = 0;
+    for await (const rawBuffer of rawInput as AsyncIterable<unknown>) {
       ctx.cancellation.throwIfCancelled();
+      if (++bufferCount > MAX_PACKAGE_BUFFERS) {
+        throw new Error(`forme-render-terminal/package: exceeds the ${MAX_PACKAGE_BUFFERS}-buffer limit`);
+      }
+      const buffer = snapshotTerminalBuffer(rawBuffer);
       if (seen.has(buffer.route)) throw new Error(`forme-render-terminal/package: duplicate route ${JSON.stringify(buffer.route)}`);
       seen.add(buffer.route);
       const relative = portableRoute(buffer.route);
       const ansiPath = `${root}/${relative}.ansi`;
       const evidencePath = `${root}/${relative}.degradations.json`;
       for (const path of [ansiPath, evidencePath]) {
-        const folded = path.toLowerCase();
-        const previous = seenPaths.get(folded);
-        if (previous !== undefined) {
-          throw new Error(`forme-render-terminal/package: portable path collision between ${JSON.stringify(previous)} and ${JSON.stringify(buffer.route)}`);
-        }
-        seenPaths.set(folded, buffer.route);
+        registerPortableFile(path, buffer.route, filePaths, directoryPaths);
       }
-      files[ansiPath] = encoder.encode(buffer.text);
-      files[evidencePath] = encoder.encode(`${JSON.stringify(buffer.degradations, null, 2)}\n`);
+      const evidence = `${JSON.stringify(buffer.degradations, null, 2)}\n`;
+      const ansiBytes = encoder.encode(buffer.text);
+      const evidenceBytes = encoder.encode(evidence);
+      if (ansiBytes.byteLength > MAX_TERMINAL_TEXT_BYTES) {
+        throw new Error("forme-render-terminal/package: ANSI file exceeds the 8 MiB limit");
+      }
+      if (evidenceBytes.byteLength > MAX_EVIDENCE_BYTES) {
+        throw new Error("forme-render-terminal/package: degradation evidence exceeds the 1 MiB limit");
+      }
+      artifactBytes += ansiBytes.byteLength + evidenceBytes.byteLength;
+      if (artifactBytes > MAX_ARTIFACT_BYTES) {
+        throw new Error("forme-render-terminal/package: artifact exceeds the 64 MiB aggregate limit");
+      }
+      files[ansiPath] = ansiBytes;
+      files[evidencePath] = evidenceBytes;
+      identityFiles.push({ path: ansiPath, content: buffer.text }, { path: evidencePath, content: evidence });
       routes.push({ pattern: buffer.route, target: { kind: "file", path: ansiPath }, islands: [], css: [] });
-      revisions.push({ route: buffer.route, revision: buffer.provenance.revision });
     }
     routes.sort((a, b) => compare(a.pattern, b.pattern));
     const orderedFiles = Object.fromEntries(Object.entries(files).sort(([a], [b]) => compare(a, b)));
-    const buildId = computeRevisionId({ terminal: revisions.sort((a, b) => compare(a.route, b.route)) });
+    identityFiles.sort((a, b) => compare(a.path, b.path));
+    const buildId = computeRevisionId({ domain: "forme-terminal-artifact-v1", files: identityFiles });
     return Object.freeze({
       variant: Object.freeze({ kind: "dist-tree" as const }),
       files: Object.freeze(orderedFiles),
@@ -209,9 +271,9 @@ function snapshotRenderConfig(value: unknown): RenderTerminalConfig {
   const contexts = object.get("activeStyleContexts");
   const entries = object.get("interactivity");
   return Object.freeze({
-    ...(object.has("style") ? { style: object.get("style") as StyleDocument } : {}),
+    ...(object.has("style") ? { style: snapshotJson(object.get("style"), "config.style", snapshotBudget(100_000, 4_194_304)) as unknown as StyleDocument } : {}),
     ...(contexts === undefined ? {} : { activeStyleContexts: stringArray(contexts, "config.activeStyleContexts") }),
-    ...(entries === undefined ? {} : { interactivity: entries as readonly RouteInteractivity[] }),
+    ...(entries === undefined ? {} : { interactivity: snapshotJson(entries, "config.interactivity", snapshotBudget(100_000, 4_194_304)) as unknown as readonly RouteInteractivity[] }),
   });
 }
 
@@ -265,28 +327,28 @@ function renderNode(node: Node, path: readonly number[], parent: MatchNode, stat
   const match = matchNode(node, parent);
   const current = match ?? parent;
   const children = (separator = "") => "children" in node
-    ? node.children.map((child, index) => renderNode(child as Node, [...path, index], current, state, depth + 1)).join(separator)
+    ? boundedJoin(node.children.map((child, index) => renderNode(child as Node, [...path, index], current, state, depth + 1)), separator)
     : "";
   let output: string;
   switch (node.type) {
     case "document": output = children(); break;
-    case "heading": output = `${children()}\n\n`; break;
-    case "paragraph": output = `${children()}\n\n`; break;
-    case "code_block": output = `${safeText(node.value)}\n\n`; break;
-    case "blockquote": output = children().trimEnd().split("\n").map(line => `> ${line}`).join("\n") + "\n\n"; break;
-    case "list": output = node.children.map((child, index) => `${node.ordered ? `${(node.start ?? 1) + index}.` : "-"} ${renderNode(child, [...path, index], current, state, depth + 1).trim()}\n`).join("") + "\n"; break;
+    case "heading": output = boundedConcat([children(), "\n\n"]); break;
+    case "paragraph": output = boundedConcat([children(), "\n\n"]); break;
+    case "code_block": output = boundedConcat([safeText(node.value), "\n\n"]); break;
+    case "blockquote": output = boundedConcat([boundedJoin(children().trimEnd().split("\n").map(line => boundedConcat(["> ", line])), "\n"), "\n\n"]); break;
+    case "list": output = boundedConcat([boundedJoin(node.children.map((child, index) => boundedConcat([node.ordered ? `${(node.start ?? 1) + index}.` : "-", " ", renderNode(child, [...path, index], current, state, depth + 1).trim(), "\n"]))), "\n"]); break;
     case "list_item": output = children(); break;
-    case "task_item": output = `[${node.checked ? "x" : " "}] ${children()}`; break;
+    case "task_item": output = boundedConcat([`[${node.checked ? "x" : " "}] `, children()]); break;
     case "thematic_break": output = "---\n\n"; break;
     case "raw_block": output = renderRaw(node.format, node.value, path, true, state); break;
     case "table": output = children(); break;
-    case "table_row": output = `${children("\t")}\n`; break;
+    case "table_row": output = boundedConcat([children("\t"), "\n"]); break;
     case "table_cell": output = children(); break;
     case "text": output = safeText(node.value); break;
     case "emphasis": case "strong": case "strikethrough": output = children(); break;
     case "code_span": output = safeText(node.value); break;
-    case "link": output = `${children()} <${safeText(node.destination)}>`; break;
-    case "image": output = `[image: ${safeText(node.alt || node.destination)}]`; break;
+    case "link": output = boundedConcat([children(), " <", safeText(node.destination), ">"]); break;
+    case "image": output = boundedConcat(["[image: ", safeText(node.alt || node.destination), "]"]); break;
     case "autolink": output = safeText(node.destination); break;
     case "raw_inline": output = renderRaw(node.format, node.value, path, false, state); break;
     case "hard_break": output = "\n"; break;
@@ -301,22 +363,23 @@ function renderRaw(format: string, value: string, path: readonly number[], block
     message: `terminal backend extracted fallback text and dropped raw ${format} markup`,
   }));
   if (format !== "html") return "";
+  if (value.length > MAX_RAW_HTML_BYTES) throw new Error("forme-render-terminal: raw HTML exceeds the 1 MiB per-document limit");
   state.rawHtmlBytes += new TextEncoder().encode(value).byteLength;
   if (state.rawHtmlBytes > MAX_RAW_HTML_BYTES) throw new Error("forme-render-terminal: raw HTML exceeds the 1 MiB per-document limit");
   const fragment = parseFragment(value) as unknown as HtmlNode;
   const text = htmlFallback(fragment, state, 0).trim();
-  return text.length === 0 ? "" : `${text}${block ? "\n\n" : ""}`;
+  return text.length === 0 ? "" : boundedConcat([text, block ? "\n\n" : ""]);
 }
 
 interface HtmlNode { readonly nodeName?: string; readonly value?: string; readonly attrs?: readonly { name: string; value: string }[]; readonly childNodes?: readonly HtmlNode[] }
 
 function htmlFallback(node: HtmlNode, state: RenderState, depth: number): string {
   if (depth > MAX_AST_DEPTH || ++state.htmlNodes > MAX_HTML_NODES) throw new Error("forme-render-terminal: raw HTML exceeds the structural limit");
-  for (const attribute of node.attrs ?? []) if (attribute.name === "id") state.htmlIds.set(attribute.value, (state.htmlIds.get(attribute.value) ?? 0) + 1);
   if (node.nodeName === "script" || node.nodeName === "style") return "";
+  for (const attribute of node.attrs ?? []) if (attribute.name === "id") state.htmlIds.set(attribute.value, (state.htmlIds.get(attribute.value) ?? 0) + 1);
   if (node.nodeName === "#text") return safeText(node.value ?? "");
-  const content = (node.childNodes ?? []).map(child => htmlFallback(child, state, depth + 1)).join("");
-  return ["p", "div", "li", "section", "article"].includes(node.nodeName ?? "") ? `${content}\n` : content;
+  const content = boundedJoin((node.childNodes ?? []).map(child => htmlFallback(child, state, depth + 1)));
+  return ["p", "div", "li", "section", "article"].includes(node.nodeName ?? "") ? boundedConcat([content, "\n"]) : content;
 }
 
 function appendInteractivityDegradations(route: string, document: InteractivityDocument, state: RenderState): void {
@@ -345,7 +408,7 @@ function wrapSynthetic(node: MatchNode, value: string, state: RenderState): stri
     const style = state.styles.get(rule.id);
     if (style === undefined || style.prefix.length === 0) continue;
     state.used.add(rule.id);
-    output = `${style.prefix}${output}${style.suffix}`;
+    output = boundedConcat([style.prefix, output, style.suffix]);
   }
   return output;
 }
@@ -391,17 +454,190 @@ function matches(selector: Selector, node: MatchNode): boolean {
   }
 }
 
+function snapshotBudget(maxNodes: number, maxStringCodeUnits: number): SnapshotBudget {
+  return { nodes: 0, stringCodeUnits: 0, seen: new WeakSet(), maxNodes, maxStringCodeUnits };
+}
+
+function snapshotJson(value: unknown, path: string, budget: SnapshotBudget, depth = 0): JsonValue {
+  if (depth > MAX_AST_DEPTH || ++budget.nodes > budget.maxNodes) {
+    throw new TypeError(`forme-render-terminal: ${path} exceeds the structural limit`);
+  }
+  if (value === null || typeof value === "boolean") return value;
+  if (typeof value === "number") {
+    if (!Number.isFinite(value)) throw new TypeError(`forme-render-terminal: ${path} must contain finite JSON numbers`);
+    return value;
+  }
+  if (typeof value === "string") {
+    budget.stringCodeUnits += value.length;
+    if (budget.stringCodeUnits > budget.maxStringCodeUnits) throw new TypeError(`forme-render-terminal: ${path} exceeds the string limit`);
+    return value;
+  }
+  if (typeof value !== "object" || utilTypes.isProxy(value)) {
+    throw new TypeError(`forme-render-terminal: ${path} must be descriptor-safe JSON`);
+  }
+  if (budget.seen.has(value)) throw new TypeError(`forme-render-terminal: ${path} must not contain cycles`);
+  budget.seen.add(value);
+  if (Array.isArray(value)) {
+    const raw = arraySnapshot(value, budget.maxNodes, path);
+    const output = Object.freeze(raw.map((item, index) => snapshotJson(item, `${path}[${index}]`, budget, depth + 1)));
+    budget.seen.delete(value);
+    return output;
+  }
+  const prototype = Object.getPrototypeOf(value);
+  if (prototype !== Object.prototype && prototype !== null) throw new TypeError(`forme-render-terminal: ${path} must contain plain objects`);
+  const output: Record<string, JsonValue> = Object.create(null) as Record<string, JsonValue>;
+  let count = 0;
+  for (const key in value) {
+    if (!Object.prototype.hasOwnProperty.call(value, key)) throw new TypeError(`forme-render-terminal: ${path}.${key} must be an own property`);
+    if (++count > 64) throw new TypeError(`forme-render-terminal: ${path} has too many fields`);
+    const descriptor = Object.getOwnPropertyDescriptor(value, key);
+    if (descriptor === undefined || !("value" in descriptor)) throw new TypeError(`forme-render-terminal: ${path}.${key} must not be an accessor`);
+    output[key] = snapshotJson(descriptor.value, `${path}.${key}`, budget, depth + 1);
+  }
+  budget.seen.delete(value);
+  return Object.freeze(output);
+}
+
+function snapshotContentNode(value: unknown): ContentNode {
+  const safe = snapshotJson(value, "ContentNode", snapshotBudget(40_000, MAX_TERMINAL_TEXT_BYTES)) as unknown;
+  const node = recordValue(safe, "ContentNode");
+  assertOnlyKeys(node, ["identity", "revision", "document", "frontmatter", "route", "assetRefs", "sourcePath"], "ContentNode");
+  if (typeof node.identity !== "string" || !isLogicalIdShape(node.identity)) throw new TypeError("forme-render-terminal: ContentNode.identity is invalid");
+  if (typeof node.revision !== "string" || !isRevisionIdShape(node.revision)) throw new TypeError("forme-render-terminal: ContentNode.revision is invalid");
+  if (node.route !== null && typeof node.route !== "string") throw new TypeError("forme-render-terminal: ContentNode.route must be a string or null");
+  if (typeof node.sourcePath !== "string") throw new TypeError("forme-render-terminal: ContentNode.sourcePath must be a string");
+  recordValue(node.frontmatter, "ContentNode.frontmatter");
+  const assets = arrayValue(node.assetRefs, "ContentNode.assetRefs");
+  for (let index = 0; index < assets.length; index++) validateAssetRef(assets[index], `ContentNode.assetRefs[${index}]`);
+  validateDocumentNode(node.document, "ContentNode.document", 0);
+  return safe as ContentNode;
+}
+
+function validateAssetRef(value: unknown, path: string): void {
+  const ref = recordValue(value, path);
+  assertOnlyKeys(ref, ["id", "nodePath", "role", "sourcePath", "urlSuffix"], path);
+  if (typeof ref.id !== "string" || !isLogicalIdShape(ref.id)) throw new TypeError(`forme-render-terminal: ${path}.id is invalid`);
+  const nodePath = arrayValue(ref.nodePath, `${path}.nodePath`);
+  if (nodePath.length > MAX_AST_DEPTH || nodePath.some(part => !Number.isSafeInteger(part) || (part as number) < 0)) throw new TypeError(`forme-render-terminal: ${path}.nodePath is invalid`);
+  if (!["image", "video", "audio", "font", "script", "embed", "binary"].includes(ref.role as string)) throw new TypeError(`forme-render-terminal: ${path}.role is invalid`);
+  for (const optional of ["sourcePath", "urlSuffix"] as const) if (ref[optional] !== undefined && typeof ref[optional] !== "string") throw new TypeError(`forme-render-terminal: ${path}.${optional} is invalid`);
+}
+
+function validateDocumentNode(value: unknown, path: string, depth: number): void {
+  if (depth > MAX_AST_DEPTH) throw new TypeError(`forme-render-terminal: ${path} exceeds the structural limit`);
+  const node = recordValue(value, path);
+  if (typeof node.type !== "string") throw new TypeError(`forme-render-terminal: ${path}.type is invalid`);
+  const children = (keys: readonly string[]) => {
+    assertOnlyKeys(node, ["type", ...keys], path);
+    const values = arrayValue(node.children, `${path}.children`);
+    for (let index = 0; index < values.length; index++) validateDocumentNode(values[index], `${path}.children[${index}]`, depth + 1);
+  };
+  const string = (key: string) => { if (typeof node[key] !== "string") throw new TypeError(`forme-render-terminal: ${path}.${key} must be a string`); };
+  const nullableString = (key: string) => { if (node[key] !== null && typeof node[key] !== "string") throw new TypeError(`forme-render-terminal: ${path}.${key} must be a string or null`); };
+  switch (node.type) {
+    case "document": case "paragraph": case "blockquote": case "list_item": case "emphasis": case "strong": case "strikethrough": case "table_cell":
+      children(["children"]); break;
+    case "heading":
+      children(["level", "children"]);
+      if (!Number.isInteger(node.level) || (node.level as number) < 1 || (node.level as number) > 6) throw new TypeError(`forme-render-terminal: ${path}.level is invalid`);
+      break;
+    case "code_block": assertOnlyKeys(node, ["type", "language", "value"], path); nullableString("language"); string("value"); break;
+    case "list":
+      children(["ordered", "start", "tight", "children"]);
+      if (typeof node.ordered !== "boolean" || typeof node.tight !== "boolean" || (node.start !== null && !Number.isSafeInteger(node.start))) throw new TypeError(`forme-render-terminal: ${path} list fields are invalid`);
+      break;
+    case "task_item": children(["checked", "children"]); if (typeof node.checked !== "boolean") throw new TypeError(`forme-render-terminal: ${path}.checked is invalid`); break;
+    case "thematic_break": case "hard_break": case "soft_break": assertOnlyKeys(node, ["type"], path); break;
+    case "raw_block": case "raw_inline": assertOnlyKeys(node, ["type", "format", "value"], path); string("format"); string("value"); break;
+    case "table":
+      children(["align", "children"]);
+      if (arrayValue(node.align, `${path}.align`).some(item => item !== null && item !== "left" && item !== "right" && item !== "center")) throw new TypeError(`forme-render-terminal: ${path}.align is invalid`);
+      break;
+    case "table_row": children(["isHeader", "children"]); if (typeof node.isHeader !== "boolean") throw new TypeError(`forme-render-terminal: ${path}.isHeader is invalid`); break;
+    case "text": case "code_span": assertOnlyKeys(node, ["type", "value"], path); string("value"); break;
+    case "link": children(["destination", "title", "children"]); string("destination"); nullableString("title"); break;
+    case "image": assertOnlyKeys(node, ["type", "destination", "title", "alt"], path); string("destination"); nullableString("title"); string("alt"); break;
+    case "autolink": assertOnlyKeys(node, ["type", "destination", "isEmail"], path); string("destination"); if (typeof node.isEmail !== "boolean") throw new TypeError(`forme-render-terminal: ${path}.isEmail is invalid`); break;
+    default: throw new TypeError(`forme-render-terminal: ${path}.type ${JSON.stringify(node.type)} is unknown`);
+  }
+}
+
+function snapshotTerminalBuffer(value: unknown): TerminalBuffer {
+  const safe = snapshotJson(value, "TerminalBuffer", snapshotBudget(50_000, MAX_TERMINAL_TEXT_BYTES + MAX_EVIDENCE_BYTES)) as unknown;
+  const buffer = recordValue(safe, "TerminalBuffer");
+  assertOnlyKeys(buffer, ["route", "text", "usedStyle", "usedAssets", "degradations", "provenance"], "TerminalBuffer");
+  if (typeof buffer.route !== "string" || typeof buffer.text !== "string") throw new TypeError("forme-render-terminal/package: TerminalBuffer route/text is invalid");
+  const styles = arrayValue(buffer.usedStyle, "TerminalBuffer.usedStyle");
+  if (styles.some(value => typeof value !== "string")) throw new TypeError("forme-render-terminal/package: TerminalBuffer.usedStyle is invalid");
+  const assets = arrayValue(buffer.usedAssets, "TerminalBuffer.usedAssets");
+  if (assets.some(value => typeof value !== "string" || !isLogicalIdShape(value))) throw new TypeError("forme-render-terminal/package: TerminalBuffer.usedAssets is invalid");
+  const degradations = arrayValue(buffer.degradations, "TerminalBuffer.degradations");
+  for (let index = 0; index < degradations.length; index++) validateDegradation(degradations[index], `TerminalBuffer.degradations[${index}]`);
+  validateOutputProvenance(buffer.provenance, "TerminalBuffer.provenance");
+  return safe as TerminalBuffer;
+}
+
+function validateDegradation(value: unknown, path: string): void {
+  const item = recordValue(value, path);
+  if (typeof item.code !== "string" || typeof item.message !== "string") throw new TypeError(`forme-render-terminal/package: ${path} is invalid`);
+  switch (item.code) {
+    case "style-property-dropped": assertOnlyKeys(item, ["code", "ruleId", "propertyKind", "message"], path); if (typeof item.ruleId !== "string" || typeof item.propertyKind !== "string") throw new TypeError(`forme-render-terminal/package: ${path} is invalid`); break;
+    case "interactivity-dropped": assertOnlyKeys(item, ["code", "islandId", "message"], path); if (item.islandId !== null && typeof item.islandId !== "string") throw new TypeError(`forme-render-terminal/package: ${path} is invalid`); break;
+    case "raw-node-dropped": assertOnlyKeys(item, ["code", "format", "nodePath", "message"], path); if (typeof item.format !== "string") throw new TypeError(`forme-render-terminal/package: ${path} is invalid`); validateIndexPath(item.nodePath, `${path}.nodePath`); break;
+    case "asset-reference-dropped": assertOnlyKeys(item, ["code", "asset", "nodePath", "message"], path); if (typeof item.asset !== "string" || !isLogicalIdShape(item.asset)) throw new TypeError(`forme-render-terminal/package: ${path} is invalid`); validateIndexPath(item.nodePath, `${path}.nodePath`); break;
+    default: throw new TypeError(`forme-render-terminal/package: ${path}.code is unknown`);
+  }
+}
+
+function validateIndexPath(value: unknown, path: string): void {
+  const indexes = arrayValue(value, path);
+  if (indexes.length > MAX_AST_DEPTH || indexes.some(index => !Number.isSafeInteger(index) || (index as number) < 0)) throw new TypeError(`forme-render-terminal/package: ${path} is invalid`);
+}
+
+function validateOutputProvenance(value: unknown, path: string): void {
+  const provenance = recordValue(value, path);
+  assertOnlyKeys(provenance, ["contributors", "revision"], path);
+  if (typeof provenance.revision !== "string" || !isRevisionIdShape(provenance.revision)) throw new TypeError(`forme-render-terminal/package: ${path}.revision is invalid`);
+  const contributors = arrayValue(provenance.contributors, `${path}.contributors`);
+  for (let index = 0; index < contributors.length; index++) {
+    const contributor = recordValue(contributors[index], `${path}.contributors[${index}]`);
+    assertOnlyKeys(contributor, ["identity", "revision"], `${path}.contributors[${index}]`);
+    if (typeof contributor.identity !== "string" || !isLogicalIdShape(contributor.identity) || typeof contributor.revision !== "string" || !isRevisionIdShape(contributor.revision)) throw new TypeError(`forme-render-terminal/package: ${path}.contributors[${index}] is invalid`);
+  }
+}
+
+function recordValue(value: unknown, path: string): Record<string, unknown> {
+  if (value === null || typeof value !== "object" || Array.isArray(value)) throw new TypeError(`forme-render-terminal: ${path} must be an object`);
+  return value as Record<string, unknown>;
+}
+
+function arrayValue(value: unknown, path: string): readonly unknown[] {
+  if (!Array.isArray(value)) throw new TypeError(`forme-render-terminal: ${path} must be an array`);
+  return value;
+}
+
+function assertOnlyKeys(value: Record<string, unknown>, allowed: readonly string[], path: string): void {
+  const set = new Set(allowed);
+  for (const key of Object.keys(value)) if (!set.has(key)) throw new TypeError(`forme-render-terminal: ${path}.${key} is unknown`);
+  for (const key of allowed) if (!(key in value) && !["sourcePath", "urlSuffix"].includes(key)) throw new TypeError(`forme-render-terminal: ${path}.${key} is required`);
+}
+
 function exactObject(value: unknown, keys: readonly string[], path: string): ReadonlyMap<string, unknown> {
   if (value === undefined) return new Map();
   if (utilTypes.isProxy(value) || value === null || typeof value !== "object" || Array.isArray(value)) throw new TypeError(`forme-render-terminal: ${path} must be a plain object`);
   const prototype = Object.getPrototypeOf(value);
   if (prototype !== Object.prototype && prototype !== null) throw new TypeError(`forme-render-terminal: ${path} must be a plain object`);
-  if (Object.getOwnPropertySymbols(value).length !== 0) throw new TypeError(`forme-render-terminal: ${path} must not contain symbol keys`);
   const allowed = new Set(keys);
   const result = new Map<string, unknown>();
-  for (const key of Object.getOwnPropertyNames(value)) {
+  let count = 0;
+  for (const key in value) {
+    if (!Object.prototype.hasOwnProperty.call(value, key)) throw new TypeError(`forme-render-terminal: ${path}.${key} must be an own property`);
+    if (++count > keys.length) throw new TypeError(`forme-render-terminal: ${path} has too many fields`);
     if (!allowed.has(key)) throw new TypeError(`forme-render-terminal: ${path}.${key} is unknown`);
+  }
+  for (const key of keys) {
     const descriptor = Object.getOwnPropertyDescriptor(value, key)!;
+    if (descriptor === undefined) continue;
     if (!("value" in descriptor)) throw new TypeError(`forme-render-terminal: ${path}.${key} must not be an accessor`);
     result.set(key, descriptor.value);
   }
@@ -423,16 +659,43 @@ function portableRoute(route: string): string {
   return parts.join("/");
 }
 
-function arraySnapshot(value: unknown, maxLength: number, path: string): readonly unknown[] {
-  if (utilTypes.isProxy(value) || !Array.isArray(value) || value.length > maxLength) throw new TypeError(`forme-render-terminal: ${path} must be a bounded array`);
-  if (Object.getOwnPropertySymbols(value).length !== 0) throw new TypeError(`forme-render-terminal: ${path} must not contain symbol keys`);
-  const result: unknown[] = [];
-  const names = Object.getOwnPropertyNames(value);
-  for (const name of names) {
-    if (name === "length") continue;
-    if (!/^(0|[1-9][0-9]*)$/.test(name) || Number(name) >= value.length) throw new TypeError(`forme-render-terminal: ${path}.${name} is unknown`);
+function registerPortableFile(
+  path: string,
+  route: string,
+  filePaths: Map<string, string>,
+  directoryPaths: Set<string>,
+): void {
+  const folded = path.toLowerCase();
+  const previous = filePaths.get(folded);
+  if (previous !== undefined || directoryPaths.has(folded)) {
+    throw new Error(`forme-render-terminal/package: portable path collision between ${JSON.stringify(previous ?? "an existing parent path")} and ${JSON.stringify(route)}`);
   }
-  for (let index = 0; index < value.length; index++) {
+  const segments = folded.split("/");
+  let ancestor = "";
+  for (let index = 0; index < segments.length - 1; index++) {
+    ancestor = ancestor.length === 0 ? segments[index]! : `${ancestor}/${segments[index]!}`;
+    const ancestorRoute = filePaths.get(ancestor);
+    if (ancestorRoute !== undefined) {
+      throw new Error(`forme-render-terminal/package: portable path collision between ${JSON.stringify(ancestorRoute)} and ${JSON.stringify(route)}`);
+    }
+    directoryPaths.add(ancestor);
+  }
+  filePaths.set(folded, route);
+}
+
+function arraySnapshot(value: unknown, maxLength: number, path: string): readonly unknown[] {
+  if (utilTypes.isProxy(value) || !Array.isArray(value)) throw new TypeError(`forme-render-terminal: ${path} must be a bounded array`);
+  const lengthDescriptor = Object.getOwnPropertyDescriptor(value, "length");
+  const length = lengthDescriptor !== undefined && "value" in lengthDescriptor ? lengthDescriptor.value : -1;
+  if (!Number.isSafeInteger(length) || length < 0 || length > maxLength) throw new TypeError(`forme-render-terminal: ${path} must be a bounded array`);
+  const result: unknown[] = [];
+  let count = 0;
+  for (const name in value) {
+    if (!Object.prototype.hasOwnProperty.call(value, name)) throw new TypeError(`forme-render-terminal: ${path}.${name} must be an own property`);
+    if (++count > length) throw new TypeError(`forme-render-terminal: ${path} has too many elements`);
+    if (!/^(0|[1-9][0-9]*)$/.test(name) || Number(name) >= length) throw new TypeError(`forme-render-terminal: ${path}.${name} is unknown`);
+  }
+  for (let index = 0; index < length; index++) {
     const descriptor = Object.getOwnPropertyDescriptor(value, String(index));
     if (descriptor === undefined || !("value" in descriptor)) throw new TypeError(`forme-render-terminal: ${path}[${index}] must be a data element`);
     result.push(descriptor.value);
@@ -456,7 +719,29 @@ function validatePortableSegments(parts: readonly string[], field: string, final
 }
 
 function safeText(value: string): string {
-  return value.replace(/[\u0000-\u0008\u000b-\u001f\u007f-\u009f]/g, "");
+  return value
+    .replace(/\r\n?/g, "\n")
+    .replace(/[\u0000-\u0008\u000b-\u001f\u007f-\u009f]/g, "")
+    .replace(/\p{Cf}/gu, "");
+}
+
+function boundedConcat(parts: readonly string[]): string {
+  let length = 0;
+  for (const part of parts) {
+    length += part.length;
+    if (length > MAX_TERMINAL_TEXT_BYTES) throw new Error("forme-render-terminal: rendered terminal text exceeds the 8 MiB limit");
+  }
+  return parts.join("");
+}
+
+function boundedJoin(parts: readonly string[], separator = ""): string {
+  if (parts.length === 0) return "";
+  let length = separator.length * (parts.length - 1);
+  for (const part of parts) {
+    length += part.length;
+    if (length > MAX_TERMINAL_TEXT_BYTES) throw new Error("forme-render-terminal: rendered terminal text exceeds the 8 MiB limit");
+  }
+  return parts.join(separator);
 }
 
 function compare(left: string, right: string): number { return left < right ? -1 : left > right ? 1 : 0; }
