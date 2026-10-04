@@ -7,7 +7,12 @@
  * never opens a file, socket, environment variable, or subprocess.
  */
 
-export { canonicalAuthoringProject, createAuthoringProject, validateAuthoringProject } from "./project.js";
+export {
+  canonicalAuthoringProject,
+  createAuthoringProject,
+  validateAuthoringProject,
+  validateAuthoringRevision,
+} from "./project.js";
 export { openAuthoringSession } from "./session.js";
 export { AuthoringError } from "./error.js";
 export type { AuthoringErrorCode } from "./error.js";
@@ -18,10 +23,13 @@ export type {
   AuthoringDocumentStatus,
   AuthoringLimitOverrides,
   AuthoringLimits,
+  AuthoringPublicationCommand,
+  AuthoringPublicationRecord,
   AuthoringProject,
   AuthoringSession,
   AuthoringSiteConfig,
   AuthoringStorage,
+  AuthoringWorkflow,
   CreateAuthoringProjectInput,
   OpenAuthoringSessionOptions,
   StoredAuthoringState,

@@ -2,10 +2,12 @@
 
 import { canonicalJson, canonicalJsonByteLength, encodeCanonicalJson } from "./canonical.js";
 import { AuthoringError, invalidState } from "./error.js";
-import { resolveLimits, validateAuthoringProject } from "./project.js";
+import { resolveLimits, validateAuthoringProject, validateAuthoringRevision } from "./project.js";
 import type {
   AuthoringCommand,
   AuthoringLimits,
+  AuthoringPublicationCommand,
+  AuthoringPublicationRecord,
   AuthoringProject,
   AuthoringSession,
   AuthoringStorage,
@@ -40,10 +42,7 @@ function storageFailure(error: unknown, signal?: AbortSignal): never {
 }
 
 function validateRevision(value: unknown, source: "stored" | "adapter"): string {
-  if (typeof value !== "string" || value.length < 1 || value.length > 1_024 || /[\u0000-\u001f\u007f]/.test(value)) {
-    invalidState(`${source} revision is invalid`);
-  }
-  return value;
+  try { return validateAuthoringRevision(value); } catch { invalidState(`${source} revision is invalid`); }
 }
 
 function exactObject(value: unknown, keys: readonly string[]): Record<string, unknown> {
@@ -183,6 +182,29 @@ function validateCommand(value: unknown): AuthoringCommand {
   return snapshot;
 }
 
+function validatePublicationCommand(value: unknown): AuthoringPublicationCommand {
+  if (value === null || typeof value !== "object") {
+    throw new AuthoringError("INVALID_COMMAND", "Publication commands must be plain objects.");
+  }
+  let fields: Record<string, unknown>;
+  try { fields = exactObject(value, ["type", "publication"]); } catch {
+    throw new AuthoringError("INVALID_COMMAND", "The publication command has missing or unknown fields.");
+  }
+  if (fields.type !== "record-publication") {
+    throw new AuthoringError("INVALID_COMMAND", "The publication command type is not supported.");
+  }
+  let publication: Record<string, unknown>;
+  try {
+    publication = exactObject(fields.publication, ["authoringRevision", "manifestSha256", "targetId"]);
+  } catch {
+    throw new AuthoringError("INVALID_COMMAND", "The publication record has missing or unknown fields.");
+  }
+  return {
+    type: "record-publication",
+    publication: publication as unknown as AuthoringPublicationRecord,
+  };
+}
+
 function adapterRevision(value: unknown): string {
   let fields: Record<string, unknown>;
   try { fields = exactObject(value, ["revision"]); } catch {
@@ -268,6 +290,34 @@ class Session implements AuthoringSession {
     return this.#enqueue(async () => {
       abortIfNeeded(signal);
       const project = applyCommand(this.project, command, this.#limits);
+      const prefix = [...this.#state.history.slice(0, this.#state.cursor + 1), project];
+      const history = prefix.length > this.#state.historyLimit
+        ? prefix.slice(prefix.length - this.#state.historyLimit)
+        : prefix;
+      await this.#persist({ ...this.#state, history, cursor: history.length - 1 }, signal);
+    });
+  }
+
+  dispatchAtRevision(
+    expectedRevision: string,
+    command: AuthoringPublicationCommand,
+    signal?: AbortSignal,
+  ): Promise<void> {
+    return this.#enqueue(async () => {
+      abortIfNeeded(signal);
+      const expected = validateRevision(expectedRevision, "stored");
+      if (this.#revision !== expected) {
+        throw new AuthoringError("STORAGE_CONFLICT", "The authoring project changed before publication was recorded.");
+      }
+      const checked = validatePublicationCommand(command);
+      if (checked.publication.authoringRevision !== expected) {
+        throw new AuthoringError("INVALID_COMMAND", "The publication record does not match the expected authoring revision.");
+      }
+      const project = validateAuthoringProject({
+        ...this.project,
+        workflow: { lastPublication: checked.publication },
+        documents: this.project.documents.map((document) => ({ ...document, status: "published" as const })),
+      }, this.#limits);
       const prefix = [...this.#state.history.slice(0, this.#state.cursor + 1), project];
       const history = prefix.length > this.#state.historyLimit
         ? prefix.slice(prefix.length - this.#state.historyLimit)

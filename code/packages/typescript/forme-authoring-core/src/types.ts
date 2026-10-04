@@ -14,6 +14,16 @@ export interface AuthoringSiteConfig {
   readonly themeId: string;
 }
 
+export interface AuthoringPublicationRecord {
+  readonly authoringRevision: string;
+  readonly manifestSha256: string;
+  readonly targetId: string;
+}
+
+export interface AuthoringWorkflow {
+  readonly lastPublication: AuthoringPublicationRecord | null;
+}
+
 export type AuthoringDocumentStatus = "draft" | "published";
 
 export interface AuthoringDocument {
@@ -29,6 +39,7 @@ export interface AuthoringProject {
   readonly projectId: string;
   readonly title: string;
   readonly site: AuthoringSiteConfig;
+  readonly workflow: AuthoringWorkflow;
   readonly documents: readonly AuthoringDocument[];
   readonly activeDocumentId: string | null;
 }
@@ -95,6 +106,11 @@ export type AuthoringCommand =
       readonly documentId: string | null;
     };
 
+export interface AuthoringPublicationCommand {
+  readonly type: "record-publication";
+  readonly publication: AuthoringPublicationRecord;
+}
+
 /** Bytes and an opaque compare-and-swap token returned by a host adapter. */
 export interface StoredAuthoringState {
   readonly bytes: Uint8Array;
@@ -129,6 +145,11 @@ export interface AuthoringSession {
   readonly canRedo: boolean;
   readonly storageRevision: string;
   dispatch(command: AuthoringCommand, signal?: AbortSignal): Promise<void>;
+  dispatchAtRevision(
+    expectedRevision: string,
+    command: AuthoringPublicationCommand,
+    signal?: AbortSignal,
+  ): Promise<void>;
   undo(signal?: AbortSignal): Promise<void>;
   redo(signal?: AbortSignal): Promise<void>;
 }

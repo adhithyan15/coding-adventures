@@ -1,0 +1,24 @@
+{
+  "name": "@coding-adventures/forme-authoring-publish",
+  "version": "0.1.0",
+  "description": "Exact-revision reviewed publication coordinator for Forme authoring",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-authoring-core": "file:../forme-authoring-core",
+    "@coding-adventures/forme-deploy-runner-core": "file:../forme-deploy-runner-core"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.1",
+    "@vitest/coverage-v8": "^4.1.11",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.11"
+  }
+}

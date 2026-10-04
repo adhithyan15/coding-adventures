@@ -16,7 +16,7 @@
 | Crash-safe autosave and persistent undo/redo | Implemented | The injected compare-and-swap adapter, immutable transactions, and canonical persisted history pass failure, conflict, cancellation, and restart tests. |
 | Accessible block editor and configuration UI | Implemented | `forme-authoring-editor` provides keyboard-complete settings, document, block, history, and declarative plugin-slot controls over the durable core. |
 | Pipeline-backed preview | Implemented | `forme-authoring-preview` runs exact persisted revisions through the real FM03/FM07 watch and artifact path with cancellation, last-good retention, and bounded diagnostics. |
-| Reviewed publish workflow | Active | FM-B065 composes FM08 without exposing tokens or target files to editor plugins. |
+| Reviewed publish workflow | Implemented | `forme-authoring-publish` composes exact-revision product builds with FM08 validation, closed target review, cleanup, and durable acknowledgement without exposing host authority. |
 | Installable desktop shell | Pending | FM-B066 packages the proven workflow and first-run experience. |
 
 ## 1. Purpose and delivery boundary
@@ -138,6 +138,11 @@ interface AuthoringStorage {
 `load` returns immutable bytes plus an opaque revision. The core treats the
 revision only as a comparison token. `compareAndSwap` must atomically reject a
 stale expected revision; it must never silently overwrite another session.
+Every storage success, session snapshot, and publication record applies the
+same exact validator to that token: it is non-empty, at most 1,024 Unicode
+scalars and 2,048 UTF-16 code units, and contains no control, bidirectional,
+or lone-surrogate code point. Valid text, including spaces, is preserved
+without trimming or normalization.
 Adapters own filesystem, OPFS, or platform capabilities and must publish new
 bytes atomically. The core performs no ambient I/O.
 
@@ -307,6 +312,72 @@ platform facilities, renders the complete target and ownership decision, and
 requires an explicit publish action. A failed or indeterminate deployment does
 not mark documents published. A successful deployment records the manifest
 identity and authoring revision in the project workflow metadata.
+
+The durable project contains a closed `workflow` record whose
+`lastPublication` value is either `null` or the exact
+`authoringRevision`, base64 SHA-256 `manifestSha256`, and reviewed `targetId`
+from the most recent acknowledged publication. The authoring core exposes one
+semantic `record-publication` command and an exact-revision dispatch operation.
+That operation executes in the session's serialized transaction queue and
+rejects unless the current storage revision still equals the expected source
+revision. Its single compare-and-swap write records the publication and changes
+every document in that exact snapshot to `published`; validation, conflict,
+cancellation, or storage failure leaves both workflow metadata and document
+statuses unchanged. Undo and redo retain their existing durable semantics, so
+reverting the local acknowledgement never asserts that an external deployment
+was rolled back.
+
+`forme-authoring-publish` is the capability-free coordinator for this
+boundary. It snapshots and validates the session, captures one injected build
+method and one injected reviewed-target method, and permits only one active
+explicit action. The target's public review is closed bounded data: a portable
+target identity, a human label, and a destination summary. Credentials,
+filesystem paths, environment access, network clients, target configuration
+files, and arbitrary callbacks are not fields in the review or the builder
+input. The opaque host target owns those capabilities and receives only a
+validated FM08 manifest, a manifest-bound content store, the computed manifest
+identity, and a cancellation signal.
+
+Admission is reserved before any caller-controlled session accessor runs, so
+re-entry cannot start a second action or dispose a half-admitted one. Session
+properties are read through a bounded descriptor walk after rejecting proxy
+links; adapter, preparation, and review schemas require data fields. Unknown
+enumerable fields are rejected under the closed schemas; symbols and
+non-enumerable fields are ignored because only copied required data leaves the
+boundary. Concurrent disposal callers share one settlement and wait for the
+same active cleanup.
+
+The build adapter receives a deeply frozen copy of the exact project and its
+storage revision. It must run the real product pipeline and returns a separately
+releasable manifest/content preparation. Before deployment, the coordinator
+parses and freezes the manifest through FM08, computes the identity from its
+canonical bytes, preflights every referenced content digest, confirms the
+session revision is still exact, and then closes the build boundary. The
+coordinator never accepts a target-selected manifest identity or silently
+substitutes preview output. The target receives a manifest-restricted store,
+not the raw builder store: every target read re-verifies size and digest, and
+retirement revokes the wrapper, so mutable or retained builder content cannot
+escape the reviewed manifest.
+
+A rejected build promise is a known pre-preparation failure. Once the builder
+resolves, however, an absent or malformed own retirement method leaves cleanup
+unknown; the coordinator classifies that result as indeterminate and poisons
+retry just like an invoked retirement failure.
+
+The reviewed target resolves one closed result: `success`, `failed`, or
+`indeterminate`, always attributed to the supplied manifest identity. `failed`
+is permitted only when the adapter knows no external commit occurred;
+malformed success data, loss of acknowledgement after a possible commit, or an
+adapter-defined uncertain result is `indeterminate`. Rejection is treated as a
+closed failure only because the injected boundary contract guarantees rejection
+before its commit point; hosts must convert post-commit rejection to an
+indeterminate resolution. On success, preparation retirement completes before
+the exact-revision metadata transaction. A retirement or metadata failure after
+external success is indeterminate and never marks documents published. An
+indeterminate coordinator is poisoned against retry until the shell reloads and
+reconciles target state. A failed build or known pre-commit target failure may
+be retried. Diagnostics are bounded closed data and never include adapter
+exceptions, credentials, paths, or target configuration.
 
 ## 8. Desktop shell and first run
 

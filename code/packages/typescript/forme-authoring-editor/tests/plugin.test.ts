@@ -13,6 +13,7 @@ const project: AuthoringProject = Object.freeze({
   projectId: "018f47a0-9b6c-7def-9234-56789abcdef0",
   title: "Demo",
   site: Object.freeze({ baseUrl: null, themeId: "forme-classless" }),
+  workflow: Object.freeze({ lastPublication: null }),
   documents: Object.freeze([]),
   activeDocumentId: null,
 });
