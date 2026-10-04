@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Fixed
+
+- Drain live page and asset inputs concurrently before asset-dependent page
+  rewriting, avoiding a bounded sibling-stream deadlock at 128 shared-source
+  pages. Page snapshots now have an explicit 65,536-page safety limit.
+
 ### Added
 
 - Verify `RenderedPage.usedIslands` against exact island-module asset uses,

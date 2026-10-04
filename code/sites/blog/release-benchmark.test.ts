@@ -55,7 +55,7 @@ describe("Forme release benchmark", () => {
     ["unchanged incremental build", build({ buildId: "clean" })],
     ["broad incremental parse", build({ parseHits: 998, parseMisses: 2 })],
   ])("rejects %s", (_name, malformed) => {
-    const clean = build();
+    const clean = build({ buildId: "clean", parseHits: 0, parseMisses: 1_000 });
     expect(() => evaluateBenchmark(clean, malformed, {
       cleanElapsedMs: 1,
       incrementalElapsedMs: 1,

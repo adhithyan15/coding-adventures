@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### Fixed
+
+- Batch same-turn reads across default and named live inputs into one shared
+  permit yield. Multi-input collectors can now drain sibling bounded branches
+  concurrently without either exceeding the pipeline permit budget or
+  deadlocking when both 64-value windows fill.
+- Preserve an already-requested cancellation as the run outcome when awaited
+  iterator cleanup subsequently rejects.
+
 ### Added
 
 - Resolve `StageRef` values through an optional FM02 `PluginStageLoader`

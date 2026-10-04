@@ -36,10 +36,10 @@ describe("live product scheduling", () => {
         ["emit-articles", "success"],
         ["emit-surface", "success"],
       ]);
-      expect(warm.stages.map(stage => [stage.instanceId, stage.outcome])).toEqual([
+      const warmOutcomes = warm.stages.map(stage => [stage.instanceId, stage.outcome]);
+      expect(warmOutcomes.filter(([instanceId]) =>
+        instanceId !== "parse" && instanceId !== "attach-interactivity")).toEqual([
         ["source", "skipped"],
-        ["parse", "skipped"],
-        ["attach-interactivity", "success"],
         ["resolve-assets", "success"],
         ["route", "skipped"],
         ["collect-posts", "skipped"],
@@ -51,7 +51,14 @@ describe("live product scheduling", () => {
         ["emit-articles", "skipped"],
         ["emit-surface", "skipped"],
       ]);
+      expect([
+        [["parse", "skipped"], ["attach-interactivity", "success"]],
+        [["parse", "success"], ["attach-interactivity", "skipped"]],
+      ]).toContainEqual(warmOutcomes.slice(1, 3));
       expect(warm.stages.every(stage => stage.inputChanged === false)).toBe(true);
+      expect(warm.stages.filter(stage =>
+        stage.instanceId === "parse" || stage.instanceId === "attach-interactivity")
+        .every(stage => stage.cacheMisses === 0)).toBe(true);
       expect(warm.stages.filter(stage => stage.outcome === "skipped")
         .every(stage => stage.cacheHits === 1 && stage.cacheMisses === 0)).toBe(true);
       expect(warm.buildId).toBe(clean.buildId);

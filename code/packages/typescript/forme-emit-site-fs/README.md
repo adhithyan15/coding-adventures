@@ -19,10 +19,12 @@ emitSiteFs.produces   // Kinds.DeployArtifact
 emitSiteFs.capabilities // ["filesystem:write"]
 ```
 
-The default input and named asset input are both materialized by the
-orchestrator, so the emitter runs exactly once. This preserves the page/asset
-split established by the resolver and loader without frontmatter, event-bus,
-or hidden-filesystem side channels.
+The default page stream and named asset stream remain live, bounded inputs and
+the emitter runs exactly once. It drains both sibling streams concurrently,
+snapshots at most 65,536 pages, and only then performs the asset-dependent page
+rewrite. This avoids circular backpressure when both branches share an
+upstream source while preserving the resolver/loader split without
+frontmatter, event-bus, or hidden-filesystem side channels.
 
 ## Output policy
 
@@ -76,6 +78,7 @@ npm run test:coverage
 ```
 
 Tests include a real orchestrator pipeline with explicit default and `assets`
-wires, a fresh-process persistent-cache replay after deleting the output tree,
+wires, a 256-page shared-source regression for bounded sibling-stream
+backpressure, a fresh-process persistent-cache replay after deleting the output tree,
 real temporary-directory writes, deterministic fingerprint and manifest
 checks, suffix preservation, and failure-path coverage.

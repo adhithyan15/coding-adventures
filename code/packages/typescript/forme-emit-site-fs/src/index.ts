@@ -141,35 +141,58 @@ const emitSiteFs = defineStage({
     const files = new Map<string, Uint8Array>();
     const assetsByPath = new Map<string, PlannedAsset>();
     const outputPaths = new Map<string, string>();
-    for await (const asset of assetStream) {
-      ctx.cancellation.throwIfCancelled();
-      const planned = planAsset(asset, assetDir, publicPathPrefix);
-      if (assetsById.has(asset.identity)) {
-        throw new Error(
-          `forme-emit-site-fs: duplicate asset identity ${JSON.stringify(asset.identity)}`,
-        );
+    const assetIterator = assetStream[Symbol.asyncIterator]();
+    const pageIterator = pageStream[Symbol.asyncIterator]();
+    const collectAssets = (async () => {
+      for await (const asset of { [Symbol.asyncIterator]: () => assetIterator }) {
+        ctx.cancellation.throwIfCancelled();
+        const planned = planAsset(asset, assetDir, publicPathPrefix);
+        if (assetsById.has(asset.identity)) {
+          throw new Error(
+            `forme-emit-site-fs: duplicate asset identity ${JSON.stringify(asset.identity)}`,
+          );
+        }
+        const existingAsset = assetsByPath.get(planned.entry.path);
+        const collisionKey = portableCollisionKey(planned.entry.path);
+        const existingPortablePath = outputPaths.get(collisionKey);
+        if (existingPortablePath !== undefined && existingPortablePath !== planned.entry.path) {
+          throw new Error(
+            `forme-emit-site-fs: portable asset path collision between ${JSON.stringify(existingPortablePath)} and ${JSON.stringify(planned.entry.path)}`,
+          );
+        }
+        if (existingAsset !== undefined && (
+          !sameBytes(existingAsset.bytes, planned.bytes) ||
+          existingAsset.role !== planned.role ||
+          existingAsset.entry.mime !== planned.entry.mime
+        )) {
+          throw new Error(`forme-emit-site-fs: incompatible asset path collision at ${JSON.stringify(planned.entry.path)}`);
+        }
+        assetsById.set(asset.identity, planned);
+        if (existingAsset === undefined) {
+          assetsByPath.set(planned.entry.path, planned);
+          outputPaths.set(collisionKey, planned.entry.path);
+        }
+        if (asset.role !== "script" && !files.has(planned.entry.path)) files.set(planned.entry.path, planned.bytes);
       }
-      const existingAsset = assetsByPath.get(planned.entry.path);
-      const collisionKey = portableCollisionKey(planned.entry.path);
-      const existingPortablePath = outputPaths.get(collisionKey);
-      if (existingPortablePath !== undefined && existingPortablePath !== planned.entry.path) {
-        throw new Error(
-          `forme-emit-site-fs: portable asset path collision between ${JSON.stringify(existingPortablePath)} and ${JSON.stringify(planned.entry.path)}`,
-        );
+    })();
+    const collectPages = (async () => {
+      const pages: PageSnapshot[] = [];
+      for await (const page of { [Symbol.asyncIterator]: () => pageIterator }) {
+        ctx.cancellation.throwIfCancelled();
+        if (pages.length >= MAX_SITE_PAGES) {
+          throw new Error(`forme-emit-site-fs: site exceeds the ${MAX_SITE_PAGES}-page safety limit`);
+        }
+        pages.push(snapshotPage(page));
       }
-      if (existingAsset !== undefined && (
-        !sameBytes(existingAsset.bytes, planned.bytes) ||
-        existingAsset.role !== planned.role ||
-        existingAsset.entry.mime !== planned.entry.mime
-      )) {
-        throw new Error(`forme-emit-site-fs: incompatible asset path collision at ${JSON.stringify(planned.entry.path)}`);
-      }
-      assetsById.set(asset.identity, planned);
-      if (existingAsset === undefined) {
-        assetsByPath.set(planned.entry.path, planned);
-        outputPaths.set(collisionKey, planned.entry.path);
-      }
-      if (asset.role !== "script" && !files.has(planned.entry.path)) files.set(planned.entry.path, planned.bytes);
+      return pages;
+    })();
+    let pageSnapshots: PageSnapshot[];
+    try {
+      [, pageSnapshots] = await Promise.all([collectAssets, collectPages]);
+    } catch (error) {
+      try { await assetIterator.return?.(); } catch { /* preserve the collection failure */ }
+      try { await pageIterator.return?.(); } catch { /* preserve the collection failure */ }
+      throw error;
     }
 
     const publicPathById = new Map(
@@ -178,9 +201,8 @@ const emitSiteFs = defineStage({
     const routes: DeployRoute[] = [];
     const selectedScriptAssets = new Set<LogicalId>();
     let pageCount = 0;
-    for await (const page of pageStream) {
+    for (const snapshot of pageSnapshots) {
       ctx.cancellation.throwIfCancelled();
-      const snapshot = snapshotPage(page);
       const rewrittenHtml = rewriteAssetPlaceholdersFromSnapshot(snapshot, publicPathById);
       const moduleTags = islandModuleTags(snapshot, assetsById, selectedScriptAssets);
       const html = appendModuleTags(rewrittenHtml, moduleTags, snapshot.route);
@@ -504,6 +526,7 @@ function islandModuleTags(
 
 const MAX_PAGE_ISLANDS = 256;
 const MAX_PAGE_ASSETS = 65_536;
+const MAX_SITE_PAGES = 65_536;
 const PACKAGE_NAME = /^(?:@[a-z0-9][a-z0-9._-]*\/[a-z0-9][a-z0-9._-]*|[a-z0-9][a-z0-9._-]*)$/;
 const EXPORT_NAME = /^[A-Za-z_][A-Za-z0-9_]{0,63}$/;
 const SHA256 = /^[0-9a-f]{64}$/;
