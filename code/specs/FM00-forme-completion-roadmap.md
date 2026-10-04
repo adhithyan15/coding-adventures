@@ -1,6 +1,6 @@
 # Forme Completion Roadmap
 
-> **Status:** Living delivery backlog, last prioritized 2026-10-03.
+> **Status:** Living delivery backlog, last prioritized 2026-10-04.
 > This roadmap turns the north-star in [FM00](FM00-forme-vision.md) into
 > merge-sized work. Update it whenever implementation work discovers a new
 > gap, and reprioritize it after every merged Forme pull request.
@@ -18,7 +18,7 @@
 | AOT compiler | Static v0 implemented | [FM06](FM06-forme-aot-compiler.md) |
 | CLI and development server | Headless v0 implemented | [FM07](FM07-forme-cli-dev-server.md) |
 | Deploy runner | Headless v0 implemented | [FM08](FM08-forme-deploy-runner.md) |
-| Authoring shell | Capability-free first-run product composition implemented; native desktop host active | [FM09](FM09-forme-authoring-shell.md) |
+| Authoring shell | First-run native desktop product implemented; backend proof active | [FM09](FM09-forme-authoring-shell.md) |
 
 ## What “complete” means
 
@@ -76,8 +76,9 @@ The implementation now forms a complete headless v0 product:
   validated trees, while the GitHub Pages adapter publishes independently owned
   prefixes through non-forced ref updates. Installed third-party plugins now
   share that product path through persistent least-authority grants, native
-  sandboxes, three runner SDKs, and bounded live storage watches. The
-  native authoring host and installable desktop acceptance remain.
+  sandboxes, three runner SDKs, and bounded live storage watches. The native
+  Tauri authoring host now packages the capability-free first-run product with
+  crash-safe storage, exact isolated builds, preview, and atomic local publish.
 - The CLI now persists per-invocation cache entries and topology-scoped
   materialized checkpoints through a containment-checked project cache.
   Filesystem sources publish validated external-state manifests, and successful
@@ -184,10 +185,10 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 59 | FM-B064 | done | Run exact pipeline-backed live preview | Depends on FM-B009 and FM-B063. `forme-authoring-preview` validates and freezes each persisted revision, materializes it through a narrow isolated host boundary, runs the real FM03/FM07 watch path, cancels/coalesces stale work, retains last-good output, and emits bounded revision-bound diagnostics. |
 | 60 | FM-B065 | done | Compose the reviewed authoring publish workflow | Depends on FM-B012 and FM-B064. `forme-authoring-publish` snapshots and builds one exact persisted revision, validates and preflights its FM08 manifest/content set, publishes through one closed reviewed target without exposing credentials, retires preparation, and atomically records the revision/manifest/target while marking only that unchanged snapshot published. Failed or indeterminate work never changes publication metadata; uncertainty poisons retries until reconciliation. |
 | 61 | FM-B067 | done | Compose the capability-free first-run authoring shell | Depends on completed FM-B065. `forme-authoring-shell` owns the accessible first-run, workspace, preview, target-review, explicit-publish, failure, and disposal UI state while accepting only bounded reviewed data plus injected session/preview/publish handles; the editor never receives host capabilities. |
-| 62 | FM-B068 | active | Package the Tauri authoring host | Depends on FM-B067. Add the installable Tauri window and narrow native commands for contained crash-safe project storage, exact product materialization/preview, reviewed target configuration/publication, first-draft identity creation, and clean-profile product acceptance without a CLI. |
-| 63 | FM-B066 | blocked | Package the first-run desktop authoring product | Completion milestone depending on FM-B067 and FM-B068. An installable local shell creates a project, selects a theme, edits and previews a first post, configures a supported target, and publishes without source/config editing, git, or a command line. |
-| 64 | FM-B016 | blocked | Complete the authoring shell | Completion milestone depending on FM-B062–FM-B066. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
-| 65 | FM-B017 | blocked | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
+| 62 | FM-B068 | done | Package the Tauri authoring host | Depends on FM-B067. The installable Tauri window exposes only narrow commands for contained crash-safe project storage, exact sandboxed product materialization/preview, reviewed atomic local publication, first-draft identity creation, and clean-profile product acceptance without a CLI. |
+| 63 | FM-B066 | done | Package the first-run desktop authoring product | Completion milestone depending on FM-B067 and FM-B068. The installable local shell creates a project, selects a theme, edits and previews a first post, configures a supported target, and publishes without source/config editing, git, or a command line. |
+| 64 | FM-B016 | done | Complete the authoring shell | Completion milestone depending on FM-B062–FM-B066. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
+| 65 | FM-B017 | active | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
 | 66 | FM-B018 | blocked | Close release-quality gates | Depends on FM-B016 and FM-B017. Add 1,000-page clean/incremental benchmarks, Lighthouse/accessibility budgets, package/API versioning, migration docs, security review, and supported-platform CI. |
 | 67 | FM-B029 | later | Make duplicate PR CI cancellation and merge state unambiguous | One commit has one authoritative required CI suite; branch updates cancel obsolete runs completely; cancelling a redundant push suite cannot leave a stale final gate or misleading failed rollup; babysitting tooling identifies required checks and the current head. |
 
@@ -204,10 +205,10 @@ is proven, but it does not block FM-B004.
 Headless v0 is complete. Extensible v1 is complete through FM-B048 →
 FM-B049/FM-B050 → FM-B053 → FM-B054 → FM-B055 → FM-B051 → FM-B052 →
 FM-B056 → FM-B057 → FM-B058 → FM-B015. Interactivity is complete through
-FM-B059 → FM-B060 → FM-B061 → FM-B013. The shortest remaining path to
-Authoring v1 is the FM-B062 → FM-B063 → FM-B064 → FM-B065 → FM-B067 →
-FM-B068 → FM-B066 → FM-B016 authoring path and FM-B017 backend proof, followed by the FM-B018
-release-quality gate.
+FM-B059 → FM-B060 → FM-B061 → FM-B013. The authoring path is complete through
+FM-B062 → FM-B063 → FM-B064 → FM-B065 → FM-B067 → FM-B068 → FM-B066 →
+FM-B016. The shortest remaining path to Authoring v1 is FM-B017's backend proof
+followed by the FM-B018 release-quality gate.
 
 ## Discovery log
 
@@ -317,6 +318,7 @@ work.
 | 2026-10-04 | A resolved builder value without a valid own retirement method was classified as a retryable build failure even though it could already own privileged preparation resources that the coordinator could not release. | Treat any resolved preparation without a capturable retirement hook as indeterminate cleanup, poison retries, and retain retryable build failure only for rejected builder promises before a preparation is returned. |
 | 2026-10-04 | FM-B066 still combined a hostile browser-facing lifecycle and explicit-publication UI with native filesystem durability, product-pipeline process authority, credential custody, Tauri IPC containment, packaging, and clean-profile installation acceptance. No Tauri package or dependency exists yet, while the four capability-free authoring layers are ready to compose and test independently. | Split FM-B066 into FM-B067 (bounded injected first-run shell UI) and FM-B068 (native Tauri host plus installable product acceptance), retain FM-B066 as their completion milestone, and activate only FM-B067. |
 | 2026-10-04 | FM-B067 composed the four capability-free layers without acquiring host authority. Local file-linked React packages each installed their own peer copy during dependency bootstrap, which would create invalid cross-package hooks in tests unless the browser bundler selected one realm. | Close FM-B067 after adding bounded host/workspace admission, explicit exact-session preview, complete two-step target review, shared late-settlement disposal, adversarial coverage, and React/React DOM deduplication. Activate FM-B068 as the only native product boundary. |
+| 2026-10-04 | FM-B068's native boundary had to preserve the capability-free shell while owning durable bytes, isolated product execution, loopback serving, target selection, and atomic publication. Security review additionally exposed ACL, identity-race, cleanup-state, process-budget, and Rust/TypeScript validation-parity requirements that ordinary happy-path packaging would miss. | Close FM-B068, FM-B066, and FM-B016 after adding the installable Tauri product, exact bundled worker plus audited macOS launcher, canonical shared storage corpus, lifecycle admission, capability-only preview, descriptor-relative identity-bound local publication, ACL/resource/cleanup hardening, clean-profile product acceptance, and mandatory security review. Activate FM-B017 as the only highest-priority ready item. |
 
 ## Loop protocol
 

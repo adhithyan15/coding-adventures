@@ -1,0 +1,16 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "main-window",
+  "description": "The Forme authoring window receives only the closed application commands.",
+  "windows": ["main"],
+  "permissions": [
+    "allow-project-load",
+    "allow-project-compare-and-swap",
+    "allow-identity-create",
+    "allow-preview-build",
+    "allow-target-configure",
+    "allow-target-list",
+    "allow-target-publish",
+    "allow-workspace-dispose"
+  ]
+}

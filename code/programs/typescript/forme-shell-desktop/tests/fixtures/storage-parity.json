@@ -1,0 +1,157 @@
+[
+  {
+    "name": "valid empty project",
+    "valid": true,
+    "value": {
+      "cursor": 0,
+      "history": [
+        {
+          "activeDocumentId": null,
+          "documents": [],
+          "projectId": "01952c0d-7e63-7000-8000-000000000068",
+          "schemaVersion": 1,
+          "site": { "baseUrl": null, "themeId": "forme-classless" },
+          "title": "Parity fixture",
+          "workflow": { "lastPublication": null }
+        }
+      ],
+      "historyLimit": 1,
+      "schemaVersion": 1
+    }
+  },
+  {
+    "name": "ECMAScript trim rejects a byte-order mark around a title",
+    "valid": false,
+    "value": {
+      "cursor": 0,
+      "history": [
+        {
+          "activeDocumentId": null,
+          "documents": [],
+          "projectId": "01952c0d-7e63-7000-8000-000000000068",
+          "schemaVersion": 1,
+          "site": { "baseUrl": null, "themeId": "forme-classless" },
+          "title": "\uFEFFParity fixture\uFEFF",
+          "workflow": { "lastPublication": null }
+        }
+      ],
+      "historyLimit": 1,
+      "schemaVersion": 1
+    }
+  },
+  {
+    "name": "ECMAScript email whitespace does not include next-line",
+    "valid": true,
+    "value": {
+      "cursor": 0,
+      "history": [
+        {
+          "activeDocumentId": "01952c0d-7e63-7000-8000-000000000069",
+          "documents": [
+            {
+              "body": {
+                "children": [
+                  {
+                    "children": [
+                      { "destination": "local\u0085part@example.com", "isEmail": true, "type": "autolink" }
+                    ],
+                    "type": "paragraph"
+                  }
+                ],
+                "type": "document"
+              },
+              "id": "01952c0d-7e63-7000-8000-000000000069",
+              "slug": "welcome",
+              "status": "draft",
+              "title": "Welcome"
+            }
+          ],
+          "projectId": "01952c0d-7e63-7000-8000-000000000068",
+          "schemaVersion": 1,
+          "site": { "baseUrl": null, "themeId": "forme-classless" },
+          "title": "Parity fixture",
+          "workflow": { "lastPublication": null }
+        }
+      ],
+      "historyLimit": 1,
+      "schemaVersion": 1
+    }
+  },
+  {
+    "name": "email autolink requires a local part",
+    "valid": false,
+    "value": {
+      "cursor": 0,
+      "history": [
+        {
+          "activeDocumentId": "01952c0d-7e63-7000-8000-000000000069",
+          "documents": [
+            {
+              "body": {
+                "children": [
+                  {
+                    "children": [
+                      { "destination": "@example.com", "isEmail": true, "type": "autolink" }
+                    ],
+                    "type": "paragraph"
+                  }
+                ],
+                "type": "document"
+              },
+              "id": "01952c0d-7e63-7000-8000-000000000069",
+              "slug": "welcome",
+              "status": "draft",
+              "title": "Welcome"
+            }
+          ],
+          "projectId": "01952c0d-7e63-7000-8000-000000000068",
+          "schemaVersion": 1,
+          "site": { "baseUrl": null, "themeId": "forme-classless" },
+          "title": "Parity fixture",
+          "workflow": { "lastPublication": null }
+        }
+      ],
+      "historyLimit": 1,
+      "schemaVersion": 1
+    }
+  },
+  {
+    "name": "ordered list start must be a JavaScript safe integer",
+    "valid": false,
+    "value": {
+      "cursor": 0,
+      "history": [
+        {
+          "activeDocumentId": "01952c0d-7e63-7000-8000-000000000069",
+          "documents": [
+            {
+              "body": {
+                "children": [
+                  {
+                    "children": [{ "children": [], "type": "list_item" }],
+                    "ordered": true,
+                    "start": 9007199254740992,
+                    "tight": false,
+                    "type": "list"
+                  }
+                ],
+                "type": "document"
+              },
+              "id": "01952c0d-7e63-7000-8000-000000000069",
+              "slug": "welcome",
+              "status": "draft",
+              "title": "Welcome"
+            }
+          ],
+          "projectId": "01952c0d-7e63-7000-8000-000000000068",
+          "schemaVersion": 1,
+          "site": { "baseUrl": null, "themeId": "forme-classless" },
+          "title": "Parity fixture",
+          "workflow": { "lastPublication": null }
+        }
+      ],
+      "historyLimit": 1,
+      "schemaVersion": 1
+    }
+  }
+]
