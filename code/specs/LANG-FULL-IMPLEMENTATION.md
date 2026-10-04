@@ -1300,7 +1300,8 @@ backend immediately) come before the enabler-dependent items.
   shared with Dartmouth BASIC on native/LLVM/WASM/JVM/CLR/VM/JIT. Conditional
   statements retain that provenance only when every reachable exit proves the
   same slot; conditional value expressions retain it when their selector has no
-  procedure call and every reachable branch is independently proven; general
+  procedure call and every reachable branch is independently proven. Unary plus
+  preserves the same runtime-real proof while unary minus remains gated; general
   computed scalar `f64` formatting remains a follow-up.
   Unicode-aware BEAM strings remain.
 - ✅ **AL5** — switches (computed goto) + conditional designational expressions.
