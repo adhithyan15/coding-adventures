@@ -428,14 +428,17 @@ console.log(prose, nested);
         # +4: forme-sandbox-core plus the Linux, macOS, and Windows native
         # launcher packages that close FM02's operating-system boundary.
         # +1: forme-interactivity-ir, the bounded FM05 data contract.
+        # +1: forme-authoring-core, the durable FM09 project/session boundary.
         # -1: the standalone checklist-app was retired; checklists live in
         # Trestle (mosaic-pkg-checklist).
-        self.assertEqual(summary.total_projects, 485)
+        self.assertEqual(summary.total_projects, 486)
         self.assertEqual(summary.shared_projects, 301)
         self.assertEqual(summary.inherited_root_dir, 130)
         self.assertEqual(summary.inherited_out_dir, 133)
-        self.assertEqual(summary.standalone_emit_projects, 155)
-        self.assertEqual(summary.isolated_standalone_projects, 155)
+        # forme-authoring-core is an isolated standalone emitter, adding one
+        # to both standalone inventories.
+        self.assertEqual(summary.standalone_emit_projects, 156)
+        self.assertEqual(summary.isolated_standalone_projects, 156)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
         # 94: +1 for script-ductus. Nothing the package SHIPS touches a Node
@@ -551,8 +554,9 @@ console.log(prose, nested);
         # +1: forme-plugin-runner-conformance locks its compiler and test graph.
         # +4: the sandbox core and OS packages lock their compiler/test graphs.
         # +1: forme-interactivity-ir locks its compiler and test graph.
+        # +1: forme-authoring-core locks its compiler and test graph.
         # -1: the retired checklist-app took its lockfile with it.
-        self.assertEqual(summary.locked_compilers, 484)
+        self.assertEqual(summary.locked_compilers, 485)
 
 
 if __name__ == "__main__":
