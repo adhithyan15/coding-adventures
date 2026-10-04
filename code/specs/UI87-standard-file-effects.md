@@ -508,10 +508,14 @@ Kotlin file. What differs is how Dart and Flutter shape the rest:
   compiled by that lane's `flutter analyze` and `flutter build linux` of every
   generated project.
 
-**Known gaps.** The libc calls have run on Linux x64 only; the macOS and
-Linux arm64 flag values and the macOS `stat` layout come from the system
-headers and are pinned by tests, but no Mac or arm64 machine has run them yet. The
-Windows save has been type-checked, not run.
+**Where the libc calls run.** The Flutter lane runs the headless harness
+on Linux x64 with every TaskApp build. The CI job `Flutter platform library`
+runs the same harness, through `tests/flutter_platform_effects.rs`, on a Mac
+(arm64), on Windows x64 and on Linux arm64 whenever a change can affect the
+Flutter runtime. So the macOS and Linux arm64 `open(2)` flag values, the
+macOS `stat` layout and the Windows save (`CreateFileW`, `FlushFileBuffers`,
+`MoveFileExW`) are exercised, not just pinned. On that job a runner without
+`dart` fails (`MOSAIC_REQUIRE_DART`) instead of skipping.
 
 ## 6. What this does not decide
 
