@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C324-pasporttu",
+    "language": "malayalam",
+    "chapter": 324,
+    "sequence": 15350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:734b79b577ba310a"
+  },
+  "findings": []
+}

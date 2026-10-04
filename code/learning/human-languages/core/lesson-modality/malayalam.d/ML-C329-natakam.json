@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C329-natakam",
+    "language": "malayalam",
+    "chapter": 329,
+    "sequence": 15620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc3ed71810f8182f"
+  },
+  "findings": []
+}

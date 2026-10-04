@@ -7,3 +7,5 @@
   so no blocker remains below B1.
 - `tests/level-gate.test.ts`: the climb history records Malayalam's climb to
   A2.
+- The fourth tranche (chapters 302-337) lifts Malayalam to 1,440 headwords and
+  272 verbs at or below A2.

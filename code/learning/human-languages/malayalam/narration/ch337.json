@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 337,
+  "title": "Chalk, Uniform, Essay, Principal, Tuition",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:07264d2406d32ccc",
+  "lessons": [
+    {
+      "id": "ML-C337-cokku",
+      "sequence": 16000,
+      "title": "ചോക്ക് (cōkkŭ) — chalk",
+      "headword": "ചോക്ക്",
+      "romanization": "cōkkŭ",
+      "gloss": "chalk",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a2a8436413141b5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for science, then the Malayalam for history."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചോക്ക്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചോക്ക് — cōkkŭ — \"chalk\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cōkkŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cōkkŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cōkkŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cōkkŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say cōkkŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *cōkkŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for science, then the Malayalam for history, then say cōkkŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for science, then the Malayalam for history, then say *cōkkŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചോക്ക് (cōkkŭ) mean? (\"Chalk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C337-yuniphom",
+      "sequence": 16010,
+      "title": "യൂണിഫോം (yūṇiphōṁ) — a uniform",
+      "headword": "യൂണിഫോം",
+      "romanization": "yūṇiphōṁ",
+      "gloss": "a uniform",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b2491cd74cd4730",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for history, then the Malayalam for chalk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: യൂണിഫോം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "യൂണിഫോം — yūṇiphōṁ — \"a uniform\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yūṇiphōṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yūṇiphōṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yūṇiphōṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yūṇiphōṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say yūṇiphōṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *yūṇiphōṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for history, then the Malayalam for chalk, then say yūṇiphōṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for history, then the Malayalam for chalk, then say *yūṇiphōṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does യൂണിഫോം (yūṇiphōṁ) mean? (\"A uniform\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C337-upanyasam",
+      "sequence": 16020,
+      "title": "ഉപന്യാസം (upanyāsaṁ) — an essay",
+      "headword": "ഉപന്യാസം",
+      "romanization": "upanyāsaṁ",
+      "gloss": "an essay",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eb052e8952f36fc9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for chalk, then the Malayalam for a uniform."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഉപന്യാസം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉപന്യാസം — upanyāsaṁ — \"an essay\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upanyāsaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upanyāsaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upanyāsaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upanyāsaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say upanyāsaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *upanyāsaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for chalk, then the Malayalam for a uniform, then say upanyāsaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for chalk, then the Malayalam for a uniform, then say *upanyāsaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഉപന്യാസം (upanyāsaṁ) mean? (\"An essay\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C337-prinsippal",
+      "sequence": 16030,
+      "title": "പ്രിൻസിപ്പൽ (prinsippal) — a principal (of a school)",
+      "headword": "പ്രിൻസിപ്പൽ",
+      "romanization": "prinsippal",
+      "gloss": "a principal (of a school)",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:48ad79ee34f1e27f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a uniform, then the Malayalam for an essay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പ്രിൻസിപ്പൽ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രിൻസിപ്പൽ — prinsippal — \"a principal (of a school)\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prinsippal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prinsippal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prinsippal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prinsippal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say prinsippal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *prinsippal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a uniform, then the Malayalam for an essay, then say prinsippal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a uniform, then the Malayalam for an essay, then say *prinsippal* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പ്രിൻസിപ്പൽ (prinsippal) mean? (\"A principal (of a school)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C337-tyusan",
+      "sequence": 16040,
+      "title": "ട്യൂഷൻ (ṭyūṣan) — tuition, private coaching",
+      "headword": "ട്യൂഷൻ",
+      "romanization": "ṭyūṣan",
+      "gloss": "tuition, private coaching",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0919f7dea99d7943",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an essay, then the Malayalam for a principal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ട്യൂഷൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ട്യൂഷൻ — ṭyūṣan — \"tuition, private coaching\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭyūṣan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭyūṣan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭyūṣan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭyūṣan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ṭyūṣan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ṭyūṣan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an essay, then the Malayalam for a principal, then say ṭyūṣan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an essay, then the Malayalam for a principal, then say *ṭyūṣan* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ട്യൂഷൻ (ṭyūṣan) mean? (\"Tuition, private coaching\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R337-first-pass-words-from-chapters-329-332",
+      "sequence": 16050,
+      "title": "Words from chapters 329-332 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 329-332",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4f9739fc4af4d2d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a principal and tuition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an article, a poem, a play, football, cricket",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an article, a poem, a play, football, cricket]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lid, a jar, a water pot, a sack, gold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lid, a jar, a water pot, a sack, gold]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a coconut scraper, a spatula, a clay water jug, a wire, wool",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a coconut scraper, a spatula, a clay water jug, a wire, wool]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a coconut shell, firewood, charcoal, ash, a sapling",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a coconut shell, firewood, charcoal, ash, a sapling]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An article? (ലേഖനം, lēkhanaṁ.) A poem? (കവിത, kavita.) A play? (നാടകം, nāṭakaṁ.) Football? (ഫുട്ബോൾ, phuṭbōḷ.) Cricket? (ക്രിക്കറ്റ്, krikkaṟṟŭ.) A lid? (മൂടി, mūṭi.) A jar? (ഭരണി, bharaṇi.) A water pot? (കുടം, kuṭaṁ.) A sack? (ചാക്ക്, cākkŭ.) Gold? (സ്വർണ്ണം, svarṇṇaṁ.) A coconut scraper? (ചിരവ, cirava.) A spatula? (ചട്ടുകം, caṭṭukaṁ.) A clay water jug? (കൂജ, kūja.) A wire? (കമ്പി, kampi.) Wool? (കമ്പിളി, kampiḷi.) A coconut shell? (ചിരട്ട, ciraṭṭa.) Firewood? (വിറക്, viṟakŭ.) Charcoal? (കരി, kari.) Ash? (ചാരം, cāraṁ.) A sapling? (തൈ, tai.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R337-second-pass-words-from-chapters-333-337",
+      "sequence": 16060,
+      "title": "Words from chapters 333-337 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 333-337",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:037ee0b34d2bc794",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a cashew nut and sugarcane."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cashew nut, sugarcane, a sickle, a bindi, a helmet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cashew nut, sugarcane, a sickle, a bindi, a helmet]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an employee, a boss, a manager, a company, a meeting",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an employee, a boss, a manager, a company, a meeting]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a degree, a subject, mathematics, homework, a letter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a degree, a subject, mathematics, homework, a letter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sale, a machine, farming, science, history",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sale, a machine, farming, science, history]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chalk, a uniform, an essay, a principal, tuition",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: chalk, a uniform, an essay, a principal, tuition]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A cashew nut? (കശുവണ്ടി, kaśuvaṇṭi.) Sugarcane? (കരിമ്പ്, karimpŭ.) A sickle? (അരിവാൾ, arivāḷ.) A bindi? (പൊട്ട്, poṭṭŭ.) A helmet? (ഹെൽമെറ്റ്, helmeṟṟŭ.) An employee? (ജീവനക്കാരൻ, jīvanakkāran.) A boss? (മുതലാളി, mutalāḷi.) A manager? (മാനേജർ, mānējar.) A company? (കമ്പനി, kampani.) A meeting? (യോഗം, yōgaṁ.) A degree? (ബിരുദം, birudaṁ.) A subject? (വിഷയം, viṣayaṁ.) Mathematics? (കണക്ക്, kaṇakkŭ.) Homework? (ഗൃഹപാഠം, gṛhapāṭhaṁ.) A letter? (അക്ഷരം, akṣaraṁ.) A sale? (വിൽപ്പന, vilppana.) A machine? (യന്ത്രം, yantraṁ.) Farming? (കൃഷി, kṛṣi.) Science? (ശാസ്ത്രം, śāstraṁ.) History? (ചരിത്രം, caritraṁ.) Chalk? (ചോക്ക്, cōkkŭ.) A uniform? (യൂണിഫോം, yūṇiphōṁ.) An essay? (ഉപന്യാസം, upanyāsaṁ.) A principal? (പ്രിൻസിപ്പൽ, prinsippal.) Tuition? (ട്യൂഷൻ, ṭyūṣan.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 317,
+  "title": "Alone, Anyway, For no reason, Not at all, Barely",
+  "label": "ch:ml-alone-anyway-for-no-reason-not-at-all-barely",
+  "canDo": "I can say alone, anyway, for no reason, not at all and barely.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "ML-C317-kasticcu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 317: I can say alone, anyway, for no reason, not at all and barely.",
+    "assesses": [
+      "ML-LEX-C317-KARANAM317-03",
+      "ML-LEX-C317-KARANAM317-04",
+      "ML-LEX-C317-KARANAM317-05"
+    ]
+  }
+}

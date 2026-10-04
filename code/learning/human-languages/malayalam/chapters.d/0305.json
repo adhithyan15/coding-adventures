@@ -1,0 +1,19 @@
+{
+  "chapter": 305,
+  "title": "To deposit, To withdraw, To join, To meet, To visit",
+  "label": "ch:ml-to-deposit-to-withdraw-to-join-to-meet-to-visit",
+  "canDo": "I can say to deposit, to withdraw, to join, to meet and to visit.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C305-sandarsikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 305: I can say to deposit, to withdraw, to join, to meet and to visit.",
+    "assesses": [
+      "ML-LEX-C305-KRIYA305-03",
+      "ML-LEX-C305-KRIYA305-04",
+      "ML-LEX-C305-KRIYA305-05"
+    ]
+  }
+}

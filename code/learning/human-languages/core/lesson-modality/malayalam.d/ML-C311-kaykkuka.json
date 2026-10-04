@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C311-kaykkuka",
+    "language": "malayalam",
+    "chapter": 311,
+    "sequence": 14690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c3b7e6fa0708fcb"
+  },
+  "findings": []
+}

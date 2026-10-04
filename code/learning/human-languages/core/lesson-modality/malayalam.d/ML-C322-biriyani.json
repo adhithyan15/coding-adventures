@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C322-biriyani",
+    "language": "malayalam",
+    "chapter": 322,
+    "sequence": 15230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a04f57e766134b8"
+  },
+  "findings": []
+}

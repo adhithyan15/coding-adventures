@@ -1,0 +1,19 @@
+{
+  "chapter": 328,
+  "title": "Bench, Shelf, Curtain, Axe, Spade",
+  "label": "ch:ml-bench-shelf-curtain-axe-spade",
+  "canDo": "I can say a bench, a shelf, a curtain, an axe and a spade.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-R328-second-pass-words-from-chapters-324-328",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 328: I can say a bench, a shelf, a curtain, an axe and a spade.",
+    "assesses": [
+      "ML-LEX-C328-VASTU328-03",
+      "ML-LEX-C328-VASTU328-04",
+      "ML-LEX-C328-VASTU328-05"
+    ]
+  }
+}

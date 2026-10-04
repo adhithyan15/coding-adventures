@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C321-satyasandhamaya",
+    "language": "malayalam",
+    "chapter": 321,
+    "sequence": 15220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9cc6f22d131e263c"
+  },
+  "findings": []
+}

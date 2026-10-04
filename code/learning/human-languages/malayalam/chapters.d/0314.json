@@ -1,0 +1,19 @@
+{
+  "chapter": 314,
+  "title": "Century, Decade, Calendar, Long ago, At dawn",
+  "label": "ch:ml-century-decade-calendar-long-ago-at-dawn",
+  "canDo": "I can say a century, a decade, a calendar, long ago and at dawn.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ML-C314-pularcce",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 314: I can say a century, a decade, a calendar, long ago and at dawn.",
+    "assesses": [
+      "ML-LEX-C314-SAMAYAM314-03",
+      "ML-LEX-C314-SAMAYAM314-04",
+      "ML-LEX-C314-SAMAYAM314-05"
+    ]
+  }
+}

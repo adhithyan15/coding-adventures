@@ -1,0 +1,11 @@
+{
+  "id": "ML-C315-sthalam",
+  "pathSegment": "ML-PATH-315-STHALAM315",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-315-STHALAM315",
+      "order": 2
+    }
+  ]
+}

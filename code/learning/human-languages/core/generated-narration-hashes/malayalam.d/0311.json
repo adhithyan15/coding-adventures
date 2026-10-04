@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:db691b227650db72",
+  "lessonIds": [
+    "ML-C311-talotuka",
+    "ML-C311-otukkuka",
+    "ML-C311-polikkuka",
+    "ML-C311-kaykkuka",
+    "ML-C311-pataruka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch311.txt",
+  "json": "malayalam/narration/ch311.json",
+  "textHash": "fnv1a64:28f42118a9db97a5",
+  "jsonHash": "fnv1a64:ee5b247f705c22c1",
+  "findings": []
+}

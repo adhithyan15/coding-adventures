@@ -1,0 +1,11 @@
+{
+  "id": "ML-C326-dipavali",
+  "pathSegment": "ML-PATH-326-VASTU326",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-326-VASTU326",
+      "order": 1
+    }
+  ]
+}

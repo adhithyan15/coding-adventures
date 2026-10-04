@@ -1,0 +1,11 @@
+{
+  "id": "ML-C321-satyasandhamaya",
+  "pathSegment": "ML-PATH-321-GUNAM321",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-321-GUNAM321",
+      "order": 4
+    }
+  ]
+}

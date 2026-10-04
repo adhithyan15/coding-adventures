@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:67ebdbc8940ddcbc",
+  "lessonIds": [
+    "ML-C315-samsthanam",
+    "ML-C315-videsam",
+    "ML-C315-sthalam",
+    "ML-C315-disa",
+    "ML-C315-vatakku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch315.txt",
+  "json": "malayalam/narration/ch315.json",
+  "textHash": "fnv1a64:39ea8c09a5429b6f",
+  "jsonHash": "fnv1a64:c617301d93935012",
+  "findings": []
+}

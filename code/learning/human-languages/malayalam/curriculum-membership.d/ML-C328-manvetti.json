@@ -1,0 +1,11 @@
+{
+  "id": "ML-C328-manvetti",
+  "pathSegment": "ML-PATH-328-VASTU328",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-328-VASTU328",
+      "order": 4
+    }
+  ]
+}

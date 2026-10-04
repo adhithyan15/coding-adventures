@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:0569957270823a21",
+  "lessonIds": [
+    "ML-C316-bhumi",
+    "ML-C316-prakrti",
+    "ML-C316-atirtti",
+    "ML-C316-pancayattu",
+    "ML-C316-nattinpuram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch316.txt",
+  "json": "malayalam/narration/ch316.json",
+  "textHash": "fnv1a64:8e092785ab63fdfd",
+  "jsonHash": "fnv1a64:6ecf1ec3028a50d9",
+  "findings": []
+}

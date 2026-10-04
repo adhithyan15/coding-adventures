@@ -1,0 +1,19 @@
+{
+  "chapter": 325,
+  "title": "Baby, Person, Woman, Man, Young man",
+  "label": "ch:ml-baby-person-woman-man-young-man",
+  "canDo": "I can say a baby, a person, a woman, a man and a young man.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C325-ceruppakkaran",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 325: I can say a baby, a person, a woman, a man and a young man.",
+    "assesses": [
+      "ML-LEX-C325-VASTU325-03",
+      "ML-LEX-C325-VASTU325-04",
+      "ML-LEX-C325-VASTU325-05"
+    ]
+  }
+}

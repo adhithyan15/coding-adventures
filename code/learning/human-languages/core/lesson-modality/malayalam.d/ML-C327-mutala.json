@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C327-mutala",
+    "language": "malayalam",
+    "chapter": 327,
+    "sequence": 15490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:088be584a1fe7aea"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C307-valaruka",
+    "language": "malayalam",
+    "chapter": 307,
+    "sequence": 14450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3de4a171787806ba"
+  },
+  "findings": []
+}

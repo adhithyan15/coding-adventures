@@ -1,0 +1,11 @@
+{
+  "id": "ML-C317-ottum",
+  "pathSegment": "ML-PATH-317-KARANAM317",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-317-KARANAM317",
+      "order": 3
+    }
+  ]
+}

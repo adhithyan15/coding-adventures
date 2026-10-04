@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C325-al",
+    "language": "malayalam",
+    "chapter": 325,
+    "sequence": 15390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f7235c88f66ceae"
+  },
+  "findings": []
+}

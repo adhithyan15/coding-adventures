@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-333-VASTU333",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a cashew nut, sugarcane, a sickle, a bindi and a helmet.",
+  "prerequisites": []
+}

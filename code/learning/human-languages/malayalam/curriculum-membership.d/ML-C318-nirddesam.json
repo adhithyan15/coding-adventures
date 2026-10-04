@@ -1,0 +1,11 @@
+{
+  "id": "ML-C318-nirddesam",
+  "pathSegment": "ML-PATH-318-KARANAM318",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-318-KARANAM318",
+      "order": 4
+    }
+  ]
+}

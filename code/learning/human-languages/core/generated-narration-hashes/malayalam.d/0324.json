@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:dd1f32fa6deff189",
+  "lessonIds": [
+    "ML-C324-rekha",
+    "ML-C324-sarttiphikkarru",
+    "ML-C324-pasporttu",
+    "ML-C324-visa",
+    "ML-C324-insuransu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch324.txt",
+  "json": "malayalam/narration/ch324.json",
+  "textHash": "fnv1a64:3c6a145f111850ac",
+  "jsonHash": "fnv1a64:610f0bd57c297dc2",
+  "findings": []
+}

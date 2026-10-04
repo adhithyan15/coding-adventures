@@ -1,0 +1,19 @@
+{
+  "chapter": 331,
+  "title": "Coconut scraper, Spatula, Clay water jug, Wire, Wool",
+  "label": "ch:ml-coconut-scraper-spatula-clay-water-jug-wire-wool",
+  "canDo": "I can say a coconut scraper, a spatula, a clay water jug, a wire and wool.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C331-kampili",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 331: I can say a coconut scraper, a spatula, a clay water jug, a wire and wool.",
+    "assesses": [
+      "ML-LEX-C331-VASTU331-03",
+      "ML-LEX-C331-VASTU331-04",
+      "ML-LEX-C331-VASTU331-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:09c1a6f3e2370a41",
+  "lessonIds": [
+    "ML-C333-kasuvanti",
+    "ML-C333-karimpu",
+    "ML-C333-arival",
+    "ML-C333-pottu",
+    "ML-C333-helmerru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch333.txt",
+  "json": "malayalam/narration/ch333.json",
+  "textHash": "fnv1a64:8c48d1c27bbf4013",
+  "jsonHash": "fnv1a64:08d1462fb52272f5",
+  "findings": []
+}

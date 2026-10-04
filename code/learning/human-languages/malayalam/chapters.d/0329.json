@@ -1,0 +1,19 @@
+{
+  "chapter": 329,
+  "title": "Article, Poem, Play, Football, Cricket",
+  "label": "ch:ml-article-poem-play-football-cricket",
+  "canDo": "I can say an article, a poem, a play, football and cricket.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C329-krikkarru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 329: I can say an article, a poem, a play, football and cricket.",
+    "assesses": [
+      "ML-LEX-C329-VASTU329-03",
+      "ML-LEX-C329-VASTU329-04",
+      "ML-LEX-C329-VASTU329-05"
+    ]
+  }
+}

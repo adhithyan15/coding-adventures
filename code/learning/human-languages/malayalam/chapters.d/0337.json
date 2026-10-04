@@ -1,0 +1,19 @@
+{
+  "chapter": 337,
+  "title": "Chalk, Uniform, Essay, Principal, Tuition",
+  "label": "ch:ml-chalk-uniform-essay-principal-tuition",
+  "canDo": "I can say chalk, a uniform, an essay, a principal and tuition.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-R337-second-pass-words-from-chapters-333-337",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 337: I can say chalk, a uniform, an essay, a principal and tuition.",
+    "assesses": [
+      "ML-LEX-C337-JOLI337-03",
+      "ML-LEX-C337-JOLI337-04",
+      "ML-LEX-C337-JOLI337-05"
+    ]
+  }
+}

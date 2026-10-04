@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C318-vicaram",
+    "language": "malayalam",
+    "chapter": 318,
+    "sequence": 15030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a31fcf2ffe23216"
+  },
+  "findings": []
+}

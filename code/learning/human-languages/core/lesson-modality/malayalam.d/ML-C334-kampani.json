@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C334-kampani",
+    "language": "malayalam",
+    "chapter": 334,
+    "sequence": 15880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6b714c3f3e12a28"
+  },
+  "findings": []
+}

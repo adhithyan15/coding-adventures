@@ -1,0 +1,19 @@
+{
+  "chapter": 332,
+  "title": "Coconut shell, Firewood, Charcoal, Ash, Sapling",
+  "label": "ch:ml-coconut-shell-firewood-charcoal-ash-sapling",
+  "canDo": "I can say a coconut shell, firewood, charcoal, ash and a sapling.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C332-tai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 332: I can say a coconut shell, firewood, charcoal, ash and a sapling.",
+    "assesses": [
+      "ML-LEX-C332-VASTU332-03",
+      "ML-LEX-C332-VASTU332-04",
+      "ML-LEX-C332-VASTU332-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:07264d2406d32ccc",
+  "lessonIds": [
+    "ML-C337-cokku",
+    "ML-C337-yuniphom",
+    "ML-C337-upanyasam",
+    "ML-C337-prinsippal",
+    "ML-C337-tyusan",
+    "ML-R337-first-pass-words-from-chapters-329-332",
+    "ML-R337-second-pass-words-from-chapters-333-337"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch337.txt",
+  "json": "malayalam/narration/ch337.json",
+  "textHash": "fnv1a64:b7f7ed86c02c8663",
+  "jsonHash": "fnv1a64:dcc836345d5e557d",
+  "findings": []
+}

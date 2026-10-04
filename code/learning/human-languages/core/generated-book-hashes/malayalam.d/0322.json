@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:647ee1ad78952f62",
+  "lessonIds": [
+    "ML-C322-biriyani",
+    "ML-C322-cappatti",
+    "ML-C322-porotta",
+    "ML-C322-kappa",
+    "ML-C322-cammanti"
+  ],
+  "tex": "malayalam/book/chapters/ch322-biryani-chapati-parotta-tapioca-chutney.tex"
+}

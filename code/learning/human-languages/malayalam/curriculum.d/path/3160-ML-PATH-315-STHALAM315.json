@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-315-STHALAM315",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "ML-EXT-315-STHALAM315"
+  ],
+  "after": []
+}

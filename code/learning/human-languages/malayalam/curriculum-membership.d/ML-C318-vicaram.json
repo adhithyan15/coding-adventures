@@ -1,0 +1,11 @@
+{
+  "id": "ML-C318-vicaram",
+  "pathSegment": "ML-PATH-318-KARANAM318",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-318-KARANAM318",
+      "order": 2
+    }
+  ]
+}

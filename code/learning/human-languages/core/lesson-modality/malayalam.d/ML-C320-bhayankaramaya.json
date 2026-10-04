@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C320-bhayankaramaya",
+    "language": "malayalam",
+    "chapter": 320,
+    "sequence": 15160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f7a2a6da4ef539e"
+  },
+  "findings": []
+}

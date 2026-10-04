@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C316-prakrti",
+    "language": "malayalam",
+    "chapter": 316,
+    "sequence": 14920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2065d1c9a3b899b"
+  },
+  "findings": []
+}

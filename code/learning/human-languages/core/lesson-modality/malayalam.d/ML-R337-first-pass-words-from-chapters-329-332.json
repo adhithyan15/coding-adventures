@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R337-first-pass-words-from-chapters-329-332",
+    "language": "malayalam",
+    "chapter": 337,
+    "sequence": 16050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4f9739fc4af4d2d1"
+  },
+  "findings": []
+}

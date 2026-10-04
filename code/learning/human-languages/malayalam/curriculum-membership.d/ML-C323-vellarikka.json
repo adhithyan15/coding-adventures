@@ -1,0 +1,11 @@
+{
+  "id": "ML-C323-vellarikka",
+  "pathSegment": "ML-PATH-323-VASTU323",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-323-VASTU323",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 321,
+  "title": "Spotted, Fragrant, Smelly, Noisy, Honest",
+  "label": "ch:ml-spotted-fragrant-smelly-noisy-honest",
+  "canDo": "I can say spotted, fragrant, smelly, noisy and honest.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ML-C321-satyasandhamaya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 321: I can say spotted, fragrant, smelly, noisy and honest.",
+    "assesses": [
+      "ML-LEX-C321-GUNAM321-03",
+      "ML-LEX-C321-GUNAM321-04",
+      "ML-LEX-C321-GUNAM321-05"
+    ]
+  }
+}

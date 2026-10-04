@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C314-kalantar",
+    "language": "malayalam",
+    "chapter": 314,
+    "sequence": 14830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0bfa925d9acd4c40"
+  },
+  "findings": []
+}

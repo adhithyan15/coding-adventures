@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:209dd3f8ccee764f",
+  "lessonIds": [
+    "ML-C333-kasuvanti",
+    "ML-C333-karimpu",
+    "ML-C333-arival",
+    "ML-C333-pottu",
+    "ML-C333-helmerru"
+  ],
+  "tex": "malayalam/book/chapters/ch333-cashew-nut-sugarcane-sickle-bindi-helmet.tex"
+}

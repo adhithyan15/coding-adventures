@@ -1,0 +1,11 @@
+{
+  "id": "ML-C314-patirrantu",
+  "pathSegment": "ML-PATH-314-SAMAYAM314",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-314-SAMAYAM314",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 319,
+  "title": "Online, Humility, Character, Arrogance, Strict",
+  "label": "ch:ml-online-humility-character-arrogance-strict",
+  "canDo": "I can say online, humility, character, arrogance and strict.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ML-R319-second-pass-words-from-chapters-315-319",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 319: I can say online, humility, character, arrogance and strict.",
+    "assesses": [
+      "ML-LEX-C319-GUNAM319-03",
+      "ML-LEX-C319-GUNAM319-04",
+      "ML-LEX-C319-GUNAM319-05"
+    ]
+  }
+}

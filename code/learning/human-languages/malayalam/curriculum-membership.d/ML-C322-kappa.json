@@ -1,0 +1,11 @@
+{
+  "id": "ML-C322-kappa",
+  "pathSegment": "ML-PATH-322-VASTU322",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-322-VASTU322",
+      "order": 3
+    }
+  ]
+}

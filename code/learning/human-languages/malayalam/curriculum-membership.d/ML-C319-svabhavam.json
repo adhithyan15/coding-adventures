@@ -1,0 +1,11 @@
+{
+  "id": "ML-C319-svabhavam",
+  "pathSegment": "ML-PATH-319-GUNAM319",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-319-GUNAM319",
+      "order": 2
+    }
+  ]
+}

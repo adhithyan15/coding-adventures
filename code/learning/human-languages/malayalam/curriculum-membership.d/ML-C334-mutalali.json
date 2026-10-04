@@ -1,0 +1,11 @@
+{
+  "id": "ML-C334-mutalali",
+  "pathSegment": "ML-PATH-334-JOLI334",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-334-JOLI334",
+      "order": 1
+    }
+  ]
+}

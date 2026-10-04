@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C312-rogi",
+    "language": "malayalam",
+    "chapter": 312,
+    "sequence": 14720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2859ecaa1b59417"
+  },
+  "findings": []
+}

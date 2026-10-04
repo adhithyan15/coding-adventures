@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:15b97eea1c7316c6",
+  "lessonIds": [
+    "ML-C323-tannimattan",
+    "ML-C323-cira",
+    "ML-C323-kararru",
+    "ML-C323-vellarikka",
+    "ML-C323-malli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch323.txt",
+  "json": "malayalam/narration/ch323.json",
+  "textHash": "fnv1a64:a1d05d8e674da673",
+  "jsonHash": "fnv1a64:6eed3487ca9f73fc",
+  "findings": []
+}

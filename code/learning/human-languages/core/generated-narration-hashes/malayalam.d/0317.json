@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:c1cc0dd8cafedb50",
+  "lessonIds": [
+    "ML-C317-taniye",
+    "ML-C317-entayalum",
+    "ML-C317-verute",
+    "ML-C317-ottum",
+    "ML-C317-kasticcu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch317.txt",
+  "json": "malayalam/narration/ch317.json",
+  "textHash": "fnv1a64:db88d7a0725a5fc5",
+  "jsonHash": "fnv1a64:008876c32cb39c4c",
+  "findings": []
+}

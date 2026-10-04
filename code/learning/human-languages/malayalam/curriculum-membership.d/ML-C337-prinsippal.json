@@ -1,0 +1,11 @@
+{
+  "id": "ML-C337-prinsippal",
+  "pathSegment": "ML-PATH-337-JOLI337",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-337-JOLI337",
+      "order": 3
+    }
+  ]
+}

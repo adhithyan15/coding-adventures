@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C329-krikkarru",
+    "language": "malayalam",
+    "chapter": 329,
+    "sequence": 15640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c44cef55d3ecd48"
+  },
+  "findings": []
+}

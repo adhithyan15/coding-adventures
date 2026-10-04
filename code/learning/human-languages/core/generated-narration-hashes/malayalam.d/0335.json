@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:237a8169458b86c4",
+  "lessonIds": [
+    "ML-C335-birudam",
+    "ML-C335-visayam",
+    "ML-C335-kanakku",
+    "ML-C335-grhapatham",
+    "ML-C335-aksaram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch335.txt",
+  "json": "malayalam/narration/ch335.json",
+  "textHash": "fnv1a64:7861db53d452c372",
+  "jsonHash": "fnv1a64:84ff397f63fda690",
+  "findings": []
+}

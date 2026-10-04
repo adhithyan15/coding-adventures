@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C306-raddakkuka",
+    "language": "malayalam",
+    "chapter": 306,
+    "sequence": 14410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:96a7965d8b1e72e8"
+  },
+  "findings": []
+}
