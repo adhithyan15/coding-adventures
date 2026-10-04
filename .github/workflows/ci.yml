@@ -3062,6 +3062,12 @@ jobs:
             MOSAIC_APP_STATE_PATH="$ui_state_path" flutter test test/task_app_lifecycle_test.dart
             MOSAIC_APP_STATE_PATH="$ui_state_path" MOSAIC_EXPECT_RESTORED=1 \
               flutter test test/task_app_lifecycle_test.dart
+            # UI87 §7.7: on Linux the platform library asks before a save
+            # replaces a file (GTK's chooser, as file_selector opens it, does
+            # not). Drive that "Replace it?" dialog with the widget tester.
+            cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-app-bindings/conformance/flutter-replace-dialog/replace_dialog_test.dart" \
+              test/mosaic_replace_dialog_test.dart
+            flutter test test/mosaic_replace_dialog_test.dart
           )
 
           # UI87 §7.7: every Flutter app gets Mosaic's platform library

@@ -401,6 +401,17 @@ Kotlin file. What differs is how Dart and Flutter shape the rest:
   `file_selector: '>=1.0.0 <2.0.0'` admits the pin. Extensions are passed bare,
   as one type group, or no group at all for "any file" (Linux refuses an
   empty group). A choice with no local path is a failure, not a cancel.
+- **Asking before replacing, on Linux.** NSSavePanel and the Windows dialog
+  ask before a save goes onto an existing name; GTK's chooser can, but
+  `file_selector_linux` never turns that on. So on Linux the library asks
+  itself (`mosaicConfirmReplacing`): when anything is at the chosen path -- a
+  link, even a dangling one, counts -- it asks "Replace "<name>"?" in a
+  Material dialog on the app's root navigator (`mosaicAskToReplace`), found
+  by walking the widget tree rather than through a key `main.dart` would have
+  to hand over. Replace saves; Cancel, or dismissing the dialog, is a cancel.
+  With no navigator to ask through the question throws, and the save fails
+  ("the file dialog failed") rather than replacing a file nobody was asked
+  about. The save itself is unchanged: it still replaces atomically.
 - **Files through libc, as Qt and SwiftUI do it.** dart:io cannot do what
   the save and the open need: its exclusive `createSync` closes the file it
   created, and `openSync` then reopens by path (`O_CREAT | O_TRUNC`, no
@@ -467,18 +478,22 @@ Kotlin file. What differs is how Dart and Flutter shape the rest:
   temporary's name (each fails the save and nothing is written through it),
   checks the ownership rule on real files, and hands a FIFO, a device and a
   directory straight to the descriptor read.
+  It also asks before replacing exactly when the dialog did not and
+  something is at the path (a dangling link included), names the file
+  rather than the path, treats "keep" as a cancel, and fails a save whose
+  question cannot be asked without touching the file.
+  `conformance/flutter-replace-dialog/` drives the dialog itself with the
+  widget tester (Replace, Cancel, dismissal, the navigator found without a
+  key, a throw with none), in CI's Flutter TaskApp lane.
   `tests/flutter_platform_effects.rs` runs it wherever `dart` is installed;
   the Flutter CI lane checks TaskApp's `main.dart` installs the library and
   runs the harness against TaskApp's generated files. The dialogs file is
   compiled by that lane's `flutter analyze` and `flutter build linux` of every
   generated project.
 
-**Known gaps.** `file_selector_linux` never turns on GTK's overwrite
-confirmation (off by default), so on Linux saving onto an existing name
-replaces it without asking; NSSavePanel and the Windows dialog ask. The macOS
-entitlement above belongs to whatever generates the macOS runner. Both are
-follow-ups. The libc calls have run on Linux x64 only; the macOS and Linux
-arm64 flag values and the macOS `stat` layout come from the system headers
+**Known gaps.** The macOS entitlement above belongs to whatever generates
+the macOS runner; it is a follow-up. The libc calls have run on Linux x64
+only; the macOS and Linux arm64 flag values and the macOS `stat` layout come from the system headers
 and are pinned by tests, but no Mac or arm64 machine has run them yet. The
 Windows save has been type-checked, not run.
 

@@ -1215,6 +1215,84 @@ void _checkFlagsOnThisKernel(Directory directory, MosaicOpenFlags flags) {
   File(fresh).deleteSync();
 }
 
+/// UI87 §7.7: where the dialog did not ask before replacing (Linux), the
+/// library asks; a question answered "keep" is a cancel.
+Future<void> checkConfirmReplacing(Directory directory) async {
+  final existing = '${directory.path}${Platform.pathSeparator}taken.json';
+  File(existing).writeAsStringSync('old');
+  final fresh = '${directory.path}${Platform.pathSeparator}fresh.json';
+  final asked = <String>[];
+  Future<bool> answer(bool replace) async => replace;
+  MosaicReplaceQuestion recording(bool replace) => (name) {
+    asked.add(name);
+    return answer(replace);
+  };
+
+  check(
+    await mosaicConfirmReplacing(existing, dialogAsked: false, ask: recording(true)) ==
+        existing,
+    'replacing an existing file when the person agrees',
+  );
+  check(asked.length == 1 && asked.single == 'taken.json', 'asked by name, not path');
+  check(
+    await mosaicConfirmReplacing(existing, dialogAsked: false, ask: recording(false)) ==
+        null,
+    'keeping an existing file is a cancel',
+  );
+  asked.clear();
+  check(
+    await mosaicConfirmReplacing(fresh, dialogAsked: false, ask: recording(false)) == fresh,
+    'a new name is not asked about',
+  );
+  check(
+    await mosaicConfirmReplacing(existing, dialogAsked: true, ask: recording(false)) ==
+        existing,
+    'a dialog that asked is not asked again',
+  );
+  check(
+    await mosaicConfirmReplacing(null, dialogAsked: false, ask: recording(true)) == null,
+    'a cancelled dialog stays cancelled',
+  );
+  check(asked.isEmpty, 'no question for a new name, an asking dialog or a cancel');
+  if (!Platform.isWindows) {
+    final dangling = '${directory.path}/dangling.json';
+    Link(dangling).createSync('${directory.path}/nowhere');
+    check(
+      await mosaicConfirmReplacing(dangling, dialogAsked: false, ask: recording(false)) ==
+          null,
+      'a dangling link is something to replace',
+    );
+    check(asked.single == 'dangling.json', 'asked about the link');
+    Link(dangling).deleteSync();
+  }
+  // A question that cannot be asked fails the save; it never replaces.
+  final save = await mosaicRunFilesSave(
+    <String, Object?>{'suggestedName': 'taken.json', 'bytes': base64Encode(<int>[1])},
+    _AskingDialogs(existing),
+  ).then<Object?>((value) => value, onError: (Object error) => error);
+  check(save is StateError, 'an unaskable question throws to the router');
+  check(File(existing).readAsStringSync() == 'old', 'nothing replaced unasked');
+  File(existing).deleteSync();
+}
+
+/// Dialogs that, like Linux's, chose an existing file without asking, and
+/// have no window to ask through.
+final class _AskingDialogs implements MosaicFileDialogs {
+  _AskingDialogs(this.choice);
+  final String choice;
+
+  @override
+  Future<String?> chooseFileToOpen(List<String> extensions) async => null;
+
+  @override
+  Future<String?> chooseFileToSave(String suggestedName, List<String> extensions) =>
+      mosaicConfirmReplacing(
+        choice,
+        dialogAsked: false,
+        ask: (_) => throw StateError('no window to ask whether to replace the file'),
+      );
+}
+
 Future<void> main() async {
   final directory = Directory.systemTemp.createTempSync(
     'mosaic-flutter-platform-effects-',
@@ -1222,6 +1300,7 @@ Future<void> main() async {
   try {
     checkRouting();
     await checkSave(directory);
+    await checkConfirmReplacing(directory);
     await checkPosixCalls(directory);
     await checkSaveRefusals(directory);
     await checkOpen(directory);
