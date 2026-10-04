@@ -218,6 +218,23 @@ private func checkSaveRefusals(in directory: URL) {
   check(!FileManager.default.fileExists(atPath: target.path), "refusals write nothing")
 }
 
+private func checkNameSafety() {
+  // UI87 §3.1: Windows device names are never plain names, on any host.
+  for name in ["CON", "con.txt", "Nul.json", "COM1.json", "lpt9", "COM\u{B9}.json", "CON .txt", "CONIN$.log", "aux.tar.gz"] {
+    check(!mosaicIsPlainFileName(name), "device name refused: \(name)")
+  }
+  for name in ["console.txt", "CONFIG.json", "aux-notes.txt", "COM10.json", "my.CON", "nul report.json", "CON\u{131}N$.txt"] {
+    check(mosaicIsPlainFileName(name), "not a device name: \(name)")
+  }
+  // Active content and non-ASCII extensions count as executable.
+  for name in ["page.html", "page.HTM", "card.svg", "archive.mht", "shortcut.website", "report.xlsm", "deck.pptm", "tool.py", "invoice.\u{435}x\u{435}", "setup.exe\u{301}", "macros.xlsb", "addin.xla", "link.iqy", "sheet.slk", "remote.rdp", "app.pyzw", "cache.pyc"] {
+    check(mosaicHasExecutableExtension(name), "executable: \(name)")
+  }
+  for name in ["notes.txt", "data.xlsx", "report.docx", "photo.png"] {
+    check(!mosaicHasExecutableExtension(name), "not executable: \(name)")
+  }
+}
+
 private func checkOpen(in directory: URL) {
   let source = directory.appendingPathComponent("photo.PNG")
   FileManager.default.createFile(atPath: source.path, contents: Data([1, 2, 3]))
@@ -330,6 +347,7 @@ func runPlatformEffectsChecks() {
   checkStartLocation()
   checkSave(in: directory)
   checkSaveRefusals(in: directory)
+  checkNameSafety()
   checkOpen(in: directory)
   checkRouter(in: directory)
   print("Mosaic SwiftUI platform effects passed")

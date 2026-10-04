@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+### Changed — device names, active content and non-ASCII extensions (UI87 §3.1)
+
+- `isPlainFileName` refuses Windows device names (`CON`, `NUL.txt`,
+  `com1.json`, `COM¹`, `CONIN$`, …), compared on the part before the first
+  dot with trailing spaces removed and ASCII letters folded to upper case. New exports:
+  `RESERVED_DEVICE_NAMES` and `isReservedDeviceName`.
+- `EXECUTABLE_EXTENSIONS` adds documents that run code when opened (web
+  pages and SVG, `.mht`, `.website`, Office macro formats with `.xlsb` and
+  `.xla`), Python scripts and bytecode, and `.iqy`, `.slk`, `.rdp`; `hasExecutableExtension` also counts any extension with a
+  non-ASCII character (a Cyrillic lookalike of `.exe`, or `.exe` with a
+  combining mark). The same rules land in every native host library.
+- A node test covers each; a Rust test in `mosaic-app-bindings` pins the
+  device-name list to the native libraries'.
+
 ### Changed — one stricter plain-name rule on every host (UI87 §3.1)
 
 Following the SwiftUI library's security review, `files.save` suggested names

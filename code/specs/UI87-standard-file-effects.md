@@ -71,21 +71,51 @@ picker's own filter, as UI59 §3 describes. The limits are the browser
 executor's, applied everywhere:
 - 16 MiB of bytes at most;
 - `suggestedName` is a plain name, checked identically by every host (the
-  Compose and SwiftUI libraries and the browser executor; tests pin the three
-  to one rule): no path separators or `:`, not `.`/`..`, no leading `.`
-  (dot-files), no control, format, line- or paragraph-separator characters,
+  Compose, SwiftUI, XAML, Qt and Flutter libraries and the browser executor;
+  tests pin them to one rule): no path separators or `:`, not `.`/`..`, no
+  leading `.` (dot-files), no control, format, line- or paragraph-separator characters,
   no leading or trailing whitespace, no run of two or more whitespace
   characters (characters that render blank — Hangul fillers, BRAILLE
   PATTERN BLANK — count as whitespace), no surrogate, unassigned or
-  private-use code point, no trailing dot, at most 255 UTF-16 units. Hosts
-  check by code point (Swift by scalar, never by grapheme cluster: a
+  private-use code point, no trailing dot, at most 255 UTF-16 units, and not
+  a Windows device name (`CON`, `PRN`, `AUX`, `NUL`, `COM0`-`COM9`,
+  `LPT0`-`LPT9`, `COM¹²³`, `LPT¹²³`, `CONIN$`, `CONOUT$`), compared on the
+  part before the first dot with trailing spaces removed and ASCII letters
+  folded to upper case (only those: .NET's own upper-casing leaves `ı` alone
+  where the others make it `I`, so a shared fold keeps one rule) --
+  `con.txt` and `NUL .json` open the console or the null device on Windows,
+  never a file, so every host refuses them and a name saves alike everywhere.
+  Hosts check by code point (Swift by scalar, never by grapheme cluster: a
   combining letter merged with a `.` would otherwise hide it);
 - when the app names no accepted type, the name may not end in an extension
   that runs, installs or mounts when opened (`.command`, `.terminal`,
   `.webloc`, `.exe`, `.scf`, `.iso`, `.desktop`, `.AppImage`, … — one list,
-  shared by every host, compared after folding case through upper case). With a type, the name must
-  already end in one of that type's extensions;
+  shared by every host, compared after folding case through upper case).
+  The list includes documents that run code when opened: web pages and SVG
+  (`.html`, `.htm`, `.xhtml`, `.svg`, …, whose script runs from the local
+  file), saved web archives and shortcuts (`.mht`, `.website`), the Office
+  formats made to carry macros (`.docm`, `.xlsm`, `.pptm`, …, `.xlsb`,
+  `.xla`), Python scripts (`.py`, `.pyw`, `.pyz`, `.pyzw`, `.pyc`), and
+  shortcuts that fetch or connect when opened (`.iqy`, `.slk`, `.rdp`). The
+  older binary Office formats (`.doc`, `.xls`, `.ppt`) can carry macros too
+  but are everyday documents, and Office opens them protected, so they stay
+  allowed. An extension with any non-ASCII character counts
+  too: a lookalike letter (`.ехе` with Cyrillic `е`) or a combining mark
+  after `.exe` makes an extension no list can name but a reader takes for an
+  executable one. With a type, the name must already end in one of that
+  type's extensions;
 - one file operation at a time; a second request gets `failed`, not a queue.
+
+**No download marks of our own.** The platform libraries add no
+Mark-of-the-Web (`Zone.Identifier`) on Windows and no `com.apple.quarantine`
+on macOS. Those mark files that arrived from somewhere else; a `files.save`
+is the app writing its own data where the person chose, as an application's
+Save As does. Marking them would make the operating system warn about the
+app's own documents, and teach people to click through the warning. Where
+the operating system or browser adds a mark itself -- the browser
+executor's download fallback and File System Access writes in Chromium, a
+file created by a sandboxed macOS app -- it is left in place. The extension
+rules above are what keep a save from becoming a launcher.
 
 ### 3.2 One name
 

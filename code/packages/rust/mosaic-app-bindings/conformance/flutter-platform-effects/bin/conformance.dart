@@ -496,6 +496,23 @@ Future<void> checkSaveRefusals(Directory directory) async {
   check(!File(target).existsSync(), 'refusals write nothing');
 }
 
+void checkNameSafety() {
+  // UI87 §3.1: Windows device names are never plain names, on any host.
+  for (final name in <String>['CON', 'con.txt', 'Nul.json', 'COM1.json', 'lpt9', 'COM\u00B9.json', 'CON .txt', 'CONIN\$.log', 'aux.tar.gz']) {
+    check(!mosaicIsPlainFileName(name), 'device name refused: ${shown(name)}');
+  }
+  for (final name in <String>['console.txt', 'CONFIG.json', 'aux-notes.txt', 'COM10.json', 'my.CON', 'nul report.json', 'CON\u0131N\$.txt']) {
+    check(mosaicIsPlainFileName(name), 'not a device name: ${shown(name)}');
+  }
+  // Active content and non-ASCII extensions count as executable.
+  for (final name in <String>['page.html', 'page.HTM', 'card.svg', 'archive.mht', 'shortcut.website', 'report.xlsm', 'deck.pptm', 'tool.py', 'invoice.\u0435x\u0435', 'setup.exe\u0301', 'macros.xlsb', 'addin.xla', 'link.iqy', 'sheet.slk', 'remote.rdp', 'app.pyzw', 'cache.pyc']) {
+    check(mosaicHasExecutableExtension(name), 'executable: ${shown(name)}');
+  }
+  for (final name in <String>['notes.txt', 'data.xlsx', 'report.docx', 'photo.png']) {
+    check(!mosaicHasExecutableExtension(name), 'not executable: ${shown(name)}');
+  }
+}
+
 Future<void> checkOpen(Directory directory) async {
   final source = '${directory.path}/photo.PNG';
   File(source).writeAsBytesSync(<int>[1, 2, 3]);
@@ -1303,6 +1320,7 @@ Future<void> main() async {
     await checkConfirmReplacing(directory);
     await checkPosixCalls(directory);
     await checkSaveRefusals(directory);
+    checkNameSafety();
     await checkOpen(directory);
     await checkRouter(directory);
   } finally {
