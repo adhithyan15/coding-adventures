@@ -12,7 +12,7 @@ import { Kinds, streamOf } from "../src/index.js";
 import type {
   Asset, Collection, ContentNode, ContentSource,
   DeployArtifact, Document, Feed,
-  KindPayload, PrintForme, RenderedPage, RequestHandler, SearchIndex,
+  KindPayload, PrintForme, RenderedPage, RequestHandler, SearchIndex, TerminalBuffer,
 } from "../src/index.js";
 
 // Compile-time equality assertion using a conditional-type trick.
@@ -63,6 +63,11 @@ describe("KindPayload<typeof Kinds.X>", () => {
 
   it("PrintForme → PrintForme", () => {
     assertType<Equal<KindPayload<typeof Kinds.PrintForme>, PrintForme>>();
+    expect(true).toBe(true);
+  });
+
+  it("TerminalBuffer → TerminalBuffer", () => {
+    assertType<Equal<KindPayload<typeof Kinds.TerminalBuffer>, TerminalBuffer>>();
     expect(true).toBe(true);
   });
 

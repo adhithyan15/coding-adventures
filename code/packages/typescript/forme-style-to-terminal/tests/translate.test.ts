@@ -7,7 +7,7 @@ import {
   styleRuleId, sel,
   type StyleDocument, type StyleRule,
 } from "@coding-adventures/forme-style-ir";
-import { translateToTerminal } from "../src/index.js";
+import { compileTerminalStyles, translateToTerminal } from "../src/index.js";
 
 function baseDoc(): StyleDocument {
   return {
@@ -70,6 +70,22 @@ describe("translateToTerminal — happy path", () => {
     expect(emittedRules).toEqual([]);
     expect(output).toContain("new Map([");
     expect(output).toContain("]);");
+  });
+});
+
+describe("compileTerminalStyles — runtime renderer boundary", () => {
+  it("returns the same ANSI rule data and warnings without parsing generated source", () => {
+    const doc: StyleDocument = {
+      ...baseDoc(),
+      rules: [rule("body", sel.type("paragraph"), [
+        { kind: "font-weight", value: 700 },
+        { kind: "padding", value: { top: { unit: "pt", value: 1 }, right: { unit: "pt", value: 1 }, bottom: { unit: "pt", value: 1 }, left: { unit: "pt", value: 1 } } },
+      ])],
+    };
+    const compiled = compileTerminalStyles(doc, { activeContexts: [] });
+    expect(compiled.styles.get("body")).toEqual({ prefix: "\u001b[1m", suffix: "\u001b[0m" });
+    expect(compiled.emittedRules).toEqual(["body"]);
+    expect(compiled.warnings).toMatchObject([{ code: "PROPERTY_SKIPPED", ruleId: "body", propertyKind: "padding" }]);
   });
 });
 

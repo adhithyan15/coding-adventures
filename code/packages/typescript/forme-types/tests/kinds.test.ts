@@ -30,15 +30,15 @@ describe("KERNEL_API_VERSION", () => {
 });
 
 describe("KINDS", () => {
-  it("includes all 13 built-in kind names (12 data kinds + Void)", () => {
-    expect(KINDS.length).toBe(13);
+  it("includes all 14 built-in kind names (13 data kinds + Void)", () => {
+    expect(KINDS.length).toBe(14);
   });
 
   it("includes Void, Stream, and the canonical 11 data kinds", () => {
     const expected = new Set([
       "Void",
       "ContentSource", "ContentNode", "Collection", "Asset",
-      "Document", "RenderedPage", "PrintForme",
+      "Document", "RenderedPage", "PrintForme", "TerminalBuffer",
       "RequestHandler", "SearchIndex", "Feed", "DeployArtifact",
       "Stream",
     ]);
@@ -50,7 +50,7 @@ describe("KINDS", () => {
       // @ts-expect-error — KINDS is readonly at the type level.
       KINDS.push("Bogus");
     }).toThrow(TypeError);
-    expect(KINDS.length).toBe(13);
+    expect(KINDS.length).toBe(14);
   });
 });
 

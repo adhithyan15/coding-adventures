@@ -1,0 +1,29 @@
+{
+  "name": "@coding-adventures/forme-render-terminal",
+  "version": "0.1.0",
+  "description": "Pure Forme terminal renderer and deterministic terminal artifact packager.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/document-ast": "file:../document-ast",
+    "@coding-adventures/forme-identity": "file:../forme-identity",
+    "@coding-adventures/forme-interactivity-ir": "file:../forme-interactivity-ir",
+    "@coding-adventures/forme-stage": "file:../forme-stage",
+    "@coding-adventures/forme-style-ir": "file:../forme-style-ir",
+    "@coding-adventures/forme-style-to-terminal": "file:../forme-style-to-terminal",
+    "@coding-adventures/forme-types": "file:../forme-types"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@vitest/coverage-v8": "^4.1.11",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.11"
+  }
+}
