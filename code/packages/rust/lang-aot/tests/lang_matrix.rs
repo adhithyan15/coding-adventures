@@ -1787,6 +1787,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("20.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — division may combine runtime-real provenance with finite
+    // static operands while powers remain gated.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; real x; x := 18.0 / pick(); output(x / 2.0) end",
+        expect: Expect::Stdout("4"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — static integer-valued functions may feed checked snapshots and widen into
     // bounded static real expressions. Copying preserves the destination when
     // the source is reassigned; overflow, control flow, calls, captures,
@@ -12258,6 +12267,29 @@ fn algol_multiplicative_runtime_real_output_runs_on_every_available_standard_bac
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but multiplicative runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_division_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("x := 18.0 / pick(); output(x / 2.0)")
+        })
+        .expect("the ALGOL division runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but division runtime real output did not complete"
             );
             continue;
         };

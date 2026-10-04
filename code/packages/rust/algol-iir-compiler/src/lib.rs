@@ -3825,7 +3825,7 @@ impl Compiler {
                         {
                             return false;
                         }
-                    } else if !matches!(piece, Piece::Op(op) if op == "*") {
+                    } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "*" | "/")) {
                         return false;
                     }
                 }
@@ -12316,12 +12316,33 @@ mod tests {
     }
 
     #[test]
-    fn al4_runtime_real_scalar_formatter_still_rejects_division() {
+    fn al4_runtime_real_provenance_crosses_division_composition() {
+        for source in [
+            "begin real procedure pick; pick := 2.25; output(18.0 / pick()) end",
+            "begin real procedure pick; pick := 2.25; real x; x := 18.0 / pick(); output(x) end",
+            "begin real procedure pick; pick := 2.25; real x; x := 18.0 / pick(); output(x / 2.0) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "division composition must preserve runtime-real formatter provenance for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_scalar_formatter_still_rejects_powers() {
         let err = compile_source(
-            "begin real procedure pick; pick := 2.25; output(pick() / 1.0) end",
+            "begin real procedure pick; pick := 2.25; output(pick() ^ 2) end",
             "test",
         )
-        .expect_err("the scalar formatter gate must not admit dynamic division");
+        .expect_err("the scalar formatter gate must not admit dynamic powers");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
