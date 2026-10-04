@@ -19,10 +19,15 @@ emitSiteFs.produces   // Kinds.DeployArtifact
 emitSiteFs.capabilities // ["filesystem:write"]
 ```
 
-The default input and named asset input are both materialized by the
-orchestrator, so the emitter runs exactly once. This preserves the page/asset
-split established by the resolver and loader without frontmatter, event-bus,
-or hidden-filesystem side channels.
+The default page stream and named asset stream remain live, bounded inputs and
+the emitter runs exactly once. It drains both sibling streams concurrently,
+snapshots at most 65,536 pages, and only then performs the asset-dependent page
+rewrite. This avoids circular backpressure when both branches share an
+upstream source while preserving the resolver/loader split without
+frontmatter, event-bus, or hidden-filesystem side channels.
+Before retaining a page, the collector enforces a 16 MiB per-page and 32 MiB
+aggregate UTF-8 content budget plus 65,536 aggregate asset/island/module uses.
+Island-module package names retain the FM05 214-character ceiling at this sink.
 
 ## Output policy
 
@@ -51,7 +56,8 @@ missing `meta.sourcePath`, inconsistent byte lengths, missing assets, and
 undeclared placeholders. Validation finishes before the first write except for
 cancellation, which is checked throughout collection and materialization.
 Page asset/island/module lists are descriptor-snapshotted with explicit count
-bounds so later producer mutation cannot alter the deploy manifest.
+bounds so later producer mutation cannot alter the deploy manifest. Aggregate
+content and usage budgets are checked before those defensive copies.
 
 `filesystem:write` follows the same adapter exception as `forme-emit-fs`: the
 stage declares the capability and directly materializes through
@@ -76,6 +82,7 @@ npm run test:coverage
 ```
 
 Tests include a real orchestrator pipeline with explicit default and `assets`
-wires, a fresh-process persistent-cache replay after deleting the output tree,
+wires, a 256-page shared-source regression for bounded sibling-stream
+backpressure, a fresh-process persistent-cache replay after deleting the output tree,
 real temporary-directory writes, deterministic fingerprint and manifest
 checks, suffix preservation, and failure-path coverage.

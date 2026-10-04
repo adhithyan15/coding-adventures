@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Fixed
+
+- Drain live page and asset inputs concurrently before asset-dependent page
+  rewriting, avoiding a bounded sibling-stream deadlock at 128 shared-source
+  pages. Page snapshots now have explicit page-count, per-page/aggregate UTF-8
+  byte, aggregate nested-usage, and FM05 package-name safety limits.
+
 ### Added
 
 - Verify `RenderedPage.usedIslands` against exact island-module asset uses,

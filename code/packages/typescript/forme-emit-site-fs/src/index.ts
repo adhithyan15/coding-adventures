@@ -42,6 +42,11 @@ interface PageSnapshot {
   readonly islandModules: readonly NonNullable<RenderedPage["islandModules"]>[number][];
 }
 
+interface PageCollectionBudget {
+  contentBytes: number;
+  usageEntries: number;
+}
+
 const encoder = new TextEncoder();
 const PLACEHOLDER_PREFIX = "forme-asset:";
 
@@ -141,35 +146,59 @@ const emitSiteFs = defineStage({
     const files = new Map<string, Uint8Array>();
     const assetsByPath = new Map<string, PlannedAsset>();
     const outputPaths = new Map<string, string>();
-    for await (const asset of assetStream) {
-      ctx.cancellation.throwIfCancelled();
-      const planned = planAsset(asset, assetDir, publicPathPrefix);
-      if (assetsById.has(asset.identity)) {
-        throw new Error(
-          `forme-emit-site-fs: duplicate asset identity ${JSON.stringify(asset.identity)}`,
-        );
+    const assetIterator = assetStream[Symbol.asyncIterator]();
+    const pageIterator = pageStream[Symbol.asyncIterator]();
+    const collectAssets = (async () => {
+      for await (const asset of { [Symbol.asyncIterator]: () => assetIterator }) {
+        ctx.cancellation.throwIfCancelled();
+        const planned = planAsset(asset, assetDir, publicPathPrefix);
+        if (assetsById.has(asset.identity)) {
+          throw new Error(
+            `forme-emit-site-fs: duplicate asset identity ${JSON.stringify(asset.identity)}`,
+          );
+        }
+        const existingAsset = assetsByPath.get(planned.entry.path);
+        const collisionKey = portableCollisionKey(planned.entry.path);
+        const existingPortablePath = outputPaths.get(collisionKey);
+        if (existingPortablePath !== undefined && existingPortablePath !== planned.entry.path) {
+          throw new Error(
+            `forme-emit-site-fs: portable asset path collision between ${JSON.stringify(existingPortablePath)} and ${JSON.stringify(planned.entry.path)}`,
+          );
+        }
+        if (existingAsset !== undefined && (
+          !sameBytes(existingAsset.bytes, planned.bytes) ||
+          existingAsset.role !== planned.role ||
+          existingAsset.entry.mime !== planned.entry.mime
+        )) {
+          throw new Error(`forme-emit-site-fs: incompatible asset path collision at ${JSON.stringify(planned.entry.path)}`);
+        }
+        assetsById.set(asset.identity, planned);
+        if (existingAsset === undefined) {
+          assetsByPath.set(planned.entry.path, planned);
+          outputPaths.set(collisionKey, planned.entry.path);
+        }
+        if (asset.role !== "script" && !files.has(planned.entry.path)) files.set(planned.entry.path, planned.bytes);
       }
-      const existingAsset = assetsByPath.get(planned.entry.path);
-      const collisionKey = portableCollisionKey(planned.entry.path);
-      const existingPortablePath = outputPaths.get(collisionKey);
-      if (existingPortablePath !== undefined && existingPortablePath !== planned.entry.path) {
-        throw new Error(
-          `forme-emit-site-fs: portable asset path collision between ${JSON.stringify(existingPortablePath)} and ${JSON.stringify(planned.entry.path)}`,
-        );
+    })();
+    const collectPages = (async () => {
+      const pages: PageSnapshot[] = [];
+      const budget: PageCollectionBudget = { contentBytes: 0, usageEntries: 0 };
+      for await (const page of { [Symbol.asyncIterator]: () => pageIterator }) {
+        ctx.cancellation.throwIfCancelled();
+        if (pages.length >= MAX_SITE_PAGES) {
+          throw new Error(`forme-emit-site-fs: site exceeds the ${MAX_SITE_PAGES}-page safety limit`);
+        }
+        pages.push(snapshotPage(page, budget));
       }
-      if (existingAsset !== undefined && (
-        !sameBytes(existingAsset.bytes, planned.bytes) ||
-        existingAsset.role !== planned.role ||
-        existingAsset.entry.mime !== planned.entry.mime
-      )) {
-        throw new Error(`forme-emit-site-fs: incompatible asset path collision at ${JSON.stringify(planned.entry.path)}`);
-      }
-      assetsById.set(asset.identity, planned);
-      if (existingAsset === undefined) {
-        assetsByPath.set(planned.entry.path, planned);
-        outputPaths.set(collisionKey, planned.entry.path);
-      }
-      if (asset.role !== "script" && !files.has(planned.entry.path)) files.set(planned.entry.path, planned.bytes);
+      return pages;
+    })();
+    let pageSnapshots: PageSnapshot[];
+    try {
+      [, pageSnapshots] = await Promise.all([collectAssets, collectPages]);
+    } catch (error) {
+      try { await assetIterator.return?.(); } catch { /* preserve the collection failure */ }
+      try { await pageIterator.return?.(); } catch { /* preserve the collection failure */ }
+      throw error;
     }
 
     const publicPathById = new Map(
@@ -178,9 +207,8 @@ const emitSiteFs = defineStage({
     const routes: DeployRoute[] = [];
     const selectedScriptAssets = new Set<LogicalId>();
     let pageCount = 0;
-    for await (const page of pageStream) {
+    for (const snapshot of pageSnapshots) {
       ctx.cancellation.throwIfCancelled();
-      const snapshot = snapshotPage(page);
       const rewrittenHtml = rewriteAssetPlaceholdersFromSnapshot(snapshot, publicPathById);
       const moduleTags = islandModuleTags(snapshot, assetsById, selectedScriptAssets);
       const html = appendModuleTags(rewrittenHtml, moduleTags, snapshot.route);
@@ -504,11 +532,19 @@ function islandModuleTags(
 
 const MAX_PAGE_ISLANDS = 256;
 const MAX_PAGE_ASSETS = 65_536;
+const MAX_SITE_PAGES = 65_536;
+const MAX_PAGE_CONTENT_BYTES = 16 * 1024 * 1024;
+const MAX_SITE_CONTENT_BYTES = 32 * 1024 * 1024;
+const MAX_SITE_USAGE_ENTRIES = 65_536;
+const MAX_PACKAGE_NAME_LENGTH = 214;
 const PACKAGE_NAME = /^(?:@[a-z0-9][a-z0-9._-]*\/[a-z0-9][a-z0-9._-]*|[a-z0-9][a-z0-9._-]*)$/;
 const EXPORT_NAME = /^[A-Za-z_][A-Za-z0-9_]{0,63}$/;
 const SHA256 = /^[0-9a-f]{64}$/;
 
-function snapshotPage(page: RenderedPage): PageSnapshot {
+function snapshotPage(
+  page: RenderedPage,
+  budget?: PageCollectionBudget,
+): PageSnapshot {
   if (typeof page !== "object" || page === null || utilTypes.isProxy(page)) {
     throw new TypeError("forme-emit-site-fs: page must be a non-proxy object");
   }
@@ -518,10 +554,36 @@ function snapshotPage(page: RenderedPage): PageSnapshot {
     throw new TypeError("forme-emit-site-fs: page.route must be a non-empty string of at most 2048 characters");
   }
   if (typeof html !== "string") throw new TypeError("forme-emit-site-fs: page.html must be a string");
-  const usedAssets = logicalIdArray(dataProperty(page, "usedAssets"), "page.usedAssets", MAX_PAGE_ASSETS);
-  const usedIslands = islandIdArray(dataProperty(page, "usedIslands"), "page.usedIslands");
+  const rawAssets = dataProperty(page, "usedAssets");
+  const rawIslands = dataProperty(page, "usedIslands");
   const rawModules = dataProperty(page, "islandModules", false);
-  const islandModules = moduleUseArray(rawModules === undefined ? [] : rawModules);
+  const modules = rawModules === undefined ? [] : rawModules;
+  const contentBytes = Buffer.byteLength(route, "utf8") + Buffer.byteLength(html, "utf8");
+  if (contentBytes > MAX_PAGE_CONTENT_BYTES) {
+    throw new TypeError(
+      `forme-emit-site-fs: page content exceeds the ${MAX_PAGE_CONTENT_BYTES}-byte UTF-8 limit`,
+    );
+  }
+  const usageEntries = validatedExactArrayLength(rawAssets, "page.usedAssets", MAX_PAGE_ASSETS)
+    + validatedExactArrayLength(rawIslands, "page.usedIslands", MAX_PAGE_ISLANDS)
+    + validatedExactArrayLength(modules, "page.islandModules", MAX_PAGE_ISLANDS);
+  if (budget !== undefined) {
+    if (budget.contentBytes > MAX_SITE_CONTENT_BYTES - contentBytes) {
+      throw new TypeError(
+        `forme-emit-site-fs: site page content exceeds the ${MAX_SITE_CONTENT_BYTES}-byte UTF-8 limit`,
+      );
+    }
+    if (budget.usageEntries > MAX_SITE_USAGE_ENTRIES - usageEntries) {
+      throw new TypeError(
+        `forme-emit-site-fs: site page usage exceeds the ${MAX_SITE_USAGE_ENTRIES}-entry limit`,
+      );
+    }
+    budget.contentBytes += contentBytes;
+    budget.usageEntries += usageEntries;
+  }
+  const usedAssets = logicalIdArray(rawAssets, "page.usedAssets", MAX_PAGE_ASSETS);
+  const usedIslands = islandIdArray(rawIslands, "page.usedIslands");
+  const islandModules = moduleUseArray(modules);
   return Object.freeze({ route, html, usedAssets, usedIslands, islandModules });
 }
 
@@ -536,18 +598,27 @@ function dataProperty(value: object, key: string, required = true): unknown {
 }
 
 function exactArray(value: unknown, path: string, maximum: number): readonly unknown[] {
+  validatedExactArrayLength(value, path, maximum);
+  const array = value as readonly unknown[];
+  const copy: unknown[] = [];
+  for (let index = 0; index < array.length; index++) {
+    const descriptor = Object.getOwnPropertyDescriptor(array, String(index))!;
+    copy.push((descriptor as PropertyDescriptor & { value: unknown }).value);
+  }
+  return copy;
+}
+
+function validatedExactArrayLength(value: unknown, path: string, maximum: number): number {
   if (!Array.isArray(value) || utilTypes.isProxy(value) || value.length > maximum) {
     throw new TypeError(`forme-emit-site-fs: ${path} must be an array of at most ${maximum} entries`);
   }
   if (Object.getOwnPropertySymbols(value).length !== 0) {
     throw new TypeError(`forme-emit-site-fs: ${path} must not contain symbol keys`);
   }
-  const copy: unknown[] = [];
   for (let index = 0; index < value.length; index++) {
     const descriptor = Object.getOwnPropertyDescriptor(value, String(index));
     if (descriptor === undefined) throw new TypeError(`forme-emit-site-fs: ${path}[${index}] is sparse`);
     if (!("value" in descriptor)) throw new TypeError(`forme-emit-site-fs: ${path}[${index}] must not be an accessor`);
-    copy.push(descriptor.value);
   }
   for (const key of Object.getOwnPropertyNames(value)) {
     if (key === "length") continue;
@@ -556,7 +627,7 @@ function exactArray(value: unknown, path: string, maximum: number): readonly unk
       throw new TypeError(`forme-emit-site-fs: ${path} has an unknown property`);
     }
   }
-  return copy;
+  return value.length;
 }
 
 function logicalIdArray(value: unknown, path: string, maximum: number): readonly LogicalId[] {
@@ -600,7 +671,8 @@ function moduleUseArray(value: unknown): readonly NonNullable<RenderedPage["isla
     const sha256 = dataField(entry, "sha256", path);
     if (typeof island !== "string" || !/^[A-Za-z_][A-Za-z0-9_-]{0,63}$/.test(island) ||
         typeof asset !== "string" || !isLogicalIdShape(asset) ||
-        typeof packageName !== "string" || !PACKAGE_NAME.test(packageName) ||
+        typeof packageName !== "string" || packageName.length > MAX_PACKAGE_NAME_LENGTH ||
+        !PACKAGE_NAME.test(packageName) ||
         typeof exportName !== "string" || !EXPORT_NAME.test(exportName) ||
         typeof sha256 !== "string" || !SHA256.test(sha256)) {
       throw new TypeError(`forme-emit-site-fs: ${path} is not a reviewed island-module binding`);

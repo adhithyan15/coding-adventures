@@ -55,6 +55,13 @@ These limits remain after the concurrent scheduler milestone:
   per statically known edge and one source traversal across fan-out
 - Replayable `AsyncIterable` inputs at named fan-in boundaries; a multi-input
   join is invoked exactly once
+- Same-turn reads across a stage's default and named live inputs are batched
+  into one permit yield, so sibling bounded branches can make concurrent
+  progress without exceeding the stage's single scheduler permit
+- Input wrappers reject overlapping operations on one iterator and cap active
+  iterators plus pending operations; no result is delivered while either a
+  batched read or direct cleanup has yielded the stage permit, and cancellation
+  retires queued reads before a non-reacquired cleanup yield releases its guard
 - Per-stage `StageContext` construction with denied-by-default capability APIs
 - `init` / `dispose` lifecycle hooks (init failure aborts before any `run`; dispose always runs)
 - Fail-fast and best-effort error handling

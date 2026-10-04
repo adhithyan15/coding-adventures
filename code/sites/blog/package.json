@@ -13,7 +13,8 @@
     "build:clean": "npm run bootstrap && npm run clean && npm run build",
     "clean": "forme clean",
     "dev": "forme watch",
-    "test": "vitest run surface-stage.test.ts interactivity-stage.test.ts pipeline-steps.test.ts product-build.test.ts"
+    "benchmark:release": "tsx release-benchmark.ts",
+    "test": "vitest run surface-stage.test.ts interactivity-stage.test.ts pipeline-steps.test.ts product-build.test.ts release-benchmark.test.ts"
   },
   "author": "Adhithya Rajasekaran",
   "license": "MIT",

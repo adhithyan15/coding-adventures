@@ -313,6 +313,34 @@ describe("fingerprinted static-site emission", () => {
 });
 
 describe("validation and safety", () => {
+  it("bounds retained page bytes and aggregate usage before snapshot copies", async () => {
+    await expect(runSite([page({
+      html: "x".repeat(16 * 1024 * 1024 + 1),
+      usedAssets: [],
+    })], [])).rejects.toThrow(/UTF-8 limit/);
+
+    const twelveMiB = "y".repeat(12 * 1024 * 1024);
+    await expect(runSite([
+      page({ route: "/a.html", html: twelveMiB, usedAssets: [] }),
+      page({ route: "/b.html", html: twelveMiB, usedAssets: [] }),
+      page({ route: "/c.html", html: twelveMiB, usedAssets: [] }),
+    ], [])).rejects.toThrow(/site page content.*UTF-8 limit/);
+
+    const manyUses = Array<LogicalId>(32_769).fill(ID_A);
+    await expect(runSite([
+      page({ route: "/a.html", html: "a", usedAssets: manyUses }),
+      page({ route: "/b.html", html: "b", usedAssets: manyUses }),
+    ], [])).rejects.toThrow(/site page usage.*entry limit/);
+
+    await expect(runSite([page({
+      usedAssets: [],
+      islandModules: [{
+        ...moduleUse("Search", ID_A, new Uint8Array([1])),
+        packageName: `@scope/${"a".repeat(208)}`,
+      }] as never,
+    })], [])).rejects.toThrow(/reviewed island-module binding/);
+  });
+
   it("validates config, source paths, sha256 helpers, and byte lengths", async () => {
     expect(fingerprintedAssetFilename("images/cat.png", "a".repeat(64)))
       .toBe(`cat.${"a".repeat(64)}.png`);
@@ -513,6 +541,102 @@ describe("orchestrator end-to-end", () => {
     expect(new TextDecoder().decode(artifact.files["post/index.html"]!))
       .toMatch(/src="\/assets\/cat\.[0-9a-f]{64}\.png\?width=400#hero"/);
   });
+
+  it("drains sibling page and asset streams without a two-window fan-in deadlock", async () => {
+    const count = 256;
+    const source = defineStage({
+      name: "@test/shared-content",
+      version: "0.1.0",
+      apiVersion: 1,
+      description: "shared source large enough to fill both bounded page windows",
+      consumes: Kinds.Void,
+      produces: streamOf(Kinds.ContentSource),
+      capabilities: [],
+      configSchema: null,
+      async *run() {
+        for (let index = 0; index < count; index++) {
+          const path = `post-${index}.md`;
+          yield {
+            path,
+            bytes: new TextEncoder().encode(path),
+            mimeType: "text/markdown",
+            identity: ID_A,
+            revision: "blake2b:00",
+            providerMeta: {},
+          } as never;
+        }
+      },
+    });
+    const pages = defineStage({
+      name: "@test/shared-pages",
+      version: "0.1.0",
+      apiVersion: 1,
+      description: "renders every shared source without assets",
+      consumes: streamOf(Kinds.ContentSource),
+      produces: streamOf(Kinds.RenderedPage),
+      capabilities: [],
+      configSchema: null,
+      async *run(input) {
+        let index = 0;
+        for await (const _item of input as AsyncIterable<unknown>) {
+          yield page({ route: `/post-${index++}.html`, html: "page", usedAssets: [] });
+        }
+      },
+    });
+    const assets = defineStage({
+      name: "@test/shared-assets",
+      version: "0.1.0",
+      apiVersion: 1,
+      description: "drains the same shared source while producing no assets",
+      consumes: streamOf(Kinds.ContentSource),
+      produces: streamOf(Kinds.Asset),
+      capabilities: [],
+      configSchema: null,
+      async *run(input) {
+        for await (const _item of input as AsyncIterable<unknown>) {
+          // This fixture intentionally contains no asset references.
+        }
+      },
+    });
+    const orchestrator = createOrchestrator({ logger: silentLogger() });
+    const pipeline = await orchestrator.buildPipeline({
+      name: "bounded-fan-in",
+      settings: {
+        storageRoot: ".",
+        cacheDir: null,
+        reproducibleBuild: true,
+        maxConcurrency: 4,
+        logLevel: "error",
+        bestEffort: false,
+        deadlineMs: null,
+      },
+      stages: [
+        { id: "source", stage: source },
+        { id: "pages", stage: pages },
+        { id: "assets", stage: assets },
+        { id: "site", stage: emitSiteFs, config: { outDir } },
+      ],
+      wires: [
+        { from: { id: "source" }, to: { id: "pages" } },
+        { from: { id: "source" }, to: { id: "assets" } },
+        { from: { id: "pages" }, to: { id: "site" } },
+        { from: { id: "assets" }, to: { id: "site", port: "assets" } },
+      ],
+      outputs: [{ fromInstance: "site", name: "site" }],
+    } as never);
+
+    const result = await Promise.race([
+      orchestrator.runOnce(pipeline),
+      new Promise<never>((_resolve, reject) => setTimeout(
+        () => reject(new Error("page/asset fan-in did not settle")),
+        10_000,
+      )),
+    ]);
+    await orchestrator.dispose();
+
+    expect(result.outcome).toBe("success");
+    expect((result.outputs.site as DeployArtifact).manifest.routes).toHaveLength(count);
+  }, 15_000);
 
   it("restores a deleted site from persistent checkpoints without rerunning producers", async () => {
     const cacheRoot = await mkdtemp(join(tmpdir(), "forme-emit-site-cache-"));

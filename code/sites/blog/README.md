@@ -80,6 +80,20 @@ reproducible mode. It requires identical build IDs, canonical output reports,
 and file hashes; verifies that the source, pure transforms, and replay-capable
 emitters skip safely; and keeps ambient asset readers conservative.
 
+`npm run benchmark:release` supplies the FM-B069 release-scale gate. It derives
+a disposable configuration from the live thirteen-stage DAG, generates exactly
+1,000 bounded Markdown pages under `.forme/`, runs a clean build, edits one
+page, and runs an incremental build against the persistent cache. The report at
+`dist/.forme-release-benchmark.json` records both same-run elapsed times while
+the pass/fail contract uses portable work evidence: both HTML and terminal
+backends retain 1,000 routes, the clean parser handles all 1,000 pages, and the
+incremental parser reuses 999 entries while rebuilding one. No absolute
+millisecond threshold mistakes hosted-runner load for a Forme regression.
+Each CLI phase has a three-minute liveness deadline and forced child
+retirement. The disposable source/cache/output tree lives in a freshly created
+private project-temporary directory and is removed in `finally` on both success and failure;
+the retained summary is replaced atomically without following a target symlink.
+
 The installed `forme` launcher registers `tsx` for TypeScript-first packages;
 the site uses `tsx` directly only for its post-build verifier and unit tests.
 
@@ -97,6 +111,9 @@ last good blog when an edit produces a build error.
 - `forme.config.ts` — `PipelineConfig` literal wiring thirteen named stage
   instances, including routed content/asset fan-out, named asset fan-in, and
   three deploy outputs.
+- `release-benchmark.config.ts` / `release-benchmark.ts` — disposable
+  1,000-page clean/single-edit incremental release-scale evidence derived from
+  the exact live DAG.
 - `interactivity-stage.ts` — the narrow product authority boundary that
   attaches the reviewed pipeline-step module identity and source to the one
   article allowed to use it.
