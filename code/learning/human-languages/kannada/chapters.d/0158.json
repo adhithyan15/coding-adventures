@@ -1,0 +1,19 @@
+{
+  "chapter": 158,
+  "title": "To boil, To cook, To buy, To pay, To bathe",
+  "label": "ch:ka-to-boil-to-cook-to-buy-to-pay-to-bathe",
+  "canDo": "I can say to boil, to cook, to buy, to pay and to bathe.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C158-snana-madu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 158: I can say to boil, to cook, to buy, to pay and to bathe.",
+    "assesses": [
+      "KA-LEX-C158-KRIYE158-03",
+      "KA-LEX-C158-KRIYE158-04",
+      "KA-LEX-C158-KRIYE158-05"
+    ]
+  }
+}

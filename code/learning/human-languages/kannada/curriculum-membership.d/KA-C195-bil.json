@@ -1,0 +1,11 @@
+{
+  "id": "KA-C195-bil",
+  "pathSegment": "KA-PATH-195-KELASA195",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-195-KELASA195",
+      "order": 4
+    }
+  ]
+}

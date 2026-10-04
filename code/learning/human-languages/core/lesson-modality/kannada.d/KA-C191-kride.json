@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C191-kride",
+    "language": "kannada",
+    "chapter": 191,
+    "sequence": 8730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:001d73b8aadb6832"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C172-ksana",
+  "pathSegment": "KA-PATH-172-KALA172",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-172-KALA172",
+      "order": 4
+    }
+  ]
+}

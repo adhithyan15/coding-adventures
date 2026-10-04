@@ -1,0 +1,11 @@
+{
+  "id": "KA-C189-upavasa",
+  "pathSegment": "KA-PATH-189-VASTU189",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-189-VASTU189",
+      "order": 4
+    }
+  ]
+}

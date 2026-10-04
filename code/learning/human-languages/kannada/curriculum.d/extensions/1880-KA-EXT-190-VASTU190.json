@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-190-VASTU190",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a sofa, a bench, a stool, a mattress and an axe.",
+  "prerequisites": []
+}

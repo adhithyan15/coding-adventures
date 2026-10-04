@@ -1,0 +1,19 @@
+{
+  "chapter": 180,
+  "title": "Free of charge, Government, Private, Local, Compulsory",
+  "label": "ch:ka-free-of-charge-government-private-local-compulsory",
+  "canDo": "I can say free of charge, government, private, local and compulsory.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "KA-C180-kaddaya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 180: I can say free of charge, government, private, local and compulsory.",
+    "assesses": [
+      "KA-LEX-C180-GUNA180-03",
+      "KA-LEX-C180-GUNA180-04",
+      "KA-LEX-C180-GUNA180-05"
+    ]
+  }
+}

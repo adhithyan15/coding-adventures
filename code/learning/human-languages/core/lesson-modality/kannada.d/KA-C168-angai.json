@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C168-angai",
+    "language": "kannada",
+    "chapter": 168,
+    "sequence": 7570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c08324fc8aa69ec0"
+  },
+  "findings": []
+}

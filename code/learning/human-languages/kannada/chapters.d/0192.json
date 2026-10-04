@@ -1,0 +1,19 @@
+{
+  "chapter": 192,
+  "title": "Grinding stone, Pestle, Mixer-grinder, Sieve, Coconut grater",
+  "label": "ch:ka-grinding-stone-pestle-mixer-grinder-sieve-coconut-grater",
+  "canDo": "I can say a grinding stone, a pestle, a mixer-grinder, a sieve and a coconut grater.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C192-turimane",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 192: I can say a grinding stone, a pestle, a mixer-grinder, a sieve and a coconut grater.",
+    "assesses": [
+      "KA-LEX-C192-VASTU192-03",
+      "KA-LEX-C192-VASTU192-04",
+      "KA-LEX-C192-VASTU192-05"
+    ]
+  }
+}

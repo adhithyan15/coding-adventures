@@ -1,0 +1,11 @@
+{
+  "id": "KA-C186-pensil",
+  "pathSegment": "KA-PATH-186-VASTU186",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-186-VASTU186",
+      "order": 2
+    }
+  ]
+}

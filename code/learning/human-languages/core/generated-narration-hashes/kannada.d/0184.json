@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 184,
+  "sourceHash": "fnv1a64:16e70aa30e059787",
+  "lessonIds": [
+    "KA-C184-sautekayi",
+    "KA-C184-bendekayi",
+    "KA-C184-hurulikayi",
+    "KA-C184-soppu",
+    "KA-C184-elaniru",
+    "KA-R184-first-pass-words-from-chapters-176-179",
+    "KA-R184-second-pass-words-from-chapters-180-184"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch184.txt",
+  "json": "kannada/narration/ch184.json",
+  "textHash": "fnv1a64:c6364728b34e2081",
+  "jsonHash": "fnv1a64:ccf622a57c258740",
+  "findings": []
+}

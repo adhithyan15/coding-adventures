@@ -1,0 +1,11 @@
+{
+  "id": "KA-C188-mullu",
+  "pathSegment": "KA-PATH-188-VASTU188",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-188-VASTU188",
+      "order": 3
+    }
+  ]
+}

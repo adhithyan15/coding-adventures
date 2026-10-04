@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 186,
+  "sourceHash": "fnv1a64:d25eecf4715b68c5",
+  "lessonIds": [
+    "KA-C186-sandesa",
+    "KA-C186-imel",
+    "KA-C186-pensil",
+    "KA-C186-kadata",
+    "KA-C186-dakhale"
+  ],
+  "tex": "kannada/book/chapters/ch186-message-email-pencil-file-document.tex"
+}

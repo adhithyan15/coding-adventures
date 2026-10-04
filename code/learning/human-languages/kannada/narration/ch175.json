@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 175,
+  "title": "Fence, Pillar, Beside, On the other side, On this side",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:fd2fc8690b45d5fd",
+  "lessons": [
+    {
+      "id": "KA-C175-beli",
+      "sequence": 7880,
+      "title": "ಬೇಲಿ (bēli) — a fence",
+      "headword": "ಬೇಲಿ",
+      "romanization": "bēli",
+      "gloss": "a fence",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d2bd2a461a0b1b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a zoo, then the Kannada for a palace."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬೇಲಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೇಲಿ — bēli — \"a fence\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bēli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bēli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bēli, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bēli*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say bēli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *bēli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a zoo, then the Kannada for a palace, then say bēli again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a zoo, then the Kannada for a palace, then say *bēli* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬೇಲಿ (bēli) mean? (\"A fence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C175-kamba",
+      "sequence": 7890,
+      "title": "ಕಂಬ (kamba) — a pillar",
+      "headword": "ಕಂಬ",
+      "romanization": "kamba",
+      "gloss": "a pillar",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6b49358c08cc47e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a palace, then the Kannada for a fence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕಂಬ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಂಬ — kamba — \"a pillar\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kamba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kamba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kamba, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kamba*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kamba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kamba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a palace, then the Kannada for a fence, then say kamba again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a palace, then the Kannada for a fence, then say *kamba* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕಂಬ (kamba) mean? (\"A pillar\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C175-pakka",
+      "sequence": 7900,
+      "title": "ಪಕ್ಕ (pakka) — beside, next to; the side",
+      "headword": "ಪಕ್ಕ",
+      "romanization": "pakka",
+      "gloss": "beside, next to; the side",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9b515c4b3ea04593",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a fence, then the Kannada for a pillar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪಕ್ಕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪಕ್ಕ — pakka — \"beside, next to; the side\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say pakka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *pakka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a fence, then the Kannada for a pillar, then say pakka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a fence, then the Kannada for a pillar, then say *pakka* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪಕ್ಕ (pakka) mean? (\"Beside, next to; the side\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C175-ace",
+      "sequence": 7910,
+      "title": "ಆಚೆ (āce) — on the other side, over there",
+      "headword": "ಆಚೆ",
+      "romanization": "āce",
+      "gloss": "on the other side, over there",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9be0a531d86979d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a pillar, then the Kannada for beside."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಆಚೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆಚೆ — āce — \"on the other side, over there\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āce",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āce*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āce, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āce*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say āce",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *āce*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a pillar, then the Kannada for beside, then say āce again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a pillar, then the Kannada for beside, then say *āce* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಆಚೆ (āce) mean? (\"On the other side, over there\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C175-ice",
+      "sequence": 7920,
+      "title": "ಈಚೆ (īce) — on this side",
+      "headword": "ಈಚೆ",
+      "romanization": "īce",
+      "gloss": "on this side",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de916e971e3cdc28",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for beside, then the Kannada for on the other side."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಈಚೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಈಚೆ — īce — \"on this side\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īce",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īce*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īce, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īce*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say īce",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *īce*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for beside, then the Kannada for on the other side, then say īce again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for beside, then the Kannada for on the other side, then say *īce* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಈಚೆ (īce) mean? (\"On this side\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R175-first-pass-words-from-chapters-167-170",
+      "sequence": 7930,
+      "title": "Words from chapters 167-170 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 167-170",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:71ee1c6639907d7f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for on the other side and on this side."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to drop off, to improve, to support, to burst, to snore",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to drop off, to improve, to support, to burst, to snore]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the forehead, the throat, the heel, the thigh, the palm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the forehead, the throat, the heel, the thigh, the palm]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patience, jealousy, loneliness, curiosity, a feeling",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: patience, jealousy, loneliness, curiosity, a feeling]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "childbirth, eyesight, an infection, a blister, nutritious",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: childbirth, eyesight, an infection, a blister, nutritious]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To drop off? (ಉದುರು, uduru.) To improve? (ಸುಧಾರಿಸು, sudhārisu.) To support? (ಬೆಂಬಲಿಸು, bembalisu.) To burst? (ಸಿಡಿ, siḍi.) To snore? (ಗೊರಕೆ ಹೊಡೆ, gorake hoḍe.) The forehead? (ಹಣೆ, haṇe.) The throat? (ಗಂಟಲು, gaṇṭalu.) The heel? (ಹಿಮ್ಮಡಿ, himmaḍi.) The thigh? (ತೊಡೆ, toḍe.) The palm? (ಅಂಗೈ, aṅgai.) Patience? (ತಾಳ್ಮೆ, tāḷme.) Jealousy? (ಅಸೂಯೆ, asūye.) Loneliness? (ಒಂಟಿತನ, oṇṭitana.) Curiosity? (ಕುತೂಹಲ, kutūhala.) A feeling? (ಭಾವನೆ, bhāvane.) Childbirth? (ಹೆರಿಗೆ, herige.) Eyesight? (ದೃಷ್ಟಿ, dṛṣṭi.) An infection? (ಸೋಂಕು, sōṅku.) A blister? (ಬೊಕ್ಕೆ, bokke.) Nutritious? (ಪೌಷ್ಟಿಕ, pauṣṭika.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R175-second-pass-words-from-chapters-171-175",
+      "sequence": 7940,
+      "title": "Words from chapters 171-175 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 171-175",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:238b57470735352e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for always and now and then."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "always, now and then, a date, the weekend, before",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: always, now and then, a date, the weekend, before]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rarely, every day, the beginning, a century, a moment",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: rarely, every day, the beginning, a century, a moment]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a kitchen, a bathroom, a toilet, a room, a courtyard",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a kitchen, a bathroom, a toilet, a room, a courtyard]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tourist, a lake, a cave, a zoo, a palace",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tourist, a lake, a cave, a zoo, a palace]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fence, a pillar, beside, on the other side, on this side",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fence, a pillar, beside, on the other side, on this side]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Always? (ಯಾವಾಗಲೂ, yāvāgalū.) Now and then? (ಆಗಾಗ, āgāga.) A date? (ದಿನಾಂಕ, dināṅka.) The weekend? (ವಾರಾಂತ್ಯ, vārāntya.) Before? (ಮುಂಚೆ, muñce.) Rarely? (ಅಪರೂಪಕ್ಕೆ, aparūpakke.) Every day? (ಪ್ರತಿದಿನ, pratidina.) The beginning? (ಆರಂಭ, ārambha.) A century? (ಶತಮಾನ, śatamāna.) A moment? (ಕ್ಷಣ, kṣaṇa.) A kitchen? (ಅಡುಗೆಮನೆ, aḍugemane.) A bathroom? (ಸ್ನಾನದ ಮನೆ, snānada mane.) A toilet? (ಶೌಚಾಲಯ, śaucālaya.) A room? (ಕೋಣೆ, kōṇe.) A courtyard? (ಅಂಗಳ, aṅgaḷa.) A tourist? (ಪ್ರವಾಸಿ, pravāsi.) A lake? (ಸರೋವರ, sarōvara.) A cave? (ಗುಹೆ, guhe.) A zoo? (ಮೃಗಾಲಯ, mṛgālaya.) A palace? (ಅರಮನೆ, aramane.) A fence? (ಬೇಲಿ, bēli.) A pillar? (ಕಂಬ, kamba.) Beside? (ಪಕ್ಕ, pakka.) On the other side? (ಆಚೆ, āce.) On this side? (ಈಚೆ, īce.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

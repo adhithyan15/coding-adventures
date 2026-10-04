@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C182-magida",
+    "language": "kannada",
+    "chapter": 182,
+    "sequence": 8280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21e75118a7babe64"
+  },
+  "findings": []
+}

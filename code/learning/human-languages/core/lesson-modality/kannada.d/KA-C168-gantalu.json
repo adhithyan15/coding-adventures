@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C168-gantalu",
+    "language": "kannada",
+    "chapter": 168,
+    "sequence": 7540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cfff23ff418bc37b"
+  },
+  "findings": []
+}

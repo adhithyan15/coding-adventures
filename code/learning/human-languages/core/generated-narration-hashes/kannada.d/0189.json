@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:58ddc8c9f4208a77",
+  "lessonIds": [
+    "KA-C189-gumpu",
+    "KA-C189-jatre",
+    "KA-C189-puje",
+    "KA-C189-devaru",
+    "KA-C189-upavasa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch189.txt",
+  "json": "kannada/narration/ch189.json",
+  "textHash": "fnv1a64:def8f593bb907c52",
+  "jsonHash": "fnv1a64:4bda45e122ae2ef2",
+  "findings": []
+}

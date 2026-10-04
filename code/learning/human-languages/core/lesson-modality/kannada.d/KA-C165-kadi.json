@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C165-kadi",
+    "language": "kannada",
+    "chapter": 165,
+    "sequence": 7360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:031c683c00c98ed9"
+  },
+  "findings": []
+}

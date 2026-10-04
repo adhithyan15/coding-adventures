@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:d7b7ee9ca9938a3b",
+  "lessonIds": [
+    "KA-C192-oralu",
+    "KA-C192-onake",
+    "KA-C192-miksi",
+    "KA-C192-jaradi",
+    "KA-C192-turimane"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch192.txt",
+  "json": "kannada/narration/ch192.json",
+  "textHash": "fnv1a64:8594ddb2c6262bf9",
+  "jsonHash": "fnv1a64:e6690225782761fc",
+  "findings": []
+}

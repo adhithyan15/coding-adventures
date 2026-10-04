@@ -1,0 +1,11 @@
+{
+  "id": "KA-C171-dinanka",
+  "pathSegment": "KA-PATH-171-KALA171",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-171-KALA171",
+      "order": 2
+    }
+  ]
+}

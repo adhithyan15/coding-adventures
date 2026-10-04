@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C185-kilo",
+    "language": "kannada",
+    "chapter": 185,
+    "sequence": 8450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7493192d64c443db"
+  },
+  "findings": []
+}

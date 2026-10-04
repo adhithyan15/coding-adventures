@@ -1,0 +1,11 @@
+{
+  "id": "KA-C192-jaradi",
+  "pathSegment": "KA-PATH-192-VASTU192",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-192-VASTU192",
+      "order": 3
+    }
+  ]
+}

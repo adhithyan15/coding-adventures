@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C166-soru",
+    "language": "kannada",
+    "chapter": 166,
+    "sequence": 7440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:35ba55a12e7c2b0c"
+  },
+  "findings": []
+}

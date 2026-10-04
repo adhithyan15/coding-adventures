@@ -1,0 +1,11 @@
+{
+  "id": "KA-C163-mosa-madu",
+  "pathSegment": "KA-PATH-163-KRIYE163",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-163-KRIYE163",
+      "order": 2
+    }
+  ]
+}

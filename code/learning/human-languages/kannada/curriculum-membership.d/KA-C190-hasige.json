@@ -1,0 +1,11 @@
+{
+  "id": "KA-C190-hasige",
+  "pathSegment": "KA-PATH-190-VASTU190",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-190-VASTU190",
+      "order": 3
+    }
+  ]
+}

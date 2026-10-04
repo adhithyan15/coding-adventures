@@ -1,0 +1,19 @@
+{
+  "chapter": 169,
+  "title": "Patience, Jealousy, Loneliness, Curiosity, Feeling",
+  "label": "ch:ka-patience-jealousy-loneliness-curiosity-feeling",
+  "canDo": "I can say patience, jealousy, loneliness, curiosity and a feeling.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "KA-C169-bhavane",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 169: I can say patience, jealousy, loneliness, curiosity and a feeling.",
+    "assesses": [
+      "KA-LEX-C169-AROGYA169-03",
+      "KA-LEX-C169-AROGYA169-04",
+      "KA-LEX-C169-AROGYA169-05"
+    ]
+  }
+}

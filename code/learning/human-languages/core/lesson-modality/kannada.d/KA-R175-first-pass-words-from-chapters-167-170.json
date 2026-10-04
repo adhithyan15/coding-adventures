@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R175-first-pass-words-from-chapters-167-170",
+    "language": "kannada",
+    "chapter": 175,
+    "sequence": 7930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:71ee1c6639907d7f"
+  },
+  "findings": []
+}

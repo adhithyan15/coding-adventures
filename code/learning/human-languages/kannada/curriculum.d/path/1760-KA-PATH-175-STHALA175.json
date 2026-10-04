@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-175-STHALA175",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "KA-EXT-175-STHALA175"
+  ],
+  "after": []
+}

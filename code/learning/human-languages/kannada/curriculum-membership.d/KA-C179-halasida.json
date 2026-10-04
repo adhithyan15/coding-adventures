@@ -1,0 +1,11 @@
+{
+  "id": "KA-C179-halasida",
+  "pathSegment": "KA-PATH-179-GUNA179",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-179-GUNA179",
+      "order": 1
+    }
+  ]
+}

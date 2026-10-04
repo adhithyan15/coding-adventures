@@ -1,0 +1,19 @@
+{
+  "chapter": 194,
+  "title": "Salary, Customer, Tailor, Housework, Boss",
+  "label": "ch:ka-salary-customer-tailor-housework-boss",
+  "canDo": "I can say a salary, a customer, a tailor, housework and a boss.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C194-meladhikari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 194: I can say a salary, a customer, a tailor, housework and a boss.",
+    "assesses": [
+      "KA-LEX-C194-KELASA194-03",
+      "KA-LEX-C194-KELASA194-04",
+      "KA-LEX-C194-KELASA194-05"
+    ]
+  }
+}

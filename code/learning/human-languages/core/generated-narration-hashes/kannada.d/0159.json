@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:a0a45432e3d853d0",
+  "lessonIds": [
+    "KA-C159-suli",
+    "KA-C159-are",
+    "KA-C159-badisu",
+    "KA-C159-ruci-nodu",
+    "KA-C159-agi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch159.txt",
+  "json": "kannada/narration/ch159.json",
+  "textHash": "fnv1a64:6fe2bd883bea5847",
+  "jsonHash": "fnv1a64:6c24720beaeec184",
+  "findings": []
+}

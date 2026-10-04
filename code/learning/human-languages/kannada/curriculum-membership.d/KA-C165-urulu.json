@@ -1,0 +1,11 @@
+{
+  "id": "KA-C165-urulu",
+  "pathSegment": "KA-PATH-165-KRIYE165",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-165-KRIYE165",
+      "order": 2
+    }
+  ]
+}

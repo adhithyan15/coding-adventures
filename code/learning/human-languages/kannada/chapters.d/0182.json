@@ -1,0 +1,19 @@
+{
+  "chapter": 182,
+  "title": "Stingy, Stubborn, Rotten, Ripe, One's own",
+  "label": "ch:ka-stingy-stubborn-rotten-ripe-one-s-own",
+  "canDo": "I can say stingy, stubborn, rotten, ripe and one's own.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "KA-C182-svanta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 182: I can say stingy, stubborn, rotten, ripe and one's own.",
+    "assesses": [
+      "KA-LEX-C182-GUNA182-03",
+      "KA-LEX-C182-GUNA182-04",
+      "KA-LEX-C182-GUNA182-05"
+    ]
+  }
+}

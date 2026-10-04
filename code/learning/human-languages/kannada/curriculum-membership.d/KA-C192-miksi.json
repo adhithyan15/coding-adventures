@@ -1,0 +1,11 @@
+{
+  "id": "KA-C192-miksi",
+  "pathSegment": "KA-PATH-192-VASTU192",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-192-VASTU192",
+      "order": 2
+    }
+  ]
+}

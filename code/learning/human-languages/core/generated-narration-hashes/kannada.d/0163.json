@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:d04cca9d26ff5462",
+  "lessonIds": [
+    "KA-C163-anumanapadu",
+    "KA-C163-sahisu",
+    "KA-C163-mosa-madu",
+    "KA-C163-hondiko",
+    "KA-C163-nedu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch163.txt",
+  "json": "kannada/narration/ch163.json",
+  "textHash": "fnv1a64:e964024c4159dafa",
+  "jsonHash": "fnv1a64:66b05e4e8b547142",
+  "findings": []
+}

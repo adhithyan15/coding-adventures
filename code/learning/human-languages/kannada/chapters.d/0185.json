@@ -1,0 +1,19 @@
+{
+  "chapter": 185,
+  "title": "Banknote, Coin, Discount, Kilogram, Purse",
+  "label": "ch:ka-banknote-coin-discount-kilogram-purse",
+  "canDo": "I can say a banknote, a coin, a discount, a kilogram and a purse.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C185-pars",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 185: I can say a banknote, a coin, a discount, a kilogram and a purse.",
+    "assesses": [
+      "KA-LEX-C185-VASTU185-03",
+      "KA-LEX-C185-VASTU185-04",
+      "KA-LEX-C185-VASTU185-05"
+    ]
+  }
+}

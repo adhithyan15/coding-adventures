@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C193-cauka",
+    "language": "kannada",
+    "chapter": 193,
+    "sequence": 8850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5eb6c5580ada24d0"
+  },
+  "findings": []
+}

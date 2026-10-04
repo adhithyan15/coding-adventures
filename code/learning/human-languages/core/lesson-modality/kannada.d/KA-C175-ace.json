@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C175-ace",
+    "language": "kannada",
+    "chapter": 175,
+    "sequence": 7910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9be0a531d86979d6"
+  },
+  "findings": []
+}

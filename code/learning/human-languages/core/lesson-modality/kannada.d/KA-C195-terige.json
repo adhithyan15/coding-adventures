@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C195-terige",
+    "language": "kannada",
+    "chapter": 195,
+    "sequence": 8970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7b6a0c5e1629e102"
+  },
+  "findings": []
+}

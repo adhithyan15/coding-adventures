@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C183-battalu",
+    "language": "kannada",
+    "chapter": 183,
+    "sequence": 8320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f725a9546406185e"
+  },
+  "findings": []
+}

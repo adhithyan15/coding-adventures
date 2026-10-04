@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:a6f0be7c706c384e",
+  "lessonIds": [
+    "KA-C179-taja",
+    "KA-C179-halasida",
+    "KA-C179-hasi",
+    "KA-C179-sappe",
+    "KA-C179-dubari"
+  ],
+  "tex": "kannada/book/chapters/ch179-fresh-stale-raw-bland-expensive.tex"
+}

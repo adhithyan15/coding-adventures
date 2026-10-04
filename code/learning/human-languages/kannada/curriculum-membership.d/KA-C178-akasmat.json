@@ -1,0 +1,11 @@
+{
+  "id": "KA-C178-akasmat",
+  "pathSegment": "KA-PATH-178-KARANA178",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-178-KARANA178",
+      "order": 1
+    }
+  ]
+}

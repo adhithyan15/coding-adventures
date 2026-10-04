@@ -1,0 +1,11 @@
+{
+  "id": "KA-C190-bencu",
+  "pathSegment": "KA-PATH-190-VASTU190",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-190-VASTU190",
+      "order": 1
+    }
+  ]
+}

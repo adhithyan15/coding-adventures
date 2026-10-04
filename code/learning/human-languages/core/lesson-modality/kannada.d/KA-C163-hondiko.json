@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C163-hondiko",
+    "language": "kannada",
+    "chapter": 163,
+    "sequence": 7290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a5c5d2f257a7aec"
+  },
+  "findings": []
+}

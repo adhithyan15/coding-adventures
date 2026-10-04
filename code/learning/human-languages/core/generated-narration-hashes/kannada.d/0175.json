@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:fd2fc8690b45d5fd",
+  "lessonIds": [
+    "KA-C175-beli",
+    "KA-C175-kamba",
+    "KA-C175-pakka",
+    "KA-C175-ace",
+    "KA-C175-ice",
+    "KA-R175-first-pass-words-from-chapters-167-170",
+    "KA-R175-second-pass-words-from-chapters-171-175"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch175.txt",
+  "json": "kannada/narration/ch175.json",
+  "textHash": "fnv1a64:35f1f179bc1ae6b5",
+  "jsonHash": "fnv1a64:487447e204e0df96",
+  "findings": []
+}

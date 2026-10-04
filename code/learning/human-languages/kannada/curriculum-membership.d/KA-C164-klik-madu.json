@@ -1,0 +1,11 @@
+{
+  "id": "KA-C164-klik-madu",
+  "pathSegment": "KA-PATH-164-KRIYE164",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-164-KRIYE164",
+      "order": 1
+    }
+  ]
+}

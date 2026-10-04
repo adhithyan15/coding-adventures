@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:a596c100f316ef7b",
+  "lessonIds": [
+    "KA-C169-talme",
+    "KA-C169-asuye",
+    "KA-C169-ontitana",
+    "KA-C169-kutuhala",
+    "KA-C169-bhavane"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch169.txt",
+  "json": "kannada/narration/ch169.json",
+  "textHash": "fnv1a64:54f4d279dd48d788",
+  "jsonHash": "fnv1a64:3f55eb1069b9000c",
+  "findings": []
+}

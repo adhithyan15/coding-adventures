@@ -1,0 +1,19 @@
+{
+  "chapter": 193,
+  "title": "Cardboard, Shape, Circle, Square, Triangle",
+  "label": "ch:ka-cardboard-shape-circle-square-triangle",
+  "canDo": "I can say cardboard, a shape, a circle, a square and a triangle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-R193-second-pass-words-from-chapters-189-193",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 193: I can say cardboard, a shape, a circle, a square and a triangle.",
+    "assesses": [
+      "KA-LEX-C193-VASTU193-03",
+      "KA-LEX-C193-VASTU193-04",
+      "KA-LEX-C193-VASTU193-05"
+    ]
+  }
+}

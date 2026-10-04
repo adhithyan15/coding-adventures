@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:a54f8ed82044d3de",
+  "lessonIds": [
+    "KA-C180-ucita",
+    "KA-C180-sarkari",
+    "KA-C180-khasagi",
+    "KA-C180-sthaliya",
+    "KA-C180-kaddaya"
+  ],
+  "tex": "kannada/book/chapters/ch180-free-of-charge-government-private-local-compulsory.tex"
+}

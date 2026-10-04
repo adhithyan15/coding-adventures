@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C186-sandesa",
+    "language": "kannada",
+    "chapter": 186,
+    "sequence": 8470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57cbe81670145e09"
+  },
+  "findings": []
+}

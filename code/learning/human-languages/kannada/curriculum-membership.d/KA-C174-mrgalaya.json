@@ -1,0 +1,11 @@
+{
+  "id": "KA-C174-mrgalaya",
+  "pathSegment": "KA-PATH-174-STHALA174",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-174-STHALA174",
+      "order": 3
+    }
+  ]
+}

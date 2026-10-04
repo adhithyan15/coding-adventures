@@ -1,0 +1,11 @@
+{
+  "id": "KA-C171-munce",
+  "pathSegment": "KA-PATH-171-KALA171",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-171-KALA171",
+      "order": 4
+    }
+  ]
+}

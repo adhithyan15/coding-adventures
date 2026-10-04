@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C183-baket",
+    "language": "kannada",
+    "chapter": 183,
+    "sequence": 8340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e82a1058945d89a"
+  },
+  "findings": []
+}

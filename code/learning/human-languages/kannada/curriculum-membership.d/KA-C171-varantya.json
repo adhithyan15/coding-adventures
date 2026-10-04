@@ -1,0 +1,11 @@
+{
+  "id": "KA-C171-varantya",
+  "pathSegment": "KA-PATH-171-KALA171",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-171-KALA171",
+      "order": 3
+    }
+  ]
+}

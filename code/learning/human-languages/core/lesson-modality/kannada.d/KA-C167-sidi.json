@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C167-sidi",
+    "language": "kannada",
+    "chapter": 167,
+    "sequence": 7510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a410a45d2fb70624"
+  },
+  "findings": []
+}

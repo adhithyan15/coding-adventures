@@ -1,0 +1,19 @@
+{
+  "chapter": 168,
+  "title": "Forehead, Throat, Heel, Thigh, Palm",
+  "label": "ch:ka-forehead-throat-heel-thigh-palm",
+  "canDo": "I can say the forehead, the throat, the heel, the thigh and the palm.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "KA-C168-angai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 168: I can say the forehead, the throat, the heel, the thigh and the palm.",
+    "assesses": [
+      "KA-LEX-C168-AROGYA168-03",
+      "KA-LEX-C168-AROGYA168-04",
+      "KA-LEX-C168-AROGYA168-05"
+    ]
+  }
+}

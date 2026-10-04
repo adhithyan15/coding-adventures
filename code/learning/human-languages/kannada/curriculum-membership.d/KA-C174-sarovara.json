@@ -1,0 +1,11 @@
+{
+  "id": "KA-C174-sarovara",
+  "pathSegment": "KA-PATH-174-STHALA174",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-174-STHALA174",
+      "order": 1
+    }
+  ]
+}

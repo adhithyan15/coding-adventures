@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:433b6dd6d16d525d",
+  "lessonIds": [
+    "KA-C190-sopha",
+    "KA-C190-bencu",
+    "KA-C190-stulu",
+    "KA-C190-hasige",
+    "KA-C190-kodali"
+  ],
+  "tex": "kannada/book/chapters/ch190-sofa-bench-stool-mattress-axe.tex"
+}

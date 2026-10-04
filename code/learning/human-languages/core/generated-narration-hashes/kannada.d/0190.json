@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:0c4715caf2f3de7b",
+  "lessonIds": [
+    "KA-C190-sopha",
+    "KA-C190-bencu",
+    "KA-C190-stulu",
+    "KA-C190-hasige",
+    "KA-C190-kodali"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch190.txt",
+  "json": "kannada/narration/ch190.json",
+  "textHash": "fnv1a64:a79abf42b6c63960",
+  "jsonHash": "fnv1a64:fe894cbae9c37c09",
+  "findings": []
+}

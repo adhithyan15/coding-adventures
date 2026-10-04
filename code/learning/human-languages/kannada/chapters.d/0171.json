@@ -1,0 +1,19 @@
+{
+  "chapter": 171,
+  "title": "Always, Now and then, Date, Weekend, Before",
+  "label": "ch:ka-always-now-and-then-date-weekend-before",
+  "canDo": "I can say always, now and then, a date, the weekend and before.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "KA-C171-munce",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 171: I can say always, now and then, a date, the weekend and before.",
+    "assesses": [
+      "KA-LEX-C171-KALA171-03",
+      "KA-LEX-C171-KALA171-04",
+      "KA-LEX-C171-KALA171-05"
+    ]
+  }
+}

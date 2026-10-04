@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:d9ce12eb3886c663",
+  "lessonIds": [
+    "KA-C196-lekhaka",
+    "KA-C196-nirdesaka",
+    "KA-C196-atagara",
+    "KA-C196-preksaka",
+    "KA-C196-badagi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch196.txt",
+  "json": "kannada/narration/ch196.json",
+  "textHash": "fnv1a64:b957295a45b11247",
+  "jsonHash": "fnv1a64:c28c0b799efe3946",
+  "findings": []
+}

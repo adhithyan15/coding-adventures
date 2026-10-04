@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:9ab69c0d3a81f461",
+  "lessonIds": [
+    "KA-C160-baggu",
+    "KA-C160-horu",
+    "KA-C160-vyayama-madu",
+    "KA-C160-sinu",
+    "KA-C160-nadugu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch160.txt",
+  "json": "kannada/narration/ch160.json",
+  "textHash": "fnv1a64:2c8e1b54c971cf72",
+  "jsonHash": "fnv1a64:93f3cec610afc260",
+  "findings": []
+}

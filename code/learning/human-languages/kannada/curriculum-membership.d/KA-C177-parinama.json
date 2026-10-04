@@ -1,0 +1,11 @@
+{
+  "id": "KA-C177-parinama",
+  "pathSegment": "KA-PATH-177-KARANA177",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-177-KARANA177",
+      "order": 3
+    }
+  ]
+}

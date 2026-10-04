@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C160-nadugu",
+    "language": "kannada",
+    "chapter": 160,
+    "sequence": 7150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14325757afa284da"
+  },
+  "findings": []
+}

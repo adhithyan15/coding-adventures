@@ -1,0 +1,11 @@
+{
+  "id": "KA-C188-balli",
+  "pathSegment": "KA-PATH-188-VASTU188",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-188-VASTU188",
+      "order": 1
+    }
+  ]
+}

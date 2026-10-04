@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C181-sampradayika",
+    "language": "kannada",
+    "chapter": 181,
+    "sequence": 8240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2190618b2a428a0b"
+  },
+  "findings": []
+}

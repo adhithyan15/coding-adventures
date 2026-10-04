@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:4870080ee3abff3e",
+  "lessonIds": [
+    "KA-C193-rattu",
+    "KA-C193-akara",
+    "KA-C193-vrtta",
+    "KA-C193-cauka",
+    "KA-C193-trikona",
+    "KA-R193-first-pass-words-from-chapters-185-188",
+    "KA-R193-second-pass-words-from-chapters-189-193"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch193.txt",
+  "json": "kannada/narration/ch193.json",
+  "textHash": "fnv1a64:938dacde5abd58c6",
+  "jsonHash": "fnv1a64:4f76b71ad791323e",
+  "findings": []
+}

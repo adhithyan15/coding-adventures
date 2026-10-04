@@ -1,0 +1,19 @@
+{
+  "chapter": 160,
+  "title": "To bend down, To carry, To exercise, To sneeze, To shiver",
+  "label": "ch:ka-to-bend-down-to-carry-to-exercise-to-sneeze-to-shiver",
+  "canDo": "I can say to bend down, to carry, to exercise, to sneeze and to shiver.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C160-nadugu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 160: I can say to bend down, to carry, to exercise, to sneeze and to shiver.",
+    "assesses": [
+      "KA-LEX-C160-KRIYE160-03",
+      "KA-LEX-C160-KRIYE160-04",
+      "KA-LEX-C160-KRIYE160-05"
+    ]
+  }
+}

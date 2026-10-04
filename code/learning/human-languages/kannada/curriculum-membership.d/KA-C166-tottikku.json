@@ -1,0 +1,11 @@
+{
+  "id": "KA-C166-tottikku",
+  "pathSegment": "KA-PATH-166-KRIYE166",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-166-KRIYE166",
+      "order": 2
+    }
+  ]
+}

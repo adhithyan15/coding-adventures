@@ -1,0 +1,19 @@
+{
+  "chapter": 190,
+  "title": "Sofa, Bench, Stool, Mattress, Axe",
+  "label": "ch:ka-sofa-bench-stool-mattress-axe",
+  "canDo": "I can say a sofa, a bench, a stool, a mattress and an axe.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C190-kodali",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 190: I can say a sofa, a bench, a stool, a mattress and an axe.",
+    "assesses": [
+      "KA-LEX-C190-VASTU190-03",
+      "KA-LEX-C190-VASTU190-04",
+      "KA-LEX-C190-VASTU190-05"
+    ]
+  }
+}
