@@ -1769,6 +1769,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — additive composition may combine runtime-real provenance
+    // with finite static operands without opening multiplicative expressions.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; real x; x := pick() + 1.25; output(10.0 - x + pick()) end",
+        expect: Expect::Stdout("8.75"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — static integer-valued functions may feed checked snapshots and widen into
     // bounded static real expressions. Copying preserves the destination when
     // the source is reassigned; overflow, control flow, calls, captures,
@@ -12194,6 +12203,29 @@ fn algol_unary_minus_runtime_real_output_runs_on_every_available_standard_backen
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but unary-minus runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_additive_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("output(10.0 - x + pick())")
+        })
+        .expect("the ALGOL additive runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but additive runtime real output did not complete"
             );
             continue;
         };

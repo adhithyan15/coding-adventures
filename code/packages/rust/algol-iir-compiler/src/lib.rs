@@ -3784,6 +3784,31 @@ impl Compiler {
         if let Some((sign, child)) = single_signed_child(node) {
             return matches!(sign, "+" | "-") && self.is_runtime_real_assignment_value(child);
         }
+        if matches!(node.rule_name.as_str(), "expr_add" | "simple_arith") {
+            let sequence = pieces(node);
+            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
+                let mut saw_runtime_real = false;
+                for (index, piece) in sequence.iter().enumerate() {
+                    if index % 2 == 0 {
+                        let Piece::Node(operand) = piece else {
+                            return false;
+                        };
+                        if self.is_runtime_real_assignment_value(operand) {
+                            saw_runtime_real = true;
+                        } else if expr_static_real_arithmetic_value_with(operand, &|_| None)
+                            .is_none()
+                        {
+                            return false;
+                        }
+                    } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "+" | "-")) {
+                        return false;
+                    }
+                }
+                if saw_runtime_real {
+                    return true;
+                }
+            }
+        }
         if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
             if self.contains_procedure_call(condition) {
                 return false;
@@ -12211,9 +12236,29 @@ mod tests {
     }
 
     #[test]
+    fn al4_runtime_real_provenance_crosses_additive_composition() {
+        for source in [
+            "begin real procedure pick; pick := 2.25; output(pick() + 1.25) end",
+            "begin real procedure pick; pick := 2.25; real x; x := pick() + 1.25; output(x) end",
+            "begin real procedure pick; pick := 2.25; real x; x := pick() + 1.25; output(10.0 - x + pick()) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "additive composition must preserve runtime-real formatter provenance for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
     fn al4_runtime_real_scalar_copy_provenance_does_not_admit_wrappers() {
         for source in [
-            "begin real procedure pick; pick := 2.25; real x, y; x := pick(); y := x + 0.0; output(y) end",
             "begin real procedure pick; pick := 2.25; real x, y; procedure capture; y := x; x := pick(); y := x; output(y) end",
             "begin real procedure pick; pick := 2.25; boolean flag; real x; x := if flag then pick() else 1.0; output(x) end",
             "begin real procedure pick; pick := 2.25; boolean procedure choose; choose := true; real x; x := pick(); output(if choose() then x else x) end",
@@ -12225,12 +12270,12 @@ mod tests {
     }
 
     #[test]
-    fn al4_runtime_real_scalar_formatter_does_not_admit_composition() {
+    fn al4_runtime_real_scalar_formatter_does_not_admit_multiplicative_composition() {
         let err = compile_source(
-            "begin real procedure pick; pick := 2.25; real x; x := pick(); output(x + 0.0) end",
+            "begin real procedure pick; pick := 2.25; real x; x := pick(); output(x * 1.0) end",
             "test",
         )
-        .expect_err("the scalar formatter gate must not admit dynamic arithmetic");
+        .expect_err("the scalar formatter gate must not admit dynamic multiplication");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
