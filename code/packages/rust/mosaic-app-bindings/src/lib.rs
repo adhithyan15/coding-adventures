@@ -47,6 +47,15 @@ pub fn compose_platform_effects() -> String {
     include_str!("../templates/compose/MosaicPlatformEffects.kt").to_string()
 }
 
+/// Android's half of the Compose platform library (UI89 §3.8): `files.open`
+/// and `files.save` through the Storage Access Framework's document picker,
+/// as [`compose_file_effects`]' picker, and the install `MosaicActivity`
+/// calls. Written as `android/src/main/kotlin/MosaicPlatformEffects.kt`, in
+/// place of the desktop's, which never reaches Android.
+pub fn compose_android_platform_effects() -> String {
+    include_str!("../templates/compose/android/MosaicPlatformEffects.kt").to_string()
+}
+
 /// The SwiftUI platform library (UI87 §7): `files.open` and `files.save`
 /// through `NSOpenPanel` / `NSSavePanel` on macOS and
 /// `UIDocumentPickerViewController` on iOS and iPadOS (UI89 §3.8), and the

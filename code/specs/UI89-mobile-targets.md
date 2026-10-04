@@ -157,7 +157,7 @@ and are the seams to cut:
 |---|---|---|
 | `Main.kt` holds both `fun main() = application { Window(…) }` and the shared `MosaicApp(host)` composable | `application`/`Window` exist only on desktop | split: `MosaicAppShell.kt` (shared: `MosaicApp`, `MosaicComposeHost`, the prop helpers) and `Main.kt` (desktop `main`) |
 | components with drag and drop read `event.awtTransferable` | AWT | the component calls platform functions -- `mosaicDragText(event)`, `mosaicDragPosition(event)`, `mosaicDragTransfer(text, onCompleted)` and `mosaicDragEnded(event)` -- defined in `MosaicPlatform.kt`, one per platform (desktop: AWT; Android: `ClipData`, see §3.5) |
-| `MosaicPlatformEffects.kt` opens `java.awt.FileDialog` | AWT | desktop-only file; Android gets its own library later (§3.3, step 6) and installs nothing until then |
+| `MosaicPlatformEffects.kt` opens `java.awt.FileDialog` | AWT | desktop-only file; Android has its own `MosaicPlatformEffects.kt`, the document picker, beside the shared `MosaicFileEffects.kt` (§3.8) |
 | `MosaicRuntimeHost` finds its state under `user.home`, its library through `compose.application.resources.dir` | JVM desktop properties | `MosaicRuntimeHost.load(stateDirectory = …)`: the Android activity passes `filesDir`; JNA loads `libmosaic_app.so` from `jniLibs` by name |
 
 Each seam lands first with desktop output unchanged, byte-for-byte except for
@@ -199,7 +199,8 @@ What step 4 changed from §3.4, and why:
   every exported component with its layout variants. It writes the Android
   project last, after `[host_assets]` and `[host_effects]` are installed (the
   iOS project's rule), so a replaced shared file reaches Android too. Package
-  effect handlers stay desktop-only until step 6.
+  effect handlers stay desktop-only; the standard file effects reach Android
+  through its own platform library (§3.8).
 - **The activity lives in a package.** A manifest cannot name a class in the
   root package, and the shared sources live there. `MosaicActivity` is
   `mosaic.android.MosaicActivity`, and imports the root-package shell, which
@@ -476,6 +477,37 @@ hand-off through the router with fakes; the iOS picker itself is compiled by
 CI's iOS simulator and device builds and driven by nothing until §4's
 XCUITest.
 
+**As built: Android (third PR).** `mosaic-app-bindings`'
+`compose_android_platform_effects()` is written as
+`android/src/main/kotlin/MosaicPlatformEffects.kt`, and `MosaicFileEffects.kt`
+joins the shared sources copied from the desktop project. The library is
+`MosaicAndroidDocumentPicker` (two launchers: `OpenDocument`, and
+`MosaicCreateDocument`, a contract that takes the type and title per request,
+since `CreateDocument` fixes its type when registered) and an
+`installMosaicPlatformEffects(host, picker)` that returns the router. A save
+asks for the suggested name's own type when the request accepts it (or
+accepts anything), else the first type it accepts. A provider's display
+name reaches the app only when it is an ordinary name -- after any `/` or
+`\`, not `.` or `..`, no control or separator characters, lone surrogates or
+bidirectional controls, at most 255 UTF-16 units (the zero-width joiners of
+ordinary writing and emoji pass) -- and is "document" otherwise; its MIME type is used only
+when shaped like one, each part at most 127 characters. Both are asked of
+the provider on the background thread. A failed write is reported, never
+cleaned up by deleting the document, which may be one the person already
+had. A launch that throws anything leaves the picker not waiting. *Known
+limit:* a provider whose stream blocks for ever (a stalled network pipe)
+holds the one background thread, and with it the one file operation, until
+the process ends; a no-progress watchdog that fails the request is a
+follow-up.
+`MosaicActivity` constructs the picker in `onCreate` before `setContent`,
+installs the library as the host loads (inside `MosaicStartup`'s loader, or
+the sample's `remember`), and in `onDestroy` fails the request whose picker
+is still open. The CI Android build checks the shared and Android files are
+in the project and that `MosaicPlatformRouter`, `MosaicFileEffectsKt` and
+`MosaicAndroidDocumentPicker` are in the dex; the library and both
+activities were type-checked locally against `android.jar` (API 36). The
+picker itself is driven by nothing until §4's instrumented test.
+
 **Order.** Three PRs: the Kotlin shared core and asynchronous router, with
 desktop behaviour unchanged; the Swift router's asynchronous path with the
 iOS picker; the Android library.
@@ -505,7 +537,9 @@ lanes are green, as their own PRs.
    emulator test. *Done (§3.6, §3.7): the engine is built per ABI and
    packaged, and Trestle launches, restores its state and quarantines refused
    state on an x86_64 emulator.*
-6. **Mobile host effects** through UI87's shared libraries.
+6. **Mobile host effects** through UI87's shared libraries. *Done (§3.8):
+   Compose on Android and SwiftUI on iOS and iPadOS; Flutter's arrive with
+   step 8, which builds Flutter for phones.*
 7. **Every app:** Journal, Engram, Venture (after BR02's host work).
 8. **Flutter:** `flutter create --platforms=android,ios`, per-ABI native
    assets, `path_provider` for state.
