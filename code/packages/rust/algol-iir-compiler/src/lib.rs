@@ -539,8 +539,8 @@ struct Compiler {
     initialized_string_slots: HashSet<String>,
     /// Canonical text for local real scalars assigned a finite compile-time
     /// expression along a straight-line path. This deliberately stops tracking
-    /// at control flow or procedure calls; a general runtime f64 formatter is
-    /// still required once the source value can vary at run time.
+    /// at control flow or procedure calls; direct zero-argument real-procedure
+    /// results use the portable formatter, while scalar migration is separate.
     static_real_slots: HashMap<String, String>,
     /// Exact values for local integer scalars assigned a literal or another
     /// tracked integer along the same straight-line path. These snapshots may
@@ -549,6 +549,7 @@ struct Compiler {
     /// Static values for local boolean scalars along the current path.
     static_boolean_slots: HashMap<String, bool>,
     static_real_tracking_disabled: bool,
+    needs_real_print_helpers: bool,
 }
 
 impl Default for Compiler {
@@ -590,6 +591,7 @@ impl Default for Compiler {
             static_integer_slots: HashMap::new(),
             static_boolean_slots: HashMap::new(),
             static_real_tracking_disabled: false,
+            needs_real_print_helpers: false,
         }
     }
 }
@@ -659,6 +661,11 @@ impl Compiler {
         // a same-module `call` resolves the callee's signature by name.
         for proc in self.functions {
             module.functions.push(proc);
+        }
+        if self.needs_real_print_helpers {
+            module.functions.extend(
+                dartmouth_basic_iir_compiler::portable_numeric_print_helpers(),
+            );
         }
         module.entry_point = Some("main".to_string());
 
@@ -2283,7 +2290,7 @@ impl Compiler {
                     )));
                 }
                 let value = self.read_scalar(binding);
-                self.emit_standard_output_value(name, value)?;
+                self.emit_standard_output_value(name, value, false)?;
                 continue;
             }
 
@@ -2294,10 +2301,11 @@ impl Compiler {
             // `print_str` of a runtime string on all seven columns, so — unlike
             // the literal/variable fast paths above — no literal-backing is
             // required. Integer expressions use the shared numeric stdout
-            // builtin, while booleans select typed string literals. Real
-            // formatting remains an explicit type error.
+            // builtin, booleans select typed string literals, and direct
+            // zero-argument real-procedure results use the portable formatter.
+            let allow_runtime_real = self.is_direct_declared_real_procedure_call(actual);
             let value = self.emit_expr(actual)?;
-            self.emit_standard_output_value(name, value)?;
+            self.emit_standard_output_value(name, value, allow_runtime_real)?;
         }
 
         Ok(true)
@@ -3668,6 +3676,7 @@ impl Compiler {
         &mut self,
         name: &str,
         value: ExprValue,
+        allow_runtime_real: bool,
     ) -> Result<(), CompileError> {
         match value.ty {
             ScalarType::String => self.emit(IIRInstr::new(
@@ -3687,10 +3696,23 @@ impl Compiler {
             )),
             ScalarType::Boolean => self.emit_standard_output_boolean(value.slot),
             ScalarType::Real => {
-                return Err(CompileError::Type(format!(
-                    "standard output procedure {name:?} cannot print a {} value",
-                    value.ty.name()
-                )))
+                if !allow_runtime_real {
+                    return Err(CompileError::Type(format!(
+                        "standard output procedure {name:?} cannot print a {} value",
+                        value.ty.name()
+                    )));
+                }
+                self.needs_real_print_helpers = true;
+                let result = self.fresh_temp();
+                self.emit(IIRInstr::new(
+                    "call",
+                    Some(result),
+                    vec![
+                        Operand::Var("__basic_print_real".to_string()),
+                        Operand::Var(value.slot),
+                    ],
+                    "i64",
+                ));
             }
         }
         Ok(())
@@ -3715,6 +3737,27 @@ impl Compiler {
         self.emit_label(&false_label);
         self.emit_standard_output_literal("false");
         self.emit_label(&end_label);
+    }
+
+    fn is_direct_declared_real_procedure_call(&self, node: &GrammarASTNode) -> bool {
+        if node.rule_name == "proc_call" {
+            let Some(source_name) = direct_tokens(node)
+                .into_iter()
+                .find(|token| token.effective_type_name() == "NAME")
+                .map(|token| token.value.clone())
+            else {
+                return false;
+            };
+            let target_name = self.resolve_procedure_identity(&source_name);
+            return self
+                .proc_sigs
+                .get(&target_name)
+                .is_some_and(|sig| {
+                    sig.params.is_empty() && sig.ret == Some(ScalarType::Real)
+                });
+        }
+        let children = direct_nodes(node);
+        children.len() == 1 && self.is_direct_declared_real_procedure_call(children[0])
     }
 
     fn disable_static_tracking(&mut self) {
@@ -12031,6 +12074,36 @@ mod tests {
             format!("{err:?}").contains("cannot print a real value"),
             "unexpected rejection: {err:?}"
         );
+    }
+
+    #[test]
+    fn al4_print_runtime_real_procedure_result_uses_portable_formatter() {
+        let module = compile_source(
+            "begin real procedure pick; pick := 2.25; output(pick()) end",
+            "test",
+        )
+        .expect("a runtime real procedure result uses the portable formatter");
+        let main = module.get_function("main").expect("has main");
+        assert!(
+            main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }),
+            "main instructions: {:#?}",
+            main.instructions
+        );
+        assert!(module.get_function("__basic_print_real").is_some());
+    }
+
+    #[test]
+    fn al4_runtime_real_formatter_does_not_admit_dynamic_scalar_composition() {
+        let err = compile_source(
+            "begin real procedure pick; pick := 0.0; real x; x := sin(1.0); output(pick() + x) end",
+            "test",
+        )
+        .expect_err("the bounded formatter gate must not admit dynamic scalar arithmetic");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
