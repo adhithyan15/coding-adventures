@@ -446,8 +446,8 @@ class CorpusTests(unittest.TestCase):
             {
                 "boundary_count": 18,
                 "input_count": 21,
-                "scope_count": 484,
-                "authorization_count": 487,
+                "scope_count": 485,
+                "authorization_count": 488,
             },
         )
         self.assertEqual(
