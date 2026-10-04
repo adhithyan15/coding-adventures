@@ -518,12 +518,18 @@ fn treemap_text_node(
         let opacity = style.and_then(|style| style.opacity).unwrap_or(1.0);
         let effects = EffectStyle {
             filters: shadows.iter().map(|shadow| {
-                let color = color_with_opacity(css_to_color(&shadow.color), opacity);
+                let shadow_color = match &shadow.color {
+                    diagram_ir::TreemapTextShadowColor::CurrentColor => color,
+                    diagram_ir::TreemapTextShadowColor::Color(value) =>
+                        color_with_opacity(css_to_color(value), opacity),
+                };
                 EffectFilter::DropShadow {
                     dx: shadow.offset_x,
                     dy: shadow.offset_y,
                     blur: shadow.blur_radius,
-                    color: EffectColor { r: color.r, g: color.g, b: color.b, a: color.a },
+                    color: EffectColor {
+                        r: shadow_color.r, g: shadow_color.g, b: shadow_color.b, a: shadow_color.a,
+                    },
                 }
             }).collect(),
             ..EffectStyle::default()
@@ -7294,10 +7300,12 @@ mod tests {
             Some(ExtValue::Map(html)) if html.get("dir") == Some(&ExtValue::Str("rtl".into()))));
         whitespace_style.text_shadow = Some(diagram_ir::TreemapTextShadow::Shadows(vec![
             diagram_ir::TreemapTextShadowLayer {
-                offset_x: 2.0, offset_y: 3.0, blur_radius: 4.0, color: "#334155".into(),
+                offset_x: 2.0, offset_y: 3.0, blur_radius: 4.0,
+                color: diagram_ir::TreemapTextShadowColor::Color("#334155".into()),
             },
             diagram_ir::TreemapTextShadowLayer {
-                offset_x: -1.0, offset_y: 0.0, blur_radius: 0.0, color: "#f8fafc".into(),
+                offset_x: -1.0, offset_y: 0.0, blur_radius: 0.0,
+                color: diagram_ir::TreemapTextShadowColor::CurrentColor,
             },
         ]));
         let shadowed_text = treemap_text_node(
@@ -7308,7 +7316,7 @@ mod tests {
             [EffectFilter::DropShadow { dx: 2.0, dy: 3.0, blur: 4.0,
                 color: EffectColor { r: 51, g: 65, b: 85, a: 204 } },
              EffectFilter::DropShadow { dx: -1.0, dy: 0.0, blur: 0.0,
-                color: EffectColor { r: 248, g: 250, b: 252, a: 204 } }]));
+                color: EffectColor { r: 12, g: 34, b: 56, a: 78 } }]));
         whitespace_style.white_space = Some(diagram_ir::TreemapWhiteSpace::Pre);
         whitespace_style.tab_size = Some(3);
         whitespace_style.text_transform = Some(diagram_ir::TreemapTextTransform::None);

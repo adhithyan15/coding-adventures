@@ -4856,8 +4856,8 @@ fn parse_treemap_text_shadow_layer(
             return Err(token_error(token, "treemap text-shadow supports one color"));
         }
     }
-    if !(2..=3).contains(&lengths.len()) || color.is_none() {
-        return Err(token_error(token, "treemap text-shadow requires x/y px offsets, optional px blur, and a color"));
+    if !(2..=3).contains(&lengths.len()) {
+        return Err(token_error(token, "treemap text-shadow requires x/y px offsets and optional px blur and color"));
     }
     let blur_radius = lengths.get(2).copied().unwrap_or(0.0);
     if blur_radius < 0.0 {
@@ -4867,7 +4867,12 @@ fn parse_treemap_text_shadow_layer(
         offset_x: lengths[0],
         offset_y: lengths[1],
         blur_radius,
-        color: color.expect("validated text-shadow color"),
+        color: match color {
+            None => diagram_ir::TreemapTextShadowColor::CurrentColor,
+            Some(color) if color.eq_ignore_ascii_case("currentcolor") =>
+                diagram_ir::TreemapTextShadowColor::CurrentColor,
+            Some(color) => diagram_ir::TreemapTextShadowColor::Color(color),
+        },
     })
 }
 
@@ -15033,15 +15038,18 @@ B//-A: reverse stick top
             ("none", diagram_ir::TreemapTextShadow::None),
             ("#334155 2px -3px", diagram_ir::TreemapTextShadow::Shadows(vec![
                 diagram_ir::TreemapTextShadowLayer {
-                    offset_x: 2.0, offset_y: -3.0, blur_radius: 0.0, color: "#334155".into(),
+                    offset_x: 2.0, offset_y: -3.0, blur_radius: 0.0,
+                    color: diagram_ir::TreemapTextShadowColor::Color("#334155".into()),
                 },
             ])),
-            ("1px 2px 4px navy, -2px 0 #f8fafc", diagram_ir::TreemapTextShadow::Shadows(vec![
+            ("1px 2px 4px, -2px 0 currentColor", diagram_ir::TreemapTextShadow::Shadows(vec![
                 diagram_ir::TreemapTextShadowLayer {
-                    offset_x: 1.0, offset_y: 2.0, blur_radius: 4.0, color: "navy".into(),
+                    offset_x: 1.0, offset_y: 2.0, blur_radius: 4.0,
+                    color: diagram_ir::TreemapTextShadowColor::CurrentColor,
                 },
                 diagram_ir::TreemapTextShadowLayer {
-                    offset_x: -2.0, offset_y: 0.0, blur_radius: 0.0, color: "#f8fafc".into(),
+                    offset_x: -2.0, offset_y: 0.0, blur_radius: 0.0,
+                    color: diagram_ir::TreemapTextShadowColor::CurrentColor,
                 },
             ])),
         ] {
@@ -15050,7 +15058,7 @@ B//-A: reverse stick top
             assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_shadow.clone()), Some(expected));
             assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.node.text_color.as_deref()), Some("#123456"));
         }
-        for value in ["2px red", "1px 2px -3px red", "1px 2px red blue", "none, 1px 2px red"] {
+        for value in ["2px", "1px 2px -3px red", "1px 2px red blue", "none, 1px 2px red"] {
             let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-shadow:{value}");
             assert!(parse_treemap(&source).is_err());
         }
