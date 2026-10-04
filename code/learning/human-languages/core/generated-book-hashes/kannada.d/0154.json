@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:b7b8d65304d06c4b",
+  "lessonIds": [
+    "KA-C154-yaru",
+    "KA-C154-endigu",
+    "KA-C154-elliyu",
+    "KA-C154-yaradaru",
+    "KA-C154-enadaru"
+  ],
+  "tex": "kannada/book/chapters/ch154-nobody-never-nowhere-anyone-anything.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C155-igagale",
+  "pathSegment": "KA-PATH-155-HINDE155",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-155-HINDE155",
+      "order": 1
+    }
+  ]
+}

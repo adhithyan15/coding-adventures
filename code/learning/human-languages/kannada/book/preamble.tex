@@ -187,6 +187,15 @@
   \fi}
 \renewcommand*\l@section{\@dottedtocline{1}{2.8em}{3.2em}}
 \renewcommand*\l@subsection{\@dottedtocline{2}{6.0em}{4.1em}}
+% Page numbers in the table of contents. `book.cls` gives them a 1.55em box,
+% which holds three digits. The A2 vocabulary chapters take this book past
+% page 999, and every contents line with a four-digit page ("1000" is 4.93pt
+% wider than the box) reported an overfull \hbox. 2.4em holds four bold
+% digits; the right margin that keeps titles clear of the numbers widens by the
+% same 0.85em so the dotted leaders still stop short of them. Same fix as the
+% Bengali, Tamil, German, Sanskrit, Italian and French preambles.
+\renewcommand\@pnumwidth{2.4em}
+\renewcommand\@tocrmarg{3.4em}
 \makeatother
 
 % ---------------------------------------------------------------------------

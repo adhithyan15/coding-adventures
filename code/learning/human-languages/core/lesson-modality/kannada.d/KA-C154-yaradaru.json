@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C154-yaradaru",
+    "language": "kannada",
+    "chapter": 154,
+    "sequence": 6820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:88a265134643b16c"
+  },
+  "findings": []
+}

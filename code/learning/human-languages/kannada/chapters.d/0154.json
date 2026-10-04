@@ -1,0 +1,19 @@
+{
+  "chapter": 154,
+  "title": "Nobody, Never, Nowhere, Anyone, Anything",
+  "label": "ch:ka-nobody-never-nowhere-anyone-anything",
+  "canDo": "I can say what is not so, and ask yes-or-no questions.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "KA-C154-enadaru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 154: I can say what is not so, and ask yes-or-no questions.",
+    "assesses": [
+      "KA-LEX-C154-ILLA154-03",
+      "KA-LEX-C154-ILLA154-04",
+      "KA-LEX-C154-ILLA154-05"
+    ]
+  }
+}

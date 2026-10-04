@@ -1,0 +1,19 @@
+{
+  "chapter": 156,
+  "title": "Next, From Now On, the Future, To Decide, To Expect",
+  "label": "ch:ka-next-from-now-on-the-future-to-decide-to-expect",
+  "canDo": "I can say what will happen, and when: next week, from now on, and what I have decided.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "KA-C156-nirikshisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 156: I can say what will happen, and when: next week, from now on, and what I have decided.",
+    "assesses": [
+      "KA-LEX-C156-MUNDE156-03",
+      "KA-LEX-C156-MUNDE156-04",
+      "KA-LEX-C156-MUNDE156-05"
+    ]
+  }
+}
