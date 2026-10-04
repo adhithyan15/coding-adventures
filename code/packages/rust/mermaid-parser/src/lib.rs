@@ -15397,6 +15397,16 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn treemap_preserves_none_node_paint() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::unpainted\nclassDef unpainted fill:none,stroke:NONE",
+        ).expect("none node paint must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.fill.as_deref(), Some("none"));
+        assert_eq!(style.node.stroke.as_deref(), Some("NONE"));
+    }
+
+    #[test]
     fn treemap_rejects_unsupported_font_style() {
         let error = parse_treemap(
             "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-style:slanted",

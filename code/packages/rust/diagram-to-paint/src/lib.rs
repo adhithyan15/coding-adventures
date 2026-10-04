@@ -133,10 +133,10 @@ where
         let resolve_current_color = |value: String| {
             if value.eq_ignore_ascii_case("currentcolor") { current_color.clone() } else { value }
         };
-        let fill = normalize_css_named_paint(resolve_current_color(node.style.as_ref().and_then(|style| style.node.fill.clone())
+        let fill = normalize_css_paint(resolve_current_color(node.style.as_ref().and_then(|style| style.node.fill.clone())
             .or_else(|| configured_fill.clone())
             .unwrap_or_else(|| palette_index.map_or_else(|| "transparent".into(), |index| diagram.config.theme.fills[index].clone()))));
-        let stroke = normalize_css_named_paint(resolve_current_color(node.style.as_ref().and_then(|style| style.node.stroke.clone())
+        let stroke = normalize_css_paint(resolve_current_color(node.style.as_ref().and_then(|style| style.node.stroke.clone())
             .or_else(|| configured_stroke.clone())
             .unwrap_or_else(|| palette_index.map_or_else(|| "transparent".into(), |index| diagram.config.theme.strokes[index].clone()))));
         let opacity = node.style.as_ref().and_then(|style| style.opacity).unwrap_or(1.0);
@@ -1208,7 +1208,12 @@ fn full_size_kana(value: &str) -> String {
 }
 
 fn with_opacity(color: &str, opacity: f64) -> String {
-    if let Some(parsed) = parse_css_color(color) {
+    let parsed = if color.eq_ignore_ascii_case("none") {
+        Some(Color { r: 0, g: 0, b: 0, a: 0 })
+    } else {
+        parse_css_color(color)
+    };
+    if let Some(parsed) = parsed {
         let alpha = f64::from(parsed.a) / 255.0 * opacity.clamp(0.0, 1.0);
         return format!("rgba({},{},{},{})", parsed.r, parsed.g, parsed.b, css_alpha(alpha));
     }
@@ -2272,9 +2277,11 @@ fn parse_css_named_color(css: &str) -> Option<Color> {
     Some(Color { r, g, b, a: 255 })
 }
 
-fn normalize_css_named_paint(css: String) -> String {
-    parse_css_named_color(&css)
-        .map_or(css, |color| format!("rgb({},{},{})", color.r, color.g, color.b))
+fn normalize_css_paint(css: String) -> String {
+    if css.eq_ignore_ascii_case("none") || css.eq_ignore_ascii_case("transparent") {
+        return "rgba(0,0,0,0)".into();
+    }
+    parse_css_named_color(&css).map_or(css, |color| format!("rgb({},{},{})", color.r, color.g, color.b))
 }
 
 fn text_node(
@@ -7404,6 +7411,14 @@ mod tests {
         assert_eq!(css_to_color("CornflowerBlue"), Color { r: 100, g: 149, b: 237, a: 255 });
         assert_eq!(css_to_color("papayawhip"), Color { r: 255, g: 239, b: 213, a: 255 });
         assert_eq!(css_to_color("darkslategrey"), css_to_color("darkslategray"));
+    }
+
+    #[test]
+    fn css_none_paint_lowers_to_transparent_without_becoming_a_text_color() {
+        assert_eq!(normalize_css_paint("none".into()), "rgba(0,0,0,0)");
+        assert_eq!(normalize_css_paint("TRANSPARENT".into()), "rgba(0,0,0,0)");
+        assert_eq!(with_opacity("none", 0.5), "rgba(0,0,0,0)");
+        assert_eq!(css_to_color("none"), Color { r: 0, g: 0, b: 0, a: 255 });
     }
 
     #[test]
