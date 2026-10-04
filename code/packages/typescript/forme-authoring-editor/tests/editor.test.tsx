@@ -126,7 +126,7 @@ describe("AuthoringEditor", () => {
     }
 
     expect(session.project.documents[0]!.body.children).toHaveLength(8);
-    expect(screen.getByRole("heading", { name: "Block 8: Link" })).toHaveFocus();
+    await waitFor(() => expect(screen.getByRole("heading", { name: "Block 8: Link" })).toHaveFocus());
     const linkBlock = screen.getByRole("group", { name: "Block 8: Link" });
     fireEvent.click(within(linkBlock).getByRole("button", { name: "Move up" }));
     await screen.findByText("Block moved.");
