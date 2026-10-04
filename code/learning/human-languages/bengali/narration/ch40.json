@@ -2,9 +2,9 @@
   "version": 1,
   "language": "bengali",
   "chapter": 40,
-  "title": "Reading — Words, Lines, and a First Passage",
+  "title": "Reading — Words, Lines, a First Passage, and Timed Writing",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a032e684938fdf6d",
+  "sourceHash": "fnv1a64:ee3e616f14cb21aa",
   "lessons": [
     {
       "id": "BN-C40-words",
@@ -575,6 +575,149 @@
             {
               "kind": "speech",
               "text": "Which of the three joiners is borrowed? (কিন্তু, through Persian.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W40-a1-timed-production",
+      "sequence": 2155,
+      "title": "Your first complete A1 writing paper",
+      "headword": "(timed A1 writing)",
+      "romanization": "",
+      "gloss": "a complete 20-minute A1 form and named-reader message under assessment conditions",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:0553a98ab906248c",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This is an attempt, not a model. You will write the answers, and this page will not show you any copyable Bengali answer."
+            },
+            {
+              "kind": "speech",
+              "text": "Put away romanization, dictionaries, translators, and spell-checkers. Set one timer for 20 minutes. Keep it running through both tasks. Write in Bengali script. Ordinary legible handwriting is enough; decorative calligraphy is not scored."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — timed assessment production",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Task 1 — practical form: 7 minutes, 40 points."
+            },
+            {
+              "kind": "speech",
+              "text": "Complete all six fields in Bengali script for a new neighbourhood activity group. Short answers are enough."
+            },
+            {
+              "kind": "speech",
+              "text": "Your name."
+            },
+            {
+              "kind": "speech",
+              "text": "Where you live or stay."
+            },
+            {
+              "kind": "speech",
+              "text": "A language you speak."
+            },
+            {
+              "kind": "speech",
+              "text": "One everyday action or kind of work you do."
+            },
+            {
+              "kind": "speech",
+              "text": "One drink or food you like."
+            },
+            {
+              "kind": "speech",
+              "text": "One person in your family."
+            },
+            {
+              "kind": "speech",
+              "text": "At seven minutes, move on even if a field is unfinished. Do not restart the timer and do not polish the form with time meant for the message."
+            },
+            {
+              "kind": "speech",
+              "text": "Task 2 — message: 13 minutes, 60 points."
+            },
+            {
+              "kind": "speech",
+              "text": "Reader: Mira. Purpose: help Mira recognise you and arrange your first meeting tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "Write 30–40 words in Bengali script. Greet Mira, introduce yourself, say where you live and which language you speak, mention one everyday action or kind of work and one drink or food you like, ask where Mira is, and close politely. The instructions give content, not sentences: choose and connect the Bengali yourself."
+            },
+            {
+              "kind": "speech",
+              "text": "When the 20-minute timer rings, stop, even if a line is unfinished. Record the number of completed form fields and the message word count. An honest timed attempt is more useful than a perfect untimed one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Only after you have stopped, review the same attempt. Do not rewrite it yet. Mark one strength and one next step under each assessment criterion:"
+            },
+            {
+              "kind": "speech",
+              "text": "Task fulfilment and relevant content — six fields are attempted; the named reader, meeting purpose, and requested message points are present."
+            },
+            {
+              "kind": "speech",
+              "text": "Comprehensibility and organisation — Mira can follow the message and see how its ideas connect."
+            },
+            {
+              "kind": "speech",
+              "text": "Bengali vocabulary, grammar, and register — familiar words and sentence patterns carry the intended meaning in a suitable everyday tone."
+            },
+            {
+              "kind": "speech",
+              "text": "Bengali orthographic control — headline strokes, hasanta, vowel-sign placement, word spacing, and punctuation remain readable."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Keep the paper. On another day, repeat the same two-task shape with new personal details. The goal is not to memorise this prompt; it is to make a complete Bengali attempt calmly inside the real limit."
             }
           ]
         }
