@@ -62,8 +62,8 @@ use layout_backgrounds::{
 };
 use layout_effects::{EffectBlendMode, EffectColor, EffectFilter, EffectStyle};
 use layout_ir::{
-    Color, Content, ExtValue, FontSpec, PositionedNode, TextAlign, TextContent, TextDecorationLines,
-    TextDecorationStyle, TextUnderlinePosition,
+    Color, Content, ExtValue, FontSpec, FontStretch as LayoutFontStretch, PositionedNode, TextAlign,
+    TextContent, TextDecorationLines, TextDecorationStyle, TextUnderlinePosition,
 };
 use layout_positioned::{Position, PositionedStyle};
 use layout_replaced::{object_fit_rect, IntrinsicSize};
@@ -2217,7 +2217,17 @@ fn query_from_font(font: &FontSpec) -> FontQuery {
         } else {
             FontStyle::Normal
         },
-        stretch: FontStretch::Normal,
+        stretch: match font.stretch {
+            LayoutFontStretch::UltraCondensed => FontStretch::UltraCondensed,
+            LayoutFontStretch::ExtraCondensed => FontStretch::ExtraCondensed,
+            LayoutFontStretch::Condensed => FontStretch::Condensed,
+            LayoutFontStretch::SemiCondensed => FontStretch::SemiCondensed,
+            LayoutFontStretch::Normal => FontStretch::Normal,
+            LayoutFontStretch::SemiExpanded => FontStretch::SemiExpanded,
+            LayoutFontStretch::Expanded => FontStretch::Expanded,
+            LayoutFontStretch::ExtraExpanded => FontStretch::ExtraExpanded,
+            LayoutFontStretch::UltraExpanded => FontStretch::UltraExpanded,
+        },
     }
 }
 
@@ -2226,6 +2236,7 @@ struct FontCacheKey {
     family: String,
     weight: u16,
     italic: bool,
+    stretch: LayoutFontStretch,
 }
 
 impl From<&FontSpec> for FontCacheKey {
@@ -2238,6 +2249,7 @@ impl From<&FontSpec> for FontCacheKey {
             },
             weight: f.weight,
             italic: f.italic,
+            stretch: f.stretch,
         }
     }
 }
@@ -3050,6 +3062,14 @@ mod tests {
             a: 128,
         });
         assert!(half.starts_with("rgba(0, 0, 0, 0.50"));
+    }
+
+    #[test]
+    fn font_stretch_reaches_backend_neutral_font_query() {
+        let mut font = font_spec("Helvetica", 16.0);
+        font.stretch = LayoutFontStretch::ExtraExpanded;
+        assert_eq!(query_from_font(&font).stretch, FontStretch::ExtraExpanded);
+        assert!(FontCacheKey::from(&font) != FontCacheKey::from(&font_spec("Helvetica", 16.0)));
     }
 
     #[test]

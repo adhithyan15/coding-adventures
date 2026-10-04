@@ -159,6 +159,7 @@ pub struct FontSpec {
     /// CSS-style weight 100..=900.
     pub weight: u16,
     pub italic: bool,
+    pub stretch: FontStretch,
     /// Line-height multiplier, e.g. 1.5 = 150% of `size`. Must be > 0.
     pub line_height: f64,
 }
@@ -169,8 +170,23 @@ pub fn font_spec(family: impl Into<String>, size: f64) -> FontSpec {
         size,
         weight: 400,
         italic: false,
+        stretch: FontStretch::Normal,
         line_height: 1.2,
     }
+}
+
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
+pub enum FontStretch {
+    UltraCondensed,
+    ExtraCondensed,
+    Condensed,
+    SemiCondensed,
+    #[default]
+    Normal,
+    SemiExpanded,
+    Expanded,
+    ExtraExpanded,
+    UltraExpanded,
 }
 
 pub fn font_bold(mut spec: FontSpec) -> FontSpec {

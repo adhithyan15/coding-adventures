@@ -126,6 +126,7 @@ fn label_font_spec(family: &str, size: f64, weight: u16, italic: bool) -> FontSp
         size,
         weight,
         italic,
+        stretch: layout_ir::FontStretch::Normal,
         line_height: 1.2,
     }
 }

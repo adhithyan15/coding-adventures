@@ -1507,6 +1507,7 @@ pub struct TreemapStyle {
     pub direction: Option<TreemapTextDirection>,
     pub text_shadow: Option<TreemapTextShadow>,
     pub tab_size: Option<u16>,
+    pub font_stretch: Option<TreemapFontStretch>,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -1587,6 +1588,12 @@ pub enum TreemapWordSpacing { Normal, Pixels(f64), Factor(f64) }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum TreemapTextDirection { LeftToRight, RightToLeft }
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TreemapFontStretch {
+    UltraCondensed, ExtraCondensed, Condensed, SemiCondensed, Normal,
+    SemiExpanded, Expanded, ExtraExpanded, UltraExpanded,
+}
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum TreemapTextShadow {
