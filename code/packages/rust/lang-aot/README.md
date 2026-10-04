@@ -3,8 +3,9 @@
 ALGOL runtime real output now includes values migrated through provenance-tracked
 scalar slots: a zero-argument real procedure result can be assigned and copied
 between real locals before the shared portable formatter prints it on all seven
-standard backends.
-Reassigned, control-flow-merged, and composed dynamic real values remain gated.
+standard backends. Unknown statement conditions may also merge that provenance
+when both exits establish it for the same slot. One-sided reassignment and
+composed dynamic real values remain gated.
 
 The opt-in CLR integration suite `tests/clr_strict_flow.rs` executes forward-only
 conditional control, nested Bool branches and wide values through joins,

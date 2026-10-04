@@ -198,9 +198,10 @@ IIR formatter shared with Dartmouth BASIC; its helper
 functions use only typed arithmetic, control flow, calls, conversions, and
 `putchar`, so the same path runs on every standard backend. A runtime procedure
 result may therefore migrate through local real copies and be printed later.
-Reassignment,
-control flow, intervening calls, and composed dynamic real expressions remain
-conservative while their analysis tests are migrated.
+Conditional statements preserve that runtime provenance only for slots proven
+on every reachable exit. One-sided reassignment, intervening calls without a
+subsequent proven assignment, loops, and composed dynamic real expressions
+remain conservative.
 For definite string initialization, a `step`/`until` element may establish an
 initialized local when finite static start, step, and limit values prove that
 its body executes at least once; zero-trip and dynamic bounds fail closed.
