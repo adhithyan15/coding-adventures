@@ -538,8 +538,9 @@ modern space/slash `rgb()`/`rgba()` colors survive Mermaid style parsing, while
 backend-neutral color lowering also accepts legacy comma forms. Modern
 space/slash `hsl()`/`hsla()` styles preserve hue units and alpha through semantic
 IR before backend-neutral RGB conversion; lowering also accepts legacy comma
-forms. The CSS basic named-color set plus `orange` likewise resolves to explicit
-backend-neutral RGB paint for node fills, strokes, labels, and opacity composition.
+forms. The complete CSS named-color set likewise resolves to explicit
+backend-neutral RGB paint for node fills, strokes, labels, and opacity composition,
+including gray/grey aliases and `rebeccapurple`.
 Relative `bolder` and `lighter`
 font weights resolve against the default weight, integer weights from 1 through
 1000 survive into native variable-font matching, and `oblique` font style lowers
