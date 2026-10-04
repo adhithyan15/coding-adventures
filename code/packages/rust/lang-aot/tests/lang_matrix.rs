@@ -1788,12 +1788,21 @@ fn main() { out(1, VALUE); }\n",
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — division may combine runtime-real provenance with finite
-    // static operands while powers remain gated.
+    // static operands.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
         src: "begin real procedure pick; pick := 2.25; real x; x := 18.0 / pick(); output(x / 2.0) end",
         expect: Expect::Stdout("4"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — exponentiation may combine runtime-real provenance with
+    // finite static operands on either side of the operator.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 3.0; real x; x := 2.0 ^ pick(); output(x ^ 2) end",
+        expect: Expect::Stdout("64"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — static integer-valued functions may feed checked snapshots and widen into
@@ -12290,6 +12299,29 @@ fn algol_division_runtime_real_output_runs_on_every_available_standard_backend()
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but division runtime real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_power_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("x := 2.0 ^ pick(); output(x ^ 2)")
+        })
+        .expect("the ALGOL power runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but power runtime real output did not complete"
             );
             continue;
         };
