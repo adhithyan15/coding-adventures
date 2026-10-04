@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:e3af87eaa1178a6e",
+  "lessonIds": [
+    "KA-C210-konege",
+    "KA-C210-samanyavagi",
+    "KA-C210-taksana",
+    "KA-C210-biduvu",
+    "KA-C210-yugadi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch210.txt",
+  "json": "kannada/narration/ch210.json",
+  "textHash": "fnv1a64:a93fe1adfee428c2",
+  "jsonHash": "fnv1a64:bb760473755cb25d",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-208-AROGYA208",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say the body, an injection, an ointment, an illness and a patient.",
+  "prerequisites": []
+}

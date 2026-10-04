@@ -1,0 +1,19 @@
+{
+  "chapter": 206,
+  "title": "To trip, To crawl, To follow, To escape, To hurry",
+  "label": "ch:ka-to-trip-to-crawl-to-follow-to-escape-to-hurry",
+  "canDo": "I can say to trip, to crawl, to follow, to escape and to hurry.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-R206-second-pass-words-from-chapters-202-206",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 206: I can say to trip, to crawl, to follow, to escape and to hurry.",
+    "assesses": [
+      "KA-LEX-C206-KRIYE206-03",
+      "KA-LEX-C206-KRIYE206-04",
+      "KA-LEX-C206-KRIYE206-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 225,
+  "title": "Neem, Jasmine, Sunflower, Sugarcane, Firecracker",
+  "label": "ch:ka-neem-jasmine-sunflower-sugarcane-firecracker",
+  "canDo": "I can say neem, jasmine, a sunflower, sugarcane and a firecracker.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C225-pataki",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 225: I can say neem, jasmine, a sunflower, sugarcane and a firecracker.",
+    "assesses": [
+      "KA-LEX-C225-VASTU225-03",
+      "KA-LEX-C225-VASTU225-04",
+      "KA-LEX-C225-VASTU225-05"
+    ]
+  }
+}

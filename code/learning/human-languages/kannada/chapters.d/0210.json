@@ -1,0 +1,19 @@
+{
+  "chapter": 210,
+  "title": "Finally, Usually, Immediately, Free time, Ugadi",
+  "label": "ch:ka-finally-usually-immediately-free-time-ugadi",
+  "canDo": "I can say finally, usually, immediately, free time and Ugadi.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "KA-C210-yugadi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 210: I can say finally, usually, immediately, free time and Ugadi.",
+    "assesses": [
+      "KA-LEX-C210-KALA210-03",
+      "KA-LEX-C210-KALA210-04",
+      "KA-LEX-C210-KALA210-05"
+    ]
+  }
+}

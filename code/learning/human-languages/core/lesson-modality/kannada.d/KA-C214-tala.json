@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C214-tala",
+    "language": "kannada",
+    "chapter": 214,
+    "sequence": 9950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b49be073a0f7726d"
+  },
+  "findings": []
+}

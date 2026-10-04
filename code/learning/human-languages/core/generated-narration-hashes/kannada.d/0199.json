@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:9f8bbae444ecf9e8",
+  "lessonIds": [
+    "KA-C199-nungu",
+    "KA-C199-hasu",
+    "KA-C199-madacu",
+    "KA-C199-istri-madu",
+    "KA-C199-badalisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch199.txt",
+  "json": "kannada/narration/ch199.json",
+  "textHash": "fnv1a64:181c588f3ac365e3",
+  "jsonHash": "fnv1a64:5662d9de317ac096",
+  "findings": []
+}

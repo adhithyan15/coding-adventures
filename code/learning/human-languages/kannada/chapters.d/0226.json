@@ -1,0 +1,19 @@
+{
+  "chapter": 226,
+  "title": "Art, Aunt, Daughter-in-law, Son-in-law, Sister-in-law",
+  "label": "ch:ka-art-aunt-daughter-in-law-son-in-law-sister-in-law",
+  "canDo": "I can say art, aunt, daughter-in-law, son-in-law and sister-in-law.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C226-attige",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 226: I can say art, aunt, daughter-in-law, son-in-law and sister-in-law.",
+    "assesses": [
+      "KA-LEX-C226-VASTU226-03",
+      "KA-LEX-C226-VASTU226-04",
+      "KA-LEX-C226-VASTU226-05"
+    ]
+  }
+}

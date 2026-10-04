@@ -1,0 +1,19 @@
+{
+  "chapter": 213,
+  "title": "Fort, Wedding hall, Gym, Stadium, Museum",
+  "label": "ch:ka-fort-wedding-hall-gym-stadium-museum",
+  "canDo": "I can say a fort, a wedding hall, a gym, a stadium and a museum.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "KA-C213-vastusangrahalaya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 213: I can say a fort, a wedding hall, a gym, a stadium and a museum.",
+    "assesses": [
+      "KA-LEX-C213-STHALA213-03",
+      "KA-LEX-C213-STHALA213-04",
+      "KA-LEX-C213-STHALA213-05"
+    ]
+  }
+}

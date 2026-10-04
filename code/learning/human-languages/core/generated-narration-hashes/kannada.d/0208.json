@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:103d8749a215853f",
+  "lessonIds": [
+    "KA-C208-deha",
+    "KA-C208-cuccumaddu",
+    "KA-C208-mulamu",
+    "KA-C208-kayile",
+    "KA-C208-rogi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch208.txt",
+  "json": "kannada/narration/ch208.json",
+  "textHash": "fnv1a64:4ea33d72380840f3",
+  "jsonHash": "fnv1a64:ce728161839944dd",
+  "findings": []
+}

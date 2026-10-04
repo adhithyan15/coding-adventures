@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:e6a8adcdd7a0f786",
+  "lessonIds": [
+    "KA-C212-bandaru",
+    "KA-C212-karkhane",
+    "KA-C212-citramandira",
+    "KA-C212-maidana",
+    "KA-C212-dikku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch212.txt",
+  "json": "kannada/narration/ch212.json",
+  "textHash": "fnv1a64:4be8b2df595e8fa7",
+  "jsonHash": "fnv1a64:bacf4efb9fd08886",
+  "findings": []
+}

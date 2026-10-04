@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C229-totti",
+    "language": "kannada",
+    "chapter": 229,
+    "sequence": 10730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bdf6a0bcde197a82"
+  },
+  "findings": []
+}

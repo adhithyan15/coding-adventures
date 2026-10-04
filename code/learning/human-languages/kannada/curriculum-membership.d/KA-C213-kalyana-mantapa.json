@@ -1,0 +1,11 @@
+{
+  "id": "KA-C213-kalyana-mantapa",
+  "pathSegment": "KA-PATH-213-STHALA213",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-213-STHALA213",
+      "order": 1
+    }
+  ]
+}

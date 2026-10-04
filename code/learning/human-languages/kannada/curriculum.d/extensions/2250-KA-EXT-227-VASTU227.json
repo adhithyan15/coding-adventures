@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-227-VASTU227",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a saw, a ladder, glue, a torch and a machine.",
+  "prerequisites": []
+}

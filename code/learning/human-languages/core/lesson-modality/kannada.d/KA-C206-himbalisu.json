@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C206-himbalisu",
+    "language": "kannada",
+    "chapter": 206,
+    "sequence": 9530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d3aeb2068841536"
+  },
+  "findings": []
+}

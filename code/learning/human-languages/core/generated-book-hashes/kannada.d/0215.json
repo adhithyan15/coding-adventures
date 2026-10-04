@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:3c91c2570acd600a",
+  "lessonIds": [
+    "KA-C215-mulaka",
+    "KA-C215-prakara",
+    "KA-C215-bagge",
+    "KA-C215-sampradaya",
+    "KA-C215-samskrti",
+    "KA-R215-first-pass-words-from-chapters-207-210",
+    "KA-R215-second-pass-words-from-chapters-211-215"
+  ],
+  "tex": "kannada/book/chapters/ch215-through-according-to-about-tradition-culture.tex"
+}

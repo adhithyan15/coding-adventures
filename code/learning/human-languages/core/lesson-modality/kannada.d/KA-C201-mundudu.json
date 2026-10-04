@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C201-mundudu",
+    "language": "kannada",
+    "chapter": 201,
+    "sequence": 9260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3d15d1258be3d21"
+  },
+  "findings": []
+}

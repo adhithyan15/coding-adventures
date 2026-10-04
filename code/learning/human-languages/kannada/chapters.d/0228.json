@@ -1,0 +1,19 @@
+{
+  "chapter": 228,
+  "title": "Football, Chess, Hobby, Opinion, Idea",
+  "label": "ch:ka-football-chess-hobby-opinion-idea",
+  "canDo": "I can say football, chess, a hobby, an opinion and an idea.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C228-vicara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 228: I can say football, chess, a hobby, an opinion and an idea.",
+    "assesses": [
+      "KA-LEX-C228-VASTU228-03",
+      "KA-LEX-C228-VASTU228-04",
+      "KA-LEX-C228-VASTU228-05"
+    ]
+  }
+}

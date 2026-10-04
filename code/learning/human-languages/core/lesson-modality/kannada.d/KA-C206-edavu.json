@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C206-edavu",
+    "language": "kannada",
+    "chapter": 206,
+    "sequence": 9510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3166c23eed075bb0"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C216-kartavya",
+  "pathSegment": "KA-PATH-216-KARANA216",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-216-KARANA216",
+      "order": 4
+    }
+  ]
+}

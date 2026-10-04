@@ -1,0 +1,11 @@
+{
+  "id": "KA-C232-anubhava",
+  "pathSegment": "KA-PATH-232-KELASA232",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-232-KELASA232",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C206-tappisikollu",
+  "pathSegment": "KA-PATH-206-KRIYE206",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-206-KRIYE206",
+      "order": 3
+    }
+  ]
+}

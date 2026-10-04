@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C198-ujju",
+    "language": "kannada",
+    "chapter": 198,
+    "sequence": 9110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7db278ce40cf6905"
+  },
+  "findings": []
+}

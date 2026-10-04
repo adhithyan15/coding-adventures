@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:42c1308524057f10",
+  "lessonIds": [
+    "KA-C206-edavu",
+    "KA-C206-tevalu",
+    "KA-C206-himbalisu",
+    "KA-C206-tappisikollu",
+    "KA-C206-aturapadu",
+    "KA-R206-first-pass-words-from-chapters-198-201",
+    "KA-R206-second-pass-words-from-chapters-202-206"
+  ],
+  "tex": "kannada/book/chapters/ch206-to-trip-to-crawl-to-follow-to-escape-to-hurry.tex"
+}

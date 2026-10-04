@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C233-itihasa",
+    "language": "kannada",
+    "chapter": 233,
+    "sequence": 10980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8beaec30789a967f"
+  },
+  "findings": []
+}

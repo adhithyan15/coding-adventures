@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:1bc675f6ea2f2425",
+  "lessonIds": [
+    "KA-C221-sebu",
+    "KA-C221-kittale",
+    "KA-C221-pappayi",
+    "KA-C221-kallangadi",
+    "KA-C221-capati"
+  ],
+  "tex": "kannada/book/chapters/ch221-apple-orange-papaya-watermelon-chapati.tex"
+}

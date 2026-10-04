@@ -1,0 +1,19 @@
+{
+  "chapter": 221,
+  "title": "Apple, Orange, Papaya, Watermelon, Chapati",
+  "label": "ch:ka-apple-orange-papaya-watermelon-chapati",
+  "canDo": "I can say an apple, an orange, a papaya, a watermelon and a chapati.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C221-capati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 221: I can say an apple, an orange, a papaya, a watermelon and a chapati.",
+    "assesses": [
+      "KA-LEX-C221-VASTU221-03",
+      "KA-LEX-C221-VASTU221-04",
+      "KA-LEX-C221-VASTU221-05"
+    ]
+  }
+}

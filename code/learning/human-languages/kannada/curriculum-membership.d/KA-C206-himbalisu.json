@@ -1,0 +1,11 @@
+{
+  "id": "KA-C206-himbalisu",
+  "pathSegment": "KA-PATH-206-KRIYE206",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-206-KRIYE206",
+      "order": 2
+    }
+  ]
+}

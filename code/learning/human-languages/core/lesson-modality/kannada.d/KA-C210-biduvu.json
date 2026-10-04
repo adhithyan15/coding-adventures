@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C210-biduvu",
+    "language": "kannada",
+    "chapter": 210,
+    "sequence": 9760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6c0684d0a5cb399c"
+  },
+  "findings": []
+}

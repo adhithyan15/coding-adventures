@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C212-dikku",
+    "language": "kannada",
+    "chapter": 212,
+    "sequence": 9870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc0744636dc0ef22"
+  },
+  "findings": []
+}

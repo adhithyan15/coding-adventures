@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C200-suru-madu",
+    "language": "kannada",
+    "chapter": 200,
+    "sequence": 9250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38f2a1b19b63b23f"
+  },
+  "findings": []
+}

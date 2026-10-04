@@ -1,0 +1,19 @@
+{
+  "chapter": 216,
+  "title": "Success, Freedom, Justice, Responsibility, Duty",
+  "label": "ch:ka-success-freedom-justice-responsibility-duty",
+  "canDo": "I can say success, freedom, justice, responsibility and a duty.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "KA-C216-kartavya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 216: I can say success, freedom, justice, responsibility and a duty.",
+    "assesses": [
+      "KA-LEX-C216-KARANA216-03",
+      "KA-LEX-C216-KARANA216-04",
+      "KA-LEX-C216-KARANA216-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C205-nadu",
+    "language": "kannada",
+    "chapter": 205,
+    "sequence": 9490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1c76a8aa5f6c8a1"
+  },
+  "findings": []
+}

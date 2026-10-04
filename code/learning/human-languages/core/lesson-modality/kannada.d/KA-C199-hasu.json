@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C199-hasu",
+    "language": "kannada",
+    "chapter": 199,
+    "sequence": 9170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:26993f507f0147a4"
+  },
+  "findings": []
+}

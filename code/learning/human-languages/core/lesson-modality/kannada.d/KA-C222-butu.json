@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C222-butu",
+    "language": "kannada",
+    "chapter": 222,
+    "sequence": 10390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:136d6b857723ea19"
+  },
+  "findings": []
+}

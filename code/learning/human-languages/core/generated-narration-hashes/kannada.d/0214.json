@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:53cf5994b904f395",
+  "lessonIds": [
+    "KA-C214-ancu",
+    "KA-C214-tudi",
+    "KA-C214-tala",
+    "KA-C214-addaraste",
+    "KA-C214-kavalu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch214.txt",
+  "json": "kannada/narration/ch214.json",
+  "textHash": "fnv1a64:5fb86f827576c58e",
+  "jsonHash": "fnv1a64:c81944e5ed5470d3",
+  "findings": []
+}

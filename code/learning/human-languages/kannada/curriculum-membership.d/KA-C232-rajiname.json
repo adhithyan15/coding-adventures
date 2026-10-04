@@ -1,0 +1,11 @@
+{
+  "id": "KA-C232-rajiname",
+  "pathSegment": "KA-PATH-232-KELASA232",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-232-KELASA232",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:1315bf924b11a0d4",
+  "lessonIds": [
+    "KA-C219-samanya",
+    "KA-C219-mondu",
+    "KA-C219-nunupu",
+    "KA-C219-oratu",
+    "KA-C219-jigutu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch219.txt",
+  "json": "kannada/narration/ch219.json",
+  "textHash": "fnv1a64:a3b7ff2e202f056c",
+  "jsonHash": "fnv1a64:9315c153958f6dcf",
+  "findings": []
+}

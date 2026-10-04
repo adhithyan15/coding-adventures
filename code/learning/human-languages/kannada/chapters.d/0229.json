@@ -1,0 +1,19 @@
+{
+  "chapter": 229,
+  "title": "Large water-heating pot, Water tank, Cradle, Knot, Chain",
+  "label": "ch:ka-large-water-heating-pot-water-tank-cradle-knot-chain",
+  "canDo": "I can say a large water-heating pot, a water tank, a cradle, a knot and a chain.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-R229-second-pass-words-from-chapters-227-229",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 229: I can say a large water-heating pot, a water tank, a cradle, a knot and a chain.",
+    "assesses": [
+      "KA-LEX-C229-VASTU229-03",
+      "KA-LEX-C229-VASTU229-04",
+      "KA-LEX-C229-VASTU229-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C207-kuttu",
+    "language": "kannada",
+    "chapter": 207,
+    "sequence": 9600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b93d7e9135e99091"
+  },
+  "findings": []
+}

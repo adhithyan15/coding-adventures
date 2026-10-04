@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:58a6178d3c938e50",
+  "lessonIds": [
+    "KA-C211-niyamitavagi",
+    "KA-C211-illiyavarege",
+    "KA-C211-varege",
+    "KA-C211-sadyakke",
+    "KA-C211-avadhi"
+  ],
+  "tex": "kannada/book/chapters/ch211-regularly-so-far-until-for-now-period.tex"
+}

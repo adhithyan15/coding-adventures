@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C206-tevalu",
+    "language": "kannada",
+    "chapter": 206,
+    "sequence": 9520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc3dee8115831671"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 205,
+  "title": "To pluck, To grate, To strain, To knead, To roll out",
+  "label": "ch:ka-to-pluck-to-grate-to-strain-to-knead-to-roll-out",
+  "canDo": "I can say to pluck, to grate, to strain, to knead and to roll out.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C205-lattisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 205: I can say to pluck, to grate, to strain, to knead and to roll out.",
+    "assesses": [
+      "KA-LEX-C205-KRIYE205-03",
+      "KA-LEX-C205-KRIYE205-04",
+      "KA-LEX-C205-KRIYE205-05"
+    ]
+  }
+}

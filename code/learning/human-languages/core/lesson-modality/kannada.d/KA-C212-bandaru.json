@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C212-bandaru",
+    "language": "kannada",
+    "chapter": 212,
+    "sequence": 9830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00b473f5caac1b95"
+  },
+  "findings": []
+}

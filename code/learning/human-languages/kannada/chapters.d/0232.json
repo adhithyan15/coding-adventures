@@ -1,0 +1,19 @@
+{
+  "chapter": 232,
+  "title": "Expense, Insurance, Queue, Experience, Resignation",
+  "label": "ch:ka-expense-insurance-queue-experience-resignation",
+  "canDo": "I can say an expense, insurance, a queue, experience and a resignation.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C232-rajiname",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 232: I can say an expense, insurance, a queue, experience and a resignation.",
+    "assesses": [
+      "KA-LEX-C232-KELASA232-03",
+      "KA-LEX-C232-KELASA232-04",
+      "KA-LEX-C232-KELASA232-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 203,
+  "title": "To grow, To bloom, To wilt, To blow, To melt",
+  "label": "ch:ka-to-grow-to-bloom-to-wilt-to-blow-to-melt",
+  "canDo": "I can say to grow, to bloom, to wilt, to blow and to melt.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C203-karagu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 203: I can say to grow, to bloom, to wilt, to blow and to melt.",
+    "assesses": [
+      "KA-LEX-C203-KRIYE203-03",
+      "KA-LEX-C203-KRIYE203-04",
+      "KA-LEX-C203-KRIYE203-05"
+    ]
+  }
+}

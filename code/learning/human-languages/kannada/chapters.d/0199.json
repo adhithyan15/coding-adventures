@@ -1,0 +1,19 @@
+{
+  "chapter": 199,
+  "title": "To swallow, To spread out, To fold, To iron, To change",
+  "label": "ch:ka-to-swallow-to-spread-out-to-fold-to-iron-to-change",
+  "canDo": "I can say to swallow, to spread out, to fold, to iron and to change.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C199-badalisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 199: I can say to swallow, to spread out, to fold, to iron and to change.",
+    "assesses": [
+      "KA-LEX-C199-KRIYE199-03",
+      "KA-LEX-C199-KRIYE199-04",
+      "KA-LEX-C199-KRIYE199-05"
+    ]
+  }
+}

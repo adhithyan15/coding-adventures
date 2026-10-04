@@ -1,0 +1,19 @@
+{
+  "chapter": 218,
+  "title": "Ready, Available, Clear, Honest, Generous",
+  "label": "ch:ka-ready-available-clear-honest-generous",
+  "canDo": "I can say ready, available, clear, honest and generous.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "KA-C218-udara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 218: I can say ready, available, clear, honest and generous.",
+    "assesses": [
+      "KA-LEX-C218-GUNA218-03",
+      "KA-LEX-C218-GUNA218-04",
+      "KA-LEX-C218-GUNA218-05"
+    ]
+  }
+}

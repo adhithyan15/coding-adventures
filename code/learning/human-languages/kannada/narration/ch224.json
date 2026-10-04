@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 224,
+  "title": "Smoke, Dust, Flood, Nature, Animal",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:4f52168b2f792ffd",
+  "lessons": [
+    {
+      "id": "KA-C224-hoge",
+      "sequence": 10450,
+      "title": "ಹೊಗೆ (hoge) — smoke",
+      "headword": "ಹೊಗೆ",
+      "romanization": "hoge",
+      "gloss": "smoke",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7c77906c2ac1d10",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an identity card, then the Kannada for a cheque."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹೊಗೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೊಗೆ — hoge — \"smoke\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hoge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hoge*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hoge, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hoge*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say hoge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *hoge*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an identity card, then the Kannada for a cheque, then say hoge again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an identity card, then the Kannada for a cheque, then say *hoge* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹೊಗೆ (hoge) mean? (\"Smoke\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C224-dhulu",
+      "sequence": 10460,
+      "title": "ಧೂಳು (dhūḷu) — dust",
+      "headword": "ಧೂಳು",
+      "romanization": "dhūḷu",
+      "gloss": "dust",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:321c66780c458275",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a cheque, then the Kannada for smoke."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಧೂಳು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಧೂಳು — dhūḷu — \"dust\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhūḷu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhūḷu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhūḷu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhūḷu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say dhūḷu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *dhūḷu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a cheque, then the Kannada for smoke, then say dhūḷu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a cheque, then the Kannada for smoke, then say *dhūḷu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಧೂಳು (dhūḷu) mean? (\"Dust\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C224-pravaha",
+      "sequence": 10470,
+      "title": "ಪ್ರವಾಹ (pravāha) — a flood",
+      "headword": "ಪ್ರವಾಹ",
+      "romanization": "pravāha",
+      "gloss": "a flood",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0fc203598329f161",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for smoke, then the Kannada for dust."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ರವಾಹ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರವಾಹ — pravāha — \"a flood\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pravāha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pravāha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pravāha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pravāha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say pravāha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *pravāha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for smoke, then the Kannada for dust, then say pravāha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for smoke, then the Kannada for dust, then say *pravāha* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ರವಾಹ (pravāha) mean? (\"A flood\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C224-prakrti",
+      "sequence": 10480,
+      "title": "ಪ್ರಕೃತಿ (prakṛti) — nature",
+      "headword": "ಪ್ರಕೃತಿ",
+      "romanization": "prakṛti",
+      "gloss": "nature",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a752afbf7d80e062",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for dust, then the Kannada for a flood."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ರಕೃತಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಕೃತಿ — prakṛti — \"nature\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prakṛti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prakṛti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prakṛti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prakṛti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say prakṛti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *prakṛti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for dust, then the Kannada for a flood, then say prakṛti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for dust, then the Kannada for a flood, then say *prakṛti* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ರಕೃತಿ (prakṛti) mean? (\"Nature\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C224-prani",
+      "sequence": 10490,
+      "title": "ಪ್ರಾಣಿ (prāṇi) — an animal",
+      "headword": "ಪ್ರಾಣಿ",
+      "romanization": "prāṇi",
+      "gloss": "an animal",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:889fd375de30fb51",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a flood, then the Kannada for nature."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ರಾಣಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಾಣಿ — prāṇi — \"an animal\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prāṇi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prāṇi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prāṇi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prāṇi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say prāṇi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *prāṇi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a flood, then the Kannada for nature, then say prāṇi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a flood, then the Kannada for nature, then say *prāṇi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ರಾಣಿ (prāṇi) mean? (\"An animal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R224-first-pass-words-from-chapters-216-219",
+      "sequence": 10500,
+      "title": "Words from chapters 216-219 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 216-219",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f099bf12cca8d80e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for nature and an animal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "success, freedom, justice, responsibility, a duty",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: success, freedom, justice, responsibility, a duty]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cheap, empty, tight, loose, thick",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cheap, empty, tight, loose, thick]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ready, available, clear, honest, generous",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ready, available, clear, honest, generous]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ordinary, blunt, smooth, rough, sticky",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ordinary, blunt, smooth, rough, sticky]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Success? (ಯಶಸ್ಸು, yaśassu.) Freedom? (ಸ್ವಾತಂತ್ರ್ಯ, svātantrya.) Justice? (ನ್ಯಾಯ, nyāya.) Responsibility? (ಜವಾಬ್ದಾರಿ, javābdāri.) A duty? (ಕರ್ತವ್ಯ, kartavya.) Cheap? (ಅಗ್ಗ, agga.) Empty? (ಖಾಲಿ, khāli.) Tight? (ಬಿಗಿ, bigi.) Loose? (ಸಡಿಲ, saḍila.) Thick? (ದಪ್ಪ, dappa.) Ready? (ಸಿದ್ಧ, siddha.) Available? (ಲಭ್ಯ, labhya.) Clear? (ಸ್ಪಷ್ಟ, spaṣṭa.) Honest? (ಪ್ರಾಮಾಣಿಕ, prāmāṇika.) Generous? (ಉದಾರ, udāra.) Ordinary? (ಸಾಮಾನ್ಯ, sāmānya.) Blunt? (ಮೊಂಡು, moṇḍu.) Smooth? (ನುಣುಪು, nuṇupu.) Rough? (ಒರಟು, oraṭu.) Sticky? (ಜಿಗುಟು, jiguṭu.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R224-second-pass-words-from-chapters-220-224",
+      "sequence": 10510,
+      "title": "Words from chapters 220-224 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 220-224",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:967c684bedd13b9d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a lid and a cupboard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lid, a cupboard, a fridge, a fan, rubbish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lid, a cupboard, a fridge, a fan, rubbish]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an apple, an orange, a papaya, a watermelon, a chapati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an apple, an orange, a papaya, a watermelon, a chapati]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "trousers, a long skirt, a blouse, a vest, shoes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: trousers, a long skirt, a blouse, a vest, shoes]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a form, a certificate, a passport, an identity card, a cheque",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a form, a certificate, a passport, an identity card, a cheque]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "smoke, dust, a flood, nature, an animal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: smoke, dust, a flood, nature, an animal]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A lid? (ಮುಚ್ಚಳ, muccaḷa.) A cupboard? (ಬೀರು, bīru.) A fridge? (ಫ್ರಿಜ್, phrij.) A fan? (ಫ್ಯಾನ್, phyān.) Rubbish? (ಕಸ, kasa.) An apple? (ಸೇಬು, sēbu.) An orange? (ಕಿತ್ತಳೆ, kittaḷe.) A papaya? (ಪಪ್ಪಾಯಿ, pappāyi.) A watermelon? (ಕಲ್ಲಂಗಡಿ, kallaṅgaḍi.) A chapati? (ಚಪಾತಿ, capāti.) Trousers? (ಪ್ಯಾಂಟ್, pyāṇṭ.) A long skirt? (ಲಂಗ, laṅga.) A blouse? (ರವಿಕೆ, ravike.) A vest? (ಬನಿಯನ್, baniyan.) Shoes? (ಬೂಟು, būṭu.) A form? (ನಮೂನೆ, namūne.) A certificate? (ಪ್ರಮಾಣಪತ್ರ, pramāṇapatra.) A passport? (ಪಾಸ್ಪೋರ್ಟ್, pāspōrṭ.) An identity card? (ಗುರುತಿನ ಚೀಟಿ, gurutina cīṭi.) A cheque? (ಚೆಕ್, cek.) Smoke? (ಹೊಗೆ, hoge.) Dust? (ಧೂಳು, dhūḷu.) A flood? (ಪ್ರವಾಹ, pravāha.) Nature? (ಪ್ರಕೃತಿ, prakṛti.) An animal? (ಪ್ರಾಣಿ, prāṇi.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

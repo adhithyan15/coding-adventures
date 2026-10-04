@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:4f52168b2f792ffd",
+  "lessonIds": [
+    "KA-C224-hoge",
+    "KA-C224-dhulu",
+    "KA-C224-pravaha",
+    "KA-C224-prakrti",
+    "KA-C224-prani",
+    "KA-R224-first-pass-words-from-chapters-216-219",
+    "KA-R224-second-pass-words-from-chapters-220-224"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch224.txt",
+  "json": "kannada/narration/ch224.json",
+  "textHash": "fnv1a64:1357871e1db478ea",
+  "jsonHash": "fnv1a64:04c2016fa99b02a0",
+  "findings": []
+}

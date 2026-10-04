@@ -1,0 +1,11 @@
+{
+  "id": "KA-C213-vastusangrahalaya",
+  "pathSegment": "KA-PATH-213-STHALA213",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-213-STHALA213",
+      "order": 4
+    }
+  ]
+}

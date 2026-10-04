@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C229-gantu",
+    "language": "kannada",
+    "chapter": 229,
+    "sequence": 10750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:99f681c2c357abb1"
+  },
+  "findings": []
+}

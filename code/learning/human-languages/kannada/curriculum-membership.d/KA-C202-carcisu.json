@@ -1,0 +1,11 @@
+{
+  "id": "KA-C202-carcisu",
+  "pathSegment": "KA-PATH-202-KRIYE202",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-202-KRIYE202",
+      "order": 4
+    }
+  ]
+}

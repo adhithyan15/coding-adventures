@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R224-second-pass-words-from-chapters-220-224",
+    "language": "kannada",
+    "chapter": 224,
+    "sequence": 10510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:967c684bedd13b9d"
+  },
+  "findings": []
+}

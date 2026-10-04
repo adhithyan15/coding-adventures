@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:787d3f3771d1375e",
+  "lessonIds": [
+    "KA-C234-sibbandi",
+    "KA-C234-naukara",
+    "KA-C234-hajari",
+    "KA-C234-pali",
+    "KA-C234-mungada",
+    "KA-R234-first-pass-words-from-chapters-230-231",
+    "KA-R234-second-pass-words-from-chapters-232-234"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch234.txt",
+  "json": "kannada/narration/ch234.json",
+  "textHash": "fnv1a64:bc5a2924a99073eb",
+  "jsonHash": "fnv1a64:9758a2d52a84da89",
+  "findings": []
+}

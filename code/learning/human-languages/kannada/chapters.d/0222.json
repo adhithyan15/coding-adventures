@@ -1,0 +1,19 @@
+{
+  "chapter": 222,
+  "title": "Trousers, Long skirt, Blouse, Vest, Shoes",
+  "label": "ch:ka-trousers-long-skirt-blouse-vest-shoes",
+  "canDo": "I can say trousers, a long skirt, a blouse, a vest and shoes.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C222-butu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 222: I can say trousers, a long skirt, a blouse, a vest and shoes.",
+    "assesses": [
+      "KA-LEX-C222-VASTU222-03",
+      "KA-LEX-C222-VASTU222-04",
+      "KA-LEX-C222-VASTU222-05"
+    ]
+  }
+}

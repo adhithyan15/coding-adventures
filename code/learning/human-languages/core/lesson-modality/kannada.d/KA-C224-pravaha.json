@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C224-pravaha",
+    "language": "kannada",
+    "chapter": 224,
+    "sequence": 10470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0fc203598329f161"
+  },
+  "findings": []
+}
