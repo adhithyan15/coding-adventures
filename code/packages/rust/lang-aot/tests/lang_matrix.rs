@@ -1733,6 +1733,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — an unknown statement condition may retain runtime-real
+    // formatter provenance when both exits establish it for the same slot.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.25; boolean flag; real x; if flag then x := pick() else x := pick(); output(x) end",
+        expect: Expect::Stdout("2.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — static integer-valued functions may feed checked snapshots and widen into
     // bounded static real expressions. Copying preserves the destination when
     // the source is reassigned; overflow, control flow, calls, captures,
@@ -12066,6 +12075,29 @@ fn algol_copied_runtime_real_scalar_output_runs_on_every_available_standard_back
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but copied runtime real scalar output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_conditional_runtime_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("if flag then x := pick() else x := pick()")
+        })
+        .expect("the ALGOL conditional-runtime-real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but conditional runtime real output did not complete"
             );
             continue;
         };

@@ -5734,7 +5734,6 @@ impl Compiler {
 
     fn emit_cond_stmt(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
         self.set_loc(node);
-        self.runtime_real_slots.clear();
         let children = direct_nodes(node);
         let cond_node = children
             .iter()
@@ -5752,6 +5751,7 @@ impl Compiler {
         let entry_boolean_slots = self.static_boolean_slots.clone();
         let entry_tracking_disabled = self.static_real_tracking_disabled;
         let entry_initialized_string_slots = self.initialized_string_slots.clone();
+        let entry_runtime_real_slots = self.runtime_real_slots.clone();
 
         let branches: Vec<&GrammarASTNode> = children
             .into_iter()
@@ -5778,6 +5778,7 @@ impl Compiler {
         let mut then_boolean_slots = self.static_boolean_slots.clone();
         let then_tracking_disabled = self.static_real_tracking_disabled;
         let then_initialized_string_slots = self.initialized_string_slots.clone();
+        let then_runtime_real_slots = self.runtime_real_slots.clone();
         self.emit(IIRInstr::new(
             "jmp",
             None,
@@ -5790,6 +5791,7 @@ impl Compiler {
         self.static_boolean_slots = entry_boolean_slots;
         self.static_real_tracking_disabled = entry_tracking_disabled;
         self.initialized_string_slots = entry_initialized_string_slots;
+        self.runtime_real_slots = entry_runtime_real_slots;
         if let Some(branch) = else_branch {
             self.emit_branch_node(branch)?;
         }
@@ -5798,6 +5800,7 @@ impl Compiler {
         let else_boolean_slots = self.static_boolean_slots.clone();
         let else_tracking_disabled = self.static_real_tracking_disabled;
         let else_initialized_string_slots = self.initialized_string_slots.clone();
+        let else_runtime_real_slots = self.runtime_real_slots.clone();
         self.emit_label(&end_label);
 
         match static_condition {
@@ -5807,6 +5810,7 @@ impl Compiler {
                 self.static_integer_slots = then_integer_slots;
                 self.static_boolean_slots = then_boolean_slots;
                 self.static_real_tracking_disabled = then_tracking_disabled;
+                self.runtime_real_slots = then_runtime_real_slots;
             }
             Some(false) => {
                 self.initialized_string_slots = else_initialized_string_slots;
@@ -5814,8 +5818,13 @@ impl Compiler {
                 self.static_integer_slots = else_integer_slots;
                 self.static_boolean_slots = else_boolean_slots;
                 self.static_real_tracking_disabled = else_tracking_disabled;
+                self.runtime_real_slots = else_runtime_real_slots;
             }
             None => {
+                let merged_runtime_real_slots = then_runtime_real_slots
+                    .intersection(&else_runtime_real_slots)
+                    .cloned()
+                    .collect();
                 self.initialized_string_slots = then_initialized_string_slots
                     .intersection(&else_initialized_string_slots)
                     .cloned()
@@ -5833,9 +5842,9 @@ impl Compiler {
                     self.static_boolean_slots = then_boolean_slots;
                     self.static_real_tracking_disabled = false;
                 }
+                self.runtime_real_slots = merged_runtime_real_slots;
             }
         }
-        self.runtime_real_slots.clear();
         Ok(())
     }
 
@@ -12120,6 +12129,21 @@ mod tests {
     }
 
     #[test]
+    fn al4_runtime_real_provenance_intersects_statement_branches() {
+        let module = compile_source(
+            "begin real procedure pick; pick := 2.25; boolean flag; real x; if flag then x := pick() else x := pick(); output(x) end",
+            "test",
+        )
+        .expect("equal runtime-real branch provenance survives the join");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var)
+                    == Some("__basic_print_real")
+        }));
+    }
+
+    #[test]
     fn al4_runtime_real_scalar_copy_provenance_does_not_admit_wrappers() {
         for source in [
             "begin real procedure pick; pick := 2.25; real x, y; x := pick(); y := x + 0.0; output(y) end",
@@ -12146,7 +12170,7 @@ mod tests {
     fn al4_runtime_real_scalar_provenance_invalidates_conservatively() {
         for source in [
             "begin real procedure pick; pick := 2.25; real x; x := pick(); x := sin(1.0); output(x) end",
-            "begin real procedure pick; pick := 2.25; boolean flag; real x; x := pick(); if flag then flag := false; output(x) end",
+            "begin real procedure pick; pick := 2.25; boolean flag; real x; x := pick(); if flag then x := 1.0; output(x) end",
             "begin real procedure pick; pick := 2.25; procedure touch; begin end; real x; x := pick(); touch(); output(x) end",
         ] {
             let err = compile_source(source, "test")

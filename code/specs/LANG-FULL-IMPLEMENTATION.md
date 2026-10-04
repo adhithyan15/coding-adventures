@@ -1297,7 +1297,9 @@ backend immediately) come before the enabler-dependent items.
   reassignment, differing branches, and captured globals invalidate the tracked value. Direct zero-argument
   real-procedure results and their straight-line bare local copies use the
   portable six-significant-digit IIR formatter
-  shared with Dartmouth BASIC on native/LLVM/WASM/JVM/CLR/VM/JIT; general
+  shared with Dartmouth BASIC on native/LLVM/WASM/JVM/CLR/VM/JIT. Conditional
+  statements retain that provenance only when every reachable exit proves the
+  same slot; general
   computed scalar `f64` formatting remains a follow-up.
   Unicode-aware BEAM strings remain.
 - ✅ **AL5** — switches (computed goto) + conditional designational expressions.
