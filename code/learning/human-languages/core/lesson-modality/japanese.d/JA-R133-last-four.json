@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-R133-last-four",
+    "language": "japanese",
+    "chapter": 133,
+    "sequence": 8010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c35a119fbca1d85"
+  },
+  "findings": []
+}

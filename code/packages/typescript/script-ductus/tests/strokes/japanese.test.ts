@@ -43,6 +43,11 @@ const JAPANESE_WO = DUCTUS[ductusKey("japanese", "を")];
 const JAPANESE_SO = DUCTUS[ductusKey("japanese", "そ")];
 const JAPANESE_RE = DUCTUS[ductusKey("japanese", "れ")];
 const JAPANESE_RU = DUCTUS[ductusKey("japanese", "る")];
+const JAPANESE_KI = DUCTUS[ductusKey("japanese", "き")];
+const JAPANESE_KE = DUCTUS[ductusKey("japanese", "け")];
+const JAPANESE_NU = DUCTUS[ductusKey("japanese", "ぬ")];
+const JAPANESE_HE = DUCTUS[ductusKey("japanese", "へ")];
+const JAPANESE_RA = DUCTUS[ductusKey("japanese", "ら")];
 
 const OWNER_SCRIPTS = new Set(["japanese"]);
 const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
@@ -654,6 +659,169 @@ describe("handwriting ductus", () => {
     expect(flick[flick.length - 1].x).toBeGreaterThan(
       Math.max(...vertical.map((p) => p.x)) + 500,
     );
+  });
+
+  // Chapter 133's four signs, the last of the basic hiragana, are fitted the
+  // same way: KanjiVG's file supplies the order and direction, the bundled
+  // outline supplies the coordinates. Each test pins the run and lift counts,
+  // the labels in order, exact joins and the citation.
+  for (const [letter, file, name, labels] of [
+    [
+      JAPANESE_KI,
+      "0304d",
+      "U+304D HIRAGANA LETTER KI",
+      [
+        ["draw the upper bar from left to right"],
+        ["draw the lower bar from left to right"],
+        [
+          "run the long diagonal down to the right",
+          "turn sharply and hook back to the left",
+        ],
+        ["curve down and along the base"],
+      ],
+    ],
+    [
+      JAPANESE_KE,
+      "03051",
+      "U+3051 HIRAGANA LETTER KE",
+      [
+        ["draw the left vertical down", "turn and flick up to the right"],
+        ["draw the bar from left to right"],
+        ["run down and sweep to the lower left"],
+      ],
+    ],
+    [
+      JAPANESE_NU,
+      "0306c",
+      "U+306C HIRAGANA LETTER NU",
+      [
+        ["draw the short diagonal"],
+        [
+          "cut down to the lower left",
+          "loop up and over the arch",
+          "come down the right side",
+          "tie a small loop and flick out",
+        ],
+      ],
+    ],
+    [
+      JAPANESE_HE,
+      "03078",
+      "U+3078 HIRAGANA LETTER HE",
+      [["rise up to the peak", "run down to the right"]],
+    ],
+    // ら has been written since chapter 8, but only now has a record and a
+    // ductus; it is fitted the same way.
+    [
+      JAPANESE_RA,
+      "03089",
+      "U+3089 HIRAGANA LETTER RA",
+      [
+        ["draw the top stroke to the right"],
+        ["run down the left side", "turn up and round the open bowl"],
+      ],
+    ],
+  ] as const) {
+    it(`Japanese ${letter.glyph} follows KanjiVG's ${labels.length}-path order on its own outline`, () => {
+      expect(letter.strokes).toHaveLength(labels.length);
+      expect(penLifts(letter)).toBe(labels.length - 1);
+      expect(
+        letter.strokes.map((stroke) =>
+          stroke.segments.map((segment) => segment.label),
+        ),
+      ).toEqual(labels);
+      for (const stroke of letter.strokes) {
+        for (const gap of joinGaps(stroke)) expect(gap).toBe(0);
+      }
+      expect(letter.source.url).toBe(
+        `https://github.com/KanjiVG/kanjivg/blob/master/kanji/${file}.svg`,
+      );
+      for (const phrase of [
+        "KanjiVG",
+        name,
+        "Ulrich Apel and contributors, CC BY-SA 3.0",
+      ]) {
+        expect(letter.source.citation, phrase).toContain(phrase);
+      }
+      for (const phrase of [
+        "Only the order and direction",
+        "Noto Sans JP outline's own medial line",
+      ]) {
+        expect(letter.source.variation, phrase).toContain(phrase);
+      }
+    });
+  }
+
+  it("Japanese き, け, ぬ, へ and ら run in the directions their captions claim", () => {
+    const first = (path: readonly Point[]) => path[0];
+    const last = (path: readonly Point[]) => path[path.length - 1];
+    // き: both bars run rightward; the diagonal runs down to the RIGHT and
+    // hooks back LEFT; the separate curve drops from the left and finishes
+    // along the base, far to the right of where it began.
+    for (const stroke of JAPANESE_KI.strokes.slice(0, 2)) {
+      const bar = penPath(stroke);
+      expect(first(bar).x).toBeLessThan(last(bar).x - 400);
+    }
+    const [diagonal, hook] = JAPANESE_KI.strokes[2].segments.map(
+      (segment) => segment.path,
+    );
+    expect(last(diagonal).y).toBeLessThan(first(diagonal).y - 400);
+    expect(last(diagonal).x).toBeGreaterThan(first(diagonal).x + 150);
+    expect(last(hook).x).toBeLessThan(first(hook).x - 100);
+    const kiCurve = penPath(JAPANESE_KI.strokes[3]);
+    expect(last(kiCurve).y).toBeLessThan(first(kiCurve).y - 150);
+    expect(last(kiCurve).x).toBeGreaterThan(first(kiCurve).x + 300);
+    expect(Math.min(...kiCurve.map((p) => p.x))).toBeLessThan(first(kiCurve).x);
+    // け: the left stroke comes down, then flicks up and to the right; the
+    // bar runs rightward; the long stroke comes down and ends to the LEFT.
+    const [down, flick] = JAPANESE_KE.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    expect(last(down).y).toBeLessThan(first(down).y - 600);
+    expect(last(flick).y).toBeGreaterThan(first(flick).y + 200);
+    expect(last(flick).x).toBeGreaterThan(first(flick).x + 50);
+    const keBar = penPath(JAPANESE_KE.strokes[1]);
+    expect(first(keBar).x).toBeLessThan(last(keBar).x - 400);
+    const sweep = penPath(JAPANESE_KE.strokes[2]);
+    expect(last(sweep).y).toBeLessThan(first(sweep).y - 600);
+    expect(last(sweep).x).toBeLessThan(first(sweep).x - 100);
+    // ぬ: the short stroke runs down to the right; the long one starts above
+    // it, cuts down to the LEFT, and its last part swings back left round
+    // the small loop before it flicks out further right than it began.
+    const nuShort = penPath(JAPANESE_NU.strokes[0]);
+    expect(last(nuShort).x).toBeGreaterThan(first(nuShort).x + 150);
+    expect(last(nuShort).y).toBeLessThan(first(nuShort).y - 300);
+    const nuParts = JAPANESE_NU.strokes[1].segments.map(
+      (segment) => segment.path,
+    );
+    expect(first(nuParts[0]).y).toBeGreaterThan(first(nuShort).y);
+    expect(last(nuParts[0]).x).toBeLessThan(first(nuParts[0]).x - 200);
+    const loop = nuParts[3];
+    expect(Math.min(...loop.map((p) => p.x))).toBeLessThan(first(loop).x - 200);
+    expect(last(loop).x).toBeGreaterThan(first(loop).x + 50);
+    // へ: the peak is the highest point, it sits left of the middle, and the
+    // stroke finishes lower than it started.
+    const [rise, fall] = JAPANESE_HE.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    const peak = last(rise);
+    expect(peak.y).toBeGreaterThan(first(rise).y + 250);
+    expect(peak.y).toBeGreaterThan(last(fall).y + 400);
+    expect(peak.x - first(rise).x).toBeLessThan(last(fall).x - peak.x);
+    expect(last(fall).y).toBeLessThan(first(rise).y);
+    // ら: the top stroke runs rightward; the left stroke comes down, then the
+    // bowl rises to the right of it and finishes low, left of its widest point.
+    const raTop = penPath(JAPANESE_RA.strokes[0]);
+    expect(first(raTop).x).toBeLessThan(last(raTop).x - 200);
+    const [raDown, bowl] = JAPANESE_RA.strokes[1].segments.map(
+      (segment) => segment.path,
+    );
+    expect(last(raDown).y).toBeLessThan(first(raDown).y - 250);
+    expect(Math.max(...bowl.map((p) => p.y))).toBeGreaterThan(first(bowl).y + 100);
+    const bowlRight = Math.max(...bowl.map((p) => p.x));
+    expect(bowlRight).toBeGreaterThan(first(bowl).x + 400);
+    expect(last(bowl).x).toBeLessThan(bowlRight - 300);
+    expect(last(bowl).y).toBeLessThan(first(bowl).y - 150);
   });
 
   it("Japanese counter hiragana preserve the cited stroke and lift counts", () => {

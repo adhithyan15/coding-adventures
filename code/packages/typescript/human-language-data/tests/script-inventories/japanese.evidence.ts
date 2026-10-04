@@ -398,5 +398,32 @@ export const scriptInventoryEvidence = {
       expect(missingJapanese.has(glyph)).toBe(false);
       expect(affected.get(glyph) ?? 0).toBe(0);
     }
+    // Chapter 133: き, け, ぬ and へ, the last four basic hiragana, are cited
+    // the same way. KanjiVG has four paths for き, three for け, two for ぬ and
+    // one for へ, so the lift counts are 3, 2, 1 and 0. ら, written since
+    // chapter 8 but missing from the inventory until chapter 133, is cited the
+    // same way: two paths, one lift. Phrase by phrase with toContain, as above.
+    for (const [glyph, file, name, lifts] of [
+      ["き", "0304d", "U+304D HIRAGANA LETTER KI", 3],
+      ["け", "03051", "U+3051 HIRAGANA LETTER KE", 2],
+      ["ぬ", "0306c", "U+306C HIRAGANA LETTER NU", 1],
+      ["へ", "03078", "U+3078 HIRAGANA LETTER HE", 0],
+      ["ら", "03089", "U+3089 HIRAGANA LETTER RA", 1],
+    ] as const) {
+      const letter = scripts.japanese!.letters.find((entry) => entry.glyph === glyph)!;
+      expect(letter.role).toBe("hiragana");
+      expect(letter.penLifts).toBe(lifts);
+      expect(letter.strokeOrderSource?.url).toBe(
+        `https://github.com/KanjiVG/kanjivg/blob/master/kanji/${file}.svg`,
+      );
+      for (const phrase of ["KanjiVG", name, "Ulrich Apel and contributors, CC BY-SA 3.0"]) {
+        expect(letter.strokeOrderSource?.citation, phrase).toContain(phrase);
+      }
+      for (const phrase of ["Only the order and direction", "Noto Sans JP outline's own medial line"]) {
+        expect(letter.strokeOrderSource?.variation, phrase).toContain(phrase);
+      }
+      expect(missingJapanese.has(glyph)).toBe(false);
+      expect(affected.get(glyph) ?? 0).toBe(0);
+    }
   },
 };

@@ -1,0 +1,21 @@
+{
+  "glyph": "ぬ",
+  "sound": "nu",
+  "role": "hiragana",
+  "components": [
+    "a short diagonal down to the right",
+    "a long stroke that crosses it down to the left, loops round the lower left, arches over the top, comes down the right side and ties a small loop before flicking out to the right"
+  ],
+  "strokeOrder": [
+    "draw the short diagonal from the upper left down to the right",
+    "lift, begin at the top and cut down and left across the first stroke, loop round the lower left, rise over the arch, come down the right side, tie the small loop at the bottom and flick out to the right"
+  ],
+  "strokeOrderNote": "KanjiVG's 0306c file records ぬ as two stroke paths in this order and direction: the short diagonal, then the long looping stroke; so there is one pen lift.",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/0306c.svg",
+    "citation": "KanjiVG, kanji/0306c.svg, hiragana ぬ (U+306C HIRAGANA LETTER NU), two stroke paths kvg:0306c-s1 and s2 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is the short diagonal drawn from the upper left down to the right; s2 starts at the top, descends left across s1, loops round the lower left, rises and arches over the top, comes down the right side, closes a small loop at the bottom and ends in a flick to the right. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs."
+  },
+  "notes": "The nu of いぬ, a dog, and ぬの, cloth. Up to the right side it is written like め; the small closed loop at the end is the whole difference."
+}

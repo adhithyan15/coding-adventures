@@ -1,0 +1,26 @@
+{
+  "language": "japanese",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:2a797dc60ac9ea5c",
+  "lessonIds": [
+    "JA-C133-eki",
+    "JA-W133-ki",
+    "JA-C133-kinou",
+    "JA-C133-ike",
+    "JA-W133-ke",
+    "JA-C133-kesa",
+    "JA-C133-inu",
+    "JA-W133-nu",
+    "JA-C133-nuno",
+    "JA-C133-heya",
+    "JA-W133-he",
+    "JA-R133-last-four"
+  ],
+  "voiceLessons": 8,
+  "drivablePrefix": 1,
+  "text": "japanese/narration/ch133.txt",
+  "json": "japanese/narration/ch133.json",
+  "textHash": "fnv1a64:0dbc3a295ef2e289",
+  "jsonHash": "fnv1a64:98481136685d21b0",
+  "findings": []
+}

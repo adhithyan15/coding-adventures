@@ -1,0 +1,25 @@
+{
+  "glyph": "き",
+  "sound": "ki",
+  "role": "hiragana",
+  "components": [
+    "an upper bar",
+    "a lower bar",
+    "a long diagonal down to the right that hooks back to the left at its foot",
+    "a separate open curve that drops from the left and finishes along the base"
+  ],
+  "strokeOrder": [
+    "draw the upper bar from left to right",
+    "lift, draw the lower bar from left to right",
+    "lift, begin above the upper bar and run the long diagonal down and right through both bars, then without lifting turn sharply and hook back to the left",
+    "lift, begin at the upper left of the curve, drop down and finish along the base to the right"
+  ],
+  "strokeOrderNote": "KanjiVG's 0304d file records き as four stroke paths in this order and direction: the upper bar, the lower bar, the diagonal with its hook, then the open curve; so there are three pen lifts.",
+  "penLifts": 3,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/0304d.svg",
+    "citation": "KanjiVG, kanji/0304d.svg, hiragana き (U+304D HIRAGANA LETTER KI), four stroke paths kvg:0304d-s1 to s4 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 and s2 are the two bars, each drawn left to right; s3 starts above the upper bar, runs down and to the right through both bars and, without lifting, turns sharply back to the left; s4 starts at the upper left of the curve, drops and finishes along the base to the right. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs. Some hands join the hook to the curve below it; KanjiVG and the bundled print glyph keep them apart, and so does this book."
+  },
+  "notes": "The ki of えき, a station, and きのう, yesterday. Below its two bars it is written like さ, which has one."
+}
