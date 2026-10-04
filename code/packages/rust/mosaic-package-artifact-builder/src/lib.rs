@@ -5979,7 +5979,7 @@ const SWIFTUI_NAMESPACE: LayoutNamespace = LayoutNamespace {
 /// |-----------------------------------|-----------------------------------------|
 /// | `MosaicAppShell.kt`               | `MosaicApp`, `MosaicComposeHost`, `MosaicComposeHostBridge`, and a native-complete shell's `MosaicStartup` |
 /// | `MosaicRuntimeHost.kt`            | `MosaicRuntimeHost`, `MosaicRuntimeException`, `MosaicNativeApi`, `MosaicSizeT`, `MosaicBuffer`, `MosaicBytes`, `MosaicPlatformEffectHost` |
-/// | `MosaicFileEffects.kt`            | `MosaicPlatformRouter`, `MosaicAccept`, `MosaicFileFailure`, `MosaicOpenedDocument`, `MosaicSaveTarget`, `MosaicDocumentPicker`, `MosaicSaveRequest` |
+/// | `MosaicFileEffects.kt`            | `MosaicPlatformRouter`, `MosaicAccept`, `MosaicFileFailure`, `MosaicOpenedDocument`, `MosaicSaveTarget`, `MosaicDocumentPicker`, `MosaicSaveRequest`, `MosaicStallWatch` |
 /// | `MosaicPlatformEffects.kt`        | desktop: `MosaicFileDialogs`, `AwtMosaicFileDialogs`, `MosaicDialogPicker`; Android: `MosaicAndroidDocumentPicker` |
 /// | `MosaicPlatform.kt`               | Android: `MosaicDragEndWatcher` (UI89 §3.5) |
 ///
@@ -6009,6 +6009,7 @@ const COMPOSE_SHELL_RESERVED_NAMES: &[&str] = &[
     "MosaicSaveTarget",
     "MosaicDocumentPicker",
     "MosaicSaveRequest",
+    "MosaicStallWatch",
     "MosaicFileDialogs",
     "AwtMosaicFileDialogs",
     "MosaicDialogPicker",

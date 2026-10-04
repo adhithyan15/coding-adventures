@@ -503,11 +503,47 @@ ordinary writing and emoji pass) -- and is "document" otherwise; its MIME type i
 when shaped like one, each part at most 127 characters. Both are asked of
 the provider on the background thread. A failed write is reported, never
 cleaned up by deleting the document, which may be one the person already
-had. A launch that throws anything leaves the picker not waiting. *Known
-limit:* a provider whose stream blocks for ever (a stalled network pipe)
-holds the one background thread, and with it the one file operation, until
-the process ends; a no-progress watchdog that fails the request is a
-follow-up.
+had. A launch that throws anything leaves the picker not waiting.
+
+*A stalled provider fails the request instead of holding it.* A provider
+serves its document through a pipe it fills as it goes -- a cloud
+provider, downloading -- and one that stops filling it would block the read
+for ever. So would a provider that never returns from opening the document,
+or a reader at the far end of a save that stops taking bytes. Each would hold
+the one background thread, and with it the one file operation, until the
+process ended. A watch now bounds every Android read and write:
+
+- `MosaicStallWatch` (shared, in `MosaicFileEffects.kt`) notes each time
+  bytes move, and when none has moved for `MOSAIC_STALL_MILLIS` (60 seconds)
+  stops the transfer and remembers that it did. Progress, not total time,
+  is what it measures: a slow file that keeps arriving is never cut off.
+- Opening asks the provider through `openAssetFileDescriptor(uri, mode,
+  signal)`; until the stream exists, stopping cancels that
+  `CancellationSignal`, which a `DocumentsProvider` receives in
+  `openDocument`.
+- Once the descriptor exists, stopping closes it from the watchdog's thread,
+  with `closeWithError`: a provider reading a save through a reliable pipe
+  learns the save failed, rather than taking a truncated one for finished.
+  Android's file streams wake a thread blocked on a descriptor another thread
+  closed, so the blocked `read` or `write` throws. The descriptor is closed
+  exactly once, by the watch or by the transfer, whichever comes first, since
+  two threads closing one descriptor could close a reused fd number. A
+  transfer that returns after the watch fired is failed all the same.
+- The display-name query takes a `CancellationSignal` too and is watched the
+  same way; a provider that never answers it leaves the name "document".
+  `getType` and the binder call that sets up a cancellation take no signal
+  and are not watched.
+- The bytes of a save are written in 64 KiB pieces, so a slow save that is
+  moving keeps the watch fed.
+- A transfer the watch stopped fails with a fixed message ("the selected file
+  stopped arriving", "the file stopped saving"), and the router answers the
+  request, freeing the file operation for the next one. The answer waits for
+  the blocked call to return, which the close forces on a stream; an
+  `openDocument` that ignores its cancellation still holds the thread until
+  it returns.
+
+The desktop reads and writes local files, which do not stall this way, and
+does not use the watch.
 `MosaicActivity` constructs the picker in `onCreate` before `setContent`,
 installs the library as the host loads (inside `MosaicStartup`'s loader, or
 the sample's `remember`), and in `onDestroy` fails the request whose picker

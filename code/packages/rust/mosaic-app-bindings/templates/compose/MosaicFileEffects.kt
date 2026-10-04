@@ -54,9 +54,15 @@
 // completion; a lost one would leave it awaited for the life of the process.
 
 import java.io.ByteArrayOutputStream
+import java.io.FilterInputStream
 import java.io.InputStream
+import java.io.OutputStream
 import java.util.Base64
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicLong
 
 /** The effect kinds this library answers unless an app claims them. */
 val MOSAIC_STANDARD_EFFECT_KINDS: Set<String> = setOf("files.open", "files.save")
@@ -162,6 +168,109 @@ fun mosaicReadBounded(stream: InputStream, limit: Long): ByteArray? {
 
 /** Reads in a row that may return nothing before a read gives up. */
 private const val MOSAIC_MAX_IDLE_READS = 1000
+
+/**
+ * How long a transfer may go without a byte moving before it is stopped
+ * (UI89 §3.8). Progress, not total time: a slow file that keeps arriving is
+ * never cut off.
+ */
+const val MOSAIC_STALL_MILLIS = 60_000L
+
+// One daemon thread checks every watch; it never keeps the process alive.
+private val mosaicStallWatchdog: ScheduledExecutorService =
+    Executors.newSingleThreadScheduledExecutor { work ->
+        Thread(work, "mosaic-file-watchdog").apply { isDaemon = true }
+    }
+
+/**
+ * A watch on one transfer: when no byte has moved for [stallMillis], it runs
+ * the stop action it was last given -- cancelling an open still in progress,
+ * or closing the stream -- once, and remembers that it did (UI89 §3.8).
+ *
+ * ```text
+ *   progressed() ..... bytes moved: the clock starts again
+ *   stopWith(stop) ... what stopping means now (set it as the transfer
+ *                      moves from opening to streaming); run at once if the
+ *                      watch has already fired
+ *   stalled .......... true once the watch has stopped the transfer, so the
+ *                      error the stopped call throws can be told apart
+ *   close() .......... the transfer is over; the watch stops checking
+ * ```
+ *
+ * Android's file streams wake a thread blocked in `read` or `write` when
+ * another thread closes the stream, which is what makes closing a stop.
+ */
+class MosaicStallWatch(
+    private val stallMillis: Long = MOSAIC_STALL_MILLIS,
+) : AutoCloseable {
+    private val lastProgress = AtomicLong(System.nanoTime())
+    private val fired = AtomicBoolean(false)
+
+    @Volatile
+    private var stop: (() -> Unit)? = null
+
+    /** True once the watch has stopped the transfer. */
+    val stalled: Boolean get() = fired.get()
+
+    private val check = mosaicStallWatchdog.scheduleWithFixedDelay(
+        ::checkProgress,
+        checkEvery(stallMillis),
+        checkEvery(stallMillis),
+        TimeUnit.MILLISECONDS,
+    )
+
+    /** Bytes moved. */
+    fun progressed() = lastProgress.set(System.nanoTime())
+
+    /** What stopping means from now on; run at once when already stalled. */
+    fun stopWith(action: () -> Unit) {
+        stop = action
+        if (stalled) runCatching(action)
+    }
+
+    private fun checkProgress() {
+        val idle = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - lastProgress.get())
+        if (idle < stallMillis || !fired.compareAndSet(false, true)) return
+        // Fired once; the task itself runs on, cheaply, until close() --
+        // cancelling it from here could race the property's assignment.
+        // Both stops (cancel, close) are idempotent, so a `stopWith` racing
+        // this check running the action a second time is harmless.
+        stop?.let { runCatching(it) }
+    }
+
+    override fun close() {
+        check.cancel(false)
+    }
+
+    private companion object {
+        /** A quarter of the allowance, at most five seconds apart. */
+        fun checkEvery(stallMillis: Long): Long = (stallMillis / 4).coerceIn(1L, 5_000L)
+    }
+}
+
+/** [stream], telling [watch] each time a read brings bytes. */
+fun mosaicWatchedInput(stream: InputStream, watch: MosaicStallWatch): InputStream =
+    object : FilterInputStream(stream) {
+        override fun read(): Int = super.read().also { if (it >= 0) watch.progressed() }
+
+        override fun read(b: ByteArray, off: Int, len: Int): Int =
+            super.read(b, off, len).also { if (it > 0) watch.progressed() }
+    }
+
+/**
+ * Write [bytes] to [stream] in 64 KiB pieces, telling [watch] after each, so
+ * a slow save that is moving is never taken for a stalled one.
+ */
+fun mosaicWriteWatched(stream: OutputStream, bytes: ByteArray, watch: MosaicStallWatch) {
+    var offset = 0
+    while (offset < bytes.size) {
+        val count = minOf(64 * 1024, bytes.size - offset)
+        stream.write(bytes, offset, count)
+        offset += count
+        watch.progressed()
+    }
+    stream.flush()
+}
 
 /**
  * A suggested name is a plain file name (UI87 §3.1), so an app cannot steer the

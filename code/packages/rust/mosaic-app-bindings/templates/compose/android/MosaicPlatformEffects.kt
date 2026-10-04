@@ -10,12 +10,14 @@
 //
 //   files.open  ACTION_OPEN_DOCUMENT (ActivityResultContracts.OpenDocument),
 //               filtered on the request's MIME types (any document when none
-//               map); the bytes come from ContentResolver.openInputStream,
+//               map); the bytes come from the provider's file descriptor,
 //               bounded while reading -- a provider's reported size is not
-//               trusted.
+//               trusted -- and watched: no byte for MOSAIC_STALL_MILLIS and
+//               the read is stopped and the request fails (UI89 §3.8).
 //   files.save  checked first, exactly as on the desktop; then
 //               ACTION_CREATE_DOCUMENT with the suggested name and its type,
-//               and the bytes go to openOutputStream(uri, "wt"). The answer's
+//               and the bytes go to the provider's descriptor ("wt"), in
+//               watched 64 KiB pieces. The answer's
 //               name is the provider's display name, which may differ from
 //               the suggestion (most providers add " (1)" rather than replace).
 //               A provider owns the file, and SAF offers no atomic replace, so
@@ -40,7 +42,9 @@ import android.content.ActivityNotFoundException
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
+import android.content.res.AssetFileDescriptor
 import android.net.Uri
+import android.os.CancellationSignal
 import android.os.Handler
 import android.os.Looper
 import android.provider.OpenableColumns
@@ -50,6 +54,7 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * `ACTION_CREATE_DOCUMENT` with the type and title chosen per request:
@@ -151,9 +156,14 @@ class MosaicAndroidDocumentPicker(activity: ComponentActivity) : MosaicDocumentP
  * Anything else, or nothing, is null, and the app is told "document".
  */
 private fun mosaicDisplayName(resolver: ContentResolver, uri: Uri): String? {
+    // Watched like a read (UI89 §3.8): a provider that never answers is
+    // cancelled, and the app is told "document".
     val reported = try {
-        resolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)?.use { cursor ->
-            if (cursor.moveToFirst() && !cursor.isNull(0)) cursor.getString(0) else null
+        MosaicStallWatch().use { watch ->
+            val asking = CancellationSignal()
+            watch.stopWith { asking.cancel() }
+            resolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null, asking)
+                ?.use { cursor -> if (cursor.moveToFirst() && !cursor.isNull(0)) cursor.getString(0) else null }
         }
     } catch (error: Exception) {
         null
@@ -196,9 +206,17 @@ private class MosaicContentDocument(
         }
     }
 
-    override fun read(limit: Long): ByteArray? {
-        val stream = resolver.openInputStream(uri) ?: throw MosaicFileFailure("couldn't read the selected file")
-        return stream.use { mosaicReadBounded(it, limit) }
+    // Watched (UI89 §3.8): a provider that stops serving -- or never finishes
+    // opening -- is stopped after MOSAIC_STALL_MILLIS without a byte, and the
+    // request fails instead of holding the one file operation for ever.
+    override fun read(limit: Long): ByteArray? = mosaicWatchedTransfer(
+        resolver,
+        uri,
+        mode = "r",
+        unopened = "couldn't read the selected file",
+        stalled = "the selected file stopped arriving",
+    ) { descriptor, watch ->
+        mosaicReadBounded(mosaicWatchedInput(descriptor.createInputStream(), watch), limit)
     }
 }
 
@@ -209,12 +227,77 @@ private class MosaicContentTarget(
 ) : MosaicSaveTarget {
     override val name: String by lazy { mosaicDisplayName(resolver, uri) ?: "document" }
 
-    override fun write(bytes: ByteArray) {
-        val stream = resolver.openOutputStream(uri, "wt") ?: throw MosaicFileFailure("couldn't save the file")
-        stream.use {
-            it.write(bytes)
-            it.flush()
+    // Watched like a read: a provider that stops taking bytes, or never
+    // finishes opening, fails the save rather than holding it (UI89 §3.8).
+    override fun write(bytes: ByteArray) = mosaicWatchedTransfer(
+        resolver,
+        uri,
+        mode = "wt",
+        unopened = "couldn't save the file",
+        stalled = "the file stopped saving",
+    ) { descriptor, watch ->
+        mosaicWriteWatched(descriptor.createOutputStream(), bytes, watch)
+    }
+}
+
+/**
+ * One read or write of a document through its provider, watched (UI89 §3.8):
+ * opened with a `CancellationSignal` the watch cancels if the provider never
+ * finishes opening; then [transfer] runs on the descriptor, which the watch
+ * closes if no byte moves for `MOSAIC_STALL_MILLIS`.
+ *
+ * The descriptor is closed exactly once, whichever comes first:
+ *
+ * | who          | how                         | the provider is told |
+ * |--------------|-----------------------------|----------------------|
+ * | the watch    | `closeWithError` (stalled)  | the transfer failed  |
+ * | the transfer | `close` (finished, or threw) | it ended normally    |
+ *
+ * A transfer that finished claims the close before its result is trusted, so
+ * the provider and the app are never told different things.
+ *
+ * Once, because two threads closing one descriptor can close a reused fd
+ * number. With an error, because a provider reading a save through a reliable
+ * pipe would otherwise take a stalled, truncated save for a finished one.
+ * [transfer] makes its stream from the descriptor and must not close it.
+ */
+private fun <T> mosaicWatchedTransfer(
+    resolver: ContentResolver,
+    uri: Uri,
+    mode: String,
+    unopened: String,
+    stalled: String,
+    transfer: (AssetFileDescriptor, MosaicStallWatch) -> T,
+): T = MosaicStallWatch().use { watch ->
+    val opening = CancellationSignal()
+    watch.stopWith { opening.cancel() }
+    try {
+        val descriptor = resolver.openAssetFileDescriptor(uri, mode, opening)
+            ?: throw MosaicFileFailure(unopened)
+        val closed = AtomicBoolean(false)
+        watch.stopWith {
+            if (closed.compareAndSet(false, true)) {
+                descriptor.parcelFileDescriptor.closeWithError("the transfer stalled")
+            }
         }
+        val result = try {
+            transfer(descriptor, watch)
+        } catch (error: Throwable) {
+            if (closed.compareAndSet(false, true)) runCatching { descriptor.close() }
+            throw error
+        }
+        // Claim the close before trusting the result: either the watch
+        // already fired -- the bytes may have come from a reused descriptor,
+        // and the provider was told it failed -- or the transfer closes it,
+        // normally, and the watch can no longer report an error.
+        if (!closed.compareAndSet(false, true)) throw MosaicFileFailure(stalled)
+        runCatching { descriptor.close() }
+        result
+    } catch (failure: MosaicFileFailure) {
+        throw failure
+    } catch (error: Exception) {
+        if (watch.stalled) throw MosaicFileFailure(stalled)
+        throw error
     }
 }
 

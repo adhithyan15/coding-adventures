@@ -578,6 +578,103 @@ class MosaicPlatformEffectsTest {
         assertEquals(listOf<Byte>(7), mosaicReadBounded(pausing, 10)!!.toList())
     }
 
+    /**
+     * A stream that blocks until it is closed -- as a provider's pipe does
+     * when the provider stops filling it -- and then throws, as Android's
+     * file streams do for a thread blocked on a stream another one closed.
+     */
+    private class StalledStream : java.io.InputStream() {
+        private val closed = java.util.concurrent.CountDownLatch(1)
+        override fun read(): Int = throw AssertionError("bulk reads only")
+        override fun read(b: ByteArray, off: Int, len: Int): Int {
+            closed.await()
+            throw java.io.IOException("closed under a blocked read")
+        }
+        override fun close() = closed.countDown()
+    }
+
+    @Test
+    fun aStalledReadIsStoppedAndSaysSo() {
+        // UI89 §3.8: no byte for the allowance, and the watch closes the
+        // stream; the blocked read throws, and `stalled` tells the caller why.
+        val stream = StalledStream()
+        val started = System.nanoTime()
+        val error = MosaicStallWatch(stallMillis = 200).use { watch ->
+            watch.stopWith { stream.close() }
+            val thrown = runCatching { mosaicReadBounded(mosaicWatchedInput(stream, watch), 10) }
+                .exceptionOrNull()
+            assertTrue(watch.stalled, "the watch fired")
+            thrown
+        }
+        assertTrue(error is java.io.IOException, "$error")
+        val waited = java.util.concurrent.TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - started)
+        assertTrue(waited in 200..5_000, "stopped after the allowance, not before: $waited ms")
+    }
+
+    @Test
+    fun aSlowTransferThatKeepsMovingIsNeverStopped() {
+        // Progress, not total time: a byte every 50 ms for 600 ms against a
+        // 400 ms allowance -- well beyond any gap between bytes, and shorter
+        // than the whole read -- reads to the end.
+        var sent = 0
+        val slow = object : java.io.InputStream() {
+            override fun read(): Int = throw AssertionError("bulk reads only")
+            override fun read(b: ByteArray, off: Int, len: Int): Int {
+                if (sent == 12) return -1
+                Thread.sleep(50)
+                b[off] = sent++.toByte()
+                return 1
+            }
+        }
+        MosaicStallWatch(stallMillis = 400).use { watch ->
+            watch.stopWith { throw AssertionError("a moving transfer was stopped") }
+            assertEquals(12, mosaicReadBounded(mosaicWatchedInput(slow, watch), 100)!!.size)
+            assertFalse(watch.stalled)
+        }
+    }
+
+    @Test
+    fun aWatchThatAlreadyFiredStopsWhatItIsGivenNext() {
+        // The open may stall before the stream exists; the stream's stop then
+        // runs as soon as it is handed over.
+        MosaicStallWatch(stallMillis = 50).use { watch ->
+            val deadline = System.nanoTime() + 5_000_000_000L
+            while (!watch.stalled && System.nanoTime() < deadline) Thread.sleep(10)
+            assertTrue(watch.stalled)
+            var stopped = 0
+            watch.stopWith { stopped++ }
+            assertEquals(1, stopped)
+        }
+        // A closed watch never fires.
+        val closed = MosaicStallWatch(stallMillis = 50)
+        var fired = false
+        closed.stopWith { fired = true }
+        closed.close()
+        Thread.sleep(200)
+        assertFalse(fired)
+        assertFalse(closed.stalled)
+    }
+
+    @Test
+    fun aWatchedWriteGoesInPiecesAndKeepsTheWatchFed() {
+        val bytes = ByteArray(200_000) { it.toByte() }
+        val out = java.io.ByteArrayOutputStream()
+        val writes = mutableListOf<Int>()
+        val counting = object : java.io.OutputStream() {
+            override fun write(b: Int) = throw AssertionError("bulk writes only")
+            override fun write(b: ByteArray, off: Int, len: Int) {
+                writes += len
+                out.write(b, off, len)
+            }
+        }
+        MosaicStallWatch(stallMillis = 200).use { watch ->
+            mosaicWriteWatched(counting, bytes, watch)
+            assertFalse(watch.stalled)
+        }
+        assertTrue(bytes.contentEquals(out.toByteArray()))
+        assertEquals(listOf(65_536, 65_536, 65_536, 3_392), writes)
+    }
+
     @Test
     fun openingSomethingThatIsNotAFileFails() {
         val outcome = mosaicRunFilesOpen(emptyMap<String, Any?>(), FakeDialogs(directory))
