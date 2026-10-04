@@ -2001,6 +2001,9 @@ fn parse_css_color(css: &str) -> Option<Color> {
     if css.eq_ignore_ascii_case("transparent") {
         return Some(Color { r: 0, g: 0, b: 0, a: 0 });
     }
+    if let Some(color) = parse_css_rgb_function(css) {
+        return Some(color);
+    }
     let value = css.strip_prefix('#')?;
     if !value.is_ascii() || !value.bytes().all(|byte| byte.is_ascii_hexdigit()) {
         return None;
@@ -2022,6 +2025,41 @@ fn parse_css_color(css: &str) -> Option<Color> {
         }),
         _ => None,
     }
+}
+
+fn parse_css_rgb_function(css: &str) -> Option<Color> {
+    let source = css.trim().to_ascii_lowercase();
+    let inner = source.strip_prefix("rgb(").or_else(|| source.strip_prefix("rgba("))?
+        .strip_suffix(')')?.trim();
+    let normalized = inner.replace(',', " ").replace('/', " / ");
+    let parts = normalized.split_whitespace().collect::<Vec<_>>();
+    let slash = parts.iter().position(|part| *part == "/");
+    let legacy_alpha = slash.is_none() && parts.len() == 4;
+    let color_parts = slash.map_or_else(
+        || if legacy_alpha { &parts[..3] } else { &parts[..] },
+        |index| &parts[..index],
+    );
+    if color_parts.len() != 3 {
+        return None;
+    }
+    let component = |value: &str| -> Option<u8> {
+        let (number, scale) = value.strip_suffix('%').map_or((value, 1.0), |value| (value, 2.55));
+        number.parse::<f64>().ok().filter(|value| value.is_finite())
+            .map(|value| (value * scale).clamp(0.0, 255.0).round() as u8)
+    };
+    let alpha_source = slash.and_then(|index| parts.get(index + 1).copied())
+        .or_else(|| legacy_alpha.then(|| parts[3]));
+    let alpha = alpha_source.map_or(Some(255), |value| {
+        let (number, scale) = value.strip_suffix('%').map_or((value, 255.0), |value| (value, 2.55));
+        number.parse::<f64>().ok().filter(|value| value.is_finite())
+            .map(|value| (value * scale).clamp(0.0, 255.0).round() as u8)
+    })?;
+    Some(Color {
+        r: component(color_parts[0])?,
+        g: component(color_parts[1])?,
+        b: component(color_parts[2])?,
+        a: alpha,
+    })
 }
 
 fn text_node(
@@ -7118,6 +7156,14 @@ mod tests {
     }
 
     #[test]
+    fn css_colors_parse_legacy_and_modern_rgb_functions() {
+        let expected = Color { r: 51, g: 102, b: 153, a: 204 };
+        assert_eq!(css_to_color("rgba(51, 102, 153, 0.8)"), expected);
+        assert_eq!(css_to_color("rgb(20% 40% 60% / 80%)"), expected);
+        assert_eq!(with_opacity("rgb(20% 40% 60% / 80%)", 0.5), "rgba(51,102,153,0.4)");
+    }
+
+    #[test]
     fn chart_accessibility_metadata_reaches_paint_scene() {
         let shaper = FakeShaper;
         let metrics = FakeMetrics;
@@ -7171,7 +7217,7 @@ mod tests {
                 style: Some(diagram_ir::TreemapStyle {
                     node: diagram_ir::DiagramStyle {
                         fill: Some("currentColor".into()), stroke: Some("currentcolor".into()), stroke_width: Some(3.0),
-                        stroke_dash: Some(vec![5.0, 2.0]), text_color: Some("#78350fcc".into()), font_size: Some(17.0),
+                        stroke_dash: Some(vec![5.0, 2.0]), text_color: Some("rgb(47.059% 20.784% 5.882% / 80%)".into()), font_size: Some(17.0),
                         font_weight: Some(700), font_italic: Some(true), font_family: Some("Avenir".into()), corner_radius: Some(9.0),
                     },
                     font_size: Some(diagram_ir::TreemapFontSize::Factor(1.25)),
