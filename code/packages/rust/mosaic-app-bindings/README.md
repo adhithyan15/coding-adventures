@@ -24,7 +24,10 @@ asynchronous path from a picker's answer to the effect's outcome (UI89 §3.8).
 `MosaicPlatformEffects.kt` is each target's own half: the desktop's
 (`compose_platform_effects()`) answers through the native file dialog,
 Android's (`compose_android_platform_effects()`) through the Storage Access
-Framework's document picker. The shared half and the desktop's are tested with
+Framework's document picker. Android's reads and writes are watched by the
+shared `MosaicStallWatch`: a provider that moves no byte for a minute, or never
+finishes opening the document, is stopped and the request fails, instead of
+holding the one file operation (UI89 §3.8). The shared half and the desktop's are tested with
 fake dialogs, pickers and hosts by
 `conformance/compose/MosaicPlatformEffectsTest.kt`.
 
