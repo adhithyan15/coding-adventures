@@ -1301,8 +1301,10 @@ backend immediately) come before the enabler-dependent items.
   statements retain that provenance only when every reachable exit proves the
   same slot; conditional value expressions retain it when their selector has no
   procedure call and every reachable branch is independently proven. Unary plus
-  and unary minus preserve the same runtime-real proof; general computed scalar
-  `f64` formatting remains a follow-up.
+  and unary minus preserve the same runtime-real proof. Additive composition
+  preserves it when every operand is independently runtime-real or a finite
+  static numeric expression; multiplicative, division, power, and broader
+  computed scalar `f64` formatting remain follow-ups.
   Unicode-aware BEAM strings remain.
 - ✅ **AL5** — switches (computed goto) + conditional designational expressions.
   `switch s := a1,a2,a3; … goto s[3]` ⇒ exit 49, **verified by running** across
