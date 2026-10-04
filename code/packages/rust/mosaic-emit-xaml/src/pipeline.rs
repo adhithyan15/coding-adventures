@@ -235,6 +235,27 @@ impl ComponentRegistry {
     pub fn is_empty(&self) -> bool {
         self.entries.is_empty()
     }
+
+    /// The registered components declared in the C# namespace
+    /// `namespace` (an entry whose xmlns is `using:<namespace>`), sorted.
+    ///
+    /// These are the ones that share the generated controls' namespace --
+    /// `mosaic-compile`'s single-file mode registers the package's sibling
+    /// exports this way -- so a layout variant's type must not spell one of
+    /// their names (UI48 §7.11). A component in another namespace is
+    /// referenced only through its own XAML prefix (`<grid:Card/>`), never
+    /// by a bare C# name, so it cannot collide.
+    pub fn components_in_namespace(&self, namespace: &str) -> Vec<String> {
+        let xmlns = format!("using:{namespace}");
+        let mut tags: Vec<String> = self
+            .entries
+            .iter()
+            .filter(|(_, entry)| entry.xmlns_value == xmlns)
+            .map(|(tag, _)| tag.clone())
+            .collect();
+        tags.sort();
+        tags
+    }
 }
 
 /// Options controlling the emitter's behaviour.
@@ -488,7 +509,7 @@ pub fn from_pipeline(
     validate_layout_choices(
         &interface.component,
         &options.layout_variants,
-        &options.package_exports,
+        &name_owners(registry, options),
     )?;
     emit_component(interface, layout, style, registry, options, &interface.component, None)
 }
@@ -645,9 +666,11 @@ fn emit_component(
 // Row view models are `X_<Alias>Vm`; a variant type has no `_`, so it can
 // never spell one. A dependency package's components add no names: the
 // package builder composes them into the layout that mounts them (no
-// registry, no `<pkg:X/>` reference). Known gap: a caller that passes a
-// `ComponentRegistry` (`mosaic-compile`'s single-file mode) references
-// controls declared elsewhere, whose names are not checked here.
+// registry, no `<pkg:X/>` reference). A `ComponentRegistry`'s components
+// (`mosaic-compile`'s single-file mode registers the package's sibling
+// exports) are owners when they are declared in the generated namespace;
+// one in another namespace is reached only through its XAML prefix and
+// cannot collide with a bare C# name.
 
 /// The C# type of a layout variant's control: the component name followed
 /// by the variant in PascalCase, `-` and `_` both separating words --
@@ -741,6 +764,17 @@ fn reserved_variant_type(component: &str, type_name: &str, exports: &[String]) -
     None
 }
 
+/// The controls besides the component that own names in the generated
+/// namespace: the package's exports, and a registry's components declared
+/// in that namespace ([`ComponentRegistry::components_in_namespace`]).
+fn name_owners(registry: Option<&ComponentRegistry>, options: &EmitOptions) -> Vec<String> {
+    let mut owners = options.package_exports.clone();
+    if let Some(registry) = registry {
+        owners.extend(registry.components_in_namespace(&options.namespace));
+    }
+    owners
+}
+
 /// Whether `type_name` is spelled inside `owner`'s support namespace,
 /// `<owner>Mosaic...`: every support type a layout of the control `owner`
 /// may declare is named that way (`<X>MosaicFontSize`, `<X>MosaicSlider`,
@@ -776,8 +810,9 @@ pub fn in_support_namespace(owner: &str, type_name: &str) -> bool {
 ///
 /// [`PipelineEmitError::InvalidLayoutVariant`] when the variant cannot name
 /// a type, or the type is reserved -- the component's own name or event
-/// union, a name in `options.package_exports` (or its union or support
-/// types), or one of [`SHELL_RESERVED_NAMES`]. Otherwise as
+/// union, a name in `options.package_exports` or a `registry` component in
+/// the generated namespace (or its union or support types), or one of
+/// [`SHELL_RESERVED_NAMES`]. Otherwise as
 /// [`from_pipeline`].
 pub fn from_pipeline_variant(
     interface: &MosmodelComponent,
@@ -799,7 +834,7 @@ pub fn from_pipeline_variant(
             "`{variant}` of {component} cannot name a C# type"
         ))
     })?;
-    if let Some(reason) = reserved_variant_type(component, &type_name, &options.package_exports) {
+    if let Some(reason) = reserved_variant_type(component, &type_name, &name_owners(registry, options)) {
         return Err(PipelineEmitError::InvalidLayoutVariant(format!(
             "`{variant}` of {component}: {reason}"
         )));
@@ -7507,6 +7542,50 @@ fn main_window_cs_with_layout_variants(
         // The root is mounted by `MountLayout`, which wires its `Dispatch`
         // as it creates it; there is no fixed control to wire once.
         source = replace_exactly_once(&source, "    private bool dispatchWired;\n", "");
+        // UI48 §7.11: the runtime starts once the window has been laid out,
+        // so the first root it mounts is the one the window selects. Until
+        // then the loading view shows -- never the default layout, about to
+        // be replaced, for a frame.
+        source = replace_exactly_once(
+            &source,
+            concat!(
+                "        ShowStartupLoading();\n",
+                "        if (!this.DispatcherQueue.TryEnqueue(StartRuntime))\n",
+            ),
+            concat!(
+                "        ShowStartupLoading();\n",
+                "        // UI48 §7.11: the first root is the one the window's environment\n",
+                "        // selects, so the runtime starts once the window has been laid\n",
+                "        // out and has a size to select by. Until then the loading view\n",
+                "        // shows, never the default layout about to be replaced. A retried\n",
+                "        // start finds the window laid out and starts at once.\n",
+                "        if (this.Content is FrameworkElement root && root.ActualWidth <= 0)\n",
+                "        {\n",
+                "            root.SizeChanged -= StartRuntimeOnceLaidOut;\n",
+                "            root.SizeChanged += StartRuntimeOnceLaidOut;\n",
+                "            return;\n",
+                "        }\n",
+                "        if (!this.DispatcherQueue.TryEnqueue(StartRuntime))\n",
+            ),
+        );
+        source = replace_exactly_once(
+            &source,
+            "    private void StartRuntime()\n",
+            concat!(
+                "    // The window's first layout pass. The runtime starts from the\n",
+                "    // dispatcher queue, outside the layout pass that raised this, once.\n",
+                "    private void StartRuntimeOnceLaidOut(object sender, SizeChangedEventArgs args)\n",
+                "    {\n",
+                "        if (this.Content is FrameworkElement root) root.SizeChanged -= StartRuntimeOnceLaidOut;\n",
+                "        if (!this.DispatcherQueue.TryEnqueue(StartRuntime))\n",
+                "        {\n",
+                "            ShowStartupFailure(\"WinUI could not schedule Mosaic runtime initialization.\");\n",
+                "        }\n",
+                "    }\n",
+                "\n",
+                "    private void StartRuntime()\n",
+            ),
+        );
         source = replace_exactly_once(
             &source,
             concat!(
@@ -7520,8 +7599,8 @@ fn main_window_cs_with_layout_variants(
             ),
             concat!(
                 "            // UI48 §7.11: the root the window's environment selects (the\n",
-                "            // default before the first layout pass), its props applied\n",
-                "            // strictly, as every later root's are.\n",
+                "            // default only if the window has no size even now), its props\n",
+                "            // applied strictly, as every later root's are.\n",
                 "            MountLayout(WindowEnvironment() is { } environment\n",
                 "                ? MosaicLayoutVariant(environment)\n",
                 "                : null);\n",
@@ -19946,6 +20025,34 @@ mod tests {
     }
 
     #[test]
+    fn a_registry_component_in_the_generated_namespace_owns_its_names() {
+        // UI48 §7.11: mosaic-compile's single-file mode registers the
+        // package's sibling exports in the generated namespace; a variant
+        // may not spell one of them, its union or its support types. A
+        // component in another namespace is reached through its own XAML
+        // prefix, so its names are free.
+        let (c, l, s) = tappable_card();
+        let mut registry = ComponentRegistry::new();
+        registry.register("CardTouch", "pkg", "using:Mosaic.Generated", "mosaic-pkg-cards");
+        registry.register("CardWide", "grid", "using:Mosaic.Package.Grid", "mosaic-pkg-grid");
+        assert_eq!(registry.components_in_namespace("Mosaic.Generated"), vec!["CardTouch"]);
+        for variant in ["touch", "touch-event", "touch-mosaic-slider"] {
+            let error = from_pipeline_variant(&c, &l, &s, Some(&registry), variant, &opts())
+                .unwrap_err()
+                .to_string();
+            assert!(error.contains("CardTouch"), "{variant}: {error}");
+            let mut o = opts();
+            o.emit_project = true;
+            o.layout_variants = vec![choice(variant, &[])];
+            let error = from_pipeline(&c, &l, &s, Some(&registry), &o).unwrap_err().to_string();
+            assert!(error.contains("CardTouch"), "{variant}: {error}");
+        }
+        assert!(from_pipeline_variant(&c, &l, &s, Some(&registry), "wide", &opts()).is_ok());
+        // Without the registry the same variant is free.
+        assert!(from_pipeline_variant(&c, &l, &s, None, "touch", &opts()).is_ok());
+    }
+
+    #[test]
     fn a_variant_type_may_not_take_a_name_already_in_the_namespace() {
         let (c, l, s) = tappable_card();
         let refused = |variant: &str, exports: &[&str]| {
@@ -20079,6 +20186,28 @@ mod tests {
         let first = source.find("            MountLayout(WindowEnvironment() is { } environment\n").unwrap();
         let shown = source.find("            ShowRuntimeContent();\n").unwrap();
         assert!(load < first && first < shown, "{source}");
+        // The runtime starts only once the window is laid out, so that first
+        // root is the selected one, not the default for a frame: before the
+        // first layout pass the start waits for SizeChanged (unsubscribed
+        // as it fires), and queues StartRuntime from there.
+        let queue = &source[source.find("    private void QueueRuntimeStartup()").unwrap()..];
+        let waits = queue
+            .find(concat!(
+                "        if (this.Content is FrameworkElement root && root.ActualWidth <= 0)\n",
+                "        {\n",
+                "            root.SizeChanged -= StartRuntimeOnceLaidOut;\n",
+                "            root.SizeChanged += StartRuntimeOnceLaidOut;\n",
+                "            return;\n",
+                "        }\n",
+            ))
+            .unwrap();
+        assert!(waits < queue.find("this.DispatcherQueue.TryEnqueue(StartRuntime)").unwrap(), "{queue}");
+        assert!(source.contains(concat!(
+            "    private void StartRuntimeOnceLaidOut(object sender, SizeChangedEventArgs args)\n",
+            "    {\n",
+            "        if (this.Content is FrameworkElement root) root.SizeChanged -= StartRuntimeOnceLaidOut;\n",
+            "        if (!this.DispatcherQueue.TryEnqueue(StartRuntime))\n",
+        )), "{source}");
         let mount = &source[source.find("    private void MountLayout(string? variant)").unwrap()..];
         let apply = mount.find("MosaicRuntimeHost.ApplyRequiredProps(next, RequiredProps);").unwrap();
         let replace = mount.find("ShowLayoutRoot(next, variant);").unwrap();
@@ -20112,7 +20241,9 @@ mod tests {
         let report = source.find("            root.SizeChanged += (_, _) => QueueEnvironmentReport();").unwrap();
         let switch = source.find("            root.SizeChanged += (_, _) => QueueLayoutSwitch();").unwrap();
         assert!(report < switch);
-        assert_eq!(source.matches("root.SizeChanged += ").count(), 2);
+        // (The third subscription is the one-shot start, above.)
+        assert_eq!(source.matches("root.SizeChanged += (_, _)").count(), 2);
+        assert_eq!(source.matches("root.SizeChanged += ").count(), 3);
         assert!(source.contains("            root.ActualThemeChanged += (_, _) => QueueLayoutSwitch();\n            this.Closed += OnLayoutWindowClosed;\n            this.environmentWired = true;"));
         // Never swapped inside the handler: queued, one at a time, and the
         // settle state checked again when it runs.
