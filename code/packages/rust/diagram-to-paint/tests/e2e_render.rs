@@ -2406,6 +2406,38 @@ line "Target" [35, 50, 68, 82]"##,
     }
 
     #[test]
+    fn render_mermaid_treemap_hwb_colors_to_png() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"HWB leaf\": 1:::hwb\nclassDef hwb fill:hwb(210 20% 40% / 80%),stroke:hwb(0 20% 20%),color:hwb(120 10% 30%)",
+        )
+        .expect("HWB treemap parse failed");
+        let layout = layout_treemap(&diagram, 480.0);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_treemap(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+            device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 12.0),
+            title_font: font_spec("Helvetica", 17.0),
+            shaper: &shaper,
+            metrics: &metrics,
+            resolver: &resolver,
+        });
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            paint_instructions::PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some("rgba(51,102,153,0.8)")
+                    && rect.stroke.as_deref() == Some("rgb(204,51,51)"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            paint_instructions::PaintInstruction::GlyphRun(run)
+                if run.fill.as_deref() == Some("rgb(26, 179, 26)"))));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_treemap_hwb_colors_e2e.png")
+            .expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
     fn render_mermaid_treeview_to_png() {
         let diagram = parse_treeview("treeView-beta\ntitle Application Files\naccTitle: Application tree\nproject/ :::highlight icon(folder)\n    src/ icon(folder)\n        App.tsx icon(logos:react) ## main component\n        index.ts ## entry point\n    README.md").expect("treeview parse failed");
         let layout = layout_treeview(&diagram, 720.0);
