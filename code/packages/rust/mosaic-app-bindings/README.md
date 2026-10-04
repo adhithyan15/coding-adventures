@@ -16,10 +16,14 @@ semantic events, and return decoded updates to the generated view.
 
 Beside each runtime binding, this crate ships the operating-system
 capabilities every generated app gets, so no app carries its own copy. The
-first is Compose's `MosaicPlatformEffects.kt` (`compose_platform_effects()`):
-`files.open` and `files.save` through the native file dialog, and a router that
-sends each effect to the app's own `[host_effects]` handler or to this library
-by kind. Its behaviour is tested with fake dialogs by
+first is Compose's, in two files. `MosaicFileEffects.kt`
+(`compose_file_effects()`) is the half every Compose target shares: the rules
+a request must meet, the MIME table, a router that sends each effect to the
+app's own `[host_effects]` handler or to this library by kind, and the
+asynchronous path from a picker's answer to the effect's outcome (UI89 §3.8).
+`MosaicPlatformEffects.kt` (`compose_platform_effects()`) is the desktop's:
+`files.open` and `files.save` through the native file dialog. Both are tested
+with fake dialogs and fake pickers by
 `conformance/compose/MosaicPlatformEffectsTest.kt`.
 
 SwiftUI's `MosaicPlatformEffects.swift` (`swift_platform_effects()`) answers

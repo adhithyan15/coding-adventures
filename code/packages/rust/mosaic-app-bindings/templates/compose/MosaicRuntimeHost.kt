@@ -113,7 +113,20 @@ interface MosaicNativeApi : Library {
     fun mosaic_app_destroy(app: Pointer)
 }
 
-class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : MosaicComposeHost {
+/**
+ * What the platform library's router (MosaicFileEffects.kt) needs from a host:
+ * the effect handler it wraps, and deferring and answering an effect.
+ * [MosaicRuntimeHost] is the real one; a test supplies a fake, so routing and
+ * deferral run without a Rust runtime (UI89 §3.8).
+ */
+interface MosaicPlatformEffectHost {
+    var effectHandler: ((Long, String, Any?, String) -> Unit)?
+    fun deferEffect(id: Long): Boolean
+    fun completeEffect(id: Long, result: Map<String, Any?>): Map<String, Any?>
+}
+
+class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) :
+    MosaicComposeHost, MosaicPlatformEffectHost {
     private var handle: Pointer? = null
     private var sequence = 0L
     private var latestUpdate: JsonObject
@@ -142,7 +155,7 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
      * marshal there itself -- there is no portable main-thread primitive here
      * to do it for you.
      */
-    var effectHandler: ((Long, String, Any?, String) -> Unit)? = null
+    override var effectHandler: ((Long, String, Any?, String) -> Unit)? = null
 
     /** Awaited effect ids nothing has answered yet. */
     private val awaiting = mutableSetOf<Long>()
@@ -334,7 +347,7 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
      * a file dialog dismissed with Escape is an ordinary user action.
      */
     @Synchronized
-    fun completeEffect(id: Long, result: Map<String, Any?>): Map<String, Any?> {
+    override fun completeEffect(id: Long, result: Map<String, Any?>): Map<String, Any?> {
         val app = requireHandle()
         val update = withJsonInput(result.toJsonElement()) { resultBytes ->
             withJsonInput(JsonPrimitive(id)) { idBytes ->
@@ -379,7 +392,7 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
      * will ever answer -- wedging persistence for the life of the process.
      */
     @Synchronized
-    fun deferEffect(id: Long): Boolean {
+    override fun deferEffect(id: Long): Boolean {
         if (!awaiting.contains(id)) return false
         deferred.add(id)
         return true

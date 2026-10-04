@@ -428,6 +428,34 @@ where both paths share it.
   automation of §4 (an XCUITest, an instrumented Compose test), which lands
   with those lanes.
 
+**As built: the Kotlin shared core (first PR).** `MosaicFileEffects.kt`
+(`mosaic-app-bindings`' `compose_file_effects()`) holds the rules, the MIME
+table, routing, `mosaicCheckSaveRequest`, the picker seam
+(`MosaicDocumentPicker`, `MosaicOpenedDocument`, `MosaicSaveTarget`,
+`MosaicAccept`, `MosaicFileFailure`), `mosaicAnswerFilesOpen` /
+`mosaicAnswerFilesSave` (each answers exactly once, never throws, and hears a
+picker's first answer only) and the router, which now takes a picker and an
+optional `runInBackground` -- null (the desktop) reads and writes inline, as
+before; otherwise the outcome is handed back through `runOnUi` before the
+effect is completed -- and gains `failPending(message)` for a picker whose
+answer can no longer arrive. The router is typed on
+`MosaicPlatformEffectHost`, an interface `MosaicRuntimeHost.kt` now declares
+and `MosaicRuntimeHost` implements, so the harness drives it with a fake
+host as the Swift harness does. The desktop
+`MosaicPlatformEffects.kt` keeps the AWT dialogs and writing in place,
+adapted by `MosaicDialogPicker`; `mosaicRunFilesOpen` / `mosaicRunFilesSave`
+and `installMosaicPlatformEffects` keep their signatures and outcomes, so
+`Main.kt` is unchanged. The builder writes both files into every desktop
+project and reserves the new public type names (UI48 §7.5); Android gets the
+shared file with its own picker in the third PR. Nothing thrown on the
+background thread escapes it (an `OutOfMemoryError` encoding a large file is
+still an answer); an answer the host cannot take is answered again with a
+small failure ("couldn't deliver the file"), so a deferred effect is never
+left awaited; and a stream that only ever returns nothing fails the read
+after 1000 such reads instead of holding the one file operation open. The
+Compose harness gained thirteen checks of the asynchronous path and the
+router (26 in all).
+
 **Order.** Three PRs: the Kotlin shared core and asynchronous router, with
 desktop behaviour unchanged; the Swift router's asynchronous path with the
 iOS picker; the Android library.
