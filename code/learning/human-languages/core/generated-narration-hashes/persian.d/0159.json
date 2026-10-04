@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:e8581872e0d00ece",
+  "lessonIds": [
+    "FA-C159-be-har-hal",
+    "FA-C159-bedun-e",
+    "FA-C159-vagarna",
+    "FA-C159-dar-hali-ke",
+    "FA-C159-makhsusan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch159.txt",
+  "json": "persian/narration/ch159.json",
+  "textHash": "fnv1a64:fe470a14081dcf40",
+  "jsonHash": "fnv1a64:eb42f252761caf87",
+  "findings": []
+}

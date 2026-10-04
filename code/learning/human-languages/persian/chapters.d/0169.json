@@ -1,0 +1,19 @@
+{
+  "chapter": 169,
+  "title": "Adult, Classmate, Host, Enemy, People",
+  "label": "ch:fa-adult-classmate-host-enemy-people",
+  "canDo": "I can say an adult, a classmate, a host, an enemy and people.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C169-mardom",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 169: I can say an adult, a classmate, a host, an enemy and people.",
+    "assesses": [
+      "FA-LEX-C169-CHIZ169-03",
+      "FA-LEX-C169-CHIZ169-04",
+      "FA-LEX-C169-CHIZ169-05"
+    ]
+  }
+}

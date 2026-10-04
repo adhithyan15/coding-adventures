@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C148-chort-zadan",
+    "language": "persian",
+    "chapter": 148,
+    "sequence": 7550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c29c3b1be896b67a"
+  },
+  "findings": []
+}

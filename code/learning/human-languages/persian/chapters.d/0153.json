@@ -1,0 +1,19 @@
+{
+  "chapter": 153,
+  "title": "Midnight, Ago, Then, Finally, Weekly",
+  "label": "ch:fa-midnight-ago-then-finally-weekly",
+  "canDo": "I can say midnight, ago, then, finally and weekly.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "FA-C153-haftegi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 153: I can say midnight, ago, then, finally and weekly.",
+    "assesses": [
+      "FA-LEX-C153-ZAMAN153-03",
+      "FA-LEX-C153-ZAMAN153-04",
+      "FA-LEX-C153-ZAMAN153-05"
+    ]
+  }
+}

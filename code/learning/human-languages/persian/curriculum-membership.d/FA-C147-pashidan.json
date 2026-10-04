@@ -1,0 +1,11 @@
+{
+  "id": "FA-C147-pashidan",
+  "pathSegment": "FA-PATH-147-KONESH147",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-147-KONESH147",
+      "order": 4
+    }
+  ]
+}

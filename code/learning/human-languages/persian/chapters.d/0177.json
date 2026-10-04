@@ -1,0 +1,19 @@
+{
+  "chapter": 177,
+  "title": "Passenger, Guide, Leave, Subject of study, Course",
+  "label": "ch:fa-passenger-guide-leave-subject-of-study-course",
+  "canDo": "I can say a passenger, a guide, leave, a subject of study and a course.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C177-dowre",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 177: I can say a passenger, a guide, leave, a subject of study and a course.",
+    "assesses": [
+      "FA-LEX-C177-KAR177-03",
+      "FA-LEX-C177-KAR177-04",
+      "FA-LEX-C177-KAR177-05"
+    ]
+  }
+}

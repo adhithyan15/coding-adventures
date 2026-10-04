@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C149-entezar-dashtan",
+    "language": "persian",
+    "chapter": 149,
+    "sequence": 7650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:276b9e654bb2d055"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:c8443dd07f2481de",
+  "lessonIds": [
+    "FA-C169-bozorgsal",
+    "FA-C169-hamkelasi",
+    "FA-C169-mizban",
+    "FA-C169-doshman",
+    "FA-C169-mardom"
+  ],
+  "tex": "persian/book/chapters/ch169-adult-classmate-host-enemy-people.tex"
+}

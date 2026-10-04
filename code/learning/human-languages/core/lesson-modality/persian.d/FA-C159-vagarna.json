@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C159-vagarna",
+    "language": "persian",
+    "chapter": 159,
+    "sequence": 8150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d66093bfa066642b"
+  },
+  "findings": []
+}

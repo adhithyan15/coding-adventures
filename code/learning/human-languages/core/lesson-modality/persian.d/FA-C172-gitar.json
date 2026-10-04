@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C172-gitar",
+    "language": "persian",
+    "chapter": 172,
+    "sequence": 8810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f005d89408a9d3f7"
+  },
+  "findings": []
+}

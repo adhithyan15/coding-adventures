@@ -1,0 +1,19 @@
+{
+  "chapter": 154,
+  "title": "Store, Supermarket, Butcher's shop, Café, Doctor's surgery",
+  "label": "ch:fa-store-supermarket-butcher-s-shop-cafe-doctor-s-surgery",
+  "canDo": "I can say a store, a supermarket, a butcher's shop, a café and a doctor's surgery.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "FA-C154-matab",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 154: I can say a store, a supermarket, a butcher's shop, a café and a doctor's surgery.",
+    "assesses": [
+      "FA-LEX-C154-MAKAN154-03",
+      "FA-LEX-C154-MAKAN154-04",
+      "FA-LEX-C154-MAKAN154-05"
+    ]
+  }
+}

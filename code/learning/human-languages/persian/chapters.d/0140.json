@@ -1,0 +1,19 @@
+{
+  "chapter": 140,
+  "title": "To open, To wipe, To switch on, To switch off, To wake up",
+  "label": "ch:fa-to-open-to-wipe-to-switch-on-to-switch-off-to-wake-up",
+  "canDo": "I can say to open, to wipe, to switch on, to switch off and to wake up.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C140-bidar-shodan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 140: I can say to open, to wipe, to switch on, to switch off and to wake up.",
+    "assesses": [
+      "FA-LEX-C140-KONESH140-03",
+      "FA-LEX-C140-KONESH140-04",
+      "FA-LEX-C140-KONESH140-05"
+    ]
+  }
+}

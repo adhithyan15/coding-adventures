@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:f261b3b9cea0a7f1",
+  "lessonIds": [
+    "FA-C151-taval",
+    "FA-C151-jush",
+    "FA-C151-pomad",
+    "FA-C151-qatre",
+    "FA-C151-kapsul"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch151.txt",
+  "json": "persian/narration/ch151.json",
+  "textHash": "fnv1a64:f7a87be8628b24ff",
+  "jsonHash": "fnv1a64:70d0c07efca2578a",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 168,
+  "title": "Website, Password, Passport, Visa, Form",
+  "label": "ch:fa-website-password-passport-visa-form",
+  "canDo": "I can say a website, a password, a passport, a visa and a form.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C168-form",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 168: I can say a website, a password, a passport, a visa and a form.",
+    "assesses": [
+      "FA-LEX-C168-CHIZ168-03",
+      "FA-LEX-C168-CHIZ168-04",
+      "FA-LEX-C168-CHIZ168-05"
+    ]
+  }
+}

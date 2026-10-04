@@ -1,0 +1,11 @@
+{
+  "id": "FA-C155-gomrok",
+  "pathSegment": "FA-PATH-155-MAKAN155",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-155-MAKAN155",
+      "order": 4
+    }
+  ]
+}

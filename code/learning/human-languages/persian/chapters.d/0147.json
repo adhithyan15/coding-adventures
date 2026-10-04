@@ -1,0 +1,19 @@
+{
+  "chapter": 147,
+  "title": "To dust, To spread out, To pound, To rub, To sprinkle",
+  "label": "ch:fa-to-dust-to-spread-out-to-pound-to-rub-to-sprinkle",
+  "canDo": "I can say to dust, to spread out, to pound, to rub and to sprinkle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C147-pashidan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 147: I can say to dust, to spread out, to pound, to rub and to sprinkle.",
+    "assesses": [
+      "FA-LEX-C147-KONESH147-03",
+      "FA-LEX-C147-KONESH147-04",
+      "FA-LEX-C147-KONESH147-05"
+    ]
+  }
+}

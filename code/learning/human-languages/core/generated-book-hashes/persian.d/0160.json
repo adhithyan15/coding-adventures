@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:b1fd1820ceacff05",
+  "lessonIds": [
+    "FA-C160-angize",
+    "FA-C160-manzur",
+    "FA-C160-qasd",
+    "FA-C160-ettefaq",
+    "FA-C160-shans"
+  ],
+  "tex": "persian/book/chapters/ch160-motive-meaning-intention-event-luck.tex"
+}

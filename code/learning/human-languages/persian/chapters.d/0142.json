@@ -1,0 +1,19 @@
+{
+  "chapter": 142,
+  "title": "To wait, To suggest, To choose, To catch a cold, To get hurt",
+  "label": "ch:fa-to-wait-to-suggest-to-choose-to-catch-a-cold-to-get-hurt",
+  "canDo": "I can say to wait, to suggest, to choose, to catch a cold and to get hurt.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C142-zakhmi-shodan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 142: I can say to wait, to suggest, to choose, to catch a cold and to get hurt.",
+    "assesses": [
+      "FA-LEX-C142-KONESH142-03",
+      "FA-LEX-C142-KONESH142-04",
+      "FA-LEX-C142-KONESH142-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C144-rahnamayi-kardan",
+    "language": "persian",
+    "chapter": 144,
+    "sequence": 7340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:334e3d3703f3d9be"
+  },
+  "findings": []
+}

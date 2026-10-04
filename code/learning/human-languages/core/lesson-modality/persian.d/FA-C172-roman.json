@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C172-roman",
+    "language": "persian",
+    "chapter": 172,
+    "sequence": 8820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dacdc226e2205901"
+  },
+  "findings": []
+}

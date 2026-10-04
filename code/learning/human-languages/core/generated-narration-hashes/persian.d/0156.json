@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 156,
+  "sourceHash": "fnv1a64:fe7d210c9040258d",
+  "lessonIds": [
+    "FA-C156-chah",
+    "FA-C156-kolbe",
+    "FA-C156-asiyab",
+    "FA-C156-qanat",
+    "FA-C156-dokkan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch156.txt",
+  "json": "persian/narration/ch156.json",
+  "textHash": "fnv1a64:a9ef2a6c2379e66e",
+  "jsonHash": "fnv1a64:28467c269896bd4c",
+  "findings": []
+}

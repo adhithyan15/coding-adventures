@@ -1,0 +1,11 @@
+{
+  "id": "FA-C169-mizban",
+  "pathSegment": "FA-PATH-169-CHIZ169",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-169-CHIZ169",
+      "order": 2
+    }
+  ]
+}

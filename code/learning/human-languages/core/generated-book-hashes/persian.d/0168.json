@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:93f78343892899f4",
+  "lessonIds": [
+    "FA-C168-sayt",
+    "FA-C168-ramz",
+    "FA-C168-pasport",
+    "FA-C168-viza",
+    "FA-C168-form"
+  ],
+  "tex": "persian/book/chapters/ch168-website-password-passport-visa-form.tex"
+}

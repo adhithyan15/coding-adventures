@@ -1,0 +1,19 @@
+{
+  "chapter": 162,
+  "title": "State-run, Urgent, Necessary, Brave, Talkative",
+  "label": "ch:fa-state-run-urgent-necessary-brave-talkative",
+  "canDo": "I can say state-run, urgent, necessary, brave and talkative.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FA-C162-porharf",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 162: I can say state-run, urgent, necessary, brave and talkative.",
+    "assesses": [
+      "FA-LEX-C162-SEFAT162-03",
+      "FA-LEX-C162-SEFAT162-04",
+      "FA-LEX-C162-SEFAT162-05"
+    ]
+  }
+}

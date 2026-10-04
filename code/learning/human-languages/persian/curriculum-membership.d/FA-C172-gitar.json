@@ -1,0 +1,11 @@
+{
+  "id": "FA-C172-gitar",
+  "pathSegment": "FA-PATH-172-CHIZ172",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-172-CHIZ172",
+      "order": 1
+    }
+  ]
+}

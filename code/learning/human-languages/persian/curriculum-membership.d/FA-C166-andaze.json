@@ -1,0 +1,11 @@
+{
+  "id": "FA-C166-andaze",
+  "pathSegment": "FA-PATH-166-CHIZ166",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-166-CHIZ166",
+      "order": 2
+    }
+  ]
+}

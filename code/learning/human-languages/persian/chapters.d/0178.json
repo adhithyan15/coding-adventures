@@ -1,0 +1,19 @@
+{
+  "chapter": 178,
+  "title": "Stapler, Folder, Eraser, Pencil case, School report",
+  "label": "ch:fa-stapler-folder-eraser-pencil-case-school-report",
+  "canDo": "I can say a stapler, a folder, an eraser, a pencil case and a school report.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-R178-second-pass-words-from-chapters-176-178",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 178: I can say a stapler, a folder, an eraser, a pencil case and a school report.",
+    "assesses": [
+      "FA-LEX-C178-KAR178-03",
+      "FA-LEX-C178-KAR178-04",
+      "FA-LEX-C178-KAR178-05"
+    ]
+  }
+}

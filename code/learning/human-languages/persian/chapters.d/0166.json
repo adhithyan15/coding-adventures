@@ -1,0 +1,19 @@
+{
+  "chapter": 166,
+  "title": "Toman, Customer, Size, Cash, Blouse",
+  "label": "ch:fa-toman-customer-size-cash-blouse",
+  "canDo": "I can say toman, a customer, a size, cash and a blouse.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-R166-second-pass-words-from-chapters-162-166",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 166: I can say toman, a customer, a size, cash and a blouse.",
+    "assesses": [
+      "FA-LEX-C166-CHIZ166-03",
+      "FA-LEX-C166-CHIZ166-04",
+      "FA-LEX-C166-CHIZ166-05"
+    ]
+  }
+}

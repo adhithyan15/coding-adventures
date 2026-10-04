@@ -1,0 +1,11 @@
+{
+  "id": "FA-C159-vagarna",
+  "pathSegment": "FA-PATH-159-CHERA159",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-159-CHERA159",
+      "order": 2
+    }
+  ]
+}

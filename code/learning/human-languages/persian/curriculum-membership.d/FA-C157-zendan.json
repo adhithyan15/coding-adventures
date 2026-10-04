@@ -1,0 +1,11 @@
+{
+  "id": "FA-C157-zendan",
+  "pathSegment": "FA-PATH-157-MAKAN157",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-157-MAKAN157",
+      "order": 2
+    }
+  ]
+}

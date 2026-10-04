@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C170-khashm",
+    "language": "persian",
+    "chapter": 170,
+    "sequence": 8710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ed73f4a1d025079"
+  },
+  "findings": []
+}

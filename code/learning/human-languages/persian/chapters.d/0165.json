@@ -1,0 +1,19 @@
+{
+  "chapter": 165,
+  "title": "Bathtub, Toilet, Toilet, Toothpaste, Shampoo",
+  "label": "ch:fa-bathtub-toilet-toilet-toothpaste-shampoo",
+  "canDo": "I can say a bathtub, a toilet, a toilet, toothpaste and shampoo.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C165-shampu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 165: I can say a bathtub, a toilet, a toilet, toothpaste and shampoo.",
+    "assesses": [
+      "FA-LEX-C165-CHIZ165-03",
+      "FA-LEX-C165-CHIZ165-04",
+      "FA-LEX-C165-CHIZ165-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:d279bd7a62f9255d",
+  "lessonIds": [
+    "FA-C154-forushgah",
+    "FA-C154-supermarket",
+    "FA-C154-qassabi",
+    "FA-C154-kafe",
+    "FA-C154-matab"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch154.txt",
+  "json": "persian/narration/ch154.json",
+  "textHash": "fnv1a64:717fbdcf94b3754f",
+  "jsonHash": "fnv1a64:ef56caad0916b9f9",
+  "findings": []
+}

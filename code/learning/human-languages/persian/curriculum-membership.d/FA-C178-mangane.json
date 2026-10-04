@@ -1,0 +1,11 @@
+{
+  "id": "FA-C178-mangane",
+  "pathSegment": "FA-PATH-178-KAR178",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-178-KAR178",
+      "order": 0
+    }
+  ]
+}

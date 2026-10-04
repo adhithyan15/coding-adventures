@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C178-mangane",
+    "language": "persian",
+    "chapter": 178,
+    "sequence": 9120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f2dd5850496c92e"
+  },
+  "findings": []
+}

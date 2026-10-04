@@ -1,0 +1,19 @@
+{
+  "chapter": 149,
+  "title": "To waste, To economise, To divide, To compare, To expect",
+  "label": "ch:fa-to-waste-to-economise-to-divide-to-compare-to-expect",
+  "canDo": "I can say to waste, to economise, to divide, to compare and to expect.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C149-entezar-dashtan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 149: I can say to waste, to economise, to divide, to compare and to expect.",
+    "assesses": [
+      "FA-LEX-C149-KONESH149-03",
+      "FA-LEX-C149-KONESH149-04",
+      "FA-LEX-C149-KONESH149-05"
+    ]
+  }
+}

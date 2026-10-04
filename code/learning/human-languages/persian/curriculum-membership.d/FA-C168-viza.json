@@ -1,0 +1,11 @@
+{
+  "id": "FA-C168-viza",
+  "pathSegment": "FA-PATH-168-CHIZ168",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-168-CHIZ168",
+      "order": 3
+    }
+  ]
+}

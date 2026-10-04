@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C148-dast-zadan",
+    "language": "persian",
+    "chapter": 148,
+    "sequence": 7540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef2786a12403c59f"
+  },
+  "findings": []
+}

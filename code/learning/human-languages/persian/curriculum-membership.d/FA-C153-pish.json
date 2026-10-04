@@ -1,0 +1,11 @@
+{
+  "id": "FA-C153-pish",
+  "pathSegment": "FA-PATH-153-ZAMAN153",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-153-ZAMAN153",
+      "order": 1
+    }
+  ]
+}

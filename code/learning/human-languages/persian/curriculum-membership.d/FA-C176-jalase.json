@@ -1,0 +1,11 @@
+{
+  "id": "FA-C176-jalase",
+  "pathSegment": "FA-PATH-176-KAR176",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-176-KAR176",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C164-khalvat",
+  "pathSegment": "FA-PATH-164-SEFAT164",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-164-SEFAT164",
+      "order": 4
+    }
+  ]
+}

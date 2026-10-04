@@ -1,0 +1,11 @@
+{
+  "id": "FA-C151-kapsul",
+  "pathSegment": "FA-PATH-151-SALAMAT151",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-151-SALAMAT151",
+      "order": 4
+    }
+  ]
+}

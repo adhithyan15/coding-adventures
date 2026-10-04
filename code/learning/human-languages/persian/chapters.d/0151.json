@@ -1,0 +1,19 @@
+{
+  "chapter": 151,
+  "title": "Blister, Pimple, Ointment, Drop, Capsule",
+  "label": "ch:fa-blister-pimple-ointment-drop-capsule",
+  "canDo": "I can say a blister, a pimple, an ointment, a drop and a capsule.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FA-C151-kapsul",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 151: I can say a blister, a pimple, an ointment, a drop and a capsule.",
+    "assesses": [
+      "FA-LEX-C151-SALAMAT151-03",
+      "FA-LEX-C151-SALAMAT151-04",
+      "FA-LEX-C151-SALAMAT151-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C159-makhsusan",
+    "language": "persian",
+    "chapter": 159,
+    "sequence": 8170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0532ae8dcc4d166"
+  },
+  "findings": []
+}

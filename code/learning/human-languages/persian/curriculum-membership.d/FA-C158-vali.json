@@ -1,0 +1,11 @@
+{
+  "id": "FA-C158-vali",
+  "pathSegment": "FA-PATH-158-CHERA158",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-158-CHERA158",
+      "order": 1
+    }
+  ]
+}

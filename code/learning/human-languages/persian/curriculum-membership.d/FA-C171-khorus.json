@@ -1,0 +1,11 @@
+{
+  "id": "FA-C171-khorus",
+  "pathSegment": "FA-PATH-171-CHIZ171",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-171-CHIZ171",
+      "order": 3
+    }
+  ]
+}

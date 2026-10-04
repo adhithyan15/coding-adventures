@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:7378daff43a09368",
+  "lessonIds": [
+    "FA-C176-herfe",
+    "FA-C176-sherkat",
+    "FA-C176-karkhane",
+    "FA-C176-jalase",
+    "FA-C176-hoquq"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch176.txt",
+  "json": "persian/narration/ch176.json",
+  "textHash": "fnv1a64:d467455ece6addcb",
+  "jsonHash": "fnv1a64:28ac9a36ffe09237",
+  "findings": []
+}

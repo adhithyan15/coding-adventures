@@ -1,0 +1,11 @@
+{
+  "id": "FA-C164-kond",
+  "pathSegment": "FA-PATH-164-SEFAT164",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-164-SEFAT164",
+      "order": 2
+    }
+  ]
+}

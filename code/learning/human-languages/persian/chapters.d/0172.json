@@ -1,0 +1,19 @@
+{
+  "chapter": 172,
+  "title": "Camera, Guitar, Novel, Magazine, TV series",
+  "label": "ch:fa-camera-guitar-novel-magazine-tv-series",
+  "canDo": "I can say a camera, a guitar, a novel, a magazine and a TV series.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-R172-second-pass-words-from-chapters-170-172",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 172: I can say a camera, a guitar, a novel, a magazine and a TV series.",
+    "assesses": [
+      "FA-LEX-C172-CHIZ172-03",
+      "FA-LEX-C172-CHIZ172-04",
+      "FA-LEX-C172-CHIZ172-05"
+    ]
+  }
+}

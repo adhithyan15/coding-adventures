@@ -1,0 +1,19 @@
+{
+  "chapter": 143,
+  "title": "To swallow, To forget, To teach, To fill, To hand in",
+  "label": "ch:fa-to-swallow-to-forget-to-teach-to-fill-to-hand-in",
+  "canDo": "I can say to swallow, to forget, to teach, to fill and to hand in.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C143-tahvil-dadan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 143: I can say to swallow, to forget, to teach, to fill and to hand in.",
+    "assesses": [
+      "FA-LEX-C143-KONESH143-03",
+      "FA-LEX-C143-KONESH143-04",
+      "FA-LEX-C143-KONESH143-05"
+    ]
+  }
+}

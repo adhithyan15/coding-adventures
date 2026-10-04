@@ -1,0 +1,11 @@
+{
+  "id": "FA-C152-pas-az",
+  "pathSegment": "FA-PATH-152-ZAMAN152",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-152-ZAMAN152",
+      "order": 4
+    }
+  ]
+}

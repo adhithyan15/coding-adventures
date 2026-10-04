@@ -1,0 +1,11 @@
+{
+  "id": "FA-C145-negahdari-kardan",
+  "pathSegment": "FA-PATH-145-KONESH145",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-145-KONESH145",
+      "order": 1
+    }
+  ]
+}

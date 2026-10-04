@@ -1,0 +1,19 @@
+{
+  "chapter": 158,
+  "title": "If, But, Because of, Result, Problem",
+  "label": "ch:fa-if-but-because-of-result-problem",
+  "canDo": "I can say if, but, because of, a result and a problem.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "FA-C158-moshkel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 158: I can say if, but, because of, a result and a problem.",
+    "assesses": [
+      "FA-LEX-C158-CHERA158-03",
+      "FA-LEX-C158-CHERA158-04",
+      "FA-LEX-C158-CHERA158-05"
+    ]
+  }
+}
