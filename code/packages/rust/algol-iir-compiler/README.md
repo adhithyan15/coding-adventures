@@ -199,9 +199,11 @@ functions use only typed arithmetic, control flow, calls, conversions, and
 `putchar`, so the same path runs on every standard backend. A runtime procedure
 result may therefore migrate through local real copies and be printed later.
 Conditional statements preserve that runtime provenance only for slots proven
-on every reachable exit. One-sided reassignment, intervening calls without a
-subsequent proven assignment, loops, and composed dynamic real expressions
-remain conservative.
+on every reachable exit. Conditional value expressions likewise preserve it
+when the selector contains no procedure call and every reachable value branch
+is a direct runtime real result or a provenance-backed local. One-sided
+reassignment, selector calls, intervening calls without a subsequent proven
+assignment, loops, and composed dynamic real expressions remain conservative.
 For definite string initialization, a `step`/`until` element may establish an
 initialized local when finite static start, step, and limit values prove that
 its body executes at least once; zero-trip and dynamic bounds fail closed.

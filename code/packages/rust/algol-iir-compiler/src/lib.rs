@@ -2309,10 +2309,12 @@ impl Compiler {
             // the literal/variable fast paths above — no literal-backing is
             // required. Integer expressions use the shared numeric stdout
             // builtin, booleans select typed string literals, and direct
-            // zero-argument real-procedure results use the portable formatter.
+            // zero-argument real-procedure results and path-independent
+            // conditional values over proven runtime-real branches use the
+            // portable formatter.
             // Provenance-backed real scalar variables take the bounded path
             // above; composed dynamic real expressions still fail closed here.
-            let allow_runtime_real = self.is_direct_declared_real_procedure_call(actual);
+            let allow_runtime_real = self.is_runtime_real_assignment_value(actual);
             let value = self.emit_expr(actual)?;
             self.emit_standard_output_value(name, value, allow_runtime_real)?;
         }
@@ -3772,6 +3774,19 @@ impl Compiler {
     fn is_runtime_real_assignment_value(&self, node: &GrammarASTNode) -> bool {
         if self.is_direct_declared_real_procedure_call(node) {
             return true;
+        }
+        if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
+            if self.contains_procedure_call(condition) {
+                return false;
+            }
+            return match self.static_boolean_value(condition) {
+                Some(true) => self.is_runtime_real_assignment_value(then_node),
+                Some(false) => self.is_runtime_real_assignment_value(else_node),
+                None => {
+                    self.is_runtime_real_assignment_value(then_node)
+                        && self.is_runtime_real_assignment_value(else_node)
+                }
+            };
         }
         let Some(source_name) = exact_bare_variable_expression_name(node) else {
             return false;
@@ -12144,11 +12159,28 @@ mod tests {
     }
 
     #[test]
+    fn al4_runtime_real_provenance_intersects_conditional_value_branches() {
+        let module = compile_source(
+            "begin real procedure pick; pick := 2.25; boolean flag; output(if flag then pick() else pick()) end",
+            "test",
+        )
+        .expect("equal runtime-real conditional values retain formatter provenance");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var)
+                    == Some("__basic_print_real")
+        }));
+    }
+
+    #[test]
     fn al4_runtime_real_scalar_copy_provenance_does_not_admit_wrappers() {
         for source in [
             "begin real procedure pick; pick := 2.25; real x, y; x := pick(); y := x + 0.0; output(y) end",
             "begin real procedure pick; pick := 2.25; real x, y; x := pick(); y := -x; output(y) end",
             "begin real procedure pick; pick := 2.25; real x, y; procedure capture; y := x; x := pick(); y := x; output(y) end",
+            "begin real procedure pick; pick := 2.25; boolean flag; real x; x := if flag then pick() else 1.0; output(x) end",
+            "begin real procedure pick; pick := 2.25; boolean procedure choose; choose := true; real x; x := pick(); output(if choose() then x else x) end",
         ] {
             let err = compile_source(source, "test")
                 .expect_err("computed copies must not inherit formatter provenance");
