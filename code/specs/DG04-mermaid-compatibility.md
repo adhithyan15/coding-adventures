@@ -541,6 +541,9 @@ IR before backend-neutral RGB conversion; lowering also accepts legacy comma
 forms. The complete CSS named-color set likewise resolves to explicit
 backend-neutral RGB paint for node fills, strokes, labels, and opacity composition,
 including gray/grey aliases and `rebeccapurple`.
+The SVG/CSS `none` paint keyword remains distinct from text color semantics and
+lowers node fills and strokes to explicit backend-neutral transparency, including
+when opacity declarations are present.
 Relative `bolder` and `lighter`
 font weights resolve against the default weight, integer weights from 1 through
 1000 survive into native variable-font matching, and `oblique` font style lowers
