@@ -434,7 +434,8 @@ describe("AuthoringShell", () => {
     await screen.findByRole("heading", { name: "Forme authoring" });
     fireEvent.click(screen.getByRole("button", { name: "Review publication" }));
     fireEvent.click(screen.getByRole("button", { name: "Publish to GitHub Pages" }));
-    expect(await screen.findByText("Publication state must be reconciled.")).toBeInTheDocument();
+    expect(await screen.findByText("Workspace state could not be retired or verified safely. Reload before continuing.")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Review publication" })).not.toBeInTheDocument();
     expect(screen.queryByText(/secret/)).not.toBeInTheDocument();
   });
 
@@ -564,7 +565,7 @@ describe("AuthoringShell", () => {
     expect(screen.queryByText(/secret|x{100}/)).not.toBeInTheDocument();
   });
 
-  it("reports every bounded publication outcome and rejected pre-commit work", async () => {
+  it("reports every bounded definite publication outcome", async () => {
     const workspace = await workspaceFixture();
     const revision = workspace.session.storageRevision;
     const publish = vi.mocked(workspace.publishers[0]!.publish);
@@ -572,10 +573,7 @@ describe("AuthoringShell", () => {
       .mockResolvedValueOnce({ outcome: "cancelled", revision, manifestSha256: null, targetId: "github-pages", diagnostics: [] })
       .mockResolvedValueOnce({ outcome: "failed", revision, manifestSha256: null, targetId: "github-pages", diagnostics: [{ severity: "error", code: "DEPLOY", message: "Reviewed deploy failure" }] })
       .mockResolvedValueOnce({ outcome: "failed", revision, manifestSha256: DIGEST, targetId: "github-pages", diagnostics: [{ severity: "error", code: "DEPLOY", message: "Reviewed post-build failure" }] })
-      .mockResolvedValueOnce({ outcome: "failed", revision, manifestSha256: null, targetId: "github-pages", diagnostics: [] })
-      .mockResolvedValueOnce({ outcome: "indeterminate", revision, manifestSha256: DIGEST, targetId: "github-pages", diagnostics: [{ severity: "error", code: "UNCERTAIN", message: "Reconcile remote target" }] })
-      .mockResolvedValueOnce({ outcome: "indeterminate", revision, manifestSha256: DIGEST, targetId: "github-pages", diagnostics: [] })
-      .mockRejectedValueOnce(new Error("/secret/deploy/path"));
+      .mockResolvedValueOnce({ outcome: "failed", revision, manifestSha256: null, targetId: "github-pages", diagnostics: [] });
     render(<AuthoringShell host={host(async () => workspace)} />);
     await screen.findByRole("heading", { name: "Forme authoring" });
 
@@ -584,15 +582,31 @@ describe("AuthoringShell", () => {
       "Reviewed deploy failure",
       "Reviewed post-build failure",
       "Publication failed.",
-      "Reconcile remote target",
-      "Publication state must be reconciled.",
-      "Publication state must be reconciled.",
     ]) {
       fireEvent.click(screen.getByRole("button", { name: "Review publication" }));
       fireEvent.click(screen.getByRole("button", { name: "Publish to GitHub Pages" }));
       await waitFor(() => expect(screen.getByText(expected)).toBeInTheDocument());
     }
     expect(screen.queryByText(/secret/)).not.toBeInTheDocument();
+  });
+
+  it.each([
+    ["indeterminate outcome", (revision: string) => Promise.resolve({ outcome: "indeterminate", revision, manifestSha256: DIGEST, targetId: "github-pages", diagnostics: [{ severity: "error", code: "UNCERTAIN", message: "Reconcile remote target" }] })],
+    ["malformed outcome", (revision: string) => Promise.resolve({ outcome: "published", revision: `${revision}-stale`, manifestSha256: DIGEST, targetId: "github-pages", diagnostics: [] })],
+    ["rejected settlement", (_revision: string) => Promise.reject(new Error("/secret/deploy/path"))],
+  ])("poisons and blocks a second publication after an %s", async (_name, settle) => {
+    const workspace = await workspaceFixture();
+    const publish = vi.mocked(workspace.publishers[0]!.publish);
+    publish.mockImplementationOnce(async (value) => await settle(value.storageRevision) as never);
+    render(<AuthoringShell host={host(async () => workspace)} />);
+    await screen.findByRole("heading", { name: "Forme authoring" });
+
+    fireEvent.click(screen.getByRole("button", { name: "Review publication" }));
+    fireEvent.click(screen.getByRole("button", { name: "Publish to GitHub Pages" }));
+    expect(await screen.findByText("Workspace state could not be retired or verified safely. Reload before continuing.")).toBeInTheDocument();
+    expect(publish).toHaveBeenCalledOnce();
+    expect(screen.queryByRole("button", { name: "Review publication" })).not.toBeInTheDocument();
+    expect(screen.queryByText(/secret|Reconcile remote target/)).not.toBeInTheDocument();
   });
 
   it.each([
@@ -609,7 +623,7 @@ describe("AuthoringShell", () => {
     await screen.findByRole("heading", { name: "Forme authoring" });
     fireEvent.click(screen.getByRole("button", { name: "Review publication" }));
     fireEvent.click(screen.getByRole("button", { name: "Publish to GitHub Pages" }));
-    expect(await screen.findByText("Publication state must be reconciled.")).toBeInTheDocument();
+    expect(await screen.findByText("Workspace state could not be retired or verified safely. Reload before continuing.")).toBeInTheDocument();
     expect(screen.queryByText(/x{100}/)).not.toBeInTheDocument();
   });
 
@@ -781,16 +795,63 @@ describe("AuthoringShell", () => {
     expect(openSecond).toHaveBeenCalledOnce();
   });
 
+  it("serializes rapid host replacements behind the same retirement", async () => {
+    let finishRetirement!: () => void;
+    const retirement = new Promise<void>((resolve) => { finishRetirement = resolve; });
+    const first = await workspaceFixture({ dispose: vi.fn(async () => await retirement) });
+    const second = await workspaceFixture({ previewUrl: "http://localhost:4996/skipped/" });
+    const third = await workspaceFixture({ previewUrl: "http://localhost:4995/latest/" });
+    const openSecond = vi.fn(async () => second);
+    const openThird = vi.fn(async () => third);
+    const view = render(<AuthoringShell host={host(async () => first)} />);
+    await screen.findByRole("heading", { name: "Forme authoring" });
+
+    view.rerender(<AuthoringShell host={host(openSecond)} />);
+    view.rerender(<AuthoringShell host={host(openThird)} />);
+    await waitFor(() => expect(first.dispose).toHaveBeenCalledOnce());
+    expect(openSecond).not.toHaveBeenCalled();
+    expect(openThird).not.toHaveBeenCalled();
+    finishRetirement();
+    expect(await screen.findByTitle("Site preview")).toHaveAttribute("src", third.previewUrl);
+    expect(openSecond).not.toHaveBeenCalled();
+    expect(openThird).toHaveBeenCalledOnce();
+  });
+
+  it("keeps poison sticky when stale retirement fails while the current open is pending", async () => {
+    let resolveStale!: (workspace: AuthoringShellWorkspace) => void;
+    let resolveCurrent!: (workspace: AuthoringShellWorkspace) => void;
+    const stalePending = new Promise<AuthoringShellWorkspace>((resolve) => { resolveStale = resolve; });
+    const currentPending = new Promise<AuthoringShellWorkspace>((resolve) => { resolveCurrent = resolve; });
+    const stale = await workspaceFixture({ dispose: vi.fn(async () => { throw new Error("/secret/stale-retirement"); }) });
+    const current = await workspaceFixture({ previewUrl: "http://localhost:4994/pending/" });
+    const openStale = vi.fn(async () => await stalePending);
+    const openCurrent = vi.fn(async () => await currentPending);
+    const view = render(<AuthoringShell host={host(openStale)} />);
+    await waitFor(() => expect(openStale).toHaveBeenCalledOnce());
+    view.rerender(<AuthoringShell host={host(openCurrent)} />);
+    await waitFor(() => expect(openCurrent).toHaveBeenCalledOnce());
+
+    resolveStale(stale);
+    expect(await screen.findByText("Workspace state could not be retired or verified safely. Reload before continuing.")).toBeInTheDocument();
+    resolveCurrent(current);
+    await waitFor(() => expect(current.dispose).toHaveBeenCalledOnce());
+    expect(screen.getByText("Workspace state could not be retired or verified safely. Reload before continuing.")).toBeInTheDocument();
+    expect(screen.queryByTitle("Site preview")).not.toBeInTheDocument();
+  });
+
   it("poisons an active replacement when stale workspace retirement fails", async () => {
     let resolveStale!: (workspace: AuthoringShellWorkspace) => void;
     const stalePending = new Promise<AuthoringShellWorkspace>((resolve) => { resolveStale = resolve; });
     const stale = await workspaceFixture({ dispose: vi.fn(async () => { throw new Error("/secret/stale-retirement"); }) });
     const active = await workspaceFixture({ previewUrl: "http://localhost:4997/active/" });
-    const view = render(<AuthoringShell host={host(async () => await stalePending)} />);
+    const openStale = vi.fn(async () => await stalePending);
+    const view = render(<AuthoringShell host={host(openStale)} />);
+    await waitFor(() => expect(openStale).toHaveBeenCalledOnce());
     view.rerender(<AuthoringShell host={host(async () => active)} />);
     expect(await screen.findByTitle("Site preview")).toHaveAttribute("src", active.previewUrl);
 
     resolveStale(stale);
+    await waitFor(() => expect(stale.dispose).toHaveBeenCalledOnce());
     expect(await screen.findByText("Workspace state could not be retired or verified safely. Reload before continuing.")).toBeInTheDocument();
     await waitFor(() => expect(active.dispose).toHaveBeenCalledOnce());
     expect(screen.queryByText(/secret/)).not.toBeInTheDocument();
@@ -807,6 +868,12 @@ describe("AuthoringShell", () => {
     expect(await screen.findByText("Workspace state could not be retired or verified safely. Reload before continuing.")).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Forme authoring" })).not.toBeInTheDocument();
     expect(screen.queryByText(/secret/)).not.toBeInTheDocument();
+
+    const openAfterPoison = vi.fn(async () => second);
+    view.rerender(<AuthoringShell host={host(openAfterPoison)} />);
+    await Promise.resolve();
+    expect(openAfterPoison).not.toHaveBeenCalled();
+    expect(screen.getByText("Workspace state could not be retired or verified safely. Reload before continuing.")).toBeInTheDocument();
   });
 
   it("ignores a loading rejection that settles after unmount", async () => {

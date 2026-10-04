@@ -18,12 +18,13 @@ here.
   synchronously, isolated raw sessions behind a validated snapshot facade, and
   validated preview/publication attribution before rendering results.
 - Validated canonical base64 SHA-256 publication identities with the authoring
-  core's shared validator and treated malformed or rejected publisher
-  settlements as indeterminate rather than safe-to-retry failures.
+  core's shared validator and permanently poisoned the mounted shell after an
+  indeterminate, malformed, or rejected publisher settlement rather than
+  exposing an unsafe publication retry.
 - Made one captured workspace-level disposal method authoritative for failed
   admission, replacement, and unmount, serialized replacement behind its
-  successful settlement, and poisoned interaction after missing, failed, or
-  stale retirement.
+  successful settlement on a persistent retirement chain, and kept poison
+  sticky across rapid host changes after missing, failed, or stale retirement.
 - Poisoned the workspace after a committed session mutation cannot be safely
   resnapshotted, preventing a stale facade from reporting unsaved state or
   accepting later mutations before reload.

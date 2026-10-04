@@ -393,7 +393,7 @@ function publicationMessage(value: unknown, expectedRevision: string, expectedTa
     case "published": return "Site published.";
     case "cancelled": return "Publication was cancelled.";
     case "failed": return diagnostic || "Publication failed.";
-    case "indeterminate": return diagnostic || "Publication state must be reconciled.";
+    case "indeterminate": throw new WorkspacePoisonedError(diagnostic || "publication state is indeterminate");
     default: throw new TypeError("publication attempt outcome is invalid");
   }
 }
@@ -409,8 +409,23 @@ export function AuthoringShell(props: AuthoringShellProps): ReactNode {
   const action = useRef<ActionToken | null>(null);
   const workspaceRef = useRef<SafeWorkspace | null>(null);
   const mounted = useRef(true);
+  const poisoned = useRef(false);
+  const retirementChain = useRef<Promise<void>>(Promise.resolve());
 
-  const enterPoisonedState = (): void => {
+  const retireWorkspace = (workspace: SafeWorkspace): Promise<void> => {
+    const disposal = retirementChain.current.then(
+      async () => await Promise.resolve().then(async () => await workspace.dispose()),
+    );
+    const retirement = disposal.catch(() => {
+      enterPoisonedState();
+      throw new WorkspacePoisonedError("workspace retirement did not complete");
+    });
+    retirementChain.current = retirement.catch(() => undefined);
+    return retirement;
+  };
+
+  function enterPoisonedState(): void {
+    poisoned.current = true;
     if (!mounted.current) return;
     const active = workspaceRef.current;
     workspaceRef.current = null;
@@ -420,10 +435,15 @@ export function AuthoringShell(props: AuthoringShellProps): ReactNode {
     setConfirming(false);
     setMessage("");
     setView({ phase: "poisoned" });
-    if (active !== null) void active.dispose().catch(() => undefined);
-  };
+    if (active !== null) void retireWorkspace(active).catch(() => undefined);
+  }
 
   const activateWorkspace = (workspace: SafeWorkspace): void => {
+    /* v8 ignore next 4 -- defensive against synchronous poison between the final guard and activation */
+    if (!mounted.current || poisoned.current) {
+      void retireWorkspace(workspace).catch(() => undefined);
+      return;
+    }
     workspaceRef.current = workspace;
     void workspace.poisoned.then(() => {
       if (!mounted.current || workspaceRef.current !== workspace) return;
@@ -441,13 +461,14 @@ export function AuthoringShell(props: AuthoringShellProps): ReactNode {
       action.current = null;
       const workspace = workspaceRef.current;
       workspaceRef.current = null;
-      if (workspace !== null) void workspace.dispose().catch(() => undefined);
+      if (workspace !== null) void retireWorkspace(workspace).catch(() => undefined);
     };
   }, []);
 
   useEffect(() => {
     const abort = new AbortController();
     let live = true;
+    if (poisoned.current) return () => { live = false; APPLY(ABORT, abort, []); };
     if (action.current !== null) APPLY(ABORT, action.current.abort, []);
     action.current = null;
     setBusy(false);
@@ -456,20 +477,26 @@ export function AuthoringShell(props: AuthoringShellProps): ReactNode {
     setView({ phase: "loading" });
     const previous = workspaceRef.current;
     workspaceRef.current = null;
+    const retirement = previous === null ? retirementChain.current : retireWorkspace(previous);
     void (async () => {
       try {
-        if (previous !== null) {
-          try { await previous.dispose(); } catch { throw new WorkspacePoisonedError("workspace retirement did not complete"); }
-        }
-        if (!live) return;
+        await retirement;
+        await retirementChain.current;
+        if (!live || poisoned.current) return;
         const raw = await Promise.resolve().then(async () => await host.open(abort.signal));
         if (raw === null) {
-          if (live) setView({ phase: "first-run" });
+          if (live && !poisoned.current) setView({ phase: "first-run" });
           return;
         }
         const workspace = await admitWorkspace(raw);
-        if (!live) {
-          try { await workspace.dispose(); } catch { enterPoisonedState(); }
+        if (!live || poisoned.current) {
+          try { await retireWorkspace(workspace); } catch { enterPoisonedState(); }
+          return;
+        }
+        await retirementChain.current;
+        /* v8 ignore next 4 -- only a same-microtask hostile settlement can change these refs here */
+        if (!live || poisoned.current) {
+          try { await retireWorkspace(workspace); } catch { enterPoisonedState(); }
           return;
         }
         activateWorkspace(workspace);
@@ -502,8 +529,8 @@ export function AuthoringShell(props: AuthoringShellProps): ReactNode {
     setMessage("");
     void Promise.resolve().then(async () => await host.create(input, token.abort.signal))
       .then(async (raw) => await admitWorkspace(raw)).then(async (admitted) => {
-      if (!mounted.current || action.current !== token || token.abort.signal.aborted) {
-        try { await admitted.dispose(); } catch {
+      if (!mounted.current || poisoned.current || action.current !== token || token.abort.signal.aborted) {
+        try { await retireWorkspace(admitted); } catch {
           enterPoisonedState();
         }
         return;
@@ -558,7 +585,7 @@ export function AuthoringShell(props: AuthoringShellProps): ReactNode {
         if (mounted.current && action.current === token) setMessage(nextMessage);
       })
       .catch(() => {
-        if (mounted.current && action.current === token) setMessage("Publication state must be reconciled.");
+        if (mounted.current && action.current === token) enterPoisonedState();
       })
       .finally(() => {
         if (action.current === token) {
