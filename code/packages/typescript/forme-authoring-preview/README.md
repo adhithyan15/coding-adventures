@@ -69,6 +69,8 @@ await preview.dispose();
   aggregate-byte limits and copies all bytes through typed-array intrinsics.
 - Async publishers may prepare work before committing, but every visible
   mutation must occur inside the supplied one-shot synchronous commit guard.
+  A successful guarded mutation records the exact visible last-good revision
+  immediately, even if the publisher then hangs and is superseded.
   The guard rejects stale generations and closes when the publisher returns or
   its abort signal fires, so a non-cooperative stale publisher cannot block the
   next revision.

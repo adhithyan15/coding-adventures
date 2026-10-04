@@ -267,8 +267,12 @@ and build identities are exact tokens of at most 1,024 Unicode scalars; they
 are rejected rather than truncated. The publisher may prepare asynchronously,
 but every externally visible mutation must run inside the coordinator's
 one-shot synchronous generation guard. A successful publish requires exactly
-one guarded commit. Rejection after a commit is reported as indeterminate, and
-no delayed guard can commit after its publisher call returns.
+one guarded commit. As soon as that guarded mutation returns successfully, the
+coordinator records its exact revision and build as the externally visible
+last-good snapshot, even if the publisher then hangs and is superseded.
+Rejection after a commit is reported as indeterminate while retaining that
+last-good attribution, and no delayed guard can commit after its publisher call
+returns.
 Publisher settlement is raced against the same abort signal, so a stale
 non-cooperative publisher cannot block a newer revision or disposal; its late
 rejection remains observed but its closed guard can no longer commit.

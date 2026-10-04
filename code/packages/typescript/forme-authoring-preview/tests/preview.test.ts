@@ -9,6 +9,8 @@ import type { Pipeline, RunResult, WatchOptions, WatchSession } from "@coding-ad
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   createAuthoringPreview,
+  type AuthoringPreviewAttempt,
+  type AuthoringPreviewCoordinator,
   type AuthoringPreviewInput,
   type AuthoringPreviewPublisher,
   type PreparedAuthoringPreview,
@@ -276,6 +278,103 @@ describe("pipeline-backed authoring preview", () => {
     expect(committed).toEqual(["rev-new"]);
   });
 
+  it("records a guarded commit before a hanging publisher is superseded", async () => {
+    vi.useFakeTimers();
+    const committed: string[] = [];
+    let markCommitted!: () => void;
+    const committedOld = new Promise<void>(resolve => { markCommitted = resolve; });
+    const watches: ControlledWatch[] = [];
+    const coordinator = createAuthoringPreview({
+      debounceMs: 0,
+      orchestrator: {
+        watch() {
+          const watch = new ControlledWatch();
+          watches.push(watch);
+          return watch;
+        },
+      },
+      materializer: {
+        async prepare() { return { pipeline: {} as Pipeline, async release() {} }; },
+      },
+      publisher: {
+        publish(snapshot, commit) {
+          commit(() => { committed.push(snapshot.revision); });
+          if (snapshot.revision === "rev-committed-old") {
+            markCommitted();
+            return new Promise<void>(() => {});
+          }
+        },
+        publishFailure(_failure, commit) { commit(() => {}); },
+      },
+    });
+    const first = coordinator.request(session("rev-committed-old"));
+    await flushDebounce();
+    watches[0]!.settle(result("success", "build-committed-old"));
+    await committedOld;
+    expect(coordinator.state).toMatchObject({
+      phase: "ready",
+      activeRevision: "rev-committed-old",
+      lastGoodRevision: "rev-committed-old",
+      lastGoodBuildId: "build-committed-old",
+    });
+
+    const second = coordinator.request(session("rev-after-commit"));
+    expect(coordinator.state).toMatchObject({
+      phase: "building",
+      activeRevision: "rev-after-commit",
+      lastGoodRevision: "rev-committed-old",
+      lastGoodBuildId: "build-committed-old",
+    });
+    await expect(first).resolves.toMatchObject({ outcome: "superseded" });
+    await flushDebounce();
+    watches[1]!.settle(result("success", "build-after-commit"));
+    await expect(second).resolves.toMatchObject({ outcome: "ready" });
+    expect(committed).toEqual(["rev-committed-old", "rev-after-commit"]);
+  });
+
+  it("preserves a reentrant newer build while recording the snapshot that became visible", async () => {
+    vi.useFakeTimers();
+    const watches: ControlledWatch[] = [];
+    let second!: Promise<AuthoringPreviewAttempt>;
+    let coordinator!: AuthoringPreviewCoordinator;
+    coordinator = createAuthoringPreview({
+      debounceMs: 0,
+      orchestrator: {
+        watch() {
+          const watch = new ControlledWatch();
+          watches.push(watch);
+          return watch;
+        },
+      },
+      materializer: {
+        async prepare() { return { pipeline: {} as Pipeline, async release() {} }; },
+      },
+      publisher: {
+        publish(snapshot, commit) {
+          commit(() => {
+            if (snapshot.revision === "rev-reentrant-old") {
+              second = coordinator.request(session("rev-reentrant-new"));
+            }
+          });
+        },
+        publishFailure(_failure, commit) { commit(() => {}); },
+      },
+    });
+    const first = coordinator.request(session("rev-reentrant-old"));
+    await flushDebounce();
+    watches[0]!.settle(result("success", "build-reentrant-old"));
+    await expect(first).resolves.toMatchObject({ outcome: "superseded" });
+    expect(coordinator.state).toMatchObject({
+      phase: "building",
+      activeRevision: "rev-reentrant-new",
+      lastGoodRevision: "rev-reentrant-old",
+      lastGoodBuildId: "build-reentrant-old",
+    });
+    await flushDebounce();
+    watches[1]!.settle(result("success", "build-reentrant-new"));
+    await expect(second).resolves.toMatchObject({ outcome: "ready" });
+  });
+
   it("retains last-good output and binds bounded diagnostics to the failed revision", async () => {
     vi.useFakeTimers();
     const h = harness();
@@ -422,6 +521,7 @@ describe("pipeline-backed authoring preview", () => {
       { site: { variant: { kind: "dist-tree" }, files: { "proxy.bin": proxiedBytes } } },
       { site: { variant: { kind: "dist-tree" }, files: { "A.txt": byte, "a.txt": byte } } },
       { site: { variant: { kind: "dist-tree" }, files: { assets: byte, "assets/app.js": byte } } },
+      { site: { variant: { kind: "dist-tree" }, files: { a: byte, "a-0": byte, "a/x": byte } } },
       new Proxy({}, { ownKeys() { throw new Error("proxy secret"); } }),
     ];
     for (const [index, outputs] of invalidOutputs.entries()) {
@@ -636,7 +736,9 @@ describe("pipeline-backed authoring preview", () => {
       { pipeline: null, async release() {} },
       { pipeline: {}, release: "no" },
       { pipeline: {}, async release() {}, extra: true },
+      Object.defineProperty({ async release() {} }, "pipeline", { enumerable: true, get() { return {}; } }),
       Object.assign(Object.create(null), { pipeline: {}, async release() {} }),
+      new Proxy({ pipeline: {}, async release() {} }, { ownKeys() { throw new Error("proxy secret"); } }),
     ];
     for (const prepared of malformed) {
       let watched = false;
@@ -863,6 +965,15 @@ describe("pipeline-backed authoring preview", () => {
       const attempt = await pending;
       expect(attempt).toMatchObject({ outcome: "failed", diagnostics: [{ code: item.code }] });
       expect(JSON.stringify(attempt)).not.toContain("secret");
+      if (index === 1) {
+        expect(coordinator.state).toMatchObject({
+          phase: "failed",
+          activeRevision: "rev-guard-1",
+          lastGoodRevision: "rev-guard-1",
+          lastGoodBuildId: "build-guard-1",
+          diagnostics: [{ code: "E_PREVIEW_PUBLISH_INDETERMINATE" }],
+        });
+      }
     }
   });
 

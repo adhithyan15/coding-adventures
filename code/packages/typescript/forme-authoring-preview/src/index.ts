@@ -497,6 +497,7 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
       const returned = mutation();
       if (returned !== undefined) throw new TypeError("preview publisher commit must be synchronous");
       committed = true;
+      this.recordCommittedState(active, success);
       return true;
     };
     const publisher = Promise.resolve().then(() => publish(commit)).then(
@@ -528,6 +529,37 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
       return failedAttempt(active.task.input.revision, "E_PREVIEW_PUBLISH", failureMessage);
     }
     return success;
+  }
+
+  private recordCommittedState(active: ActiveTask, attempt: AuthoringPreviewAttempt): void {
+    const task = active.task;
+    if (attempt.outcome === "ready") {
+      if (this.isCurrent(active)) {
+        this.currentState = freezeState({
+          phase: "ready",
+          activeRevision: task.input.revision,
+          lastGoodRevision: task.input.revision,
+          lastGoodBuildId: attempt.buildId,
+          diagnostics: [],
+        });
+      } else {
+        // The guarded mutation may synchronously request a newer revision.
+        // Preserve that newer phase while still recording what just became
+        // externally visible as the exact last-good snapshot.
+        this.currentState = freezeState({
+          ...this.currentState,
+          lastGoodRevision: task.input.revision,
+          lastGoodBuildId: attempt.buildId,
+        });
+      }
+    } else if (attempt.outcome === "failed" && this.isCurrent(active)) {
+      this.currentState = freezeState({
+        ...this.currentState,
+        phase: "failed",
+        activeRevision: task.input.revision,
+        diagnostics: attempt.diagnostics,
+      });
+    }
   }
 
   private isCurrent(active: ActiveTask): boolean {
@@ -593,26 +625,38 @@ function snapshotProperty(value: object, key: PropertyKey, label: string): unkno
 }
 
 function safePrepared(value: unknown): SafePrepared {
-  if (value === null || typeof value !== "object" || Object.getPrototypeOf(value) !== Object.prototype) {
+  if (
+    value === null
+    || typeof value !== "object"
+    || nodeTypes.isProxy(value)
+    || Object.getPrototypeOf(value) !== Object.prototype
+  ) {
     throw new TypeError("prepared preview must be a plain object");
   }
-  const ownKeys = Reflect.ownKeys(value);
-  if (ownKeys.length !== 2 || !ownKeys.includes("pipeline") || !ownKeys.includes("release")) {
+  const fields = new Map<string, unknown>();
+  for (const key in value) {
+    if (!Object.hasOwn(value, key)) continue;
+    if (fields.size === 2) throw new TypeError("prepared preview has missing or unknown fields");
+    const descriptor = Object.getOwnPropertyDescriptor(value, key);
+    if (descriptor === undefined || !descriptor.enumerable || !("value" in descriptor)) {
+      throw new TypeError("prepared preview has unreadable fields");
+    }
+    fields.set(key, descriptor.value);
+  }
+  if (fields.size !== 2 || !fields.has("pipeline") || !fields.has("release")) {
     throw new TypeError("prepared preview has missing or unknown fields");
   }
-  const pipeline = dataField(value, "pipeline") as Pipeline;
+  const pipeline = fields.get("pipeline") as Pipeline;
   if (pipeline === null || typeof pipeline !== "object") throw new TypeError("prepared preview pipeline is invalid");
-  const releaseDescriptor = Object.getOwnPropertyDescriptor(value, "release");
-  if (releaseDescriptor === undefined || !("value" in releaseDescriptor) || typeof releaseDescriptor.value !== "function") {
-    throw new TypeError("prepared preview release is invalid");
-  }
+  const release = fields.get("release");
+  if (typeof release !== "function") throw new TypeError("prepared preview release is invalid");
   let released = false;
   return {
     pipeline,
     async release() {
       if (released) return;
       released = true;
-      await releaseDescriptor.value.call(value);
+      await release.call(value);
     },
   };
 }
@@ -851,12 +895,19 @@ function validatePortablePath(path: string): void {
 }
 
 function rejectPortableCollisions(paths: readonly string[]): void {
-  const folded = paths.map(path => path.toLowerCase()).sort();
-  for (let index = 1; index < folded.length; index += 1) {
-    const previous = folded[index - 1]!;
-    const current = folded[index]!;
-    if (current === previous || current.startsWith(`${previous}/`)) {
-      throw new TypeError("preview outputs contain a non-portable path collision");
+  const folded = new Set<string>();
+  for (const path of paths) {
+    const canonical = path.toLowerCase();
+    if (folded.has(canonical)) throw new TypeError("preview outputs contain a non-portable path collision");
+    folded.add(canonical);
+  }
+  for (const path of folded) {
+    let separator = path.indexOf("/");
+    while (separator !== -1) {
+      if (folded.has(path.slice(0, separator))) {
+        throw new TypeError("preview outputs contain a non-portable path collision");
+      }
+      separator = path.indexOf("/", separator + 1);
     }
   }
 }
