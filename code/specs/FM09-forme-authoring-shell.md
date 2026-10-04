@@ -424,16 +424,124 @@ revision; a post-commit snapshot failure poisons the workspace so a stale
 facade cannot accept later work. The host owns coordinator retirement behind
 that boundary.
 
-FM-B068 then packages that shell as the default local desktop product. Tauri
-remains the target unless the packaging slice documents and reviews a
-replacement. Its product test starts from an empty profile, creates a project,
-selects the default theme, opens a first draft, previews it, configures a
-supported publication target, and publishes without editing JSON, YAML,
-TypeScript, git, or shell commands.
+FM-B068 then packages that shell as the default local desktop product for
+macOS. Tauri remains the target unless a later packaging slice documents,
+sandboxes, and reviews another platform. Its product test starts from an empty
+profile, creates a project, selects the default theme, opens a first draft,
+previews it, configures a supported publication target, and publishes without
+editing JSON, YAML, TypeScript, git, or shell commands.
 
 The desktop host exposes only narrow commands for project storage, preview,
 and publish. Paths are canonicalized and contained; web content receives no
 ambient filesystem, network, environment, shell, or subprocess access.
+
+### 8.1 Native authority and IPC
+
+`forme-shell-desktop` is one Tauri v2 application with a capability-free web
+frontend and a native authority process. The checked-in Tauri capability file
+grants the main window only the application's own commands; generic filesystem,
+dialog, HTTP, shell, process, environment, updater, and opener plugins are not
+enabled. The production content-security policy denies remote scripts,
+connections, frames, and navigation. Preview content is served from a
+randomly-bound loopback listener and is displayed in the already sandboxed
+preview frame; it is never loaded into the privileged application origin.
+
+The IPC surface is a closed command set:
+
+- `project_load` returns either no profile or bounded canonical session bytes
+  plus an opaque revision. It accepts no path.
+- `project_compare_and_swap` accepts the expected opaque revision and at most
+  8 MiB of canonical session bytes. It returns the committed revision. A stale
+  revision is a closed conflict and an uncertain commit is indeterminate.
+- `identity_create` returns one canonical UUIDv7 and accepts no arguments.
+- `preview_build` accepts only an exact storage revision. While holding the
+  storage transaction, native code loads that revision's current project,
+  executes the reviewed product pipeline, and atomically replaces the
+  loopback server's last-good artifact snapshot only on success, and returns
+  only the closed FM-B064 attempt fields.
+- `target_configure` opens the native destination chooser and returns only an
+  opaque target identity plus the reviewed label and destination summary. The
+  selected path and any credentials remain native-owned.
+- `target_list` returns the same bounded reviewed records and no native
+  configuration.
+- `target_publish` accepts an opaque target identity and exact storage
+  revision. While holding the storage transaction it loads that revision's
+  current project, repeats the same product build,
+  validates the FM08 manifest and content, deploys through the reviewed
+  adapter, and returns only the closed FM-B065 attempt fields.
+- `workspace_dispose` retires preview, build, publication, target, and storage
+  work for the current native workspace and is idempotent.
+
+Every request and response is an exact-key bounded data record. Unknown fields,
+malformed identifier, revision, or digest text, oversized collections or
+bytes, unsafe Unicode, and stale workspace generations fail before authority
+is exercised. Native exceptions, filesystem paths, command lines, environment
+values, credentials, and arbitrary adapter diagnostics are mapped to fixed
+error codes. Product actions have a hard native deadline;
+workspace disposal waits for the bounded active action and its retirement.
+Cancellation during native work is not claimed by this macOS v0 boundary. A
+rejected or lost response after a storage or publication commit is
+indeterminate and poisons retry until the workspace is reloaded and reconciled.
+
+### 8.2 Storage, build, and publication containment
+
+The project store is a fixed child of Tauri's application-local-data directory.
+No renderer-provided string participates in path selection. On every open and
+write, the native host rejects links and non-directories, verifies that the
+profile and final file are owned by the effective user and inaccessible to
+group/other users, and applies owner-only permissions.
+Writes use a same-directory, exclusively created temporary file, flush file
+contents, atomically replace the destination, then flush the parent directory
+before reporting success. Temporary names are random and never reused. The
+opaque revision is derived from the exact committed bytes, so compare-and-swap
+is stable across restart. Malformed project bytes are reported and never
+replaced; abandoned temporary files are inert and are not followed or reused.
+
+Preview and publication materialize the authoring project into a fresh native
+workspace that is not addressable by the renderer. The bundled, version-pinned
+product worker runs only the checked-in Forme pipeline and receives its input
+over inherited anonymous pipes; it has no command-selection IPC. Its executable
+and product bundle are resolved from Tauri resources, identity-checked before
+launch, copied into its private workspace, re-verified, and never selected from
+`PATH`. Each run is launched through macOS Seatbelt with network, subprocess,
+and outside-workspace writes denied, plus CPU, descriptor, process, byte, and
+wall-clock limits, a fresh output directory, process-group retirement, and
+unconditional workspace retirement. The host validates portable artifact
+paths, file counts, per-file and aggregate sizes, declared hashes, exact
+build/revision attribution, and the FM07/FM08 structures before committing
+preview or publication state. A timeout, protocol violation, extra output,
+sandbox failure, or incomplete retirement poisons the workspace rather than
+allowing another worker to overlap it.
+
+The worker protocol is one UTF-8 JSON record followed by end-of-file in each
+direction. The request has exactly `schemaVersion`, `project`, `revision`, and
+`output`; version `1` is the only accepted version, `project` must pass the
+FM-B062 bounded validator, `revision` is the exact non-empty storage revision,
+and `output` is the fresh native-owned workspace granted to the sandbox. The
+worker has exactly one operation: build that snapshot with the reviewed product
+pipeline. Its success record has exactly `schemaVersion`, `revision`, `buildId`,
+`manifestSha256`, `manifest`, and `files`; `manifest` is the canonical FM08
+deployment manifest and each file record has exactly `path`, `size`, and
+hexadecimal `sha256`. It emits neither artifact bytes nor native paths. The
+native host recomputes every digest from the contained output tree and
+validates the manifest before use. The worker emits one fixed-code failure
+record only for a known pre-commit build failure. More than 8 MiB of request
+data, 8 MiB of response data, trailing records, non-canonical project values,
+unknown keys, unsafe strings, or any stdout/stderr chatter is a protocol
+violation.
+
+The initial supported publication target is a user-selected local directory.
+Selection occurs in the native chooser; the frontend receives a destination
+summary but never the path. Before each commit the host reopens the stored
+directory identity without following links, proves that it still names
+the reviewed destination, rejects the application profile and preview roots,
+and enforces the FM08 owned-tree rules. It stages and flushes a complete sibling
+tree, then uses macOS atomic directory exchange as the single publication
+point; the previous complete tree remains at the staging name until cleanup.
+The shell's separately confirmed commit is preceded by native validation and
+staging, but FM-B068 does not expose a standalone user-visible dry-run action.
+Changing the destination creates a new opaque target identity so a stale review
+cannot authorize publication elsewhere.
 
 ## 9. Required verification
 
