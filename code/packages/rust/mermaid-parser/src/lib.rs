@@ -4749,6 +4749,17 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                         .ok_or_else(|| token_error(token, "unsupported treemap font-stretch"))?
                 ),
             }),
+            "font-weight" => {
+                let weight = match value.to_ascii_lowercase().as_str() {
+                    "normal" => 400,
+                    "bold" | "bolder" => 700,
+                    "lighter" => 300,
+                    numeric => numeric.parse::<u16>()
+                        .ok().filter(|weight| (1..=1000).contains(weight))
+                        .ok_or_else(|| token_error(token, "treemap font-weight must be normal, bold, bolder, lighter, or an integer from 1 through 1000"))?,
+                };
+                style.node.font_weight = Some(weight);
+            }
             "text-shadow" => style.text_shadow = Some(parse_treemap_text_shadow(token, value)?),
             "tab-size" => style.tab_size = Some(value.parse::<u16>().ok()
                 .filter(|value| *value <= 256)
@@ -15160,6 +15171,26 @@ B//-A: reverse stick top
         ).expect("relative font weights must parse");
         assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.node.font_weight), Some(700));
         assert_eq!(diagram.nodes[2].style.as_ref().and_then(|style| style.node.font_weight), Some(300));
+    }
+
+    #[test]
+    fn treemap_preserves_variable_font_weights() {
+        for weight in [1, 575, 1000] {
+            let source = format!(
+                "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-weight:{weight}"
+            );
+            let diagram = parse_treemap(&source).expect("CSS variable font weight must parse");
+            assert_eq!(
+                diagram.nodes[1].style.as_ref().and_then(|style| style.node.font_weight),
+                Some(weight)
+            );
+        }
+        for weight in ["0", "1001", "575.5", "heavy"] {
+            let source = format!(
+                "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-weight:{weight}"
+            );
+            assert!(parse_treemap(&source).is_err());
+        }
     }
 
     #[test]
