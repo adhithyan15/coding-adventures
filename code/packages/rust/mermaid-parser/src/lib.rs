@@ -4970,15 +4970,18 @@ fn parse_treemap_text_decoration_thickness(
         "auto" => Ok(diagram_ir::TreemapTextDecorationThickness::Auto),
         "from-font" => Ok(diagram_ir::TreemapTextDecorationThickness::FromFont),
         _ => {
-            let (number, percentage) = source.strip_suffix('%').map_or_else(
-                || (source.strip_suffix("px"), false),
-                |number| (Some(number), true),
-            );
+            let (number, factor) = if let Some(number) = source.strip_suffix('%') {
+                (Some(number), Some(100.0))
+            } else if let Some(number) = source.strip_suffix("em") {
+                (Some(number), Some(1.0))
+            } else {
+                (source.strip_suffix("px"), None)
+            };
             let value = number.and_then(|number| number.trim().parse::<f64>().ok())
                 .filter(|value| value.is_finite() && *value > 0.0)
                 .ok_or_else(|| token_error(token, "invalid treemap text-decoration-thickness"))?;
-            Ok(if percentage {
-                diagram_ir::TreemapTextDecorationThickness::Factor(value / 100.0)
+            Ok(if let Some(divisor) = factor {
+                diagram_ir::TreemapTextDecorationThickness::Factor(value / divisor)
             } else {
                 diagram_ir::TreemapTextDecorationThickness::Pixels(value)
             })
@@ -4993,15 +4996,18 @@ fn parse_treemap_text_underline_offset(
     if source.eq_ignore_ascii_case("auto") {
         return Ok(diagram_ir::TreemapTextUnderlineOffset::Auto);
     }
-    let (number, percentage) = source.strip_suffix('%').map_or_else(
-        || (source.strip_suffix("px"), false),
-        |number| (Some(number), true),
-    );
+    let (number, factor) = if let Some(number) = source.strip_suffix('%') {
+        (Some(number), Some(100.0))
+    } else if let Some(number) = source.strip_suffix("em") {
+        (Some(number), Some(1.0))
+    } else {
+        (source.strip_suffix("px"), None)
+    };
     let value = number.and_then(|number| number.trim().parse::<f64>().ok())
         .filter(|value| value.is_finite())
         .ok_or_else(|| token_error(token, "invalid treemap text-underline-offset"))?;
-    Ok(if percentage {
-        diagram_ir::TreemapTextUnderlineOffset::Factor(value / 100.0)
+    Ok(if let Some(divisor) = factor {
+        diagram_ir::TreemapTextUnderlineOffset::Factor(value / divisor)
     } else {
         diagram_ir::TreemapTextUnderlineOffset::Pixels(value)
     })
@@ -14673,7 +14679,7 @@ B//-A: reverse stick top
 
     #[test]
     fn treemap_rejects_invalid_text_decoration_thickness() {
-        for value in ["0", "0px", "0%", "2em", "thick"] {
+        for value in ["0", "0px", "0%", "0em", "thick"] {
             let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-decoration-thickness:{value}");
             assert!(parse_treemap(&source).is_err());
         }
@@ -14686,6 +14692,7 @@ B//-A: reverse stick top
             ("from-font", diagram_ir::TreemapTextDecorationThickness::FromFont),
             ("2.5px", diagram_ir::TreemapTextDecorationThickness::Pixels(2.5)),
             ("12.5%", diagram_ir::TreemapTextDecorationThickness::Factor(0.125)),
+            ("0.2em", diagram_ir::TreemapTextDecorationThickness::Factor(0.2)),
         ] {
             let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-decoration:underline,text-decoration-thickness:{value}");
             let diagram = parse_treemap(&source).expect("supported decoration thickness must parse");
@@ -14699,13 +14706,14 @@ B//-A: reverse stick top
             ("auto", diagram_ir::TreemapTextUnderlineOffset::Auto),
             ("3.5px", diagram_ir::TreemapTextUnderlineOffset::Pixels(3.5)),
             ("-25%", diagram_ir::TreemapTextUnderlineOffset::Factor(-0.25)),
+            ("0.4em", diagram_ir::TreemapTextUnderlineOffset::Factor(0.4)),
         ] {
             let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-decoration:underline,text-underline-offset:{value}");
             let diagram = parse_treemap(&source).expect("supported underline offset must parse");
             assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_underline_offset), Some(expected));
         }
         assert!(parse_treemap(
-            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-underline-offset:2em",
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-underline-offset:2rem",
         ).is_err());
     }
 
