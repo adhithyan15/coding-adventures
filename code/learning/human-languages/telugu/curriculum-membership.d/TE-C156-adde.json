@@ -1,0 +1,11 @@
+{
+  "id": "TE-C156-adde",
+  "pathSegment": "TE-PATH-156-CADUVU156",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-156-CADUVU156",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-153-NISHEDHAM153",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "TE-EXT-153-NISHEDHAM153"
+  ],
+  "after": []
+}

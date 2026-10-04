@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C156-rasidu",
+    "language": "telugu",
+    "chapter": 156,
+    "sequence": 6810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf1c5e143bef9f33"
+  },
+  "findings": []
+}

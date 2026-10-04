@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:b2cc130f9901e74c",
+  "lessonIds": [
+    "TE-C153-evaru",
+    "TE-C153-eppudu",
+    "TE-C153-ekkada",
+    "TE-C153-evaraina",
+    "TE-C153-emaina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch153.txt",
+  "json": "telugu/narration/ch153.json",
+  "textHash": "fnv1a64:e67d5c0fe86cb706",
+  "jsonHash": "fnv1a64:2faa08b4218f0435",
+  "findings": []
+}

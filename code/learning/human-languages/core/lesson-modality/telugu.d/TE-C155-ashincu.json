@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C155-ashincu",
+    "language": "telugu",
+    "chapter": 155,
+    "sequence": 6750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5a6530cc5deff36"
+  },
+  "findings": []
+}

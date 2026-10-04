@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-154-GATAM154",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what happened, and when: recently, already, last year.",
+  "prerequisites": []
+}

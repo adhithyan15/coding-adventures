@@ -4,7 +4,7 @@
   "chapter": 103,
   "title": "Temple, School, Library, Bank, Market",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b1e9e8c7e463f8c5",
+  "sourceHash": "fnv1a64:32011acb02ef14dd",
   "lessons": [
     {
       "id": "TE-C103-gudi",
@@ -255,9 +255,9 @@
     {
       "id": "TE-C103-grandhalayam",
       "sequence": 4070,
-      "title": "గ్రంథాలయం (grandhālayaṁ) — a library",
+      "title": "గ్రంథాలయం (granthālayaṁ) — a library",
       "headword": "గ్రంథాలయం",
-      "romanization": "grandhālayaṁ",
+      "romanization": "granthālayaṁ",
       "gloss": "a library",
       "script": "telugu",
       "modality": "voice",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54ebe97ef7305d08",
+      "sourceHash": "fnv1a64:a3375eed53bf3258",
       "notice": null,
       "blocks": [
         {
@@ -292,7 +292,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "గ్రంథాలయం — grandhālayaṁ — \"a library\"."
+              "text": "గ్రంథాలయం — granthālayaṁ — \"a library\"."
             }
           ]
         },
@@ -321,38 +321,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "grandhālayaṁ",
+              "instruction": "granthālayaṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *grandhālayaṁ*]"
+              "source": "[YOU SAY: *granthālayaṁ*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "grandhālayaṁ, once more",
+              "instruction": "granthālayaṁ, once more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *grandhālayaṁ*, once more]"
+              "source": "[YOU SAY: *granthālayaṁ*, once more]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "say grandhālayaṁ",
+              "instruction": "say granthālayaṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: say *grandhālayaṁ*]"
+              "source": "[YOU SAY: say *granthālayaṁ*]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say the Telugu for a temple, then the Telugu for a school, then say grandhālayaṁ again",
+              "instruction": "say the Telugu for a temple, then the Telugu for a school, then say granthālayaṁ again",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say the Telugu for a temple, then the Telugu for a school, then say *grandhālayaṁ* again]"
+              "source": "[YOU RECALL: say the Telugu for a temple, then the Telugu for a school, then say *granthālayaṁ* again]"
             }
           ]
         },
@@ -369,7 +369,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does గ్రంథాలయం (grandhālayaṁ) mean? (\"A library\".) Say it once more."
+              "text": "What does గ్రంథాలయం (granthālayaṁ) mean? (\"A library\".) Say it once more."
             }
           ]
         }

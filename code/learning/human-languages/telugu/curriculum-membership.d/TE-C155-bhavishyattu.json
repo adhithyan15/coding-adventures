@@ -1,0 +1,11 @@
+{
+  "id": "TE-C155-bhavishyattu",
+  "pathSegment": "TE-PATH-155-BHAVISHYAT155",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-155-BHAVISHYAT155",
+      "order": 2
+    }
+  ]
+}

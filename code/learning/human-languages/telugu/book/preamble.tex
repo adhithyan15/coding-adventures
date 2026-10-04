@@ -170,7 +170,7 @@
     \vskip 1.0em \@plus\p@
     \setlength\@tempdima{2.8em}%
     \begingroup
-      \parindent \z@ \rightskip \@pnumwidth
+      \parindent \z@ \rightskip \@pnumwidth \@plus 6em
       \parfillskip -\@pnumwidth
       \leavevmode \bfseries
       \advance\leftskip\@tempdima
@@ -183,6 +183,20 @@
   \fi}
 \renewcommand*\l@section{\@dottedtocline{1}{2.8em}{3.2em}}
 \renewcommand*\l@subsection{\@dottedtocline{2}{6.0em}{4.1em}}
+% Page numbers in the table of contents. `book.cls` gives them a 1.55em box,
+% which holds three digits. The A2 vocabulary chapters take this book past
+% page 999, and every contents line with a four-digit page ("1000" is 4.93pt
+% wider than the box) reported an overfull \hbox. 2.4em holds four bold
+% digits; the right margin that keeps titles clear of the numbers widens by the
+% same 0.85em so the dotted leaders still stop short of them. Same fix as the
+% Bengali, Tamil, German, Sanskrit, Italian and French preambles.
+\renewcommand\@pnumwidth{2.4em}
+\renewcommand\@tocrmarg{3.4em}
+% A chapter title too long for one contents line used to wrap with its spaces
+% stretched to fill the measure -- an underfull \hbox for every such title. The
+% \rightskip above now carries 6em of finite stretch, so a wrapped line simply
+% ends ragged (as the callouts already do) instead. A one-line entry is
+% unchanged: its \hfil before the page number is infinite and wins.
 \makeatother
 
 % ---------------------------------------------------------------------------
