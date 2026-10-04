@@ -541,7 +541,8 @@ thickness values into the same semantic representation, and the
 `text-decoration-line` longhand supports none and composable underline,
 overline, and line-through values. Decoration `currentColor` remains semantic
 until it resolves against the final label color. Auto, pixel, em, and percentage underline offsets follow the same
-backend-neutral geometry path. Normal, unitless,
+backend-neutral geometry path. Auto, from-font, and under underline positions select metric or descent-based
+backend-neutral placement. Normal, unitless,
 percentage, and pixel line heights flow through the same text layout path.
 Pixel and percentage text indents adjust only the first backend-neutral line box
 before glyph shaping while `hanging` inverts the target and `each-line` restarts

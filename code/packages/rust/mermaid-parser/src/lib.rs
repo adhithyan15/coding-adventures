@@ -4621,6 +4621,12 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
             "text-underline-offset" => style.text_underline_offset = Some(
                 parse_treemap_text_underline_offset(token, value)?
             ),
+            "text-underline-position" => style.text_underline_position = Some(match value.to_ascii_lowercase().as_str() {
+                "auto" => diagram_ir::TreemapTextUnderlinePosition::Auto,
+                "from-font" => diagram_ir::TreemapTextUnderlinePosition::FromFont,
+                "under" => diagram_ir::TreemapTextUnderlinePosition::Under,
+                _ => return Err(token_error(token, "treemap text-underline-position must be auto, from-font, or under")),
+            }),
             "line-height" => style.line_height = Some(parse_treemap_line_height(token, value)?),
             "text-indent" => {
                 let (indent, hanging, each_line) = parse_treemap_text_indent(token, value)?;
@@ -14714,6 +14720,22 @@ B//-A: reverse stick top
         }
         assert!(parse_treemap(
             "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-underline-offset:2rem",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_text_underline_positions() {
+        for (value, expected) in [
+            ("auto", diagram_ir::TreemapTextUnderlinePosition::Auto),
+            ("from-font", diagram_ir::TreemapTextUnderlinePosition::FromFont),
+            ("under", diagram_ir::TreemapTextUnderlinePosition::Under),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-decoration:underline,text-underline-position:{value}");
+            let diagram = parse_treemap(&source).expect("supported underline position must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.text_underline_position), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent text-underline-position:left",
         ).is_err());
     }
 

@@ -223,6 +223,14 @@ pub enum TextDecorationStyle {
     Wavy,
 }
 
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
+pub enum TextUnderlinePosition {
+    #[default]
+    Auto,
+    FromFont,
+    Under,
+}
+
 /// Paint-independent text decoration inherited by inline text descendants.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct TextDecoration {
@@ -234,6 +242,8 @@ pub struct TextDecoration {
     pub thickness: Option<f64>,
     /// Authored underline distance below the baseline. `None` uses font metrics.
     pub underline_offset: Option<f64>,
+    /// Selects the baseline-relative source for an automatic underline offset.
+    pub underline_position: TextUnderlinePosition,
 }
 
 impl TextDecoration {
@@ -244,6 +254,7 @@ impl TextDecoration {
             color: None,
             thickness: None,
             underline_offset: None,
+            underline_position: TextUnderlinePosition::Auto,
         }
     }
 }

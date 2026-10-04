@@ -63,7 +63,7 @@ use layout_backgrounds::{
 use layout_effects::{EffectBlendMode, EffectColor, EffectFilter, EffectStyle};
 use layout_ir::{
     Color, Content, ExtValue, FontSpec, PositionedNode, TextAlign, TextContent, TextDecorationLines,
-    TextDecorationStyle,
+    TextDecorationStyle, TextUnderlinePosition,
 };
 use layout_positioned::{Position, PositionedStyle};
 use layout_replaced::{object_fit_rect, IntrinsicSize};
@@ -1711,10 +1711,13 @@ fn emit_text_decorations<M>(
     };
 
     if decoration.lines.contains(TextDecorationLines::UNDERLINE) {
-        let position = decoration.underline_offset.unwrap_or_else(|| metrics
-            .underline_position(handle)
-            .map(|value| f64::from(value) * scale)
-            .unwrap_or_else(|| f64::from(size) * 0.08));
+        let position = decoration.underline_offset.unwrap_or_else(|| match decoration.underline_position {
+            TextUnderlinePosition::Under => f64::from(metrics.descent(handle).max(0)) * scale,
+            TextUnderlinePosition::Auto | TextUnderlinePosition::FromFont => metrics
+                .underline_position(handle)
+                .map(|value| f64::from(value) * scale)
+                .unwrap_or_else(|| f64::from(size) * 0.08),
+        });
         emit_line(baseline_y + position);
     }
     if decoration.lines.contains(TextDecorationLines::OVERLINE) {
@@ -2567,6 +2570,7 @@ mod tests {
                 color: Some(rgb(37, 99, 235)),
                 thickness: Some(3.0),
                 underline_offset: None,
+                underline_position: TextUnderlinePosition::Auto,
             });
             let root = positioned_leaf(text, 0.0, 0.0, 200.0, 30.0);
             let shaper = FakeShaper;
@@ -2590,6 +2594,7 @@ mod tests {
             color: None,
             thickness: Some(3.5),
             underline_offset: Some(5.0),
+            underline_position: TextUnderlinePosition::Under,
         });
         let root = positioned_leaf(text, 0.0, 0.0, 200.0, 30.0);
         let shaper = FakeShaper;
@@ -2605,6 +2610,33 @@ mod tests {
             _ => None,
         }).expect("authored underline should emit a rectangle");
         assert_eq!(underline.y - baseline, 5.0);
+    }
+
+    #[test]
+    fn under_position_places_underline_below_font_descent() {
+        let mut text = text_content("gyp");
+        text.decoration = Some(layout_ir::TextDecoration {
+            lines: TextDecorationLines::UNDERLINE,
+            style: TextDecorationStyle::Solid,
+            color: None,
+            thickness: Some(1.0),
+            underline_offset: None,
+            underline_position: TextUnderlinePosition::Under,
+        });
+        let root = positioned_leaf(text, 0.0, 0.0, 200.0, 30.0);
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let scene = layout_to_paint(&root, &make_options(&shaper, &metrics, &resolver));
+        let baseline = scene.instructions.iter().find_map(|instruction| match instruction {
+            PaintInstruction::GlyphRun(run) => run.glyphs.first().map(|glyph| glyph.y),
+            _ => None,
+        }).expect("decorated text should emit glyphs");
+        let underline = scene.instructions.iter().find_map(|instruction| match instruction {
+            PaintInstruction::Rect(rect) if rect.height == 1.0 => Some(rect),
+            _ => None,
+        }).expect("under-positioned underline should emit a rectangle");
+        assert!(((underline.y - baseline) - 3.2).abs() < f64::EPSILON * 8.0);
     }
 
     #[test]
