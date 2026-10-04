@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent, ReactNode } from "react";
 import {
+  validateAuthoringManifestSha256,
   validateAuthoringRevision,
   validateAuthoringProject,
   type AuthoringSession,
@@ -77,6 +78,7 @@ interface SafeWorkspace {
   readonly preview: SafePreview;
   readonly previewUrl: string;
   readonly publishers: readonly SafePublisher[];
+  readonly poisoned: Promise<void>;
   createDocumentIdentity(): string | Promise<string>;
   dispose(): Promise<void>;
 }
@@ -91,12 +93,15 @@ type ViewState =
   | { readonly phase: "loading" }
   | { readonly phase: "first-run" }
   | { readonly phase: "error" }
+  | { readonly phase: "poisoned" }
   | { readonly phase: "ready"; readonly workspace: SafeWorkspace };
 
 interface ActionToken {
   readonly abort: AbortController;
   readonly workspace: SafeWorkspace | null;
 }
+
+class WorkspacePoisonedError extends Error {}
 
 function captureMethod<T extends Function>(value: unknown, name: string, label: string): T {
   if (value === null || (typeof value !== "object" && typeof value !== "function")) throw new TypeError(`${label} is invalid`);
@@ -151,10 +156,23 @@ function dataField(value: unknown, name: string, label: string): unknown {
 }
 
 function denseArray(value: unknown, maximum: number, label: string): readonly unknown[] {
-  if (!Array.isArray(value) || value.length > maximum) throw new TypeError(`${label} is invalid`);
+  let array: boolean;
+  try { array = Array.isArray(value); } catch { throw new TypeError(`${label} is invalid`); }
+  if (!array || value === null || typeof value !== "object") throw new TypeError(`${label} is invalid`);
+  let lengthDescriptor: PropertyDescriptor | undefined;
+  try { lengthDescriptor = Object.getOwnPropertyDescriptor(value, "length"); } catch {
+    throw new TypeError(`${label} is invalid`);
+  }
+  if (lengthDescriptor === undefined || !("value" in lengthDescriptor)
+    || !Number.isSafeInteger(lengthDescriptor.value) || lengthDescriptor.value < 0
+    || lengthDescriptor.value > maximum) throw new TypeError(`${label} is invalid`);
+  const length = lengthDescriptor.value as number;
   const result: unknown[] = [];
-  for (let index = 0; index < value.length; index += 1) {
-    const descriptor = Object.getOwnPropertyDescriptor(value, String(index));
+  for (let index = 0; index < length; index += 1) {
+    let descriptor: PropertyDescriptor | undefined;
+    try { descriptor = Object.getOwnPropertyDescriptor(value, String(index)); } catch {
+      throw new TypeError(`${label} is invalid`);
+    }
     if (descriptor === undefined || !("value" in descriptor) || !descriptor.enumerable) {
       throw new TypeError(`${label} is sparse or accessor-backed`);
     }
@@ -208,7 +226,7 @@ interface SessionSnapshot {
  * never retained in React props: its state is sampled once at admission and
  * again only after a captured mutation settles.
  */
-function admitSession(value: unknown): AuthoringSession {
+function admitSession(value: unknown): { readonly session: AuthoringSession; readonly poisoned: Promise<void> } {
   const readProject = captureReader(value, "project", "authoring session");
   const readCanUndo = captureReader(value, "canUndo", "authoring session");
   const readCanRedo = captureReader(value, "canRedo", "authoring session");
@@ -229,9 +247,17 @@ function admitSession(value: unknown): AuthoringSession {
     });
   };
   let current = snapshot();
+  let poison!: () => void;
+  const poisonedPromise = new Promise<void>((resolve) => { poison = resolve; });
+  let isPoisoned = false;
   const mutate = async (operation: () => Promise<void>): Promise<void> => {
+    if (isPoisoned) throw new WorkspacePoisonedError("authoring workspace requires reload");
     await Promise.resolve().then(operation);
-    current = snapshot();
+    try { current = snapshot(); } catch {
+      isPoisoned = true;
+      poison();
+      throw new WorkspacePoisonedError("authoring workspace state is indeterminate");
+    }
   };
   const facade: AuthoringSession = {
     get project() { return current.project; },
@@ -243,7 +269,7 @@ function admitSession(value: unknown): AuthoringSession {
     undo: (signal) => mutate(async () => await undo(signal)),
     redo: (signal) => mutate(async () => await redo(signal)),
   };
-  return Object.freeze(facade);
+  return Object.freeze({ session: Object.freeze(facade), poisoned: poisonedPromise });
 }
 
 function prepareHost(value: AuthoringShellHost): SafeHost {
@@ -267,7 +293,8 @@ async function admitWorkspace(value: AuthoringShellWorkspace): Promise<SafeWorks
       retirementPromise = Promise.resolve().then(async () => await dispose());
       return retirementPromise;
     };
-    const session = admitSession(dataField(value, "session", "workspace"));
+    const admittedSession = admitSession(dataField(value, "session", "workspace"));
+    const session = admittedSession.session;
     const project = session.project;
     const active = project.documents.find((document) => document.id === project.activeDocumentId);
     if (active === undefined || active.status !== "draft") throw new TypeError("workspace must contain an active draft");
@@ -297,12 +324,15 @@ async function admitWorkspace(value: AuthoringShellWorkspace): Promise<SafeWorks
       preview,
       previewUrl: safePreviewUrl(dataField(value, "previewUrl", "workspace")),
       publishers: Object.freeze(publishers),
+      poisoned: admittedSession.poisoned,
       createDocumentIdentity,
       dispose: retirement,
     });
   } catch {
     if (retirement !== null) {
-      try { await retirement(); } catch { /* The fixed admission failure remains authoritative. */ }
+      try { await retirement(); } catch { throw new WorkspacePoisonedError("workspace retirement did not complete"); }
+    } else if (value !== null && (typeof value === "object" || typeof value === "function")) {
+      throw new WorkspacePoisonedError("workspace retirement is unavailable");
     }
     throw new TypeError("authoring workspace could not be inspected safely");
   }
@@ -356,13 +386,8 @@ function publicationMessage(value: unknown, expectedRevision: string, expectedTa
     throw new TypeError("publication attempt target is stale");
   }
   const manifestSha256 = dataField(value, "manifestSha256", "publication attempt");
-  if (manifestSha256 !== null && (typeof manifestSha256 !== "string" || !/^[0-9a-f]{64}$/.test(manifestSha256))) {
-    throw new TypeError("publication digest is invalid");
-  }
+  if (manifestSha256 !== null) validateAuthoringManifestSha256(manifestSha256);
   if (outcome === "published" && manifestSha256 === null) throw new TypeError("published attempt is missing its digest");
-  if ((outcome === "cancelled" || outcome === "failed") && manifestSha256 !== null) {
-    throw new TypeError("uncommitted publication attempt has a digest");
-  }
   const diagnostic = diagnosticMessage(dataField(value, "diagnostics", "publication attempt"), false);
   switch (outcome) {
     case "published": return "Site published.";
@@ -382,7 +407,31 @@ export function AuthoringShell(props: AuthoringShellProps): ReactNode {
   const [targetId, setTargetId] = useState("");
   const [confirming, setConfirming] = useState(false);
   const action = useRef<ActionToken | null>(null);
+  const workspaceRef = useRef<SafeWorkspace | null>(null);
   const mounted = useRef(true);
+
+  const enterPoisonedState = (): void => {
+    if (!mounted.current) return;
+    const active = workspaceRef.current;
+    workspaceRef.current = null;
+    if (action.current !== null) APPLY(ABORT, action.current.abort, []);
+    action.current = null;
+    setBusy(false);
+    setConfirming(false);
+    setMessage("");
+    setView({ phase: "poisoned" });
+    if (active !== null) void active.dispose().catch(() => undefined);
+  };
+
+  const activateWorkspace = (workspace: SafeWorkspace): void => {
+    workspaceRef.current = workspace;
+    void workspace.poisoned.then(() => {
+      if (!mounted.current || workspaceRef.current !== workspace) return;
+      enterPoisonedState();
+    });
+    setTargetId(workspace.publishers[0]!.review.targetId);
+    setView({ phase: "ready", workspace });
+  };
 
   useEffect(() => {
     mounted.current = true;
@@ -390,6 +439,9 @@ export function AuthoringShell(props: AuthoringShellProps): ReactNode {
       mounted.current = false;
       if (action.current !== null) APPLY(ABORT, action.current.abort, []);
       action.current = null;
+      const workspace = workspaceRef.current;
+      workspaceRef.current = null;
+      if (workspace !== null) void workspace.dispose().catch(() => undefined);
     };
   }, []);
 
@@ -402,18 +454,30 @@ export function AuthoringShell(props: AuthoringShellProps): ReactNode {
     setConfirming(false);
     setMessage("");
     setView({ phase: "loading" });
-    void Promise.resolve().then(async () => await host.open(abort.signal)).then(async (raw) => {
-      if (raw === null) {
-        if (live) setView({ phase: "first-run" });
-        return;
+    const previous = workspaceRef.current;
+    workspaceRef.current = null;
+    void (async () => {
+      try {
+        if (previous !== null) {
+          try { await previous.dispose(); } catch { throw new WorkspacePoisonedError("workspace retirement did not complete"); }
+        }
+        if (!live) return;
+        const raw = await Promise.resolve().then(async () => await host.open(abort.signal));
+        if (raw === null) {
+          if (live) setView({ phase: "first-run" });
+          return;
+        }
+        const workspace = await admitWorkspace(raw);
+        if (!live) {
+          try { await workspace.dispose(); } catch { enterPoisonedState(); }
+          return;
+        }
+        activateWorkspace(workspace);
+      } catch (error) {
+        if (error instanceof WorkspacePoisonedError) enterPoisonedState();
+        else if (live) setView({ phase: "error" });
       }
-      const workspace = await admitWorkspace(raw);
-      if (!live) void workspace.dispose();
-      else {
-        setTargetId(workspace.publishers[0]!.review.targetId);
-        setView({ phase: "ready", workspace });
-      }
-    }).catch(() => { if (live) setView({ phase: "error" }); });
+    })();
     return () => {
       live = false;
       APPLY(ABORT, abort, []);
@@ -423,13 +487,6 @@ export function AuthoringShell(props: AuthoringShellProps): ReactNode {
   }, [host, generation]);
 
   const workspace = view.phase === "ready" ? view.workspace : null;
-  useEffect(() => () => {
-    if (workspace !== null) {
-      void workspace.dispose().catch(() => {
-        if (mounted.current) setMessage("Workspace cleanup did not complete; reload before continuing.");
-      });
-    }
-  }, [workspace]);
 
   const create = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
@@ -444,15 +501,17 @@ export function AuthoringShell(props: AuthoringShellProps): ReactNode {
     setBusy(true);
     setMessage("");
     void Promise.resolve().then(async () => await host.create(input, token.abort.signal))
-      .then(async (raw) => await admitWorkspace(raw)).then((admitted) => {
+      .then(async (raw) => await admitWorkspace(raw)).then(async (admitted) => {
       if (!mounted.current || action.current !== token || token.abort.signal.aborted) {
-        void admitted.dispose().catch(() => undefined);
+        try { await admitted.dispose(); } catch {
+          enterPoisonedState();
+        }
         return;
       }
-      setTargetId(admitted.publishers[0]!.review.targetId);
-      setView({ phase: "ready", workspace: admitted });
-    }).catch(() => {
-      if (mounted.current && action.current === token) setMessage("The authoring workspace could not be created.");
+      activateWorkspace(admitted);
+    }).catch((error: unknown) => {
+      if (error instanceof WorkspacePoisonedError) enterPoisonedState();
+      else if (mounted.current && action.current === token) setMessage("The authoring workspace could not be created.");
     }).finally(() => {
       if (action.current === token) {
         action.current = null;
@@ -499,7 +558,7 @@ export function AuthoringShell(props: AuthoringShellProps): ReactNode {
         if (mounted.current && action.current === token) setMessage(nextMessage);
       })
       .catch(() => {
-        if (mounted.current && action.current === token) setMessage("Publication failed before its commit point.");
+        if (mounted.current && action.current === token) setMessage("Publication state must be reconciled.");
       })
       .finally(() => {
         if (action.current === token) {
@@ -519,6 +578,10 @@ export function AuthoringShell(props: AuthoringShellProps): ReactNode {
       <h1>Forme could not start</h1>
       <p role="alert">The authoring workspace could not be opened.</p>
       <button type="button" onClick={() => setGeneration((value) => value + 1)}>Try again</button>
+    </section>}
+    {view.phase === "poisoned" && <section>
+      <h1>Forme must be reloaded</h1>
+      <p role="alert">Workspace state could not be retired or verified safely. Reload before continuing.</p>
     </section>}
     {view.phase === "first-run" && <section>
       <h1>Create your Forme site</h1>

@@ -5,6 +5,7 @@ import {
   HARD_AUTHORING_LIMITS,
   canonicalAuthoringProject,
   createAuthoringProject,
+  validateAuthoringManifestSha256,
   validateAuthoringRevision,
   validateAuthoringProject,
   type AuthoringProject,
@@ -12,6 +13,16 @@ import {
 
 const PROJECT_ID = "01952c0d-7e63-7000-8000-000000000001";
 const DOCUMENT_ID = "01952c0d-7e63-7000-8000-000000000002";
+const MANIFEST_SHA256 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+
+describe("validateAuthoringManifestSha256", () => {
+  it("accepts only the canonical 32-byte base64 spelling", () => {
+    expect(validateAuthoringManifestSha256(MANIFEST_SHA256)).toBe(MANIFEST_SHA256);
+    for (const value of [null, "a".repeat(64), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB=", `${MANIFEST_SHA256} `]) {
+      expect(() => validateAuthoringManifestSha256(value)).toThrow(/canonical base64 SHA-256/);
+    }
+  });
+});
 
 function project(overrides: Partial<AuthoringProject> = {}): AuthoringProject {
   return {

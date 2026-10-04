@@ -1,5 +1,6 @@
 import "@testing-library/jest-dom";
 
+import { createHash } from "node:crypto";
 import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import {
@@ -17,6 +18,7 @@ import type {
   AuthoringPublisher,
   AuthoringPublishState,
 } from "@coding-adventures/forme-authoring-publish";
+import { createAuthoringPublisher } from "@coding-adventures/forme-authoring-publish";
 
 import {
   AuthoringShell,
@@ -27,7 +29,8 @@ import {
 const PROJECT_ID = "018f47a0-9b6c-7def-9234-56789abcdef0";
 const DOCUMENT_ID = "018f47a0-9b6c-7def-9234-56789abcdef1";
 const NEXT_DOCUMENT_ID = "018f47a0-9b6c-7def-9234-56789abcdef2";
-const DIGEST = "a".repeat(64);
+const CONTENT = Buffer.from("hello from the authoring shell", "utf8");
+const DIGEST = createHash("sha256").update(CONTENT).digest("base64");
 
 class MemoryStorage implements AuthoringStorage {
   state: StoredAuthoringState | null = null;
@@ -232,6 +235,77 @@ describe("AuthoringShell", () => {
     expect(signal).toBeInstanceOf(AbortSignal);
   });
 
+  it("accepts the canonical base64 identity emitted by the real publication coordinator", async () => {
+    const publisher = createAuthoringPublisher({
+      builder: {
+        build: async () => ({
+          manifest: {
+            version: 1,
+            baseUrl: "https://example.com",
+            fileCount: 1,
+            totalSizeBytes: CONTENT.byteLength,
+            files: {
+              "index.html": {
+                outputPath: "index.html",
+                contentType: "text/html; charset=utf-8",
+                sizeBytes: CONTENT.byteLength,
+                sha256: DIGEST,
+                source: "page-bundle",
+                route: "/",
+              },
+            },
+          },
+          contentStore: Object.freeze({
+            async get(digest: string) {
+              if (digest !== DIGEST) throw new Error("missing");
+              return new Uint8Array(CONTENT);
+            },
+            async has(digest: string) { return digest === DIGEST; },
+            async *hashes() { yield DIGEST; },
+          }),
+          async release() {},
+        }),
+      },
+      target: {
+        review: {
+          targetId: "github-pages",
+          label: "GitHub Pages",
+          destination: "example/site on gh-pages",
+        },
+        publish: async (input) => ({ outcome: "success", manifestSha256: input.manifestSha256 }),
+      },
+    });
+    let observedAttempt: Awaited<ReturnType<AuthoringPublisher["publish"]>> | undefined;
+    const observedPublish = vi.fn(async (session: AuthoringSession) => {
+      // Vitest's jsdom AbortSignal belongs to a different EventTarget realm
+      // than the Node-loaded publisher. Signal forwarding is covered by the
+      // adjacent shell contract test; this integration exercises the real
+      // coordinator's result and durable publication record.
+      observedAttempt = await publisher.publish(session);
+      return observedAttempt;
+    });
+    const observedPublisher: AuthoringPublisher = {
+      target: publisher.target,
+      state: publisher.state,
+      publish: observedPublish,
+      dispose: async () => await publisher.dispose(),
+    };
+    const workspace = await workspaceFixture({
+      publishers: [observedPublisher],
+      dispose: vi.fn(async () => { await publisher.dispose(); }),
+    });
+    render(<AuthoringShell host={host(async () => workspace)} />);
+    await screen.findByRole("heading", { name: "Forme authoring" });
+    fireEvent.click(screen.getByRole("button", { name: "Review publication" }));
+    fireEvent.click(screen.getByRole("button", { name: "Publish to GitHub Pages" }));
+    await waitFor(() => expect(observedPublish).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(observedAttempt).toBeDefined());
+    expect(observedAttempt).toMatchObject({ outcome: "published", diagnostics: [] });
+    expect(await screen.findByText("Site published.")).toBeInTheDocument();
+    expect(observedAttempt?.manifestSha256).toMatch(/^[A-Za-z0-9+/]{42}[AEIMQUYcgkosw048]=$/u);
+    expect(workspace.session.project.workflow.lastPublication?.manifestSha256).toBe(observedAttempt?.manifestSha256);
+  });
+
   it("redacts host failures and remains retryable", async () => {
     const workspace = await workspaceFixture();
     const open = vi.fn()
@@ -275,6 +349,18 @@ describe("AuthoringShell", () => {
     }],
     ["null preview", async () => ({ ...(await workspaceFixture()), preview: null })],
     ["missing preview request", async () => ({ ...(await workspaceFixture()), preview: { dispose: async () => {} } })],
+    ["accessor preview request", async () => {
+      const workspace = await workspaceFixture();
+      const preview = { dispose: async () => {} } as unknown as AuthoringPreviewCoordinator;
+      Object.defineProperty(preview, "request", { enumerable: true, get: () => workspace.preview.request });
+      return { ...workspace, preview };
+    }],
+    ["setter-only session project", async () => {
+      const workspace = await workspaceFixture();
+      const session = Object.create(workspace.session) as AuthoringSession;
+      Object.defineProperty(session, "project", { enumerable: true, set: () => undefined });
+      return { ...workspace, session };
+    }],
     ["empty publishers", async () => ({ ...(await workspaceFixture()), publishers: [] })],
     ["too many publishers", async () => {
       const workspace = await workspaceFixture();
@@ -348,7 +434,7 @@ describe("AuthoringShell", () => {
     await screen.findByRole("heading", { name: "Forme authoring" });
     fireEvent.click(screen.getByRole("button", { name: "Review publication" }));
     fireEvent.click(screen.getByRole("button", { name: "Publish to GitHub Pages" }));
-    expect(await screen.findByText("Publication failed before its commit point.")).toBeInTheDocument();
+    expect(await screen.findByText("Publication state must be reconciled.")).toBeInTheDocument();
     expect(screen.queryByText(/secret/)).not.toBeInTheDocument();
   });
 
@@ -367,8 +453,16 @@ describe("AuthoringShell", () => {
       getOwnPropertyDescriptor() { throw new Error("/secret/proxy-trap"); },
     });
     render(<AuthoringShell host={host(async () => trapped)} />);
-    expect(await screen.findByText("The authoring workspace could not be opened.")).toBeInTheDocument();
+    expect(await screen.findByText("Workspace state could not be retired or verified safely. Reload before continuing.")).toBeInTheDocument();
     expect(screen.queryByText(/secret/)).not.toBeInTheDocument();
+  });
+
+  it("poisons the shell when a resolved workspace has no own retirement boundary", async () => {
+    const workspace = await workspaceFixture();
+    const malformed = { ...workspace, dispose: undefined } as unknown as AuthoringShellWorkspace;
+    render(<AuthoringShell host={host(async () => malformed)} />);
+    expect(await screen.findByText("Workspace state could not be retired or verified safely. Reload before continuing.")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Try again" })).not.toBeInTheDocument();
   });
 
   it("fails closed for sparse publisher arrays and synchronous disposal failure", async () => {
@@ -381,6 +475,37 @@ describe("AuthoringShell", () => {
       dispose: (() => { throw new Error("/secret/dispose-sync"); }) as AuthoringShellWorkspace["dispose"],
     };
     render(<AuthoringShell host={host(async () => malformed)} />);
+    expect(await screen.findByText("Workspace state could not be retired or verified safely. Reload before continuing.")).toBeInTheDocument();
+    expect(screen.queryByText(/secret/)).not.toBeInTheDocument();
+  });
+
+  it("snapshots an array length descriptor once instead of trusting proxy reads", async () => {
+    const workspace = await workspaceFixture();
+    let lengthReads = 0;
+    const publishers = new Proxy([workspace.publishers[0]!], {
+      get(target, key, receiver) {
+        if (key === "length") {
+          lengthReads += 1;
+          return lengthReads === 1 ? 1 : Number.MAX_SAFE_INTEGER;
+        }
+        return Reflect.get(target, key, receiver);
+      },
+    });
+    render(<AuthoringShell host={host(async () => ({ ...workspace, publishers }))} />);
+    expect(await screen.findByRole("heading", { name: "Forme authoring" })).toBeInTheDocument();
+    expect(screen.getAllByRole("option", { name: "GitHub Pages" })).toHaveLength(1);
+    expect(lengthReads).toBe(0);
+  });
+
+  it.each(["length", "0"])("fails closed when a publisher array %s descriptor trap fires", async (trappedKey) => {
+    const workspace = await workspaceFixture();
+    const publishers = new Proxy([workspace.publishers[0]!], {
+      getOwnPropertyDescriptor(target, key) {
+        if (key === trappedKey) throw new Error("/secret/array-descriptor");
+        return Reflect.getOwnPropertyDescriptor(target, key);
+      },
+    });
+    render(<AuthoringShell host={host(async () => ({ ...workspace, publishers }))} />);
     expect(await screen.findByText("The authoring workspace could not be opened.")).toBeInTheDocument();
     expect(screen.queryByText(/secret/)).not.toBeInTheDocument();
   });
@@ -446,6 +571,7 @@ describe("AuthoringShell", () => {
     publish
       .mockResolvedValueOnce({ outcome: "cancelled", revision, manifestSha256: null, targetId: "github-pages", diagnostics: [] })
       .mockResolvedValueOnce({ outcome: "failed", revision, manifestSha256: null, targetId: "github-pages", diagnostics: [{ severity: "error", code: "DEPLOY", message: "Reviewed deploy failure" }] })
+      .mockResolvedValueOnce({ outcome: "failed", revision, manifestSha256: DIGEST, targetId: "github-pages", diagnostics: [{ severity: "error", code: "DEPLOY", message: "Reviewed post-build failure" }] })
       .mockResolvedValueOnce({ outcome: "failed", revision, manifestSha256: null, targetId: "github-pages", diagnostics: [] })
       .mockResolvedValueOnce({ outcome: "indeterminate", revision, manifestSha256: DIGEST, targetId: "github-pages", diagnostics: [{ severity: "error", code: "UNCERTAIN", message: "Reconcile remote target" }] })
       .mockResolvedValueOnce({ outcome: "indeterminate", revision, manifestSha256: DIGEST, targetId: "github-pages", diagnostics: [] })
@@ -456,10 +582,11 @@ describe("AuthoringShell", () => {
     for (const expected of [
       "Publication was cancelled.",
       "Reviewed deploy failure",
+      "Reviewed post-build failure",
       "Publication failed.",
       "Reconcile remote target",
       "Publication state must be reconciled.",
-      "Publication failed before its commit point.",
+      "Publication state must be reconciled.",
     ]) {
       fireEvent.click(screen.getByRole("button", { name: "Review publication" }));
       fireEvent.click(screen.getByRole("button", { name: "Publish to GitHub Pages" }));
@@ -473,7 +600,6 @@ describe("AuthoringShell", () => {
     ["wrong target", (revision: string) => ({ outcome: "published", revision, manifestSha256: DIGEST, targetId: "other", diagnostics: [] })],
     ["invalid digest", (revision: string) => ({ outcome: "published", revision, manifestSha256: "digest", targetId: "github-pages", diagnostics: [] })],
     ["missing committed digest", (revision: string) => ({ outcome: "published", revision, manifestSha256: null, targetId: "github-pages", diagnostics: [] })],
-    ["uncommitted digest", (revision: string) => ({ outcome: "failed", revision, manifestSha256: DIGEST, targetId: "github-pages", diagnostics: [] })],
     ["unknown outcome", (revision: string) => ({ outcome: "spoofed", revision, manifestSha256: null, targetId: "github-pages", diagnostics: [] })],
     ["oversized diagnostic", (revision: string) => ({ outcome: "failed", revision, manifestSha256: null, targetId: "github-pages", diagnostics: [{ severity: "error", code: "DEPLOY", message: "x".repeat(2_049) }] })],
   ])("rejects a hostile publication result with %s", async (_name, attempt) => {
@@ -483,7 +609,7 @@ describe("AuthoringShell", () => {
     await screen.findByRole("heading", { name: "Forme authoring" });
     fireEvent.click(screen.getByRole("button", { name: "Review publication" }));
     fireEvent.click(screen.getByRole("button", { name: "Publish to GitHub Pages" }));
-    expect(await screen.findByText("Publication failed before its commit point.")).toBeInTheDocument();
+    expect(await screen.findByText("Publication state must be reconciled.")).toBeInTheDocument();
     expect(screen.queryByText(/x{100}/)).not.toBeInTheDocument();
   });
 
@@ -574,6 +700,34 @@ describe("AuthoringShell", () => {
     expect(screen.queryByText(/secret/)).not.toBeInTheDocument();
   });
 
+  it("poisons the workspace when a committed mutation cannot be resnapshotted", async () => {
+    const workspace = await workspaceFixture();
+    const raw = workspace.session;
+    let projectReads = 0;
+    const changing = {
+      get project() {
+        projectReads += 1;
+        if (projectReads > 1) throw new Error("/secret/post-commit-getter");
+        return raw.project;
+      },
+      get canUndo() { return raw.canUndo; },
+      get canRedo() { return raw.canRedo; },
+      get storageRevision() { return raw.storageRevision; },
+      dispatch: raw.dispatch.bind(raw),
+      dispatchAtRevision: raw.dispatchAtRevision.bind(raw),
+      undo: raw.undo.bind(raw),
+      redo: raw.redo.bind(raw),
+    } satisfies AuthoringSession;
+    render(<AuthoringShell host={host(async () => ({ ...workspace, session: changing }))} />);
+    await screen.findByRole("heading", { name: "Forme authoring" });
+    fireEvent.change(screen.getByLabelText("Site title"), { target: { value: "Committed title" } });
+    fireEvent.click(screen.getByRole("button", { name: "Save site settings" }));
+    expect(await screen.findByText("Workspace state could not be retired or verified safely. Reload before continuing.")).toBeInTheDocument();
+    expect(raw.project.title).toBe("Committed title");
+    expect(screen.queryByRole("button", { name: "Save site settings" })).not.toBeInTheDocument();
+    expect(screen.queryByText(/secret/)).not.toBeInTheDocument();
+  });
+
   it("invokes the document identity callback without workspace authority", async () => {
     const workspace = await workspaceFixture();
     let receiver: unknown = Symbol("unset");
@@ -610,6 +764,38 @@ describe("AuthoringShell", () => {
     await waitFor(() => expect(screen.queryByText("Preview is ready.")).not.toBeInTheDocument());
   });
 
+  it("retires the previous workspace before opening its replacement", async () => {
+    let finishRetirement!: () => void;
+    const retirement = new Promise<void>((resolve) => { finishRetirement = resolve; });
+    const first = await workspaceFixture({ dispose: vi.fn(async () => await retirement) });
+    const second = await workspaceFixture({ previewUrl: "http://localhost:4998/serialized/" });
+    const openSecond = vi.fn(async () => second);
+    const view = render(<AuthoringShell host={host(async () => first)} />);
+    await screen.findByRole("heading", { name: "Forme authoring" });
+
+    view.rerender(<AuthoringShell host={host(openSecond)} />);
+    await waitFor(() => expect(first.dispose).toHaveBeenCalledOnce());
+    expect(openSecond).not.toHaveBeenCalled();
+    finishRetirement();
+    expect(await screen.findByTitle("Site preview")).toHaveAttribute("src", second.previewUrl);
+    expect(openSecond).toHaveBeenCalledOnce();
+  });
+
+  it("poisons an active replacement when stale workspace retirement fails", async () => {
+    let resolveStale!: (workspace: AuthoringShellWorkspace) => void;
+    const stalePending = new Promise<AuthoringShellWorkspace>((resolve) => { resolveStale = resolve; });
+    const stale = await workspaceFixture({ dispose: vi.fn(async () => { throw new Error("/secret/stale-retirement"); }) });
+    const active = await workspaceFixture({ previewUrl: "http://localhost:4997/active/" });
+    const view = render(<AuthoringShell host={host(async () => await stalePending)} />);
+    view.rerender(<AuthoringShell host={host(async () => active)} />);
+    expect(await screen.findByTitle("Site preview")).toHaveAttribute("src", active.previewUrl);
+
+    resolveStale(stale);
+    expect(await screen.findByText("Workspace state could not be retired or verified safely. Reload before continuing.")).toBeInTheDocument();
+    await waitFor(() => expect(active.dispose).toHaveBeenCalledOnce());
+    expect(screen.queryByText(/secret/)).not.toBeInTheDocument();
+  });
+
   it("redacts workspace cleanup failure during replacement", async () => {
     const first = await workspaceFixture({
       dispose: vi.fn(async () => { throw new Error("/secret/cleanup"); }),
@@ -618,7 +804,8 @@ describe("AuthoringShell", () => {
     const view = render(<AuthoringShell host={host(async () => first)} />);
     await screen.findByRole("heading", { name: "Forme authoring" });
     view.rerender(<AuthoringShell host={host(async () => second)} />);
-    expect(await screen.findByText("Workspace cleanup did not complete; reload before continuing.")).toBeInTheDocument();
+    expect(await screen.findByText("Workspace state could not be retired or verified safely. Reload before continuing.")).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Forme authoring" })).not.toBeInTheDocument();
     expect(screen.queryByText(/secret/)).not.toBeInTheDocument();
   });
 
@@ -674,5 +861,26 @@ describe("AuthoringShell", () => {
     resolve(workspace);
     await waitFor(() => expect(workspace.preview.dispose).toHaveBeenCalledOnce());
     expect(workspace.publishers[0]!.dispose).toHaveBeenCalledOnce();
+  });
+
+  it("poisons the shell when stale created-workspace retirement fails while mounted", async () => {
+    let resolve!: (workspace: AuthoringShellWorkspace) => void;
+    const pending = new Promise<AuthoringShellWorkspace>((done) => { resolve = done; });
+    const stale = await workspaceFixture({
+      dispose: vi.fn(async () => { throw new Error("/secret/create-retirement"); }),
+    });
+    const active = await workspaceFixture({ previewUrl: "http://localhost:4996/active-after-create/" });
+    const firstHost = host(async () => null, async () => await pending);
+    const view = render(<AuthoringShell host={firstHost} />);
+    await screen.findByRole("heading", { name: "Create your Forme site" });
+    fireEvent.change(screen.getByLabelText("Site title"), { target: { value: "Stale site" } });
+    fireEvent.click(screen.getByRole("button", { name: "Create site" }));
+    view.rerender(<AuthoringShell host={host(async () => active)} />);
+    expect(await screen.findByTitle("Site preview")).toHaveAttribute("src", active.previewUrl);
+
+    resolve(stale);
+    expect(await screen.findByText("Workspace state could not be retired or verified safely. Reload before continuing.")).toBeInTheDocument();
+    await waitFor(() => expect(active.dispose).toHaveBeenCalledOnce());
+    expect(screen.queryByText(/secret/)).not.toBeInTheDocument();
   });
 });

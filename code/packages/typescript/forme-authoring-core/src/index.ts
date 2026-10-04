@@ -10,6 +10,7 @@
 export {
   canonicalAuthoringProject,
   createAuthoringProject,
+  validateAuthoringManifestSha256,
   validateAuthoringProject,
   validateAuthoringRevision,
 } from "./project.js";

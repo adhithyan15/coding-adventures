@@ -43,12 +43,22 @@ from this package; `required_capabilities.json` remains empty.
 - Publication shows the complete reviewed target and destination, then
   requires a separate confirmation action and accepts only an exact-revision,
   exact-target result with a valid manifest digest.
+- A malformed or rejected publisher settlement is conservatively reported as
+  indeterminate because the shell cannot prove whether an external commit
+  occurred; only a validated coordinator result may claim a pre-commit failure.
 - Host rejections and malformed values become fixed user-facing failures;
   adapter details never reach the DOM.
 - Loading and creation are abortable. A synchronous action token rejects
   overlapping create, preview, and publish actions before React state settles.
-- Workspace-level disposal is shared by failed admission, replacement, and
-  late completion after unmount; disposal failures remain fixed and redacted.
+- A session mutation is not considered safely reflected until the shell can
+  resnapshot the committed project, history flags, and storage revision. If
+  that resnapshot fails, the workspace is poisoned and all interaction is
+  removed until the product reloads from durable state.
+- Workspace replacement is serialized behind successful retirement of the
+  previous workspace. Workspace-level disposal is also shared by failed
+  admission and late completion; a missing, rejected, or stale retirement
+  boundary poisons the shell, retires any active replacement, and requires a
+  reload rather than allowing possibly overlapping host graphs.
 
 ## Verification
 
@@ -56,4 +66,4 @@ The test suite covers first run, editor composition, preview and publication
 outcomes, complete target review, retry, hostile admission data, loopback URL
 restrictions, synchronous throws, hostile action results, overlapping actions,
 stale async settlement, session snapshot isolation, and shared disposal.
-Coverage exceeds 95% statements and lines and 90% branches.
+Coverage meets 95% statements, lines, and functions and 90% branches.

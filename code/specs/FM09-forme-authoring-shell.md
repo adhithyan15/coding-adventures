@@ -410,9 +410,19 @@ build identity, and bounded diagnostics before rendering it. Publication
 renders the selected target label and destination, requires a separate
 confirmation action, admits only one action synchronously, and validates the
 returned outcome, revision, target identity, manifest digest, and bounded
-diagnostics. Unmount, workspace replacement, or failed admission invokes the
+diagnostics. A malformed or rejected publisher settlement is indeterminate
+because the shell cannot prove whether an external commit occurred; only a
+validated coordinator result may claim a known pre-commit failure. Unmount,
+workspace replacement, or failed admission invokes the
 captured workspace disposal boundary exactly once and observes the same
-settlement; the host owns coordinator retirement behind that boundary.
+settlement; replacement does not open its next host graph until prior
+retirement succeeds. A missing, rejected, or stale retirement settlement
+poisons the shell, retires any active replacement, removes all interaction,
+and requires reload. Likewise, a session mutation is not safely reflected
+until the shell resnapshots the committed project, history flags, and storage
+revision; a post-commit snapshot failure poisons the workspace so a stale
+facade cannot accept later work. The host owns coordinator retirement behind
+that boundary.
 
 FM-B068 then packages that shell as the default local desktop product. Tauri
 remains the target unless the packaging slice documents and reviews a
