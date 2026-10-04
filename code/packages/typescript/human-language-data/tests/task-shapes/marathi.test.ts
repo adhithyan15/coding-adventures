@@ -114,4 +114,54 @@ describe("Marathi task-shape inventories", () => {
     expect(Object.values(inventory.passRule.independentSkillThresholds)).toEqual([0.6, 0.6, 0.6, 0.6]);
     expect(inventory.passRule).toMatchObject({ maximumPoints: 400, passPoints: 240 });
   });
+
+  it("makes B1 an exact 45/35/45/15-minute four-paper contract", () => {
+    const inventory = loadTaskShapeInventory("marathi", "B1");
+
+    expect(inventory.target).toEqual({
+      name: "Coding Adventures Marathi B1 Assessment — project-defined equivalent",
+      basis: "project-defined",
+    });
+    expect(inventory.administration).toMatchObject({
+      writtenMinutes: 125,
+      speakingMinutes: 15,
+      speakingPreparationMinutes: 10,
+    });
+    expect(inventory.sections.map((section) => section.minutes)).toEqual([45, 35, 45, 15]);
+    expect(inventory.sections.map((section) => section.parts.map((part) => part.items))).toEqual([
+      [7, 7, 7, 7],
+      [7, 6, 6, 6],
+      [1, 1],
+      [5, 1, 1, 4],
+    ]);
+
+    const [reading, listening, writing, speaking] = inventory.sections;
+    expect(reading?.parts.reduce((sum, part) => sum + (part.stimulusLength?.minimum ?? 0), 0)).toBe(1100);
+    expect(reading?.parts.reduce((sum, part) => sum + (part.stimulusLength?.maximum ?? 0), 0)).toBe(1400);
+    expect(listening?.parts.every((part) =>
+      part.promptModes.includes("recorded Marathi at 130-150 words per minute")
+    )).toBe(true);
+    expect(listening?.parts.map((part) => part.replayCount)).toEqual([2, 2, 1, 1]);
+    expect(writing?.parts.map((part) => part.responseLength)).toEqual([
+      { unit: "words", minimum: 50, maximum: 70, approximate: false },
+      { unit: "words", minimum: 130, maximum: 170, approximate: false },
+    ]);
+    expect(writing?.parts.every((part) =>
+      ["copyable answer model", "romanization", "dictionary", "translator", "spell-checker"]
+        .every((aid) => part.aids.forbidden.includes(aid))
+    )).toBe(true);
+    expect(speaking?.parts[1]?.responseLength).toEqual({
+      unit: "seconds",
+      minimum: 150,
+      maximum: 180,
+      approximate: false,
+    });
+
+    const paperPoints = inventory.sections.map((section) =>
+      section.parts.reduce((sum, part) => sum + (part.scoring.maxRawPoints ?? 0), 0),
+    );
+    expect(paperPoints).toEqual([100, 100, 100, 100]);
+    expect(Object.values(inventory.passRule.independentSkillThresholds)).toEqual([0.6, 0.6, 0.6, 0.6]);
+    expect(inventory.passRule).toMatchObject({ maximumPoints: 400, passPoints: 240 });
+  });
 });
