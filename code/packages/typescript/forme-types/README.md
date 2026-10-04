@@ -29,7 +29,7 @@ Asset                 → image / video / font / script / binary with metadata
 Document              → (content, style, interactivity) triple ready to render
 RenderedPage          → HTML + metadata + revision-aware input provenance
 PrintForme            → backend-neutral page for LaTeX / PDF / EPUB
-TerminalBuffer        → ANSI text + explicit degradation evidence
+TerminalBuffer        → ANSI text + content revision + source provenance + explicit degradation evidence
 RequestHandler        → per-request handler (Workers, Node, Deno, Bun)
 SearchIndex           → serialised search index
 Feed                  → RSS / Atom / JSON Feed / sitemap

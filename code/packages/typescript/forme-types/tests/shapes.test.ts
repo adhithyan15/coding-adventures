@@ -288,6 +288,7 @@ describe("TerminalBuffer", () => {
         islandId: "search" as IslandId,
         message: "terminal output preserves fallback content",
       }],
+      revision: SAMPLE_REV,
       provenance: {
         contributors: [{ identity: SAMPLE_ID, revision: SAMPLE_REV }],
         revision: SAMPLE_REV,

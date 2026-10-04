@@ -399,6 +399,8 @@ export interface TerminalBuffer {
   readonly usedStyle: readonly StyleRuleId[];
   readonly usedAssets: readonly LogicalId[];
   readonly degradations: readonly TerminalDegradation[];
+  /** Revision of the exact backend configuration and rendered payload. */
+  readonly revision: RevisionId;
   readonly provenance: OutputProvenance;
 }
 

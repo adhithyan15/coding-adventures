@@ -28,6 +28,8 @@ import {
   type ContentNode,
   type DeployArtifact,
   type JsonValue,
+  type LogicalId,
+  type RevisionId,
   type StyleRuleId,
   type TerminalBuffer,
   type TerminalDegradation,
@@ -107,6 +109,9 @@ const renderTerminal = defineStage({
     if (validated.document.rules.length > MAX_STYLE_RULES) {
       throw new Error(`forme-render-terminal: StyleDocument exceeds the ${MAX_STYLE_RULES}-rule limit`);
     }
+    for (const rule of validated.document.rules) {
+      if (!isSafeMetadataString(rule.id)) throw new Error("forme-render-terminal: StyleRule.id contains terminal presentation controls");
+    }
     if (validated.document.theme !== null) {
       throw new Error(`forme-render-terminal: StyleDocument theme ${JSON.stringify(validated.document.theme)} is unresolved`);
     }
@@ -122,7 +127,7 @@ const renderTerminal = defineStage({
       ctx.cancellation.throwIfCancelled();
       const node = snapshotContentNode(rawNode);
       if (node.route === null) {
-        throw new Error(`forme-render-terminal: ContentNode ${node.identity} (${node.sourcePath}) has no route`);
+        throw new Error(`forme-render-terminal: ContentNode ${node.identity} (${JSON.stringify(sanitizeMetadata(node.sourcePath))}) has no route`);
       }
 
       const usedRuleIds = collectUsedRules(node.document, validated.document.rules);
@@ -159,9 +164,9 @@ const renderTerminal = defineStage({
         if (warning.ruleId === undefined || warning.propertyKind === undefined) continue;
         state.degradations.push(Object.freeze({
           code: "style-property-dropped",
-          ruleId: warning.ruleId as StyleRuleId,
-          propertyKind: warning.propertyKind,
-          message: warning.message,
+          ruleId: sanitizeMetadata(warning.ruleId) as StyleRuleId,
+          propertyKind: sanitizeMetadata(warning.propertyKind),
+          message: sanitizeMetadata(warning.message),
         }));
       }
       const document = interactivity.get(node.route);
@@ -183,7 +188,7 @@ const renderTerminal = defineStage({
       });
       const provenance = Object.freeze({
         contributors: sourceProvenance.contributors,
-        revision: outputRevision,
+        revision: sourceProvenance.revision,
       });
       yield Object.freeze({
         route: node.route,
@@ -191,6 +196,7 @@ const renderTerminal = defineStage({
         usedStyle,
         usedAssets,
         degradations,
+        revision: outputRevision,
         provenance,
       }) satisfies TerminalBuffer;
     }
@@ -229,6 +235,7 @@ export const packageTerminal = defineStage({
       const ansiPath = `${root}/${relative}.ansi`;
       const evidencePath = `${root}/${relative}.degradations.json`;
       for (const path of [ansiPath, evidencePath]) {
+        if (path.length > 2_048) throw new Error("forme-render-terminal/package: generated artifact path exceeds the 2048-character portable limit");
         registerPortableFile(path, buffer.route, filePaths, directoryPaths);
       }
       const evidence = `${JSON.stringify(buffer.degradations, null, 2)}\n`;
@@ -358,9 +365,10 @@ function renderNode(node: Node, path: readonly number[], parent: MatchNode, stat
 }
 
 function renderRaw(format: string, value: string, path: readonly number[], block: boolean, state: RenderState): string {
+  const safeFormat = sanitizeMetadata(format);
   state.degradations.push(Object.freeze({
-    code: "raw-node-dropped", format, nodePath: Object.freeze([...path]),
-    message: `terminal backend extracted fallback text and dropped raw ${format} markup`,
+    code: "raw-node-dropped", format: safeFormat, nodePath: Object.freeze([...path]),
+    message: `terminal backend extracted fallback text and dropped raw ${safeFormat} markup`,
   }));
   if (format !== "html") return "";
   if (value.length > MAX_RAW_HTML_BYTES) throw new Error("forme-render-terminal: raw HTML exceeds the 1 MiB per-document limit");
@@ -389,7 +397,7 @@ function appendInteractivityDegradations(route: string, document: InteractivityD
       if (count !== 1) throw new Error(`forme-render-terminal: route ${JSON.stringify(route)} fallback id ${JSON.stringify(island.fallback.id)} has ${count} matches`);
     }
     state.degradations.push(Object.freeze({
-      code: "interactivity-dropped", islandId: island.id as never,
+      code: "interactivity-dropped", islandId: sanitizeMetadata(island.id) as never,
       message: "terminal backend preserves fallback content and drops executable island behavior",
     }));
   }
@@ -468,6 +476,7 @@ function snapshotJson(value: unknown, path: string, budget: SnapshotBudget, dept
     return value;
   }
   if (typeof value === "string") {
+    if (hasLoneSurrogate(value)) throw new TypeError(`forme-render-terminal: ${path} contains malformed Unicode`);
     budget.stringCodeUnits += value.length;
     if (budget.stringCodeUnits > budget.maxStringCodeUnits) throw new TypeError(`forme-render-terminal: ${path} exceeds the string limit`);
     return value;
@@ -565,25 +574,27 @@ function validateDocumentNode(value: unknown, path: string, depth: number): void
 function snapshotTerminalBuffer(value: unknown): TerminalBuffer {
   const safe = snapshotJson(value, "TerminalBuffer", snapshotBudget(50_000, MAX_TERMINAL_TEXT_BYTES + MAX_EVIDENCE_BYTES)) as unknown;
   const buffer = recordValue(safe, "TerminalBuffer");
-  assertOnlyKeys(buffer, ["route", "text", "usedStyle", "usedAssets", "degradations", "provenance"], "TerminalBuffer");
+  assertOnlyKeys(buffer, ["route", "text", "usedStyle", "usedAssets", "degradations", "revision", "provenance"], "TerminalBuffer");
   if (typeof buffer.route !== "string" || typeof buffer.text !== "string") throw new TypeError("forme-render-terminal/package: TerminalBuffer route/text is invalid");
+  validateTerminalText(buffer.text);
   const styles = arrayValue(buffer.usedStyle, "TerminalBuffer.usedStyle");
-  if (styles.some(value => typeof value !== "string")) throw new TypeError("forme-render-terminal/package: TerminalBuffer.usedStyle is invalid");
+  if (styles.some(value => typeof value !== "string" || !isSafeMetadataString(value))) throw new TypeError("forme-render-terminal/package: TerminalBuffer.usedStyle is invalid");
   const assets = arrayValue(buffer.usedAssets, "TerminalBuffer.usedAssets");
   if (assets.some(value => typeof value !== "string" || !isLogicalIdShape(value))) throw new TypeError("forme-render-terminal/package: TerminalBuffer.usedAssets is invalid");
   const degradations = arrayValue(buffer.degradations, "TerminalBuffer.degradations");
   for (let index = 0; index < degradations.length; index++) validateDegradation(degradations[index], `TerminalBuffer.degradations[${index}]`);
+  if (typeof buffer.revision !== "string" || !isRevisionIdShape(buffer.revision)) throw new TypeError("forme-render-terminal/package: TerminalBuffer.revision is invalid");
   validateOutputProvenance(buffer.provenance, "TerminalBuffer.provenance");
   return safe as TerminalBuffer;
 }
 
 function validateDegradation(value: unknown, path: string): void {
   const item = recordValue(value, path);
-  if (typeof item.code !== "string" || typeof item.message !== "string") throw new TypeError(`forme-render-terminal/package: ${path} is invalid`);
+  if (typeof item.code !== "string" || typeof item.message !== "string" || !isSafeMetadataString(item.message)) throw new TypeError(`forme-render-terminal/package: ${path} is invalid`);
   switch (item.code) {
-    case "style-property-dropped": assertOnlyKeys(item, ["code", "ruleId", "propertyKind", "message"], path); if (typeof item.ruleId !== "string" || typeof item.propertyKind !== "string") throw new TypeError(`forme-render-terminal/package: ${path} is invalid`); break;
-    case "interactivity-dropped": assertOnlyKeys(item, ["code", "islandId", "message"], path); if (item.islandId !== null && typeof item.islandId !== "string") throw new TypeError(`forme-render-terminal/package: ${path} is invalid`); break;
-    case "raw-node-dropped": assertOnlyKeys(item, ["code", "format", "nodePath", "message"], path); if (typeof item.format !== "string") throw new TypeError(`forme-render-terminal/package: ${path} is invalid`); validateIndexPath(item.nodePath, `${path}.nodePath`); break;
+    case "style-property-dropped": assertOnlyKeys(item, ["code", "ruleId", "propertyKind", "message"], path); if (typeof item.ruleId !== "string" || !isSafeMetadataString(item.ruleId) || typeof item.propertyKind !== "string" || !isSafeMetadataString(item.propertyKind)) throw new TypeError(`forme-render-terminal/package: ${path} is invalid`); break;
+    case "interactivity-dropped": assertOnlyKeys(item, ["code", "islandId", "message"], path); if (item.islandId !== null && (typeof item.islandId !== "string" || !isSafeMetadataString(item.islandId))) throw new TypeError(`forme-render-terminal/package: ${path} is invalid`); break;
+    case "raw-node-dropped": assertOnlyKeys(item, ["code", "format", "nodePath", "message"], path); if (typeof item.format !== "string" || !isSafeMetadataString(item.format)) throw new TypeError(`forme-render-terminal/package: ${path} is invalid`); validateIndexPath(item.nodePath, `${path}.nodePath`); break;
     case "asset-reference-dropped": assertOnlyKeys(item, ["code", "asset", "nodePath", "message"], path); if (typeof item.asset !== "string" || !isLogicalIdShape(item.asset)) throw new TypeError(`forme-render-terminal/package: ${path} is invalid`); validateIndexPath(item.nodePath, `${path}.nodePath`); break;
     default: throw new TypeError(`forme-render-terminal/package: ${path}.code is unknown`);
   }
@@ -599,11 +610,22 @@ function validateOutputProvenance(value: unknown, path: string): void {
   assertOnlyKeys(provenance, ["contributors", "revision"], path);
   if (typeof provenance.revision !== "string" || !isRevisionIdShape(provenance.revision)) throw new TypeError(`forme-render-terminal/package: ${path}.revision is invalid`);
   const contributors = arrayValue(provenance.contributors, `${path}.contributors`);
+  const checked: Array<{ identity: LogicalId; revision: RevisionId }> = [];
   for (let index = 0; index < contributors.length; index++) {
     const contributor = recordValue(contributors[index], `${path}.contributors[${index}]`);
     assertOnlyKeys(contributor, ["identity", "revision"], `${path}.contributors[${index}]`);
     if (typeof contributor.identity !== "string" || !isLogicalIdShape(contributor.identity) || typeof contributor.revision !== "string" || !isRevisionIdShape(contributor.revision)) throw new TypeError(`forme-render-terminal/package: ${path}.contributors[${index}] is invalid`);
+    checked.push({ identity: contributor.identity as LogicalId, revision: contributor.revision as RevisionId });
   }
+  const canonical = createOutputProvenance(checked);
+  if (
+    provenance.revision !== canonical.revision ||
+    contributors.length !== canonical.contributors.length ||
+    canonical.contributors.some((contributor, index) => {
+      const original = contributors[index] as Record<string, unknown>;
+      return original.identity !== contributor.identity || original.revision !== contributor.revision;
+    })
+  ) throw new TypeError(`forme-render-terminal/package: ${path} is not canonical`);
 }
 
 function recordValue(value: unknown, path: string): Record<string, unknown> {
@@ -723,6 +745,45 @@ function safeText(value: string): string {
     .replace(/\r\n?/g, "\n")
     .replace(/[\u0000-\u0008\u000b-\u001f\u007f-\u009f]/g, "")
     .replace(/\p{Cf}/gu, "");
+}
+
+function sanitizeMetadata(value: string): string {
+  return safeText(value).replace(/[\n\t]/g, "");
+}
+
+function isSafeMetadataString(value: string): boolean {
+  return !/[\p{Cc}\p{Cf}\p{Cs}]/u.test(value);
+}
+
+function validateTerminalText(value: string): void {
+  const sgr = /\u001b\[[0-9]+(?:;[0-9]+)*m/y;
+  for (let index = 0; index < value.length;) {
+    if (value.charCodeAt(index) === 0x1b) {
+      sgr.lastIndex = index;
+      if (sgr.exec(value) === null) throw new TypeError("forme-render-terminal/package: TerminalBuffer.text contains a non-SGR terminal control sequence");
+      index = sgr.lastIndex;
+      continue;
+    }
+    const point = value.codePointAt(index)!;
+    const character = String.fromCodePoint(point);
+    if (character !== "\n" && character !== "\t" && /[\p{Cc}\p{Cf}\p{Cs}]/u.test(character)) {
+      throw new TypeError("forme-render-terminal/package: TerminalBuffer.text contains authored terminal presentation controls");
+    }
+    index += character.length;
+  }
+}
+
+function hasLoneSurrogate(value: string): boolean {
+  for (let index = 0; index < value.length; index++) {
+    const code = value.charCodeAt(index);
+    if (code >= 0xd800 && code <= 0xdbff) {
+      if (index + 1 >= value.length) return true;
+      const next = value.charCodeAt(index + 1);
+      if (next < 0xdc00 || next > 0xdfff) return true;
+      index++;
+    } else if (code >= 0xdc00 && code <= 0xdfff) return true;
+  }
+  return false;
 }
 
 function boundedConcat(parts: readonly string[]): string {

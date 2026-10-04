@@ -5,7 +5,8 @@
 ### Added
 
 - `TerminalBuffer` v1.0 and `TerminalDegradation` make ANSI output,
-  backend losses, exact style usage, assets, and provenance first-class.
+  backend losses, exact style usage, assets, a content/config revision, and
+  canonical source provenance first-class.
 - `AssetRef.sourcePath` optionally carries the normalized storage-root-relative
   locator produced by filesystem reference resolvers.
 - `AssetRef.urlSuffix` preserves authored query strings and fragments across

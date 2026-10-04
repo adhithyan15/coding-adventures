@@ -20,10 +20,12 @@ import {
   type StageContext,
 } from "@coding-adventures/forme-stage";
 import { emptyStyleDocument, sel, styleRuleId } from "@coding-adventures/forme-style-ir";
+import { createOutputProvenance } from "@coding-adventures/forme-identity";
 import renderTerminal, { packageTerminal } from "../src/index.js";
 
 const ID = "00000000-0000-7000-8000-000000000001" as ContentNode["identity"];
 const REV = ("blake2b:" + "1".repeat(64)) as ContentNode["revision"];
+const PROVENANCE = createOutputProvenance([{ identity: ID, revision: REV }]);
 
 function context(): StageContext {
   return {
@@ -105,6 +107,8 @@ describe("render-terminal stage", () => {
       for await (const _ of renderTerminal.run(values([input]) as never, { style } as never, context()) as AsyncIterable<unknown>) { /* drain */ }
     };
     await expect(consume(unrouted)).rejects.toThrow(/no route/);
+    const hostilePath = { ...unrouted, sourcePath: "bad\u001b]52;c;x\u0007\u202E.md" };
+    await expect(consume(hostilePath)).rejects.toThrow(/bad\]52;c;x\.md/);
     await expect(consume(node(), { ...theme, theme: "missing" })).rejects.toThrow(/unresolved/);
   });
 
@@ -251,6 +255,12 @@ describe("render-terminal stage", () => {
     const results: TerminalBuffer[] = [];
     for await (const item of renderTerminal.run(values([controlled]) as never, {} as never, context()) as AsyncIterable<TerminalBuffer>) results.push(item);
     expect(results[0]!.text).toBe("before\noverwriteafter\n");
+    const rawFormat = { ...node(), assetRefs: [], document: { type: "document", children: [
+      { type: "raw_block", format: "ht\u001bml\u202E", value: "ignored" },
+    ] } } as ContentNode;
+    const rawResults: TerminalBuffer[] = [];
+    for await (const item of renderTerminal.run(values([rawFormat]) as never, {} as never, context()) as AsyncIterable<TerminalBuffer>) rawResults.push(item);
+    expect(rawResults[0]!.degradations[0]).toMatchObject({ format: "html", message: expect.not.stringMatching(/[\u001b\u202e]/) });
   });
 
   it("binds output provenance to style and terminal bytes", async () => {
@@ -259,7 +269,8 @@ describe("render-terminal stage", () => {
     for await (const item of renderTerminal.run(values([node()]) as never, {} as never, context()) as AsyncIterable<TerminalBuffer>) plain.push(item);
     for await (const item of renderTerminal.run(values([node()]) as never, { style: theme } as never, context()) as AsyncIterable<TerminalBuffer>) styled.push(item);
     expect(styled[0]!.text).not.toBe(plain[0]!.text);
-    expect(styled[0]!.provenance.revision).not.toBe(plain[0]!.provenance.revision);
+    expect(styled[0]!.revision).not.toBe(plain[0]!.revision);
+    expect(styled[0]!.provenance).toEqual(plain[0]!.provenance);
     const plainArtifact = await packageTerminal.run(values(plain) as never, {} as never, context()) as any;
     const styledArtifact = await packageTerminal.run(values(styled) as never, {} as never, context()) as any;
     expect(styledArtifact.manifest.buildId).not.toBe(plainArtifact.manifest.buildId);
@@ -283,7 +294,7 @@ describe("package-terminal stage", () => {
   it("rejects duplicate routes and unsafe roots", async () => {
     const buffer: TerminalBuffer = {
       route: "/same", text: "x", usedStyle: [], usedAssets: [], degradations: [],
-      provenance: { contributors: [{ identity: ID, revision: REV }], revision: REV },
+      revision: REV, provenance: PROVENANCE,
     };
     await expect(packageTerminal.run(values([buffer, buffer]) as never, {} as never, context())).rejects.toThrow(/duplicate route/);
     await expect(packageTerminal.run(values([buffer]) as never, { root: "../escape" } as never, context())).rejects.toThrow(/root/);
@@ -294,13 +305,15 @@ describe("package-terminal stage", () => {
     await expect(packageTerminal.run(values([{ ...buffer, route: "/Same" }, { ...buffer, route: "/same" }]) as never, {} as never, context())).rejects.toThrow(/portable path collision/);
     await expect(packageTerminal.run(values([{ ...buffer, route: "/foo" }, { ...buffer, route: "/foo.ansi/bar" }]) as never, {} as never, context())).rejects.toThrow(/portable path collision/);
     await expect(packageTerminal.run(values([buffer]) as never, { root: "NUL" } as never, context())).rejects.toThrow(/unsafe portable path/);
+    const longRoot = Array(10).fill("r".repeat(203)).join("/");
+    await expect(packageTerminal.run(values([buffer]) as never, { root: longRoot } as never, context())).rejects.toThrow(/2048-character/);
     await expect(packageTerminal.run(values([buffer]) as never, { extra: true } as never, context())).rejects.toThrow(/unknown/);
   });
 
   it("snapshots hostile buffers and enforces per-file limits before packaging", async () => {
     const buffer: TerminalBuffer = {
       route: "/safe", text: "x", usedStyle: [], usedAssets: [], degradations: [],
-      provenance: { contributors: [{ identity: ID, revision: REV }], revision: REV },
+      revision: REV, provenance: PROVENANCE,
     };
     const hostile: any = { ...buffer, degradations: [{ code: "raw-node-dropped", format: "html", nodePath: [], message: "x" }] };
     Object.defineProperty(hostile.degradations[0], "toJSON", { enumerable: true, value: () => { throw new Error("must not run"); } });
@@ -310,6 +323,10 @@ describe("package-terminal stage", () => {
     await expect(packageTerminal.run(values([{ ...buffer, usedAssets: ["bad"] }]) as never, {} as never, context())).rejects.toThrow(/usedAssets/);
     await expect(packageTerminal.run(values([{ ...buffer, degradations: [{ code: "unknown", message: "x" }] }]) as never, {} as never, context())).rejects.toThrow(/code is unknown/);
     await expect(packageTerminal.run(values([{ ...buffer, provenance: { ...buffer.provenance, revision: "bad" } }]) as never, {} as never, context())).rejects.toThrow(/revision is invalid/);
+    await expect(packageTerminal.run(values([{ ...buffer, provenance: { contributors: PROVENANCE.contributors, revision: REV } }]) as never, {} as never, context())).rejects.toThrow(/not canonical/);
+    await expect(packageTerminal.run(values([{ ...buffer, text: "safe\u001b]52;c;bad\u0007" }]) as never, {} as never, context())).rejects.toThrow(/non-SGR/);
+    await expect(packageTerminal.run(values([{ ...buffer, text: "safe\rspoof" }]) as never, {} as never, context())).rejects.toThrow(/presentation controls/);
+    await expect(packageTerminal.run(values([{ ...buffer, text: "\ud800" }]) as never, {} as never, context())).rejects.toThrow(/malformed Unicode/);
   });
 
   it("supports an empty default-root artifact", async () => {
