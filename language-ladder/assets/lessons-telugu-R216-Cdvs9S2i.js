@@ -1,0 +1,106 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TE-R216-first-pass-words-from-chapters-208-211
+spine_node: SPINE-ASK-LOCATION
+sequence: 9960
+chapter: 216
+type: review
+headword: (dialogue)
+gloss: first pass over chapters 208-211
+concept_tag: REVIEW
+prerequisites: [TE-C208-atuku, TE-C208-pukkilincu, TE-C208-canipovu, TE-C208-puttu, TE-C208-edurkonu, TE-C209-durada, TE-C209-narsu, TE-C209-pariksa, TE-C209-vaidyam, TE-C209-nuduru, TE-C210-anumanam, TE-C210-trpti, TE-C210-nirasa, TE-C210-visugu, TE-C210-benga, TE-C211-timmiri, TE-C211-ekkillu, TE-C211-guraka, TE-C211-vadadebba, TE-C211-aviri, TE-C216-bekari, TE-C216-selunu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TE-LEX-C208-KRIYA208-01, TE-LEX-C208-KRIYA208-02, TE-LEX-C208-KRIYA208-03, TE-LEX-C208-KRIYA208-04, TE-LEX-C208-KRIYA208-05, TE-LEX-C209-AROGYAM209-01, TE-LEX-C209-AROGYAM209-02, TE-LEX-C209-AROGYAM209-03, TE-LEX-C209-AROGYAM209-04, TE-LEX-C209-AROGYAM209-05, TE-LEX-C210-AROGYAM210-01, TE-LEX-C210-AROGYAM210-02, TE-LEX-C210-AROGYAM210-03, TE-LEX-C210-AROGYAM210-04, TE-LEX-C210-AROGYAM210-05, TE-LEX-C211-AROGYAM211-01, TE-LEX-C211-AROGYAM211-02, TE-LEX-C211-AROGYAM211-03, TE-LEX-C211-AROGYAM211-04, TE-LEX-C211-AROGYAM211-05, TE-LEX-C216-STHALAM216-04, TE-LEX-C216-STHALAM216-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TE-LEX-C208-KRIYA208-01, TE-LEX-C208-KRIYA208-02, TE-LEX-C208-KRIYA208-03, TE-LEX-C208-KRIYA208-04, TE-LEX-C208-KRIYA208-05, TE-LEX-C209-AROGYAM209-01, TE-LEX-C209-AROGYAM209-02, TE-LEX-C209-AROGYAM209-03, TE-LEX-C209-AROGYAM209-04, TE-LEX-C209-AROGYAM209-05, TE-LEX-C210-AROGYAM210-01, TE-LEX-C210-AROGYAM210-02, TE-LEX-C210-AROGYAM210-03, TE-LEX-C210-AROGYAM210-04, TE-LEX-C210-AROGYAM210-05, TE-LEX-C211-AROGYAM211-01, TE-LEX-C211-AROGYAM211-02, TE-LEX-C211-AROGYAM211-03, TE-LEX-C211-AROGYAM211-04, TE-LEX-C211-AROGYAM211-05, TE-LEX-C216-STHALAM216-04, TE-LEX-C216-STHALAM216-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C208-atuku, TE-C208-pukkilincu, TE-C208-canipovu, TE-C208-puttu, TE-C208-edurkonu, TE-C209-durada, TE-C209-narsu, TE-C209-pariksa, TE-C209-vaidyam, TE-C209-nuduru, TE-C210-anumanam, TE-C210-trpti, TE-C210-nirasa, TE-C210-visugu, TE-C210-benga, TE-C211-timmiri, TE-C211-ekkillu, TE-C211-guraka, TE-C211-vadadebba, TE-C211-aviri, TE-C216-bekari, TE-C216-selunu]
+---
+
+# Words from chapters 208-211 — a first pass
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C216-STHALAM216-04, TE-LEX-C216-STHALAM216-05] -->
+
+[PAUSE 3s] Say the words for a bakery and a hair salon.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C208-KRIYA208-01, TE-LEX-C208-KRIYA208-02, TE-LEX-C208-KRIYA208-03, TE-LEX-C208-KRIYA208-04, TE-LEX-C208-KRIYA208-05, TE-LEX-C209-AROGYAM209-01, TE-LEX-C209-AROGYAM209-02, TE-LEX-C209-AROGYAM209-03, TE-LEX-C209-AROGYAM209-04, TE-LEX-C209-AROGYAM209-05, TE-LEX-C210-AROGYAM210-01, TE-LEX-C210-AROGYAM210-02, TE-LEX-C210-AROGYAM210-03, TE-LEX-C210-AROGYAM210-04, TE-LEX-C210-AROGYAM210-05, TE-LEX-C211-AROGYAM211-01, TE-LEX-C211-AROGYAM211-02, TE-LEX-C211-AROGYAM211-03, TE-LEX-C211-AROGYAM211-04, TE-LEX-C211-AROGYAM211-05, TE-LEX-C216-STHALAM216-04, TE-LEX-C216-STHALAM216-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to stick, to gargle, to die, to be born, to confront]
+- [YOU SAY: an itch, a nurse, a test, medical treatment, the forehead]
+- [YOU SAY: doubt, contentment, disappointment, boredom, pining]
+- [YOU SAY: numbness, hiccups, snoring, sunstroke, steam]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C208-KRIYA208-01, TE-LEX-C208-KRIYA208-02, TE-LEX-C208-KRIYA208-03, TE-LEX-C208-KRIYA208-04, TE-LEX-C208-KRIYA208-05, TE-LEX-C209-AROGYAM209-01, TE-LEX-C209-AROGYAM209-02, TE-LEX-C209-AROGYAM209-03, TE-LEX-C209-AROGYAM209-04, TE-LEX-C209-AROGYAM209-05, TE-LEX-C210-AROGYAM210-01, TE-LEX-C210-AROGYAM210-02, TE-LEX-C210-AROGYAM210-03, TE-LEX-C210-AROGYAM210-04, TE-LEX-C210-AROGYAM210-05, TE-LEX-C211-AROGYAM211-01, TE-LEX-C211-AROGYAM211-02, TE-LEX-C211-AROGYAM211-03, TE-LEX-C211-AROGYAM211-04, TE-LEX-C211-AROGYAM211-05, TE-LEX-C216-STHALAM216-04, TE-LEX-C216-STHALAM216-05] -->
+
+[PAUSE 3s] To stick? (**అతుకు**, *atuku*.) To gargle? (**పుక్కిలించు**, *pukkiliñcu*.) To die? (**చనిపోవు**, *canipōvu*.) To be born? (**పుట్టు**, *puṭṭu*.) To confront? (**ఎదుర్కొను**, *edurkonu*.) An itch? (**దురద**, *durada*.) A nurse? (**నర్సు**, *narsu*.) A test? (**పరీక్ష**, *parīkṣa*.) Medical treatment? (**వైద్యం**, *vaidyaṁ*.) The forehead? (**నుదురు**, *nuduru*.) Doubt? (**అనుమానం**, *anumānaṁ*.) Contentment? (**తృప్తి**, *tṛpti*.) Disappointment? (**నిరాశ**, *nirāśa*.) Boredom? (**విసుగు**, *visugu*.) Pining? (**బెంగ**, *beṅga*.) Numbness? (**తిమ్మిరి**, *timmiri*.) Hiccups? (**ఎక్కిళ్ళు**, *ekkiḷḷu*.) Snoring? (**గురక**, *guraka*.) Sunstroke? (**వడదెబ్బ**, *vaḍadebba*.) Steam? (**ఆవిరి**, *āviri*.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TE-R216-second-pass-words-from-chapters-212-216
+spine_node: SPINE-ASK-LOCATION
+sequence: 9970
+chapter: 216
+type: review
+headword: (dialogue)
+gloss: second pass over chapters 212-216
+concept_tag: REVIEW
+prerequisites: [TE-C212-tirika, TE-C212-ventane, TE-C212-civaraku, TE-C212-varaku, TE-C212-sankranti, TE-C213-akasmattuga, TE-C213-pade-pade, TE-C213-kasepu, TE-C213-sekanu, TE-C213-monna, TE-C214-bastandu, TE-C214-vimanasrayam, TE-C214-kudali, TE-C214-rajadhani, TE-C214-jilla, TE-C215-edari, TE-C215-banda, TE-C215-maidanam, TE-C215-thiyetaru, TE-C215-stediyam, TE-C216-snanapu-gadi, TE-C216-punadi, TE-C216-getu, TE-C216-bekari, TE-C216-selunu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TE-LEX-C212-SAMAYAM212-01, TE-LEX-C212-SAMAYAM212-02, TE-LEX-C212-SAMAYAM212-03, TE-LEX-C212-SAMAYAM212-04, TE-LEX-C212-SAMAYAM212-05, TE-LEX-C213-SAMAYAM213-01, TE-LEX-C213-SAMAYAM213-02, TE-LEX-C213-SAMAYAM213-03, TE-LEX-C213-SAMAYAM213-04, TE-LEX-C213-SAMAYAM213-05, TE-LEX-C214-STHALAM214-01, TE-LEX-C214-STHALAM214-02, TE-LEX-C214-STHALAM214-03, TE-LEX-C214-STHALAM214-04, TE-LEX-C214-STHALAM214-05, TE-LEX-C215-STHALAM215-01, TE-LEX-C215-STHALAM215-02, TE-LEX-C215-STHALAM215-03, TE-LEX-C215-STHALAM215-04, TE-LEX-C215-STHALAM215-05, TE-LEX-C216-STHALAM216-01, TE-LEX-C216-STHALAM216-02, TE-LEX-C216-STHALAM216-03, TE-LEX-C216-STHALAM216-04, TE-LEX-C216-STHALAM216-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [TE-LEX-C212-SAMAYAM212-01, TE-LEX-C212-SAMAYAM212-02, TE-LEX-C212-SAMAYAM212-03, TE-LEX-C212-SAMAYAM212-04, TE-LEX-C212-SAMAYAM212-05, TE-LEX-C213-SAMAYAM213-01, TE-LEX-C213-SAMAYAM213-02, TE-LEX-C213-SAMAYAM213-03, TE-LEX-C213-SAMAYAM213-04, TE-LEX-C213-SAMAYAM213-05, TE-LEX-C214-STHALAM214-01, TE-LEX-C214-STHALAM214-02, TE-LEX-C214-STHALAM214-03, TE-LEX-C214-STHALAM214-04, TE-LEX-C214-STHALAM214-05, TE-LEX-C215-STHALAM215-01, TE-LEX-C215-STHALAM215-02, TE-LEX-C215-STHALAM215-03, TE-LEX-C215-STHALAM215-04, TE-LEX-C215-STHALAM215-05, TE-LEX-C216-STHALAM216-01, TE-LEX-C216-STHALAM216-02, TE-LEX-C216-STHALAM216-03, TE-LEX-C216-STHALAM216-04, TE-LEX-C216-STHALAM216-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C212-tirika, TE-C212-ventane, TE-C212-civaraku, TE-C212-varaku, TE-C212-sankranti, TE-C213-akasmattuga, TE-C213-pade-pade, TE-C213-kasepu, TE-C213-sekanu, TE-C213-monna, TE-C214-bastandu, TE-C214-vimanasrayam, TE-C214-kudali, TE-C214-rajadhani, TE-C214-jilla, TE-C215-edari, TE-C215-banda, TE-C215-maidanam, TE-C215-thiyetaru, TE-C215-stediyam, TE-C216-snanapu-gadi, TE-C216-punadi, TE-C216-getu, TE-C216-bekari, TE-C216-selunu]
+---
+
+# Words from chapters 212-216 — a second pass
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C212-SAMAYAM212-01, TE-LEX-C212-SAMAYAM212-02] -->
+
+[PAUSE 3s] Say the words for free time and immediately.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C212-SAMAYAM212-01, TE-LEX-C212-SAMAYAM212-02, TE-LEX-C212-SAMAYAM212-03, TE-LEX-C212-SAMAYAM212-04, TE-LEX-C212-SAMAYAM212-05, TE-LEX-C213-SAMAYAM213-01, TE-LEX-C213-SAMAYAM213-02, TE-LEX-C213-SAMAYAM213-03, TE-LEX-C213-SAMAYAM213-04, TE-LEX-C213-SAMAYAM213-05, TE-LEX-C214-STHALAM214-01, TE-LEX-C214-STHALAM214-02, TE-LEX-C214-STHALAM214-03, TE-LEX-C214-STHALAM214-04, TE-LEX-C214-STHALAM214-05, TE-LEX-C215-STHALAM215-01, TE-LEX-C215-STHALAM215-02, TE-LEX-C215-STHALAM215-03, TE-LEX-C215-STHALAM215-04, TE-LEX-C215-STHALAM215-05, TE-LEX-C216-STHALAM216-01, TE-LEX-C216-STHALAM216-02, TE-LEX-C216-STHALAM216-03, TE-LEX-C216-STHALAM216-04, TE-LEX-C216-STHALAM216-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: free time, immediately, finally, until, Sankranti]
+- [YOU SAY: suddenly, again and again, a little while, a second, the day before yesterday]
+- [YOU SAY: a bus stand, an airport, a junction, a capital city, a district]
+- [YOU SAY: a desert, a rock, an open ground, a theatre, a stadium]
+- [YOU SAY: a bathroom, a foundation, a gate, a bakery, a hair salon]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C212-SAMAYAM212-01, TE-LEX-C212-SAMAYAM212-02, TE-LEX-C212-SAMAYAM212-03, TE-LEX-C212-SAMAYAM212-04, TE-LEX-C212-SAMAYAM212-05, TE-LEX-C213-SAMAYAM213-01, TE-LEX-C213-SAMAYAM213-02, TE-LEX-C213-SAMAYAM213-03, TE-LEX-C213-SAMAYAM213-04, TE-LEX-C213-SAMAYAM213-05, TE-LEX-C214-STHALAM214-01, TE-LEX-C214-STHALAM214-02, TE-LEX-C214-STHALAM214-03, TE-LEX-C214-STHALAM214-04, TE-LEX-C214-STHALAM214-05, TE-LEX-C215-STHALAM215-01, TE-LEX-C215-STHALAM215-02, TE-LEX-C215-STHALAM215-03, TE-LEX-C215-STHALAM215-04, TE-LEX-C215-STHALAM215-05, TE-LEX-C216-STHALAM216-01, TE-LEX-C216-STHALAM216-02, TE-LEX-C216-STHALAM216-03, TE-LEX-C216-STHALAM216-04, TE-LEX-C216-STHALAM216-05] -->
+
+[PAUSE 3s] Free time? (**తీరిక**, *tīrika*.) Immediately? (**వెంటనే**, *veṇṭanē*.) Finally? (**చివరకు**, *civaraku*.) Until? (**వరకు**, *varaku*.) Sankranti? (**సంక్రాంతి**, *saṅkrānti*.) Suddenly? (**అకస్మాత్తుగా**, *akasmāttugā*.) Again and again? (**పదే పదే**, *padē padē*.) A little while? (**కాసేపు**, *kāsēpu*.) A second? (**సెకను**, *sekanu*.) The day before yesterday? (**మొన్న**, *monna*.) A bus stand? (**బస్టాండు**, *basṭāṇḍu*.) An airport? (**విమానాశ్రయం**, *vimānāśrayaṁ*.) A junction? (**కూడలి**, *kūḍali*.) A capital city? (**రాజధాని**, *rājadhāni*.) A district? (**జిల్లా**, *jillā*.) A desert? (**ఎడారి**, *eḍāri*.) A rock? (**బండ**, *baṇḍa*.) An open ground? (**మైదానం**, *maidānaṁ*.) A theatre? (**థియేటరు**, *thiyēṭaru*.) A stadium? (**స్టేడియం**, *sṭēḍiyaṁ*.) A bathroom? (**స్నానపు గది**, *snānapu gadi*.) A foundation? (**పునాది**, *punādi*.) A gate? (**గేటు**, *gēṭu*.) A bakery? (**బేకరీ**, *bēkarī*.) A hair salon? (**సెలూను**, *selūnu*.)
+`;export{t as n,r as t};
