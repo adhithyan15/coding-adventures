@@ -289,6 +289,31 @@ only a project has a QML module for the names to collide in. On XAML an export
 named inside a variant's support types (`CardTouchMosaicSlider` beside
 `Card.touch`) is refused as well.
 
+### Exports and the project shell (UI32 §3.7)
+
+An export's names and file names come from its own name, so an export can
+spell something the project shell owns. A project build refuses both kinds of
+collision, naming the export:
+
+```text
+MosaicApp.mll on Compose or Flutter  -> `MosaicApp` beside the shell's root
+MosaicHost.mll on Qt                 -> `MosaicHost` beside the shell's type
+App.mll on SwiftUI                   -> App.swift over the shell's App.swift
+Main.mll (or MAIN.mll) on Compose    -> Main.kt over the shell's Main.kt
+```
+
+Names are checked against the same reserved lists as layout variants, before
+anything is written, and only in project builds: a flat build has no shell.
+Files are guarded at the write itself. Once the exports are generated, no later
+write in the build may land on an export's file, and the shell's copy of an
+export into its source set (`Sources/App/`, `src/main/kotlin/`, `lib/`) may not
+land on a file the shell already wrote. Paths are compared without regard to
+case, as macOS's and Windows' default filesystems would. The deliberate
+rewrites, Qt re-emitting its root strictly and XAML re-emitting its root's side
+files, go through `write_export_file`, which is exempt. Two exports whose names
+differ only in letter case (`Card`, `CARD`) are refused on every build, flat
+or project, for the same reason.
+
 ## Layout Per Backend
 
 | Backend | Files written |

@@ -337,6 +337,40 @@ Per-PR test: emit into a tmpdir; assert the set of created files
 equals exactly the §2.2 enumeration; assert no created path begins
 with `..`, `/`, or `~`.
 
+**An export never shares a name or a file with the shell.** The shell and
+the package's exports land in one directory and, on every compiled backend,
+one namespace, and an export's names and file names come from its own name.
+So an export can spell something the shell owns, and before this rule the
+build went through and handed back a project that could not work:
+
+| export | backend | what happened |
+|---|---|---|
+| `MosaicApp` | Compose, Flutter | `MosaicApp` declared twice: the shell's root and the export |
+| `MosaicHost` | Qt | the export's QML type beside the shell's registered `MosaicHost` |
+| `App` | SwiftUI | the export's `App.swift` replaced the shell's: no `@main` |
+| `Main` | Compose | the export's `Main.kt` replaced the shell's: no `fun main()` |
+
+The builder refuses both, naming the export and what it collides with:
+
+- **Names.** In a project build, an export may not declare a name the
+  backend's shell reserves (the same lists layout variants are checked
+  against, UI48 §7.5), checked for the whole package before anything is
+  written. A flat build has no shell (its consumer brings one), so it is not
+  checked there.
+- **Files.** The shell never writes over a file an export produced in the
+  same build, and its copy of an export into the toolchain's source set
+  (`Sources/App/`, `src/main/kotlin/`, `lib/`) never lands on a file the
+  shell wrote. Paths compare without regard to case, as a case-insensitive
+  filesystem (macOS's and Windows' default) would. The refusal comes before
+  the write, so the export's own file is left as generated. A shell that
+  deliberately re-emits an export's file (Qt's strict root) says so.
+
+Two exports whose names differ only in letter case (`Card`, `CARD`) are
+refused too, on every build: their files are one file on a case-insensitive
+filesystem, each written over the other.
+
+Rename the export; nothing about these collisions can be configured away.
+
 ### 3.8 No environment reads at emission time
 
 The emitter MUST be a pure function of (component interface, layout,
