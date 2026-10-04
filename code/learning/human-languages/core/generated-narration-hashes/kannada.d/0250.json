@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:6890da594f579a52",
+  "lessonIds": [
+    "KA-C250-sutta",
+    "KA-C250-gudisalu",
+    "KA-C250-badavane",
+    "KA-C250-ance-kaceri",
+    "KA-C250-kanive"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch250.txt",
+  "json": "kannada/narration/ch250.json",
+  "textHash": "fnv1a64:50800571e188536d",
+  "jsonHash": "fnv1a64:d10554dd2b7d05b0",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-256-GUNA256",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say hollow, flat, crooked, blurred and crowded.",
+  "prerequisites": []
+}

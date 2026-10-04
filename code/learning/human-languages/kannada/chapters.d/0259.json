@@ -1,0 +1,19 @@
+{
+  "chapter": 259,
+  "title": "Button, Sweater, Shawl, Handkerchief, Necklace",
+  "label": "ch:ka-button-sweater-shawl-handkerchief-necklace",
+  "canDo": "I can say a button, a sweater, a shawl, a handkerchief and a necklace.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C259-sara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 259: I can say a button, a sweater, a shawl, a handkerchief and a necklace.",
+    "assesses": [
+      "KA-LEX-C259-VASTU259-03",
+      "KA-LEX-C259-VASTU259-04",
+      "KA-LEX-C259-VASTU259-05"
+    ]
+  }
+}

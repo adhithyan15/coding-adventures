@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:1129368879b84527",
+  "lessonIds": [
+    "KA-C247-dasara",
+    "KA-C247-dipavali",
+    "KA-C247-sankranti",
+    "KA-C247-ganesa-caturthi",
+    "KA-C247-rajyotsava"
+  ],
+  "tex": "kannada/book/chapters/ch247-dasara-deepavali-sankranti-ganesha-chaturthi-rajyotsava.tex"
+}

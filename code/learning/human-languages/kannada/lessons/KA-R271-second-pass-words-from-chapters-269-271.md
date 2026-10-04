@@ -1,0 +1,51 @@
+---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-R271-second-pass-words-from-chapters-269-271
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 13000
+chapter: 271
+type: review
+headword: (dialogue)
+gloss: second pass over chapters 269-271
+concept_tag: REVIEW
+prerequisites: [KA-C269-varadi, KA-C269-samasye, KA-C269-suddi, KA-C269-mahiti, KA-C269-anka, KA-C270-bhugola, KA-C270-pada, KA-C270-vakya, KA-C270-ksaurika, KA-C270-dhobi, KA-C271-pincani, KA-C271-danda, KA-C271-muskara, KA-C271-samsthe, KA-C271-ilakhe]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [KA-LEX-C269-KELASA269-01, KA-LEX-C269-KELASA269-02, KA-LEX-C269-KELASA269-03, KA-LEX-C269-KELASA269-04, KA-LEX-C269-KELASA269-05, KA-LEX-C270-KELASA270-01, KA-LEX-C270-KELASA270-02, KA-LEX-C270-KELASA270-03, KA-LEX-C270-KELASA270-04, KA-LEX-C270-KELASA270-05, KA-LEX-C271-KELASA271-01, KA-LEX-C271-KELASA271-02, KA-LEX-C271-KELASA271-03, KA-LEX-C271-KELASA271-04, KA-LEX-C271-KELASA271-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [KA-LEX-C269-KELASA269-01, KA-LEX-C269-KELASA269-02, KA-LEX-C269-KELASA269-03, KA-LEX-C269-KELASA269-04, KA-LEX-C269-KELASA269-05, KA-LEX-C270-KELASA270-01, KA-LEX-C270-KELASA270-02, KA-LEX-C270-KELASA270-03, KA-LEX-C270-KELASA270-04, KA-LEX-C270-KELASA270-05, KA-LEX-C271-KELASA271-01, KA-LEX-C271-KELASA271-02, KA-LEX-C271-KELASA271-03, KA-LEX-C271-KELASA271-04, KA-LEX-C271-KELASA271-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C269-varadi, KA-C269-samasye, KA-C269-suddi, KA-C269-mahiti, KA-C269-anka, KA-C270-bhugola, KA-C270-pada, KA-C270-vakya, KA-C270-ksaurika, KA-C270-dhobi, KA-C271-pincani, KA-C271-danda, KA-C271-muskara, KA-C271-samsthe, KA-C271-ilakhe]
+---
+
+# Words from chapters 269-271 — a second pass
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C269-KELASA269-01, KA-LEX-C269-KELASA269-02] -->
+
+[PAUSE 3s] Say the words for a report and a problem.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C269-KELASA269-01, KA-LEX-C269-KELASA269-02, KA-LEX-C269-KELASA269-03, KA-LEX-C269-KELASA269-04, KA-LEX-C269-KELASA269-05, KA-LEX-C270-KELASA270-01, KA-LEX-C270-KELASA270-02, KA-LEX-C270-KELASA270-03, KA-LEX-C270-KELASA270-04, KA-LEX-C270-KELASA270-05, KA-LEX-C271-KELASA271-01, KA-LEX-C271-KELASA271-02, KA-LEX-C271-KELASA271-03, KA-LEX-C271-KELASA271-04, KA-LEX-C271-KELASA271-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a report, a problem, news, information, a mark]
+- [YOU SAY: geography, a word, a sentence, a barber, a washerman]
+- [YOU SAY: a pension, a fine, a strike, an organisation, a government department]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C269-KELASA269-01, KA-LEX-C269-KELASA269-02, KA-LEX-C269-KELASA269-03, KA-LEX-C269-KELASA269-04, KA-LEX-C269-KELASA269-05, KA-LEX-C270-KELASA270-01, KA-LEX-C270-KELASA270-02, KA-LEX-C270-KELASA270-03, KA-LEX-C270-KELASA270-04, KA-LEX-C270-KELASA270-05, KA-LEX-C271-KELASA271-01, KA-LEX-C271-KELASA271-02, KA-LEX-C271-KELASA271-03, KA-LEX-C271-KELASA271-04, KA-LEX-C271-KELASA271-05] -->
+
+[PAUSE 3s] A report? (**ವರದಿ**, *varadi*.) A problem? (**ಸಮಸ್ಯೆ**, *samasye*.) News? (**ಸುದ್ದಿ**, *suddi*.) Information? (**ಮಾಹಿತಿ**, *māhiti*.) A mark? (**ಅಂಕ**, *aṅka*.) Geography? (**ಭೂಗೋಳ**, *bhūgōḷa*.) A word? (**ಪದ**, *pada*.) A sentence? (**ವಾಕ್ಯ**, *vākya*.) A barber? (**ಕ್ಷೌರಿಕ**, *kṣaurika*.) A washerman? (**ಧೋಬಿ**, *dhōbi*.) A pension? (**ಪಿಂಚಣಿ**, *piñcaṇi*.) A fine? (**ದಂಡ**, *daṇḍa*.) A strike? (**ಮುಷ್ಕರ**, *muṣkara*.) An organisation? (**ಸಂಸ್ಥೆ**, *saṃsthe*.) A government department? (**ಇಲಾಖೆ**, *ilākhe*.)

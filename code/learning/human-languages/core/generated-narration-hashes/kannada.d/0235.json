@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:1aa5e6094c958b68",
+  "lessonIds": [
+    "KA-C235-bilu",
+    "KA-C235-hindirugu",
+    "KA-C235-muttu",
+    "KA-C235-ettu",
+    "KA-C235-ese"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch235.txt",
+  "json": "kannada/narration/ch235.json",
+  "textHash": "fnv1a64:5191489245fa4518",
+  "jsonHash": "fnv1a64:ac5751f99eb54c94",
+  "findings": []
+}

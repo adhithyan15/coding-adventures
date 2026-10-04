@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C264-ap",
+    "language": "kannada",
+    "chapter": 264,
+    "sequence": 12600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:67d5cd648a6460fe"
+  },
+  "findings": []
+}

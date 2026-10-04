@@ -1,0 +1,19 @@
+{
+  "chapter": 270,
+  "title": "Geography, Word, Sentence, Barber, Washerman",
+  "label": "ch:ka-geography-word-sentence-barber-washerman",
+  "canDo": "I can say geography, a word, a sentence, a barber and a washerman.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C270-dhobi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 270: I can say geography, a word, a sentence, a barber and a washerman.",
+    "assesses": [
+      "KA-LEX-C270-KELASA270-03",
+      "KA-LEX-C270-KELASA270-04",
+      "KA-LEX-C270-KELASA270-05"
+    ]
+  }
+}

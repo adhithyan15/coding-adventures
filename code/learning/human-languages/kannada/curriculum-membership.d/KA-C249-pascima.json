@@ -1,0 +1,11 @@
+{
+  "id": "KA-C249-pascima",
+  "pathSegment": "KA-PATH-249-STHALA249",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-249-STHALA249",
+      "order": 1
+    }
+  ]
+}

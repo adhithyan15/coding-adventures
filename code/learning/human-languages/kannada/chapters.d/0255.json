@@ -1,0 +1,19 @@
+{
+  "chapter": 255,
+  "title": "Naughty, Calm, Selfish, Serious, Round",
+  "label": "ch:ka-naughty-calm-selfish-serious-round",
+  "canDo": "I can say naughty, calm, selfish, serious and round.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "KA-C255-gundage",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 255: I can say naughty, calm, selfish, serious and round.",
+    "assesses": [
+      "KA-LEX-C255-GUNA255-03",
+      "KA-LEX-C255-GUNA255-04",
+      "KA-LEX-C255-GUNA255-05"
+    ]
+  }
+}

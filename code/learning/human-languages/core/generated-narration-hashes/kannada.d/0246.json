@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:11176c37c56636aa",
+  "lessonIds": [
+    "KA-C246-uluku",
+    "KA-C246-ajirna",
+    "KA-C246-hunnu",
+    "KA-C246-byandej",
+    "KA-C246-madhumeha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch246.txt",
+  "json": "kannada/narration/ch246.json",
+  "textHash": "fnv1a64:b8f7fd794bb0664e",
+  "jsonHash": "fnv1a64:97e77bdc6eb13ea6",
+  "findings": []
+}

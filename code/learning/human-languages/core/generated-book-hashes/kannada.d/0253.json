@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:313bafeb9c262e3d",
+  "lessonIds": [
+    "KA-C253-udaharane",
+    "KA-C253-ghatane",
+    "KA-C253-nenapu",
+    "KA-C253-jivana",
+    "KA-C253-niyama"
+  ],
+  "tex": "kannada/book/chapters/ch253-example-event-memory-life-rule.tex"
+}

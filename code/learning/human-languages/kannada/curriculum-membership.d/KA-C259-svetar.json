@@ -1,0 +1,11 @@
+{
+  "id": "KA-C259-svetar",
+  "pathSegment": "KA-PATH-259-VASTU259",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-259-VASTU259",
+      "order": 1
+    }
+  ]
+}

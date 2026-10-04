@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 257,
+  "sourceHash": "fnv1a64:07402d94f1a3d56b",
+  "lessonIds": [
+    "KA-C257-nalli",
+    "KA-C257-mettilu",
+    "KA-C257-hittu",
+    "KA-C257-bele",
+    "KA-C257-hunasehannu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch257.txt",
+  "json": "kannada/narration/ch257.json",
+  "textHash": "fnv1a64:a8bcf5e2b0544637",
+  "jsonHash": "fnv1a64:e49eb9368effea51",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C254-telu2",
+    "language": "kannada",
+    "chapter": 254,
+    "sequence": 12050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b98ad89aedd51cd3"
+  },
+  "findings": []
+}

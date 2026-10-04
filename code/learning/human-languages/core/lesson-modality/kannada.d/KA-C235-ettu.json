@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C235-ettu",
+    "language": "kannada",
+    "chapter": 235,
+    "sequence": 11090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:65183442d5ccf4ca"
+  },
+  "findings": []
+}

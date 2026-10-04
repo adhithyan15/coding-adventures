@@ -1,0 +1,11 @@
+{
+  "id": "KA-C255-svarthi",
+  "pathSegment": "KA-PATH-255-GUNA255",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-255-GUNA255",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C238-oppu",
+  "pathSegment": "KA-PATH-238-KRIYE238",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-238-KRIYE238",
+      "order": 2
+    }
+  ]
+}

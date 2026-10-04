@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:377f837e1db39e67",
+  "lessonIds": [
+    "KA-C245-bhedi",
+    "KA-C245-alarji",
+    "KA-C245-uta",
+    "KA-C245-gulle",
+    "KA-C245-cikitse"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch245.txt",
+  "json": "kannada/narration/ch245.json",
+  "textHash": "fnv1a64:ee429032560240de",
+  "jsonHash": "fnv1a64:b170909ceb3de7ca",
+  "findings": []
+}

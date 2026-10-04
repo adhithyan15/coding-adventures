@@ -1,0 +1,19 @@
+{
+  "chapter": 271,
+  "title": "Pension, Fine, Strike, Organisation, Government department",
+  "label": "ch:ka-pension-fine-strike-organisation-government-department",
+  "canDo": "I can say a pension, a fine, a strike, an organisation and a government department.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-R271-second-pass-words-from-chapters-269-271",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 271: I can say a pension, a fine, a strike, an organisation and a government department.",
+    "assesses": [
+      "KA-LEX-C271-KELASA271-03",
+      "KA-LEX-C271-KELASA271-04",
+      "KA-LEX-C271-KELASA271-05"
+    ]
+  }
+}

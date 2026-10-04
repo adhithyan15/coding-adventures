@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C270-pada",
+    "language": "kannada",
+    "chapter": 270,
+    "sequence": 12900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:958d87fe5f27f0a6"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C242-addu",
+    "language": "kannada",
+    "chapter": 242,
+    "sequence": 11440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2c6e258463c4b1e1"
+  },
+  "findings": []
+}

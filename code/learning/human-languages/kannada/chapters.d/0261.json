@@ -1,0 +1,19 @@
+{
+  "chapter": 261,
+  "title": "Pet, Calf, Squirrel, Lizard, Cockroach",
+  "label": "ch:ka-pet-calf-squirrel-lizard-cockroach",
+  "canDo": "I can say a pet, a calf, a squirrel, a lizard and a cockroach.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-R261-second-pass-words-from-chapters-257-261",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 261: I can say a pet, a calf, a squirrel, a lizard and a cockroach.",
+    "assesses": [
+      "KA-LEX-C261-VASTU261-03",
+      "KA-LEX-C261-VASTU261-04",
+      "KA-LEX-C261-VASTU261-05"
+    ]
+  }
+}

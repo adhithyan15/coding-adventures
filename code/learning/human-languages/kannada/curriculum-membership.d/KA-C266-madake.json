@@ -1,0 +1,11 @@
+{
+  "id": "KA-C266-madake",
+  "pathSegment": "KA-PATH-266-VASTU266",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-266-VASTU266",
+      "order": 2
+    }
+  ]
+}

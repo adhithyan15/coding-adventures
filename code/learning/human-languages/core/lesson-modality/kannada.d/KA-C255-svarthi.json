@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C255-svarthi",
+    "language": "kannada",
+    "chapter": 255,
+    "sequence": 12120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e033ed7b9b7b5ac4"
+  },
+  "findings": []
+}

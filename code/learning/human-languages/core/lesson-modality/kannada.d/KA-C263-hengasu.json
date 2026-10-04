@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C263-hengasu",
+    "language": "kannada",
+    "chapter": 263,
+    "sequence": 12550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12fc7908f9bb88ef"
+  },
+  "findings": []
+}

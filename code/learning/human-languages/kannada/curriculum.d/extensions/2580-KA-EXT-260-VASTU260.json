@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-260-VASTU260",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say luggage, a key, a newspaper, a vehicle and an autorickshaw.",
+  "prerequisites": []
+}

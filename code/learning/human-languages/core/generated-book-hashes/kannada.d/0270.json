@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:6ea7e09f02779f05",
+  "lessonIds": [
+    "KA-C270-bhugola",
+    "KA-C270-pada",
+    "KA-C270-vakya",
+    "KA-C270-ksaurika",
+    "KA-C270-dhobi"
+  ],
+  "tex": "kannada/book/chapters/ch270-geography-word-sentence-barber-washerman.tex"
+}

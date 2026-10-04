@@ -1,0 +1,19 @@
+{
+  "chapter": 250,
+  "title": "Around, Hut, Residential area, Post office, Valley",
+  "label": "ch:ka-around-hut-residential-area-post-office-valley",
+  "canDo": "I can say around, a hut, a residential area, a post office and a valley.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "KA-C250-kanive",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 250: I can say around, a hut, a residential area, a post office and a valley.",
+    "assesses": [
+      "KA-LEX-C250-STHALA250-03",
+      "KA-LEX-C250-STHALA250-04",
+      "KA-LEX-C250-STHALA250-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 251,
+  "title": "Frontier, Canal, Tunnel, Downward slope, Backyard",
+  "label": "ch:ka-frontier-canal-tunnel-downward-slope-backyard",
+  "canDo": "I can say a frontier, a canal, a tunnel, a downward slope and a backyard.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "KA-C251-hittilu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 251: I can say a frontier, a canal, a tunnel, a downward slope and a backyard.",
+    "assesses": [
+      "KA-LEX-C251-STHALA251-03",
+      "KA-LEX-C251-STHALA251-04",
+      "KA-LEX-C251-STHALA251-05"
+    ]
+  }
+}

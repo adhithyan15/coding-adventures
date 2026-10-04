@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:518175ec3ea5e8c2",
+  "lessonIds": [
+    "KA-C240-bogalu",
+    "KA-C240-kugu",
+    "KA-C240-mulugu",
+    "KA-C240-vadisu",
+    "KA-C240-kalpisiko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch240.txt",
+  "json": "kannada/narration/ch240.json",
+  "textHash": "fnv1a64:8d7b6983172257ea",
+  "jsonHash": "fnv1a64:eb4f719d4ce2c225",
+  "findings": []
+}

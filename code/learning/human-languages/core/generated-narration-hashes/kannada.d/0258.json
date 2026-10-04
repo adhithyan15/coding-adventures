@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:6ddc4911b57ac042",
+  "lessonIds": [
+    "KA-C258-majjige",
+    "KA-C258-benne",
+    "KA-C258-payasa",
+    "KA-C258-biskattu",
+    "KA-C258-bred"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch258.txt",
+  "json": "kannada/narration/ch258.json",
+  "textHash": "fnv1a64:3d7648e4a9d798cc",
+  "jsonHash": "fnv1a64:b2403019c5bd97e0",
+  "findings": []
+}

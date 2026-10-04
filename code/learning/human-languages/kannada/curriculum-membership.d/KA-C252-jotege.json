@@ -1,0 +1,11 @@
+{
+  "id": "KA-C252-jotege",
+  "pathSegment": "KA-PATH-252-KARANA252",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-252-KARANA252",
+      "order": 3
+    }
+  ]
+}

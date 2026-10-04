@@ -1,0 +1,11 @@
+{
+  "id": "KA-C265-ukku",
+  "pathSegment": "KA-PATH-265-VASTU265",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-265-VASTU265",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C243-uccarisu",
+    "language": "kannada",
+    "chapter": 243,
+    "sequence": 11470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a4d98c63e02c763a"
+  },
+  "findings": []
+}

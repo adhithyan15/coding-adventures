@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C237-balasu",
+    "language": "kannada",
+    "chapter": 237,
+    "sequence": 11170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f681f8f22813f9dc"
+  },
+  "findings": []
+}

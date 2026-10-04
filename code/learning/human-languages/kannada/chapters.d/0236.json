@@ -1,0 +1,19 @@
+{
+  "chapter": 236,
+  "title": "To untie, To wake, To wake up, To bargain, To climb",
+  "label": "ch:ka-to-untie-to-wake-to-wake-up-to-bargain-to-climb",
+  "canDo": "I can say to untie, to wake, to wake up, to bargain and to climb.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C236-eru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 236: I can say to untie, to wake, to wake up, to bargain and to climb.",
+    "assesses": [
+      "KA-LEX-C236-KRIYE236-03",
+      "KA-LEX-C236-KRIYE236-04",
+      "KA-LEX-C236-KRIYE236-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 260,
+  "title": "Luggage, Key, Newspaper, Vehicle, Autorickshaw",
+  "label": "ch:ka-luggage-key-newspaper-vehicle-autorickshaw",
+  "canDo": "I can say luggage, a key, a newspaper, a vehicle and an autorickshaw.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C260-ato",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 260: I can say luggage, a key, a newspaper, a vehicle and an autorickshaw.",
+    "assesses": [
+      "KA-LEX-C260-VASTU260-03",
+      "KA-LEX-C260-VASTU260-04",
+      "KA-LEX-C260-VASTU260-05"
+    ]
+  }
+}

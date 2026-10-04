@@ -1,0 +1,11 @@
+{
+  "id": "KA-C243-alladisu",
+  "pathSegment": "KA-PATH-243-KRIYE243",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-243-KRIYE243",
+      "order": 4
+    }
+  ]
+}

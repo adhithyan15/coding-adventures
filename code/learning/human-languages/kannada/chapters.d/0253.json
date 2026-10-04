@@ -1,0 +1,19 @@
+{
+  "chapter": 253,
+  "title": "Example, Event, Memory, Life, Rule",
+  "label": "ch:ka-example-event-memory-life-rule",
+  "canDo": "I can say an example, an event, a memory, life and a rule.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "KA-C253-niyama",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 253: I can say an example, an event, a memory, life and a rule.",
+    "assesses": [
+      "KA-LEX-C253-KARANA253-03",
+      "KA-LEX-C253-KARANA253-04",
+      "KA-LEX-C253-KARANA253-05"
+    ]
+  }
+}

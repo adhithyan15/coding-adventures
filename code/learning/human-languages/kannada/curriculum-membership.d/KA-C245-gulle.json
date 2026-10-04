@@ -1,0 +1,11 @@
+{
+  "id": "KA-C245-gulle",
+  "pathSegment": "KA-PATH-245-AROGYA245",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-245-AROGYA245",
+      "order": 3
+    }
+  ]
+}

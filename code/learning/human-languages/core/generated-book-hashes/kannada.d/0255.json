@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:6d8ce346d8c63354",
+  "lessonIds": [
+    "KA-C255-tunta",
+    "KA-C255-santa",
+    "KA-C255-svarthi",
+    "KA-C255-gambhira",
+    "KA-C255-gundage"
+  ],
+  "tex": "kannada/book/chapters/ch255-naughty-calm-selfish-serious-round.tex"
+}

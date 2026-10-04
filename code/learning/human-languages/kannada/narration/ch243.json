@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 243,
+  "title": "To recognise, To pronounce, To add up, To manage, To shake",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:67a5dc684a32ef35",
+  "lessons": [
+    {
+      "id": "KA-C243-gurutisu",
+      "sequence": 11460,
+      "title": "ಗುರುತಿಸು (gurutisu) — to recognise",
+      "headword": "ಗುರುತಿಸು",
+      "romanization": "gurutisu",
+      "gloss": "to recognise",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:63708b19af3a8926",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to dip, then the Kannada for to tear."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಗುರುತಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗುರುತಿಸು — gurutisu — \"to recognise\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gurutisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gurutisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gurutisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gurutisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say gurutisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *gurutisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to dip, then the Kannada for to tear, then say gurutisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to dip, then the Kannada for to tear, then say *gurutisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಗುರುತಿಸು (gurutisu) mean? (\"To recognise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C243-uccarisu",
+      "sequence": 11470,
+      "title": "ಉಚ್ಚರಿಸು (uccarisu) — to pronounce",
+      "headword": "ಉಚ್ಚರಿಸು",
+      "romanization": "uccarisu",
+      "gloss": "to pronounce",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a4d98c63e02c763a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to tear, then the Kannada for to recognise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಉಚ್ಚರಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉಚ್ಚರಿಸು — uccarisu — \"to pronounce\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uccarisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uccarisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uccarisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uccarisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say uccarisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *uccarisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to tear, then the Kannada for to recognise, then say uccarisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to tear, then the Kannada for to recognise, then say *uccarisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಉಚ್ಚರಿಸು (uccarisu) mean? (\"To pronounce\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C243-kudisu",
+      "sequence": 11480,
+      "title": "ಕೂಡಿಸು (kūḍisu) — to add up (numbers)",
+      "headword": "ಕೂಡಿಸು",
+      "romanization": "kūḍisu",
+      "gloss": "to add up (numbers)",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ec92e1ff37bc215",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to recognise, then the Kannada for to pronounce."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕೂಡಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೂಡಿಸು — kūḍisu — \"to add up (numbers)\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūḍisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūḍisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūḍisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūḍisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kūḍisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kūḍisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to recognise, then the Kannada for to pronounce, then say kūḍisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to recognise, then the Kannada for to pronounce, then say *kūḍisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕೂಡಿಸು (kūḍisu) mean? (\"To add up (numbers)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C243-nibhayisu",
+      "sequence": 11490,
+      "title": "ನಿಭಾಯಿಸು (nibhāyisu) — to manage, to cope with",
+      "headword": "ನಿಭಾಯಿಸು",
+      "romanization": "nibhāyisu",
+      "gloss": "to manage, to cope with",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cd620b0245f62417",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to pronounce, then the Kannada for to add up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನಿಭಾಯಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಿಭಾಯಿಸು — nibhāyisu — \"to manage, to cope with\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nibhāyisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nibhāyisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nibhāyisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nibhāyisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say nibhāyisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *nibhāyisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to pronounce, then the Kannada for to add up, then say nibhāyisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to pronounce, then the Kannada for to add up, then say *nibhāyisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನಿಭಾಯಿಸು (nibhāyisu) mean? (\"To manage, to cope with\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C243-alladisu",
+      "sequence": 11500,
+      "title": "ಅಲ್ಲಾಡಿಸು (allāḍisu) — to shake (something)",
+      "headword": "ಅಲ್ಲಾಡಿಸು",
+      "romanization": "allāḍisu",
+      "gloss": "to shake (something)",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:690346dfc0d520ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to add up, then the Kannada for to manage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅಲ್ಲಾಡಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಲ್ಲಾಡಿಸು — allāḍisu — \"to shake (something)\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "allāḍisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *allāḍisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "allāḍisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *allāḍisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say allāḍisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *allāḍisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to add up, then the Kannada for to manage, then say allāḍisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to add up, then the Kannada for to manage, then say *allāḍisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅಲ್ಲಾಡಿಸು (allāḍisu) mean? (\"To shake (something)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R243-first-pass-words-from-chapters-235-238",
+      "sequence": 11510,
+      "title": "Words from chapters 235-238 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 235-238",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d4f31650288d85da",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to manage and to shake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to fall, to return, to touch, to lift, to throw",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to fall, to return, to touch, to lift, to throw]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to untie, to wake, to wake up, to bargain, to climb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to untie, to wake, to wake up, to bargain, to climb]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to bite, to use, to repair, to hit, to try",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to bite, to use, to repair, to hit, to try]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to type, to get lost, to agree, to refuse, to earn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to type, to get lost, to agree, to refuse, to earn]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To fall? (ಬೀಳು, bīḷu.) To return? (ಹಿಂದಿರುಗು, hindirugu.) To touch? (ಮುಟ್ಟು, muṭṭu.) To lift? (ಎತ್ತು, ettu.) To throw? (ಎಸೆ, ese.) To untie? (ಬಿಚ್ಚು, biccu.) To wake? (ಎಬ್ಬಿಸು, ebbisu.) To wake up? (ಎಚ್ಚರಗೊಳ್ಳು, eccaragoḷḷu.) To bargain? (ಚೌಕಾಸಿ ಮಾಡು, caukāsi māḍu.) To climb? (ಏರು, ēru.) To bite? (ಕಚ್ಚು, kaccu.) To use? (ಬಳಸು, baḷasu.) To repair? (ಸರಿಪಡಿಸು, saripaḍisu.) To hit? (ಹೊಡೆ, hoḍe.) To try? (ಪ್ರಯತ್ನಿಸು, prayatnisu.) To type? (ಟೈಪ್ ಮಾಡು, ṭaip māḍu.) To get lost? (ಕಳೆದುಹೋಗು, kaḷeduhōgu.) To agree? (ಒಪ್ಪು, oppu.) To refuse? (ನಿರಾಕರಿಸು, nirākarisu.) To earn? (ಸಂಪಾದಿಸು, sampādisu.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R243-second-pass-words-from-chapters-239-243",
+      "sequence": 11520,
+      "title": "Words from chapters 239-243 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 239-243",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d67765657708e4c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to celebrate and to decorate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to celebrate, to decorate, to share out, to pay a visit, to hug",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to celebrate, to decorate, to share out, to pay a visit, to hug]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to bark, to shout, to sink, to argue, to imagine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to bark, to shout, to sink, to argue, to imagine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to criticise, to share, to hate, to find out, to borrow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to criticise, to share, to hate, to find out, to borrow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to temper, to soak, to wring, to dip, to tear",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to temper, to soak, to wring, to dip, to tear]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to recognise, to pronounce, to add up, to manage, to shake",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to recognise, to pronounce, to add up, to manage, to shake]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To celebrate? (ಆಚರಿಸು, ācarisu.) To decorate? (ಅಲಂಕರಿಸು, alaṅkarisu.) To share out? (ಹಂಚು, hañcu.) To pay a visit? (ಭೇಟಿ ಕೊಡು, bhēṭi koḍu.) To hug? (ಅಪ್ಪಿಕೊ, appiko.) To bark? (ಬೊಗಳು, bogaḷu.) To shout? (ಕೂಗು, kūgu.) To sink? (ಮುಳುಗು, muḷugu.) To argue? (ವಾದಿಸು, vādisu.) To imagine? (ಕಲ್ಪಿಸಿಕೊ, kalpisiko.) To criticise? (ಟೀಕಿಸು, ṭīkisu.) To share? (ಹಂಚಿಕೊಳ್ಳು, hañcikoḷḷu.) To hate? (ದ್ವೇಷಿಸು, dvēṣisu.) To find out? (ಕಂಡುಹಿಡಿ, kaṇḍuhiḍi.) To borrow? (ಸಾಲ ಪಡೆ, sāla paḍe.) To temper? (ಒಗ್ಗರಣೆ ಹಾಕು, oggaraṇe hāku.) To soak? (ನೆನೆಸು, nenesu.) To wring? (ಹಿಂಡು, hiṇḍu.) To dip? (ಅದ್ದು, addu.) To tear? (ಹರಿ, hari.) To recognise? (ಗುರುತಿಸು, gurutisu.) To pronounce? (ಉಚ್ಚರಿಸು, uccarisu.) To add up? (ಕೂಡಿಸು, kūḍisu.) To manage? (ನಿಭಾಯಿಸು, nibhāyisu.) To shake? (ಅಲ್ಲಾಡಿಸು, allāḍisu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

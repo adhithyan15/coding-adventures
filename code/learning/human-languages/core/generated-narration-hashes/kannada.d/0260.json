@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:ebce2c33109fc3f7",
+  "lessonIds": [
+    "KA-C260-samanu",
+    "KA-C260-kili",
+    "KA-C260-patrike",
+    "KA-C260-vahana",
+    "KA-C260-ato"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch260.txt",
+  "json": "kannada/narration/ch260.json",
+  "textHash": "fnv1a64:be7f026f9873c382",
+  "jsonHash": "fnv1a64:f44f7eaa878f9aaa",
+  "findings": []
+}

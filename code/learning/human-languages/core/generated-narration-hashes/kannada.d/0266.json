@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:58c7002d0f5f4427",
+  "lessonIds": [
+    "KA-C266-balb",
+    "KA-C266-rimot",
+    "KA-C266-madake",
+    "KA-C266-karpura",
+    "KA-C266-tamra",
+    "KA-R266-first-pass-words-from-chapters-262-263",
+    "KA-R266-second-pass-words-from-chapters-264-266"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch266.txt",
+  "json": "kannada/narration/ch266.json",
+  "textHash": "fnv1a64:e7cbc1c37346f9d0",
+  "jsonHash": "fnv1a64:8c2120fa1b6fd987",
+  "findings": []
+}

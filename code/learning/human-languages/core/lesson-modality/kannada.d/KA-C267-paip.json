@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C267-paip",
+    "language": "kannada",
+    "chapter": 267,
+    "sequence": 12760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28b712f2a35613ea"
+  },
+  "findings": []
+}

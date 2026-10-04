@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-268-KELASA268",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a lawyer, an engineer, a postman, a company and a class.",
+  "prerequisites": []
+}

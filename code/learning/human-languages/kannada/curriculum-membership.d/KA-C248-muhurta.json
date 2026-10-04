@@ -1,0 +1,11 @@
+{
+  "id": "KA-C248-muhurta",
+  "pathSegment": "KA-PATH-248-KALA248",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-248-KALA248",
+      "order": 3
+    }
+  ]
+}

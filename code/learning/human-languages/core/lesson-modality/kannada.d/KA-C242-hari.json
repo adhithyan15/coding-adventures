@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C242-hari",
+    "language": "kannada",
+    "chapter": 242,
+    "sequence": 11450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9975fee3fa2ffefe"
+  },
+  "findings": []
+}

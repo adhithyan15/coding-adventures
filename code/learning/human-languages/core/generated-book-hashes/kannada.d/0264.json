@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:a91f817d310f46f1",
+  "lessonIds": [
+    "KA-C264-intarnet",
+    "KA-C264-vebsait",
+    "KA-C264-pasvard",
+    "KA-C264-ap",
+    "KA-C264-vidiyo"
+  ],
+  "tex": "kannada/book/chapters/ch264-internet-website-password-app-video.tex"
+}

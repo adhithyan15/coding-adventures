@@ -1,0 +1,11 @@
+{
+  "id": "KA-C264-ap",
+  "pathSegment": "KA-PATH-264-VASTU264",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-264-VASTU264",
+      "order": 3
+    }
+  ]
+}

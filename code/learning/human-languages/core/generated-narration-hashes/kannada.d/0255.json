@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:f6f8bdbd1660f1df",
+  "lessonIds": [
+    "KA-C255-tunta",
+    "KA-C255-santa",
+    "KA-C255-svarthi",
+    "KA-C255-gambhira",
+    "KA-C255-gundage"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch255.txt",
+  "json": "kannada/narration/ch255.json",
+  "textHash": "fnv1a64:c1fe042423eb786e",
+  "jsonHash": "fnv1a64:9745bc96338393b5",
+  "findings": []
+}

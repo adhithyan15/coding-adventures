@@ -1,0 +1,19 @@
+{
+  "chapter": 266,
+  "title": "Light bulb, Remote control, Earthen pot, Camphor, Copper",
+  "label": "ch:ka-light-bulb-remote-control-earthen-pot-camphor-copper",
+  "canDo": "I can say a light bulb, a remote control, an earthen pot, camphor and copper.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-R266-second-pass-words-from-chapters-264-266",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 266: I can say a light bulb, a remote control, an earthen pot, camphor and copper.",
+    "assesses": [
+      "KA-LEX-C266-VASTU266-03",
+      "KA-LEX-C266-VASTU266-04",
+      "KA-LEX-C266-VASTU266-05"
+    ]
+  }
+}

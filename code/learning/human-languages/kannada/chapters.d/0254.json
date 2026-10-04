@@ -1,0 +1,19 @@
+{
+  "chapter": 254,
+  "title": "Thin, Unwell, Sharp, Brown, Pink",
+  "label": "ch:ka-thin-unwell-sharp-brown-pink",
+  "canDo": "I can say thin, unwell, sharp, brown and pink.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "KA-C254-gulabi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 254: I can say thin, unwell, sharp, brown and pink.",
+    "assesses": [
+      "KA-LEX-C254-GUNA254-03",
+      "KA-LEX-C254-GUNA254-04",
+      "KA-LEX-C254-GUNA254-05"
+    ]
+  }
+}

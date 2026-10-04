@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C261-alilu",
+    "language": "kannada",
+    "chapter": 261,
+    "sequence": 12420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d089d894bc45fe7"
+  },
+  "findings": []
+}

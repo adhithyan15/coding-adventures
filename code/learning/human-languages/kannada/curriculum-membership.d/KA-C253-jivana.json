@@ -1,0 +1,11 @@
+{
+  "id": "KA-C253-jivana",
+  "pathSegment": "KA-PATH-253-KARANA253",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-253-KARANA253",
+      "order": 3
+    }
+  ]
+}

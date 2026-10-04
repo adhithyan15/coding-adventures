@@ -1,0 +1,11 @@
+{
+  "id": "KA-C246-ajirna",
+  "pathSegment": "KA-PATH-246-AROGYA246",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-246-AROGYA246",
+      "order": 1
+    }
+  ]
+}

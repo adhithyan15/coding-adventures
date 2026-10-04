@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:90d8f103e6c9f7ad",
+  "lessonIds": [
+    "KA-C267-gobbara",
+    "KA-C267-kunda",
+    "KA-C267-paip",
+    "KA-C267-pampu",
+    "KA-C267-getu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch267.txt",
+  "json": "kannada/narration/ch267.json",
+  "textHash": "fnv1a64:9177d48d72dfa790",
+  "jsonHash": "fnv1a64:f6e0373e33636d4f",
+  "findings": []
+}

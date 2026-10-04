@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C247-dasara",
+    "language": "kannada",
+    "chapter": 247,
+    "sequence": 11680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a9058642e331f772"
+  },
+  "findings": []
+}

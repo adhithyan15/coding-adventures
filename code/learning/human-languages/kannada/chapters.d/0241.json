@@ -1,0 +1,19 @@
+{
+  "chapter": 241,
+  "title": "To criticise, To share, To hate, To find out, To borrow",
+  "label": "ch:ka-to-criticise-to-share-to-hate-to-find-out-to-borrow",
+  "canDo": "I can say to criticise, to share, to hate, to find out and to borrow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C241-sala-pade",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 241: I can say to criticise, to share, to hate, to find out and to borrow.",
+    "assesses": [
+      "KA-LEX-C241-KRIYE241-03",
+      "KA-LEX-C241-KRIYE241-04",
+      "KA-LEX-C241-KRIYE241-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C263-muduka",
+    "language": "kannada",
+    "chapter": 263,
+    "sequence": 12560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e6d90f55975bb61"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C266-rimot",
+  "pathSegment": "KA-PATH-266-VASTU266",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-266-VASTU266",
+      "order": 1
+    }
+  ]
+}
