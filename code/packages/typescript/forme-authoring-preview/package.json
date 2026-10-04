@@ -1,0 +1,24 @@
+{
+  "name": "@coding-adventures/forme-authoring-preview",
+  "version": "0.1.0",
+  "description": "Exact-revision pipeline-backed live preview coordinator for Forme authoring",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-authoring-core": "file:../forme-authoring-core",
+    "@coding-adventures/forme-dev-server": "file:../forme-dev-server",
+    "@coding-adventures/forme-orchestrator": "file:../forme-orchestrator"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^4.1.11",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.11"
+  }
+}
