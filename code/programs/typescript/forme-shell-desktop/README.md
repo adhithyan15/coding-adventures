@@ -62,5 +62,7 @@ current architecture is copied byte-for-byte; a universal executable is
 thinned to the current architecture; and an executable that lacks the current
 architecture is rejected before blob injection.
 
-On non-macOS builders, `sh BUILD` runs the portable TypeScript build, tests,
-and coverage gate, then explicitly skips the unsupported native product gate.
+On non-macOS builders, the selected platform front runs the portable
+TypeScript build, tests, and coverage gate while skipping the unsupported
+native product gate. The Windows `BUILD_windows` front is native-command-free:
+it must not invoke `uname`, SEA assembly, Cargo, or Tauri packaging.
