@@ -439,7 +439,7 @@ console.log(prose, nested);
         self.assertEqual(summary.shared_projects, 301)
         self.assertEqual(summary.inherited_root_dir, 130)
         self.assertEqual(summary.inherited_out_dir, 133)
-        # forme-authoring-core, forme-authoring-editor, and
+        # forme-authoring-core, forme-authoring-editor,
         # forme-authoring-preview, forme-authoring-publish, and
         # forme-authoring-shell are isolated standalone emitters, adding five
         # to both standalone inventories.
