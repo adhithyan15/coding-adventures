@@ -195,3 +195,71 @@ describe("Malayalam B1 task shapes", () => {
     )).toBe(true);
   });
 });
+
+describe("Malayalam B2 task shapes", () => {
+  it("defines the project-owned four-skill B2 envelope", () => {
+    const inventory = loadTaskShapeInventory("malayalam", "B2");
+
+    expect(inventory.target).toEqual({
+      name: "Coding Adventures Malayalam B2 Assessment — project-defined equivalent",
+      basis: "project-defined",
+    });
+    expect(inventory.administration).toMatchObject({
+      writtenMinutes: 165,
+      speakingMinutes: 18,
+      speakingPreparationMinutes: 10,
+    });
+    expect(inventory.sections.map((section) => section.skill)).toEqual([
+      "reading",
+      "listening",
+      "writing",
+      "speaking",
+    ]);
+    expect(inventory.sections.map((section) => section.minutes)).toEqual([60, 45, 60, 18]);
+    expect(inventory.sections.map((section) => section.parts.map((part) => part.items))).toEqual([
+      [8, 8, 8, 8],
+      [7, 7, 7, 7],
+      [1, 1],
+      [1, 1, 5],
+    ]);
+    expect(Object.values(inventory.passRule.independentSkillThresholds)).toEqual([0.6, 0.6, 0.6, 0.6]);
+  });
+
+  it("pins B2 length, single-play listening, regional voices, and scoring", () => {
+    const inventory = loadTaskShapeInventory("malayalam", "B2");
+    const [reading, listening, writing] = inventory.sections;
+
+    expect(reading?.parts.reduce((sum, part) => sum + (part.stimulusLength?.minimum ?? 0), 0)).toBe(1800);
+    expect(reading?.parts.reduce((sum, part) => sum + (part.stimulusLength?.maximum ?? 0), 0)).toBe(2300);
+    expect(listening?.parts.every((part) =>
+      part.promptModes.includes("recorded Malayalam at 150-170 words per minute")
+      && part.replayCount === 1
+    )).toBe(true);
+    expect(listening?.parts.filter((part) =>
+      part.promptModes.some((mode) => mode.includes("documented regional Malayalam voice"))
+    )).toHaveLength(2);
+    expect(writing?.parts.map((part) => part.responseLength)).toEqual([
+      { unit: "words", minimum: 100, maximum: 130, approximate: false },
+      { unit: "words", minimum: 220, maximum: 280, approximate: false },
+    ]);
+    expect(inventory.sections.map((section) =>
+      section.parts.reduce((sum, part) => sum + (part.scoring.maxRawPoints ?? 0), 0)
+    )).toEqual([100, 100, 100, 100]);
+  });
+
+  it("uses both reception orthographies and independent Malayalam writing", () => {
+    const inventory = loadTaskShapeInventory("malayalam", "B2");
+    const reading = inventory.sections.find((section) => section.skill === "reading");
+    const writing = inventory.sections.find((section) => section.skill === "writing");
+
+    expect(reading?.parts.filter((part) =>
+      part.promptModes.includes("written-malayalam-traditional-orthography")
+    )).toHaveLength(2);
+    expect(writing?.parts.every((part) =>
+      part.responseModes.some((mode) => mode.includes("reformed or traditional Malayalam orthography"))
+      && part.aids.forbidden.includes("copyable answer model")
+      && part.aids.forbidden.includes("romanization")
+      && part.aids.forbidden.includes("translator")
+    )).toBe(true);
+  });
+});
