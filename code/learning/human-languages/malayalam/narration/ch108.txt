@@ -1,8 +1,8 @@
-Malayalam, chapter 108: The Marks on the Page.
-7 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Malayalam, chapter 108: The Marks on the Page, and Your First Question.
+8 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 7.
+Lesson 1 of 8.
 . (full stop) — how a Malayalam sentence ends.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice:. and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -45,7 +45,7 @@ Wrap-up Recall.
 What closes a Malayalam sentence in print today? (A full stop — the same dot English uses.) What closed one in the classical tradition? (The daṇḍa, a single upright stroke.) How many punctuation marks does the Malayalam alphabet itself carry? (None.)
 
 
-Lesson 2 of 7.
+Lesson 2 of 8.
 , — the comma, and the list that does not need one.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice:, and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -88,7 +88,7 @@ Wrap-up Recall.
 How many commas are in വെള്ളവും അരിയും പാലും? (None.) What is doing their work? (-ഉം, on every item.) Which side of the comma takes the space? (After it.)
 
 
-Lesson 3 of 7.
+Lesson 3 of 8.
 ? (question mark, exclamation mark) — the mark you have been reading all along.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice:? and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -127,7 +127,7 @@ Wrap-up Recall.
 Where does a Malayalam question mark stand? (At the end, and nowhere else.) Does a full stop follow it? (No — it closes the sentence on its own.) What was making your questions questions before this lesson? (The question words, and the ending -ō.)
 
 
-Lesson 4 of 7.
+Lesson 4 of 8.
 " " (quotation marks, dialogue dash) — quoting, when a word is already doing it.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: " " and — and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -169,7 +169,7 @@ Wrap-up Recall.
 Where did you first read quotation marks? (Around the quoted sentence in front of എന്ന്.) Does the marker stop you using the marks? (No — a sentence can carry both.) What opens a line of dialogue instead of the marks? (A long dash.)
 
 
-Lesson 5 of 7.
+Lesson 5 of 8.
 : ( ) - / (colon, parentheses, hyphen, slash) — the four that are left, two at a time.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice:: ( ) and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -200,7 +200,7 @@ Wrap-up Recall.
 Which mark comes before a list? (The colon.) Which comes in a pair, around an aside? (The parentheses.) Next: the hyphen and the slash, and why you have barely met them in a Malayalam word.
 
 
-Lesson 6 of 7.
+Lesson 6 of 8.
 (: ( ) - /, (comma) continued) ((colon, parentheses, hyphen, slash, continued)) — the hyphen and the slash.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: - / and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -238,7 +238,7 @@ Wrap-up Recall.
 How is a Malayalam compound written — joined by a hyphen, or solid? (Solid.) What are the hyphens in this book marking, then? (An ending or a stem shown on its own.) Which mark goes between two alternatives? (The slash.)
 
 
-Lesson 7 of 7.
+Lesson 7 of 8.
 (. (full stop), (comma)? (question mark, exclamation mark)! " " (quotation marks, dialogue dash) —: ( ) - / (colon, parentheses, hyphen, slash)) — from cold.
 
 Warm-up.
@@ -270,3 +270,26 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Where did you first read a question mark? (Asking somebody their name.) What does a Malayalam question put at the front, the way Spanish does? (Nothing.) Which Malayalam word does the work of quotation marks? (എന്ന്.) And where did the marks themselves come from? (Europe — the Malayalam script supplied none.)
+
+
+Lesson 8 of 8.
+Your first Malayalam question from meaning — assemble one familiar Malayalam location question from meaning, with no visible answer.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Close the earlier lessons. Recall tea, the place question where?, (comma) and the mark that closes a question. Do not write yet.
+
+Writing — assemble one familiar question.
+From meaning alone, write Where is the tea? There is no word bank, romanization, or copyable sentence. Choose the two familiar pieces, put them in Malayalam order, and add the question mark. This first composition is untimed: finish before opening the answer key.
+[question — say your answer, then pause 40 seconds]
+With no word bank, romanization, or copyable answer, write the Malayalam question meaning: Where is the tea?
+
+Guided Practice — repair one difference.
+Check the thing, place question, word boundary, and punctuation separately. Repair the first difference and write the whole question once more from meaning.
+
+Wrap-up Recall.
+[pause 2 seconds]
+What made this composition rather than copying? (You selected and ordered two known pieces from meaning, with no visible Malayalam answer.)
+One controlled line proves this rung, not the later timed A1 writing task.

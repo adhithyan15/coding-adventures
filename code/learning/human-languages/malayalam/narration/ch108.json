@@ -2,9 +2,9 @@
   "version": 1,
   "language": "malayalam",
   "chapter": 108,
-  "title": "The Marks on the Page",
+  "title": "The Marks on the Page, and Your First Question",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:89896627032a6f1f",
+  "sourceHash": "fnv1a64:719b37a37a63687e",
   "lessons": [
     {
       "id": "ML-W108-full-stop",
@@ -1185,6 +1185,112 @@
             {
               "kind": "speech",
               "text": "Where did you first read a question mark? (Asking somebody their name.) What does a Malayalam question put at the front, the way Spanish does? (Nothing.) Which Malayalam word does the work of quotation marks? (എന്ന്.) And where did the marks themselves come from? (Europe — the Malayalam script supplied none.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W108-evide-controlled-question",
+      "sequence": 4005,
+      "title": "Your first Malayalam question from meaning",
+      "headword": "ചായ എവിടെ?",
+      "romanization": "cāya eviṭe?",
+      "gloss": "assemble one familiar Malayalam location question from meaning, with no visible answer",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:f5b21eda90bbb608",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the earlier lessons. Recall tea, the place question where?, (comma) and the mark that closes a question. Do not write yet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — assemble one familiar question",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "From meaning alone, write Where is the tea? There is no word bank, romanization, or copyable sentence. Choose the two familiar pieces, put them in Malayalam order, and add the question mark. This first composition is untimed: finish before opening the answer key."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ML-W108-evide-controlled-question-check",
+              "prompt": "With no word bank, romanization, or copyable answer, write the Malayalam question meaning: Where is the tea?",
+              "assesses": [
+                "ML-CONCEPT-C39-CHAAYA-01",
+                "ML-LEX-C41-DEIXIS-06",
+                "ML-PUNCT-QUESTION-01"
+              ],
+              "responseSeconds": 40,
+              "acceptedResponses": [
+                "ചായ എവിടെ?",
+                "ചായ എവിടെ"
+              ],
+              "feedback": {
+                "correct": "You selected two familiar pieces and wrote a Malayalam location question.",
+                "incorrect": "Finish the attempt first. Then check the thing, place question, word boundary, and final question mark separately."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — repair one difference",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Check the thing, place question, word boundary, and punctuation separately. Repair the first difference and write the whole question once more from meaning."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What made this composition rather than copying? (You selected and ordered two known pieces from meaning, with no visible Malayalam answer.)"
+            },
+            {
+              "kind": "speech",
+              "text": "One controlled line proves this rung, not the later timed A1 writing task."
             }
           ]
         }
