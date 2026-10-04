@@ -1,16 +1,18 @@
 {
   "chapter": 77,
-  "title": "Marks on the Page",
+  "title": "Marks on the Page, and Your First Question",
   "label": "ch:ka-viraama-chihne",
-  "canDo": "I can name the punctuation marks a Kannada page uses, write the three a sentence of my own needs, and recognise the rest when a notice or a form puts them in front of me.",
+  "canDo": "I can name Kannada punctuation and independently compose a familiar yes-or-no question from meaning.",
   "payoff": {
-    "lesson": "KA-R77-marks-recall",
+    "lesson": "KA-W77-gotta-controlled-question",
     "kind": "production",
-    "summary": "From cold: name the three marks you write yourself, say where a question mark goes and how many a question gets, and name every mark in the previous chapter's reading passage.",
+    "summary": "Compose a familiar Kannada yes-or-no question from meaning without a visible model, then check its ending and final question mark.",
     "assesses": [
       "KA-SCRIPT-RECOG-152",
       "KA-SCRIPT-RECOG-153",
-      "KA-SCRIPT-RECOG-154"
+      "KA-SCRIPT-RECOG-154",
+      "KA-LEX-C32-GOTTU-01",
+      "KA-GRAMMAR-C69-ASK-02"
     ],
     "note": "The chapter introduces exactly these three atoms and the payoff assesses all three, with nothing open in front of the reader."
   }
