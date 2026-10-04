@@ -2212,6 +2212,17 @@ fn parse_css_color_function(css: &str) -> Option<Color> {
             a: alpha,
         }),
         "srgb-linear" => Some(linear_srgb_to_color(r, g, b, alpha)),
+        "display-p3" => {
+            let r = encoded_srgb_to_linear(r);
+            let g = encoded_srgb_to_linear(g);
+            let b = encoded_srgb_to_linear(b);
+            Some(xyz_d65_to_color(
+                0.4865709486482162 * r + 0.2656676931690931 * g + 0.1982172852343625 * b,
+                0.2289745640697488 * r + 0.6917385218365064 * g + 0.0792869140937450 * b,
+                0.0451133818589026 * g + 1.043_944_368_900_976 * b,
+                alpha,
+            ))
+        }
         _ => None,
     }
 }
@@ -2285,12 +2296,7 @@ fn css_lab_to_color(lightness: f64, a: f64, b: f64, alpha: u8) -> Color {
     let x65 = 0.9554734 * x50 - 0.0230985 * y50 + 0.0632593 * z50;
     let y65 = -0.0283697 * x50 + 1.0099955 * y50 + 0.0210414 * z50;
     let z65 = 0.0123140 * x50 - 0.0205077 * y50 + 1.3303659 * z50;
-    linear_srgb_to_color(
-        3.2406 * x65 - 1.5372 * y65 - 0.4986 * z65,
-        -0.9689 * x65 + 1.8758 * y65 + 0.0415 * z65,
-        0.0557 * x65 - 0.2040 * y65 + 1.0570 * z65,
-        alpha,
-    )
+    xyz_d65_to_color(x65, y65, z65, alpha)
 }
 
 fn css_oklab_to_color(lightness: f64, a: f64, b: f64, alpha: u8) -> Color {
@@ -2320,6 +2326,19 @@ fn linear_srgb_to_color(r: f64, g: f64, b: f64, alpha: u8) -> Color {
         b: encode(b),
         a: alpha,
     }
+}
+
+fn encoded_srgb_to_linear(value: f64) -> f64 {
+    if value <= 0.04045 { value / 12.92 } else { ((value + 0.055) / 1.055).powf(2.4) }
+}
+
+fn xyz_d65_to_color(x: f64, y: f64, z: f64, alpha: u8) -> Color {
+    linear_srgb_to_color(
+        3.2406 * x - 1.5372 * y - 0.4986 * z,
+        -0.9689 * x + 1.8758 * y + 0.0415 * z,
+        0.0557 * x - 0.2040 * y + 1.0570 * z,
+        alpha,
+    )
 }
 
 fn parse_css_hue(value: &str) -> Option<f64> {
@@ -7671,6 +7690,15 @@ mod tests {
         );
         assert_eq!(with_opacity("color(srgb 0.2 0.4 0.6 / 80%)", 0.5), "rgba(51,102,153,0.4)");
         assert_eq!(normalize_css_paint("color(srgb 20% 40% 60% / 80%)".into()), "rgba(51,102,153,0.8)");
+    }
+
+    #[test]
+    fn css_colors_parse_color_display_p3_profile() {
+        let expected = Color { r: 27, g: 104, b: 157, a: 204 };
+        assert_eq!(css_to_color("color(display-p3 0.2 0.4 0.6 / 0.8)"), expected);
+        assert_eq!(css_to_color("color(display-p3 20% 40% 60% / 80%)"), expected);
+        assert_eq!(with_opacity("color(display-p3 0.2 0.4 0.6 / 80%)", 0.5), "rgba(27,104,157,0.4)");
+        assert_eq!(normalize_css_paint("color(display-p3 20% 40% 60% / 80%)".into()), "rgba(27,104,157,0.8)");
     }
 
     #[test]
