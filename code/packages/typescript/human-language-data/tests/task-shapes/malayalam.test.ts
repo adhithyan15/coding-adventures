@@ -1,4 +1,4 @@
-import { expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { listTaskShapeInventories, loadLessons, loadTaskShapeInventory } from "../../src/loader.js";
 import { measureReadingReach } from "../../src/reading-reach.js";
 
@@ -44,7 +44,6 @@ it("scores the chandrakkala for both of the jobs it does", () => {
     part.promptModes.every((mode) => mode !== "written-devanagari")))).toBe(true);
 });
 
-
 it("declares a published stimulus length, so reading reach can measure it rather than skip it", () => {
   // The corpus-wide reading-reach test asserts one ROW per inventory, so this
   // track is counted the moment the file exists. What that test does not pin is
@@ -65,4 +64,69 @@ it("declares a published stimulus length, so reading reach can measure it rather
   expect(row?.status).toBe("measurable");
   expect(row?.partsMeasurable).toBe(3);
   expect(row?.partsWithinReach).toBe(3);
+}, 30_000);
+
+describe("Malayalam task shapes", () => {
+  it("defines a project-owned A2 envelope with four independent papers", () => {
+    const inventory = loadTaskShapeInventory("malayalam", "A2");
+
+    expect(inventory.target).toEqual({
+      name: "Coding Adventures Malayalam A2 Assessment — project-defined equivalent",
+      basis: "project-defined",
+    });
+    expect(inventory.administration).toMatchObject({
+      writtenMinutes: 85,
+      speakingMinutes: 12,
+      speakingPreparationMinutes: 5,
+    });
+    expect(inventory.sections.map((section) => section.skill)).toEqual([
+      "reading",
+      "listening",
+      "writing",
+      "speaking",
+    ]);
+    expect(inventory.sections.map((section) => section.minutes)).toEqual([30, 25, 30, 12]);
+    expect(inventory.sections.map((section) => section.parts.map((part) => part.items))).toEqual([
+      [8, 8, 8],
+      [7, 7, 6],
+      [1, 1],
+      [6, 1, 1],
+    ]);
+    expect(Object.values(inventory.passRule.independentSkillThresholds)).toEqual([0.6, 0.6, 0.6, 0.6]);
+    expect(inventory.passRule).toMatchObject({ maximumPoints: 400, passPoints: 240 });
+  });
+
+  it("pins the sourced A2 timing, length, replay, and scoring boundaries", () => {
+    const inventory = loadTaskShapeInventory("malayalam", "A2");
+    const [reading, listening, writing] = inventory.sections;
+
+    expect(reading?.parts.reduce((sum, part) => sum + (part.stimulusLength?.minimum ?? 0), 0)).toBe(550);
+    expect(reading?.parts.reduce((sum, part) => sum + (part.stimulusLength?.maximum ?? 0), 0)).toBe(750);
+    expect(listening?.parts.every((part) =>
+      part.promptModes.includes("recorded Malayalam at 110-130 words per minute") && part.replayCount === 2
+    )).toBe(true);
+    expect(writing?.parts.map((part) => part.responseLength)).toEqual([
+      { unit: "words", minimum: 25, maximum: 35, approximate: false },
+      { unit: "words", minimum: 70, maximum: 90, approximate: false },
+    ]);
+    expect(inventory.sections.map((section) =>
+      section.parts.reduce((sum, part) => sum + (part.scoring.maxRawPoints ?? 0), 0)
+    )).toEqual([100, 100, 100, 100]);
+  });
+
+  it("requires traditional-script reading and accepts either orthography for independent writing", () => {
+    const inventory = loadTaskShapeInventory("malayalam", "A2");
+    const reading = inventory.sections.find((section) => section.skill === "reading");
+    const writing = inventory.sections.find((section) => section.skill === "writing");
+
+    expect(reading?.parts.some((part) =>
+      part.promptModes.includes("written-malayalam-traditional-orthography")
+    )).toBe(true);
+    expect(writing?.parts.every((part) =>
+      part.responseModes.some((mode) => mode.includes("reformed or traditional Malayalam orthography"))
+      && part.aids.forbidden.includes("copyable answer model")
+      && part.aids.forbidden.includes("romanization")
+      && part.aids.forbidden.includes("translator")
+    )).toBe(true);
+  });
 });
