@@ -27,10 +27,8 @@ it("builds Bengali's first A1 controlled question without a visible model", () =
   expect(activity?.answer).toBe("চা কোথায়?");
 });
 
-it("leaves only timed assessment production missing from Bengali A1", () => {
+it("keeps Bengali A1 writing complete after the controlled question's successor lands", () => {
   const bengali = languageWritingStages("bengali");
   expect(bengali.defects).toEqual([]);
-  expect(bengali.levels.find((level) => level.level === "A1")?.missingStages).toEqual([
-    "timed-assessment-production",
-  ]);
+  expect(bengali.levels.find((level) => level.level === "A1")?.missingStages).toEqual([]);
 });
