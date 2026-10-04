@@ -1,0 +1,11 @@
+{
+  "id": "ML-C234-atmavisvasam",
+  "pathSegment": "ML-PATH-234-AROGYAM234",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-234-AROGYAM234",
+      "order": 2
+    }
+  ]
+}

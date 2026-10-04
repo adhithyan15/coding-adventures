@@ -1,0 +1,19 @@
+{
+  "chapter": 242,
+  "title": "At least, Either, Difference, Matter, Situation",
+  "label": "ch:ml-at-least-either-difference-matter-situation",
+  "canDo": "I can say at least, either, a difference, a matter and a situation.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "ML-C242-sahacaryam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 242: I can say at least, either, a difference, a matter and a situation.",
+    "assesses": [
+      "ML-LEX-C242-KARANAM242-03",
+      "ML-LEX-C242-KARANAM242-04",
+      "ML-LEX-C242-KARANAM242-05"
+    ]
+  }
+}

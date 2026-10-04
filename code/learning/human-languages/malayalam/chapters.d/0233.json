@@ -1,0 +1,19 @@
+{
+  "chapter": 233,
+  "title": "Ankle, Blood, Breath, Diarrhoea, Allergy",
+  "label": "ch:ml-ankle-blood-breath-diarrhoea-allergy",
+  "canDo": "I can say the ankle, blood, breath, diarrhoea and an allergy.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ML-C233-alarji",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 233: I can say the ankle, blood, breath, diarrhoea and an allergy.",
+    "assesses": [
+      "ML-LEX-C233-AROGYAM233-03",
+      "ML-LEX-C233-AROGYAM233-04",
+      "ML-LEX-C233-AROGYAM233-05"
+    ]
+  }
+}

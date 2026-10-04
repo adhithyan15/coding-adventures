@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:6d187e97266a7bd2",
+  "lessonIds": [
+    "ML-C242-kurannatu",
+    "ML-C242-onnukil",
+    "ML-C242-vyatyasam",
+    "ML-C242-karyam",
+    "ML-C242-sahacaryam"
+  ],
+  "tex": "malayalam/book/chapters/ch242-at-least-either-difference-matter-situation.tex"
+}

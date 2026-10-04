@@ -1,0 +1,19 @@
+{
+  "chapter": 244,
+  "title": "Full, Torn, Sharp, Private, Public",
+  "label": "ch:ml-full-torn-sharp-private-public",
+  "canDo": "I can say full, torn, sharp, private and public.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ML-C244-potu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 244: I can say full, torn, sharp, private and public.",
+    "assesses": [
+      "ML-LEX-C244-GUNAM244-03",
+      "ML-LEX-C244-GUNAM244-04",
+      "ML-LEX-C244-GUNAM244-05"
+    ]
+  }
+}

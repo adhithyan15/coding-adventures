@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C242-kurannatu",
+    "language": "malayalam",
+    "chapter": 242,
+    "sequence": 11030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a725d0fff969186d"
+  },
+  "findings": []
+}

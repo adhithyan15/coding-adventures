@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-236-SAMAYAM236",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "before": [],
+  "inline": [
+    "ML-EXT-236-SAMAYAM236"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 232,
+  "title": "To soak, To dip, To sink, To flow, To unfold",
+  "label": "ch:ml-to-soak-to-dip-to-sink-to-flow-to-unfold",
+  "canDo": "I can say to soak, to dip, to sink, to flow and to unfold.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C232-nivarttuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 232: I can say to soak, to dip, to sink, to flow and to unfold.",
+    "assesses": [
+      "ML-LEX-C232-KRIYA232-03",
+      "ML-LEX-C232-KRIYA232-04",
+      "ML-LEX-C232-KRIYA232-05"
+    ]
+  }
+}

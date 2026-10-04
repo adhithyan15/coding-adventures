@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C248-paippu",
+    "language": "malayalam",
+    "chapter": 248,
+    "sequence": 11340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b6656c85755138b3"
+  },
+  "findings": []
+}

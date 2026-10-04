@@ -1,0 +1,11 @@
+{
+  "id": "ML-C252-patakkam",
+  "pathSegment": "ML-PATH-252-VASTU252",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-252-VASTU252",
+      "order": 4
+    }
+  ]
+}

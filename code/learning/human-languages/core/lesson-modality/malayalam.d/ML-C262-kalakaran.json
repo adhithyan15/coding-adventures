@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C262-kalakaran",
+    "language": "malayalam",
+    "chapter": 262,
+    "sequence": 12090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fbd9f6e6632a1e36"
+  },
+  "findings": []
+}

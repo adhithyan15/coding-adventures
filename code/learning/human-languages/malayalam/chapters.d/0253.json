@@ -1,0 +1,19 @@
+{
+  "chapter": 253,
+  "title": "Banyan tree, Jackfruit tree, Rose, Hibiscus, Holy basil",
+  "label": "ch:ml-banyan-tree-jackfruit-tree-rose-hibiscus-holy-basil",
+  "canDo": "I can say a banyan tree, a jackfruit tree, a rose, a hibiscus and holy basil.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C253-tulasi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 253: I can say a banyan tree, a jackfruit tree, a rose, a hibiscus and holy basil.",
+    "assesses": [
+      "ML-LEX-C253-VASTU253-03",
+      "ML-LEX-C253-VASTU253-04",
+      "ML-LEX-C253-VASTU253-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C246-urappulla",
+  "pathSegment": "ML-PATH-246-GUNAM246",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-246-GUNAM246",
+      "order": 3
+    }
+  ]
+}

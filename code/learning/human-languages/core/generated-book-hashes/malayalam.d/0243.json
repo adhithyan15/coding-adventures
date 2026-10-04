@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:b8a077a48284c80e",
+  "lessonIds": [
+    "ML-C243-olikalivu",
+    "ML-C243-kurram",
+    "ML-C243-uttaravadittam",
+    "ML-C243-sadhyata",
+    "ML-C243-atisthanam"
+  ],
+  "tex": "malayalam/book/chapters/ch243-excuse-blame-responsibility-possibility-basis.tex"
+}

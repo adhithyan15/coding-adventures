@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-253-VASTU253",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a banyan tree, a jackfruit tree, a rose, a hibiscus and holy basil.",
+  "prerequisites": []
+}

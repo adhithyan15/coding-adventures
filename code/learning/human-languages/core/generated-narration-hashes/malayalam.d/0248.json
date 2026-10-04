@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:7a6f49c32e28821a",
+  "lessonIds": [
+    "ML-C248-gyas",
+    "ML-C248-paippu",
+    "ML-C248-kavar",
+    "ML-C248-pavata",
+    "ML-C248-jins"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch248.txt",
+  "json": "malayalam/narration/ch248.json",
+  "textHash": "fnv1a64:57645b32eb7c5d53",
+  "jsonHash": "fnv1a64:5e5c28bdb19f310d",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:65bf3ff7d8ea40b6",
+  "lessonIds": [
+    "ML-C246-paramparagata",
+    "ML-C246-janapriyamaya",
+    "ML-C246-avesakaramaya",
+    "ML-C246-urappulla",
+    "ML-C246-ketaya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch246.txt",
+  "json": "malayalam/narration/ch246.json",
+  "textHash": "fnv1a64:e49a8e3ad48f6449",
+  "jsonHash": "fnv1a64:e3e61ee2c24afe7f",
+  "findings": []
+}

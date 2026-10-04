@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C234-avesam",
+    "language": "malayalam",
+    "chapter": 234,
+    "sequence": 10640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:725431f1dbffae83"
+  },
+  "findings": []
+}

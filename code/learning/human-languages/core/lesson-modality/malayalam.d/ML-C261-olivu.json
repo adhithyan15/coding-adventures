@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C261-olivu",
+    "language": "malayalam",
+    "chapter": 261,
+    "sequence": 12040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bcec9d5eee4a3a59"
+  },
+  "findings": []
+}

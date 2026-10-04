@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R263-first-pass-words-from-chapters-259-260",
+    "language": "malayalam",
+    "chapter": 263,
+    "sequence": 12170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bcec3daa560f83ec"
+  },
+  "findings": []
+}

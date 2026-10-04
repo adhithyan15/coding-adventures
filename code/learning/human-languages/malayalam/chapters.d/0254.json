@@ -1,0 +1,19 @@
+{
+  "chapter": 254,
+  "title": "Sparrow, Squirrel, Crab, Tail, Wing",
+  "label": "ch:ml-sparrow-squirrel-crab-tail-wing",
+  "canDo": "I can say a sparrow, a squirrel, a crab, a tail and a wing.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C254-ciraku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 254: I can say a sparrow, a squirrel, a crab, a tail and a wing.",
+    "assesses": [
+      "ML-LEX-C254-VASTU254-03",
+      "ML-LEX-C254-VASTU254-04",
+      "ML-LEX-C254-VASTU254-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 229,
+  "title": "To set, To shine, To wilt, To doubt, To agree",
+  "label": "ch:ml-to-set-to-shine-to-wilt-to-doubt-to-agree",
+  "canDo": "I can say to set, to shine, to wilt, to doubt and to agree.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C229-yojikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 229: I can say to set, to shine, to wilt, to doubt and to agree.",
+    "assesses": [
+      "ML-LEX-C229-KRIYA229-03",
+      "ML-LEX-C229-KRIYA229-04",
+      "ML-LEX-C229-KRIYA229-05"
+    ]
+  }
+}

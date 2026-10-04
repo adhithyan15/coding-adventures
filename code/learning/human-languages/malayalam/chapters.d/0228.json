@@ -1,0 +1,19 @@
+{
+  "chapter": 228,
+  "title": "To complain, To tell a lie, To promise, To enjoy, To hate",
+  "label": "ch:ml-to-complain-to-tell-a-lie-to-promise-to-enjoy-to-hate",
+  "canDo": "I can say to complain, to tell a lie, to promise, to enjoy and to hate.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C228-verukkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 228: I can say to complain, to tell a lie, to promise, to enjoy and to hate.",
+    "assesses": [
+      "ML-LEX-C228-KRIYA228-03",
+      "ML-LEX-C228-KRIYA228-04",
+      "ML-LEX-C228-KRIYA228-05"
+    ]
+  }
+}

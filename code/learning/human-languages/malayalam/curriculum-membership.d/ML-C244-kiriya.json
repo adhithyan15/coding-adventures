@@ -1,0 +1,11 @@
+{
+  "id": "ML-C244-kiriya",
+  "pathSegment": "ML-PATH-244-GUNAM244",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-244-GUNAM244",
+      "order": 1
+    }
+  ]
+}

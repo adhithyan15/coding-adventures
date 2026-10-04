@@ -1,0 +1,19 @@
+{
+  "chapter": 257,
+  "title": "Roof tile, Pillar, Corridor, Bedroom, Wide bronze cooking vessel",
+  "label": "ch:ml-roof-tile-pillar-corridor-bedroom-wide-bronze-cooking-vessel",
+  "canDo": "I can say a roof tile, a pillar, a corridor, a bedroom and a wide bronze cooking vessel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C257-uruli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 257: I can say a roof tile, a pillar, a corridor, a bedroom and a wide bronze cooking vessel.",
+    "assesses": [
+      "ML-LEX-C257-VASTU257-03",
+      "ML-LEX-C257-VASTU257-04",
+      "ML-LEX-C257-VASTU257-05"
+    ]
+  }
+}

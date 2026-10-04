@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C258-trikonam",
+    "language": "malayalam",
+    "chapter": 258,
+    "sequence": 11890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3d549a6c313644b"
+  },
+  "findings": []
+}

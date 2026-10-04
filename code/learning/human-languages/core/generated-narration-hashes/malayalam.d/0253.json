@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:310b9a70221d58d9",
+  "lessonIds": [
+    "ML-C253-almaram",
+    "ML-C253-plavu",
+    "ML-C253-rosappu",
+    "ML-C253-cemparatti",
+    "ML-C253-tulasi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch253.txt",
+  "json": "malayalam/narration/ch253.json",
+  "textHash": "fnv1a64:fe0a4ce84c7d16ae",
+  "jsonHash": "fnv1a64:e620a8507c726468",
+  "findings": []
+}

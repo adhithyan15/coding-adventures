@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:419941a6262923a5",
+  "lessonIds": [
+    "ML-C255-laptoppu",
+    "ML-C255-skrin",
+    "ML-C255-vebsairru",
+    "ML-C255-kyamara",
+    "ML-C255-prinrar"
+  ],
+  "tex": "malayalam/book/chapters/ch255-laptop-screen-website-camera-printer.tex"
+}

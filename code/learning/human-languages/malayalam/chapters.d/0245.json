@@ -1,0 +1,19 @@
+{
+  "chapter": 245,
+  "title": "Colour, Brown, Grey, Pink, Violet",
+  "label": "ch:ml-colour-brown-grey-pink-violet",
+  "canDo": "I can say a colour, brown, grey, pink and violet.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ML-C245-vayalarru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 245: I can say a colour, brown, grey, pink and violet.",
+    "assesses": [
+      "ML-LEX-C245-GUNAM245-03",
+      "ML-LEX-C245-GUNAM245-04",
+      "ML-LEX-C245-GUNAM245-05"
+    ]
+  }
+}

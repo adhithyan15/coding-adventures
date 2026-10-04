@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C259-ventaykka",
+    "language": "malayalam",
+    "chapter": 259,
+    "sequence": 11930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b52207a2c0f75ede"
+  },
+  "findings": []
+}

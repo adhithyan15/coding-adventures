@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C232-olukuka",
+    "language": "malayalam",
+    "chapter": 232,
+    "sequence": 10540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc1a2b9d8511e2c9"
+  },
+  "findings": []
+}

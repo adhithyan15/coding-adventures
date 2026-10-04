@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C240-arram",
+    "language": "malayalam",
+    "chapter": 240,
+    "sequence": 10910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7936fb56d4fb8e67"
+  },
+  "findings": []
+}

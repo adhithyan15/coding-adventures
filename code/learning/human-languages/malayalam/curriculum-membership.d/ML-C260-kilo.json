@@ -1,0 +1,11 @@
+{
+  "id": "ML-C260-kilo",
+  "pathSegment": "ML-PATH-260-JOLI260",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-260-JOLI260",
+      "order": 3
+    }
+  ]
+}

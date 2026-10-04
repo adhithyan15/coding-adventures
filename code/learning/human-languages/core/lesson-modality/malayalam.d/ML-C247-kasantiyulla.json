@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C247-kasantiyulla",
+    "language": "malayalam",
+    "chapter": 247,
+    "sequence": 11300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:655a8cf8ba7974dd"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C244-murccayulla",
+  "pathSegment": "ML-PATH-244-GUNAM244",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-244-GUNAM244",
+      "order": 2
+    }
+  ]
+}

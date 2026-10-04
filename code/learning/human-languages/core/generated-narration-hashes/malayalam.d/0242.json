@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:2ad00150eedb6ee1",
+  "lessonIds": [
+    "ML-C242-kurannatu",
+    "ML-C242-onnukil",
+    "ML-C242-vyatyasam",
+    "ML-C242-karyam",
+    "ML-C242-sahacaryam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch242.txt",
+  "json": "malayalam/narration/ch242.json",
+  "textHash": "fnv1a64:53f3aa92caf54a54",
+  "jsonHash": "fnv1a64:304049eb7f71fc55",
+  "findings": []
+}

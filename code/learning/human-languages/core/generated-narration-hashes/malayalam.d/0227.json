@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:cf0939ea5afa2275",
+  "lessonIds": [
+    "ML-C227-kuriccetukkuka",
+    "ML-C227-hajarakuka",
+    "ML-C227-panketukkuka",
+    "ML-C227-valiterruka",
+    "ML-C227-parkku-ceyyuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch227.txt",
+  "json": "malayalam/narration/ch227.json",
+  "textHash": "fnv1a64:83936c8206c3ebe6",
+  "jsonHash": "fnv1a64:8fd1e223acf1264e",
+  "findings": []
+}

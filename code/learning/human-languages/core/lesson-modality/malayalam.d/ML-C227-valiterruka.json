@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C227-valiterruka",
+    "language": "malayalam",
+    "chapter": 227,
+    "sequence": 10270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2de7cde8be790cfa"
+  },
+  "findings": []
+}

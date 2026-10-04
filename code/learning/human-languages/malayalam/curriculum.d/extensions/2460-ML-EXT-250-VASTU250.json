@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-250-VASTU250",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a number, an app, news, a newspaper and a stamp.",
+  "prerequisites": []
+}

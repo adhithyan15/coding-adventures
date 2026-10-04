@@ -1,0 +1,19 @@
+{
+  "chapter": 263,
+  "title": "Carpenter, Mason, Watchman, Bakery, Supermarket",
+  "label": "ch:ml-carpenter-mason-watchman-bakery-supermarket",
+  "canDo": "I can say a carpenter, a mason, a watchman, a bakery and a supermarket.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-R263-second-pass-words-from-chapters-261-263",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 263: I can say a carpenter, a mason, a watchman, a bakery and a supermarket.",
+    "assesses": [
+      "ML-LEX-C263-JOLI263-03",
+      "ML-LEX-C263-JOLI263-04",
+      "ML-LEX-C263-JOLI263-05"
+    ]
+  }
+}

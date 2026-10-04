@@ -1,0 +1,19 @@
+{
+  "chapter": 236,
+  "title": "Childhood, Atham, Thiruvonam, Dusk, Moment",
+  "label": "ch:ml-childhood-atham-thiruvonam-dusk-moment",
+  "canDo": "I can say childhood, Atham, Thiruvonam, dusk and a moment.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ML-C236-nimisam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 236: I can say childhood, Atham, Thiruvonam, dusk and a moment.",
+    "assesses": [
+      "ML-LEX-C236-SAMAYAM236-03",
+      "ML-LEX-C236-SAMAYAM236-04",
+      "ML-LEX-C236-SAMAYAM236-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C244-potu",
+  "pathSegment": "ML-PATH-244-GUNAM244",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-244-GUNAM244",
+      "order": 4
+    }
+  ]
+}

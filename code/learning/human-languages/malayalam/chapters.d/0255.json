@@ -1,0 +1,19 @@
+{
+  "chapter": 255,
+  "title": "Laptop, Screen, Website, Camera, Printer",
+  "label": "ch:ml-laptop-screen-website-camera-printer",
+  "canDo": "I can say a laptop, a screen, a website, a camera and a printer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C255-prinrar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 255: I can say a laptop, a screen, a website, a camera and a printer.",
+    "assesses": [
+      "ML-LEX-C255-VASTU255-03",
+      "ML-LEX-C255-VASTU255-04",
+      "ML-LEX-C255-VASTU255-05"
+    ]
+  }
+}

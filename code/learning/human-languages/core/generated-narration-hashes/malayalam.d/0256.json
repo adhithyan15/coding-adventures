@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:877565751e732643",
+  "lessonIds": [
+    "ML-C256-vinodam",
+    "ML-C256-kalippattam",
+    "ML-C256-abhiprayam",
+    "ML-C256-asayam",
+    "ML-C256-upadesam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch256.txt",
+  "json": "malayalam/narration/ch256.json",
+  "textHash": "fnv1a64:5251d4b80b77ef8f",
+  "jsonHash": "fnv1a64:ea8376bb5bb2247f",
+  "findings": []
+}

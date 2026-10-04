@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:8e4b8cc9e9d14a56",
+  "lessonIds": [
+    "ML-C233-kanankal",
+    "ML-C233-cora",
+    "ML-C233-svasam",
+    "ML-C233-vayarilakkam",
+    "ML-C233-alarji"
+  ],
+  "tex": "malayalam/book/chapters/ch233-ankle-blood-breath-diarrhoea-allergy.tex"
+}

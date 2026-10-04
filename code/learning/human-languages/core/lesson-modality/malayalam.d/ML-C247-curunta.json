@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C247-curunta",
+    "language": "malayalam",
+    "chapter": 247,
+    "sequence": 11310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0566c6084ad7f86"
+  },
+  "findings": []
+}

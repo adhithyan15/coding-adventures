@@ -1,0 +1,11 @@
+{
+  "id": "ML-C238-yatrakkaran",
+  "pathSegment": "ML-PATH-238-STHALAM238",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-238-STHALAM238",
+      "order": 3
+    }
+  ]
+}
