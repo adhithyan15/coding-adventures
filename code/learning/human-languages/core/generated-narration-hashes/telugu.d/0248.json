@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:42d4aa05ddbbd791",
+  "lessonIds": [
+    "TE-C248-molakettu",
+    "TE-C248-pituku",
+    "TE-C248-mosam-ceyu",
+    "TE-C248-docuko",
+    "TE-C248-appagincu",
+    "TE-R248-first-pass-words-from-chapters-240-243",
+    "TE-R248-second-pass-words-from-chapters-244-248"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch248.txt",
+  "json": "telugu/narration/ch248.json",
+  "textHash": "fnv1a64:c5eb8ad37b7af6d4",
+  "jsonHash": "fnv1a64:83191aab0bdc4c99",
+  "findings": []
+}

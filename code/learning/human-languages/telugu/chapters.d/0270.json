@@ -1,0 +1,19 @@
+{
+  "chapter": 270,
+  "title": "Saucepan, Flowerpot, Griddle, Mortar, Pestle",
+  "label": "ch:te-saucepan-flowerpot-griddle-mortar-pestle",
+  "canDo": "I can say a saucepan, a flowerpot, a griddle, a mortar and a pestle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C270-rokali",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 270: I can say a saucepan, a flowerpot, a griddle, a mortar and a pestle.",
+    "assesses": [
+      "TE-LEX-C270-VASTUVU270-03",
+      "TE-LEX-C270-VASTUVU270-04",
+      "TE-LEX-C270-VASTUVU270-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C256-godamu",
+  "pathSegment": "TE-PATH-256-STHALAM256",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-256-STHALAM256",
+      "order": 3
+    }
+  ]
+}

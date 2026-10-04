@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:ba872425044bfb3f",
+  "lessonIds": [
+    "TE-C264-cekku",
+    "TE-C264-visa",
+    "TE-C264-samanu",
+    "TE-C264-vartapatrika",
+    "TE-C264-nambaru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch264.txt",
+  "json": "telugu/narration/ch264.json",
+  "textHash": "fnv1a64:e3344a423ba01091",
+  "jsonHash": "fnv1a64:fb8dea861926dccc",
+  "findings": []
+}

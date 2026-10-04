@@ -1,0 +1,11 @@
+{
+  "id": "TE-C275-natakam",
+  "pathSegment": "TE-PATH-275-PANI275",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-275-PANI275",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C255-vedika",
+  "pathSegment": "TE-PATH-255-STHALAM255",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-255-STHALAM255",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C262-rotte",
+    "language": "telugu",
+    "chapter": 262,
+    "sequence": 12330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:761356d607460aa5"
+  },
+  "findings": []
+}

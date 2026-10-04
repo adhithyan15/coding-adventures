@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C273-konugolu",
+    "language": "telugu",
+    "chapter": 273,
+    "sequence": 12960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e94d64465efaccc8"
+  },
+  "findings": []
+}

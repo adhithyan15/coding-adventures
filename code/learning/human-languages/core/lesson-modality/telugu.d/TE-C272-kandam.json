@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C272-kandam",
+    "language": "telugu",
+    "chapter": 272,
+    "sequence": 12880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:521d24d4d4a33850"
+  },
+  "findings": []
+}

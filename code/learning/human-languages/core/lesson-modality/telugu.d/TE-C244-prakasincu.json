@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C244-prakasincu",
+    "language": "telugu",
+    "chapter": 244,
+    "sequence": 11400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cda7e4e2cdb63370"
+  },
+  "findings": []
+}

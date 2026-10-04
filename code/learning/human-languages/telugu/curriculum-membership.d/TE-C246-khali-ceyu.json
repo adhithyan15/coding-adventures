@@ -1,0 +1,11 @@
+{
+  "id": "TE-C246-khali-ceyu",
+  "pathSegment": "TE-PATH-246-KRIYA246",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-246-KRIYA246",
+      "order": 2
+    }
+  ]
+}

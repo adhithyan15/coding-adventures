@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C277-kammari",
+    "language": "telugu",
+    "chapter": 277,
+    "sequence": 13160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd04680bc831dd21"
+  },
+  "findings": []
+}

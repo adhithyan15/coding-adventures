@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:39fd79079ee2a1a5",
+  "lessonIds": [
+    "TE-C249-bharincu",
+    "TE-C249-paku",
+    "TE-C249-vangu",
+    "TE-C249-cacu",
+    "TE-C249-percu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch249.txt",
+  "json": "telugu/narration/ch249.json",
+  "textHash": "fnv1a64:1f328c9b036a9071",
+  "jsonHash": "fnv1a64:a8a93973168d4aaa",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 266,
+  "title": "Jasmine flower, Neem, Banyan tree, Holy basil, Bud",
+  "label": "ch:te-jasmine-flower-neem-banyan-tree-holy-basil-bud",
+  "canDo": "I can say a jasmine flower, neem, a banyan tree, holy basil and a bud.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-R266-second-pass-words-from-chapters-262-266",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 266: I can say a jasmine flower, neem, a banyan tree, holy basil and a bud.",
+    "assesses": [
+      "TE-LEX-C266-VASTUVU266-03",
+      "TE-LEX-C266-VASTUVU266-04",
+      "TE-LEX-C266-VASTUVU266-05"
+    ]
+  }
+}

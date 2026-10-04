@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:1587d02ab29bd7f6",
+  "lessonIds": [
+    "TE-C261-sahajamaina",
+    "TE-C261-cikkani",
+    "TE-C261-jiddu",
+    "TE-C261-jigata",
+    "TE-C261-garuku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch261.txt",
+  "json": "telugu/narration/ch261.json",
+  "textHash": "fnv1a64:c175e038df54aa94",
+  "jsonHash": "fnv1a64:65646542ca3b21f9",
+  "findings": []
+}

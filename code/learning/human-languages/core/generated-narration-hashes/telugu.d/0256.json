@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:567dd18e1ea57ac1",
+  "lessonIds": [
+    "TE-C256-sandu",
+    "TE-C256-sorangam",
+    "TE-C256-sivaru",
+    "TE-C256-godamu",
+    "TE-C256-kortu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch256.txt",
+  "json": "telugu/narration/ch256.json",
+  "textHash": "fnv1a64:f7ac06323dd71483",
+  "jsonHash": "fnv1a64:9cb289cbcaf8908d",
+  "findings": []
+}

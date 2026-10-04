@@ -1,0 +1,19 @@
+{
+  "chapter": 257,
+  "title": "Promise, Secret, Friendship, Quarrel, Culture",
+  "label": "ch:te-promise-secret-friendship-quarrel-culture",
+  "canDo": "I can say a promise, a secret, friendship, a quarrel and culture.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "TE-R257-second-pass-words-from-chapters-253-257",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 257: I can say a promise, a secret, friendship, a quarrel and culture.",
+    "assesses": [
+      "TE-LEX-C257-KARANAM257-03",
+      "TE-LEX-C257-KARANAM257-04",
+      "TE-LEX-C257-KARANAM257-05"
+    ]
+  }
+}

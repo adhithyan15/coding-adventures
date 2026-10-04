@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:fb294829aa56f5fc",
+  "lessonIds": [
+    "TE-C276-rasayanasastram",
+    "TE-C276-jivasastram",
+    "TE-C276-arthasastram",
+    "TE-C276-vyakaranam",
+    "TE-C276-nallaballa"
+  ],
+  "tex": "telugu/book/chapters/ch276-chemistry-biology-economics-grammar-blackboard.tex"
+}

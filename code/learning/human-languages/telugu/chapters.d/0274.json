@@ -1,0 +1,19 @@
+{
+  "chapter": 274,
+  "title": "Class, Lesson, Answer, Subject, Mathematics",
+  "label": "ch:te-class-lesson-answer-subject-mathematics",
+  "canDo": "I can say a class, a lesson, an answer, a subject and mathematics.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C274-ganitam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 274: I can say a class, a lesson, an answer, a subject and mathematics.",
+    "assesses": [
+      "TE-LEX-C274-PANI274-03",
+      "TE-LEX-C274-PANI274-04",
+      "TE-LEX-C274-PANI274-05"
+    ]
+  }
+}

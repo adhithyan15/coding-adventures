@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-256-STHALAM256",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "TE-EXT-256-STHALAM256"
+  ],
+  "after": []
+}

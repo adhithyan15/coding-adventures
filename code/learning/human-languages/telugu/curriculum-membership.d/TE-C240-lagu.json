@@ -1,0 +1,11 @@
+{
+  "id": "TE-C240-lagu",
+  "pathSegment": "TE-PATH-240-KRIYA240",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-240-KRIYA240",
+      "order": 2
+    }
+  ]
+}

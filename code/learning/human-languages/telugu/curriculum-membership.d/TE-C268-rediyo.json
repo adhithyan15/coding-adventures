@@ -1,0 +1,11 @@
+{
+  "id": "TE-C268-rediyo",
+  "pathSegment": "TE-PATH-268-VASTUVU268",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-268-VASTUVU268",
+      "order": 1
+    }
+  ]
+}

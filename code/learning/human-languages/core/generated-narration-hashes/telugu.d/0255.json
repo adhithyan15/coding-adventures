@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:8bf18ae609e45fcd",
+  "lessonIds": [
+    "TE-C255-myuziyam",
+    "TE-C255-vyayamasala",
+    "TE-C255-vedika",
+    "TE-C255-nagaram",
+    "TE-C255-raccabanda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch255.txt",
+  "json": "telugu/narration/ch255.json",
+  "textHash": "fnv1a64:cf050b28ca3f6604",
+  "jsonHash": "fnv1a64:68d4134ea4b837c7",
+  "findings": []
+}

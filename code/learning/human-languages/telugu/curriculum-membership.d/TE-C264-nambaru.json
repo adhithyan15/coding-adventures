@@ -1,0 +1,11 @@
+{
+  "id": "TE-C264-nambaru",
+  "pathSegment": "TE-PATH-264-VASTUVU264",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-264-VASTUVU264",
+      "order": 4
+    }
+  ]
+}

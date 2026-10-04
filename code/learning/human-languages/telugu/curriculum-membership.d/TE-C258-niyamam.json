@@ -1,0 +1,11 @@
+{
+  "id": "TE-C258-niyamam",
+  "pathSegment": "TE-PATH-258-KARANAM258",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-258-KARANAM258",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C274-ganitam",
+  "pathSegment": "TE-PATH-274-PANI274",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-274-PANI274",
+      "order": 4
+    }
+  ]
+}

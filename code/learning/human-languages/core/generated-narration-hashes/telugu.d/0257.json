@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 257,
+  "sourceHash": "fnv1a64:6ca4136096c56f1e",
+  "lessonIds": [
+    "TE-C257-vagdanam",
+    "TE-C257-rahasyam",
+    "TE-C257-sneham",
+    "TE-C257-godava",
+    "TE-C257-samskrti",
+    "TE-R257-first-pass-words-from-chapters-249-252",
+    "TE-R257-second-pass-words-from-chapters-253-257"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch257.txt",
+  "json": "telugu/narration/ch257.json",
+  "textHash": "fnv1a64:265f65ba7c00b23a",
+  "jsonHash": "fnv1a64:e23b2dfc3fe46f10",
+  "findings": []
+}

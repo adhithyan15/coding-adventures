@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R266-first-pass-words-from-chapters-258-261",
+    "language": "telugu",
+    "chapter": 266,
+    "sequence": 12580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ec0b2102a00e08d"
+  },
+  "findings": []
+}

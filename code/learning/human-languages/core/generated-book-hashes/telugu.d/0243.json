@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:de931f8922f515ab",
+  "lessonIds": [
+    "TE-C243-pariskarincu",
+    "TE-C243-taggincu",
+    "TE-C243-pencu",
+    "TE-C243-teliyajeyu",
+    "TE-C243-badili-ceyu"
+  ],
+  "tex": "telugu/book/chapters/ch243-to-solve-to-reduce-to-raise-to-inform-to-transfer.tex"
+}

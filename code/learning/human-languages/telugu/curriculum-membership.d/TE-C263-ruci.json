@@ -1,0 +1,11 @@
+{
+  "id": "TE-C263-ruci",
+  "pathSegment": "TE-PATH-263-VASTUVU263",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-263-VASTUVU263",
+      "order": 1
+    }
+  ]
+}

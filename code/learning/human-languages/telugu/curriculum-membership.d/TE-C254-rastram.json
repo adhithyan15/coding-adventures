@@ -1,0 +1,11 @@
+{
+  "id": "TE-C254-rastram",
+  "pathSegment": "TE-PATH-254-STHALAM254",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-254-STHALAM254",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C276-arthasastram",
+  "pathSegment": "TE-PATH-276-PANI276",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-276-PANI276",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C266-vepa",
+  "pathSegment": "TE-PATH-266-VASTUVU266",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-266-VASTUVU266",
+      "order": 1
+    }
+  ]
+}

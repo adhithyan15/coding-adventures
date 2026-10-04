@@ -1,0 +1,11 @@
+{
+  "id": "TE-C277-mangali",
+  "pathSegment": "TE-PATH-277-PANI277",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-277-PANI277",
+      "order": 1
+    }
+  ]
+}

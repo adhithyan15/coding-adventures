@@ -1,0 +1,19 @@
+{
+  "chapter": 242,
+  "title": "To bring, To use, To finish, To begin, To iron",
+  "label": "ch:te-to-bring-to-use-to-finish-to-begin-to-iron",
+  "canDo": "I can say to bring, to use, to finish, to begin and to iron.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C242-istri-ceyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 242: I can say to bring, to use, to finish, to begin and to iron.",
+    "assesses": [
+      "TE-LEX-C242-KRIYA242-03",
+      "TE-LEX-C242-KRIYA242-04",
+      "TE-LEX-C242-KRIYA242-05"
+    ]
+  }
+}

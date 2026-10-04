@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:6382fd24797d4970",
+  "lessonIds": [
+    "TE-C256-sandu",
+    "TE-C256-sorangam",
+    "TE-C256-sivaru",
+    "TE-C256-godamu",
+    "TE-C256-kortu"
+  ],
+  "tex": "telugu/book/chapters/ch256-lane-tunnel-outskirts-warehouse-court.tex"
+}

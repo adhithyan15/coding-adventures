@@ -1,0 +1,19 @@
+{
+  "chapter": 275,
+  "title": "Priest, Artist, Poet, Music, Play",
+  "label": "ch:te-priest-artist-poet-music-play",
+  "canDo": "I can say a priest, an artist, a poet, music and a play.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C275-natakam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 275: I can say a priest, an artist, a poet, music and a play.",
+    "assesses": [
+      "TE-LEX-C275-PANI275-03",
+      "TE-LEX-C275-PANI275-04",
+      "TE-LEX-C275-PANI275-05"
+    ]
+  }
+}

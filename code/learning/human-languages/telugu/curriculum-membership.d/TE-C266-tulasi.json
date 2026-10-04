@@ -1,0 +1,11 @@
+{
+  "id": "TE-C266-tulasi",
+  "pathSegment": "TE-PATH-266-VASTUVU266",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-266-VASTUVU266",
+      "order": 3
+    }
+  ]
+}

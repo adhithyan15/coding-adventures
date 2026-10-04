@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:ce663a92553a7e13",
+  "lessonIds": [
+    "TE-C277-phiryadu",
+    "TE-C277-mangali",
+    "TE-C277-cakali",
+    "TE-C277-kummari",
+    "TE-C277-kammari",
+    "TE-R277-first-pass-words-from-chapters-273-274",
+    "TE-R277-second-pass-words-from-chapters-275-277"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch277.txt",
+  "json": "telugu/narration/ch277.json",
+  "textHash": "fnv1a64:a6f71c77cc7eaa79",
+  "jsonHash": "fnv1a64:237e579ab4acecab",
+  "findings": []
+}

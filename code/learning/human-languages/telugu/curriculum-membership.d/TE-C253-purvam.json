@@ -1,0 +1,11 @@
+{
+  "id": "TE-C253-purvam",
+  "pathSegment": "TE-PATH-253-SAMAYAM253",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-253-SAMAYAM253",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 243,
+  "title": "To solve, To reduce, To raise, To inform, To transfer",
+  "label": "ch:te-to-solve-to-reduce-to-raise-to-inform-to-transfer",
+  "canDo": "I can say to solve, to reduce, to raise, to inform and to transfer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C243-badili-ceyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 243: I can say to solve, to reduce, to raise, to inform and to transfer.",
+    "assesses": [
+      "TE-LEX-C243-KRIYA243-03",
+      "TE-LEX-C243-KRIYA243-04",
+      "TE-LEX-C243-KRIYA243-05"
+    ]
+  }
+}

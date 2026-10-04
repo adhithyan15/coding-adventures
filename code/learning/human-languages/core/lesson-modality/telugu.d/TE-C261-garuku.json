@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C261-garuku",
+    "language": "telugu",
+    "chapter": 261,
+    "sequence": 12320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4f847b5d1cb79db0"
+  },
+  "findings": []
+}

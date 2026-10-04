@@ -1,0 +1,11 @@
+{
+  "id": "TE-C261-garuku",
+  "pathSegment": "TE-PATH-261-GUNAM261",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-261-GUNAM261",
+      "order": 4
+    }
+  ]
+}

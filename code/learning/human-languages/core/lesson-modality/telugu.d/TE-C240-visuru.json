@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C240-visuru",
+    "language": "telugu",
+    "chapter": 240,
+    "sequence": 11230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff4a232bd1db87a7"
+  },
+  "findings": []
+}

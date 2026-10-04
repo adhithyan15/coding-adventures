@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:24d3b042cc435d96",
+  "lessonIds": [
+    "TE-C273-vaddi",
+    "TE-C273-billu",
+    "TE-C273-taggimpu",
+    "TE-C273-sarukulu",
+    "TE-C273-konugolu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch273.txt",
+  "json": "telugu/narration/ch273.json",
+  "textHash": "fnv1a64:d467cfe9fcd42ac3",
+  "jsonHash": "fnv1a64:e5990f464279748f",
+  "findings": []
+}

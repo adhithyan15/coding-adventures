@@ -1,0 +1,11 @@
+{
+  "id": "TE-C270-penam",
+  "pathSegment": "TE-PATH-270-VASTUVU270",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-270-VASTUVU270",
+      "order": 2
+    }
+  ]
+}

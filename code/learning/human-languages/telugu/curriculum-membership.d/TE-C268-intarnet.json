@@ -1,0 +1,11 @@
+{
+  "id": "TE-C268-intarnet",
+  "pathSegment": "TE-PATH-268-VASTUVU268",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-268-VASTUVU268",
+      "order": 3
+    }
+  ]
+}

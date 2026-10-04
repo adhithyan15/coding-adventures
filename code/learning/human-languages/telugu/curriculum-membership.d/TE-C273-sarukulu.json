@@ -1,0 +1,11 @@
+{
+  "id": "TE-C273-sarukulu",
+  "pathSegment": "TE-PATH-273-PANI273",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-273-PANI273",
+      "order": 3
+    }
+  ]
+}

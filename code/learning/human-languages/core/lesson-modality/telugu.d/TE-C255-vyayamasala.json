@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C255-vyayamasala",
+    "language": "telugu",
+    "chapter": 255,
+    "sequence": 11970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6252e5a497417d1d"
+  },
+  "findings": []
+}

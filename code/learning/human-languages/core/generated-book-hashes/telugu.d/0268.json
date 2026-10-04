@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:8f7008314b208876",
+  "lessonIds": [
+    "TE-C268-pradarsana",
+    "TE-C268-rediyo",
+    "TE-C268-karyakramam",
+    "TE-C268-intarnet",
+    "TE-C268-vebsait"
+  ],
+  "tex": "telugu/book/chapters/ch268-show-radio-programme-internet-website.tex"
+}

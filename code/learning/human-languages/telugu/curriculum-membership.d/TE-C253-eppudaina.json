@@ -1,0 +1,11 @@
+{
+  "id": "TE-C253-eppudaina",
+  "pathSegment": "TE-PATH-253-SAMAYAM253",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-253-SAMAYAM253",
+      "order": 1
+    }
+  ]
+}

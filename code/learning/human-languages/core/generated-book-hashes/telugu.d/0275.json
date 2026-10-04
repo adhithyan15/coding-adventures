@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:93ee76d1659a8c97",
+  "lessonIds": [
+    "TE-C275-pujari",
+    "TE-C275-kalakarudu",
+    "TE-C275-kavi",
+    "TE-C275-sangitam",
+    "TE-C275-natakam"
+  ],
+  "tex": "telugu/book/chapters/ch275-priest-artist-poet-music-play.tex"
+}

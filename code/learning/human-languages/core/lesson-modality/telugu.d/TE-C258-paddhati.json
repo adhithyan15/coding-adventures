@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C258-paddhati",
+    "language": "telugu",
+    "chapter": 258,
+    "sequence": 12130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d818ed8e2ac7cfe"
+  },
+  "findings": []
+}

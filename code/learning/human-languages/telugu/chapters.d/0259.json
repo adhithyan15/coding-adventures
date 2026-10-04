@@ -1,0 +1,19 @@
+{
+  "chapter": 259,
+  "title": "Crowded, Important, Own, Busy, Compulsory",
+  "label": "ch:te-crowded-important-own-busy-compulsory",
+  "canDo": "I can say crowded, important, own, busy and compulsory.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TE-C259-tappanisari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 259: I can say crowded, important, own, busy and compulsory.",
+    "assesses": [
+      "TE-LEX-C259-GUNAM259-03",
+      "TE-LEX-C259-GUNAM259-04",
+      "TE-LEX-C259-GUNAM259-05"
+    ]
+  }
+}

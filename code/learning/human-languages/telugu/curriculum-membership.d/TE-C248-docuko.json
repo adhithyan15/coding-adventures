@@ -1,0 +1,11 @@
+{
+  "id": "TE-C248-docuko",
+  "pathSegment": "TE-PATH-248-KRIYA248",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-248-KRIYA248",
+      "order": 3
+    }
+  ]
+}

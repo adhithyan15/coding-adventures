@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C241-tummu",
+    "language": "telugu",
+    "chapter": 241,
+    "sequence": 11270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d07cf1afaaf5b23"
+  },
+  "findings": []
+}

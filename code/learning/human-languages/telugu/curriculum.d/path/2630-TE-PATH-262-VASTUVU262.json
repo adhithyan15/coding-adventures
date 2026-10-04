@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-262-VASTUVU262",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "TE-EXT-262-VASTUVU262"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C249-vangu",
+    "language": "telugu",
+    "chapter": 249,
+    "sequence": 11680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00f1a40ac2dd7464"
+  },
+  "findings": []
+}

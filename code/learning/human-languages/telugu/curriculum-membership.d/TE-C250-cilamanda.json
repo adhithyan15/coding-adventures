@@ -1,0 +1,11 @@
+{
+  "id": "TE-C250-cilamanda",
+  "pathSegment": "TE-PATH-250-AROGYAM250",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-250-AROGYAM250",
+      "order": 2
+    }
+  ]
+}

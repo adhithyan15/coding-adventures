@@ -1,0 +1,19 @@
+{
+  "chapter": 241,
+  "title": "To swallow, To bite, To breathe in, To sneeze, To vomit",
+  "label": "ch:te-to-swallow-to-bite-to-breathe-in-to-sneeze-to-vomit",
+  "canDo": "I can say to swallow, to bite, to breathe in, to sneeze and to vomit.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C241-vanti-cesuko",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 241: I can say to swallow, to bite, to breathe in, to sneeze and to vomit.",
+    "assesses": [
+      "TE-LEX-C241-KRIYA241-03",
+      "TE-LEX-C241-KRIYA241-04",
+      "TE-LEX-C241-KRIYA241-05"
+    ]
+  }
+}

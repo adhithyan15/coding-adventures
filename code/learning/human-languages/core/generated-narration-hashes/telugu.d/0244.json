@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:a33fa75026178f61",
+  "lessonIds": [
+    "TE-C244-vicu",
+    "TE-C244-prakasincu",
+    "TE-C244-gaddakattu",
+    "TE-C244-vadipovu",
+    "TE-C244-morugu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch244.txt",
+  "json": "telugu/narration/ch244.json",
+  "textHash": "fnv1a64:c62f1a53e283615e",
+  "jsonHash": "fnv1a64:9d9654060a266498",
+  "findings": []
+}

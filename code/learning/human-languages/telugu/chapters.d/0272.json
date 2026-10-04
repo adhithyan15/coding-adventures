@@ -1,0 +1,19 @@
+{
+  "chapter": 272,
+  "title": "Trellis, Fence, Bush, Stem, Wing",
+  "label": "ch:te-trellis-fence-bush-stem-wing",
+  "canDo": "I can say a trellis, a fence, a bush, a stem and a wing.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-R272-second-pass-words-from-chapters-270-272",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 272: I can say a trellis, a fence, a bush, a stem and a wing.",
+    "assesses": [
+      "TE-LEX-C272-VASTUVU272-03",
+      "TE-LEX-C272-VASTUVU272-04",
+      "TE-LEX-C272-VASTUVU272-05"
+    ]
+  }
+}

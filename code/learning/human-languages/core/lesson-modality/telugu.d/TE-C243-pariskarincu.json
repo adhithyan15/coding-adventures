@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C243-pariskarincu",
+    "language": "telugu",
+    "chapter": 243,
+    "sequence": 11340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:298d87330b0bd5dc"
+  },
+  "findings": []
+}

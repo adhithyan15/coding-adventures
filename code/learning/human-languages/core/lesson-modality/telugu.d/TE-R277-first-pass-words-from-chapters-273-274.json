@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R277-first-pass-words-from-chapters-273-274",
+    "language": "telugu",
+    "chapter": 277,
+    "sequence": 13170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f49e5031de87c68b"
+  },
+  "findings": []
+}

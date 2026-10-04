@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C253-tellavarujamu",
+    "language": "telugu",
+    "chapter": 253,
+    "sequence": 11900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8f0ee02f3644d18"
+  },
+  "findings": []
+}

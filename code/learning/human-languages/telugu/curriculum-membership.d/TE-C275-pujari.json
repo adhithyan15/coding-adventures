@@ -1,0 +1,11 @@
+{
+  "id": "TE-C275-pujari",
+  "pathSegment": "TE-PATH-275-PANI275",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-275-PANI275",
+      "order": 0
+    }
+  ]
+}

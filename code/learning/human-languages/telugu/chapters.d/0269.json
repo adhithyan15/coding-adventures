@@ -1,0 +1,19 @@
+{
+  "chapter": 269,
+  "title": "Tin, Eating plate, Sieve, Wood, Brass",
+  "label": "ch:te-tin-eating-plate-sieve-wood-brass",
+  "canDo": "I can say a tin, an eating plate, a sieve, wood and brass.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C269-ittadi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 269: I can say a tin, an eating plate, a sieve, wood and brass.",
+    "assesses": [
+      "TE-LEX-C269-VASTUVU269-03",
+      "TE-LEX-C269-VASTUVU269-04",
+      "TE-LEX-C269-VASTUVU269-05"
+    ]
+  }
+}

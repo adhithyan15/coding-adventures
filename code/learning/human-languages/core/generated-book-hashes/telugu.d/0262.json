@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:6ce9b00aab39d63d",
+  "lessonIds": [
+    "TE-C262-rotte",
+    "TE-C262-capati",
+    "TE-C262-upma",
+    "TE-C262-tiphinu",
+    "TE-C262-pesalu"
+  ],
+  "tex": "telugu/book/chapters/ch262-bread-chapati-upma-breakfast-green-gram.tex"
+}

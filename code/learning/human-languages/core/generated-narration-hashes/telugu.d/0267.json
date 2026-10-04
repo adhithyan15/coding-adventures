@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:c42e5290fa265d45",
+  "lessonIds": [
+    "TE-C267-indradhanussu",
+    "TE-C267-varada",
+    "TE-C267-karuvu",
+    "TE-C267-vennela",
+    "TE-C267-cikati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch267.txt",
+  "json": "telugu/narration/ch267.json",
+  "textHash": "fnv1a64:b1550998022f9bbd",
+  "jsonHash": "fnv1a64:e06efba3725aeb42",
+  "findings": []
+}

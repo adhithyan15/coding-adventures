@@ -1,0 +1,11 @@
+{
+  "id": "TE-C270-rokali",
+  "pathSegment": "TE-PATH-270-VASTUVU270",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-270-VASTUVU270",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:c858746097e9e255",
+  "lessonIds": [
+    "TE-C271-sunnam",
+    "TE-C271-penku",
+    "TE-C271-plastikku",
+    "TE-C271-nurugu",
+    "TE-C271-cillu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch271.txt",
+  "json": "telugu/narration/ch271.json",
+  "textHash": "fnv1a64:b009e5911ba35d67",
+  "jsonHash": "fnv1a64:7abe8586f0788ec8",
+  "findings": []
+}

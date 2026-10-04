@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:919356975e4ec376",
+  "lessonIds": [
+    "TE-C242-teccu",
+    "TE-C242-upayogincu",
+    "TE-C242-mugincu",
+    "TE-C242-modalupettu",
+    "TE-C242-istri-ceyu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch242.txt",
+  "json": "telugu/narration/ch242.json",
+  "textHash": "fnv1a64:c0bf921231ac9384",
+  "jsonHash": "fnv1a64:8321310a05970e14",
+  "findings": []
+}

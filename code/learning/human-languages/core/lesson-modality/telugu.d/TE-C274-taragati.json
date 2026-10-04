@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C274-taragati",
+    "language": "telugu",
+    "chapter": 274,
+    "sequence": 12970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8af0d669982c0a6"
+  },
+  "findings": []
+}
