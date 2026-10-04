@@ -2347,7 +2347,7 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_treemap_named_colors_to_png() {
         let diagram = parse_treemap(
-            "treemap\n\"Root\"\n  \"Named leaf\": 1:::named\nclassDef named fill:orange,stroke:navy,color:teal,stroke-width:3px",
+            "treemap\n\"Root\"\n  \"Named leaf\": 1:::named\nclassDef named fill:papayawhip,stroke:rebeccapurple,color:cornflowerblue,stroke-width:3px",
         )
         .expect("named-color treemap parse failed");
         let layout = layout_treemap(&diagram, 480.0);
@@ -2365,11 +2365,11 @@ line "Target" [35, 50, 68, 82]"##,
         });
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             paint_instructions::PaintInstruction::Rect(rect)
-                if rect.fill.as_deref() == Some("rgb(255,165,0)")
-                    && rect.stroke.as_deref() == Some("rgb(0,0,128)"))));
+                if rect.fill.as_deref() == Some("rgb(255,239,213)")
+                    && rect.stroke.as_deref() == Some("rgb(102,51,153)"))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             paint_instructions::PaintInstruction::GlyphRun(run)
-                if run.fill.as_deref() == Some("rgb(0, 128, 128)"))));
+                if run.fill.as_deref() == Some("rgb(100, 149, 237)"))));
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_treemap_named_colors_e2e.png")
             .expect("PNG write failed");
