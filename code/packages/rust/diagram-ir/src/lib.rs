@@ -1595,8 +1595,11 @@ pub struct TreemapTextShadowLayer {
     pub offset_x: f64,
     pub offset_y: f64,
     pub blur_radius: f64,
-    pub color: String,
+    pub color: TreemapTextShadowColor,
 }
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum TreemapTextShadowColor { CurrentColor, Color(String) }
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct TreemapNode {
