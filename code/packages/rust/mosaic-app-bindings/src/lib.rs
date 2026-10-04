@@ -856,7 +856,7 @@ mod tests {
             let from = source.find(start).unwrap_or_else(|| panic!("{start}")) + start.len();
             let to = from + source[from..].find(end).expect("list end");
             let mut out: Vec<String> = source[from..to]
-                .split(|c| c == '"' || c == '\'')
+                .split(['"', '\''])
                 .skip(1)
                 .step_by(2)
                 .map(|name| {
