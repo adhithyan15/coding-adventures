@@ -4710,7 +4710,15 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             written.push(host_nested);
 
             // The platform library every Compose app gets (UI87 §7): the
-            // standard file effects, and the router Main.kt installs.
+            // shared half -- rules, router, the asynchronous path from a
+            // picker to an outcome (UI89 §3.8) -- and the desktop's dialogs,
+            // which Main.kt installs.
+            let file_effects_nested = backend_dir.join("src/main/kotlin/MosaicFileEffects.kt");
+            write_file(
+                &file_effects_nested,
+                mosaic_app_bindings::compose_file_effects().as_bytes(),
+            )?;
+            written.push(file_effects_nested);
             let platform_nested = backend_dir.join("src/main/kotlin/MosaicPlatformEffects.kt");
             write_file(
                 &platform_nested,
@@ -5862,8 +5870,9 @@ const SWIFTUI_NAMESPACE: LayoutNamespace = LayoutNamespace {
 /// | file                              | names                                   |
 /// |-----------------------------------|-----------------------------------------|
 /// | `MosaicAppShell.kt`               | `MosaicApp`, `MosaicComposeHost`, `MosaicComposeHostBridge`, and a native-complete shell's `MosaicStartup` |
-/// | `MosaicRuntimeHost.kt`            | `MosaicRuntimeHost`, `MosaicRuntimeException`, `MosaicNativeApi`, `MosaicSizeT`, `MosaicBuffer`, `MosaicBytes` |
-/// | `MosaicPlatformEffects.kt`        | `MosaicPlatformRouter`, `MosaicFileDialogs`, `AwtMosaicFileDialogs` |
+/// | `MosaicRuntimeHost.kt`            | `MosaicRuntimeHost`, `MosaicRuntimeException`, `MosaicNativeApi`, `MosaicSizeT`, `MosaicBuffer`, `MosaicBytes`, `MosaicPlatformEffectHost` |
+/// | `MosaicFileEffects.kt`            | `MosaicPlatformRouter`, `MosaicAccept`, `MosaicFileFailure`, `MosaicOpenedDocument`, `MosaicSaveTarget`, `MosaicDocumentPicker`, `MosaicSaveRequest` |
+/// | `MosaicPlatformEffects.kt`        | `MosaicFileDialogs`, `AwtMosaicFileDialogs`, `MosaicDialogPicker` |
 ///
 /// `Main.kt`, both halves of `MosaicPlatform.kt` and the rest declare only
 /// `main`, camelCase helpers or `private` names; `MosaicActivity` lives in
@@ -5883,9 +5892,17 @@ const COMPOSE_SHELL_RESERVED_NAMES: &[&str] = &[
     "MosaicSizeT",
     "MosaicBuffer",
     "MosaicBytes",
+    "MosaicPlatformEffectHost",
     "MosaicPlatformRouter",
+    "MosaicAccept",
+    "MosaicFileFailure",
+    "MosaicOpenedDocument",
+    "MosaicSaveTarget",
+    "MosaicDocumentPicker",
+    "MosaicSaveRequest",
     "MosaicFileDialogs",
     "AwtMosaicFileDialogs",
+    "MosaicDialogPicker",
 ];
 
 const COMPOSE_NAMESPACE: LayoutNamespace = LayoutNamespace {
@@ -14090,6 +14107,15 @@ layout NativeEvents {
         // Never the desktop-only ones: the window, AWT, the file dialogs.
         assert!(!kotlin.join("Main.kt").exists());
         assert!(!kotlin.join("MosaicPlatformEffects.kt").exists());
+        // The desktop has both halves of the platform library; the shared one
+        // reaches Android with Android's own picker (UI89 §3.8), not before.
+        let desktop = out.path().join("compose/src/main/kotlin");
+        assert_eq!(
+            fs::read_to_string(desktop.join("MosaicFileEffects.kt")).unwrap(),
+            mosaic_app_bindings::compose_file_effects()
+        );
+        assert!(desktop.join("MosaicPlatformEffects.kt").is_file());
+        assert!(!kotlin.join("MosaicFileEffects.kt").exists());
         assert_eq!(
             fs::read_to_string(kotlin.join("MosaicPlatform.kt")).unwrap(),
             mosaic_emit_compose::pipeline::ANDROID_PLATFORM_KT

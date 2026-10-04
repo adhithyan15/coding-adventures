@@ -282,8 +282,10 @@ test('the download fallback refuses a name with no accepted type', async () => {
 });
 
 test('the plain-name rule and executable list match the Compose library', async () => {
-  const kotlin = await readFile(new URL('../../mosaic-app-bindings/templates/compose/MosaicPlatformEffects.kt', import.meta.url), 'utf8');
+  // The rules live in the half Compose Desktop and Android share (UI89 §3.8).
+  const kotlin = await readFile(new URL('../../mosaic-app-bindings/templates/compose/MosaicFileEffects.kt', import.meta.url), 'utf8');
   const start = kotlin.indexOf('val MOSAIC_EXECUTABLE_EXTENSIONS: Set<String> = setOf(');
+  assert.ok(start >= 0, 'the Compose library declares MOSAIC_EXECUTABLE_EXTENSIONS');
   const body = kotlin.slice(start, kotlin.indexOf(')\n', start));
   const listed = [...body.matchAll(/"([a-z0-9-]+)"/g)].map(match => match[1]).sort();
   assert.deepEqual([...EXECUTABLE_EXTENSIONS].sort(), listed);

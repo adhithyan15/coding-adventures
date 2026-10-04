@@ -28,11 +28,21 @@ fn compose_jna_binding_source(application_id: Option<&str>) -> String {
     )
 }
 
-/// The Compose platform library (UI87 §7): the operating-system capabilities
-/// Mosaic answers for every generated app -- `files.open` and `files.save`
-/// through the native file dialog -- and the router that sends each effect to
-/// the app's own handler or to this library by kind. Written beside
-/// `MosaicRuntimeHost.kt` in every Compose project; installed by `Main.kt`.
+/// The shared half of the Compose platform library (UI87 §7, UI89 §3.8): the
+/// rules a `files.open` / `files.save` request must meet, the MIME table, the
+/// router that sends each effect to the app's own handler or to the library by
+/// kind, and the asynchronous path from a picker's answer to the effect's
+/// outcome. It imports nothing from AWT or Android, so every Compose target
+/// compiles it beside its own [`compose_platform_effects`].
+pub fn compose_file_effects() -> String {
+    include_str!("../templates/compose/MosaicFileEffects.kt").to_string()
+}
+
+/// The desktop half of the Compose platform library (UI87 §7): `files.open`
+/// and `files.save` through the native file dialog (`java.awt.FileDialog`),
+/// adapted to [`compose_file_effects`]' picker, and the install `Main.kt`
+/// calls. Written beside `MosaicRuntimeHost.kt` in every Compose desktop
+/// project.
 pub fn compose_platform_effects() -> String {
     include_str!("../templates/compose/MosaicPlatformEffects.kt").to_string()
 }
@@ -487,6 +497,12 @@ fn bind_application(template: &str, application_id: Option<&str>) -> String {
 mod tests {
     use super::*;
 
+    /// The whole Compose platform library, as one text: the shared half
+    /// (rules, MIME table, router) and the desktop's dialogs (UI89 §3.8).
+    fn compose_platform_library() -> String {
+        compose_file_effects() + &compose_platform_effects()
+    }
+
     /// UI48 ENV4 on Compose (§7.4): the host reports the environment, keeps
     /// the showing props for a no-reaction update at the same revision only,
     /// and seeds the start context with what the platform knows.
@@ -782,7 +798,7 @@ mod tests {
     #[test]
     fn swift_platform_effects_match_the_compose_contract() {
         let swift = swift_platform_effects();
-        let kotlin = compose_platform_effects();
+        let kotlin = compose_platform_library();
         for kind in ["\"files.open\"", "\"files.save\""] {
             assert!(swift.contains(kind) && kotlin.contains(kind), "{kind}");
         }
@@ -834,7 +850,7 @@ mod tests {
             "]",
         );
         let kotlin = listed(
-            &compose_platform_effects(),
+            &compose_platform_library(),
             "val MOSAIC_EXECUTABLE_EXTENSIONS: Set<String> = setOf(",
             ")\n",
         );
@@ -871,7 +887,7 @@ mod tests {
             out
         }
         let compose = names(
-            &compose_platform_effects(),
+            &compose_platform_library(),
             "val MOSAIC_RESERVED_DEVICE_NAMES: Set<String> = setOf(",
             ")\n",
         );
@@ -915,7 +931,7 @@ mod tests {
     fn qt_platform_effects_match_the_compose_contract() {
         let qt = qt_platform_effects().source;
         let header = qt_platform_effects().header;
-        let kotlin = compose_platform_effects();
+        let kotlin = compose_platform_library();
         let qt_list: std::collections::BTreeSet<String> = {
             let from = qt.find("static const QSet<QString> extensions{").expect("qt list");
             let to = from + qt[from..].find("};").expect("end");
@@ -961,7 +977,7 @@ mod tests {
     #[test]
     fn xaml_platform_effects_match_the_compose_contract() {
         let xaml = xaml_platform_effects("Mosaic.Generated");
-        let kotlin = compose_platform_effects();
+        let kotlin = compose_platform_library();
         assert!(xaml.contains(
             "new HashSet<string>(StringComparer.Ordinal) { \"files.open\", \"files.save\" };"
         ));
@@ -1586,7 +1602,7 @@ mod tests {
     #[test]
     fn flutter_platform_effects_match_the_compose_contract() {
         let dart = flutter_platform_effects().core;
-        let kotlin = compose_platform_effects();
+        let kotlin = compose_platform_library();
         assert!(dart.contains(
             "const Set<String> mosaicStandardEffectKinds = <String>{\n  'files.open',\n  'files.save',\n};"
         ));

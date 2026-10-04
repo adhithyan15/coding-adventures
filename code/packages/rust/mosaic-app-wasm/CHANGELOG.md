@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Changed — the executable-list parity test reads the shared Compose file (UI89 §3.8)
+
+- The Compose platform library's rules moved into `MosaicFileEffects.kt`,
+  the half Compose Desktop and Android share, so the node test that pins
+  `EXECUTABLE_EXTENSIONS` to the Kotlin list reads that file, and now fails
+  plainly if the list is not found rather than comparing against nothing.
+
 ### Changed — device names, active content and non-ASCII extensions (UI87 §3.1)
 
 - `isPlainFileName` refuses Windows device names (`CON`, `NUL.txt`,

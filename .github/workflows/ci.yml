@@ -3484,8 +3484,9 @@ jobs:
               test --tests JournalUiTest
 
           # The platform library's own behaviour (UI87 §7): every Compose app
-          # gets MosaicPlatformEffects.kt, and this drives its open/save logic,
-          # limits and routing with fake dialogs -- no display needed.
+          # gets MosaicFileEffects.kt and MosaicPlatformEffects.kt, and this
+          # drives their open/save logic, limits, routing and the asynchronous
+          # picker path (UI89 §3.8) with fakes -- no display needed.
           cp code/packages/rust/mosaic-app-bindings/conformance/compose/MosaicPlatformEffectsTest.kt \
             "$journal_output/compose/src/test/kotlin/MosaicPlatformEffectsTest.kt"
           gradle --no-daemon --stacktrace -p "$journal_output/compose" \

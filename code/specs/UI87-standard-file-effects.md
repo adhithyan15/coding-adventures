@@ -6,7 +6,7 @@ capabilities, and no application carries its own copy (§7).
 
 | host | platform library | state |
 | --- | --- | --- |
-| Compose (desktop) | `MosaicPlatformEffects.kt` | done (#16016) |
+| Compose (desktop) | `MosaicFileEffects.kt` + `MosaicPlatformEffects.kt` | done (#16016; split for Android, UI89 §3.8) |
 | web family | `mosaic-file-effects.mjs` answers `files.*` | done (#16032) |
 | SwiftUI (macOS) | `MosaicPlatformEffects.swift` | done; iOS/iPadOS fail each request with a message until UI89 step 6 |
 | Qt | `MosaicPlatformEffects.{h,cpp}` | done (§7.4a) |
@@ -177,7 +177,7 @@ generated project the same way:
 
 | backend | library | per-OS inside it |
 | --- | --- | --- |
-| Compose | `MosaicPlatformEffects.kt` | desktop: `java.awt.FileDialog` (the native macOS/Windows/GTK dialog, not Swing's); Android (UI89): `ActivityResultContracts` |
+| Compose | `MosaicFileEffects.kt` (shared) + `MosaicPlatformEffects.kt` (per target) | desktop: `java.awt.FileDialog` (the native macOS/Windows/GTK dialog, not Swing's); Android (UI89): `ActivityResultContracts` |
 | SwiftUI | `MosaicPlatformEffects.swift` | macOS: `NSOpenPanel` / `NSSavePanel`; iOS/iPadOS (UI89): `UIDocumentPickerViewController` (until then each request fails with "… is not available on this platform yet", never a silent cancel) |
 | Flutter | `mosaic_platform_effects.dart` (+ its plain-Dart `_core.dart`, §7.7) | `file_selector` on desktop; share sheet for save on mobile (until UI89, each mobile request fails with a message) |
 | Qt | `MosaicPlatformEffects.{h,cpp}` | `QFileDialog` (native where the platform has one) |
