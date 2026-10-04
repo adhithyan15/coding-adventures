@@ -292,6 +292,146 @@ What step 4 changed from §3.4, and why:
 - **Still to come:** an instrumented Compose test that edits, relaunches and
   reads the screen (§4), and the same gate for Journal (step 7).
 
+### 3.8 Mobile file effects, designed (step 6)
+
+Written before implementation. `files.open` and `files.save` (UI59, UI87) on
+iOS/iPadOS and Android, through the same platform library each backend
+already has: SwiftUI's `MosaicPlatformEffects.swift` on iOS, and an Android
+library for Compose. Flutter on mobile waits for step 8, which builds Flutter
+for phones at all; until then it keeps failing each request with a message
+(UI87 §7.7). The contracts, limits and name rules (UI87 §3.1) do not change:
+a mobile save refuses exactly the names a desktop save refuses, and an open
+reads at most 50 MiB.
+
+**Why the desktop seam does not carry over.** On desktop a dialog is modal
+and synchronous: `MosaicFileDialogs.chooseFileToOpen` returns the chosen file
+and the library reads or writes it in place. A phone's pickers are neither:
+
+| | iOS / iPadOS | Android |
+|---|---|---|
+| picker | `UIDocumentPickerViewController`, presented; answers through a delegate | the Storage Access Framework through `ActivityResultContracts.OpenDocument` / `CreateDocument`; answers through the activity's result registry |
+| what comes back | a file URL (with `asCopy`, a copy in the app's own temporary directory) | a `content://` `Uri`, read and written through `ContentResolver` streams, never a path |
+| who confirms a replace | the picker | the provider (most append ` (1)` to a taken name rather than replace) |
+
+So each library gains an asynchronous path beside the synchronous one, and
+the part that is the same everywhere -- the name rules, the MIME table, the
+base64 and size limits, the `ok` / `cancelled` / `failed` answers -- moves
+where both paths share it.
+
+**The shared core, testable without a phone.**
+
+- *Kotlin.* The platform-independent half of today's `MosaicPlatformEffects.kt`
+  (routing by kind, the MIME table, `mosaicIsPlainFileName`,
+  `mosaicHasExecutableExtension`, the device names, the payload checks and
+  limits) moves to `MosaicFileEffects.kt`, with the router and the
+  asynchronous path below; it imports nothing from AWT or Android. The desktop project gets both files; desktop output is otherwise
+  unchanged. The Android project gets `MosaicFileEffects.kt` and its own
+  `MosaicPlatformEffects.kt` (below), and still never the desktop one.
+- *The asynchronous router.* `MosaicPlatformRouter` takes a picker that
+  answers later: `MosaicDocumentPicker` with `open(accept, done)` and
+  `create(request, done)`, each `done` called exactly once
+  with a document or nothing (a cancel). `accept` carries the request's
+  known MIME types and their extensions; `create` gets the whole checked
+  save request, bytes included, because iOS's picker exports a file it is
+  handed and so needs them before it is shown. A document is a name plus a way to
+  read or write its bytes as streams. The router defers the effect, as on
+  desktop, keeps the one-request-at-a-time rule, and answers from `done`:
+  reading (bounded, as on desktop) or writing off the main thread, then
+  completing the effect. The synchronous desktop dialogs are adapted to this
+  shape, so there is one router per language, and the desktop conformance
+  harness exercises it with fakes on the JVM and on Linux Swift, as it does
+  today.
+- *Swift.* The same split inside `MosaicPlatformEffects.swift`: the router and
+  the rules compile on every OS, the AppKit panels under `#if os(macOS)`, the
+  UIKit picker under `#if os(iOS)`. The Linux harness keeps compiling the
+  file, so the router's new path is checked there.
+
+**iOS / iPadOS.**
+
+- *Open.* `UIDocumentPickerViewController(forOpeningContentTypes:asCopy: true)`,
+  the content types from the request's accepted types (`UTType` of each of
+  their extensions; `.item`, any document, when none map).
+  With `asCopy` the system copies the chosen file into the app's temporary
+  directory, so no security-scoped access is held and nothing outside the
+  app's container is touched after the picker closes. The copy is read with
+  the desktop limits and removed whether or not the read succeeded. The name
+  is the copy's last path component (the original's name).
+- *Save.* The request is checked first, exactly as on desktop; a refused
+  name, size or extension fails before anything is shown. The bytes are then
+  written as `<suggestedName>` into a fresh private directory under the app's
+  temporary directory, and `UIDocumentPickerViewController(forExporting:
+  asCopy: true)` hands that file to the person, who chooses where it goes;
+  the picker confirms any replace. The answer is `ok { name }` with the name
+  the picker reports, `cancelled {}` on a cancel; the private directory is
+  removed either way.
+- *Where it is shown.* From the foreground window scene's key window (an
+  active scene first, else one that is only momentarily inactive), on its
+  topmost presented view controller. No such window (the app is in the
+  background) fails the request with a message rather than waiting; a host
+  that closed while the request was queued shows nothing.
+- *Lifetime.* The picker is its own delegate and is held by the view
+  controller presenting it. A picker that goes away without either delegate
+  callback (a scene destroyed under it) answers `cancelled {}` from its
+  `deinit` -- after any delegate call, since UIKit passes the picker to the
+  delegate -- so a deferred effect is never left pending. A presentation
+  UIKit refuses fails the request at once.
+- *Off the main queue.* The copy is read, and an export's answer handled,
+  on a background queue; the outcome comes back to the main queue before the
+  effect is completed, so the host is touched only where it always was.
+- `mosaicPlatformHasFileDialogs` becomes true on iOS; the "not available on
+  this platform yet" failure remains for any other OS without a picker.
+
+**Android.**
+
+- *The library.* `android/src/main/kotlin/MosaicPlatformEffects.kt`, from a
+  new `mosaic-app-bindings` template, implements `MosaicDocumentPicker` on
+  the activity's `ActivityResultRegistry`. It registers its two launchers
+  when the activity is created (before it starts, as the registry requires)
+  and unregisters them when it is destroyed.
+- *Open.* `OpenDocument` with the request's MIME types (`*/*` when none
+  map). The name is the provider's `OpenableColumns.DISPLAY_NAME`, the type
+  `ContentResolver.getType` (else the MIME table's guess, as on desktop); the
+  bytes are read from `openInputStream` on a background thread, with the
+  desktop limit enforced while reading, not trusted from the provider's size.
+- *Save.* Checked first, as on desktop. Then `ACTION_CREATE_DOCUMENT` with
+  the suggested name and its type (the name's own type when the request
+  accepts it or accepts anything, else the first accepted type); the bytes
+  are written with `openOutputStream(uri, "wt")` on a background thread. The
+  answer's name is the provider's display name for the document, which may
+  differ from the suggestion (` (1)`). A write that fails fails the request
+  and touches nothing else: the picker may have handed back a document the
+  person already had (DocumentsUI asks "replace?"), and deleting it would
+  lose its history along with the bytes. There is no temporary-and-rename
+  here: the provider owns the file, and SAF offers no atomic replace.
+- *Install.* `MosaicActivity` installs the library when the host loads, as
+  the desktop `Main.kt` does: `installMosaicPlatformEffects(host, picker)`,
+  with the picker it built in `onCreate`, returning the router. Package
+  `[host_effects]` handlers remain desktop-only (§3.5),
+  so on Android the standard kinds always go to the library, and any other
+  kind is failed by the host as unanswered.
+- *The activity goes away.* `MosaicActivity` already handles rotation and
+  size changes itself. If it is destroyed anyway while a picker is open (the
+  system reclaims it), the router answers the waiting effect `failed` with a
+  message from `onDestroy`, so the runtime is never left awaiting a result
+  that can no longer arrive; a result delivered later is dropped.
+
+**Gates.**
+
+- The desktop harnesses (Compose on the JVM, Swift on Linux and macOS) drive
+  the asynchronous router with fake pickers: a document answered later, a
+  cancel, `done` never called twice, a second request refused while one is
+  open, a read over the limit, a failed write reported with a fixed
+  message, and a save refused before any picker is shown.
+- CI's existing mobile lanes compile the new code: the iOS simulator and
+  device builds (§2.3) and the Android APK (§3.5), whose dex must hold the
+  Android library. Driving the system pickers themselves needs the UI
+  automation of §4 (an XCUITest, an instrumented Compose test), which lands
+  with those lanes.
+
+**Order.** Three PRs: the Kotlin shared core and asynchronous router, with
+desktop behaviour unchanged; the Swift router's asynchronous path with the
+iOS picker; the Android library.
+
 ## 4. CI
 
 | lane | builds | drives |
