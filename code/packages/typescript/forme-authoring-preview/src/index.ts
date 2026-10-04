@@ -118,6 +118,7 @@ const TYPED_ARRAY_PROTOTYPE = Object.getPrototypeOf(Uint8Array.prototype) as obj
 const TYPED_ARRAY_BYTE_LENGTH = Object.getOwnPropertyDescriptor(TYPED_ARRAY_PROTOTYPE, "byteLength")?.get;
 const UINT8_SET = Uint8Array.prototype.set;
 const APPLY = Reflect.apply;
+const ABORT = AbortController.prototype.abort;
 
 interface RequestTask {
   readonly input: AuthoringPreviewInput;
@@ -129,6 +130,9 @@ interface RequestTask {
 interface ActiveTask {
   readonly task: RequestTask;
   readonly abort: AbortController;
+  readonly cancelledPromise: Promise<{ readonly kind: "aborted" }>;
+  readonly resolveCancelled: () => void;
+  cancelled: boolean;
   watch: SafeWatch | null;
   stopPromise: Promise<boolean> | null;
 }
@@ -150,8 +154,9 @@ interface SafeRunResult {
   readonly errors: unknown;
 }
 
-interface IdleChanges extends AsyncIterable<unknown> {
-  close(): void;
+interface IdleChanges {
+  readonly stream: AsyncIterable<unknown>;
+  readonly close: () => void;
 }
 
 /**
@@ -229,7 +234,7 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
     }
     if (this.poisoned !== null) {
       this.generation += 1;
-      if (this.active !== null) this.active.abort.abort();
+      if (this.active !== null) this.cancelActive(this.active);
       const attempt = failedAttempt(input.revision, this.poisoned.code, this.poisoned.message);
       this.currentState = freezeState({
         ...this.currentState,
@@ -315,9 +320,16 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
   }
 
   private async execute(task: RequestTask): Promise<void> {
+    let resolveCancelled!: () => void;
+    const cancelledPromise = new Promise<{ readonly kind: "aborted" }>(resolve => {
+      resolveCancelled = () => resolve({ kind: "aborted" });
+    });
     const active: ActiveTask = {
       task,
       abort: new AbortController(),
+      cancelledPromise,
+      resolveCancelled,
+      cancelled: false,
       watch: null,
       stopPromise: null,
     };
@@ -340,11 +352,11 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
       try {
         rawPrepared = await this.prepare(task.input, active.abort.signal);
       } catch {
-        if (task.settled || this.disposed || active.abort.signal.aborted) return;
+        if (task.settled || this.disposed || active.cancelled) return;
         attempt = failedAttempt(task.input.revision, "E_PREVIEW_PREPARE", "Preview input could not be prepared.");
         return;
       }
-      if (task.settled || this.disposed || active.abort.signal.aborted) {
+      if (task.settled || this.disposed || active.cancelled) {
         try {
           prepared = safePrepared(rawPrepared);
         } catch {
@@ -362,20 +374,20 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
 
       idle = idleChanges();
       try {
-        active.watch = safeWatch(this.watch(prepared.pipeline, { changes: idle, debounceMs: 0 }));
+        active.watch = safeWatch(this.watch(prepared.pipeline, { changes: idle.stream, debounceMs: 0 }));
       } catch {
         attempt = failedAttempt(task.input.revision, "E_PREVIEW_RUN", "Preview pipeline could not be started.");
         return;
       }
 
-      const first = await firstResultUntilAbort(active.watch.results(), active.abort.signal);
+      const first = await firstResultUntilAbort(() => active.watch!.results(), active);
       if (first.kind === "aborted") return;
       if (first.kind === "rejected") {
         attempt = failedAttempt(task.input.revision, "E_PREVIEW_RUN", "Preview pipeline did not complete safely.");
         return;
       }
       const next = first.next;
-      if (task.settled || this.disposed || active.abort.signal.aborted) return;
+      if (task.settled || this.disposed || active.cancelled) return;
       if (next.done) {
         attempt = failedAttempt(task.input.revision, "E_PREVIEW_RUN", "Preview pipeline ended without a result.");
         return;
@@ -411,7 +423,7 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
       }
       attempt = makeAttempt("ready", task.input.revision, buildId, []);
     } finally {
-      idle?.close();
+      try { idle?.close(); } catch { /* Stop and release remain mandatory. */ }
       let stopped = true;
       let released = true;
       try {
@@ -436,7 +448,7 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
 
       if (!task.settled && !this.disposed) {
         if (attempt === null) {
-          attempt = makeAttempt(active.abort.signal.aborted ? "cancelled" : "failed", task.input.revision, null, []);
+          attempt = makeAttempt(active.cancelled ? "cancelled" : "failed", task.input.revision, null, []);
         }
         await this.publishAttempt(active, attempt, snapshot);
       }
@@ -524,17 +536,7 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
       () => ({ kind: "settled" as const }),
       () => ({ kind: "rejected" as const }),
     );
-    let abortListener: (() => void) | null = null;
-    const aborted = new Promise<{ readonly kind: "aborted" }>(resolve => {
-      abortListener = () => {
-        open = false;
-        resolve({ kind: "aborted" });
-      };
-      if (active.abort.signal.aborted) abortListener();
-      else active.abort.signal.addEventListener("abort", abortListener, { once: true });
-    });
-    const result = await Promise.race([publisher, aborted]);
-    if (abortListener !== null) active.abort.signal.removeEventListener("abort", abortListener);
+    const result = await Promise.race([publisher, active.cancelledPromise]);
     open = false;
     if (result.kind === "aborted") return success;
     if (result.kind === "rejected") {
@@ -586,7 +588,7 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
     const diagnostic = failure.diagnostics[0]!;
     this.poisoned = { code: diagnostic.code, message: diagnostic.message };
     this.generation += 1;
-    active.abort.abort();
+    this.cancelActive(active);
     this.finishWithAttempt(active.task, failure);
     if (this.timer !== null) clearTimeout(this.timer);
     this.timer = null;
@@ -618,11 +620,15 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
       && !active.task.settled
       && !this.disposed
       && this.poisoned === null
-      && !active.abort.signal.aborted;
+      && !active.cancelled;
   }
 
   private cancelActive(active: ActiveTask): void {
-    active.abort.abort();
+    if (!active.cancelled) {
+      active.cancelled = true;
+      active.resolveCancelled();
+      APPLY(ABORT, active.abort, []);
+    }
     if (active.watch !== null) void this.stopWatch(active);
   }
 
@@ -782,27 +788,26 @@ async function firstResult(stream: unknown): Promise<{ readonly done: boolean; r
 }
 
 async function firstResultUntilAbort(
-  stream: unknown,
-  signal: AbortSignal,
+  stream: () => unknown,
+  active: ActiveTask,
 ): Promise<
   | { readonly kind: "result"; readonly next: { readonly done: boolean; readonly value?: unknown } }
   | { readonly kind: "rejected" }
   | { readonly kind: "aborted" }
 > {
-  if (signal.aborted) return { kind: "aborted" };
-  let abortListener!: () => void;
-  const aborted = new Promise<{ readonly kind: "aborted" }>(resolve => {
-    abortListener = () => resolve({ kind: "aborted" });
-    signal.addEventListener("abort", abortListener, { once: true });
-    if (signal.aborted) abortListener();
+  if (active.cancelled) return { kind: "aborted" };
+  const result = Promise.resolve().then(async () => {
+    if (active.cancelled) return { kind: "aborted" as const };
+    try {
+      const candidate = stream();
+      if (active.cancelled) return { kind: "aborted" as const };
+      const next = await firstResult(candidate);
+      return { kind: "result" as const, next };
+    } catch {
+      return { kind: active.cancelled ? "aborted" as const : "rejected" as const };
+    }
   });
-  const result = Promise.resolve().then(() => firstResult(stream)).then(
-    next => ({ kind: "result" as const, next }),
-    () => ({ kind: "rejected" as const }),
-  );
-  const outcome = await Promise.race([result, aborted]);
-  signal.removeEventListener("abort", abortListener);
-  return outcome;
+  return Promise.race([result, active.cancelledPromise]);
 }
 
 function safeRunResult(value: unknown): SafeRunResult {
@@ -1057,20 +1062,23 @@ function freezeState(state: AuthoringPreviewState): AuthoringPreviewState {
 function idleChanges(): IdleChanges {
   let closed = false;
   let resolve: ((result: IteratorResult<unknown>) => void) | null = null;
-  const iterator: AsyncIterator<unknown> = {
+  const close = () => {
+    closed = true;
+    resolve?.({ done: true, value: undefined });
+    resolve = null;
+  };
+  const iterator: AsyncIterator<unknown> = Object.freeze({
     next() {
       if (closed) return Promise.resolve({ done: true, value: undefined });
       return new Promise<IteratorResult<unknown>>(nextResolve => { resolve = nextResolve; });
     },
     return() {
-      closed = true;
-      resolve?.({ done: true, value: undefined });
-      resolve = null;
+      close();
       return Promise.resolve({ done: true, value: undefined });
     },
-  };
-  return {
+  });
+  const stream: AsyncIterable<unknown> = Object.freeze({
     [Symbol.asyncIterator]: () => iterator,
-    close() { void iterator.return?.(); },
-  };
+  });
+  return Object.freeze({ stream, close });
 }

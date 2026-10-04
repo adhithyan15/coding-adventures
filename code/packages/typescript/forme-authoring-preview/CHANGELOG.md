@@ -24,7 +24,8 @@ here.
   disposal so stale or malformed host activity fails closed.
 - Hardened production `Session` accessor snapshots, typed-array intrinsic
   sizing/copying, portable path collisions, proxy rejection, watch-retirement
-  failures, watch and publisher abort races, poisoned retirement, intrinsic
-  host-function dispatch, and commit-time last-good attribution.
+  failures, private watch and publisher cancellation races, frozen idle-stream
+  cleanup, poisoned retirement, intrinsic host-function dispatch, and
+  commit-time last-good attribution.
 - Added adversarial lifecycle tests with 95%+ statement, 99%+ line, 100%
   function, and 90%+ branch coverage.

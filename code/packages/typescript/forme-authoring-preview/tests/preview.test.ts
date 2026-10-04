@@ -265,7 +265,14 @@ describe("pipeline-backed authoring preview", () => {
         },
       },
       materializer: {
-        async prepare(input) {
+        async prepare(input, signal) {
+          if (input.revision === "rev-hung") {
+            Object.defineProperties(signal, {
+              aborted: { configurable: true, value: false },
+              addEventListener: { configurable: true, value: () => {} },
+              removeEventListener: { configurable: true, value: () => { throw new Error("signal secret"); } },
+            });
+          }
           return { pipeline: {} as Pipeline, release: input.revision === "rev-hung" ? release : async () => {} };
         },
       },
@@ -1042,6 +1049,7 @@ describe("pipeline-backed authoring preview", () => {
       { expected: "started", watch: () => { throw new Error("start secret"); } },
       { expected: "started", watch: () => ({ results() {}, rebuild() {}, get stop() { throw new Error("stop getter secret"); } }) as never },
       { expected: "started", watch: () => ({ results() {}, rebuild() {} }) as never },
+      { expected: "complete", watch: () => ({ results() { throw new Error("results secret"); }, rebuild() {}, async stop() {} }) as never },
       { expected: "complete", watch: () => immediateWatch(new Error("stream secret")) },
       { expected: "without a result", watch: () => immediateWatch({ done: true, value: undefined }) },
       { expected: "invalid result", watch: () => immediateWatch({ done: false, value: {} as RunResult }) },
@@ -1285,17 +1293,26 @@ describe("pipeline-backed authoring preview", () => {
     vi.useFakeTimers();
     let changes: WatchOptions["changes"] | null = null;
     let iterator: AsyncIterator<unknown> | null = null;
+    let pendingChange: Promise<IteratorResult<unknown>> | null = null;
+    const stop = vi.fn(async () => {});
+    const release = vi.fn(async () => {});
     const coordinator = createAuthoringPreview({
       debounceMs: 0,
       orchestrator: {
         watch(_pipeline, options) {
           changes = options.changes;
           iterator = changes[Symbol.asyncIterator]();
-          void iterator.next();
-          return immediateWatch({ done: false, value: result("success", "build-idle") });
+          pendingChange = iterator.next();
+          expect(() => Object.defineProperty(changes, "close", { value() { throw new Error("close secret"); } })).toThrow();
+          expect(() => Object.defineProperty(iterator, "return", { value() { throw new Error("return secret"); } })).toThrow();
+          return {
+            results: () => immediateWatch({ done: false, value: result("success", "build-idle") }).results(),
+            async rebuild() { return result("cancelled", "unused"); },
+            stop,
+          };
         },
       },
-      materializer: { async prepare() { return { pipeline: {} as Pipeline, async release() {} }; } },
+      materializer: { async prepare() { return { pipeline: {} as Pipeline, release }; } },
       publisher: {
         publish(_snapshot, commit) { commit(() => {}); },
         publishFailure(_failure, commit) { commit(() => {}); },
@@ -1304,8 +1321,13 @@ describe("pipeline-backed authoring preview", () => {
     const pending = coordinator.request(session("rev-idle"));
     await flushDebounce();
     await expect(pending).resolves.toMatchObject({ outcome: "ready" });
-    expect(changes).not.toBeNull();
+    expect(Object.isFrozen(changes)).toBe(true);
+    expect(Object.isFrozen(iterator)).toBe(true);
+    await expect(pendingChange).resolves.toEqual({ done: true, value: undefined });
+    await expect(iterator!.return!()).resolves.toEqual({ done: true, value: undefined });
     await expect(iterator!.next()).resolves.toEqual({ done: true, value: undefined });
+    expect(stop).toHaveBeenCalledOnce();
+    expect(release).toHaveBeenCalledOnce();
   });
 
   it("rejects null sessions and empty revisions without scheduling host work", async () => {
