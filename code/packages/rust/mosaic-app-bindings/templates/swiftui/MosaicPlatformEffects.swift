@@ -21,8 +21,9 @@
 // --------------------
 //
 //   macOS ........ NSOpenPanel / NSSavePanel, the system's own panels
-//   iOS, iPadOS .. not yet (UI89 step 6 brings UIDocumentPickerViewController);
-//                  each request fails with a message, so an Await never wedges
+//   iOS, iPadOS .. UIDocumentPickerViewController (UI89 §3.8): open a copy of
+//                  the chosen document; save by exporting a copy of the bytes
+//   elsewhere .... each request fails with a message, so an Await never wedges
 //
 // Routing
 // -------
@@ -37,19 +38,38 @@
 //                                and the host fails an unanswered Await
 //                                rather than leaving it pending.
 //
+// From request to outcome
+// -----------------------
+//
+//   router: defer the effect, then on the main queue
+//     check the request ............ a refusal answers here; no picker shown
+//     picker.open / picker.create
+//          |   now (a macOS panel is modal) or later (iOS's picker), once
+//          v
+//     done(document)  or  done(nil) .... nil answers cancelled {}
+//          |
+//     read (bounded) or write: inline on macOS; on iOS off the main queue,
+//     the outcome handed back to the main queue
+//          v
+//     the effect's outcome, completed exactly once
+//
 // Threading
 // ---------
 //
 // The host's lock is held while a handler runs, so a modal panel shown inline
 // would hold it for as long as the panel is open -- and SwiftUI calls
 // `applyProps()` every frame. Each standard effect is DEFERRED, then answered
-// from the main queue, which is also where AppKit panels must run. Nothing may
-// escape that block: once deferred, an effect is out of the host's fail
-// sweep, so a lost answer would leave it awaited for the life of the process.
+// from the main queue, which is also where AppKit panels and UIKit pickers
+// must run. Nothing may escape that path: once deferred, an effect is out of
+// the host's fail sweep, so a lost answer would leave it awaited for the life
+// of the process -- which is why every path above ends in one completion.
 
 import Foundation
 #if os(macOS)
 import AppKit
+import UniformTypeIdentifiers
+#elseif os(iOS)
+import UIKit
 import UniformTypeIdentifiers
 #endif
 
@@ -79,8 +99,8 @@ protocol MosaicFileDialogs {
   func chooseFileToSave(suggestedName: String, extensions: [String]) -> URL?
 }
 
-/// The platform's own panels. On iOS and iPadOS there are none yet (UI89
-/// step 6), and every request fails with a message rather than waiting.
+/// The platform's own panels on macOS. iOS and iPadOS have a picker that
+/// answers later instead (`MosaicUIKitDocumentPicker`, below).
 struct MosaicSystemFileDialogs: MosaicFileDialogs {
   func chooseFileToOpen(extensions: [String]) -> URL? {
     #if os(macOS)
@@ -116,10 +136,10 @@ struct MosaicSystemFileDialogs: MosaicFileDialogs {
   }
 }
 
-/// True where this library has panels to show. Elsewhere a standard kind
+/// True where this library has a picker to show. Elsewhere a standard kind
 /// fails at once, with a message, instead of reporting a cancel nobody made.
 let mosaicPlatformHasFileDialogs: Bool = {
-  #if os(macOS)
+  #if os(macOS) || os(iOS)
   return true
   #else
   return false
@@ -149,6 +169,11 @@ func mosaicMimeType(for url: URL) -> String {
   let fileExtension = url.pathExtension.lowercased()
   return mosaicMimeExtensions.first { $0.extensions.contains(fileExtension) }?.mime
     ?? "application/octet-stream"
+}
+
+/// The MIME type a file name suggests, from the table above.
+func mosaicMimeType(forName name: String) -> String {
+  mosaicMimeType(for: URL(fileURLWithPath: name))
 }
 
 /// Whether every extension the open panel filters on is an image's, so it can
@@ -385,65 +410,286 @@ func mosaicHasExecutableExtension(_ name: String) -> Bool {
   return mosaicExecutableExtensions.contains(fileExtension)
 }
 
-/// `files.open`: the outcome dictionary, never a thrown error.
-func mosaicRunFilesOpen(_ payload: Any, dialogs: MosaicFileDialogs) -> [String: Any] {
-  let request = mosaicPayloadDictionary(payload)
-  guard let chosen = dialogs.chooseFileToOpen(extensions: mosaicExtensions(for: request)) else {
-    return mosaicCancelled()
-  }
-  // Not the error's own text: it can carry the full local path, and a
-  // failure message is data the app sees.
-  let bytes: Data
-  switch mosaicReadChosenFile(chosen, limit: mosaicMaxOpenBytes) {
-  case .bytes(let read): bytes = read
-  case .notRegular: return mosaicFailed("that is not a regular file")
-  case .tooLarge:
-    return mosaicFailed("the selected file is larger than \(mosaicMaxOpenBytes) bytes")
-  case .unreadable: return mosaicFailed("couldn't read the selected file")
-  }
-  return mosaicOk([
-    "name": chosen.lastPathComponent,
-    "mimeType": mosaicMimeType(for: chosen),
-    "bytes": bytes.base64EncodedString(),
-  ])
+// ---- The asynchronous path (UI89 §3.8) -------------------------------------
+
+/// A failure whose message the app may see. Anything else a picker or a
+/// document throws is reported with a fixed message instead: an error's own
+/// text can carry a local path, and a failure message is data the app sees.
+struct MosaicFileFailure: Error {
+  let message: String
+  init(_ message: String) { self.message = message }
 }
 
-/// `files.save`: the outcome dictionary, never a thrown error.
-func mosaicRunFilesSave(_ payload: Any, dialogs: MosaicFileDialogs) -> [String: Any] {
+/// What a request accepts, as a picker needs it: the MIME types this library
+/// knows and their extensions (both pickers filter on these). A type the
+/// table does not know is dropped rather than failing the request (UI59 §3).
+struct MosaicAccept {
+  let mimeTypes: [String]
+  let extensions: [String]
+}
+
+func mosaicAccept(for payload: [String: Any]) -> MosaicAccept {
+  let accepted = (payload["accept"] as? [Any] ?? []).compactMap { $0 as? String }
+  var mimeTypes: [String] = []
+  for mime in accepted
+  where !mimeTypes.contains(mime) && mosaicMimeExtensions.contains(where: { $0.mime == mime }) {
+    mimeTypes.append(mime)
+  }
+  return MosaicAccept(mimeTypes: mimeTypes, extensions: mosaicExtensions(for: payload))
+}
+
+/// A document the person chose to open.
+protocol MosaicOpenedDocument {
+  /// Its name, as the app is told it; never a path.
+  var name: String { get }
+  /// The provider's MIME type, or nil to take it from the name.
+  var mimeType: String? { get }
+  /// Its bytes: at most `limit` of them, or nil when it is longer.
+  func read(limit: Int) throws -> Data?
+}
+
+/// Where the person chose to save.
+protocol MosaicSaveTarget {
+  /// The name it is saved under, which a picker may have changed.
+  var name: String { get }
+  /// Write `bytes` there, replacing what was there; throws on failure.
+  func write(_ bytes: Data) throws
+}
+
+/// A `files.save` request that met every rule of UI87 §3.1.
+struct MosaicSaveRequest {
+  let suggestedName: String
+  let bytes: Data
+  let accept: MosaicAccept
+}
+
+/// The system's file pickers. Each call answers `done` once, with the
+/// person's choice or nil for a cancel -- before returning (a modal macOS
+/// panel) or later, on the main queue (iOS's picker). A picker that cannot be
+/// shown throws; a `MosaicFileFailure`'s message reaches the app.
+///
+/// `create` is given the whole checked request, bytes included: iOS's picker
+/// exports a file it is handed, so it needs them before it is shown; a panel
+/// that returns a place to write leaves them to the target.
+protocol MosaicDocumentPicker {
+  func open(_ accept: MosaicAccept, done: @escaping (MosaicOpenedDocument?) -> Void) throws
+  func create(_ request: MosaicSaveRequest, done: @escaping (MosaicSaveTarget?) -> Void) throws
+}
+
+/// Check a `files.save` request before any picker is shown, exactly as on
+/// every host. Throws a `MosaicFileFailure` naming the rule it broke.
+func mosaicCheckSaveRequest(_ payload: Any) throws -> MosaicSaveRequest {
   let request = mosaicPayloadDictionary(payload)
   let suggestedName = request["suggestedName"] as? String ?? ""
   guard mosaicIsPlainFileName(suggestedName) else {
-    return mosaicFailed("suggestedName must be a plain file name")
+    throw MosaicFileFailure("suggestedName must be a plain file name")
   }
   guard let encoded = request["bytes"] as? String else {
-    return mosaicFailed("bytes must be base64 text")
+    throw MosaicFileFailure("bytes must be base64 text")
   }
   // Checked on the encoded length before decoding, so an oversized payload is
   // refused without allocating its decoded copy (4 base64 chars = 3 bytes).
   if encoded.utf8.count > (mosaicMaxSaveBytes / 3 + 1) * 4 {
-    return mosaicFailed("the file is larger than \(mosaicMaxSaveBytes) bytes")
+    throw MosaicFileFailure("the file is larger than \(mosaicMaxSaveBytes) bytes")
   }
   guard let bytes = Data(base64Encoded: encoded) else {
-    return mosaicFailed("bytes must be base64 text")
+    throw MosaicFileFailure("bytes must be base64 text")
   }
   if bytes.count > mosaicMaxSaveBytes {
-    return mosaicFailed("the file is larger than \(mosaicMaxSaveBytes) bytes")
+    throw MosaicFileFailure("the file is larger than \(mosaicMaxSaveBytes) bytes")
   }
   // When the app says what it is saving, the name must agree: a JSON export
   // cannot be offered as `notes.exe`.
-  let extensions = mosaicExtensions(for: request)
+  let accept = mosaicAccept(for: request)
   let suggestedExtension = mosaicFileExtension(suggestedName)
-  if !extensions.isEmpty && !extensions.contains(where: { $0 == suggestedExtension }) {
-    return mosaicFailed("suggestedName must end in an extension of an accepted type")
+  if !accept.extensions.isEmpty && !accept.extensions.contains(where: { $0 == suggestedExtension }) {
+    throw MosaicFileFailure("suggestedName must end in an extension of an accepted type")
   }
-  if extensions.isEmpty && mosaicHasExecutableExtension(suggestedName) {
-    return mosaicFailed("suggestedName must not end in an executable extension")
+  if accept.extensions.isEmpty && mosaicHasExecutableExtension(suggestedName) {
+    throw MosaicFileFailure("suggestedName must not end in an executable extension")
   }
-  guard let target = dialogs.chooseFileToSave(suggestedName: suggestedName, extensions: extensions)
-  else {
-    return mosaicCancelled()
+  return MosaicSaveRequest(suggestedName: suggestedName, bytes: bytes, accept: accept)
+}
+
+/// A flag that can be claimed once, from any thread.
+private final class MosaicOnceFlag {
+  private let lock = NSLock()
+  private var claimed = false
+
+  func claim() -> Bool {
+    lock.lock()
+    defer { lock.unlock() }
+    if claimed { return false }
+    claimed = true
+    return true
   }
-  return mosaicWriteReplacing(target, with: bytes)
+}
+
+/// `answer`, called at most once however often the result is.
+private func mosaicOnce(_ answer: @escaping ([String: Any]) -> Void) -> ([String: Any]) -> Void {
+  let flag = MosaicOnceFlag()
+  return { outcome in
+    if flag.claim() { answer(outcome) }
+  }
+}
+
+/// `files.open`, from request to `answer` -- called once, never with a thrown
+/// error. The picker is asked; the chosen document is read on
+/// `runInBackground`, the 50 MiB limit enforced while reading.
+func mosaicAnswerFilesOpen(
+  _ payload: Any,
+  picker: MosaicDocumentPicker,
+  runInBackground: @escaping (@escaping () -> Void) -> Void,
+  answer: @escaping ([String: Any]) -> Void
+) {
+  let once = mosaicOnce(answer)
+  let picked = MosaicOnceFlag()
+  do {
+    try picker.open(mosaicAccept(for: mosaicPayloadDictionary(payload))) { document in
+      // A picker that answers twice is heard once.
+      guard picked.claim() else { return }
+      guard let document else {
+        once(mosaicCancelled())
+        return
+      }
+      runInBackground { once(mosaicReadOpened(document)) }
+    }
+  } catch let failure as MosaicFileFailure {
+    once(mosaicFailed(failure.message))
+  } catch {
+    once(mosaicFailed("the file dialog failed"))
+  }
+}
+
+private func mosaicReadOpened(_ document: MosaicOpenedDocument) -> [String: Any] {
+  let bytes: Data
+  do {
+    guard let read = try document.read(limit: mosaicMaxOpenBytes) else {
+      return mosaicFailed("the selected file is larger than \(mosaicMaxOpenBytes) bytes")
+    }
+    bytes = read
+  } catch let failure as MosaicFileFailure {
+    return mosaicFailed(failure.message)
+  } catch {
+    return mosaicFailed("couldn't read the selected file")
+  }
+  return mosaicOk([
+    "name": document.name,
+    "mimeType": document.mimeType ?? mosaicMimeType(forName: document.name),
+    "bytes": bytes.base64EncodedString(),
+  ])
+}
+
+/// `files.save`, from request to `answer` -- called once, never with a thrown
+/// error. The request is checked first (a refusal shows no picker), the picker
+/// is asked, and the bytes are written on `runInBackground`.
+func mosaicAnswerFilesSave(
+  _ payload: Any,
+  picker: MosaicDocumentPicker,
+  runInBackground: @escaping (@escaping () -> Void) -> Void,
+  answer: @escaping ([String: Any]) -> Void
+) {
+  let once = mosaicOnce(answer)
+  let request: MosaicSaveRequest
+  do {
+    request = try mosaicCheckSaveRequest(payload)
+  } catch let failure as MosaicFileFailure {
+    once(mosaicFailed(failure.message))
+    return
+  } catch {
+    once(mosaicFailed("couldn't save the file"))
+    return
+  }
+  let picked = MosaicOnceFlag()
+  do {
+    try picker.create(request) { target in
+      guard picked.claim() else { return }
+      guard let target else {
+        once(mosaicCancelled())
+        return
+      }
+      runInBackground { once(mosaicWriteTarget(target, request.bytes)) }
+    }
+  } catch let failure as MosaicFileFailure {
+    once(mosaicFailed(failure.message))
+  } catch {
+    once(mosaicFailed("the file dialog failed"))
+  }
+}
+
+private func mosaicWriteTarget(_ target: MosaicSaveTarget, _ bytes: Data) -> [String: Any] {
+  do {
+    try target.write(bytes)
+    return mosaicOk(["name": target.name])
+  } catch let failure as MosaicFileFailure {
+    return mosaicFailed(failure.message)
+  } catch {
+    return mosaicFailed("couldn't save the file")
+  }
+}
+
+// ---- The macOS panels as a picker ------------------------------------------
+
+/// The panels as the router's `MosaicDocumentPicker`: each answers `done`
+/// before it returns, with the chosen file as a document or a target.
+struct MosaicDialogPicker: MosaicDocumentPicker {
+  let dialogs: MosaicFileDialogs
+
+  func open(_ accept: MosaicAccept, done: @escaping (MosaicOpenedDocument?) -> Void) throws {
+    done(dialogs.chooseFileToOpen(extensions: accept.extensions).map { MosaicFileDocument(url: $0) })
+  }
+
+  func create(_ request: MosaicSaveRequest, done: @escaping (MosaicSaveTarget?) -> Void) throws {
+    let target = dialogs.chooseFileToSave(
+      suggestedName: request.suggestedName, extensions: request.accept.extensions)
+    done(target.map { MosaicFileTarget(url: $0) })
+  }
+}
+
+/// A chosen file, read in place through `mosaicReadChosenFile`.
+private struct MosaicFileDocument: MosaicOpenedDocument {
+  let url: URL
+  var name: String { url.lastPathComponent }
+  var mimeType: String? { nil }
+
+  func read(limit: Int) throws -> Data? {
+    switch mosaicReadChosenFile(url, limit: limit) {
+    case .bytes(let read): return read
+    case .notRegular: throw MosaicFileFailure("that is not a regular file")
+    case .tooLarge: return nil
+    case .unreadable: throw MosaicFileFailure("couldn't read the selected file")
+    }
+  }
+}
+
+/// A chosen file to save over, through `mosaicWriteReplacing`.
+private struct MosaicFileTarget: MosaicSaveTarget {
+  let url: URL
+  var name: String { url.lastPathComponent }
+
+  func write(_ bytes: Data) throws {
+    guard mosaicWriteReplacing(url, with: bytes) else {
+      throw MosaicFileFailure("couldn't save the file")
+    }
+  }
+}
+
+/// `files.open` through `dialogs`, answered before it returns.
+func mosaicRunFilesOpen(_ payload: Any, dialogs: MosaicFileDialogs) -> [String: Any] {
+  var outcome = mosaicFailed("the file dialog failed")
+  mosaicAnswerFilesOpen(
+    payload, picker: MosaicDialogPicker(dialogs: dialogs), runInBackground: { $0() }
+  ) { outcome = $0 }
+  return outcome
+}
+
+/// `files.save` through `dialogs`, answered before it returns.
+func mosaicRunFilesSave(_ payload: Any, dialogs: MosaicFileDialogs) -> [String: Any] {
+  var outcome = mosaicFailed("the file dialog failed")
+  mosaicAnswerFilesSave(
+    payload, picker: MosaicDialogPicker(dialogs: dialogs), runInBackground: { $0() }
+  ) { outcome = $0 }
+  return outcome
 }
 
 /// Write `bytes` beside `target` and rename it into place, so an interrupted
@@ -458,7 +704,10 @@ func mosaicRunFilesSave(_ payload: Any, dialogs: MosaicFileDialogs) -> [String: 
 /// - Those bits are applied with `fchmod` on the open descriptor. A `chmod`
 ///   by path would follow a symlink swapped in after the write, and land on
 ///   whatever file it pointed at.
-private func mosaicWriteReplacing(_ target: URL, with bytes: Data) -> [String: Any] {
+///
+/// True once the file is in place; false, with nothing left behind, if any
+/// step failed (the caller reports a fixed message, never the error's text).
+private func mosaicWriteReplacing(_ target: URL, with bytes: Data) -> Bool {
   var mode: mode_t = 0o600
   var existing = stat()
   if lstat(target.path, &existing) == 0,
@@ -470,7 +719,7 @@ private func mosaicWriteReplacing(_ target: URL, with bytes: Data) -> [String: A
   let directory = target.deletingLastPathComponent()
   let temporary = directory.appendingPathComponent(".mosaic-save-\(UUID().uuidString).tmp")
   let descriptor = open(temporary.path, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW, 0o600)
-  guard descriptor >= 0 else { return mosaicFailed("couldn't save the file") }
+  guard descriptor >= 0 else { return false }
   let handle = FileHandle(fileDescriptor: descriptor, closeOnDealloc: false)
   var renamed = false
   defer {
@@ -480,19 +729,19 @@ private func mosaicWriteReplacing(_ target: URL, with bytes: Data) -> [String: A
     try handle.write(contentsOf: bytes)
     guard fchmod(descriptor, mode) == 0 else {
       try? handle.close()
-      return mosaicFailed("couldn't save the file")
+      return false
     }
     try handle.synchronize()
   } catch {
     try? handle.close()
-    return mosaicFailed("couldn't save the file")
+    return false
   }
   try? handle.close()
   guard rename(temporary.path, target.path) == 0 else {
-    return mosaicFailed("couldn't save the file")
+    return false
   }
   renamed = true
-  return mosaicOk(["name": target.lastPathComponent])
+  return true
 }
 
 /// Route one effect (UI87 §7.2). True when this library takes it, false when
@@ -506,7 +755,7 @@ func mosaicRoutesToPlatform(_ kind: String, appKinds: Set<String>?) -> Bool? {
 }
 
 /// The handler this library installs: it routes each effect by kind (UI87
-/// §7.2) and answers the standard kinds itself.
+/// §7.2) and answers the standard kinds itself, through `picker`.
 final class MosaicPlatformRouter {
   // Weak, as the host's `effectHandler` documentation asks: the host holds
   // this router's closure, so a strong reference back would be a cycle that
@@ -514,29 +763,36 @@ final class MosaicPlatformRouter {
   private weak var host: MosaicPlatformEffectHost?
   private let appHandler: ((UInt64, String, Any, String) -> Void)?
   private let appKinds: Set<String>?
-  private let dialogs: MosaicFileDialogs
+  private let picker: MosaicDocumentPicker
   private let hasDialogs: Bool
   private let runOnUI: (@escaping () -> Void) -> Void
-  // One file operation at a time (UI87 §3.1): a second request while a panel
+  private let runInBackground: ((@escaping () -> Void) -> Void)?
+  // One file operation at a time (UI87 §3.1): a second request while a picker
   // is open is failed, not queued behind it. Guarded by `busyLock` because the
   // handler can run on whichever thread settled the effect.
   private var busy = false
   private let busyLock = NSLock()
 
+  /// `runInBackground` is where a chosen document is read or written. Nil
+  /// (macOS) reads and writes inline, on the main queue, as it always has;
+  /// otherwise (iOS) the work runs there and its outcome is handed back
+  /// through `runOnUI` before the effect is completed.
   init(
     host: MosaicPlatformEffectHost,
     appHandler: ((UInt64, String, Any, String) -> Void)?,
     appKinds: Set<String>?,
-    dialogs: MosaicFileDialogs,
+    picker: MosaicDocumentPicker,
     hasDialogs: Bool,
-    runOnUI: @escaping (@escaping () -> Void) -> Void
+    runOnUI: @escaping (@escaping () -> Void) -> Void,
+    runInBackground: ((@escaping () -> Void) -> Void)? = nil
   ) {
     self.host = host
     self.appHandler = appHandler
     self.appKinds = appKinds
-    self.dialogs = dialogs
+    self.picker = picker
     self.hasDialogs = hasDialogs
     self.runOnUI = runOnUI
+    self.runInBackground = runInBackground
   }
 
   func handle(_ id: UInt64, _ kind: String, _ payload: Any, _ delivery: String) {
@@ -564,8 +820,8 @@ final class MosaicPlatformRouter {
   private func answerStandard(_ id: UInt64, _ kind: String, _ payload: Any, _ delivery: String) {
     // Only an Await has someone waiting for the answer.
     guard delivery.lowercased() == "await", let host else { return }
-    // No panels here (iOS, for now): answer inline, which the recursive lock
-    // allows, instead of pretending the person cancelled.
+    // No picker here: answer inline, which the recursive lock allows, instead
+    // of pretending the person cancelled.
     guard hasDialogs else {
       _ = host.completeEffect(id, mosaicFailed("\(kind) is not available on this platform yet"))
       return
@@ -575,54 +831,290 @@ final class MosaicPlatformRouter {
       return
     }
     // Ownership first. False means the runtime is not waiting on this id, and
-    // the right move is to open no panel at all.
+    // the right move is to open no picker at all.
     guard host.deferEffect(id) else {
       release()
       return
     }
-    let dialogs = self.dialogs
+    let picker = self.picker
+    let runOnUI = self.runOnUI
+    let runInBackground = self.runInBackground
     runOnUI { [weak self, weak host] in
-      let outcome = kind == "files.open"
-        ? mosaicRunFilesOpen(payload, dialogs: dialogs)
-        : mosaicRunFilesSave(payload, dialogs: dialogs)
-      self?.release()
-      _ = host?.completeEffect(id, outcome)
+      // The host closed while this was queued: nothing would hear the
+      // answer, so show no picker.
+      guard host != nil else {
+        self?.release()
+        return
+      }
+      let finish: ([String: Any]) -> Void = { outcome in
+        self?.release()
+        // A refused answer leaves the effect pending, and a deferred effect
+        // nobody answers is awaited for good: answer again with something
+        // small. The runtime refuses a second answer to the same effect, so
+        // this can never answer twice.
+        if let refused = host?.completeEffect(id, outcome), refused["error"] != nil {
+          _ = host?.completeEffect(id, mosaicFailed("couldn't deliver the file"))
+        }
+      }
+      let work: (@escaping () -> Void) -> Void
+      let answer: ([String: Any]) -> Void
+      if let runInBackground {
+        work = runInBackground
+        answer = { outcome in runOnUI { finish(outcome) } }
+      } else {
+        work = { $0() }
+        answer = finish
+      }
+      if kind == "files.open" {
+        mosaicAnswerFilesOpen(payload, picker: picker, runInBackground: work, answer: answer)
+      } else {
+        mosaicAnswerFilesSave(payload, picker: picker, runInBackground: work, answer: answer)
+      }
     }
   }
 }
 
 // Hosts that already carry a router, held weakly so a closed host is not kept
 // alive by this table. Installing twice would stack one router inside another.
-private let mosaicRoutedHosts = NSHashTable<AnyObject>.weakObjects()
+// Compared by identity, never by address alone: a new host can reuse a closed
+// one's memory. (A plain weak table rather than NSHashTable, which Linux's
+// Foundation lacks, so the harness compiles this file as it is.)
+private final class MosaicWeakHost {
+  weak var host: AnyObject?
+  init(_ host: AnyObject) { self.host = host }
+}
+private var mosaicRoutedHosts: [MosaicWeakHost] = []
 private let mosaicRoutedHostsLock = NSLock()
+
+/// This platform's picker: the panels (through `dialogs`) on macOS, the
+/// document picker on iOS and iPadOS, where `dialogs` is not used.
+func mosaicSystemPicker(dialogs: MosaicFileDialogs) -> MosaicDocumentPicker {
+  #if os(iOS)
+  return MosaicUIKitDocumentPicker()
+  #else
+  return MosaicDialogPicker(dialogs: dialogs)
+  #endif
+}
+
+/// Where this platform reads and writes a chosen document: inline on macOS
+/// (a panel is modal, and this is how it always worked); off the main queue on
+/// iOS, where a 50 MiB read would otherwise freeze the app's only window.
+let mosaicPlatformBackground: ((@escaping () -> Void) -> Void)? = {
+  #if os(iOS)
+  return { work in DispatchQueue.global(qos: .userInitiated).async(execute: work) }
+  #else
+  return nil
+  #endif
+}()
 
 /// Install the platform library on `host`, wrapping whatever handler the app
 /// installed. `appKinds` is the app's `[host_effects]` `kinds`, or nil when it
-/// declared none. `dialogs`, `hasDialogs` and `runOnUI` are replaceable for
-/// tests. Idempotent per host: a second call changes nothing.
+/// declared none. `picker` (default: this platform's), `dialogs` (the macOS
+/// panels the default picker uses), `hasDialogs`, `runOnUI` and
+/// `runInBackground` are replaceable for tests. Idempotent per host: a second
+/// call changes nothing.
 ///
 /// The router is kept alive by the closure the host holds; the router holds
 /// the host weakly, so no cycle forms.
 func installMosaicPlatformEffects(
   _ host: MosaicPlatformEffectHost,
   appKinds: Set<String>?,
+  picker: MosaicDocumentPicker? = nil,
   dialogs: MosaicFileDialogs = MosaicSystemFileDialogs(),
   hasDialogs: Bool = mosaicPlatformHasFileDialogs,
-  runOnUI: @escaping (@escaping () -> Void) -> Void = { DispatchQueue.main.async(execute: $0) }
+  runOnUI: @escaping (@escaping () -> Void) -> Void = { DispatchQueue.main.async(execute: $0) },
+  runInBackground: ((@escaping () -> Void) -> Void)? = mosaicPlatformBackground
 ) {
   mosaicRoutedHostsLock.lock()
   defer { mosaicRoutedHostsLock.unlock() }
-  if mosaicRoutedHosts.contains(host) { return }
-  mosaicRoutedHosts.add(host)
+  mosaicRoutedHosts.removeAll { $0.host == nil }
+  if mosaicRoutedHosts.contains(where: { $0.host === host }) { return }
+  mosaicRoutedHosts.append(MosaicWeakHost(host))
   let router = MosaicPlatformRouter(
     host: host,
     appHandler: host.effectHandler,
     appKinds: appKinds,
-    dialogs: dialogs,
+    picker: picker ?? mosaicSystemPicker(dialogs: dialogs),
     hasDialogs: hasDialogs,
-    runOnUI: runOnUI
+    runOnUI: runOnUI,
+    runInBackground: runInBackground
   )
   host.effectHandler = { id, kind, payload, delivery in
     router.handle(id, kind, payload, delivery)
   }
 }
+
+#if os(iOS)
+// ---- iOS and iPadOS: UIDocumentPickerViewController (UI89 §3.8) -----------
+
+/// The document picker as the router's `MosaicDocumentPicker`. Both pickers
+/// work on copies, so no security-scoped access is ever held and nothing
+/// outside the app's container is touched once the picker closes:
+///
+///   open  ... `forOpeningContentTypes:asCopy: true` -- the system copies the
+///             chosen document into the app's temporary directory; the copy
+///             is read with the desktop's limits and removed.
+///   save  ... the checked bytes are written as `<suggestedName>` into a
+///             fresh owner-only directory under the temporary directory, and
+///             `forExporting:asCopy: true` hands that file to the person, who
+///             chooses where it goes (the picker confirms any replace). The
+///             directory is removed when the picker answers.
+final class MosaicUIKitDocumentPicker: MosaicDocumentPicker {
+  func open(_ accept: MosaicAccept, done: @escaping (MosaicOpenedDocument?) -> Void) throws {
+    let presenter = try mosaicPickerPresenter()
+    let types = accept.extensions.compactMap { UTType(filenameExtension: $0) }
+    let picker = MosaicPickerController(
+      forOpeningContentTypes: types.isEmpty ? [.item] : types, asCopy: true)
+    picker.allowsMultipleSelection = false
+    picker.answer.finish = { urls in
+      done(urls?.first.map { MosaicCopiedDocument(url: $0) })
+    }
+    try mosaicPresent(picker, on: presenter)
+  }
+
+  func create(_ request: MosaicSaveRequest, done: @escaping (MosaicSaveTarget?) -> Void) throws {
+    let presenter = try mosaicPickerPresenter()
+    let files = FileManager.default
+    let directory = files.temporaryDirectory
+      .appendingPathComponent("mosaic-save-\(UUID().uuidString)", isDirectory: true)
+    // The name is a checked plain file name (UI87 §3.1), so it cannot leave
+    // the directory; `withoutOverwriting` refuses anything already there.
+    let file = directory.appendingPathComponent(request.suggestedName)
+    do {
+      try files.createDirectory(
+        at: directory, withIntermediateDirectories: false,
+        attributes: [.posixPermissions: 0o700])
+      try request.bytes.write(to: file, options: .withoutOverwriting)
+    } catch {
+      try? files.removeItem(at: directory)
+      throw MosaicFileFailure("couldn't save the file")
+    }
+    let picker = MosaicPickerController(forExporting: [file], asCopy: true)
+    picker.answer.finish = { urls in
+      try? FileManager.default.removeItem(at: directory)
+      done(urls?.first.map { MosaicExportedTarget(name: $0.lastPathComponent) })
+    }
+    do {
+      try mosaicPresent(picker, on: presenter)
+    } catch {
+      try? files.removeItem(at: directory)
+      throw error
+    }
+  }
+}
+
+/// The view controller to present a picker on: the topmost one in the
+/// foreground scene's key window -- an active scene first, else one that is
+/// only momentarily inactive (Control Center pulled down, a launch still
+/// settling). None (the app is in the background, or has no window yet)
+/// fails the request instead of leaving it waiting.
+private func mosaicPickerPresenter() throws -> UIViewController {
+  let scenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+  let foreground =
+    scenes.first(where: { $0.activationState == .foregroundActive })
+    ?? scenes.first(where: { $0.activationState == .foregroundInactive })
+  guard let scene = foreground,
+    let window = scene.windows.first(where: { $0.isKeyWindow }) ?? scene.windows.first,
+    var top = window.rootViewController
+  else {
+    throw MosaicFileFailure("there is no window to show the file picker in")
+  }
+  while let presented = top.presentedViewController, !presented.isBeingDismissed {
+    top = presented
+  }
+  return top
+}
+
+/// Present `picker`, or throw: a presentation UIKit refuses (the presenter
+/// left the window in the meantime) would otherwise never answer at all.
+private func mosaicPresent(_ picker: MosaicPickerController, on presenter: UIViewController) throws {
+  // Its own delegate (held weakly; the presenter holds the picker).
+  picker.delegate = picker
+  presenter.present(picker, animated: true)
+  guard picker.presentingViewController != nil else {
+    picker.answer.finish = nil
+    throw MosaicFileFailure("the file picker could not be shown")
+  }
+}
+
+/// The one answer a picker gives, however it ends. Not a view controller, so
+/// the controller's `deinit` can give it without touching UIKit.
+final class MosaicPickerAnswer {
+  private let lock = NSLock()
+  private var pending: (([URL]?) -> Void)?
+
+  /// What answers the picker; set before it is shown, cleared once given.
+  var finish: (([URL]?) -> Void)? {
+    get {
+      lock.lock()
+      defer { lock.unlock() }
+      return pending
+    }
+    set {
+      lock.lock()
+      pending = newValue
+      lock.unlock()
+    }
+  }
+
+  func give(_ urls: [URL]?) {
+    lock.lock()
+    let finish = pending
+    pending = nil
+    lock.unlock()
+    finish?(urls)
+  }
+}
+
+/// A document picker that is its own delegate and always answers: a pick, a
+/// cancel, or -- when it goes away without either (its scene was destroyed
+/// under it) -- a cancel from `deinit`. The delegate has always answered by
+/// then: UIKit hands it this controller, so it is alive for the call.
+final class MosaicPickerController: UIDocumentPickerViewController, UIDocumentPickerDelegate {
+  let answer = MosaicPickerAnswer()
+
+  func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+    answer.give(urls)
+  }
+
+  func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+    answer.give(nil)
+  }
+
+  deinit {
+    answer.give(nil)
+  }
+}
+
+/// A document opened through `asCopy`: a copy in the app's temporary
+/// directory, read like any chosen file and removed once read (or, unread,
+/// when the router lets go of it).
+private final class MosaicCopiedDocument: MosaicOpenedDocument {
+  let url: URL
+  var name: String { url.lastPathComponent }
+  var mimeType: String? { nil }
+
+  init(url: URL) { self.url = url }
+
+  func read(limit: Int) throws -> Data? {
+    defer { try? FileManager.default.removeItem(at: url) }
+    switch mosaicReadChosenFile(url, limit: limit) {
+    case .bytes(let read): return read
+    case .notRegular: throw MosaicFileFailure("that is not a regular file")
+    case .tooLarge: return nil
+    case .unreadable: throw MosaicFileFailure("couldn't read the selected file")
+    }
+  }
+
+  deinit {
+    try? FileManager.default.removeItem(at: url)
+  }
+}
+
+/// Where an exported copy went. The system wrote it before answering, so
+/// there is nothing left to write; its name is what the app is told.
+private struct MosaicExportedTarget: MosaicSaveTarget {
+  let name: String
+  func write(_ bytes: Data) throws {}
+}
+#endif

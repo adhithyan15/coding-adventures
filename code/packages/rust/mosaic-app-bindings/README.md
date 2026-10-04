@@ -27,10 +27,11 @@ with fake dialogs and fake pickers by
 `conformance/compose/MosaicPlatformEffectsTest.kt`.
 
 SwiftUI's `MosaicPlatformEffects.swift` (`swift_platform_effects()`) answers
-the same contract through `NSOpenPanel` / `NSSavePanel` on macOS; on iOS and
-iPadOS it fails each request with a message until UI89 step 6 adds the
-document picker, so an `Await` never wedges. It is tested with a fake host and
-fake panels by `conformance/swiftui/Sources/Conformance/PlatformEffectsChecks.swift`
+the same contract through `NSOpenPanel` / `NSSavePanel` on macOS and
+`UIDocumentPickerViewController` on iOS and iPadOS (UI89 §3.8), behind the
+same asynchronous picker seam as Compose. It is tested with a fake host, fake
+panels and fake pickers by
+`conformance/swiftui/Sources/Conformance/PlatformEffectsChecks.swift`
 (`--platform-effects`).
 
 Qt's `MosaicPlatformEffects.{h,cpp}` (`qt_platform_effects()`) answers the same

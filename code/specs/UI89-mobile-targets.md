@@ -456,6 +456,26 @@ after 1000 such reads instead of holding the one file operation open. The
 Compose harness gained thirteen checks of the asynchronous path and the
 router (26 in all).
 
+**As built: Swift and iOS (second PR).** `MosaicPlatformEffects.swift`
+gained the same seam as Kotlin (`MosaicDocumentPicker`,
+`MosaicOpenedDocument`, `MosaicSaveTarget`, `MosaicSaveRequest`,
+`MosaicAccept`, `MosaicFileFailure`, `mosaicCheckSaveRequest`,
+`mosaicAnswerFilesOpen` / `mosaicAnswerFilesSave`), the macOS panels
+adapted by `MosaicDialogPicker`, and, under `#if os(iOS)`,
+`MosaicUIKitDocumentPicker` with its `MosaicPickerController`. The router
+takes a picker and an optional `runInBackground`: nil on macOS (inline, as
+before), a global queue on iOS, whose outcome is handed back through
+`runOnUI`. `installMosaicPlatformEffects` keeps its parameters and adds
+`picker:` and `runInBackground:`; the generated `App.swift` is unchanged. The
+table of hosts already routed is a lock-guarded list of weak references
+compared by identity, not `NSHashTable`, which Linux's Foundation lacks, so
+the Linux harness compiles the library exactly as generated. A Rust test
+fences AppKit to `#if os(macOS)` and UIKit to `#if os(iOS)`. The
+Linux and macOS harness drives the asynchronous path and the background
+hand-off through the router with fakes; the iOS picker itself is compiled by
+CI's iOS simulator and device builds and driven by nothing until §4's
+XCUITest.
+
 **Order.** Three PRs: the Kotlin shared core and asynchronous router, with
 desktop behaviour unchanged; the Swift router's asynchronous path with the
 iOS picker; the Android library.

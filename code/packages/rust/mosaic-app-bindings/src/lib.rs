@@ -48,10 +48,10 @@ pub fn compose_platform_effects() -> String {
 }
 
 /// The SwiftUI platform library (UI87 §7): `files.open` and `files.save`
-/// through `NSOpenPanel` / `NSSavePanel` on macOS, a clear failure on iOS and
-/// iPadOS until UI89 step 6, and the router that sends each effect to the
-/// app's own handler or to this library by kind -- the same contract the
-/// Compose library answers. Written beside `MosaicRuntimeHost.swift` in every
+/// through `NSOpenPanel` / `NSSavePanel` on macOS and
+/// `UIDocumentPickerViewController` on iOS and iPadOS (UI89 §3.8), and the
+/// router that sends each effect to the app's own handler or to this library
+/// by kind -- the same contract the Compose library answers. Written beside `MosaicRuntimeHost.swift` in every
 /// SwiftUI project; installed by the generated `App.swift`.
 pub fn swift_platform_effects() -> String {
     include_str!("../templates/swiftui/MosaicPlatformEffects.swift").to_string()
@@ -1161,28 +1161,50 @@ mod tests {
         ));
     }
 
-    /// AppKit exists only on macOS; the iOS app target compiles this file too
-    /// (UI89 §2.2 lists every `Sources/App/*.swift`), so every AppKit use must
-    /// sit behind `#if os(macOS)`.
+    /// AppKit exists only on macOS and UIKit's picker only on iOS; both app
+    /// targets compile this file (UI89 §2.2 lists every `Sources/App/*.swift`),
+    /// and so does the Linux harness. So every AppKit use sits behind
+    /// `#if os(macOS)`, every UIKit use behind `#if os(iOS)` (or the
+    /// `#elseif` that follows a macOS block), and `UTType` behind either.
     #[test]
-    fn swift_platform_effects_fence_appkit_to_macos() {
+    fn swift_platform_effects_fence_appkit_to_macos_and_uikit_to_ios() {
         let swift = swift_platform_effects();
-        let mut depth_macos = false;
+        #[derive(Clone, Copy, PartialEq)]
+        enum Fence {
+            None,
+            MacOs,
+            Ios,
+        }
+        let mut fence = Fence::None;
+        let (mut appkit_seen, mut uikit_seen) = (false, false);
         for line in swift.lines() {
             let trimmed = line.trim();
-            if trimmed == "#if os(macOS)" {
-                depth_macos = true;
-            } else if trimmed == "#else" || trimmed == "#endif" {
-                depth_macos = false;
-            } else if !trimmed.starts_with("//") && !trimmed.starts_with("///") {
-                for appkit in ["NSOpenPanel", "NSSavePanel", "import AppKit", "UTType("] {
-                    assert!(
-                        !trimmed.contains(appkit) || depth_macos,
-                        "`{appkit}` outside #if os(macOS): {line}"
-                    );
+            match trimmed {
+                "#if os(macOS)" => fence = Fence::MacOs,
+                "#if os(iOS)" | "#elseif os(iOS)" => fence = Fence::Ios,
+                "#else" | "#endif" => fence = Fence::None,
+                _ if trimmed.starts_with("#if") || trimmed.starts_with("#elseif") => fence = Fence::None,
+                _ if trimmed.starts_with("//") => {}
+                _ => {
+                    for appkit in ["NSOpenPanel", "NSSavePanel", "import AppKit"] {
+                        if trimmed.contains(appkit) {
+                            appkit_seen = true;
+                            assert!(fence == Fence::MacOs, "`{appkit}` outside #if os(macOS): {line}");
+                        }
+                    }
+                    for uikit in ["import UIKit", "UIDocumentPicker", "UIApplication", "UIViewController", "UIWindowScene"] {
+                        if trimmed.contains(uikit) {
+                            uikit_seen = true;
+                            assert!(fence == Fence::Ios, "`{uikit}` outside #if os(iOS): {line}");
+                        }
+                    }
+                    if trimmed.contains("UTType") {
+                        assert!(fence != Fence::None, "`UTType` outside a macOS or iOS block: {line}");
+                    }
                 }
             }
         }
+        assert!(appkit_seen && uikit_seen, "both pickers are still there");
     }
 
     #[test]
