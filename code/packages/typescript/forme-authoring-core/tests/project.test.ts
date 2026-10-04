@@ -5,6 +5,7 @@ import {
   HARD_AUTHORING_LIMITS,
   canonicalAuthoringProject,
   createAuthoringProject,
+  validateAuthoringRevision,
   validateAuthoringProject,
   type AuthoringProject,
 } from "../src/index.js";
@@ -67,6 +68,13 @@ function invalid(value: unknown, code = "INVALID_PROJECT"): void {
 }
 
 describe("the authoring project codec", () => {
+  it("shares one exact bounded opaque revision contract", () => {
+    expect(validateAuthoringRevision(" revision with spaces ")).toBe(" revision with spaces ");
+    expect(validateAuthoringRevision("😀".repeat(1_024))).toBe("😀".repeat(1_024));
+    for (const value of ["", "😀".repeat(1_025), "bad\u0085", "bad\u202e", "bad\ud800"]) {
+      expect(() => validateAuthoringRevision(value)).toThrow("invalid");
+    }
+  });
   it("validates, clones, and deeply freezes a complete project", () => {
     const source = project();
     const validated = validateAuthoringProject(source);

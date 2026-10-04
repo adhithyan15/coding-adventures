@@ -159,7 +159,7 @@ function scalarLength(value: string): number {
     const unit = value.charCodeAt(index);
     if (unit >= 0xd800 && unit <= 0xdbff) {
       const next = value.charCodeAt(index + 1);
-      if (next < 0xdc00 || next > 0xdfff) return -1;
+      if (!Number.isFinite(next) || next < 0xdc00 || next > 0xdfff) return -1;
       index += 1;
     } else if (unit >= 0xdc00 && unit <= 0xdfff) {
       return -1;
@@ -167,6 +167,17 @@ function scalarLength(value: string): number {
     length += 1;
   }
   return length;
+}
+
+/** Validate one opaque persisted authoring revision without normalizing it. */
+export function validateAuthoringRevision(value: unknown): string {
+  if (typeof value !== "string") throw new TypeError("authoring revision must be a string");
+  if (value.length > 2_048) throw new TypeError("authoring revision is invalid");
+  const length = scalarLength(value);
+  if (length < 1 || length > 1_024 || UNSAFE_IDENTITY.test(value)) {
+    throw new TypeError("authoring revision is invalid");
+  }
+  return value;
 }
 
 function stringValue(
@@ -257,9 +268,7 @@ function portableName(value: unknown, path: string, maximum: number): string {
 }
 
 function publicationRevision(value: unknown, path: string): string {
-  const result = stringValue(value, path, 1_024, { nonEmpty: true });
-  if (UNSAFE_IDENTITY.test(result)) invalidProject(path, "contains unsafe identity formatting");
-  return result;
+  try { return validateAuthoringRevision(value); } catch { invalidProject(path, "contains an invalid authoring revision"); }
 }
 
 function publicationRecord(

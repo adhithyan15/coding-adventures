@@ -18,3 +18,8 @@ here.
   100% functions, and 90%+ branch coverage.
 - Hardened synchronous adapter re-entry and replaced the raw builder store with
   a revocable manifest-restricted wrapper that re-verifies every target read.
+- Reserved publication admission before session inspection, rejected proxy and
+  accessor-backed boundaries with bounded schema snapshots, and made concurrent
+  disposal share one cleanup settlement.
+- Reused the core's exact opaque revision validator across snapshot, staleness,
+  and durable-record phases so a deployed token cannot fail only at persistence.

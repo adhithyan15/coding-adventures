@@ -8,7 +8,9 @@
  */
 
 import { createHash } from "node:crypto";
+import { types as nodeTypes } from "node:util";
 import {
+  validateAuthoringRevision,
   validateAuthoringProject,
   type AuthoringProject,
   type AuthoringPublicationCommand,
@@ -98,7 +100,6 @@ export interface AuthoringPublisher {
   dispose(): Promise<void>;
 }
 
-const MAX_REVISION_SCALARS = 1_024;
 const MAX_TARGET_ID_SCALARS = 256;
 const MAX_LABEL_SCALARS = 512;
 const MAX_DESTINATION_SCALARS = 2_048;
@@ -138,7 +139,9 @@ class Publisher implements AuthoringPublisher {
   private readonly deploy: AuthoringPublishTarget["publish"];
   private currentState: AuthoringPublishState = state("idle", null, null, []);
   private active: ActiveAction | null = null;
+  private starting = false;
   private disposed = false;
+  private disposePromise: Promise<void> | null = null;
   private poisoned = false;
 
   constructor(options: CreateAuthoringPublisherOptions) {
@@ -159,10 +162,24 @@ class Publisher implements AuthoringPublisher {
 
   publish(session: AuthoringSession, signal?: AbortSignal): Promise<AuthoringPublishAttempt> {
     if (this.disposed) return Promise.reject(new Error("authoring publisher is disposed"));
+    if (this.starting) return Promise.reject(new Error("another publication action is starting"));
+    if (this.active !== null) {
+      return Promise.resolve(attempt(
+        "failed",
+        this.currentState.revision ?? "active-publication",
+        null,
+        this.target.targetId,
+        [diagnostic("E_PUBLISH_BUSY", "Another publication action is already active.")],
+      ));
+    }
+    this.starting = true;
     let snapshot: SessionSnapshot;
     try { snapshot = snapshotSession(session); } catch {
+      this.starting = false;
       return Promise.reject(new TypeError("authoring session could not be inspected safely"));
     }
+    this.starting = false;
+    if (this.disposed) return Promise.reject(new Error("authoring publisher is disposed"));
     if (this.poisoned) {
       return Promise.resolve(attempt(
         "indeterminate",
@@ -170,15 +187,6 @@ class Publisher implements AuthoringPublisher {
         null,
         this.target.targetId,
         [diagnostic("E_PUBLISH_RECONCILE", "Publication state must be reconciled before retrying.")],
-      ));
-    }
-    if (this.active !== null) {
-      return Promise.resolve(attempt(
-        "failed",
-        snapshot.revision,
-        null,
-        this.target.targetId,
-        [diagnostic("E_PUBLISH_BUSY", "Another publication action is already active.")],
       ));
     }
     const abort = new AbortController();
@@ -196,9 +204,14 @@ class Publisher implements AuthoringPublisher {
     return promise;
   }
 
-  async dispose(): Promise<void> {
-    if (this.disposed) return;
+  dispose(): Promise<void> {
+    if (this.disposePromise !== null) return this.disposePromise;
     this.disposed = true;
+    this.disposePromise = this.finishDispose();
+    return this.disposePromise;
+  }
+
+  private async finishDispose(): Promise<void> {
     const active = this.active;
     if (active !== null) {
       APPLY(ABORT, active.abort, []);
@@ -413,22 +426,38 @@ interface SessionSnapshot {
 }
 
 function snapshotSession(session: AuthoringSession): SessionSnapshot {
-  if (session === null || typeof session !== "object") throw new TypeError("session must be an object");
-  const revision = exactIdentity(session.storageRevision, MAX_REVISION_SCALARS, "revision");
-  const project = validateAuthoringProject(session.project);
+  if (session === null || typeof session !== "object" || nodeTypes.isProxy(session)) throw new TypeError("session must be an object");
+  const revision = validateAuthoringRevision(snapshotProperty(session, "storageRevision", "session"));
+  const project = validateAuthoringProject(snapshotProperty(session, "project", "session"));
   const record = captureMethod<AuthoringSession["dispatchAtRevision"]>(session, "dispatchAtRevision", "session");
   return Object.freeze({ revision, project, record, session });
 }
 
 function currentRevision(session: AuthoringSession, signal: AbortSignal): string {
   throwIfAborted(signal);
-  return exactIdentity(session.storageRevision, MAX_REVISION_SCALARS, "revision");
+  return validateAuthoringRevision(snapshotProperty(session, "storageRevision", "session"));
+}
+
+function snapshotProperty(value: object, key: PropertyKey, label: string): unknown {
+  let cursor: object | null = value;
+  for (let depth = 0; cursor !== null && depth < 16; depth += 1) {
+    if (nodeTypes.isProxy(cursor)) throw new TypeError(`${label} must not be a proxy`);
+    const descriptor = Object.getOwnPropertyDescriptor(cursor, key);
+    if (descriptor !== undefined) {
+      if ("value" in descriptor) return descriptor.value;
+      if (typeof descriptor.get !== "function") throw new TypeError(`${label} ${String(key)} is unreadable`);
+      return APPLY(descriptor.get, value, []);
+    }
+    cursor = Object.getPrototypeOf(cursor);
+  }
+  throw new TypeError(`${label} is missing ${String(key)}`);
 }
 
 function captureMethod<T extends Function>(value: unknown, name: string, label: string): T {
-  if (value === null || (typeof value !== "object" && typeof value !== "function")) throw new TypeError(`${label} must be an object`);
+  if (value === null || (typeof value !== "object" && typeof value !== "function") || nodeTypes.isProxy(value)) throw new TypeError(`${label} must be an object`);
   let cursor: object | null = value as object;
   for (let depth = 0; cursor !== null && depth < 16; depth += 1) {
+    if (nodeTypes.isProxy(cursor)) throw new TypeError(`${label} must not use a proxy prototype`);
     const descriptor = Object.getOwnPropertyDescriptor(cursor, name);
     if (descriptor !== undefined) {
       if (!("value" in descriptor) || typeof descriptor.value !== "function") throw new TypeError(`${label} ${name} must be a data method`);
@@ -442,7 +471,7 @@ function captureMethod<T extends Function>(value: unknown, name: string, label: 
 }
 
 function captureOwnMethod<T extends Function>(value: unknown, name: string, label: string): T {
-  if (value === null || typeof value !== "object" || Object.getPrototypeOf(value) !== Object.prototype) {
+  if (value === null || typeof value !== "object" || nodeTypes.isProxy(value) || Object.getPrototypeOf(value) !== Object.prototype) {
     throw new TypeError(`${label} must be a plain object`);
   }
   const descriptor = Object.getOwnPropertyDescriptor(value, name);
@@ -457,21 +486,22 @@ function exactDataObject(
   keys: readonly string[],
   label: string,
 ): Record<string, unknown> {
-  if (value === null || typeof value !== "object" || Object.getPrototypeOf(value) !== Object.prototype) {
+  if (value === null || typeof value !== "object" || nodeTypes.isProxy(value) || Object.getPrototypeOf(value) !== Object.prototype) {
     throw new TypeError(`${label} must be a plain object`);
   }
-  const ownKeys = Reflect.ownKeys(value as object);
-  if (ownKeys.some((key) => typeof key !== "string")) throw new TypeError(`${label} contains symbol fields`);
-  const actual = [...ownKeys as string[]].sort();
-  const expected = [...keys].sort();
-  if (actual.length !== expected.length || actual.some((key, index) => key !== expected[index])) {
-    throw new TypeError(`${label} has missing or unknown fields`);
-  }
+  const expected = new Set(keys);
   const result: Record<string, unknown> = {};
-  for (const key of actual) {
+  let count = 0;
+  for (const key in value) {
+    if (!Object.hasOwn(value, key)) continue;
+    count += 1;
+    if (count > keys.length || !expected.has(key)) throw new TypeError(`${label} has missing or unknown fields`);
     const descriptor = Object.getOwnPropertyDescriptor(value as object, key);
     if (descriptor === undefined || !("value" in descriptor) || !descriptor.enumerable) throw new TypeError(`${label} contains accessors`);
     result[key] = descriptor.value;
+  }
+  if (count !== keys.length || keys.some((key) => !Object.hasOwn(result, key))) {
+    throw new TypeError(`${label} has missing or unknown fields`);
   }
   return result;
 }
@@ -501,7 +531,7 @@ function exactIdentity(value: unknown, maximum: number, label: string): string {
 }
 
 function exactText(value: unknown, maximum: number, label: string): string {
-  if (typeof value !== "string" || value.length === 0 || value.trim() !== value) throw new TypeError(`${label} must be non-empty trimmed text`);
+  if (typeof value !== "string" || value.length === 0 || value.length > maximum * 2 || value.trim() !== value) throw new TypeError(`${label} must be non-empty trimmed text`);
   let scalars = 0;
   for (const _scalar of value) scalars += 1;
   if (scalars > maximum || UNSAFE_TEXT.test(value)) throw new TypeError(`${label} is unsafe or too long`);

@@ -138,6 +138,11 @@ interface AuthoringStorage {
 `load` returns immutable bytes plus an opaque revision. The core treats the
 revision only as a comparison token. `compareAndSwap` must atomically reject a
 stale expected revision; it must never silently overwrite another session.
+Every storage success, session snapshot, and publication record applies the
+same exact validator to that token: it is non-empty, at most 1,024 Unicode
+scalars and 2,048 UTF-16 code units, and contains no control, bidirectional,
+or lone-surrogate code point. Valid text, including spaces, is preserved
+without trimming or normalization.
 Adapters own filesystem, OPFS, or platform capabilities and must publish new
 bytes atomically. The core performs no ambient I/O.
 
@@ -332,6 +337,15 @@ files, and arbitrary callbacks are not fields in the review or the builder
 input. The opaque host target owns those capabilities and receives only a
 validated FM08 manifest, a manifest-bound content store, the computed manifest
 identity, and a cancellation signal.
+
+Admission is reserved before any caller-controlled session accessor runs, so
+re-entry cannot start a second action or dispose a half-admitted one. Session
+properties are read through a bounded descriptor walk after rejecting proxy
+links; adapter, preparation, and review schemas require data fields. Unknown
+enumerable fields are rejected under the closed schemas; symbols and
+non-enumerable fields are ignored because only copied required data leaves the
+boundary. Concurrent disposal callers share one settlement and wait for the
+same active cleanup.
 
 The build adapter receives a deeply frozen copy of the exact project and its
 storage revision. It must run the real product pipeline and returns a separately

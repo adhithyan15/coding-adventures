@@ -28,6 +28,11 @@ digests, and retirement revokes later reads. Synchronous builder re-entry also
 observes the action as active because adapter work starts only after the active
 record is installed.
 
+The coordinator reserves admission before reading a session, rejects proxy
+boundaries, and snapshots required fields through bounded descriptor walks.
+All storage and publication revision checks use the core's single opaque-token
+validator, while concurrent disposal callers share one cleanup settlement.
+
 ## Usage
 
 ```ts

@@ -2,7 +2,7 @@
 
 import { canonicalJson, canonicalJsonByteLength, encodeCanonicalJson } from "./canonical.js";
 import { AuthoringError, invalidState } from "./error.js";
-import { resolveLimits, validateAuthoringProject } from "./project.js";
+import { resolveLimits, validateAuthoringProject, validateAuthoringRevision } from "./project.js";
 import type {
   AuthoringCommand,
   AuthoringLimits,
@@ -42,10 +42,7 @@ function storageFailure(error: unknown, signal?: AbortSignal): never {
 }
 
 function validateRevision(value: unknown, source: "stored" | "adapter"): string {
-  if (typeof value !== "string" || value.length < 1 || value.length > 1_024 || /[\u0000-\u001f\u007f]/.test(value)) {
-    invalidState(`${source} revision is invalid`);
-  }
-  return value;
+  try { return validateAuthoringRevision(value); } catch { invalidState(`${source} revision is invalid`); }
 }
 
 function exactObject(value: unknown, keys: readonly string[]): Record<string, unknown> {

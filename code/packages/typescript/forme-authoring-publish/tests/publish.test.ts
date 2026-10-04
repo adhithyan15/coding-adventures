@@ -203,6 +203,53 @@ describe("reviewed authoring publication", () => {
     expect(session.records).toHaveLength(1);
   });
 
+  it("bounds publication content reads by abort state and manifest ownership", async () => {
+    const publish = vi.fn<AuthoringPublishTarget["publish"]>(async (input) => {
+      const aborted = new AbortController();
+      aborted.abort();
+      await expect(input.contentStore.get(DIGEST, aborted.signal)).rejects.toThrow("aborted");
+      await expect(input.contentStore.has(DIGEST, aborted.signal)).rejects.toThrow("aborted");
+      await expect(input.contentStore.get("not-in-manifest")).rejects.toThrow("not owned");
+      return { outcome: "success", manifestSha256: input.manifestSha256 };
+    });
+
+    await expect(coordinator(undefined, target(publish)).publish(new Session()))
+      .resolves.toMatchObject({ outcome: "published" });
+  });
+
+  it("reserves admission before hostile session getters can re-enter", async () => {
+    const base = new Session();
+    let publisher!: ReturnType<typeof coordinator>;
+    let reentrant!: Promise<AuthoringPublishAttempt>;
+    let firstRead = true;
+    const session = {
+      get storageRevision() {
+        if (firstRead) {
+          firstRead = false;
+          reentrant = publisher.publish(base);
+        }
+        return base.storageRevision;
+      },
+      get project() { return base.project; },
+      dispatchAtRevision: base.dispatchAtRevision.bind(base),
+    } as unknown as AuthoringSession;
+    publisher = coordinator();
+
+    await expect(publisher.publish(session)).resolves.toMatchObject({ outcome: "published" });
+    await expect(reentrant).rejects.toThrow("starting");
+
+    const disposeBase = new Session();
+    let disposingPublisher!: ReturnType<typeof coordinator>;
+    const disposingSession = {
+      get storageRevision() { void disposingPublisher.dispose(); return disposeBase.storageRevision; },
+      get project() { return disposeBase.project; },
+      dispatchAtRevision: disposeBase.dispatchAtRevision.bind(disposeBase),
+    } as unknown as AuthoringSession;
+    disposingPublisher = coordinator();
+    await expect(disposingPublisher.publish(disposingSession)).rejects.toThrow("disposed");
+    expect(disposeBase.records).toEqual([]);
+  });
+
   it("honors disposal re-entered synchronously by the builder", async () => {
     const session = new Session();
     let publisher!: ReturnType<typeof coordinator>;
@@ -425,6 +472,36 @@ describe("reviewed authoring publication", () => {
     expect(publisher.state.phase).toBe("disposed");
   });
 
+  it("shares one concurrent disposal settlement through retirement", async () => {
+    let releaseStarted!: () => void;
+    const started = new Promise<void>((resolve) => { releaseStarted = resolve; });
+    let finishRelease!: () => void;
+    const held = new Promise<void>((resolve) => { finishRelease = resolve; });
+    const publisher = coordinator(async () => prepared({
+      async release() { releaseStarted(); await held; },
+    }));
+    const action = publisher.publish(new Session());
+    await started;
+    const first = publisher.dispose();
+    const second = publisher.dispose();
+    expect(second).toBe(first);
+    let settled = false;
+    void second.then(() => { settled = true; });
+    await Promise.resolve();
+    expect(settled).toBe(false);
+    finishRelease();
+    await Promise.all([first, second, action]);
+    expect(publisher.state.phase).toBe("disposed");
+  });
+
+  it("publishes an exact opaque revision containing surrounding spaces", async () => {
+    const session = new Session();
+    session.storageRevision = " revision with spaces ";
+    const result = await coordinator().publish(session);
+    expect(result).toMatchObject({ outcome: "published", revision: " revision with spaces " });
+    expect(session.records[0]!.expected).toBe(" revision with spaces ");
+  });
+
   it("forwards a later caller cancellation to active build work", async () => {
     const controller = new AbortController();
     const publisher = coordinator(async (_input, signal) => {
@@ -460,11 +537,17 @@ describe("reviewed authoring publication", () => {
     expect(() => createAuthoringPublisher(accessor as never)).toThrow();
 
     const symbolOptions = { builder: { build: async () => prepared() }, target: target(), [Symbol("secret")]: true };
-    expect(() => createAuthoringPublisher(symbolOptions as never)).toThrow();
+    expect(createAuthoringPublisher(symbolOptions as never).target).toEqual(target().review);
 
     const publisher = coordinator();
     await expect(publisher.publish(null as never)).rejects.toThrow("inspected safely");
+    await expect(publisher.publish({} as never)).rejects.toThrow("inspected safely");
+    const writeOnlyRevision = { project: project(), dispatchAtRevision: async () => {} } as Record<string, unknown>;
+    Object.defineProperty(writeOnlyRevision, "storageRevision", { set() {}, configurable: true });
+    await expect(publisher.publish(writeOnlyRevision as never)).rejects.toThrow("inspected safely");
     await expect(publisher.publish({ project: project(), storageRevision: "bad\u202e" } as never)).rejects.toThrow("inspected safely");
+    await expect(coordinator(async () => null as never).publish(new Session()))
+      .resolves.toMatchObject({ outcome: "failed" });
     await expect(coordinator(async () => ({ manifest: manifest(), contentStore: store() } as never)).publish(new Session()))
       .resolves.toMatchObject({ outcome: "failed", diagnostics: [{ code: "E_PUBLISH_BUILD" }] });
     await expect(coordinator(async () => ({ ...prepared(), release: 1 } as never)).publish(new Session()))
@@ -478,12 +561,32 @@ describe("reviewed authoring publication", () => {
 
     const hiddenReview = target();
     Object.defineProperty(hiddenReview.review, "token", { value: "secret" });
-    expect(() => createAuthoringPublisher({ builder: { async build() { return prepared(); } }, target: hiddenReview })).toThrow(
-      "could not be inspected safely",
-    );
+    expect(createAuthoringPublisher({ builder: { async build() { return prepared(); } }, target: hiddenReview }).target)
+      .toEqual(target().review);
 
     const hostile = new Proxy({}, { getPrototypeOf() { throw new Error("secret"); } });
     expect(() => createAuthoringPublisher(hostile as never)).toThrow("could not be inspected safely");
+
+    const hugeReview = {
+      ...target(),
+      review: { ...target().review, label: "x".repeat(1_000_000) },
+    };
+    expect(() => createAuthoringPublisher({ builder: { async build() { return prepared(); } }, target: hugeReview })).toThrow();
+    const excessive = { builder: { async build() { return prepared(); } }, target: target(), a: 1, b: 2, c: 3 };
+    expect(() => createAuthoringPublisher(excessive as never)).toThrow();
+
+    await expect(publisher.publish(new Proxy(new Session(), {}) as never)).rejects.toThrow("inspected safely");
+    const revoked = Proxy.revocable(new Session(), {});
+    revoked.revoke();
+    await expect(publisher.publish(revoked.proxy as never)).rejects.toThrow("inspected safely");
+    const trappingPrototype = new Proxy({}, {
+      getOwnPropertyDescriptor() { throw new Error("secret"); },
+    });
+    const prototypeSession = Object.assign(Object.create(trappingPrototype), {
+      storageRevision: "revision-1",
+      project: project(),
+    });
+    await expect(publisher.publish(prototypeSession as never)).rejects.toThrow("inspected safely");
   });
 
   it("returns immutable closed attempts and state", async () => {

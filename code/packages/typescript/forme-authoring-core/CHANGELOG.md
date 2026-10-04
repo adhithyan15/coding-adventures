@@ -11,6 +11,8 @@ All notable changes to this package will be documented in this file.
 - Added the semantic `record-publication` command and serialized
   `dispatchAtRevision` transaction so stale queued edits cannot acknowledge an
   older deployment or mark newer documents published.
+- Added one exact opaque revision validator shared by storage, project workflow
+  metadata, and publication composition without trimming or normalization.
 
 ## [0.1.0] - 2026-10-02
 
