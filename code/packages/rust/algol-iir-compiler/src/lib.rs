@@ -538,7 +538,7 @@ struct Compiler {
     /// procedure call copied into a scalar local.
     initialized_string_slots: HashSet<String>,
     /// Local real slots whose latest straight-line assignment is a direct
-    /// zero-argument real-procedure result.
+    /// zero-argument real-procedure result or a copy of another such slot.
     runtime_real_slots: HashSet<String>,
     /// Canonical text for local real scalars assigned a finite compile-time
     /// expression along a straight-line path. This deliberately stops tracking
@@ -3769,6 +3769,23 @@ impl Compiler {
         children.len() == 1 && self.is_direct_declared_real_procedure_call(children[0])
     }
 
+    fn is_runtime_real_assignment_value(&self, node: &GrammarASTNode) -> bool {
+        if self.is_direct_declared_real_procedure_call(node) {
+            return true;
+        }
+        let Some(source_name) = exact_bare_variable_expression_name(node) else {
+            return false;
+        };
+        if self.active_by_name_binding(&source_name).is_some() {
+            return false;
+        }
+        self.require_var(&source_name).is_ok_and(|binding| {
+            binding.ty == ScalarType::Real
+                && !binding.is_global
+                && self.runtime_real_slots.contains(&binding.slot)
+        })
+    }
+
     fn disable_static_tracking(&mut self) {
         self.runtime_real_slots.clear();
         self.static_real_slots.clear();
@@ -5137,7 +5154,7 @@ impl Compiler {
         let static_boolean_value = (!self.static_real_tracking_disabled)
             .then(|| self.static_boolean_value(expr))
             .flatten();
-        let runtime_real_value = self.is_direct_declared_real_procedure_call(expr);
+        let runtime_real_value = self.is_runtime_real_assignment_value(expr);
 
         if let Some(literal) = expr_string_literal(expr) {
             let mut saw_string_target = false;
@@ -12084,6 +12101,35 @@ mod tests {
                     == Some("__basic_print_real")
         }));
         assert!(module.get_function("__basic_print_real").is_some());
+    }
+
+    #[test]
+    fn al4_print_copied_runtime_real_scalar_uses_portable_formatter() {
+        let module = compile_source(
+            "begin real procedure pick; pick := 2.25; real x, y; x := pick(); y := x; x := 1.0; output(y) end",
+            "test",
+        )
+        .expect("a copied runtime real scalar retains formatter provenance");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var)
+                    == Some("__basic_print_real")
+        }));
+        assert!(module.get_function("__basic_print_real").is_some());
+    }
+
+    #[test]
+    fn al4_runtime_real_scalar_copy_provenance_does_not_admit_wrappers() {
+        for source in [
+            "begin real procedure pick; pick := 2.25; real x, y; x := pick(); y := x + 0.0; output(y) end",
+            "begin real procedure pick; pick := 2.25; real x, y; x := pick(); y := -x; output(y) end",
+            "begin real procedure pick; pick := 2.25; real x, y; procedure capture; y := x; x := pick(); y := x; output(y) end",
+        ] {
+            let err = compile_source(source, "test")
+                .expect_err("computed copies must not inherit formatter provenance");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
     }
 
     #[test]

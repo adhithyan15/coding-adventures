@@ -1,8 +1,9 @@
 # lang-aot
 
-ALGOL runtime real output now includes values migrated through a provenance-tracked
-scalar slot: a zero-argument real procedure result can be assigned to a real local and
-printed through the shared portable formatter on all seven standard backends.
+ALGOL runtime real output now includes values migrated through provenance-tracked
+scalar slots: a zero-argument real procedure result can be assigned and copied
+between real locals before the shared portable formatter prints it on all seven
+standard backends.
 Reassigned, control-flow-merged, and composed dynamic real values remain gated.
 
 The opt-in CLR integration suite `tests/clr_strict_flow.rs` executes forward-only
