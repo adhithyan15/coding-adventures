@@ -129,6 +129,27 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "JA-W132-re",
+      "sourceHash": "fnv1a64:89f7590422edc85d",
+      "svgHash": "fnv1a64:cc4623ca14a6a23e",
+      "svg": "japanese/book/figures/JA-W132-re-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "JA-W132-ru",
+      "sourceHash": "fnv1a64:abb6fd1d7fc1ed96",
+      "svgHash": "fnv1a64:bb3ede9fdd2958f2",
+      "svg": "japanese/book/figures/JA-W132-ru-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "JA-W132-so",
+      "sourceHash": "fnv1a64:d4bbfe7f2b425c85",
+      "svgHash": "fnv1a64:3a5d488b33ad1fb6",
+      "svg": "japanese/book/figures/JA-W132-so-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "JA-W15-ro",
       "sourceHash": "fnv1a64:754e54093168a32d",
       "svgHash": "fnv1a64:cafe2e19d507e82a",

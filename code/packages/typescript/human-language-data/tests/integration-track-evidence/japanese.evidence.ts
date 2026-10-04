@@ -16,9 +16,12 @@ export const integrationTrackEvidence: IntegrationTrackEvidence = {
     // Japanese to A1.
     // 734 -> 743: chapter 131 writes small ゃ, small ょ and を, each one lesson
     // after the word that holds it, with two more words and one review.
-    expect(japanese).toHaveLength(743);
+    // 743 -> 752: chapter 132 writes そ, れ and る the same way, each one lesson
+    // after the word that holds it (そこ, これ, くるま), with two more words
+    // (そと, それ) and one review.
+    expect(japanese).toHaveLength(752);
     expect(new Set(japanese.map((lesson) => lesson.realization.chapter)))
-      .toEqual(new Set(Array.from({ length: 131 }, (_, index) => index + 1)));
+      .toEqual(new Set(Array.from({ length: 132 }, (_, index) => index + 1)));
     expect(japanese.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
     expect(japanese.map((lesson) => [
       lesson.realization.lessonId,

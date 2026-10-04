@@ -1,0 +1,23 @@
+{
+  "language": "japanese",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:bb88cb5f35941112",
+  "lessonIds": [
+    "JA-C132-soko",
+    "JA-W132-so",
+    "JA-C132-soto",
+    "JA-C132-kore",
+    "JA-W132-re",
+    "JA-C132-sore",
+    "JA-C132-kuruma",
+    "JA-W132-ru",
+    "JA-R132-this-and-that"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "japanese/narration/ch132.txt",
+  "json": "japanese/narration/ch132.json",
+  "textHash": "fnv1a64:785746389f8dd3b9",
+  "jsonHash": "fnv1a64:ca33297512db90b6",
+  "findings": []
+}
