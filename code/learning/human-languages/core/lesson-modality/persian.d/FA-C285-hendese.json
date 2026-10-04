@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C285-hendese",
+    "language": "persian",
+    "chapter": 285,
+    "sequence": 14770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c78ce821816fadbf"
+  },
+  "findings": []
+}

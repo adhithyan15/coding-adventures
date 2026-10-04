@@ -1,0 +1,11 @@
+{
+  "id": "FA-C275-qarch",
+  "pathSegment": "FA-PATH-275-CHIZ275",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-275-CHIZ275",
+      "order": 2
+    }
+  ]
+}

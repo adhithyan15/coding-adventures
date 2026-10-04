@@ -1,0 +1,19 @@
+{
+  "chapter": 254,
+  "title": "To take off, To prepare, To iron, To fold, To hang up",
+  "label": "ch:fa-to-take-off-to-prepare-to-iron-to-fold-to-hang-up",
+  "canDo": "I can say to take off, to prepare, to iron, to fold and to hang up.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C254-avizan-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 254: I can say to take off, to prepare, to iron, to fold and to hang up.",
+    "assesses": [
+      "FA-LEX-C254-KONESH254-03",
+      "FA-LEX-C254-KONESH254-04",
+      "FA-LEX-C254-KONESH254-05"
+    ]
+  }
+}

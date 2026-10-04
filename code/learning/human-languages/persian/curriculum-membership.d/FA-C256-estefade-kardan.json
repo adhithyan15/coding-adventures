@@ -1,0 +1,11 @@
+{
+  "id": "FA-C256-estefade-kardan",
+  "pathSegment": "FA-PATH-256-KONESH256",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-256-KONESH256",
+      "order": 1
+    }
+  ]
+}

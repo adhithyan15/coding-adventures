@@ -1,0 +1,11 @@
+{
+  "id": "FA-C263-sardard",
+  "pathSegment": "FA-PATH-263-SALAMAT263",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-263-SALAMAT263",
+      "order": 2
+    }
+  ]
+}

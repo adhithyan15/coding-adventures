@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C284-arayeshgar",
+    "language": "persian",
+    "chapter": 284,
+    "sequence": 14690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef990e31640ef72c"
+  },
+  "findings": []
+}

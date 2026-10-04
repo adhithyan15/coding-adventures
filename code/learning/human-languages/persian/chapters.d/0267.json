@@ -1,0 +1,19 @@
+{
+  "chapter": 267,
+  "title": "Stadium, Capital city, Border, Rock, Ocean",
+  "label": "ch:fa-stadium-capital-city-border-rock-ocean",
+  "canDo": "I can say a stadium, a capital city, a border, a rock and an ocean.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "FA-C267-oqyanus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 267: I can say a stadium, a capital city, a border, a rock and an ocean.",
+    "assesses": [
+      "FA-LEX-C267-MAKAN267-03",
+      "FA-LEX-C267-MAKAN267-04",
+      "FA-LEX-C267-MAKAN267-05"
+    ]
+  }
+}

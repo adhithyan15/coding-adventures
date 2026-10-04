@@ -1,0 +1,19 @@
+{
+  "chapter": 255,
+  "title": "To shout, To brush one's teeth, To weigh, To bite, To chew",
+  "label": "ch:fa-to-shout-to-brush-one-s-teeth-to-weigh-to-bite-to-chew",
+  "canDo": "I can say to shout, to brush one's teeth, to weigh, to bite and to chew.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C255-javidan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 255: I can say to shout, to brush one's teeth, to weigh, to bite and to chew.",
+    "assesses": [
+      "FA-LEX-C255-KONESH255-03",
+      "FA-LEX-C255-KONESH255-04",
+      "FA-LEX-C255-KONESH255-05"
+    ]
+  }
+}

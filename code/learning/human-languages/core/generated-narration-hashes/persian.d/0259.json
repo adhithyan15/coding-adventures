@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 259,
+  "sourceHash": "fnv1a64:5b183127fb866d1b",
+  "lessonIds": [
+    "FA-C259-barrasi-kardan",
+    "FA-C259-chane-zadan",
+    "FA-C259-dozdidan",
+    "FA-C259-farar-kardan",
+    "FA-C259-jaru-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch259.txt",
+  "json": "persian/narration/ch259.json",
+  "textHash": "fnv1a64:bc207c50779deb09",
+  "jsonHash": "fnv1a64:575cd9dab2562bac",
+  "findings": []
+}

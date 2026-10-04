@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:5b86c61e95de211c",
+  "lessonIds": [
+    "FA-C258-jostoju-kardan",
+    "FA-C258-zang-zadan",
+    "FA-C258-dorost-kardan",
+    "FA-C258-movafeq-budan",
+    "FA-C258-tasavvor-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch258.txt",
+  "json": "persian/narration/ch258.json",
+  "textHash": "fnv1a64:ae2d2793a4b98bb3",
+  "jsonHash": "fnv1a64:c124db451fa6ad96",
+  "findings": []
+}

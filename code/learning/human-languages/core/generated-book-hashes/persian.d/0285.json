@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:84c5fe0eada107bc",
+  "lessonIds": [
+    "FA-C285-fizik",
+    "FA-C285-shimi",
+    "FA-C285-adabiyat",
+    "FA-C285-engelisi",
+    "FA-C285-hendese"
+  ],
+  "tex": "persian/book/chapters/ch285-physics-chemistry-literature-english-geometry.tex"
+}

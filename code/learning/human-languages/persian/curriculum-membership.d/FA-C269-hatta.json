@@ -1,0 +1,11 @@
+{
+  "id": "FA-C269-hatta",
+  "pathSegment": "FA-PATH-269-CHERA269",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-269-CHERA269",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C282-qab",
+    "language": "persian",
+    "chapter": 282,
+    "sequence": 14590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:594ef30cbe137702"
+  },
+  "findings": []
+}

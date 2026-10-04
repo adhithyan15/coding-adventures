@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-265-ZAMAN265",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "before": [],
+  "inline": [
+    "FA-EXT-265-ZAMAN265"
+  ],
+  "after": []
+}

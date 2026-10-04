@@ -1,0 +1,19 @@
+{
+  "chapter": 283,
+  "title": "Gravel, Rubber, Chain, Screwdriver, Pliers",
+  "label": "ch:fa-gravel-rubber-chain-screwdriver-pliers",
+  "canDo": "I can say gravel, rubber, a chain, a screwdriver and pliers.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C283-anbor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 283: I can say gravel, rubber, a chain, a screwdriver and pliers.",
+    "assesses": [
+      "FA-LEX-C283-CHIZ283-03",
+      "FA-LEX-C283-CHIZ283-04",
+      "FA-LEX-C283-CHIZ283-05"
+    ]
+  }
+}

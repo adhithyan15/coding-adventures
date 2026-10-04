@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:04c3aa0af479d0f1",
+  "lessonIds": [
+    "FA-C278-sofre",
+    "FA-C278-raz",
+    "FA-C278-tim",
+    "FA-C278-jayeze",
+    "FA-C278-ehteram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch278.txt",
+  "json": "persian/narration/ch278.json",
+  "textHash": "fnv1a64:b255a7093b7103ac",
+  "jsonHash": "fnv1a64:e7ff6d4736b7f81b",
+  "findings": []
+}

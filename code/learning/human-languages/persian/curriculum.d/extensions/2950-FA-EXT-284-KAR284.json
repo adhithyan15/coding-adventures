@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-284-KAR284",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a mechanic, a hairdresser, a postman, a librarian and an accountant.",
+  "prerequisites": []
+}

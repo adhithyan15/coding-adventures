@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:dec8c47b1d203c41",
+  "lessonIds": [
+    "FA-C262-bastebandi-kardan",
+    "FA-C262-saf-keshidan",
+    "FA-C262-jarime-shodan",
+    "FA-C262-tamdid-kardan",
+    "FA-C262-tah-gereftan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch262.txt",
+  "json": "persian/narration/ch262.json",
+  "textHash": "fnv1a64:ee86d395ebcc2b74",
+  "jsonHash": "fnv1a64:6e2c2f67f3d6b9ed",
+  "findings": []
+}

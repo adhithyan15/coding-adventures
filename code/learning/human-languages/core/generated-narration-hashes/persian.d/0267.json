@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:34d55b18dc04f2f0",
+  "lessonIds": [
+    "FA-C267-varzeshgah",
+    "FA-C267-paytakht",
+    "FA-C267-marz",
+    "FA-C267-sakhre",
+    "FA-C267-oqyanus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch267.txt",
+  "json": "persian/narration/ch267.json",
+  "textHash": "fnv1a64:e61141f23e65719b",
+  "jsonHash": "fnv1a64:859b7048a9672e6f",
+  "findings": []
+}

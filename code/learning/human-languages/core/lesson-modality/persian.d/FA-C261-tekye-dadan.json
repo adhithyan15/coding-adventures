@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C261-tekye-dadan",
+    "language": "persian",
+    "chapter": 261,
+    "sequence": 13490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb9db9a5f3df5c71"
+  },
+  "findings": []
+}

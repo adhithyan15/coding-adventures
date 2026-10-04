@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C284-ketabdar",
+    "language": "persian",
+    "chapter": 284,
+    "sequence": 14710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:51d97ce1c0d32f7e"
+  },
+  "findings": []
+}

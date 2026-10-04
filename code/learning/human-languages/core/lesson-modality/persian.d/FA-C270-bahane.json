@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C270-bahane",
+    "language": "persian",
+    "chapter": 270,
+    "sequence": 13980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8dc3bc515e20279"
+  },
+  "findings": []
+}

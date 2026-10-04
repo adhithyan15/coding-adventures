@@ -1,0 +1,19 @@
+{
+  "chapter": 274,
+  "title": "Heater, Shelf, Price, Discount, Banknote",
+  "label": "ch:fa-heater-shelf-price-discount-banknote",
+  "canDo": "I can say a heater, a shelf, a price, a discount and a banknote.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C274-eskenas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 274: I can say a heater, a shelf, a price, a discount and a banknote.",
+    "assesses": [
+      "FA-LEX-C274-CHIZ274-03",
+      "FA-LEX-C274-CHIZ274-04",
+      "FA-LEX-C274-CHIZ274-05"
+    ]
+  }
+}

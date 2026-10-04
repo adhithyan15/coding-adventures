@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:46bb8670744c9da6",
+  "lessonIds": [
+    "FA-C277-valedeyn",
+    "FA-C277-namzad",
+    "FA-C277-damad",
+    "FA-C277-famil",
+    "FA-C277-nojavan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch277.txt",
+  "json": "persian/narration/ch277.json",
+  "textHash": "fnv1a64:1f176a8d8f3686af",
+  "jsonHash": "fnv1a64:e05feb26431db6ae",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 271,
+  "title": "Free, Foreign, Local, Official, Private",
+  "label": "ch:fa-free-foreign-local-official-private",
+  "canDo": "I can say free, foreign, local, official and private.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FA-C271-khosusi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 271: I can say free, foreign, local, official and private.",
+    "assesses": [
+      "FA-LEX-C271-SEFAT271-03",
+      "FA-LEX-C271-SEFAT271-04",
+      "FA-LEX-C271-SEFAT271-05"
+    ]
+  }
+}

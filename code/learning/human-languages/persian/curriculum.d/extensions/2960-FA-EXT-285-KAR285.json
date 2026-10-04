@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-285-KAR285",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say physics, chemistry, literature, English and geometry.",
+  "prerequisites": []
+}

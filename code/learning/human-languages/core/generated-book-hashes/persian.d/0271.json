@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:1639bcb0985e9e4a",
+  "lessonIds": [
+    "FA-C271-azad",
+    "FA-C271-khareji",
+    "FA-C271-mahalli",
+    "FA-C271-rasmi",
+    "FA-C271-khosusi"
+  ],
+  "tex": "persian/book/chapters/ch271-free-foreign-local-official-private.tex"
+}

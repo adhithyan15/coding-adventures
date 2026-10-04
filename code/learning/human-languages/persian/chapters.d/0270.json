@@ -1,0 +1,19 @@
+{
+  "chapter": 270,
+  "title": "Shape, Patience, Since, Despite, Excuse",
+  "label": "ch:fa-shape-patience-since-despite-excuse",
+  "canDo": "I can say a shape, patience, since, despite and an excuse.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "FA-R270-second-pass-words-from-chapters-266-270",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 270: I can say a shape, patience, since, despite and an excuse.",
+    "assesses": [
+      "FA-LEX-C270-CHERA270-03",
+      "FA-LEX-C270-CHERA270-04",
+      "FA-LEX-C270-CHERA270-05"
+    ]
+  }
+}

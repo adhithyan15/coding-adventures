@@ -1,0 +1,11 @@
+{
+  "id": "FA-C280-naqqashi",
+  "pathSegment": "FA-PATH-280-CHIZ280",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-280-CHIZ280",
+      "order": 4
+    }
+  ]
+}

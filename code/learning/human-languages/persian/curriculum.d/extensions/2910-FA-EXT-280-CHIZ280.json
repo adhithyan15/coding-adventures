@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-280-CHIZ280",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say chess, mountain climbing, a concert, art and painting.",
+  "prerequisites": []
+}

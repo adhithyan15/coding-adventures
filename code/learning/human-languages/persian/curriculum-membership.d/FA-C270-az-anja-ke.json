@@ -1,0 +1,11 @@
+{
+  "id": "FA-C270-az-anja-ke",
+  "pathSegment": "FA-PATH-270-CHERA270",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-270-CHERA270",
+      "order": 2
+    }
+  ]
+}

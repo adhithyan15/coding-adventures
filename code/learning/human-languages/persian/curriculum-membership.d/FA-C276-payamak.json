@@ -1,0 +1,11 @@
+{
+  "id": "FA-C276-payamak",
+  "pathSegment": "FA-PATH-276-CHIZ276",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-276-CHIZ276",
+      "order": 3
+    }
+  ]
+}

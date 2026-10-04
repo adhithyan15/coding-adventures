@@ -1,0 +1,19 @@
+{
+  "chapter": 276,
+  "title": "Vinegar, Flour, Number, Text message, Email",
+  "label": "ch:fa-vinegar-flour-number-text-message-email",
+  "canDo": "I can say vinegar, flour, a number, a text message and an email.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C276-imeyl",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 276: I can say vinegar, flour, a number, a text message and an email.",
+    "assesses": [
+      "FA-LEX-C276-CHIZ276-03",
+      "FA-LEX-C276-CHIZ276-04",
+      "FA-LEX-C276-CHIZ276-05"
+    ]
+  }
+}

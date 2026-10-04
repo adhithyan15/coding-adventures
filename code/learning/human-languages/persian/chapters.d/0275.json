@@ -1,0 +1,19 @@
+{
+  "chapter": 275,
+  "title": "Lettuce, Cabbage, Mushroom, Cinnamon, Cream",
+  "label": "ch:fa-lettuce-cabbage-mushroom-cinnamon-cream",
+  "canDo": "I can say lettuce, cabbage, a mushroom, cinnamon and cream.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C275-khame",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 275: I can say lettuce, cabbage, a mushroom, cinnamon and cream.",
+    "assesses": [
+      "FA-LEX-C275-CHIZ275-03",
+      "FA-LEX-C275-CHIZ275-04",
+      "FA-LEX-C275-CHIZ275-05"
+    ]
+  }
+}

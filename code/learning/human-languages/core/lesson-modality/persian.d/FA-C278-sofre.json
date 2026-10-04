@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C278-sofre",
+    "language": "persian",
+    "chapter": 278,
+    "sequence": 14360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e0b82ab2719964fd"
+  },
+  "findings": []
+}

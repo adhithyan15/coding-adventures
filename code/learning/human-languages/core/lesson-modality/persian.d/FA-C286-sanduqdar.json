@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C286-sanduqdar",
+    "language": "persian",
+    "chapter": 286,
+    "sequence": 14800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0f0fcca8313ff82"
+  },
+  "findings": []
+}

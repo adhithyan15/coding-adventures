@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:bfa25863f117c7e5",
+  "lessonIds": [
+    "FA-C275-kahu",
+    "FA-C275-kalam",
+    "FA-C275-qarch",
+    "FA-C275-darchin",
+    "FA-C275-khame"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch275.txt",
+  "json": "persian/narration/ch275.json",
+  "textHash": "fnv1a64:039a1ae25d32e6d3",
+  "jsonHash": "fnv1a64:5f8aec086ce7aad0",
+  "findings": []
+}
