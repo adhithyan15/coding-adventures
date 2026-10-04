@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-216-VASTU216",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say copper, plastic, a plank, a brick and cement.",
+  "prerequisites": []
+}

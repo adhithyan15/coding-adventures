@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:5302e9bf30b97706",
+  "lessonIds": [
+    "ML-C260-kaccavatam",
+    "ML-C260-kaccavatakkaran",
+    "ML-C260-tulasu",
+    "ML-C260-kilo",
+    "ML-C260-sadhanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch260.txt",
+  "json": "malayalam/narration/ch260.json",
+  "textHash": "fnv1a64:f6f3dfdf314aa84c",
+  "jsonHash": "fnv1a64:1d07ea222157eef4",
+  "findings": []
+}

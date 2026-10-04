@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C224-rucikkuka",
+    "language": "malayalam",
+    "chapter": 224,
+    "sequence": 10110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:49bb54fe845dd9d4"
+  },
+  "findings": []
+}

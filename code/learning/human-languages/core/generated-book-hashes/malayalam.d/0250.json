@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:a96115f03deedeb8",
+  "lessonIds": [
+    "ML-C250-nampar",
+    "ML-C250-appu",
+    "ML-C250-vartta",
+    "ML-C250-patram",
+    "ML-C250-srrampu"
+  ],
+  "tex": "malayalam/book/chapters/ch250-number-app-news-newspaper-stamp.tex"
+}

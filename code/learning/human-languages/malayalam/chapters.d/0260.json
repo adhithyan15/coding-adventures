@@ -1,0 +1,19 @@
+{
+  "chapter": 260,
+  "title": "Business, Shopkeeper, Weighing scale, Kilo, Thing",
+  "label": "ch:ml-business-shopkeeper-weighing-scale-kilo-thing",
+  "canDo": "I can say business, a shopkeeper, a weighing scale, a kilo and a thing.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C260-sadhanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 260: I can say business, a shopkeeper, a weighing scale, a kilo and a thing.",
+    "assesses": [
+      "ML-LEX-C260-JOLI260-03",
+      "ML-LEX-C260-JOLI260-04",
+      "ML-LEX-C260-JOLI260-05"
+    ]
+  }
+}

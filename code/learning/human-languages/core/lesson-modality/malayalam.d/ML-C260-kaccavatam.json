@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C260-kaccavatam",
+    "language": "malayalam",
+    "chapter": 260,
+    "sequence": 11970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe36f1fb3e55db1a"
+  },
+  "findings": []
+}

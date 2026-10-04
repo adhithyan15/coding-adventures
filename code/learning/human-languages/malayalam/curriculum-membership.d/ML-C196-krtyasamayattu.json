@@ -1,0 +1,11 @@
+{
+  "id": "ML-C196-krtyasamayattu",
+  "pathSegment": "ML-PATH-196-SAMAYAM196",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-196-SAMAYAM196",
+      "order": 3
+    }
+  ]
+}

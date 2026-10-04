@@ -1,0 +1,11 @@
+{
+  "id": "ML-C247-curunta",
+  "pathSegment": "ML-PATH-247-GUNAM247",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-247-GUNAM247",
+      "order": 3
+    }
+  ]
+}

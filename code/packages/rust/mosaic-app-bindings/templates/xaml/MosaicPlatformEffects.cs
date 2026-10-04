@@ -78,6 +78,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.Versioning;
 using System.Text.Json;
 using System.Threading;
@@ -201,6 +202,16 @@ public static class MosaicPlatformEffects
         "library-ms", "searchconnector-ms", "iso", "img", "vhd", "vhdx",
         // Linux desktops.
         "desktop", "sh", "run", "appimage", "deb", "rpm", "flatpakref",
+        // Documents that run code when opened: web pages and SVG (their script
+        // runs from the local file), saved web archives and shortcuts, and Office
+        // files that carry macros.
+        "html", "htm", "xhtml", "xht", "shtml", "svg", "svgz", "mht", "mhtml", "website",
+        "docm", "dotm", "xlsm", "xltm", "xlam", "pptm", "potm", "ppam", "ppsm", "sldm",
+        "xlsb", "xla",
+        // Scripts an installed interpreter runs on a double-click.
+        "py", "pyw", "pyz", "pyzw", "pyc",
+        // Shortcuts that fetch or connect: Excel web queries, SYLK, Remote Desktop.
+        "iqy", "slk", "rdp",
     };
 
     // ── Outcomes ────────────────────────────────────────────────────────
@@ -380,7 +391,32 @@ public static class MosaicPlatformEffects
         {
             if (IsSpace(visible[index - 1]) && IsSpace(visible[index])) return false;
         }
-        return true;
+        return !IsReservedDeviceName(name);
+    }
+
+    /// <summary>
+    /// Windows device names: CON, NUL.txt or com1.json is the console,
+    /// the null device or a serial port there, never a file. Refused on every
+    /// host, so a name saves the same everywhere. Compared on the part before
+    /// the first dot, trailing spaces removed, ASCII letters folded to upper case (only those: a host's own upper-casing differs on `ı`).
+    /// </summary>
+    public static readonly IReadOnlySet<string> ReservedDeviceNames = new HashSet<string>(StringComparer.Ordinal)
+    {
+        "CON", "PRN", "AUX", "NUL", "CONIN$", "CONOUT$", "COM0", "COM1",
+        "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
+        "COM¹", "COM²", "COM³", "LPT0", "LPT1", "LPT2", "LPT3", "LPT4",
+        "LPT5", "LPT6", "LPT7", "LPT8", "LPT9", "LPT¹", "LPT²", "LPT³",
+    };
+
+    /// <summary>True when <paramref name="name"/> is a Windows device name (see <see cref="ReservedDeviceNames"/>).</summary>
+    public static bool IsReservedDeviceName(string name)
+    {
+        var dot = name.IndexOf('.');
+        var stem = (dot < 0 ? name : name[..dot]).TrimEnd(' ');
+        // ASCII letters only: every host's own upper-casing differs on some
+        // character (.NET's leaves `ı` alone, the others make it `I`).
+        var folded = new string(stem.Select(unit => unit is >= 'a' and <= 'z' ? (char)(unit - 0x20) : unit).ToArray());
+        return ReservedDeviceNames.Contains(folded);
     }
 
     /// <summary>
@@ -454,6 +490,10 @@ public static class MosaicPlatformEffects
     /// <summary>True when <paramref name="name"/> ends in an extension from <see cref="ExecutableExtensions"/>.</summary>
     public static bool HasExecutableExtension(string name)
     {
+        // A non-ASCII extension counts as one: a lookalike letter (Cyrillic
+        // `е` in `ехе`) or a combining mark after `.exe` makes an extension no
+        // list can name but a reader takes for an executable one.
+        if (name.Contains('.') && ExtensionOf(name).Any(unit => unit > 0x7F)) return true;
         // Folded through upper case first: `ſ` (LONG S) lowercases to itself
         // but is `S` to a case-insensitive file system.
         return name.Contains('.')

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C196-otuvil",
+    "language": "malayalam",
+    "chapter": 196,
+    "sequence": 8630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2d0fb0f039a68d4"
+  },
+  "findings": []
+}

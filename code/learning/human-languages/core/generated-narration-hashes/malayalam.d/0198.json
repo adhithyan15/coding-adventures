@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:d242b086a853245b",
+  "lessonIds": [
+    "ML-C198-tekku",
+    "ML-C198-kilakku",
+    "ML-C198-patinnaru",
+    "ML-C198-etire",
+    "ML-C198-currum",
+    "ML-R198-first-pass-words-from-chapters-190-193",
+    "ML-R198-second-pass-words-from-chapters-194-198"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch198.txt",
+  "json": "malayalam/narration/ch198.json",
+  "textHash": "fnv1a64:e484396b78efe74c",
+  "jsonHash": "fnv1a64:61c6f9e654b68f9d",
+  "findings": []
+}

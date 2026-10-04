@@ -2,9 +2,9 @@
   "version": 1,
   "language": "kannada",
   "chapter": 77,
-  "title": "Marks on the Page",
+  "title": "Marks on the Page, and Your First Question",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:99407c31a083f5b6",
+  "sourceHash": "fnv1a64:62005d3fd8a9732f",
   "lessons": [
     {
       "id": "KA-S152-full-stop-and-comma",
@@ -643,6 +643,114 @@
             {
               "kind": "speech",
               "text": "Which three marks do you write? (.,? (question mark)) Which mark opens a question? (None.) Where did the whole set come from? (The Latin alphabet.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-W77-gotta-controlled-question",
+      "sequence": 2735,
+      "title": "Your first Kannada question from meaning",
+      "headword": "ನಿಮಗೆ ಗೊತ್ತಾ?",
+      "romanization": "nimage gottā?",
+      "gloss": "assemble one familiar Kannada yes-or-no question from meaning, with no visible answer",
+      "script": "kannada",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:49db0b3475d639dc",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the earlier lessons. Recall how Kannada marks the person who knows, the word meaning known, the ending that turns a statement into a yes-or-no question, and the mark that closes a question. Do not write yet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — assemble one familiar question",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "From meaning alone, write Do you know? There is no word bank, romanization, or copyable sentence. Choose the familiar pieces, put them in Kannada order, change the know-word into a yes-or-no question, and add the question mark. This first composition is untimed: finish before opening the answer key."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "KA-W77-gotta-controlled-question-check",
+              "prompt": "With no word bank, romanization, or copyable answer, write the Kannada question meaning: Do you know?",
+              "assesses": [
+                "KA-LEX-C06-DATIVE-GE-01",
+                "KA-LEX-C32-GOTTU-01",
+                "KA-GRAMMAR-C32-GOTTU-02",
+                "KA-GRAMMAR-C69-ASK-02",
+                "KA-SCRIPT-RECOG-153"
+              ],
+              "responseSeconds": 40,
+              "acceptedResponses": [
+                "ನಿಮಗೆ ಗೊತ್ತಾ?",
+                "ನಿಮಗೆ ಗೊತ್ತಾ"
+              ],
+              "feedback": {
+                "correct": "You selected familiar pieces, changed the ending, and closed a Kannada question.",
+                "incorrect": "Finish the attempt first. Then check the knower, the know-word, the question ending, word boundary, and final question mark separately."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — repair one difference",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Check the knower, know-word, long question ending, word boundary, and punctuation separately. Repair the first difference and write the whole question once more from meaning."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What made this composition rather than copying? (You selected, changed, and ordered known pieces from meaning, with no visible Kannada answer.)"
+            },
+            {
+              "kind": "speech",
+              "text": "One controlled line proves this rung, not the later timed A1 writing task."
             }
           ]
         }

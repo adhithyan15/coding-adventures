@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-219-JOLI219",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a coin, a banknote, small change, the balance and a discount.",
+  "prerequisites": []
+}

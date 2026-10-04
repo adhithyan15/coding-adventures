@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:900b8f554429eedb",
+  "lessonIds": [
+    "ML-C206-kusrtiyulla",
+    "ML-C206-anusaranayulla",
+    "ML-C206-svartthamaya",
+    "ML-C206-sthiramaya",
+    "ML-C206-orra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch206.txt",
+  "json": "malayalam/narration/ch206.json",
+  "textHash": "fnv1a64:d4d5d2a8c2be2877",
+  "jsonHash": "fnv1a64:e534c8a9af3c3fdc",
+  "findings": []
+}

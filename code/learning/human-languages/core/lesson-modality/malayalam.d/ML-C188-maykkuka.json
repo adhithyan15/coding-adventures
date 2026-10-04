@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C188-maykkuka",
+    "language": "malayalam",
+    "chapter": 188,
+    "sequence": 8190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef90e3f1fb4c608d"
+  },
+  "findings": []
+}

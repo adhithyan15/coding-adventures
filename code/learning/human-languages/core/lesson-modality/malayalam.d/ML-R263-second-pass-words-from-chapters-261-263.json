@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R263-second-pass-words-from-chapters-261-263",
+    "language": "malayalam",
+    "chapter": 263,
+    "sequence": 12180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a48e0ed0c9404fb"
+  },
+  "findings": []
+}

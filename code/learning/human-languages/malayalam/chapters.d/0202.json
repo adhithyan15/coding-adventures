@@ -1,0 +1,19 @@
+{
+  "chapter": 202,
+  "title": "Motivation, Insistence, Good quality, Drawback, Fairness",
+  "label": "ch:ml-motivation-insistence-good-quality-drawback-fairness",
+  "canDo": "I can say a motivation, insistence, a good quality, a drawback and fairness.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "ML-C202-nyayam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 202: I can say a motivation, insistence, a good quality, a drawback and fairness.",
+    "assesses": [
+      "ML-LEX-C202-KARANAM202-03",
+      "ML-LEX-C202-KARANAM202-04",
+      "ML-LEX-C202-KARANAM202-05"
+    ]
+  }
+}

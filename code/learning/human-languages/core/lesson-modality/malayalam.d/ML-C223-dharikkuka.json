@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C223-dharikkuka",
+    "language": "malayalam",
+    "chapter": 223,
+    "sequence": 10060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9c287e634ce1dc8"
+  },
+  "findings": []
+}

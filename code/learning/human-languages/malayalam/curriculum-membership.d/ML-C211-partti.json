@@ -1,0 +1,11 @@
+{
+  "id": "ML-C211-partti",
+  "pathSegment": "ML-PATH-211-VASTU211",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-211-VASTU211",
+      "order": 4
+    }
+  ]
+}

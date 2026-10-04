@@ -1,0 +1,15 @@
+{
+  "language": "malayalam",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:1b0c78eee3b0e895",
+  "lessonIds": [
+    "ML-C198-tekku",
+    "ML-C198-kilakku",
+    "ML-C198-patinnaru",
+    "ML-C198-etire",
+    "ML-C198-currum",
+    "ML-R198-first-pass-words-from-chapters-190-193",
+    "ML-R198-second-pass-words-from-chapters-194-198"
+  ],
+  "tex": "malayalam/book/chapters/ch198-south-east-west-against-around.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 252,
+  "title": "Joke, Snake-boat race, Vishu kani, Vishu gift of money, Firecracker",
+  "label": "ch:ml-joke-snake-boat-race-vishu-kani-vishu-gift-of-money-firecracker",
+  "canDo": "I can say a joke, a snake-boat race, the Vishu kani, a Vishu gift of money and a firecracker.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C252-patakkam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 252: I can say a joke, a snake-boat race, the Vishu kani, a Vishu gift of money and a firecracker.",
+    "assesses": [
+      "ML-LEX-C252-VASTU252-03",
+      "ML-LEX-C252-VASTU252-04",
+      "ML-LEX-C252-VASTU252-05"
+    ]
+  }
+}

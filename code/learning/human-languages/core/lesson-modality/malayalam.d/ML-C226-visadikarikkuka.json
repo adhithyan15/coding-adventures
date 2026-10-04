@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C226-visadikarikkuka",
+    "language": "malayalam",
+    "chapter": 226,
+    "sequence": 10200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5bcf1d4e9e85ae5a"
+  },
+  "findings": []
+}

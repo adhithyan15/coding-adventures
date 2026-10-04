@@ -1,0 +1,19 @@
+{
+  "chapter": 203,
+  "title": "Tasty, Rotten, Loose, Tight, Empty",
+  "label": "ch:ml-tasty-rotten-loose-tight-empty",
+  "canDo": "I can say tasty, rotten, loose, tight and empty.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ML-C203-kaliyaya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 203: I can say tasty, rotten, loose, tight and empty.",
+    "assesses": [
+      "ML-LEX-C203-GUNAM203-03",
+      "ML-LEX-C203-GUNAM203-04",
+      "ML-LEX-C203-GUNAM203-05"
+    ]
+  }
+}

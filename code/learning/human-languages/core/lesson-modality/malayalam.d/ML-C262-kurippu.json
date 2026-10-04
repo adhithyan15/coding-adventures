@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C262-kurippu",
+    "language": "malayalam",
+    "chapter": 262,
+    "sequence": 12070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:34ac0ff99691205a"
+  },
+  "findings": []
+}

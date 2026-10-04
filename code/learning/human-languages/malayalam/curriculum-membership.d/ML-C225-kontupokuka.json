@@ -1,0 +1,11 @@
+{
+  "id": "ML-C225-kontupokuka",
+  "pathSegment": "ML-PATH-225-KRIYA225",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-225-KRIYA225",
+      "order": 4
+    }
+  ]
+}

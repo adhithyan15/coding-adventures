@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C209-masala",
+    "language": "malayalam",
+    "chapter": 209,
+    "sequence": 9320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6996bd917e7a6e99"
+  },
+  "findings": []
+}

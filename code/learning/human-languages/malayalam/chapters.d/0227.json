@@ -1,0 +1,19 @@
+{
+  "chapter": 227,
+  "title": "To note down, To be present, To take part, To lose one's way, To park",
+  "label": "ch:ml-to-note-down-to-be-present-to-take-part-to-lose-one-s-way-to-park",
+  "canDo": "I can say to note down, to be present, to take part, to lose one's way and to park.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C227-parkku-ceyyuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 227: I can say to note down, to be present, to take part, to lose one's way and to park.",
+    "assesses": [
+      "ML-LEX-C227-KRIYA227-03",
+      "ML-LEX-C227-KRIYA227-04",
+      "ML-LEX-C227-KRIYA227-05"
+    ]
+  }
+}

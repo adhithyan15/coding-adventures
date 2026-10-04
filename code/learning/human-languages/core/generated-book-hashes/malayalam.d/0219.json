@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:2169a95c984f8b21",
+  "lessonIds": [
+    "ML-C219-nanayam",
+    "ML-C219-nottu",
+    "ML-C219-cillara",
+    "ML-C219-bakki",
+    "ML-C219-kilivu"
+  ],
+  "tex": "malayalam/book/chapters/ch219-coin-banknote-small-change-balance-discount.tex"
+}

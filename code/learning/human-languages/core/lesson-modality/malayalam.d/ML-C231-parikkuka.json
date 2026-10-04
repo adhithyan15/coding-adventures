@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C231-parikkuka",
+    "language": "malayalam",
+    "chapter": 231,
+    "sequence": 10470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd2ff8d968200a30"
+  },
+  "findings": []
+}

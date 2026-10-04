@@ -1,0 +1,15 @@
+{
+  "language": "malayalam",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:bef6fe688c552642",
+  "lessonIds": [
+    "ML-C216-cempu",
+    "ML-C216-plasrriku",
+    "ML-C216-palaka",
+    "ML-C216-istika",
+    "ML-C216-simanru",
+    "ML-R216-first-pass-words-from-chapters-208-211",
+    "ML-R216-second-pass-words-from-chapters-212-216"
+  ],
+  "tex": "malayalam/book/chapters/ch216-copper-plastic-plank-brick-cement.tex"
+}

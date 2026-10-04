@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C216-cempu",
+    "language": "malayalam",
+    "chapter": 216,
+    "sequence": 9650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e13f7fedcbaa633"
+  },
+  "findings": []
+}

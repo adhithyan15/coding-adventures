@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C223-vaykkuka",
+    "language": "malayalam",
+    "chapter": 223,
+    "sequence": 10050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:795597ff04e2151f"
+  },
+  "findings": []
+}

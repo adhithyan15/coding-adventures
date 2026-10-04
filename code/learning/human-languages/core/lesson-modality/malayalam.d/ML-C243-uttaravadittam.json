@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C243-uttaravadittam",
+    "language": "malayalam",
+    "chapter": 243,
+    "sequence": 11100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77270a518b5e1dd7"
+  },
+  "findings": []
+}

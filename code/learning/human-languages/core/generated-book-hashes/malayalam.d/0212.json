@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:5ed8bf87a04f775d",
+  "lessonIds": [
+    "ML-C212-kala",
+    "ML-C212-samgitam",
+    "ML-C212-matsaram",
+    "ML-C212-daivam",
+    "ML-C212-mula"
+  ],
+  "tex": "malayalam/book/chapters/ch212-art-music-competition-god-bamboo.tex"
+}

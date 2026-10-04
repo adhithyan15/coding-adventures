@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:f751e9df525a692a",
+  "lessonIds": [
+    "ML-C243-olikalivu",
+    "ML-C243-kurram",
+    "ML-C243-uttaravadittam",
+    "ML-C243-sadhyata",
+    "ML-C243-atisthanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch243.txt",
+  "json": "malayalam/narration/ch243.json",
+  "textHash": "fnv1a64:92bd2476abd4e6da",
+  "jsonHash": "fnv1a64:707497073942f57a",
+  "findings": []
+}

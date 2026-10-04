@@ -1,0 +1,19 @@
+{
+  "chapter": 190,
+  "title": "To copy, To hide, To press, To knead, To cool",
+  "label": "ch:ml-to-copy-to-hide-to-press-to-knead-to-cool",
+  "canDo": "I can say to copy, to hide, to press, to knead and to cool.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C190-arruka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 190: I can say to copy, to hide, to press, to knead and to cool.",
+    "assesses": [
+      "ML-LEX-C190-KRIYA190-03",
+      "ML-LEX-C190-KRIYA190-04",
+      "ML-LEX-C190-KRIYA190-05"
+    ]
+  }
+}

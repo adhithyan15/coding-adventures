@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:738b5904b732cfb5",
+  "lessonIds": [
+    "ML-C200-venti",
+    "ML-C200-pakaram",
+    "ML-C200-prasnam",
+    "ML-C200-pariharam",
+    "ML-C200-anusariccu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch200.txt",
+  "json": "malayalam/narration/ch200.json",
+  "textHash": "fnv1a64:299d738a3e036c02",
+  "jsonHash": "fnv1a64:c196e59379142494",
+  "findings": []
+}

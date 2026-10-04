@@ -1,0 +1,19 @@
+{
+  "chapter": 183,
+  "title": "To choose, To use, To try, To get, To lose",
+  "label": "ch:ml-to-choose-to-use-to-try-to-get-to-lose",
+  "canDo": "I can say to choose, to use, to try, to get and to lose.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C183-nastappetuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 183: I can say to choose, to use, to try, to get and to lose.",
+    "assesses": [
+      "ML-LEX-C183-KRIYA183-03",
+      "ML-LEX-C183-KRIYA183-04",
+      "ML-LEX-C183-KRIYA183-05"
+    ]
+  }
+}

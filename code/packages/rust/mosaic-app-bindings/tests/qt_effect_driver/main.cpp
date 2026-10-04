@@ -560,6 +560,31 @@ int main(int argc, char **argv) {
               "files.open refuses something that is not a regular file");
     }
 
+    {
+        // UI87 §3.1: Windows device names are never plain names, on any host;
+        // active content and non-ASCII extensions count as executable.
+        bool devices = true;
+        for (const QString &name : {QStringLiteral("CON"), QStringLiteral("con.txt"), QStringLiteral("Nul.json"), QStringLiteral("COM1.json"), QStringLiteral("lpt9"), QStringLiteral("COM\u00B9.json"), QStringLiteral("CON .txt"), QStringLiteral("CONIN$.log"), QStringLiteral("aux.tar.gz")}) {
+            devices = devices && !mosaicIsPlainFileName(name) && mosaicIsReservedDeviceName(name);
+        }
+        check(devices, "Windows device names are not plain names");
+        bool near = true;
+        for (const QString &name : {QStringLiteral("console.txt"), QStringLiteral("CONFIG.json"), QStringLiteral("aux-notes.txt"), QStringLiteral("COM10.json"), QStringLiteral("my.CON"), QStringLiteral("nul report.json"), QStringLiteral("CON\u0131N$.txt")}) {
+            near = near && mosaicIsPlainFileName(name);
+        }
+        check(near, "names that only start like a device name pass");
+        bool active = true;
+        for (const QString &name : {QStringLiteral("page.html"), QStringLiteral("page.HTM"), QStringLiteral("card.svg"), QStringLiteral("archive.mht"), QStringLiteral("shortcut.website"), QStringLiteral("report.xlsm"), QStringLiteral("deck.pptm"), QStringLiteral("tool.py"), QStringLiteral("invoice.\u0435x\u0435"), QStringLiteral("setup.exe\u0301"), QStringLiteral("macros.xlsb"), QStringLiteral("addin.xla"), QStringLiteral("link.iqy"), QStringLiteral("sheet.slk"), QStringLiteral("remote.rdp"), QStringLiteral("app.pyzw"), QStringLiteral("cache.pyc")}) {
+            active = active && mosaicHasExecutableExtension(name);
+        }
+        check(active, "active content and non-ASCII extensions are executable");
+        bool documents = true;
+        for (const QString &name : {QStringLiteral("notes.txt"), QStringLiteral("data.xlsx"), QStringLiteral("report.docx"), QStringLiteral("photo.png")}) {
+            documents = documents && !mosaicHasExecutableExtension(name);
+        }
+        check(documents, "ordinary documents are not executable");
+    }
+
     if (failures) {
         std::printf("\n%d check(s) failed\n", failures);
         return 1;

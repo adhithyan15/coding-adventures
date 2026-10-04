@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C261-posrrman",
+    "language": "malayalam",
+    "chapter": 261,
+    "sequence": 12020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:02ea533d0605c1bb"
+  },
+  "findings": []
+}

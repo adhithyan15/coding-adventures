@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "BN-W40-a1-timed-production",
+    "language": "bengali",
+    "chapter": 40,
+    "sequence": 2155,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0553a98ab906248c",
+    "detachableSegments": [
+      "Writing — timed assessment production"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

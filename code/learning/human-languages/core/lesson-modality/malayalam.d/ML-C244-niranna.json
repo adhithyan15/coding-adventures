@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C244-niranna",
+    "language": "malayalam",
+    "chapter": 244,
+    "sequence": 11130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2d18540d65cba11"
+  },
+  "findings": []
+}

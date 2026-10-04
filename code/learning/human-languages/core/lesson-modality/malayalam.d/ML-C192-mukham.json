@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C192-mukham",
+    "language": "malayalam",
+    "chapter": 192,
+    "sequence": 8410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc4f5ea2c93ee712"
+  },
+  "findings": []
+}

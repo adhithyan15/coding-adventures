@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C212-daivam",
+    "language": "malayalam",
+    "chapter": 212,
+    "sequence": 9480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bda9e72546e3526f"
+  },
+  "findings": []
+}

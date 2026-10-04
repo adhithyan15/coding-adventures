@@ -1,0 +1,11 @@
+{
+  "id": "ML-C234-nirasa",
+  "pathSegment": "ML-PATH-234-AROGYAM234",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-234-AROGYAM234",
+      "order": 1
+    }
+  ]
+}

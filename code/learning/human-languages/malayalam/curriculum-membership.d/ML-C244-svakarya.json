@@ -1,0 +1,11 @@
+{
+  "id": "ML-C244-svakarya",
+  "pathSegment": "ML-PATH-244-GUNAM244",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-244-GUNAM244",
+      "order": 3
+    }
+  ]
+}

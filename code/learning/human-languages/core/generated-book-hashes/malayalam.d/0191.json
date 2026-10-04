@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:371d60a4cb0a23f0",
+  "lessonIds": [
+    "ML-C191-citaruka",
+    "ML-C191-tulayuka",
+    "ML-C191-urukuka",
+    "ML-C191-piriyuka",
+    "ML-C191-cuntuka"
+  ],
+  "tex": "malayalam/book/chapters/ch191-to-scatter-to-row-to-melt-to-part-to-point.tex"
+}

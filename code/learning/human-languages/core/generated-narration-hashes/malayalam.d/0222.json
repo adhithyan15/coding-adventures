@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:d47881cb35911fb1",
+  "lessonIds": [
+    "ML-C222-bhumisastram",
+    "ML-C222-sahityam",
+    "ML-C222-vyakaranam",
+    "ML-C222-barbar",
+    "ML-C222-tayyalkkaran",
+    "ML-R222-first-pass-words-from-chapters-217-219",
+    "ML-R222-second-pass-words-from-chapters-220-222"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch222.txt",
+  "json": "malayalam/narration/ch222.json",
+  "textHash": "fnv1a64:f01a8220376d11b5",
+  "jsonHash": "fnv1a64:91c4a565dcabde13",
+  "findings": []
+}

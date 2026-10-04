@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:df2e03c90360f8c4",
+  "lessonIds": [
+    "ML-C213-pulu",
+    "ML-C213-vavval",
+    "ML-C213-kuyil",
+    "ML-C213-paruntu",
+    "ML-C213-kokku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch213.txt",
+  "json": "malayalam/narration/ch213.json",
+  "textHash": "fnv1a64:be1c9dbc0bb8a7ad",
+  "jsonHash": "fnv1a64:3a231e251166ff17",
+  "findings": []
+}

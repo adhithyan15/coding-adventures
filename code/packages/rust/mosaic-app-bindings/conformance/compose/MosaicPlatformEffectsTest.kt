@@ -122,6 +122,31 @@ class MosaicPlatformEffectsTest {
     }
 
     @Test
+    fun windowsDeviceNamesAreNeverPlainNames() {
+        // UI87 §3.1: on Windows these are the console, the null device or a
+        // port, never a file; refused on every host so a name saves alike.
+        for (name in listOf("CON", "con.txt", "Nul.json", "COM1.json", "lpt9", "COM\u00B9.json", "CON .txt", "CONIN\$.log", "aux.tar.gz")) {
+            assertFalse(mosaicIsPlainFileName(name), name)
+        }
+        for (name in listOf("console.txt", "CONFIG.json", "aux-notes.txt", "COM10.json", "my.CON", "nul report.json", "CON\u0131N\$.txt")) {
+            assertTrue(mosaicIsPlainFileName(name), name)
+        }
+    }
+
+    @Test
+    fun activeContentAndNonAsciiExtensionsCountAsExecutable() {
+        // Web pages, SVG, web archives and shortcuts, macro documents and
+        // Python scripts run code when opened; a non-ASCII extension can be
+        // a lookalike of `.exe` (Cyrillic) or `.exe` with a combining mark.
+        for (name in listOf("page.html", "page.HTM", "card.svg", "archive.mht", "shortcut.website", "report.xlsm", "deck.pptm", "tool.py", "invoice.\u0435x\u0435", "setup.exe\u0301", "macros.xlsb", "addin.xla", "link.iqy", "sheet.slk", "remote.rdp", "app.pyzw", "cache.pyc")) {
+            assertTrue(mosaicHasExecutableExtension(name), name)
+        }
+        for (name in listOf("notes.txt", "data.xlsx", "report.docx", "photo.png")) {
+            assertFalse(mosaicHasExecutableExtension(name), name)
+        }
+    }
+
+    @Test
     fun theNameMustMatchTheAcceptedType() {
         val outcome = mosaicRunFilesSave(
             mapOf("suggestedName" to "notes.exe", "accept" to listOf("application/json"), "bytes" to encoded("{}")),

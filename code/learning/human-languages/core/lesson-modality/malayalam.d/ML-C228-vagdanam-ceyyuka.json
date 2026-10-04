@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C228-vagdanam-ceyyuka",
+    "language": "malayalam",
+    "chapter": 228,
+    "sequence": 10310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f8d8cd72f3891b1"
+  },
+  "findings": []
+}

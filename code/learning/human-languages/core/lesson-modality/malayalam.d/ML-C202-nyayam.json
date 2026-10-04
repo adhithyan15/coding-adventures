@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C202-nyayam",
+    "language": "malayalam",
+    "chapter": 202,
+    "sequence": 8970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0736b5b1dfe7671"
+  },
+  "findings": []
+}

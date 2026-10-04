@@ -251,6 +251,16 @@ const Set<String> mosaicExecutableExtensions = <String>{
   'library-ms', 'searchconnector-ms', 'iso', 'img', 'vhd', 'vhdx',
   // Linux desktops.
   'desktop', 'sh', 'run', 'appimage', 'deb', 'rpm', 'flatpakref',
+  // Documents that run code when opened: web pages and SVG (their script
+  // runs from the local file), saved web archives and shortcuts, and Office
+  // files that carry macros.
+  'html', 'htm', 'xhtml', 'xht', 'shtml', 'svg', 'svgz', 'mht', 'mhtml', 'website',
+  'docm', 'dotm', 'xlsm', 'xltm', 'xlam', 'pptm', 'potm', 'ppam', 'ppsm', 'sldm',
+  'xlsb', 'xla',
+  // Scripts an installed interpreter runs on a double-click.
+  'py', 'pyw', 'pyz', 'pyzw', 'pyc',
+  // Shortcuts that fetch or connect: Excel web queries, SYLK, Remote Desktop.
+  'iqy', 'slk', 'rdp',
 };
 
 // ── Outcomes ──────────────────────────────────────────────────────────────
@@ -410,7 +420,34 @@ bool mosaicIsPlainFileName(String name) {
       return false;
     }
   }
-  return true;
+  return !mosaicIsReservedDeviceName(name);
+}
+
+/// Windows device names: `CON`, `NUL.txt` or `com1.json` is the console,
+/// the null device or a serial port there, never a file. Refused on every
+/// host, so a name saves the same everywhere. Compared on the part before
+/// the first dot, trailing spaces removed, ASCII letters folded to upper case (only those: a host's own upper-casing differs on `ı`).
+const Set<String> mosaicReservedDeviceNames = <String>{
+  'CON', 'PRN', 'AUX', 'NUL', 'CONIN\$', 'CONOUT\$', 'COM0', 'COM1',
+  'COM2', 'COM3', 'COM4', 'COM5', 'COM6', 'COM7', 'COM8', 'COM9',
+  'COM¹', 'COM²', 'COM³', 'LPT0', 'LPT1', 'LPT2', 'LPT3', 'LPT4',
+  'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9', 'LPT¹', 'LPT²', 'LPT³',
+};
+
+/// True when [name] is a Windows device name (see
+/// [mosaicReservedDeviceNames]).
+bool mosaicIsReservedDeviceName(String name) {
+  final dot = name.indexOf('.');
+  final stem = (dot < 0 ? name : name.substring(0, dot)).replaceFirst(
+    RegExp(r' +$'),
+    '',
+  );
+  // ASCII letters only: every host's own upper-casing differs on some
+  // character (.NET's leaves `ı` alone, the others make it `I`).
+  final folded = String.fromCharCodes(
+    stem.codeUnits.map((unit) => unit >= 0x61 && unit <= 0x7A ? unit - 0x20 : unit),
+  );
+  return mosaicReservedDeviceNames.contains(folded);
 }
 
 /// The code points of [name], or null when it holds a lone surrogate (which
@@ -483,6 +520,13 @@ bool _mosaicIsInvisible(int point) =>
 
 /// True when [name] ends in an extension from [mosaicExecutableExtensions].
 bool mosaicHasExecutableExtension(String name) {
+  // A non-ASCII extension counts as one: a lookalike letter (Cyrillic `е` in
+  // `ехе`) or a combining mark after `.exe` makes an extension no list can
+  // name but a reader takes for an executable one.
+  if (name.contains('.') &&
+      _mosaicExtensionOf(name).codeUnits.any((unit) => unit > 0x7F)) {
+    return true;
+  }
   // Folded through upper case first: `ſ` (LONG S) lowercases to itself but
   // is `S` to a case-insensitive file system.
   return name.contains('.') &&

@@ -1,0 +1,19 @@
+{
+  "chapter": 243,
+  "title": "Excuse, Blame, Responsibility, Possibility, Basis",
+  "label": "ch:ml-excuse-blame-responsibility-possibility-basis",
+  "canDo": "I can say an excuse, blame, responsibility, a possibility and a basis.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "ML-C243-atisthanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 243: I can say an excuse, blame, responsibility, a possibility and a basis.",
+    "assesses": [
+      "ML-LEX-C243-KARANAM243-03",
+      "ML-LEX-C243-KARANAM243-04",
+      "ML-LEX-C243-KARANAM243-05"
+    ]
+  }
+}

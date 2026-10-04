@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C254-kuruvi",
+    "language": "malayalam",
+    "chapter": 254,
+    "sequence": 11650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e909637d4ff916c5"
+  },
+  "findings": []
+}

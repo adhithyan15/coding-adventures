@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 240,
+  "title": "End, Across, To there, To here, Side",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:8b2945cd64818d1d",
+  "lessons": [
+    {
+      "id": "ML-C240-arram",
+      "sequence": 10910,
+      "title": "അറ്റം (aṟṟaṁ) — the end, the tip",
+      "headword": "അറ്റം",
+      "romanization": "aṟṟaṁ",
+      "gloss": "the end, the tip",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7936fb56d4fb8e67",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a stream, then the Malayalam for a cave."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അറ്റം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അറ്റം — aṟṟaṁ — \"the end, the tip\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṟṟaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṟṟaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṟṟaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṟṟaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say aṟṟaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *aṟṟaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a stream, then the Malayalam for a cave, then say aṟṟaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a stream, then the Malayalam for a cave, then say *aṟṟaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അറ്റം (aṟṟaṁ) mean? (\"The end, the tip\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C240-kuruke",
+      "sequence": 10920,
+      "title": "കുറുകെ (kuṟuke) — across",
+      "headword": "കുറുകെ",
+      "romanization": "kuṟuke",
+      "gloss": "across",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:603ce24c412425ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a cave, then the Malayalam for the end."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കുറുകെ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുറുകെ — kuṟuke — \"across\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟuke",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟuke*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟuke, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟuke*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kuṟuke",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kuṟuke*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a cave, then the Malayalam for the end, then say kuṟuke again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a cave, then the Malayalam for the end, then say *kuṟuke* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കുറുകെ (kuṟuke) mean? (\"Across\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C240-annottu",
+      "sequence": 10930,
+      "title": "അങ്ങോട്ട് (aṅṅōṭṭŭ) — to there, that way",
+      "headword": "അങ്ങോട്ട്",
+      "romanization": "aṅṅōṭṭŭ",
+      "gloss": "to there, that way",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e15bac13c26bd343",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for the end, then the Malayalam for across."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അങ്ങോട്ട്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അങ്ങോട്ട് — aṅṅōṭṭŭ — \"to there, that way\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṅṅōṭṭŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṅṅōṭṭŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṅṅōṭṭŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṅṅōṭṭŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say aṅṅōṭṭŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *aṅṅōṭṭŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for the end, then the Malayalam for across, then say aṅṅōṭṭŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for the end, then the Malayalam for across, then say *aṅṅōṭṭŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അങ്ങോട്ട് (aṅṅōṭṭŭ) mean? (\"To there, that way\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C240-innottu",
+      "sequence": 10940,
+      "title": "ഇങ്ങോട്ട് (iṅṅōṭṭŭ) — to here, this way",
+      "headword": "ഇങ്ങോട്ട്",
+      "romanization": "iṅṅōṭṭŭ",
+      "gloss": "to here, this way",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7c809606d790a1d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for across, then the Malayalam for to there."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഇങ്ങോട്ട്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇങ്ങോട്ട് — iṅṅōṭṭŭ — \"to here, this way\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṅṅōṭṭŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṅṅōṭṭŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṅṅōṭṭŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṅṅōṭṭŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say iṅṅōṭṭŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *iṅṅōṭṭŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for across, then the Malayalam for to there, then say iṅṅōṭṭŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for across, then the Malayalam for to there, then say *iṅṅōṭṭŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഇങ്ങോട്ട് (iṅṅōṭṭŭ) mean? (\"To here, this way\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C240-vasam",
+      "sequence": 10950,
+      "title": "വശം (vaśaṁ) — a side",
+      "headword": "വശം",
+      "romanization": "vaśaṁ",
+      "gloss": "a side",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4c4f812e9b856796",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to there, then the Malayalam for to here."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വശം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വശം — vaśaṁ — \"a side\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaśaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaśaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaśaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaśaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say vaśaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *vaśaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to there, then the Malayalam for to here, then say vaśaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to there, then the Malayalam for to here, then say *vaśaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വശം (vaśaṁ) mean? (\"A side\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R240-first-pass-words-from-chapters-232-235",
+      "sequence": 10960,
+      "title": "Words from chapters 232-235 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 232-235",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6351f5e7743bb923",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to here and a side."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to soak, to dip, to sink, to flow, to unfold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to soak, to dip, to sink, to flow, to unfold]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ankle, blood, breath, diarrhoea, an allergy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ankle, blood, breath, diarrhoea, an allergy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enthusiasm, disappointment, self-confidence, excitement, relief",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: enthusiasm, disappointment, self-confidence, excitement, relief]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wrist, a heel, the spine, the liver, a kidney",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wrist, a heel, the spine, the liver, a kidney]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To soak? (കുതിർക്കുക, kutirkkuka.) To dip? (മുക്കുക, mukkuka.) To sink? (മുങ്ങുക, muṅṅuka.) To flow? (ഒഴുകുക, oḻukuka.) To unfold? (നിവർത്തുക, nivarttuka.) The ankle? (കണങ്കാൽ, kaṇaṅkāl.) Blood? (ചോര, cōra.) Breath? (ശ്വാസം, śvāsaṁ.) Diarrhoea? (വയറിളക്കം, vayaṟiḷakkaṁ.) An allergy? (അലർജി, alarji.) Enthusiasm? (ഉത്സാഹം, utsāhaṁ.) Disappointment? (നിരാശ, nirāśa.) Self-confidence? (ആത്മവിശ്വാസം, ātmaviśvāsaṁ.) Excitement? (ആവേശം, āvēśaṁ.) Relief? (ആശ്വാസം, āśvāsaṁ.) A wrist? (കണങ്കൈ, kaṇaṅkai.) A heel? (ഉപ്പൂറ്റി, uppūṟṟi.) The spine? (നട്ടെല്ല്, naṭṭellŭ.) The liver? (കരൾ, karaḷ.) A kidney? (വൃക്ക, vṛkka.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R240-second-pass-words-from-chapters-236-240",
+      "sequence": 10970,
+      "title": "Words from chapters 236-240 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 236-240",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ad6e2dce9da0856",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for childhood and Atham."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "childhood, Atham, Thiruvonam, dusk, a moment",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: childhood, Atham, Thiruvonam, dusk, a moment]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daytime, someday, the day before, the following day, the day before yesterday",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: daytime, someday, the day before, the following day, the day before yesterday]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "in the middle, an airport, the railway, a passenger, a junction",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: in the middle, an airport, the railway, a passenger, a junction]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a corner, a hill, the backwaters, a stream, a cave",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a corner, a hill, the backwaters, a stream, a cave]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the end, across, to there, to here, a side",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the end, across, to there, to here, a side]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Childhood? (കുട്ടിക്കാലം, kuṭṭikkālaṁ.) Atham? (അത്തം, attaṁ.) Thiruvonam? (തിരുവോണം, tiruvōṇaṁ.) Dusk? (സന്ധ്യ, sandhya.) A moment? (നിമിഷം, nimiṣaṁ.) Daytime? (പകൽ, pakal.) Someday? (എന്നെങ്കിലും, enneṅkiluṁ.) The day before? (തലേന്ന്, talēnnŭ.) The following day? (പിറ്റേന്ന്, piṟṟēnnŭ.) The day before yesterday? (മിനിഞ്ഞാന്ന്, miniññānnŭ.) In the middle? (നടുവിൽ, naṭuvil.) An airport? (വിമാനത്താവളം, vimānattāvaḷaṁ.) The railway? (റെയിൽവേ, ṟeyilvē.) A passenger? (യാത്രക്കാരൻ, yātrakkāran.) A junction? (കവല, kavala.) A corner? (മൂല, mūla.) A hill? (കുന്ന്, kunnŭ.) The backwaters? (കായൽ, kāyal.) A stream? (തോട്, tōṭŭ.) A cave? (ഗുഹ, guha.) The end? (അറ്റം, aṟṟaṁ.) Across? (കുറുകെ, kuṟuke.) To there? (അങ്ങോട്ട്, aṅṅōṭṭŭ.) To here? (ഇങ്ങോട്ട്, iṅṅōṭṭŭ.) A side? (വശം, vaśaṁ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

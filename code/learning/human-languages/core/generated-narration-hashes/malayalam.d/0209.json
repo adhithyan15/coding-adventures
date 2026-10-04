@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:0963f6ef1d47b381",
+  "lessonIds": [
+    "ML-C209-kariveppila",
+    "ML-C209-katuku",
+    "ML-C209-masala",
+    "ML-C209-cemmin",
+    "ML-C209-sandesam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch209.txt",
+  "json": "malayalam/narration/ch209.json",
+  "textHash": "fnv1a64:44fe2f303bee8007",
+  "jsonHash": "fnv1a64:29035b8b8db61af8",
+  "findings": []
+}

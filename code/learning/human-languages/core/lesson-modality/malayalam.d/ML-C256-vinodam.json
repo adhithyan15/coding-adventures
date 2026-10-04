@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C256-vinodam",
+    "language": "malayalam",
+    "chapter": 256,
+    "sequence": 11750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ae0f4155c72649ab"
+  },
+  "findings": []
+}

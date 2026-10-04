@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 263,
+  "sourceHash": "fnv1a64:3d1eeeec50b1c9ee",
+  "lessonIds": [
+    "ML-C263-asari",
+    "ML-C263-mestiri",
+    "ML-C263-kavalkkaran",
+    "ML-C263-bekkari",
+    "ML-C263-supparmarkkarru",
+    "ML-R263-first-pass-words-from-chapters-259-260",
+    "ML-R263-second-pass-words-from-chapters-261-263"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch263.txt",
+  "json": "malayalam/narration/ch263.json",
+  "textHash": "fnv1a64:7e7a431280ff2b5b",
+  "jsonHash": "fnv1a64:c6c15ff512be3160",
+  "findings": []
+}

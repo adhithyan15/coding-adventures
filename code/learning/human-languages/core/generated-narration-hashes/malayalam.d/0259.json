@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 259,
+  "sourceHash": "fnv1a64:827f3a79c285a35e",
+  "lessonIds": [
+    "ML-C259-pavaykka",
+    "ML-C259-ventaykka",
+    "ML-C259-murinnakka",
+    "ML-C259-colam",
+    "ML-C259-katala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch259.txt",
+  "json": "malayalam/narration/ch259.json",
+  "textHash": "fnv1a64:552619bae293aa95",
+  "jsonHash": "fnv1a64:8c101c64327ce195",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:b75681684ad0b511",
+  "lessonIds": [
+    "ML-C241-sambandhiccu",
+    "ML-C241-enkilum",
+    "ML-C241-ennittum",
+    "ML-C241-ennirunnalum",
+    "ML-C241-enkil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch241.txt",
+  "json": "malayalam/narration/ch241.json",
+  "textHash": "fnv1a64:5499567d6005815f",
+  "jsonHash": "fnv1a64:13b4b62bcac4e565",
+  "findings": []
+}

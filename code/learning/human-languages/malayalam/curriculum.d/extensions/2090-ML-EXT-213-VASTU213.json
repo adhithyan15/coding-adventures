@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-213-VASTU213",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a worm, a bat, a koel, a kite and a crane.",
+  "prerequisites": []
+}

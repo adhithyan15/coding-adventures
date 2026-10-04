@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C203-kaliyaya",
+    "language": "malayalam",
+    "chapter": 203,
+    "sequence": 9020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:75c96cd13b27759d"
+  },
+  "findings": []
+}

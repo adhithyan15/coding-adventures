@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C256-kalippattam",
+    "language": "malayalam",
+    "chapter": 256,
+    "sequence": 11760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10b0650f0b6cb2f9"
+  },
+  "findings": []
+}

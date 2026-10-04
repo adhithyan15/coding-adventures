@@ -1,0 +1,11 @@
+{
+  "id": "ML-C221-vakku",
+  "pathSegment": "ML-PATH-221-JOLI221",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ML-EXT-221-JOLI221",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C213-pulu",
+    "language": "malayalam",
+    "chapter": 213,
+    "sequence": 9500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:70265ff4defdc182"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C249-jyus",
+    "language": "malayalam",
+    "chapter": 249,
+    "sequence": 11410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e789f5cb364586ad"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 249,
+  "title": "Flour, Wheat, Bread, Juice, Tender coconut",
+  "label": "ch:ml-flour-wheat-bread-juice-tender-coconut",
+  "canDo": "I can say flour, wheat, bread, juice and a tender coconut.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-R249-second-pass-words-from-chapters-245-249",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 249: I can say flour, wheat, bread, juice and a tender coconut.",
+    "assesses": [
+      "ML-LEX-C249-VASTU249-03",
+      "ML-LEX-C249-VASTU249-04",
+      "ML-LEX-C249-VASTU249-05"
+    ]
+  }
+}

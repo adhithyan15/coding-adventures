@@ -257,6 +257,10 @@ fn the_emitted_qt_host_answers_effects() {
         "mixed types keep Qt's default start",
         "any file keeps Qt's default start",
         "a document keeps Qt's default start",
+        "Windows device names are not plain names",
+        "names that only start like a device name pass",
+        "active content and non-ASCII extensions are executable",
+        "ordinary documents are not executable",
     ] {
         assert!(
             stdout.contains(expected),

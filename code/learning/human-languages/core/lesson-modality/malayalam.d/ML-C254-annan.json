@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C254-annan",
+    "language": "malayalam",
+    "chapter": 254,
+    "sequence": 11660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14cfc25ecd73e703"
+  },
+  "findings": []
+}

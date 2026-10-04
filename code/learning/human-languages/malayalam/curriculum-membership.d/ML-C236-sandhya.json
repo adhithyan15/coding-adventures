@@ -1,0 +1,11 @@
+{
+  "id": "ML-C236-sandhya",
+  "pathSegment": "ML-PATH-236-SAMAYAM236",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-236-SAMAYAM236",
+      "order": 3
+    }
+  ]
+}

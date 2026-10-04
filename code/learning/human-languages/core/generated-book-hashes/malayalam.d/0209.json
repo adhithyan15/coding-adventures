@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:89c57276662dc4d0",
+  "lessonIds": [
+    "ML-C209-kariveppila",
+    "ML-C209-katuku",
+    "ML-C209-masala",
+    "ML-C209-cemmin",
+    "ML-C209-sandesam"
+  ],
+  "tex": "malayalam/book/chapters/ch209-curry-leaves-mustard-seeds-spice-mix-prawn-message.tex"
+}

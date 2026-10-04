@@ -175,8 +175,8 @@ across calls. A captured string still requires assignment before its first
 read, just like a local string.
 
 Direct real literals also use the shared string output path, preserving their
-source spelling and an exact unary `+` or `-` without requiring a runtime `f64`
-formatter. An arithmetic conditional whose leaves are all direct real literals
+source spelling and an exact unary `+` or `-`. An arithmetic conditional whose
+leaves are all direct real literals
 branches to the selected source-spelled string at run time. Exact parentheses
 around a direct signed literal are ignored while preserving that spelling.
 Finite literal-only addition, subtraction, multiplication, and division are
@@ -191,6 +191,14 @@ Integer literals also enter that real evaluator when their magnitude is within
 binary64's exact integer range; larger widenings remain unsupported.
 Labels, branches, loops,
 gotos, calls, dynamic reassignment, and captured globals invalidate that shortcut.
+Direct zero-argument real-procedure results and local real scalar variables whose
+latest straight-line assignment is such a result call the portable six-significant-digit
+IIR formatter shared with Dartmouth BASIC; its helper
+functions use only typed arithmetic, control flow, calls, conversions, and
+`putchar`, so the same path runs on every standard backend. A runtime procedure
+result may therefore be assigned to a real local and printed later. Reassignment,
+control flow, intervening calls, and composed dynamic real expressions remain
+conservative while their analysis tests are migrated.
 For definite string initialization, a `step`/`until` element may establish an
 initialized local when finite static start, step, and limit values prove that
 its body executes at least once; zero-trip and dynamic bounds fail closed.

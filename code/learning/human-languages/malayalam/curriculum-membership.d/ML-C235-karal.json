@@ -1,0 +1,11 @@
+{
+  "id": "ML-C235-karal",
+  "pathSegment": "ML-PATH-235-AROGYAM235",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-235-AROGYAM235",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C251-vivaram",
+    "language": "malayalam",
+    "chapter": 251,
+    "sequence": 11540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a8ffa865639da27"
+  },
+  "findings": []
+}

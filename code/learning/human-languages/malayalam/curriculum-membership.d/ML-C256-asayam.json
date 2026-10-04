@@ -1,0 +1,11 @@
+{
+  "id": "ML-C256-asayam",
+  "pathSegment": "ML-PATH-256-VASTU256",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-256-VASTU256",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C252-tamasa",
+  "pathSegment": "ML-PATH-252-VASTU252",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ML-EXT-252-VASTU252",
+      "order": 0
+    }
+  ]
+}

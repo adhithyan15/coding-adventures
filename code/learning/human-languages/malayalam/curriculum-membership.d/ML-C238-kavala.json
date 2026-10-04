@@ -1,0 +1,11 @@
+{
+  "id": "ML-C238-kavala",
+  "pathSegment": "ML-PATH-238-STHALAM238",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-238-STHALAM238",
+      "order": 4
+    }
+  ]
+}

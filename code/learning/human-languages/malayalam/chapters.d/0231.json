@@ -1,0 +1,19 @@
+{
+  "chapter": 231,
+  "title": "To lean, To knock, To bend down, To pluck, To milk",
+  "label": "ch:ml-to-lean-to-knock-to-bend-down-to-pluck-to-milk",
+  "canDo": "I can say to lean, to knock, to bend down, to pluck and to milk.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-R231-second-pass-words-from-chapters-227-231",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 231: I can say to lean, to knock, to bend down, to pluck and to milk.",
+    "assesses": [
+      "ML-LEX-C231-KRIYA231-03",
+      "ML-LEX-C231-KRIYA231-04",
+      "ML-LEX-C231-KRIYA231-05"
+    ]
+  }
+}

@@ -4749,6 +4749,18 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                         .ok_or_else(|| token_error(token, "unsupported treemap font-stretch"))?
                 ),
             }),
+            "font-size" => style.font_size = Some(parse_treemap_font_size(token, value)?),
+            "font-weight" => {
+                let weight = match value.to_ascii_lowercase().as_str() {
+                    "normal" => 400,
+                    "bold" | "bolder" => 700,
+                    "lighter" => 300,
+                    numeric => numeric.parse::<u16>()
+                        .ok().filter(|weight| (1..=1000).contains(weight))
+                        .ok_or_else(|| token_error(token, "treemap font-weight must be normal, bold, bolder, lighter, or an integer from 1 through 1000"))?,
+                };
+                style.node.font_weight = Some(weight);
+            }
             "text-shadow" => style.text_shadow = Some(parse_treemap_text_shadow(token, value)?),
             "tab-size" => style.tab_size = Some(value.parse::<u16>().ok()
                 .filter(|value| *value <= 256)
@@ -4757,6 +4769,41 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
         }
     }
     Ok(style)
+}
+
+fn parse_treemap_font_size(
+    token: &Token,
+    source: &str,
+) -> Result<diagram_ir::TreemapFontSize, ParseError> {
+    let source = source.trim();
+    let parsed = match source.to_ascii_lowercase().as_str() {
+        "xx-small" => Some(diagram_ir::TreemapFontSize::Pixels(9.0)),
+        "x-small" => Some(diagram_ir::TreemapFontSize::Pixels(10.0)),
+        "small" => Some(diagram_ir::TreemapFontSize::Pixels(13.0)),
+        "medium" => Some(diagram_ir::TreemapFontSize::Pixels(16.0)),
+        "large" => Some(diagram_ir::TreemapFontSize::Pixels(18.0)),
+        "x-large" => Some(diagram_ir::TreemapFontSize::Pixels(24.0)),
+        "xx-large" => Some(diagram_ir::TreemapFontSize::Pixels(32.0)),
+        "xxx-large" => Some(diagram_ir::TreemapFontSize::Pixels(48.0)),
+        "smaller" => Some(diagram_ir::TreemapFontSize::Factor(5.0 / 6.0)),
+        "larger" => Some(diagram_ir::TreemapFontSize::Factor(1.2)),
+        _ => None,
+    }.or_else(|| if let Some(value) = source.strip_suffix('%') {
+        value.trim().parse::<f64>().ok()
+            .map(|value| diagram_ir::TreemapFontSize::Factor(value / 100.0))
+    } else if let Some(value) = source.strip_suffix("rem") {
+        value.trim().parse::<f64>().ok()
+            .map(|value| diagram_ir::TreemapFontSize::Pixels(value * 16.0))
+    } else if let Some(value) = source.strip_suffix("em") {
+        value.trim().parse::<f64>().ok().map(diagram_ir::TreemapFontSize::Factor)
+    } else {
+        source.strip_suffix("px").unwrap_or(source).trim().parse::<f64>().ok()
+            .map(diagram_ir::TreemapFontSize::Pixels)
+    });
+    parsed.filter(|size| match size {
+        diagram_ir::TreemapFontSize::Pixels(value) | diagram_ir::TreemapFontSize::Factor(value) =>
+            value.is_finite() && *value > 0.0,
+    }).ok_or_else(|| token_error(token, "unsupported treemap font-size"))
 }
 
 fn split_treemap_style_declarations(source: &str) -> Vec<&str> {
@@ -4791,8 +4838,12 @@ fn split_treemap_style_declarations(source: &str) -> Vec<&str> {
 }
 
 fn parse_treemap_opacity(token: &Token, source: &str) -> Result<f64, ParseError> {
-    source.parse::<f64>().ok().filter(|value| value.is_finite() && (0.0..=1.0).contains(value))
-        .ok_or_else(|| token_error(token, "treemap opacity must be between 0 and 1"))
+    let value = source.strip_suffix('%').map_or_else(
+        || source.parse::<f64>().ok(),
+        |value| value.trim().parse::<f64>().ok().map(|value| value / 100.0),
+    );
+    value.filter(|value| value.is_finite() && (0.0..=1.0).contains(value))
+        .ok_or_else(|| token_error(token, "treemap opacity must be between 0 and 1 or 0% and 100%"))
 }
 
 fn parse_treemap_letter_spacing(
@@ -14609,7 +14660,8 @@ B//-A: reverse stick top
         assert_eq!(style.node.text_color.as_deref(), Some("#78350f"));
         assert_eq!(style.node.stroke_width, Some(3.0));
         assert_eq!(style.node.stroke_dash.as_deref(), Some(&[5.0, 2.0][..]));
-        assert_eq!(style.node.font_size, Some(16.0));
+        assert_eq!(style.font_size, Some(diagram_ir::TreemapFontSize::Pixels(16.0)));
+        assert_eq!(style.node.font_size, None);
         assert_eq!(style.node.font_weight, Some(700));
         assert_eq!(style.node.font_italic, Some(true));
         assert_eq!(style.node.font_family.as_deref(), Some("Avenir"));
@@ -15160,6 +15212,84 @@ B//-A: reverse stick top
         ).expect("relative font weights must parse");
         assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.node.font_weight), Some(700));
         assert_eq!(diagram.nodes[2].style.as_ref().and_then(|style| style.node.font_weight), Some(300));
+    }
+
+    #[test]
+    fn treemap_preserves_variable_font_weights() {
+        for weight in [1, 575, 1000] {
+            let source = format!(
+                "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-weight:{weight}"
+            );
+            let diagram = parse_treemap(&source).expect("CSS variable font weight must parse");
+            assert_eq!(
+                diagram.nodes[1].style.as_ref().and_then(|style| style.node.font_weight),
+                Some(weight)
+            );
+        }
+        for weight in ["0", "1001", "575.5", "heavy"] {
+            let source = format!(
+                "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-weight:{weight}"
+            );
+            assert!(parse_treemap(&source).is_err());
+        }
+    }
+
+    #[test]
+    fn treemap_parses_relative_font_sizes() {
+        for (value, expected) in [
+            ("18px", diagram_ir::TreemapFontSize::Pixels(18.0)),
+            ("1.25rem", diagram_ir::TreemapFontSize::Pixels(20.0)),
+            ("1.5em", diagram_ir::TreemapFontSize::Factor(1.5)),
+            ("125%", diagram_ir::TreemapFontSize::Factor(1.25)),
+        ] {
+            let source = format!(
+                "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-size:{value}"
+            );
+            let diagram = parse_treemap(&source).expect("relative font size must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.font_size), Some(expected));
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.node.font_size), None);
+        }
+        for value in ["0", "-1em", "0%", "giant"] {
+            let source = format!(
+                "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-size:{value}"
+            );
+            assert!(parse_treemap(&source).is_err());
+        }
+    }
+
+    #[test]
+    fn treemap_parses_font_size_keywords() {
+        for (value, expected) in [
+            ("xx-small", diagram_ir::TreemapFontSize::Pixels(9.0)),
+            ("small", diagram_ir::TreemapFontSize::Pixels(13.0)),
+            ("medium", diagram_ir::TreemapFontSize::Pixels(16.0)),
+            ("large", diagram_ir::TreemapFontSize::Pixels(18.0)),
+            ("xxx-large", diagram_ir::TreemapFontSize::Pixels(48.0)),
+            ("smaller", diagram_ir::TreemapFontSize::Factor(5.0 / 6.0)),
+            ("larger", diagram_ir::TreemapFontSize::Factor(1.2)),
+        ] {
+            let source = format!(
+                "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-size:{value}"
+            );
+            let diagram = parse_treemap(&source).expect("font-size keyword must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.font_size), Some(expected));
+        }
+    }
+
+    #[test]
+    fn treemap_parses_percentage_opacity() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent opacity:80%,fill-opacity:70%,stroke-opacity:50%",
+        ).expect("percentage opacity must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!((style.opacity, style.fill_opacity, style.stroke_opacity),
+            (Some(0.8), Some(0.7), Some(0.5)));
+        for value in ["-1%", "101%", "50px"] {
+            let source = format!(
+                "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent opacity:{value}"
+            );
+            assert!(parse_treemap(&source).is_err());
+        }
     }
 
     #[test]

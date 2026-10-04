@@ -1,0 +1,19 @@
+{
+  "chapter": 208,
+  "title": "Pickle, Buttermilk, Ghee, Butter, Honey",
+  "label": "ch:ml-pickle-buttermilk-ghee-butter-honey",
+  "canDo": "I can say a pickle, buttermilk, ghee, butter and honey.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C208-ten",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 208: I can say a pickle, buttermilk, ghee, butter and honey.",
+    "assesses": [
+      "ML-LEX-C208-VASTU208-03",
+      "ML-LEX-C208-VASTU208-04",
+      "ML-LEX-C208-VASTU208-05"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "language": "malayalam",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:94947cf6ecb86dc0",
+  "lessonIds": [
+    "ML-C231-caruka",
+    "ML-C231-muttuka",
+    "ML-C231-kuniyuka",
+    "ML-C231-parikkuka",
+    "ML-C231-karakkuka",
+    "ML-R231-first-pass-words-from-chapters-223-226",
+    "ML-R231-second-pass-words-from-chapters-227-231"
+  ],
+  "tex": "malayalam/book/chapters/ch231-to-lean-to-knock-to-bend-down-to-pluck-to-milk.tex"
+}

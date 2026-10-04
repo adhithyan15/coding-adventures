@@ -1,0 +1,19 @@
+{
+  "chapter": 224,
+  "title": "To mix, To serve, To taste, To fill, To cover",
+  "label": "ch:ml-to-mix-to-serve-to-taste-to-fill-to-cover",
+  "canDo": "I can say to mix, to serve, to taste, to fill and to cover.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C224-mutuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 224: I can say to mix, to serve, to taste, to fill and to cover.",
+    "assesses": [
+      "ML-LEX-C224-KRIYA224-03",
+      "ML-LEX-C224-KRIYA224-04",
+      "ML-LEX-C224-KRIYA224-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:12570be72be0f53f",
+  "lessonIds": [
+    "ML-C214-torccu",
+    "ML-C214-barrari",
+    "ML-C214-pasa",
+    "ML-C214-sviccu",
+    "ML-C214-arakkaval"
+  ],
+  "tex": "malayalam/book/chapters/ch214-torch-battery-glue-switch-saw.tex"
+}

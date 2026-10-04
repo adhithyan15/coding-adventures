@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C195-munkutti",
+    "language": "malayalam",
+    "chapter": 195,
+    "sequence": 8600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b4e942496c66d7a9"
+  },
+  "findings": []
+}

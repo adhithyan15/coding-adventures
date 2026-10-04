@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:b3ba8212e5cc2fcd",
+  "lessonIds": [
+    "ML-C193-apakatam",
+    "ML-C193-asuya",
+    "ML-C193-nanam",
+    "ML-C193-abhimanam",
+    "ML-C193-atbhutam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch193.txt",
+  "json": "malayalam/narration/ch193.json",
+  "textHash": "fnv1a64:2f7772220406c6d6",
+  "jsonHash": "fnv1a64:6412b8a30329ba5a",
+  "findings": []
+}

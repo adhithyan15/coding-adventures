@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C210-laisansu",
+    "language": "malayalam",
+    "chapter": 210,
+    "sequence": 9370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:06463fa397cee79e"
+  },
+  "findings": []
+}

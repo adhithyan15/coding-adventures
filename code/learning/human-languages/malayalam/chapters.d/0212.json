@@ -1,0 +1,19 @@
+{
+  "chapter": 212,
+  "title": "Art, Music, Competition, God, Bamboo",
+  "label": "ch:ml-art-music-competition-god-bamboo",
+  "canDo": "I can say art, music, a competition, God and bamboo.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C212-mula",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 212: I can say art, music, a competition, God and bamboo.",
+    "assesses": [
+      "ML-LEX-C212-VASTU212-03",
+      "ML-LEX-C212-VASTU212-04",
+      "ML-LEX-C212-VASTU212-05"
+    ]
+  }
+}

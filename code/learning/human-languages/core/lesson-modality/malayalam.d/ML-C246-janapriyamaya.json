@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C246-janapriyamaya",
+    "language": "malayalam",
+    "chapter": 246,
+    "sequence": 11240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed91297666240023"
+  },
+  "findings": []
+}

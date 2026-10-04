@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:5d5d07565edfe93b",
+  "lessonIds": [
+    "ML-C185-rajivaykkuka",
+    "ML-C185-ariyikkuka",
+    "ML-C185-carju-ceyyuka",
+    "ML-C185-parakkuka",
+    "ML-C185-pintutaruka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch185.txt",
+  "json": "malayalam/narration/ch185.json",
+  "textHash": "fnv1a64:4e8dd39f7dfdfb38",
+  "jsonHash": "fnv1a64:3af255cb561b8f23",
+  "findings": []
+}

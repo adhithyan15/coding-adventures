@@ -845,6 +845,68 @@ mod tests {
         }
     }
 
+    /// Windows device names (UI87 §3.1) are one list on every host --
+    /// Compose, SwiftUI, XAML, Qt, Flutter and the browser executor -- so a
+    /// name like `CON.txt` is refused everywhere or nowhere.
+    #[test]
+    fn every_host_refuses_the_same_windows_device_names() {
+        // The quoted names between `start` and the next `end`, unescaping the
+        // `\$` Kotlin and Dart need.
+        fn names(source: &str, start: &str, end: &str) -> Vec<String> {
+            let from = source.find(start).unwrap_or_else(|| panic!("{start}")) + start.len();
+            let to = from + source[from..].find(end).expect("list end");
+            let mut out: Vec<String> = source[from..to]
+                .split(['"', '\''])
+                .skip(1)
+                .step_by(2)
+                .map(|name| {
+                    // Qt spells the superscripts as `\u00B9`-style escapes.
+                    name.replace("\\$", "$")
+                        .replace("\\u00B9", "\u{b9}")
+                        .replace("\\u00B2", "\u{b2}")
+                        .replace("\\u00B3", "\u{b3}")
+                })
+                .collect();
+            out.sort();
+            out
+        }
+        let compose = names(
+            &compose_platform_effects(),
+            "val MOSAIC_RESERVED_DEVICE_NAMES: Set<String> = setOf(",
+            ")\n",
+        );
+        let swift = names(&swift_platform_effects(), "let mosaicReservedDeviceNames: Set<String> = [", "]\n");
+        let xaml = names(
+            &xaml_platform_effects("Mosaic.Generated"),
+            "ReservedDeviceNames = new HashSet<string>(StringComparer.Ordinal)\n    {",
+            "};",
+        );
+        let qt = names(&qt_platform_effects().source, "static const QSet<QString> names{", "};");
+        let dart = names(
+            &flutter_platform_effects().core,
+            "const Set<String> mosaicReservedDeviceNames = <String>{",
+            "};",
+        );
+        let browser = names(
+            include_str!("../../mosaic-app-wasm/js/mosaic-file-effects.mjs"),
+            "export const RESERVED_DEVICE_NAMES = new Set([",
+            "]);",
+        );
+        let mut expected: Vec<String> = ["CON", "PRN", "AUX", "NUL", "CONIN$", "CONOUT$"]
+            .into_iter()
+            .map(str::to_string)
+            .chain((0..10).flat_map(|n| [format!("COM{n}"), format!("LPT{n}")]))
+            .chain(["\u{b9}", "\u{b2}", "\u{b3}"].iter().flat_map(|digit| {
+                [format!("COM{digit}"), format!("LPT{digit}")]
+            }))
+            .collect();
+        expected.sort();
+        assert_eq!(compose, expected);
+        for (host, list) in [("SwiftUI", swift), ("XAML", xaml), ("Qt", qt), ("Flutter", dart), ("browser", browser)] {
+            assert_eq!(list, expected, "{host}");
+        }
+    }
+
     /// The Qt library answers the same contract (UI87 §7.4a): the same
     /// executable list, MIME rows in the same order, and the same limits as
     /// the Compose library. Pinned here because the Qt C++ is only compiled

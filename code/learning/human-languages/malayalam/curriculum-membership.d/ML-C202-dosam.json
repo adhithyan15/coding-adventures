@@ -1,0 +1,11 @@
+{
+  "id": "ML-C202-dosam",
+  "pathSegment": "ML-PATH-202-KARANAM202",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-202-KARANAM202",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 191,
+  "title": "To scatter, To row, To melt, To part, To point",
+  "label": "ch:ml-to-scatter-to-row-to-melt-to-part-to-point",
+  "canDo": "I can say to scatter, to row, to melt, to part and to point.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C191-cuntuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 191: I can say to scatter, to row, to melt, to part and to point.",
+    "assesses": [
+      "ML-LEX-C191-KRIYA191-03",
+      "ML-LEX-C191-KRIYA191-04",
+      "ML-LEX-C191-KRIYA191-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 246,
+  "title": "Traditional, Popular, Exciting, Firm, Broken",
+  "label": "ch:ml-traditional-popular-exciting-firm-broken",
+  "canDo": "I can say traditional, popular, exciting, firm and broken.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ML-C246-ketaya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 246: I can say traditional, popular, exciting, firm and broken.",
+    "assesses": [
+      "ML-LEX-C246-GUNAM246-03",
+      "ML-LEX-C246-GUNAM246-04",
+      "ML-LEX-C246-GUNAM246-05"
+    ]
+  }
+}

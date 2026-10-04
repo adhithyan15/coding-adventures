@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:dea368e2372eb632",
+  "lessonIds": [
+    "ML-C225-otikkuka",
+    "ML-C225-ninnuka",
+    "ML-C225-ettuka",
+    "ML-C225-matannuka",
+    "ML-C225-kontupokuka"
+  ],
+  "tex": "malayalam/book/chapters/ch225-to-drive-to-move-to-arrive-to-return-to-take.tex"
+}

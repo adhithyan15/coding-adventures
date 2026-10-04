@@ -1,0 +1,19 @@
+{
+  "chapter": 182,
+  "title": "To stir, To fry, To boil, To roast, To pour",
+  "label": "ch:ml-to-stir-to-fry-to-boil-to-roast-to-pour",
+  "canDo": "I can say to stir, to fry, to boil, to roast and to pour.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C182-olikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 182: I can say to stir, to fry, to boil, to roast and to pour.",
+    "assesses": [
+      "ML-LEX-C182-KRIYA182-03",
+      "ML-LEX-C182-KRIYA182-04",
+      "ML-LEX-C182-KRIYA182-05"
+    ]
+  }
+}

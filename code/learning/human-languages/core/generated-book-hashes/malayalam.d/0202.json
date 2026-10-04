@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:7abedfc62d793cfb",
+  "lessonIds": [
+    "ML-C202-prerana",
+    "ML-C202-nirbandham",
+    "ML-C202-gunam",
+    "ML-C202-dosam",
+    "ML-C202-nyayam"
+  ],
+  "tex": "malayalam/book/chapters/ch202-motivation-insistence-good-quality-drawback-fairness.tex"
+}

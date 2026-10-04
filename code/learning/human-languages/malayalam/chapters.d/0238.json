@@ -1,0 +1,19 @@
+{
+  "chapter": 238,
+  "title": "In the middle, Airport, Railway, Passenger, Junction",
+  "label": "ch:ml-in-the-middle-airport-railway-passenger-junction",
+  "canDo": "I can say in the middle, an airport, the railway, a passenger and a junction.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ML-C238-kavala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 238: I can say in the middle, an airport, the railway, a passenger and a junction.",
+    "assesses": [
+      "ML-LEX-C238-STHALAM238-03",
+      "ML-LEX-C238-STHALAM238-04",
+      "ML-LEX-C238-STHALAM238-05"
+    ]
+  }
+}

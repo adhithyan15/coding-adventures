@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:f11cb16051067da0",
+  "lessonIds": [
+    "ML-C226-carcca-ceyyuka",
+    "ML-C226-visadikarikkuka",
+    "ML-C226-tayyarakkuka",
+    "ML-C226-purttiyakkuka",
+    "ML-C226-parisodhikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch226.txt",
+  "json": "malayalam/narration/ch226.json",
+  "textHash": "fnv1a64:57b498d1f6bde521",
+  "jsonHash": "fnv1a64:042879dd7c1a6a61",
+  "findings": []
+}

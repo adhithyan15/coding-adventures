@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:ed35a31545742394",
+  "lessonIds": [
+    "ML-C251-kampyuttar",
+    "ML-C251-phayal",
+    "ML-C251-nottubukku",
+    "ML-C251-rabbar",
+    "ML-C251-vivaram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch251.txt",
+  "json": "malayalam/narration/ch251.json",
+  "textHash": "fnv1a64:1393b94a6a4e8a77",
+  "jsonHash": "fnv1a64:4503bcae080bb26b",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:f0c8ed4d0fe58ae4",
+  "lessonIds": [
+    "ML-C249-mavu",
+    "ML-C249-gotambu",
+    "ML-C249-rotti",
+    "ML-C249-jyus",
+    "ML-C249-karikku",
+    "ML-R249-first-pass-words-from-chapters-241-244",
+    "ML-R249-second-pass-words-from-chapters-245-249"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch249.txt",
+  "json": "malayalam/narration/ch249.json",
+  "textHash": "fnv1a64:787e7253a56c1440",
+  "jsonHash": "fnv1a64:f19e3c353f6e0ebe",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C196-olivusamayam",
+    "language": "malayalam",
+    "chapter": 196,
+    "sequence": 8650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:13e3173eee75050c"
+  },
+  "findings": []
+}

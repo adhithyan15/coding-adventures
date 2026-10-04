@@ -1,0 +1,19 @@
+{
+  "chapter": 210,
+  "title": "Luggage, Seat, Licence, Motorbike, Taxi",
+  "label": "ch:ml-luggage-seat-licence-motorbike-taxi",
+  "canDo": "I can say luggage, a seat, a licence, a motorbike and a taxi.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C210-taksi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 210: I can say luggage, a seat, a licence, a motorbike and a taxi.",
+    "assesses": [
+      "ML-LEX-C210-VASTU210-03",
+      "ML-LEX-C210-VASTU210-04",
+      "ML-LEX-C210-VASTU210-05"
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+import { expect, it } from "vitest";
+import { loadTrackLessons } from "../../../src/loader.js";
+import { languageWritingStages } from "../assert-language-corpus.js";
+
+it("builds Kannada's first A1 controlled question without a visible model", () => {
+  const lesson = loadTrackLessons("kannada").find(
+    (candidate) => candidate.realization.lessonId === "KA-W77-gotta-controlled-question",
+  );
+  expect(lesson).toBeDefined();
+  expect(lesson?.frontmatter.type).toBe("writing");
+  expect(lesson?.frontmatter.skills).toContain("writing");
+  expect(Number(lesson?.frontmatter["duration.max_seconds"])).toBeLessThanOrEqual(150);
+
+  const controlled = lesson?.blocks.find(
+    (block) => block.writingStage === "controlled-composition",
+  );
+  expect(controlled?.markdown).toContain("no word bank");
+  expect(controlled?.markdown).toContain("romanization");
+  expect(controlled?.markdown).toContain("copyable sentence");
+  expect(controlled?.markdown).toContain("composition is untimed");
+  expect(controlled?.markdown).not.toContain("ನಿಮಗೆ ಗೊತ್ತಾ");
+
+  const activity = controlled?.activities?.find(
+    (candidate) => candidate.id === "KA-W77-gotta-controlled-question-check",
+  );
+  expect(activity?.prompt).toContain("no word bank, romanization, or copyable answer");
+  expect(activity?.answer).toBe("ನಿಮಗೆ ಗೊತ್ತಾ?");
+});
+
+it("leaves only timed assessment production missing from Kannada A1", () => {
+  const kannada = languageWritingStages("kannada");
+  expect(kannada.defects).toEqual([]);
+  expect(kannada.levels.find((level) => level.level === "A1")?.missingStages).toEqual([
+    "timed-assessment-production",
+  ]);
+});

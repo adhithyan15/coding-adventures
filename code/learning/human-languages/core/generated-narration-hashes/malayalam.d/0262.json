@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:67cbbfe4f07880d9",
+  "lessonIds": [
+    "ML-C262-kurippu",
+    "ML-C262-udaharanam",
+    "ML-C262-kalakaran",
+    "ML-C262-pujari",
+    "ML-C262-gayakan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch262.txt",
+  "json": "malayalam/narration/ch262.json",
+  "textHash": "fnv1a64:3bca8c9e6d498018",
+  "jsonHash": "fnv1a64:ea133cd20e764cbd",
+  "findings": []
+}
