@@ -17,7 +17,7 @@
 | Manifest validation | Implemented | `forme-manifest` validates first-party manifest data; FM02 owns host enforcement. |
 | Shared diagnostics | Implemented | `forme-errors` supplies the common error surface. |
 | Interactivity shape | Placeholder active for compatibility | [FM05](FM05-forme-interactivity-ir.md) defines the normative v1 contract; FM-B059 supplies its dedicated package before a later kernel migration. |
-| Terminal output shape | Specified for v1 | `TerminalBuffer` carries ANSI text, exact usage, provenance, and explicit non-web degradation records for FM-B017. |
+| Terminal output shape | Implemented | `TerminalBuffer` carries bounded ANSI text, exact usage, canonical provenance, a content/config revision, and explicit non-web degradation records in the live FM-B017 product path. |
 
 ---
 

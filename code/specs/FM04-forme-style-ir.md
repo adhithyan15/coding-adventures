@@ -22,7 +22,7 @@
 | CSS, LaTeX, and terminal translation | Implemented | Backend translators have focused package coverage. |
 | Per-page CSS slicing | Implemented | [FM06](FM06-forme-aot-compiler.md) is exercised by both live sites. |
 | Live theme persistence/editor UX | Pending | The FM07 authoring surface and FM-B016 own it. |
-| Cross-backend product proof | Specified; implementation active | FM-B017 wires the blog's resolved theme through HTML and terminal renderers, preserving exact ANSI rule usage and explicit skipped-property records. |
+| Cross-backend product proof | Implemented | FM-B017 wires the blog's resolved theme through HTML and terminal renderers, preserving exact ANSI rule usage and explicit skipped-property records. |
 
 ---
 

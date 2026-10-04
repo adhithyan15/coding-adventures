@@ -15,7 +15,7 @@
 | Page/style/script emission | Implemented | Page, HTML document, style-tag, script-tag, and bundle emitters exist. |
 | Site metadata emission | Implemented | Sitemap, robots, discovery links, and deploy-manifest emitters exist. |
 | Interactivity tree shaking | Active | FM05 is implemented; FM-B060 composes exact renderer, script-asset, and deploy-route usage. |
-| Multi-backend release proof | Specified; implementation active | FM-B017 adds terminal buffers and a capability-free terminal artifact packager to the live blog fan-out. |
+| Multi-backend release proof | Implemented | FM-B017 adds terminal buffers and a capability-free terminal artifact packager to the live blog fan-out. |
 
 ## 1. Purpose
 

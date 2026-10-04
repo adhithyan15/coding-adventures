@@ -16,7 +16,7 @@
 | Bounded validation and canonical bytes | Implemented | FM-B059 rejects hostile values and emits deterministic JSON. |
 | Per-page island tracking | Implemented | FM-B060 composes validated documents with rendered pages and records exact `usedIslands`. |
 | Progressive-enhancement proof | Implemented | FM-B061 ships a live fallback plus one bounded enhancement. |
-| Non-web degradation | Specified; implementation active | FM-B017's terminal renderer validates the same per-route IR, preserves fallback content, emits no executable module, and records one deterministic degradation per dropped island. |
+| Non-web degradation | Implemented | FM-B017's terminal renderer validates the same per-route IR, preserves fallback content, emits no executable module, and records one deterministic degradation per dropped island. |
 
 ## 1. Purpose and authority
 
