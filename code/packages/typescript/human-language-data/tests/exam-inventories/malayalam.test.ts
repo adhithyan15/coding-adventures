@@ -134,7 +134,9 @@ describe("the committed Malayalam A1 inventory", () => {
     // lessons and ten reviews); `shown` and the overlap hold at 69.
     // 1494 -> 1682: chapters 302-337, the fourth A2 vocabulary tranche (180
     // lessons and eight reviews); `shown` and the overlap hold at 69.
-    expect(lessons).toHaveLength(1682);
+    // 1682 -> 1683: the first A1 controlled-composition question. It reuses
+    // already-owned Malayalam glyphs, so `shown` and the overlap still hold.
+    expect(lessons).toHaveLength(1683);
     expect(shown.size).toBe(69);
     expect([...shown].filter((glyph) => directlyOwned.has(glyph))).toHaveLength(69);
     expect(open).toEqual([]);
