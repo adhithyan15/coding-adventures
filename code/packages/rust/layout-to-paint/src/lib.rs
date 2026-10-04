@@ -253,6 +253,7 @@ where
                     text_word_break(frame.node),
                     text_line_break(frame.node),
                     text_hyphens(frame.node),
+                    text_hyphenate_character(frame.node),
                     text_overflow(frame.node),
                     text_wraps(frame.node, tc.wrap),
                     text_wrap_style(frame.node),
@@ -543,6 +544,13 @@ fn text_hyphens(node: &PositionedNode) -> TextHyphens {
     match node.ext.get("text.hyphens") {
         Some(ExtValue::Str(value)) if value == "none" => TextHyphens::None,
         _ => TextHyphens::Manual,
+    }
+}
+
+fn text_hyphenate_character(node: &PositionedNode) -> &str {
+    match node.ext.get("text.hyphenate-character") {
+        Some(ExtValue::Str(value)) => value,
+        _ => "-",
     }
 }
 
@@ -1370,6 +1378,7 @@ fn emit_text_content<S, M, R>(
     word_break: TextWordBreak,
     line_break: TextLineBreak,
     hyphens: TextHyphens,
+    hyphenate_character: &str,
     text_overflow: Option<TextOverflow>,
     wrap: bool,
     wrap_style: TextWrapStyle,
@@ -1434,6 +1443,7 @@ fn emit_text_content<S, M, R>(
                 word_break,
                 line_break,
                 hyphens,
+                hyphenate_character,
                 wrap_style,
                 break_spaces,
                 direction,
@@ -1805,6 +1815,7 @@ fn wrap_line<S: TextShaper>(
     word_break: TextWordBreak,
     line_break: TextLineBreak,
     hyphens: TextHyphens,
+    hyphenate_character: &str,
     wrap_style: TextWrapStyle,
     break_spaces: bool,
     direction: BaseDirection,
@@ -1869,7 +1880,7 @@ fn wrap_line<S: TextShaper>(
                 current_hyphen = piece.hyphen_after;
             } else {
                 if current_hyphen {
-                    current.push('-');
+                    current.push_str(hyphenate_character);
                 }
                 lines.push(std::mem::take(&mut current));
                 current.push_str(piece.value);
@@ -1902,6 +1913,7 @@ fn wrap_line<S: TextShaper>(
             word_break,
             line_break,
             hyphens,
+            hyphenate_character,
             TextWrapStyle::Auto,
             false,
             direction,
@@ -3493,6 +3505,8 @@ mod tests {
         manual.ext.insert("text.hyphens".into(), ExtValue::Str("manual".into()));
         let mut none = positioned_leaf(content, 0.0, 0.0, 48.0, 60.0);
         none.ext.insert("text.hyphens".into(), ExtValue::Str("none".into()));
+        let mut custom = manual.clone();
+        custom.ext.insert("text.hyphenate-character".into(), ExtValue::Str("‐".into()));
         let shaper = FakeShaper;
         let metrics = FakeMetrics;
         let resolver = FakeResolver;
@@ -3505,6 +3519,7 @@ mod tests {
                 _ => None,
             }).collect::<Vec<_>>();
         assert_eq!(glyph_lines(&manual), vec!["extra-", "ordinary"]);
+        assert_eq!(glyph_lines(&custom), vec!["extra‐", "ordinary"]);
         assert_eq!(glyph_lines(&none), vec!["extraordinary"]);
     }
 

@@ -4669,6 +4669,16 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                 "manual" => diagram_ir::TreemapHyphens::Manual,
                 _ => return Err(token_error(token, "treemap hyphens must be none or manual")),
             }),
+            "hyphenate-character" => {
+                style.hyphenate_character = Some(if value.eq_ignore_ascii_case("auto") {
+                    diagram_ir::TreemapHyphenateCharacter::Auto
+                } else if let Some(character) = value.strip_prefix('"').and_then(|value| value.strip_suffix('"'))
+                    .filter(|value| !value.is_empty()).or_else(|| (!value.is_empty()).then_some(value)) {
+                    diagram_ir::TreemapHyphenateCharacter::Character(character.into())
+                } else {
+                    return Err(token_error(token, "treemap hyphenate-character must be auto or a non-empty quoted string"));
+                });
+            }
             "text-overflow" => style.text_overflow = Some(match value.to_ascii_lowercase().as_str() {
                 "clip" => diagram_ir::TreemapTextOverflow::Clip,
                 "ellipsis" => diagram_ir::TreemapTextOverflow::Ellipsis,
@@ -14869,6 +14879,21 @@ B//-A: reverse stick top
         }
         assert!(parse_treemap(
             "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent hyphens:auto",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_hyphenate_characters() {
+        for (value, expected) in [
+            ("auto", diagram_ir::TreemapHyphenateCharacter::Auto),
+            ("\"‐\"", diagram_ir::TreemapHyphenateCharacter::Character("‐".into())),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent hyphenate-character:{value}");
+            let diagram = parse_treemap(&source).expect("supported hyphenate character must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.hyphenate_character.clone()), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent hyphenate-character:\"\"",
         ).is_err());
     }
 
