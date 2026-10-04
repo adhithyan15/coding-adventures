@@ -234,7 +234,6 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
     }
     if (this.poisoned !== null) {
       this.generation += 1;
-      if (this.active !== null) this.cancelActive(this.active);
       const attempt = failedAttempt(input.revision, this.poisoned.code, this.poisoned.message);
       this.currentState = freezeState({
         ...this.currentState,
@@ -242,6 +241,7 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
         activeRevision: input.revision,
         diagnostics: attempt.diagnostics,
       });
+      if (this.active !== null) this.cancelActive(this.active);
       return Promise.resolve(attempt);
     }
     return new Promise(resolve => {
@@ -252,12 +252,14 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
         this.finish(this.active.task, "superseded", null, []);
         this.cancelActive(this.active);
       }
-      this.currentState = freezeState({
-        ...this.currentState,
-        phase: "building",
-        activeRevision: input.revision,
-        diagnostics: [],
-      });
+      if (task.generation === this.generation && !task.settled) {
+        this.currentState = freezeState({
+          ...this.currentState,
+          phase: "building",
+          activeRevision: input.revision,
+          diagnostics: [],
+        });
+      }
       this.armDebounce();
     });
   }
@@ -588,7 +590,6 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
     const diagnostic = failure.diagnostics[0]!;
     this.poisoned = { code: diagnostic.code, message: diagnostic.message };
     this.generation += 1;
-    this.cancelActive(active);
     this.finishWithAttempt(active.task, failure);
     if (this.timer !== null) clearTimeout(this.timer);
     this.timer = null;
@@ -612,6 +613,7 @@ class PreviewCoordinator implements AuthoringPreviewCoordinator {
         diagnostics: failure.diagnostics,
       });
     }
+    this.cancelActive(active);
   }
 
   private isCurrent(active: ActiveTask): boolean {

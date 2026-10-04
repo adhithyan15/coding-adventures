@@ -291,6 +291,51 @@ describe("pipeline-backed authoring preview", () => {
     expect(release).toHaveBeenCalledOnce();
   });
 
+  it("keeps reentrant abort-listener requests newer than the request that triggered cancellation", async () => {
+    vi.useFakeTimers();
+    let coordinator!: AuthoringPreviewCoordinator;
+    let reentrant!: Promise<AuthoringPreviewAttempt>;
+    let watchCalls = 0;
+    coordinator = createAuthoringPreview({
+      debounceMs: 0,
+      orchestrator: {
+        watch() {
+          watchCalls += 1;
+          if (watchCalls > 1) return immediateWatch({ done: false, value: result("success", "build-abort-reentrant") });
+          return {
+            results() {
+              return { [Symbol.asyncIterator]: () => ({ next: () => new Promise<IteratorResult<RunResult>>(() => {}) }) };
+            },
+            async rebuild() { return result("cancelled", "unused"); },
+            async stop() {},
+          };
+        },
+      },
+      materializer: {
+        async prepare(input, signal) {
+          if (input.revision === "rev-abort-active") {
+            signal.addEventListener("abort", () => {
+              reentrant = coordinator.request(session("rev-abort-reentrant"));
+            }, { once: true });
+          }
+          return { pipeline: {} as Pipeline, async release() {} };
+        },
+      },
+      publisher: {
+        publish(_snapshot, commit) { commit(() => {}); },
+        publishFailure(_failure, commit) { commit(() => {}); },
+      },
+    });
+    const first = coordinator.request(session("rev-abort-active"));
+    await flushDebounce();
+    const displaced = coordinator.request(session("rev-abort-displaced"));
+    expect(coordinator.state).toMatchObject({ phase: "building", activeRevision: "rev-abort-reentrant" });
+    await expect(first).resolves.toMatchObject({ outcome: "superseded" });
+    await expect(displaced).resolves.toMatchObject({ outcome: "superseded" });
+    await flushDebounce();
+    await expect(reentrant).resolves.toMatchObject({ outcome: "ready", buildId: "build-abort-reentrant" });
+  });
+
   it("observes cancellation triggered reentrantly by the first result iterator", async () => {
     vi.useFakeTimers();
     let coordinator!: AuthoringPreviewCoordinator;
@@ -1165,6 +1210,58 @@ describe("pipeline-backed authoring preview", () => {
     expect(coordinator.state).toMatchObject({
       phase: "failed",
       activeRevision: "rev-after-poison-publisher",
+      diagnostics: [{ code: "E_PREVIEW_CLEANUP" }],
+    });
+  });
+
+  it("keeps a poisoned reentrant abort-listener request as the reported active revision", async () => {
+    vi.useFakeTimers();
+    let coordinator!: AuthoringPreviewCoordinator;
+    let reentrant!: Promise<AuthoringPreviewAttempt>;
+    coordinator = createAuthoringPreview({
+      debounceMs: 0,
+      orchestrator: {
+        watch() {
+          return {
+            results() {
+              return {
+                [Symbol.asyncIterator]: () => ({
+                  next: async () => ({ done: false, value: result("failed", "build-poison-reentrant") }),
+                }),
+              };
+            },
+            async rebuild() { return result("cancelled", "unused"); },
+            async stop() { throw new Error("retirement secret"); },
+          };
+        },
+      },
+      materializer: {
+        async prepare(_input, signal) {
+          signal.addEventListener("abort", () => {
+            reentrant = coordinator.request(session("rev-poison-reentrant-new"));
+          }, { once: true });
+          return { pipeline: {} as Pipeline, async release() {} };
+        },
+      },
+      publisher: {
+        publish(_snapshot, commit) { commit(() => {}); },
+        publishFailure() { throw new Error("must not publish after poison"); },
+      },
+    });
+    const first = coordinator.request(session("rev-poison-reentrant-old"));
+    await flushDebounce();
+    await expect(first).resolves.toMatchObject({
+      outcome: "failed",
+      diagnostics: [{ code: "E_PREVIEW_CLEANUP" }],
+    });
+    await expect(reentrant).resolves.toMatchObject({
+      outcome: "failed",
+      revision: "rev-poison-reentrant-new",
+      diagnostics: [{ code: "E_PREVIEW_CLEANUP" }],
+    });
+    expect(coordinator.state).toMatchObject({
+      phase: "failed",
+      activeRevision: "rev-poison-reentrant-new",
       diagnostics: [{ code: "E_PREVIEW_CLEANUP" }],
     });
   });
