@@ -1,7 +1,7 @@
 # FM09 — Forme Authoring Shell
 
-> **Status:** Authoring v1 in progress. The durable authoring core and default
-> editor are implemented; preview, publish, and desktop packaging follow as
+> **Status:** Authoring v1 in progress. The durable authoring core, default
+> editor, and exact pipeline preview are implemented; publish and packaging follow as
 > separately reviewable product boundaries.
 > **Scope:** Project state, editing transactions, persistent history, editor
 > composition, live preview, publish composition, and the local desktop shell.
@@ -15,8 +15,8 @@
 | Bounded project codec | Implemented | `forme-authoring-core` validates the closed v1 project and authorable Content IR subset with hard recursive limits. |
 | Crash-safe autosave and persistent undo/redo | Implemented | The injected compare-and-swap adapter, immutable transactions, and canonical persisted history pass failure, conflict, cancellation, and restart tests. |
 | Accessible block editor and configuration UI | Implemented | `forme-authoring-editor` provides keyboard-complete settings, document, block, history, and declarative plugin-slot controls over the durable core. |
-| Pipeline-backed preview | Active | FM-B064 uses the real FM07 watch path and last-good output. |
-| Reviewed publish workflow | Pending | FM-B065 composes FM08 without exposing tokens or target files to editor plugins. |
+| Pipeline-backed preview | Implemented | `forme-authoring-preview` runs exact persisted revisions through the real FM03/FM07 watch and artifact path with cancellation, last-good retention, and bounded diagnostics. |
+| Reviewed publish workflow | Active | FM-B065 composes FM08 without exposing tokens or target files to editor plugins. |
 | Installable desktop shell | Pending | FM-B066 packages the proven workflow and first-run experience. |
 
 ## 1. Purpose and delivery boundary
@@ -221,13 +221,82 @@ workflow.
 
 ## 6. Preview
 
-FM-B064 materializes a validated draft snapshot into an isolated project input
-and runs the same FM03/FM07 pipeline used by product builds. Preview inherits
-FM07's coalescing, cancellation, server-sent reload, and last-good-output
-semantics. It may cache aggressively, but it may not substitute a separate DOM
-renderer for pipeline output. Preview artifacts and diagnostics are bound to
-the exact authoring revision that produced them so stale success cannot be
-mistaken for the active draft.
+FM-B064 supplies `forme-authoring-preview`, a capability-free coordinator over
+the durable authoring core and the existing FM03/FM07 watch path. A preview
+request snapshots both `AuthoringSession.project` and
+`AuthoringSession.storageRevision`, validates a private copy of the project,
+and gives an injected host materializer only that frozen pair plus a bounded
+abort signal. The materializer must create a new isolated project input and
+return the real typed `Pipeline` for that input. It may not reuse a mutable
+input tree across authoring revisions. Filesystem paths, configuration loading,
+plugin discovery, and cache ownership remain host capabilities and never cross
+back into the editor or authoring project value.
+
+The coordinator runs every prepared pipeline through `Orchestrator.watch`, not
+through a second renderer or a direct call to an emitter. Each persisted edit
+requests a new preview. A short bounded debounce window coalesces bursts to the
+latest requested revision. When a newer revision supersedes preparation or an
+active build, the coordinator aborts preparation or stops the watch session,
+waits for cancellation to settle, disposes the isolated materialization, and
+then starts only the latest request. Disposal is idempotent and stops pending
+work before releasing the host materialization. The host must make preparation
+and release safe under cancellation. Release is the final retirement boundary:
+it must retire all prepared work even when watch stop reports failure, and the
+coordinator reports that cleanup failure rather than treating stop as settled.
+The host must retire non-cooperative preparation and release work.
+
+Only a successful, still-current watch result is converted with FM07's
+`snapshotFromOutputs` contract and sent to the injected preview publisher. A
+failed, cancelled, malformed-output, or superseded result never replaces the
+last good output. The publisher receives the exact authoring revision together
+with the build ID and static artifact snapshot, or a bounded failure record for
+that same revision. This preserves FM07's server-sent reload and last-good-site
+behavior while making the authoring revision visible to the shell. A success
+from revision N is stale as soon as N+1 is requested, even if N finishes before
+its cancellation is observed.
+
+Before conversion, the coordinator descriptor-snapshots at most 256 named
+outputs and 10,000 total files. Output names are limited to 256 Unicode
+scalars, portable artifact paths to 2,048 characters with 255-byte ASCII
+segments, each file to 16 MiB, and the complete snapshot to 128 MiB. It rejects
+proxies before incrementally enumerating bounded plain records, copies every byte array using
+typed-array intrinsics, rejects portable case-fold and file/ancestor
+collisions, and publishes a
+non-mutating view so producer mutation cannot change validated output. Revision
+and build identities are exact tokens of at most 1,024 Unicode scalars; they
+are rejected rather than truncated. The publisher may prepare asynchronously,
+but every externally visible mutation must run inside the coordinator's
+one-shot synchronous generation guard. A successful publish requires exactly
+one guarded commit. As soon as that guarded mutation returns successfully, the
+coordinator records its exact revision and build as the externally visible
+last-good snapshot, even if the publisher then hangs and is superseded.
+Rejection after a commit is reported as indeterminate while retaining that
+last-good attribution, and no delayed guard can commit after its publisher call
+returns.
+Publisher settlement is raced against the same abort signal, so a stale
+non-cooperative publisher cannot block a newer revision or disposal; its late
+rejection remains observed but its closed guard can no longer commit.
+The initial watch result is likewise raced against private cancellation state,
+not mutable properties on the host-visible signal, so a stopped session cannot
+retain the pump merely by leaving its result stream open or shadowing signal
+members. The idle change stream and iterator passed to watch are frozen while
+their close closure remains private. Stop and release are invoked through
+captured call intrinsics. If either final
+retirement step fails, the coordinator enters a failed poisoned state, blocks
+all pending and later builds with a bounded retirement diagnostic, and never
+runs a newer pipeline alongside work whose retirement is unknown. Poisoning
+also settles and invalidates the active task without opening a publisher guard,
+so delayed failure publication cannot overwrite a later poisoned request.
+
+Preview diagnostics are closed data: severity, code, stage identity, and a
+plain message. The coordinator admits at most 64 diagnostics, limits every
+scalar, rejects controls and bidi formatting, removes arbitrary fields and
+adapter errors, and emits one generic bounded diagnostic if a result is not
+safe to inspect. Public result objects, status snapshots, projects, and
+diagnostics are private deeply frozen copies. A caller receives one terminal
+attempt result (`ready`, `failed`, `cancelled`, or `superseded`) for every
+request; state for the last good revision is reported separately from the
+active revision so the UI cannot label stale output as current.
 
 ## 7. Publish
 
@@ -271,6 +340,17 @@ dispatch rollback, and declarative plugin-slot activation. They also prove the
 plugin bridge receives only the frozen request and that hostile contribution
 descriptors are rejected. The package must exceed 95% statement and line
 coverage and 90% branch coverage.
+
+FM-B064 tests use a real `Orchestrator.watch`-shaped session boundary and prove
+initial success, exact persisted-revision attribution, burst coalescing,
+superseded preparation and active-build cancellation, last-good retention,
+malformed artifact refusal, bounded/redacted diagnostics, hostile host result
+handling, generation-guarded asynchronous publication, immutable bounded
+artifact snapshots, materialization cleanup, concurrent double disposal, and
+rejection after disposal. The package must exceed 95% statement and line coverage and 90%
+branch coverage. One composition test must pass real FM03 `RunResult` output
+through FM07 `snapshotFromOutputs`; a mock DOM renderer is not an acceptable
+preview proof.
 
 ## 10. Related specifications
 

@@ -18,7 +18,7 @@
 | AOT compiler | Static v0 implemented | [FM06](FM06-forme-aot-compiler.md) |
 | CLI and development server | Headless v0 implemented | [FM07](FM07-forme-cli-dev-server.md) |
 | Deploy runner | Headless v0 implemented | [FM08](FM08-forme-deploy-runner.md) |
-| Authoring shell | Durable project core and accessible default editor implemented; pipeline-backed preview active | [FM09](FM09-forme-authoring-shell.md) |
+| Authoring shell | Durable core, accessible editor, and exact pipeline-backed preview implemented; reviewed publish workflow active | [FM09](FM09-forme-authoring-shell.md) |
 
 ## What “complete” means
 
@@ -45,7 +45,7 @@ stays visible so a local optimization cannot quietly close the project early.
 
 The implementation now forms a complete headless v0 product:
 
-- 77 TypeScript `forme-*` packages and 235 package test files cover the kernel,
+- 78 TypeScript `forme-*` packages and 236 package test files cover the kernel,
   stage contracts, a bounded concurrent orchestrator, Style IR, AOT emitters, document
   transforms, collections, feeds, routing, and static output.
 - The plugin runtime boundary also includes Python and Rust SDK packages. All
@@ -181,8 +181,8 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 56 | FM-B013 | done | Complete Interactivity IR | Completion milestone depending on FM-B059–FM-B061. The normative schema, validator, exact per-page island selection, zero-JavaScript static path, and live progressive-enhancement proof close the FM05 delivery gate. |
 | 57 | FM-B062 | done | Implement the durable authoring project core | Depends on FM-B013 and FM-B015. A bounded closed project codec, semantic immutable transactions, compare-and-swap autosave, and persistent bounded undo/redo pass hostile-input, failure, conflict, cancellation, and restart tests without ambient I/O. |
 | 58 | FM-B063 | done | Build the accessible default block editor | Depends on FM-B062. A keyboard-complete editor and configuration UI create and edit the default Content IR block set through exact declarative plugin slots and durable core commands without exposing storage or host authority. |
-| 59 | FM-B064 | active | Run exact pipeline-backed live preview | Depends on FM-B009 and FM-B063. The active persisted draft revision runs through the real pipeline with coalescing, cancellation, last-good output, bounded diagnostics, and exact revision attribution. |
-| 60 | FM-B065 | blocked | Compose the reviewed authoring publish workflow | Depends on FM-B012 and FM-B064. The shell builds the exact persisted revision and publishes through one reviewed FM08 target without exposing credentials or silently marking failed/indeterminate work as published. |
+| 59 | FM-B064 | done | Run exact pipeline-backed live preview | Depends on FM-B009 and FM-B063. `forme-authoring-preview` validates and freezes each persisted revision, materializes it through a narrow isolated host boundary, runs the real FM03/FM07 watch path, cancels/coalesces stale work, retains last-good output, and emits bounded revision-bound diagnostics. |
+| 60 | FM-B065 | active | Compose the reviewed authoring publish workflow | Depends on FM-B012 and FM-B064. The shell builds the exact persisted revision and publishes through one reviewed FM08 target without exposing credentials or silently marking failed/indeterminate work as published. |
 | 61 | FM-B066 | blocked | Package the first-run desktop authoring product | Depends on FM-B065. An installable local shell creates a project, selects a theme, edits and previews a first post, configures a supported target, and publishes without source/config editing, git, or a command line. |
 | 62 | FM-B016 | blocked | Complete the authoring shell | Completion milestone depending on FM-B062–FM-B066. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
 | 63 | FM-B017 | blocked | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
@@ -308,6 +308,7 @@ work.
 | 2026-10-02 | FM-B061 added an opt-in pipeline-step explorer to only the `Hello, Forme` article. Its full ordered list remains the no-JavaScript fallback; the product binds one stable script identity to reviewed SHA-256 bytes; clean and unchanged warm builds are byte-identical; and every other article remains script- and island-free. The source-input audit also added the module identity sidecar to the exact blog boundary and regenerated every checked digest projection. | Close FM-B061 and its FM-B013 completion milestone. Interactivity IR is implemented end to end. Activate FM-B016 as the highest-priority ready Authoring-v1 item; FM-B017 is independently ready but remains blocked so only one roadmap item is active. |
 | 2026-10-03 | Adding the canonical FM09 authoring-shell specification and its TypeScript core exposed that the numbered-spec allowlist, roadmap status table, and TypeScript project inventory still stopped before the new surfaces. | Extend all three metadata contracts to FM09 and `forme-authoring-core` so future additions cannot silently bypass the canonical maps. |
 | 2026-10-03 | A same-realm React plugin component could read ambient DOM and host globals regardless of the props omitted from its nominal interface, so passing JSX through an “editor slot” would not satisfy FM09's authority claim. | Make FM-B063 slots bounded declarative data and route activation through one injected bridge representing the already-sandboxed FM02 boundary. The bridge receives only a frozen snapshot and returns one core command; arbitrary plugin code and DOM nodes never enter the editor realm. |
+| 2026-10-03 | A mutable preview input or an output labeled only by pipeline build ID could let a completed older draft masquerade as the active revision. Running a second in-editor renderer would also bypass the product pipeline entirely. | Close FM-B064 with one capability-free coordinator: snapshot the persisted revision, require a separately disposable isolated materialization, execute only through `Orchestrator.watch`, stop superseded sessions, pass success through FM07 artifact validation, and publish closed diagnostics plus exact authoring-revision attribution. Activate FM-B065 next. |
 
 ## Loop protocol
 
