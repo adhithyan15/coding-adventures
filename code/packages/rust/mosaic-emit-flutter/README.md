@@ -245,8 +245,17 @@ See `CHANGELOG.d/` for the full feature matrix. The headline:
   drop, arrow-key target movement, Escape cancellation, screen-reader
   announcements, disabled/accepted-kind filtering, and the complete lifecycle
   event payloads.
-- 🚧 Rich dialog behavior and multi-field payload synthesis from a single
-  text-input callback remain follow-up work.
+- ✅ `HostDialog` (modal) lowers to `_MosaicDialogHost`, which pushes its
+  own `DialogRoute` on the root navigator when `open` becomes true and
+  removes that route when it becomes false (UI29-1 §3.3). It never calls
+  `showDialog`, whose desktop windowing path aborts macOS AOT builds.
+  `onClose` fires once per open, however the dialog closes.
+  `tests/flutter_dialog_host.rs` runs the helper, exactly as emitted,
+  against the widget tests in `conformance/dialog-host/` when `flutter`
+  is on PATH (CI's Flutter lane requires it).
+- 🚧 Non-modal dialogs (`modal: false`), `onOpen`, and multi-field
+  payload synthesis from a single text-input callback remain follow-up
+  work.
 
 ## Versioning
 

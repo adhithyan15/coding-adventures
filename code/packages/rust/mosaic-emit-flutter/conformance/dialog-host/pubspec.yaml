@@ -1,0 +1,11 @@
+name: mosaic_dialog_host_conformance
+description: Drives the HostDialog lowering's _MosaicDialogHost, exactly as emitted (UI29-1 §3.3).
+publish_to: none
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+dependencies:
+  flutter:
+    sdk: flutter
+dev_dependencies:
+  flutter_test:
+    sdk: flutter

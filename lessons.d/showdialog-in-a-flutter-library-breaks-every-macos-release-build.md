@@ -30,4 +30,5 @@ pushes when windowing is off, and a Rust test refuses `showDialog` and
 `DialogRoute` instead. Before blaming a toolchain bump for a failure, check
 which recent commits touched the failing app's inputs. The two green runs on
 either side of #16581 pointed at it at once. The emitter's `HostDialog`
-lowering still calls `showDialog` (backlog).
+lowering (`_MosaicDialogHost`) made the same call and now pushes its own
+`DialogRoute` too (UI29-1 §3.3).

@@ -24,7 +24,7 @@
 //! | `HostButton`         | `ElevatedButton(onPressed: ..., child: Text(...))`  |
 //! | `HostScroll`         | `SingleChildScrollView(child: ...)`                 |
 //! | `HostNavigationSplit` | `LayoutBuilder` + regular `Row` / compact `Drawer` |
-//! | `HostDialog`         | `Builder(builder: (context) { ... showDialog ... })` — see below |
+//! | `HostDialog`         | `_MosaicDialogHost(open: ..., builder: (context) => AlertDialog(...))` — see below |
 //! | `HostCheckbox`       | `Checkbox(value: ..., onChanged: ...)`              |
 //! | `HostRadio`          | `Radio<String>(value: ..., groupValue: ..., onChanged: ...)` |
 //! | `HostTable`          | `DataTable(columns: [...], rows: [...])`            |
@@ -36,16 +36,14 @@
 //! | `If` / `Else`        | Dart `if ... else ...` expression in widget tree    |
 //! | `For`                | Spread `...list.map((x) => Widget(x))`              |
 //!
-//! ## HostDialog — anchor + imperative show
+//! ## HostDialog — anchor + imperative route
 //!
-//! Flutter's `showDialog` is imperative — you call it from a
-//! callback, it doesn't sit in the widget tree. We follow the same
-//! pattern as `mosaic-emit-swiftui`'s `Color.clear` anchor: emit a
-//! zero-size `SizedBox.shrink()` placeholder that carries the dialog
-//! logic via a `useEffect`-shaped Flutter hook (`useEffect` from the
-//! `flutter_hooks` package, or a `StatefulWidget` wrapper if the
-//! host prefers vanilla Flutter). v1 ships the `flutter_hooks` shape;
-//! the host imports `package:flutter_hooks/flutter_hooks.dart` once.
+//! A Flutter dialog is a route pushed on a `Navigator`, not a widget in
+//! the tree. Each `HostDialog` lowers to `_MosaicDialogHost`, a private
+//! zero-size `StatefulWidget` written once per file that watches `open`
+//! and pushes or removes a `DialogRoute` (UI29-1 §3.3) -- the same anchor
+//! idea as `mosaic-emit-swiftui`'s `Color.clear`. It never calls
+//! `showDialog`, whose desktop windowing path breaks macOS AOT builds.
 //!
 //! ## What is NOT in this first cut
 //!
@@ -7296,7 +7294,7 @@ fn emit_host_scroll(
 /// #13010: does this `HostDialog` node lower to a real native dialog on
 /// the Flutter backend, or does it still fall back to the zero-size
 /// placeholder? `modal: false` is the one case still unimplemented --
-/// Flutter's `showDialog` is inherently modal (a full-screen barrier +
+/// a Flutter dialog route is inherently modal (a full-screen barrier +
 /// route), with no vanilla-Flutter equivalent to SwiftUI's `.popover`/
 /// Qt's non-modal `Popup` short of a custom `Overlay`, which is out of
 /// scope here. `modal: true` (the default, and the only value the
@@ -7305,13 +7303,13 @@ pub fn host_dialog_has_native_semantics(node: &LayoutNode) -> bool {
     !matches!(find_keyword_prop(node, "modal"), Some("false"))
 }
 
-/// `HostDialog` -> a declarative-triggered imperative `showDialog`,
+/// `HostDialog` -> a declaratively triggered `DialogRoute` push,
 /// wrapped in the shared `_MosaicDialogHost` `StatefulWidget` (emitted
-/// once per file, see [`emit_dialog_helper`]). Flutter's `showDialog`
+/// once per file, see [`emit_dialog_helper`]). Pushing a route
 /// is an imperative call, not a widget that sits in the tree the way
 /// SwiftUI's `.sheet` modifier or Compose's conditional composition
 /// does -- `_MosaicDialogHost` bridges the two: it watches its `open`
-/// property and calls `showDialog`/`Navigator.pop` from lifecycle
+/// property and pushes or removes its route from lifecycle
 /// callbacks so the rest of this emitter can still treat `HostDialog`
 /// as an ordinary declarative tree node.
 ///
@@ -7451,22 +7449,44 @@ fn emit_host_dialog(
 }
 
 /// Shared `StatefulWidget` bridging a declarative `open: bool` to
-/// Flutter's imperative `showDialog`/`Navigator` API. Emitted once per
+/// Flutter's imperative `Navigator` API (UI29-1 §3.3). Emitted once per
 /// file (gated on `uses_dialog`, mirroring [`emit_drag_helpers`]'s
 /// `uses_drag` gate), reused by every `HostDialog` in that file.
 ///
-/// - `open` flips false -> true: schedules `showDialog` on the next
-///   frame (an `addPostFrameCallback`, since `showDialog` needs a
-///   `BuildContext` already in the tree -- calling it synchronously
-///   from `didUpdateWidget`/`initState` can race the current build).
-/// - `open` flips true -> false while the dialog is still showing
-///   (the host closed it via its own slot, not via backdrop-tap or an
-///   in-dialog control): pops the route programmatically.
-/// - Either dismissal path (backdrop tap or host-driven pop) resolves
-///   `showDialog`'s returned `Future`, which is where `onClose` fires
-///   -- exactly once per open/close cycle, regardless of which side
-///   initiated the close.
-fn emit_dialog_helper() -> String {
+/// - `open` is true (first build, or a false -> true change): pushes a
+///   `DialogRoute` on the root navigator after the frame -- a route needs
+///   a `BuildContext` already in the tree, so pushing synchronously from
+///   `initState`/`didUpdateWidget` would race the current build. `_route`
+///   is set as the push happens, so however many rebuilds schedule an
+///   open before the frame, only one dialog is pushed.
+/// - `open` flips true -> false while the dialog is showing (the host
+///   closed it through its own slot): after the frame, removes *this*
+///   route -- popped,
+///   with its exit animation, when it is on top; taken out from under
+///   anything pushed above it otherwise, rather than popping that.
+/// - Either way it closes, `onClose` fires exactly once per open, and
+///   never for a component that has left the tree; a component that
+///   leaves with its dialog showing takes the dialog with it.
+///
+/// Not `showDialog`: that goes through `showRawDialog`, which can open a
+/// dialog as a window of its own and so reaches Flutter's desktop
+/// windowing code, whose macOS FFI structs abort the AOT snapshotter
+/// ("Class with illegal cid") -- an app carrying the call fails every
+/// macOS release build. The route is what `showDialog` pushes when
+/// windowing is off, with the same barrier colour and focus traversal.
+///
+/// Truth table for a close (`_route` is this host's route, if pushed):
+///
+/// | how it closes            | route on top? | what happens                  |
+/// |--------------------------|---------------|-------------------------------|
+/// | barrier, Escape, `pop`   | yes           | push's future -> `_closed`    |
+/// | host sets `open: false`  | yes           | after the frame: `pop` -> push's future |
+/// | host sets `open: false`  | no            | after the frame: `removeRoute` -> `_closed` |
+/// | component disposed       | either        | removed after the frame; no `onClose` |
+///
+/// Public so `tests/flutter_dialog_host.rs` can drive exactly this text
+/// with Flutter's widget tester.
+pub fn emit_dialog_helper() -> String {
     r#"class _MosaicDialogHost extends StatefulWidget {
   final bool open;
   final bool barrierDismissible;
@@ -7483,7 +7503,8 @@ fn emit_dialog_helper() -> String {
 }
 
 class _MosaicDialogHostState extends State<_MosaicDialogHost> {
-  bool _isShowing = false;
+  // The route this host pushed, from the push until it closes.
+  DialogRoute<void>? _route;
 
   @override
   void initState() {
@@ -7496,22 +7517,64 @@ class _MosaicDialogHostState extends State<_MosaicDialogHost> {
   @override
   void didUpdateWidget(covariant _MosaicDialogHost oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.open && !_isShowing) {
+    if (widget.open && _route == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _open());
-    } else if (!widget.open && _isShowing) {
-      Navigator.of(context).maybePop();
+    } else if (!widget.open && _route != null) {
+      // After the frame too: changing the navigator's routes from inside
+      // this build would rebuild widgets the framework is building.
+      WidgetsBinding.instance.addPostFrameCallback((_) => _close());
     }
   }
 
-  Future<void> _open() async {
-    _isShowing = true;
-    await showDialog<void>(
+  void _open() {
+    // Re-checked after the frame: the host may have closed again, left
+    // the tree, or already pushed.
+    if (!mounted || !widget.open || _route != null) return;
+    final route = DialogRoute<void>(
       context: context,
       barrierDismissible: widget.barrierDismissible,
+      barrierColor: DialogTheme.of(context).barrierColor ??
+          Theme.of(context).dialogTheme.barrierColor ??
+          Colors.black54,
+      traversalEdgeBehavior: TraversalEdgeBehavior.closedLoop,
       builder: widget.builder,
     );
-    _isShowing = false;
-    widget.onClose?.call();
+    _route = route;
+    Navigator.of(context, rootNavigator: true)
+        .push<void>(route)
+        .then((_) => _closed(route));
+  }
+
+  void _close() {
+    final route = _route;
+    // Re-checked after the frame: the host may have reopened it.
+    if (!mounted || widget.open || route == null || !route.isActive) return;
+    if (route.isCurrent) {
+      route.navigator!.pop();
+    } else {
+      route.navigator!.removeRoute(route);
+      _closed(route);
+    }
+  }
+
+  void _closed(DialogRoute<void> route) {
+    if (!identical(_route, route)) return;
+    _route = null;
+    if (mounted) widget.onClose?.call();
+  }
+
+  @override
+  void dispose() {
+    final route = _route;
+    _route = null;
+    if (route != null) {
+      // Not from inside the tree's teardown: the navigator may be
+      // rebuilding too.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (route.isActive) route.navigator?.removeRoute(route);
+      });
+    }
+    super.dispose();
   }
 
   @override
@@ -15297,7 +15360,7 @@ mod tests {
     }
 
     // ---------------------------------------------------------------------
-    // #13010 — HostDialog: real showDialog wiring, not a placeholder
+    // #13010 — HostDialog: a real dialog route, not a placeholder
     // ---------------------------------------------------------------------
 
     /// A `HostDialog` with `open: slot: x`, a literal `title`, an
@@ -15367,6 +15430,49 @@ mod tests {
             out.contains("class _MosaicDialogHost extends StatefulWidget"),
             "expected the shared dialog helper class to be emitted, got:\n{out}"
         );
+    }
+
+    /// UI29-1 §3.3: the dialog is a `DialogRoute` this host pushes and
+    /// removes itself, never `showDialog`/`showRawDialog`, whose desktop
+    /// windowing path aborts macOS AOT builds of any app carrying it.
+    #[test]
+    fn host_dialog_pushes_its_own_route_and_never_calls_show_dialog() {
+        let helper = emit_dialog_helper();
+        for call in [
+            "showDialog",
+            "showRawDialog",
+            "showGeneralDialog",
+            "maybePop",
+        ] {
+            assert!(
+                !helper.contains(call),
+                "the dialog helper calls {call}:\n{helper}"
+            );
+        }
+        let required = [
+            // A route of its own, on the root navigator, as showDialog uses.
+            "final route = DialogRoute<void>(",
+            "Navigator.of(context, rootNavigator: true)\n        .push<void>(route)",
+            // What showDialog would have given the route.
+            "DialogTheme.of(context).barrierColor ??",
+            "traversalEdgeBehavior: TraversalEdgeBehavior.closedLoop,",
+            "barrierDismissible: widget.barrierDismissible,",
+            // One route per open, however many rebuilds ask before the frame.
+            "if (!mounted || !widget.open || _route != null) return;",
+            // A host-driven close runs after the frame and removes this
+            // route, never one pushed above it.
+            "WidgetsBinding.instance.addPostFrameCallback((_) => _close());",
+            "if (route.isCurrent) {\n      route.navigator!.pop();",
+            "route.navigator!.removeRoute(route);",
+            // onClose once per open, never for a component that is gone,
+            // which takes its dialog with it.
+            "if (!identical(_route, route)) return;",
+            "if (mounted) widget.onClose?.call();",
+            "void dispose() {",
+        ];
+        for needle in required {
+            assert!(helper.contains(needle), "missing {needle:?}:\n{helper}");
+        }
     }
 
     /// `dismiss-on-backdrop: false` maps to `barrierDismissible: false`.
@@ -15452,7 +15558,7 @@ mod tests {
     }
 
     /// #13010's documented scope decision: `modal: false` is NOT
-    /// implemented (Flutter's `showDialog` is inherently modal) --
+    /// implemented (a Flutter dialog route is inherently modal) --
     /// it must keep the old placeholder rather than emit a
     /// wrong-shaped (still-modal) dialog silently.
     #[test]

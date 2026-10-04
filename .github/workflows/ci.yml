@@ -3114,6 +3114,14 @@ jobs:
             flutter test test/mosaic_replace_dialog_test.dart
           )
 
+          # UI29-1 §3.3: every HostDialog lowers to _MosaicDialogHost, which
+          # pushes its own DialogRoute (never showDialog, whose windowing path
+          # breaks macOS AOT builds). Drive the helper, exactly as emitted,
+          # with the widget tester: one dialog per open, one close per open,
+          # and no other route popped or left behind.
+          MOSAIC_REQUIRE_FLUTTER=1 cargo test --manifest-path code/packages/rust/mosaic-emit-flutter/Cargo.toml \
+            --test flutter_dialog_host -- --nocapture
+
           # UI87 §7.7: every Flutter app gets Mosaic's platform library
           # (files.open / files.save and the router), installed on each started
           # host right after it is assigned. The TaskApp build above compiled
