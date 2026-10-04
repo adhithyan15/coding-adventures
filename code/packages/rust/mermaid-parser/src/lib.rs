@@ -4838,8 +4838,12 @@ fn split_treemap_style_declarations(source: &str) -> Vec<&str> {
 }
 
 fn parse_treemap_opacity(token: &Token, source: &str) -> Result<f64, ParseError> {
-    source.parse::<f64>().ok().filter(|value| value.is_finite() && (0.0..=1.0).contains(value))
-        .ok_or_else(|| token_error(token, "treemap opacity must be between 0 and 1"))
+    let value = source.strip_suffix('%').map_or_else(
+        || source.parse::<f64>().ok(),
+        |value| value.trim().parse::<f64>().ok().map(|value| value / 100.0),
+    );
+    value.filter(|value| value.is_finite() && (0.0..=1.0).contains(value))
+        .ok_or_else(|| token_error(token, "treemap opacity must be between 0 and 1 or 0% and 100%"))
 }
 
 fn parse_treemap_letter_spacing(
@@ -15269,6 +15273,22 @@ B//-A: reverse stick top
             );
             let diagram = parse_treemap(&source).expect("font-size keyword must parse");
             assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.font_size), Some(expected));
+        }
+    }
+
+    #[test]
+    fn treemap_parses_percentage_opacity() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent opacity:80%,fill-opacity:70%,stroke-opacity:50%",
+        ).expect("percentage opacity must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!((style.opacity, style.fill_opacity, style.stroke_opacity),
+            (Some(0.8), Some(0.7), Some(0.5)));
+        for value in ["-1%", "101%", "50px"] {
+            let source = format!(
+                "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent opacity:{value}"
+            );
+            assert!(parse_treemap(&source).is_err());
         }
     }
 
