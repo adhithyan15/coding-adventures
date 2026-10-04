@@ -133,12 +133,12 @@ where
         let resolve_current_color = |value: String| {
             if value.eq_ignore_ascii_case("currentcolor") { current_color.clone() } else { value }
         };
-        let fill = resolve_current_color(node.style.as_ref().and_then(|style| style.node.fill.clone())
+        let fill = normalize_css_named_paint(resolve_current_color(node.style.as_ref().and_then(|style| style.node.fill.clone())
             .or_else(|| configured_fill.clone())
-            .unwrap_or_else(|| palette_index.map_or_else(|| "transparent".into(), |index| diagram.config.theme.fills[index].clone())));
-        let stroke = resolve_current_color(node.style.as_ref().and_then(|style| style.node.stroke.clone())
+            .unwrap_or_else(|| palette_index.map_or_else(|| "transparent".into(), |index| diagram.config.theme.fills[index].clone()))));
+        let stroke = normalize_css_named_paint(resolve_current_color(node.style.as_ref().and_then(|style| style.node.stroke.clone())
             .or_else(|| configured_stroke.clone())
-            .unwrap_or_else(|| palette_index.map_or_else(|| "transparent".into(), |index| diagram.config.theme.strokes[index].clone())));
+            .unwrap_or_else(|| palette_index.map_or_else(|| "transparent".into(), |index| diagram.config.theme.strokes[index].clone()))));
         let opacity = node.style.as_ref().and_then(|style| style.opacity).unwrap_or(1.0);
         let fill = if node.style.as_ref().is_some_and(|style| style.opacity.is_some() || style.fill_opacity.is_some()) {
             with_opacity(&fill, node.style.as_ref().and_then(|style| style.fill_opacity).unwrap_or(1.0) * opacity)
@@ -2007,6 +2007,9 @@ fn parse_css_color(css: &str) -> Option<Color> {
     if let Some(color) = parse_css_hsl_function(css) {
         return Some(color);
     }
+    if let Some(color) = parse_css_named_color(css) {
+        return Some(color);
+    }
     let value = css.strip_prefix('#')?;
     if !value.is_ascii() || !value.bytes().all(|byte| byte.is_ascii_hexdigit()) {
         return None;
@@ -2119,6 +2122,35 @@ fn parse_css_byte(value: &str, numeric_scale: f64) -> Option<u8> {
         let scaled = if percentage { value / 100.0 * 255.0 } else { value * numeric_scale };
         scaled.clamp(0.0, 255.0).round() as u8
     })
+}
+
+fn parse_css_named_color(css: &str) -> Option<Color> {
+    let (r, g, b) = match css.trim().to_ascii_lowercase().as_str() {
+        "aqua" => (0, 255, 255),
+        "black" => (0, 0, 0),
+        "blue" => (0, 0, 255),
+        "fuchsia" => (255, 0, 255),
+        "gray" | "grey" => (128, 128, 128),
+        "green" => (0, 128, 0),
+        "lime" => (0, 255, 0),
+        "maroon" => (128, 0, 0),
+        "navy" => (0, 0, 128),
+        "olive" => (128, 128, 0),
+        "orange" => (255, 165, 0),
+        "purple" => (128, 0, 128),
+        "red" => (255, 0, 0),
+        "silver" => (192, 192, 192),
+        "teal" => (0, 128, 128),
+        "white" => (255, 255, 255),
+        "yellow" => (255, 255, 0),
+        _ => return None,
+    };
+    Some(Color { r, g, b, a: 255 })
+}
+
+fn normalize_css_named_paint(css: String) -> String {
+    parse_css_named_color(&css)
+        .map_or(css, |color| format!("rgb({},{},{})", color.r, color.g, color.b))
 }
 
 fn text_node(
@@ -7232,6 +7264,14 @@ mod tests {
         assert_eq!(css_to_color("hsl(0.5turn 100% 50%)"), cyan);
         assert_eq!(css_to_color("hsl(200grad 100% 50%)"), cyan);
         assert_eq!(css_to_color("hsl(3.141592653589793rad 100% 50%)"), cyan);
+    }
+
+    #[test]
+    fn css_colors_parse_basic_named_colors() {
+        assert_eq!(css_to_color("ORANGE"), Color { r: 255, g: 165, b: 0, a: 255 });
+        assert_eq!(css_to_color("navy"), Color { r: 0, g: 0, b: 128, a: 255 });
+        assert_eq!(css_to_color("grey"), css_to_color("gray"));
+        assert_eq!(with_opacity("teal", 0.5), "rgba(0,128,128,0.5)");
     }
 
     #[test]
