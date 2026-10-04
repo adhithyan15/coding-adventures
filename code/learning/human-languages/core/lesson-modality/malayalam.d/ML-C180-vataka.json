@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C180-vataka",
+    "language": "malayalam",
+    "chapter": 180,
+    "sequence": 7790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:26413996fc2dbf68"
+  },
+  "findings": []
+}

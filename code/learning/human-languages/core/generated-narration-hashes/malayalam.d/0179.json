@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:4ccacf3a7e1c767c",
+  "lessonIds": [
+    "ML-C179-atutta",
+    "ML-C179-ini-mutal",
+    "ML-C179-bhavi",
+    "ML-C179-tirumanikkuka",
+    "ML-C179-pratikshikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch179.txt",
+  "json": "malayalam/narration/ch179.json",
+  "textHash": "fnv1a64:4158c7013c1f6d24",
+  "jsonHash": "fnv1a64:d718e88a506bab17",
+  "findings": []
+}

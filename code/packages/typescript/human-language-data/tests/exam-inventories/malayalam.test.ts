@@ -122,7 +122,10 @@ describe("the committed Malayalam A1 inventory", () => {
     // 653 -> 837: chapters 142-176, 175 vocabulary lessons, eight reviews and
     // the punctuation split *the rest, more*. Every headword was chosen from
     // glyphs the track already teaches, so `shown` and the overlap hold at 69.
-    expect(lessons).toHaveLength(837);
+    // 837 -> 859: chapters 177-180, the four A2 spine chapters (twenty
+    // lessons and two reviews). Every headword uses glyphs the track already
+    // teaches, so `shown` and the overlap hold at 69.
+    expect(lessons).toHaveLength(859);
     expect(shown.size).toBe(69);
     expect([...shown].filter((glyph) => directlyOwned.has(glyph))).toHaveLength(69);
     expect(open).toEqual([]);

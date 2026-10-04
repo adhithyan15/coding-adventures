@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C177-eviteyum",
+    "language": "malayalam",
+    "chapter": 177,
+    "sequence": 7640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f214074bb07f3b06"
+  },
+  "findings": []
+}

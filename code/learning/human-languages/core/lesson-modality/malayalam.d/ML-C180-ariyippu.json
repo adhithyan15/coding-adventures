@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C180-ariyippu",
+    "language": "malayalam",
+    "chapter": 180,
+    "sequence": 7780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e30709affcfe719"
+  },
+  "findings": []
+}

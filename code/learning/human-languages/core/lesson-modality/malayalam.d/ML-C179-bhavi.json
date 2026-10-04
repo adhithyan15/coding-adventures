@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C179-bhavi",
+    "language": "malayalam",
+    "chapter": 179,
+    "sequence": 7740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:659e105775f7d18d"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C179-ini-mutal",
+    "language": "malayalam",
+    "chapter": 179,
+    "sequence": 7730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a636f9ae79eee3a5"
+  },
+  "findings": []
+}
