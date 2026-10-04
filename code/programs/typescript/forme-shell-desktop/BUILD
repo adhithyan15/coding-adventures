@@ -39,12 +39,4 @@ set -e
 npm ci --quiet
 npm run build
 npm run test:coverage
-if [ "$(uname -s)" = "Darwin" ]; then
-  npm run worker:sea
-  npm run worker:sea:test
-  npm run native:test
-  npm run native:check
-  npm run tauri:build
-else
-  echo "forme-shell-desktop: macOS native gate skipped on $(uname -s)"
-fi
+if [ "$(uname -s)" = "Darwin" ]; then npm run worker:sea && npm run worker:sea:test && npm run native:test && npm run native:check && npm run tauri:build; else echo "forme-shell-desktop: macOS native gate skipped on $(uname -s)"; fi
