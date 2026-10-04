@@ -1,0 +1,910 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "level": "B1",
+  "target": {
+    "name": "Coding Adventures Urdu B1 Assessment — project-defined equivalent",
+    "basis": "project-defined"
+  },
+  "sources": [
+    {
+      "id": "ca-hl16-assessment-policy",
+      "title": "HL16 — Exam-ready books and the gentle writing ramp",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/specs/HL16-exam-ready-books-and-writing-ramp.md",
+      "published": "2026-08-20",
+      "accessed": "2026-10-02"
+    },
+    {
+      "id": "ca-hl18-task-shapes",
+      "title": "HL18 — Four-skill task shapes",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/specs/HL18-four-skill-task-shapes.md",
+      "published": "2026-08-20",
+      "accessed": "2026-10-02"
+    },
+    {
+      "id": "ca-urdu-assessment",
+      "title": "Coding Adventures Urdu Assessment Specification",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/urdu/assessment-spec.md",
+      "published": "2026-08-21",
+      "accessed": "2026-10-02"
+    },
+    {
+      "id": "ca-urdu-pronunciation",
+      "title": "Coding Adventures Urdu Pronunciation and Script Reference",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/urdu/pronunciation-reference.md",
+      "published": "not stated",
+      "accessed": "2026-10-02"
+    }
+  ],
+  "administration": {
+    "writtenMinutes": 125,
+    "speakingMinutes": 15,
+    "speakingGroupMaximum": 2,
+    "speakingPreparationMinutes": 10,
+    "deliveryModes": [
+      "paper or equivalent locked digital form",
+      "recorded-audio",
+      "live-interlocutor"
+    ]
+  },
+  "passRule": {
+    "maximumPoints": 400,
+    "passPoints": 240,
+    "requiresEverySectionAttempted": true,
+    "independentSkillThresholds": {
+      "reading": 0.6,
+      "listening": 0.6,
+      "writing": 0.6,
+      "speaking": 0.6
+    },
+    "note": "Each skill is a separate 100-point paper and must independently reach 60/100; the 240-point headline sum cannot compensate for a failed paper. This project-defined assessment is not an external qualification."
+  },
+  "sections": [
+    {
+      "skill": "reading",
+      "minutes": 45,
+      "parts": [
+        {
+          "id": "b1-reading-correspondence",
+          "promptModes": [
+            "written Urdu script in approved Nastaliq or accessibility Naskh"
+          ],
+          "promptGenres": [
+            "personal or practical correspondence"
+          ],
+          "responseModes": [
+            "selection",
+            "detail match",
+            "purpose match"
+          ],
+          "items": 7,
+          "stimulusLength": {
+            "unit": "words",
+            "minimum": 220,
+            "maximum": 280,
+            "approximate": false
+          },
+          "responseLength": {
+            "unit": "items",
+            "minimum": 1,
+            "maximum": 1,
+            "approximate": false
+          },
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": {
+            "maxRawPoints": 25,
+            "criteria": [
+              "purpose recognition",
+              "explicit-detail recognition",
+              "tone recognition"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "marking on the question paper",
+              "one unscored example",
+              "approved Nastaliq or Naskh accessibility presentation"
+            ],
+            "forbidden": [
+              "Roman Urdu",
+              "dictionary",
+              "translator",
+              "Devanagari substitution"
+            ],
+            "notPublished": []
+          },
+          "notPublished": [],
+          "sourceIds": [
+            "ca-hl16-assessment-policy",
+            "ca-hl18-task-shapes",
+            "ca-urdu-assessment",
+            "ca-urdu-pronunciation"
+          ]
+        },
+        {
+          "id": "b1-reading-public-information",
+          "promptModes": [
+            "written Urdu script in approved Nastaliq or accessibility Naskh"
+          ],
+          "promptGenres": [
+            "public information page",
+            "detailed instructions or advice"
+          ],
+          "responseModes": [
+            "selection",
+            "heading match",
+            "detail match"
+          ],
+          "items": 7,
+          "stimulusLength": {
+            "unit": "words",
+            "minimum": 260,
+            "maximum": 330,
+            "approximate": false
+          },
+          "responseLength": {
+            "unit": "items",
+            "minimum": 1,
+            "maximum": 1,
+            "approximate": false
+          },
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": {
+            "maxRawPoints": 25,
+            "criteria": [
+              "main-idea recognition",
+              "required-action recognition",
+              "specific-detail recognition"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "marking on the question paper",
+              "one unscored example",
+              "approved Nastaliq or Naskh accessibility presentation"
+            ],
+            "forbidden": [
+              "Roman Urdu",
+              "dictionary",
+              "translator",
+              "Devanagari substitution"
+            ],
+            "notPublished": []
+          },
+          "notPublished": [],
+          "sourceIds": [
+            "ca-hl16-assessment-policy",
+            "ca-hl18-task-shapes",
+            "ca-urdu-assessment",
+            "ca-urdu-pronunciation"
+          ]
+        },
+        {
+          "id": "b1-reading-narrative",
+          "promptModes": [
+            "written Urdu script in approved Nastaliq or accessibility Naskh"
+          ],
+          "promptGenres": [
+            "connected personal or fictional narrative"
+          ],
+          "responseModes": [
+            "selection",
+            "sequence match",
+            "inference match"
+          ],
+          "items": 7,
+          "stimulusLength": {
+            "unit": "words",
+            "minimum": 280,
+            "maximum": 360,
+            "approximate": false
+          },
+          "responseLength": {
+            "unit": "items",
+            "minimum": 1,
+            "maximum": 1,
+            "approximate": false
+          },
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": {
+            "maxRawPoints": 25,
+            "criteria": [
+              "event sequence",
+              "character motive",
+              "explicit and implicit detail"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "marking on the question paper",
+              "one unscored example",
+              "approved Nastaliq or Naskh accessibility presentation"
+            ],
+            "forbidden": [
+              "Roman Urdu",
+              "dictionary",
+              "translator",
+              "Devanagari substitution"
+            ],
+            "notPublished": []
+          },
+          "notPublished": [],
+          "sourceIds": [
+            "ca-hl16-assessment-policy",
+            "ca-hl18-task-shapes",
+            "ca-urdu-assessment",
+            "ca-urdu-pronunciation"
+          ]
+        },
+        {
+          "id": "b1-reading-informational-article",
+          "promptModes": [
+            "written Urdu script in approved Nastaliq or accessibility Naskh"
+          ],
+          "promptGenres": [
+            "informational article on a familiar social, cultural, or practical topic"
+          ],
+          "responseModes": [
+            "selection",
+            "paragraph-purpose match",
+            "detail match"
+          ],
+          "items": 7,
+          "stimulusLength": {
+            "unit": "words",
+            "minimum": 340,
+            "maximum": 430,
+            "approximate": false
+          },
+          "responseLength": {
+            "unit": "items",
+            "minimum": 1,
+            "maximum": 1,
+            "approximate": false
+          },
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": {
+            "maxRawPoints": 25,
+            "criteria": [
+              "argument structure",
+              "paragraph purpose",
+              "specific-detail recognition",
+              "writer stance"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "marking on the question paper",
+              "one unscored example",
+              "approved Nastaliq or Naskh accessibility presentation"
+            ],
+            "forbidden": [
+              "Roman Urdu",
+              "dictionary",
+              "translator",
+              "Devanagari substitution"
+            ],
+            "notPublished": []
+          },
+          "notPublished": [],
+          "sourceIds": [
+            "ca-hl16-assessment-policy",
+            "ca-hl18-task-shapes",
+            "ca-urdu-assessment",
+            "ca-urdu-pronunciation"
+          ]
+        }
+      ],
+      "variants": []
+    },
+    {
+      "skill": "listening",
+      "minutes": 35,
+      "parts": [
+        {
+          "id": "b1-listening-transactions",
+          "promptModes": [
+            "recorded contemporary standard Urdu at 130-150 words per minute"
+          ],
+          "promptGenres": [
+            "everyday transaction set"
+          ],
+          "responseModes": [
+            "selection",
+            "detail match",
+            "outcome match"
+          ],
+          "items": 7,
+          "stimulusLength": {
+            "unit": "seconds",
+            "minimum": 120,
+            "maximum": 180,
+            "approximate": false
+          },
+          "responseLength": {
+            "unit": "items",
+            "minimum": 1,
+            "maximum": 1,
+            "approximate": false
+          },
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": {
+            "maxRawPoints": 25,
+            "criteria": [
+              "purpose recognition",
+              "specific-detail recognition",
+              "outcome recognition"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "notes on the question paper",
+              "one unscored example"
+            ],
+            "forbidden": [
+              "transcript",
+              "dictionary",
+              "translator",
+              "Roman Urdu",
+              "Devanagari substitution"
+            ],
+            "notPublished": []
+          },
+          "notPublished": [],
+          "sourceIds": [
+            "ca-hl16-assessment-policy",
+            "ca-hl18-task-shapes",
+            "ca-urdu-assessment",
+            "ca-urdu-pronunciation"
+          ]
+        },
+        {
+          "id": "b1-listening-interview",
+          "promptModes": [
+            "recorded contemporary standard Urdu at 130-150 words per minute"
+          ],
+          "promptGenres": [
+            "short interview on a familiar topic"
+          ],
+          "responseModes": [
+            "selection",
+            "speaker-view match",
+            "detail match"
+          ],
+          "items": 6,
+          "stimulusLength": {
+            "unit": "seconds",
+            "minimum": 180,
+            "maximum": 240,
+            "approximate": false
+          },
+          "responseLength": {
+            "unit": "items",
+            "minimum": 1,
+            "maximum": 1,
+            "approximate": false
+          },
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": {
+            "maxRawPoints": 25,
+            "criteria": [
+              "interview gist",
+              "speaker viewpoint",
+              "specific-detail recognition"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "notes on the question paper",
+              "one unscored example"
+            ],
+            "forbidden": [
+              "transcript",
+              "dictionary",
+              "translator",
+              "Roman Urdu",
+              "Devanagari substitution"
+            ],
+            "notPublished": []
+          },
+          "notPublished": [],
+          "sourceIds": [
+            "ca-hl16-assessment-policy",
+            "ca-hl18-task-shapes",
+            "ca-urdu-assessment",
+            "ca-urdu-pronunciation"
+          ]
+        },
+        {
+          "id": "b1-listening-narrative",
+          "promptModes": [
+            "recorded contemporary standard Urdu at 130-150 words per minute"
+          ],
+          "promptGenres": [
+            "connected personal or factual narrative"
+          ],
+          "responseModes": [
+            "selection",
+            "sequence match",
+            "attitude match"
+          ],
+          "items": 6,
+          "stimulusLength": {
+            "unit": "seconds",
+            "minimum": 210,
+            "maximum": 300,
+            "approximate": false
+          },
+          "responseLength": {
+            "unit": "items",
+            "minimum": 1,
+            "maximum": 1,
+            "approximate": false
+          },
+          "interaction": "individual",
+          "replayCount": 1,
+          "scoring": {
+            "maxRawPoints": 25,
+            "criteria": [
+              "narrative structure",
+              "event sequence",
+              "speaker attitude"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "notes on the question paper",
+              "one unscored orienting preview"
+            ],
+            "forbidden": [
+              "transcript",
+              "dictionary",
+              "translator",
+              "Roman Urdu",
+              "Devanagari substitution"
+            ],
+            "notPublished": []
+          },
+          "notPublished": [],
+          "sourceIds": [
+            "ca-hl16-assessment-policy",
+            "ca-hl18-task-shapes",
+            "ca-urdu-assessment",
+            "ca-urdu-pronunciation"
+          ]
+        },
+        {
+          "id": "b1-listening-short-talk",
+          "promptModes": [
+            "recorded contemporary standard Urdu at 130-150 words per minute"
+          ],
+          "promptGenres": [
+            "short informational talk"
+          ],
+          "responseModes": [
+            "selection",
+            "note completion",
+            "main-point match"
+          ],
+          "items": 6,
+          "stimulusLength": {
+            "unit": "seconds",
+            "minimum": 240,
+            "maximum": 330,
+            "approximate": false
+          },
+          "responseLength": {
+            "unit": "items",
+            "minimum": 1,
+            "maximum": 1,
+            "approximate": false
+          },
+          "interaction": "individual",
+          "replayCount": 1,
+          "scoring": {
+            "maxRawPoints": 25,
+            "criteria": [
+              "talk structure",
+              "main-point recognition",
+              "supporting-detail recognition"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "notes on the question paper",
+              "one unscored orienting preview"
+            ],
+            "forbidden": [
+              "transcript",
+              "dictionary",
+              "translator",
+              "Roman Urdu",
+              "Devanagari substitution"
+            ],
+            "notPublished": []
+          },
+          "notPublished": [],
+          "sourceIds": [
+            "ca-hl16-assessment-policy",
+            "ca-hl18-task-shapes",
+            "ca-urdu-assessment",
+            "ca-urdu-pronunciation"
+          ]
+        }
+      ],
+      "variants": []
+    },
+    {
+      "skill": "writing",
+      "minutes": 45,
+      "parts": [
+        {
+          "id": "b1-writing-functional-text",
+          "promptModes": [
+            "written Urdu script in approved Nastaliq or accessibility Naskh"
+          ],
+          "promptGenres": [
+            "request, reply, complaint, invitation, or practical explanation for a named reader"
+          ],
+          "responseModes": [
+            "independent handwritten functional text in Urdu script"
+          ],
+          "items": 1,
+          "stimulusLength": {
+            "unit": "words",
+            "minimum": 50,
+            "maximum": 90,
+            "approximate": false
+          },
+          "responseLength": {
+            "unit": "words",
+            "minimum": 50,
+            "maximum": 70,
+            "approximate": false
+          },
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": {
+            "maxRawPoints": 35,
+            "criteria": [
+              "task fulfilment and relevant content",
+              "reader and purpose awareness",
+              "range and control of Urdu vocabulary, grammar, and register",
+              "Urdu orthographic control"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "one unscored task example",
+              "approved Nastaliq or Naskh accessibility presentation",
+              "Unicode normalization of equivalent Urdu grapheme sequences for typed responses after submission"
+            ],
+            "forbidden": [
+              "copyable answer model",
+              "Roman Urdu",
+              "dictionary",
+              "translator",
+              "spell-checker",
+              "Devanagari substitution"
+            ],
+            "notPublished": []
+          },
+          "notPublished": [
+            "unwritten short vowels and optional diacritics receive neither bonus nor penalty unless the item explicitly tests a meaning-changing contrast",
+            "ordinary legible Urdu handwriting is sufficient; Nastaliq calligraphic ligatures and slope are not scored"
+          ],
+          "sourceIds": [
+            "ca-hl16-assessment-policy",
+            "ca-hl18-task-shapes",
+            "ca-urdu-assessment",
+            "ca-urdu-pronunciation"
+          ]
+        },
+        {
+          "id": "b1-writing-connected-text",
+          "promptModes": [
+            "written Urdu script in approved Nastaliq or accessibility Naskh"
+          ],
+          "promptGenres": [
+            "narrative, description, or opinion for a named audience"
+          ],
+          "responseModes": [
+            "independent handwritten connected text in Urdu script"
+          ],
+          "items": 1,
+          "stimulusLength": {
+            "unit": "words",
+            "minimum": 60,
+            "maximum": 100,
+            "approximate": false
+          },
+          "responseLength": {
+            "unit": "words",
+            "minimum": 130,
+            "maximum": 170,
+            "approximate": false
+          },
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": {
+            "maxRawPoints": 65,
+            "criteria": [
+              "task fulfilment and relevant content",
+              "organisation and cohesion",
+              "audience-aware register",
+              "range and control of Urdu vocabulary, grammar, and register",
+              "Urdu orthographic control"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "one unscored task example",
+              "approved Nastaliq or Naskh accessibility presentation",
+              "Unicode normalization of equivalent Urdu grapheme sequences for typed responses after submission"
+            ],
+            "forbidden": [
+              "copyable answer model",
+              "Roman Urdu",
+              "dictionary",
+              "translator",
+              "spell-checker",
+              "Devanagari substitution"
+            ],
+            "notPublished": []
+          },
+          "notPublished": [
+            "unwritten short vowels and optional diacritics receive neither bonus nor penalty unless the item explicitly tests a meaning-changing contrast",
+            "ordinary legible Urdu handwriting is sufficient; Nastaliq calligraphic ligatures and slope are not scored"
+          ],
+          "sourceIds": [
+            "ca-hl16-assessment-policy",
+            "ca-hl18-task-shapes",
+            "ca-urdu-assessment",
+            "ca-urdu-pronunciation"
+          ]
+        }
+      ],
+      "variants": []
+    },
+    {
+      "skill": "speaking",
+      "minutes": 15,
+      "parts": [
+        {
+          "id": "b1-speaking-interview",
+          "promptModes": [
+            "live-speech"
+          ],
+          "promptGenres": [
+            "personal interview with follow-up questions"
+          ],
+          "responseModes": [
+            "extended spoken responses with reasons and examples"
+          ],
+          "items": 5,
+          "stimulusLength": {
+            "unit": "seconds",
+            "minimum": 15,
+            "maximum": 60,
+            "approximate": false
+          },
+          "responseLength": {
+            "unit": "seconds",
+            "minimum": 150,
+            "maximum": 210,
+            "approximate": false
+          },
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": {
+            "maxRawPoints": 20,
+            "criteria": [
+              "task fulfilment and relevant content",
+              "interaction",
+              "range and control of Urdu vocabulary, grammar, and register",
+              "pronunciation and fluency"
+            ]
+          },
+          "aids": {
+            "allowed": [],
+            "forbidden": [
+              "written answer script",
+              "Roman Urdu",
+              "dictionary",
+              "translator",
+              "Devanagari substitution"
+            ],
+            "notPublished": []
+          },
+          "notPublished": [],
+          "sourceIds": [
+            "ca-hl16-assessment-policy",
+            "ca-hl18-task-shapes",
+            "ca-urdu-assessment",
+            "ca-urdu-pronunciation"
+          ]
+        },
+        {
+          "id": "b1-speaking-prepared-account",
+          "promptModes": [
+            "written Urdu script in approved Nastaliq or accessibility Naskh topic cue"
+          ],
+          "promptGenres": [
+            "familiar experience, issue, process, or event"
+          ],
+          "responseModes": [
+            "three-minute prepared spoken account"
+          ],
+          "items": 1,
+          "stimulusLength": {
+            "unit": "words",
+            "minimum": 25,
+            "maximum": 50,
+            "approximate": false
+          },
+          "responseLength": {
+            "unit": "seconds",
+            "minimum": 150,
+            "maximum": 180,
+            "approximate": false
+          },
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": {
+            "maxRawPoints": 30,
+            "criteria": [
+              "task fulfilment and relevant content",
+              "organisation and cohesion",
+              "range and control of Urdu vocabulary, grammar, and register",
+              "pronunciation and fluency"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "examiner-provided prompt card",
+              "paper notes made during ten-minute preparation",
+              "approved Nastaliq or Naskh accessibility presentation"
+            ],
+            "forbidden": [
+              "written answer script",
+              "Roman Urdu",
+              "dictionary",
+              "translator",
+              "Devanagari substitution"
+            ],
+            "notPublished": []
+          },
+          "notPublished": [],
+          "sourceIds": [
+            "ca-hl16-assessment-policy",
+            "ca-hl18-task-shapes",
+            "ca-urdu-assessment",
+            "ca-urdu-pronunciation"
+          ]
+        },
+        {
+          "id": "b1-speaking-collaborative-planning",
+          "promptModes": [
+            "live-speech",
+            "written Urdu script in approved Nastaliq or accessibility Naskh planning brief"
+          ],
+          "promptGenres": [
+            "familiar collaborative planning problem"
+          ],
+          "responseModes": [
+            "spoken proposal, comparison, negotiation, and agreement"
+          ],
+          "items": 1,
+          "stimulusLength": {
+            "unit": "words",
+            "minimum": 35,
+            "maximum": 65,
+            "approximate": false
+          },
+          "responseLength": {
+            "unit": "seconds",
+            "minimum": 180,
+            "maximum": 240,
+            "approximate": false
+          },
+          "interaction": "pair",
+          "replayCount": 0,
+          "scoring": {
+            "maxRawPoints": 30,
+            "criteria": [
+              "task fulfilment",
+              "collaborative interaction and repair",
+              "range and control of Urdu vocabulary, grammar, and register",
+              "pronunciation and fluency"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "examiner-provided planning card",
+              "approved Nastaliq or Naskh accessibility presentation"
+            ],
+            "forbidden": [
+              "written answer script",
+              "Roman Urdu",
+              "dictionary",
+              "translator",
+              "Devanagari substitution"
+            ],
+            "notPublished": []
+          },
+          "notPublished": [],
+          "sourceIds": [
+            "ca-hl16-assessment-policy",
+            "ca-hl18-task-shapes",
+            "ca-urdu-assessment",
+            "ca-urdu-pronunciation"
+          ]
+        },
+        {
+          "id": "b1-speaking-follow-up-discussion",
+          "promptModes": [
+            "live-speech"
+          ],
+          "promptGenres": [
+            "follow-up discussion linked to the planning task"
+          ],
+          "responseModes": [
+            "spoken opinion, reason, response, and clarification"
+          ],
+          "items": 4,
+          "stimulusLength": {
+            "unit": "seconds",
+            "minimum": 15,
+            "maximum": 60,
+            "approximate": false
+          },
+          "responseLength": {
+            "unit": "seconds",
+            "minimum": 150,
+            "maximum": 210,
+            "approximate": false
+          },
+          "interaction": "pair",
+          "replayCount": 0,
+          "scoring": {
+            "maxRawPoints": 20,
+            "criteria": [
+              "reasoned response",
+              "interaction and repair",
+              "range and control of Urdu vocabulary, grammar, and register",
+              "pronunciation and fluency"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "examiner follow-up questions"
+            ],
+            "forbidden": [
+              "written answer script",
+              "Roman Urdu",
+              "dictionary",
+              "translator",
+              "Devanagari substitution"
+            ],
+            "notPublished": []
+          },
+          "notPublished": [],
+          "sourceIds": [
+            "ca-hl16-assessment-policy",
+            "ca-hl18-task-shapes",
+            "ca-urdu-assessment",
+            "ca-urdu-pronunciation"
+          ]
+        }
+      ],
+      "variants": []
+    }
+  ]
+}
+
