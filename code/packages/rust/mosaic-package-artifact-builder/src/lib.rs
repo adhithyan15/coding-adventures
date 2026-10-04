@@ -4600,6 +4600,21 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     write_file(&path, body.as_bytes())?;
                     written.push(path);
                 }
+                // The macOS runner's entitlements (UI87 §7.7), written before
+                // `flutter create` makes the runner: it keeps files that are
+                // already there, so the sandboxed app can open the file
+                // dialogs the platform library shows.
+                for (file, body) in [
+                    (FLUTTER_MACOS_DEBUG_ENTITLEMENTS, FLUTTER_MACOS_DEBUG_ENTITLEMENTS_BODY),
+                    (FLUTTER_MACOS_RELEASE_ENTITLEMENTS, FLUTTER_MACOS_RELEASE_ENTITLEMENTS_BODY),
+                ] {
+                    let path = backend_dir.join(file);
+                    if let Some(parent) = path.parent() {
+                        create_dir_all(parent)?;
+                    }
+                    write_file(&path, body.as_bytes())?;
+                    written.push(path);
+                }
                 if let Some(source) = runtime_library {
                     let hook = backend_dir.join("hook/build.dart");
                     write_file(&hook, build_flutter_runtime_hook(source)?.as_bytes())?;
@@ -6913,6 +6928,57 @@ const FLUTTER_PLATFORM_EFFECTS_FILE: &str = "mosaic_platform_effects.dart";
 
 /// The platform library's plain-Dart core, beside it under `lib/`.
 const FLUTTER_PLATFORM_EFFECTS_CORE_FILE: &str = "mosaic_platform_effects_core.dart";
+
+/// Where `flutter create --platforms=macos` puts the runner's entitlements.
+/// `flutter create` writes only the files a project does not have yet, so
+/// writing these first decides what the runner is entitled to (UI87 §7.7).
+const FLUTTER_MACOS_DEBUG_ENTITLEMENTS: &str = "macos/Runner/DebugProfile.entitlements";
+const FLUTTER_MACOS_RELEASE_ENTITLEMENTS: &str = "macos/Runner/Release.entitlements";
+
+/// Flutter's own debug/profile entitlements -- the sandbox, JIT for the Dart
+/// VM, and the VM service's listening socket -- plus the one the platform
+/// library needs: read and write access to the files the person picks in an
+/// open or save panel. Without it NSOpenPanel and NSSavePanel fail inside the
+/// sandbox, and every `files.open` / `files.save` answers
+/// `failed { "the file dialog failed" }`.
+///
+/// `user-selected` is the narrowest file entitlement there is: the app gains
+/// the one file the person chose, for this launch, and nothing else on disk.
+const FLUTTER_MACOS_DEBUG_ENTITLEMENTS_BODY: &str = r#"<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Written by Mosaic (UI87 §7.7): Flutter's debug entitlements plus
+     files.user-selected.read-write, which the open and save panels need inside
+     the sandbox. -->
+<plist version="1.0">
+<dict>
+	<key>com.apple.security.app-sandbox</key>
+	<true/>
+	<key>com.apple.security.cs.allow-jit</key>
+	<true/>
+	<key>com.apple.security.network.server</key>
+	<true/>
+	<key>com.apple.security.files.user-selected.read-write</key>
+	<true/>
+</dict>
+</plist>
+"#;
+
+/// Flutter's release entitlements (the sandbox alone) plus the same
+/// user-selected file access as [`FLUTTER_MACOS_DEBUG_ENTITLEMENTS_BODY`].
+const FLUTTER_MACOS_RELEASE_ENTITLEMENTS_BODY: &str = r#"<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Written by Mosaic (UI87 §7.7): Flutter's release entitlements plus
+     files.user-selected.read-write, which the open and save panels need inside
+     the sandbox. -->
+<plist version="1.0">
+<dict>
+	<key>com.apple.security.app-sandbox</key>
+	<true/>
+	<key>com.apple.security.files.user-selected.read-write</key>
+	<true/>
+</dict>
+</plist>
+"#;
 
 /// Add `import '<path>';` to a Dart file, after its last import so it cannot
 /// land between a directive and its own comment. Nothing when it is present.
@@ -12559,6 +12625,40 @@ layout NativeEvents {
             .find("host.setPropsChangedHandler")
             .expect("props handler");
         assert!(assign < install && install < props, "{main}");
+
+        // UI87 §7.7: the macOS runner's entitlements, written before
+        // `flutter create` (which keeps them) so the sandboxed app can open
+        // the panels: Flutter's own keys plus user-selected file access.
+        for (file, keys) in [
+            (
+                "flutter/macos/Runner/DebugProfile.entitlements",
+                &[
+                    "com.apple.security.app-sandbox",
+                    "com.apple.security.cs.allow-jit",
+                    "com.apple.security.network.server",
+                    "com.apple.security.files.user-selected.read-write",
+                ][..],
+            ),
+            (
+                "flutter/macos/Runner/Release.entitlements",
+                &[
+                    "com.apple.security.app-sandbox",
+                    "com.apple.security.files.user-selected.read-write",
+                ][..],
+            ),
+        ] {
+            let path = out.path().join(file);
+            assert!(result.artifacts.contains(&path), "{file}");
+            let plist = fs::read_to_string(path).unwrap();
+            let declared: Vec<&str> = plist
+                .lines()
+                .filter_map(|line| line.trim().strip_prefix("<key>"))
+                .filter_map(|line| line.strip_suffix("</key>"))
+                .collect();
+            assert_eq!(declared, keys, "{file}: exactly these keys, each set true");
+            assert_eq!(plist.matches("<true/>").count(), keys.len(), "{file}");
+            assert!(plist.starts_with("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"));
+        }
 
         let pubspec = fs::read_to_string(out.path().join("flutter/pubspec.yaml")).unwrap();
         assert!(pubspec.contains("\n  file_selector: 1.0.4\n"), "{pubspec}");
