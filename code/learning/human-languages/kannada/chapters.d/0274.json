@@ -1,0 +1,19 @@
+{
+  "chapter": 274,
+  "title": "To dance, To press, To deposit, To withdraw, To sign",
+  "label": "ch:ka-to-dance-to-press-to-deposit-to-withdraw-to-sign",
+  "canDo": "I can say to dance, to press, to deposit, to withdraw and to sign.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C274-sahi-madu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 274: I can say to dance, to press, to deposit, to withdraw and to sign.",
+    "assesses": [
+      "KA-LEX-C274-KRIYE274-03",
+      "KA-LEX-C274-KRIYE274-04",
+      "KA-LEX-C274-KRIYE274-05"
+    ]
+  }
+}

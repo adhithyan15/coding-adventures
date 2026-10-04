@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C278-tayarisu",
+    "language": "kannada",
+    "chapter": 278,
+    "sequence": 13350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28620c0db9e6511b"
+  },
+  "findings": []
+}

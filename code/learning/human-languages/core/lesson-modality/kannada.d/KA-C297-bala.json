@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C297-bala",
+    "language": "kannada",
+    "chapter": 297,
+    "sequence": 14340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:480de1f5381672d8"
+  },
+  "findings": []
+}

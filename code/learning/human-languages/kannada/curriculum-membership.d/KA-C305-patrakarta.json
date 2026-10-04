@@ -1,0 +1,11 @@
+{
+  "id": "KA-C305-patrakarta",
+  "pathSegment": "KA-PATH-305-KELASA305",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-305-KELASA305",
+      "order": 4
+    }
+  ]
+}

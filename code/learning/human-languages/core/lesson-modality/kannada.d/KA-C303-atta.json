@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C303-atta",
+    "language": "kannada",
+    "chapter": 303,
+    "sequence": 14630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:92c47272bb0f5905"
+  },
+  "findings": []
+}

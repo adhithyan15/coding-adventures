@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C288-allade",
+    "language": "kannada",
+    "chapter": 288,
+    "sequence": 13830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c4dc99567cba095d"
+  },
+  "findings": []
+}

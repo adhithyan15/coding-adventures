@@ -1,0 +1,11 @@
+{
+  "id": "KA-C287-prapanca",
+  "pathSegment": "KA-PATH-287-STHALA287",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-287-STHALA287",
+      "order": 3
+    }
+  ]
+}

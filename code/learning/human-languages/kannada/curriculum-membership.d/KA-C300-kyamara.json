@@ -1,0 +1,11 @@
+{
+  "id": "KA-C300-kyamara",
+  "pathSegment": "KA-PATH-300-VASTU300",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-300-VASTU300",
+      "order": 1
+    }
+  ]
+}

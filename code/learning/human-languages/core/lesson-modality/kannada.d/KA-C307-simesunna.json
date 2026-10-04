@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C307-simesunna",
+    "language": "kannada",
+    "chapter": 307,
+    "sequence": 14850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28b41d25516ea9ce"
+  },
+  "findings": []
+}

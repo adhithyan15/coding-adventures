@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Here, There, and Where",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:02885a90457bacd3",
+  "sourceHash": "fnv1a64:414e3cd7050eebe2",
   "lessons": [
     {
       "id": "BN-W05-tha",
@@ -689,6 +689,111 @@
             {
               "kind": "speech",
               "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W26-kothay-controlled-question",
+      "sequence": 1925,
+      "title": "Your first question from meaning",
+      "headword": "চা কোথায়?",
+      "romanization": "chā kothāy?",
+      "gloss": "assemble one familiar Bengali location question from meaning, with no visible answer",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:befe677f56394e48",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the earlier lessons. Recall tea and the place question where? without writing either word yet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing: assemble one familiar question",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "From meaning alone, write Where is the tea? There is no word bank, romanization, or copyable sentence. Choose the two familiar pieces, put them in Bengali order, and add the Bengali question mark. This first composition is untimed: finish before opening the answer key."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "BN-W26-kothay-controlled-question-check",
+              "prompt": "With no word bank, romanization, or copyable answer, write the Bengali question meaning: Where is the tea?",
+              "assesses": [
+                "BN-LEX-C10-CHA-01",
+                "BN-LEX-C26-KOTHAY-01"
+              ],
+              "responseSeconds": 40,
+              "acceptedResponses": [
+                "চা কোথায়?",
+                "চা কোথায়"
+              ],
+              "feedback": {
+                "correct": "You selected two familiar pieces and wrote a Bengali location question.",
+                "incorrect": "Finish the attempt first. Then check the thing, place question, word boundary, and Bengali question mark separately."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: repair one difference",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Check the thing, place question, word boundary, and punctuation separately. Repair the first difference and write the whole question once more from meaning."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What made this composition rather than copying? (You selected and ordered two known pieces from meaning, with no visible Bengali answer.)"
+            },
+            {
+              "kind": "speech",
+              "text": "One controlled line proves this rung, not the later timed A1 writing task."
             }
           ]
         }

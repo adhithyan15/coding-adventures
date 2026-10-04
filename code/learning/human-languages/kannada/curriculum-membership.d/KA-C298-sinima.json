@@ -1,0 +1,11 @@
+{
+  "id": "KA-C298-sinima",
+  "pathSegment": "KA-PATH-298-VASTU298",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-298-VASTU298",
+      "order": 1
+    }
+  ]
+}

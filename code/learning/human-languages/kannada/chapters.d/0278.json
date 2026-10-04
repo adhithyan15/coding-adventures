@@ -1,0 +1,19 @@
+{
+  "chapter": 278,
+  "title": "To lend, To give back, To come back, To prevent, To prepare",
+  "label": "ch:ka-to-lend-to-give-back-to-come-back-to-prevent-to-prepare",
+  "canDo": "I can say to lend, to give back, to come back, to prevent and to prepare.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C278-tayarisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 278: I can say to lend, to give back, to come back, to prevent and to prepare.",
+    "assesses": [
+      "KA-LEX-C278-KRIYE278-03",
+      "KA-LEX-C278-KRIYE278-04",
+      "KA-LEX-C278-KRIYE278-05"
+    ]
+  }
+}

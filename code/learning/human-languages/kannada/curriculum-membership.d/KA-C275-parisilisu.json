@@ -1,0 +1,11 @@
+{
+  "id": "KA-C275-parisilisu",
+  "pathSegment": "KA-PATH-275-KRIYE275",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-275-KRIYE275",
+      "order": 1
+    }
+  ]
+}

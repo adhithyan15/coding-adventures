@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R298-second-pass-words-from-chapters-294-298",
+    "language": "kannada",
+    "chapter": 298,
+    "sequence": 14410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8649ed249144f532"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C280-kai-kuluku",
+    "language": "kannada",
+    "chapter": 280,
+    "sequence": 13430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:476ef2a70faf0b52"
+  },
+  "findings": []
+}

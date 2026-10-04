@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:6d68329ccf39e593",
+  "lessonIds": [
+    "KA-C300-photo",
+    "KA-C300-kyamara",
+    "KA-C300-karyakrama",
+    "KA-C300-dharavahi",
+    "KA-C300-kadambari"
+  ],
+  "tex": "kannada/book/chapters/ch300-photo-camera-programme-tv-serial-novel.tex"
+}

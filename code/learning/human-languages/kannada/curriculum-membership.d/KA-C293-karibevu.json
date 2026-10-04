@@ -1,0 +1,11 @@
+{
+  "id": "KA-C293-karibevu",
+  "pathSegment": "KA-PATH-293-VASTU293",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-293-VASTU293",
+      "order": 2
+    }
+  ]
+}

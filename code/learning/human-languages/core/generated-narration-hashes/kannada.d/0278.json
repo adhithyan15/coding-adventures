@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:cf5f1bf264de35aa",
+  "lessonIds": [
+    "KA-C278-sala-kodu",
+    "KA-C278-hintirugisu",
+    "KA-C278-hintirugu",
+    "KA-C278-tade",
+    "KA-C278-tayarisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch278.txt",
+  "json": "kannada/narration/ch278.json",
+  "textHash": "fnv1a64:45c4dfee736e502d",
+  "jsonHash": "fnv1a64:973939b4013116b5",
+  "findings": []
+}

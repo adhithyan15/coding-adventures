@@ -1,0 +1,19 @@
+{
+  "chapter": 307,
+  "title": "Warehouse, Signboard, Ink, Chalk, Ruler",
+  "label": "ch:ka-warehouse-signboard-ink-chalk-ruler",
+  "canDo": "I can say a warehouse, a signboard, ink, chalk and a ruler.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-R307-second-pass-words-from-chapters-303-307",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 307: I can say a warehouse, a signboard, ink, chalk and a ruler.",
+    "assesses": [
+      "KA-LEX-C307-KELASA307-03",
+      "KA-LEX-C307-KELASA307-04",
+      "KA-LEX-C307-KELASA307-05"
+    ]
+  }
+}

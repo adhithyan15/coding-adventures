@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:9c286a0d78e5805b",
+  "lessonIds": [
+    "KA-C289-hegadaru",
+    "KA-C289-andare",
+    "KA-C289-nepa",
+    "KA-C289-adhara",
+    "KA-C289-saksi",
+    "KA-R289-first-pass-words-from-chapters-281-284",
+    "KA-R289-second-pass-words-from-chapters-285-289"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch289.txt",
+  "json": "kannada/narration/ch289.json",
+  "textHash": "fnv1a64:4fdb5a25a5c25e91",
+  "jsonHash": "fnv1a64:9bb3651a43e8be58",
+  "findings": []
+}

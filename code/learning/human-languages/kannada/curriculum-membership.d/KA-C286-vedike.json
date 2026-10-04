@@ -1,0 +1,11 @@
+{
+  "id": "KA-C286-vedike",
+  "pathSegment": "KA-PATH-286-STHALA286",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-286-STHALA286",
+      "order": 3
+    }
+  ]
+}

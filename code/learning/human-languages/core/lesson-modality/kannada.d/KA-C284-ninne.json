@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C284-ninne",
+    "language": "kannada",
+    "chapter": 284,
+    "sequence": 13650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:68aedd210356e1ea"
+  },
+  "findings": []
+}

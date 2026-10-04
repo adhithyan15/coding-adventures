@@ -1,0 +1,19 @@
+{
+  "chapter": 298,
+  "title": "Game, Film, Music, Competition, Prize",
+  "label": "ch:ka-game-film-music-competition-prize",
+  "canDo": "I can say a game, a film, music, a competition and a prize.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-R298-second-pass-words-from-chapters-294-298",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 298: I can say a game, a film, music, a competition and a prize.",
+    "assesses": [
+      "KA-LEX-C298-VASTU298-03",
+      "KA-LEX-C298-VASTU298-04",
+      "KA-LEX-C298-VASTU298-05"
+    ]
+  }
+}

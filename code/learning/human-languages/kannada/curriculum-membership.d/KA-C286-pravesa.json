@@ -1,0 +1,11 @@
+{
+  "id": "KA-C286-pravesa",
+  "pathSegment": "KA-PATH-286-STHALA286",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-286-STHALA286",
+      "order": 2
+    }
+  ]
+}

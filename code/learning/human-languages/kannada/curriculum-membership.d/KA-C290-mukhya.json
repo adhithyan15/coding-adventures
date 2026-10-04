@@ -1,0 +1,11 @@
+{
+  "id": "KA-C290-mukhya",
+  "pathSegment": "KA-PATH-290-GUNA290",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-290-GUNA290",
+      "order": 4
+    }
+  ]
+}

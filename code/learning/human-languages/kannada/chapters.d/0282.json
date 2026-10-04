@@ -1,0 +1,19 @@
+{
+  "chapter": 282,
+  "title": "Accident, Ambulance, Stress, Nurse, Surprise",
+  "label": "ch:ka-accident-ambulance-stress-nurse-surprise",
+  "canDo": "I can say an accident, an ambulance, stress, a nurse and surprise.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "KA-C282-ascarya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 282: I can say an accident, an ambulance, stress, a nurse and surprise.",
+    "assesses": [
+      "KA-LEX-C282-AROGYA282-03",
+      "KA-LEX-C282-AROGYA282-04",
+      "KA-LEX-C282-AROGYA282-05"
+    ]
+  }
+}

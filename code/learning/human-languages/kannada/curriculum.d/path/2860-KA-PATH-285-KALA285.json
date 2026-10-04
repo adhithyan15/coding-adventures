@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-285-KALA285",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "before": [],
+  "inline": [
+    "KA-EXT-285-KALA285"
+  ],
+  "after": []
+}

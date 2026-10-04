@@ -1,0 +1,19 @@
+{
+  "chapter": 284,
+  "title": "Full moon, Sunset, Yesterday, Time, Sometimes",
+  "label": "ch:ka-full-moon-sunset-yesterday-time-sometimes",
+  "canDo": "I can say full moon, sunset, yesterday, time and sometimes.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "KA-C284-kelavomme",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 284: I can say full moon, sunset, yesterday, time and sometimes.",
+    "assesses": [
+      "KA-LEX-C284-KALA284-03",
+      "KA-LEX-C284-KALA284-04",
+      "KA-LEX-C284-KALA284-05"
+    ]
+  }
+}

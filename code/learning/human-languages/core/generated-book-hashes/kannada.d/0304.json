@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:f4ece8ac7fda98bf",
+  "lessonIds": [
+    "KA-C304-patha",
+    "KA-C304-parikse",
+    "KA-C304-tarabeti",
+    "KA-C304-visaya",
+    "KA-C304-ganita"
+  ],
+  "tex": "kannada/book/chapters/ch304-lesson-exam-training-subject-mathematics.tex"
+}

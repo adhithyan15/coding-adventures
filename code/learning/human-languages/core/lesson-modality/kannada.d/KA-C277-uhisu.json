@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C277-uhisu",
+    "language": "kannada",
+    "chapter": 277,
+    "sequence": 13260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:085bcb144b1bd3ec"
+  },
+  "findings": []
+}

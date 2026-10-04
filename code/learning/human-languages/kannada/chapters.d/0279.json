@@ -1,0 +1,19 @@
+{
+  "chapter": 279,
+  "title": "To prick, To spit, To yawn, To solve, To dig",
+  "label": "ch:ka-to-prick-to-spit-to-yawn-to-solve-to-dig",
+  "canDo": "I can say to prick, to spit, to yawn, to solve and to dig.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C279-age",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 279: I can say to prick, to spit, to yawn, to solve and to dig.",
+    "assesses": [
+      "KA-LEX-C279-KRIYE279-03",
+      "KA-LEX-C279-KRIYE279-04",
+      "KA-LEX-C279-KRIYE279-05"
+    ]
+  }
+}

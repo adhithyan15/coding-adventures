@@ -1,0 +1,11 @@
+{
+  "id": "KA-C304-ganita",
+  "pathSegment": "KA-PATH-304-KELASA304",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-304-KELASA304",
+      "order": 4
+    }
+  ]
+}

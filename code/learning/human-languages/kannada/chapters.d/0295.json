@@ -1,0 +1,19 @@
+{
+  "chapter": 295,
+  "title": "Cotton, Silk, Envelope, Postage stamp, Parcel",
+  "label": "ch:ka-cotton-silk-envelope-postage-stamp-parcel",
+  "canDo": "I can say cotton, silk, an envelope, a postage stamp and a parcel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C295-parsel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 295: I can say cotton, silk, an envelope, a postage stamp and a parcel.",
+    "assesses": [
+      "KA-LEX-C295-VASTU295-03",
+      "KA-LEX-C295-VASTU295-04",
+      "KA-LEX-C295-VASTU295-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C297-cirate",
+  "pathSegment": "KA-PATH-297-VASTU297",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-297-VASTU297",
+      "order": 3
+    }
+  ]
+}

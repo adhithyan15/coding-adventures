@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:1df1df2e07d242ce",
+  "lessonIds": [
+    "KA-C277-uhisu",
+    "KA-C277-anisu",
+    "KA-C277-abhyasa-madu",
+    "KA-C277-banna-haccu",
+    "KA-C277-daunlod-madu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch277.txt",
+  "json": "kannada/narration/ch277.json",
+  "textHash": "fnv1a64:a1583d5031ede993",
+  "jsonHash": "fnv1a64:108cdd7f84689945",
+  "findings": []
+}

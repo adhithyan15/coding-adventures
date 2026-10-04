@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-283-AROGYA283",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say the pulse, a cramp, a fracture, an operation and pregnant.",
+  "prerequisites": []
+}

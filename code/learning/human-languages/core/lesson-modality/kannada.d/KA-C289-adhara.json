@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C289-adhara",
+    "language": "kannada",
+    "chapter": 289,
+    "sequence": 13910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9211e86e5e82295c"
+  },
+  "findings": []
+}

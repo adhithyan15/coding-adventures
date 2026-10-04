@@ -45,8 +45,8 @@ use diagram_ir::{
     RailroadElementKind, StructuralNodeKind,
 };
 use layout_ir::{
-    Color, Content, ExtValue, FontSpec, PositionedNode, TextAlign, TextContent, TextDecoration,
-    TextDecorationLines, TextDecorationStyle, TextUnderlinePosition,
+    Color, Content, ExtValue, FontSpec, FontStretch, PositionedNode, TextAlign, TextContent,
+    TextDecoration, TextDecorationLines, TextDecorationStyle, TextUnderlinePosition,
 };
 use layout_effects::{EffectColor, EffectFilter, EffectStyle};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
@@ -308,6 +308,18 @@ fn treemap_text_node(
     color: Color,
     style: Option<&diagram_ir::TreemapStyle>,
 ) -> PositionedNode {
+    let mut font = font;
+    font.stretch = match style.and_then(|style| style.font_stretch) {
+        Some(diagram_ir::TreemapFontStretch::UltraCondensed) => FontStretch::UltraCondensed,
+        Some(diagram_ir::TreemapFontStretch::ExtraCondensed) => FontStretch::ExtraCondensed,
+        Some(diagram_ir::TreemapFontStretch::Condensed) => FontStretch::Condensed,
+        Some(diagram_ir::TreemapFontStretch::SemiCondensed) => FontStretch::SemiCondensed,
+        Some(diagram_ir::TreemapFontStretch::SemiExpanded) => FontStretch::SemiExpanded,
+        Some(diagram_ir::TreemapFontStretch::Expanded) => FontStretch::Expanded,
+        Some(diagram_ir::TreemapFontStretch::ExtraExpanded) => FontStretch::ExtraExpanded,
+        Some(diagram_ir::TreemapFontStretch::UltraExpanded) => FontStretch::UltraExpanded,
+        Some(diagram_ir::TreemapFontStretch::Normal) | None => FontStretch::Normal,
+    };
     let text_indent = match style.and_then(|style| style.text_indent) {
         Some(diagram_ir::TreemapTextIndent::Pixels(value)) => value,
         Some(diagram_ir::TreemapTextIndent::Factor(value)) => width * value,
@@ -5992,6 +6004,7 @@ mod tests {
                 size: 18.0,
                 weight: 700,
                 italic: false,
+                stretch: FontStretch::Normal,
                 line_height: 1.2,
             },
             shaper,
@@ -7117,6 +7130,7 @@ mod tests {
                     direction: None,
                     text_shadow: None,
                     tab_size: None,
+                    font_stretch: Some(diagram_ir::TreemapFontStretch::Condensed),
                 }),
             }],
         };
@@ -7126,11 +7140,12 @@ mod tests {
             Color { r: 0, g: 0, b: 0, a: 255 }, layout.nodes[0].style.as_ref(),
         );
         assert!(matches!(styled_text.content,
-            Some(Content::Text(TextContent { value, wrap: false, text_align: TextAlign::End,
+            Some(Content::Text(TextContent { value, wrap: false, text_align: TextAlign::End, font,
                 decoration: Some(TextDecoration { lines, color: Some(decoration_color),
                     style: TextDecorationStyle::Wavy, thickness: Some(3.5), underline_offset: Some(3.5),
                     underline_position: TextUnderlinePosition::Under }), .. }))
                 if value == "\u{ff33}\u{ff54}\u{ff59}\u{ff4c}\u{ff45}\u{ff44}\u{3000}\u{ff4e}\u{ff4f}\u{ff44}\u{ff45}"
+                    && font.stretch == FontStretch::Condensed
                     && lines.contains(TextDecorationLines::UNDERLINE)
                     && lines.contains(TextDecorationLines::OVERLINE)
                     && lines.contains(TextDecorationLines::LINE_THROUGH)

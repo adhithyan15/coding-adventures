@@ -1,0 +1,19 @@
+{
+  "chapter": 290,
+  "title": "Half, Whole, Difficult, Easy, Important",
+  "label": "ch:ka-half-whole-difficult-easy-important",
+  "canDo": "I can say half, whole, difficult, easy and important.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "KA-C290-mukhya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 290: I can say half, whole, difficult, easy and important.",
+    "assesses": [
+      "KA-LEX-C290-GUNA290-03",
+      "KA-LEX-C290-GUNA290-04",
+      "KA-LEX-C290-GUNA290-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:80a711c11517814f",
+  "lessonIds": [
+    "KA-C303-jagali",
+    "KA-C303-atta",
+    "KA-C303-cilaka",
+    "KA-C303-hidike",
+    "KA-C303-vasane"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch303.txt",
+  "json": "kannada/narration/ch303.json",
+  "textHash": "fnv1a64:b7dd7c3782bbec05",
+  "jsonHash": "fnv1a64:8f8e5b5dc19e164b",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 304,
+  "title": "Lesson, Exam, Training, Subject, Mathematics",
+  "label": "ch:ka-lesson-exam-training-subject-mathematics",
+  "canDo": "I can say a lesson, an exam, training, a subject and mathematics.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C304-ganita",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 304: I can say a lesson, an exam, training, a subject and mathematics.",
+    "assesses": [
+      "KA-LEX-C304-KELASA304-03",
+      "KA-LEX-C304-KELASA304-04",
+      "KA-LEX-C304-KELASA304-05"
+    ]
+  }
+}

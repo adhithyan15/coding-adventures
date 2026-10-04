@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C299-manusya",
+    "language": "kannada",
+    "chapter": 299,
+    "sequence": 14440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8bb1d9fdb99996d"
+  },
+  "findings": []
+}

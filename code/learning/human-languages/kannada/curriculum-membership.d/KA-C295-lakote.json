@@ -1,0 +1,11 @@
+{
+  "id": "KA-C295-lakote",
+  "pathSegment": "KA-PATH-295-VASTU295",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-295-VASTU295",
+      "order": 2
+    }
+  ]
+}

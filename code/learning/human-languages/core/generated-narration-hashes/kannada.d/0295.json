@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:71368384e19ffa79",
+  "lessonIds": [
+    "KA-C295-hatti",
+    "KA-C295-resme",
+    "KA-C295-lakote",
+    "KA-C295-anceciti",
+    "KA-C295-parsel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch295.txt",
+  "json": "kannada/narration/ch295.json",
+  "textHash": "fnv1a64:82c536309a6a30c0",
+  "jsonHash": "fnv1a64:ab4e67a8deca8fce",
+  "findings": []
+}
