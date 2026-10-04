@@ -2776,6 +2776,21 @@ fn build_package_inner(
     for component in &manifest.components.exports {
         validate_component_name(component)?;
     }
+    // Two exports whose names differ only in letter case (`Card`, `CARD`)
+    // generate one file on a case-insensitive filesystem -- macOS's and
+    // Windows' default -- each over the other's (UI32 §3.7).
+    let mut by_folded_name: HashMap<String, &String> = HashMap::new();
+    for component in &manifest.components.exports {
+        if let Some(first) = by_folded_name.insert(component.to_lowercase(), component) {
+            if first != component {
+                return Err(BuildError::Io(format!(
+                    "the exports {first} and {component} differ only in letter case, so \
+                     their generated files are one file on a case-insensitive filesystem; \
+                     rename one"
+                )));
+            }
+        }
+    }
     // The theme selector is interpolated into a stylesheet filename and joined
     // onto `src/`, so validate it as a safe path segment before any I/O — the
     // library enforces this itself, not just the CLI (see `validate_theme_name`).
@@ -2797,7 +2812,9 @@ fn build_package_inner(
     // emitted" can later be told apart from "what a previous build left". Into
     // a fresh directory this is empty and costs one failed `read_dir`.
     let pre_emission = pre_emission_stamps(&backend_dir);
-    begin_write_recording();
+    // Ended explicitly below; the guard also clears the recording when the
+    // build fails part-way, so nothing outlives it on this thread.
+    let _recording = WriteRecording::begin();
 
     // ----- 4. Compile each component (× each variant) ----------------------
     //
@@ -2842,7 +2859,22 @@ fn build_package_inner(
         }
         _ => {}
     }
+    if opts.emit_project {
+        let shell_namespace = match opts.backend {
+            Backend::Xaml => Some(&XAML_NAMESPACE),
+            Backend::SwiftUI => Some(&SWIFTUI_NAMESPACE),
+            Backend::Compose => Some(&COMPOSE_NAMESPACE),
+            Backend::Flutter => Some(&FLUTTER_NAMESPACE),
+            Backend::Qt => Some(&QT_NAMESPACE),
+            _ => None,
+        };
+        if let Some(namespace) = shell_namespace {
+            check_exports_against_shell(namespace, exports)?;
+        }
+    }
 
+    // Which export each generated file belongs to, for the guard below.
+    let mut export_files: Vec<(PathBuf, String)> = Vec::new();
     for component in &manifest.components.exports {
         let variants = discover_variants(&src_dir, component)?;
         for variant in &variants {
@@ -2864,6 +2896,7 @@ fn build_package_inner(
             // between them.
             for artifact in component_artifacts {
                 if !artifacts.contains(&artifact) {
+                    export_files.push((artifact.clone(), component.clone()));
                     artifacts.push(artifact);
                 }
             }
@@ -2875,6 +2908,14 @@ fn build_package_inner(
         // every per-backend index emitter (deferred to a follow-up).
         components_built.push(component.clone());
     }
+
+    // UI32 §3.7: from here on the builder writes the package's own files --
+    // the index, the platform library, the project shell -- and none of them
+    // may land on a file an export was just generated into. An export's file
+    // names come from its name, so `App` (SwiftUI's `App.swift`) or `Main`
+    // (Compose's `Main.kt`) would otherwise be silently replaced by the
+    // shell's, leaving a project with no entry point.
+    protect_export_files(&export_files);
 
     // ----- 5. Emit the per-backend index / qmldir --------------------------
     //
@@ -4598,7 +4639,11 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     let component_source =
                         read_to_string(&backend_dir.join(format!("{exported_component}.dart")))?;
                     let component_copy = backend_dir.join(format!("lib/{exported_component}.dart"));
-                    write_file(&component_copy, component_source.as_bytes())?;
+                    write_export_mirror(
+                        &component_copy,
+                        component_source.as_bytes(),
+                        exported_component,
+                    )?;
                     written.push(component_copy);
                     // Every layout variant too (UI48 §7.9): the root's are
                     // imported by `main.dart` and selected at run time, and
@@ -4613,7 +4658,11 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                         let variant_source = backend_dir.join(&variant_file);
                         if variant_source.is_file() {
                             let variant_copy = backend_dir.join("lib").join(&variant_file);
-                            write_file(&variant_copy, read_to_string(&variant_source)?.as_bytes())?;
+                            write_export_mirror(
+                                &variant_copy,
+                                read_to_string(&variant_source)?.as_bytes(),
+                                exported_component,
+                            )?;
                             written.push(variant_copy);
                         }
                     }
@@ -4721,7 +4770,11 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     read_to_string(&backend_dir.join(format!("{exported_component}.kt")))?;
                 let component_nested =
                     backend_dir.join(format!("src/main/kotlin/{exported_component}.kt"));
-                write_file(&component_nested, component_source.as_bytes())?;
+                write_export_mirror(
+                    &component_nested,
+                    component_source.as_bytes(),
+                    exported_component,
+                )?;
                 written.push(component_nested);
                 // Every layout variant too (UI48 §7.5): the root's are selected
                 // at run time, and every export's is compiled, for the same
@@ -4735,7 +4788,11 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     if variant_source.is_file() {
                         let variant_nested =
                             backend_dir.join(format!("src/main/kotlin/{variant_file}"));
-                        write_file(&variant_nested, read_to_string(&variant_source)?.as_bytes())?;
+                        write_export_mirror(
+                            &variant_nested,
+                            read_to_string(&variant_source)?.as_bytes(),
+                            exported_component,
+                        )?;
                         written.push(variant_nested);
                     }
                 }
@@ -4797,7 +4854,9 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             )
             .map_err(|e| pipeline_emit_err(component, e))?;
             if require_runtime {
-                write_file(
+                // The root export's own file, re-emitted strictly: the one
+                // write UI32 §3.7's guard is told about.
+                write_export_file(
                     &backend_dir.join(format!("{component}.qml")),
                     r.output.as_bytes(),
                 )?;
@@ -4813,7 +4872,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                         &qt_opts,
                     )
                     .map_err(|e| pipeline_emit_err(component, e))?;
-                    write_file(
+                    write_export_file(
                         &backend_dir.join(format!("{component}.{variant}.qml")),
                         strict.output.as_bytes(),
                     )?;
@@ -5015,7 +5074,11 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                         read_to_string(&backend_dir.join(format!("{exported_component}.swift")))?;
                     let component_nested =
                         backend_dir.join(format!("Sources/App/{exported_component}.swift"));
-                    write_file(&component_nested, component_source.as_bytes())?;
+                    write_export_mirror(
+                        &component_nested,
+                        component_source.as_bytes(),
+                        exported_component,
+                    )?;
                     written.push(component_nested);
                 }
                 // And the root's layout variants the shell can switch to.
@@ -5023,7 +5086,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     let file = format!("{component}.{}.swift", choice.variant);
                     let source = read_to_string(&backend_dir.join(&file))?;
                     let nested = backend_dir.join("Sources/App").join(&file);
-                    write_file(&nested, source.as_bytes())?;
+                    write_export_mirror(&nested, source.as_bytes(), component)?;
                     written.push(nested);
                 }
             }
@@ -5119,9 +5182,12 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     written.push(p);
                 }
             }
+            // The root export's own side files, re-emitted with the shell's
+            // options -- like Qt's strict root, a deliberate rewrite of an
+            // export's files that UI32 §3.7's guard is told about.
             for side_file in r.for_view_models.iter().chain(r.if_helpers.iter()) {
                 let p = backend_dir.join(&side_file.filename);
-                write_file(&p, side_file.source.as_bytes())?;
+                write_export_file(&p, side_file.source.as_bytes())?;
                 written.push(p);
             }
         }
@@ -6016,6 +6082,36 @@ const XAML_NAMESPACE: LayoutNamespace = LayoutNamespace {
     },
     variant_claim: xaml_support_claim,
 };
+
+/// UI32 §3.7: in a project build, an export may not declare a name the
+/// backend's shell declares, variants or not -- `MosaicApp` on Compose or
+/// Flutter declared a second `MosaicApp` beside the shell's root, and the
+/// build went through. A flat build has no shell (its consumer brings one),
+/// so this is checked only when the shell is emitted; the layout-variant
+/// checks in [`check_layout_namespace`] apply to every build.
+fn check_exports_against_shell(
+    namespace: &LayoutNamespace,
+    components: &[String],
+) -> Result<(), BuildError> {
+    for export in components {
+        for &name in namespace.shell_names {
+            let claim = match (namespace.export_claim)(export, name) {
+                Some(NameClaim::Name) => format!("would declare `{name}`"),
+                Some(NameClaim::Prefix(prefix)) => {
+                    format!("would claim the names in `{prefix}...`, `{name}` among them")
+                }
+                None => continue,
+            };
+            return Err(BuildError::Io(format!(
+                "the export {export} ({export}.mll) {claim}, which {shell} declares in \
+                 {holder}; rename the export",
+                shell = namespace.shell,
+                holder = namespace.holder,
+            )));
+        }
+    }
+    Ok(())
+}
 
 /// Refuse a layout variant -- of ANY export, not only the root -- whose
 /// root would take a name already claimed in `namespace` (see the table
@@ -9509,6 +9605,15 @@ fn read_to_string(path: &Path) -> Result<String, BuildError> {
 }
 
 fn write_file(path: &Path, bytes: &[u8]) -> Result<(), BuildError> {
+    refuse_overwriting_an_export(path)?;
+    write_export_file(path, bytes)
+}
+
+/// [`write_file`] for a write that replaces an export's own generated file on
+/// purpose -- the Qt shell re-emitting its root strictly, the XAML shell its
+/// root's side files -- and so is exempt from the UI32 §3.7 guard. Every
+/// other write goes through `write_file`.
+fn write_export_file(path: &Path, bytes: &[u8]) -> Result<(), BuildError> {
     if let Some(parent) = path.parent() {
         create_dir_all(parent)?;
     }
@@ -9535,6 +9640,13 @@ thread_local! {
 /// overwriting the HTML app shell reported nothing. An emitter cannot forget to
 /// do something it does not do.
 fn record_written(path: &Path) {
+    if let Some(key) = case_folded_key(path) {
+        WRITTEN_KEYS_THIS_BUILD.with(|written| {
+            if let Some(set) = written.borrow_mut().as_mut() {
+                set.insert(key);
+            }
+        });
+    }
     let Ok(canonical) = fs::canonicalize(path) else {
         return;
     };
@@ -9548,11 +9660,157 @@ fn record_written(path: &Path) {
 /// Start recording writes for a build, discarding anything a previous one left.
 fn begin_write_recording() {
     WRITTEN_THIS_BUILD.with(|written| *written.borrow_mut() = Some(HashSet::new()));
+    WRITTEN_KEYS_THIS_BUILD.with(|written| *written.borrow_mut() = Some(HashSet::new()));
+    // A build that failed part-way leaves its guard behind; this one starts
+    // with none.
+    PROTECTED_EXPORT_FILES.with(|protected| *protected.borrow_mut() = None);
+}
+
+/// A build's write recording, cleared however the build ends -- a `?` that
+/// returns early included -- so no guard or record outlives it on its thread.
+struct WriteRecording;
+
+impl WriteRecording {
+    fn begin() -> Self {
+        begin_write_recording();
+        WriteRecording
+    }
+}
+
+impl Drop for WriteRecording {
+    fn drop(&mut self) {
+        PROTECTED_EXPORT_FILES.with(|protected| *protected.borrow_mut() = None);
+        WRITTEN_KEYS_THIS_BUILD.with(|written| *written.borrow_mut() = None);
+        WRITTEN_THIS_BUILD.with(|written| *written.borrow_mut() = None);
+    }
 }
 
 /// Take what this build wrote, and stop recording.
+///
+/// Also lifts the export-file guard: what follows -- `[host_assets]` and
+/// `[host_effects]` -- may replace a generated file on purpose, and reports it
+/// where it does.
 fn end_write_recording() -> HashSet<PathBuf> {
+    PROTECTED_EXPORT_FILES.with(|protected| *protected.borrow_mut() = None);
+    WRITTEN_KEYS_THIS_BUILD.with(|written| *written.borrow_mut() = None);
     WRITTEN_THIS_BUILD.with(|written| written.borrow_mut().take().unwrap_or_default())
+}
+
+thread_local! {
+    /// Every path this build wrote, by [`case_folded_key`]: what a mirrored
+    /// export file must not land on.
+    static WRITTEN_KEYS_THIS_BUILD: std::cell::RefCell<Option<HashSet<String>>> =
+        const { std::cell::RefCell::new(None) };
+
+    /// The files this build generated for the package's exports, by the key
+    /// [`case_folded_key`] gives them, with the export each belongs to.
+    /// `Some` from the end of the component loop until `end_write_recording`.
+    static PROTECTED_EXPORT_FILES: std::cell::RefCell<Option<HashMap<String, (String, String)>>> =
+        const { std::cell::RefCell::new(None) };
+}
+
+/// Protect `files` -- (path, export) -- from every later write in this build
+/// (UI32 §3.7).
+///
+/// Only files named after their export (`Card.qml`, `Card.Event.cs`,
+/// `Main.kt`) are protected: those are the ones an export's name can make
+/// collide with a shell file. Support files an emitter writes for any
+/// component (XAML's `BoolToVisibilityConverter.cs`) are the shell's too,
+/// and rewriting them is expected; an export cannot be named like one,
+/// since they are reserved names.
+fn protect_export_files(files: &[(PathBuf, String)]) {
+    let protected = files
+        .iter()
+        .filter(|(path, export)| {
+            path.file_name().is_some_and(|name| {
+                name.to_string_lossy()
+                    .to_lowercase()
+                    .starts_with(&export.to_lowercase())
+            })
+        })
+        .filter_map(|(path, export)| {
+            let file = path.file_name()?.to_string_lossy().into_owned();
+            Some((case_folded_key(path)?, (export.clone(), file)))
+        })
+        .collect();
+    PROTECTED_EXPORT_FILES.with(|cell| *cell.borrow_mut() = Some(protected));
+}
+
+/// A path as a case-insensitive filesystem would see it: resolved (the file
+/// itself when it exists, so a link to a protected file is that file;
+/// otherwise its directory), then folded to lower case. `Card.kt` and
+/// `card.kt` are one file on macOS's and Windows' default filesystems, so
+/// they are one key here on every OS. Export names are ASCII, so lower-casing
+/// is all the folding a generated name needs. `None` when the directory does
+/// not exist yet -- then nothing generated can be there either.
+fn case_folded_key(path: &Path) -> Option<String> {
+    let resolved = match fs::canonicalize(path) {
+        Ok(file) => file,
+        Err(_) => fs::canonicalize(path.parent()?)
+            .ok()?
+            .join(path.file_name()?),
+    };
+    Some(resolved.to_string_lossy().to_lowercase())
+}
+
+/// Copy an export's generated file into the project (the shells mirror every
+/// export into the directory their toolchain compiles: `Sources/App/`,
+/// `src/main/kotlin/`, `lib/`), protecting the copy like the original.
+///
+/// The copy is refused when this build already wrote that path -- the shell
+/// got there first (`Sources/App/App.swift` for an export `App`) -- and is
+/// protected from any write after it, so the collision is caught in either
+/// order.
+fn write_export_mirror(path: &Path, bytes: &[u8], export: &str) -> Result<(), BuildError> {
+    let file = path
+        .file_name()
+        .map(|name| name.to_string_lossy().into_owned())
+        .unwrap_or_default();
+    let shell_wrote_it = case_folded_key(path).is_some_and(|key| {
+        WRITTEN_KEYS_THIS_BUILD.with(|written| {
+            written
+                .borrow()
+                .as_ref()
+                .is_some_and(|set| set.contains(&key))
+        })
+    });
+    if shell_wrote_it {
+        return Err(BuildError::Io(format!(
+            "the export {export} ({export}.mll) generates {file}, and the project shell \
+             already wrote a file of that name where the export is copied (one file on a \
+             case-insensitive filesystem); rename the export"
+        )));
+    }
+    refuse_overwriting_an_export(path)?;
+    write_export_file(path, bytes)?;
+    if let Some(key) = case_folded_key(path) {
+        PROTECTED_EXPORT_FILES.with(|cell| {
+            if let Some(protected) = cell.borrow_mut().as_mut() {
+                protected.insert(key, (export.to_string(), file));
+            }
+        });
+    }
+    Ok(())
+}
+
+/// Refuse a write that would land on a file an export was generated into.
+fn refuse_overwriting_an_export(path: &Path) -> Result<(), BuildError> {
+    let owner = PROTECTED_EXPORT_FILES.with(|cell| {
+        let cell = cell.borrow();
+        let protected = cell.as_ref()?;
+        protected.get(&case_folded_key(path)?).cloned()
+    });
+    match owner {
+        None => Ok(()),
+        Some((export, file)) => Err(BuildError::Io(format!(
+            "the export {export} ({export}.mll) generates {file}, and the package's own \
+             output -- its index, platform library or project shell -- would write {} over \
+             it (one file on a case-insensitive filesystem); rename the export",
+            path.file_name()
+                .map(|name| name.to_string_lossy())
+                .unwrap_or_default()
+        ))),
+    }
 }
 
 fn create_dir_all(path: &Path) -> Result<(), BuildError> {
@@ -18007,6 +18265,119 @@ version = "1"
             }
         }
         assert_eq!(declared, ["MosaicHost", "MosaicFileDialogs"]);
+    }
+
+    /// UI32 §3.7: in a project build, an export named like a type the
+    /// backend's shell declares is refused before anything is written -- and
+    /// a flat build, which has no shell, still takes it.
+    #[test]
+    fn a_project_build_refuses_an_export_named_like_a_shell_type() {
+        for (backend, export) in [
+            (Backend::Compose, "MosaicApp"),
+            (Backend::Flutter, "MosaicApp"),
+            (Backend::Qt, "MosaicHost"),
+            (Backend::Xaml, "MainWindow"),
+        ] {
+            let pkg = make_package("mosaic-pkg-shell-name", &[export]);
+            let out = TempDir::new().unwrap();
+            let error = build_package(&swiftui_options(&pkg, &out, backend))
+                .unwrap_err()
+                .to_string();
+            assert!(
+                error.contains(&format!(
+                    "the export {export} ({export}.mll) would declare `{export}`"
+                )),
+                "{backend:?}: {error}"
+            );
+            assert!(error.contains("rename the export"), "{backend:?}: {error}");
+            assert!(
+                walk_files(out.path()).is_empty(),
+                "{backend:?}: refused before anything was written"
+            );
+
+            let flat = TempDir::new().unwrap();
+            build_package(&BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: flat.path().to_path_buf(),
+                backend,
+                emit_project: false,
+                theme: None,
+            })
+            .unwrap_or_else(|error| panic!("{backend:?} flat build of {export}: {error}"));
+        }
+    }
+
+    /// Every regular file under `root`, depth first.
+    fn walk_files(root: &Path) -> Vec<PathBuf> {
+        let mut files = Vec::new();
+        let mut pending = vec![root.to_path_buf()];
+        while let Some(directory) = pending.pop() {
+            for entry in fs::read_dir(&directory).unwrap() {
+                let path = entry.unwrap().path();
+                if path.is_dir() {
+                    pending.push(path);
+                } else {
+                    files.push(path);
+                }
+            }
+        }
+        files
+    }
+
+    /// UI32 §3.7: exports differing only in letter case are one file on a
+    /// case-insensitive filesystem, so they are refused before any I/O, on
+    /// flat builds too.
+    #[test]
+    fn exports_differing_only_in_case_are_refused() {
+        let pkg = make_package("mosaic-pkg-case-twins", &["Card", "CARD"]);
+        let out = TempDir::new().unwrap();
+        let error = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Compose,
+            emit_project: false,
+            theme: None,
+        })
+        .unwrap_err()
+        .to_string();
+        assert!(
+            error.contains("the exports Card and CARD differ only in letter case"),
+            "{error}"
+        );
+        assert!(walk_files(out.path()).is_empty(), "refused before any I/O");
+    }
+
+    /// UI32 §3.7: the shell never writes over a file an export was generated
+    /// into. `App` on SwiftUI and `Main` on Compose used to lose their files
+    /// to the shell's `App.swift` and `Main.kt` -- and the project its entry
+    /// point -- without a word; `MAIN` is the same file on a case-insensitive
+    /// filesystem. The export's file is left as it was generated.
+    #[test]
+    fn the_shell_never_writes_over_an_export_file() {
+        for (backend, export, export_file) in [
+            (Backend::SwiftUI, "App", "App.swift"),
+            (Backend::Compose, "Main", "Main.kt"),
+            (Backend::Compose, "MAIN", "MAIN.kt"),
+        ] {
+            let pkg = make_package("mosaic-pkg-shell-file", &[export]);
+            let out = TempDir::new().unwrap();
+            let error = build_package(&swiftui_options(&pkg, &out, backend))
+                .unwrap_err()
+                .to_string();
+            assert!(
+                error.contains(&format!(
+                    "the export {export} ({export}.mll) generates {export_file}, and the"
+                )) && error.contains("case-insensitive filesystem); rename the export"),
+                "{backend:?} {export}: {error}"
+            );
+            // The export's own artifact is as the emitter wrote it.
+            let flat = out.path().join(backend.dir_name()).join(export_file);
+            let source = fs::read_to_string(&flat).unwrap();
+            assert!(
+                !source.contains("fun main()") && !source.contains("@main"),
+                "{backend:?}: {export_file} is the export's, not the shell's:\n{source}"
+            );
+        }
     }
 
     /// One QML module holds every export and every variant, so no two may
