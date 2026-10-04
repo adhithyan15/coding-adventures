@@ -2326,15 +2326,15 @@ fn collect_native_degradations(
         )),
         // #13010: fixed for the common `modal: true` (default) case --
         // `host_dialog_has_native_semantics` is false only for the
-        // still-unimplemented `modal: false` shape (Flutter's
-        // `showDialog` is inherently modal).
+        // still-unimplemented `modal: false` shape (a Flutter dialog
+        // route is inherently modal).
         "HostDialog"
             if backend == Backend::Flutter
                 && !mosaic_emit_flutter::pipeline::host_dialog_has_native_semantics(node) =>
         {
             Some((
                 "interaction.dialog-placeholder",
-                "the Flutter emitter produces a zero-size TODO placeholder instead of a native dialog for modal: false (Flutter's showDialog is inherently modal)",
+                "the Flutter emitter produces a zero-size TODO placeholder instead of a native dialog for modal: false (a Flutter dialog route is inherently modal)",
             ))
         }
         "HostSlider"
@@ -14901,7 +14901,7 @@ layout NativeEvents {
     #[test]
     fn flutter_specific_placeholders_are_reported() {
         // #13010: `modal: false` is the one HostDialog shape still
-        // unimplemented on Flutter (showDialog is inherently modal) --
+        // unimplemented on Flutter (a dialog route is inherently modal) --
         // the default/`modal: true` case is fixed and covered
         // separately by `flutter_modal_dialog_has_no_placeholder_degradation`.
         let pkg = make_package("mosaic-pkg-links", &["Links"]);

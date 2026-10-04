@@ -126,6 +126,56 @@ Out of scope for `U29-1-K-react`. The lowering shapes are sketched in
 UI29 §2.1 row for `HostDialog` and will be tightened in `U29-1-K-swiftui`
 and `U29-1-K-qt`.
 
+### 3.3 Flutter (`mosaic-emit-flutter`)
+
+Flutter has no dialog *widget* that sits in the tree; a dialog is a route
+pushed on a `Navigator`. The emitter bridges the two with one private
+`StatefulWidget`, `_MosaicDialogHost`, written once into any file that has a
+`HostDialog`, and lowers each `HostDialog` to an instance of it:
+
+```dart
+_MosaicDialogHost(
+  open: open,
+  barrierDismissible: false,          // only for dismiss-on-backdrop: false
+  onClose: () { dispatch(const ModalEventClose()); },
+  builder: (context) => AlertDialog(
+    title: Text("Save changes?"),     // literal or slot
+    content: Text("Body"),            // one child, or a Column of several
+  ),
+)
+```
+
+What `_MosaicDialogHost` does:
+
+- **Opening.** When `open` is true -- on first build or on a `false → true`
+  change -- it pushes a `DialogRoute` on the root navigator after the
+  frame (a route needs a context already in the tree). The route carries
+  what `showDialog` would give it: the themed barrier colour, Tab held
+  inside the dialog, `barrierDismissible`. A host that already has its
+  route on the navigator never pushes a second, however many rebuilds
+  ask before the frame.
+- **Not `showDialog`.** `showDialog` goes through `showRawDialog`, which
+  can open a dialog as a window of its own and so reaches Flutter's
+  desktop windowing code; on macOS that code's FFI structs abort the AOT
+  snapshotter ("Class with illegal cid", Flutter 3.44 and 3.47), so any
+  app carrying the call fails every macOS release build (UI87 §7.7 hit
+  this first). The emitter therefore never emits `showDialog` or
+  `showRawDialog`.
+- **Closing.** Whichever side closes it -- the barrier, Escape, a control
+  inside the dialog that pops, or the host setting `open` to false --
+  `onClose` fires exactly once for that open. A host-driven close removes
+  *this* dialog's route: it pops it when it is on top, and otherwise
+  takes it out from under whatever was pushed above it, never popping
+  that other route instead.
+- **Going away.** When the component itself leaves the tree with its
+  dialog still showing, the route is removed after the frame, and
+  `onClose` is not dispatched to the component that is gone.
+
+`modal: false` is not lowered yet: a non-modal popover needs an `Overlay`
+entry rather than a route. It stays a zero-size placeholder, which the
+package builder reports as the known gap `interaction.dialog-placeholder`. `onOpen` is not lowered
+on Flutter yet.
+
 ## 4. Validation surface
 
 For the React backend:
