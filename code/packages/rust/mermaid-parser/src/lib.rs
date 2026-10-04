@@ -4733,6 +4733,18 @@ fn parse_treemap_style(token: &Token, source: &str) -> Result<diagram_ir::Treema
                 "rtl" => diagram_ir::TreemapTextDirection::RightToLeft,
                 _ => return Err(token_error(token, "treemap direction must be ltr or rtl")),
             }),
+            "font-stretch" => style.font_stretch = Some(match value.to_ascii_lowercase().as_str() {
+                "ultra-condensed" => diagram_ir::TreemapFontStretch::UltraCondensed,
+                "extra-condensed" => diagram_ir::TreemapFontStretch::ExtraCondensed,
+                "condensed" => diagram_ir::TreemapFontStretch::Condensed,
+                "semi-condensed" => diagram_ir::TreemapFontStretch::SemiCondensed,
+                "normal" => diagram_ir::TreemapFontStretch::Normal,
+                "semi-expanded" => diagram_ir::TreemapFontStretch::SemiExpanded,
+                "expanded" => diagram_ir::TreemapFontStretch::Expanded,
+                "extra-expanded" => diagram_ir::TreemapFontStretch::ExtraExpanded,
+                "ultra-expanded" => diagram_ir::TreemapFontStretch::UltraExpanded,
+                _ => return Err(token_error(token, "unsupported treemap font-stretch")),
+            }),
             "text-shadow" => style.text_shadow = Some(parse_treemap_text_shadow(token, value)?),
             "tab-size" => style.tab_size = Some(value.parse::<u16>().ok()
                 .filter(|value| *value <= 256)
@@ -15059,6 +15071,28 @@ B//-A: reverse stick top
         }
         assert!(parse_treemap(
             "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent direction:auto",
+        ).is_err());
+    }
+
+    #[test]
+    fn treemap_parses_font_stretch_keywords() {
+        for (value, expected) in [
+            ("ultra-condensed", diagram_ir::TreemapFontStretch::UltraCondensed),
+            ("extra-condensed", diagram_ir::TreemapFontStretch::ExtraCondensed),
+            ("condensed", diagram_ir::TreemapFontStretch::Condensed),
+            ("semi-condensed", diagram_ir::TreemapFontStretch::SemiCondensed),
+            ("normal", diagram_ir::TreemapFontStretch::Normal),
+            ("semi-expanded", diagram_ir::TreemapFontStretch::SemiExpanded),
+            ("expanded", diagram_ir::TreemapFontStretch::Expanded),
+            ("extra-expanded", diagram_ir::TreemapFontStretch::ExtraExpanded),
+            ("ultra-expanded", diagram_ir::TreemapFontStretch::UltraExpanded),
+        ] {
+            let source = format!("treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-stretch:{value}");
+            let diagram = parse_treemap(&source).expect("font stretch keyword must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.font_stretch), Some(expected));
+        }
+        assert!(parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-stretch:wide",
         ).is_err());
     }
 
