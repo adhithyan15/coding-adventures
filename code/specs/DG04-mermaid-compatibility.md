@@ -541,7 +541,9 @@ IR before backend-neutral RGB conversion; lowering also accepts legacy comma
 forms. Modern `hwb()` colors preserve hue units, whiteness, blackness, and alpha
 through the same semantic and backend-neutral conversion path. Perceptual
 `lab()` and cylindrical `lch()` colors preserve their components and alpha through
-semantic IR before conversion from D50 Lab to backend-neutral sRGB paint. The complete CSS named-color set likewise resolves to explicit
+semantic IR before conversion from D50 Lab to backend-neutral sRGB paint. The
+corresponding `oklab()` and `oklch()` forms preserve their perceptual components
+and alpha before direct linear-sRGB lowering. The complete CSS named-color set likewise resolves to explicit
 backend-neutral RGB paint for node fills, strokes, labels, and opacity composition,
 including gray/grey aliases and `rebeccapurple`.
 The SVG/CSS `none` paint keyword remains distinct from text color semantics and
