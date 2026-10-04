@@ -4776,7 +4776,19 @@ fn parse_treemap_font_size(
     source: &str,
 ) -> Result<diagram_ir::TreemapFontSize, ParseError> {
     let source = source.trim();
-    let parsed = if let Some(value) = source.strip_suffix('%') {
+    let parsed = match source.to_ascii_lowercase().as_str() {
+        "xx-small" => Some(diagram_ir::TreemapFontSize::Pixels(9.0)),
+        "x-small" => Some(diagram_ir::TreemapFontSize::Pixels(10.0)),
+        "small" => Some(diagram_ir::TreemapFontSize::Pixels(13.0)),
+        "medium" => Some(diagram_ir::TreemapFontSize::Pixels(16.0)),
+        "large" => Some(diagram_ir::TreemapFontSize::Pixels(18.0)),
+        "x-large" => Some(diagram_ir::TreemapFontSize::Pixels(24.0)),
+        "xx-large" => Some(diagram_ir::TreemapFontSize::Pixels(32.0)),
+        "xxx-large" => Some(diagram_ir::TreemapFontSize::Pixels(48.0)),
+        "smaller" => Some(diagram_ir::TreemapFontSize::Factor(5.0 / 6.0)),
+        "larger" => Some(diagram_ir::TreemapFontSize::Factor(1.2)),
+        _ => None,
+    }.or_else(|| if let Some(value) = source.strip_suffix('%') {
         value.trim().parse::<f64>().ok()
             .map(|value| diagram_ir::TreemapFontSize::Factor(value / 100.0))
     } else if let Some(value) = source.strip_suffix("rem") {
@@ -4787,11 +4799,11 @@ fn parse_treemap_font_size(
     } else {
         source.strip_suffix("px").unwrap_or(source).trim().parse::<f64>().ok()
             .map(diagram_ir::TreemapFontSize::Pixels)
-    };
+    });
     parsed.filter(|size| match size {
         diagram_ir::TreemapFontSize::Pixels(value) | diagram_ir::TreemapFontSize::Factor(value) =>
             value.is_finite() && *value > 0.0,
-    }).ok_or_else(|| token_error(token, "treemap font-size must be a positive number, pixel, em, rem, or percentage value"))
+    }).ok_or_else(|| token_error(token, "unsupported treemap font-size"))
 }
 
 fn split_treemap_style_declarations(source: &str) -> Vec<&str> {
@@ -15233,11 +15245,30 @@ B//-A: reverse stick top
             assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.font_size), Some(expected));
             assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.node.font_size), None);
         }
-        for value in ["0", "-1em", "0%", "large"] {
+        for value in ["0", "-1em", "0%", "giant"] {
             let source = format!(
                 "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-size:{value}"
             );
             assert!(parse_treemap(&source).is_err());
+        }
+    }
+
+    #[test]
+    fn treemap_parses_font_size_keywords() {
+        for (value, expected) in [
+            ("xx-small", diagram_ir::TreemapFontSize::Pixels(9.0)),
+            ("small", diagram_ir::TreemapFontSize::Pixels(13.0)),
+            ("medium", diagram_ir::TreemapFontSize::Pixels(16.0)),
+            ("large", diagram_ir::TreemapFontSize::Pixels(18.0)),
+            ("xxx-large", diagram_ir::TreemapFontSize::Pixels(48.0)),
+            ("smaller", diagram_ir::TreemapFontSize::Factor(5.0 / 6.0)),
+            ("larger", diagram_ir::TreemapFontSize::Factor(1.2)),
+        ] {
+            let source = format!(
+                "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-size:{value}"
+            );
+            let diagram = parse_treemap(&source).expect("font-size keyword must parse");
+            assert_eq!(diagram.nodes[1].style.as_ref().and_then(|style| style.font_size), Some(expected));
         }
     }
 
