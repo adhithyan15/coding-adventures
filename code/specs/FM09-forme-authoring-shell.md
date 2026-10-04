@@ -308,6 +308,55 @@ requires an explicit publish action. A failed or indeterminate deployment does
 not mark documents published. A successful deployment records the manifest
 identity and authoring revision in the project workflow metadata.
 
+The durable project contains a closed `workflow` record whose
+`lastPublication` value is either `null` or the exact
+`authoringRevision`, base64 SHA-256 `manifestSha256`, and reviewed `targetId`
+from the most recent acknowledged publication. The authoring core exposes one
+semantic `record-publication` command and an exact-revision dispatch operation.
+That operation executes in the session's serialized transaction queue and
+rejects unless the current storage revision still equals the expected source
+revision. Its single compare-and-swap write records the publication and changes
+every document in that exact snapshot to `published`; validation, conflict,
+cancellation, or storage failure leaves both workflow metadata and document
+statuses unchanged. Undo and redo retain their existing durable semantics, so
+reverting the local acknowledgement never asserts that an external deployment
+was rolled back.
+
+`forme-authoring-publish` is the capability-free coordinator for this
+boundary. It snapshots and validates the session, captures one injected build
+method and one injected reviewed-target method, and permits only one active
+explicit action. The target's public review is closed bounded data: a portable
+target identity, a human label, and a destination summary. Credentials,
+filesystem paths, environment access, network clients, target configuration
+files, and arbitrary callbacks are not fields in the review or the builder
+input. The opaque host target owns those capabilities and receives only a
+validated FM08 manifest, a manifest-bound content store, the computed manifest
+identity, and a cancellation signal.
+
+The build adapter receives a deeply frozen copy of the exact project and its
+storage revision. It must run the real product pipeline and returns a separately
+releasable manifest/content preparation. Before deployment, the coordinator
+parses and freezes the manifest through FM08, computes the identity from its
+canonical bytes, preflights every referenced content digest, confirms the
+session revision is still exact, and then closes the build boundary. The
+coordinator never accepts a target-selected manifest identity or silently
+substitutes preview output.
+
+The reviewed target resolves one closed result: `success`, `failed`, or
+`indeterminate`, always attributed to the supplied manifest identity. `failed`
+is permitted only when the adapter knows no external commit occurred;
+malformed success data, loss of acknowledgement after a possible commit, or an
+adapter-defined uncertain result is `indeterminate`. Rejection is treated as a
+closed failure only because the injected boundary contract guarantees rejection
+before its commit point; hosts must convert post-commit rejection to an
+indeterminate resolution. On success, preparation retirement completes before
+the exact-revision metadata transaction. A retirement or metadata failure after
+external success is indeterminate and never marks documents published. An
+indeterminate coordinator is poisoned against retry until the shell reloads and
+reconciles target state. A failed build or known pre-commit target failure may
+be retried. Diagnostics are bounded closed data and never include adapter
+exceptions, credentials, paths, or target configuration.
+
 ## 8. Desktop shell and first run
 
 FM-B066 packages the proven editor, preview, and publish flow as the default
