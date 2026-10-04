@@ -25,6 +25,12 @@ fn dart_available() -> bool {
 #[test]
 fn the_flutter_platform_library_passes_its_headless_conformance() {
     if !dart_available() {
+        // CI's off-Linux job sets this: there a missing `dart` is a broken
+        // runner, not a reason to pass without running anything.
+        assert!(
+            std::env::var_os("MOSAIC_REQUIRE_DART").is_none(),
+            "MOSAIC_REQUIRE_DART is set but `dart` is not on PATH"
+        );
         eprintln!("skipping Flutter platform-library conformance: dart unavailable");
         return;
     }
