@@ -15333,6 +15333,17 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn treemap_preserves_current_color_for_node_paint() {
+        let diagram = parse_treemap(
+            "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent color:#123456,fill:currentColor,stroke:CURRENTCOLOR",
+        ).expect("currentColor node paint must parse");
+        let style = diagram.nodes[1].style.as_ref().expect("resolved treemap style");
+        assert_eq!(style.node.text_color.as_deref(), Some("#123456"));
+        assert_eq!(style.node.fill.as_deref(), Some("currentColor"));
+        assert_eq!(style.node.stroke.as_deref(), Some("CURRENTCOLOR"));
+    }
+
+    #[test]
     fn treemap_rejects_unsupported_font_style() {
         let error = parse_treemap(
             "treemap\n\"Root\"\n  \"Leaf\": 1:::accent\nclassDef accent font-style:slanted",

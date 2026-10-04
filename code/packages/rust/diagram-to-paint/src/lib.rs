@@ -129,12 +129,16 @@ where
         let configured_fill = if node.has_children { &diagram.config.section_fill_color } else { &diagram.config.leaf_fill_color };
         let configured_stroke = if node.has_children { &diagram.config.section_stroke_color } else { &diagram.config.leaf_stroke_color };
         let configured_stroke_width = if node.has_children { diagram.config.section_stroke_width } else { diagram.config.leaf_stroke_width };
-        let fill = node.style.as_ref().and_then(|style| style.node.fill.clone())
+        let current_color = treemap_current_color(node, diagram, text_color);
+        let resolve_current_color = |value: String| {
+            if value.eq_ignore_ascii_case("currentcolor") { current_color.clone() } else { value }
+        };
+        let fill = resolve_current_color(node.style.as_ref().and_then(|style| style.node.fill.clone())
             .or_else(|| configured_fill.clone())
-            .unwrap_or_else(|| palette_index.map_or_else(|| "transparent".into(), |index| diagram.config.theme.fills[index].clone()));
-        let stroke = node.style.as_ref().and_then(|style| style.node.stroke.clone())
+            .unwrap_or_else(|| palette_index.map_or_else(|| "transparent".into(), |index| diagram.config.theme.fills[index].clone())));
+        let stroke = resolve_current_color(node.style.as_ref().and_then(|style| style.node.stroke.clone())
             .or_else(|| configured_stroke.clone())
-            .unwrap_or_else(|| palette_index.map_or_else(|| "transparent".into(), |index| diagram.config.theme.strokes[index].clone()));
+            .unwrap_or_else(|| palette_index.map_or_else(|| "transparent".into(), |index| diagram.config.theme.strokes[index].clone())));
         let opacity = node.style.as_ref().and_then(|style| style.opacity).unwrap_or(1.0);
         let fill = if node.style.as_ref().is_some_and(|style| style.opacity.is_some() || style.fill_opacity.is_some()) {
             with_opacity(&fill, node.style.as_ref().and_then(|style| style.fill_opacity).unwrap_or(1.0) * opacity)
@@ -596,6 +600,20 @@ fn treemap_corner_radius(node: &diagram_ir::LayoutedTreemapNode) -> f64 {
         Some(diagram_ir::TreemapBorderRadius::Factor(value)) => node.width.min(node.height) * value,
         None => node.style.as_ref().and_then(|style| style.node.corner_radius).unwrap_or(3.0),
     }
+}
+
+fn treemap_current_color(
+    node: &diagram_ir::LayoutedTreemapNode,
+    diagram: &diagram_ir::LayoutedTreemapDiagram,
+    fallback: Color,
+) -> String {
+    node.style.as_ref().and_then(|style| style.node.text_color.as_deref())
+        .filter(|value| !value.eq_ignore_ascii_case("currentcolor"))
+        .or(diagram.config.label_color.as_deref())
+        .filter(|value| !value.eq_ignore_ascii_case("currentcolor"))
+        .map(str::to_string)
+        .or_else(|| node.palette_index.map(|index| diagram.config.theme.labels[index].clone()))
+        .unwrap_or_else(|| format!("rgb({}, {}, {})", fallback.r, fallback.g, fallback.b))
 }
 
 struct TreemapNumberFormat {
@@ -7128,7 +7146,7 @@ mod tests {
                 class_selector: None,
                 style: Some(diagram_ir::TreemapStyle {
                     node: diagram_ir::DiagramStyle {
-                        fill: Some("#fef3c7".into()), stroke: Some("#b45309".into()), stroke_width: Some(3.0),
+                        fill: Some("currentColor".into()), stroke: Some("currentcolor".into()), stroke_width: Some(3.0),
                         stroke_dash: Some(vec![5.0, 2.0]), text_color: Some("#78350f".into()), font_size: Some(17.0),
                         font_weight: Some(700), font_italic: Some(true), font_family: Some("Avenir".into()), corner_radius: Some(9.0),
                     },
@@ -7401,8 +7419,8 @@ mod tests {
             Some(&"Allocation treemap".to_string())
         );
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
-            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("rgba(254,243,199,0.4)")
-                && rect.stroke.as_deref() == Some("rgba(180,83,9,0.4)")
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("rgba(120,53,15,0.4)")
+                && rect.stroke.as_deref() == Some("rgba(120,53,15,0.4)")
                 && rect.stroke_width == Some(3.0)
                 && rect.corner_radius == Some(46.0)
                 && rect.stroke_dash.as_deref() == Some(&[5.0, 2.0][..])
