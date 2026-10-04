@@ -540,11 +540,9 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
-          # Pinned, as ci.yml, release-task-app.yml and visicalc.yml are: the
-          # unpinned stable channel moved to 3.47.6, whose AOT snapshotter
-          # aborts building macOS apps ("Class with illegal cid, full-aot" in
-          # flutter/src/widgets/_window_macos.dart). A release builds with the
-          # Flutter every other lane tests.
+          # Pinned, as ci.yml, release-task-app.yml and visicalc.yml are: a
+          # release builds with the Flutter every other lane tests, not
+          # whatever the stable channel moved to since (3.47.6 by 10-04).
           flutter-version: '3.44.0'
           channel: stable
 

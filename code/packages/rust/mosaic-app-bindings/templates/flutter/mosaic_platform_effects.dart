@@ -84,13 +84,28 @@ final class MosaicFileSelectorDialogs implements MosaicFileDialogs {
 /// file. With no navigator to ask through it throws, which fails the save
 /// ("the file dialog failed") rather than replacing a file nobody was asked
 /// about.
+///
+/// The dialog is a `DialogRoute` pushed on the navigator, not `showDialog`:
+/// `showDialog` goes through `showRawDialog`, which can open the dialog as a
+/// window of its own and so reaches Flutter's desktop windowing code -- and
+/// on macOS that code's FFI structs abort the AOT snapshotter ("Class with
+/// illegal cid", Flutter 3.44 and 3.47), failing every release build of an
+/// app that merely contains this library. The route is what `showDialog`
+/// pushes when windowing is off, as it is by default.
 Future<bool> mosaicAskToReplace(String fileName) async {
   final navigator = mosaicRootNavigator();
   if (navigator == null) {
     throw StateError('no window to ask whether to replace the file');
   }
-  final replace = await showDialog<bool>(
-    context: navigator.context,
+  final context = navigator.context;
+  final replace = await navigator.push<bool>(DialogRoute<bool>(
+    context: context,
+    // What showDialog passes: the themed barrier, and Tab kept inside the
+    // question rather than reaching the page behind the barrier.
+    barrierColor: DialogTheme.of(context).barrierColor ??
+        Theme.of(context).dialogTheme.barrierColor ??
+        Colors.black54,
+    traversalEdgeBehavior: TraversalEdgeBehavior.closedLoop,
     builder: (context) => AlertDialog(
       title: Text('Replace "$fileName"?'),
       content: const Text(
@@ -108,7 +123,7 @@ Future<bool> mosaicAskToReplace(String fileName) async {
         ),
       ],
     ),
-  );
+  ));
   return replace ?? false;
 }
 

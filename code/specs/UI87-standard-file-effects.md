@@ -414,7 +414,12 @@ Kotlin file. What differs is how Dart and Flutter shape the rest:
   link, even a dangling one, counts -- it asks "Replace "<name>"?" in a
   Material dialog on the app's root navigator (`mosaicAskToReplace`), found
   by walking the widget tree rather than through a key `main.dart` would have
-  to hand over. Replace saves; Cancel, or dismissing the dialog, is a cancel.
+  to hand over. The dialog is a `DialogRoute` pushed on that navigator, not
+  `showDialog`: `showDialog` reaches Flutter's desktop windowing code, whose
+  macOS FFI structs abort the AOT snapshotter ("Class with illegal cid",
+  Flutter 3.44 and 3.47), so carrying it broke every macOS release build of
+  a Flutter app (seen in Engram's release lane). Replace saves; Cancel, or
+  dismissing the dialog, is a cancel.
   With no navigator to ask through the question throws, and the save fails
   ("the file dialog failed") rather than replacing a file nobody was asked
   about. The save itself is unchanged: it still replaces atomically.
