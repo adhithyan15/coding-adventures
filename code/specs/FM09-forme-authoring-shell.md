@@ -1,7 +1,8 @@
 # FM09 — Forme Authoring Shell
 
 > **Status:** Authoring v1 in progress. The durable authoring core, default
-> editor, and exact pipeline preview are implemented; publish and packaging follow as
+> editor, exact pipeline preview, and reviewed publication are implemented;
+> shell composition and native packaging follow as
 > separately reviewable product boundaries.
 > **Scope:** Project state, editing transactions, persistent history, editor
 > composition, live preview, publish composition, and the local desktop shell.
@@ -17,7 +18,8 @@
 | Accessible block editor and configuration UI | Implemented | `forme-authoring-editor` provides keyboard-complete settings, document, block, history, and declarative plugin-slot controls over the durable core. |
 | Pipeline-backed preview | Implemented | `forme-authoring-preview` runs exact persisted revisions through the real FM03/FM07 watch and artifact path with cancellation, last-good retention, and bounded diagnostics. |
 | Reviewed publish workflow | Implemented | `forme-authoring-publish` composes exact-revision product builds with FM08 validation, closed target review, cleanup, and durable acknowledgement without exposing host authority. |
-| Installable desktop shell | Pending | FM-B066 packages the proven workflow and first-run experience. |
+| First-run shell composition | Pending | FM-B067 composes the proven capability-free layers through injected handles. |
+| Installable desktop shell | Pending | FM-B068 adds the native Tauri host; FM-B066 closes after both slices. |
 
 ## 1. Purpose and delivery boundary
 
@@ -381,12 +383,34 @@ exceptions, credentials, paths, or target configuration.
 
 ## 8. Desktop shell and first run
 
-FM-B066 packages the proven editor, preview, and publish flow as the default
-local desktop product. Tauri remains the target unless the packaging slice
-documents and reviews a replacement. First run creates a project, selects the
-default theme, opens a first draft, previews it, configures a supported
-publication target, and publishes without editing JSON, YAML, TypeScript, git,
-or shell commands.
+FM-B067 first composes the proven editor, preview, and publish flow as a
+capability-free React shell. It owns loading, first-run project/theme selection,
+the active workspace, preview controls, complete reviewed-target rendering,
+explicit publication confirmation, bounded user-facing failures, and shared
+disposal. Its host input is a closed list of theme descriptors and narrow
+methods that open or create one workspace. A workspace exposes an
+`AuthoringSession`, one `AuthoringPreviewCoordinator`, closed reviewed target
+data paired with opaque `AuthoringPublisher` handles, and one bounded loopback
+preview URL. The shell copies and freezes descriptors at admission, rejects
+proxies/accessors/duplicates/unsafe text, invokes no ambient capability, and
+passes only the session, theme descriptors, document-identity callback, and
+optional declarative plugin boundary into `AuthoringEditor`.
+
+Opening a missing profile shows the first-run form. Creation selects one
+reviewed theme and must return a workspace with one active draft before the
+editor is mounted. Preview is an explicit cancellable action over the exact
+persisted session revision. Publication renders the selected target label and
+destination, requires a separate confirmation action, disables overlapping
+actions, and reports only the coordinator's bounded diagnostics. Unmount,
+workspace replacement, or failed admission disposes every supplied coordinator
+exactly once and waits for the same settlement.
+
+FM-B068 then packages that shell as the default local desktop product. Tauri
+remains the target unless the packaging slice documents and reviews a
+replacement. Its product test starts from an empty profile, creates a project,
+selects the default theme, opens a first draft, previews it, configures a
+supported publication target, and publishes without editing JSON, YAML,
+TypeScript, git, or shell commands.
 
 The desktop host exposes only narrow commands for project storage, preview,
 and publish. Paths are canonicalized and contained; web content receives no
