@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "BN-W26-kothay-controlled-question",
+    "language": "bengali",
+    "chapter": 37,
+    "sequence": 1925,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:befe677f56394e48",
+    "detachableSegments": [
+      "Writing: assemble one familiar question"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
