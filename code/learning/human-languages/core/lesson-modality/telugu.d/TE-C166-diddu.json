@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C166-diddu",
+    "language": "telugu",
+    "chapter": 166,
+    "sequence": 7330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e907c470e8d982d3"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C162-kaugilincu",
+    "language": "telugu",
+    "chapter": 162,
+    "sequence": 7100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:095988d8f62de605"
+  },
+  "findings": []
+}

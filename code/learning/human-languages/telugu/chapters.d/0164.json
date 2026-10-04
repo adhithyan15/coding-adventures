@@ -1,0 +1,19 @@
+{
+  "chapter": 164,
+  "title": "To grate, To strain, To dip, To tear, To wrap",
+  "label": "ch:te-to-grate-to-strain-to-dip-to-tear-to-wrap",
+  "canDo": "I can say to grate, to strain, to dip, to tear and to wrap.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C164-cuttu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 164: I can say to grate, to strain, to dip, to tear and to wrap.",
+    "assesses": [
+      "TE-LEX-C164-KRIYA164-03",
+      "TE-LEX-C164-KRIYA164-04",
+      "TE-LEX-C164-KRIYA164-05"
+    ]
+  }
+}

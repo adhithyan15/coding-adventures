@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C172-eppatiki",
+    "language": "telugu",
+    "chapter": 172,
+    "sequence": 7650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e24a4d39478e660"
+  },
+  "findings": []
+}

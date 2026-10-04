@@ -1,0 +1,19 @@
+{
+  "chapter": 179,
+  "title": "Delicious, Bland, Fresh, Expensive, Cheap",
+  "label": "ch:te-delicious-bland-fresh-expensive-cheap",
+  "canDo": "I can say delicious, bland, fresh, expensive and cheap.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TE-C179-cauka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 179: I can say delicious, bland, fresh, expensive and cheap.",
+    "assesses": [
+      "TE-LEX-C179-GUNAM179-03",
+      "TE-LEX-C179-GUNAM179-04",
+      "TE-LEX-C179-GUNAM179-05"
+    ]
+  }
+}

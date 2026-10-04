@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:cd2e90900afcc6ac",
+  "lessonIds": [
+    "TE-C176-lekapote",
+    "TE-C176-ayina",
+    "TE-C176-dvara",
+    "TE-C176-gurinci",
+    "TE-C176-lekunda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch176.txt",
+  "json": "telugu/narration/ch176.json",
+  "textHash": "fnv1a64:e095ec779925b67f",
+  "jsonHash": "fnv1a64:d74a75deb0b5dcbe",
+  "findings": []
+}

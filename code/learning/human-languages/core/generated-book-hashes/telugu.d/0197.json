@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:4b8570a2b3d5d807",
+  "lessonIds": [
+    "TE-C197-vadrangi",
+    "TE-C197-racayita",
+    "TE-C197-samasya",
+    "TE-C197-pariskaram",
+    "TE-C197-abhiprayam"
+  ],
+  "tex": "telugu/book/chapters/ch197-carpenter-writer-problem-solution-opinion.tex"
+}

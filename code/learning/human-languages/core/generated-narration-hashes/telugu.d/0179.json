@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:e6937ba9b79ffd88",
+  "lessonIds": [
+    "TE-C179-kammani",
+    "TE-C179-cappani",
+    "TE-C179-taja",
+    "TE-C179-kharidaina",
+    "TE-C179-cauka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch179.txt",
+  "json": "telugu/narration/ch179.json",
+  "textHash": "fnv1a64:4f9eba30eb7b0738",
+  "jsonHash": "fnv1a64:ebcd801075782079",
+  "findings": []
+}

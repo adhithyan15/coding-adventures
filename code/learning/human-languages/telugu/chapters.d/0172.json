@@ -1,0 +1,19 @@
+{
+  "chapter": 172,
+  "title": "Youth, Old age, Meanwhile, Every year, Forever",
+  "label": "ch:te-youth-old-age-meanwhile-every-year-forever",
+  "canDo": "I can say youth, old age, meanwhile, every year and forever.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TE-C172-eppatiki",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 172: I can say youth, old age, meanwhile, every year and forever.",
+    "assesses": [
+      "TE-LEX-C172-SAMAYAM172-03",
+      "TE-LEX-C172-SAMAYAM172-04",
+      "TE-LEX-C172-SAMAYAM172-05"
+    ]
+  }
+}

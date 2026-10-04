@@ -1,0 +1,19 @@
+{
+  "chapter": 162,
+  "title": "To kiss, To hug, To tease, To praise, To describe",
+  "label": "ch:te-to-kiss-to-hug-to-tease-to-praise-to-describe",
+  "canDo": "I can say to kiss, to hug, to tease, to praise and to describe.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C162-varnincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 162: I can say to kiss, to hug, to tease, to praise and to describe.",
+    "assesses": [
+      "TE-LEX-C162-KRIYA162-03",
+      "TE-LEX-C162-KRIYA162-04",
+      "TE-LEX-C162-KRIYA162-05"
+    ]
+  }
+}

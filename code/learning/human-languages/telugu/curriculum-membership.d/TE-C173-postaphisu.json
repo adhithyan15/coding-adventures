@@ -1,0 +1,11 @@
+{
+  "id": "TE-C173-postaphisu",
+  "pathSegment": "TE-PATH-173-STHALAM173",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-173-STHALAM173",
+      "order": 4
+    }
+  ]
+}

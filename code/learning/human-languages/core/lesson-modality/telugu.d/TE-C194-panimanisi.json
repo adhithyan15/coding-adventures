@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C194-panimanisi",
+    "language": "telugu",
+    "chapter": 194,
+    "sequence": 8780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5cc839e10be561d3"
+  },
+  "findings": []
+}

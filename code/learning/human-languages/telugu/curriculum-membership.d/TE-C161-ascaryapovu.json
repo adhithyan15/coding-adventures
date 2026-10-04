@@ -1,0 +1,11 @@
+{
+  "id": "TE-C161-ascaryapovu",
+  "pathSegment": "TE-PATH-161-KRIYA161",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-161-KRIYA161",
+      "order": 4
+    }
+  ]
+}

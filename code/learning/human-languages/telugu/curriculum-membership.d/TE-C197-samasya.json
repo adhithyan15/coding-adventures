@@ -1,0 +1,11 @@
+{
+  "id": "TE-C197-samasya",
+  "pathSegment": "TE-PATH-197-PANI197",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-197-PANI197",
+      "order": 2
+    }
+  ]
+}

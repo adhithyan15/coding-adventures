@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:43b70afd9fbc93ff",
+  "lessonIds": [
+    "TE-C191-rabbaru",
+    "TE-C191-balbu",
+    "TE-C191-kattelu",
+    "TE-C191-vala",
+    "TE-C191-trasu"
+  ],
+  "tex": "telugu/book/chapters/ch191-rubber-light-bulb-firewood-net-weighing-scale.tex"
+}

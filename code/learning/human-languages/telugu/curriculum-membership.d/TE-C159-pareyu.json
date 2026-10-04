@@ -1,0 +1,11 @@
+{
+  "id": "TE-C159-pareyu",
+  "pathSegment": "TE-PATH-159-KRIYA159",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-159-KRIYA159",
+      "order": 3
+    }
+  ]
+}

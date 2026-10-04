@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 186,
+  "sourceHash": "fnv1a64:d00982e3b7583cde",
+  "lessonIds": [
+    "TE-C186-manavadu",
+    "TE-C186-manavaralu",
+    "TE-C186-tallidandrulu",
+    "TE-C186-kavalalu",
+    "TE-C186-papa"
+  ],
+  "tex": "telugu/book/chapters/ch186-grandson-granddaughter-parents-twins-baby.tex"
+}

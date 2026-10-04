@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:34d368581710803b",
+  "lessonIds": [
+    "TE-C175-gumpu",
+    "TE-C175-prapancam",
+    "TE-C175-bhukampam",
+    "TE-C175-dummu",
+    "TE-C175-poga"
+  ],
+  "tex": "telugu/book/chapters/ch175-crowd-world-earthquake-dust-smoke.tex"
+}

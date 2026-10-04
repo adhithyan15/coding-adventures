@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:8fbd5f718a5900f3",
+  "lessonIds": [
+    "TE-C196-phiju",
+    "TE-C196-jarimana",
+    "TE-C196-gaduvu",
+    "TE-C196-badhyata",
+    "TE-C196-darakhastu"
+  ],
+  "tex": "telugu/book/chapters/ch196-fee-fine-deadline-responsibility-application.tex"
+}

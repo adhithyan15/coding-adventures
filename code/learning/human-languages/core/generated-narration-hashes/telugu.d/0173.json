@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:1add81cf2af80ba1",
+  "lessonIds": [
+    "TE-C173-varanda",
+    "TE-C173-peradu",
+    "TE-C173-hotalu",
+    "TE-C173-pakkana",
+    "TE-C173-postaphisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch173.txt",
+  "json": "telugu/narration/ch173.json",
+  "textHash": "fnv1a64:ed52e744404d5574",
+  "jsonHash": "fnv1a64:e63198b5ba7ff59b",
+  "findings": []
+}

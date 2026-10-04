@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C167-virecanalu",
+    "language": "telugu",
+    "chapter": 167,
+    "sequence": 7370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab80b7179f250fb4"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C175-bhukampam",
+    "language": "telugu",
+    "chapter": 175,
+    "sequence": 7800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a348b09353b86b9f"
+  },
+  "findings": []
+}

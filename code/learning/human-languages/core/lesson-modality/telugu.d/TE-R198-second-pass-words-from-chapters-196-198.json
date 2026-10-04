@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R198-second-pass-words-from-chapters-196-198",
+    "language": "telugu",
+    "chapter": 198,
+    "sequence": 9030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1826cba61edcd7bb"
+  },
+  "findings": []
+}

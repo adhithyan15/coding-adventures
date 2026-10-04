@@ -1,0 +1,11 @@
+{
+  "id": "TE-C190-tivaci",
+  "pathSegment": "TE-PATH-190-VASTUVU190",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-190-VASTUVU190",
+      "order": 4
+    }
+  ]
+}

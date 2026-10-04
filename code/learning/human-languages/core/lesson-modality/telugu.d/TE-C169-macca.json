@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C169-macca",
+    "language": "telugu",
+    "chapter": 169,
+    "sequence": 7490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15811c7b68eea78f"
+  },
+  "findings": []
+}

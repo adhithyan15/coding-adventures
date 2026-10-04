@@ -1,0 +1,11 @@
+{
+  "id": "TE-C181-mamulu",
+  "pathSegment": "TE-PATH-181-GUNAM181",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-181-GUNAM181",
+      "order": 4
+    }
+  ]
+}

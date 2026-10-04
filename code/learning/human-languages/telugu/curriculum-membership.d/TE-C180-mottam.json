@@ -1,0 +1,11 @@
+{
+  "id": "TE-C180-mottam",
+  "pathSegment": "TE-PATH-180-GUNAM180",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-180-GUNAM180",
+      "order": 1
+    }
+  ]
+}

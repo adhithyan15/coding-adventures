@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C190-karentu",
+    "language": "telugu",
+    "chapter": 190,
+    "sequence": 8550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41881bb09e3405fc"
+  },
+  "findings": []
+}

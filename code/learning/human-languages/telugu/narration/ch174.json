@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 174,
+  "title": "On the other side, That way, This way, Cave, Valley",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:3e5fc3543f065795",
+  "lessons": [
+    {
+      "id": "TE-C174-avatala",
+      "sequence": 7710,
+      "title": "అవతల (avatala) — on the other side, beyond",
+      "headword": "అవతల",
+      "romanization": "avatala",
+      "gloss": "on the other side, beyond",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b52348f9e2029c03",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for beside, then the Telugu for a post office."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అవతల",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అవతల — avatala — \"on the other side, beyond\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avatala",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avatala*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avatala, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avatala*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say avatala",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *avatala*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for beside, then the Telugu for a post office, then say avatala again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for beside, then the Telugu for a post office, then say *avatala* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అవతల (avatala) mean? (\"On the other side, beyond\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C174-atu",
+      "sequence": 7720,
+      "title": "అటు (aṭu) — that way, in that direction",
+      "headword": "అటు",
+      "romanization": "aṭu",
+      "gloss": "that way, in that direction",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8769fbbcdefbf93",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a post office, then the Telugu for on the other side."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అటు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అటు — aṭu — \"that way, in that direction\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say aṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *aṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a post office, then the Telugu for on the other side, then say aṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a post office, then the Telugu for on the other side, then say *aṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అటు (aṭu) mean? (\"That way, in that direction\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C174-itu",
+      "sequence": 7730,
+      "title": "ఇటు (iṭu) — this way, in this direction",
+      "headword": "ఇటు",
+      "romanization": "iṭu",
+      "gloss": "this way, in this direction",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:12a655d4beeb7663",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for on the other side, then the Telugu for that way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఇటు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఇటు — iṭu — \"this way, in this direction\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say iṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *iṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for on the other side, then the Telugu for that way, then say iṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for on the other side, then the Telugu for that way, then say *iṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఇటు (iṭu) mean? (\"This way, in this direction\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C174-guha",
+      "sequence": 7740,
+      "title": "గుహ (guha) — a cave",
+      "headword": "గుహ",
+      "romanization": "guha",
+      "gloss": "a cave",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3877f93fbf3be7b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for that way, then the Telugu for this way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గుహ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గుహ — guha — \"a cave\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say guha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *guha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for that way, then the Telugu for this way, then say guha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for that way, then the Telugu for this way, then say *guha* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గుహ (guha) mean? (\"A cave\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C174-loya",
+      "sequence": 7750,
+      "title": "లోయ (lōya) — a valley",
+      "headword": "లోయ",
+      "romanization": "lōya",
+      "gloss": "a valley",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:85bf9f9b06f7339e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for this way, then the Telugu for a cave."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: లోయ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "లోయ — lōya — \"a valley\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lōya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lōya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lōya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lōya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say lōya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *lōya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for this way, then the Telugu for a cave, then say lōya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for this way, then the Telugu for a cave, then say *lōya* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does లోయ (lōya) mean? (\"A valley\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R174-first-pass-words-from-chapters-166-169",
+      "sequence": 7760,
+      "title": "Words from chapters 166-169 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 166-169",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6d31b75fbc1fe6e7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a cave and a valley."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to continue, to observe, to correct, to mutter, to separate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to continue, to observe, to correct, to mutter, to separate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a headache, diarrhoea, a tablet, sweat, a swelling",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a headache, diarrhoea, a tablet, sweat, a swelling]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jealousy, pride, enthusiasm, peace, patience",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: jealousy, pride, enthusiasm, peace, patience]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sore, a blister, a rash, a scar, a sprain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sore, a blister, a rash, a scar, a sprain]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To continue? (కొనసాగు, konasāgu.) To observe? (పాటించు, pāṭiñcu.) To correct? (దిద్దు, diddu.) To mutter? (గొణుగు, goṇugu.) To separate? (విడిపోవు, viḍipōvu.) A headache? (తలనొప్పి, talanoppi.) Diarrhoea? (విరేచనాలు, virēcanālu.) A tablet? (మాత్ర, mātra.) Sweat? (చెమట, cemaṭa.) A swelling? (వాపు, vāpu.) Jealousy? (అసూయ, asūya.) Pride? (గర్వం, garvaṁ.) Enthusiasm? (ఉత్సాహం, utsāhaṁ.) Peace? (శాంతి, śānti.) Patience? (సహనం, sahanaṁ.) A sore? (పుండు, puṇḍu.) A blister? (బొబ్బ, bobba.) A rash? (దద్దుర్లు, daddurlu.) A scar? (మచ్చ, macca.) A sprain? (బెణుకు, beṇuku.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R174-second-pass-words-from-chapters-170-174",
+      "sequence": 7770,
+      "title": "Words from chapters 170-174 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 170-174",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:74f619abc144ffba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for time and sometimes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "time, sometimes, often, a date, a weekend",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: time, sometimes, often, a date, a weekend]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sunset, every day, usually, rarely, constantly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sunset, every day, usually, rarely, constantly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "youth, old age, meanwhile, every year, forever",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: youth, old age, meanwhile, every year, forever]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a veranda, a backyard, a restaurant, beside, a post office",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a veranda, a backyard, a restaurant, beside, a post office]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "on the other side, that way, this way, a cave, a valley",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: on the other side, that way, this way, a cave, a valley]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Time? (సమయం, samayaṁ.) Sometimes? (అప్పుడప్పుడు, appuḍappuḍu.) Often? (తరచుగా, taracugā.) A date? (తేదీ, tēdī.) A weekend? (వారాంతం, vārāntaṁ.) Sunset? (సూర్యాస్తమయం, sūryāstamayaṁ.) Every day? (ప్రతిరోజు, pratirōju.) Usually? (సాధారణంగా, sādhāraṇaṅgā.) Rarely? (అరుదుగా, arudugā.) Constantly? (నిరంతరం, nirantaraṁ.) Youth? (యవ్వనం, yavvanaṁ.) Old age? (వృద్ధాప్యం, vṛddhāpyaṁ.) Meanwhile? (ఇంతలో, intalō.) Every year? (ఏటా, ēṭā.) Forever? (ఎప్పటికీ, eppaṭikī.) A veranda? (వరండా, varaṇḍā.) A backyard? (పెరడు, peraḍu.) A restaurant? (హోటలు, hōṭalu.) Beside? (పక్కన, pakkana.) A post office? (పోస్టాఫీసు, pōsṭāphīsu.) On the other side? (అవతల, avatala.) That way? (అటు, aṭu.) This way? (ఇటు, iṭu.) A cave? (గుహ, guha.) A valley? (లోయ, lōya.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

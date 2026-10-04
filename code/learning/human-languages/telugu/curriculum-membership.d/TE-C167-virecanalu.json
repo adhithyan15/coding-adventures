@@ -1,0 +1,11 @@
+{
+  "id": "TE-C167-virecanalu",
+  "pathSegment": "TE-PATH-167-AROGYAM167",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-167-AROGYAM167",
+      "order": 1
+    }
+  ]
+}

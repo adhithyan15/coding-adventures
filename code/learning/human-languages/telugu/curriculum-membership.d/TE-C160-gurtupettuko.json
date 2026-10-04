@@ -1,0 +1,11 @@
+{
+  "id": "TE-C160-gurtupettuko",
+  "pathSegment": "TE-PATH-160-KRIYA160",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-160-KRIYA160",
+      "order": 3
+    }
+  ]
+}

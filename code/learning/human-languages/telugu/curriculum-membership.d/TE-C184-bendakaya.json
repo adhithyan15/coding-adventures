@@ -1,0 +1,11 @@
+{
+  "id": "TE-C184-bendakaya",
+  "pathSegment": "TE-PATH-184-VASTUVU184",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-184-VASTUVU184",
+      "order": 4
+    }
+  ]
+}

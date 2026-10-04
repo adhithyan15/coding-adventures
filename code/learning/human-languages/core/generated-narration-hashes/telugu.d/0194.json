@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:d41152e29b8ea699",
+  "lessonIds": [
+    "TE-C194-intipani",
+    "TE-C194-panimanisi",
+    "TE-C194-darji",
+    "TE-C194-vyapari",
+    "TE-C194-nanem"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch194.txt",
+  "json": "telugu/narration/ch194.json",
+  "textHash": "fnv1a64:625a187f4c6d1fe3",
+  "jsonHash": "fnv1a64:82c76e158f7ac7eb",
+  "findings": []
+}

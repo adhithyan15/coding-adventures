@@ -1,0 +1,11 @@
+{
+  "id": "TE-C179-taja",
+  "pathSegment": "TE-PATH-179-GUNAM179",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-179-GUNAM179",
+      "order": 2
+    }
+  ]
+}

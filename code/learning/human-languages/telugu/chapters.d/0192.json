@@ -1,0 +1,19 @@
+{
+  "chapter": 192,
+  "title": "Wick, Latch, Paintbrush, Necklace, Braid",
+  "label": "ch:te-wick-latch-paintbrush-necklace-braid",
+  "canDo": "I can say a wick, a latch, a paintbrush, a necklace and a braid.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-R192-second-pass-words-from-chapters-188-192",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 192: I can say a wick, a latch, a paintbrush, a necklace and a braid.",
+    "assesses": [
+      "TE-LEX-C192-VASTUVU192-03",
+      "TE-LEX-C192-VASTUVU192-04",
+      "TE-LEX-C192-VASTUVU192-05"
+    ]
+  }
+}

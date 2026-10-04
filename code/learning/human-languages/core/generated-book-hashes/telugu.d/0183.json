@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 183,
+  "sourceHash": "fnv1a64:7c3e577c835ed02f",
+  "lessonIds": [
+    "TE-C183-vantagadi",
+    "TE-C183-padakagadi",
+    "TE-C183-balci",
+    "TE-C183-muta",
+    "TE-C183-banali",
+    "TE-R183-first-pass-words-from-chapters-175-178",
+    "TE-R183-second-pass-words-from-chapters-179-183"
+  ],
+  "tex": "telugu/book/chapters/ch183-kitchen-bedroom-bucket-lid-frying-pan.tex"
+}

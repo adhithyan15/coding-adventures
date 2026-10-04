@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:423133f0453914b2",
+  "lessonIds": [
+    "TE-C167-talanoppi",
+    "TE-C167-virecanalu",
+    "TE-C167-matra",
+    "TE-C167-cemata",
+    "TE-C167-vapu"
+  ],
+  "tex": "telugu/book/chapters/ch167-headache-diarrhoea-tablet-sweat-swelling.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 159,
+  "title": "To squeeze, To soak, To repair, To throw away, To lose",
+  "label": "ch:te-to-squeeze-to-soak-to-repair-to-throw-away-to-lose",
+  "canDo": "I can say to squeeze, to soak, to repair, to throw away and to lose.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C159-pogottuko",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 159: I can say to squeeze, to soak, to repair, to throw away and to lose.",
+    "assesses": [
+      "TE-LEX-C159-KRIYA159-03",
+      "TE-LEX-C159-KRIYA159-04",
+      "TE-LEX-C159-KRIYA159-05"
+    ]
+  }
+}

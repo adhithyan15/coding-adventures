@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C165-guccu",
+    "language": "telugu",
+    "chapter": 165,
+    "sequence": 7270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5318d00845cf9923"
+  },
+  "findings": []
+}

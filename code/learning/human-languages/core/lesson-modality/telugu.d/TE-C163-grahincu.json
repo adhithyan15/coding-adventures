@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C163-grahincu",
+    "language": "telugu",
+    "chapter": 163,
+    "sequence": 7150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ebe6a6a12091aa42"
+  },
+  "findings": []
+}

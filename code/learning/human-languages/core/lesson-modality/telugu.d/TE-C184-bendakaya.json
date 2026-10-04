@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C184-bendakaya",
+    "language": "telugu",
+    "chapter": 184,
+    "sequence": 8290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8ca3be3f822a492"
+  },
+  "findings": []
+}

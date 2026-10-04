@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C159-baguceyu",
+    "language": "telugu",
+    "chapter": 159,
+    "sequence": 6960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4eef1bbd1b059c4b"
+  },
+  "findings": []
+}

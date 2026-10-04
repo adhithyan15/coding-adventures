@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C169-daddurlu",
+    "language": "telugu",
+    "chapter": 169,
+    "sequence": 7480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:afafd3f66a8f5f22"
+  },
+  "findings": []
+}

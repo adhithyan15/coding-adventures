@@ -1,0 +1,11 @@
+{
+  "id": "TE-C175-prapancam",
+  "pathSegment": "TE-PATH-175-STHALAM175",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-175-STHALAM175",
+      "order": 1
+    }
+  ]
+}

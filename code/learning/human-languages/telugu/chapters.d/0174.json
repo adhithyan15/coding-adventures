@@ -1,0 +1,19 @@
+{
+  "chapter": 174,
+  "title": "On the other side, That way, This way, Cave, Valley",
+  "label": "ch:te-on-the-other-side-that-way-this-way-cave-valley",
+  "canDo": "I can say on the other side, that way, this way, a cave and a valley.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TE-R174-second-pass-words-from-chapters-170-174",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 174: I can say on the other side, that way, this way, a cave and a valley.",
+    "assesses": [
+      "TE-LEX-C174-STHALAM174-03",
+      "TE-LEX-C174-STHALAM174-04",
+      "TE-LEX-C174-STHALAM174-05"
+    ]
+  }
+}

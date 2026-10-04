@@ -1,0 +1,19 @@
+{
+  "chapter": 197,
+  "title": "Carpenter, Writer, Problem, Solution, Opinion",
+  "label": "ch:te-carpenter-writer-problem-solution-opinion",
+  "canDo": "I can say a carpenter, a writer, a problem, a solution and an opinion.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C197-abhiprayam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 197: I can say a carpenter, a writer, a problem, a solution and an opinion.",
+    "assesses": [
+      "TE-LEX-C197-PANI197-03",
+      "TE-LEX-C197-PANI197-04",
+      "TE-LEX-C197-PANI197-05"
+    ]
+  }
+}

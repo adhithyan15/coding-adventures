@@ -1,0 +1,11 @@
+{
+  "id": "TE-C186-kavalalu",
+  "pathSegment": "TE-PATH-186-VASTUVU186",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-186-VASTUVU186",
+      "order": 3
+    }
+  ]
+}

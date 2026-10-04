@@ -1,0 +1,11 @@
+{
+  "id": "TE-C178-poni",
+  "pathSegment": "TE-PATH-178-KARANAM178",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-178-KARANAM178",
+      "order": 2
+    }
+  ]
+}

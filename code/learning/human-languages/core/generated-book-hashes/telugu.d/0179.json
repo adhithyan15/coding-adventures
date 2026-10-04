@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:6f7a70deeef6dde8",
+  "lessonIds": [
+    "TE-C179-kammani",
+    "TE-C179-cappani",
+    "TE-C179-taja",
+    "TE-C179-kharidaina",
+    "TE-C179-cauka"
+  ],
+  "tex": "telugu/book/chapters/ch179-delicious-bland-fresh-expensive-cheap.tex"
+}

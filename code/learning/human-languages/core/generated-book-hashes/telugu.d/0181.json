@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 181,
+  "sourceHash": "fnv1a64:2cd3260506f604c7",
+  "lessonIds": [
+    "TE-C181-goppa",
+    "TE-C181-vasana",
+    "TE-C181-asaktikaramaina",
+    "TE-C181-adbhutamaina",
+    "TE-C181-mamulu"
+  ],
+  "tex": "telugu/book/chapters/ch181-great-smell-interesting-wonderful-ordinary.tex"
+}

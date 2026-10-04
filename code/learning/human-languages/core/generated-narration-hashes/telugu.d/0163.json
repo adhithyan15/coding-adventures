@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:49864fe3998b486b",
+  "lessonIds": [
+    "TE-C163-anumanincu",
+    "TE-C163-grahincu",
+    "TE-C163-pattincuko",
+    "TE-C163-potipadu",
+    "TE-C163-tannu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch163.txt",
+  "json": "telugu/narration/ch163.json",
+  "textHash": "fnv1a64:adca1813d6092368",
+  "jsonHash": "fnv1a64:9cca3c1a77fa5809",
+  "findings": []
+}

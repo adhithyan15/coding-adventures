@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-179-GUNAM179",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say delicious, bland, fresh, expensive and cheap.",
+  "prerequisites": []
+}

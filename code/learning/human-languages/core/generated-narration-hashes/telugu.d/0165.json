@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:a1a3b32b16354f17",
+  "lessonIds": [
+    "TE-C165-cindu",
+    "TE-C165-gorugu",
+    "TE-C165-bigincu",
+    "TE-C165-guccu",
+    "TE-C165-allu",
+    "TE-R165-first-pass-words-from-chapters-157-160",
+    "TE-R165-second-pass-words-from-chapters-161-165"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch165.txt",
+  "json": "telugu/narration/ch165.json",
+  "textHash": "fnv1a64:0b3cb07cca68edd6",
+  "jsonHash": "fnv1a64:5dc07b4f7ec60e59",
+  "findings": []
+}

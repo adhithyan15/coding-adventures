@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C180-pradhana",
+    "language": "telugu",
+    "chapter": 180,
+    "sequence": 8030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2b7ced246fab4ebd"
+  },
+  "findings": []
+}

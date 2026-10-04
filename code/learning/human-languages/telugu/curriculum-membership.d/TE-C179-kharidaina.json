@@ -1,0 +1,11 @@
+{
+  "id": "TE-C179-kharidaina",
+  "pathSegment": "TE-PATH-179-GUNAM179",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-179-GUNAM179",
+      "order": 3
+    }
+  ]
+}

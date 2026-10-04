@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:38910e2ffa1dc177",
+  "lessonIds": [
+    "TE-C180-pradhana",
+    "TE-C180-mottam",
+    "TE-C180-prati",
+    "TE-C180-gulabi-rangu",
+    "TE-C180-narinja-rangu"
+  ],
+  "tex": "telugu/book/chapters/ch180-main-total-every-pink-orange.tex"
+}

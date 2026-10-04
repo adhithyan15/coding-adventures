@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:b9f4932fbabcfba1",
+  "lessonIds": [
+    "TE-C161-natyam-ceyu",
+    "TE-C161-jarupuko",
+    "TE-C161-palakarincu",
+    "TE-C161-siggupadu",
+    "TE-C161-ascaryapovu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch161.txt",
+  "json": "telugu/narration/ch161.json",
+  "textHash": "fnv1a64:9d45213cdb6c152b",
+  "jsonHash": "fnv1a64:240fdd6d0fd97e33",
+  "findings": []
+}

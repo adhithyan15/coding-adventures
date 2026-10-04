@@ -1,0 +1,11 @@
+{
+  "id": "TE-C180-narinja-rangu",
+  "pathSegment": "TE-PATH-180-GUNAM180",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-180-GUNAM180",
+      "order": 4
+    }
+  ]
+}

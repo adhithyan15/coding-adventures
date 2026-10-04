@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C175-gumpu",
+    "language": "telugu",
+    "chapter": 175,
+    "sequence": 7780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:762de2759e11fad7"
+  },
+  "findings": []
+}

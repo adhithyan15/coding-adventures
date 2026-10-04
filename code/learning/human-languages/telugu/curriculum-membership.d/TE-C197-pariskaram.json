@@ -1,0 +1,11 @@
+{
+  "id": "TE-C197-pariskaram",
+  "pathSegment": "TE-PATH-197-PANI197",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-197-PANI197",
+      "order": 3
+    }
+  ]
+}

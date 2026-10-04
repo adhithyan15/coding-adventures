@@ -1,0 +1,19 @@
+{
+  "chapter": 190,
+  "title": "Electricity, Machine, Sofa, Swing, Carpet",
+  "label": "ch:te-electricity-machine-sofa-swing-carpet",
+  "canDo": "I can say electricity, a machine, a sofa, a swing and a carpet.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C190-tivaci",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 190: I can say electricity, a machine, a sofa, a swing and a carpet.",
+    "assesses": [
+      "TE-LEX-C190-VASTUVU190-03",
+      "TE-LEX-C190-VASTUVU190-04",
+      "TE-LEX-C190-VASTUVU190-05"
+    ]
+  }
+}

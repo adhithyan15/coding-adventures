@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:a9d0ea79d5e1b389",
+  "lessonIds": [
+    "TE-C162-muddupettu",
+    "TE-C162-kaugilincu",
+    "TE-C162-atapattincu",
+    "TE-C162-pogadu",
+    "TE-C162-varnincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch162.txt",
+  "json": "telugu/narration/ch162.json",
+  "textHash": "fnv1a64:3f048902fe25a3b5",
+  "jsonHash": "fnv1a64:4cd6a1ad8eef1995",
+  "findings": []
+}

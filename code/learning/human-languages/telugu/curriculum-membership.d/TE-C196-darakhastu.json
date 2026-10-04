@@ -1,0 +1,11 @@
+{
+  "id": "TE-C196-darakhastu",
+  "pathSegment": "TE-PATH-196-PANI196",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-196-PANI196",
+      "order": 4
+    }
+  ]
+}

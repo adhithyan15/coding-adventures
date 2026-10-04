@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:76ce493c96b726b4",
+  "lessonIds": [
+    "TE-C182-nissabdam",
+    "TE-C182-mannikaina",
+    "TE-C182-nakili",
+    "TE-C182-sada",
+    "TE-C182-adanapu"
+  ],
+  "tex": "telugu/book/chapters/ch182-silence-durable-fake-plain-extra.tex"
+}

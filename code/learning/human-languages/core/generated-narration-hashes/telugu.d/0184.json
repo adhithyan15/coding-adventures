@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 184,
+  "sourceHash": "fnv1a64:099ce16f069ae3f9",
+  "lessonIds": [
+    "TE-C184-venna",
+    "TE-C184-paccadi",
+    "TE-C184-payasam",
+    "TE-C184-dosakaya",
+    "TE-C184-bendakaya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch184.txt",
+  "json": "telugu/narration/ch184.json",
+  "textHash": "fnv1a64:7f083f6fb1998c07",
+  "jsonHash": "fnv1a64:2938cc2d633a903b",
+  "findings": []
+}

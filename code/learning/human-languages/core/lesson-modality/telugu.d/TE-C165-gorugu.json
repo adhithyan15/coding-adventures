@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C165-gorugu",
+    "language": "telugu",
+    "chapter": 165,
+    "sequence": 7250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09d3a19a5481bc0b"
+  },
+  "findings": []
+}

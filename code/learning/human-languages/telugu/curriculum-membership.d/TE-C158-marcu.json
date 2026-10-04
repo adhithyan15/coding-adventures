@@ -1,0 +1,11 @@
+{
+  "id": "TE-C158-marcu",
+  "pathSegment": "TE-PATH-158-KRIYA158",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-158-KRIYA158",
+      "order": 2
+    }
+  ]
+}

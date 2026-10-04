@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:ac3e4055055bf220",
+  "lessonIds": [
+    "TE-C192-vatti",
+    "TE-C192-gollem",
+    "TE-C192-kunce",
+    "TE-C192-haram",
+    "TE-C192-jada",
+    "TE-R192-first-pass-words-from-chapters-184-187",
+    "TE-R192-second-pass-words-from-chapters-188-192"
+  ],
+  "tex": "telugu/book/chapters/ch192-wick-latch-paintbrush-necklace-braid.tex"
+}

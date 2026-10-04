@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:894a7cf3a29a8a2f",
+  "lessonIds": [
+    "TE-C164-turumu",
+    "TE-C164-vadakattu",
+    "TE-C164-muncu",
+    "TE-C164-cimpu",
+    "TE-C164-cuttu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch164.txt",
+  "json": "telugu/narration/ch164.json",
+  "textHash": "fnv1a64:5df1800bc71ccda8",
+  "jsonHash": "fnv1a64:7136b4e3b8629a86",
+  "findings": []
+}

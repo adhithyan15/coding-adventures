@@ -1,0 +1,11 @@
+{
+  "id": "TE-C176-gurinci",
+  "pathSegment": "TE-PATH-176-KARANAM176",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-176-KARANAM176",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C170-varantam",
+    "language": "telugu",
+    "chapter": 170,
+    "sequence": 7550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e446fd0dff9c4e08"
+  },
+  "findings": []
+}

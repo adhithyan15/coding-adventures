@@ -1,0 +1,11 @@
+{
+  "id": "TE-C170-taracuga",
+  "pathSegment": "TE-PATH-170-SAMAYAM170",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-170-SAMAYAM170",
+      "order": 2
+    }
+  ]
+}

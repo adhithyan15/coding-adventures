@@ -1,0 +1,11 @@
+{
+  "id": "TE-C181-vasana",
+  "pathSegment": "TE-PATH-181-GUNAM181",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-181-GUNAM181",
+      "order": 1
+    }
+  ]
+}

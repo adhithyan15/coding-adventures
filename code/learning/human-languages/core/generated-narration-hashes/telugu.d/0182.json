@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:6641f6ae1d6b2790",
+  "lessonIds": [
+    "TE-C182-nissabdam",
+    "TE-C182-mannikaina",
+    "TE-C182-nakili",
+    "TE-C182-sada",
+    "TE-C182-adanapu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch182.txt",
+  "json": "telugu/narration/ch182.json",
+  "textHash": "fnv1a64:4acea8ece9ea2a5d",
+  "jsonHash": "fnv1a64:54e421fdff17de14",
+  "findings": []
+}

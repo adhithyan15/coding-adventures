@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C184-venna",
+    "language": "telugu",
+    "chapter": 184,
+    "sequence": 8250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38ee9cdf0af9917d"
+  },
+  "findings": []
+}

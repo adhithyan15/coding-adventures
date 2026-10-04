@@ -1,0 +1,19 @@
+{
+  "chapter": 163,
+  "title": "To suspect, To realize, To pay attention to, To compete, To kick",
+  "label": "ch:te-to-suspect-to-realize-to-pay-attention-to-to-compete-to-kick",
+  "canDo": "I can say to suspect, to realize, to pay attention to, to compete and to kick.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C163-tannu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 163: I can say to suspect, to realize, to pay attention to, to compete and to kick.",
+    "assesses": [
+      "TE-LEX-C163-KRIYA163-03",
+      "TE-LEX-C163-KRIYA163-04",
+      "TE-LEX-C163-KRIYA163-05"
+    ]
+  }
+}

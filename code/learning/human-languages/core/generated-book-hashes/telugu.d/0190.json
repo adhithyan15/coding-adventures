@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:c955a381eb2c2436",
+  "lessonIds": [
+    "TE-C190-karentu",
+    "TE-C190-yantram",
+    "TE-C190-sopha",
+    "TE-C190-uyyala",
+    "TE-C190-tivaci"
+  ],
+  "tex": "telugu/book/chapters/ch190-electricity-machine-sofa-swing-carpet.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:8c7e41e9df078c5d",
+  "lessonIds": [
+    "TE-C187-tenetiga",
+    "TE-C187-balli",
+    "TE-C187-purugu",
+    "TE-C187-piccuka",
+    "TE-C187-kokila"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch187.txt",
+  "json": "telugu/narration/ch187.json",
+  "textHash": "fnv1a64:22b4ce2491b73196",
+  "jsonHash": "fnv1a64:e4a8058b1e683c38",
+  "findings": []
+}

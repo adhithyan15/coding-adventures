@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C159-pogottuko",
+    "language": "telugu",
+    "chapter": 159,
+    "sequence": 6980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1a0f40945d4f132"
+  },
+  "findings": []
+}

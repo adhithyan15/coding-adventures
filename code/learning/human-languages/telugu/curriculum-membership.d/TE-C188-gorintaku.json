@@ -1,0 +1,11 @@
+{
+  "id": "TE-C188-gorintaku",
+  "pathSegment": "TE-PATH-188-VASTUVU188",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-188-VASTUVU188",
+      "order": 4
+    }
+  ]
+}

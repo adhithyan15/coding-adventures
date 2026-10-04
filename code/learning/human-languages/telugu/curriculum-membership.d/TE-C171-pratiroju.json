@@ -1,0 +1,11 @@
+{
+  "id": "TE-C171-pratiroju",
+  "pathSegment": "TE-PATH-171-SAMAYAM171",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-171-SAMAYAM171",
+      "order": 1
+    }
+  ]
+}

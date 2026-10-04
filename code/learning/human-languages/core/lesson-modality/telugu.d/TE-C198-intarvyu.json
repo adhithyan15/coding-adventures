@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C198-intarvyu",
+    "language": "telugu",
+    "chapter": 198,
+    "sequence": 8980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fbe316a2f3e3d356"
+  },
+  "findings": []
+}

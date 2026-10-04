@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C171-suryastamayam",
+    "language": "telugu",
+    "chapter": 171,
+    "sequence": 7560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2465e9d877523004"
+  },
+  "findings": []
+}
