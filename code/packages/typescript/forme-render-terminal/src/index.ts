@@ -84,6 +84,9 @@ const MAX_HTML_NODES = 20_000;
 const MAX_PACKAGE_BUFFERS = 1_000;
 const MAX_EVIDENCE_BYTES = 1_048_576;
 const MAX_ARTIFACT_BYTES = 67_108_864;
+const MAX_PROPERTY_KEY_CODE_UNITS = 256;
+const MAX_DIAGNOSTIC_CODE_POINTS = 160;
+const MAX_METADATA_CODE_POINTS = 256;
 const PATH_SEGMENT_RE = /^[A-Za-z0-9._~!$&'()*+,;=@\-]+$/;
 const WIN_RESERVED_RE = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?$/i;
 
@@ -113,7 +116,7 @@ const renderTerminal = defineStage({
       if (!isSafeMetadataString(rule.id)) throw new Error("forme-render-terminal: StyleRule.id contains terminal presentation controls");
     }
     if (validated.document.theme !== null) {
-      throw new Error(`forme-render-terminal: StyleDocument theme ${JSON.stringify(validated.document.theme)} is unresolved`);
+      throw new Error(`forme-render-terminal: StyleDocument theme ${asciiDiagnostic(validated.document.theme)} is unresolved`);
     }
     const interactivity = prepareInteractivity(config.interactivity);
     const backendConfigRevision = computeRevisionId({
@@ -127,7 +130,7 @@ const renderTerminal = defineStage({
       ctx.cancellation.throwIfCancelled();
       const node = snapshotContentNode(rawNode);
       if (node.route === null) {
-        throw new Error(`forme-render-terminal: ContentNode ${node.identity} (${JSON.stringify(sanitizeMetadata(node.sourcePath))}) has no route`);
+        throw new Error(`forme-render-terminal: ContentNode ${node.identity} (${asciiDiagnostic(node.sourcePath)}) has no route`);
       }
 
       const usedRuleIds = collectUsedRules(node.document, validated.document.rules);
@@ -229,7 +232,7 @@ export const packageTerminal = defineStage({
         throw new Error(`forme-render-terminal/package: exceeds the ${MAX_PACKAGE_BUFFERS}-buffer limit`);
       }
       const buffer = snapshotTerminalBuffer(rawBuffer);
-      if (seen.has(buffer.route)) throw new Error(`forme-render-terminal/package: duplicate route ${JSON.stringify(buffer.route)}`);
+      if (seen.has(buffer.route)) throw new Error(`forme-render-terminal/package: duplicate route ${asciiDiagnostic(buffer.route)}`);
       seen.add(buffer.route);
       const relative = portableRoute(buffer.route);
       const ansiPath = `${root}/${relative}.ansi`;
@@ -305,7 +308,7 @@ function prepareInteractivity(value: unknown): ReadonlyMap<string, Interactivity
     if (typeof route !== "string" || !route.startsWith("/") || route.includes("\\") || route.includes("..")) {
       throw new TypeError(`forme-render-terminal: config.interactivity[${index}].route is invalid`);
     }
-    if (result.has(route)) throw new TypeError(`forme-render-terminal: duplicate interactivity route ${JSON.stringify(route)}`);
+    if (result.has(route)) throw new TypeError(`forme-render-terminal: duplicate interactivity route ${asciiDiagnostic(route)}`);
     result.set(route, validateInteractivityDocument(entry.get("document")));
   }
   return result;
@@ -394,7 +397,7 @@ function appendInteractivityDegradations(route: string, document: InteractivityD
   for (const island of document.islands) {
     if (island.fallback.kind === "element") {
       const count = state.htmlIds.get(island.fallback.id) ?? 0;
-      if (count !== 1) throw new Error(`forme-render-terminal: route ${JSON.stringify(route)} fallback id ${JSON.stringify(island.fallback.id)} has ${count} matches`);
+      if (count !== 1) throw new Error(`forme-render-terminal: route ${asciiDiagnostic(route)} fallback id ${asciiDiagnostic(island.fallback.id)} has ${count} matches`);
     }
     state.degradations.push(Object.freeze({
       code: "interactivity-dropped", islandId: sanitizeMetadata(island.id) as never,
@@ -497,11 +500,16 @@ function snapshotJson(value: unknown, path: string, budget: SnapshotBudget, dept
   const output: Record<string, JsonValue> = Object.create(null) as Record<string, JsonValue>;
   let count = 0;
   for (const key in value) {
-    if (!Object.prototype.hasOwnProperty.call(value, key)) throw new TypeError(`forme-render-terminal: ${path}.${key} must be an own property`);
+    if (key.length > MAX_PROPERTY_KEY_CODE_UNITS || hasLoneSurrogate(key) || !isSafeMetadataString(key)) {
+      throw new TypeError(`forme-render-terminal: ${path} contains an unsafe field name`);
+    }
+    budget.stringCodeUnits += key.length;
+    if (budget.stringCodeUnits > budget.maxStringCodeUnits) throw new TypeError(`forme-render-terminal: ${path} exceeds the string limit`);
+    if (!Object.prototype.hasOwnProperty.call(value, key)) throw new TypeError(`forme-render-terminal: ${path} contains an inherited field`);
     if (++count > 64) throw new TypeError(`forme-render-terminal: ${path} has too many fields`);
     const descriptor = Object.getOwnPropertyDescriptor(value, key);
-    if (descriptor === undefined || !("value" in descriptor)) throw new TypeError(`forme-render-terminal: ${path}.${key} must not be an accessor`);
-    output[key] = snapshotJson(descriptor.value, `${path}.${key}`, budget, depth + 1);
+    if (descriptor === undefined || !("value" in descriptor)) throw new TypeError(`forme-render-terminal: ${path} contains an accessor field`);
+    output[key] = snapshotJson(descriptor.value, `${path}.field`, budget, depth + 1);
   }
   budget.seen.delete(value);
   return Object.freeze(output);
@@ -567,7 +575,7 @@ function validateDocumentNode(value: unknown, path: string, depth: number): void
     case "link": children(["destination", "title", "children"]); string("destination"); nullableString("title"); break;
     case "image": assertOnlyKeys(node, ["type", "destination", "title", "alt"], path); string("destination"); nullableString("title"); string("alt"); break;
     case "autolink": assertOnlyKeys(node, ["type", "destination", "isEmail"], path); string("destination"); if (typeof node.isEmail !== "boolean") throw new TypeError(`forme-render-terminal: ${path}.isEmail is invalid`); break;
-    default: throw new TypeError(`forme-render-terminal: ${path}.type ${JSON.stringify(node.type)} is unknown`);
+    default: throw new TypeError(`forme-render-terminal: ${path}.type ${asciiDiagnostic(node.type)} is unknown`);
   }
 }
 
@@ -640,7 +648,12 @@ function arrayValue(value: unknown, path: string): readonly unknown[] {
 
 function assertOnlyKeys(value: Record<string, unknown>, allowed: readonly string[], path: string): void {
   const set = new Set(allowed);
-  for (const key of Object.keys(value)) if (!set.has(key)) throw new TypeError(`forme-render-terminal: ${path}.${key} is unknown`);
+  for (const key of Object.keys(value)) {
+    if (key.length > MAX_PROPERTY_KEY_CODE_UNITS || hasLoneSurrogate(key) || !isSafeMetadataString(key)) {
+      throw new TypeError(`forme-render-terminal: ${path} contains an unsafe field name`);
+    }
+    if (!set.has(key)) throw new TypeError(`forme-render-terminal: ${path} contains unknown field ${asciiDiagnostic(key)}`);
+  }
   for (const key of allowed) if (!(key in value) && !["sourcePath", "urlSuffix"].includes(key)) throw new TypeError(`forme-render-terminal: ${path}.${key} is required`);
 }
 
@@ -653,9 +666,12 @@ function exactObject(value: unknown, keys: readonly string[], path: string): Rea
   const result = new Map<string, unknown>();
   let count = 0;
   for (const key in value) {
-    if (!Object.prototype.hasOwnProperty.call(value, key)) throw new TypeError(`forme-render-terminal: ${path}.${key} must be an own property`);
+    if (key.length > MAX_PROPERTY_KEY_CODE_UNITS || hasLoneSurrogate(key) || !isSafeMetadataString(key)) {
+      throw new TypeError(`forme-render-terminal: ${path} contains an unsafe field name`);
+    }
+    if (!Object.prototype.hasOwnProperty.call(value, key)) throw new TypeError(`forme-render-terminal: ${path} contains an inherited field`);
     if (++count > keys.length) throw new TypeError(`forme-render-terminal: ${path} has too many fields`);
-    if (!allowed.has(key)) throw new TypeError(`forme-render-terminal: ${path}.${key} is unknown`);
+    if (!allowed.has(key)) throw new TypeError(`forme-render-terminal: ${path} contains unknown field ${asciiDiagnostic(key)}`);
   }
   for (const key of keys) {
     const descriptor = Object.getOwnPropertyDescriptor(value, key)!;
@@ -675,7 +691,7 @@ function stringArray(value: unknown, path: string): readonly string[] {
 }
 
 function portableRoute(route: string): string {
-  if (route.length > 2_048 || !route.startsWith("/") || route.startsWith("//") || route.includes("\\")) throw new Error(`forme-render-terminal/package: unsafe route ${JSON.stringify(route)}`);
+  if (route.length > 2_048 || !route.startsWith("/") || route.startsWith("//") || route.includes("\\")) throw new Error(`forme-render-terminal/package: unsafe route ${asciiDiagnostic(route)}`);
   const parts = route.slice(1).split("/");
   validatePortableSegments(parts, "route", ".degradations.json".length);
   return parts.join("/");
@@ -690,7 +706,7 @@ function registerPortableFile(
   const folded = path.toLowerCase();
   const previous = filePaths.get(folded);
   if (previous !== undefined || directoryPaths.has(folded)) {
-    throw new Error(`forme-render-terminal/package: portable path collision between ${JSON.stringify(previous ?? "an existing parent path")} and ${JSON.stringify(route)}`);
+    throw new Error(`forme-render-terminal/package: portable path collision between ${asciiDiagnostic(previous ?? "an existing parent path")} and ${asciiDiagnostic(route)}`);
   }
   const segments = folded.split("/");
   let ancestor = "";
@@ -698,7 +714,7 @@ function registerPortableFile(
     ancestor = ancestor.length === 0 ? segments[index]! : `${ancestor}/${segments[index]!}`;
     const ancestorRoute = filePaths.get(ancestor);
     if (ancestorRoute !== undefined) {
-      throw new Error(`forme-render-terminal/package: portable path collision between ${JSON.stringify(ancestorRoute)} and ${JSON.stringify(route)}`);
+      throw new Error(`forme-render-terminal/package: portable path collision between ${asciiDiagnostic(ancestorRoute)} and ${asciiDiagnostic(route)}`);
     }
     directoryPaths.add(ancestor);
   }
@@ -713,9 +729,12 @@ function arraySnapshot(value: unknown, maxLength: number, path: string): readonl
   const result: unknown[] = [];
   let count = 0;
   for (const name in value) {
-    if (!Object.prototype.hasOwnProperty.call(value, name)) throw new TypeError(`forme-render-terminal: ${path}.${name} must be an own property`);
+    if (name.length > 32 || hasLoneSurrogate(name) || !isSafeMetadataString(name)) {
+      throw new TypeError(`forme-render-terminal: ${path} contains an unsafe array property`);
+    }
+    if (!Object.prototype.hasOwnProperty.call(value, name)) throw new TypeError(`forme-render-terminal: ${path} contains an inherited array property`);
     if (++count > length) throw new TypeError(`forme-render-terminal: ${path} has too many elements`);
-    if (!/^(0|[1-9][0-9]*)$/.test(name) || Number(name) >= length) throw new TypeError(`forme-render-terminal: ${path}.${name} is unknown`);
+    if (!/^(0|[1-9][0-9]*)$/.test(name) || Number(name) >= length) throw new TypeError(`forme-render-terminal: ${path} contains an unknown array property`);
   }
   for (let index = 0; index < length; index++) {
     const descriptor = Object.getOwnPropertyDescriptor(value, String(index));
@@ -735,7 +754,7 @@ function validatePortableSegments(parts: readonly string[], field: string, final
       part === "__proto__" || part === "constructor" || part === "prototype" ||
       new TextEncoder().encode(part).byteLength + suffix > 255
     ) {
-      throw new TypeError(`forme-render-terminal/package: ${field} contains an unsafe portable path segment ${JSON.stringify(part)}`);
+      throw new TypeError(`forme-render-terminal/package: ${field} contains an unsafe portable path segment ${asciiDiagnostic(part)}`);
     }
   }
 }
@@ -748,7 +767,36 @@ function safeText(value: string): string {
 }
 
 function sanitizeMetadata(value: string): string {
-  return safeText(value).replace(/[\n\t]/g, "");
+  let output = "";
+  let index = 0;
+  let points = 0;
+  while (index < value.length && points < MAX_METADATA_CODE_POINTS) {
+    const point = value.codePointAt(index)!;
+    const character = String.fromCodePoint(point);
+    if (!/[\p{Cc}\p{Cf}\p{Cs}]/u.test(character)) output += character;
+    index += character.length;
+    points++;
+  }
+  return output;
+}
+
+function asciiDiagnostic(value: string): string {
+  let output = '"';
+  let index = 0;
+  let points = 0;
+  while (index < value.length && points < MAX_DIAGNOSTIC_CODE_POINTS) {
+    const point = value.codePointAt(index)!;
+    const character = String.fromCodePoint(point);
+    if (point >= 0x20 && point <= 0x7e) {
+      output += character === "\\" || character === '"' ? `\\${character}` : character;
+    } else {
+      output += `\\u{${point.toString(16)}}`;
+    }
+    index += character.length;
+    points++;
+  }
+  if (index < value.length) output += "...";
+  return `${output}\"`;
 }
 
 function isSafeMetadataString(value: string): boolean {

@@ -108,7 +108,10 @@ describe("render-terminal stage", () => {
     };
     await expect(consume(unrouted)).rejects.toThrow(/no route/);
     const hostilePath = { ...unrouted, sourcePath: "bad\u001b]52;c;x\u0007\u202E.md" };
-    await expect(consume(hostilePath)).rejects.toThrow(/bad\]52;c;x\.md/);
+    let message = "";
+    try { await consume(hostilePath); } catch (error) { message = (error as Error).message; }
+    expect(message).toContain("bad\\u{1b}]52;c;x\\u{7}\\u{202e}.md");
+    expect(message).not.toMatch(/[\u001b\u0007\u202e]/);
     await expect(consume(node(), { ...theme, theme: "missing" })).rejects.toThrow(/unresolved/);
   });
 
@@ -185,6 +188,10 @@ describe("render-terminal stage", () => {
     cycle.self = cycle;
     await expect(drain({ style: cycle })).rejects.toThrow(/cycles/);
     await expect(drain({ style: new Date() })).rejects.toThrow(/plain objects/);
+    await expect(drain({ ["x".repeat(257)]: true })).rejects.toThrow(/unsafe field name/);
+    const namedArray = ["screen"];
+    Object.defineProperty(namedArray, "x".repeat(33), { enumerable: true, value: true });
+    await expect(drain({ activeStyleContexts: namedArray })).rejects.toThrow(/unsafe array property/);
   });
 
   it("rejects malformed ContentNode and Document AST shapes at the boundary", async () => {
@@ -208,6 +215,7 @@ describe("render-terminal stage", () => {
       { ...node(), document: { type: "autolink", destination: "x", isEmail: "yes" } },
     ];
     for (const value of invalid) await expect(drain(value)).rejects.toThrow(/forme-render-terminal/);
+    await expect(drain({ ...node(), frontmatter: { ["x".repeat(257)]: true } })).rejects.toThrow(/unsafe field name/);
   });
 
   it("bounds adversarial document and raw-HTML structure", async () => {
@@ -327,6 +335,15 @@ describe("package-terminal stage", () => {
     await expect(packageTerminal.run(values([{ ...buffer, text: "safe\u001b]52;c;bad\u0007" }]) as never, {} as never, context())).rejects.toThrow(/non-SGR/);
     await expect(packageTerminal.run(values([{ ...buffer, text: "safe\rspoof" }]) as never, {} as never, context())).rejects.toThrow(/presentation controls/);
     await expect(packageTerminal.run(values([{ ...buffer, text: "\ud800" }]) as never, {} as never, context())).rejects.toThrow(/malformed Unicode/);
+    let diagnostic = "";
+    try {
+      await packageTerminal.run(values([{ ...buffer, route: `/${"x".repeat(5_000)}\u001b\u202e` }]) as never, {} as never, context());
+    } catch (error) {
+      diagnostic = (error as Error).message;
+    }
+    expect(diagnostic.length).toBeLessThan(512);
+    expect(diagnostic).toMatch(/unsafe route/);
+    expect(diagnostic).not.toMatch(/[\u001b\u202e]/);
   });
 
   it("supports an empty default-root artifact", async () => {
