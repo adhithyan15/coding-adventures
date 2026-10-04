@@ -238,7 +238,30 @@ fun mosaicIsPlainFileName(name: String): Boolean {
     for (index in 1 until visible.size) {
         if (mosaicIsSpace(visible[index - 1]) && mosaicIsSpace(visible[index])) return false
     }
-    return true
+    return !mosaicIsReservedDeviceName(name)
+}
+
+/**
+ * Windows device names: `CON`, `NUL.txt` or `com1.json` is the console,
+ * the null device or a serial port there, never a file. Refused on every
+ * host, so a name saves the same everywhere. Compared on the part before
+ * the first dot, trailing spaces removed, ASCII letters folded to upper case (only those: a host's own upper-casing differs on `ı`).
+ */
+val MOSAIC_RESERVED_DEVICE_NAMES: Set<String> = setOf(
+    "CON", "PRN", "AUX", "NUL", "CONIN\$", "CONOUT\$", "COM0", "COM1",
+    "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
+    "COM¹", "COM²", "COM³", "LPT0", "LPT1", "LPT2", "LPT3", "LPT4",
+    "LPT5", "LPT6", "LPT7", "LPT8", "LPT9", "LPT¹", "LPT²", "LPT³",
+)
+
+/** True when [name] is a Windows device name (see [MOSAIC_RESERVED_DEVICE_NAMES]). */
+fun mosaicIsReservedDeviceName(name: String): Boolean {
+    // ASCII letters only: every host's own upper-casing differs on some
+    // character (.NET's leaves `ı` alone, the others make it `I`).
+    val stem = name.substringBefore('.').trimEnd(' ')
+        .map { if (it in 'a'..'z') it - ('a' - 'A') else it }
+        .joinToString("")
+    return stem in MOSAIC_RESERVED_DEVICE_NAMES
 }
 
 private fun mosaicIsSpace(point: Int): Boolean =
@@ -288,14 +311,30 @@ val MOSAIC_EXECUTABLE_EXTENSIONS: Set<String> = setOf(
     "library-ms", "searchconnector-ms", "iso", "img", "vhd", "vhdx",
     // Linux desktops.
     "desktop", "sh", "run", "appimage", "deb", "rpm", "flatpakref",
+    // Documents that run code when opened: web pages and SVG (their script
+    // runs from the local file), saved web archives and shortcuts, and Office
+    // files that carry macros.
+    "html", "htm", "xhtml", "xht", "shtml", "svg", "svgz", "mht", "mhtml", "website",
+    "docm", "dotm", "xlsm", "xltm", "xlam", "pptm", "potm", "ppam", "ppsm", "sldm",
+    "xlsb", "xla",
+    // Scripts an installed interpreter runs on a double-click.
+    "py", "pyw", "pyz", "pyzw", "pyc",
+    // Shortcuts that fetch or connect: Excel web queries, SYLK, Remote Desktop.
+    "iqy", "slk", "rdp",
 )
 
 /** True when [name] ends in an extension from [MOSAIC_EXECUTABLE_EXTENSIONS]. */
 fun mosaicHasExecutableExtension(name: String): Boolean {
     val dot = name.lastIndexOf('.')
+    if (dot < 0) return false
+    val extension = name.substring(dot + 1)
+    // A non-ASCII extension counts as one: a lookalike letter (Cyrillic `е`
+    // in `ехе`) or a combining mark after `.exe` makes an extension no list
+    // can name but a reader takes for an executable one.
+    if (extension.any { it.code > 0x7F }) return true
     // Folded through upper case first: `ſ` (LONG S) lowercases to itself but
     // is `S` to a case-insensitive file system.
-    return dot >= 0 && name.substring(dot + 1).uppercase().lowercase() in MOSAIC_EXECUTABLE_EXTENSIONS
+    return extension.uppercase().lowercase() in MOSAIC_EXECUTABLE_EXTENSIONS
 }
 
 /** `files.open`: the outcome map, never an exception. */

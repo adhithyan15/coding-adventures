@@ -180,6 +180,20 @@ internal static class Program
         Check(MosaicPlatformEffects.RoutesToPlatform("somethingElse", Kinds("importAnki")) is null, "unowned custom");
     }
 
+    private static void CheckNameSafety()
+    {
+        // UI87 §3.1: Windows device names are never plain names, on any host.
+        foreach (var name in new[] { "CON", "con.txt", "Nul.json", "COM1.json", "lpt9", "COM\u00B9.json", "CON .txt", "CONIN$.log", "aux.tar.gz" })
+            Check(!MosaicPlatformEffects.IsPlainFileName(name), $"device name refused: {name}");
+        foreach (var name in new[] { "console.txt", "CONFIG.json", "aux-notes.txt", "COM10.json", "my.CON", "nul report.json", "CON\u0131N$.txt" })
+            Check(MosaicPlatformEffects.IsPlainFileName(name), $"not a device name: {name}");
+        // Active content and non-ASCII extensions count as executable.
+        foreach (var name in new[] { "page.html", "page.HTM", "card.svg", "archive.mht", "shortcut.website", "report.xlsm", "deck.pptm", "tool.py", "invoice.\u0435x\u0435", "setup.exe\u0301", "macros.xlsb", "addin.xla", "link.iqy", "sheet.slk", "remote.rdp", "app.pyzw", "cache.pyc" })
+            Check(MosaicPlatformEffects.HasExecutableExtension(name), $"executable: {name}");
+        foreach (var name in new[] { "notes.txt", "data.xlsx", "report.docx", "photo.png" })
+            Check(!MosaicPlatformEffects.HasExecutableExtension(name), $"not executable: {name}");
+    }
+
     private static void CheckStartLocation()
     {
         // UI59 §2: a "pictures only" open starts in the Pictures library.
@@ -599,6 +613,7 @@ internal static class Program
         {
             CheckRouting();
             CheckStartLocation();
+        CheckNameSafety();
             CheckSave(directory);
             CheckSaveRefusals(directory);
             CheckOpen(directory);

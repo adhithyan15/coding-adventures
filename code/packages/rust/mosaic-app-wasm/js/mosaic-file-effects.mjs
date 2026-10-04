@@ -105,7 +105,31 @@ export function isPlainFileName(name) {
     && !new RegExp(`${BLANK}{2,}`, 'u').test(visible)
     // Surrogates (a lone one cannot be a file name), and unassigned or
     // private-use code points, whose meaning varies by Unicode version.
-    && !/[\\/:\p{Cc}\p{Cf}\p{Zl}\p{Zp}\p{Cs}\p{Cn}\p{Co}]/u.test(name);
+    && !/[\\/:\p{Cc}\p{Cf}\p{Zl}\p{Zp}\p{Cs}\p{Cn}\p{Co}]/u.test(name)
+    && !isReservedDeviceName(name);
+}
+
+/**
+ * Windows device names: `CON`, `NUL.txt` or `com1.json` is the console,
+ * the null device or a serial port there, never a file. Refused on every
+ * host, so a name saves the same everywhere. Compared on the part before
+ * the first dot, trailing spaces removed, ASCII letters folded to upper case (only those: a host's own upper-casing differs on `ı`).
+ */
+export const RESERVED_DEVICE_NAMES = new Set([
+  'CON', 'PRN', 'AUX', 'NUL', 'CONIN$', 'CONOUT$', 'COM0', 'COM1',
+  'COM2', 'COM3', 'COM4', 'COM5', 'COM6', 'COM7', 'COM8', 'COM9',
+  'COM¹', 'COM²', 'COM³', 'LPT0', 'LPT1', 'LPT2', 'LPT3', 'LPT4',
+  'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9', 'LPT¹', 'LPT²', 'LPT³',
+]);
+
+/** True when `name` is a Windows device name (see `RESERVED_DEVICE_NAMES`). */
+export function isReservedDeviceName(name) {
+  const text = String(name);
+  const dot = text.indexOf('.');
+  const stem = (dot < 0 ? text : text.slice(0, dot)).replace(/ +$/u, '');
+  // ASCII letters only: every host's own upper-casing differs on some
+  // character (.NET's leaves `ı` alone, the others make it `I`).
+  return RESERVED_DEVICE_NAMES.has(stem.replace(/[a-z]/g, letter => letter.toUpperCase()));
 }
 
 /**
@@ -127,14 +151,30 @@ export const EXECUTABLE_EXTENSIONS = new Set([
   'library-ms', 'searchconnector-ms', 'iso', 'img', 'vhd', 'vhdx',
   // Linux desktops.
   'desktop', 'sh', 'run', 'appimage', 'deb', 'rpm', 'flatpakref',
+  // Documents that run code when opened: web pages and SVG (their script
+  // runs from the local file), saved web archives and shortcuts, and Office
+  // files that carry macros.
+  'html', 'htm', 'xhtml', 'xht', 'shtml', 'svg', 'svgz', 'mht', 'mhtml', 'website',
+  'docm', 'dotm', 'xlsm', 'xltm', 'xlam', 'pptm', 'potm', 'ppam', 'ppsm', 'sldm',
+  'xlsb', 'xla',
+  // Scripts an installed interpreter runs on a double-click.
+  'py', 'pyw', 'pyz', 'pyzw', 'pyc',
+  // Shortcuts that fetch or connect: Excel web queries, SYLK, Remote Desktop.
+  'iqy', 'slk', 'rdp',
 ]);
 
 /** True when `name` ends in an extension from `EXECUTABLE_EXTENSIONS`. */
 export function hasExecutableExtension(name) {
   const dot = String(name).lastIndexOf('.');
+  if (dot < 0) return false;
+  const extension = String(name).slice(dot + 1);
+  // A non-ASCII extension counts as one: a lookalike letter (Cyrillic `е` in
+  // `ехе`) or a combining mark after `.exe` makes an extension no list can
+  // name but a reader takes for an executable one.
+  if (/[^\x00-\x7F]/u.test(extension)) return true;
   // Folded through upper case first: `ſ` (LONG S) is `S` to a
   // case-insensitive file system.
-  return dot >= 0 && EXECUTABLE_EXTENSIONS.has(String(name).slice(dot + 1).toUpperCase().toLowerCase());
+  return EXECUTABLE_EXTENSIONS.has(extension.toUpperCase().toLowerCase());
 }
 
 function mimeTypeFor(file) {
