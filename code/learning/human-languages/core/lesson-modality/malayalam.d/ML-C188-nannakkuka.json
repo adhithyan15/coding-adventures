@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C188-nannakkuka",
+    "language": "malayalam",
+    "chapter": 188,
+    "sequence": 8230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62e4bd9b29e427b6"
+  },
+  "findings": []
+}

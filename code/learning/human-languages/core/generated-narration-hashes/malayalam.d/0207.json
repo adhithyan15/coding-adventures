@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:fa59c3c70442018f",
+  "lessonIds": [
+    "ML-C207-tara",
+    "ML-C207-melukutiri",
+    "ML-C207-catti",
+    "ML-C207-tavi",
+    "ML-C207-arippa",
+    "ML-R207-first-pass-words-from-chapters-199-202",
+    "ML-R207-second-pass-words-from-chapters-203-207"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch207.txt",
+  "json": "malayalam/narration/ch207.json",
+  "textHash": "fnv1a64:c2dccf19b8ba8163",
+  "jsonHash": "fnv1a64:832b5a5c5c499ee4",
+  "findings": []
+}

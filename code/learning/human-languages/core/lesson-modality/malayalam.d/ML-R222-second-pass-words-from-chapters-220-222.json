@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R222-second-pass-words-from-chapters-220-222",
+    "language": "malayalam",
+    "chapter": 222,
+    "sequence": 10030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:239330ed6db9a5bf"
+  },
+  "findings": []
+}

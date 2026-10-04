@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:5a3517136e28eabb",
+  "lessonIds": [
+    "ML-C218-valam",
+    "ML-C218-canakam",
+    "ML-C218-kala2",
+    "ML-C218-cena",
+    "ML-C218-mattanna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch218.txt",
+  "json": "malayalam/narration/ch218.json",
+  "textHash": "fnv1a64:4fd1fa26d8952a3a",
+  "jsonHash": "fnv1a64:62904ef6bd8b0f36",
+  "findings": []
+}

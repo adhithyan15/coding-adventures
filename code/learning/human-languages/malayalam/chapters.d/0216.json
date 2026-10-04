@@ -1,0 +1,19 @@
+{
+  "chapter": 216,
+  "title": "Copper, Plastic, Plank, Brick, Cement",
+  "label": "ch:ml-copper-plastic-plank-brick-cement",
+  "canDo": "I can say copper, plastic, a plank, a brick and cement.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-R216-second-pass-words-from-chapters-212-216",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 216: I can say copper, plastic, a plank, a brick and cement.",
+    "assesses": [
+      "ML-LEX-C216-VASTU216-03",
+      "ML-LEX-C216-VASTU216-04",
+      "ML-LEX-C216-VASTU216-05"
+    ]
+  }
+}

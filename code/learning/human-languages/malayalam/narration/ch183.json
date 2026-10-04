@@ -1,0 +1,626 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 183,
+  "title": "To choose, To use, To try, To get, To lose",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e3437734e054b800",
+  "lessons": [
+    {
+      "id": "ML-C183-tirannetukkuka",
+      "sequence": 7940,
+      "title": "തിരഞ്ഞെടുക്കുക (tiraññeṭukkuka) — to choose",
+      "headword": "തിരഞ്ഞെടുക്കുക",
+      "romanization": "tiraññeṭukkuka",
+      "gloss": "to choose",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a99ab85b0982601f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to roast, then the Malayalam for to pour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തിരഞ്ഞെടുക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തിരഞ്ഞെടുക്കുക — tiraññeṭukkuka — \"to choose\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiraññeṭukkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiraññeṭukkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiraññeṭukkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiraññeṭukkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tiraññeṭukkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tiraññeṭukkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to roast, then the Malayalam for to pour, then say tiraññeṭukkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to roast, then the Malayalam for to pour, then say *tiraññeṭukkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തിരഞ്ഞെടുക്കുക (tiraññeṭukkuka) mean? (\"To choose\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C183-upayogikkuka",
+      "sequence": 7950,
+      "title": "ഉപയോഗിക്കുക (upayōgikkuka) — to use",
+      "headword": "ഉപയോഗിക്കുക",
+      "romanization": "upayōgikkuka",
+      "gloss": "to use",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e9221e97c6f32d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to pour, then the Malayalam for to choose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഉപയോഗിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉപയോഗിക്കുക — upayōgikkuka — \"to use\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upayōgikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upayōgikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upayōgikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upayōgikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say upayōgikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *upayōgikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to pour, then the Malayalam for to choose, then say upayōgikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to pour, then the Malayalam for to choose, then say *upayōgikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഉപയോഗിക്കുക (upayōgikkuka) mean? (\"To use\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C183-sramikkuka",
+      "sequence": 7960,
+      "title": "ശ്രമിക്കുക (śramikkuka) — to try",
+      "headword": "ശ്രമിക്കുക",
+      "romanization": "śramikkuka",
+      "gloss": "to try",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:09e043e377aa023e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to choose, then the Malayalam for to use."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ശ്രമിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശ്രമിക്കുക — śramikkuka — \"to try\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śramikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śramikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śramikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śramikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say śramikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *śramikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to choose, then the Malayalam for to use, then say śramikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to choose, then the Malayalam for to use, then say *śramikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ശ്രമിക്കുക (śramikkuka) mean? (\"To try\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C183-kittuka",
+      "sequence": 7970,
+      "title": "കിട്ടുക (kiṭṭuka) — to get, to receive",
+      "headword": "കിട്ടുക",
+      "romanization": "kiṭṭuka",
+      "gloss": "to get, to receive",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:84ef7080118cb98c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to use, then the Malayalam for to try."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കിട്ടുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കിട്ടുക — kiṭṭuka — \"to get, to receive\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kiṭṭuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kiṭṭuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kiṭṭuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kiṭṭuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kiṭṭuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kiṭṭuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to use, then the Malayalam for to try, then say kiṭṭuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to use, then the Malayalam for to try, then say *kiṭṭuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കിട്ടുക (kiṭṭuka) mean? (\"To get, to receive\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C183-nastappetuka",
+      "sequence": 7980,
+      "title": "നഷ്ടപ്പെടുക (naṣṭappeṭuka) — to lose",
+      "headword": "നഷ്ടപ്പെടുക",
+      "romanization": "naṣṭappeṭuka",
+      "gloss": "to lose",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40a732e718b31bcc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to try, then the Malayalam for to get."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നഷ്ടപ്പെടുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നഷ്ടപ്പെടുക — naṣṭappeṭuka — \"to lose\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṣṭappeṭuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṣṭappeṭuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṣṭappeṭuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṣṭappeṭuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say naṣṭappeṭuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *naṣṭappeṭuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to try, then the Malayalam for to get, then say naṣṭappeṭuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to try, then the Malayalam for to get, then say *naṣṭappeṭuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നഷ്ടപ്പെടുക (naṣṭappeṭuka) mean? (\"To lose\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

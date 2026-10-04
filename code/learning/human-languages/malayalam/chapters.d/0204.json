@@ -1,0 +1,19 @@
+{
+  "chapter": 204,
+  "title": "Poor, Dirty, Smooth, Rough, Round",
+  "label": "ch:ml-poor-dirty-smooth-rough-round",
+  "canDo": "I can say poor, dirty, smooth, rough and round.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ML-C204-urunta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 204: I can say poor, dirty, smooth, rough and round.",
+    "assesses": [
+      "ML-LEX-C204-GUNAM204-03",
+      "ML-LEX-C204-GUNAM204-04",
+      "ML-LEX-C204-GUNAM204-05"
+    ]
+  }
+}

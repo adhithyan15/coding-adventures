@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:5a75ad6d1f603ba8",
+  "lessonIds": [
+    "ML-C194-prasavam",
+    "ML-C194-opparesan",
+    "ML-C194-kelvi",
+    "ML-C194-arogyam",
+    "ML-C194-kanpola"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch194.txt",
+  "json": "malayalam/narration/ch194.json",
+  "textHash": "fnv1a64:c0b10861b71048e2",
+  "jsonHash": "fnv1a64:177d584daf17e4f5",
+  "findings": []
+}

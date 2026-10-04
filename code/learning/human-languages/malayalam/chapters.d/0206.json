@@ -1,0 +1,19 @@
+{
+  "chapter": 206,
+  "title": "Naughty, Obedient, Selfish, Permanent, Single",
+  "label": "ch:ml-naughty-obedient-selfish-permanent-single",
+  "canDo": "I can say naughty, obedient, selfish, permanent and single.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ML-C206-orra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 206: I can say naughty, obedient, selfish, permanent and single.",
+    "assesses": [
+      "ML-LEX-C206-GUNAM206-03",
+      "ML-LEX-C206-GUNAM206-04",
+      "ML-LEX-C206-GUNAM206-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C196-ituvare",
+    "language": "malayalam",
+    "chapter": 196,
+    "sequence": 8610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2295f5164a2c2add"
+  },
+  "findings": []
+}

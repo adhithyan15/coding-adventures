@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:e1b2dbcc7fd98a93",
+  "lessonIds": [
+    "ML-C220-sahapravarttakan",
+    "ML-C220-udyogasthan",
+    "ML-C220-gumastan",
+    "ML-C220-enciniyar",
+    "ML-C220-vakkil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch220.txt",
+  "json": "malayalam/narration/ch220.json",
+  "textHash": "fnv1a64:965148a3d37df94e",
+  "jsonHash": "fnv1a64:183a52584b2a0efc",
+  "findings": []
+}

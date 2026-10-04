@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C204-alukkulla",
+    "language": "malayalam",
+    "chapter": 204,
+    "sequence": 9040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d0fd0e36f862be72"
+  },
+  "findings": []
+}

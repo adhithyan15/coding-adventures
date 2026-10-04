@@ -1,0 +1,19 @@
+{
+  "chapter": 185,
+  "title": "To resign, To inform, To charge, To fly, To follow",
+  "label": "ch:ml-to-resign-to-inform-to-charge-to-fly-to-follow",
+  "canDo": "I can say to resign, to inform, to charge, to fly and to follow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C185-pintutaruka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 185: I can say to resign, to inform, to charge, to fly and to follow.",
+    "assesses": [
+      "ML-LEX-C185-KRIYA185-03",
+      "ML-LEX-C185-KRIYA185-04",
+      "ML-LEX-C185-KRIYA185-05"
+    ]
+  }
+}

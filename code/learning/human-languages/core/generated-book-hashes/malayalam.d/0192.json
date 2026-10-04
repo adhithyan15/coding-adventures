@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:bcd3b7f04e6319f9",
+  "lessonIds": [
+    "ML-C192-mukham",
+    "ML-C192-sariram",
+    "ML-C192-tonta",
+    "ML-C192-tuta",
+    "ML-C192-ara"
+  ],
+  "tex": "malayalam/book/chapters/ch192-face-body-throat-thigh-waist.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C207-melukutiri",
+    "language": "malayalam",
+    "chapter": 207,
+    "sequence": 9190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73c307f0c4fd12bc"
+  },
+  "findings": []
+}

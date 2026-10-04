@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:dc3ff6002215cb0b",
+  "lessonIds": [
+    "ML-C201-atupole",
+    "ML-C201-olike",
+    "ML-C201-bhagyavasal",
+    "ML-C201-nirbhagyavasal",
+    "ML-C201-ennaneyenkilum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch201.txt",
+  "json": "malayalam/narration/ch201.json",
+  "textHash": "fnv1a64:12633fb04405bd6e",
+  "jsonHash": "fnv1a64:748abed9b27fdfbb",
+  "findings": []
+}

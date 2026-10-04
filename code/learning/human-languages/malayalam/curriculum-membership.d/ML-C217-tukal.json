@@ -1,0 +1,11 @@
+{
+  "id": "ML-C217-tukal",
+  "pathSegment": "ML-PATH-217-VASTU217",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-217-VASTU217",
+      "order": 2
+    }
+  ]
+}

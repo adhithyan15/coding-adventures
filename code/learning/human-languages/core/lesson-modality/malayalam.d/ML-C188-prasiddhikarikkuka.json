@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C188-prasiddhikarikkuka",
+    "language": "malayalam",
+    "chapter": 188,
+    "sequence": 8220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6359a3c84f162507"
+  },
+  "findings": []
+}

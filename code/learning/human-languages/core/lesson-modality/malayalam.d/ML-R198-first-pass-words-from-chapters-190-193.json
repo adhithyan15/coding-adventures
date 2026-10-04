@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R198-first-pass-words-from-chapters-190-193",
+    "language": "malayalam",
+    "chapter": 198,
+    "sequence": 8760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:324f144f2f3f32d6"
+  },
+  "findings": []
+}

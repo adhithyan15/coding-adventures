@@ -1,0 +1,11 @@
+{
+  "id": "ML-C181-katakkuka",
+  "pathSegment": "ML-PATH-181-KRIYA181",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-181-KRIYA181",
+      "order": 2
+    }
+  ]
+}

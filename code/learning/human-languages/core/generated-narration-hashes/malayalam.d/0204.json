@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:4a0ad8fe6e6f6941",
+  "lessonIds": [
+    "ML-C204-pavam",
+    "ML-C204-alukkulla",
+    "ML-C204-minusamulla",
+    "ML-C204-parukkan",
+    "ML-C204-urunta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch204.txt",
+  "json": "malayalam/narration/ch204.json",
+  "textHash": "fnv1a64:4f766cd2e28501b3",
+  "jsonHash": "fnv1a64:63a2628f1143cbe3",
+  "findings": []
+}

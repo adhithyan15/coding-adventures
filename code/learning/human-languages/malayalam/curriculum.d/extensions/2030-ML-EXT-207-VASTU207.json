@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-207-VASTU207",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say the floor, a candle, a cooking pan, a ladle and a sieve.",
+  "prerequisites": []
+}

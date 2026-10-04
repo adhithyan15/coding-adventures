@@ -1,0 +1,19 @@
+{
+  "chapter": 198,
+  "title": "South, East, West, Against, Around",
+  "label": "ch:ml-south-east-west-against-around",
+  "canDo": "I can say south, east, west, against and around.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ML-R198-second-pass-words-from-chapters-194-198",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 198: I can say south, east, west, against and around.",
+    "assesses": [
+      "ML-LEX-C198-STHALAM198-03",
+      "ML-LEX-C198-STHALAM198-04",
+      "ML-LEX-C198-STHALAM198-05"
+    ]
+  }
+}

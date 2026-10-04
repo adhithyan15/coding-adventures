@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C193-asuya",
+    "language": "malayalam",
+    "chapter": 193,
+    "sequence": 8470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a4bd1d2a630d9952"
+  },
+  "findings": []
+}

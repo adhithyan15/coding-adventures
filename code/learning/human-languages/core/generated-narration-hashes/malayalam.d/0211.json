@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:af320ddc4ea40c0a",
+  "lessonIds": [
+    "ML-C211-dampatikal",
+    "ML-C211-varan",
+    "ML-C211-vadhu",
+    "ML-C211-aparicitan",
+    "ML-C211-partti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch211.txt",
+  "json": "malayalam/narration/ch211.json",
+  "textHash": "fnv1a64:d7feb4e845252acd",
+  "jsonHash": "fnv1a64:b063847d16c5b1b6",
+  "findings": []
+}

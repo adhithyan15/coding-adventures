@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:94c24f03c7292bc1",
+  "lessonIds": [
+    "ML-C195-ennum",
+    "ML-C195-tiyati",
+    "ML-C195-varantyam",
+    "ML-C195-pettennu",
+    "ML-C195-munkutti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch195.txt",
+  "json": "malayalam/narration/ch195.json",
+  "textHash": "fnv1a64:57c7a65fcc1fa68c",
+  "jsonHash": "fnv1a64:24b0b3530cb02cf9",
+  "findings": []
+}

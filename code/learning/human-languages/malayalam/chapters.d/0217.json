@@ -1,0 +1,19 @@
+{
+  "chapter": 217,
+  "title": "Cotton, Silk, Leather, Brass, Lime",
+  "label": "ch:ml-cotton-silk-leather-brass-lime",
+  "canDo": "I can say cotton, silk, leather, brass and lime.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C217-cunnampu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 217: I can say cotton, silk, leather, brass and lime.",
+    "assesses": [
+      "ML-LEX-C217-VASTU217-03",
+      "ML-LEX-C217-VASTU217-04",
+      "ML-LEX-C217-VASTU217-05"
+    ]
+  }
+}

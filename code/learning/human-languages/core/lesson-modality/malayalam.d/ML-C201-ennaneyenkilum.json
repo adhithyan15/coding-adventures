@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C201-ennaneyenkilum",
+    "language": "malayalam",
+    "chapter": 201,
+    "sequence": 8920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bcc9cfce5d803254"
+  },
+  "findings": []
+}

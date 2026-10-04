@@ -1,0 +1,15 @@
+{
+  "language": "malayalam",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:521c2e984256e7f8",
+  "lessonIds": [
+    "ML-C222-bhumisastram",
+    "ML-C222-sahityam",
+    "ML-C222-vyakaranam",
+    "ML-C222-barbar",
+    "ML-C222-tayyalkkaran",
+    "ML-R222-first-pass-words-from-chapters-217-219",
+    "ML-R222-second-pass-words-from-chapters-220-222"
+  ],
+  "tex": "malayalam/book/chapters/ch222-geography-literature-grammar-barber-tailor.tex"
+}

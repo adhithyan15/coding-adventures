@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 183,
+  "sourceHash": "fnv1a64:e3437734e054b800",
+  "lessonIds": [
+    "ML-C183-tirannetukkuka",
+    "ML-C183-upayogikkuka",
+    "ML-C183-sramikkuka",
+    "ML-C183-kittuka",
+    "ML-C183-nastappetuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch183.txt",
+  "json": "malayalam/narration/ch183.json",
+  "textHash": "fnv1a64:5d9489d7ff17958e",
+  "jsonHash": "fnv1a64:aece338e9dcafdf9",
+  "findings": []
+}

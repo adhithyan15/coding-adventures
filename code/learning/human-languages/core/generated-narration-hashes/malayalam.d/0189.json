@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:deea379ea97c0575",
+  "lessonIds": [
+    "ML-C189-tuppuka",
+    "ML-C189-piliyuka",
+    "ML-C189-kulukkuka",
+    "ML-C189-uruttuka",
+    "ML-C189-ilayuka",
+    "ML-R189-first-pass-words-from-chapters-181-184",
+    "ML-R189-second-pass-words-from-chapters-185-189"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch189.txt",
+  "json": "malayalam/narration/ch189.json",
+  "textHash": "fnv1a64:92f4fe125f12d865",
+  "jsonHash": "fnv1a64:43c34ab6d2441a0f",
+  "findings": []
+}

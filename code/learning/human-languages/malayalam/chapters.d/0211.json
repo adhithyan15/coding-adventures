@@ -1,0 +1,19 @@
+{
+  "chapter": 211,
+  "title": "Married couple, Bridegroom, Bride, Stranger, Party",
+  "label": "ch:ml-married-couple-bridegroom-bride-stranger-party",
+  "canDo": "I can say a married couple, a bridegroom, a bride, a stranger and a party.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C211-partti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 211: I can say a married couple, a bridegroom, a bride, a stranger and a party.",
+    "assesses": [
+      "ML-LEX-C211-VASTU211-03",
+      "ML-LEX-C211-VASTU211-04",
+      "ML-LEX-C211-VASTU211-05"
+    ]
+  }
+}

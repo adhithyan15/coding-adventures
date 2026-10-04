@@ -1,0 +1,19 @@
+{
+  "chapter": 207,
+  "title": "Floor, Candle, Cooking pan, Ladle, Sieve",
+  "label": "ch:ml-floor-candle-cooking-pan-ladle-sieve",
+  "canDo": "I can say the floor, a candle, a cooking pan, a ladle and a sieve.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-R207-second-pass-words-from-chapters-203-207",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 207: I can say the floor, a candle, a cooking pan, a ladle and a sieve.",
+    "assesses": [
+      "ML-LEX-C207-VASTU207-03",
+      "ML-LEX-C207-VASTU207-04",
+      "ML-LEX-C207-VASTU207-05"
+    ]
+  }
+}

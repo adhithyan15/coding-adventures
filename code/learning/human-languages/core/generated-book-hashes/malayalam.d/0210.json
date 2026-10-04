@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:9427426c71c44299",
+  "lessonIds": [
+    "ML-C210-lageju",
+    "ML-C210-sirru",
+    "ML-C210-laisansu",
+    "ML-C210-baikku",
+    "ML-C210-taksi"
+  ],
+  "tex": "malayalam/book/chapters/ch210-luggage-seat-licence-motorbike-taxi.tex"
+}

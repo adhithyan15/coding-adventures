@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C200-pakaram",
+    "language": "malayalam",
+    "chapter": 200,
+    "sequence": 8840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52c72ef5a4209569"
+  },
+  "findings": []
+}

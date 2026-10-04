@@ -1,0 +1,19 @@
+{
+  "chapter": 184,
+  "title": "To break, To get better, To exercise, To fill in, To sign",
+  "label": "ch:ml-to-break-to-get-better-to-exercise-to-fill-in-to-sign",
+  "canDo": "I can say to break, to get better, to exercise, to fill in and to sign.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C184-oppituka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 184: I can say to break, to get better, to exercise, to fill in and to sign.",
+    "assesses": [
+      "ML-LEX-C184-KRIYA184-03",
+      "ML-LEX-C184-KRIYA184-04",
+      "ML-LEX-C184-KRIYA184-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:fdd9e4549dfdd623",
+  "lessonIds": [
+    "ML-C221-vakku",
+    "ML-C221-vakyam",
+    "ML-C221-phisu",
+    "ML-C221-sahapathi",
+    "ML-C221-vidyabhyasam"
+  ],
+  "tex": "malayalam/book/chapters/ch221-word-sentence-fees-classmate-education.tex"
+}

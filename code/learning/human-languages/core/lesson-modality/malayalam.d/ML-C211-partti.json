@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C211-partti",
+    "language": "malayalam",
+    "chapter": 211,
+    "sequence": 9440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2cc926fb78173ff9"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-203-GUNAM203",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "ML-EXT-203-GUNAM203"
+  ],
+  "after": []
+}

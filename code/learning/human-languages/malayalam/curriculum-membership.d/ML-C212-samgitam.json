@@ -1,0 +1,11 @@
+{
+  "id": "ML-C212-samgitam",
+  "pathSegment": "ML-PATH-212-VASTU212",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-212-VASTU212",
+      "order": 1
+    }
+  ]
+}

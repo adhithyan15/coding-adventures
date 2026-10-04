@@ -1,0 +1,11 @@
+{
+  "id": "ML-C203-irukiya",
+  "pathSegment": "ML-PATH-203-GUNAM203",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-203-GUNAM203",
+      "order": 3
+    }
+  ]
+}

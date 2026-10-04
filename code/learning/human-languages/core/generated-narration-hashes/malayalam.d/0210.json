@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:a176bca9b7c522ff",
+  "lessonIds": [
+    "ML-C210-lageju",
+    "ML-C210-sirru",
+    "ML-C210-laisansu",
+    "ML-C210-baikku",
+    "ML-C210-taksi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch210.txt",
+  "json": "malayalam/narration/ch210.json",
+  "textHash": "fnv1a64:e4222aa7fcb9df24",
+  "jsonHash": "fnv1a64:4fd3196901e49290",
+  "findings": []
+}

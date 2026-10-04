@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C182-olikkuka",
+    "language": "malayalam",
+    "chapter": 182,
+    "sequence": 7930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8486f7bf2ba69391"
+  },
+  "findings": []
+}

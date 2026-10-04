@@ -1,0 +1,11 @@
+{
+  "id": "ML-C210-laisansu",
+  "pathSegment": "ML-PATH-210-VASTU210",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-210-VASTU210",
+      "order": 2
+    }
+  ]
+}

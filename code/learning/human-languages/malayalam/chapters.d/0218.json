@@ -1,0 +1,19 @@
+{
+  "chapter": 218,
+  "title": "Manure, Cow dung, Weed, Elephant-foot yam, Pumpkin",
+  "label": "ch:ml-manure-cow-dung-weed-elephant-foot-yam-pumpkin",
+  "canDo": "I can say manure, cow dung, a weed, elephant-foot yam and a pumpkin.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C218-mattanna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 218: I can say manure, cow dung, a weed, elephant-foot yam and a pumpkin.",
+    "assesses": [
+      "ML-LEX-C218-VASTU218-03",
+      "ML-LEX-C218-VASTU218-04",
+      "ML-LEX-C218-VASTU218-05"
+    ]
+  }
+}
