@@ -532,7 +532,9 @@ through semantic IR and backend-neutral paint, including CSS percentage opacity
 values. Pixel and percentage class border radii likewise reach backend-neutral
 rectangle geometry, with percentages resolving against the shorter node edge,
 and `currentColor` node fills and strokes resolve against the final label color
-before opacity composition. Relative `bolder` and `lighter`
+before opacity composition. Three/four/eight-digit CSS hex colors and transparent
+text colors preserve authored alpha through glyph and node opacity composition.
+Relative `bolder` and `lighter`
 font weights resolve against the default weight, integer weights from 1 through
 1000 survive into native variable-font matching, and `oblique` font style lowers
 through the existing backend-neutral italic face selection. Positive pixel,

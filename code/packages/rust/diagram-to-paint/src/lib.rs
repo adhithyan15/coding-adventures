@@ -1208,13 +1208,16 @@ fn full_size_kana(value: &str) -> String {
 }
 
 fn with_opacity(color: &str, opacity: f64) -> String {
-    let hex = color.trim_start_matches('#');
-    if hex.len() == 6 {
-        if let (Ok(r), Ok(g), Ok(b)) = (u8::from_str_radix(&hex[0..2], 16), u8::from_str_radix(&hex[2..4], 16), u8::from_str_radix(&hex[4..6], 16)) {
-            return format!("rgba({r},{g},{b},{})", opacity.clamp(0.0, 1.0));
-        }
+    if let Some(parsed) = parse_css_color(color) {
+        let alpha = f64::from(parsed.a) / 255.0 * opacity.clamp(0.0, 1.0);
+        return format!("rgba({},{},{},{})", parsed.r, parsed.g, parsed.b, css_alpha(alpha));
     }
     color.to_string()
+}
+
+fn css_alpha(alpha: f64) -> String {
+    let value = format!("{:.6}", alpha.clamp(0.0, 1.0));
+    value.trim_end_matches('0').trim_end_matches('.').to_string()
 }
 
 fn color_with_opacity(mut color: Color, opacity: f64) -> Color {
@@ -1991,22 +1994,34 @@ fn endpoint_marker(edge: &LayoutedGraphEdge, at_start: bool) -> Vec<PaintInstruc
 /// Convert a diagram-ir color string (CSS hex or "none") to a layout-ir Color.
 /// Falls back to opaque black when the string is not a supported hex format.
 fn css_to_color(css: &str) -> Color {
-    let s = css.trim_start_matches('#');
-    if s.len() == 6 {
-        if let (Ok(r), Ok(g), Ok(b)) = (
-            u8::from_str_radix(&s[0..2], 16),
-            u8::from_str_radix(&s[2..4], 16),
-            u8::from_str_radix(&s[4..6], 16),
-        ) {
-            return Color { r, g, b, a: 255 };
-        }
+    parse_css_color(css).unwrap_or(Color { r: 0, g: 0, b: 0, a: 255 })
+}
+
+fn parse_css_color(css: &str) -> Option<Color> {
+    if css.eq_ignore_ascii_case("transparent") {
+        return Some(Color { r: 0, g: 0, b: 0, a: 0 });
     }
-    Color {
-        r: 0,
-        g: 0,
-        b: 0,
-        a: 255,
-    } // opaque black fallback
+    let value = css.strip_prefix('#')?;
+    if !value.is_ascii() || !value.bytes().all(|byte| byte.is_ascii_hexdigit()) {
+        return None;
+    }
+    let byte = |source: &str| u8::from_str_radix(source, 16).ok();
+    let nibble = |source: &str| byte(source).map(|value| value * 17);
+    match value.len() {
+        3 | 4 => Some(Color {
+            r: nibble(&value[0..1])?,
+            g: nibble(&value[1..2])?,
+            b: nibble(&value[2..3])?,
+            a: if value.len() == 4 { nibble(&value[3..4])? } else { 255 },
+        }),
+        6 | 8 => Some(Color {
+            r: byte(&value[0..2])?,
+            g: byte(&value[2..4])?,
+            b: byte(&value[4..6])?,
+            a: if value.len() == 8 { byte(&value[6..8])? } else { 255 },
+        }),
+        _ => None,
+    }
 }
 
 fn text_node(
@@ -7094,6 +7109,15 @@ mod tests {
     }
 
     #[test]
+    fn css_colors_preserve_shorthand_and_alpha() {
+        assert_eq!(css_to_color("#369"), Color { r: 51, g: 102, b: 153, a: 255 });
+        assert_eq!(css_to_color("#369c"), Color { r: 51, g: 102, b: 153, a: 204 });
+        assert_eq!(css_to_color("#336699cc"), Color { r: 51, g: 102, b: 153, a: 204 });
+        assert_eq!(css_to_color("transparent"), Color { r: 0, g: 0, b: 0, a: 0 });
+        assert_eq!(with_opacity("#336699cc", 0.5), "rgba(51,102,153,0.4)");
+    }
+
+    #[test]
     fn chart_accessibility_metadata_reaches_paint_scene() {
         let shaper = FakeShaper;
         let metrics = FakeMetrics;
@@ -7147,7 +7171,7 @@ mod tests {
                 style: Some(diagram_ir::TreemapStyle {
                     node: diagram_ir::DiagramStyle {
                         fill: Some("currentColor".into()), stroke: Some("currentcolor".into()), stroke_width: Some(3.0),
-                        stroke_dash: Some(vec![5.0, 2.0]), text_color: Some("#78350f".into()), font_size: Some(17.0),
+                        stroke_dash: Some(vec![5.0, 2.0]), text_color: Some("#78350fcc".into()), font_size: Some(17.0),
                         font_weight: Some(700), font_italic: Some(true), font_family: Some("Avenir".into()), corner_radius: Some(9.0),
                     },
                     font_size: Some(diagram_ir::TreemapFontSize::Factor(1.25)),
@@ -7419,8 +7443,8 @@ mod tests {
             Some(&"Allocation treemap".to_string())
         );
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
-            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("rgba(120,53,15,0.4)")
-                && rect.stroke.as_deref() == Some("rgba(120,53,15,0.4)")
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("rgba(120,53,15,0.32)")
+                && rect.stroke.as_deref() == Some("rgba(120,53,15,0.32)")
                 && rect.stroke_width == Some(3.0)
                 && rect.corner_radius == Some(46.0)
                 && rect.stroke_dash.as_deref() == Some(&[5.0, 2.0][..])
