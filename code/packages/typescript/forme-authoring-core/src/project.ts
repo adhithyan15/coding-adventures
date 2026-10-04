@@ -180,6 +180,14 @@ export function validateAuthoringRevision(value: unknown): string {
   return value;
 }
 
+/** Validate one canonical base64-encoded SHA-256 publication identity. */
+export function validateAuthoringManifestSha256(value: unknown): string {
+  if (typeof value !== "string" || !SHA256_BASE64.test(value)) {
+    throw new TypeError("authoring manifest identity must be a canonical base64 SHA-256 digest");
+  }
+  return value;
+}
+
 function stringValue(
   value: unknown,
   path: string,
@@ -283,8 +291,10 @@ function publicationRecord(
     ["authoringRevision", "manifestSha256", "targetId"],
     { nodes: 0, seen, limits },
   );
-  const manifestSha256 = stringValue(node.manifestSha256, `${path}.manifestSha256`, 44, { nonEmpty: true });
-  if (!SHA256_BASE64.test(manifestSha256)) invalidProject(`${path}.manifestSha256`, "expected base64 SHA-256");
+  let manifestSha256: string;
+  try { manifestSha256 = validateAuthoringManifestSha256(node.manifestSha256); } catch {
+    invalidProject(`${path}.manifestSha256`, "expected base64 SHA-256");
+  }
   return {
     authoringRevision: publicationRevision(node.authoringRevision, `${path}.authoringRevision`),
     manifestSha256,

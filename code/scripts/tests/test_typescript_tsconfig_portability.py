@@ -432,17 +432,19 @@ console.log(prose, nested);
         # +1: forme-authoring-editor, the accessible FM09 React editor boundary.
         # +1: forme-authoring-preview, the exact FM09 pipeline preview boundary.
         # +1: forme-authoring-publish, the exact FM09 reviewed publication boundary.
+        # +1: forme-authoring-shell, the capability-free FM09 product composer.
         # -1: the standalone checklist-app was retired; checklists live in
         # Trestle (mosaic-pkg-checklist).
-        self.assertEqual(summary.total_projects, 489)
+        self.assertEqual(summary.total_projects, 490)
         self.assertEqual(summary.shared_projects, 301)
         self.assertEqual(summary.inherited_root_dir, 130)
         self.assertEqual(summary.inherited_out_dir, 133)
-        # forme-authoring-core, forme-authoring-editor, and
-        # forme-authoring-preview, and forme-authoring-publish are isolated
-        # standalone emitters, adding four to both standalone inventories.
-        self.assertEqual(summary.standalone_emit_projects, 159)
-        self.assertEqual(summary.isolated_standalone_projects, 159)
+        # forme-authoring-core, forme-authoring-editor,
+        # forme-authoring-preview, forme-authoring-publish, and
+        # forme-authoring-shell are isolated standalone emitters, adding five
+        # to both standalone inventories.
+        self.assertEqual(summary.standalone_emit_projects, 160)
+        self.assertEqual(summary.isolated_standalone_projects, 160)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
         # 94: +1 for script-ductus. Nothing the package SHIPS touches a Node
@@ -567,8 +569,9 @@ console.log(prose, nested);
         # +1: forme-authoring-editor locks its React compiler and browser tests.
         # +1: forme-authoring-preview locks its compiler and lifecycle tests.
         # +1: forme-authoring-publish locks its compiler and lifecycle tests.
+        # +1: forme-authoring-shell locks its React compiler and lifecycle tests.
         # -1: the retired checklist-app took its lockfile with it.
-        self.assertEqual(summary.locked_compilers, 488)
+        self.assertEqual(summary.locked_compilers, 489)
 
 
 if __name__ == "__main__":

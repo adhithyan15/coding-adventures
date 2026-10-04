@@ -1,0 +1,45 @@
+{
+  "name": "@coding-adventures/forme-authoring-shell",
+  "version": "0.1.0",
+  "description": "Capability-free first-run workspace shell for Forme authoring",
+  "type": "module",
+  "main": "src/index.tsx",
+  "exports": "./src/index.tsx",
+  "files": [
+    "src",
+    "README.md",
+    "CHANGELOG.md",
+    "required_capabilities.json"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-authoring-core": "file:../forme-authoring-core",
+    "@coding-adventures/forme-authoring-editor": "file:../forme-authoring-editor",
+    "@coding-adventures/forme-authoring-preview": "file:../forme-authoring-preview",
+    "@coding-adventures/forme-authoring-publish": "file:../forme-authoring-publish"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.0.0",
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^16.0.0",
+    "@types/node": "^22.20.1",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitest/coverage-v8": "^4.1.11",
+    "jsdom": "^25.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.11"
+  }
+}

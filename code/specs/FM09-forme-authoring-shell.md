@@ -1,12 +1,14 @@
 # FM09 — Forme Authoring Shell
 
 > **Status:** Authoring v1 in progress. The durable authoring core, default
-> editor, and exact pipeline preview are implemented; publish and packaging follow as
-> separately reviewable product boundaries.
+> editor, exact pipeline preview, reviewed publication, and capability-free
+> first-run shell composition are implemented; native packaging follows as a
+> separately reviewable product boundary.
 > **Scope:** Project state, editing transactions, persistent history, editor
 > composition, live preview, publish composition, and the local desktop shell.
-> **Packages:** `forme-authoring-core`, the editor packages, and
-> `forme-shell-desktop`.
+> **Packages:** `forme-authoring-core`, `forme-authoring-editor`,
+> `forme-authoring-preview`, `forme-authoring-publish`,
+> `forme-authoring-shell`, and `forme-shell-desktop`.
 
 ## Implementation status
 
@@ -17,7 +19,8 @@
 | Accessible block editor and configuration UI | Implemented | `forme-authoring-editor` provides keyboard-complete settings, document, block, history, and declarative plugin-slot controls over the durable core. |
 | Pipeline-backed preview | Implemented | `forme-authoring-preview` runs exact persisted revisions through the real FM03/FM07 watch and artifact path with cancellation, last-good retention, and bounded diagnostics. |
 | Reviewed publish workflow | Implemented | `forme-authoring-publish` composes exact-revision product builds with FM08 validation, closed target review, cleanup, and durable acknowledgement without exposing host authority. |
-| Installable desktop shell | Pending | FM-B066 packages the proven workflow and first-run experience. |
+| First-run shell composition | Implemented | `forme-authoring-shell` composes the proven layers through bounded injected handles, explicit preview and publish actions, complete target review, fixed failures, and shared disposal. |
+| Installable desktop shell | Active | FM-B068 adds the native Tauri host; FM-B066 closes after packaging and clean-profile acceptance. |
 
 ## 1. Purpose and delivery boundary
 
@@ -381,12 +384,52 @@ exceptions, credentials, paths, or target configuration.
 
 ## 8. Desktop shell and first run
 
-FM-B066 packages the proven editor, preview, and publish flow as the default
-local desktop product. Tauri remains the target unless the packaging slice
-documents and reviews a replacement. First run creates a project, selects the
-default theme, opens a first draft, previews it, configures a supported
-publication target, and publishes without editing JSON, YAML, TypeScript, git,
-or shell commands.
+FM-B067 first composes the proven editor, preview, and publish flow as a
+capability-free React shell. It owns loading, first-run project/theme selection,
+the active workspace, preview controls, complete reviewed-target rendering,
+explicit publication confirmation, bounded user-facing failures, and shared
+disposal. Its host input is a closed list of theme descriptors and narrow
+methods that open or create one workspace. A workspace exposes an
+`AuthoringSession`, one `AuthoringPreviewCoordinator`, closed reviewed target
+data paired with opaque `AuthoringPublisher` handles, and one bounded loopback
+preview URL. Every resolved workspace also exposes one own idempotent disposal
+method; the shell captures that method before inspecting any other workspace
+field so a later admission failure can retire the whole host-owned graph. The
+shell copies and freezes bounded data-descriptor snapshots at admission, fails
+closed when descriptor or proxy traps prevent safe inspection, rejects
+accessor-backed display records, sparse arrays, duplicates, and unsafe text,
+invokes no ambient capability, and passes only a validated session facade,
+theme descriptors, an unbound document-identity callback, and the optional
+declarative plugin boundary into `AuthoringEditor`.
+
+Opening a missing profile shows the first-run form. Creation selects one
+reviewed theme and must return a workspace with one active draft before the
+editor is mounted. Preview is an explicit cancellable action over the exact
+persisted session revision. The shell validates the returned outcome, revision,
+build identity, and bounded diagnostics before rendering it. Publication
+renders the selected target label and destination, requires a separate
+confirmation action, admits only one action synchronously, and validates the
+returned outcome, revision, target identity, manifest digest, and bounded
+diagnostics. A malformed or rejected publisher settlement is indeterminate
+because the shell cannot prove whether an external commit occurred; only a
+validated coordinator result may claim a known pre-commit failure. Unmount,
+workspace replacement, or failed admission invokes the
+captured workspace disposal boundary exactly once and observes the same
+settlement; replacement does not open its next host graph until prior
+retirement succeeds. A missing, rejected, or stale retirement settlement
+poisons the shell, retires any active replacement, removes all interaction,
+and requires reload. Likewise, a session mutation is not safely reflected
+until the shell resnapshots the committed project, history flags, and storage
+revision; a post-commit snapshot failure poisons the workspace so a stale
+facade cannot accept later work. The host owns coordinator retirement behind
+that boundary.
+
+FM-B068 then packages that shell as the default local desktop product. Tauri
+remains the target unless the packaging slice documents and reviews a
+replacement. Its product test starts from an empty profile, creates a project,
+selects the default theme, opens a first draft, previews it, configures a
+supported publication target, and publishes without editing JSON, YAML,
+TypeScript, git, or shell commands.
 
 The desktop host exposes only narrow commands for project storage, preview,
 and publish. Paths are canonicalized and contained; web content receives no
@@ -399,10 +442,13 @@ transaction rollback, write failure, cancellation, stale-revision conflict,
 history truncation, persisted undo/redo, and restart recovery. Coverage for the
 new core package must exceed 95% statements and lines and 90% branches.
 
-Later slices add browser accessibility tests, exact preview/build parity,
-deploy dry-run and failure tests, native capability tests, and a product test
-that starts from an empty profile and publishes a first site without editing a
-source or configuration file.
+FM-B067 proves browser accessibility, first-run creation, exact session
+preview, complete reviewed-target confirmation, bounded failures, hostile
+admission data, and late lifecycle settlement above 95% statements/lines and
+90% branches. FM-B068 adds exact preview/build parity, deploy dry-run and
+failure tests, native capability tests, and a product test that starts from an
+empty profile and publishes a first site without editing a source or
+configuration file.
 
 FM-B063 browser tests cover every default block form, metadata and site
 configuration, host-supplied theme choices, selection, create/remove, undo and

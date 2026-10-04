@@ -13,6 +13,8 @@ All notable changes to this package will be documented in this file.
   older deployment or mark newer documents published.
 - Added one exact opaque revision validator shared by storage, project workflow
   metadata, and publication composition without trimming or normalization.
+- Added one canonical base64 SHA-256 validator shared by project workflow
+  parsing and product-shell publication result admission.
 
 ## [0.1.0] - 2026-10-02
 
