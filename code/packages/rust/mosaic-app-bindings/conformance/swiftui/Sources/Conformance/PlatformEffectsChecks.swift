@@ -337,6 +337,206 @@ private func checkRouter(in directory: URL) {
     "a clear failure without dialogs")
 }
 
+// ---- The asynchronous path (UI89 §3.8): a picker that answers later ------
+
+private final class LaterPicker: MosaicDocumentPicker {
+  var opens = 0
+  var creates = 0
+  var lastAccept: MosaicAccept?
+  var lastRequest: MosaicSaveRequest?
+  var openDone: ((MosaicOpenedDocument?) -> Void)?
+  var createDone: ((MosaicSaveTarget?) -> Void)?
+  var refuse: Error?
+
+  func open(_ accept: MosaicAccept, done: @escaping (MosaicOpenedDocument?) -> Void) throws {
+    if let refuse { throw refuse }
+    opens += 1
+    lastAccept = accept
+    openDone = done
+  }
+
+  func create(_ request: MosaicSaveRequest, done: @escaping (MosaicSaveTarget?) -> Void) throws {
+    if let refuse { throw refuse }
+    creates += 1
+    lastRequest = request
+    createDone = done
+  }
+}
+
+private struct LaterDocument: MosaicOpenedDocument {
+  let name: String
+  let mimeType: String?
+  let bytes: Data
+  var failure: Error?
+  func read(limit: Int) throws -> Data? {
+    if let failure { throw failure }
+    return bytes.count > limit ? nil : bytes
+  }
+}
+
+private final class LaterTarget: MosaicSaveTarget {
+  let name: String
+  var failure: Error?
+  var written: Data?
+  init(_ name: String, failure: Error? = nil) {
+    self.name = name
+    self.failure = failure
+  }
+  func write(_ bytes: Data) throws {
+    if let failure { throw failure }
+    written = bytes
+  }
+}
+
+private struct PathError: Error { let path = "/Users/person/secret.txt" }
+
+private func checkAsynchronousPath() {
+  // Open: nothing until the picker answers, then read in the background,
+  // heard once however often the picker answers.
+  let picker = LaterPicker()
+  var background: [() -> Void] = []
+  var outcomes: [[String: Any]] = []
+  mosaicAnswerFilesOpen(
+    ["accept": ["application/json", "x/unknown"]], picker: picker,
+    runInBackground: { background.append($0) }
+  ) { outcomes.append($0) }
+  check(outcomes.isEmpty, "an open waits for its picker")
+  check(picker.lastAccept?.mimeTypes == ["application/json"], "known MIME types reach the picker")
+  check(picker.lastAccept?.extensions == ["json"], "and their extensions")
+  picker.openDone?(LaterDocument(name: "notes.json", mimeType: "application/json", bytes: Data("{}".utf8)))
+  check(outcomes.isEmpty && background.count == 1, "the read waits for the background")
+  picker.openDone?(nil)
+  background.removeFirst()()
+  check(outcomes.count == 1, "answered once: \(outcomes)")
+  check(okValue(outcomes[0])?["bytes"] as? String == encoded("{}"), "the document's bytes")
+  check(okValue(outcomes[0])?["mimeType"] as? String == "application/json", "the provider's type")
+
+  // A document with no type takes its name's; a cancel is a cancel.
+  outcomes = []
+  mosaicAnswerFilesOpen(NSNull(), picker: picker, runInBackground: { $0() }) { outcomes.append($0) }
+  picker.openDone?(LaterDocument(name: "photo.PNG", mimeType: nil, bytes: Data([1])))
+  check(okValue(outcomes[0])?["mimeType"] as? String == "image/png", "type from the name")
+  mosaicAnswerFilesOpen(NSNull(), picker: picker, runInBackground: { $0() }) { outcomes.append($0) }
+  picker.openDone?(nil)
+  check(isCancelled(outcomes[1]), "a later cancel")
+
+  // A read's own error text never reaches the app; a failure's does.
+  outcomes = []
+  mosaicAnswerFilesOpen(NSNull(), picker: picker, runInBackground: { $0() }) { outcomes.append($0) }
+  picker.openDone?(LaterDocument(name: "a.txt", mimeType: nil, bytes: Data(), failure: PathError()))
+  mosaicAnswerFilesOpen(NSNull(), picker: picker, runInBackground: { $0() }) { outcomes.append($0) }
+  picker.openDone?(
+    LaterDocument(name: "a.txt", mimeType: nil, bytes: Data(), failure: MosaicFileFailure("that is not a regular file")))
+  mosaicAnswerFilesOpen(NSNull(), picker: picker, runInBackground: { $0() }) { outcomes.append($0) }
+  picker.openDone?(LaterDocument(name: "big", mimeType: nil, bytes: Data(count: mosaicMaxOpenBytes + 1)))
+  check(failure(outcomes[0]) == "couldn't read the selected file", "a fixed message for an error")
+  check(failure(outcomes[1]) == "that is not a regular file", "a failure's own message")
+  check(
+    failure(outcomes[2]) == "the selected file is larger than \(mosaicMaxOpenBytes) bytes",
+    "a read over the limit")
+
+  // A picker that cannot be shown fails the request.
+  outcomes = []
+  picker.refuse = MosaicFileFailure("there is no window to show the file picker in")
+  mosaicAnswerFilesOpen(NSNull(), picker: picker, runInBackground: { $0() }) { outcomes.append($0) }
+  picker.refuse = PathError()
+  mosaicAnswerFilesSave(
+    ["suggestedName": "a.json", "bytes": encoded("x")], picker: picker, runInBackground: { $0() }
+  ) { outcomes.append($0) }
+  picker.refuse = nil
+  check(failure(outcomes[0]) == "there is no window to show the file picker in", "no window")
+  check(failure(outcomes[1]) == "the file dialog failed", "a picker's own error is not shown")
+
+  // A refused save shows no picker.
+  outcomes = []
+  let creates = picker.creates
+  for payload: [String: Any] in [
+    ["suggestedName": "../x.json", "bytes": encoded("x")],
+    ["suggestedName": "CON.json", "bytes": encoded("x")],
+    ["suggestedName": "run.command", "bytes": encoded("x")],
+    ["suggestedName": "a.txt", "accept": ["application/json"], "bytes": encoded("x")],
+    ["suggestedName": "a.json", "bytes": "not base64!"],
+  ] {
+    mosaicAnswerFilesSave(payload, picker: picker, runInBackground: { $0() }) { outcomes.append($0) }
+  }
+  check(picker.creates == creates, "no picker for a refused save")
+  check(outcomes.count == 5 && outcomes.allSatisfy { failure($0) != nil }, "five refusals")
+
+  // Save: the picker gets the checked bytes; the name it reports is the answer.
+  outcomes = []
+  background = []
+  mosaicAnswerFilesSave(
+    ["suggestedName": "journal.json", "accept": ["application/json"], "bytes": encoded("{}")],
+    picker: picker, runInBackground: { background.append($0) }
+  ) { outcomes.append($0) }
+  check(picker.lastRequest?.suggestedName == "journal.json", "the suggested name")
+  check(picker.lastRequest?.bytes == Data("{}".utf8), "the checked bytes, before the picker shows")
+  let target = LaterTarget("journal (1).json")
+  picker.createDone?(target)
+  check(outcomes.isEmpty, "the write waits for the background")
+  background.removeFirst()()
+  check(okValue(outcomes[0])?["name"] as? String == "journal (1).json", "the picker's name")
+  check(target.written == Data("{}".utf8), "the bytes written")
+
+  // A failed write is a fixed failure; a later cancel is a cancel.
+  outcomes = []
+  let save: [String: Any] = ["suggestedName": "a.json", "bytes": encoded("x")]
+  mosaicAnswerFilesSave(save, picker: picker, runInBackground: { $0() }) { outcomes.append($0) }
+  picker.createDone?(LaterTarget("a.json", failure: PathError()))
+  mosaicAnswerFilesSave(save, picker: picker, runInBackground: { $0() }) { outcomes.append($0) }
+  picker.createDone?(nil)
+  check(failure(outcomes[0]) == "couldn't save the file", "a failed write")
+  check(isCancelled(outcomes[1]), "a cancelled save")
+
+  // Through the router with a background (iOS's shape): the outcome comes
+  // back through the UI queue before the effect is completed.
+  let host = FakeHost()
+  var ui: [() -> Void] = []
+  var work: [() -> Void] = []
+  let routed = LaterPicker()
+  installMosaicPlatformEffects(
+    host, appKinds: nil, picker: routed, hasDialogs: true,
+    runOnUI: { ui.append($0) }, runInBackground: { work.append($0) })
+  host.waitingOn = [1]
+  host.effectHandler?(1, "files.open", NSNull(), "await")
+  check(host.deferred == [1] && ui.count == 1, "deferred, then the picker on the UI queue")
+  ui.removeFirst()()
+  routed.openDone?(LaterDocument(name: "a.txt", mimeType: nil, bytes: Data("hi".utf8)))
+  check(work.count == 1 && host.answers[1] == nil, "read in the background")
+  work.removeFirst()()
+  check(ui.count == 1 && host.answers[1] == nil, "handed back to the UI queue")
+  ui.removeFirst()()
+  check(okValue(host.answers[1] ?? [:])?["name"] as? String == "a.txt", "then completed")
+  // The router is free again.
+  host.waitingOn = [2]
+  host.effectHandler?(2, "files.save", ["suggestedName": "b.txt", "bytes": encoded("x")], "await")
+  ui.removeFirst()()
+  check(routed.createDone != nil && host.answers[2] == nil, "a second request reaches the picker")
+
+  // An answer the app refuses is answered again, small: a deferred effect
+  // nobody answers would be awaited for good.
+  let refusing = RefusingHost()
+  let refused = LaterPicker()
+  installMosaicPlatformEffects(
+    refusing, appKinds: nil, picker: refused, hasDialogs: true, runOnUI: { $0() },
+    runInBackground: nil)
+  refusing.effectHandler?(1, "files.open", NSNull(), "await")
+  refused.openDone?(LaterDocument(name: "a.txt", mimeType: nil, bytes: Data("hi".utf8)))
+  check(refusing.offered.count == 2, "answered twice: \(refusing.offered)")
+  check(failure(refusing.offered[1]) == "couldn't deliver the file", "the second answer is small")
+}
+
+/// A host whose runtime refuses any `ok` answer.
+private final class RefusingHost: MosaicPlatformEffectHost {
+  var effectHandler: ((UInt64, String, Any, String) -> Void)?
+  var offered: [[String: Any]] = []
+  func deferEffect(_ id: UInt64) -> Bool { true }
+  func completeEffect(_ id: UInt64, _ result: [String: Any]) -> NSDictionary? {
+    offered.append(result)
+    return result["ok"] != nil ? ["error": "refused"] as NSDictionary : [:] as NSDictionary
+  }
+}
+
 func runPlatformEffectsChecks() {
   let directory = FileManager.default.temporaryDirectory
     .appendingPathComponent("mosaic-platform-effects-\(UUID().uuidString)")
@@ -350,6 +550,7 @@ func runPlatformEffectsChecks() {
   checkNameSafety()
   checkOpen(in: directory)
   checkRouter(in: directory)
+  checkAsynchronousPath()
   print("Mosaic SwiftUI platform effects passed")
 }
 
