@@ -152,7 +152,7 @@ where
             stroke: Some(stroke),
             stroke_width: Some(node.style.as_ref().and_then(|style| style.node.stroke_width)
                 .or(configured_stroke_width).unwrap_or(diagram.config.border_width)),
-            corner_radius: Some(node.style.as_ref().and_then(|style| style.node.corner_radius).unwrap_or(3.0)),
+            corner_radius: Some(treemap_corner_radius(node)),
             stroke_dash: node.style.as_ref().and_then(|style| style.node.stroke_dash.clone()),
             stroke_dash_offset: node.style.as_ref().and_then(|style| style.stroke_dash_offset),
         }));
@@ -588,6 +588,14 @@ fn apply_treemap_font_size(font: &mut FontSpec, style: Option<&diagram_ir::Treem
         Some(diagram_ir::TreemapFontSize::Factor(value)) => font.size * value,
         None => font.size,
     };
+}
+
+fn treemap_corner_radius(node: &diagram_ir::LayoutedTreemapNode) -> f64 {
+    match node.style.as_ref().and_then(|style| style.border_radius) {
+        Some(diagram_ir::TreemapBorderRadius::Pixels(value)) => value,
+        Some(diagram_ir::TreemapBorderRadius::Factor(value)) => node.width.min(node.height) * value,
+        None => node.style.as_ref().and_then(|style| style.node.corner_radius).unwrap_or(3.0),
+    }
 }
 
 struct TreemapNumberFormat {
@@ -7125,6 +7133,7 @@ mod tests {
                         font_weight: Some(700), font_italic: Some(true), font_family: Some("Avenir".into()), corner_radius: Some(9.0),
                     },
                     font_size: Some(diagram_ir::TreemapFontSize::Factor(1.25)),
+                    border_radius: Some(diagram_ir::TreemapBorderRadius::Factor(0.25)),
                     opacity: Some(0.8), fill_opacity: Some(0.5), stroke_opacity: Some(0.5), stroke_dash_offset: Some(-1.0),
                     text_align: Some(diagram_ir::TreemapTextAlign::End),
                     text_align_last: None,
@@ -7395,7 +7404,7 @@ mod tests {
             PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("rgba(254,243,199,0.4)")
                 && rect.stroke.as_deref() == Some("rgba(180,83,9,0.4)")
                 && rect.stroke_width == Some(3.0)
-                && rect.corner_radius == Some(9.0)
+                && rect.corner_radius == Some(46.0)
                 && rect.stroke_dash.as_deref() == Some(&[5.0, 2.0][..])
                 && rect.stroke_dash_offset == Some(-1.0))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
