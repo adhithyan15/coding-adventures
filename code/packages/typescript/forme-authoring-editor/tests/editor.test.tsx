@@ -96,18 +96,21 @@ describe("AuthoringEditor", () => {
     fireEvent.click(screen.getByRole("button", { name: "Create document" }));
     await screen.findByText("Document created.");
     expect(session.project.activeDocumentId).toBe(SECOND_DOCUMENT_ID);
-    expect(screen.getByRole("heading", { name: "Editing Second" })).toHaveFocus();
+    await waitFor(() =>
+      expect(screen.getByRole("heading", { name: "Editing Second" })).toHaveFocus());
 
     fireEvent.click(screen.getByRole("button", { name: "Select Welcome" }));
     await screen.findByText("Document selected.");
     expect(session.project.activeDocumentId).toBe(FIRST_DOCUMENT_ID);
-    expect(screen.getByRole("heading", { name: "Editing Welcome" })).toHaveFocus();
+    await waitFor(() =>
+      expect(screen.getByRole("heading", { name: "Editing Welcome" })).toHaveFocus());
 
     fireEvent.click(screen.getByRole("button", { name: "Remove current document" }));
     await screen.findByText("Document removed.");
     expect(session.project.documents.map((document) => document.title)).toEqual(["Second"]);
     expect(session.project.activeDocumentId).toBe(SECOND_DOCUMENT_ID);
-    expect(screen.getByRole("heading", { name: "Editing Second" })).toHaveFocus();
+    await waitFor(() =>
+      expect(screen.getByRole("heading", { name: "Editing Second" })).toHaveFocus());
   });
 
   it("inserts every required block and supports no-pointer reordering and removal", async () => {

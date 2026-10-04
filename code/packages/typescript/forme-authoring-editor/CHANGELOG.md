@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Fixed
+
+- Await React's documented focus-restoration effect in the document lifecycle
+  regression so slower macOS CI hosts do not race the assertion against it.
+
 ## [0.1.0] - 2026-10-03
 
 ### Added
