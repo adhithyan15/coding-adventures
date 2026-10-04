@@ -18,6 +18,7 @@ function project(overrides: Partial<AuthoringProject> = {}): AuthoringProject {
     projectId: PROJECT_ID,
     title: "My site",
     site: { baseUrl: "https://example.com/blog", themeId: "forme-classless" },
+    workflow: { lastPublication: null },
     documents: [
       {
         id: DOCUMENT_ID,
@@ -83,6 +84,7 @@ describe("the authoring project codec", () => {
       projectId: PROJECT_ID,
       title: "New site",
       site: { baseUrl: null, themeId: "forme-classless" },
+      workflow: { lastPublication: null },
       documents: [],
       activeDocumentId: null,
     });
@@ -94,6 +96,7 @@ describe("the authoring project codec", () => {
       activeDocumentId: DOCUMENT_ID,
       documents: project().documents,
       site: { themeId: "forme-classless", baseUrl: "https://example.com/blog" },
+      workflow: { lastPublication: null },
       title: "My site",
       projectId: PROJECT_ID,
       schemaVersion: 1,
@@ -182,6 +185,32 @@ describe("the authoring project codec", () => {
     const original = project().documents[0]!;
     invalid({ ...project(), documents: [original, { ...original, slug: "other" }] });
     invalid({ ...project(), documents: [original, { ...original, id: "01952c0d-7e63-7000-8000-000000000003" }] });
+  });
+
+  it("validates, freezes, and bounds exact publication workflow metadata", () => {
+    const published = validateAuthoringProject({
+      ...project(),
+      workflow: {
+        lastPublication: {
+          authoringRevision: "revision-42",
+          manifestSha256: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+          targetId: "github-pages",
+        },
+      },
+    });
+    expect(published.workflow.lastPublication).toEqual({
+      authoringRevision: "revision-42",
+      manifestSha256: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      targetId: "github-pages",
+    });
+    expect(Object.isFrozen(published.workflow)).toBe(true);
+    expect(Object.isFrozen(published.workflow.lastPublication)).toBe(true);
+
+    invalid({ ...project(), workflow: {} });
+    invalid({ ...project(), workflow: { lastPublication: { authoringRevision: "revision", manifestSha256: "bad", targetId: "github-pages" } } });
+    invalid({ ...project(), workflow: { lastPublication: { authoringRevision: "revision", manifestSha256: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=", targetId: "../secret" } } });
+    invalid({ ...project(), workflow: { lastPublication: { authoringRevision: "bad\u202erevision", manifestSha256: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=", targetId: "github-pages" } } });
+    invalid({ ...project(), workflow: { lastPublication: { authoringRevision: "revision", manifestSha256: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=", targetId: "github-pages", token: "secret" } } });
   });
 
   it("rejects raw nodes, unsafe links, malformed trees, and unknown nodes", () => {

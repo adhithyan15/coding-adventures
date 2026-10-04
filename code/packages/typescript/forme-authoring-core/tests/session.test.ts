@@ -112,6 +112,69 @@ describe("durable authoring sessions", () => {
     expect(storage.writes).toBe(6);
   });
 
+  it("records publication only against the exact persisted revision", async () => {
+    const storage = new MemoryStorage();
+    const session = await openAuthoringSession({ storage, initialProject: initial() });
+    await session.dispatch({ type: "create-document", document: document(), activate: true });
+    const sourceRevision = session.storageRevision;
+
+    await session.dispatchAtRevision(sourceRevision, {
+      type: "record-publication",
+      publication: {
+        authoringRevision: sourceRevision,
+        manifestSha256: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+        targetId: "github-pages",
+      },
+    });
+
+    expect(session.project.documents[0]!.status).toBe("published");
+    expect(session.project.workflow.lastPublication).toEqual({
+      authoringRevision: sourceRevision,
+      manifestSha256: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      targetId: "github-pages",
+    });
+    expect(storage.writes).toBe(3);
+
+    const before = session.project;
+    await expect(session.dispatchAtRevision(sourceRevision, {
+      type: "record-publication",
+      publication: {
+        authoringRevision: sourceRevision,
+        manifestSha256: "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=",
+        targetId: "filesystem",
+      },
+    })).rejects.toMatchObject({ code: "STORAGE_CONFLICT" });
+    expect(session.project).toBe(before);
+    expect(storage.writes).toBe(3);
+  });
+
+  it("serializes exact publication behind edits and rejects stale attribution", async () => {
+    const storage = new MemoryStorage();
+    const session = await openAuthoringSession({ storage, initialProject: initial() });
+    await session.dispatch({ type: "create-document", document: document(), activate: true });
+    const sourceRevision = session.storageRevision;
+
+    const edit = session.dispatch({
+      type: "configure-site",
+      title: "Edited while publishing",
+      baseUrl: null,
+      themeId: "forme-classless",
+    });
+    const record = session.dispatchAtRevision(sourceRevision, {
+      type: "record-publication",
+      publication: {
+        authoringRevision: sourceRevision,
+        manifestSha256: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+        targetId: "github-pages",
+      },
+    });
+    await edit;
+    await expect(record).rejects.toMatchObject({ code: "STORAGE_CONFLICT" });
+    expect(session.project.title).toBe("Edited while publishing");
+    expect(session.project.documents[0]!.status).toBe("draft");
+    expect(session.project.workflow.lastPublication).toBeNull();
+  });
+
   it("persists undo and redo across restarts", async () => {
     const storage = new MemoryStorage();
     const session = await openAuthoringSession({ storage, initialProject: initial() });
