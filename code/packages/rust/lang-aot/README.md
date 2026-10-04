@@ -6,8 +6,8 @@ between real locals before the shared portable formatter prints it on all seven
 standard backends. Unknown statement conditions may also merge that provenance
 when both exits establish it for the same slot, and side-effect-free conditional
 value selectors may choose between proven runtime-real branches. One-sided
-reassignment, selector calls, unary minus, and composed dynamic real values
-remain gated; unary plus preserves runtime-real provenance.
+reassignment, selector calls, and composed dynamic real values remain gated;
+unary plus and unary minus preserve runtime-real provenance.
 
 The opt-in CLR integration suite `tests/clr_strict_flow.rs` executes forward-only
 conditional control, nested Bool branches and wide values through joins,
