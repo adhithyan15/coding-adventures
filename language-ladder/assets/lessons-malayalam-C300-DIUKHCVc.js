@@ -1,0 +1,946 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ML-C300-kavi
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 14080
+chapter: 300
+type: word
+headword: "കവി"
+gloss: "a poet"
+romanization: "kavi"
+concept_tag: ML-JOLI300-KAVI
+prerequisites: [ML-C299-sarvakalasala, ML-C300-natan]
+sounds: []
+roots: []
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [ML-LEX-C299-JOLI299-05, ML-LEX-C300-JOLI300-01]
+introduces:
+  knowledge: [ML-LEX-C300-JOLI300-02]
+practises:
+  knowledge: [ML-LEX-C300-JOLI300-02, ML-LEX-C299-JOLI299-05, ML-LEX-C300-JOLI300-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C300-natan]
+---
+
+# കവി (kavi) — a poet
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C299-JOLI299-05, ML-LEX-C300-JOLI300-01] -->
+
+[PAUSE 2s] Before the new one: say the Malayalam for a university, then the Malayalam for an actor.
+
+## You'll want to know: കവി
+<!-- hl-knowledge: introduces=[ML-LEX-C300-JOLI300-02]; assesses=[] -->
+
+**കവി** — *kavi* — "a poet".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C300-JOLI300-02, ML-LEX-C299-JOLI299-05, ML-LEX-C300-JOLI300-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: *kavi*]
+- [YOU SAY: *kavi*, once more]
+- [YOU SAY: say *kavi*]
+- [YOU RECALL: say the Malayalam for a university, then the Malayalam for an actor, then say *kavi* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C300-JOLI300-02, ML-LEX-C299-JOLI299-05, ML-LEX-C300-JOLI300-01] -->
+
+[PAUSE 3s] What does കവി mean? ("A poet".) Say it once more.
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ML-C300-labham
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 14100
+chapter: 300
+type: word
+headword: "ലാഭം"
+gloss: "profit"
+romanization: "lābhaṁ"
+concept_tag: ML-JOLI300-LABHAM
+prerequisites: [ML-C300-kavi, ML-C300-tukkam]
+sounds: []
+roots: []
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [ML-LEX-C300-JOLI300-02, ML-LEX-C300-JOLI300-03]
+introduces:
+  knowledge: [ML-LEX-C300-JOLI300-04]
+practises:
+  knowledge: [ML-LEX-C300-JOLI300-04, ML-LEX-C300-JOLI300-02, ML-LEX-C300-JOLI300-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C300-tukkam]
+---
+
+# ലാഭം (lābhaṁ) — profit
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C300-JOLI300-02, ML-LEX-C300-JOLI300-03] -->
+
+[PAUSE 2s] Before the new one: say the Malayalam for a poet, then the Malayalam for weight.
+
+## You'll want to know: ലാഭം
+<!-- hl-knowledge: introduces=[ML-LEX-C300-JOLI300-04]; assesses=[] -->
+
+**ലാഭം** — *lābhaṁ* — "profit".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C300-JOLI300-04, ML-LEX-C300-JOLI300-02, ML-LEX-C300-JOLI300-03] -->
+
+[PAUSE 1s]
+- [YOU SAY: *lābhaṁ*]
+- [YOU SAY: *lābhaṁ*, once more]
+- [YOU SAY: say *lābhaṁ*]
+- [YOU RECALL: say the Malayalam for a poet, then the Malayalam for weight, then say *lābhaṁ* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C300-JOLI300-04, ML-LEX-C300-JOLI300-02, ML-LEX-C300-JOLI300-03] -->
+
+[PAUSE 3s] What does ലാഭം mean? ("Profit".) Say it once more.
+`,a=e({default:()=>o}),o=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ML-C300-nastam
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 14110
+chapter: 300
+type: word
+headword: "നഷ്ടം"
+gloss: "a loss"
+romanization: "naṣṭaṁ"
+concept_tag: ML-JOLI300-NASTAM
+prerequisites: [ML-C300-tukkam, ML-C300-labham]
+sounds: []
+roots: []
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [ML-LEX-C300-JOLI300-03, ML-LEX-C300-JOLI300-04]
+introduces:
+  knowledge: [ML-LEX-C300-JOLI300-05]
+practises:
+  knowledge: [ML-LEX-C300-JOLI300-05, ML-LEX-C300-JOLI300-03, ML-LEX-C300-JOLI300-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C300-labham]
+---
+
+# നഷ്ടം (naṣṭaṁ) — a loss
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C300-JOLI300-03, ML-LEX-C300-JOLI300-04] -->
+
+[PAUSE 2s] Before the new one: say the Malayalam for weight, then the Malayalam for profit.
+
+## You'll want to know: നഷ്ടം
+<!-- hl-knowledge: introduces=[ML-LEX-C300-JOLI300-05]; assesses=[] -->
+
+**നഷ്ടം** — *naṣṭaṁ* — "a loss".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C300-JOLI300-05, ML-LEX-C300-JOLI300-03, ML-LEX-C300-JOLI300-04] -->
+
+[PAUSE 1s]
+- [YOU SAY: *naṣṭaṁ*]
+- [YOU SAY: *naṣṭaṁ*, once more]
+- [YOU SAY: say *naṣṭaṁ*]
+- [YOU RECALL: say the Malayalam for weight, then the Malayalam for profit, then say *naṣṭaṁ* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C300-JOLI300-05, ML-LEX-C300-JOLI300-03, ML-LEX-C300-JOLI300-04] -->
+
+[PAUSE 3s] What does നഷ്ടം mean? ("A loss".) Say it once more.
+`,s=e({default:()=>c}),c=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ML-C300-natan
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 14070
+chapter: 300
+type: word
+headword: "നടൻ"
+gloss: "an actor"
+romanization: "naṭan"
+concept_tag: ML-JOLI300-NATAN
+prerequisites: [ML-C299-koleju, ML-C299-sarvakalasala]
+sounds: []
+roots: []
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [ML-LEX-C299-JOLI299-04, ML-LEX-C299-JOLI299-05]
+introduces:
+  knowledge: [ML-LEX-C300-JOLI300-01]
+practises:
+  knowledge: [ML-LEX-C300-JOLI300-01, ML-LEX-C299-JOLI299-04, ML-LEX-C299-JOLI299-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C299-sarvakalasala]
+---
+
+# നടൻ (naṭan) — an actor
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C299-JOLI299-04, ML-LEX-C299-JOLI299-05] -->
+
+[PAUSE 2s] Before the new one: say the Malayalam for a college, then the Malayalam for a university.
+
+## You'll want to know: നടൻ
+<!-- hl-knowledge: introduces=[ML-LEX-C300-JOLI300-01]; assesses=[] -->
+
+**നടൻ** — *naṭan* — "an actor".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C300-JOLI300-01, ML-LEX-C299-JOLI299-04, ML-LEX-C299-JOLI299-05] -->
+
+[PAUSE 1s]
+- [YOU SAY: *naṭan*]
+- [YOU SAY: *naṭan*, once more]
+- [YOU SAY: say *naṭan*]
+- [YOU RECALL: say the Malayalam for a college, then the Malayalam for a university, then say *naṭan* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C300-JOLI300-01, ML-LEX-C299-JOLI299-04, ML-LEX-C299-JOLI299-05] -->
+
+[PAUSE 3s] What does നടൻ mean? ("An actor".) Say it once more.
+`,l=e({default:()=>u}),u=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ML-C300-tukkam
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 14090
+chapter: 300
+type: word
+headword: "തൂക്കം"
+gloss: "weight"
+romanization: "tūkkaṁ"
+concept_tag: ML-JOLI300-TUKKAM
+prerequisites: [ML-C300-natan, ML-C300-kavi]
+sounds: []
+roots: []
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [ML-LEX-C300-JOLI300-01, ML-LEX-C300-JOLI300-02]
+introduces:
+  knowledge: [ML-LEX-C300-JOLI300-03]
+practises:
+  knowledge: [ML-LEX-C300-JOLI300-03, ML-LEX-C300-JOLI300-01, ML-LEX-C300-JOLI300-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C300-kavi]
+---
+
+# തൂക്കം (tūkkaṁ) — weight
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C300-JOLI300-01, ML-LEX-C300-JOLI300-02] -->
+
+[PAUSE 2s] Before the new one: say the Malayalam for an actor, then the Malayalam for a poet.
+
+## You'll want to know: തൂക്കം
+<!-- hl-knowledge: introduces=[ML-LEX-C300-JOLI300-03]; assesses=[] -->
+
+**തൂക്കം** — *tūkkaṁ* — "weight".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C300-JOLI300-03, ML-LEX-C300-JOLI300-01, ML-LEX-C300-JOLI300-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: *tūkkaṁ*]
+- [YOU SAY: *tūkkaṁ*, once more]
+- [YOU SAY: say *tūkkaṁ*]
+- [YOU RECALL: say the Malayalam for an actor, then the Malayalam for a poet, then say *tūkkaṁ* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C300-JOLI300-03, ML-LEX-C300-JOLI300-01, ML-LEX-C300-JOLI300-02] -->
+
+[PAUSE 3s] What does തൂക്കം mean? ("Weight".) Say it once more.
+`,d=e({default:()=>f}),f=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ML-C301-karar
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 14120
+chapter: 301
+type: word
+headword: "കരാർ"
+gloss: "a contract"
+romanization: "karār"
+concept_tag: ML-JOLI301-KARAR
+prerequisites: [ML-C300-labham, ML-C300-nastam]
+sounds: []
+roots: []
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [ML-LEX-C300-JOLI300-04, ML-LEX-C300-JOLI300-05]
+introduces:
+  knowledge: [ML-LEX-C301-JOLI301-01]
+practises:
+  knowledge: [ML-LEX-C301-JOLI301-01, ML-LEX-C300-JOLI300-04, ML-LEX-C300-JOLI300-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C300-nastam]
+---
+
+# കരാർ (karār) — a contract
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C300-JOLI300-04, ML-LEX-C300-JOLI300-05] -->
+
+[PAUSE 2s] Before the new one: say the Malayalam for profit, then the Malayalam for a loss.
+
+## You'll want to know: കരാർ
+<!-- hl-knowledge: introduces=[ML-LEX-C301-JOLI301-01]; assesses=[] -->
+
+**കരാർ** — *karār* — "a contract".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C301-JOLI301-01, ML-LEX-C300-JOLI300-04, ML-LEX-C300-JOLI300-05] -->
+
+[PAUSE 1s]
+- [YOU SAY: *karār*]
+- [YOU SAY: *karār*, once more]
+- [YOU SAY: say *karār*]
+- [YOU RECALL: say the Malayalam for profit, then the Malayalam for a loss, then say *karār* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C301-JOLI301-01, ML-LEX-C300-JOLI300-04, ML-LEX-C300-JOLI300-05] -->
+
+[PAUSE 3s] What does കരാർ mean? ("A contract".) Say it once more.
+`,p=e({default:()=>m}),m=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ML-C301-nikuti
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 14130
+chapter: 301
+type: word
+headword: "നികുതി"
+gloss: "a tax"
+romanization: "nikuti"
+concept_tag: ML-JOLI301-NIKUTI
+prerequisites: [ML-C300-nastam, ML-C301-karar]
+sounds: []
+roots: []
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [ML-LEX-C300-JOLI300-05, ML-LEX-C301-JOLI301-01]
+introduces:
+  knowledge: [ML-LEX-C301-JOLI301-02]
+practises:
+  knowledge: [ML-LEX-C301-JOLI301-02, ML-LEX-C300-JOLI300-05, ML-LEX-C301-JOLI301-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C301-karar]
+---
+
+# നികുതി (nikuti) — a tax
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C300-JOLI300-05, ML-LEX-C301-JOLI301-01] -->
+
+[PAUSE 2s] Before the new one: say the Malayalam for a loss, then the Malayalam for a contract.
+
+## You'll want to know: നികുതി
+<!-- hl-knowledge: introduces=[ML-LEX-C301-JOLI301-02]; assesses=[] -->
+
+**നികുതി** — *nikuti* — "a tax".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C301-JOLI301-02, ML-LEX-C300-JOLI300-05, ML-LEX-C301-JOLI301-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: *nikuti*]
+- [YOU SAY: *nikuti*, once more]
+- [YOU SAY: say *nikuti*]
+- [YOU RECALL: say the Malayalam for a loss, then the Malayalam for a contract, then say *nikuti* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C301-JOLI301-02, ML-LEX-C300-JOLI300-05, ML-LEX-C301-JOLI301-01] -->
+
+[PAUSE 3s] What does നികുതി mean? ("A tax".) Say it once more.
+`,h=e({default:()=>g}),g=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ML-C301-pila
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 14140
+chapter: 301
+type: word
+headword: "പിഴ"
+gloss: "a fine, a penalty"
+romanization: "piḻa"
+concept_tag: ML-JOLI301-PILA
+prerequisites: [ML-C301-karar, ML-C301-nikuti]
+sounds: []
+roots: []
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [ML-LEX-C301-JOLI301-01, ML-LEX-C301-JOLI301-02]
+introduces:
+  knowledge: [ML-LEX-C301-JOLI301-03]
+practises:
+  knowledge: [ML-LEX-C301-JOLI301-03, ML-LEX-C301-JOLI301-01, ML-LEX-C301-JOLI301-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C301-nikuti]
+---
+
+# പിഴ (piḻa) — a fine, a penalty
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C301-JOLI301-01, ML-LEX-C301-JOLI301-02] -->
+
+[PAUSE 2s] Before the new one: say the Malayalam for a contract, then the Malayalam for a tax.
+
+## You'll want to know: പിഴ
+<!-- hl-knowledge: introduces=[ML-LEX-C301-JOLI301-03]; assesses=[] -->
+
+**പിഴ** — *piḻa* — "a fine, a penalty".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C301-JOLI301-03, ML-LEX-C301-JOLI301-01, ML-LEX-C301-JOLI301-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: *piḻa*]
+- [YOU SAY: *piḻa*, once more]
+- [YOU SAY: say *piḻa*]
+- [YOU RECALL: say the Malayalam for a contract, then the Malayalam for a tax, then say *piḻa* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C301-JOLI301-03, ML-LEX-C301-JOLI301-01, ML-LEX-C301-JOLI301-02] -->
+
+[PAUSE 3s] What does പിഴ mean? ("A fine, a penalty".) Say it once more.
+`,_=e({default:()=>v}),v=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ML-C301-skeyil
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 14160
+chapter: 301
+type: word
+headword: "സ്കെയിൽ"
+gloss: "a ruler (for lines)"
+romanization: "skeyil"
+concept_tag: ML-JOLI301-SKEYIL
+prerequisites: [ML-C301-pila, ML-C301-srraplar]
+sounds: []
+roots: []
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [ML-LEX-C301-JOLI301-03, ML-LEX-C301-JOLI301-04]
+introduces:
+  knowledge: [ML-LEX-C301-JOLI301-05]
+practises:
+  knowledge: [ML-LEX-C301-JOLI301-05, ML-LEX-C301-JOLI301-03, ML-LEX-C301-JOLI301-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C301-srraplar]
+---
+
+# സ്കെയിൽ (skeyil) — a ruler (for lines)
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C301-JOLI301-03, ML-LEX-C301-JOLI301-04] -->
+
+[PAUSE 2s] Before the new one: say the Malayalam for a fine, then the Malayalam for a stapler.
+
+## You'll want to know: സ്കെയിൽ
+<!-- hl-knowledge: introduces=[ML-LEX-C301-JOLI301-05]; assesses=[] -->
+
+**സ്കെയിൽ** — *skeyil* — "a ruler (for lines)".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C301-JOLI301-05, ML-LEX-C301-JOLI301-03, ML-LEX-C301-JOLI301-04] -->
+
+[PAUSE 1s]
+- [YOU SAY: *skeyil*]
+- [YOU SAY: *skeyil*, once more]
+- [YOU SAY: say *skeyil*]
+- [YOU RECALL: say the Malayalam for a fine, then the Malayalam for a stapler, then say *skeyil* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C301-JOLI301-05, ML-LEX-C301-JOLI301-03, ML-LEX-C301-JOLI301-04] -->
+
+[PAUSE 3s] What does സ്കെയിൽ mean? ("A ruler (for lines)".) Say it once more.
+`,y=e({default:()=>b}),b=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ML-C301-srraplar
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 14150
+chapter: 301
+type: word
+headword: "സ്റ്റാപ്ലർ"
+gloss: "a stapler"
+romanization: "sṟṟāplar"
+concept_tag: ML-JOLI301-SRRAPLAR
+prerequisites: [ML-C301-nikuti, ML-C301-pila]
+sounds: []
+roots: []
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [ML-LEX-C301-JOLI301-02, ML-LEX-C301-JOLI301-03]
+introduces:
+  knowledge: [ML-LEX-C301-JOLI301-04]
+practises:
+  knowledge: [ML-LEX-C301-JOLI301-04, ML-LEX-C301-JOLI301-02, ML-LEX-C301-JOLI301-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C301-pila]
+---
+
+# സ്റ്റാപ്ലർ (sṟṟāplar) — a stapler
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C301-JOLI301-02, ML-LEX-C301-JOLI301-03] -->
+
+[PAUSE 2s] Before the new one: say the Malayalam for a tax, then the Malayalam for a fine.
+
+## You'll want to know: സ്റ്റാപ്ലർ
+<!-- hl-knowledge: introduces=[ML-LEX-C301-JOLI301-04]; assesses=[] -->
+
+**സ്റ്റാപ്ലർ** — *sṟṟāplar* — "a stapler".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C301-JOLI301-04, ML-LEX-C301-JOLI301-02, ML-LEX-C301-JOLI301-03] -->
+
+[PAUSE 1s]
+- [YOU SAY: *sṟṟāplar*]
+- [YOU SAY: *sṟṟāplar*, once more]
+- [YOU SAY: say *sṟṟāplar*]
+- [YOU RECALL: say the Malayalam for a tax, then the Malayalam for a fine, then say *sṟṟāplar* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C301-JOLI301-04, ML-LEX-C301-JOLI301-02, ML-LEX-C301-JOLI301-03] -->
+
+[PAUSE 3s] What does സ്റ്റാപ്ലർ mean? ("A stapler".) Say it once more.
+`,x=e({default:()=>S}),S=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ML-C302-araykkuka
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
+sequence: 14230
+chapter: 302
+type: word
+headword: "അരയ്ക്കുക"
+gloss: "to grind"
+romanization: "araykkuka"
+concept_tag: ML-VERB-ARAYKKUKA
+prerequisites: [ML-C302-murikkuka, ML-C302-ariyuka]
+sounds: []
+roots: []
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [ML-LEX-C302-KRIYA302-03, ML-LEX-C302-KRIYA302-04]
+introduces:
+  knowledge: [ML-LEX-C302-KRIYA302-05]
+practises:
+  knowledge: [ML-LEX-C302-KRIYA302-05, ML-LEX-C302-KRIYA302-03, ML-LEX-C302-KRIYA302-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C302-ariyuka]
+---
+
+# അരയ്ക്കുക (araykkuka) — to grind
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C302-KRIYA302-03, ML-LEX-C302-KRIYA302-04] -->
+
+[PAUSE 2s] Before the new one: say the Malayalam for to cut, then the Malayalam for to chop.
+
+## You'll want to know: അരയ്ക്കുക
+<!-- hl-knowledge: introduces=[ML-LEX-C302-KRIYA302-05]; assesses=[] -->
+
+**അരയ്ക്കുക** — *araykkuka* — "to grind".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C302-KRIYA302-05, ML-LEX-C302-KRIYA302-03, ML-LEX-C302-KRIYA302-04] -->
+
+[PAUSE 1s]
+- [YOU SAY: *araykkuka*]
+- [YOU SAY: *araykkuka*, once more]
+- [YOU SAY: say *araykkuka*]
+- [YOU RECALL: say the Malayalam for to cut, then the Malayalam for to chop, then say *araykkuka* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C302-KRIYA302-05, ML-LEX-C302-KRIYA302-03, ML-LEX-C302-KRIYA302-04] -->
+
+[PAUSE 3s] What does അരയ്ക്കുക mean? ("To grind".) Say it once more.
+`,C=e({default:()=>w}),w=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ML-C302-ariyuka
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
+sequence: 14220
+chapter: 302
+type: word
+headword: "അരിയുക"
+gloss: "to chop (vegetables)"
+romanization: "ariyuka"
+concept_tag: ML-VERB-ARIYUKA
+prerequisites: [ML-C302-istiriyituka, ML-C302-murikkuka]
+sounds: []
+roots: []
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [ML-LEX-C302-KRIYA302-02, ML-LEX-C302-KRIYA302-03]
+introduces:
+  knowledge: [ML-LEX-C302-KRIYA302-04]
+practises:
+  knowledge: [ML-LEX-C302-KRIYA302-04, ML-LEX-C302-KRIYA302-02, ML-LEX-C302-KRIYA302-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C302-murikkuka]
+---
+
+# അരിയുക (ariyuka) — to chop (vegetables)
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C302-KRIYA302-02, ML-LEX-C302-KRIYA302-03] -->
+
+[PAUSE 2s] Before the new one: say the Malayalam for to iron, then the Malayalam for to cut.
+
+## You'll want to know: അരിയുക
+<!-- hl-knowledge: introduces=[ML-LEX-C302-KRIYA302-04]; assesses=[] -->
+
+**അരിയുക** — *ariyuka* — "to chop (vegetables)".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C302-KRIYA302-04, ML-LEX-C302-KRIYA302-02, ML-LEX-C302-KRIYA302-03] -->
+
+[PAUSE 1s]
+- [YOU SAY: *ariyuka*]
+- [YOU SAY: *ariyuka*, once more]
+- [YOU SAY: say *ariyuka*]
+- [YOU RECALL: say the Malayalam for to iron, then the Malayalam for to cut, then say *ariyuka* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C302-KRIYA302-04, ML-LEX-C302-KRIYA302-02, ML-LEX-C302-KRIYA302-03] -->
+
+[PAUSE 3s] What does അരിയുക mean? ("To chop (vegetables)".) Say it once more.
+`,T=e({default:()=>E}),E=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ML-C302-istiriyituka
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
+sequence: 14200
+chapter: 302
+type: word
+headword: "ഇസ്തിരിയിടുക"
+gloss: "to iron (clothes)"
+romanization: "istiriyiṭuka"
+concept_tag: ML-VERB-ISTIRIYITUKA
+prerequisites: [ML-C301-skeyil, ML-C302-tunnuka]
+sounds: []
+roots: []
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [ML-LEX-C301-JOLI301-05, ML-LEX-C302-KRIYA302-01]
+introduces:
+  knowledge: [ML-LEX-C302-KRIYA302-02]
+practises:
+  knowledge: [ML-LEX-C302-KRIYA302-02, ML-LEX-C301-JOLI301-05, ML-LEX-C302-KRIYA302-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C302-tunnuka]
+---
+
+# ഇസ്തിരിയിടുക (istiriyiṭuka) — to iron (clothes)
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C301-JOLI301-05, ML-LEX-C302-KRIYA302-01] -->
+
+[PAUSE 2s] Before the new one: say the Malayalam for a ruler, then the Malayalam for to sew.
+
+## You'll want to know: ഇസ്തിരിയിടുക
+<!-- hl-knowledge: introduces=[ML-LEX-C302-KRIYA302-02]; assesses=[] -->
+
+**ഇസ്തിരിയിടുക** — *istiriyiṭuka* — "to iron (clothes)".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C302-KRIYA302-02, ML-LEX-C301-JOLI301-05, ML-LEX-C302-KRIYA302-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: *istiriyiṭuka*]
+- [YOU SAY: *istiriyiṭuka*, once more]
+- [YOU SAY: say *istiriyiṭuka*]
+- [YOU RECALL: say the Malayalam for a ruler, then the Malayalam for to sew, then say *istiriyiṭuka* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C302-KRIYA302-02, ML-LEX-C301-JOLI301-05, ML-LEX-C302-KRIYA302-01] -->
+
+[PAUSE 3s] What does ഇസ്തിരിയിടുക mean? ("To iron (clothes)".) Say it once more.
+`,D=e({default:()=>O}),O=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ML-C302-murikkuka
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
+sequence: 14210
+chapter: 302
+type: word
+headword: "മുറിക്കുക"
+gloss: "to cut"
+romanization: "muṟikkuka"
+concept_tag: ML-VERB-MURIKKUKA
+prerequisites: [ML-C302-tunnuka, ML-C302-istiriyituka]
+sounds: []
+roots: []
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [ML-LEX-C302-KRIYA302-01, ML-LEX-C302-KRIYA302-02]
+introduces:
+  knowledge: [ML-LEX-C302-KRIYA302-03]
+practises:
+  knowledge: [ML-LEX-C302-KRIYA302-03, ML-LEX-C302-KRIYA302-01, ML-LEX-C302-KRIYA302-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C302-istiriyituka]
+---
+
+# മുറിക്കുക (muṟikkuka) — to cut
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C302-KRIYA302-01, ML-LEX-C302-KRIYA302-02] -->
+
+[PAUSE 2s] Before the new one: say the Malayalam for to sew, then the Malayalam for to iron.
+
+## You'll want to know: മുറിക്കുക
+<!-- hl-knowledge: introduces=[ML-LEX-C302-KRIYA302-03]; assesses=[] -->
+
+**മുറിക്കുക** — *muṟikkuka* — "to cut".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C302-KRIYA302-03, ML-LEX-C302-KRIYA302-01, ML-LEX-C302-KRIYA302-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: *muṟikkuka*]
+- [YOU SAY: *muṟikkuka*, once more]
+- [YOU SAY: say *muṟikkuka*]
+- [YOU RECALL: say the Malayalam for to sew, then the Malayalam for to iron, then say *muṟikkuka* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C302-KRIYA302-03, ML-LEX-C302-KRIYA302-01, ML-LEX-C302-KRIYA302-02] -->
+
+[PAUSE 3s] What does മുറിക്കുക mean? ("To cut".) Say it once more.
+`,k=e({default:()=>A}),A=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ML-C302-tunnuka
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
+sequence: 14190
+chapter: 302
+type: word
+headword: "തുന്നുക"
+gloss: "to sew"
+romanization: "tunnuka"
+concept_tag: ML-VERB-TUNNUKA
+prerequisites: [ML-C301-srraplar, ML-C301-skeyil]
+sounds: []
+roots: []
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [ML-LEX-C301-JOLI301-04, ML-LEX-C301-JOLI301-05]
+introduces:
+  knowledge: [ML-LEX-C302-KRIYA302-01]
+practises:
+  knowledge: [ML-LEX-C302-KRIYA302-01, ML-LEX-C301-JOLI301-04, ML-LEX-C301-JOLI301-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C301-skeyil]
+---
+
+# തുന്നുക (tunnuka) — to sew
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C301-JOLI301-04, ML-LEX-C301-JOLI301-05] -->
+
+[PAUSE 2s] Before the new one: say the Malayalam for a stapler, then the Malayalam for a ruler.
+
+## You'll want to know: തുന്നുക
+<!-- hl-knowledge: introduces=[ML-LEX-C302-KRIYA302-01]; assesses=[] -->
+
+**തുന്നുക** — *tunnuka* — "to sew".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C302-KRIYA302-01, ML-LEX-C301-JOLI301-04, ML-LEX-C301-JOLI301-05] -->
+
+[PAUSE 1s]
+- [YOU SAY: *tunnuka*]
+- [YOU SAY: *tunnuka*, once more]
+- [YOU SAY: say *tunnuka*]
+- [YOU RECALL: say the Malayalam for a stapler, then the Malayalam for a ruler, then say *tunnuka* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C302-KRIYA302-01, ML-LEX-C301-JOLI301-04, ML-LEX-C301-JOLI301-05] -->
+
+[PAUSE 3s] What does തുന്നുക mean? ("To sew".) Say it once more.
+`;export{x as a,h as c,l as d,s as f,t as h,C as i,p as l,r as m,D as n,y as o,a as p,T as r,_ as s,k as t,d as u};
