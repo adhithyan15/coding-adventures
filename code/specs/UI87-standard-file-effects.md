@@ -464,8 +464,14 @@ Kotlin file. What differs is how Dart and Flutter shape the rest:
   yet", nothing deferred, as SwiftUI does on iOS, until UI89 adds a document
   picker and a share sheet. A sandboxed macOS build needs the
   `com.apple.security.files.user-selected.read-write` entitlement, which the
-  runner `flutter create` generates does not have; there the panel fails and
-  the request is answered `failed { "the file dialog failed" }`.
+  runner `flutter create` generates does not have; without it the panel fails
+  and the request is answered `failed { "the file dialog failed" }`. So the
+  builder writes `macos/Runner/DebugProfile.entitlements` and
+  `Release.entitlements` into every Flutter project: Flutter's own keys (the
+  sandbox; JIT and the VM service's socket in debug) plus that one.
+  `flutter create` writes only the files a project lacks, so the runner it
+  makes later keeps them. `user-selected` is the narrowest file entitlement:
+  the app gets the one file the person chose, nothing else on disk.
 - **Tests.** `conformance/flutter-platform-effects/` runs the core on the
   plain Dart VM with a fake host and fake dialogs: the Compose test's cases,
   the SwiftUI and XAML harnesses' router cases (including the host disposed
@@ -491,10 +497,9 @@ Kotlin file. What differs is how Dart and Flutter shape the rest:
   compiled by that lane's `flutter analyze` and `flutter build linux` of every
   generated project.
 
-**Known gaps.** The macOS entitlement above belongs to whatever generates
-the macOS runner; it is a follow-up. The libc calls have run on Linux x64
-only; the macOS and Linux arm64 flag values and the macOS `stat` layout come from the system headers
-and are pinned by tests, but no Mac or arm64 machine has run them yet. The
+**Known gaps.** The libc calls have run on Linux x64 only; the macOS and
+Linux arm64 flag values and the macOS `stat` layout come from the system
+headers and are pinned by tests, but no Mac or arm64 machine has run them yet. The
 Windows save has been type-checked, not run.
 
 ## 6. What this does not decide

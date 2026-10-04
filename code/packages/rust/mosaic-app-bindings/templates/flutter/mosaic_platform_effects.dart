@@ -15,7 +15,9 @@
 // chooser on Linux. A sandboxed macOS build needs the
 // `com.apple.security.files.user-selected.read-write` entitlement for them;
 // without it the panel fails and the request is answered
-// `failed { "the file dialog failed" }`.
+// `failed { "the file dialog failed" }`. Generated projects carry it: the
+// builder writes `macos/Runner/{DebugProfile,Release}.entitlements` before
+// `flutter create` makes the runner, and `flutter create` keeps them.
 //
 // On Linux GTK's chooser does not ask before saving over a file (the plugin
 // never turns that on), so this library asks itself, in a Material dialog on
