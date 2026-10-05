@@ -1,0 +1,15 @@
+{
+  "glyph": "ず",
+  "sound": "zu",
+  "role": "hiragana",
+  "components": [
+    "す",
+    "the dakuten ゛"
+  ],
+  "strokeOrder": [
+    "す in full",
+    "two short strokes at the upper right"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "す voiced, read zu: on an s sign the dakuten makes a z. The end of みず and the middle of すずしい."
+}

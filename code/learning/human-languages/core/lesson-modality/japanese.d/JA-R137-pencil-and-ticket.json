@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-R137-pencil-and-ticket",
+    "language": "japanese",
+    "chapter": 137,
+    "sequence": 8460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e689a3a823b85221"
+  },
+  "findings": []
+}

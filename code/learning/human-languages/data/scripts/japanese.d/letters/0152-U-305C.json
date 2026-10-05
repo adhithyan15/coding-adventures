@@ -1,0 +1,15 @@
+{
+  "glyph": "ぜ",
+  "sound": "ze",
+  "role": "hiragana",
+  "components": [
+    "せ",
+    "the dakuten ゛"
+  ],
+  "strokeOrder": [
+    "せ in full",
+    "two short strokes at the upper right"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "せ voiced, read ze. The end of かぜ; with it every sign of the z row is written."
+}

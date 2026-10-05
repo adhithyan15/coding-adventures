@@ -1,0 +1,15 @@
+{
+  "glyph": "ぱ",
+  "sound": "pa",
+  "role": "hiragana",
+  "components": [
+    "は",
+    "the handakuten ゜"
+  ],
+  "strokeOrder": [
+    "は in full",
+    "a small circle at the upper right"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "は with the handakuten, read pa. The third sign of いっぱい and of しんぱい."
+}

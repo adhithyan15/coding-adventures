@@ -1,0 +1,11 @@
+{
+  "id": "JA-C136-suzushii",
+  "pathSegment": "JA-PATH-136-WRITE136",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "JA-EXT-136-WRITE136",
+      "order": 5
+    }
+  ]
+}

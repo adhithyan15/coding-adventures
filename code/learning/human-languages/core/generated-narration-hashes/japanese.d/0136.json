@@ -1,0 +1,23 @@
+{
+  "language": "japanese",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:025aa8d6d9439e08",
+  "lessonIds": [
+    "JA-C136-kazoku",
+    "JA-W136-zo",
+    "JA-C136-kazoeru",
+    "JA-C136-mizu",
+    "JA-W136-zu",
+    "JA-C136-suzushii",
+    "JA-C136-kaze",
+    "JA-W136-ze",
+    "JA-R136-family-and-water"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "japanese/narration/ch136.txt",
+  "json": "japanese/narration/ch136.json",
+  "textHash": "fnv1a64:834acb4c4a2eb2f2",
+  "jsonHash": "fnv1a64:986d084ac08d1d7d",
+  "findings": []
+}

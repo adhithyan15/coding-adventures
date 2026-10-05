@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-137-WRITE137",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write pa, pi, pu and pe by adding the small circle to signs I already write, and read words for things I want or need that use them, such as kippu, enpitsu and tenpura.",
+  "prerequisites": []
+}

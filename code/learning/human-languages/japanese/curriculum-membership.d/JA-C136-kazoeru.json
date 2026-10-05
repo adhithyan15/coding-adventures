@@ -1,0 +1,11 @@
+{
+  "id": "JA-C136-kazoeru",
+  "pathSegment": "JA-PATH-136-WRITE136",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-136-WRITE136",
+      "order": 2
+    }
+  ]
+}

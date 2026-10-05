@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 137,
+  "sourceHash": "fnv1a64:9ab078b27ea5324a",
+  "lessonIds": [
+    "JA-C137-ippai",
+    "JA-W137-pa",
+    "JA-C137-shinpai",
+    "JA-C137-enpitsu",
+    "JA-W137-pi",
+    "JA-C137-ippiki",
+    "JA-C137-kippu",
+    "JA-W137-pu",
+    "JA-C137-tenpura",
+    "JA-C137-perapera",
+    "JA-W137-pe",
+    "JA-R137-pencil-and-ticket"
+  ],
+  "tex": "japanese/book/chapters/ch137-pencil-and-ticket-pa-pi-pu-pe.tex"
+}

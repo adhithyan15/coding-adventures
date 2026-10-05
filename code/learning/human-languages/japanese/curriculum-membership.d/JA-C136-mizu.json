@@ -1,0 +1,11 @@
+{
+  "id": "JA-C136-mizu",
+  "pathSegment": "JA-PATH-136-WRITE136",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-136-WRITE136",
+      "order": 3
+    }
+  ]
+}

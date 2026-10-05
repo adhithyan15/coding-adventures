@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C136-kazoku",
+    "language": "japanese",
+    "chapter": 136,
+    "sequence": 8260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a1865dda5960ba4"
+  },
+  "findings": []
+}

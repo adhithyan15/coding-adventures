@@ -1,0 +1,15 @@
+{
+  "glyph": "ぞ",
+  "sound": "zo",
+  "role": "hiragana",
+  "components": [
+    "そ",
+    "the dakuten ゛"
+  ],
+  "strokeOrder": [
+    "そ in full",
+    "two short strokes at the upper right"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "そ voiced, read zo. The middle of かぞく and of かぞえる."
+}

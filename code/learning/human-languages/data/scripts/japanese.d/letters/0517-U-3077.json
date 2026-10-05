@@ -1,0 +1,15 @@
+{
+  "glyph": "ぷ",
+  "sound": "pu",
+  "role": "hiragana",
+  "components": [
+    "ふ",
+    "the handakuten ゜"
+  ],
+  "strokeOrder": [
+    "ふ in full",
+    "a small circle at the upper right"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "ふ with the handakuten, read pu. The end of きっぷ and the third sign of てんぷら."
+}

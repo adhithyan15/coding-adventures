@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "JA-W136-zo",
+    "language": "japanese",
+    "chapter": 136,
+    "sequence": 8270,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7d7700ba9ed5a8fb",
+    "detachableSegments": [
+      "Script — the change"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

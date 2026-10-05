@@ -1,0 +1,15 @@
+{
+  "glyph": "ぴ",
+  "sound": "pi",
+  "role": "hiragana",
+  "components": [
+    "ひ",
+    "the handakuten ゜"
+  ],
+  "strokeOrder": [
+    "ひ in full",
+    "a small circle at the upper right"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "ひ with the handakuten, read pi. The third sign of えんぴつ and of いっぴき."
+}

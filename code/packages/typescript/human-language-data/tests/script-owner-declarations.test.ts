@@ -39,7 +39,12 @@ const CONFIGS = [
   // げ (U+3052) and ぎ (U+304E). Each row follows が, ご, ざ and ぼ: the base
   // sign plus the dakuten, with no stroke-order source of its own and so no
   // ductus.
-  { language: "japanese", script: "japanese", letters: 78, marks: 3 },
+  // 78 -> 85: chapters 136 and 137 write ぞ (U+305E), ず (U+305A), ぜ
+  // (U+305C), ぱ (U+3071), ぴ (U+3074), ぷ (U+3077) and ぺ (U+307A). The
+  // three z signs follow ざ (base plus the dakuten); the four p signs follow
+  // ぽ (base plus the handakuten). None has a stroke-order source of its own,
+  // and so none has a ductus.
+  { language: "japanese", script: "japanese", letters: 85, marks: 3 },
   // 24 -> 26: HL-C350 adds ج and ص as RECOGNITION-ONLY owners. panj (five) and
   // sad (a hundred) need them in a headword, and `uncoveredGlyphs` is a
   // headword check, so the numerals could not be taught without them. Both

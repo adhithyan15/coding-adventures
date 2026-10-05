@@ -1,0 +1,28 @@
+{
+  "chapter": 137,
+  "title": "Pencil and Ticket: Pa, Pi, Pu and Pe",
+  "label": "ch:ja-pencil-and-ticket-pa-pi-pu-pe",
+  "canDo": "I can write pa, pi, pu and pe by adding the small circle to signs I already write, and read words for things I want or need that use them, such as kippu, enpitsu and tenpura.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "JA-R137-pencil-and-ticket",
+    "kind": "production",
+    "summary": "Read ippai, shinpai, enpitsu, ippiki, kippu, tenpura and perapera, write the four new signs beside the signs they come from, write enpitsu and kippu from memory and say which one you show on a train, and write perapera.",
+    "assesses": [
+      "JA-LEX-ANCHOR-IPPAI",
+      "JA-SCRIPT-PA-01",
+      "JA-LEX-C137-SHINPAI",
+      "JA-LEX-ANCHOR-ENPITSU",
+      "JA-SCRIPT-PI-01",
+      "JA-LEX-C137-IPPIKI",
+      "JA-LEX-ANCHOR-KIPPU",
+      "JA-SCRIPT-PU-01",
+      "JA-LEX-C137-TENPURA",
+      "JA-LEX-ANCHOR-PERAPERA",
+      "JA-SCRIPT-PE-01"
+    ],
+    "note": "Word before sign, every time, as in chapter 136. Each of the four signs is first SEEN inside a word taught one lesson earlier -- ippai for pa, enpitsu for pi, kippu for pu, perapera for pe -- and only then written, so every letter lesson is anchored (HL-C443). Each one is an h-row sign the book already writes plus the small circle of the handakuten, which the book has written only on ho (po, in ippon) since chapter 18. Two lessons separate each writing lesson from the next, and each new sign is spent at once in a second word (shinpai, ippiki, tenpura) or in the review. After this chapter the book writes every sign of the p row."
+  }
+}
