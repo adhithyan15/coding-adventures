@@ -14,8 +14,8 @@ import { Kinds, streamOf } from "@coding-adventures/forme-types";
 
 export default defineStage({
   name:        "@forme/parse-markdown",
-  version:     "0.1.0",
-  apiVersion:  1,
+  version:     "1.0.0",
+  apiVersion:  2,
   description: "Parses CommonMark + GFM into a ContentNode.",
   consumes:    Kinds.ContentSource,
   produces:    Kinds.ContentNode,
@@ -36,7 +36,7 @@ and declare required named side inputs with `inputPorts`:
 export default defineStage({
   name: "@forme/emit-static-site",
   version: "0.1.0",
-  apiVersion: 1,
+  apiVersion: 2,
   description: "Join rendered pages with processed assets.",
   consumes: streamOf(Kinds.RenderedPage),
   inputPorts: { assets: streamOf(Kinds.Asset) },

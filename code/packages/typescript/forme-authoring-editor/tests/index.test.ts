@@ -10,7 +10,7 @@ import {
 
 describe("forme-authoring-editor public surface", () => {
   it("exports the editor, pure helpers, styles, and version", () => {
-    expect(VERSION).toBe("0.1.0");
+    expect(VERSION).toBe("1.0.0");
     expect(AuthoringEditor).toBeTypeOf("function");
     expect(createDefaultBlock("paragraph")).toEqual({
       type: "paragraph",

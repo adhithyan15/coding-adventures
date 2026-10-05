@@ -27,8 +27,8 @@
  * documents resolve authored element IDs and populate exact `usedIslands`
  * plus reviewed, SHA-256-bound module-asset uses. Resolved assets become collision-free
  * emitter placeholders and populate `usedAssets`. `provenance` records the
- * input node's logical and revision IDs; `source` remains as a temporary
- * compatibility hint for consumers of the v1.0 kind.
+ * input node's logical and revision IDs. Kernel API v2 removes the legacy
+ * single-`source` compatibility field.
  *
  * `meta.title` is derived via the three-step fallback in `title.ts`:
  * `frontmatter.title` → first H1 → slug.
@@ -105,8 +105,8 @@ const DEFAULT_SITE_TITLE = "";
 
 const renderStatic = defineStage({
   name: "@coding-adventures/forme-render-static",
-  version: "0.2.0",
-  apiVersion: 1,
+  version: "1.0.0",
+  apiVersion: 2,
   description: "Render ContentNode pages with matched Style IR and AOT-sliced CSS.",
   consumes: streamOf(Kinds.ContentNode),
   produces: streamOf(Kinds.RenderedPage),
@@ -257,7 +257,6 @@ const renderStatic = defineStage({
         ])],
         meta,
         provenance: createOutputProvenance([node]),
-        source: node.identity,
       };
       yield page as never;
     }

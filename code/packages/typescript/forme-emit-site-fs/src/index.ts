@@ -15,7 +15,11 @@ import {
   type LogicalId,
   type RenderedPage,
 } from "@coding-adventures/forme-types";
-import { computeRevisionId, isLogicalIdShape } from "@coding-adventures/forme-identity";
+import {
+  computeRevisionId,
+  isLogicalIdShape,
+  validateOutputProvenance,
+} from "@coding-adventures/forme-identity";
 import { defineStage, type StageContext } from "@coding-adventures/forme-stage";
 
 export interface EmitSiteFsConfig {
@@ -117,8 +121,8 @@ function rewriteAssetPlaceholdersFromSnapshot(
 
 const emitSiteFs = defineStage({
   name: "@coding-adventures/forme-emit-site-fs",
-  version: "0.2.0",
-  apiVersion: 1,
+  version: "1.0.0",
+  apiVersion: 2,
   description: "Join rendered pages with Asset IR and emit a fingerprinted static site.",
   consumes: streamOf(Kinds.RenderedPage),
   inputPorts: { assets: streamOf(Kinds.Asset) },
@@ -557,6 +561,10 @@ function snapshotPage(
   const rawAssets = dataProperty(page, "usedAssets");
   const rawIslands = dataProperty(page, "usedIslands");
   const rawModules = dataProperty(page, "islandModules", false);
+  const provenance = validateOutputProvenance(
+    dataProperty(page, "provenance"),
+    utilTypes.isProxy,
+  );
   const modules = rawModules === undefined ? [] : rawModules;
   const contentBytes = Buffer.byteLength(route, "utf8") + Buffer.byteLength(html, "utf8");
   if (contentBytes > MAX_PAGE_CONTENT_BYTES) {
@@ -566,7 +574,8 @@ function snapshotPage(
   }
   const usageEntries = validatedExactArrayLength(rawAssets, "page.usedAssets", MAX_PAGE_ASSETS)
     + validatedExactArrayLength(rawIslands, "page.usedIslands", MAX_PAGE_ISLANDS)
-    + validatedExactArrayLength(modules, "page.islandModules", MAX_PAGE_ISLANDS);
+    + validatedExactArrayLength(modules, "page.islandModules", MAX_PAGE_ISLANDS)
+    + provenance.contributors.length;
   if (budget !== undefined) {
     if (budget.contentBytes > MAX_SITE_CONTENT_BYTES - contentBytes) {
       throw new TypeError(

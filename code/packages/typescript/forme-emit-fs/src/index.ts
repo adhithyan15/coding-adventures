@@ -59,6 +59,7 @@
 import { lstat, mkdir, realpath, rename, unlink, writeFile } from "node:fs/promises";
 import { isAbsolute, relative as relPath, resolve, sep } from "node:path";
 import { createHash, randomUUID } from "node:crypto";
+import { types as utilTypes } from "node:util";
 import {
   Kinds,
   streamOf,
@@ -69,7 +70,7 @@ import {
   type JsonValue,
 } from "@coding-adventures/forme-types";
 import { defineStage, type StageContext } from "@coding-adventures/forme-stage";
-import { computeRevisionId } from "@coding-adventures/forme-identity";
+import { computeRevisionId, validateOutputProvenance } from "@coding-adventures/forme-identity";
 import { routeToOutPath } from "./path-utils.js";
 
 export interface EmitFsConfig {
@@ -241,8 +242,8 @@ function sha256Hex(bytes: Uint8Array): string {
 
 const emitFs = defineStage({
   name: "@coding-adventures/forme-emit-fs",
-  version: "0.2.0",
-  apiVersion: 1,
+  version: "1.0.0",
+  apiVersion: 2,
   description: "Write each RenderedPage to disk under outDir; emit one DeployArtifact summarising the result.",
   consumes: streamOf(Kinds.RenderedPage),
   produces: Kinds.DeployArtifact,
@@ -267,6 +268,7 @@ const emitFs = defineStage({
 
     for await (const page of stream) {
       ctx.cancellation.throwIfCancelled();
+      validateOutputProvenance(pageDataProperty(page, "provenance"), utilTypes.isProxy);
 
       const absPath = routeToOutPath(config.outDir, page.route);
       const bytes = encoder.encode(page.html);
@@ -333,6 +335,20 @@ const emitFs = defineStage({
     });
   },
 });
+
+function pageDataProperty(page: RenderedPage, key: string): unknown {
+  if (typeof page !== "object" || page === null || utilTypes.isProxy(page)) {
+    throw new TypeError("forme-emit-fs: page must be a non-proxy object");
+  }
+  const descriptor = Object.getOwnPropertyDescriptor(page, key);
+  if (descriptor === undefined) {
+    throw new TypeError(`forme-emit-fs: page.${key} is required`);
+  }
+  if (!("value" in descriptor)) {
+    throw new TypeError(`forme-emit-fs: page.${key} must not be an accessor`);
+  }
+  return descriptor.value;
+}
 
 export default emitFs;
 export { emitFs, routeToOutPath, sha256Hex };

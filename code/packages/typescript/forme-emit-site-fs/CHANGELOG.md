@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 1.0.0 — 2026-10-05
+
+- Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.
+
 ### Fixed
 
 - Drain live page and asset inputs concurrently before asset-dependent page
@@ -19,6 +23,8 @@
 
 ### Security
 
+- Require descriptor-only canonical bounded provenance for every page and
+  reject legacy source-only or forged plugin output before materialization.
 - Reject missing, duplicate, non-script, non-JavaScript-MIME, or usage-list
   mismatches before materializing an interactive page. Recompute reviewed
   script SHA-256 bindings, snapshot bounded page usage, and reject exact or

@@ -18,14 +18,14 @@ import {
 import type { KindDescriptor, KindName } from "../src/index.js";
 
 describe("KERNEL_API_VERSION", () => {
-  it("starts at 1 — bumping requires explicit migration plan", () => {
-    expect(KERNEL_API_VERSION).toBe(1);
+  it("is 2 after the RenderedPage provenance migration", () => {
+    expect(KERNEL_API_VERSION).toBe(2);
   });
 
   it("is a numeric literal type, not a widening number", () => {
-    // Type-level: this assignment is OK only if the version is `1`.
-    const v: 1 = KERNEL_API_VERSION;
-    expect(v).toBe(1);
+    // Type-level: this assignment is OK only if the version is `2`.
+    const v: 2 = KERNEL_API_VERSION;
+    expect(v).toBe(2);
   });
 });
 
@@ -62,8 +62,8 @@ describe("Kinds canonical descriptors", () => {
     expect(new Set(actualKeys)).toEqual(new Set(expectedKeys));
   });
 
-  it("advertises revision-aware RenderedPage provenance as v1.1", () => {
-    expect(Kinds.RenderedPage.version).toBe("1.1");
+  it("advertises required RenderedPage provenance as v2.0", () => {
+    expect(Kinds.RenderedPage.version).toBe("2.0");
   });
 
   it("uses semver-compatible version strings", () => {

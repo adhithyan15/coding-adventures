@@ -219,7 +219,7 @@ export async function createPluginHost(options: PluginHostOptions): Promise<Plug
     storageRoot: options.storageRoot,
     cacheDirectory: options.cacheDirectory,
     hostName: options.hostName ?? "forme-orchestrator",
-    hostVersion: options.hostVersion ?? "0.1.0",
+    hostVersion: options.hostVersion ?? "1.0.0",
     handshakeTimeoutMs: positive(options.handshakeTimeoutMs, 5_000),
     requestTimeoutMs: positive(options.requestTimeoutMs, 30_000),
     cancellationGracePeriodMs: positive(options.cancellationGracePeriodMs, 5_000),

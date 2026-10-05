@@ -1388,7 +1388,7 @@ import { Kinds, defineStage } from "@coding-adventures/forme-types";
 const greetSource = defineStage({
   name:        "greet-source",
   version:     "0.1.0",
-  apiVersion:  1,
+  apiVersion:  2,
   description: "produces a single greeting source",
   consumes:    Kinds.Void,
   produces:    Kinds.ContentSource,
@@ -1410,7 +1410,7 @@ const greetSource = defineStage({
 const printSink = defineStage({
   name:        "print-sink",
   version:     "0.1.0",
-  apiVersion:  1,
+  apiVersion:  2,
   description: "logs the source content",
   consumes:    Kinds.ContentSource,
   produces:    Kinds.Void,

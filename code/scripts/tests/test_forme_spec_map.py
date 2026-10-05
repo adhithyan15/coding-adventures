@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+import os
 import re
 import unittest
 from pathlib import Path
@@ -9,6 +11,10 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SPECS = REPO_ROOT / "code" / "specs"
+TYPESCRIPT_PACKAGES = REPO_ROOT / "code" / "packages" / "typescript"
+TYPESCRIPT_PROGRAMS = REPO_ROOT / "code" / "programs" / "typescript"
+TYPESCRIPT_SITES = REPO_ROOT / "code" / "sites"
+FORME_STABLE_PACKAGE_VERSION = "1.0.0"
 
 NUMBERED_SPECS = {
     "FM01": "FM01-forme-kernel.md",
@@ -34,6 +40,117 @@ ROADMAP_SEPARATOR = "|---:|---|---|---|---|"
 
 
 class FormeSpecMapTests(unittest.TestCase):
+    def test_live_site_local_stages_target_kernel_api_v2(self) -> None:
+        stage_sources: list[tuple[Path, str]] = []
+        for directory, child_dirs, filenames in os.walk(TYPESCRIPT_SITES):
+            child_dirs[:] = sorted(
+                name
+                for name in child_dirs
+                if name not in {".forme", "dist", "node_modules"}
+            )
+            for filename in sorted(filenames):
+                if not filename.endswith((".ts", ".tsx")):
+                    continue
+                path = Path(directory) / filename
+                source = path.read_text(encoding="utf-8")
+                if "defineStage(" in source:
+                    stage_sources.append((path, source))
+
+        self.assertTrue(stage_sources, "live Forme sites must expose stage definitions")
+        for path, source in stage_sources:
+            with self.subTest(stage=path.relative_to(TYPESCRIPT_SITES)):
+                self.assertIn("KERNEL_API_VERSION", source)
+                self.assertRegex(source, r"apiVersion:\s*KERNEL_API_VERSION")
+
+    def test_forme_products_report_the_stable_version(self) -> None:
+        for program_name in (
+            "forme-doc-demo",
+            "forme-hello-world",
+            "forme-shell-desktop",
+        ):
+            with self.subTest(program=program_name):
+                program_dir = TYPESCRIPT_PROGRAMS / program_name
+                package = json.loads(
+                    (program_dir / "package.json").read_text(encoding="utf-8")
+                )
+                lock = json.loads(
+                    (program_dir / "package-lock.json").read_text(encoding="utf-8")
+                )
+                self.assertEqual(package["version"], FORME_STABLE_PACKAGE_VERSION)
+                self.assertEqual(lock["version"], FORME_STABLE_PACKAGE_VERSION)
+                self.assertEqual(
+                    lock["packages"][""]["version"], FORME_STABLE_PACKAGE_VERSION
+                )
+
+        native_dir = TYPESCRIPT_PROGRAMS / "forme-shell-desktop" / "src-tauri"
+        cargo_toml = (native_dir / "Cargo.toml").read_text(encoding="utf-8")
+        cargo_lock = (native_dir / "Cargo.lock").read_text(encoding="utf-8")
+        tauri_config = json.loads(
+            (native_dir / "tauri.conf.json").read_text(encoding="utf-8")
+        )
+        self.assertRegex(
+            cargo_toml,
+            rf'(?m)^version = "{re.escape(FORME_STABLE_PACKAGE_VERSION)}"$',
+        )
+        self.assertRegex(
+            cargo_lock,
+            rf'(?s)name = "forme-shell-desktop-native"\nversion = "{re.escape(FORME_STABLE_PACKAGE_VERSION)}"',
+        )
+        self.assertEqual(tauri_config["version"], FORME_STABLE_PACKAGE_VERSION)
+
+    def test_forme_packages_and_local_locks_share_the_stable_version(self) -> None:
+        package_dirs = sorted(TYPESCRIPT_PACKAGES.glob("forme-*"))
+        self.assertTrue(package_dirs, "Forme package set is empty")
+
+        for package_dir in package_dirs:
+            with self.subTest(package=package_dir.name):
+                package = json.loads(
+                    (package_dir / "package.json").read_text(encoding="utf-8")
+                )
+                self.assertTrue(package["name"].startswith("@coding-adventures/forme-"))
+                self.assertEqual(package["version"], FORME_STABLE_PACKAGE_VERSION)
+
+                lock = json.loads(
+                    (package_dir / "package-lock.json").read_text(encoding="utf-8")
+                )
+                self.assertEqual(lock["version"], FORME_STABLE_PACKAGE_VERSION)
+                self.assertEqual(
+                    lock["packages"][""]["version"], FORME_STABLE_PACKAGE_VERSION
+                )
+                for entry_path, entry in lock["packages"].items():
+                    name = entry.get("name", "")
+                    if name.startswith("@coding-adventures/forme-"):
+                        self.assertEqual(
+                            entry.get("version"),
+                            FORME_STABLE_PACKAGE_VERSION,
+                            f"{package_dir.name}:{entry_path} carries {name} at a mixed version",
+                        )
+
+                changelog = (package_dir / "CHANGELOG.md").read_text(
+                    encoding="utf-8"
+                )
+                self.assertIn(
+                    "## 1.0.0 — 2026-10-05\n",
+                    changelog,
+                    "stable package releases must be recorded in every changelog",
+                )
+
+    def test_kernel_api_v2_contract_and_migration_guide_are_pinned(self) -> None:
+        kinds = (
+            TYPESCRIPT_PACKAGES / "forme-types" / "src" / "kinds.ts"
+        ).read_text(encoding="utf-8")
+        self.assertRegex(kinds, r"KERNEL_API_VERSION = 2 as const")
+        self.assertRegex(
+            kinds,
+            r'RenderedPage:\s+Object\.freeze\(\{ name: "RenderedPage",\s+version: "2\.0" \}\)',
+        )
+
+        migration = (
+            TYPESCRIPT_PACKAGES / "forme-types" / "MIGRATION-v2.md"
+        ).read_text(encoding="utf-8")
+        self.assertIn("`RenderedPage.source` is removed", migration)
+        self.assertIn("Hosts and runners reject v1", migration)
+
     def test_numbered_spec_map_is_complete_and_collision_free(self) -> None:
         actual = sorted(path.name for path in SPECS.glob("FM[0-9][0-9]-*.md"))
         expected = sorted(

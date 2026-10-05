@@ -138,11 +138,11 @@ const echoStage = defineStage({
 
 async function handshake(driver: HostDriver): Promise<void> {
   await expect(driver.request("handshake", {
-    hostName: "test", hostVersion: "1", apiVersion: 1, protocolVersion: 1,
+    hostName: "test", hostVersion: "1", apiVersion: 2, protocolVersion: 1,
     pluginName: "@example/echo", pluginVersion: "1.0.0", manifestHash: "sha256:x",
     instanceId: "echo-1", trustTier: "unverified-third-party",
   })).resolves.toMatchObject({
-    pluginName: "@example/echo", pluginVersion: "1.0.0", apiVersion: 1,
+    pluginName: "@example/echo", pluginVersion: "1.0.0", apiVersion: 2,
     protocolVersion: 1, runner: "@coding-adventures/forme-plugin-runner-ts",
   });
   await expect(driver.request("announce", {})).resolves.toEqual({
@@ -248,7 +248,7 @@ describe("TypeScript plugin runner", () => {
     });
     const { driver, completed } = start(streamStage);
     await driver.request("handshake", {
-      hostName: "test", hostVersion: "1", apiVersion: 1, protocolVersion: 1,
+      hostName: "test", hostVersion: "1", apiVersion: 2, protocolVersion: 1,
       pluginName: "@example/echo", pluginVersion: "1.0.0", manifestHash: "sha256:x",
       instanceId: "echo-1", trustTier: "unverified-third-party",
     });
@@ -300,6 +300,12 @@ describe("TypeScript plugin runner", () => {
     expect(new CancellationError("x").reason).toBe("x");
   });
 
+  it("refuses a stage targeting legacy kernel API v1", async () => {
+    const legacy = { ...echoStage, apiVersion: 1 };
+    await expect(runPlugin(legacy as typeof echoStage, { installSignalHandlers: false }))
+      .rejects.toThrow(/apiVersion is unsupported/);
+  });
+
   it("rejects invalid stage metadata, descriptors, argv, and resource limits", async () => {
     const invalidStages = [
       { ...echoStage, name: "" },
@@ -334,16 +340,16 @@ describe("TypeScript plugin runner", () => {
     const { driver, completed } = start(echoStage);
     await expect(driver.request("announce", {})).rejects.toMatchObject({ code: -32004 });
     await expect(driver.request("handshake", {
-      pluginName: "wrong", pluginVersion: "1.0.0", apiVersion: 1, protocolVersion: 1,
+      pluginName: "wrong", pluginVersion: "1.0.0", apiVersion: 2, protocolVersion: 1,
     })).rejects.toMatchObject({ code: -32006, data: { field: "pluginName" } });
     await expect(driver.request("handshake", {
-      pluginName: "@example/echo", pluginVersion: "wrong", apiVersion: 1, protocolVersion: 1,
+      pluginName: "@example/echo", pluginVersion: "wrong", apiVersion: 2, protocolVersion: 1,
     })).rejects.toMatchObject({ code: -32006, data: { field: "pluginVersion" } });
     await expect(driver.request("handshake", {
-      pluginName: "@example/echo", pluginVersion: "1.0.0", apiVersion: 2, protocolVersion: 1,
+      pluginName: "@example/echo", pluginVersion: "1.0.0", apiVersion: 1, protocolVersion: 1,
     })).rejects.toMatchObject({ code: -32006, data: { field: "apiVersion" } });
     await expect(driver.request("handshake", {
-      pluginName: "@example/echo", pluginVersion: "1.0.0", apiVersion: 1, protocolVersion: 2,
+      pluginName: "@example/echo", pluginVersion: "1.0.0", apiVersion: 2, protocolVersion: 2,
     })).rejects.toMatchObject({ code: -32006, data: { field: "protocolVersion" } });
     await handshake(driver);
     await expect(driver.request("handshake", {})).rejects.toMatchObject({ code: -32004 });
@@ -378,7 +384,7 @@ describe("TypeScript plugin runner", () => {
     const driver = new HostDriver();
     const { completed } = start(lifecycle, driver, { argv: ["node", "plugin.mjs"] });
     await driver.request("handshake", {
-      pluginName: "echo", pluginVersion: "1.0.0", apiVersion: 1, protocolVersion: 1,
+      pluginName: "echo", pluginVersion: "1.0.0", apiVersion: 2, protocolVersion: 1,
     });
     await expect(driver.request("announce", {})).resolves.toMatchObject({
       stage: { id: "echo", configSchemaHash: null },
@@ -405,7 +411,7 @@ describe("TypeScript plugin runner", () => {
     });
     const { driver, completed } = start(delayed);
     await driver.request("handshake", {
-      pluginName: "@example/echo", pluginVersion: "1.0.0", apiVersion: 1, protocolVersion: 1,
+      pluginName: "@example/echo", pluginVersion: "1.0.0", apiVersion: 2, protocolVersion: 1,
     });
     await driver.request("announce", {});
     const initializing = driver.request("stage.init", { config: {} });
@@ -442,7 +448,7 @@ describe("TypeScript plugin runner", () => {
     for (const [index, stage] of cases.entries()) {
       const { driver, completed } = start(stage);
       await driver.request("handshake", {
-        pluginName: "@example/echo", pluginVersion: "1.0.0", apiVersion: 1, protocolVersion: 1,
+        pluginName: "@example/echo", pluginVersion: "1.0.0", apiVersion: 2, protocolVersion: 1,
       });
       await driver.request("announce", {});
       await driver.request("stage.init", { config: {} });
@@ -468,7 +474,7 @@ describe("TypeScript plugin runner", () => {
       maxBufferedStreamBytes: 32,
     });
     await driver.request("handshake", {
-      pluginName: "@example/echo", pluginVersion: "1.0.0", apiVersion: 1, protocolVersion: 1,
+      pluginName: "@example/echo", pluginVersion: "1.0.0", apiVersion: 2, protocolVersion: 1,
     });
     await driver.request("announce", {});
     await driver.request("stage.init", { config: {} });
@@ -483,7 +489,7 @@ describe("TypeScript plugin runner", () => {
     const driver2 = new HostDriver();
     const second = start(streamStage, driver2, { maxBufferedStreamBytes: 16 });
     await driver2.request("handshake", {
-      pluginName: "@example/echo", pluginVersion: "1.0.0", apiVersion: 1, protocolVersion: 1,
+      pluginName: "@example/echo", pluginVersion: "1.0.0", apiVersion: 2, protocolVersion: 1,
     });
     await driver2.request("announce", {});
     await driver2.request("stage.init", { config: {} });
@@ -516,7 +522,7 @@ describe("TypeScript plugin runner", () => {
     });
     const streaming = start(streamStage);
     await streaming.driver.request("handshake", {
-      pluginName: "@example/echo", pluginVersion: "1.0.0", apiVersion: 1, protocolVersion: 1,
+      pluginName: "@example/echo", pluginVersion: "1.0.0", apiVersion: 2, protocolVersion: 1,
     });
     await streaming.driver.request("announce", {});
     await streaming.driver.request("stage.init", { config: {} });

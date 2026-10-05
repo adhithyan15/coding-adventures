@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-authoring-editor",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Accessible declarative block editor for the Forme authoring shell",
   "type": "module",
   "main": "src/index.ts",

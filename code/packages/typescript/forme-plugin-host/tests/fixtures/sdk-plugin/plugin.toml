@@ -3,7 +3,7 @@ manifestVersion = 1
 [plugin]
 name = "@example/sdk"
 version = "1.0.0"
-apiVersion = 1
+apiVersion = 2
 description = "FM-B050 TypeScript runner end-to-end fixture"
 
 [runtime]

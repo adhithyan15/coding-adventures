@@ -19,6 +19,8 @@ npm install
 npm start
 # → reads ./corpus, writes ./dist (6 pages + sidebar + search)
 
+# every build requires a new output root; move or remove an old dist/ first
+
 # serve dist/ with anything that speaks static files
 npx serve dist
 # or
@@ -100,8 +102,10 @@ spec puts it.  Every library in the chain remains testable in
 memory.
 
 Capability scope: `fs:read` is bounded to `./corpus/**`,
-`fs:write` to `./dist/**` (with a `safeJoin` containment check
-on every write target).  No network, no shell, no env.
+`fs:write` to `./dist/**` (with a resolved `safeJoin` containment
+check, a freshly created private output root, an exclusive writer lock,
+link-free directory traversal, and opened-file identity checks before every
+truncation).  No network, no shell, no env.
 
 ## Two small local helpers
 
@@ -153,9 +157,16 @@ npm start
 npx tsx src/main.ts ./my-corpus ./public
 ```
 
+The output directory must not already exist. Each run creates it privately
+(mode `0700` on POSIX) and holds an exclusive `.forme-write-lock` for the
+duration of the write. Move or remove a previous build before rerunning. The
+writer fails closed when it observes a changed link, directory, file, or lock
+identity; concurrent mutation by another process running as the same OS user
+is outside the supported single-writer contract.
+
 ## Tests
 
-46 tests in `tests/build.test.ts`:
+66 tests in `tests/build.test.ts`:
 
 - **`routeFor`** — every input form (root, nested, `./`, `/`,
   `.md`, `.mdx`).
@@ -172,8 +183,11 @@ npx tsx src/main.ts ./my-corpus ./public
   code blocks, theme CSS, site title).
 - **`writeBundle`** — actual disk output with nested
   directories and `search/` shards.
-- **`safeJoin`** — rejects `..`, absolute, and prefix-string
-  false-match attacks.
+- **`safeJoin` and link-safe writes** — resolve the base and target;
+  reject `..`, absolute, prefix-string false-match, symlink, Windows
+  junction/reparse-point, linked-ancestor, pre-existing-root, and
+  multiply-linked-file attacks; enforce a fresh private single-writer root;
+  and verify directory, lock, and opened-file identities before truncation.
 - **`validateOutDir`** — rejects empty, non-string, and system
   directories.
 

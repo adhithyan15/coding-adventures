@@ -122,7 +122,7 @@ FM02 specifies.
 
 The wire protocol is versioned by an `apiVersion` integer that
 matches FM01's `KERNEL_API_VERSION`. A plugin built against
-`apiVersion: 1` runs against any host that supports `apiVersion: 1`.
+`apiVersion: 2` runs against any host that supports `apiVersion: 2`.
 Breaking changes bump the version; the host loads only plugins
 whose declared `apiVersion` falls inside its supported set.
 
@@ -298,7 +298,7 @@ manifestVersion = 1
 [plugin]
 name        = "@forme/parse-markdown"     # globally unique; namespace recommended
 version     = "1.4.2"                      # semver
-apiVersion  = 1                            # FM01 KERNEL_API_VERSION targeted
+apiVersion  = 2                            # FM01 KERNEL_API_VERSION targeted
 description = "Parse CommonMark + GFM into a ContentNode"
 license     = "MIT"
 authors     = ["Alice <alice@example.com>"]
@@ -872,7 +872,7 @@ The host's first message is a `handshake` request:
   "params": {
     "hostName":          "forme-orchestrator",
     "hostVersion":       "0.1.1",
-    "apiVersion":        1,                    // FM01 KERNEL_API_VERSION
+    "apiVersion":        2,                    // FM01 KERNEL_API_VERSION
     "protocolVersion":   1,                    // FM02 wire protocol version
     "pluginName":        "@forme/parse-markdown",
     "pluginVersion":     "1.4.2",
@@ -894,10 +894,10 @@ The plugin must respond within `handshakeTimeoutMs` (default
   "result": {
     "pluginName":       "@forme/parse-markdown",
     "pluginVersion":    "1.4.2",
-    "apiVersion":       1,
+    "apiVersion":       2,
     "protocolVersion":  1,
     "runner":           "@coding-adventures/forme-plugin-runner-ts",
-    "runnerVersion":    "0.1.0"
+    "runnerVersion":    "1.0.0"
   }
 }
 ```
@@ -1734,7 +1734,7 @@ import { Kinds, defineStage } from "@coding-adventures/forme-types";
 const stage = defineStage({
   name:        "@me/my-plugin",
   version:     "1.0.0",
-  apiVersion:  1,
+  apiVersion:  2,
   description: "...",
   consumes:    Kinds.ContentSource,
   produces:    Kinds.ContentNode,
@@ -1780,7 +1780,7 @@ from forme_plugin_runner import run_plugin, define_stage
 @define_stage(
     name="@me/my-plugin",
     version="1.0.0",
-    api_version=1,
+    api_version=2,
     consumes="ContentSource",
     produces="ContentNode",
     capabilities=["storage:read"],
@@ -1800,7 +1800,8 @@ For `binary` runtime plugins:
 ```rust
 use async_trait::async_trait;
 use forme_plugin_runner_rs::{run_plugin, RunnerOptions, Stage, StageContext,
-    StageError, StageInput, StageMetadata, StageOutput, WireValue};
+    StageError, StageInput, StageMetadata, StageOutput, WireValue,
+    KERNEL_API_VERSION};
 
 struct MyStage;
 #[async_trait]
@@ -1809,7 +1810,7 @@ impl Stage for MyStage {
     type Output = ContentNode;
 
     fn metadata(&self) -> StageMetadata {
-        StageMetadata::new("@me/my-plugin", "1.0.0", 1,
+        StageMetadata::new("@me/my-plugin", "1.0.0", KERNEL_API_VERSION,
             "ContentSource", "ContentNode", ["storage:read"])
     }
 

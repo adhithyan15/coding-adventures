@@ -2,7 +2,7 @@
 
 [package]
 name = "forme-shell-desktop-native"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2021"
 description = "Contained native authority for the Forme Tauri authoring product"
 publish = false

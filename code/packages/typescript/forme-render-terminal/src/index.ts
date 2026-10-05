@@ -92,8 +92,8 @@ const WIN_RESERVED_RE = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?$/i;
 
 const renderTerminal = defineStage({
   name: "@coding-adventures/forme-render-terminal",
-  version: "0.1.0",
-  apiVersion: 1,
+  version: "1.0.0",
+  apiVersion: 2,
   description: "Render routed ContentNode values as ANSI TerminalBuffer values with explicit degradations.",
   consumes: streamOf(Kinds.ContentNode),
   produces: streamOf(Kinds.TerminalBuffer),
@@ -208,8 +208,8 @@ const renderTerminal = defineStage({
 
 export const packageTerminal = defineStage({
   name: "@coding-adventures/forme-render-terminal/package",
-  version: "0.1.0",
-  apiVersion: 1,
+  version: "1.0.0",
+  apiVersion: 2,
   description: "Package TerminalBuffer values into a deterministic in-memory DeployArtifact.",
   consumes: streamOf(Kinds.TerminalBuffer),
   produces: Kinds.DeployArtifact,

@@ -14,7 +14,7 @@ manifestVersion = 1
 [plugin]
 name       = "@me/test-plugin"
 version    = "1.0.0"
-apiVersion = 1
+apiVersion = 2
 [runtime]
 kind  = "node"
 entry = "./e.js"
@@ -41,7 +41,7 @@ manifestVersion = 1
 [plugin]
 name = "@me/p"
 version = "1.0.0"
-apiVersion = 1
+apiVersion = 2
 [runtime]
 kind = "binary"
 entry = "./ignored"
@@ -60,7 +60,7 @@ manifestVersion = 1
 [plugin]
 name = "@me/p"
 version = "1.0.0"
-apiVersion = 1
+apiVersion = 2
 [runtime]
 kind = "node"
 entry = "./e.js"
@@ -125,6 +125,11 @@ describe("validateManifest — rejections (one per FM02 §3.3 rule)", () => {
   it("rejects invalid apiVersion", () => {
     const m: Manifest = { ...valid(), plugin: { ...valid().plugin, apiVersion: 99 } };
     expect(() => validateManifest(m)).toThrowError(/apiVersion 99/);
+  });
+
+  it("refuses legacy kernel API v1 manifests", () => {
+    const m: Manifest = { ...valid(), plugin: { ...valid().plugin, apiVersion: 1 } };
+    expect(() => validateManifest(m)).toThrowError(/apiVersion 1.*not supported.*2/);
   });
 
   it("rejects unrecognised runtime.kind", () => {

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 1.0.0 — 2026-10-05
+
+- Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.
+
 - Accept one explicit `Stream<KindName>` wrapper in stage contribution kind
   references and reject malformed or nested wrappers before plugin loading.
 - Reversibly URI-encode templated host paths into one capability detail so

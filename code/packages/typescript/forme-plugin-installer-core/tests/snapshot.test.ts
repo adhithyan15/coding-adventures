@@ -20,7 +20,7 @@ manifestVersion = 1
 [plugin]
 name = "@example/minimal"
 version = "1.2.3"
-apiVersion = 1
+apiVersion = 2
 
 [runtime]
 kind = "node"

@@ -31,7 +31,7 @@ async function request(): Promise<SandboxLaunchRequest> {
   roots.push(workingDirectory);
   const manifest: Manifest = {
     manifestVersion: 1,
-    plugin: { name: "@example/launch", version: "1.0.0", apiVersion: 1 },
+    plugin: { name: "@example/launch", version: "1.0.0", apiVersion: 2 },
     runtime: { kind: "node", entry: "entry.mjs" },
     capabilities: { required: [], optional: [] },
     contributes: {

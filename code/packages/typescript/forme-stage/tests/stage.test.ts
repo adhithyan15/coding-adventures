@@ -41,7 +41,7 @@ describe("defineStage — type narrowing", () => {
     const obj = {
       name: "test",
       version: "0.1.0",
-      apiVersion: 1,
+      apiVersion: 2,
       description: "x",
       consumes: Kinds.Void,
       produces: Kinds.ContentSource,
@@ -57,7 +57,7 @@ describe("defineStage — type narrowing", () => {
     const stage = defineStage({
       name: "src",
       version: "0.1.0",
-      apiVersion: 1,
+      apiVersion: 2,
       description: "produces a single content source",
       consumes: Kinds.Void,
       produces: Kinds.ContentSource,
@@ -79,7 +79,7 @@ describe("defineStage — type narrowing", () => {
     const stage = defineStage({
       name: "join",
       version: "0.1.0",
-      apiVersion: 1,
+      apiVersion: 2,
       description: "joins content and an asset",
       consumes: Kinds.ContentSource,
       inputPorts: { asset: Kinds.Asset },
@@ -126,7 +126,7 @@ describe("Stage execution paths", () => {
     const stage: Stage<typeof Kinds.Void, typeof Kinds.RenderedPage> = {
       name: "sync",
       version: "0.1.0",
-      apiVersion: 1,
+      apiVersion: 2,
       description: "x",
       consumes: Kinds.Void,
       produces: Kinds.RenderedPage,
@@ -140,7 +140,13 @@ describe("Stage execution paths", () => {
             title: "x", description: null, canonicalUrl: null,
             openGraph: {}, structured: [], extra: {},
           },
-          source: "01952c0d-7e63-7000-8000-000000000000" as never,
+          provenance: {
+            contributors: [{
+              identity: "01952c0d-7e63-7000-8000-000000000000" as never,
+              revision: `blake2b:${"a".repeat(64)}` as never,
+            }],
+            revision: `blake2b:${"a".repeat(64)}` as never,
+          },
         };
       },
     };
@@ -152,7 +158,7 @@ describe("Stage execution paths", () => {
     const stage = defineStage({
       name: "async",
       version: "0.1.0",
-      apiVersion: 1,
+      apiVersion: 2,
       description: "x",
       consumes: Kinds.Void,
       produces: Kinds.ContentSource,
@@ -175,7 +181,7 @@ describe("Stage execution paths", () => {
     const stage = defineStage({
       name: "stream",
       version: "0.1.0",
-      apiVersion: 1,
+      apiVersion: 2,
       description: "x",
       consumes: Kinds.Void,
       produces: streamOf(Kinds.ContentSource),
@@ -204,7 +210,7 @@ describe("Stage lifecycle hooks (init/dispose)", () => {
     const stage = defineStage({
       name: "no-hooks",
       version: "0.1.0",
-      apiVersion: 1,
+      apiVersion: 2,
       description: "x",
       consumes: Kinds.Void,
       produces: Kinds.ContentSource,
@@ -229,7 +235,7 @@ describe("Stage lifecycle hooks (init/dispose)", () => {
     const stage = defineStage({
       name: "with-hooks",
       version: "0.1.0",
-      apiVersion: 1,
+      apiVersion: 2,
       description: "x",
       consumes: Kinds.Void,
       produces: Kinds.ContentSource,

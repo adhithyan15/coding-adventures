@@ -111,8 +111,8 @@ describe("collectChronological — stage shape", () => {
     expect(collectChronological.capabilities).toEqual([]);
   });
 
-  it("targets kernel apiVersion 1", () => {
-    expect(collectChronological.apiVersion).toBe(1);
+  it("targets kernel apiVersion 2", () => {
+    expect(collectChronological.apiVersion).toBe(2);
   });
 
   it("has a configSchema with all 3 optional fields", () => {

@@ -200,8 +200,8 @@ export interface Stage<
  *
  *   export default defineStage({
  *     name:        "@forme/parse-markdown",
- *     version:     "0.1.0",
- *     apiVersion:  1,
+ *     version:     "1.0.0",
+ *     apiVersion:  2,
  *     description: "Parses CommonMark + GFM into a ContentNode.",
  *     consumes:    Kinds.ContentSource,
  *     produces:    Kinds.ContentNode,

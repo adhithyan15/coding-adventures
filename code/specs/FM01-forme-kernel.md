@@ -76,7 +76,9 @@ source-compatible because consumers do exhaustiveness checks that
 default gracefully) do not bump `apiVersion` — they are captured in the
 kernel package's semver minor.
 
-The initial `apiVersion` is `1`.
+The initial `apiVersion` was `1`. The stable Forme package line targets
+`apiVersion` `2`; v2 removes the temporary `RenderedPage.source` producer
+shape and requires revision-aware provenance on every rendered page.
 
 ---
 
@@ -414,23 +416,13 @@ export interface RenderedPageFields {
   }[];
   /** Asset IDs referenced by this page. */
   readonly usedAssets: readonly LogicalId[];
+  /** Exact source revisions behind this output. */
+  readonly provenance: OutputProvenance;
   /** Meta tags (title, description, OG, etc.). */
   readonly meta: PageMeta;
 }
 
-export type RenderedPage = RenderedPageFields & (
-  | {
-      /** Exact source revisions behind this output; required for new producers. */
-      readonly provenance: OutputProvenance;
-      /** Optional compatibility hint for a single-source page. */
-      readonly source?: LogicalId;
-    }
-  | {
-      /** Legacy v1.0 producer shape; new producers attach provenance. */
-      readonly source: LogicalId;
-      readonly provenance?: never;
-    }
-);
+export type RenderedPage = RenderedPageFields;
 
 export interface PageMeta {
   readonly title: string;
@@ -693,7 +685,7 @@ export const Kinds = {
   Collection:      { name: "Collection",      version: "1.0" },
   Asset:           { name: "Asset",           version: "1.0" },
   Document:        { name: "Document",        version: "1.0" },
-  RenderedPage:    { name: "RenderedPage",    version: "1.1" },
+  RenderedPage:    { name: "RenderedPage",    version: "2.0" },
   PrintForme:      { name: "PrintForme",      version: "1.0" },
   TerminalBuffer:  { name: "TerminalBuffer",  version: "1.0" },
   RequestHandler:  { name: "RequestHandler",  version: "1.0" },
@@ -714,7 +706,11 @@ Version semantics:
   the new minor can feed consumers of the old minor (the consumer
   ignores the new field).
 
-The kernel's initial kinds are all `"1.0"`.
+The kernel's initial kinds were all `"1.0"`. `RenderedPage` is `"2.0"`
+because requiring `provenance` and removing the temporary `source` field is a
+breaking shape change. The major-version compatibility rule therefore refuses
+to connect a v1.x producer or consumer to the v2 contract without an explicit
+adapter.
 
 ### 2.5 Kind extensibility
 
@@ -911,7 +907,7 @@ import { defineStage, Kinds } from "@coding-adventures/forme-types";
 export default defineStage({
   name: "@forme/parse-markdown",
   version: "0.1.0",
-  apiVersion: 1,
+  apiVersion: 2,
   description: "Parses CommonMark + GFM into a ContentNode.",
   consumes: Kinds.ContentSource,
   produces: Kinds.ContentNode,
@@ -1701,7 +1697,7 @@ the plugin host uses `package.json` only for the JavaScript loader
 [plugin]
 name        = "@forme/embed-youtube"       # package-qualified name
 version     = "0.1.0"                      # semver
-api-version = 1                            # kernel API version targeted
+api-version = 2                            # kernel API version targeted
 entry       = "./dist/index.js"            # JS entry point (ES module)
 description = "YouTube embed block"
 license     = "MIT"
@@ -1790,7 +1786,7 @@ A plugin that does nothing is rejected at load time.
 The kernel exposes a version constant:
 
 ```typescript
-export const KERNEL_API_VERSION = 1;
+export const KERNEL_API_VERSION = 2;
 ```
 
 A plugin loads only if `plugin.api-version === KERNEL_API_VERSION`.
@@ -2009,7 +2005,7 @@ const configSchema = { /* JSON Schema */ };
 export default defineStage<typeof Kinds.ContentSource, typeof Kinds.ContentNode>({
   name: "@forme/parse-markdown",
   version: "0.1.0",
-  apiVersion: 1,
+  apiVersion: 2,
   description: "Parses CommonMark (+ optional GFM) into a ContentNode.",
   consumes: Kinds.ContentSource,
   produces: Kinds.ContentNode,
@@ -2077,7 +2073,7 @@ interface Config {
 export default defineStage({
   name: "@forme/source-fs",
   version: "0.1.0",
-  apiVersion: 1,
+  apiVersion: 2,
   description: "Reads files from a local directory.",
   consumes: Kinds.Void,
   produces: { ...Kinds.ContentSource, kind: "Stream" },
@@ -2127,7 +2123,7 @@ A plugin that adds a YouTube embed block.
 [plugin]
 name        = "@forme/embed-youtube"
 version     = "0.1.0"
-api-version = 1
+api-version = 2
 entry       = "./dist/index.js"
 description = "Embed YouTube videos as a block."
 license     = "MIT"

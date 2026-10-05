@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 1.0.0 — 2026-10-05
+
+- Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.
+
 ### Added
 
 - Resolved image references now render as `forme-asset:` placeholders and
@@ -54,8 +58,8 @@
 - `renderHtmlDocument` accepts an escaped header destination and trusted
   generated head tags; the fallback theme styles chronological indexes.
 - Rendered pages carry the input node's logical and revision IDs through
-  deterministic `OutputProvenance`; the legacy single `source` remains as a
-  compatibility hint during the RenderedPage v1.1 migration.
+  deterministic `OutputProvenance`. Kernel API v2 removes the legacy single
+  `source` compatibility field and requires canonical provenance.
 
 ### Tests
 

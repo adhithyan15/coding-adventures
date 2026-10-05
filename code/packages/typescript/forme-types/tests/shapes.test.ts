@@ -247,7 +247,6 @@ describe("RenderedPage", () => {
         extra: {},
       },
       provenance,
-      source: SAMPLE_ID,
     };
     expect(page.usedStyle.length).toBe(1);
     expect(page.usedIslands.length).toBe(1);
@@ -255,24 +254,28 @@ describe("RenderedPage", () => {
     expect(page.provenance.contributors[0]?.revision).toBe(SAMPLE_REV);
   });
 
-  it("keeps the legacy single-source producer shape during migration", () => {
+  it("requires provenance and no longer exposes the legacy source field", () => {
     const page: RenderedPage = {
-      route: "/legacy",
+      route: "/current",
       html: "<!doctype html>",
       usedStyle: [],
       usedIslands: [],
       usedAssets: [],
       meta: {
-        title: "Legacy",
+        title: "Current",
         description: null,
         canonicalUrl: null,
         openGraph: {},
         structured: [],
         extra: {},
       },
-      source: SAMPLE_ID,
+      provenance: {
+        contributors: [{ identity: SAMPLE_ID, revision: SAMPLE_REV }],
+        revision: SAMPLE_REV,
+      },
     };
-    expect(page.source).toBe(SAMPLE_ID);
+    expect("source" in page).toBe(false);
+    expect(page.provenance.contributors[0]?.identity).toBe(SAMPLE_ID);
   });
 });
 

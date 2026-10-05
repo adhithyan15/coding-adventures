@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-style-ir",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Forme Style IR: design tokens, selectors, rules, contexts, themes — the typed value tree backends translate to CSS / LaTeX / PDF / terminal (FM04).",
   "type": "module",
   "main": "src/index.ts",

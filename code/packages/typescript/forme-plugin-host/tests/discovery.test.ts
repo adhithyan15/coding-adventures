@@ -11,7 +11,7 @@ function manifest(name: string, version = "1.0.0"): string {
 [plugin]
 name = "${name}"
 version = "${version}"
-apiVersion = 1
+apiVersion = 2
 [runtime]
 kind = "node"
 entry = "./entry.mjs"
@@ -30,7 +30,7 @@ function binaryManifest(name: string, entry?: string): string {
 [plugin]
 name = "${name}"
 version = "1.0.0"
-apiVersion = 1
+apiVersion = 2
 [runtime]
 kind = "binary"
 [runtime.platforms]
@@ -83,7 +83,7 @@ describe("plugin discovery", () => {
       "[plugin]",
       'name = "@example/shared-schema"',
       'version = "1.0.0"',
-      "apiVersion = 1",
+      "apiVersion = 2",
       "[runtime]",
       'kind = "node"',
       'entry = "./entry.mjs"',

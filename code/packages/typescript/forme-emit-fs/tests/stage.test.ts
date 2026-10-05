@@ -12,6 +12,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { createHash } from "node:crypto";
 import { Kinds, streamOf, type RenderedPage } from "@coding-adventures/forme-types";
+import { createOutputProvenance } from "@coding-adventures/forme-identity";
 import {
   createCancellationTokenSource,
   inMemoryCache,
@@ -59,7 +60,8 @@ function makeCtx(overrides: Partial<StageContext> = {}): StageContext {
 let pageSeq = 0;
 function makePage(opts: { route: string; html?: string; title?: string }): RenderedPage {
   pageSeq++;
-  const id = `00000000-0000-7000-8000-${String(pageSeq).padStart(12, "0")}` as RenderedPage["source"];
+  const id = `00000000-0000-7000-8000-${String(pageSeq).padStart(12, "0")}` as RenderedPage["provenance"]["contributors"][number]["identity"];
+  const revision = `blake2b:${String(pageSeq).padStart(64, "0")}` as RenderedPage["provenance"]["revision"];
   return {
     route: opts.route,
     html: opts.html ?? `<!DOCTYPE html>\n<html><head><title>${opts.title ?? "x"}</title></head><body>${opts.title ?? "x"}</body></html>\n`,
@@ -74,7 +76,7 @@ function makePage(opts: { route: string; html?: string; title?: string }): Rende
       structured: [],
       extra: {},
     },
-    source: id,
+    provenance: createOutputProvenance([{ identity: id, revision }]),
   };
 }
 
@@ -110,8 +112,8 @@ describe("emitFs — stage shape", () => {
     expect(emitFs.capabilities).toContain("filesystem:write");
   });
 
-  it("targets apiVersion 1", () => {
-    expect(emitFs.apiVersion).toBe(1);
+  it("targets apiVersion 2", () => {
+    expect(emitFs.apiVersion).toBe(2);
   });
 
   it("has a configSchema requiring outDir", () => {
@@ -124,6 +126,13 @@ describe("emitFs — stage shape", () => {
 });
 
 describe("emitFs — running", () => {
+  it("rejects a legacy source-only page before writing output", async () => {
+    const { provenance: _provenance, ...legacy } = makePage({ route: "/legacy.html" });
+    await expect(runEmit([{ ...legacy, source: "01952c0d-7e63-7000-8000-000000000099" } as never]))
+      .rejects.toThrow(/page.provenance is required/);
+    await expect(readFile(resolve(outDir, "legacy.html"))).rejects.toThrow();
+  });
+
   it("writes one file per page with the expected bytes", async () => {
     const pages = [
       makePage({ route: "/a.html", html: "<p>a</p>" }),

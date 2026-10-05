@@ -25,7 +25,7 @@
  * because the corpus is small.
  */
 
-import { describe, it, expect, beforeAll } from "vitest";
+import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { JSDOM } from "jsdom";
 import * as fs from "node:fs/promises";
 import * as fsSync from "node:fs";
@@ -102,6 +102,7 @@ describe("bundleSearchClient", () => {
 describe("search bundle — end-to-end in JSDOM", () => {
   let dom: JSDOM;
   let window: JSDOM["window"];
+  let sandbox: string;
   let tmpDist: string;
 
   beforeAll(async () => {
@@ -109,7 +110,8 @@ describe("search bundle — end-to-end in JSDOM", () => {
     // build pipeline rather than relying on a checked-in
     // `dist/` so the test fails if anything in the pipeline
     // breaks the search index.
-    tmpDist = await fs.mkdtemp(path.join(REPO_ROOT, ".tmp-search-e2e-"));
+    sandbox = await fs.mkdtemp(path.join(REPO_ROOT, ".tmp-search-e2e-"));
+    tmpDist = path.join(sandbox, "dist");
     const files = await readCorpus(CORPUS);
     const searchClientJs = await bundleSearchClient();
     const bundle = build(files, {
@@ -155,6 +157,11 @@ describe("search bundle — end-to-end in JSDOM", () => {
 
     // Give init() a tick to run (it's async via DOMContentLoaded).
     await waitFor(() => window.document.querySelector("ul.search-results") !== null);
+  });
+
+  afterAll(async () => {
+    dom?.window.close();
+    await fs.rm(sandbox, { recursive: true, force: true });
   });
 
   it("renders the dropdown skeleton into the body", () => {

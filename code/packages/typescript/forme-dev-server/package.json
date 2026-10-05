@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-dev-server",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "In-memory Forme preview server with last-good artifacts and live reload.",
   "type": "module",
   "main": "src/index.ts",

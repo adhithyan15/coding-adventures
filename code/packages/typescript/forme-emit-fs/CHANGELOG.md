@@ -1,5 +1,11 @@
 # Changelog — @coding-adventures/forme-emit-fs
 
+## 1.0.0 — 2026-10-05
+
+- Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.
+- Refuse legacy source-only or malformed `RenderedPage` values before writing
+  output by admitting canonical bounded provenance at the sink boundary.
+
 ## 0.2.0 — 2026-09-19
 
 ### Added

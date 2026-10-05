@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 1.0.0 — 2026-10-05
+
+- Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.
+
 - Align the host-owned default descriptor budget with FM02's specified 256 so
   standard Node and Python runtimes are not terminated during normal Windows
   startup when a plugin manifest omits resource overrides.

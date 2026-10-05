@@ -36,7 +36,7 @@ beforeAll(async () => {
     cwd: fixtureRoot,
     modeArgument: true,
     expectedRunner: "@coding-adventures/forme-plugin-runner-ts",
-    expectedRunnerVersion: "0.1.0",
+    expectedRunnerVersion: "1.0.0",
   };
 });
 

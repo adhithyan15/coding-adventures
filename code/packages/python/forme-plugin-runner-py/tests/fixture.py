@@ -15,7 +15,7 @@ PRODUCES = "Stream<ContentNode>" if MODE in {"stream", "single-stream"} else "Co
 @define_stage(
     name="@forme/conformance",
     version="1.0.0",
-    api_version=1,
+    api_version=2,
     consumes=CONSUMES,
     produces=PRODUCES,
     capabilities=[

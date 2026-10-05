@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-plugin-installer-core",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Bounded validation and atomic filesystem installation for complete Forme plugin snapshots.",
   "type": "module",
   "main": "src/index.ts",

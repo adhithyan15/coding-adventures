@@ -771,7 +771,7 @@ describe("plugin host cross-process contract", () => {
 [plugin]
 name = "constructor"
 version = "1.0.0"
-apiVersion = 1
+apiVersion = 2
 [runtime]
 kind = "node"
 entry = "./entry.mjs"
@@ -837,7 +837,7 @@ produces = "ContentNode"
 [plugin]
 name = "@example/schema"
 version = "1.0.0"
-apiVersion = 1
+apiVersion = 2
 [runtime]
 kind = "node"
 entry = "./entry.mjs"

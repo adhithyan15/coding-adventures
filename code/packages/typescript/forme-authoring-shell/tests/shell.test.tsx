@@ -109,7 +109,7 @@ function host(open: AuthoringShellHost["open"], create: AuthoringShellHost["crea
 describe("AuthoringShell", () => {
   it("resolves the published package entrypoint", async () => {
     const entrypoint = await import("@coding-adventures/forme-authoring-shell");
-    expect(entrypoint.VERSION).toBe("0.1.0");
+    expect(entrypoint.VERSION).toBe("1.0.0");
   });
 
   it("opens an existing workspace and renders only reviewed product controls", async () => {

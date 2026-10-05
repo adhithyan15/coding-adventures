@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-style-theme",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Theme registry + composition for Forme Style IR — composeWithTheme (base + theme → merged StyleDocument), createThemeRegistry (in-memory name → Theme lookup), resolveTokenRefs (bulk TokenRef resolution) (FM04 §7 / §13.3).",
   "type": "module",
   "main": "src/index.ts",

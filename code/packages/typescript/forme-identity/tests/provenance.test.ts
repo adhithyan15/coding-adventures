@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { types as utilTypes } from "node:util";
 import type {
   LogicalId,
   ProvenanceContributor,
@@ -7,6 +8,7 @@ import type {
 import {
   createOutputProvenance,
   isRevisionIdShape,
+  validateOutputProvenance,
 } from "../src/index.js";
 
 const FIRST = "01952c0d-7e63-7000-8000-000000000001" as LogicalId;
@@ -79,5 +81,68 @@ describe("createOutputProvenance", () => {
       { identity: FIRST, revision: REV_A },
       { identity: FIRST, revision: REV_B },
     ])).toThrow(`logical identity ${FIRST} has conflicting revisions`);
+  });
+});
+
+describe("validateOutputProvenance", () => {
+  it("accepts and freezes a canonical descriptor-only snapshot", () => {
+    const provenance = createOutputProvenance([
+      { identity: FIRST, revision: REV_A },
+      { identity: SECOND, revision: REV_B },
+    ]);
+    expect(validateOutputProvenance(provenance, utilTypes.isProxy)).toEqual(provenance);
+  });
+
+  it("rejects missing, non-canonical, accessor, proxy, and forged provenance", () => {
+    const canonical = createOutputProvenance([
+      { identity: FIRST, revision: REV_A },
+      { identity: SECOND, revision: REV_B },
+    ]);
+    expect(() => validateOutputProvenance(undefined, utilTypes.isProxy)).toThrow(/must be a non-proxy object/);
+    expect(() => validateOutputProvenance({
+      ...canonical,
+      contributors: [...canonical.contributors].reverse(),
+    }, utilTypes.isProxy)).toThrow(/canonical order/);
+    expect(() => validateOutputProvenance({
+      ...canonical,
+      revision: REV_A,
+    }, utilTypes.isProxy)).toThrow(/does not match/);
+    expect(() => validateOutputProvenance({
+      get contributors() { throw new Error("must not run"); },
+      revision: canonical.revision,
+    }, utilTypes.isProxy)).toThrow(/must not be an accessor/);
+    expect(() => validateOutputProvenance(new Proxy(canonical, {}), utilTypes.isProxy)).toThrow(/must be a non-proxy object/);
+  });
+
+  it("ignores inert key floods without enumerating them", () => {
+    const canonical = createOutputProvenance([
+      { identity: FIRST, revision: REV_A },
+    ]);
+    const flooded: Record<string, unknown> = {
+      contributors: canonical.contributors,
+      revision: canonical.revision,
+    };
+    for (let index = 0; index < 25_000; index++) {
+      Object.defineProperty(flooded, `ignored-${index}`, {
+        get() { throw new Error("must not run"); },
+      });
+    }
+    expect(validateOutputProvenance(flooded, utilTypes.isProxy)).toEqual(canonical);
+  });
+
+  it("rejects sparse arrays and oversized fields", () => {
+    const canonical = createOutputProvenance([
+      { identity: FIRST, revision: REV_A },
+    ]);
+    const sparse = new Array(1);
+    expect(() => validateOutputProvenance({
+      contributors: sparse,
+      revision: canonical.revision,
+    }, utilTypes.isProxy)).toThrow(/is sparse/);
+
+    expect(() => validateOutputProvenance({
+      contributors: [{ identity: "x".repeat(65), revision: REV_A }],
+      revision: canonical.revision,
+    }, utilTypes.isProxy)).toThrow(/bounded string/);
   });
 });

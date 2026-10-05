@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-sandbox-linux",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Linux namespace, seccomp, cgroup, rlimit, and exact-snapshot launcher for Forme plugins (FM02).",
   "type": "module",
   "main": "src/index.ts",

@@ -9,6 +9,7 @@
  */
 
 import {
+  KERNEL_API_VERSION,
   Kinds,
   streamOf,
   type AssetRef,
@@ -34,7 +35,7 @@ const pipelineIslandRef: AssetRef = Object.freeze({
 const attachBlogInteractivity = defineStage({
   name: "@coding-adventures/blog-attach-interactivity",
   version: "0.1.0",
-  apiVersion: 1,
+  apiVersion: KERNEL_API_VERSION,
   description: "Attach the reviewed Hello, Forme progressive-enhancement module.",
   consumes: streamOf(Kinds.ContentNode),
   produces: streamOf(Kinds.ContentNode),

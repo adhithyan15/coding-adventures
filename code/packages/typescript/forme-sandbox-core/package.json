@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-sandbox-core",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Exact-snapshot staging and fail-closed native launcher handshake shared by Forme OS sandboxes (FM02).",
   "type": "module",
   "main": "src/index.ts",

@@ -290,10 +290,9 @@ export interface OutputProvenance {
  * code-splitting.  The `usedStyle` and `usedIslands` arrays drive the
  * AOT compiler's "smallest artifact" decision (FM06).
  *
- * New producers attach revision-aware `provenance`. During the v1 migration,
- * a legacy producer may still provide only `source`; a revision-aware producer
- * may retain `source` as a compatibility hint for a single-source page. An
- * aggregate page does not invent a single source and omits that field.
+ * Every producer attaches revision-aware `provenance`. Single-source and
+ * aggregate pages use the same canonical contributor contract; there is no
+ * separate source-identity shortcut.
  */
 export interface RenderedPageFields {
   readonly route: string;
@@ -302,25 +301,16 @@ export interface RenderedPageFields {
   readonly usedIslands: readonly IslandId[];
   /**
    * Exact module assets corresponding one-for-one with `usedIslands`.
-   * Optional only for legacy static producers; an interactive page must
+   * Optional for static pages; an interactive page must
    * provide the field so deploy emitters can fail closed.
    */
   readonly islandModules?: readonly IslandModuleUse[];
   readonly usedAssets: readonly LogicalId[];
+  readonly provenance: OutputProvenance;
   readonly meta: PageMeta;
 }
 
-export type RenderedPage = RenderedPageFields & (
-  | {
-      readonly provenance: OutputProvenance;
-      readonly source?: LogicalId;
-    }
-  | {
-      /** @deprecated Attach revision-aware `provenance` in new producers. */
-      readonly source: LogicalId;
-      readonly provenance?: never;
-    }
-);
+export type RenderedPage = RenderedPageFields;
 
 // ─── PrintForme ───────────────────────────────────────────────────────────
 

@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-deploy-runner-core",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Capability-free manifest validation, deploy planning, content preflight, and deterministic dry-run reporting for Forme.",
   "type": "module",
   "main": "src/index.ts",

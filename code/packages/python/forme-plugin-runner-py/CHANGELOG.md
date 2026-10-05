@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Target kernel API v2 exactly and reject legacy v1 stage metadata before the
+  runner starts its protocol loop.
 - Consume live host-mediated storage watches as bounded asynchronous streams,
   cancel abandoned iterators, and release every capability stream at run end.
 

@@ -122,8 +122,8 @@ export function resolveAssetSource(
 
 const resolveAssetRefsFs = defineStage({
   name: "@coding-adventures/forme-resolve-asset-refs-fs",
-  version: "0.1.0",
-  apiVersion: 1,
+  version: "1.0.0",
+  apiVersion: 2,
   description: "Resolve local image references beneath a storage root and attach AssetRef metadata.",
   consumes: streamOf(Kinds.ContentNode),
   produces: streamOf(Kinds.ContentNode),

@@ -145,8 +145,8 @@ function productConfig(project: AuthoringProject, revision: string, output: stri
 function authoringSource(project: AuthoringProject, authoringRevision: string) {
   return defineStage({
     name: "forme-shell-desktop-authoring-source",
-    version: "0.1.0",
-    apiVersion: 1,
+    version: "1.0.0",
+    apiVersion: 2,
     description: "Yield a validated authoring snapshot as Content IR.",
     consumes: Kinds.Void,
     produces: streamOf(Kinds.ContentNode),

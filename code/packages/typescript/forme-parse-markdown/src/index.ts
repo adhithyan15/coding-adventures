@@ -84,8 +84,8 @@ function decodeBody(bytes: Uint8Array): string {
 
 const parseMarkdown = defineStage({
   name: "@coding-adventures/forme-parse-markdown",
-  version: "0.1.0",
-  apiVersion: 1,
+  version: "1.0.0",
+  apiVersion: 2,
   description: "Parse a Markdown ContentSource into a ContentNode (DocumentNode + frontmatter).",
   consumes: Kinds.ContentSource,
   produces: Kinds.ContentNode,

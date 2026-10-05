@@ -12,7 +12,7 @@ import {
   type RenderedPage,
 } from "@coding-adventures/forme-types";
 import { filesystemCache } from "@coding-adventures/forme-cache";
-import { computeRevisionId } from "@coding-adventures/forme-identity";
+import { computeRevisionId, createOutputProvenance } from "@coding-adventures/forme-identity";
 import {
   createCancellationTokenSource,
   frozenClock,
@@ -93,7 +93,10 @@ function page(options: {
       structured: [],
       extra: {},
     },
-    source: "01952c0d-7e63-7000-8000-000000000001" as LogicalId,
+    provenance: createOutputProvenance([{
+        identity: "01952c0d-7e63-7000-8000-000000000001" as LogicalId,
+        revision: `blake2b:${"a".repeat(64)}` as never,
+      }]),
   };
 }
 
@@ -134,6 +137,15 @@ describe("emitSiteFs contract", () => {
 });
 
 describe("fingerprinted static-site emission", () => {
+  it("rejects a legacy source-only page before writing output", async () => {
+    const { provenance: _provenance, ...legacy } = page({ route: "/legacy.html" });
+    await expect(runSite([{
+      ...legacy,
+      source: "01952c0d-7e63-7000-8000-000000000099",
+    } as never], [])).rejects.toThrow(/page.provenance is required/);
+    await expect(readFile(join(outDir, "legacy.html"))).rejects.toThrow();
+  });
+
   it("emits only selected island scripts and preserves zero-JavaScript pages", async () => {
     const selected = ID_A;
     const unused = ID_B;
@@ -489,7 +501,7 @@ describe("orchestrator end-to-end", () => {
     const pages = defineStage({
       name: "@test/rendered-pages",
       version: "0.1.0",
-      apiVersion: 1,
+      apiVersion: 2,
       description: "fixture pages",
       consumes: Kinds.Void,
       produces: streamOf(Kinds.RenderedPage),
@@ -500,7 +512,7 @@ describe("orchestrator end-to-end", () => {
     const assets = defineStage({
       name: "@test/assets",
       version: "0.1.0",
-      apiVersion: 1,
+      apiVersion: 2,
       description: "fixture assets",
       consumes: Kinds.Void,
       produces: streamOf(Kinds.Asset),
@@ -547,7 +559,7 @@ describe("orchestrator end-to-end", () => {
     const source = defineStage({
       name: "@test/shared-content",
       version: "0.1.0",
-      apiVersion: 1,
+      apiVersion: 2,
       description: "shared source large enough to fill both bounded page windows",
       consumes: Kinds.Void,
       produces: streamOf(Kinds.ContentSource),
@@ -570,7 +582,7 @@ describe("orchestrator end-to-end", () => {
     const pages = defineStage({
       name: "@test/shared-pages",
       version: "0.1.0",
-      apiVersion: 1,
+      apiVersion: 2,
       description: "renders every shared source without assets",
       consumes: streamOf(Kinds.ContentSource),
       produces: streamOf(Kinds.RenderedPage),
@@ -586,7 +598,7 @@ describe("orchestrator end-to-end", () => {
     const assets = defineStage({
       name: "@test/shared-assets",
       version: "0.1.0",
-      apiVersion: 1,
+      apiVersion: 2,
       description: "drains the same shared source while producing no assets",
       consumes: streamOf(Kinds.ContentSource),
       produces: streamOf(Kinds.Asset),
@@ -653,7 +665,7 @@ describe("orchestrator end-to-end", () => {
     }) => defineStage({
       name: options.name,
       version: "1.0.0",
-      apiVersion: 1,
+      apiVersion: 2,
       description: "fixed observed fixture source",
       consumes: Kinds.Void,
       produces: streamOf(options.kind),

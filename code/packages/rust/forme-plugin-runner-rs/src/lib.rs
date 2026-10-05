@@ -12,7 +12,7 @@ pub use context::{
     EnvApi, FilesystemApi, Logger, NetworkApi, NetworkResponse, ShellApi, ShellResult,
     StageContext, StorageApi, StorageWatch, TimeApi,
 };
-pub use runner::{run_plugin, RunnerOptions};
+pub use runner::{run_plugin, RunnerOptions, KERNEL_API_VERSION};
 pub use stage::{
     CancellationError, CancellationToken, FromWire, InputStream, Stage, StageError, StageInput,
     StageMetadata, StageOutput,

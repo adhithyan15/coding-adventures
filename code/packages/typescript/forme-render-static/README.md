@@ -41,8 +41,7 @@ For each input `ContentNode`:
    canonical URL, project-page-safe site navigation, and RSS/Atom discovery.
 8. **Wrap** the body in a theme-agnostic HTML5 shell with sliced CSS inlined.
 9. **Emit** a `RenderedPage` carrying the route, full HTML, derived title,
-   and revision-aware provenance for the input node. The legacy `source`
-   identity is retained temporarily for v1.0 consumers.
+   and required revision-aware provenance for the input node.
 
 ## Routing contract
 
