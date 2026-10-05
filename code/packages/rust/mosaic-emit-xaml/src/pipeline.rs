@@ -1910,6 +1910,47 @@ fn register_host_visual_states(
     }
 }
 
+/// Row VMs are immutable snapshots. A predicate that reads component state
+/// must invalidate the outer projection, including captured nested row values.
+fn register_template_state_dependencies(src: &str, ctx: &mut EmitContext<'_>) {
+    let Ok(tokens) = tokenise_expr(src) else {
+        return;
+    };
+    let dependencies = tokens
+        .iter()
+        .filter_map(|token| {
+            let ExprTok::Name(name) = token else {
+                return None;
+            };
+            if ctx.lookup_for_binding(name).is_some() || ctx.lookup_for_index(name).is_some() {
+                return None;
+            }
+            ctx.slot_types
+                .keys()
+                .find(|slot| kebab_to_pascal_case(slot) == kebab_to_pascal_case(name))
+                .map(|slot| ctx.slot_property_name(slot))
+        })
+        .collect::<Vec<_>>();
+    let Some(projection_name) = ctx
+        .for_scope
+        .first()
+        .and_then(|binding| binding.projection_property.as_ref())
+    else {
+        return;
+    };
+    if let Some(projection) = ctx
+        .row_projections
+        .iter_mut()
+        .find(|projection| &projection.property_name == projection_name)
+    {
+        for dependency in dependencies {
+            if !projection.dependency_paths.contains(&dependency) {
+                projection.dependency_paths.push(dependency);
+            }
+        }
+    }
+}
+
 fn lower_state_trigger_value(value: &LayoutPropValue, ctx: &mut EmitContext<'_>) -> Option<String> {
     if !ctx.for_scope.is_empty() {
         return match value {
@@ -1919,54 +1960,15 @@ fn lower_state_trigger_value(value: &LayoutPropValue, ctx: &mut EmitContext<'_>)
                 let path = if let Some(path) = try_lower_for_template_predicate(src, ctx) {
                     path
                 } else {
-                    let binding = ctx.for_scope.last()?;
-                    let element_root = kebab_to_pascal_case(&binding.as_name);
-                    let index_root = binding.index_name.as_deref().map(kebab_to_pascal_case);
-                    let tokens = tokenise_expr(src).ok()?;
-                    if tokens.iter().any(|token| {
-                        matches!(
-                            token,
-                            ExprTok::EqEq
-                                | ExprTok::NotEq
-                                | ExprTok::Lt
-                                | ExprTok::Le
-                                | ExprTok::Gt
-                                | ExprTok::Ge
-                                | ExprTok::AndAnd
-                                | ExprTok::OrOr
-                                | ExprTok::Not
-                                | ExprTok::LBracket
-                                | ExprTok::RBracket
-                        )
-                    }) {
-                        // Page-level expression helpers are not in a
-                        // DataTemplate's typed x:Bind scope. Reject shapes
-                        // that would require one instead of generating markup
-                        // that compiles against the wrong namescope.
-                        return None;
-                    }
+                    // The shared lowerer projects helper results onto the row
+                    // VM. Only bind that property, never a page-level method in
+                    // the DataTemplate's isolated typed namescope.
                     match lower_expr_for_xbind(src, ctx) {
-                        ExprLowering::Bindable(path)
-                            if path == element_root
-                                || path.starts_with(&format!("{element_root}.")) =>
-                        {
-                            path
-                        }
-                        ExprLowering::Bindable(path)
-                            if index_root.as_deref() == Some(path.as_str()) =>
-                        {
-                            "Index".to_string()
-                        }
-                        ExprLowering::Bindable(path)
-                            if matches!(path.as_str(), "True" | "False") =>
-                        {
-                            path
-                        }
-                        ExprLowering::Bindable(_)
-                        | ExprLowering::Helper(_)
-                        | ExprLowering::Unsupported(_) => return None,
+                        ExprLowering::Bindable(path) => path,
+                        ExprLowering::Helper(_) | ExprLowering::Unsupported(_) => return None,
                     }
                 };
+                register_template_state_dependencies(src, ctx);
                 Some(format!("{{x:Bind {path}, Mode=OneWay}}"))
             }
             // Component slots live on the generated page, not on the row VM
@@ -6916,7 +6918,7 @@ fn emit_for(
     let body_result =
         emit_xaml_single_content_children(&node.children, indent + 12, part_styles, ctx);
     ctx.horizontal_repeater = horizontal;
-    let template_visual_state_groups = ctx
+    let mut template_visual_state_groups = ctx
         .template_visual_state_groups
         .pop()
         .expect("For template visual-state collector");
@@ -6940,13 +6942,30 @@ fn emit_for(
     if !template_visual_state_groups.is_empty() {
         let pad = " ".repeat(indent + 12);
         let mut wrapped = String::new();
-        writeln!(wrapped, "{pad}<Grid>").unwrap();
+        writeln!(wrapped, "{pad}<UserControl>\n{pad}    <Grid>").unwrap();
+        // WinUI initializes StateTriggers lazily. Compiled bindings on those
+        // objects can run before their connection fields exist. Bind compiled
+        // predicates on ordinary template children instead, then bridge their
+        // dependency properties into the triggers by template-local name.
+        // UserControl provides the control host required for state activation.
+        let mut trigger_proxies = String::new();
+        for group in &mut template_visual_state_groups {
+            for state in &mut group.states {
+                if state.trigger_value.starts_with("{x:Bind ") {
+                    let proxy = format!("{}Trigger", state.name);
+                    writeln!(trigger_proxies, "{pad}        <Border x:Name=\"{proxy}\" Tag=\"{}\" Visibility=\"Collapsed\"/>",
+                        escape_xaml_attr(&state.trigger_value)).unwrap();
+                    state.trigger_value = format!("{{Binding Tag, ElementName={proxy}}}");
+                }
+            }
+        }
         wrapped.push_str(&emit_visual_state_groups(
             &template_visual_state_groups,
-            indent + 16,
+            indent + 20,
         ));
-        wrapped.push_str(&indent_xaml_fragment(&body, 4));
-        writeln!(wrapped, "{pad}</Grid>").unwrap();
+        wrapped.push_str(&trigger_proxies);
+        wrapped.push_str(&indent_xaml_fragment(&body, 8));
+        writeln!(wrapped, "{pad}    </Grid>\n{pad}</UserControl>").unwrap();
         body = wrapped;
     }
 
@@ -24006,7 +24025,7 @@ mod tests {
         let r = compile(&c, &l, &s);
         assert!(
             r.xaml.contains(
-                "<DataTemplate x:DataType=\"local:HoverRows_RowVm\">\n                <Grid>\n                    <VisualStateManager.VisualStateGroups>"
+                "<DataTemplate x:DataType=\"local:HoverRows_RowVm\">\n                <UserControl>\n                    <Grid>\n                        <VisualStateManager.VisualStateGroups>"
             ),
             "hover groups must live in the repeated row namescope:\n{}",
             r.xaml
@@ -24277,7 +24296,7 @@ mod tests {
         let r = compile(&c, &l, &s);
         assert!(
             r.xaml.contains(
-                "<DataTemplate x:DataType=\"local:FocusRows_RowVm\">\n                <Grid>\n                    <VisualStateManager.VisualStateGroups>"
+                "<DataTemplate x:DataType=\"local:FocusRows_RowVm\">\n                <UserControl>\n                    <Grid>\n                        <VisualStateManager.VisualStateGroups>"
             ),
             "focus groups must live in the repeated row namescope:\n{}",
             r.xaml
@@ -24723,14 +24742,14 @@ mod tests {
         );
         assert!(
             r.xaml.contains(
-                "<DataTemplate x:DataType=\"local:AnimatedRow_RowVm\">\n                <Grid>\n                    <VisualStateManager.VisualStateGroups>"
+                "<DataTemplate x:DataType=\"local:AnimatedRow_RowVm\">\n                <UserControl>\n                    <Grid>\n                        <VisualStateManager.VisualStateGroups>"
             ),
-            "WinUI StateTriggers must live on the DataTemplate's first visual child:\n{}",
+            "WinUI StateTriggers must live on the template control host's first child:\n{}",
             r.xaml
         );
         assert!(
             r.xaml
-                .contains("<StateTrigger IsActive=\"{x:Bind IsSelected, Mode=OneWay}\"/>"),
+                .contains("Tag=\"{x:Bind IsSelected, Mode=OneWay}\""),
             "template predicate must bind row-local projected state:\n{}",
             r.xaml
         );
@@ -24763,7 +24782,7 @@ mod tests {
                 "rows",
                 SlotType::List(Box::new(ListInnerType::Text)),
                 true,
-            )],
+            ), slot("selected-index", SlotType::Number, true)],
             vec![],
         );
         let l = layout_with_root(
@@ -24774,7 +24793,7 @@ mod tests {
                 Some("r"),
                 vec![styled_host_button(vec![LayoutProp {
                     name: "state-when-selected".to_string(),
-                    value: LayoutPropValue::Expr("r == 0".to_string()),
+                    value: LayoutPropValue::Expr("(r == selectedIndex && r >= 0)".to_string()),
                 }])],
             ),
         );
@@ -24798,16 +24817,15 @@ mod tests {
         };
 
         let r = compile(&c, &l, &style);
-        assert!(
-            !r.xaml.contains("<VisualStateManager.VisualStateGroups>"),
-            "unsupported template predicates must be omitted instead of targeting the root:\n{}",
-            r.xaml
-        );
-        assert!(
-            !r.code_behind.contains("private bool Expr_"),
-            "DataTemplate x:Bind cannot resolve page-level helper methods:\n{}",
-            r.code_behind
-        );
+        assert!(r.xaml.contains("<VisualStateManager.VisualStateGroups>"), "{}", r.xaml);
+        assert!(r.xaml.contains("Tag=\"{x:Bind Expr_"), "{}", r.xaml);
+        assert!(!r.xaml.contains("x:Bind Owner.Expr_"), "{}", r.xaml);
+        assert!(!r.xaml.contains("<StateTrigger IsActive=\"{x:Bind "), "{}", r.xaml);
+        assert!(r.xaml.contains("IsActive=\"{Binding Tag, ElementName=MosaicState1State0Trigger}"), "{}", r.xaml);
+
+        assert!(r.code_behind.contains("OnMosaicSelectedIndexRowProjectionInputChanged"), "{}", r.code_behind);
+        let vm = r.for_view_models.iter().find(|vm| vm.filename.ends_with("_RowVm.cs")).unwrap();
+        assert!(vm.source.contains("=> Owner.Expr_"), "{}", vm.source);
     }
 
     // ── #13040 ──────────────────────────────────────────────────────
