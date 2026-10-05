@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Expanded dynamic source-selection and package-hash fixture replay from 16/4
+  to 20/8 cases, covering before/after shared-input digest evidence for two
+  Swift consumers. The production engine and host authority are unchanged.
 - Rejected caller-owned diff package lists over 4,096 entries before
   enumeration or allocation, preserving the graph-limit diagnostic.
 - Matched the reference's granular graph/diff diagnostics and validation
