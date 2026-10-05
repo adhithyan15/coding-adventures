@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Describing Things",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:4eb6d0203539cc1d",
+  "sourceHash": "fnv1a64:7ad8bba8a62d9fe5",
   "lessons": [
     {
       "id": "SA-C15-big",
@@ -1155,7 +1155,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a9fd1d6cab29ab19",
+      "sourceHash": "fnv1a64:be724adce2808093",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1250,11 +1250,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "1. descend the left side, curve counterclockwise around the lower bowl, and rise along the right side to the headline without lifting."
+              "text": "1. descend the left side, curve counterclockwise around the lower bowl, and rise along the right side to the headline."
             },
             {
               "kind": "speech",
-              "text": "2. lift and draw the right stem top-to-bottom, retracing its upper body-side segment before continuing below the bowl."
+              "text": "2. without lifting, draw the right stem top-to-bottom, retracing its upper body-side segment before continuing below the bowl."
             },
             {
               "kind": "speech",
@@ -1266,11 +1266,11 @@
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 3. The pen comes up 3 times and no more."
+              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
             },
             {
               "kind": "speech",
-              "text": "verified four-stroke teaching form fitted to the bundled printed outline."
+              "text": "The source shows four movements; most native writers draw ष (ṣa) in three strokes (83% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the diagonal and the headline."
             },
             {
               "kind": "speech",

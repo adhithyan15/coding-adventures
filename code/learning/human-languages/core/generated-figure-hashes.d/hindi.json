@@ -46,22 +46,22 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "HI-S110-letter-ra",
-      "sourceHash": "fnv1a64:525876ef2d4293c1",
-      "svgHash": "fnv1a64:5f8d465475c7dd70",
+      "sourceHash": "fnv1a64:2f35074e9469b5e2",
+      "svgHash": "fnv1a64:4ea87c9b4eba4f6c",
       "svg": "hindi/book/figures/HI-S110-letter-ra-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "HI-S111-letter-ka",
-      "sourceHash": "fnv1a64:0d8a6aea37ff22a9",
-      "svgHash": "fnv1a64:b80af52019f4a24c",
+      "sourceHash": "fnv1a64:8d092e3a0cf2894a",
+      "svgHash": "fnv1a64:80a016a33cc7a661",
       "svg": "hindi/book/figures/HI-S111-letter-ka-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "HI-S113-letter-pa",
-      "sourceHash": "fnv1a64:435ea7f2cc043d84",
-      "svgHash": "fnv1a64:de616690902187ca",
+      "sourceHash": "fnv1a64:87d9f2cda02501b4",
+      "svgHash": "fnv1a64:b228f44194852575",
       "svg": "hindi/book/figures/HI-S113-letter-pa-filmstrip.svg"
     },
     {
@@ -74,8 +74,8 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "HI-S115-letter-ya",
-      "sourceHash": "fnv1a64:86f49c09889f630b",
-      "svgHash": "fnv1a64:26ddfa520f4a00ed",
+      "sourceHash": "fnv1a64:78f86455536a9e4d",
+      "svgHash": "fnv1a64:90d2e3699ae40ca4",
       "svg": "hindi/book/figures/HI-S115-letter-ya-filmstrip.svg"
     },
     {
@@ -88,15 +88,15 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "HI-S119-letter-ssa",
-      "sourceHash": "fnv1a64:d1744034a86b6e06",
-      "svgHash": "fnv1a64:3ffcfcea51b86579",
+      "sourceHash": "fnv1a64:4d9e8fa174a7cb44",
+      "svgHash": "fnv1a64:0283faf9a1351c6f",
       "svg": "hindi/book/figures/HI-S119-letter-ssa-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "HI-S121-letter-la",
-      "sourceHash": "fnv1a64:29e952458da2df93",
-      "svgHash": "fnv1a64:6c712e21db2f3e27",
+      "sourceHash": "fnv1a64:63ed17d107472aab",
+      "svgHash": "fnv1a64:c5c124aa4f703277",
       "svg": "hindi/book/figures/HI-S121-letter-la-filmstrip.svg"
     },
     {
@@ -109,15 +109,15 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "HI-S123-letter-da",
-      "sourceHash": "fnv1a64:8ae9ae874410d11d",
-      "svgHash": "fnv1a64:4bad59c61ab19ba8",
+      "sourceHash": "fnv1a64:259f7f054ac2693e",
+      "svgHash": "fnv1a64:6057e578576dc99e",
       "svg": "hindi/book/figures/HI-S123-letter-da-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "HI-S124-letter-dha",
-      "sourceHash": "fnv1a64:0f647de206a48db1",
-      "svgHash": "fnv1a64:3c9a47541608d5e4",
+      "sourceHash": "fnv1a64:2a808b5a966e48ee",
+      "svgHash": "fnv1a64:60bebbfdfa6415b8",
       "svg": "hindi/book/figures/HI-S124-letter-dha-filmstrip.svg"
     },
     {
@@ -186,15 +186,15 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "HI-S135-letter-au",
-      "sourceHash": "fnv1a64:b5646539b352ca5e",
-      "svgHash": "fnv1a64:13fd32bf8e4201d8",
+      "sourceHash": "fnv1a64:4bb7e8d4fe63a55c",
+      "svgHash": "fnv1a64:c3f87bd88a25054a",
       "svg": "hindi/book/figures/HI-S135-letter-au-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "HI-S136-letter-gha",
-      "sourceHash": "fnv1a64:eb43bf97ac28cca9",
-      "svgHash": "fnv1a64:136ca633b9c1fd76",
+      "sourceHash": "fnv1a64:c708c490e970cb4d",
+      "svgHash": "fnv1a64:0218556830f6c6e8",
       "svg": "hindi/book/figures/HI-S136-letter-gha-filmstrip.svg"
     },
     {
@@ -228,8 +228,8 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "HI-S143-letter-tha-retroflex",
-      "sourceHash": "fnv1a64:37e0f26e7b81a7dd",
-      "svgHash": "fnv1a64:51d2fc22531641db",
+      "sourceHash": "fnv1a64:699ec4cb8d66490d",
+      "svgHash": "fnv1a64:a59cd97c9bf6cf41",
       "svg": "hindi/book/figures/HI-S143-letter-tha-retroflex-filmstrip.svg"
     },
     {
@@ -291,8 +291,8 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "HI-W12-ya",
-      "sourceHash": "fnv1a64:ce693b41b51f0e52",
-      "svgHash": "fnv1a64:26ddfa520f4a00ed",
+      "sourceHash": "fnv1a64:723e510d90319c76",
+      "svgHash": "fnv1a64:90d2e3699ae40ca4",
       "svg": "hindi/book/figures/HI-W12-ya-filmstrip.svg"
     },
     {

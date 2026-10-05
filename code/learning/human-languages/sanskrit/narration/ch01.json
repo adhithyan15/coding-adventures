@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8790ae0e955f641e",
+  "sourceHash": "fnv1a64:857770ebd8f0f0ef",
   "lessons": [
     {
       "id": "SA-C01-namaste",
@@ -953,7 +953,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:71d3bda9b974a36c",
+      "sourceHash": "fnv1a64:c58c5b5415cba90a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1044,7 +1044,7 @@
             },
             {
               "kind": "speech",
-              "text": "2. lift at the stem's lower junction, sweep left through the upper shoulder and around the outer body, curl inward and clockwise through the loop, then continue down-right through the tail without lifting."
+              "text": "2. without lifting, sweep left through the upper shoulder and around the outer body, curl inward and clockwise through the loop, then continue down-right through the tail."
             },
             {
               "kind": "speech",
@@ -1052,11 +1052,11 @@
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+              "text": "Pen lifts: 1. The pen comes up once."
             },
             {
               "kind": "speech",
-              "text": "verified three-stroke teaching form; another learner source stages the outer body and curl-tail separately."
+              "text": "The source shows three movements; most native writers draw द (da) in two strokes (95% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",

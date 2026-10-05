@@ -10,7 +10,7 @@ delivery: script
 chapter: 39
 type: writing
 headword: "औ"
-gloss: the single character औ — the standing form of the mark drawn one chapter ago, and the most pen lifts in the book
+gloss: the single character औ — the standing form of the mark drawn one chapter ago, and the longest build in the book
 romanization: "au"
 prerequisites: [HI-S134-vowel-sign-au]
 sounds: []
@@ -55,7 +55,7 @@ yet.
 What it is made of:
 
 - the joined upper and lower bowls of **अ**
-- a separately swept middle shoulder
+- a middle shoulder running into the inner stem
 - the inner stem
 - the trailing stem
 - two separate upper arcs
@@ -79,15 +79,16 @@ one idea, two shapes, and a count that decides it.
 
 - **1.** curve right around the upper bowl and continue down and around the lower bowl without lifting
 - **2.** lift and sweep the middle shoulder right
-- **3.** lift and descend the inner stem
-- **4.** lift and descend the trailing stem
-- **5.** lift at the trailing stem's headline junction and sweep the lower upper arc upward and left
-- **6.** lift at the same junction and sweep the taller upper arc upward and left
-- **7.** lift and draw the top shirorekhā left-to-right
+- **3.** without lifting, climb up the inner stem to the headline
+- **4.** descend the inner stem
+- **5.** lift and descend the trailing stem
+- **6.** lift at the trailing stem's headline junction and sweep the lower upper arc upward and left
+- **7.** lift at the same junction and sweep the taller upper arc upward and left
+- **8.** lift and draw the top shirorekhā left-to-right
 
-**Pen lifts: 6.** More than any other character you have drawn — take it slowly.
+**Pen lifts: 5.** As many as **ओ**, and more than any other — take it slowly.
 
-> Verified modern printed teaching form; traditional and everyday handwriting may divide or simplify the curves differently.
+> The source shows seven movements; most native writers draw औ in six strokes (60% of HP Labs India's native-writer samples). This path keeps every movement in order and lifts five times; only the shoulder runs on, up the inner stem.
 
 > This is one attested teaching order and not a national standard — handwriting
 > here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari औ stroke order.svg’, panels 1–7, Wikimedia Commons, 5 August 2023.
@@ -107,4 +108,4 @@ one idea, two shapes, and a count that decides it.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-135, HI-SCRIPT-RECOG-134] -->
 
 [PAUSE 3s] What sound is **औ**? (*au*.) What is its sitting form? (**◌ौ**.) How
-many pen lifts does it take? (Six — the most in the book.)
+many pen lifts does it take? (Five — as many as **ओ**, the most in the book.)

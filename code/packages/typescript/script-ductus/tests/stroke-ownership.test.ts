@@ -385,12 +385,19 @@ describe("stroke ownership migration baseline", () => {
       // remain unchanged.
       // The non-Tamil hash was re-measured on top of the Telugu native-lift
       // batches.
+      //
+      // Devanagari क, य, र, प, ध, ल, द, ठ, घ, ष and औ now lift only where HP
+      // Labs India's native writers do: their sourced runs become segments of
+      // fewer strokes, with new captions and source notes. Only the non-Tamil
+      // data hash moves, measured after the last caption was settled; keys,
+      // the key hash, every script count, Tamil and both shared-identity
+      // values remain unchanged.
     }).toEqual({
       keys: 469,
       keyHash:
         "a94dcc62ecb888f6d99cc3af625b2bf9ad784a37b2072f2bea505a0131281b3a",
       nonTamilDataHash:
-        "b66c9cab0d0365feba7887298ca714ae493c20fa95190d433c0c0bdbcb0e7a4e",
+        "41a1a63c9cf9a3759b097385cbc7afeac9dee14be90d5bc321445e231b5af6e0",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",

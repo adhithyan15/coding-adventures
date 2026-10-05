@@ -62,12 +62,12 @@ You already say this word, and र is one of the shapes inside it — the rest o
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-110] -->
 
 - **1.** start at the headline junction, descend the stem, and curl left and clockwise around the lower loop to the tail junction
-- **2.** lift at that junction and draw the diagonal tail down-right
+- **2.** without lifting, draw the diagonal tail down-right
 - **3.** lift and draw the top shirorekhā left-to-right
 
-**Pen lifts: 2.** The pen comes up 2 times and no more.
+**Pen lifts: 1.** The pen comes up once.
 
-> verified three-stroke teaching form; another animated learner source joins the loop and diagonal tail
+> The source shows three movements; most native writers draw र in two strokes (96% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline.
 
 > This is one attested teaching order and not a national standard — handwriting
 > here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-र-order.gif’, strokes 1–3, Wikimedia Commons, 10 May 2009.

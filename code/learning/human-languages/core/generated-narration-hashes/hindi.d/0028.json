@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 28,
-  "sourceHash": "fnv1a64:176e5f2e43335fa1",
+  "sourceHash": "fnv1a64:49264fa7fbf27d1d",
   "lessonIds": [
     "HI-C28-subah",
     "HI-S143-letter-tha-retroflex"
@@ -10,7 +10,7 @@
   "drivablePrefix": 1,
   "text": "hindi/narration/ch28.txt",
   "json": "hindi/narration/ch28.json",
-  "textHash": "fnv1a64:3974d73efab66c2b",
-  "jsonHash": "fnv1a64:0ce9faaddc41f704",
+  "textHash": "fnv1a64:413f4a7fe87c2c68",
+  "jsonHash": "fnv1a64:ff2381c499805425",
   "findings": []
 }

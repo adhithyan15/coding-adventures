@@ -417,81 +417,87 @@ describe("Devanagari ओ — shared आ base before upper arc and headline", () 
   });
 });
 
-describe("Devanagari औ — shared आ base before two upper arcs and headline", () => {
+describe("Devanagari औ — shoulder runs into the inner stem before trailing stem, two arcs, and headline", () => {
   const steps = ductusSteps(DEVANAGARI_AU);
   const strip = ductusFilmstrip(DEVANAGARI_AU, devanagariAuOutline);
 
-  it("shows eight movements across seven sourced strokes", () => {
+  it("shows nine movements across six strokes", () => {
     expect(steps.map((step) => step.label)).toEqual([
       "curve right around the upper bowl",
-      "continue down and around the lower bowl without lifting",
+      "continue round the lower bowl",
       "lift, then sweep the middle shoulder right",
-      "lift, then descend the inner stem",
+      "climb up the inner stem without lifting",
+      "descend the inner stem",
       "lift, then descend the trailing stem",
-      "lift, then sweep the lower upper arc upward and left",
-      "lift, then sweep the taller upper arc upward and left",
-      "lift, then draw the shirorekha left-to-right",
+      "lift, then sweep the lower arc up and left",
+      "lift, then sweep the taller arc up and left",
+      "lift, then draw the shirorekha rightward",
     ]);
     expect(steps.map((step) => step.startsAfterLift)).toEqual([
       false,
       false,
       true,
-      true,
+      false,
+      false,
       true,
       true,
       true,
       true,
     ]);
     expect(steps.map((step) => step.strokeIndex)).toEqual([
-      0, 0, 1, 2, 3, 4, 5, 6,
+      0, 0, 1, 1, 1, 2, 3, 4, 5,
     ]);
-    expect(strip.frames).toHaveLength(8);
-    expect(strip.penLifts).toBe(6);
-    expect(strip.summary).toBe("7 strokes · 6 pen lifts · 8 movements");
+    expect(strip.frames).toHaveLength(9);
+    expect(strip.penLifts).toBe(5);
+    expect(strip.summary).toBe("6 strokes · 5 pen lifts · 9 movements");
   });
 
   it("draws the exact Noto Sans Devanagari character behind the headline", () => {
-    const paths = byTag(strip.frames[7], "path");
+    const paths = byTag(strip.frames[8], "path");
     expect(
       paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d,
     ).toBe(devanagariAuOutline.path);
     expect(
       paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d,
-    ).toBe(penPathD(DEVANAGARI_AU.strokes[6], 1));
+    ).toBe(penPathD(DEVANAGARI_AU.strokes[5], 1));
   });
 });
 
-describe("Devanagari क — counterclockwise bowl before stem, arch, and headline", () => {
+describe("Devanagari क — bowl, stem, and arch in one run before the headline", () => {
   const steps = ductusSteps(DEVANAGARI_KA);
   const strip = ductusFilmstrip(DEVANAGARI_KA, devanagariKaOutline);
 
-  it("shows four movements across four sourced strokes", () => {
+  it("shows six movements across two strokes", () => {
     expect(steps.map((step) => step.label)).toEqual([
       "sweep left over the top and around the bowl",
-      "lift, then descend the central stem",
-      "lift, then sweep the right-hand arch clockwise",
-      "lift, then draw the shirorekha left-to-right",
+      "climb up the central stem without lifting",
+      "descend the central stem",
+      "climb back up to the upper junction",
+      "sweep the right-hand arch clockwise",
+      "lift, then draw the shirorekha rightward",
     ]);
     expect(steps.map((step) => step.startsAfterLift)).toEqual([
       false,
-      true,
-      true,
+      false,
+      false,
+      false,
+      false,
       true,
     ]);
-    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2, 3]);
-    expect(strip.frames).toHaveLength(4);
-    expect(strip.penLifts).toBe(3);
-    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 4 movements");
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0, 0, 1]);
+    expect(strip.frames).toHaveLength(6);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 6 movements");
   });
 
   it("draws the exact Noto Sans Devanagari character behind the headline", () => {
-    const paths = byTag(strip.frames[3], "path");
+    const paths = byTag(strip.frames[5], "path");
     expect(
       paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d,
     ).toBe(devanagariKaOutline.path);
     expect(
       paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d,
-    ).toBe(penPathD(DEVANAGARI_KA.strokes[3], 1));
+    ).toBe(penPathD(DEVANAGARI_KA.strokes[1], 1));
   });
 });
 
@@ -591,25 +597,25 @@ describe("Devanagari त — right-to-left shoulder before the lifted right stem
   });
 });
 
-describe("Devanagari द — short stem before the joined outer body, curl, and tail", () => {
+describe("Devanagari द — short stem runs into the outer body, curl, and tail", () => {
   const steps = ductusSteps(DEVANAGARI_DA);
   const strip = ductusFilmstrip(DEVANAGARI_DA, devanagariDaOutline);
 
-  it("shows three movements across three sourced strokes", () => {
+  it("shows three movements across two strokes", () => {
     expect(steps.map((step) => step.label)).toEqual([
       "descend the short stem",
-      "lift, then sweep around the body, inner curl, and tail",
-      "lift, then draw the shirorekha left-to-right",
+      "continue round the body, curl and tail",
+      "lift, then draw the shirorekha rightward",
     ]);
     expect(steps.map((step) => step.startsAfterLift)).toEqual([
       false,
-      true,
+      false,
       true,
     ]);
-    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1]);
     expect(strip.frames).toHaveLength(3);
-    expect(strip.penLifts).toBe(2);
-    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 3 movements");
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
   });
 
   it("draws the exact Noto Sans Devanagari character behind the headline", () => {
@@ -619,41 +625,45 @@ describe("Devanagari द — short stem before the joined outer body, curl, and 
     ).toBe(devanagariDaOutline.path);
     expect(
       paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d,
-    ).toBe(penPathD(DEVANAGARI_DA.strokes[2], 1));
+    ).toBe(penPathD(DEVANAGARI_DA.strokes[1], 1));
   });
 });
 
-describe("Devanagari ध — upper spiral before the lower bowl and lifted right stem", () => {
+describe("Devanagari ध — upper spiral, lower bowl, and right stem in one run", () => {
   const steps = ductusSteps(DEVANAGARI_DHA);
   const strip = ductusFilmstrip(DEVANAGARI_DHA, devanagariDhaOutline);
 
-  it("shows four movements across four sourced strokes", () => {
+  it("shows six movements across two strokes", () => {
     expect(steps.map((step) => step.label)).toEqual([
-      "curl around the upper spiral and sweep right through the shoulder",
-      "lift, then sweep down and around the lower bowl",
-      "lift, then descend the right stem",
-      "lift, then draw the shirorekha left-to-right",
+      "curl the spiral and pull the shoulder right",
+      "turn back left along the shoulder",
+      "sweep down and around the lower bowl",
+      "climb up the right stem without lifting",
+      "descend the right stem",
+      "lift, then draw the shirorekha rightward",
     ]);
     expect(steps.map((step) => step.startsAfterLift)).toEqual([
       false,
-      true,
-      true,
+      false,
+      false,
+      false,
+      false,
       true,
     ]);
-    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2, 3]);
-    expect(strip.frames).toHaveLength(4);
-    expect(strip.penLifts).toBe(3);
-    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 4 movements");
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0, 0, 1]);
+    expect(strip.frames).toHaveLength(6);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 6 movements");
   });
 
   it("draws the exact Noto Sans Devanagari character behind the headline", () => {
-    const paths = byTag(strip.frames[3], "path");
+    const paths = byTag(strip.frames[5], "path");
     expect(
       paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d,
     ).toBe(devanagariDhaOutline.path);
     expect(
       paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d,
-    ).toBe(penPathD(DEVANAGARI_DHA.strokes[3], 1));
+    ).toBe(penPathD(DEVANAGARI_DHA.strokes[1], 1));
   });
 });
 
@@ -689,35 +699,37 @@ describe("Devanagari न — clockwise loop and shoulder before the lifted right
   });
 });
 
-describe("Devanagari प — descending left stem curves through the bowl before the lifted right stem", () => {
+describe("Devanagari प — left stem and bowl run into the right stem", () => {
   const steps = ductusSteps(DEVANAGARI_PA);
   const strip = ductusFilmstrip(DEVANAGARI_PA, devanagariPaOutline);
 
-  it("shows three movements across three sourced strokes", () => {
+  it("shows four movements across two strokes", () => {
     expect(steps.map((step) => step.label)).toEqual([
-      "descend the left stem and curve right around the lower bowl",
-      "lift, then descend the right stem",
-      "lift, then draw the shirorekha left-to-right",
+      "descend the left stem and round the bowl",
+      "climb up the right stem without lifting",
+      "descend the right stem",
+      "lift, then draw the shirorekha rightward",
     ]);
     expect(steps.map((step) => step.startsAfterLift)).toEqual([
       false,
-      true,
+      false,
+      false,
       true,
     ]);
-    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2]);
-    expect(strip.frames).toHaveLength(3);
-    expect(strip.penLifts).toBe(2);
-    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 3 movements");
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 4 movements");
   });
 
   it("draws the exact Noto Sans Devanagari character behind the headline", () => {
-    const paths = byTag(strip.frames[2], "path");
+    const paths = byTag(strip.frames[3], "path");
     expect(
       paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d,
     ).toBe(devanagariPaOutline.path);
     expect(
       paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d,
-    ).toBe(penPathD(DEVANAGARI_PA.strokes[2], 1));
+    ).toBe(penPathD(DEVANAGARI_PA.strokes[1], 1));
   });
 });
 
@@ -819,59 +831,61 @@ describe("Devanagari म — descending left stem joins the clockwise lower loop
   });
 });
 
-describe("Devanagari य — inner curl precedes the restarted lower bowl", () => {
+describe("Devanagari य — inner curl, lower bowl, and right stem in one run", () => {
   const steps = ductusSteps(DEVANAGARI_YA);
   const strip = ductusFilmstrip(DEVANAGARI_YA, devanagariYaOutline);
 
-  it("shows four movements across four sourced strokes", () => {
+  it("shows five movements across two strokes", () => {
     expect(steps.map((step) => step.label)).toEqual([
       "curve clockwise around the inner curl",
-      "lift, then curve around the lower bowl to the right",
-      "lift, then descend the right stem",
-      "lift, then draw the shirorekha left-to-right",
+      "continue around the lower bowl to the right",
+      "climb up the right stem without lifting",
+      "descend the right stem",
+      "lift, then draw the shirorekha rightward",
     ]);
     expect(steps.map((step) => step.startsAfterLift)).toEqual([
       false,
-      true,
-      true,
+      false,
+      false,
+      false,
       true,
     ]);
-    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2, 3]);
-    expect(strip.frames).toHaveLength(4);
-    expect(strip.penLifts).toBe(3);
-    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 4 movements");
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0, 1]);
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 5 movements");
   });
 
   it("draws the exact Noto Sans Devanagari character behind the headline", () => {
-    const paths = byTag(strip.frames[3], "path");
+    const paths = byTag(strip.frames[4], "path");
     expect(
       paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d,
     ).toBe(devanagariYaOutline.path);
     expect(
       paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d,
-    ).toBe(penPathD(DEVANAGARI_YA.strokes[3], 1));
+    ).toBe(penPathD(DEVANAGARI_YA.strokes[1], 1));
   });
 });
 
-describe("Devanagari र — looped stem precedes the restarted diagonal tail", () => {
+describe("Devanagari र — looped stem runs into the diagonal tail", () => {
   const steps = ductusSteps(DEVANAGARI_RA);
   const strip = ductusFilmstrip(DEVANAGARI_RA, devanagariRaOutline);
 
-  it("shows three movements across three sourced strokes", () => {
+  it("shows three movements across two strokes", () => {
     expect(steps.map((step) => step.label)).toEqual([
-      "descend and curl clockwise around the lower loop",
-      "lift, then draw the diagonal tail down-right",
-      "lift, then draw the shirorekha left-to-right",
+      "descend and curl clockwise into the loop",
+      "continue down-right along the diagonal tail",
+      "lift, then draw the shirorekha rightward",
     ]);
     expect(steps.map((step) => step.startsAfterLift)).toEqual([
       false,
-      true,
+      false,
       true,
     ]);
-    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1]);
     expect(strip.frames).toHaveLength(3);
-    expect(strip.penLifts).toBe(2);
-    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 3 movements");
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
   });
 
   it("draws the exact Noto Sans Devanagari character behind the headline", () => {
@@ -881,41 +895,43 @@ describe("Devanagari र — looped stem precedes the restarted diagonal tail", 
     ).toBe(devanagariRaOutline.path);
     expect(
       paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d,
-    ).toBe(penPathD(DEVANAGARI_RA.strokes[2], 1));
+    ).toBe(penPathD(DEVANAGARI_RA.strokes[1], 1));
   });
 });
 
-describe("Devanagari ल — open loop precedes the restarted diagonal arm", () => {
+describe("Devanagari ल — open loop, diagonal arm, and right stem in one run", () => {
   const steps = ductusSteps(DEVANAGARI_LA);
   const strip = ductusFilmstrip(DEVANAGARI_LA, devanagariLaOutline);
 
-  it("shows four movements across four sourced strokes", () => {
+  it("shows five movements across two strokes", () => {
     expect(steps.map((step) => step.label)).toEqual([
-      "curve up and clockwise around the open left loop",
-      "lift, then sweep the diagonal arm up-right",
-      "lift, then descend the right stem",
-      "lift, then draw the shirorekha left-to-right",
+      "curve up clockwise round the open loop",
+      "sweep the diagonal arm up-right",
+      "climb up the right stem without lifting",
+      "descend the right stem",
+      "lift, then draw the shirorekha rightward",
     ]);
     expect(steps.map((step) => step.startsAfterLift)).toEqual([
       false,
-      true,
-      true,
+      false,
+      false,
+      false,
       true,
     ]);
-    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2, 3]);
-    expect(strip.frames).toHaveLength(4);
-    expect(strip.penLifts).toBe(3);
-    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 4 movements");
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0, 1]);
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 5 movements");
   });
 
   it("draws the exact Noto Sans Devanagari character behind the headline", () => {
-    const paths = byTag(strip.frames[3], "path");
+    const paths = byTag(strip.frames[4], "path");
     expect(
       paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d,
     ).toBe(devanagariLaOutline.path);
     expect(
       paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d,
-    ).toBe(penPathD(DEVANAGARI_LA.strokes[3], 1));
+    ).toBe(penPathD(DEVANAGARI_LA.strokes[1], 1));
   });
 });
 

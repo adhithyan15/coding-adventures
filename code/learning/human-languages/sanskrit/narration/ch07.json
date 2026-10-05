@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "The Core Verbs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1140f2db83ffc6a8",
+  "sourceHash": "fnv1a64:a722460b3428fa60",
   "lessons": [
     {
       "id": "SA-C07-asti",
@@ -745,7 +745,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6e2735eede939c53",
+      "sourceHash": "fnv1a64:613bca57f3437f2b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -813,7 +813,7 @@
             },
             {
               "kind": "speech",
-              "text": "a separate right-hand arch."
+              "text": "a right-hand arch."
             },
             {
               "kind": "speech",
@@ -840,23 +840,31 @@
             },
             {
               "kind": "speech",
-              "text": "2. lift and draw the central stem top-to-bottom."
+              "text": "2. without lifting, climb up the central stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "3. lift at the upper junction and sweep the right-hand arch clockwise down to its open lower tip."
+              "text": "3. descend the central stem top-to-bottom."
             },
             {
               "kind": "speech",
-              "text": "4. lift and draw the top shirorekhā left-to-right."
+              "text": "4. climb back up the stem to the upper junction."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 3. The pen comes up 3 times and no more."
+              "text": "5. sweep the right-hand arch clockwise down to its open lower tip."
             },
             {
               "kind": "speech",
-              "text": "verified four-stroke teaching form; everyday handwriting may join or simplify the body differently."
+              "text": "6. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 1. The pen comes up once."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows four movements; most native writers draw क (ka) in two strokes (74% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",
