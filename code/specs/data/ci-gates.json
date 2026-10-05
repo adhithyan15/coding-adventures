@@ -441,7 +441,9 @@
         "code/specs/FM0*-forme-*.md",
         "code/specs/data/ci-gates.json",
         "code/scripts/forme_release_gate.py",
-        "code/scripts/tests/test_forme_release_gate.py"
+        "code/scripts/setup_msvc_dev_cmd.py",
+        "code/scripts/tests/test_forme_release_gate.py",
+        "code/scripts/tests/test_setup_msvc_dev_cmd.py"
       ]
     },
     "build-linux-os-suites": {

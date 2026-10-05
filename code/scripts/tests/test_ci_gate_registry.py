@@ -239,6 +239,12 @@ class CIGateRegistryTests(unittest.TestCase):
         self.assertIn("actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97", body)
         self.assertIn("python-version: '3.13.7'", body)
         self.assertIn("toolchain: '1.95.0'", body)
+        self.assertIn("Set up MSVC for the native Windows product", body)
+        self.assertIn("if: runner.os == 'Windows'", body)
+        self.assertIn("python code/scripts/setup_msvc_dev_cmd.py --arch x64", body)
+        release_paths = self.gates["forme-release-platform"]["paths"]
+        self.assertIn("code/scripts/setup_msvc_dev_cmd.py", release_paths)
+        self.assertIn("code/scripts/tests/test_setup_msvc_dev_cmd.py", release_paths)
         verdict = self._job_body("forme-release-verdict")
         self.assertIn("pattern: forme-release-*", verdict)
         self.assertIn("forme_release_gate.py verdict", verdict)
