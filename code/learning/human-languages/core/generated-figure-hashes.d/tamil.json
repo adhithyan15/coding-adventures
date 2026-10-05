@@ -270,36 +270,36 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "TA-W02-ma-retroflex-na",
-      "sourceHash": "fnv1a64:680a7ab004cbcd37",
-      "svgHash": "fnv1a64:7bf8b8f6f7d341c2",
+      "sourceHash": "fnv1a64:c9ad63ee88d369d5",
+      "svgHash": "fnv1a64:1526589a63c88b23",
       "svg": "tamil/book/figures/TA-W02-ma-retroflex-na-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "TA-W02-three-ns",
-      "sourceHash": "fnv1a64:d031e02ca7581f34",
-      "svgHash": "fnv1a64:da5ee3e491d34a0d",
+      "sourceHash": "fnv1a64:4c2dad5edc9632fa",
+      "svgHash": "fnv1a64:00b2ff51893ab065",
       "svg": "tamil/book/figures/TA-W02-three-ns-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "TA-W04-vowel-signs-nandri",
-      "sourceHash": "fnv1a64:1623d987f6a46692",
-      "svgHash": "fnv1a64:ce1b4098e49d2bc8",
+      "sourceHash": "fnv1a64:30bbe78c31269b26",
+      "svgHash": "fnv1a64:e38f2971a78981b8",
       "svg": "tamil/book/figures/TA-W04-vowel-signs-nandri-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "TA-W07-write-sari",
-      "sourceHash": "fnv1a64:4ec8cba28930be9f",
-      "svgHash": "fnv1a64:0ca3031bceb187b8",
+      "sourceHash": "fnv1a64:3953b5ef4a145414",
+      "svgHash": "fnv1a64:2e313410035a59ff",
       "svg": "tamil/book/figures/TA-W07-write-sari-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "TA-W08-short-o-observe",
-      "sourceHash": "fnv1a64:1d725a5578b12846",
-      "svgHash": "fnv1a64:5b4dde7c160bfc4e",
+      "sourceHash": "fnv1a64:e6736ceef136343f",
+      "svgHash": "fnv1a64:3e92481dd2f9e31d",
       "svg": "tamil/book/figures/TA-W08-short-o-observe-filmstrip.svg"
     },
     {
@@ -326,15 +326,15 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "TA-W26-read-mesai",
-      "sourceHash": "fnv1a64:4e1bda17e3b72609",
-      "svgHash": "fnv1a64:cbc153067092f90d",
+      "sourceHash": "fnv1a64:9bdfe296e2384bd8",
+      "svgHash": "fnv1a64:db8ddff58d7da466",
       "svg": "tamil/book/figures/TA-W26-read-mesai-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
       "lessonId": "TA-W30-read-sariyaa",
-      "sourceHash": "fnv1a64:8de77d2870e5db1d",
-      "svgHash": "fnv1a64:a418b4a0bb7133aa",
+      "sourceHash": "fnv1a64:be5d38312ed919d8",
+      "svgHash": "fnv1a64:0d6a553763db3027",
       "svg": "tamil/book/figures/TA-W30-read-sariyaa-filmstrip.svg"
     }
   ]

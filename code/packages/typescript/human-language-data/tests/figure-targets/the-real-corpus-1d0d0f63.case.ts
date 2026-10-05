@@ -196,7 +196,8 @@ describe("the real corpus", () => {
   });
 
   it("composes words only in scripts whose letters stand apart", () => {
-    // Words whose pieces spell the headword back: three Japanese words, the
+    // Words whose pieces spell the headword back: four Japanese words (ありがとう
+    // joined once が gained its ductus), the
     // two Tamil words whose only sign is written AFTER its consonant (சரி,
     // சரியா), and the Gujarati words, whose signs are all written after their
     // consonant (અને, કે, કેમકે, તે, and હા three times). A Tamil word
@@ -218,6 +219,7 @@ describe("the real corpus", () => {
       "GU-W01-haa-guided-copy",
       "JA-W01-hai-read",
       "JA-W01-konnichiwa-read",
+      "JA-W03-arigatou-read",
       "JA-W08-sayounara-read",
       "TA-W07-write-sari",
       "TA-W30-read-sariyaa",

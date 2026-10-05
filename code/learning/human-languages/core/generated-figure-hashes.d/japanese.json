@@ -80,6 +80,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "JA-W03-arigatou-read",
+      "sourceHash": "fnv1a64:e3e314fcf684ef17",
+      "svgHash": "fnv1a64:66e34712e47ce457",
+      "svg": "japanese/book/figures/JA-W03-arigatou-read-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "JA-W03-dakuten",
       "sourceHash": "fnv1a64:1510d3718027e1be",
       "svgHash": "fnv1a64:9ddd694ee1d78e0c",
