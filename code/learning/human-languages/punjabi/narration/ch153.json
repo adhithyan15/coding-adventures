@@ -4,12 +4,12 @@
   "chapter": 153,
   "title": "Write One Fictional Date Field",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:76bf702a1307da55",
+  "sourceHash": "fnv1a64:bc93a4f71e4529da",
   "lessons": [
     {
       "id": "PA-W09-date-label",
       "sequence": 8270,
-      "title": "ਤਾਰੀਖ਼ (tārīkh) (heard fictional date) (delayed fictional date field) — find the date line",
+      "title": "ਤਾਰੀਖ਼ (tārīkh) — find the date line",
       "headword": "ਤਾਰੀਖ਼",
       "romanization": "tārīkh",
       "gloss": "the date label on a fictional form",
@@ -36,7 +36,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "You met ਤਾਰੀਖ਼ (heard fictional date) (delayed fictional date field) as “a date.” Read it aloud once. Its Persian source tārīkh also means a date or history; here the form asks for a date only."
+              "text": "You met ਤਾਰੀਖ਼ as “a date.” Read it aloud once. Its Persian source tārīkh also means a date or history; here the form asks for a date only."
             }
           ]
         },
@@ -47,7 +47,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "On this fictional beginner form, ਤਾਰੀਖ਼ (tārīkh) (heard fictional date) (delayed fictional date field): ______ labels the date line. Point to the label. The blank is where a date goes; it is not a phone or age line. No real personal information is requested."
+              "text": "On this fictional beginner form, ਤਾਰੀਖ਼ (tārīkh): ______ labels the date line. Point to the label. The blank is where a date goes; it is not a phone or age line. No real personal information is requested."
             }
           ]
         },
@@ -58,7 +58,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Copy ਤਾਰੀਖ਼ (tārīkh) (heard fictional date) (delayed fictional date field): once, including the colon. Leave its value blank."
+              "text": "Copy ਤਾਰੀਖ਼ (tārīkh): once, including the colon. Leave its value blank."
             }
           ]
         },
@@ -75,7 +75,7 @@
               "kind": "activity",
               "scored": true,
               "id": "PA-W09-date-label-check",
-              "prompt": "A fictional form shows ਤਾਰੀਖ਼ (tārīkh) (heard fictional date) (delayed fictional date field). What belongs on that line?",
+              "prompt": "A fictional form shows ਤਾਰੀਖ਼ (tārīkh). What belongs on that line?",
               "assesses": [
                 "PA-FORM-LABEL-DATE-01"
               ],
@@ -561,7 +561,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Point to the ਤਾਰੀਖ਼ (tārīkh) (heard fictional date) (delayed fictional date field) label and to both bank entries. Keep the closed bank in view: A ੧੫/੦੧/੨੦੨੫ (fictional January date A), B ੨੫/੦੨/੨੦੨੫ (fictional February date B)."
+              "text": "Point to the ਤਾਰੀਖ਼ (tārīkh) label and to both bank entries. Keep the closed bank in view: A ੧੫/੦੧/੨੦੨੫ (fictional January date A), B ੨੫/੦੨/੨੦੨੫ (fictional February date B)."
             }
           ]
         },
@@ -572,7 +572,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "For the fictional card ਕ, select A. Copy its day into the first box, January's numeric month into the middle box, and its year into the final box: ਤਾਰੀਖ਼ (tārīkh) (heard fictional date) (delayed fictional date field): ੧੫/੦੧/੨੦੨੫ (fictional January date A) (supported fictional date field). Keep both slash marks."
+              "text": "For the fictional card ਕ, select A. Copy its day into the first box, January's numeric month into the middle box, and its year into the final box: ਤਾਰੀਖ਼ (tārīkh): ੧੫/੦੧/੨੦੨੫ (fictional January date A) (supported fictional date field). Keep both slash marks."
             }
           ]
         },
@@ -627,7 +627,7 @@
       "sequence": 8340,
       "title": "Hide the bank, then write",
       "headword": "ਤਾਰੀਖ਼",
-      "romanization": "delayed fictional date field",
+      "romanization": "tārīkh",
       "gloss": "hide the closed bank, then fill one requested date after a short delay",
       "script": "gurmukhi",
       "modality": "pen",
@@ -636,7 +636,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:53a5f866c71cd240",
+      "sourceHash": "fnv1a64:38a8f872ec784b20",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -664,7 +664,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "After the short delay, the fictional card shows ਖ. Fill its ਤਾਰੀਖ਼ (tārīkh) (heard fictional date) (delayed fictional date field) line from memory. Do not uncover the bank before you finish. Write the day, the month, and the year in the printed order, with two slash marks."
+              "text": "After the short delay, the fictional card shows ਖ. Fill its ਤਾਰੀਖ਼ (tārīkh) line from memory. Do not uncover the bank before you finish. Write the day, the month, and the year in the printed order, with two slash marks."
             }
           ]
         },
@@ -719,7 +719,7 @@
       "sequence": 8350,
       "title": "Hear a date; fill three boxes",
       "headword": "ਤਾਰੀਖ਼",
-      "romanization": "heard fictional date",
+      "romanization": "tārīkh",
       "gloss": "transcribe one heard fictional date into Gurmukhi digits",
       "script": "gurmukhi",
       "modality": "pen",
@@ -728,7 +728,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:5bbabad2fc721796",
+      "sourceHash": "fnv1a64:e7429053428b548c",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -844,7 +844,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Check one dimension at a time: selector becomes day becomes month becomes year becomes slash marks becomes label spelling and spacing. On a printed date form, a correct set of digits in the wrong boxes is still wrong. The label is ਤਾਰੀਖ਼ (tārīkh) (heard fictional date) (delayed fictional date field); keep the final dot beneath ਖ਼, and leave a readable space after the colon."
+              "text": "Check one dimension at a time: selector becomes day becomes month becomes year becomes slash marks becomes label spelling and spacing. On a printed date form, a correct set of digits in the wrong boxes is still wrong. The label is ਤਾਰੀਖ਼ (tārīkh); keep the final dot beneath ਖ਼, and leave a readable space after the colon."
             }
           ]
         },
@@ -855,7 +855,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "For ਕ, ੧੫/੦੧੨੦੨੫ has the right digits but one missing slash. Add only that slash. Next, ਤਾਰੀਖ: ੧੫/੦੧/੨੦੨੫ (fictional January date A) has the right value but lacks the dot in the label; repair only ਤਾਰੀਖ਼ (tārīkh) (heard fictional date) (delayed fictional date field). Keep the date digits untouched."
+              "text": "For ਕ, ੧੫/੦੧੨੦੨੫ has the right digits but one missing slash. Add only that slash. Next, ਤਾਰੀਖ: ੧੫/੦੧/੨੦੨੫ (fictional January date A) has the right value but lacks the dot in the label; repair only ਤਾਰੀਖ਼ (tārīkh). Keep the date digits untouched."
             }
           ]
         },
@@ -937,7 +937,7 @@
             },
             {
               "kind": "speech",
-              "text": "ਖ — ਤਾਰੀਖ਼ (tārīkh) (heard fictional date) (delayed fictional date field): __________ (independent fictional date field)."
+              "text": "ਖ — ਤਾਰੀਖ਼ (tārīkh): __________ (independent fictional date field)."
             },
             {
               "kind": "speech",
