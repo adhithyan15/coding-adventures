@@ -29,7 +29,12 @@ const CONFIGS = [
   // おちゃを ください).
   // 62 -> 65: chapter 132 writes そ (U+305D), れ (U+308C) and る (U+308B),
   // each after a word that already holds it (そこ, これ, くるま).
-  { language: "japanese", script: "japanese", letters: 65, marks: 3 },
+  // 65 -> 69: chapter 133 writes the last four basic hiragana, き (U+304D),
+  // け (U+3051), ぬ (U+306C) and へ (U+3078), each after a word that already
+  // holds it (えき, いけ, いぬ, へや). 69 -> 70: ら (U+3089), written since
+  // chapter 8 (JA-W08-ra) but never given an inventory row, gets its record,
+  // its KanjiVG stroke-order source and its ductus in the same chapter.
+  { language: "japanese", script: "japanese", letters: 70, marks: 3 },
   // 24 -> 26: HL-C350 adds ج and ص as RECOGNITION-ONLY owners. panj (five) and
   // sad (a hundred) need them in a headword, and `uncoveredGlyphs` is a
   // headword check, so the numerals could not be taught without them. Both

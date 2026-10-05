@@ -1,0 +1,28 @@
+{
+  "chapter": 133,
+  "title": "The Last Four Hiragana: Ki, Ke, Nu and He",
+  "label": "ch:ja-last-four-hiragana-ki-ke-nu-he",
+  "canDo": "I can write ki, ke, nu and he, the last four basic hiragana, and read words that use them, such as eki, inu and heya.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "JA-R133-last-four",
+    "kind": "production",
+    "summary": "Read eki, kinou, ike, kesa, inu, nuno and heya, write kinou and kesa from memory and say which is earlier, write heya with he at the front, and write the four new signs once each.",
+    "assesses": [
+      "JA-LEX-ANCHOR-EKI",
+      "JA-SCRIPT-KI-01",
+      "JA-LEX-C133-KINOU",
+      "JA-LEX-ANCHOR-IKE",
+      "JA-SCRIPT-KE-01",
+      "JA-LEX-C133-KESA",
+      "JA-LEX-ANCHOR-INU",
+      "JA-SCRIPT-NU-01",
+      "JA-LEX-C133-NUNO",
+      "JA-LEX-ANCHOR-HEYA",
+      "JA-SCRIPT-HE-01"
+    ],
+    "note": "Word before sign, every time. Each of the four signs is first SEEN inside a word taught one lesson earlier -- eki for ki, ike for ke, inu for nu, heya for he -- and only then written, so every letter lesson is anchored (HL-C443) rather than building toward a later word. Two lessons separate each writing lesson from the next, and each new sign is spent at once in a second word (kinou, kesa, nuno) or in the review. They were the last four signs of the basic hiragana table that the book had not yet written."
+  }
+}

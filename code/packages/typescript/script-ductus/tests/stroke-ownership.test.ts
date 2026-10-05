@@ -321,12 +321,19 @@ describe("stroke ownership migration baseline", () => {
       // Keys move 415 -> 418 and Japanese 26 -> 29, with the ordered key hash
       // and the non-Tamil data hash; Tamil and both shared-identity values
       // remain unchanged.
+      //
+      // Japanese chapter 133 writes the last four basic hiragana: き (U+304D),
+      // け (U+3051), ぬ (U+306C) and へ (U+3078). It also gives ら (U+3089),
+      // written since chapter 8 but missing from the inventory, its record
+      // and ductus. Keys move 418 -> 423 and Japanese 29 -> 34, with the
+      // ordered key hash and the non-Tamil data hash; Tamil and both
+      // shared-identity values remain unchanged.
     }).toEqual({
-      keys: 418,
+      keys: 423,
       keyHash:
-        "fb8a3b61b3d468f8130075573fa5a3ef61d844360c5eadb2075dac47dd7a5c50",
+        "5201f51ef4d7b82c5b44ce8ad422b0917a9d1d2d8de626e0b7d53edfc53a10f5",
       nonTamilDataHash:
-        "58fb99edebc9b195bde435a33c0542db8947324aa89d1403b0717e614b1d3f62",
+        "d7ab4cd9dd756164d4263be44ae4f6a94e69a617ab81af16ecca5baa0ecff3dd",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -337,7 +344,7 @@ describe("stroke ownership migration baseline", () => {
         devanagari: 44,
         gujarati: 44,
         hebrew: 22,
-        japanese: 29,
+        japanese: 34,
         kannada: 13,
         malayalam: 14,
         "perso-arabic": 24,

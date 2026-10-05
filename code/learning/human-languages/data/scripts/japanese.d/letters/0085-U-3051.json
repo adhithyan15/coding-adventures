@@ -1,0 +1,23 @@
+{
+  "glyph": "け",
+  "sound": "ke",
+  "role": "hiragana",
+  "components": [
+    "a left vertical that flicks up to the right at its foot",
+    "a bar",
+    "a long right vertical that sweeps away to the lower left"
+  ],
+  "strokeOrder": [
+    "draw the left vertical from top to bottom, then without lifting turn and flick up to the right",
+    "lift, draw the bar from left to right",
+    "lift, begin at the top and run the long vertical down through the bar, then sweep it away to the lower left"
+  ],
+  "strokeOrderNote": "KanjiVG's 03051 file records け as three stroke paths in this order and direction: the left vertical with its flick, the bar, then the long vertical; so there are two pen lifts.",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/03051.svg",
+    "citation": "KanjiVG, kanji/03051.svg, hiragana け (U+3051 HIRAGANA LETTER KE), three stroke paths kvg:03051-s1 to s3 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is the left vertical drawn top to bottom, which turns at its foot and flicks up to the right without lifting; s2 is the bar drawn left to right; s3 starts at the top, runs down through the bar and curves away to the lower left. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs; where the print glyph's left stroke runs on below the point the flick leaves it, the path goes down to the foot of that ink and climbs back a short way before the flick."
+  },
+  "notes": "The ke of いけ, a pond, and けさ, this morning. Its first two strokes are those of は; the last one sweeps away to the lower left instead of tying a loop."
+}

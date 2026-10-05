@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:e7ef236c1f30d923",
+  "lessonIds": [
+    "JA-C133-eki",
+    "JA-W133-ki",
+    "JA-C133-kinou",
+    "JA-C133-ike",
+    "JA-W133-ke",
+    "JA-C133-kesa",
+    "JA-C133-inu",
+    "JA-W133-nu",
+    "JA-C133-nuno",
+    "JA-C133-heya",
+    "JA-W133-he",
+    "JA-R133-last-four"
+  ],
+  "tex": "japanese/book/chapters/ch133-last-four-hiragana-ki-ke-nu-he.tex"
+}

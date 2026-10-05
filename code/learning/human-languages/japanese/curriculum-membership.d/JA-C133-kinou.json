@@ -1,0 +1,11 @@
+{
+  "id": "JA-C133-kinou",
+  "pathSegment": "JA-PATH-133-WRITE133",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-133-WRITE133",
+      "order": 2
+    }
+  ]
+}

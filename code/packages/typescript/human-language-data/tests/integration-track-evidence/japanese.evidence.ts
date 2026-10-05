@@ -19,9 +19,12 @@ export const integrationTrackEvidence: IntegrationTrackEvidence = {
     // 743 -> 752: chapter 132 writes そ, れ and る the same way, each one lesson
     // after the word that holds it (そこ, これ, くるま), with two more words
     // (そと, それ) and one review.
-    expect(japanese).toHaveLength(752);
+    // 752 -> 764: chapter 133 writes the last four basic hiragana, き, け, ぬ
+    // and へ, the same way (えき, いけ, いぬ, へや), with three more words
+    // (きのう, けさ, ぬの) and one review.
+    expect(japanese).toHaveLength(764);
     expect(new Set(japanese.map((lesson) => lesson.realization.chapter)))
-      .toEqual(new Set(Array.from({ length: 132 }, (_, index) => index + 1)));
+      .toEqual(new Set(Array.from({ length: 133 }, (_, index) => index + 1)));
     expect(japanese.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
     expect(japanese.map((lesson) => [
       lesson.realization.lessonId,

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C133-nuno",
+    "language": "japanese",
+    "chapter": 133,
+    "sequence": 7980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32166f79cb8e011e"
+  },
+  "findings": []
+}
