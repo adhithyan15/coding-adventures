@@ -897,7 +897,7 @@ The plugin must respond within `handshakeTimeoutMs` (default
     "apiVersion":       2,
     "protocolVersion":  1,
     "runner":           "@coding-adventures/forme-plugin-runner-ts",
-    "runnerVersion":    "0.1.0"
+    "runnerVersion":    "1.0.0"
   }
 }
 ```
@@ -1800,7 +1800,8 @@ For `binary` runtime plugins:
 ```rust
 use async_trait::async_trait;
 use forme_plugin_runner_rs::{run_plugin, RunnerOptions, Stage, StageContext,
-    StageError, StageInput, StageMetadata, StageOutput, WireValue};
+    StageError, StageInput, StageMetadata, StageOutput, WireValue,
+    KERNEL_API_VERSION};
 
 struct MyStage;
 #[async_trait]
@@ -1809,7 +1810,7 @@ impl Stage for MyStage {
     type Output = ContentNode;
 
     fn metadata(&self) -> StageMetadata {
-        StageMetadata::new("@me/my-plugin", "1.0.0", 1,
+        StageMetadata::new("@me/my-plugin", "1.0.0", KERNEL_API_VERSION,
             "ContentSource", "ContentNode", ["storage:read"])
     }
 

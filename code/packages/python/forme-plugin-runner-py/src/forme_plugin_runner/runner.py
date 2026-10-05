@@ -18,6 +18,7 @@ from .wire import ProtocolError, wire_value_size
 PROTOCOL_VERSION = 1
 RUNNER_NAME = "forme-plugin-runner-py"
 RUNNER_VERSION = "0.1.0"
+KERNEL_API_VERSION = 2
 MAX_SAFE_INTEGER = 9_007_199_254_740_991
 
 
@@ -562,7 +563,7 @@ def _validate_stage(stage: Stage) -> None:
         not _token(stage.name, 256)
         or not _token(stage.version, 128)
         or not _token(stage.description, 16_384)
-        or stage.api_version != 1
+        or stage.api_version != KERNEL_API_VERSION
         or not _kind(stage.consumes)
         or not _kind(stage.produces)
         or len(stage.capabilities) > 256

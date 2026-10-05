@@ -8,7 +8,7 @@ shapes explicit while preserving the authored input/output types.
 ```rust
 use async_trait::async_trait;
 use forme_plugin_runner_rs::{Stage, StageContext, StageError, StageInput,
-    StageMetadata, StageOutput, WireValue};
+    StageMetadata, StageOutput, WireValue, KERNEL_API_VERSION};
 
 struct Uppercase;
 
@@ -18,7 +18,7 @@ impl Stage for Uppercase {
     type Output = WireValue;
 
     fn metadata(&self) -> StageMetadata {
-        StageMetadata::new("@example/uppercase", "1.0.0", 1,
+        StageMetadata::new("@example/uppercase", "1.0.0", KERNEL_API_VERSION,
             "ContentNode", "ContentNode", [] as [&str; 0])
     }
 

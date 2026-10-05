@@ -1697,7 +1697,7 @@ the plugin host uses `package.json` only for the JavaScript loader
 [plugin]
 name        = "@forme/embed-youtube"       # package-qualified name
 version     = "0.1.0"                      # semver
-api-version = 1                            # kernel API version targeted
+api-version = 2                            # kernel API version targeted
 entry       = "./dist/index.js"            # JS entry point (ES module)
 description = "YouTube embed block"
 license     = "MIT"
@@ -2123,7 +2123,7 @@ A plugin that adds a YouTube embed block.
 [plugin]
 name        = "@forme/embed-youtube"
 version     = "0.1.0"
-api-version = 1
+api-version = 2
 entry       = "./dist/index.js"
 description = "Embed YouTube videos as a block."
 license     = "MIT"

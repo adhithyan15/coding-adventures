@@ -14,6 +14,9 @@
 - `createOutputProvenance(contributors)` validates revision-aware source
   references, diagnoses conflicting revisions, canonicalizes order, removes
   exact duplicates, and computes a deterministic aggregate `RevisionId`.
+- `validateOutputProvenance(value)` safely snapshots bounded own data
+  descriptors and rejects non-canonical or forged provenance received across
+  untyped plugin boundaries.
 
 ## 0.1.0 — 2026-05-15
 

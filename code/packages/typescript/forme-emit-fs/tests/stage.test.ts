@@ -12,6 +12,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { createHash } from "node:crypto";
 import { Kinds, streamOf, type RenderedPage } from "@coding-adventures/forme-types";
+import { createOutputProvenance } from "@coding-adventures/forme-identity";
 import {
   createCancellationTokenSource,
   inMemoryCache,
@@ -75,7 +76,7 @@ function makePage(opts: { route: string; html?: string; title?: string }): Rende
       structured: [],
       extra: {},
     },
-    provenance: { contributors: [{ identity: id, revision }], revision },
+    provenance: createOutputProvenance([{ identity: id, revision }]),
   };
 }
 
@@ -125,6 +126,13 @@ describe("emitFs — stage shape", () => {
 });
 
 describe("emitFs — running", () => {
+  it("rejects a legacy source-only page before writing output", async () => {
+    const { provenance: _provenance, ...legacy } = makePage({ route: "/legacy.html" });
+    await expect(runEmit([{ ...legacy, source: "01952c0d-7e63-7000-8000-000000000099" } as never]))
+      .rejects.toThrow(/page.provenance is required/);
+    await expect(readFile(resolve(outDir, "legacy.html"))).rejects.toThrow();
+  });
+
   it("writes one file per page with the expected bytes", async () => {
     const pages = [
       makePage({ route: "/a.html", html: "<p>a</p>" }),

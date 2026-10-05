@@ -14,6 +14,7 @@ use tokio::time::{timeout, Duration};
 pub const PROTOCOL_VERSION: i64 = 1;
 pub const RUNNER_NAME: &str = "forme-plugin-runner-rs";
 pub const RUNNER_VERSION: &str = "0.1.0";
+pub const KERNEL_API_VERSION: u32 = 2;
 
 #[derive(Clone, Debug)]
 pub struct RunnerOptions {
@@ -673,11 +674,7 @@ impl<S: Stage> Runtime<S> {
 pub async fn run_plugin<S: Stage>(stage: S, options: RunnerOptions) -> Result<(), ProtocolError> {
     options.validate()?;
     let metadata = stage.metadata();
-    if metadata.name.is_empty() || metadata.version.is_empty() || metadata.api_version == 0 {
-        return Err(ProtocolError::InvalidMessage(
-            "stage metadata is invalid".into(),
-        ));
-    }
+    validate_stage_metadata(&metadata)?;
     let peer = Peer::new(
         options.max_frame_bytes,
         options.max_pending_requests,
@@ -723,6 +720,18 @@ pub async fn run_plugin<S: Stage>(stage: S, options: RunnerOptions) -> Result<()
             }
         }
     }
+}
+
+fn validate_stage_metadata(metadata: &crate::StageMetadata) -> Result<(), ProtocolError> {
+    if metadata.name.is_empty()
+        || metadata.version.is_empty()
+        || metadata.api_version != KERNEL_API_VERSION
+    {
+        return Err(ProtocolError::InvalidMessage(
+            "stage metadata is invalid".into(),
+        ));
+    }
+    Ok(())
 }
 
 async fn receive<S: Stage>(
@@ -852,7 +861,7 @@ mod tests {
             StageMetadata::new(
                 "@forme/retirement-race",
                 "1.0.0",
-                1,
+                KERNEL_API_VERSION,
                 "ContentNode",
                 "ContentNode",
                 std::iter::empty::<&str>(),
@@ -885,6 +894,19 @@ mod tests {
             retiring_capability_inputs: Arc::new(Mutex::new(HashSet::new())),
             last_config: Mutex::new(WireValue::Object(BTreeMap::new())),
         })
+    }
+
+    #[test]
+    fn stage_metadata_refuses_legacy_kernel_api() {
+        let legacy = StageMetadata::new(
+            "@forme/legacy",
+            "1.0.0",
+            1,
+            "ContentNode",
+            "ContentNode",
+            std::iter::empty::<&str>(),
+        );
+        assert!(validate_stage_metadata(&legacy).is_err());
     }
 
     #[tokio::test]

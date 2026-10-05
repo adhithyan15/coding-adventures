@@ -13,7 +13,7 @@ import pytest
 
 from forme_plugin_runner import define_stage
 from forme_plugin_runner.peer import Peer, ProtocolError, RpcFault, _rpc_error
-from forme_plugin_runner.runner import RunnerState, StreamInput
+from forme_plugin_runner.runner import RunnerState, StreamInput, _validate_stage
 from forme_plugin_runner.wire import encode_frame
 
 
@@ -40,13 +40,29 @@ def _peer(**limits: int) -> Peer:
 @define_stage(
     name="@example/security-passthrough",
     version="1.0.0",
-    api_version=1,
+    api_version=2,
     consumes="ContentNode",
     produces="ContentNode",
     capabilities=[],
 )
 async def _passthrough_stage(value: Any, _config: Any, _context: Any) -> Any:
     return value
+
+
+def test_stage_metadata_refuses_legacy_kernel_api() -> None:
+    @define_stage(
+        name="@example/legacy",
+        version="1.0.0",
+        api_version=1,
+        consumes="ContentNode",
+        produces="ContentNode",
+        capabilities=[],
+    )
+    async def legacy(value: Any, _config: Any, _context: Any) -> Any:
+        return value
+
+    with pytest.raises(ProtocolError, match="stage metadata is invalid"):
+        _validate_stage(legacy)
 
 
 async def test_stream_failure_discards_buffered_values_and_wakes_reader() -> None:
@@ -68,7 +84,7 @@ async def test_retiring_capability_stream_wakes_and_discards_blocked_push() -> N
     @define_stage(
         name="@example/retiring-stream",
         version="1.0.0",
-        api_version=1,
+        api_version=2,
         consumes="ContentNode",
         produces="ContentNode",
         capabilities=[],
@@ -203,7 +219,7 @@ async def test_strict_params_and_lifecycle_hooks() -> None:
     @define_stage(
         name="@example/lifecycle",
         version="1.0.0",
-        api_version=1,
+        api_version=2,
         consumes="ContentNode",
         produces="ContentNode",
         capabilities=[],
@@ -223,7 +239,7 @@ async def test_strict_params_and_lifecycle_hooks() -> None:
         {
             "pluginName": "@example/lifecycle",
             "pluginVersion": "1.0.0",
-            "apiVersion": 1,
+            "apiVersion": 2,
             "protocolVersion": 1,
         },
     )
@@ -240,7 +256,7 @@ async def test_cancellation_closes_blocked_output_iterator() -> None:
     @define_stage(
         name="@example/stream",
         version="1.0.0",
-        api_version=1,
+        api_version=2,
         consumes="ContentNode",
         produces="Stream<ContentNode>",
         capabilities=[],
@@ -295,7 +311,7 @@ def test_runner_exits_after_termination_signal(active: bool) -> None:
                     "params": {
                         "pluginName": "@forme/conformance",
                         "pluginVersion": "1.0.0",
-                        "apiVersion": 1,
+                        "apiVersion": 2,
                         "protocolVersion": 1,
                     },
                 },

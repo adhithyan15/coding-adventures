@@ -10,7 +10,7 @@ async def test_define_stage_records_an_immutable_contract() -> None:
     @define_stage(
         name="@example/test",
         version="1.0.0",
-        api_version=1,
+        api_version=2,
         consumes="ContentNode",
         produces="ContentNode",
         capabilities=["storage:read"],

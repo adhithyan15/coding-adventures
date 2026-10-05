@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Target kernel API v2 exactly and reject legacy v1 stage metadata before the
+  runner starts its protocol loop.
 - Add live bounded storage-watch handles with explicit close, best-effort drop
   cancellation, and run-level cleanup of outstanding capability streams.
 

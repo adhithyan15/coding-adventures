@@ -952,14 +952,14 @@ plugins declare the `apiVersion` they target.
 [plugin]
 name        = "@forme/embed-youtube"
 version     = "0.1.0"
-api-version = 1
+api-version = 2
 entry       = "./dist/index.js"
 description = "YouTube embed block"
 license     = "MIT"
 homepage    = "https://github.com/foo/forme-youtube"
 
 [requires]
-forme   = ">=0.1"
+forme   = ">=1.0"
 
 [capabilities]
 declared = ["content:extend", "network:youtube-oembed"]

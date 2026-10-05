@@ -12,7 +12,7 @@ import {
   type RenderedPage,
 } from "@coding-adventures/forme-types";
 import { filesystemCache } from "@coding-adventures/forme-cache";
-import { computeRevisionId } from "@coding-adventures/forme-identity";
+import { computeRevisionId, createOutputProvenance } from "@coding-adventures/forme-identity";
 import {
   createCancellationTokenSource,
   frozenClock,
@@ -93,13 +93,10 @@ function page(options: {
       structured: [],
       extra: {},
     },
-    provenance: {
-      contributors: [{
+    provenance: createOutputProvenance([{
         identity: "01952c0d-7e63-7000-8000-000000000001" as LogicalId,
         revision: `blake2b:${"a".repeat(64)}` as never,
-      }],
-      revision: `blake2b:${"a".repeat(64)}` as never,
-    },
+      }]),
   };
 }
 
@@ -140,6 +137,15 @@ describe("emitSiteFs contract", () => {
 });
 
 describe("fingerprinted static-site emission", () => {
+  it("rejects a legacy source-only page before writing output", async () => {
+    const { provenance: _provenance, ...legacy } = page({ route: "/legacy.html" });
+    await expect(runSite([{
+      ...legacy,
+      source: "01952c0d-7e63-7000-8000-000000000099",
+    } as never], [])).rejects.toThrow(/page.provenance is required/);
+    await expect(readFile(join(outDir, "legacy.html"))).rejects.toThrow();
+  });
+
   it("emits only selected island scripts and preserves zero-JavaScript pages", async () => {
     const selected = ID_A;
     const unused = ID_B;

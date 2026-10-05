@@ -27,8 +27,8 @@
  * documents resolve authored element IDs and populate exact `usedIslands`
  * plus reviewed, SHA-256-bound module-asset uses. Resolved assets become collision-free
  * emitter placeholders and populate `usedAssets`. `provenance` records the
- * input node's logical and revision IDs; `source` remains as a temporary
- * compatibility hint for consumers of the v1.0 kind.
+ * input node's logical and revision IDs. Kernel API v2 removes the legacy
+ * single-`source` compatibility field.
  *
  * `meta.title` is derived via the three-step fallback in `title.ts`:
  * `frontmatter.title` → first H1 → slug.

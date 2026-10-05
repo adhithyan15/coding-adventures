@@ -1,7 +1,7 @@
 use async_trait::async_trait;
 use forme_plugin_runner_rs::{
     run_plugin, RunnerOptions, Stage, StageContext, StageError, StageInput, StageMetadata,
-    StageOutput, WireValue,
+    StageOutput, WireValue, KERNEL_API_VERSION,
 };
 use std::collections::BTreeMap;
 use tokio::sync::mpsc;
@@ -30,7 +30,7 @@ impl Stage for FixtureStage {
         StageMetadata::new(
             "@forme/conformance",
             "1.0.0",
-            1,
+            KERNEL_API_VERSION,
             consumes,
             produces,
             [

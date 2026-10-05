@@ -19,6 +19,7 @@ See [code/specs/FM01-forme-kernel.md](../../../specs/FM01-forme-kernel.md) §7 f
 | `buildLogicalIdFrom(t, r)` | UUIDv7 from caller-supplied timestamp + random tail (deterministic). |
 | `isLogicalIdShape(s)`   | Predicate — does `s` match the UUIDv7 format?                           |
 | `createOutputProvenance(contributors)` | Validate, normalize, and hash a revision-aware contributor set. |
+| `validateOutputProvenance(value, isProxy)` | Admit a bounded descriptor-only canonical provenance snapshot using the host's proxy detector. |
 
 ## Quick reference
 
@@ -55,6 +56,10 @@ generateLogicalId();                  // → "01952c0d-7e63-7xxx-8xxx-..."
   deduplicated by logical identity, sorted, and hashed with a domain separator.
   Conflicting revisions for one identity fail with a field-specific diagnostic;
   an empty contributor set is a valid deterministic aggregate.
+- **Boundary provenance fails closed.** Untyped values are admitted through
+  own data descriptors only; proxies, accessors, sparse/oversized arrays,
+  unknown keys, non-canonical ordering, duplicates, and forged aggregate
+  revisions are rejected before a sink writes output.
 
 ## Spec divergences from FM01 §7
 

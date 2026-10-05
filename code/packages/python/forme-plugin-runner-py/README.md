@@ -11,7 +11,7 @@ from forme_plugin_runner import define_stage, run_plugin
 @define_stage(
     name="@example/uppercase",
     version="1.0.0",
-    api_version=1,
+    api_version=2,
     consumes="ContentNode",
     produces="ContentNode",
     capabilities=[],

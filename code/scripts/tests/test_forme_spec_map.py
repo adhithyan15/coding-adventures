@@ -11,6 +11,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SPECS = REPO_ROOT / "code" / "specs"
 TYPESCRIPT_PACKAGES = REPO_ROOT / "code" / "packages" / "typescript"
+TYPESCRIPT_PROGRAMS = REPO_ROOT / "code" / "programs" / "typescript"
 FORME_STABLE_PACKAGE_VERSION = "1.0.0"
 
 NUMBERED_SPECS = {
@@ -37,6 +38,42 @@ ROADMAP_SEPARATOR = "|---:|---|---|---|---|"
 
 
 class FormeSpecMapTests(unittest.TestCase):
+    def test_forme_products_report_the_stable_version(self) -> None:
+        for program_name in (
+            "forme-doc-demo",
+            "forme-hello-world",
+            "forme-shell-desktop",
+        ):
+            with self.subTest(program=program_name):
+                program_dir = TYPESCRIPT_PROGRAMS / program_name
+                package = json.loads(
+                    (program_dir / "package.json").read_text(encoding="utf-8")
+                )
+                lock = json.loads(
+                    (program_dir / "package-lock.json").read_text(encoding="utf-8")
+                )
+                self.assertEqual(package["version"], FORME_STABLE_PACKAGE_VERSION)
+                self.assertEqual(lock["version"], FORME_STABLE_PACKAGE_VERSION)
+                self.assertEqual(
+                    lock["packages"][""]["version"], FORME_STABLE_PACKAGE_VERSION
+                )
+
+        native_dir = TYPESCRIPT_PROGRAMS / "forme-shell-desktop" / "src-tauri"
+        cargo_toml = (native_dir / "Cargo.toml").read_text(encoding="utf-8")
+        cargo_lock = (native_dir / "Cargo.lock").read_text(encoding="utf-8")
+        tauri_config = json.loads(
+            (native_dir / "tauri.conf.json").read_text(encoding="utf-8")
+        )
+        self.assertRegex(
+            cargo_toml,
+            rf'(?m)^version = "{re.escape(FORME_STABLE_PACKAGE_VERSION)}"$',
+        )
+        self.assertRegex(
+            cargo_lock,
+            rf'(?s)name = "forme-shell-desktop-native"\nversion = "{re.escape(FORME_STABLE_PACKAGE_VERSION)}"',
+        )
+        self.assertEqual(tauri_config["version"], FORME_STABLE_PACKAGE_VERSION)
+
     def test_forme_packages_and_local_locks_share_the_stable_version(self) -> None:
         package_dirs = sorted(TYPESCRIPT_PACKAGES.glob("forme-*"))
         self.assertTrue(package_dirs, "Forme package set is empty")
