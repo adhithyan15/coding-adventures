@@ -16,4 +16,8 @@
     accepts.
 - `files.open` and `files.save` now run on the same `mosaicAnswerOpen` and
   `mosaicAnswerSave`. Their behaviour is unchanged.
-- The Compose JVM harness gained a test of the app path (31 tests).
+- A refusal never throws into the caller. The same in-flight id asked for
+  twice is left to its own picker (ported to the Swift library too, with a
+  harness check). A throw inside the posted operation still answers and
+  frees the router.
+- The Compose JVM harness gained three tests of the app path (33 tests).

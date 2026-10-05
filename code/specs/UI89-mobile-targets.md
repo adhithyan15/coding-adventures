@@ -804,6 +804,16 @@ shared `MosaicFileEffects.kt`, so the desktop Compose library has it too.
   The app supplies the accepted extensions, the read limit and the `ok`
   answer. On Android, reads and writes go through the stall watch as before.
   `ok` runs on the background thread, so it only builds the answer.
+- **Robustness (both libraries, after review).**
+  - A refusal never throws into the app's handler: the host's own refusal of
+    an id it is not awaiting is swallowed, as in Swift.
+  - The request in flight, asked for again with the same id, is left to its
+    own picker rather than answered "busy". A busy answer would make the
+    picker's later answer undeliverable.
+  - A throw inside the posted operation still answers the effect and frees
+    the router.
+  - Kotlin compares extensions the way Swift does: the last extension
+    whole, folded.
 - **Shared, not copied.** `files.open` and `files.save` are rebuilt on the
   same `mosaicAnswerOpen` and `mosaicAnswerSave`. Their behaviour is
   unchanged.

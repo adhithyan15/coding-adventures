@@ -566,6 +566,49 @@ class MosaicPlatformEffectsTest {
         assertEquals(mapOf("failed" to mapOf("message" to "the activity went away")), host.answers[8])
     }
 
+    /** A host whose runtime refuses an id it is not awaiting, as the real one does. */
+    private class StrictHost : MosaicPlatformEffectHost {
+        override var effectHandler: ((Long, String, Any?, String) -> Unit)? = null
+        val waitingOn = mutableSetOf<Long>()
+        override fun deferEffect(id: Long): Boolean = id in waitingOn
+        override fun completeEffect(id: Long, result: Map<String, Any?>): Map<String, Any?> {
+            check(waitingOn.remove(id)) { "unknown effect $id" }
+            return emptyMap()
+        }
+    }
+
+    /** A refusal for an id nobody awaits never throws into the caller. */
+    @Test
+    fun anAppRefusalNeverThrowsIntoTheCaller() {
+        val host = StrictHost()
+        val ui = mutableListOf<() -> Unit>()
+        val picker = LaterPicker()
+        val router = MosaicPlatformRouter(host, null, setOf("importThing"), picker, { ui += it })
+        // A refused name for an id the runtime is not awaiting.
+        router.saveForApp(1, "../x.apkg", "PK".toByteArray(), MosaicAccept(emptyList(), listOf("apkg"))) { emptyMap() }
+        // Busy, for an id the runtime is not awaiting.
+        host.waitingOn += 2L
+        router.openForApp(2, MosaicAccept(emptyList(), emptyList()), 4) { _, _ -> emptyMap() }
+        router.openForApp(3, MosaicAccept(emptyList(), emptyList()), 4) { _, _ -> emptyMap() }
+        assertEquals(1, ui.size)
+    }
+
+    /** The request in flight, asked for again, is left to its own picker. */
+    @Test
+    fun theSameIdAskedTwiceIsLeftToItsOwnPicker() {
+        val host = FakeHost()
+        val ui = mutableListOf<() -> Unit>()
+        val picker = LaterPicker()
+        val router = MosaicPlatformRouter(host, null, setOf("importThing"), picker, { ui += it })
+        host.waitingOn += 7L
+        router.openForApp(7, MosaicAccept(emptyList(), emptyList()), 4) { _, bytes -> mapOf("size" to bytes.size) }
+        router.openForApp(7, MosaicAccept(emptyList(), emptyList()), 4) { _, _ -> emptyMap() }
+        assertNull(host.answers[7], "no busy answer for the request in flight")
+        ui.removeAt(0)()
+        picker.openDone!!(Document("a.apkg", null, "PK".toByteArray()))
+        assertEquals(mapOf("ok" to mapOf("size" to 2)), host.answers[7])
+    }
+
     @Test
     fun withABackgroundTheOutcomeComesBackThroughTheUiThread() {
         val host = FakeHost()

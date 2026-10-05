@@ -521,8 +521,13 @@ fun mosaicCheckSaveName(suggestedName: String, accept: MosaicAccept) {
     if (!mosaicIsPlainFileName(suggestedName)) {
         throw MosaicFileFailure("suggestedName must be a plain file name")
     }
-    val lowered = suggestedName.lowercase()
-    if (accept.extensions.isNotEmpty() && accept.extensions.none { lowered.endsWith(".${it.lowercase()}") }) {
+    // The last extension only, folded the way `mosaicHasExecutableExtension`
+    // folds (upper then lower, so `ſ` is `s`), and compared whole -- the same
+    // comparison as the Swift library's.
+    val suggestedExtension = suggestedName.substringAfterLast('.', "").uppercase().lowercase()
+    if (accept.extensions.isNotEmpty() &&
+        accept.extensions.none { it.uppercase().lowercase() == suggestedExtension }
+    ) {
         throw MosaicFileFailure("suggestedName must end in an extension of an accepted type")
     }
     if (accept.extensions.isEmpty() && mosaicHasExecutableExtension(suggestedName)) {
@@ -729,6 +734,10 @@ class MosaicPlatformRouter(
     // picker is open is failed, not queued behind it.
     private val busy = AtomicBoolean(false)
 
+    // The effect the request in flight is answering, while there is one.
+    @Volatile
+    private var inFlightId: Long? = null
+
     // The completion of the request in flight, while there is one.
     @Volatile
     private var pending: ((Map<String, Any?>) -> Unit)? = null
@@ -760,7 +769,9 @@ class MosaicPlatformRouter(
      * the background thread with [limit] enforced while reading. The app
      * chooses what is accepted, the limit, and the success answer, built by
      * [ok] from the document's name and bytes -- on the background thread
-     * (Android) or inline (the desktop), so it must only build the answer.
+     * (Android) or inline (the desktop), so it must only build the answer
+     * and must not throw. [limit] is in bytes, at most `Int.MAX_VALUE - 8`
+     * (what a byte array holds); 0 refuses every non-empty file.
      */
     fun openForApp(
         id: Long,
@@ -780,7 +791,8 @@ class MosaicPlatformRouter(
      * since the app chooses its own extensions here rather than taking them
      * from the MIME table, an executable extension is refused whatever it
      * accepts. The success answer is built by [ok] from the name the picker
-     * reports, on the background thread (Android) or inline (the desktop).
+     * reports, on the background thread (Android) or inline (the desktop);
+     * it must not throw. Call this from the effect handler or the UI thread.
      */
     fun saveForApp(
         id: Long,
@@ -796,7 +808,7 @@ class MosaicPlatformRouter(
             }
             MosaicSaveRequest(suggestedName, bytes, accept)
         } catch (failure: MosaicFileFailure) {
-            host.completeEffect(id, mosaicFailed(failure.message ?: "couldn't save the file"))
+            mosaicCompleteQuietly(id, mosaicFailed(failure.message ?: "couldn't save the file"))
             return
         }
         answerThroughPicker(id) { picker, work, answer ->
@@ -820,7 +832,11 @@ class MosaicPlatformRouter(
         ) -> Unit,
     ) {
         if (!busy.compareAndSet(false, true)) {
-            host.completeEffect(id, mosaicFailed("another file operation is in progress"))
+            // The request already in flight, asked for again (a handler that
+            // calls twice): its own picker will answer it, and a "busy"
+            // answer now would make that picker's answer undeliverable.
+            if (inFlightId == id) return
+            mosaicCompleteQuietly(id, mosaicFailed("another file operation is in progress"))
             return
         }
         // Ownership first. False means the runtime is not waiting on this id,
@@ -829,9 +845,11 @@ class MosaicPlatformRouter(
             busy.set(false)
             return
         }
+        inFlightId = id
         lateinit var complete: (Map<String, Any?>) -> Unit
         complete = mosaicOnce { outcome ->
             if (pending === complete) pending = null
+            inFlightId = null
             busy.set(false)
             try {
                 host.completeEffect(id, outcome)
@@ -862,9 +880,31 @@ class MosaicPlatformRouter(
             }
         }
         try {
-            runOnUi { operation(picker, work, answer) }
+            runOnUi {
+                // Caught here too: the operation runs later, outside the
+                // `try` around the post, and a throw would otherwise leave
+                // the router busy and the effect deferred for good.
+                try {
+                    operation(picker, work, answer)
+                } catch (error: Throwable) {
+                    complete(mosaicFailed("the file dialog failed"))
+                }
+            }
         } catch (error: Throwable) {
             complete(mosaicFailed("the file dialog failed"))
+        }
+    }
+
+    /**
+     * Answer a refusal without letting the host's own refusal escape: the
+     * runtime refuses an id it is not awaiting, and a closed one refuses
+     * everything, and either would otherwise throw into whoever called --
+     * on Android, possibly the main thread.
+     */
+    private fun mosaicCompleteQuietly(id: Long, outcome: Map<String, Any?>) {
+        try {
+            host.completeEffect(id, outcome)
+        } catch (ignored: Throwable) {
         }
     }
 
