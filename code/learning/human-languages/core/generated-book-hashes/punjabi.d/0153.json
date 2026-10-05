@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:91cf5d9d74b2c307",
+  "lessonIds": [
+    "PA-W09-date-label",
+    "PA-W09-month-map",
+    "PA-W09-date-format",
+    "PA-W09-date-a",
+    "PA-W09-date-b",
+    "PA-W09-date-select",
+    "PA-W09-date-supported",
+    "PA-W09-date-delayed",
+    "PA-W09-date-dictation",
+    "PA-W09-date-repair",
+    "PA-W09-date-no-model"
+  ],
+  "tex": "punjabi/book/chapters/ch153-write-one-fictional-date-field.tex"
+}
