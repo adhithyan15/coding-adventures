@@ -11,7 +11,9 @@
   - Export checks its package with strict base64 and a zip local header. It
     saves as `.apkg` only, under `suggestedName` with `.apkg` added when it
     is missing. A name the library would refuse falls back to
-    `engram.apkg`.
+    `engram.apkg`. The decode runs on the main thread, so a package past
+    the 256 MiB limit is refused before decoding, and running out of
+    memory is answered rather than crashing.
   - Without a router it answers "file dialogs are not available on this
     platform". A refusal never throws.
 - The desktop handler still stays out of the APK. CI now requires the

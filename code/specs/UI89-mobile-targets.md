@@ -856,7 +856,12 @@ Written before implementation.
   `compose/android/<target>` after the shared sources, under the same rules
   as `install_host_effects`:
   - paths relative to the package, with no `..` and nothing absolute;
-  - the source resolved inside the package and a regular file.
+  - the source resolved inside the package and a regular file;
+  - the target a Kotlin source (`.kt`) under `src/main/kotlin/`. A handler
+    is Kotlin, and elsewhere in the project a file has more reach than a
+    handler needs: `buildSrc/` runs at build time,
+    `src/debug/AndroidManifest.xml` is merged into the app, and
+    `src/main/jniLibs/` is wiped by the runtime copy. (Added after review.)
 
   A target that would replace any file the Android project already holds
   (`MosaicActivity.kt`, a shared source, a component) is refused, compared
@@ -881,15 +886,18 @@ Written before implementation.
   with the rules of §2.6:
   - import: `.apkg` / `.colpkg`, 256 MiB, answers `ok { apkg }`;
   - export: strict base64 and a zip local header, `.apkg` only, the
-    suggested name with `.apkg` added, falling back to `engram.apkg`.
+    suggested name with `.apkg` added, falling back to `engram.apkg`. The
+    decode runs on the main thread, so base64 longer than a 256 MiB package
+    is refused before it, and running out of memory while decoding is
+    answered as a failure (added after review).
 
   Without a router it answers "file dialogs are not available on this
   platform". A refusal never throws.
 - **Gates.**
   - Builder tests: the files are copied, the activity installs the handler
     with its kinds before the platform library (strict and sample), and a
-    colliding target, a source outside the package, a directory, `include`
-    and a colon are refused.
+    colliding target, a target outside `src/main/kotlin/*.kt`, a source
+    outside the package, a directory, `include` and a colon are refused.
   - The Engram Compose CI step greps the generated activity for the install
     line before building the APK.
   - The Engram APK's dex must now hold `EngramAndroidEffectsKt` and still

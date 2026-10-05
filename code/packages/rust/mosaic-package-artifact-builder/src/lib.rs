@@ -3116,8 +3116,9 @@ fn build_package_inner(
 // installers, so a `[host_assets]` replacement of a shared file reaches
 // Android too. What stays desktop-only: `Main.kt` (the window), the AWT
 // `MosaicPlatform.kt`, the platform library (`MosaicPlatformEffects.kt`,
-// `java.awt.FileDialog`) and any package effect handler -- Android gets its
-// own host effects in UI89 step 6 and, until then, installs none.
+// `java.awt.FileDialog`) and the package's desktop `compose` effect handler.
+// Android has its own platform library (UI89 §3.8), and a package's Android
+// handler is its `compose-android` entry (§3.12).
 
 /// The Android Gradle Plugin the generated project applies.
 const ANDROID_GRADLE_PLUGIN_VERSION: &str = "8.13.0";
@@ -3242,10 +3243,15 @@ fn write_android_app_project(project: AndroidProject<'_>) -> Result<Vec<PathBuf>
 /// under the rules `install_host_effects` keeps: package-relative paths with
 /// no `..` or absolute part, and a source that resolves inside the package
 /// and is a regular file. Each lands at its `target` inside the Android
-/// project. One that would replace a file the project already holds -- the
-/// activity, a shared source, a component -- is refused, compared without
-/// case (one file on case-insensitive disks): a handler silently replacing
-/// generated code is what `[host_assets]` exists to disclose.
+/// project, which must be a Kotlin source under `src/main/kotlin/`: a
+/// handler is Kotlin, and anywhere else in the project is build input with
+/// more reach than a handler needs -- `buildSrc/` runs at build time,
+/// `src/debug/AndroidManifest.xml` is merged into the app, and
+/// `src/main/jniLibs/` is wiped by the runtime copy. One that would replace
+/// a file the project already holds -- the activity, a shared source, a
+/// component -- is refused, compared without case (one file on
+/// case-insensitive disks): a handler silently replacing generated code is
+/// what `[host_assets]` exists to disclose.
 fn android_host_effect_files(
     manifest: &MosaicPackage,
     package_root: &Path,
@@ -3296,6 +3302,13 @@ fn android_host_effect_files(
             .map(|part| part.as_os_str().to_string_lossy().into_owned())
             .collect::<Vec<_>>()
             .join("/");
+        if !(relative.starts_with("src/main/kotlin/") && relative.ends_with(".kt")) {
+            return Err(BuildError::Io(format!(
+                "{ANDROID_HOST_EFFECTS_BACKEND} host effect target {} must be a Kotlin \
+                 source under src/main/kotlin/",
+                file.target
+            )));
+        }
         if !taken.insert(relative.to_lowercase()) {
             return Err(BuildError::Io(format!(
                 "{ANDROID_HOST_EFFECTS_BACKEND} host effect target {} would replace a file of the \
@@ -14815,9 +14828,9 @@ layout NativeEvents {
     fn an_android_handler_never_replaces_a_generated_android_file() {
         for target in [
             "src/main/kotlin/MosaicAppShell.kt",
-            "src/main/kotlin/mosaic/android/mosaicactivity.KT",
-            "src/main/AndroidManifest.xml",
-            "build.gradle.kts",
+            "src/main/kotlin/mosaic/android/MOSAICACTIVITY.kt",
+            "src/main/kotlin/mosaicplatformeffects.kt",
+            "src/main/kotlin/CARD.kt",
         ] {
             let pkg = card_package_with_android_effects(&format!(
                 concat!(
@@ -14834,6 +14847,39 @@ layout NativeEvents {
                 err.to_string()
                     .contains("would replace a file of the generated Android project"),
                 "{target}: {err}"
+            );
+        }
+    }
+
+    #[test]
+    fn an_android_handler_target_is_a_kotlin_source() {
+        for target in [
+            "buildSrc/build.gradle.kts",
+            "src/debug/AndroidManifest.xml",
+            "src/main/jniLibs/x86_64/libprobe.so",
+            "src/main/res/values/probe.xml",
+            "src/main/kotlin/Probe.java",
+            "ProbeEffects.kt",
+        ] {
+            let pkg = card_package_with_android_effects(&format!(
+                concat!(
+                    "files = [ {{ backend = \"compose-android\", source = \"host/android/ProbeEffects.kt\", ",
+                    "target = \"{target}\" }} ]\n",
+                    "handlers = [ {{ backend = \"compose-android\", install = \"installProbe\" }} ]\n",
+                ),
+                target = target
+            ));
+            let out = TempDir::new().unwrap();
+            let err =
+                build_package(&swiftui_options(&pkg, &out, Backend::Compose)).expect_err(target);
+            assert!(
+                err.to_string()
+                    .contains("must be a Kotlin source under src/main/kotlin/"),
+                "{target}: {err}"
+            );
+            assert!(
+                !out.path().join("compose/android").join(target).exists(),
+                "{target}"
             );
         }
     }

@@ -3,7 +3,8 @@
 - A Compose build that writes its Android project now copies the package's
   `compose-android` `[host_effects]` files into `android/<target>`. They are
   read under the rules the desktop copy keeps: a path relative to the
-  package, a source that resolves inside it, and a regular file.
+  package, a source that resolves inside it, and a regular file. The
+  target must be a Kotlin source under `src/main/kotlin/`.
 - A target that would replace a file the Android project already holds (the
   activity, a shared source, a component, the Gradle files) is refused,
   compared without case.

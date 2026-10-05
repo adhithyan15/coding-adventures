@@ -333,7 +333,10 @@ handlers = [
 ```
 
 The files are copied into the Android project only, under the desktop
-copy's rules: inside the package, and a regular file. A target that would
+copy's rules: inside the package, and a regular file. Each target must be a
+Kotlin source under `src/main/kotlin/`; elsewhere in the project a file would
+reach the build itself (`buildSrc/`), the merged manifest or the native
+libraries. A target that would
 replace a file the Android project already holds is refused, compared
 without case. `MosaicActivity` calls the install function as the host loads,
 then installs the platform library with the handler's `kinds`:

@@ -66,22 +66,36 @@ private fun exportName(payload: Any?): String {
     return if (!mosaicIsPlainFileName(named) || mosaicIsReservedDeviceName(named)) "engram.apkg" else named
 }
 
+// The longest base64 a package the engine would accept can take: 4 characters
+// for every 3 bytes, rounded up to a whole group.
+private const val MAX_EXPORT_BASE64 = (MAX_IMPORT_BYTES + 2) / 3 * 4
+
 // The package an export carries, decoded and checked, or the message to fail
 // with. Strict decoding: `Base64.getDecoder()` refuses a character outside the
 // alphabet rather than skipping it, which would write a corrupt `.apkg` that
 // only fails later, inside Anki. Then the zip local file header an `.apkg`
 // begins with -- not an is-it-empty check, because padding-only input decodes
 // successfully to a byte or two.
+//
+// This runs in the effect handler, which on Android is the main thread, so a
+// package larger than the engine's own limit is refused before decoding, and
+// running out of memory while decoding is answered rather than crashing the
+// app: here, unlike the desktop's dialog thread, nothing else would answer.
 @Suppress("UNCHECKED_CAST")
 private fun decodedExportPackage(payload: Any?): Pair<ByteArray?, String?> {
     val encoded = (payload as? Map<String, Any?>)?.get("apkg") as? String
     if (encoded.isNullOrEmpty()) {
         return null to "the export carried no package"
     }
+    if (encoded.length > MAX_EXPORT_BASE64) {
+        return null to "the export package is too large"
+    }
     val decoded = try {
         Base64.getDecoder().decode(encoded)
     } catch (error: IllegalArgumentException) {
         return null to "the export package was not valid base64"
+    } catch (error: OutOfMemoryError) {
+        return null to "the export package is too large"
     }
     if (decoded.size < 4 ||
         decoded[0] != 0x50.toByte() || decoded[1] != 0x4B.toByte() ||
