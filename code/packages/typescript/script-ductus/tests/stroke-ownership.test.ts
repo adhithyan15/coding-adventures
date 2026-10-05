@@ -364,12 +364,18 @@ describe("stroke ownership migration baseline", () => {
       // non-Tamil data hash moves, measured after the last caption was
       // settled; keys, the key hash, every count, Tamil and both
       // shared-identity values remain unchanged.
+      //
+      // A third batch does the same for త, న, ప, య, ర, ల, వ, శ, ష, హ, ఠ,
+      // జ, చ, అ, ఎ and ఒ (0, 0, 1, 2, 0, 0, 0, 0, 2, 1, 1, 1, 0, 0, 0 and 0
+      // lifts, down from 1, 2, 3, 3, 1, 1, 2, 2, 3, 3, 2, 3, 1, 1, 1 and 2).
+      // Again only the non-Tamil data hash moves; keys, the key hash, every
+      // count, Tamil and both shared-identity values remain unchanged.
     }).toEqual({
       keys: 439,
       keyHash:
         "952c14e67c27696d414897603004184adb25c58878d6a78cd91d85e6b269918c",
       nonTamilDataHash:
-        "61471f64bfef1385e6b3b56fcce893ba8a678de80b6f7971a411d04a624eba26",
+        "baf7297488c44d74f73c67785ab3ea7a7d4b1d47aeb6f09f6dc1953f09d0ae3a",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",

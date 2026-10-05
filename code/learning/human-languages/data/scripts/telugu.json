@@ -859,15 +859,16 @@
         "draw the upper bar from left to right",
         "continue down and around the left bowl",
         "sweep right and up around the outer bowl",
-        "restart and cup the upper flourish"
+        "climb up the flourish's left arm",
+        "cup the upper flourish"
       ],
-      "strokeOrderNote": "Four numbered movements in two pen-down runs: movements 1–3 form the connected main body, then movement 4 restarts for the separate upper flourish.",
-      "penLifts": 1,
+      "strokeOrderNote": "The source numbers four movements; native writers draw చ as one pen-down stroke (93% of HP Labs India's native-writer samples, 95 of 102). This ductus follows the four movements in order without lifting: movements 1–3 form the connected main body, and after a short climb up the flourish's left arm, movement 4 cups through the upper flourish.",
+      "penLifts": 0,
       "strokeOrderSource": {
         "url": "https://play.google.com/store/apps/details?id=com.sathishshanmugam.writetelugualphabets",
         "citation": "Sathish Shanmugam, Write Telugu Alphabets, consonant చ packaged tracing guide res/drawable/dot_stroke_c_2_1_cha.png, movements 1–4 (version 2.6)",
         "accessed": "2026-09-27",
-        "variation": "The packaged tracing guide numbers three directional movements for the connected main body and movement 4 for the separate upper flourish. Telugu letter direction is not uniform across the script, so this is one attested pedagogical order fitted to the bundled Noto Sans Telugu outline."
+        "variation": "The packaged tracing guide numbers three directional movements for the connected main body and movement 4 for the upper flourish. Those numbers mark movements, not pen lifts: the lift count follows HP Labs India's isolated handwritten Telugu character data (hpl-telugu-iso-char, https://lipitk.sourceforge.net/datasets/teluguchardata.htm), counted from the native-writer prototypes in the MIT-licensed LipiTk 4.0 Telugu recognizer. Those counts say how many strokes writers use, not where they break, so the single run keeps the guide's order. The bundled Noto Sans Telugu outline joins the flourish to the top of the body, so the run climbs up the flourish's left arm before cupping through it; that climb is a new segment, so the filmstrip shows one more frame than the guide has movements."
       }
     },
     {
@@ -1194,15 +1195,15 @@
         "sweep right across the upper-left arch",
         "curve down and right round the left bowl",
         "sweep right and up the lower-right bowl",
-        "restart and curl the upper-right flourish"
+        "lift and curl the upper-right flourish"
       ],
-      "strokeOrderNote": "Four numbered movements in four pen-down runs: movement 1 forms the upper-left arch, movements 2 and 3 separately form the two lower bowls, and movement 4 restarts for the upper-right flourish.",
-      "penLifts": 3,
+      "strokeOrderNote": "The source numbers four movements; native writers draw జ as two pen-down strokes (97% of HP Labs India's native-writer samples, 101 of 104). This ductus follows the four movements in order, lifting only once: movements 1–3 run unbroken from the upper-left arch through both lower bowls to the tip of the lower-right bowl, and movement 4 starts again where the arch meets the body and curls through the upper-right flourish.",
+      "penLifts": 1,
       "strokeOrderSource": {
         "url": "https://play.google.com/store/apps/details?id=com.sathishshanmugam.writetelugualphabets",
         "citation": "Sathish Shanmugam, Write Telugu Alphabets, consonant జ packaged tracing guide res/drawable/dot_stroke_c_2_3_ja.png, movements 1–4 (version 2.6)",
         "accessed": "2026-09-27",
-        "variation": "The packaged tracing guide numbers the upper-left arch, the two lower bowls, and the upper-right flourish as four separate movements. Telugu letter direction is not uniform across the script, so this is one attested pedagogical order fitted to the bundled Noto Sans Telugu outline."
+        "variation": "The packaged tracing guide numbers the upper-left arch, the two lower bowls, and the upper-right flourish as four movements. Those numbers mark movements, not pen lifts: the lift count follows HP Labs India's isolated handwritten Telugu character data (hpl-telugu-iso-char, https://lipitk.sourceforge.net/datasets/teluguchardata.htm), counted from the native-writer prototypes in the MIT-licensed LipiTk 4.0 Telugu recognizer. Those counts say how many strokes writers use, not where they break, so the break keeps the guide's order and falls where the pen reaches the tip of the lower-right bowl. In the bundled Noto Sans Telugu outline the arch runs into the left bowl through a long diagonal, which movement 2 follows. Telugu letter direction is not uniform across the script, so this is one attested pedagogical order fitted to the bundled Noto Sans Telugu outline."
       }
     },
     {
@@ -1867,16 +1868,17 @@
       ],
       "strokeOrder": [
         "sweep left round the broad circular body",
-        "curl up through the separate top flourish",
-        "place the separate inner dot"
+        "climb up the flourish's left arm",
+        "curl upward through the top flourish",
+        "lift and place the separate inner dot"
       ],
-      "strokeOrderNote": "Three numbered movements in three pen-down runs: movement 1 traces the broad circular body, movement 2 draws the separate top flourish, and movement 3 places the inner dot.",
-      "penLifts": 2,
+      "strokeOrderNote": "The source numbers three movements; native writers draw ఠ as two pen-down strokes (71% of HP Labs India's native-writer samples, 75 of 106). This ductus follows the three movements in order, lifting only once: movement 1 traces the broad circular body round to its top, and after a short climb up the flourish's left arm, movement 2 curls through the top flourish; movement 3 places the separate inner dot.",
+      "penLifts": 1,
       "strokeOrderSource": {
         "url": "https://play.google.com/store/apps/details?id=com.sathishshanmugam.writetelugualphabets",
         "citation": "Sathish Shanmugam, Write Telugu Alphabets, consonant ఠ packaged tracing guides res/drawable/dot_stroke_c_3_2_ta.png and res/drawable/line_stroke_c_3_2_ta.png, movements 1–3 (version 2.6)",
         "accessed": "2026-09-29",
-        "variation": "The packaged tracing guide numbers the circular body, separate upper flourish and inner dot as three movements. Telugu letter direction is not uniform across the script, so this is one attested pedagogical order fitted to the bundled Noto Sans Telugu outline."
+        "variation": "The packaged tracing guide numbers the circular body, upper flourish and inner dot as three movements. Those numbers mark movements, not pen lifts: the lift count follows HP Labs India's isolated handwritten Telugu character data (hpl-telugu-iso-char, https://lipitk.sourceforge.net/datasets/teluguchardata.htm), counted from the native-writer prototypes in the MIT-licensed LipiTk 4.0 Telugu recognizer. Those counts say how many strokes writers use, not where they break, so the breaks keep the guide's order and fall only between the body and its detached parts. The bundled Noto Sans Telugu outline joins the flourish to the top of the body, so movement 1 closes the circle there and the run climbs up the flourish's left arm before curling through it; that climb is a new segment, so the filmstrip shows one more frame than the guide has movements."
       }
     },
     {
@@ -2543,15 +2545,16 @@
         "curve upward around the outer-right bowl",
         "turn down the inner-right shoulder",
         "curve up and left over the upper shoulder",
-        "sweep up through the separate top flourish"
+        "climb up the flourish's left arm",
+        "curl upward through the top flourish"
       ],
-      "strokeOrderNote": "Seven numbered movements grouped into two pen-down runs: movements 1–6 stay joined through the paired bowls and broad lower body, then movement 7 restarts for the separate top flourish.",
-      "penLifts": 1,
+      "strokeOrderNote": "The source numbers seven movements; native writers draw త as one pen-down stroke (51% of HP Labs India's native-writer samples, 54 of 105). That is a bare majority; 45% use two. This ductus follows the seven movements in order without lifting: movements 1–6 run through the paired bowls and the broad lower body, and after a short climb up the flourish's left arm, movement 7 curls through the top flourish.",
+      "penLifts": 0,
       "strokeOrderSource": {
         "url": "https://play.google.com/store/apps/details?id=com.sathishshanmugam.writetelugualphabets",
         "citation": "Sathish Shanmugam, Write Telugu Alphabets, consonant త packaged tracing guides res/drawable/dot_stroke_c_4_1_ta.png and res/drawable/line_stroke_c_4_1_ta.png, movements 1–7 (version 2.6)",
         "accessed": "2026-09-30",
-        "variation": "The packaged tracing guide numbers six connected movements around the paired bowls and lower body, followed by a separate seventh movement for the top flourish. Telugu letter direction is not uniform across the script, so this is one attested pedagogical order fitted to the bundled Noto Sans Telugu outline."
+        "variation": "The packaged tracing guide numbers six movements around the paired bowls and lower body, followed by a seventh for the top flourish. Those numbers mark movements, not pen lifts: the lift count follows HP Labs India's isolated handwritten Telugu character data (hpl-telugu-iso-char, https://lipitk.sourceforge.net/datasets/teluguchardata.htm), counted from the native-writer prototypes in the MIT-licensed LipiTk 4.0 Telugu recognizer. Those counts say how many strokes writers use, not where they break, so the single run keeps the guide's order. The centre lines are fitted to the bundled Noto Sans Telugu outline. Noto closes the left curl into a loop whose base meets the outer bowl, so movement 1 starts at that meeting point and runs along the base before curling up. It closes the right curl into a loop joined to the outer right side, so movement 6 climbs back up that side before curving left over the upper shoulder. Noto also joins the flourish to that shoulder, so the run climbs back up the flourish's left arm before curling through it; that climb is a new segment, so the filmstrip shows one more frame than the guide has movements."
       }
     },
     {
@@ -3219,15 +3222,16 @@
       "strokeOrder": [
         "sweep up the left bowl into the middle",
         "sweep right and up the broad lower bowl",
-        "curl up through the separate top flourish"
+        "climb up the flourish's left arm",
+        "curl upward through the top flourish"
       ],
-      "strokeOrderNote": "Three numbered movements in three pen-down runs: movements 1 and 2 build the broad body from left to right, and movement 3 adds the separate top flourish.",
-      "penLifts": 2,
+      "strokeOrderNote": "The source numbers three movements; native writers draw న as one pen-down stroke (92% of HP Labs India's native-writer samples, 98 of 107). This ductus follows the three movements in order without lifting: movements 1 and 2 build the broad body from left to right, and after a short climb up the flourish's left arm, movement 3 curls through the top flourish.",
+      "penLifts": 0,
       "strokeOrderSource": {
         "url": "https://play.google.com/store/apps/details?id=com.sathishshanmugam.writetelugualphabets",
         "citation": "Sathish Shanmugam, Write Telugu Alphabets, consonant న packaged tracing guides res/drawable/dot_stroke_c_4_5_na.png and res/drawable/line_stroke_c_4_5_na.png, movements 1–3 (version 2.6)",
         "accessed": "2026-09-30",
-        "variation": "The packaged guide numbers two separate curves for the broad body and a third for the top flourish. The c_4_5 filename, its position after c_4_4 ధ, and the pictured glyph agree that this guide teaches న. The bundled Noto Sans Telugu outline joins the printed body more tightly, so the filmstrip preserves the three attested school-style movement boundaries while fitting their centre lines to that outline."
+        "variation": "The packaged guide numbers two curves for the broad body and a third for the top flourish. The c_4_5 filename, its position after c_4_4 ధ, and the pictured glyph agree that this guide teaches న. Those numbers mark movements, not pen lifts: the lift count follows HP Labs India's isolated handwritten Telugu character data (hpl-telugu-iso-char, https://lipitk.sourceforge.net/datasets/teluguchardata.htm), counted from the native-writer prototypes in the MIT-licensed LipiTk 4.0 Telugu recognizer. Those counts say how many strokes writers use, not where they break, so the single run keeps the guide's order. The bundled Noto Sans Telugu outline joins the flourish to the top of the body, so movement 2 runs on along the body's top to the flourish's foot, so the run climbs back up the flourish's left arm before curling through it; that climb is a new segment, so the filmstrip shows one more frame than the guide has movements."
       }
     },
     {
@@ -3386,15 +3390,15 @@
         "sweep left across the upper-left curve",
         "turn right around the lower-left bowl",
         "sweep upward around the broad right bowl",
-        "curl up through the separate top flourish"
+        "lift and curl up through the separate top flourish"
       ],
-      "strokeOrderNote": "Four numbered movements in four pen-down runs: movements 1 and 2 build the left bowl, movement 3 forms the broad right bowl, and movement 4 adds the separate top flourish.",
-      "penLifts": 3,
+      "strokeOrderNote": "The source numbers four movements; native writers draw ప as two pen-down strokes (76% of HP Labs India's native-writer samples, 78 of 102). This ductus follows the four movements in order, lifting only once: movements 1–3 run unbroken through both left curves and the broad right bowl, and movement 4 draws the separate top flourish.",
+      "penLifts": 1,
       "strokeOrderSource": {
         "url": "https://play.google.com/store/apps/details?id=com.sathishshanmugam.writetelugualphabets",
         "citation": "Sathish Shanmugam, Write Telugu Alphabets, consonant ప packaged tracing guides res/drawable/dot_stroke_c_5_1_pa.png and res/drawable/line_stroke_c_5_1_pa.png, movements 1–4 (version 2.6)",
         "accessed": "2026-10-01",
-        "variation": "The packaged guide separates the left bowl into two movements, gives the broad right bowl a third movement, and adds the top flourish last. The c_5_1 filename, its position before c_5_2 ఫ, and the pictured glyph agree that this guide teaches ప. The bundled Noto Sans Telugu outline tightens the joins between the printed bowls, so the filmstrip preserves the four attested school-style movement boundaries while fitting their centre lines to that outline."
+        "variation": "The packaged guide separates the left bowl into two movements, gives the broad right bowl a third movement, and adds the top flourish last. The c_5_1 filename, its position before c_5_2 ఫ, and the pictured glyph agree that this guide teaches ప. Those numbers mark movements, not pen lifts: the lift count follows HP Labs India's isolated handwritten Telugu character data (hpl-telugu-iso-char, https://lipitk.sourceforge.net/datasets/teluguchardata.htm), counted from the native-writer prototypes in the MIT-licensed LipiTk 4.0 Telugu recognizer. Those counts say how many strokes writers use, not where they break, so the breaks keep the guide's order and fall only between the body and its detached parts. The centre lines are fitted to the bundled Noto Sans Telugu outline, which tightens the joins between the printed bowls."
       }
     },
     {
@@ -4229,16 +4233,16 @@
       "strokeOrder": [
         "loop the left bowl counterclockwise",
         "loop the centre bowl counterclockwise",
-        "draw down and up the lower angled join",
-        "loop the right bowl counterclockwise"
+        "lift and draw down and up the lower angled join",
+        "lift again and loop the right bowl counterclockwise"
       ],
-      "strokeOrderNote": "Four numbered movements in four pen-down runs: movement 1 closes the left bowl, movement 2 closes the centre bowl, movement 3 draws the lower angled join from left to right, and movement 4 closes the right bowl.",
-      "penLifts": 3,
+      "strokeOrderNote": "The source gives four ordered movements; native writers draw య as three pen-down strokes (48% of HP Labs India's native-writer samples, 50 of 104). That is the most common count, though not a majority; 38% use two. This ductus follows the four movements in order, lifting only twice: movements 1–2 run unbroken around the left and centre bowls, movement 3 draws the lower angled join, and movement 4 closes the right bowl.",
+      "penLifts": 2,
       "strokeOrderSource": {
         "url": "https://play.google.com/store/apps/details?id=com.banuchanderjj.tracer.telugu",
         "citation": "AppChant, Telugu Alphabets Writing, consonant య animated path guide encoded by LettersPointsTelugu::getAllPointsArrayForLetterTelugu_య in version 3.8.05 (3805)",
         "accessed": "2026-10-01",
-        "variation": "The packaged auto-trace data gives four ordered starts, paths, and ends. Its య.png atlas mapping and pictured glyph independently identify U+0C2F య. The bundled Noto Sans Telugu outline rounds the printed joins differently, so the filmstrip preserves the four attested movement boundaries and directions while fitting their centre lines to that outline. Inspected XAPK SHA-256: 30c6e520a5b469cbe8d17568718bf75796987ea9596f69850eb921db2fe7bd57; libTracer.so SHA-256: 444511c98b69ada4de57900776945837c013da6a4fbfb21833c180d06f9c3ac5."
+        "variation": "The packaged auto-trace data gives four ordered starts, paths, and ends. Its య.png atlas mapping and pictured glyph independently identify U+0C2F య. Those ordered starts mark movements, not pen lifts: the lift count follows HP Labs India's isolated handwritten Telugu character data (hpl-telugu-iso-char, https://lipitk.sourceforge.net/datasets/teluguchardata.htm), counted from the native-writer prototypes in the MIT-licensed LipiTk 4.0 Telugu recognizer. Those counts say how many strokes writers use, not where they break, so the breaks keep the source's order and fall only where a movement ends at a free tip or at the end of a part. The centre lines are fitted to the bundled Noto Sans Telugu outline, which rounds the printed joins differently. Inspected XAPK SHA-256: 30c6e520a5b469cbe8d17568718bf75796987ea9596f69850eb921db2fe7bd57; libTracer.so SHA-256: 444511c98b69ada4de57900776945837c013da6a4fbfb21833c180d06f9c3ac5."
       }
     },
     {
@@ -4395,15 +4399,16 @@
       ],
       "strokeOrder": [
         "loop the main bowl counterclockwise",
-        "draw the separate chevron down and up"
+        "climb up the chevron's left arm",
+        "draw the upper chevron down and up"
       ],
-      "strokeOrderNote": "Two numbered movements in two pen-down runs: movement 1 closes the main bowl counterclockwise, and movement 2 draws the separate upper chevron from left to right.",
-      "penLifts": 1,
+      "strokeOrderNote": "The source gives two ordered movements; native writers draw ర as one pen-down stroke (81% of HP Labs India's native-writer samples, 83 of 103). This ductus follows the two movements in order without lifting: movement 1 closes the main bowl counterclockwise, and after a short climb up the chevron's left arm, movement 2 draws the upper chevron down and up.",
+      "penLifts": 0,
       "strokeOrderSource": {
         "url": "https://play.google.com/store/apps/details?id=com.banuchanderjj.tracer.telugu",
         "citation": "AppChant, Telugu Alphabets Writing, consonant ర animated path guide encoded by LettersPointsTelugu::getAllPointsArrayForLetterTelugu_ర in version 3.8.05 (3805)",
         "accessed": "2026-10-01",
-        "variation": "The packaged auto-trace data gives two ordered starts, paths, and ends. Its ర.png atlas mapping and pictured glyph independently identify U+0C30 ర. The bundled Noto Sans Telugu outline rounds the printed joins differently, so the filmstrip preserves the two attested movement boundaries and directions while fitting their centre lines to that outline. Inspected XAPK SHA-256: 30c6e520a5b469cbe8d17568718bf75796987ea9596f69850eb921db2fe7bd57; libTracer.so SHA-256: 444511c98b69ada4de57900776945837c013da6a4fbfb21833c180d06f9c3ac5."
+        "variation": "The packaged auto-trace data gives two ordered starts, paths, and ends. Its ర.png atlas mapping and pictured glyph independently identify U+0C30 ర. Those ordered starts mark movements, not pen lifts: the lift count follows HP Labs India's isolated handwritten Telugu character data (hpl-telugu-iso-char, https://lipitk.sourceforge.net/datasets/teluguchardata.htm), counted from the native-writer prototypes in the MIT-licensed LipiTk 4.0 Telugu recognizer. Those counts say how many strokes writers use, not where they break, so the single run keeps the source's order. The bundled Noto Sans Telugu outline joins the chevron to the top of the bowl, so the run climbs up the chevron's left arm before drawing it; that climb is a new segment, so the filmstrip shows one more frame than the source has movements. Inspected XAPK SHA-256: 30c6e520a5b469cbe8d17568718bf75796987ea9596f69850eb921db2fe7bd57; libTracer.so SHA-256: 444511c98b69ada4de57900776945837c013da6a4fbfb21833c180d06f9c3ac5."
       }
     },
     {
@@ -4562,13 +4567,13 @@
         "loop the small upper bowl counterclockwise",
         "sweep down round the broad lower bowl"
       ],
-      "strokeOrderNote": "Two numbered movements in two pen-down runs: movement 1 loops counterclockwise around the small upper bowl, and movement 2 sweeps down the left side and around the broad lower bowl.",
-      "penLifts": 1,
+      "strokeOrderNote": "The source gives two ordered movements; native writers draw ల as one pen-down stroke (99% of HP Labs India's native-writer samples, 106 of 107). This ductus follows the two movements in order without lifting: movement 1 loops counterclockwise around the small upper bowl, and movement 2 sweeps on down the left side and around the broad lower bowl.",
+      "penLifts": 0,
       "strokeOrderSource": {
         "url": "https://play.google.com/store/apps/details?id=com.banuchanderjj.tracer.telugu",
         "citation": "AppChant, Telugu Alphabets Writing, consonant ల animated path guide encoded by LettersPointsTelugu::getAllPointsArrayForLetterTelugu_ల in version 3.8.05 (3805)",
         "accessed": "2026-10-01",
-        "variation": "The packaged auto-trace data gives two ordered starts, paths, and ends. Its ల.png atlas mapping and pictured glyph independently identify U+0C32 ల. The bundled Noto Sans Telugu outline rounds the printed joins differently, so the filmstrip preserves the two attested movement boundaries and directions while fitting their centre lines to that outline. Inspected XAPK SHA-256: 30c6e520a5b469cbe8d17568718bf75796987ea9596f69850eb921db2fe7bd57; libTracer.so SHA-256: 444511c98b69ada4de57900776945837c013da6a4fbfb21833c180d06f9c3ac5."
+        "variation": "The packaged auto-trace data gives two ordered starts, paths, and ends. Its ల.png atlas mapping and pictured glyph independently identify U+0C32 ల. Those ordered starts mark movements, not pen lifts: the lift count follows HP Labs India's isolated handwritten Telugu character data (hpl-telugu-iso-char, https://lipitk.sourceforge.net/datasets/teluguchardata.htm), counted from the native-writer prototypes in the MIT-licensed LipiTk 4.0 Telugu recognizer. Those counts say how many strokes writers use, not where they break, so the single run keeps the source's order. The centre lines are fitted to the bundled Noto Sans Telugu outline, where movement 2 begins where the upper bowl's loop closes. Inspected XAPK SHA-256: 30c6e520a5b469cbe8d17568718bf75796987ea9596f69850eb921db2fe7bd57; libTracer.so SHA-256: 444511c98b69ada4de57900776945837c013da6a4fbfb21833c180d06f9c3ac5."
       }
     },
     {
@@ -4726,15 +4731,16 @@
       "strokeOrder": [
         "loop the lower-left bowl counterclockwise",
         "sweep round the lower and right body",
-        "draw the separate chevron down and up"
+        "climb up the chevron's left arm",
+        "draw the upper chevron down and up"
       ],
-      "strokeOrderNote": "Three numbered movements in three pen-down runs: movement 1 loops around the small lower-left bowl, movement 2 sweeps around the broad lower and right body, and movement 3 draws the separate upper chevron.",
-      "penLifts": 2,
+      "strokeOrderNote": "The source gives three ordered movements; native writers draw వ as one pen-down stroke (75% of HP Labs India's native-writer samples, 80 of 107). This ductus follows the three movements in order without lifting: movement 1 loops around the small lower-left bowl, movement 2 sweeps around the broad lower and right body, and after a short climb up the chevron's left arm, movement 3 draws the upper chevron down and up.",
+      "penLifts": 0,
       "strokeOrderSource": {
         "url": "https://play.google.com/store/apps/details?id=com.banuchanderjj.tracer.telugu",
         "citation": "AppChant, Telugu Alphabets Writing, consonant వ animated path guide encoded by LettersPointsTelugu::getAllPointsArrayForLetterTelugu_వ in version 3.8.05 (3805)",
         "accessed": "2026-10-01",
-        "variation": "The packaged auto-trace data gives three ordered starts, paths, and ends. Its rotated వ.png atlas mapping and pictured glyph independently identify U+0C35 వ. The bundled Noto Sans Telugu outline rounds the printed joins differently, so the filmstrip preserves the three attested movement boundaries and directions while fitting their centre lines to that outline. Inspected XAPK SHA-256: 30c6e520a5b469cbe8d17568718bf75796987ea9596f69850eb921db2fe7bd57; libTracer.so SHA-256: 444511c98b69ada4de57900776945837c013da6a4fbfb21833c180d06f9c3ac5."
+        "variation": "The packaged auto-trace data gives three ordered starts, paths, and ends. Its rotated వ.png atlas mapping and pictured glyph independently identify U+0C35 వ. Those ordered starts mark movements, not pen lifts: the lift count follows HP Labs India's isolated handwritten Telugu character data (hpl-telugu-iso-char, https://lipitk.sourceforge.net/datasets/teluguchardata.htm), counted from the native-writer prototypes in the MIT-licensed LipiTk 4.0 Telugu recognizer. Those counts say how many strokes writers use, not where they break, so the single run keeps the source's order. The bundled Noto Sans Telugu outline joins the chevron to the top of the body, so the run climbs up the chevron's left arm before drawing it; that climb is a new segment, so the filmstrip shows one more frame than the source has movements. Inspected XAPK SHA-256: 30c6e520a5b469cbe8d17568718bf75796987ea9596f69850eb921db2fe7bd57; libTracer.so SHA-256: 444511c98b69ada4de57900776945837c013da6a4fbfb21833c180d06f9c3ac5."
       }
     },
     {
@@ -4892,15 +4898,16 @@
       "strokeOrder": [
         "loop around the broad lower-left bowl",
         "sweep round the tall lower and right body",
-        "draw the separate chevron down and up"
+        "climb up the chevron's left arm",
+        "draw the upper chevron down and up"
       ],
-      "strokeOrderNote": "Three numbered movements in three pen-down runs: movement 1 loops around the broad lower-left bowl, movement 2 sweeps around the tall lower and right body, and movement 3 draws the separate upper chevron.",
-      "penLifts": 2,
+      "strokeOrderNote": "The source gives three ordered movements; native writers draw శ as one pen-down stroke (93% of HP Labs India's native-writer samples, 96 of 103). This ductus follows the three movements in order without lifting: movement 1 loops around the broad lower-left bowl, movement 2 sweeps around the tall lower and right body, and after a short climb up the chevron's left arm, movement 3 draws the upper chevron down and up.",
+      "penLifts": 0,
       "strokeOrderSource": {
         "url": "https://play.google.com/store/apps/details?id=com.banuchanderjj.tracer.telugu",
         "citation": "AppChant, Telugu Alphabets Writing, consonant శ animated path guide encoded by LettersPointsTelugu::getAllPointsArrayForLetterTelugu_శ in version 3.8.05 (3805)",
         "accessed": "2026-10-01",
-        "variation": "The packaged auto-trace data gives three ordered starts, paths, and ends. Its rotated శ.png atlas mapping and pictured glyph independently identify U+0C36 శ. The bundled Noto Sans Telugu outline rounds the printed joins differently, so the filmstrip preserves the three attested movement boundaries and directions while fitting their centre lines to that outline. Inspected XAPK SHA-256: 30c6e520a5b469cbe8d17568718bf75796987ea9596f69850eb921db2fe7bd57; libTracer.so SHA-256: 444511c98b69ada4de57900776945837c013da6a4fbfb21833c180d06f9c3ac5."
+        "variation": "The packaged auto-trace data gives three ordered starts, paths, and ends. Its rotated శ.png atlas mapping and pictured glyph independently identify U+0C36 శ. Those ordered starts mark movements, not pen lifts: the lift count follows HP Labs India's isolated handwritten Telugu character data (hpl-telugu-iso-char, https://lipitk.sourceforge.net/datasets/teluguchardata.htm), counted from the native-writer prototypes in the MIT-licensed LipiTk 4.0 Telugu recognizer. Those counts say how many strokes writers use, not where they break, so the single run keeps the source's order. The bundled Noto Sans Telugu outline joins the chevron to the top of the body, so the run climbs up the chevron's left arm before drawing it; that climb is a new segment, so the filmstrip shows one more frame than the source has movements. Inspected XAPK SHA-256: 30c6e520a5b469cbe8d17568718bf75796987ea9596f69850eb921db2fe7bd57; libTracer.so SHA-256: 444511c98b69ada4de57900776945837c013da6a4fbfb21833c180d06f9c3ac5."
       }
     },
     {
@@ -5058,16 +5065,16 @@
       "strokeOrder": [
         "loop around the lower-left bowl",
         "sweep round the lower and right body",
-        "add the short lower-right tail",
-        "draw the separate chevron down and up"
+        "lift and add the short lower-right tail",
+        "lift again and draw the separate chevron down and up"
       ],
-      "strokeOrderNote": "Four numbered movements in four pen-down runs: movement 1 loops around the lower-left bowl, movement 2 sweeps around the broad lower and right body, movement 3 adds the short lower-right tail, and movement 4 draws the separate upper chevron.",
-      "penLifts": 3,
+      "strokeOrderNote": "The source gives four ordered movements; native writers draw ష as two pen-down strokes (69% of HP Labs India's native-writer samples, 70 of 102). This ductus draws three, the next most common count (27%, 28 of 102), lifting twice: movements 1–2 run unbroken around the lower-left bowl and the lower and right body, movement 3 adds the short lower-right tail, and movement 4 draws the separate upper chevron. The tail stays apart because it leaves the right body partway up, after the source has finished that body.",
+      "penLifts": 2,
       "strokeOrderSource": {
         "url": "https://play.google.com/store/apps/details?id=com.banuchanderjj.tracer.telugu",
         "citation": "AppChant, Telugu Alphabets Writing, consonant ష animated path guide encoded by LettersPointsTelugu::getAllPointsArrayForLetterTelugu_ష in version 3.8.05 (3805)",
         "accessed": "2026-10-01",
-        "variation": "The packaged auto-trace data gives four ordered starts, paths, and ends. Its unrotated ష.png atlas mapping and pictured glyph independently identify U+0C37 ష. The bundled Noto Sans Telugu outline rounds the printed joins differently, so the filmstrip preserves the four attested movement boundaries and directions while fitting their centre lines to that outline. Inspected XAPK SHA-256: 30c6e520a5b469cbe8d17568718bf75796987ea9596f69850eb921db2fe7bd57; libTracer.so SHA-256: 444511c98b69ada4de57900776945837c013da6a4fbfb21833c180d06f9c3ac5."
+        "variation": "The packaged auto-trace data gives four ordered starts, paths, and ends. Its unrotated ష.png atlas mapping and pictured glyph independently identify U+0C37 ష. Those ordered starts mark movements, not pen lifts: the lift count follows HP Labs India's isolated handwritten Telugu character data (hpl-telugu-iso-char, https://lipitk.sourceforge.net/datasets/teluguchardata.htm), counted from the native-writer prototypes in the MIT-licensed LipiTk 4.0 Telugu recognizer. Those counts say how many strokes writers use, not where they break, so the breaks keep the source's order and fall only between the body and its detached parts. The bundled Noto Sans Telugu outline joins the short tail to the right body partway up, but the source draws the tail only after the body is complete, so joining it would mean retracing the right body or drawing the tail out of order; it stays a separate stroke. The centre lines are fitted to that outline, which rounds the printed joins differently. Inspected XAPK SHA-256: 30c6e520a5b469cbe8d17568718bf75796987ea9596f69850eb921db2fe7bd57; libTracer.so SHA-256: 444511c98b69ada4de57900776945837c013da6a4fbfb21833c180d06f9c3ac5."
       }
     },
     {
@@ -5391,15 +5398,15 @@
         "loop around the lower-left bowl",
         "sweep round the lower and right body",
         "draw the middle bar right and curl its end",
-        "draw the separate chevron down and up"
+        "lift and draw the separate chevron down and up"
       ],
-      "strokeOrderNote": "Four numbered movements in four pen-down runs: movement 1 loops around the lower-left bowl, movement 2 sweeps around the broad lower and right body, movement 3 draws the middle bar and its curled end, and movement 4 draws the separate upper chevron.",
-      "penLifts": 3,
+      "strokeOrderNote": "The source gives four ordered movements; native writers draw హ as two pen-down strokes (74% of HP Labs India's native-writer samples, 80 of 108). This ductus follows the four movements in order, lifting only once: movements 1–3 run unbroken through the lower-left bowl, the lower and right body, and the middle bar with its curled end, and movement 4 draws the separate upper chevron.",
+      "penLifts": 1,
       "strokeOrderSource": {
         "url": "https://play.google.com/store/apps/details?id=com.banuchanderjj.tracer.telugu",
         "citation": "AppChant, Telugu Alphabets Writing, consonant హ animated path guide encoded by LettersPointsTelugu::getAllPointsArrayForLetterTelugu_హ in version 3.8.05 (3805)",
         "accessed": "2026-10-01",
-        "variation": "The packaged auto-trace data gives four ordered starts, paths, and ends. Its unrotated హ.png atlas mapping and pictured glyph independently identify U+0C39 హ. The bundled Noto Sans Telugu outline rounds the printed joins differently, so the filmstrip preserves the four attested movement boundaries and directions while fitting their centre lines to that outline. Inspected XAPK SHA-256: 30c6e520a5b469cbe8d17568718bf75796987ea9596f69850eb921db2fe7bd57; libTracer.so SHA-256: 444511c98b69ada4de57900776945837c013da6a4fbfb21833c180d06f9c3ac5."
+        "variation": "The packaged auto-trace data gives four ordered starts, paths, and ends. Its unrotated హ.png atlas mapping and pictured glyph independently identify U+0C39 హ. Those ordered starts mark movements, not pen lifts: the lift count follows HP Labs India's isolated handwritten Telugu character data (hpl-telugu-iso-char, https://lipitk.sourceforge.net/datasets/teluguchardata.htm), counted from the native-writer prototypes in the MIT-licensed LipiTk 4.0 Telugu recognizer. Those counts say how many strokes writers use, not where they break, so the breaks keep the source's order and fall only between the body and its detached parts. The centre lines are fitted to the bundled Noto Sans Telugu outline, which rounds the printed joins differently; movement 4 runs the full length of the chevron's right arm. Inspected XAPK SHA-256: 30c6e520a5b469cbe8d17568718bf75796987ea9596f69850eb921db2fe7bd57; libTracer.so SHA-256: 444511c98b69ada4de57900776945837c013da6a4fbfb21833c180d06f9c3ac5."
       }
     },
     {
@@ -5885,12 +5892,12 @@
         "turn around the right lobe",
         "return left along the inner bar"
       ],
-      "strokeOrderNote": "Four numbered movements in two pen-down runs: movements 1–2 stay joined around the left lobe and lower bowl; after one lift, movements 3–4 stay joined around the right lobe and back along the inner bar.",
-      "penLifts": 1,
+      "strokeOrderNote": "The source numbers four movements; native writers draw అ as one pen-down stroke (97% of HP Labs India's native-writer samples, 100 of 103). This ductus follows the four movements in order without lifting: movements 1–2 run around the left lobe and the lower bowl, movement 3 continues up the bowl's right side and around the right lobe, and movement 4 returns left along the inner bar.",
+      "penLifts": 0,
       "strokeOrderSource": {
         "citation": "Sathish Shanmugam, Write Telugu Alphabets, independent vowel అ tracing screen, movements 1–4 (version 2.6)",
         "url": "https://write-telugu-alphabets.en.aptoide.com/app",
-        "variation": "The tracing screen numbers four directional movements and marks two pen-down starts; the visible joins group movements 1–2 and 3–4. Telugu letter direction is not uniform across the script, so this is one attested pedagogical order fitted to the bundled Noto Sans Telugu outline."
+        "variation": "The tracing screen numbers four directional movements and places a second start at the inner bar's right end; the visible joins group movements 1–2 and 3–4. Those numbers mark movements, not pen lifts: the lift count follows HP Labs India's isolated handwritten Telugu character data (hpl-telugu-iso-char, https://lipitk.sourceforge.net/datasets/teluguchardata.htm), counted from the native-writer prototypes in the MIT-licensed LipiTk 4.0 Telugu recognizer. Those counts say how many strokes writers use, not where they break, so the single run keeps the guide's order. In the bundled Noto Sans Telugu outline the lower bowl runs straight up into the right lobe, so movement 3 begins where movement 2 ends instead of at the bar's end. Telugu letter direction is not uniform across the script, so this is one attested pedagogical order fitted to the bundled Noto Sans Telugu outline."
       },
       "notes": "Independent short a used when a word or syllable begins with a vowel; it is distinct from the inherent a carried by an unmarked consonant."
     },
@@ -5994,14 +6001,14 @@
       "strokeOrder": [
         "turn down and left round the lower loop",
         "round its base and back to the junction",
-        "restart and sweep up the broad outer arch"
+        "sweep up the broad outer arch"
       ],
-      "strokeOrderNote": "Three numbered movements in two pen-down runs: movements 1–2 stay joined around the compact lower loop and return to the central junction; after one lift, movement 3 restarts at that junction and sweeps up through the broad outer arch.",
-      "penLifts": 1,
+      "strokeOrderNote": "The source numbers three movements; native writers draw ఎ as one pen-down stroke (86% of HP Labs India's native-writer samples, 81 of 94). This ductus follows the three movements in order without lifting: movements 1–2 run around the compact lower loop and back to the central junction, and movement 3 sweeps on from that junction up through the broad outer arch.",
+      "penLifts": 0,
       "strokeOrderSource": {
         "citation": "Sathish Shanmugam, Write Telugu Alphabets, independent vowel ఎ packaged tracing guide res/drawable/dot_stroke_v_9_e.png, movements 1–3 (version 2.6)",
         "url": "https://write-telugu-alphabets.en.aptoide.com/app",
-        "variation": "The packaged tracing guide numbers three directional movements and marks the compact loop and outer arch as two pen-down runs; the visible join groups movements 1–2 before movement 3 restarts. Telugu letter direction is not uniform across the script, so this is one attested pedagogical order fitted to the bundled Noto Sans Telugu outline."
+        "variation": "The packaged tracing guide numbers three directional movements and places movement 3's start at the junction where movement 2 ends. Those numbers mark movements, not pen lifts: the lift count follows HP Labs India's isolated handwritten Telugu character data (hpl-telugu-iso-char, https://lipitk.sourceforge.net/datasets/teluguchardata.htm), counted from the native-writer prototypes in the MIT-licensed LipiTk 4.0 Telugu recognizer. Those counts say how many strokes writers use, not where they break, so the single run keeps the guide's order. Telugu letter direction is not uniform across the script, so this is one attested pedagogical order fitted to the bundled Noto Sans Telugu outline."
       },
       "notes": "Independent short e used when a word or syllable begins with the vowel; contrast dependent short-e sign ె on a consonant carrier."
     },
@@ -6038,16 +6045,16 @@
       ],
       "strokeOrder": [
         "sweep right across the upper arch",
-        "restart and curve down around the left bowl",
-        "restart and sweep right around the broad lower bowl"
+        "curve down around the left bowl",
+        "sweep right around the broad lower bowl"
       ],
-      "strokeOrderNote": "Three numbered movements shown as three separate pen-down runs: the upper arch, left bowl, and broad lower bowl returning upward at the right.",
-      "penLifts": 2,
+      "strokeOrderNote": "The source numbers three movements; native writers draw ఒ as one pen-down stroke (99% of HP Labs India's native-writer samples, 104 of 105). This ductus follows the three movements in order without lifting: movement 1 forms the upper arch, movement 2 continues down the diagonal and around the left bowl, and movement 3 sweeps right around the broad lower bowl and rises at the right.",
+      "penLifts": 0,
       "strokeOrderSource": {
         "url": "https://write-telugu-alphabets.en.aptoide.com/app",
         "citation": "Sathish Shanmugam, Write Telugu Alphabets, independent vowel ఒ packaged tracing guide res/drawable/dot_stroke_v_12_o.png, movements 1–3 (version 2.6)",
         "accessed": "2026-08-30",
-        "variation": "The packaged tracing guide numbers three disconnected directional movements, each drawn as a separate pen-down run: movement 1 forms the upper arch, movement 2 curves around the left bowl, and movement 3 sweeps around the broad lower bowl and rises at the right. Telugu letter direction is not uniform across the script, so this is one attested pedagogical order fitted to the bundled Noto Sans Telugu outline."
+        "variation": "The packaged tracing guide numbers three separately positioned directional movements: movement 1 forms the upper arch, movement 2 curves around the left bowl, and movement 3 sweeps around the broad lower bowl and rises at the right. Those numbers mark movements, not pen lifts: the lift count follows HP Labs India's isolated handwritten Telugu character data (hpl-telugu-iso-char, https://lipitk.sourceforge.net/datasets/teluguchardata.htm), counted from the native-writer prototypes in the MIT-licensed LipiTk 4.0 Telugu recognizer. Those counts say how many strokes writers use, not where they break, so the single run keeps the guide's order. In the bundled Noto Sans Telugu outline the arch runs into the left bowl through a long diagonal, so movement 2 starts where movement 1 ends; the old fit started it beside the arch's tip, off the ink. Telugu letter direction is not uniform across the script, so this is one attested pedagogical order fitted to the bundled Noto Sans Telugu outline."
       }
     },
     {
