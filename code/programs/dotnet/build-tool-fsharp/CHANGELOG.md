@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Added native facade regressions for self edges, diff cycles, nested roots,
+  and empty failure values after the shared core's diagnostic correction.
+- Exposed no-inline `evaluateGraph` and `evaluateDiffSelection` F# facade
+  functions over the shared process-free typed .NET core. The native F# suite
+  independently pins and evaluates all eight graph and twelve diff fixtures
+  and checks empty failure values without adding host authority.
+
 - Expanded the F# facade evidence from 13 to 16 neutral source-collection cases,
   including the two exact TypeScript site roots and the foreign-package
   exclusion case shared with the C# engine, plus live discovery evidence for

@@ -20,6 +20,8 @@ the repo:
 9. Hash package sources through the complete checked language registry plus
    exact repository-boundary inputs, using one stable tracked-index snapshot
    before and after the package batch
+10. Evaluate caller-supplied graph and diff-selection snapshots without Git,
+    filesystem, process, environment, clock, or network access
 
 ## Usage
 
@@ -32,6 +34,18 @@ dotnet run -- --emit-plan --plan-file build-plan.json
 
 ## Design notes
 
+- `GraphDiffCore.EvaluateGraph(GraphInput)` and
+  `GraphDiffCore.EvaluateDiffSelection(DiffSelectionInput)` are separate pure
+  decisions from the legacy live CLI paths. Edges are
+  `[prerequisite, dependent]`; a cycle returns only `GRAPH_CYCLE`. Diff
+  selection seeds forced, local, and exact repository-boundary consumers,
+  then computes dependent and prerequisite closure. A supplied boundary must
+  pass canonical digest validation before selection. Strict globs use the
+  portable Unicode-scalar matcher, and the complete 50,000,000-unit preflight
+  precedes matching and unknown-path policy. Each failure returns empty sets.
+  C# tests load the checked 8+12 neutral fixtures; fixture decoding is not
+  linked into these operations. This bounded adoption does not certify a
+  neutral adapter or the other build-tool domains.
 - Uses no external managed dependencies. Registry, hashing, XML, and process
   work use the .NET base class library; secure file traversal calls the native
   kernel32 or libc APIs directly.

@@ -735,6 +735,21 @@ repository-boundary digest behavior, Unicode-scalar match-work accounting, and
 structural validation precedence specified above. This native core does not by
 itself claim a neutral adapter or additional host authority.
 
+The C# build-tool engine shared with the F# front door MUST expose equally
+process-free, typed graph and diff-selection operations. Both native test suites
+MUST discover and evaluate the exact eight `graph-*.json` and twelve
+`diff-selection-*.json` cases through production operations, pinning the case-ID
+roster so additions cannot be silently ignored. The F# suite MUST enter through
+explicit F# facade functions, not call the C# operations directly. The shared
+engine MUST retain the exact structural, boundary-digest, Unicode-scalar
+match-work, strict portable glob, cycle no-partial-output, and diagnostic
+precedence rules above; legacy repository traversal and Git diff methods do
+not satisfy this pure-domain contract. Native fixture loading may read the
+checked-in corpus, but the operations MUST accept only already-materialized
+values and gain no filesystem, process, environment, Git, network, clock,
+randomness, or credential authority. This adoption alone does not make either
+neutral execution adapter ready.
+
 ### 5. Hashing and cache
 
 Required behavior:

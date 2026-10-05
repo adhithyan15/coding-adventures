@@ -16,9 +16,17 @@ and BUILD-front records through a native F# symbol. The `discoverPackages`
 facade likewise gives F# callers and tests an explicit entry into the shared
 .NET discovery engine. The no-inline `selectSourceCandidates`, registry
 projection/digest, canonical-digest, and `hashPackageInputs` facades expose the
-portable source-hashing contract through native F# symbols.
+portable source-hashing contract through native F# symbols. The no-inline
+`evaluateGraph` and `evaluateDiffSelection` functions expose the process-free
+typed graph and diff decisions through F# symbols.
 
 ## Why share the engine?
+
+The F# suite independently discovers and evaluates the checked eight graph
+and twelve diff-selection fixtures through those native functions. A caller
+supplies all graph, path, and optional boundary values; this facade never
+discovers a checkout, invokes Git, or launches a process. The pure tranche is
+not a neutral execution adapter and does not cover the remaining domains.
 
 The build tool touches almost every language in the monorepo. Keeping the core
 dependency parsing, hashing, planning, and execution logic in one .NET engine

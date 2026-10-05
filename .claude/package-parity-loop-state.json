@@ -12,20 +12,20 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16722,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16722",
-    "branch": "codex/parity-build-tool-multiconsumer-20261005",
-    "implementation_revision": "99b2bf187730974ea41179612f3d2442d754c464",
+    "number": 16730,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16730",
+    "branch": "codex/parity-build-tool-dotnet-20261005",
+    "implementation_revision": "d4696e6b254f4c59bb147aeb5361522a1a5be78f",
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-10-05T11:28:38Z",
-    "pr_number": 16722,
+    "observed_at": "2026-10-05T15:15:11Z",
+    "pr_number": 16730,
     "status": "checks-pending",
-    "notes": "The new draft PR head 99b2bf187730974ea41179612f3d2442d754c464 is conflict-free and MERGEABLE; seven live checks were queued or in progress with zero failures. Auto-merge remains disabled until all final-head required checks are terminal and acceptable."
+    "notes": "The ready-for-review .NET graph/diff PR opened from tested head d4696e6b254f4c59bb147aeb5361522a1a5be78f. GitHub reports MERGEABLE with one initial check queued and no failures; auto-merge stays disabled until every final-head required check is terminal and acceptable."
   },
   "last_inventory": {
-    "revision": "103296279680459f634c213a1cf3828367e71568",
+    "revision": "87d1a0cb258309cd0307a85a5e2eafffe628248b",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1487,
@@ -1204,39 +1204,51 @@
     },
     {
       "id": "build-tool-csharp-fsharp-diff-selection-match-work-ceiling-adoption",
-      "title": "Complete the 19-case process-free graph and diff-selection contract in the shared C# and F# build-tool engine",
-      "status": "pending",
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Implement the complete eight-graph and eleven-diff contract once in the shared engine and prove dynamic production-code consumption through both native C# and F# fronts, including stable errors, strict bounded matching, and no added host authority."
+      "title": "Complete the 20-case process-free graph and diff-selection contract in the shared C# and F# build-tool engine",
+      "status": "pr-open",
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
+      "branch": "codex/parity-build-tool-dotnet-20261005",
+      "pr_number": 16730,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16730",
+      "opened_at": "2026-10-05T15:15:11Z",
+      "opened_revision": "d4696e6b254f4c59bb147aeb5361522a1a5be78f",
+      "publication_notes": "Opened a non-draft ready-for-review PR after local tests, coverage, build-file dry validation, state/inventory/diff gates, path-collision audit, and independent security/correctness reviews passed. The initial GitHub check is queued; guarded auto-merge remains disabled until all final-head checks are terminal and acceptable with no merge conflict.",
+      "selected_at": "2026-10-05T14:14:27Z",
+      "selection_revision": "c45a6099e515f4a3183116d777273f4646383ccc",
+      "implementation_revision": "f61337138882e8a0565a12b08326962e2bd65c8e",
+      "rebase_revision": "87d1a0cb258309cd0307a85a5e2eafffe628248b",
+      "rebase_notes": "Rebased conflict-free from the #16722 merge commit onto current origin/main after unrelated Mosaic/XAML, Japanese curriculum, and Mermaid color merges. The post-rebase full-checkout schema-3 inventory remains unchanged at 15 established lanes, 1,487 identities, 4,757 slots, five emerging OCaml roots, zero canonical collisions, and zero unknown buckets.",
+      "validation_revision": "f61337138882e8a0565a12b08326962e2bd65c8e",
+      "validation_notes": "Tests-first C# and F# native suites dynamically consume the exact eight graph and twelve diff-selection cases, including both consumers of one shared input. After review repairs and rebase, 93 C# and 22 F# tests pass with zero skips; the F# Release build has zero warnings, C# source/test-project format gates pass, and the new C# GraphDiffCore reaches 98.48% line coverage (323/328) in the focused Coverlet run. The 167-case/285-file neutral corpus validates; package-parity, schema, and shared-runner tests pass 125 tests and 304 subtests; the Go build-tool real dry run validates 45 Starlark BUILD files and 5,290 packages, with 2 would-build and orphan checks clean; go vet passes. The exact-main inventory is collision-clean. Independent correctness and security reviews found and then verified fixes for cycle rejection, nested-root aliasing, structural diagnostic precedence, boundary scope counting, and preflight boundedness; no remaining actionable finding. F# source formatting is not supported by dotnet format, so the warning-free native build and tests are the available local gate.",
+      "selection_notes": "Selected after #16722 merged through guarded auto-merge and exact-main schema-3 inventory remained collision-clean at 15 established lanes, 1,487 identities, 4,757 occupied slots, and five emerging OCaml roots. Eleven newly discovered geometry, GFM, event-loop, and shared-input digest owners were registered before selection. All six exact graph/diff dependencies are merged. This two-language shared-engine adoption is the strongest ready build-tool contract leaf; no other parity PR is open, and the dedicated worktree is clean at the merged main revision. Selection does not claim execution-adapter or host authority readiness.",
+      "notes": "Implement the complete eight-graph and twelve-diff contract once in the shared engine and prove dynamic production-code consumption through both native C# and F# fronts, including stable errors, strict bounded matching, shared-input multi-consumer selection, and no added host authority."
     },
     {
       "id": "build-tool-elixir-diff-selection-match-work-ceiling-adoption",
-      "title": "Complete the 19-case process-free graph and diff-selection contract in the Elixir build tool",
+      "title": "Complete the 20-case process-free graph and diff-selection contract in the Elixir build tool",
       "status": "pending",
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-elixir-glob-matcher-complexity-hardening"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-elixir-glob-matcher-complexity-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
       "branch": null,
       "pr_number": null,
-      "notes": "Dynamically consume all eight graph and eleven diff-selection cases through production code with stable no-partial errors, closures, strict memoized Unicode-scalar matching, exact BUILD fronts, and unchanged process-free authority."
+      "notes": "Dynamically consume all eight graph and twelve diff-selection cases, including shared-input multi-consumer selection, through production code with stable no-partial errors, closures, strict memoized Unicode-scalar matching, exact BUILD fronts, and unchanged process-free authority."
     },
     {
       "id": "build-tool-haskell-diff-selection-match-work-ceiling-adoption",
-      "title": "Complete the 19-case process-free graph and diff-selection contract in the Haskell build tool",
+      "title": "Complete the 20-case process-free graph and diff-selection contract in the Haskell build tool",
       "status": "pending",
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
       "branch": null,
       "pr_number": null,
-      "notes": "Implement and dynamically consume the complete eight-graph and eleven-diff process-free contract, including canonical topology, no-partial cycle failures, closures, boundary selection, strict bounded matching, and stable diagnostics."
+      "notes": "Implement and dynamically consume the complete eight-graph and twelve-diff process-free contract, including shared-input multi-consumer selection, canonical topology, no-partial cycle failures, closures, boundary selection, strict bounded matching, and stable diagnostics."
     },
     {
       "id": "build-tool-lua-diff-selection-match-work-ceiling-adoption",
-      "title": "Complete the 19-case process-free graph and diff-selection contract in the Lua build tool",
+      "title": "Complete the 20-case process-free graph and diff-selection contract in the Lua build tool",
       "status": "pending",
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
       "branch": null,
       "pr_number": null,
-      "notes": "Implement and dynamically consume all eight graph and eleven diff-selection cases in one process-free Lua core with stable errors, deterministic closures, and bounded memoized Unicode-scalar matching."
+      "notes": "Implement and dynamically consume all eight graph and twelve diff-selection cases, including shared-input multi-consumer selection, in one process-free Lua core with stable errors, deterministic closures, and bounded memoized Unicode-scalar matching."
     },
     {
       "id": "build-tool-perl-diff-selection-match-work-ceiling-adoption",
@@ -1278,43 +1290,43 @@
     },
     {
       "id": "build-tool-ruby-diff-selection-match-work-ceiling-adoption",
-      "title": "Complete the 19-case process-free graph and diff-selection contract in the Ruby build tool",
+      "title": "Complete the 20-case process-free graph and diff-selection contract in the Ruby build tool",
       "status": "pending",
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-ruby-glob-matcher-complexity-hardening"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-ruby-glob-matcher-complexity-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
       "branch": null,
       "pr_number": null,
-      "notes": "Complete and dynamically consume the eight-graph and eleven-diff process-free contract through production code, reusing the separately hardened shared Ruby matcher and preserving stable empty failures."
+      "notes": "Complete and dynamically consume the eight-graph and twelve-diff process-free contract, including shared-input multi-consumer selection, through production code, reusing the separately hardened shared Ruby matcher and preserving stable empty failures."
     },
     {
       "id": "build-tool-rust-diff-selection-match-work-ceiling-adoption",
-      "title": "Complete the 19-case process-free graph and diff-selection contract in the Rust build tool",
+      "title": "Complete the 20-case process-free graph and diff-selection contract in the Rust build tool",
       "status": "pending",
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-rust-glob-matcher-complexity-hardening"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-rust-glob-matcher-complexity-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
       "branch": null,
       "pr_number": null,
-      "notes": "Complete canonical graph projection and the total diff result contract, consume all 19 cases through production modules, reuse the separately hardened matcher, and preserve stable empty failures without new authority."
+      "notes": "Complete canonical graph projection and the total diff result contract, consume all 20 cases including shared-input multi-consumer selection through production modules, reuse the separately hardened matcher, and preserve stable empty failures without new authority."
     },
     {
       "id": "build-tool-swift-diff-selection-match-work-ceiling-adoption",
-      "title": "Complete the 19-case process-free graph and diff-selection contract in the Swift build tool",
+      "title": "Complete the 20-case process-free graph and diff-selection contract in the Swift build tool",
       "status": "pending",
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
       "branch": null,
       "pr_number": null,
-      "notes": "Dynamically consume all eight graph and eleven diff-selection cases through production code with canonical topology, stable errors, exact BUILD fronts, boundary behavior, and bounded Unicode-scalar matching."
+      "notes": "Dynamically consume all eight graph and twelve diff-selection cases, including shared-input multi-consumer selection, through production code with canonical topology, stable errors, exact BUILD fronts, boundary behavior, and bounded Unicode-scalar matching."
     },
     {
       "id": "build-tool-typescript-diff-selection-match-work-ceiling-adoption",
-      "title": "Complete the 19-case process-free graph and diff-selection contract in the TypeScript build tool",
+      "title": "Complete the 20-case process-free graph and diff-selection contract in the TypeScript build tool",
       "status": "pending",
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-typescript-glob-matcher-complexity-hardening"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-typescript-glob-matcher-complexity-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
       "branch": null,
       "pr_number": null,
-      "notes": "Dynamically consume all 19 cases through authority-free graph and diff operations, reuse the separately hardened Unicode-scalar matcher, and keep Node host authority outside the pure core."
+      "notes": "Dynamically consume all 20 cases, including shared-input multi-consumer selection, through authority-free graph and diff operations, reuse the separately hardened Unicode-scalar matcher, and keep Node host authority outside the pure core."
     },
     {
       "id": "build-tool-diff-selection-match-work-ceiling-remaining-engines",
-      "title": "Complete the 19-case process-free graph and diff-selection contract across every build-tool engine",
+      "title": "Complete the 20-case process-free graph and diff-selection contract across every build-tool engine",
       "status": "pending",
       "selection_blocked": true,
       "depends_on": ["build-tool-go-diff-selection-match-work-ceiling-adoption", "build-tool-csharp-fsharp-diff-selection-match-work-ceiling-adoption", "build-tool-elixir-diff-selection-match-work-ceiling-adoption", "build-tool-haskell-diff-selection-match-work-ceiling-adoption", "build-tool-lua-diff-selection-match-work-ceiling-adoption", "build-tool-perl-diff-selection-match-work-ceiling-adoption", "build-tool-python-diff-selection-match-work-ceiling-adoption", "build-tool-ruby-diff-selection-match-work-ceiling-adoption", "build-tool-rust-diff-selection-match-work-ceiling-adoption", "build-tool-swift-diff-selection-match-work-ceiling-adoption", "build-tool-typescript-diff-selection-match-work-ceiling-adoption", "build-tool-jvm-process-free-graph-diff-core", "build-tool-dart-process-free-graph-diff-core", "ocaml-build-tool-process-free-graph-diff-core"],
@@ -10650,7 +10662,7 @@
       "id": "event-loop-swift-lane-parity",
       "title": "Implement the portable event-loop contract in Swift",
       "status": "pending",
-      "depends_on": [],
+      "depends_on": ["event-loop-language-neutral-mockable-core-fixture"],
       "branch": null,
       "pr_number": null,
       "notes": "Post-#16717 collision-checked high-consensus audit found Swift has no event-loop package or exact child owner, while code/specs/event-loop.md defines a portable injected-source, authority-free contract. Keep native-reactor backends outside this package; reconcile with the separately owned Haskell event-loop tail."
@@ -10659,7 +10671,7 @@
       "id": "event-loop-java-kotlin-dart-lane-parity",
       "title": "Implement the portable event-loop contract in Java, Kotlin, and Dart",
       "status": "pending",
-      "depends_on": [],
+      "depends_on": ["event-loop-language-neutral-mockable-core-fixture"],
       "branch": null,
       "pr_number": null,
       "notes": "Post-#16717 high-consensus audit found the generic mockable event-loop contract in code/specs/event-loop.md has no Java, Kotlin, or Dart package root and no exact lane owner. Port injected readiness and handler behavior without native reactor/process authority; coordinate fixtures with the separate Swift and Haskell children."
@@ -10676,11 +10688,15 @@
     {
       "id": "build-tool-shared-input-multiconsumer-diff-selection-fixture",
       "title": "Prove reverse diff selects every declared consumer of one shared input",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus"],
       "branch": "codex/parity-build-tool-multiconsumer-20261005",
       "pr_number": 16722,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16722",
+      "merged_at": "2026-10-05T14:03:53Z",
+      "merged_head_revision": "379253ac7ac1e73a4c1d74ec72f17d048231cc28",
+      "merge_revision": "c45a6099e515f4a3183116d777273f4646383ccc",
+      "merge_notes": "All 64 final-head checks were terminal and acceptable, GitHub reported no conflict, and guarded squash auto-merge completed without a manual merge command.",
       "selected_at": "2026-10-05T10:59:58Z",
       "selection_revision": "103296279680459f634c213a1cf3828367e71568",
       "implementation_revision": "99b2bf187730974ea41179612f3d2442d754c464",
@@ -11766,6 +11782,105 @@
       "branch": null,
       "pr_number": null,
       "notes": "Implement the standalone two-pass Intel 4004 assembler in Lua and consume every neutral case with exact byte, address, label, page-relative branch, diagnostic, limit, and stateless-reuse equality. Keep packaging, compiler lowering, backend integration, and host authority outside."
+    },
+    {
+      "id": "geometry-2d-language-neutral-contract-and-fixture-repair",
+      "title": "Reconcile the G2D00-G2D03 portable geometry contract and neutral fixtures",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The post-#16722 collision-clean audit found point2d, affine2d, bezier2d, and arc2d each present in 12 of 15 established lanes but absent in Java, Kotlin, and Dart. First resolve G2D00 near-zero normalization disagreement (<1e-12 to origin in several lanes versus approximately 1e-15 to self in others), freeze deterministic geometry and error vectors, and reconcile existing oracles before ports. Directory presence alone is not semantic parity."
+    },
+    {
+      "id": "geometry-point2d-java-kotlin-dart-lane-parity",
+      "title": "Implement point2d parity in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Port the pure G2D00 point and rectangle foundation with exact neutral vectors, native tests, package metadata, and no paint or host authority; it unlocks the other three geometry gaps."
+    },
+    {
+      "id": "geometry-affine2d-bezier2d-java-kotlin-dart-lane-parity",
+      "title": "Implement affine2d and bezier2d parity in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["geometry-point2d-java-kotlin-dart-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Port the G2D01 and G2D02 pure transform and curve layers as one dependency-shaped tranche, dynamically consuming neutral fixtures and preserving bounded finite arithmetic."
+    },
+    {
+      "id": "geometry-arc2d-java-kotlin-dart-lane-parity",
+      "title": "Implement arc2d parity in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["geometry-affine2d-bezier2d-java-kotlin-dart-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Complete the G2D03 arc layer after point, affine, and Bezier foundations, using neutral vectors and native coverage without native drawing authority."
+    },
+    {
+      "id": "gfm-fenced-block-ast-and-consumer-contract-repair",
+      "title": "Repair the TE04 fenced-block AST and consumer contract",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "TE04 requires source-preserving fenced_block nodes, but inspected ASTs do not define FencedBlockNode and the TypeScript reference lowers fences to code_block. Reconcile the AST, parser, and downstream rendering contract before using it as a four-lane GFM oracle."
+    },
+    {
+      "id": "gfm-language-neutral-conformance-fixture",
+      "title": "Define the language-neutral GFM parser conformance fixture",
+      "status": "pending",
+      "depends_on": ["gfm-fenced-block-ast-and-consumer-contract-repair"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The existing 652-example corpus covers CommonMark, while GFM strike, task, and table behavior is only separately tested. Freeze those extensions, fenced source retention, stable errors, and AST/rendering vectors for native lane consumers."
+    },
+    {
+      "id": "gfm-swift-lane-parity",
+      "title": "Implement GFM parser parity in Swift",
+      "status": "pending",
+      "depends_on": ["gfm-language-neutral-conformance-fixture"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Swift already has CommonMark parser and HTML renderer packages, though its parser documents subset coverage. Reconcile that prerequisite against the neutral corpus and add GFM extensions with native conformance tests."
+    },
+    {
+      "id": "gfm-java-kotlin-dart-commonmark-renderer-prerequisites",
+      "title": "Establish CommonMark parser and HTML renderer prerequisites in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["gfm-fenced-block-ast-and-consumer-contract-repair"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The three lanes have document AST packages but no CommonMark parser or HTML renderer roots. Establish those portable prerequisites with shared fixtures and native tests before GFM extensions."
+    },
+    {
+      "id": "gfm-java-kotlin-dart-lane-parity",
+      "title": "Implement GFM parser parity in Java, Kotlin, and Dart",
+      "status": "pending",
+      "depends_on": ["gfm-language-neutral-conformance-fixture", "gfm-java-kotlin-dart-commonmark-renderer-prerequisites"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Add pure GFM grammar and AST support over the CommonMark and renderer prerequisites, dynamically consume the neutral suite, and avoid treating a package directory as proof of semantic parity."
+    },
+    {
+      "id": "event-loop-language-neutral-mockable-core-fixture",
+      "title": "Freeze the mockable event-loop core behavior in a neutral fixture",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Cover source/handler registration ordering, collecting readiness before dispatch, Exit suppressing later handlers, empty-poll progression, and stop taking effect on the next iteration. Keep clocks, threads, processes, and native reactor authority outside the portable fixture."
+    },
+    {
+      "id": "build-tool-shared-input-multiconsumer-digest-evidence-fixture",
+      "title": "Prove both shared-input consumers change source and package digests",
+      "status": "pending",
+      "depends_on": ["build-tool-shared-input-multiconsumer-diff-selection-fixture"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The merged reverse-diff fixture proves both consumers are selected, but does not prove both source and package digests include the same Cargo.toml change. Add bounded before/after source_collection and hashing_cache neutral cases for both Swift consumers, with stable dependency digests and no new engine authority."
     }
   ]
 }

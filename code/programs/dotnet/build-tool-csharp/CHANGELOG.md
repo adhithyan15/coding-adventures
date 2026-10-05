@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- Rejected caller-owned diff package lists over 4,096 entries before
+  enumeration or allocation, preserving the graph-limit diagnostic.
+- Matched the reference's granular graph/diff diagnostics and validation
+  precedence, rejected diff edge cycles and nested package roots before
+  selection, and counted only consumer roots against the boundary scope limit.
+- Added a process-free typed graph and diff-selection core with deterministic
+  prerequisite-first levels, no-partial cycle and diff failures, Unicode 17
+  path identity, exact repository-boundary digest/projection, strict portable
+  globs, and the 50,000,000 Unicode-scalar match-work preflight. The C# suite
+  pins and evaluates all eight graph and twelve diff fixtures plus negative
+  structural, precedence, and glob cases; this does not claim a neutral CLI
+  adapter or broader build-tool parity.
+
 - Added the `forme-plugin-installer-core`, `forme-plugin-runner-conformance`, and `forme-plugin-runner-ts`
   TypeScript roots to the repository source-input boundary projection. Digest updated to
   `3370c811b51962c87757b01e98ad3db5206cad2c75e74c6853bf5209548bd18e`.

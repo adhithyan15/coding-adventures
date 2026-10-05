@@ -1030,7 +1030,7 @@ public static partial class Hasher
                rule.Suffixes.Any(suffix => basename.EndsWith(suffix, StringComparison.Ordinal));
     }
 
-    private static bool PortableGlobMatches(string pattern, string path)
+    internal static bool PortableGlobMatches(string pattern, string path)
     {
         var patternParts = pattern.Split('/');
         var pathParts = path.Split('/');
@@ -1181,7 +1181,7 @@ public static partial class Hasher
         return true;
     }
 
-    private static void ValidatePortableGlob(string pattern)
+    internal static void ValidatePortableGlob(string pattern)
     {
         if (string.IsNullOrEmpty(pattern) ||
             pattern.EnumerateRunes().Count() > 512 ||
@@ -1252,7 +1252,7 @@ public static partial class Hasher
         return false;
     }
 
-    private static void ValidatePortablePath(string path)
+    internal static void ValidatePortablePath(string path)
     {
         if (string.IsNullOrEmpty(path) ||
             path.EnumerateRunes().Count() > 512 ||
