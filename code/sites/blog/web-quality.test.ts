@@ -1,4 +1,5 @@
 import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
+import { createServer } from "node:http";
 import { tmpdir } from "node:os";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -31,6 +32,7 @@ const target: QualityTarget = {
     maximumScripts: 1,
   },
 };
+const expectedUrl = "http://127.0.0.1:4321/coding-adventures/blog/hello.html";
 
 describe("Forme release web-quality gate", () => {
   it("proves useful static content without executing the admitted script", () => {
@@ -70,12 +72,38 @@ describe("Forme release web-quality gate", () => {
     ]);
   });
 
+  it("never fetches stylesheets or frames during the static fallback pass", async () => {
+    let requests = 0;
+    const server = createServer((_request, response) => {
+      requests += 1;
+      response.writeHead(200, { "content-type": "text/plain" }).end("unexpected");
+    });
+    await new Promise<void>((accept, reject) => {
+      server.once("error", reject);
+      server.listen(0, "127.0.0.1", accept);
+    });
+    try {
+      const address = server.address();
+      if (address === null || typeof address === "string") throw new Error("missing test port");
+      const resource = `http://127.0.0.1:${address.port}/resource`;
+      inspectStaticFallback(
+        `<main id="steps"><nav><a href="/">home</a></nav><ol><li>a</li><li>b</li><li>c</li></ol></main>` +
+        `<link rel="stylesheet" href="${resource}.css"><iframe src="${resource}.html"></iframe>`,
+        { ...target, fallback: { ...target.fallback, minimumTextCharacters: 0 } },
+      );
+      await new Promise(resolve => setTimeout(resolve, 50));
+      expect(requests).toBe(0);
+    } finally {
+      await new Promise<void>(accept => server.close(() => accept()));
+    }
+  });
+
   it("accepts explicit scores and transfer sizes while retaining audit evidence", () => {
     const report = evaluateLighthouseResult(target, lighthouse({
       performance: 0.98,
       accessibility: 1,
       resources: { total: 120_000, image: 20_000, script: 4_000 },
-    }));
+    }), expectedUrl);
 
     expect(report).toEqual({
       performance: 0.98,
@@ -91,7 +119,7 @@ describe("Forme release web-quality gate", () => {
       accessibility: 0.99,
       resources: { total: 300_000, image: 80_000, script: 40_000 },
       failedAccessibilityAudits: ["color-contrast", "button-name"],
-    }));
+    }), expectedUrl);
 
     expect(report.diagnostics).toEqual([
       "accessibility score 0.99 < 1",
@@ -102,9 +130,11 @@ describe("Forme release web-quality gate", () => {
       "resource script 40000 > 32768 bytes",
       "resource total 300000 > 262144 bytes",
     ]);
-    expect(() => evaluateLighthouseResult(target, { categories: {}, audits: {} }))
+    expect(() => evaluateLighthouseResult(target, { categories: {}, audits: {} }, expectedUrl))
       .toThrow(/missing a finite performance score/);
     expect(() => evaluateLighthouseResult(target, {
+      requestedUrl: expectedUrl,
+      finalUrl: expectedUrl,
       categories: {
         performance: { score: 1 },
         accessibility: { score: 1 },
@@ -120,14 +150,34 @@ describe("Forme release web-quality gate", () => {
           },
         },
       },
-    })).toThrow(/bounded auditRefs/);
+    }, expectedUrl)).toThrow(/bounded auditRefs/);
 
     const nearBoundary = evaluateLighthouseResult(target, lighthouse({
       performance: 0.949,
       accessibility: 1,
       resources: { total: 0, image: 0, script: 0 },
-    }));
+    }), expectedUrl);
     expect(nearBoundary.diagnostics).toContain("performance score 0.949 < 0.95");
+
+    expect(() => evaluateLighthouseResult(target, lighthouse({
+      performance: 1,
+      accessibility: 1,
+      resources: [["total", 0], ["image", 70_000], ["image", 0], ["script", 0]],
+    }), expectedUrl)).toThrow(/duplicate resource type image/);
+    expect(() => evaluateLighthouseResult(target, lighthouse({
+      performance: 1,
+      accessibility: 1,
+      resources: [["total", 0], ["image", 65_536.1], ["script", 0]],
+    }), expectedUrl)).toThrow(/exact safe-integer transfer size/);
+
+    const navigated = lighthouse({
+      performance: 1,
+      accessibility: 1,
+      resources: { total: 0, image: 0, script: 0 },
+    });
+    navigated.finalUrl = "https://example.com/borrowed-scores";
+    expect(() => evaluateLighthouseResult(target, navigated, expectedUrl))
+      .toThrow(/URL identity/);
   });
 
   it("rejects proxy and accessor-backed browser evidence before invoking it", () => {
@@ -138,7 +188,7 @@ describe("Forme release web-quality gate", () => {
         throw new Error("untrusted proxy trap ran");
       },
     });
-    expect(() => evaluateLighthouseResult(target, proxy)).toThrow(/proxies/);
+    expect(() => evaluateLighthouseResult(target, proxy, expectedUrl)).toThrow(/proxies/);
     expect(proxyWasRead).toBe(false);
 
     const accessorBacked = Object.defineProperty({}, "categories", {
@@ -147,7 +197,7 @@ describe("Forme release web-quality gate", () => {
         throw new Error("untrusted getter ran");
       },
     });
-    expect(() => evaluateLighthouseResult(target, accessorBacked)).toThrow(/accessors/);
+    expect(() => evaluateLighthouseResult(target, accessorBacked, expectedUrl)).toThrow(/accessors/);
   });
 
   it("keeps audited pages offline except for their own generated resources", () => {
@@ -166,7 +216,7 @@ describe("Forme release web-quality gate", () => {
       accessibility: 0,
       resources: { total: 0, image: 0, script: 0 },
       failedAccessibilityAudits,
-    }));
+    }), expectedUrl);
 
     expect(report.diagnostics).toHaveLength(MAX_DIAGNOSTICS);
     expect(report.diagnostics.at(-1)).toBe("diagnostics truncated after 19 entries");
@@ -215,11 +265,16 @@ describe("Forme release web-quality gate", () => {
 function lighthouse(options: {
   readonly performance: number;
   readonly accessibility: number;
-  readonly resources: Readonly<Record<string, number>>;
+  readonly resources: Readonly<Record<string, number>> | readonly (readonly [string, number])[];
   readonly failedAccessibilityAudits?: readonly string[];
-}): unknown {
+}): Record<string, unknown> {
   const failed = new Set(options.failedAccessibilityAudits ?? []);
+  const resources = Array.isArray(options.resources)
+    ? options.resources
+    : Object.entries(options.resources);
   return {
+    requestedUrl: expectedUrl,
+    finalUrl: expectedUrl,
     categories: {
       performance: { score: options.performance },
       accessibility: {
@@ -230,7 +285,7 @@ function lighthouse(options: {
     audits: {
       "resource-summary": {
         details: {
-          items: Object.entries(options.resources).map(([resourceType, transferSize]) => ({
+          items: resources.map(([resourceType, transferSize]) => ({
             resourceType,
             transferSize,
           })),
