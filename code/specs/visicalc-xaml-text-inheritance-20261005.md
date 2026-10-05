@@ -17,3 +17,7 @@ Validate nested color/alignment and local overrides, siblings, repeated/conditio
 - Launched with an isolated `MOSAIC_APP_STATE_PATH` fixture. Formula-field Value changed from `=8+9` to `=19+23`; Return produced accessibility text `A1, 42, formula =19+23`, status `Mosaic runtime handled onCommit`, visible A1 `42`, and dependent totals E1 `65`, A5 `66`, E5 `196`.
 - Remaining observed defects: selection is not clearly visible, formula input is too narrow, and numeric text does not occupy the full cell width for right alignment. Keep #14274 and full native acceptance open. This is not a packaged-release or complete accessibility/persistence acceptance result.
 - Security subagent review passed with no vulnerabilities found.
+
+## CI repair for #16719
+
+The repository metadata gate references a deleted PR-head commit for the merged Elixir/Lua barcode adoption. Bind registry and owning backlog-item implementation/validation revisions to verified squash merge 9a99df33af2dc2dfe89e0748422e4ba387f97e22. Keep package-tree hashes unchanged, mark that item merged, and preserve unrelated parity-loop scheduling state for its owner. Validate the neutral fixture contract and JSON state. No gate weakening or package implementation changes.
