@@ -750,6 +750,22 @@ values and gain no filesystem, process, environment, Git, network, clock,
 randomness, or credential authority. This adoption alone does not make either
 neutral execution adapter ready.
 
+The Swift build-tool engine MUST expose an equally process-free, typed graph
+and diff-selection core. Its native test suite MUST discover and evaluate the
+exact eight `graph-*.json` and twelve `diff-selection-*.json` cases through
+production operations, pinning the case-ID roster. The core MUST enforce the
+same declared-node and edge bounds, canonical prerequisite-first levels,
+no-partial-output cycle failure, exact BUILD-front recognition, strict portable
+globs, repository-boundary digest and exact shared-input fanout, sorted
+dependent/prerequisite closures, and one operation-wide 50,000,000-unit
+Unicode-scalar match-work preflight before matching. Structural and boundary
+diagnostics precede the ceiling; the ceiling precedes unknown-path handling.
+Fixture decoding and any host Git or checkout access remain outside this
+core. Existing Swift front-door code may delegate to it but MUST NOT cause the
+pure operations to gain filesystem, process, environment, network, clock,
+randomness, or credential authority. Native case coverage alone does not
+claim a ready neutral execution adapter.
+
 ### 5. Hashing and cache
 
 Required behavior:

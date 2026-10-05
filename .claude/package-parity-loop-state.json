@@ -12,20 +12,20 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16737,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16737",
-    "branch": "codex/parity-build-tool-shared-digest-20261005",
-    "implementation_revision": "d6e4d20629aedba5e2cd65719a4042b9bd3a2a06",
-    "status": "pr-open"
+    "number": 16744,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16744",
+    "branch": "codex/parity-build-tool-swift-graph-diff-20261005",
+    "implementation_revision": "e41ff9eb4163c93339ed12392d548af17644d131",
+    "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-10-05T16:51:38Z",
-    "pr_number": 16737,
-    "status": "pending",
-    "notes": "The sole active parity PR #16737 is OPEN and MERGEABLE; the implementation revision is d6e4d20629aedba5e2cd65719a4042b9bd3a2a06, followed by PR-state metadata. GitHub checks are queued or in progress; no auto-merge request is enabled while checks remain pending."
+    "observed_at": "2026-10-05T18:21:35Z",
+    "pr_number": 16744,
+    "status": "checks-pending",
+    "notes": "Ready-for-review Swift graph/diff PR opened from tested head e41ff9eb4163c93339ed12392d548af17644d131. Initial GitHub checks are queued, with no failures yet; GitHub reports MERGEABLE but auto-merge stays disabled until every final-head required check is terminal and acceptable."
   },
   "last_inventory": {
-    "revision": "fdee63c8cc0de3e2a6fc8a545980af730fc10dcd",
+    "revision": "0eb0f3f560b8336ecdd5181ea2d9ef3b5c636b24",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1487,
@@ -1311,10 +1311,13 @@
     {
       "id": "build-tool-swift-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 20-case process-free graph and diff-selection contract in the Swift build tool",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-build-tool-swift-graph-diff-20261005",
+      "pr_number": 16744,
+      "selected_at": "2026-10-05T17:37:42Z",
+      "selection_revision": "0eb0f3f560b8336ecdd5181ea2d9ef3b5c636b24",
+      "selection_notes": "Selected only after #16737 merged and exact-main schema-3 inventory remained collision-clean. All six prerequisites are merged, no open PR claims Swift build-tool paths, and the process-free 8-graph/12-diff native core directly unlocks three pending owners. The ready Python source-registry owner also has three direct dependents but is a narrower follow-up; AES neutral work is recorded with governing NIST/security review, while OCaml promotion remains blocked by owned build-substrate/oracle work. Implement this single Swift owner in the fresh clean origin/main worktree, without adding host authority or claiming adapter readiness.",
       "notes": "Dynamically consume all eight graph and twelve diff-selection cases, including shared-input multi-consumer selection, through production code with canonical topology, stable errors, exact BUILD fronts, boundary behavior, and bounded Unicode-scalar matching."
     },
     {
@@ -11878,12 +11881,14 @@
     {
       "id": "build-tool-shared-input-multiconsumer-digest-evidence-fixture",
       "title": "Prove both shared-input consumers change source and package digests",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-shared-input-multiconsumer-diff-selection-fixture"],
       "branch": "codex/parity-build-tool-shared-digest-20261005",
       "pr_number": 16737,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16737",
       "pr_opened_at": "2026-10-05T16:51:27Z",
+      "merged_at": "2026-10-05T17:28:00Z",
+      "merge_commit": "0eb0f3f560b8336ecdd5181ea2d9ef3b5c636b24",
       "selected_at": "2026-10-05T16:01:19Z",
       "selection_revision": "a99fb66a572dd807f827eb32e39c28e2a811a565",
       "selection_notes": "Selected only after #16730 merged, exact-main schema-3 inventory stayed collision-clean, four AES owners and the distinct .NET digest child were registered, and missing event-loop/digest edges were repaired. Its prerequisite is merged and 14 pending consumers depend directly on this neutral fixture; the ready Swift 20-case engine remains next in the leverage tier. No parity PR is open; implementation starts in a fresh clean origin/main worktree and renamed codex branch.",
@@ -11899,7 +11904,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Post-#16730 exact-main audit found AES present in 12 established lanes but absent in Java, Kotlin, and Dart, with no exact owner. Reconcile the SE01 spec, its stale nine-language matrix, FIPS key/block vectors, byte ownership, stable errors, bounded work, and the educational non-constant-time security classification before expanding lanes. Directory presence alone does not establish conformance."
+      "notes": "Post-#16730 and post-#16737 exact-main audits found AES present in 12 established lanes but absent in Java, Kotlin, and Dart, with no other owner or open-PR path claimant. Reconcile SE01's stale nine-language matrix and public expand_key/SBOX surface against existing lanes; correct the AES-256 KAT attribution from FIPS Appendix B to SP 800-38A F.1.5 and add an official AES-192 KAT, with 128/192/256 encrypt/decrypt, key expansion, malformed lengths, byte ownership, stable errors, bounded work, and educational non-constant-time classification. Existing Swift expandKey may silently ignore trailing key bytes and Haskell lacks an AES-192 KAT. Java/Kotlin/Dart gf256 uses 0x11D, not AES's 0x11B; use AES-local arithmetic unless a separate reviewed generic-gf owner is deliberately selected. Directory presence alone does not establish conformance."
     },
     {
       "id": "aes-java-kotlin-dart-lane-parity",
@@ -11917,7 +11922,7 @@
       "depends_on": ["aes-language-neutral-conformance-and-existing-lane-reconciliation"],
       "branch": null,
       "pr_number": null,
-      "notes": "AES-modes also exists in 12 established lanes and lacks Java, Kotlin, and Dart. Reconcile the stale nine-language SE02 matrix; pin CBC PKCS#7 and error precedence, CTR overflow and nonce framing, GCM tag verification without partial plaintext, deterministic vectors, bounded work, and existing-lane behavior before ports."
+      "notes": "AES-modes also exists in 12 established lanes and lacks Java, Kotlin, and Dart; no open PR claims its paths. Reconcile the stale nine-language SE02 matrix and under-specified vectors/errors: CBC PKCS#7 and precedence, IV/nonce/tag sizes, CTR big-endian counter start and overflow, GCM GHASH framing/max lengths and authentication before any plaintext return, aliasing/ownership, deterministic official vectors, and bounded work. Existing lanes generally use 12-byte GCM nonces, a 16-byte tag, and counter 1 for GCM derivation/2 for data, but several unchecked counters wrap or truncate. Keep final SP 800-38D governing; do not silently adopt the 2026 draft wGCM work or claim production-grade constant-time cryptography."
     },
     {
       "id": "aes-modes-java-kotlin-dart-lane-parity",

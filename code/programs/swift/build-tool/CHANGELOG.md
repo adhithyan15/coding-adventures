@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Added a typed, process-free graph and diff-selection core with all eight
+  graph and twelve diff-selection neutral fixture cases, exact caller-supplied
+  source-boundary digest/fanout, canonical closures, structural diagnostics,
+  and operation-wide Unicode-scalar match-work preflight. Native tests also
+  cover malformed graph structure, portable-path and glob rejection, root
+  aliases, and boundary-error precedence. The existing Git-facing CLI remains
+  unchanged.
+
 - Added the `forme-plugin-installer-core`, `forme-plugin-runner-conformance`, and `forme-plugin-runner-ts`
   TypeScript roots to the repository source-input boundary projection. Digest updated to
   `3370c811b51962c87757b01e98ad3db5206cad2c75e74c6853bf5209548bd18e`.
