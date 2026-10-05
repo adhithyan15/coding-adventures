@@ -92,7 +92,7 @@ class BarcodeLayout1DConformanceTest {
     private fun runs(input: JsonNode): List<BarcodeLayout1DV1.Run> {
         if (input.has("runs")) return input.path("runs").map { row ->
             BarcodeLayout1DV1.Run(row.path("color").asText(), row.path("modules").asInt(),
-                row.path("sourceLabel").asText(), row.path("sourceIndex").asInt(), row.path("role").asText())
+                row.path("sourceLabel").asText(), row.path("sourceIndex").asLong(), row.path("role").asText())
         }
         val repeated = input.path("repeatRuns")
         val count = repeated.path("count").asInt(-1)
@@ -102,7 +102,7 @@ class BarcodeLayout1DConformanceTest {
             BarcodeLayout1DV1.Run(
                 if (index % 2 == 0) first else if (first == "bar") "space" else "bar",
                 repeated.path("modules").asInt(), repeated.path("sourceLabel").asText(),
-                repeated.path("sourceIndex").asInt(), repeated.path("role").asText(),
+                repeated.path("sourceIndex").asLong(), repeated.path("role").asText(),
             )
         }
     }
@@ -110,7 +110,7 @@ class BarcodeLayout1DConformanceTest {
     private fun symbols(input: JsonNode): List<BarcodeLayout1DV1.Symbol>? {
         if (input.has("symbols")) return input.path("symbols").map { row ->
             BarcodeLayout1DV1.Symbol(row.path("label").asText(), row.path("modules").asInt(),
-                row.path("sourceIndex").asInt(), row.path("role").asText())
+                row.path("sourceIndex").asLong(), row.path("role").asText())
         }
         if (!input.has("repeatSymbols")) return null
         val repeated = input.path("repeatSymbols")
@@ -118,7 +118,7 @@ class BarcodeLayout1DConformanceTest {
         require(count in 0..40_980) { "fixture-schema-invalid" }
         return List(count) { index ->
             BarcodeLayout1DV1.Symbol(repeated.path("label").asText(), repeated.path("modules").asInt(),
-                index, repeated.path("role").asText())
+                index.toLong(), repeated.path("role").asText())
         }
     }
 
@@ -132,12 +132,12 @@ class BarcodeLayout1DConformanceTest {
         val input = row.path("input")
         return when (row.path("operation").asText()) {
             "expand-binary" -> BarcodeLayout1DV1.expandBinary(pattern(input), input.path("sourceLabel").asText(),
-                input.path("sourceIndex").asInt(), input.path("role").asText())
+                input.path("sourceIndex").asLong(), input.path("role").asText())
             "expand-width" -> BarcodeLayout1DV1.expandWidth(pattern(input),
                 string(input, "narrowMarker", "N"), string(input, "wideMarker", "W"),
                 integer(input, "narrowModules", 1), integer(input, "wideModules", 3),
                 string(input, "startingColor", "bar"), input.path("sourceLabel").asText(),
-                input.path("sourceIndex").asInt(), input.path("role").asText())
+                input.path("sourceIndex").asLong(), input.path("role").asText())
             "compute-layout" -> BarcodeLayout1DV1.computeLayout(runs(input),
                 input.path("quietZoneModules").asInt(), symbols(input))
             "project-scene" -> {
@@ -163,7 +163,7 @@ class BarcodeLayout1DConformanceTest {
 
     private fun runMap(run: BarcodeLayout1DV1.Run): Map<String, Any> = sortedMapOf(
         "color" to run.color, "modules" to run.modules, "role" to run.role,
-        "sourceIndex" to run.sourceIndex, "sourceLabel" to run.sourceLabel,
+        "sourceIndex" to run.sourceIndex.toInt(), "sourceLabel" to run.sourceLabel,
     )
 
     private fun project(actual: Any): Any = when (actual) {

@@ -1,0 +1,4 @@
+cd ../paint-instructions && dart pub get
+cd ../barcode-layout-1d && dart pub get
+dart run test/barcode_layout_1d_test.dart
+dart run test/barcode_layout_1d_conformance_test.dart

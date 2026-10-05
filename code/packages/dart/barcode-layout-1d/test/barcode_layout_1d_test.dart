@@ -1,5 +1,5 @@
 import 'package:coding_adventures_barcode_layout_1d/barcode_layout_1d.dart';
-import 'package:coding_adventures_paint_instructions/paint_instructions.dart';
+import 'package:coding_adventures_paint_instructions/coding_adventures_paint_instructions.dart';
 import 'package:test/test.dart';
 
 void main() {

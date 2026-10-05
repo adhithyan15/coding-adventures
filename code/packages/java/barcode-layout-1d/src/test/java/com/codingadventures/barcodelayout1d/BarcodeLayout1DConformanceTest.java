@@ -123,7 +123,7 @@ class BarcodeLayout1DConformanceTest {
         if (input.has("runs")) {
             input.path("runs").forEach(row -> result.add(new BarcodeLayout1DV1.Run(
                     row.path("color").asText(), row.path("modules").asInt(),
-                    row.path("sourceLabel").asText(), row.path("sourceIndex").asInt(),
+                    row.path("sourceLabel").asText(), row.path("sourceIndex").asLong(),
                     row.path("role").asText())));
             return result;
         }
@@ -134,7 +134,7 @@ class BarcodeLayout1DConformanceTest {
             String color = repeated.path("firstColor").asText();
             if ((i & 1) == 1) color = color.equals("bar") ? "space" : "bar";
             result.add(new BarcodeLayout1DV1.Run(color, repeated.path("modules").asInt(),
-                    repeated.path("sourceLabel").asText(), repeated.path("sourceIndex").asInt(),
+                    repeated.path("sourceLabel").asText(), repeated.path("sourceIndex").asLong(),
                     repeated.path("role").asText()));
         }
         return result;
@@ -145,7 +145,7 @@ class BarcodeLayout1DConformanceTest {
             var result = new ArrayList<BarcodeLayout1DV1.Symbol>();
             input.path("symbols").forEach(row -> result.add(new BarcodeLayout1DV1.Symbol(
                     row.path("label").asText(), row.path("modules").asInt(),
-                    row.path("sourceIndex").asInt(), row.path("role").asText())));
+                    row.path("sourceIndex").asLong(), row.path("role").asText())));
             return result;
         }
         if (!input.has("repeatSymbols")) return null;
@@ -171,13 +171,13 @@ class BarcodeLayout1DConformanceTest {
         JsonNode input = row.path("input");
         return switch (row.path("operation").asText()) {
             case "expand-binary" -> BarcodeLayout1DV1.expandBinary(pattern(input),
-                    input.path("sourceLabel").asText(), input.path("sourceIndex").asInt(),
+                    input.path("sourceLabel").asText(), input.path("sourceIndex").asLong(),
                     input.path("role").asText());
             case "expand-width" -> BarcodeLayout1DV1.expandWidth(pattern(input),
                     string(input, "narrowMarker", "N"), string(input, "wideMarker", "W"),
                     integer(input, "narrowModules", 1), integer(input, "wideModules", 3),
                     string(input, "startingColor", "bar"), input.path("sourceLabel").asText(),
-                    input.path("sourceIndex").asInt(), input.path("role").asText());
+                    input.path("sourceIndex").asLong(), input.path("role").asText());
             case "compute-layout" -> BarcodeLayout1DV1.computeLayout(runs(input),
                     input.path("quietZoneModules").asInt(), symbols(input));
             case "project-scene" -> {
@@ -204,7 +204,7 @@ class BarcodeLayout1DConformanceTest {
         map.put("color", run.color());
         map.put("modules", run.modules());
         map.put("role", run.role());
-        map.put("sourceIndex", run.sourceIndex());
+        map.put("sourceIndex", Math.toIntExact(run.sourceIndex()));
         map.put("sourceLabel", run.sourceLabel());
         return map;
     }

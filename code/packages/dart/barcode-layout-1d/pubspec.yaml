@@ -1,0 +1,16 @@
+name: coding_adventures_barcode_layout_1d
+version: 0.1.0
+description: Pure v1 one-dimensional barcode run geometry and paint projection.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_paint_instructions:
+    path: ../paint-instructions
+
+dev_dependencies:
+  crypto: ^3.0.3
+  test: ^1.25.0
