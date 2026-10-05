@@ -300,7 +300,7 @@ What step 4 changed from §3.4, and why:
   restores its own: the Linux job has no desktop TaskApp snapshot to hand,
   and one written by the same APK is the case a user meets.
 - **Still to come:** an instrumented Compose test that edits, relaunches and
-  reads the screen (§4), and the same gate for Journal (step 7).
+  reads the screen (§4). Journal runs the same gate (§3.9).
 
 ### 3.8 Mobile file effects, designed (step 6)
 
@@ -557,6 +557,66 @@ picker itself is driven by nothing until §4's instrumented test.
 desktop behaviour unchanged; the Swift router's asynchronous path with the
 iOS picker; the Android library.
 
+**Decided after step 6.**
+
+- *iOS open keeps `asCopy: true`.* The system copies the whole chosen file
+  into the app's temporary directory before the picker answers, so a file
+  over 50 MiB is copied and then refused. The other choice, `asCopy: false`,
+  could refuse an oversized file from its metadata before anything moves,
+  but it reads in place: it holds security-scoped access and needs a
+  coordinated read (`NSFileCoordinator`) for anything a file provider
+  serves. That read downloads a cloud document with no progress shown, no
+  cancel, and no way to tell a slow download from one that has stopped, so
+  it would need the stall watch Android has (above) with no progress to
+  feed it. The system's copy shows progress, offers cancel, and leaves
+  nothing behind: the copy is removed once read, or unread. The temporary
+  disk and time spent on an oversized copy are the accepted cost.
+- *No quarantine mark on saves.* Files saved through the SwiftUI library get
+  no `com.apple.quarantine`, by UI87 §3.1 ("No download marks of our own").
+  A save is the app writing its own document, and the extension rules keep it
+  from being a launcher. A mark the system adds itself, as for a sandboxed
+  app, is left in place.
+
+### 3.9 Journal on Android (step 7, first app)
+
+Written before implementation. Journal is the second app on Android, after
+Trestle. It runs the same way and passes the same gate. Nothing in Journal
+changes:
+
+- **The runtime.** `journal-mosaic-app` is a workspace crate that already
+  declares `cdylib`. `build-mosaic-android-libs.sh journal-mosaic-app` builds
+  it for the four ABIs, and the Compose build installs it as for Trestle
+  (§3.6). The engine keeps no files of its own: the whole journal is the
+  runtime's snapshot, which the host persists under `filesDir`. It reads the
+  clock through `SystemTime` and the UTC offset from the host's start
+  context, and both work on Android unchanged.
+- **Identity.** Journal's manifest names no `bundle-identifier` or
+  `display-name`, so Android takes the defaults the Apple builds already use.
+  The application id is `dev.codingadventures.journalapp` and the label is
+  `JournalApp`. A product name and identifier would change every host's
+  window title and app identity at once, so they are not chosen here.
+- **Effects.** Journal raises none, so the Android file library is present
+  but never asked.
+- **The gate.** The CI step that builds Trestle's runtime APK builds
+  Journal's the same way: native-complete with no degradations; badging
+  naming its package, label and `MosaicActivity`; and `libmosaic_app.so`
+  exporting `mosaic_app_create` for each ABI. The emulator step then runs
+  `mosaic-android-emulator-gate.sh` for Journal after Trestle, on the same
+  booted emulator, with Mosaic application id `journal-app`. Its restore
+  launch is the one that matters most for Journal, whose entries live only
+  in that snapshot.
+- **What is already proven.** The desktop Compose lane already compiles
+  Journal's output and drives it with `JournalUiTest` (edit, relaunch,
+  restore). The APK build compiles the same component and shell sources
+  against Android's Compose. The emulator gate adds what only a device
+  shows: the per-ABI engine loads through JNA, and the snapshot is kept in
+  the app's own storage. Driving Journal's screen on Android is the
+  instrumented test of §4.
+
+Engram and Venture follow as their own PRs. Engram's package `[host_effects]`
+handlers stay desktop-only (§3.5), so on Android its Anki import and export
+are failed by the host as unanswered until it has an Android handler.
+
 ## 4. CI
 
 | lane | builds | drives |
@@ -586,6 +646,7 @@ lanes are green, as their own PRs.
    Compose on Android and SwiftUI on iOS and iPadOS; Flutter's arrive with
    step 8, which builds Flutter for phones.*
 7. **Every app:** Journal, Engram, Venture (after BR02's host work).
+   *Journal on Android: §3.9.*
 8. **Flutter:** `flutter create --platforms=android,ios`, per-ABI native
    assets, `path_provider` for state.
 
