@@ -334,6 +334,34 @@ describe("barcode-layout-1d-v1 neutral corpus", function()
         assert.equal("A", second.instructions[1].metadata.sourceLabel)
     end)
 
+    it("rejects sparse caller run and symbol tables", function()
+        local first = {color = "bar", modules = 1, source_label = "A",
+            source_index = 0, role = "data"}
+        local ok, caught = pcall(layout.compute_barcode_1d_layout_v1,
+            {[1] = first, [3] = first}, 10)
+        assert.is_false(ok)
+        assert.equal("invalid-source-attribution", caught)
+        ok, caught = pcall(layout.compute_barcode_1d_layout_v1, {first}, 10,
+            {[1] = {label = "A", modules = 1, sourceIndex = 0, role = "data"},
+                [3] = {label = "B", modules = 1, sourceIndex = 1, role = "data"}})
+        assert.is_false(ok)
+        assert.equal("invalid-source-attribution", caught)
+    end)
+
+    it("rejects explicit false options rather than silently defaulting them", function()
+        local runs_value = layout.runs_from_binary_pattern_v1("10", {
+            source_label = "A", source_index = 0, role = "data",
+        })
+        local ok, caught = pcall(layout.project_barcode_1d_scene_v1, runs_value, 10,
+            {render_config = {module_width = false}})
+        assert.is_false(ok)
+        assert.equal("invalid-render-config", caught)
+        ok, caught = pcall(layout.project_barcode_1d_scene_v1, runs_value, 10,
+            {metadata = false})
+        assert.is_false(ok)
+        assert.equal("metadata-too-large", caught)
+    end)
+
     it("rejects duplicate keys and hostile fixture envelopes", function()
         assert.has_error(function() strict_decode('{"a":1,"a":2}', 8) end)
         assert.has_error(function() strict_decode(string.rep("x", max_bytes + 1), 8) end)

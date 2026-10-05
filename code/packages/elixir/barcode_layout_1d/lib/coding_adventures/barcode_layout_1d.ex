@@ -221,10 +221,18 @@ defmodule CodingAdventures.BarcodeLayout1D do
   defp v1_fail!(id), do: raise(V1Error, id)
 
   defp v1_scalar_count!(value, id) when is_binary(value) do
-    if String.valid?(value), do: length(String.codepoints(value)), else: v1_fail!(id)
+    if String.valid?(value), do: v1_count_codepoints(value, 0), else: v1_fail!(id)
   end
 
   defp v1_scalar_count!(_, id), do: v1_fail!(id)
+
+  defp v1_count_codepoints(<<>>, count), do: count
+  defp v1_count_codepoints(_rest, count) when count > @max_pattern, do: count
+
+  defp v1_count_codepoints(value, count) do
+    {_scalar, rest} = String.next_codepoint(value)
+    v1_count_codepoints(rest, count + 1)
+  end
 
   defp v1_source!(label, index, role) do
     if v1_scalar_count!(label, "invalid-source-attribution") > @max_label or

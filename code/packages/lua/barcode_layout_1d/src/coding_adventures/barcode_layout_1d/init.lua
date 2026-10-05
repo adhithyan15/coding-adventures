@@ -177,6 +177,10 @@ end
 
 -- The bounded, zero-authority v1 adapter is additive to the legacy API.
 local function fail(id) error(id, 0) end
+local function default_if_nil(value, fallback)
+    if value == nil then return fallback end
+    return value
+end
 local function scalar_count(value, id)
     if type(value) ~= "string" then fail(id) end
     local count = utf8.len(value)
@@ -185,6 +189,18 @@ local function scalar_count(value, id)
 end
 local function integer(value)
     return type(value) == "number" and math.type(value) == "integer"
+end
+local function sequence_count(value, invalid_id, too_many_id, limit)
+    if type(value) ~= "table" then fail(invalid_id) end
+    local count, maximum = 0, 0
+    for index, _ in pairs(value) do
+        if not integer(index) or index < 1 then fail(invalid_id) end
+        count = count + 1
+        if count > limit then fail(too_many_id) end
+        if index > maximum then maximum = index end
+    end
+    if maximum ~= count then fail(invalid_id) end
+    return count
 end
 local roles = {data = true, start = true, stop = true, guard = true,
     check = true, ["inter-character-gap"] = true}
@@ -230,7 +246,8 @@ function M.runs_from_width_pattern_v1(pattern, opts)
     local length = scalar_count(pattern, "invalid-width-token")
     if length > 65567 then fail("pattern-too-long") end
     if length == 0 then fail("empty-pattern") end
-    local narrow, wide = opts.narrow_marker or "N", opts.wide_marker or "W"
+    local narrow = default_if_nil(opts.narrow_marker, "N")
+    local wide = default_if_nil(opts.wide_marker, "W")
     if scalar_count(narrow, "invalid-marker-configuration") ~= 1 or
         scalar_count(wide, "invalid-marker-configuration") ~= 1 or narrow == wide then
         fail("invalid-marker-configuration")
@@ -242,11 +259,11 @@ function M.runs_from_width_pattern_v1(pattern, opts)
         tokens[#tokens + 1] = token
     end
     source(opts.source_label, opts.source_index, opts.role)
-    local narrow_modules = opts.narrow_modules or 1
-    local wide_modules = opts.wide_modules or 3
+    local narrow_modules = default_if_nil(opts.narrow_modules, 1)
+    local wide_modules = default_if_nil(opts.wide_modules, 3)
     if not integer(narrow_modules) or narrow_modules <= 0 or
         not integer(wide_modules) or wide_modules <= 0 then fail("invalid-module-count") end
-    local starting = opts.starting_color or "bar"
+    local starting = default_if_nil(opts.starting_color, "bar")
     if starting ~= "bar" and starting ~= "space" then fail("invalid-marker-configuration") end
     if length > 40979 then fail("too-many-runs") end
     local content, rows = 0, {}
@@ -285,8 +302,7 @@ local function infer_symbols(runs)
     return rows
 end
 local function explicit_symbols(symbols, content)
-    if type(symbols) ~= "table" then fail("invalid-source-attribution") end
-    if #symbols > 40979 then fail("too-many-symbols") end
+    sequence_count(symbols, "invalid-source-attribution", "too-many-symbols", 40979)
     local rows, cursor = {}, 0
     for index, symbol in ipairs(symbols) do
         if type(symbol) ~= "table" then fail("invalid-source-attribution") end
@@ -305,8 +321,7 @@ local function explicit_symbols(symbols, content)
 end
 
 function M.compute_barcode_1d_layout_v1(runs, quiet, symbols)
-    if type(runs) ~= "table" then fail("invalid-source-attribution") end
-    if #runs > 40979 then fail("too-many-runs") end
+    sequence_count(runs, "invalid-source-attribution", "too-many-runs", 40979)
     local copied, content, previous = {}, 0, nil
     for index, run in ipairs(runs) do
         if type(run) ~= "table" or (run.color ~= "bar" and run.color ~= "space") or
@@ -343,16 +358,16 @@ end
 
 function M.project_barcode_1d_scene_v1(runs, quiet, options)
     options = options or {}
-    local render = options.render_config or {}
+    local render = default_if_nil(options.render_config, {})
     if options.human_readable_text ~= nil or
         (type(render) == "table" and render.include_human_readable_text) then
         fail("human-readable-text-unsupported")
     end
     if type(render) ~= "table" then fail("invalid-render-config") end
-    local module_width = render.module_width or 4
-    local bar_height = render.bar_height or 120
-    local foreground = render.foreground or "#000000"
-    local background = render.background or "#ffffff"
+    local module_width = default_if_nil(render.module_width, 4)
+    local bar_height = default_if_nil(render.bar_height, 120)
+    local foreground = default_if_nil(render.foreground, "#000000")
+    local background = default_if_nil(render.background, "#ffffff")
     if not integer(module_width) or module_width < 1 or module_width > 8192 or
         not integer(bar_height) or bar_height < 1 or bar_height > 8192 or
         scalar_count(foreground, "invalid-render-config") > 128 or
@@ -360,8 +375,8 @@ function M.project_barcode_1d_scene_v1(runs, quiet, options)
         fail("invalid-render-config")
     end
     local layout = M.compute_barcode_1d_layout_v1(runs, quiet, options.symbols)
-    local metadata = bounded_metadata(options.metadata or {})
-    local label = options.label or "1D barcode"
+    local metadata = bounded_metadata(default_if_nil(options.metadata, {}))
+    local label = default_if_nil(options.label, "1D barcode")
     if scalar_count(label, "metadata-too-large") > 4096 then fail("metadata-too-large") end
     local rectangles, cursor = {}, quiet
     for _, run in ipairs(runs) do
