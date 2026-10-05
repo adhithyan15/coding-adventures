@@ -61,11 +61,14 @@ describe("the printed filmstrip", () => {
     // Each frame is a NESTED VIEWPORT, so it clips to its panel whatever its own
     // transforms say. 150 output units for a 200-unit box makes the panel
     // 150 x 225; the first sits at the margin and the second one gap further on.
+    // The fixture's heading is too wide for a two-frame strip, so it wraps onto
+    // a second line and the frames start one heading line (18.75) lower than
+    // the one-line band would put them (42).
     expect(figure.svg).toContain(
-      '<svg x="16" y="42" width="150" height="225" ' +
+      '<svg x="16" y="60.75" width="150" height="225" ' +
         'viewBox="-10 -100 200 300" preserveAspectRatio="xMidYMid meet" overflow="hidden">',
     );
-    expect(figure.svg).toContain('<svg x="176" y="42" width="150" height="225" ');
+    expect(figure.svg).toContain('<svg x="176" y="60.75" width="150" height="225" ');
 
     expect(figure.labels).toEqual([
       "curl around the upper loop",
@@ -93,6 +96,28 @@ describe("the printed filmstrip", () => {
     expect(panels).toHaveLength(9);
     expect(panels[6][0]).toBe(panels[0][0]);
     expect(panels[6][1]).toBeGreaterThan(panels[0][1]);
+  });
+
+  it("wraps a heading too wide for a short strip instead of clipping it", () => {
+    // Two frames make the grid 2*150 + 10 = 310 units wide, room for about 39
+    // characters at the heading's size. A one-stroke letter's summary is the
+    // longest kind, and printed on one line it ran past the figure's edge.
+    const summary = "one unbroken stroke · 2 movements";
+    const svg = renderScriptFilmstripFigure("X", entry({ summary })).svg;
+    const headingLines = [...svg.matchAll(/<text [^>]*font-size="15"[^>]*>([^<]*)<\/text>/g)].map(
+      (match) => match[1],
+    );
+    expect(headingLines).toEqual(["How it is written — one unbroken", "stroke · 2 movements"]);
+    // The separator stays on the word before it: no line begins with "·".
+    expect(headingLines.every((line) => !line.startsWith("·"))).toBe(true);
+    // The frames move down by exactly one heading line (15 * 1.25 = 18.75).
+    expect(svg).toContain('<svg x="16" y="60.75" width="150" height="225" ');
+  });
+
+  it("keeps a heading that fits on one line exactly where it was", () => {
+    const svg = renderScriptFilmstripFigure("X", entry({ summary: "1 stroke" })).svg;
+    expect(svg.match(/<text [^>]*font-size="15"/g)).toHaveLength(1);
+    expect(svg).toContain('<svg x="16" y="42" width="150" height="225" ');
   });
 
   it("prints the citation and says plainly when the order is only attested", () => {

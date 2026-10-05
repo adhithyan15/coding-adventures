@@ -486,7 +486,24 @@ export function renderScriptFilmstripFigure(
   const rows = Math.ceil(entry.frames.length / columns);
   const gridWidth = columns * FRAME_WIDTH + (columns - 1) * FRAME_GAP;
 
+  // The heading WRAPS, like the citation below. It used to be one `<text>` line,
+  // which is fine for a strip of three or more frames — but a one-stroke letter
+  // (し, へ) gets a two-frame strip only 310 px wide, and "How it is written —
+  // one unbroken stroke · 2 movements" ran straight past the figure's right
+  // edge, clipped mid-word on the printed page. Each extra line pushes the
+  // frames down by one line height, so a heading that fits on one line (every
+  // strip of three or more frames today) lays out byte-for-byte as before.
   const heading = `How it is written — ${entry.summary}`;
+  // A " · " separator is glued to the word before it (U+E000, a private-use
+  // character the wrapper does not treat as a space, stands in for the space
+  // while wrapping), so a wrapped line ends "stroke ·" instead of the next one
+  // beginning "· 2 movements".
+  const headingLines = wrapFigureText(
+    heading.replace(/ · /g, "\uE000· "),
+    gridWidth,
+    HEADING_SIZE,
+  ).map((line) => line.replace(/\uE000/g, " "));
+  const headingBand = HEADING_BAND + (headingLines.length - 1) * HEADING_SIZE * 1.25;
 
   // The footer prints the CITATION and, when the source records that the order
   // varies, one fixed sentence saying so. It does not print the `variation`
@@ -512,7 +529,7 @@ export function renderScriptFilmstripFigure(
     );
   }
 
-  const gridTop = MARGIN + HEADING_BAND;
+  const gridTop = round(MARGIN + headingBand);
   const gridHeight = rows * frameHeight + (rows - 1) * ROW_GAP;
   const citationTop = gridTop + gridHeight + CITATION_LEADING;
   const width = MARGIN * 2 + gridWidth;
@@ -539,10 +556,13 @@ export function renderScriptFilmstripFigure(
   parts.push(
     `<rect x="0" y="0" width="${width}" height="${height}" fill="${BACKGROUND}"/>`,
   );
-  parts.push(
-    `<text x="${MARGIN}" y="${MARGIN + HEADING_SIZE}" font-family="Latin Modern Sans, sans-serif" ` +
-      `font-size="${HEADING_SIZE}" fill="${HEADING_COLOR}">${escapeXml(heading)}</text>`,
-  );
+  headingLines.forEach((line, index) => {
+    parts.push(
+      `<text x="${MARGIN}" y="${round(MARGIN + HEADING_SIZE + index * HEADING_SIZE * 1.25)}" ` +
+        `font-family="Latin Modern Sans, sans-serif" ` +
+        `font-size="${HEADING_SIZE}" fill="${HEADING_COLOR}">${escapeXml(line)}</text>`,
+    );
+  });
 
   entry.frames.forEach((frame, index) => {
     const column = index % columns;
