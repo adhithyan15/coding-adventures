@@ -124,7 +124,8 @@ abstract final class BarcodeLayout1DV1 {
 
   static void _source(String label, int index, String role) {
     if (_scalars(label, 'invalid-source-attribution') > 4096 ||
-        index < -2147483648 || index > 2147483647 ||
+        index < -2147483648 ||
+        index > 2147483647 ||
         !_roles.contains(role)) {
       _fail('invalid-source-attribution');
     }
@@ -233,8 +234,7 @@ abstract final class BarcodeLayout1DV1 {
     String? previous;
     for (final run in runs) {
       if ((run.color != 'bar' && run.color != 'space') ||
-          !_roles.contains(run.role))
-        _fail('invalid-source-attribution');
+          !_roles.contains(run.role)) _fail('invalid-source-attribution');
       if (run.modules <= 0) _fail('invalid-module-count');
       _source(run.sourceLabel, run.sourceIndex, run.role);
       if (run.modules > _maxContent - content) _fail('content-too-wide');
@@ -277,8 +277,7 @@ abstract final class BarcodeLayout1DV1 {
       var start = 0;
       for (final run in runs) {
         if (run.role != 'inter-character-gap') {
-          final changed =
-              active == null ||
+          final changed = active == null ||
               active.sourceLabel != run.sourceLabel ||
               active.sourceIndex != run.sourceIndex ||
               active.role != run.role;

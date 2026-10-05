@@ -220,12 +220,12 @@ Object _execute(Map<String, dynamic> row) {
 }
 
 Map<String, Object> _runMap(Barcode1DRun run) => SplayTreeMap.of({
-  'color': run.color,
-  'modules': run.modules,
-  'role': run.role,
-  'sourceIndex': run.sourceIndex,
-  'sourceLabel': run.sourceLabel,
-});
+      'color': run.color,
+      'modules': run.modules,
+      'role': run.role,
+      'sourceIndex': run.sourceIndex,
+      'sourceLabel': run.sourceLabel,
+    });
 
 Object _project(Object actual) {
   if (actual is List<Barcode1DRun>) return actual.map(_runMap).toList();
@@ -269,7 +269,14 @@ Object _project(Object actual) {
 }
 
 void main() {
-  final bytes = _corpus.readAsBytesSync();
+  final input = _corpus.openSync();
+  late final List<int> bytes;
+  try {
+    bytes = input.readSync(131073);
+  } finally {
+    input.closeSync();
+  }
+  if (bytes.length > 131072) throw const FormatException('fixture-size-limit');
   test('neutral corpus identity and size', () {
     expect(sha256.convert(bytes).toString(), _corpusSha);
     expect((_load(bytes)['cases'] as List).length, 56);
@@ -314,8 +321,8 @@ void main() {
         final key = expected.containsKey('runs')
             ? 'runs'
             : expected.containsKey('layout')
-            ? 'layout'
-            : 'scene';
+                ? 'layout'
+                : 'scene';
         expect(actual, expected[key]);
       }
     });

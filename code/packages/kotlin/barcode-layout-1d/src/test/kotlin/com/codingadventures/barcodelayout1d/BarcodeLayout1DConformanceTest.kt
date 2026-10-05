@@ -69,7 +69,8 @@ class BarcodeLayout1DConformanceTest {
     }
 
     private fun corpus(): JsonNode {
-        val bytes = Files.readAllBytes(corpusPath)
+        val bytes = Files.newInputStream(corpusPath).use { it.readNBytes(maxBytes + 1) }
+        require(bytes.size <= maxBytes) { "fixture-size-limit" }
         assertEquals(corpusSha, sha256(bytes))
         val document = load(bytes)
         assertEquals(56, document.path("cases").size())

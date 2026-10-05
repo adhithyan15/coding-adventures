@@ -383,6 +383,7 @@ class BarcodeLayoutFixtureTests(unittest.TestCase):
                 entry["package_root"],
                 package_roots[entry["language"]],
             )
+            native_test_path = _target_package_path(entry, "native_test_path")
             if entry["status"] == "pending-adoption":
                 self.assertTrue(entry["known_divergences"])
                 self.assertIn("planned_conformance_test_path", entry)
@@ -393,7 +394,7 @@ class BarcodeLayoutFixtureTests(unittest.TestCase):
 
             self.assertEqual(entry["status"], "conformant")
             self.assertTrue(package_root.is_dir())
-            self.assertTrue(_target_package_path(entry, "native_test_path").is_file())
+            self.assertTrue(native_test_path.is_file())
             self.assertEqual(entry["known_divergences"], [])
             self.assertEqual(entry["corpus_sha256"], corpus_digest)
             conformance_path = _target_package_path(entry, "conformance_test_path")
@@ -528,6 +529,13 @@ class BarcodeLayoutFixtureTests(unittest.TestCase):
         )
         with self.assertRaisesRegex(FixtureLoadError, "target-path-outside-package"):
             _target_package_path(windows_traversal, "conformance_test_path")
+
+        pending_traversal = json.loads(json.dumps(pending_target))
+        pending_traversal["native_test_path"] = (
+            f"{pending_traversal['package_root']}/../../outside_test.py"
+        )
+        with self.assertRaisesRegex(FixtureLoadError, "target-path-outside-package"):
+            _target_package_path(pending_traversal, "native_test_path")
 
     def test_generator_is_byte_for_byte_clean(self) -> None:
         namespace = runpy.run_path(str(FIXTURE_ROOT / "generate_cases.py"))

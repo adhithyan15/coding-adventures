@@ -54,8 +54,11 @@ void main() {
     test('text value fails before native resolution', () {
       final invalidRuns = [const Barcode1DRun('bar', 0, 'A', 0, 'data')];
       expect(
-        () => BarcodeLayout1DV1.projectScene(invalidRuns, 0,
-            const Barcode1DSceneOptions(moduleWidth: 0, humanReadableText: '123')),
+        () => BarcodeLayout1DV1.projectScene(
+            invalidRuns,
+            0,
+            const Barcode1DSceneOptions(
+                moduleWidth: 0, humanReadableText: '123')),
         throwsA(isA<Barcode1DV1Error>().having((error) => error.errorId,
             'errorId', 'human-readable-text-unsupported')),
       );
@@ -64,7 +67,9 @@ void main() {
     test('text-enabled fails before native resolution', () {
       final invalidRuns = [const Barcode1DRun('bar', 0, 'A', 0, 'data')];
       expect(
-        () => BarcodeLayout1DV1.projectScene(invalidRuns, 0,
+        () => BarcodeLayout1DV1.projectScene(
+            invalidRuns,
+            0,
             const Barcode1DSceneOptions(
                 moduleWidth: 0, includeHumanReadableText: true)),
         throwsA(isA<Barcode1DV1Error>().having((error) => error.errorId,

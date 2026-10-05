@@ -1,1 +1,1 @@
-gradle --no-daemon --no-build-cache --max-workers=1 test
+gradle --no-daemon --no-build-cache --max-workers=1 check

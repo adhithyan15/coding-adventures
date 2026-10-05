@@ -96,7 +96,11 @@ class BarcodeLayout1DConformanceTest {
     }
 
     private static JsonNode corpus() throws IOException {
-        byte[] bytes = Files.readAllBytes(CORPUS);
+        byte[] bytes;
+        try (var input = Files.newInputStream(CORPUS)) {
+            bytes = input.readNBytes(MAX_BYTES + 1);
+        }
+        if (bytes.length > MAX_BYTES) throw new IllegalArgumentException("fixture-size-limit");
         assertEquals(CORPUS_SHA, sha256(bytes));
         JsonNode document = load(bytes);
         assertEquals(56, document.path("cases").size());
