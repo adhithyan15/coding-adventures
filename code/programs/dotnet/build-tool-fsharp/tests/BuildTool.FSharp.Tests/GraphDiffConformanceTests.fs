@@ -122,5 +122,27 @@ let ``F sharp facade returns empty failure values for invalid graph and diff`` (
         evaluateDiffSelection
             (DiffSelectionInput([| DiffPackage("a/a", "a", "strict_globs", [| "src/[z-a].fs" |]) |],
                                 Array.empty, [| "a/a" |], "error", [| "outside" |], null, null))
-    Assert.Equal("DIFF_INVALID_INPUT", diff.ErrorCode)
+    Assert.Equal("DIFF_GLOB_INVALID", diff.ErrorCode)
     Assert.Empty(diff.ChangedPackages)
+
+[<Fact>]
+let ``F sharp facade rejects self edges cycles and nested roots`` () =
+    let self = evaluateGraph (GraphInput([| "a/a" |], [| GraphEdge("a/a", "a/a") |]))
+    Assert.Equal("GRAPH_EDGE_SELF", self.ErrorCode)
+    Assert.Empty(self.Edges)
+    let packages =
+        [| DiffPackage("a/a", "a", "package_prefix", null)
+           DiffPackage("b/b", "b", "package_prefix", null) |]
+    let cycle =
+        evaluateDiffSelection
+            (DiffSelectionInput(packages,
+                                [| GraphEdge("a/a", "b/b"); GraphEdge("b/b", "a/a") |],
+                                [| "a/a" |], "error", [| "a/file" |], null, null))
+    Assert.Equal("DIFF_EDGE_CYCLE", cycle.ErrorCode)
+    Assert.Empty(cycle.ChangedPackages)
+    let nested =
+        evaluateDiffSelection
+            (DiffSelectionInput([| packages.[0]; DiffPackage("b/b", "a/nested", "package_prefix", null) |],
+                                Array.empty, Array.empty, "error", [| "a/nested/file" |], null, null))
+    Assert.Equal("DIFF_PATH_INVALID", nested.ErrorCode)
+    Assert.Empty(nested.ChangedPackages)
