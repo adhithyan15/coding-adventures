@@ -1,5 +1,20 @@
 # Changelog — forme-doc-demo
 
+## Unreleased
+
+### Fixed
+
+- Resolve the `safeJoin` base before containment comparisons so relative or
+  POSIX-style base spellings map to the same drive-qualified root on Windows.
+  The portable regression test now exercises a relative base explicitly.
+- Refuse POSIX symlinks, Windows junctions/reparse points, and multiply-linked
+  output files. Every build now requires a fresh private output root (mode
+  `0700` on POSIX), holds an exclusive `.forme-write-lock`, and rechecks the
+  authority chain plus directory, lock, and opened-file identities before any
+  truncation. This explicitly enforces the portable single-writer contract;
+  concurrent mutation by another process running as the same OS identity is
+  outside the supported contract, while observable changes fail closed.
+
 ## 0.2.0 — 2026-06-01
 
 Wire the browser-side search client into the demo so the
