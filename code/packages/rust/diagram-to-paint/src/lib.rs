@@ -2223,6 +2223,17 @@ fn parse_css_color_function(css: &str) -> Option<Color> {
                 alpha,
             ))
         }
+        "a98-rgb" => {
+            let r = r.powf(563.0 / 256.0);
+            let g = g.powf(563.0 / 256.0);
+            let b = b.powf(563.0 / 256.0);
+            Some(xyz_d65_to_color(
+                (573536.0 / 994567.0) * r + (263643.0 / 1420810.0) * g + (187206.0 / 994567.0) * b,
+                (591459.0 / 1989134.0) * r + (6239551.0 / 9945670.0) * g + (37422.0 / 4972835.0) * b,
+                (53769.0 / 1989134.0) * r + (351524.0 / 4972835.0) * g + (4929758.0 / 4972835.0) * b,
+                alpha,
+            ))
+        }
         _ => None,
     }
 }
@@ -7699,6 +7710,15 @@ mod tests {
         assert_eq!(css_to_color("color(display-p3 20% 40% 60% / 80%)"), expected);
         assert_eq!(with_opacity("color(display-p3 0.2 0.4 0.6 / 80%)", 0.5), "rgba(27,104,157,0.4)");
         assert_eq!(normalize_css_paint("color(display-p3 20% 40% 60% / 80%)".into()), "rgba(27,104,157,0.8)");
+    }
+
+    #[test]
+    fn css_colors_parse_color_a98_rgb_profile() {
+        let expected = Color { r: 40, g: 86, b: 157, a: 204 };
+        assert_eq!(css_to_color("color(a98-rgb 0.2 0.4 0.6 / 0.8)"), expected);
+        assert_eq!(css_to_color("color(a98-rgb 20% 40% 60% / 80%)"), expected);
+        assert_eq!(with_opacity("color(a98-rgb 0.2 0.4 0.6 / 80%)", 0.5), "rgba(40,86,157,0.4)");
+        assert_eq!(normalize_css_paint("color(a98-rgb 20% 40% 60% / 80%)".into()), "rgba(40,86,157,0.8)");
     }
 
     #[test]
