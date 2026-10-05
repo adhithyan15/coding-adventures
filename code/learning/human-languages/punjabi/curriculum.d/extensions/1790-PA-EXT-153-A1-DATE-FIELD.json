@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-153-A1-DATE-FIELD",
+  "stage": "A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can recognise the Gurmukhi date label, map two taught month names to their numeric positions, and independently write one of two fictional dates in day/month/year order from a nonverbal cue.",
+  "prerequisites": [
+    "PA-EXT-037-A1-PHONE-FIELD"
+  ]
+}
