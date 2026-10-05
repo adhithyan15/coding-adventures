@@ -2425,7 +2425,8 @@ jobs:
       - name: Round-trip Rust engine through standard SwiftUI binding
         if: runner.os == 'macOS' && needs.detect.outputs.needs_mosaic_swift_runtime == 'true'
         shell: bash
-        timeout-minutes: 30
+        # 16 minutes before Journal's iOS gate (UI89 §2.4) joined it.
+        timeout-minutes: 45
         run: |
           set -euo pipefail
           cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
@@ -2743,6 +2744,44 @@ jobs:
           xcrun simctl launch "$ipad" dev.codingadventures.trestle
           sleep 10
           xcrun simctl spawn "$ipad" launchctl list | grep 'dev.codingadventures.trestle' > /dev/null
+          xcrun simctl shutdown "$ipad"
+
+          # ---- Journal on iOS and iPadOS (UI89 §2.4, step 7). ---------------
+          # The same path as Trestle: the engine as a static .xcframework, the
+          # native-complete SwiftUI project, and the generated iOS app target.
+          # mosaic-ios-simulator-gate.sh then launches it three times on the
+          # iPhone simulator: a fresh launch writes state (the environment
+          # report is its first event), a second restores it with nothing
+          # quarantined, and a third quarantines a seeded `{}` and starts
+          # fresh. The same .app then runs on the iPad simulator.
+          journal_ios_runtime="$RUNNER_TEMP/JournalAppRuntime.xcframework"
+          bash code/scripts/build-mosaic-xcframework.sh journal-mosaic-app "$journal_ios_runtime"
+          journal_ios_output="$RUNNER_TEMP/mosaic-swift-journal-ios-linked"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/journal-app --backend swiftui --output "$journal_ios_output" --emit-project --profile native-complete --runtime-library "$journal_ios_runtime"
+          jq -e '.replacedGeneratedFiles == []' "$journal_ios_output/swiftui/mosaic-degradations.json"
+          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$journal_ios_output/swiftui/mosaic-degradations.json"
+          test -f "$journal_ios_output/swiftui/iOS/App.xcodeproj/project.pbxproj"
+          journal_ios_build="$RUNNER_TEMP/mosaic-journal-ios-app"
+          (
+            cd "$journal_ios_output/swiftui/iOS"
+            xcodebuild -project App.xcodeproj -target App -sdk iphonesimulator -configuration Debug CODE_SIGNING_ALLOWED=NO SYMROOT="$journal_ios_build" build
+          )
+          journal_ios_app="$journal_ios_build/Debug-iphonesimulator/App.app"
+          nm -gU "$journal_ios_app/App" > "$RUNNER_TEMP/mosaic-journal-ios-app-symbols.txt"
+          grep -q ' _mosaic_app_create$' "$RUNNER_TEMP/mosaic-journal-ios-app-symbols.txt"
+          # The defaults Journal's manifest leaves in place (UI89 §2.4, §3.9).
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$journal_ios_app/Info.plist")" = dev.codingadventures.journalapp
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' "$journal_ios_app/Info.plist")" = JournalApp
+          xcrun simctl boot "$simulator" || true
+          xcrun simctl bootstatus "$simulator" -b
+          bash code/scripts/mosaic-ios-simulator-gate.sh "$journal_ios_app" dev.codingadventures.journalapp journal-app "$simulator"
+          xcrun simctl shutdown "$simulator"
+          xcrun simctl boot "$ipad" || true
+          xcrun simctl bootstatus "$ipad" -b
+          xcrun simctl install "$ipad" "$journal_ios_app"
+          xcrun simctl launch "$ipad" dev.codingadventures.journalapp
+          sleep 10
+          xcrun simctl spawn "$ipad" launchctl list | grep 'dev.codingadventures.journalapp' > /dev/null
           xcrun simctl shutdown "$ipad"
 
           toolkit_output="$RUNNER_TEMP/mosaic-swift-toolkit"

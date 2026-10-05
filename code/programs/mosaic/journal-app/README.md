@@ -88,6 +88,13 @@ then launches `JournalApp` three times, and the app must:
 The application id and label are the manifest defaults,
 `dev.codingadventures.journalapp` and `JournalApp`.
 
+**iOS and iPadOS** (UI89 step 7) runs in CI too. The engine is linked
+statically from an `.xcframework`, and the generated Xcode project builds the
+simulator app. On an iPhone simulator, three launches must write state into
+the app's container, restore it, and quarantine refused state, as on Android.
+The same app then runs on an iPad simulator. The bundle identifier and
+display name are the same defaults.
+
 **The browser** (J5c): `host/web` is a Vite and React page. It mounts the
 generated `JournalApp` over the `journal-mosaic-app` runtime built for wasm32,
 and it keeps the journal in `localStorage`. See [`host/web/README.md`](host/web/README.md).
@@ -96,5 +103,5 @@ and it keeps the journal in `localStorage`. See [`host/web/README.md`](host/web/
 
 Not yet:
 
-- launching on SwiftUI or Compose, and the Flutter and XAML lanes;
+- launching the desktop SwiftUI build, and the Flutter and XAML lanes;
 - packaging and release (J5).
