@@ -19,7 +19,7 @@
     "notes": "All 64 final-head checks were terminal and acceptable with no conflict; guarded squash auto-merge was enabled, and GitHub merged #16722 as c45a6099e515f4a3183116d777273f4646383ccc without a manual merge command."
   },
   "last_inventory": {
-    "revision": "c45a6099e515f4a3183116d777273f4646383ccc",
+    "revision": "935ab6cedd1f77162ce2edb246fb58f1860733bc",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1487,
@@ -1205,6 +1205,11 @@
       "pr_number": null,
       "selected_at": "2026-10-05T14:14:27Z",
       "selection_revision": "c45a6099e515f4a3183116d777273f4646383ccc",
+      "implementation_revision": "e01283b674bdc98b06c5442b0ac4e0e2ec9f08ab",
+      "rebase_revision": "935ab6cedd1f77162ce2edb246fb58f1860733bc",
+      "rebase_notes": "Rebased conflict-free from the #16722 merge commit onto current origin/main after unrelated Mosaic/XAML and Japanese curriculum merges. The post-rebase full-checkout schema-3 inventory remains unchanged at 15 established lanes, 1,487 identities, 4,757 slots, five emerging OCaml roots, zero canonical collisions, and zero unknown buckets.",
+      "validation_revision": "e01283b674bdc98b06c5442b0ac4e0e2ec9f08ab",
+      "validation_notes": "Tests-first C# and F# native suites dynamically consume the exact eight graph and twelve diff-selection cases, including both consumers of one shared input. After review repairs and rebase, 93 C# and 22 F# tests pass with zero skips; the F# Release build has zero warnings, C# source/test-project format gates pass, and the new C# GraphDiffCore reaches 98.48% line coverage (323/328) in the focused Coverlet run. The 167-case/285-file neutral corpus validates; package-parity, schema, and shared-runner tests pass 125 tests and 304 subtests; the Go build-tool real dry run validates 45 Starlark BUILD files and 5,290 packages, with 2 would-build and orphan checks clean; go vet passes. The exact-main inventory is collision-clean. Independent correctness and security reviews found and then verified fixes for cycle rejection, nested-root aliasing, structural diagnostic precedence, boundary scope counting, and preflight boundedness; no remaining actionable finding. F# source formatting is not supported by dotnet format, so the warning-free native build and tests are the available local gate.",
       "selection_notes": "Selected after #16722 merged through guarded auto-merge and exact-main schema-3 inventory remained collision-clean at 15 established lanes, 1,487 identities, 4,757 occupied slots, and five emerging OCaml roots. Eleven newly discovered geometry, GFM, event-loop, and shared-input digest owners were registered before selection. All six exact graph/diff dependencies are merged. This two-language shared-engine adoption is the strongest ready build-tool contract leaf; no other parity PR is open, and the dedicated worktree is clean at the merged main revision. Selection does not claim execution-adapter or host authority readiness.",
       "notes": "Implement the complete eight-graph and twelve-diff contract once in the shared engine and prove dynamic production-code consumption through both native C# and F# fronts, including stable errors, strict bounded matching, shared-input multi-consumer selection, and no added host authority."
     },

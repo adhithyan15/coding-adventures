@@ -262,7 +262,8 @@ public sealed class GraphDiffConformanceTests
         }).ErrorCode);
         Assert.Equal("DIFF_POLICY_INVALID", GraphDiffCore.EvaluateDiffSelection(request with
         {
-            UnknownPathPolicy = "bad", ForcedPackages = ["missing/name"],
+            UnknownPathPolicy = "bad",
+            ForcedPackages = ["missing/name"],
         }).ErrorCode);
         Assert.Equal("DIFF_FORCED_PACKAGE_UNKNOWN", GraphDiffCore.EvaluateDiffSelection(request with
         {
@@ -270,7 +271,8 @@ public sealed class GraphDiffConformanceTests
         }).ErrorCode);
         Assert.Equal("DIFF_PATH_INVALID", GraphDiffCore.EvaluateDiffSelection(request with
         {
-            ChangedPaths = ["../unsafe"], ForcedPackages = ["missing/name"],
+            ChangedPaths = ["../unsafe"],
+            ForcedPackages = ["missing/name"],
         }).ErrorCode);
     }
 
