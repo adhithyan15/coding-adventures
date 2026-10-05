@@ -11,17 +11,17 @@
   "strokeOrder": [
     "start at the middle left and climb the left upright",
     "without lifting, carry the top bar to the right and return along it to the inner corner",
-    "without lifting, drop the inner upright and carry the middle bar left — then lift once",
-    "set the pen at the inner crossing and curve down and around the lower-left bowl",
-    "without lifting again, return up its outer left side — then lift a second time",
-    "set the pen at the inner crossing and turn around the lower-right bowl — and only now lift"
+    "without lifting, drop the inner upright to the inner crossing",
+    "without lifting, curve down and around the lower-left bowl",
+    "without lifting, return up its outer left side to the middle left",
+    "without lifting, cross the middle bar and turn around the lower-right bowl — and only now lift"
   ],
-  "strokeOrderNote": "three strokes — three joined upper-frame movements, one lift, two joined lower-left-bowl movements, a second lift, then the lower-right bowl; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 3, க",
-  "penLifts": 2,
+  "strokeOrderNote": "one stroke — the manual numbers six movements; native writers draw them without lifting, and this ductus follows them in order, crossing the middle bar to reach the lower-right bowl; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 3, க",
+  "penLifts": 0,
   "strokeOrderSource": {
     "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 3, க (Univ. of Texas at Austin), p. 191",
     "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
-    "variation": "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. This is one attested order."
+    "variation": "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. Appendix I Frame 3 numbers six hand-movements for க. Native writers draw them as one continuous stroke, and this ductus follows the six movements in order without lifting: the pen returns up the lower-left bowl's outer side to the middle left and crosses the middle bar into the lower-right bowl. In HP Labs India's online Tamil handwriting data (the LipiTk 4.0 Tamil isolated-character recognizer, trained on hpl-tamil-iso-char), 88% of the 203 stored prototypes of க are a single pen-down stroke."
   },
-  "notes": "Tamil does not write separate letters for k / g / h — க covers them all, and position in the word decides which you say. Its six numbered movements form three pen-down runs, not six strokes: the upper frame, the lower-left bowl, and the lower-right bowl."
+  "notes": "Tamil does not write separate letters for k / g / h — க covers them all, and position in the word decides which you say. Its six numbered movements are one continuous stroke: the upper frame, the lower-left bowl, and the lower-right bowl follow one another without a lift."
 }

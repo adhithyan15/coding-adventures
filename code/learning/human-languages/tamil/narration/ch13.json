@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Body Parts",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a2e697d5f3b739af",
+  "sourceHash": "fnv1a64:36a13bc5ec765a7a",
   "lessons": [
     {
       "id": "TA-C13-udal-uruppugal",
@@ -132,7 +132,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c397b1492a77fc20",
+      "sourceHash": "fnv1a64:45a327a022f13ff0",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -173,7 +173,7 @@
             },
             {
               "kind": "speech",
-              "text": "The most-used consonant in Tamil, and the most built: a square frame on top, then two bowls hanging under it. Three pen-down runs. Take it slowly — nothing else in this book asks for as many separate pieces."
+              "text": "The most-used consonant in Tamil, and the most built: a square frame on top, then two bowls hanging under it. One continuous stroke, and a long one. Take it slowly — the pen climbs, crosses, drops and goes round both bowls before it lifts."
             }
           ]
         },
@@ -223,23 +223,23 @@
             },
             {
               "kind": "speech",
-              "text": "3. without lifting, drop the inner upright and carry the middle bar left — then lift once."
+              "text": "3. without lifting, drop the inner upright to the inner crossing."
             },
             {
               "kind": "speech",
-              "text": "4. set the pen at the inner crossing and curve down and around the lower-left bowl."
+              "text": "4. without lifting, curve down and around the lower-left bowl."
             },
             {
               "kind": "speech",
-              "text": "5. without lifting again, return up its outer left side — then lift a second time."
+              "text": "5. without lifting, return up its outer left side to the middle left."
             },
             {
               "kind": "speech",
-              "text": "6. set the pen at the inner crossing and turn around the lower-right bowl — and only now lift."
+              "text": "6. without lifting, cross the middle bar and turn around the lower-right bowl — and only now lift."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+              "text": "Pen lifts: 0. The pen never leaves the paper."
             },
             {
               "kind": "speech",
@@ -300,7 +300,7 @@
             },
             {
               "kind": "speech",
-              "text": "How many pen lifts does க (ka) take? (Two — three separate runs.) What are the three parts? (Upper frame, lower-left bowl, lower-right bowl.)"
+              "text": "How many pen lifts does க (ka) take? (None — it is one continuous stroke.) What are the three parts? (Upper frame, lower-left bowl, lower-right bowl.)"
             }
           ]
         }
