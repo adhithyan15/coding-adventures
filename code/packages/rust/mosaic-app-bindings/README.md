@@ -31,7 +31,10 @@ holding the one file operation (UI89 §3.8). A package's `[host_effects]` handle
 can borrow the picker for the app's own kinds. It calls
 `mosaicPlatformRouter(host)`, the router installed as the host's handler,
 then `openForApp` / `saveForApp`, under `files.*`'s rules, with the app's
-own extensions, limit and `ok` answer (UI89 §3.11). The shared half and the desktop's are tested with
+own extensions, limit and `ok` answer (UI89 §3.11). On Android that handler
+is the package's `compose-android` one, which `MosaicActivity` installs
+first; `installMosaicPlatformEffects(host, picker, appKinds)` then wraps it
+and routes the kinds it claims to it (UI89 §3.12). The shared half and the desktop's are tested with
 fake dialogs, pickers and hosts by
 `conformance/compose/MosaicPlatformEffectsTest.kt`.
 

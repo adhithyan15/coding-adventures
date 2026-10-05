@@ -3950,9 +3950,10 @@ jobs:
 
       # UI89 step 7 (§3.10): Engram is the third app on Android, built and
       # checked exactly as Journal's above. Its touch layout variant reaches
-      # the Android project with the default one; its package [host_effects]
-      # handlers (Anki import and export) stay desktop-only, so neither the
-      # handler nor EngramEffectsKt may reach the dex.
+      # the Android project with the default one. Its Anki import and export
+      # are its own `compose-android` [host_effects] handler (§3.12), which
+      # MosaicActivity installs ahead of the platform library and which must
+      # reach the dex; the desktop handler (EngramEffectsKt) must not.
       - name: Build Engram for Android with its Rust runtime (UI89 step 7)
         if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
         shell: bash
@@ -3978,6 +3979,10 @@ jobs:
           jq -e '.replacedGeneratedFiles == []' "$output/compose/mosaic-degradations.json"
           jq -e '.nativeComplete == true and (.degradations | length == 0)' "$output/compose/mosaic-degradations.json"
           android_project="$output/compose/android"
+          # Installed as the host loads, before the platform library, which
+          # wraps it and routes the kinds it claims to it (UI89 §3.12).
+          grep -q -F 'installEngramAndroidEffects(it); platformRouter = installMosaicPlatformEffects(it, documentPicker, setOf("importAnki", "exportAnki"))' \
+            "$android_project/src/main/kotlin/mosaic/android/MosaicActivity.kt"
           bash code/scripts/assemble-mosaic-android-debug.sh "$android_project"
 
           apk="$(find "$android_project/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
@@ -4004,22 +4009,26 @@ jobs:
           unpacked="$RUNNER_TEMP/mosaic-engram-android-runtime-apk"
           rm -rf "$unpacked"
           unzip -q -o "$apk" 'classes*.dex' 'lib/*' -d "$unpacked"
-          for class in 'LEngramAppKt;' 'LMosaicRuntimeHost;' 'Lmosaic/android/MosaicActivity;'; do
+          # Engram's own Android handler, which MosaicActivity installs
+          # (UI89 §3.12): its class and its install function.
+          for class in 'LEngramAppKt;' 'LMosaicRuntimeHost;' 'Lmosaic/android/MosaicActivity;' 'LEngramAndroidEffectsKt;' 'installEngramAndroidEffects'; do
             if ! grep -a -q -F "$class" "$unpacked"/classes*.dex; then
               echo "::error::no $class in Engram's dex"
               exit 1
             fi
           done
-          # Desktop-only (UI89 §3.5, §3.10): the Anki handler stays out. Both
-          # its class and its install function are looked for, so a renamed
-          # file or an added `@file:JvmName` cannot slip past. grep's exit is
-          # read whole: 1 is "absent", anything else (no dex, unreadable) is a
-          # failure, never a pass.
+          # The desktop Anki handler stays out (UI89 §3.10, §3.12): its
+          # Swing dialogs are not Android's. Both its class and its install
+          # function are looked for, so a renamed file or an added
+          # `@file:JvmName` cannot slip past; neither is a substring of the
+          # Android handler's names. grep's exit is read whole: 1 is
+          # "absent", anything else (no dex, unreadable) is a failure, never
+          # a pass.
           for needle in 'LEngramEffectsKt;' 'installEngramEffects'; do
             found=0
             grep -a -q -F "$needle" "$unpacked"/classes*.dex || found=$?
             if [ "$found" -eq 0 ]; then
-              echo "::error::Engram's desktop-only effect handler ($needle) reached the Android dex"
+              echo "::error::Engram's desktop effect handler ($needle) reached the Android dex"
               exit 1
             fi
             if [ "$found" -ne 1 ]; then

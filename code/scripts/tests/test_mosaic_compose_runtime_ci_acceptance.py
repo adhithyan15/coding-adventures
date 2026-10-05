@@ -221,8 +221,9 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         )
 
     def test_engram_android_apk_carries_its_rust_runtime(self) -> None:
-        """UI89 step 7 (§3.10): Engram is built like Journal, and its
-        desktop-only Anki handler is kept out of the Android dex."""
+        """UI89 step 7 (§3.10): Engram is built like Journal. Its Android
+        Anki handler is installed and reaches the dex (§3.12); the desktop
+        one is kept out of it."""
 
         workflow = WORKFLOW.read_text(encoding="utf-8")
         start = workflow.index("- name: Build Engram for Android with its Rust runtime (UI89 step 7)")
@@ -236,6 +237,16 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn('bash code/scripts/assemble-mosaic-android-debug.sh "$android_project"', block)
         self.assertIn("package: name='dev\\.codingadventures\\.engramapp'", block)
         self.assertIn("'LEngramAppKt;'", block)
+        self.assertIn("'LEngramAndroidEffectsKt;' 'installEngramAndroidEffects'; do", block)
+        self.assertIn(
+            "installEngramAndroidEffects(it); platformRouter = installMosaicPlatformEffects("
+            'it, documentPicker, setOf("importAnki", "exportAnki"))',
+            block,
+        )
+        self.assertLess(
+            block.index("installEngramAndroidEffects(it); platformRouter"),
+            block.index('bash code/scripts/assemble-mosaic-android-debug.sh "$android_project"'),
+        )
         self.assertIn("for needle in 'LEngramEffectsKt;' 'installEngramEffects'; do", block)
         self.assertIn('if [ "$found" -ne 1 ]; then', block)
         self.assertIn("' T mosaic_app_create$'", block)

@@ -309,22 +309,24 @@ private val mosaicFileEffectsThread: ExecutorService = Executors.newSingleThread
 
 /**
  * Install the platform library on [host], answering through [picker] (the
- * activity's). Package `[host_effects]` handlers are desktop-only for now
- * (UI89 §3.5), so the standard kinds always come here, and any other kind is
- * failed by the host as unanswered. Returns the router -- the one already
- * installed, when there is one -- so the activity can fail a request whose
- * picker can no longer answer.
+ * activity's), and wrapping whatever handler the app installed first --
+ * a package's `compose-android` `[host_effects]` handler (UI89 §3.12), whose
+ * `kinds` are [appKinds]. With no app handler, the standard kinds come here
+ * and any other kind is failed by the host as unanswered. Returns the router
+ * -- the one already installed, when there is one -- so the activity can
+ * fail a request whose picker can no longer answer.
  */
 fun installMosaicPlatformEffects(
     host: MosaicPlatformEffectHost,
     picker: MosaicDocumentPicker,
+    appKinds: Set<String>? = null,
 ): MosaicPlatformRouter {
     (host.effectHandler as? MosaicPlatformRouter)?.let { return it }
     val main = Handler(Looper.getMainLooper())
     val router = MosaicPlatformRouter(
         host,
         host.effectHandler,
-        null,
+        appKinds,
         picker,
         { work -> main.post(work) },
         { work -> mosaicFileEffectsThread.execute(work) },

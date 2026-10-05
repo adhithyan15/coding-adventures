@@ -3069,6 +3069,7 @@ fn build_package_inner(
         if let Some(root_component) = components_built.first() {
             artifacts.extend(write_android_app_project(AndroidProject {
                 manifest: &manifest,
+                package_root: &opts.package_root,
                 backend_dir: &backend_dir,
                 src_dir: &src_dir,
                 root_component,
@@ -3144,6 +3145,7 @@ pub const ANDROID_PROJECT_DIR: &str = "android";
 
 struct AndroidProject<'a> {
     manifest: &'a MosaicPackage,
+    package_root: &'a Path,
     backend_dir: &'a Path,
     src_dir: &'a Path,
     root_component: &'a str,
@@ -3154,6 +3156,7 @@ struct AndroidProject<'a> {
 fn write_android_app_project(project: AndroidProject<'_>) -> Result<Vec<PathBuf>, BuildError> {
     let AndroidProject {
         manifest,
+        package_root,
         backend_dir,
         src_dir,
         root_component,
@@ -3192,7 +3195,14 @@ fn write_android_app_project(project: AndroidProject<'_>) -> Result<Vec<PathBuf>
         ("src/main/res/values/strings.xml".to_string(), android_strings_xml(&label)),
         (
             "src/main/kotlin/mosaic/android/MosaicActivity.kt".to_string(),
-            build_android_activity_kt(require_runtime),
+            build_android_activity_kt(
+                require_runtime,
+                manifest
+                    .host_effects
+                    .handlers
+                    .iter()
+                    .find(|handler| handler.backend == ANDROID_HOST_EFFECTS_BACKEND),
+            )?,
         ),
         (
             "src/main/kotlin/MosaicPlatform.kt".to_string(),
@@ -3210,6 +3220,11 @@ fn write_android_app_project(project: AndroidProject<'_>) -> Result<Vec<PathBuf>
         let source = backend_dir.join("src/main/kotlin").join(&shared);
         files.push((format!("src/main/kotlin/{shared}"), read_to_string(&source)?));
     }
+    let mut files: Vec<(String, Vec<u8>)> = files
+        .into_iter()
+        .map(|(relative, body)| (relative, body.into_bytes()))
+        .collect();
+    files.extend(android_host_effect_files(manifest, package_root, &files)?);
 
     let mut written = Vec::with_capacity(files.len());
     for (relative, body) in files {
@@ -3217,10 +3232,82 @@ fn write_android_app_project(project: AndroidProject<'_>) -> Result<Vec<PathBuf>
         if let Some(parent) = path.parent() {
             create_dir_all(parent)?;
         }
-        write_file(&path, body.as_bytes())?;
+        write_file(&path, &body)?;
         written.push(path);
     }
     Ok(written)
+}
+
+/// A package's `compose-android` `[host_effects]` files (UI89 §3.12), read
+/// under the rules `install_host_effects` keeps: package-relative paths with
+/// no `..` or absolute part, and a source that resolves inside the package
+/// and is a regular file. Each lands at its `target` inside the Android
+/// project. One that would replace a file the project already holds -- the
+/// activity, a shared source, a component -- is refused, compared without
+/// case (one file on case-insensitive disks): a handler silently replacing
+/// generated code is what `[host_assets]` exists to disclose.
+fn android_host_effect_files(
+    manifest: &MosaicPackage,
+    package_root: &Path,
+    existing: &[(String, Vec<u8>)],
+) -> Result<Vec<(String, Vec<u8>)>, BuildError> {
+    let declared: Vec<_> = manifest
+        .host_effects
+        .files
+        .iter()
+        .filter(|file| file.backend == ANDROID_HOST_EFFECTS_BACKEND)
+        .collect();
+    if declared.is_empty() {
+        return Ok(Vec::new());
+    }
+    let canonical_root = package_root
+        .canonicalize()
+        .map_err(|e| BuildError::Io(format!("canonicalize {}: {e}", package_root.display())))?;
+    let mut taken: HashSet<String> = existing
+        .iter()
+        .map(|(relative, _)| relative.to_lowercase())
+        .collect();
+    let mut out = Vec::with_capacity(declared.len());
+    for file in declared {
+        let source_rel = safe_manifest_relative_path("host effect source", &file.source)?;
+        let target_rel = safe_manifest_relative_path("host effect target", &file.target)?;
+        let source = package_root.join(&source_rel);
+        let canonical_source = source
+            .canonicalize()
+            .map_err(|e| BuildError::Io(format!("read {}: {e}", source.display())))?;
+        if !canonical_source.starts_with(&canonical_root) {
+            return Err(BuildError::Io(format!(
+                "host effect source {} resolves to {}, outside the package",
+                file.source,
+                canonical_source.display()
+            )));
+        }
+        let metadata = fs::metadata(&canonical_source)
+            .map_err(|e| BuildError::Io(format!("stat {}: {e}", source.display())))?;
+        if !metadata.is_file() {
+            return Err(BuildError::Io(format!(
+                "host effect source {} is not a regular file",
+                file.source
+            )));
+        }
+        // Forward slashes, as the project's own keys are written.
+        let relative = target_rel
+            .components()
+            .map(|part| part.as_os_str().to_string_lossy().into_owned())
+            .collect::<Vec<_>>()
+            .join("/");
+        if !taken.insert(relative.to_lowercase()) {
+            return Err(BuildError::Io(format!(
+                "{ANDROID_HOST_EFFECTS_BACKEND} host effect target {} would replace a file of the \
+                 generated Android project",
+                file.target
+            )));
+        }
+        let bytes = fs::read(&canonical_source)
+            .map_err(|e| BuildError::Io(format!("read {}: {e}", source.display())))?;
+        out.push((relative, bytes));
+    }
+    Ok(out)
 }
 
 /// The desktop project's Kotlin files that Android compiles too: the app
@@ -3452,45 +3539,113 @@ fn android_strings_xml(label: &str) -> String {
     )
 }
 
+/// The backend name of a package's Android `[host_effects]` (UI89 §3.12):
+/// its files land in the Android project and `MosaicActivity` installs its
+/// handler. The desktop `compose` entries are a different target.
+pub const ANDROID_HOST_EFFECTS_BACKEND: &str = "compose-android";
+
+/// How `MosaicActivity` installs a package's `compose-android` handler: the
+/// import it needs (a root-package function must be imported into
+/// `mosaic.android`; a qualified one is called by its full name) and the call.
+fn android_host_effect_install(install: &str) -> Result<(Option<String>, String), BuildError> {
+    // The manifest's shared symbol rule allows `:` and `::` separators for
+    // C++ and C#; Kotlin qualifies with `.` alone, so anything with a colon
+    // would not compile.
+    if install.contains(':') {
+        return Err(BuildError::Io(format!(
+            "`[host_effects]` {ANDROID_HOST_EFFECTS_BACKEND} handler `{install}` is not a Kotlin \
+             function name"
+        )));
+    }
+    if install.contains('.') {
+        Ok((None, install.to_string()))
+    } else {
+        Ok((Some(install.to_string()), install.to_string()))
+    }
+}
+
 /// The Android half of the app, the counterpart of the desktop `Main.kt`:
 /// the activity and the host loader. It lives in a package because a manifest
 /// cannot name a class in the root one; the shared sources stay in the root
 /// package, which Kotlin (unlike Java) can import from.
-fn build_android_activity_kt(require_runtime: bool) -> String {
+fn build_android_activity_kt(
+    require_runtime: bool,
+    handler: Option<&mosaic_package_manifest::HostEffectHandler>,
+) -> Result<String, BuildError> {
     // The host loads inside `MosaicStartup` (strict) or `remember` (sample),
     // and the platform library is installed on it as it loads, with the
-    // document picker the activity registered in onCreate (UI89 §3.8). The
-    // content sits inside `MosaicDragEndWatcher`, so every drag's end reaches
-    // its source, even one no component wanted (UI89 §3.5).
-    let (imports, content, loader) = if require_runtime {
+    // document picker the activity registered in onCreate (UI89 §3.8). A
+    // package's `compose-android` handler is installed first, so the library
+    // wraps it and routes its `kinds` to it (UI89 §3.12). The content sits
+    // inside `MosaicDragEndWatcher`, so every drag's end reaches its source,
+    // even one no component wanted (UI89 §3.5).
+    let (handler_import, install_call, claimed) = match handler {
+        None => (None, String::new(), String::new()),
+        Some(handler) => {
+            if handler.include.is_some() {
+                return Err(BuildError::Io(format!(
+                    "`[host_effects]` {ANDROID_HOST_EFFECTS_BACKEND} handler `{}` declares an \
+                     `include`, but Kotlin has no include directive: every file in the module is visible",
+                    handler.install
+                )));
+            }
+            let (import, call) = android_host_effect_install(&handler.install)?;
+            let claimed = match handler.kinds.as_deref() {
+                None => ", null".to_string(),
+                Some(kinds) => format!(
+                    ", setOf({})",
+                    kinds
+                        .iter()
+                        .map(|kind| format!("\"{kind}\""))
+                        .collect::<Vec<_>>()
+                        .join(", ")
+                ),
+            };
+            (import, format!("{call}(it); "), claimed)
+        }
+    };
+    let also = format!(
+        "{install_call}platformRouter = installMosaicPlatformEffects(it, documentPicker{claimed})"
+    );
+    let (mut imports, content, loader) = if require_runtime {
         (
-            "import MosaicComposeHost\nimport MosaicRuntimeHost\nimport MosaicStartup\n",
-            "        setContent { MosaicDragEndWatcher { MosaicStartup(::loadMosaicHost) } }\n",
-            concat!(
-                "\n",
-                "    private fun loadMosaicHost(): MosaicComposeHost =\n",
-                "        requireNotNull(MosaicRuntimeHost.load()) {\n",
-                "            \"native-complete requires the Mosaic Rust application runtime\"\n",
-                "        }.also { platformRouter = installMosaicPlatformEffects(it, documentPicker) }\n",
+            "import MosaicComposeHost\nimport MosaicRuntimeHost\nimport MosaicStartup\n".to_string(),
+            "        setContent { MosaicDragEndWatcher { MosaicStartup(::loadMosaicHost) } }\n".to_string(),
+            format!(
+                concat!(
+                    "\n",
+                    "    private fun loadMosaicHost(): MosaicComposeHost =\n",
+                    "        requireNotNull(MosaicRuntimeHost.load()) {{\n",
+                    "            \"native-complete requires the Mosaic Rust application runtime\"\n",
+                    "        }}.also {{ {also} }}\n",
+                ),
+                also = also,
             ),
         )
     } else {
         (
-            "import MosaicApp\nimport MosaicComposeHostBridge\nimport MosaicRuntimeHost\nimport androidx.compose.runtime.remember\n",
-            concat!(
-                "        setContent {\n",
-                "            val mosaicHost = remember {\n",
-                "                MosaicRuntimeHost.load()\n",
-                "                    ?.also { platformRouter = installMosaicPlatformEffects(it, documentPicker) }\n",
-                "                    ?: MosaicComposeHostBridge.load()\n",
-                "            }\n",
-                "            MosaicDragEndWatcher { MosaicApp(mosaicHost) }\n",
-                "        }\n",
+            "import MosaicApp\nimport MosaicComposeHostBridge\nimport MosaicRuntimeHost\nimport androidx.compose.runtime.remember\n"
+                .to_string(),
+            format!(
+                concat!(
+                    "        setContent {{\n",
+                    "            val mosaicHost = remember {{\n",
+                    "                MosaicRuntimeHost.load()\n",
+                    "                    ?.also {{ {also} }}\n",
+                    "                    ?: MosaicComposeHostBridge.load()\n",
+                    "            }}\n",
+                    "            MosaicDragEndWatcher {{ MosaicApp(mosaicHost) }}\n",
+                    "        }}\n",
+                ),
+                also = also,
             ),
-            "",
+            String::new(),
         )
     };
-    format!(
+    if let Some(import) = handler_import {
+        imports.push_str(&format!("import {import}\n"));
+    }
+    Ok(format!(
         concat!(
             "// AUTO-GENERATED by mosaic-compile pkg --backend compose --emit-project. Edits will be overwritten on next emit.\n",
             "// The Android half of the app (UI89 §3.4): the activity and the host\n",
@@ -3534,7 +3689,7 @@ fn build_android_activity_kt(require_runtime: bool) -> String {
         imports = imports,
         content = content,
         loader = loader,
-    )
+    ))
 }
 
 fn android_readme(application_id: &str) -> String {
@@ -3555,7 +3710,9 @@ fn android_readme(application_id: &str) -> String {
             "`src/main/jniLibs` (UI89 §3.6); without it, an app that needs it shows its\n",
             "startup failure screen, and a sample app runs on sample props.\n",
             "`files.open` and `files.save` go through the system's document picker\n",
-            "(UI89 §3.8); a package's own `[host_effects]` handlers are desktop-only.\n",
+            "(UI89 §3.8). A package's own Android handler is its `compose-android`\n",
+            "`[host_effects]` entry, copied here and installed by `MosaicActivity`\n",
+            "(UI89 §3.12); the desktop `compose` one is the window's alone.\n",
         ),
         application_id = application_id,
         gradle = ANDROID_GRADLE_VERSION,
@@ -14559,6 +14716,191 @@ layout NativeEvents {
             ),
             "{strings}"
         );
+    }
+
+    // UI89 §3.12: a package's own Android `[host_effects]`.
+
+    /// The card package with a `compose-android` handler declared, its source
+    /// under `host/android/`, and `section` as the manifest's `[host_effects]`.
+    fn card_package_with_android_effects(section: &str) -> TempDir {
+        let pkg = card_package();
+        let manifest = pkg.path().join("mosaic-package.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str("\n[host_effects]\n");
+        text.push_str(section);
+        fs::write(&manifest, text).unwrap();
+        fs::create_dir_all(pkg.path().join("host/android")).unwrap();
+        fs::write(
+            pkg.path().join("host/android/ProbeEffects.kt"),
+            "fun installProbe(host: MosaicRuntimeHost) {}\n",
+        )
+        .unwrap();
+        pkg
+    }
+
+    const ANDROID_PROBE_EFFECTS: &str = concat!(
+        "files = [ { backend = \"compose-android\", source = \"host/android/ProbeEffects.kt\", ",
+        "target = \"src/main/kotlin/ProbeEffects.kt\" } ]\n",
+        "handlers = [ { backend = \"compose-android\", install = \"installProbe\", ",
+        "kinds = [\"importAnki\", \"exportAnki\"] } ]\n",
+    );
+
+    #[test]
+    fn an_android_handler_is_copied_into_the_android_project_and_installed() {
+        let pkg = card_package_with_android_effects(ANDROID_PROBE_EFFECTS);
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Compose)).expect("Compose shell");
+        let kotlin = out.path().join("compose/android/src/main/kotlin");
+        assert_eq!(
+            fs::read_to_string(kotlin.join("ProbeEffects.kt")).unwrap(),
+            "fun installProbe(host: MosaicRuntimeHost) {}\n"
+        );
+        // Android's alone: the desktop project neither compiles nor installs it.
+        let desktop = out.path().join("compose/src/main/kotlin");
+        assert!(!desktop.join("ProbeEffects.kt").exists());
+        let main = fs::read_to_string(desktop.join("Main.kt")).unwrap();
+        assert!(!main.contains("installProbe"), "{main}");
+        assert!(
+            main.contains("installMosaicPlatformEffects(it, null)"),
+            "{main}"
+        );
+
+        // Installed first, so the platform library wraps it and routes its
+        // kinds to it.
+        let activity = fs::read_to_string(kotlin.join("mosaic/android/MosaicActivity.kt")).unwrap();
+        assert!(activity.contains("import installProbe\n"), "{activity}");
+        assert!(
+            activity.contains(concat!(
+                "                    ?.also { installProbe(it); platformRouter = ",
+                "installMosaicPlatformEffects(it, documentPicker, setOf(\"importAnki\", \"exportAnki\")) }\n",
+            )),
+            "{activity}"
+        );
+    }
+
+    #[test]
+    fn a_native_complete_android_activity_installs_the_handler_as_the_host_loads() {
+        let pkg = card_package_with_android_effects(concat!(
+            "files = [ { backend = \"compose-android\", source = \"host/android/ProbeEffects.kt\", ",
+            "target = \"src/main/kotlin/ProbeEffects.kt\" } ]\n",
+            "handlers = [ { backend = \"compose-android\", install = \"probe.effects.installProbe\" } ]\n",
+        ));
+        let runtime = pkg.path().join("libcard.so");
+        fs::write(&runtime, b"runtime").unwrap();
+        let out = TempDir::new().unwrap();
+        build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &out, Backend::Compose),
+            BuildProfile::NativeComplete,
+            Some(&runtime),
+        )
+        .expect("strict Compose shell");
+        let activity = fs::read_to_string(
+            out.path()
+                .join("compose/android/src/main/kotlin/mosaic/android/MosaicActivity.kt"),
+        )
+        .unwrap();
+        // A qualified name is called as written, with nothing imported; no
+        // `kinds` passes `null`, as the desktop does.
+        assert!(!activity.contains("import probe"), "{activity}");
+        assert!(
+            activity.contains(concat!(
+                "        }.also { probe.effects.installProbe(it); platformRouter = ",
+                "installMosaicPlatformEffects(it, documentPicker, null) }\n",
+            )),
+            "{activity}"
+        );
+    }
+
+    #[test]
+    fn an_android_handler_never_replaces_a_generated_android_file() {
+        for target in [
+            "src/main/kotlin/MosaicAppShell.kt",
+            "src/main/kotlin/mosaic/android/mosaicactivity.KT",
+            "src/main/AndroidManifest.xml",
+            "build.gradle.kts",
+        ] {
+            let pkg = card_package_with_android_effects(&format!(
+                concat!(
+                    "files = [ {{ backend = \"compose-android\", source = \"host/android/ProbeEffects.kt\", ",
+                    "target = \"{target}\" }} ]\n",
+                    "handlers = [ {{ backend = \"compose-android\", install = \"installProbe\" }} ]\n",
+                ),
+                target = target
+            ));
+            let out = TempDir::new().unwrap();
+            let err =
+                build_package(&swiftui_options(&pkg, &out, Backend::Compose)).expect_err(target);
+            assert!(
+                err.to_string()
+                    .contains("would replace a file of the generated Android project"),
+                "{target}: {err}"
+            );
+        }
+    }
+
+    #[test]
+    fn an_android_handler_source_must_stay_inside_the_package() {
+        let pkg = card_package_with_android_effects(concat!(
+            "files = [ { backend = \"compose-android\", source = \"host/android/Escape.kt\", ",
+            "target = \"src/main/kotlin/Escape.kt\" } ]\n",
+            "handlers = [ { backend = \"compose-android\", install = \"installProbe\" } ]\n",
+        ));
+        let outside = TempDir::new().unwrap();
+        fs::write(outside.path().join("secret.kt"), "secret").unwrap();
+        #[cfg(unix)]
+        std::os::unix::fs::symlink(
+            outside.path().join("secret.kt"),
+            pkg.path().join("host/android/Escape.kt"),
+        )
+        .unwrap();
+        #[cfg(not(unix))]
+        return;
+        let out = TempDir::new().unwrap();
+        let err = build_package(&swiftui_options(&pkg, &out, Backend::Compose))
+            .expect_err("a symlink out of the package");
+        assert!(err.to_string().contains("outside the package"), "{err}");
+
+        // A directory is not a source either.
+        let pkg = card_package_with_android_effects(concat!(
+            "files = [ { backend = \"compose-android\", source = \"host/android\", ",
+            "target = \"src/main/kotlin/Dir.kt\" } ]\n",
+            "handlers = [ { backend = \"compose-android\", install = \"installProbe\" } ]\n",
+        ));
+        let out = TempDir::new().unwrap();
+        let err = build_package(&swiftui_options(&pkg, &out, Backend::Compose))
+            .expect_err("a directory source");
+        assert!(err.to_string().contains("is not a regular file"), "{err}");
+    }
+
+    #[test]
+    fn an_android_handler_kotlin_cannot_express_is_refused() {
+        for (handler, expected) in [
+            (
+                "{ backend = \"compose-android\", include = \"probe.h\", install = \"installProbe\" }",
+                "Kotlin has no include directive",
+            ),
+            (
+                "{ backend = \"compose-android\", install = \"probe::installProbe\" }",
+                "is not a Kotlin function name",
+            ),
+            (
+                "{ backend = \"compose-android\", install = \"probe:installProbe\" }",
+                "is not a Kotlin function name",
+            ),
+        ] {
+            let pkg = card_package_with_android_effects(&format!(
+                concat!(
+                    "files = [ {{ backend = \"compose-android\", source = \"host/android/ProbeEffects.kt\", ",
+                    "target = \"src/main/kotlin/ProbeEffects.kt\" }} ]\n",
+                    "handlers = [ {handler} ]\n",
+                ),
+                handler = handler
+            ));
+            let out = TempDir::new().unwrap();
+            let err = build_package(&swiftui_options(&pkg, &out, Backend::Compose))
+                .expect_err(handler);
+            assert!(err.to_string().contains(expected), "{handler}: {err}");
+        }
     }
 
     fn android_runtime_dir(root: &Path, abis: &[&str]) -> PathBuf {

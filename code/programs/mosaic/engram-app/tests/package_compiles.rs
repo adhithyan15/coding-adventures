@@ -185,6 +185,26 @@ fn manifest_declares_app_package_boundary() {
     // directive and every file in the module is visible. The emitter refuses
     // one here rather than ignoring it.
     assert_eq!(compose_handler.include, None);
+    // Android's own (UI89 §3.12): the Compose build's Android project gets a
+    // handler that answers through the platform library's document picker,
+    // never the desktop one's Swing dialogs.
+    assert!(host_effects.contains(&(
+        "compose-android",
+        "host/android/EngramAndroidEffects.kt",
+        "src/main/kotlin/EngramAndroidEffects.kt"
+    )));
+    let android_handler = package
+        .host_effects
+        .handlers
+        .iter()
+        .find(|handler| handler.backend == "compose-android")
+        .expect("Android must declare an effect handler");
+    assert_eq!(android_handler.install, "installEngramAndroidEffects");
+    assert_eq!(android_handler.include, None);
+    assert_eq!(
+        android_handler.kinds.as_deref(),
+        Some(&["importAnki".to_string(), "exportAnki".to_string()][..])
+    );
 
     // Same pin as SwiftUI above: the override is asserted ABSENT, not merely
     // deleted, so a package that starts replacing the generated Kotlin host
@@ -1571,6 +1591,33 @@ fn native_project_shells_expose_engram_host_contract() {
     ]
     .join("\n");
     assert_contains(&compose_main, "fun main() = application");
+    // The desktop handler stays on the desktop; the Android project carries
+    // its own, installed by the activity ahead of the platform library
+    // (UI89 §3.12).
+    assert_contains(&compose_main, "installEngramEffects(it)");
+    assert!(!compose_main.contains("installEngramAndroidEffects"));
+    assert!(!compose_kotlin.join("EngramAndroidEffects.kt").exists());
+    let android_kotlin = tmp
+        .path()
+        .join("compose")
+        .join("android")
+        .join("src")
+        .join("main")
+        .join("kotlin");
+    assert!(android_kotlin.join("EngramAndroidEffects.kt").is_file());
+    assert!(!android_kotlin.join("EngramEffects.kt").exists());
+    let activity = fs::read_to_string(
+        android_kotlin
+            .join("mosaic")
+            .join("android")
+            .join("MosaicActivity.kt"),
+    )
+    .expect("MosaicActivity.kt");
+    assert_contains(&activity, "import installEngramAndroidEffects\n");
+    assert_contains(
+        &activity,
+        "installEngramAndroidEffects(it); platformRouter = installMosaicPlatformEffects(it, documentPicker, setOf(\"importAnki\", \"exportAnki\"))",
+    );
     assert_contains(
         &compose_main,
         "Window(onCloseRequest = ::exitApplication, title = \"EngramApp\")",

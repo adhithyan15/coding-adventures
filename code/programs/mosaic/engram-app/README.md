@@ -90,6 +90,7 @@ editing, and save/delete/cancel controls.
   | Qt | `host/qt/engram_effects.cpp` | `QFileDialog`, `QMessageBox` |
   | SwiftUI | `host/swiftui/EngramEffects.swift` | `NSOpenPanel` / `NSSavePanel` |
   | Compose | `host/compose/EngramEffects.kt` | `JFileChooser`, `JOptionPane` |
+  | Compose on Android | `host/android/EngramAndroidEffects.kt` | the platform library's document picker |
   | Flutter | `host/flutter/engram_effects.dart` | `file_selector` |
 
   Each used to override the generated host with a hand-written `engram-capi`
@@ -256,9 +257,16 @@ CI builds Engram for Android and runs it on an x86_64 emulator (UI89 §3.10).
 - **Layout:** the touch layout reaches the Android project with the default
   one, and the layout rules choose between them on a phone as they do on the
   desktop.
-- **Anki import and export:** desktop-only. Their handler is installed by the
-  desktop hosts' `Main` and never reaches the APK, and CI fails if it does.
-  On Android the host fails these two effects as unanswered.
+- **Anki import and export:** through the system document picker (UI89
+  §3.12). `host/android/EngramAndroidEffects.kt` is declared as a
+  `compose-android` `[host_effects]` handler, and the generated
+  `MosaicActivity` installs it ahead of the platform library. It hands both
+  kinds to the library's router, with the iOS rules:
+  - `.apkg` / `.colpkg` in, at most 256 MiB;
+  - `.apkg` out, after the same package check as the desktop.
+
+  The desktop handler, with its Swing dialogs, never reaches the APK. CI
+  fails if it does, and also if the Android handler is missing.
 - **Identity:** the manifest defaults, `dev.codingadventures.engramapp` and
   `EngramApp`.
 
