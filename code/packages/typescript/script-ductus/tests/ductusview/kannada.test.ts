@@ -547,27 +547,28 @@ describe("Kannada ಳ — both loops and the right bowl, then the hooked bar", (
   });
 });
 
-describe("Kannada ಯ — bowl, middle arm, hooked bar, and small right bowl", () => {
+describe("Kannada ಯ — bowl, then the middle arm into the hooked bar, then the small right bowl", () => {
   const steps = ductusSteps(KANNADA_YA);
   const strip = ductusFilmstrip(KANNADA_YA, kannadaYaOutline);
 
   it("starts each new run only after a lift", () => {
-    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 2, 2, 3, 3]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 1, 1, 1, 2, 2]);
     expect(steps.map((step) => step.startsAfterLift)).toEqual([
       false,
       false,
       true,
-      true,
+      false,
+      false,
       false,
       true,
       false,
     ]);
   });
 
-  it("reports 7 movements across 4 strokes", () => {
-    expect(strip.frames).toHaveLength(7);
-    expect(strip.penLifts).toBe(3);
-    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 7 movements");
+  it("reports 8 movements across 3 strokes", () => {
+    expect(strip.frames).toHaveLength(8);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 8 movements");
   });
 });
 
@@ -640,28 +641,30 @@ describe("Kannada ಸ — body, hooked bar, and dot", () => {
   });
 });
 
-describe("Kannada ಚ — ಬ's body, lower bar, link, then the hooked bar", () => {
+describe("Kannada ಚ — ಬ's body through the lower bar and link, then the hooked bar", () => {
   const steps = ductusSteps(KANNADA_CA);
   const strip = ductusFilmstrip(KANNADA_CA, kannadaCaOutline);
 
   it("starts each new run only after a lift", () => {
-    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0, 1, 2, 3, 3]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0, 0, 0, 0, 0, 1, 1]);
     expect(steps.map((step) => step.startsAfterLift)).toEqual([
       false,
       false,
       false,
       false,
-      true,
-      true,
+      false,
+      false,
+      false,
+      false,
       true,
       false,
     ]);
   });
 
-  it("reports 8 movements across 4 strokes", () => {
-    expect(strip.frames).toHaveLength(8);
-    expect(strip.penLifts).toBe(3);
-    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 8 movements");
+  it("reports 10 movements across 2 strokes", () => {
+    expect(strip.frames).toHaveLength(10);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 10 movements");
   });
 });
 

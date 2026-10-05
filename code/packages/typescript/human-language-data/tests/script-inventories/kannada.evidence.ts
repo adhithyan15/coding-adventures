@@ -484,12 +484,13 @@ export const scriptInventoryEvidence = {
       (entry) => entry.glyph === "ಯ",
     )!;
     expect(kannadaConsonantYa.role).toBe("syllable");
-    expect(kannadaConsonantYa.penLifts).toBe(3);
+    expect(kannadaConsonantYa.penLifts).toBe(2);
     expect(kannadaConsonantYa.strokeOrder).toEqual([
       "start at the upper left and go down the left side and round the base",
       "without lifting, climb the right side and close the bowl over the top",
       "lift, then dip from the foot of the bowl and climb the middle arm to the top bar",
-      "lift, then draw the top bar from left to right",
+      "without lifting, run back left along the top bar",
+      "without lifting, draw the top bar from left to right",
       "without lifting, curl up into the hook",
       "lift, then round the small right bowl from its foot",
       "without lifting, climb its right side and curl in at the top",
@@ -501,7 +502,7 @@ export const scriptInventoryEvidence = {
       /Gopala Krishna A.*Kannada-alphabet-ya\.gif.*consonant ಯ.*35 frames.*3\.5 seconds.*Wikimedia Commons.*25 May 2016/i,
     );
     expect(kannadaConsonantYa.strokeOrderSource?.variation).toMatch(
-      /CC BY-SA 4\.0.*four pen-down runs.*round bowl.*middle arm.*second lift.*top bar.*hook.*third lift.*small right bowl.*mirror copy.*260×189.*Noto Sans Kannada.*three-lift order/i,
+      /CC BY-SA 4\.0.*four pen-down runs.*round bowl.*middle arm.*second lift.*top bar.*hook.*third lift.*small right bowl.*mirror copy.*260×189.*Noto Sans Kannada.*arm ends at the bar\./i,
     );
     const kannadaConsonantDda = scripts.kannada!.letters.find(
       (entry) => entry.glyph === "ಡ",
@@ -578,14 +579,16 @@ export const scriptInventoryEvidence = {
       (entry) => entry.glyph === "ಚ",
     )!;
     expect(kannadaConsonantCa.role).toBe("syllable");
-    expect(kannadaConsonantCa.penLifts).toBe(3);
+    expect(kannadaConsonantCa.penLifts).toBe(1);
     expect(kannadaConsonantCa.strokeOrder).toEqual([
       "start at the curled tip inside the head and loop up over it clockwise",
       "without lifting, slant down to the left and round the left lobe, rising into the middle point",
       "without lifting, drop from the point round the right lobe's base",
       "without lifting, climb the right side to the lower bar",
-      "lift, then draw the lower bar from left to right",
-      "lift, then draw the short link up from the lower bar",
+      "without lifting, run back left along the lower bar",
+      "without lifting, draw the lower bar from left to right",
+      "without lifting, come back along the bar to the short link",
+      "without lifting, draw the short link up from the lower bar",
       "lift, then draw the upper bar from left to right",
       "without lifting, curl up into the hook",
     ]);
@@ -596,8 +599,57 @@ export const scriptInventoryEvidence = {
       /Gopala Krishna A.*Kannada-alphabet-cha\.gif.*consonant ಚ.*52 frames.*5\.2 seconds.*Wikimedia Commons.*25 May 2016/i,
     );
     expect(kannadaConsonantCa.strokeOrderSource?.variation).toMatch(
-      /CC BY-SA 4\.0.*four pen-down runs.*curled tip.*head.*left lobe.*middle point.*right lobe.*lower bar.*second lift.*short link.*third lift.*upper bar.*hook.*mirror copy \(206×180, 52 frames\).*no listed size.*Noto Sans Kannada.*three-lift order/i,
+      /CC BY-SA 4\.0.*four pen-down runs.*curled tip.*head.*left lobe.*middle point.*right lobe.*lower bar.*second lift.*short link.*third lift.*upper bar.*hook.*mirror copy \(206×180, 52 frames\).*no listed size.*Noto Sans Kannada.*climb ends at the bar\./i,
     );
+    // ಚ and ಯ once lifted the pen after every run of their Commons
+    // animations (three lifts each), more often than even Omniglot's
+    // copyists do. No native Kannada pen data was reachable; Omniglot's
+    // copyists are non-native and over-count against native writers, so
+    // their counts are cited only as a ceiling, as counts and shares, never
+    // as native evidence. ಚ now lifts once, before the upper bar; ಯ lifts
+    // twice, and its record must say why one lift was not used.
+    const omniglotCeiling: ReadonlyArray<
+      readonly [string, number, string, string, string]
+    > = [
+      [
+        "ಚ",
+        1,
+        "The source shows eight movements in four pen-down runs; Omniglot's non-native copyists most often draw ಚ in two strokes (55%, 11 of 20).",
+        "Even under that ceiling, 55% of them (11 of 20) draw ಚ in two strokes and 15% (3 of 20) in one; 10% (2 of 20) use the animation's four.",
+        "so the pen lifts once, before the upper bar.",
+      ],
+      [
+        "ಯ",
+        2,
+        "The source shows seven movements in four pen-down runs; Omniglot's non-native copyists draw ಯ in three strokes (45%, 9 of 20) or two (40%, 8 of 20).",
+        "Even under that ceiling, 45% of them (9 of 20) draw ಯ in three strokes and 40% (8 of 20) in two; 10% (2 of 20) use the animation's four.",
+        "One lift would mean retracing more than half the round bowl to reach the arm's foot",
+      ],
+    ];
+    for (const [glyph, lifts, note, shares, join] of omniglotCeiling) {
+      const letter = scripts.kannada!.letters.find(
+        (entry) => entry.glyph === glyph,
+      )!;
+      expect(letter.penLifts, glyph).toBe(lifts);
+      expect(letter.strokeOrderNote, glyph).toContain(note);
+      for (const phrase of [
+        "they are not a count of how often fluent writers lift the pen",
+        "no native writers' pen data for Kannada was available",
+        "Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence)",
+        "Amazon Mechanical Turk worker copying a printed exemplar",
+        "They are non-native copyists, not native writers",
+        "read here only as a ceiling on native lifts, and only counts and shares are cited",
+        shares,
+        "Those counts say how many strokes, not where they break",
+        join,
+      ]) {
+        expect(letter.strokeOrderSource?.variation, glyph).toContain(phrase);
+      }
+      expect(
+        (letter.strokeOrder ?? []).filter((step) => step.startsWith("lift")),
+        glyph,
+      ).toHaveLength(lifts);
+    }
     const kannadaConsonantPa = scripts.kannada!.letters.find(
       (entry) => entry.glyph === "ಪ",
     )!;

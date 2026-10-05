@@ -88,8 +88,8 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "KA-S117-letter-ya",
-      "sourceHash": "fnv1a64:306cfa43a9bb68d3",
-      "svgHash": "fnv1a64:a9f433b5e9c0573f",
+      "sourceHash": "fnv1a64:119a876d95a60748",
+      "svgHash": "fnv1a64:1debecd8a4073578",
       "svg": "kannada/book/figures/KA-S117-letter-ya-filmstrip.svg"
     },
     {
@@ -116,8 +116,8 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "KA-S122-letter-ca",
-      "sourceHash": "fnv1a64:d95e9026317dd420",
-      "svgHash": "fnv1a64:13771d240ea9e932",
+      "sourceHash": "fnv1a64:6f9b90a04e58ea8d",
+      "svgHash": "fnv1a64:66e8faf950bddcdd",
       "svg": "kannada/book/figures/KA-S122-letter-ca-filmstrip.svg"
     },
     {

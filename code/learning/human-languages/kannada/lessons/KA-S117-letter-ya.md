@@ -56,14 +56,18 @@ You already say these, and every one of them has ಯ somewhere inside it:
 - **1.** start at the upper left and go down the left side and round the base
 - **2.** without lifting, climb the right side and close the bowl over the top
 - **3.** lift, then dip from the foot of the bowl and climb the middle arm to the top bar
-- **4.** lift, then draw the top bar from left to right
-- **5.** without lifting, curl up into the hook
-- **6.** lift, then round the small right bowl from its foot
-- **7.** without lifting, climb its right side and curl in at the top
+- **4.** without lifting, run back left along the top bar
+- **5.** without lifting, draw the top bar from left to right
+- **6.** without lifting, curl up into the hook
+- **7.** lift, then round the small right bowl from its foot
+- **8.** without lifting, climb its right side and curl in at the top
 
-**Pen lifts: 3**, as many as ಕ. The round bowl comes first, then a fresh
-stroke from its foot up the middle arm, then the curled bar, and last the
-small bowl on the right, each one started fresh.
+**Pen lifts: 2.** The round bowl comes first. Then a fresh stroke from its
+foot climbs the middle arm, runs back along the top bar, draws it and curls
+into the hook. Last, after a second lift, comes the small bowl on the right.
+The animation lifts before each part; most people copying ಯ in the Omniglot
+study used two or three strokes. Joining the bowl or the hook to the next part
+would mean going back over most of a curve, so two lifts stay.
 
 > This is one attested teaching order and not a national standard — Kannada
 > handwriting is taught with school-to-school variation. Source: Gopala Krishna

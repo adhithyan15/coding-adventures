@@ -2070,8 +2070,13 @@ export const entries: DuctusEntry[] = [
   ],
   // Gopala Krishna A's 35-frame Kannada-alphabet-ya.gif writes ಯ in four
   // runs: the round bowl; a fresh stroke from the bowl's foot up the middle
-  // arm; the top bar and hook; and the small right bowl from its foot, so
-  // three lifts. Noto runs the middle arm into the bar, where it ends.
+  // arm; the top bar and hook; and the small right bowl from its foot. Noto
+  // runs the middle arm into the bar, where it ends. Omniglot's copyists, who
+  // over-count, draw ಯ in two or three strokes, so the arm runs on: the pen
+  // goes back left along the bar and draws it rightward into the hook. The
+  // other two lifts stay, because each next run starts far from the pen (the
+  // bowl ends at its top left, the hook high above the right bowl's foot).
+  // Three strokes, two lifts.
   [
     "kannada:ಯ",
     {
@@ -2165,12 +2170,17 @@ export const entries: DuctusEntry[] = [
                 { x: 752, y: 511 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then draw the top bar rightward",
+              label: "run back left along the top bar",
+              path: [
+                { x: 752, y: 511 },
+                { x: 707, y: 519 },
+                { x: 670, y: 519 },
+                { x: 632, y: 518 },
+              ],
+            },
+            {
+              label: "draw the top bar rightward",
               path: [
                 { x: 632, y: 518 },
                 { x: 670, y: 519 },
@@ -2656,6 +2666,10 @@ export const entries: DuctusEntry[] = [
   // the middle point, rounds the right lobe and climbs the right side. Then, as
   // for ಕ, three more runs: the lower bar, the short link rising from it, and
   // the upper bar with its hook. Noto runs the right side into the lower bar.
+  // Omniglot's copyists, who over-count, mostly draw ಚ in two strokes, so the
+  // first three runs join: the pen runs back left along the lower bar, draws
+  // it rightward, comes back to the link's foot and climbs the link. It lifts
+  // only before the hooked upper bar. Two strokes, one lift.
   [
     "kannada:ಚ",
     {
@@ -2739,12 +2753,19 @@ export const entries: DuctusEntry[] = [
                 { x: 636, y: 345 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then draw the lower bar rightward",
+              label: "run back left along the lower bar",
+              path: [
+                { x: 636, y: 345 },
+                { x: 598, y: 345 },
+                { x: 560, y: 345 },
+                { x: 523, y: 345 },
+                { x: 485, y: 345 },
+                { x: 447, y: 345 },
+              ],
+            },
+            {
+              label: "draw the lower bar rightward",
               path: [
                 { x: 447, y: 345 },
                 { x: 486, y: 345 },
@@ -2757,12 +2778,18 @@ export const entries: DuctusEntry[] = [
                 { x: 755, y: 345 },
               ],
             },
-          ],
-        },
-        {
-          segments: [
             {
-              label: "lift, then draw the short link upward",
+              label: "come back to the link's foot",
+              path: [
+                { x: 755, y: 345 },
+                { x: 716, y: 345 },
+                { x: 678, y: 345 },
+                { x: 640, y: 345 },
+                { x: 636, y: 352 },
+              ],
+            },
+            {
+              label: "draw the short link upward",
               path: [
                 { x: 636, y: 352 },
                 { x: 629, y: 386 },

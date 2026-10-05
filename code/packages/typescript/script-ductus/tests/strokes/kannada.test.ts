@@ -497,9 +497,9 @@ describe("handwriting ductus", () => {
     );
   });
 
-  it("Kannada ಯ draws bowl, middle arm, hooked bar, and small right bowl in four runs", () => {
-    expect(penLifts(KANNADA_YA)).toBe(3);
-    expect(KANNADA_YA.strokes).toHaveLength(4);
+  it("Kannada ಯ runs the middle arm into the hooked bar, lifting only before the arm and the small right bowl", () => {
+    expect(penLifts(KANNADA_YA)).toBe(2);
+    expect(KANNADA_YA.strokes).toHaveLength(3);
     expect(
       KANNADA_YA.strokes.map((stroke) =>
         stroke.segments.map((segment) => segment.label),
@@ -511,9 +511,8 @@ describe("handwriting ductus", () => {
       ],
       [
         "lift, then dip and climb the middle arm",
-      ],
-      [
-        "lift, then draw the top bar rightward",
+        "run back left along the top bar",
+        "draw the top bar rightward",
         "curl up into the hook",
       ],
       [
@@ -521,6 +520,17 @@ describe("handwriting ductus", () => {
         "climb its right side and curl in at the top",
       ],
     ]);
+    // The animation's four runs survive as segments, in order and direction:
+    // the arm still climbs to the bar, and the bar is still drawn rightward
+    // from its left end, after a connector that runs back along the bar.
+    const [arm, back, bar] = KANNADA_YA.strokes[1].segments;
+    expect(arm.path[0]).toEqual({ x: 515, y: 118 });
+    expect(arm.path.at(-1)).toEqual(back.path[0]);
+    expect(back.path.at(-1)).toEqual({ x: 632, y: 518 });
+    expect(bar.path[0]).toEqual({ x: 632, y: 518 });
+    expect(bar.path.at(-1)!.x).toBeGreaterThan(bar.path[0].x);
+    expect(back.path.at(-1)!.x).toBeLessThan(back.path[0].x);
+    expect(joinGaps(KANNADA_YA.strokes[1])).toEqual([0, 0, 0]);
     expect(KANNADA_YA.source.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ya.gif",
     );
@@ -612,9 +622,9 @@ describe("handwriting ductus", () => {
     );
   });
 
-  it("Kannada ಚ draws ಬ's body, then the lower bar, link, and hooked bar after three lifts", () => {
-    expect(penLifts(KANNADA_CA)).toBe(3);
-    expect(KANNADA_CA.strokes).toHaveLength(4);
+  it("Kannada ಚ runs ಬ's body through the lower bar and link, lifting only before the hooked bar", () => {
+    expect(penLifts(KANNADA_CA)).toBe(1);
+    expect(KANNADA_CA.strokes).toHaveLength(2);
     expect(
       KANNADA_CA.strokes.map((stroke) =>
         stroke.segments.map((segment) => segment.label),
@@ -625,18 +635,29 @@ describe("handwriting ductus", () => {
         "slant round the left lobe to the point",
         "drop round the right lobe's base",
         "climb the right side to the lower bar",
-      ],
-      [
-        "lift, then draw the lower bar rightward",
-      ],
-      [
-        "lift, then draw the short link upward",
+        "run back left along the lower bar",
+        "draw the lower bar rightward",
+        "come back to the link's foot",
+        "draw the short link upward",
       ],
       [
         "lift, then draw the upper bar rightward",
         "curl up into the hook",
       ],
     ]);
+    // The animation's four runs survive as segments, in order and direction:
+    // the lower bar is still drawn rightward from its left end and the link
+    // still rises from the bar, each reached along the bar's own ink.
+    const segments = KANNADA_CA.strokes[0].segments;
+    const [back, bar, toLink, link] = segments.slice(4);
+    expect(segments[3].path.at(-1)).toEqual({ x: 636, y: 345 });
+    expect(back.path.at(-1)).toEqual({ x: 447, y: 345 });
+    expect(bar.path[0]).toEqual({ x: 447, y: 345 });
+    expect(bar.path.at(-1)).toEqual({ x: 755, y: 345 });
+    expect(toLink.path.at(-1)).toEqual({ x: 636, y: 352 });
+    expect(link.path[0]).toEqual({ x: 636, y: 352 });
+    expect(link.path.at(-1)!.y).toBeGreaterThan(link.path[0].y);
+    expect(joinGaps(KANNADA_CA.strokes[0])).toEqual([0, 0, 0, 0, 0, 0, 0]);
     expect(KANNADA_CA.source.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-cha.gif",
     );

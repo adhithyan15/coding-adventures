@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Head and Hand",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c929e4980fadbc64",
+  "sourceHash": "fnv1a64:f7777a1bea64919c",
   "lessons": [
     {
       "id": "KA-C13-dehada-bhagagalu",
@@ -137,7 +137,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f6a963232268eebf",
+      "sourceHash": "fnv1a64:aa78843a7582872f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -228,23 +228,31 @@
             },
             {
               "kind": "speech",
-              "text": "5. lift, then draw the lower bar from left to right."
+              "text": "5. without lifting, run back left along the lower bar."
             },
             {
               "kind": "speech",
-              "text": "6. lift, then draw the short link up from the lower bar."
+              "text": "6. without lifting, draw the lower bar from left to right."
             },
             {
               "kind": "speech",
-              "text": "7. lift, then draw the upper bar from left to right."
+              "text": "7. without lifting, come back along the bar to the short link."
             },
             {
               "kind": "speech",
-              "text": "8. without lifting, curl up into the hook."
+              "text": "8. without lifting, draw the short link up from the lower bar."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 3, as many as ಕ. The body is one run, drawn as ಬ's is, from the curled tip inside the head to the top of the right side; then come the lower bar, the short link rising from it and the curled bar on top, each one started fresh."
+              "text": "9. lift, then draw the upper bar from left to right."
+            },
+            {
+              "kind": "speech",
+              "text": "10. without lifting, curl up into the hook."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 1. The body is drawn as ಬ's is; then the pen runs back along the lower bar, draws it, and comes back to climb the short link. It lifts once, for the curled bar on top. The animation lifts before each part; most people copying ಚ (ca) in the Omniglot study lifted only once."
             },
             {
               "kind": "speech",

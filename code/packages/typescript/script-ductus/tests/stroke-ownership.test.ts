@@ -428,12 +428,20 @@ describe("stroke ownership migration baseline", () => {
       // 451 -> 459 and Kannada 25 -> 33, with the ordered key hash and the
       // non-Tamil data hash, measured after the last caption was settled;
       // Tamil and both shared-identity values remain unchanged.
+      //
+      // Kannada ಚ (U+0C9A) and ಯ (U+0CAF) lifted the pen after every run of
+      // their animations (three lifts each), more often than even Omniglot's
+      // non-native copyists. ಚ now joins its body, lower bar and link (one
+      // lift) and ಯ its middle arm and hooked bar (two lifts), through short
+      // connectors along the bars. Only the non-Tamil data hash moves,
+      // measured after the last caption was settled; keys, Tamil and both
+      // shared-identity values remain unchanged.
     }).toEqual({
       keys: 459,
       keyHash:
         "eee5d48210cc21343b65fe014f8a9bf47a584f39a027373d32488ff7317dbc30",
       nonTamilDataHash:
-        "8eafae84f08917148b7d37ec2e54c9ad4b4d6b258c7ce7f90d6b6ac0b93dfc4b",
+        "67770a6cb056e6b901fd522194973fe68a8ed7bc80ca6b1d9a7c6b75ff37dae4",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",

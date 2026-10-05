@@ -57,15 +57,17 @@ You already say these, and every one of them has ಚ somewhere inside it:
 - **2.** without lifting, slant down to the left and round the left lobe, rising into the middle point
 - **3.** without lifting, drop from the point round the right lobe's base
 - **4.** without lifting, climb the right side to the lower bar
-- **5.** lift, then draw the lower bar from left to right
-- **6.** lift, then draw the short link up from the lower bar
-- **7.** lift, then draw the upper bar from left to right
-- **8.** without lifting, curl up into the hook
+- **5.** without lifting, run back left along the lower bar
+- **6.** without lifting, draw the lower bar from left to right
+- **7.** without lifting, come back along the bar to the short link
+- **8.** without lifting, draw the short link up from the lower bar
+- **9.** lift, then draw the upper bar from left to right
+- **10.** without lifting, curl up into the hook
 
-**Pen lifts: 3**, as many as ಕ. The body is one run, drawn as ಬ's is, from
-the curled tip inside the head to the top of the right side; then come the
-lower bar, the short link rising from it and the curled bar on top, each one
-started fresh.
+**Pen lifts: 1.** The body is drawn as ಬ's is; then the pen runs back along
+the lower bar, draws it, and comes back to climb the short link. It lifts
+once, for the curled bar on top. The animation lifts before each part; most
+people copying ಚ in the Omniglot study lifted only once.
 
 > This is one attested teaching order and not a national standard — Kannada
 > handwriting is taught with school-to-school variation. Source: Gopala Krishna
