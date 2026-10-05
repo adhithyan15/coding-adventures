@@ -645,9 +645,43 @@ changes:
   the app's own storage. Driving Journal's screen on Android is the
   instrumented test of §4.
 
-Engram and Venture follow as their own PRs. Engram's package `[host_effects]`
-handlers stay desktop-only (§3.5), so on Android its Anki import and export
-are failed by the host as unanswered until it has an Android handler.
+Engram and Venture follow as their own PRs.
+
+### 3.10 Engram on Android (step 7, second app)
+
+Written before implementation. Engram runs on Android the same way Journal
+does (§3.9), with two differences that are Engram's own:
+
+- **Its touch layout.** Engram has a second layout, `EngramApp.touch.mll`,
+  chosen by the layout rules (UI48 §7.9). The Android project already gets
+  every exported component with its layout variants (§3.5), so a phone-sized
+  window selects the touch root exactly as a narrow desktop window does. No
+  Android-specific rule is added.
+- **Its effects stay desktop-only.** Engram's package `[host_effects]`
+  handlers (`importAnki`, `exportAnki`) are installed by each desktop host's
+  `Main`. The Android project gets neither the handler file nor the install
+  (§3.5). On Android the platform library answers the standard `files.*`
+  kinds. An Anki import or export is failed by the host as unanswered, so
+  the app reports it and is never left waiting. An Android handler, through
+  the document picker of §3.8, is its own later step.
+
+Everything else is Journal's:
+
+- **The runtime.** `engram-mosaic-app` and its dependencies are pure Rust;
+  the SQLite reader and zstd are this repository's own crates. So
+  `build-mosaic-android-libs.sh engram-mosaic-app` needs no C toolchain
+  beyond the NDK's.
+- **Identity.** The manifest defaults: `dev.codingadventures.engramapp` and
+  `EngramApp`.
+- **The gate.** The Android CI step builds Engram's APK beside Journal's. It
+  checks native-complete with no degradations, the badging, the dex, and
+  `mosaic_app_create` for each ABI. The emulator step runs
+  `mosaic-android-emulator-gate.sh` for Engram after Journal, with Mosaic
+  application id `engram-app`. The seeded `{}` has no snapshot schema, so the
+  runtime refuses it before Engram's own `restore` sees it, as for the other
+  two apps.
+
+Venture follows after BR02's host work.
 
 ## 4. CI
 
@@ -678,7 +712,8 @@ lanes are green, as their own PRs.
    Compose on Android and SwiftUI on iOS and iPadOS; Flutter's arrive with
    step 8, which builds Flutter for phones.*
 7. **Every app:** Journal, Engram, Venture (after BR02's host work).
-   *Journal on Android: §3.9; on iOS and iPadOS: §2.4.*
+   *Journal on Android: §3.9; on iOS and iPadOS: §2.4. Engram on Android:
+   §3.10.*
 8. **Flutter:** `flutter create --platforms=android,ios`, per-ABI native
    assets, `path_provider` for state.
 
