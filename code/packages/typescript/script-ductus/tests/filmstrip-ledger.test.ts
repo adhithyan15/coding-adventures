@@ -20,7 +20,8 @@
 //
 // WHICH letters get an entry is decided by the book, not by this package: the
 // generator reads the curriculum's `core/figure-generation.json` and emits an
-// entry for every `script-filmstrip` target declared there. That keeps the
+// entry for every letter a `script-filmstrip` target declared there draws, and
+// for every letter of the derived lesson candidates (HL-C443). That keeps the
 // generated file the size of what is actually printed instead of all 352
 // authored glyphs, and it means adding a filmstrip to a lesson is one target
 // plus one regeneration rather than an edit here.
@@ -56,6 +57,8 @@ interface FigureTarget {
   kind: string;
   script?: string;
   glyph?: string;
+  /** A sequence target's letters, in writing order; `glyph` is then the headword. */
+  letters?: string[];
 }
 
 // Loading every lesson is the slow part of building the ledger (seconds, not
@@ -78,22 +81,27 @@ function filmstripTargets(): Array<{ script: string; glyph: string }> {
       throw new Error("script-filmstrip targets need a script and a glyph");
     }
     // Two lessons may legitimately print the same letter; the ledger holds it
-    // once, and `buildFilmstripLedger` rejects an accidental second copy.
-    wanted.set(`${target.script}:${target.glyph}`, {
-      script: target.script,
-      glyph: target.glyph,
-    });
+    // once, and `buildFilmstripLedger` rejects an accidental second copy. A
+    // sequence target asks for each of its letters, never for its headword.
+    for (const glyph of target.letters ?? [target.glyph]) {
+      wanted.set(`${target.script}:${glyph}`, { script: target.script, glyph });
+    }
   }
   // HL-C443: single-letter writing lessons on switched-on tracks are candidates
   // too. A DECLARED target without a cited ductus is an authoring error and
   // throws below; a derived candidate without one is simply not drawn, because
   // the candidate list is every letter lesson, cited or not.
+  //
+  // A SEQUENCE candidate (a list of letters, or a word whose letters stand
+  // apart) contributes its letters only when every one of them is cited — the
+  // same all-or-nothing rule `withDerivedFilmstrips` applies, so the ledger
+  // never carries a letter for a strip the book will not print.
   for (const candidate of letterLessonCandidates()) {
-    if (ductusFor(candidate.glyph, candidate.script) === undefined) continue;
-    wanted.set(`${candidate.script}:${candidate.glyph}`, {
-      script: candidate.script,
-      glyph: candidate.glyph,
-    });
+    const letters = candidate.letters ?? [candidate.glyph];
+    if (letters.some((glyph) => ductusFor(glyph, candidate.script) === undefined)) continue;
+    for (const glyph of letters) {
+      wanted.set(`${candidate.script}:${glyph}`, { script: candidate.script, glyph });
+    }
   }
   return [...wanted.values()];
 }

@@ -12,7 +12,8 @@
 // nobody took them.
 //
 // This module removes the manual steps for the case that is always the same: a
-// `type: writing` lesson whose headword is ONE letter, with a `## Writing:`
+// `type: writing` lesson whose headword is ONE letter (or, since the sequence
+// strips below, a list of letters or a word whose letters stand apart), with a `## Writing:`
 // block (or, where a track presents its letters that way, a `## Script`
 // block), on a track that has been switched on below. Such a lesson is a
 // candidate. The candidate becomes a figure only if `script-ductus` holds a
@@ -121,8 +122,10 @@ export function letterBlockIndex(lesson: ParsedLesson): number {
 /**
  * The one letter a writing lesson teaches, or `undefined` when the lesson is
  * not a single-letter writing lesson with a Writing block. A headword like
- * "வ, க" or "வணக்கம்" teaches more than one letter and is left to an explicit
- * target (and to the combinations work HL-C443 lists next).
+ * "வ, க" teaches more than one letter; `writingSequenceOf` below decides
+ * whether it becomes a sequence strip. "வணக்கம்" does not yet: it carries a
+ * pulli, and a mark is not drawn in a sequence until its written order is
+ * modelled.
  */
 export function writingLetterOf(lesson: ParsedLesson): string | undefined {
   if (lesson.realization.type !== "writing") return undefined;
@@ -130,6 +133,97 @@ export function writingLetterOf(lesson: ParsedLesson): string | undefined {
   if (headword === "" || [...GRAPHEMES.segment(headword)].length !== 1) return undefined;
   if (letterBlockIndex(lesson) === -1) return undefined;
   return headword;
+}
+
+// ---------------------------------------------------------------------------
+// Several letters in one headword (HL-C443, sequence strips)
+// ---------------------------------------------------------------------------
+//
+// About thirty writing lessons teach more than one letter at once and printed
+// no filmstrip: a LIST of letters ("வ, க", "ક — ણ — શ", "в, р", "ع ي") or a
+// short WORD whose every letter is cited ("はい", "こんにちは"). Each of those
+// letters already has a cited ductus, so the strip can be built from parts
+// that exist: every letter's own frames, in the order they are written (see
+// `renderScriptSequenceFilmstripFigure`). Nothing new is drawn.
+//
+// The danger is drawing something WRONG out of right parts. Putting cited
+// letters side by side asserts that a native writer writes them that way, and
+// for a word that is false in several scripts:
+//
+//   script            what a word does that separate letters do not
+//   ----------------  ------------------------------------------------------
+//   devanagari        one continuous headline (shirorekha) across the word;
+//                     every cited letter ends "lift, then draw the
+//                     shirorekha", so a composed word would show N headlines
+//   arabic family     letters join and change shape (initial / medial /
+//                     final); the ductus is isolated forms only
+//   cyrillic          the cited school hand is connected cursive, whose own
+//                     variation notes say words add entry and exit joins
+//
+// A LIST is different, in every script: each listed letter is written by
+// itself, in its isolated form, with its own headline — which is exactly what
+// its cited ductus draws. So lists qualify everywhere and words qualify only
+// in `SEPARATE_LETTER_SCRIPTS`.
+
+/**
+ * Scripts whose letters stand apart inside a word: no shared headline, no
+ * joining, no change of shape next to a neighbour, and a pen lift between one
+ * letter and the next. A word in one of these, made only of cited base
+ * letters, is honestly drawn as its letters one after another.
+ *
+ * Bengali and Gurmukhi are absent for the Devanagari reason above (a shared
+ * headline), as well as for having no ductus at all yet.
+ */
+export const SEPARATE_LETTER_SCRIPTS: ReadonlySet<string> = new Set([
+  "chinese",
+  "japanese",
+  "tamil",
+  "gujarati",
+  "kannada",
+  "telugu",
+  "malayalam",
+]);
+
+/** What separates the items of a list headword: space, commas, dashes, dots. */
+const LIST_SEPARATORS = /[\s,\u060C\u3001\u2014\u00B7]+/u;
+
+/**
+ * A word may only be drawn letter by letter when every grapheme is ONE base
+ * letter: a single code point of category L that is not a modifier (Lm, like
+ * ー). That leaves out every vowel sign, virama and nasal mark, and it does so
+ * on purpose — some of those are WRITTEN before the consonant they follow in
+ * Unicode (Tamil ெ, Devanagari ि), so drawing a word in code-point order would
+ * put strokes in the wrong order once marks have a ductus. Until a design that
+ * knows the written order exists, a word with a mark is not a sequence.
+ */
+const BASE_LETTER = /^(?!\p{Lm})\p{L}$/u;
+
+/**
+ * The letters a writing lesson's headword spells out, in writing order, or
+ * `undefined` when it is not a sequence this module will draw.
+ *
+ * A sequence is
+ *
+ *   * a LIST of two or more items, each exactly one grapheme, in any script; or
+ *   * one or more WORDS in a `SEPARATE_LETTER_SCRIPTS` script, two or more
+ *     letters in all, where every grapheme is a single base letter.
+ *
+ * A one-letter headword is not a sequence; `writingLetterOf` owns it. Like a
+ * single letter, a sequence needs a Writing or Script block to land in. This
+ * function only reads the headword; whether each letter has a CITED ductus is
+ * `withDerivedFilmstrips`' question, answered by the ledger.
+ */
+export function writingSequenceOf(lesson: ParsedLesson, script: string): string[] | undefined {
+  if (lesson.realization.type !== "writing") return undefined;
+  if (letterBlockIndex(lesson) === -1) return undefined;
+  const headword = (lesson.realization.headword ?? "").trim();
+  const items = headword.split(LIST_SEPARATORS).filter((item) => item !== "");
+  const graphemes = items.map((item) => [...GRAPHEMES.segment(item)].map((part) => part.segment));
+  const letters = graphemes.flat();
+  if (letters.length < 2) return undefined;
+  if (items.length >= 2 && graphemes.every((item) => item.length === 1)) return letters;
+  if (!SEPARATE_LETTER_SCRIPTS.has(script)) return undefined;
+  return letters.every((letter) => BASE_LETTER.test(letter)) ? letters : undefined;
 }
 
 /** Every lesson on a switched-on track that COULD carry a filmstrip. */
@@ -141,22 +235,35 @@ export function filmstripCandidates(
   for (const lesson of lessons) {
     const script = scripts[lesson.language];
     if (script === undefined) continue;
-    const glyph = writingLetterOf(lesson);
-    if (glyph === undefined) continue;
     const lessonId = lesson.realization.lessonId;
+    const output = `${lesson.language}/book/figures/${lessonId}-filmstrip.svg`;
+    const glyph = writingLetterOf(lesson);
+    if (glyph !== undefined) {
+      candidates.push({ kind: "script-filmstrip", lessonId, script, glyph, output });
+      continue;
+    }
+    const letters = writingSequenceOf(lesson, script);
+    if (letters === undefined) continue;
     candidates.push({
       kind: "script-filmstrip",
       lessonId,
       script,
-      glyph,
-      output: `${lesson.language}/book/figures/${lessonId}-filmstrip.svg`,
+      glyph: (lesson.realization.headword ?? "").trim(),
+      letters,
+      output,
     });
   }
   return candidates.sort((left, right) => left.lessonId.localeCompare(right.lessonId));
 }
 
+/** The letters a filmstrip target draws: its `letters`, else its one `glyph`. */
+export function filmstripLetters(target: ScriptFilmstripTarget): readonly string[] {
+  return target.letters ?? [target.glyph];
+}
+
 /**
- * The explicit targets plus every candidate whose letter has a cited ductus.
+ * The explicit targets plus every candidate whose letter (or, for a sequence,
+ * every letter) has a cited ductus.
  *
  * `hasDuctus` is the caller's source of truth for "cited": `script-ductus`
  * asks its own stroke registry, and the figure and book generators ask the
@@ -172,17 +279,34 @@ export function withDerivedFilmstrips(
       .filter((target) => target.kind === "script-filmstrip")
       .map((target) => target.lessonId),
   );
+  // A sequence is drawn only when EVERY letter in it is cited: one uncited
+  // letter would leave a hole in the word, and a strip that skipped it would
+  // teach the word misspelled.
   return [
     ...explicit,
     ...candidates.filter(
-      (candidate) => !declared.has(candidate.lessonId) && hasDuctus(candidate.script, candidate.glyph),
+      (candidate) =>
+        !declared.has(candidate.lessonId) &&
+        filmstripLetters(candidate).every((glyph) => hasDuctus(candidate.script, glyph)),
     ),
   ];
 }
 
-/** The Markdown image a book prints for a filmstrip target. */
+/**
+ * The Markdown image a book prints for a filmstrip target.
+ *
+ * A sequence reads "How はい is written" when its letters spell the headword
+ * as one word, and "How the letters வ, க are written" when the headword is a
+ * LIST — the letters joined back together are then not the headword, because
+ * the separators are gone.
+ */
 export function filmstripImageMarkdown(target: ScriptFilmstripTarget): string {
-  return `![How ${target.glyph} is written, stroke by stroke](figures/${basename(target.output)})`;
+  const file = `figures/${basename(target.output)}`;
+  if (target.letters === undefined) return `![How ${target.glyph} is written, stroke by stroke](${file})`;
+  const what = target.letters.join("") === target.glyph
+    ? `How ${target.glyph} is written`
+    : `How the letters ${target.glyph} are written`;
+  return `![${what}, letter by letter, stroke by stroke](${file})`;
 }
 
 /**

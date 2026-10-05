@@ -115,8 +115,11 @@ npm run check:filmstrip-ledger      # fail if it is stale
 
 The check also runs as part of `npm test`, so a stroke edited here and not
 regenerated fails this package rather than the book. Which letters get an entry is
-decided by the curriculum's `core/figure-generation.json`, not here: the generator
-emits one entry per `script-filmstrip` target declared there.
+decided by the curriculum, not here: the generator emits one entry per letter a
+`script-filmstrip` target in `core/figure-generation.json` draws, plus every letter
+of the lesson targets `human-language-data` derives. A sequence target (a list of
+letters, or a word whose letters stand apart) contributes each of its `letters`,
+and only when all of them are cited.
 
 `DuctusOptions.highlightSegment` is what the printed strip turns on. Frames sit
 side by side and nothing animates, so the part of the current stroke travelled

@@ -210,6 +210,34 @@
       "sourceHash": "fnv1a64:9050f01510ff35ec",
       "svgHash": "fnv1a64:d23f81e83f23241b",
       "svg": "tamil/book/figures/TA-W00-va-guided-copy-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-W01-abugida-va-ka",
+      "sourceHash": "fnv1a64:4cc0f95fd4625291",
+      "svgHash": "fnv1a64:8547c7bf2fc214ba",
+      "svg": "tamil/book/figures/TA-W01-abugida-va-ka-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-W02-ma-retroflex-na",
+      "sourceHash": "fnv1a64:680a7ab004cbcd37",
+      "svgHash": "fnv1a64:7bf8b8f6f7d341c2",
+      "svg": "tamil/book/figures/TA-W02-ma-retroflex-na-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-W02-three-ns",
+      "sourceHash": "fnv1a64:d031e02ca7581f34",
+      "svgHash": "fnv1a64:da5ee3e491d34a0d",
+      "svg": "tamil/book/figures/TA-W02-three-ns-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-W04-vowel-signs-nandri",
+      "sourceHash": "fnv1a64:1623d987f6a46692",
+      "svgHash": "fnv1a64:ce1b4098e49d2bc8",
+      "svg": "tamil/book/figures/TA-W04-vowel-signs-nandri-filmstrip.svg"
     }
   ]
 }

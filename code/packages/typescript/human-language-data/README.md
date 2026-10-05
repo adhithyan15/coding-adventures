@@ -965,7 +965,18 @@ Two kinds exist:
   two steps**: declare it here, then run `npm run generate:filmstrip-ledger` in
   `script-ductus` before `npm run generate:figures` here. A missing entry fails
   with the command to run. Stroke order is never invented — an uncited letter has
-  no ledger entry and therefore no figure. Generated book chapters rewrite the lesson's `.svg` image
+  no ledger entry and therefore no figure.
+
+  Most filmstrip targets are not declared at all: `figure-targets.ts` derives one
+  for each `type: writing` lesson on a switched-on track whose headword is one
+  cited letter. A headword that is a **list** of single letters (`வ, க`,
+  `ક — ણ — શ`, `в, р`) or a **word** in a script whose letters stand apart
+  (`はい`) becomes a *sequence* target with `letters: [...]`, drawn as each
+  letter's own cited strip in writing order, one labelled group per letter.
+  It prints only if every letter is cited. Words are not composed in
+  Devanagari (one shared headline), the Arabic family (joined, positional
+  forms) or Cyrillic (cursive joins), nor in any script when they carry a vowel
+  sign or virama, because the per-letter ductus cannot draw those honestly. Generated book chapters rewrite the lesson's `.svg` image
 destination to `.pdf`; the books workflow creates that PDF with `rsvg-convert`
 before XeLaTeX runs.
 

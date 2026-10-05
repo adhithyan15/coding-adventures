@@ -62,6 +62,17 @@ export function assertKnownFigureTarget(target: FigureTarget): void {
     if (typeof target.glyph !== "string" || target.glyph === "") {
       throw new Error(`${target.lessonId}: script-filmstrip needs a glyph`);
     }
+    // A sequence names at least two letters, each a non-empty string. One
+    // letter is a plain target, and saying so twice would give one lesson two
+    // ways to describe the same figure.
+    if (
+      target.letters !== undefined &&
+      (!Array.isArray(target.letters) ||
+        target.letters.length < 2 ||
+        target.letters.some((letter) => typeof letter !== "string" || letter === ""))
+    ) {
+      throw new Error(`${target.lessonId}: script-filmstrip letters must name two or more letters`);
+    }
     return;
   }
   const exhaustive: never = target;
@@ -111,7 +122,9 @@ function figureSources(root: string, targets: FigureTarget[]): FigureSources {
 /**
  * Every figure the book prints: the targets declared in `figure-generation.json`
  * plus, for switched-on tracks, a filmstrip for each single-letter writing
- * lesson whose letter has a cited ductus (HL-C443, `figure-targets.ts`). The
+ * lesson whose letter has a cited ductus, and for each letter-list or
+ * separate-letter word lesson ALL of whose letters do (HL-C443,
+ * `figure-targets.ts`). The
  * generated filmstrip ledger is the record of which letters are cited, so a
  * derived target can never outrun the stroke data.
  */

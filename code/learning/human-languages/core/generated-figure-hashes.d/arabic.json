@@ -3,10 +3,38 @@
   "figures": [
     {
       "kind": "script-filmstrip",
+      "lessonId": "AR-W00-ayn-ya",
+      "sourceHash": "fnv1a64:f6f233374202360d",
+      "svgHash": "fnv1a64:8b1ef46b7adc5ffc",
+      "svg": "arabic/book/figures/AR-W00-ayn-ya-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "AR-W00-ra-ha",
+      "sourceHash": "fnv1a64:a9ff350fca4d4eab",
+      "svgHash": "fnv1a64:1fd59dcff3674637",
+      "svg": "arabic/book/figures/AR-W00-ra-ha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "AR-W00-sin-lam",
+      "sourceHash": "fnv1a64:1e4e96008c535fc1",
+      "svgHash": "fnv1a64:f33368c316865dd0",
+      "svg": "arabic/book/figures/AR-W00-sin-lam-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "AR-W04-arbaa-sutur",
       "sourceHash": "fnv1a64:cfbb14afea33c759",
       "svgHash": "fnv1a64:a4b275eba8ad48cf",
       "svg": "arabic/book/figures/AR-W04-arbaa-sutur-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "AR-W04-dots-family-nun-ta",
+      "sourceHash": "fnv1a64:61ebd2c0ee935e08",
+      "svgHash": "fnv1a64:8102fa4da33f3566",
+      "svg": "arabic/book/figures/AR-W04-dots-family-nun-ta-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
@@ -17,10 +45,31 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "AR-W07-hook-family-ha-kha",
+      "sourceHash": "fnv1a64:956ccf39eb85b45b",
+      "svgHash": "fnv1a64:e29b2bf8d759fd46",
+      "svg": "arabic/book/figures/AR-W07-hook-family-ha-kha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "AR-W08-kaf-and-ra",
+      "sourceHash": "fnv1a64:37949b1c929709a1",
+      "svgHash": "fnv1a64:f112d7d0e9d73255",
+      "svg": "arabic/book/figures/AR-W08-kaf-and-ra-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "AR-W10-ayn",
       "sourceHash": "fnv1a64:99f6f0f27fe3fb0c",
       "svgHash": "fnv1a64:24c2547adbde374d",
       "svg": "arabic/book/figures/AR-W10-ayn-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "AR-W11-ha-and-ta-marbuta",
+      "sourceHash": "fnv1a64:515f086b4da43d1c",
+      "svgHash": "fnv1a64:1710d3a6f6c4631e",
+      "svg": "arabic/book/figures/AR-W11-ha-and-ta-marbuta-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",

@@ -24,6 +24,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "JA-W01-hai-read",
+      "sourceHash": "fnv1a64:94c9699a7191b626",
+      "svgHash": "fnv1a64:d6950018bc31c410",
+      "svg": "japanese/book/figures/JA-W01-hai-read-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "JA-W01-i",
       "sourceHash": "fnv1a64:649d43d4f1db5f88",
       "svgHash": "fnv1a64:0ceadbfb76c91f53",
@@ -35,6 +42,13 @@
       "sourceHash": "fnv1a64:2a4c64989965d35e",
       "svgHash": "fnv1a64:cf0a1e59e28739b0",
       "svg": "japanese/book/figures/JA-W01-ko-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "JA-W01-konnichiwa-read",
+      "sourceHash": "fnv1a64:eef14fd9790061d6",
+      "svgHash": "fnv1a64:3d066ab485f4c883",
+      "svg": "japanese/book/figures/JA-W01-konnichiwa-read-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
@@ -175,6 +189,13 @@
       "sourceHash": "fnv1a64:27b85f42a0d474f2",
       "svgHash": "fnv1a64:db82dd53c7642c26",
       "svg": "japanese/book/figures/JA-W08-ra-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "JA-W08-sayounara-read",
+      "sourceHash": "fnv1a64:883a692a9a9b1682",
+      "svgHash": "fnv1a64:661fa23349e69d7d",
+      "svg": "japanese/book/figures/JA-W08-sayounara-read-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",

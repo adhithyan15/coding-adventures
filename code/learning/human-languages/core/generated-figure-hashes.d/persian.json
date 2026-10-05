@@ -73,6 +73,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "FA-W15-te-nun",
+      "sourceHash": "fnv1a64:985d6f0a88bfe43a",
+      "svgHash": "fnv1a64:5e133b29fac55646",
+      "svg": "persian/book/figures/FA-W15-te-nun-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "FA-W15-vav",
       "sourceHash": "fnv1a64:118be5d81fac172e",
       "svgHash": "fnv1a64:c266fb65e4e10f32",

@@ -125,6 +125,35 @@ file, and places each frame in a nested SVG viewport so a frame can only ever
 paint inside its own panel. A tampered ledger therefore fails the build, and
 could at worst spoil the one frame it belongs to.
 
+#### As built (HL-C443) — sequence strips
+
+A writing lesson that names several letters gets one `script-filmstrip` figure
+with `letters: [...]`: each letter's own ledger frames, in writing order, as a
+labelled group ("Letter 2 of 3 — …"), with short letters sharing a row. Two
+headword shapes qualify:
+
+- a **list** of single letters (`வ, க`, `ક — ણ — શ`, `в, р`, `ع ي`), in any
+  script, because a letter written by itself is exactly what its isolated ductus
+  draws; and
+- a **word** in a script whose letters stand apart within a word (chinese,
+  japanese, tamil, gujarati, kannada, telugu, malayalam), when every grapheme is
+  one base letter with no mark.
+
+The figure prints only when every letter is cited, credits every letter's source
+in its footer, and claims nothing about relative size, spacing or joins: each
+letter keeps its own panels at its own scale, and the `<desc>` says so.
+
+Words are deliberately **not** composed where the parts would assemble into
+something false. Devanagari (and Bengali and Gurmukhi) words share one
+continuous headline, while every cited letter draws its own; Arabic-family
+letters join and change shape by position, while the ductus holds isolated
+forms; the cited Cyrillic hand is connected cursive. A word with a vowel sign,
+virama or length mark is refused in every script, because some marks are
+written before the consonant they follow in Unicode, so drawing in code-point
+order would draw strokes in the wrong order. These are the open work for
+combinations: mark ductus with a written-order model, a cited word-level
+headline, and positional or joined forms.
+
 ### Class B — data diagrams (generated)
 
 Etymology and cousin-web trees built from lesson `roots`, sound-articulation diagrams

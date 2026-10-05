@@ -18,11 +18,49 @@ describe("the real corpus", () => {
   );
 
   it("draws a filmstrip for every Tamil letter lesson whose letter has a cited ductus", () => {
-    // 30 lessons, 29 letters. வ has both TA-S01-va and the guided copy TA-W00,
-    // while a letter lesson without cited ductus remains an undrawn candidate.
+    // 30 one-letter lessons, 29 letters. வ has both TA-S01-va and the guided
+    // copy TA-W00, while a letter lesson without cited ductus remains an
+    // undrawn candidate.
     const tamil = targets.filter((target) => target.lessonId.startsWith("TA-"));
-    expect(tamil).toHaveLength(30);
-    expect(new Set(tamil.map((target) => target.glyph)).size).toBe(29);
+    const single = tamil.filter((target) => target.letters === undefined);
+    expect(single).toHaveLength(30);
+    expect(new Set(single.map((target) => target.glyph)).size).toBe(29);
+  });
+
+  it("draws every Tamil letter-list lesson whose letters are all cited, and no Tamil word yet", () => {
+    // Four lessons list letters ("வ, க"). Every Tamil WORD headword so far
+    // carries a vowel sign or pulli, and marks are never composed, so none is
+    // drawn — `writingSequenceOf` refuses them before the ledger is asked.
+    const sequences = targets.filter(
+      (target) => target.lessonId.startsWith("TA-") && target.letters !== undefined,
+    );
+    expect(
+      Object.fromEntries(sequences.map((target) => [target.lessonId, target.letters!.join(" ")])),
+    ).toEqual({
+      "TA-W01-abugida-va-ka": "வ க",
+      "TA-W02-ma-retroflex-na": "ம ண",
+      "TA-W02-three-ns": "ந ன ண",
+      "TA-W04-vowel-signs-nandri": "ந ன ற",
+    });
+  });
+
+  it("composes words only in scripts whose letters stand apart", () => {
+    // The three Japanese words are the corpus's only word sequences today.
+    // Devanagari (मम), the Arabic family (سلام) and Cyrillic (привет) have
+    // fully cited words that are deliberately NOT drawn: see
+    // SEPARATE_LETTER_SCRIPTS for why each would draw something false.
+    const words = targets.filter(
+      (target) => target.letters !== undefined && target.letters.join("") === target.glyph,
+    );
+    expect(words.map((target) => target.lessonId).sort()).toEqual([
+      "JA-W01-hai-read",
+      "JA-W01-konnichiwa-read",
+      "JA-W08-sayounara-read",
+    ]);
+    const lessonIds = new Set(targets.map((target) => target.lessonId));
+    for (const id of ["SA-W03-mama-guided-copy", "UR-W04-joining", "RU-W05-privet-guided-copy"]) {
+      expect(lessonIds.has(id), id).toBe(false);
+    }
   });
 
   it("draws every switched-on track exactly the letters its ductus cites", () => {

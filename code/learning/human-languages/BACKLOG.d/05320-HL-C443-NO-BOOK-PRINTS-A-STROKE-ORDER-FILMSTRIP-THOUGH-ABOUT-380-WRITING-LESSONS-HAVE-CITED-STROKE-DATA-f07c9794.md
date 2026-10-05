@@ -102,6 +102,28 @@ That is about 380 filmstrips that could print today.
   still have none. Each added path needs its primary-source citation and its
   own lesson owner before it can become a figure. Combination filmstrips remain
   later work after the single-letter inventories.
+- **Sequence strips: letter lists and separate-letter words.** A writing
+  lesson whose headword is a list of single letters (`வ, க`, `ક — ણ — શ`,
+  `в, р`, `ع ي`) prints one strip that draws each letter's own cited frames
+  in turn, a labelled group per letter. So does a word in a script whose
+  letters stand apart (Japanese はい, こんにちは, さようなら), when every
+  grapheme is one cited base letter. 28 lessons gained a filmstrip (494 →
+  522 of 1,309 writing lessons): Arabic 7, Gujarati 7, Russian 5, Tamil 4,
+  Japanese 3, Persian 1 and Urdu 1. Words are refused where composition would
+  draw something false: Devanagari (one shared headline; every cited letter
+  draws its own), the Arabic family (joined, positional forms) and Cyrillic
+  (cited school cursive joins letters). Words with any vowel sign, virama or
+  length mark are refused everywhere, because some marks are written before
+  the consonant they follow in Unicode.
+- **Next for combinations, by lessons unlocked.** 787 writing lessons still
+  print no strip. 256 need only a mark's ductus: Tamil pulli ் is needed by
+  32 lessons and ு by 17; Gujarati ા by 19. Marks need a written-order model
+  before any word containing one can compose. 360 need a letter with no
+  ductus at all (Punjabi 88, Bengali 71, Malayalam 52, Kannada 45, Japanese
+  26). 21 have cited letters but no Writing or Script block to hold the
+  figure (15 Chinese copy drills). 14 are fully cited words in a joined
+  script. The other 136 are placeholders, punctuation, or headwords that
+  mix in Latin text or A/B options.
 - **Telugu consonants started with క.** The first base consonant now has the
   five-movement, two-run order from Sathish Shanmugam's packaged tracing guide,
   fitted to the bundled Noto Sans Telugu outline. Its existing `TE-S03` lesson
