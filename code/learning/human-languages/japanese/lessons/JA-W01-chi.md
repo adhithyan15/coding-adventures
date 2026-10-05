@@ -44,8 +44,9 @@ reviews_of: [JA-W01-ni]
 Two strokes:
 
 1. a **short horizontal** across the top
-2. the **body** — down from the middle of that bar, curving left, then round into
-   a full belly to the right and up
+2. the **body** — down through that bar from above it, falling to the left, then
+   a sharp turn up to the right and round into a full belly that finishes low on
+   the left
 
 Read **chi**: the *ch* of English *cheese*, then the tight *i*.
 

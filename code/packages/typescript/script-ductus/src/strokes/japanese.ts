@@ -2956,4 +2956,371 @@ export const entries: DuctusEntry[] = [
       source: strokeSource("か"),
     },
   ],
+  // こ, さ, す, ち and と have been written since chapters 2 to 4 (JA-W01-ko,
+  // JA-W03-sa, JA-W03-su, JA-W01-chi, JA-W03-to), but their rows had no cited
+  // stroke-order source, so they had no ductus and their writing lessons
+  // printed no filmstrip. They are fitted from KanjiVG's directed paths for
+  // U+3053, U+3055, U+3059, U+3061 and U+3068 the way あ to か are: KanjiVG
+  // supplies only the ORDER and DIRECTION, and the bundled outline's medial
+  // line supplies the coordinates. Every sharp turn inside a stroke is a
+  // segment boundary and each join is exact. Two strokes reuse ink on
+  // purpose. す's vertical runs down the right side of the loop, and the
+  // loop comes back down that same side into the tail, as KanjiVG's does.
+  // ち's descender stops at its tip and turns back up the same ink before
+  // rising to the right. と's short stroke ends on the long sweep: the print
+  // glyph joins them there, and KanjiVG's first path ends on its second.
+  [
+    "japanese:こ",
+    {
+      script: "japanese",
+      glyph: "こ",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the top stroke to the right",
+              path: [
+                { x: 273, y: 659 },
+                { x: 348, y: 655 },
+                { x: 424, y: 651 },
+                { x: 499, y: 651 },
+                { x: 575, y: 651 },
+                { x: 650, y: 655 },
+                { x: 725, y: 659 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "curve down and run out to the right",
+              path: [
+                { x: 225, y: 267 },
+                { x: 215, y: 200 },
+                { x: 222, y: 132 },
+                { x: 262, y: 78 },
+                { x: 320, y: 43 },
+                { x: 386, y: 25 },
+                { x: 454, y: 19 },
+                { x: 522, y: 19 },
+                { x: 590, y: 19 },
+                { x: 658, y: 22 },
+                { x: 726, y: 31 },
+                { x: 793, y: 43 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("こ"),
+    },
+  ],
+  [
+    "japanese:さ",
+    {
+      script: "japanese",
+      glyph: "さ",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the bar to the right",
+              path: [
+                { x: 198, y: 586 },
+                { x: 267, y: 582 },
+                { x: 337, y: 578 },
+                { x: 406, y: 578 },
+                { x: 476, y: 578 },
+                { x: 545, y: 582 },
+                { x: 614, y: 587 },
+                { x: 682, y: 597 },
+                { x: 750, y: 610 },
+                { x: 818, y: 626 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "slant down to the right through the bar",
+              path: [
+                { x: 554, y: 746 },
+                { x: 574, y: 678 },
+                { x: 591, y: 610 },
+                { x: 621, y: 547 },
+                { x: 649, y: 482 },
+                { x: 682, y: 420 },
+                { x: 719, y: 359 },
+                { x: 754, y: 298 },
+              ],
+            },
+            {
+              label:
+                "hook back to the left",
+              path: [
+                { x: 754, y: 298 },
+                { x: 696, y: 290 },
+                { x: 637, y: 293 },
+                { x: 578, y: 298 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "curve down and run out to the right",
+              path: [
+                { x: 254, y: 282 },
+                { x: 232, y: 216 },
+                { x: 230, y: 146 },
+                { x: 253, y: 81 },
+                { x: 306, y: 36 },
+                { x: 371, y: 12 },
+                { x: 440, y: 0 },
+                { x: 509, y: -2 },
+                { x: 579, y: -2 },
+                { x: 649, y: 4 },
+                { x: 718, y: 14 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("さ"),
+    },
+  ],
+  [
+    "japanese:す",
+    {
+      script: "japanese",
+      glyph: "す",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the bar from left to right",
+              path: [
+                { x: 132, y: 614 },
+                { x: 201, y: 618 },
+                { x: 271, y: 622 },
+                { x: 340, y: 622 },
+                { x: 410, y: 626 },
+                { x: 479, y: 626 },
+                { x: 549, y: 626 },
+                { x: 618, y: 630 },
+                { x: 688, y: 630 },
+                { x: 757, y: 630 },
+                { x: 827, y: 630 },
+                { x: 896, y: 626 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "draw the vertical down through the bar",
+              path: [
+                { x: 584, y: 754 },
+                { x: 584, y: 688 },
+                { x: 584, y: 622 },
+                { x: 584, y: 556 },
+                { x: 583, y: 491 },
+                { x: 585, y: 425 },
+                { x: 607, y: 364 },
+                { x: 608, y: 298 },
+              ],
+            },
+            {
+              label:
+                "loop round to the left and over the top",
+              path: [
+                { x: 608, y: 298 },
+                { x: 585, y: 231 },
+                { x: 517, y: 205 },
+                { x: 446, y: 200 },
+                { x: 383, y: 235 },
+                { x: 345, y: 295 },
+                { x: 345, y: 366 },
+                { x: 382, y: 428 },
+                { x: 444, y: 464 },
+                { x: 515, y: 465 },
+                { x: 579, y: 437 },
+                { x: 608, y: 370 },
+              ],
+            },
+            {
+              label:
+                "come down and sweep to the lower left",
+              path: [
+                { x: 608, y: 370 },
+                { x: 608, y: 297 },
+                { x: 593, y: 227 },
+                { x: 582, y: 156 },
+                { x: 537, y: 99 },
+                { x: 484, y: 49 },
+                { x: 421, y: 14 },
+                { x: 352, y: -6 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("す"),
+    },
+  ],
+  [
+    "japanese:ち",
+    {
+      script: "japanese",
+      glyph: "ち",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the bar to the right",
+              path: [
+                { x: 152, y: 612 },
+                { x: 218, y: 608 },
+                { x: 285, y: 604 },
+                { x: 351, y: 606 },
+                { x: 418, y: 608 },
+                { x: 484, y: 611 },
+                { x: 550, y: 616 },
+                { x: 617, y: 624 },
+                { x: 683, y: 632 },
+                { x: 748, y: 644 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "fall through the bar to the lower left",
+              path: [
+                { x: 376, y: 748 },
+                { x: 365, y: 682 },
+                { x: 353, y: 617 },
+                { x: 338, y: 553 },
+                { x: 323, y: 488 },
+                { x: 306, y: 423 },
+                { x: 287, y: 359 },
+                { x: 277, y: 294 },
+                { x: 244, y: 236 },
+              ],
+            },
+            {
+              label:
+                "turn sharply and rise to the right",
+              path: [
+                { x: 244, y: 236 },
+                { x: 281, y: 292 },
+                { x: 342, y: 315 },
+                { x: 401, y: 346 },
+                { x: 464, y: 369 },
+                { x: 529, y: 381 },
+                { x: 596, y: 384 },
+              ],
+            },
+            {
+              label:
+                "round the right side and finish low",
+              path: [
+                { x: 596, y: 384 },
+                { x: 668, y: 378 },
+                { x: 734, y: 351 },
+                { x: 785, y: 300 },
+                { x: 804, y: 232 },
+                { x: 801, y: 160 },
+                { x: 763, y: 99 },
+                { x: 708, y: 52 },
+                { x: 642, y: 24 },
+                { x: 572, y: 7 },
+                { x: 500, y: 0 },
+                { x: 427, y: 0 },
+                { x: 356, y: 8 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("ち"),
+    },
+  ],
+  [
+    "japanese:と",
+    {
+      script: "japanese",
+      glyph: "と",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "draw the short stroke down to the right",
+              path: [
+                { x: 285, y: 728 },
+                { x: 307, y: 668 },
+                { x: 332, y: 609 },
+                { x: 359, y: 551 },
+                { x: 389, y: 495 },
+                { x: 421, y: 440 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "sweep down to the left",
+              path: [
+                { x: 757, y: 608 },
+                { x: 693, y: 575 },
+                { x: 629, y: 543 },
+                { x: 566, y: 509 },
+                { x: 503, y: 475 },
+                { x: 439, y: 442 },
+                { x: 382, y: 401 },
+                { x: 330, y: 353 },
+                { x: 282, y: 299 },
+                { x: 250, y: 235 },
+                { x: 245, y: 164 },
+              ],
+            },
+            {
+              label:
+                "curve round and run out to the right",
+              path: [
+                { x: 245, y: 164 },
+                { x: 270, y: 100 },
+                { x: 321, y: 53 },
+                { x: 386, y: 28 },
+                { x: 455, y: 17 },
+                { x: 525, y: 13 },
+                { x: 594, y: 12 },
+                { x: 664, y: 17 },
+                { x: 734, y: 24 },
+                { x: 801, y: 40 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: strokeSource("と"),
+    },
+  ],
 ];

@@ -455,5 +455,34 @@ export const scriptInventoryEvidence = {
       expect(missingJapanese.has(glyph)).toBe(false);
       expect(affected.get(glyph) ?? 0).toBe(0);
     }
+    // こ, さ, す, ち and と have been written since chapters 2 to 4, but their
+    // rows said only "authoritative" and cited nothing, so they had no ductus
+    // and their writing lessons printed no filmstrip. They now cite KanjiVG
+    // the same way: two paths each for こ, す, ち and と and three for さ, so
+    // the lift counts are 1, 2, 1, 1 and 1. Phrase by phrase with toContain,
+    // as above.
+    for (const [glyph, file, name, lifts] of [
+      ["こ", "03053", "U+3053 HIRAGANA LETTER KO", 1],
+      ["さ", "03055", "U+3055 HIRAGANA LETTER SA", 2],
+      ["す", "03059", "U+3059 HIRAGANA LETTER SU", 1],
+      ["ち", "03061", "U+3061 HIRAGANA LETTER TI", 1],
+      ["と", "03068", "U+3068 HIRAGANA LETTER TO", 1],
+    ] as const) {
+      const letter = scripts.japanese!.letters.find((entry) => entry.glyph === glyph)!;
+      expect(letter.role).toBe("hiragana");
+      expect(letter.penLifts).toBe(lifts);
+      expect(letter.strokeOrderNote).not.toBe("authoritative");
+      expect(letter.strokeOrderSource?.url).toBe(
+        `https://github.com/KanjiVG/kanjivg/blob/master/kanji/${file}.svg`,
+      );
+      for (const phrase of ["KanjiVG", name, "Ulrich Apel and contributors, CC BY-SA 3.0"]) {
+        expect(letter.strokeOrderSource?.citation, phrase).toContain(phrase);
+      }
+      for (const phrase of ["Only the order and direction", "Noto Sans JP outline's own medial line"]) {
+        expect(letter.strokeOrderSource?.variation, phrase).toContain(phrase);
+      }
+      expect(missingJapanese.has(glyph)).toBe(false);
+      expect(affected.get(glyph) ?? 0).toBe(0);
+    }
   },
 };

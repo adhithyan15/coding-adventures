@@ -4,15 +4,15 @@
   "chapter": 4,
   "title": "Polite Thanks, Three More Signs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:600d2c132460deff",
+  "sourceHash": "fnv1a64:45a7cc1212666955",
   "lessons": [
     {
       "id": "JA-W03-sa",
       "sequence": 220,
-      "title": "さ (sa) — two strokes, and the ticks work here too",
+      "title": "さ (sa) — three strokes, and the ticks work here too",
       "headword": "さ",
       "romanization": "sa",
-      "gloss": "the hiragana sign for the mora sa — two strokes, and the base of za",
+      "gloss": "the hiragana sign for the mora sa — three strokes, and the base of za",
       "script": "japanese",
       "modality": "pen",
       "derivedModality": "pen",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:264f3f50b7fc0641",
+      "sourceHash": "fnv1a64:d5c3dbda5586cddf",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -70,11 +70,11 @@
             },
             {
               "kind": "speech",
-              "text": "a short curving stroke below it, falling down and left."
+              "text": "a slanting stroke, starting above the horizontal and falling down to the right through it, then hooking back to the left."
             },
             {
               "kind": "speech",
-              "text": "a separate small curve at the foot, opening left — not joined to the stroke above it."
+              "text": "a separate curve at the foot, coming down on the left and running out to the right — not joined to the stroke above it."
             },
             {
               "kind": "speech",
@@ -106,11 +106,11 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "さ (sa) — horizontal, the short curve, then the detached foot curve",
+              "instruction": "さ (sa) — horizontal, the slanting stroke with its hook, then the detached foot curve",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU WRITE: さ — horizontal, the short curve, then the detached foot curve]"
+              "source": "[YOU WRITE: さ — horizontal, the slanting stroke with its hook, then the detached foot curve]"
             },
             {
               "kind": "prompt",

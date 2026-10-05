@@ -3,15 +3,21 @@
   "sound": "sa",
   "role": "hiragana",
   "components": [
-    "a horizontal",
-    "a short curving stroke below it",
-    "a detached curve at the foot"
+    "a bar",
+    "a stroke that slants down to the right through the bar and hooks back to the left",
+    "a separate curve at the foot"
   ],
   "strokeOrder": [
-    "horizontal",
-    "short curve",
-    "detached foot curve"
+    "draw the bar from left to right",
+    "lift, begin above the bar and slant down to the right through it, then without lifting hook back to the left",
+    "lift, draw the curve at the foot: down on the left, then out to the right along the base"
   ],
-  "strokeOrderNote": "authoritative",
+  "strokeOrderNote": "KanjiVG's 03055 file records さ as three stroke paths in this order and direction: the bar, the slanting stroke with its hook, then the curve at the foot; so there are two pen lifts.",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/03055.svg",
+    "citation": "KanjiVG, kanji/03055.svg, hiragana さ (U+3055 HIRAGANA LETTER SA), three stroke paths kvg:03055-s1 to s3 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is the bar drawn left to right, rising slightly; s2 starts above the bar, slants down to the right through it and hooks back to the left at its foot without lifting; s3 starts at the left, curves down and runs out to the right along the base. Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs."
+  },
   "notes": "Base of ざ."
 }
