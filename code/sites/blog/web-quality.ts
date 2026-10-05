@@ -12,6 +12,7 @@ import { types } from "node:util";
 import { Window } from "happy-dom";
 
 export const MAX_DIAGNOSTICS = 20;
+export const MAX_FALLBACK_HTML_BYTES = 1_048_576;
 export const QUALITY_CONTENT_SECURITY_POLICY = [
   "default-src 'none'",
   "base-uri 'none'",
@@ -25,7 +26,6 @@ export const QUALITY_CONTENT_SECURITY_POLICY = [
   "script-src 'self'",
   "style-src 'self' 'unsafe-inline'",
 ].join("; ");
-const MAX_HTML_BYTES = 1_048_576;
 const MAX_AUDIT_REFS = 256;
 const MAX_RECORD_KEYS = 512;
 
@@ -67,12 +67,27 @@ export interface StaticMount {
 
 /** Inspect the initial DOM only. No scripts, resources, or custom elements run. */
 export function inspectStaticFallback(html: string, target: QualityTarget): StaticFallbackReport {
-  if (Buffer.byteLength(html, "utf8") > MAX_HTML_BYTES) {
-    throw new Error(`fallback HTML exceeds ${MAX_HTML_BYTES} bytes`);
+  if (Buffer.byteLength(html, "utf8") > MAX_FALLBACK_HTML_BYTES) {
+    throw new Error(`fallback HTML exceeds ${MAX_FALLBACK_HTML_BYTES} bytes`);
   }
   validateTarget(target);
 
-  const window = new Window({ url: `http://127.0.0.1${target.route}` });
+  const window = new Window({
+    url: `http://127.0.0.1${target.route}`,
+    settings: {
+      disableCSSFileLoading: true,
+      disableJavaScriptFileLoading: true,
+      disableJavaScriptEvaluation: true,
+      disableIframePageLoading: true,
+      enableImageFileLoading: false,
+      navigation: {
+        disableMainFrameNavigation: true,
+        disableChildFrameNavigation: true,
+        disableChildPageNavigation: true,
+        disableFallbackToSetURL: true,
+      },
+    },
+  });
   try {
     window.document.write(html);
     window.document.close();
@@ -120,9 +135,17 @@ export function inspectStaticFallback(html: string, target: QualityTarget): Stat
 }
 
 /** Reduce a raw Lighthouse result to the exact bounded release evidence. */
-export function evaluateLighthouseResult(target: QualityTarget, raw: unknown): LighthouseReport {
+export function evaluateLighthouseResult(
+  target: QualityTarget,
+  raw: unknown,
+  expectedUrl: string,
+): LighthouseReport {
   validateTarget(target);
+  validateExpectedUrl(expectedUrl, target);
   const root = record(raw, "Lighthouse result");
+  if (root.requestedUrl !== expectedUrl || root.finalUrl !== expectedUrl) {
+    throw new Error("Lighthouse result URL identity does not match the requested loopback target");
+  }
   const categories = record(root.categories, "Lighthouse categories");
   const performanceCategory = nullableRecord(categories.performance);
   const accessibilityCategory = nullableRecord(categories.accessibility);
@@ -148,8 +171,7 @@ export function evaluateLighthouseResult(target: QualityTarget, raw: unknown): L
     if (
       ref === null ||
       typeof ref.id !== "string" ||
-      ref.id.length === 0 ||
-      ref.id.length > 128 ||
+      !/^[a-z0-9-]{1,128}$/.test(ref.id) ||
       typeof ref.weight !== "number" ||
       !Number.isFinite(ref.weight) ||
       ref.weight < 0
@@ -303,6 +325,28 @@ function validateTarget(target: QualityTarget): void {
   }
 }
 
+function validateExpectedUrl(expectedUrl: string, target: QualityTarget): void {
+  if (expectedUrl.length > 1_024) throw new Error("quality target URL is too long");
+  let parsed: URL;
+  try {
+    parsed = new URL(expectedUrl);
+  } catch {
+    throw new Error("quality target URL is invalid");
+  }
+  if (
+    parsed.protocol !== "http:" ||
+    parsed.hostname !== "127.0.0.1" ||
+    parsed.port === "" ||
+    parsed.username !== "" ||
+    parsed.password !== "" ||
+    parsed.pathname !== target.route ||
+    parsed.search !== "" ||
+    parsed.hash !== ""
+  ) {
+    throw new Error("quality target URL must be the exact ephemeral loopback route");
+  }
+}
+
 function resourceSummary(audits: Record<string, unknown>): Readonly<Record<string, number>> {
   const audit = record(audits["resource-summary"], "Lighthouse resource-summary audit");
   const details = record(audit.details, "Lighthouse resource-summary details");
@@ -316,7 +360,15 @@ function resourceSummary(audits: Record<string, unknown>): Readonly<Record<strin
     if (!Number.isFinite(item.transferSize) || (item.transferSize as number) < 0) {
       throw new Error(`Lighthouse resource ${item.resourceType} has an invalid transfer size`);
     }
-    resources[item.resourceType] = Math.round(item.transferSize as number);
+    if (!Number.isSafeInteger(item.transferSize)) {
+      throw new Error(
+        `Lighthouse resource ${item.resourceType} must have an exact safe-integer transfer size`,
+      );
+    }
+    if (resources[item.resourceType] !== undefined) {
+      throw new Error(`Lighthouse resource-summary has duplicate resource type ${item.resourceType}`);
+    }
+    resources[item.resourceType] = item.transferSize as number;
   }
   if (resources.total === undefined) {
     throw new Error("Lighthouse resource-summary is missing total transfer bytes");
@@ -355,14 +407,15 @@ function nullableRecord(value: unknown): Record<string, unknown> | null {
   if (Array.isArray(value)) return null;
   const prototype = Object.getPrototypeOf(value);
   if (prototype !== Object.prototype && prototype !== null) return null;
-  const descriptors = Object.getOwnPropertyDescriptors(value);
-  const names = Object.keys(descriptors);
-  if (names.length > MAX_RECORD_KEYS || Object.getOwnPropertySymbols(value).length > 0) {
-    throw new Error("Lighthouse evidence object exceeds its bounded string-key shape");
-  }
   const snapshot: Record<string, unknown> = Object.create(null) as Record<string, unknown>;
-  for (const name of names) {
-    const descriptor = descriptors[name];
+  let visited = 0;
+  for (const name in value) {
+    visited += 1;
+    if (visited > MAX_RECORD_KEYS) {
+      throw new Error("Lighthouse evidence object exceeds its bounded string-key shape");
+    }
+    if (!Object.prototype.hasOwnProperty.call(value, name)) continue;
+    const descriptor = Object.getOwnPropertyDescriptor(value, name);
     if (descriptor === undefined || !("value" in descriptor)) {
       throw new Error("Lighthouse evidence must not contain accessors");
     }
@@ -377,17 +430,13 @@ function boundedArray(value: unknown, label: string, maximum: number): readonly 
   }
   if (types.isProxy(value)) throw new Error("Lighthouse evidence must not contain proxies");
   if (!Array.isArray(value)) throw new Error(`${label} must be a bounded array`);
-  const descriptors = Object.getOwnPropertyDescriptors(value);
-  const length = (descriptors as unknown as Record<string, PropertyDescriptor>)["length"]?.value;
+  const length = Object.getOwnPropertyDescriptor(value, "length")?.value;
   if (!Number.isSafeInteger(length) || length < 0 || length > maximum) {
     throw new Error(`${label} must be a bounded array`);
   }
-  if (Object.getOwnPropertySymbols(value).length > 0) {
-    throw new Error(`${label} must not contain symbol properties`);
-  }
   const snapshot: unknown[] = [];
   for (let index = 0; index < length; index += 1) {
-    const descriptor = descriptors[String(index)];
+    const descriptor = Object.getOwnPropertyDescriptor(value, String(index));
     if (descriptor === undefined || !("value" in descriptor)) {
       throw new Error(`${label} must be dense and accessor-free`);
     }

@@ -101,9 +101,13 @@ Forme` article with Lighthouse 13.5.0 and a reviewed Chrome binary. Every route
 must score at least 0.95 for desktop performance and exactly 1.00 for
 accessibility. Explicit total, image, and script transfer budgets keep the
 static routes at zero JavaScript while bounding the enhanced article's one
-module. A script-free DOM pass separately proves useful navigation, content,
-and all thirteen fallback steps before Chrome runs. CI pins Chrome for Testing
-154.0.8037.92 and retains only the bounded
+module. A resource- and navigation-disabled DOM pass separately proves useful
+navigation, content, and all thirteen fallback steps before Chrome runs. The
+browser is sandboxed, proxied back to the loopback artifact server, constrained
+by a restrictive response policy, and required to report the exact requested
+and final route. CI pins Node 22.23.2 and Chrome for Testing 154.0.8037.92,
+restores the reviewed npm lock without lifecycle scripts after product builds,
+and retains only the bounded
 `dist/.forme-web-quality.json` summary; browser phases have finite deadlines and
 fresh processes, and the required CI gate waits for this lane.
 

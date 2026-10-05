@@ -130,7 +130,12 @@ describe("Forme release web-quality gate", () => {
       "resource script 40000 > 32768 bytes",
       "resource total 300000 > 262144 bytes",
     ]);
-    expect(() => evaluateLighthouseResult(target, { categories: {}, audits: {} }, expectedUrl))
+    expect(() => evaluateLighthouseResult(target, {
+      requestedUrl: expectedUrl,
+      finalUrl: expectedUrl,
+      categories: {},
+      audits: {},
+    }, expectedUrl))
       .toThrow(/missing a finite performance score/);
     expect(() => evaluateLighthouseResult(target, {
       requestedUrl: expectedUrl,

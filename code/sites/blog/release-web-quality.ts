@@ -7,16 +7,17 @@
  * traces are intentionally discarded; only the small reviewed contract in
  * `web-quality.ts` reaches the retained summary.
  */
-import { execFile } from "node:child_process";
+import { execFile, type ChildProcess } from "node:child_process";
 import { createServer, type Server } from "node:http";
-import { readFile, realpath, stat } from "node:fs/promises";
+import { open, readFile, realpath, stat } from "node:fs/promises";
 import { dirname, extname, isAbsolute, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
-import { Launcher, launch } from "chrome-launcher";
+import { Launcher } from "chrome-launcher";
 import lighthouse from "lighthouse";
 import {
   MAX_DIAGNOSTICS,
+  MAX_FALLBACK_HTML_BYTES,
   QUALITY_CONTENT_SECURITY_POLICY,
   atomicWriteQualitySummary,
   evaluateLighthouseResult,
@@ -36,6 +37,7 @@ const summaryPath = resolve(here, "dist/.forme-web-quality.json");
 const LIGHTHOUSE_VERSION = "13.5.0";
 const AUDIT_TIMEOUT_MS = 90_000;
 const BROWSER_VERSION_TIMEOUT_MS = 10_000;
+const BROWSER_RETIREMENT_TIMEOUT_MS = 10_000;
 const CHROME_CONNECTION_POLL_MS = 250;
 const CHROME_CONNECTION_RETRIES = 120;
 const MAX_SERVED_BYTES = 2 * 1024 * 1024;
@@ -124,16 +126,17 @@ async function main(): Promise<void> {
   const summaries: TargetSummary[] = [];
   try {
     for (const target of targets) {
-      const html = await readFile(resolve(here, target.document), "utf8");
+      const html = await readBoundedUtf8(
+        resolve(here, target.document),
+        MAX_FALLBACK_HTML_BYTES,
+      );
       const fallback = inspectStaticFallback(html, target);
       let browser: LighthouseReport | null = null;
       let browserDiagnostics: readonly string[] = [];
       try {
-        const raw = await runLighthouse(
-          `http://127.0.0.1:${port}${target.route}`,
-          chromePath,
-        );
-        browser = evaluateLighthouseResult(target, raw);
+        const url = `http://127.0.0.1:${port}${target.route}`;
+        const raw = await runLighthouse(url, chromePath);
+        browser = evaluateLighthouseResult(target, raw, url);
         browserDiagnostics = browser.diagnostics;
       } catch (error) {
         browserDiagnostics = [`browser audit failed: ${boundedError(error)}`];
@@ -171,7 +174,8 @@ async function main(): Promise<void> {
 }
 
 async function runLighthouse(url: string, chromePath: string): Promise<unknown> {
-  const chrome = await launch({
+  const origin = new URL(url);
+  const chrome = new Launcher({
     chromePath,
     connectionPollInterval: CHROME_CONNECTION_POLL_MS,
     maxConnectionRetries: CHROME_CONNECTION_RETRIES,
@@ -179,9 +183,28 @@ async function runLighthouse(url: string, chromePath: string): Promise<unknown> 
       "--headless=new",
       "--disable-dev-shm-usage",
       "--disable-gpu",
+      `--proxy-server=http://127.0.0.1:${origin.port}`,
+      "--proxy-bypass-list=127.0.0.1",
     ],
+    handleSIGINT: false,
     logLevel: "silent",
   });
+  try {
+    await chrome.launch();
+    if (chrome.port === undefined || chrome.chromeProcess === undefined) {
+      throw new Error("Chrome launcher returned no owned process or debugging port");
+    }
+  } catch (error) {
+    try {
+      await retireChrome(chrome);
+    } catch (retirementError) {
+      throw new AggregateError(
+        [error, retirementError],
+        "Chrome startup failed and its process could not be retired",
+      );
+    }
+    throw error;
+  }
   try {
     const result = await withTimeout(
       lighthouse(url, {
@@ -204,8 +227,48 @@ async function runLighthouse(url: string, chromePath: string): Promise<unknown> 
     if (result?.lhr === undefined) throw new Error("Lighthouse returned no result");
     return result.lhr;
   } finally {
-    chrome.kill();
+    await retireChrome(chrome);
   }
+}
+
+async function retireChrome(chrome: Launcher): Promise<void> {
+  const child = chrome.chromeProcess;
+  if (child === undefined) {
+    chrome.destroyTmp();
+    return;
+  }
+  if (child.exitCode !== null || child.signalCode !== null) {
+    chrome.kill();
+    chrome.destroyTmp();
+    return;
+  }
+
+  const exited = processExit(child);
+  chrome.kill();
+  try {
+    await withTimeout(exited, BROWSER_RETIREMENT_TIMEOUT_MS, "Chrome retirement timed out");
+  } finally {
+    chrome.destroyTmp();
+  }
+  if (child.exitCode === null && child.signalCode === null) {
+    throw new Error("Chrome retirement completed without a process exit status");
+  }
+}
+
+function processExit(child: ChildProcess): Promise<void> {
+  return new Promise<void>((accept, reject) => {
+    const onExit = (): void => {
+      child.off("error", onError);
+      accept();
+    };
+    const onError = (error: Error): void => {
+      child.off("exit", onExit);
+      reject(error);
+    };
+    child.once("exit", onExit);
+    child.once("error", onError);
+    if (child.exitCode !== null || child.signalCode !== null) onExit();
+  });
 }
 
 function createStaticServer(mounts: readonly StaticMount[]): Server {
@@ -302,7 +365,6 @@ async function readLighthouseVersion(): Promise<string> {
 function withTimeout<T>(promise: Promise<T>, milliseconds: number, message: string): Promise<T> {
   return new Promise<T>((accept, reject) => {
     const timer = setTimeout(() => reject(new Error(message)), milliseconds);
-    timer.unref();
     promise.then(
       value => {
         clearTimeout(timer);
@@ -337,7 +399,7 @@ function contained(root: string, candidate: string): boolean {
 
 function boundedError(error: unknown): string {
   const raw = error instanceof Error ? error.message : String(error);
-  return raw.replace(/[\r\n\t]+/g, " ").slice(0, MAX_ERROR_CHARACTERS);
+  return raw.replace(/[^\x20-\x7E]+/g, "?").slice(0, MAX_ERROR_CHARACTERS);
 }
 
 function boundDiagnostics(diagnostics: readonly string[]): readonly string[] {
@@ -351,7 +413,20 @@ function boundDiagnostics(diagnostics: readonly string[]): readonly string[] {
 const invokedPath = process.argv[1] === undefined ? "" : resolve(process.argv[1]);
 if (invokedPath === fileURLToPath(import.meta.url)) {
   main().catch(error => {
-    process.stderr.write(`${error instanceof Error ? error.stack ?? error.message : String(error)}\n`);
+    process.stderr.write(`web quality failed: ${boundedError(error)}\n`);
     process.exitCode = 1;
   });
+}
+
+async function readBoundedUtf8(path: string, maximumBytes: number): Promise<string> {
+  const handle = await open(path, "r");
+  try {
+    const info = await handle.stat();
+    if (!info.isFile() || info.size > maximumBytes) {
+      throw new Error(`fallback HTML must be a file no larger than ${maximumBytes} bytes`);
+    }
+    return await handle.readFile("utf8");
+  } finally {
+    await handle.close();
+  }
 }

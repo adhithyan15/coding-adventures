@@ -216,18 +216,24 @@ images, the blog index to 160 KiB total transfer, and the enhanced article to
 page and blog index admit no script bytes at all.
 
 Browser scores do not replace the static contract. Before Chrome starts, the
-gate parses each emitted HTML document without executing JavaScript and proves
-that it still contains its main content and navigation. The enhanced article
-must retain all thirteen named pipeline steps in its ordered-list fallback;
-the other two audited routes must remain script-free. Missing selectors,
-insufficient fallback content, unreachable generated assets, score regressions,
-accessibility failures, and transfer-budget overruns all fail closed.
+gate parses each size-bounded emitted HTML document with script, stylesheet,
+frame, image, and navigation loading disabled, and proves that it still
+contains its main content and navigation. The enhanced article must retain all
+thirteen named pipeline steps in its ordered-list fallback; the other two
+audited routes must remain script-free. Browser requests are constrained to
+the loopback artifact server by proxy and response policy, and Lighthouse must
+report the exact requested and final route identity. Missing selectors,
+insufficient fallback content, unreachable generated assets, navigation,
+score regressions, accessibility failures, duplicate or inexact resource
+evidence, and transfer-budget overruns all fail closed.
 
 Each browser phase has a finite deadline and is retired on success or failure.
 The retained JSON summary records the exact tool/browser versions, scores,
 resource totals, fallback evidence, and at most twenty sorted diagnostics per
 target. It omits raw Lighthouse traces and host timing thresholds so reports
 remain bounded and runner load cannot silently weaken or fail the contract.
+The CI lane restores the reviewed browser dependency lock after product builds,
+uses an exact Node release, and does not run dependency lifecycle scripts.
 
 ## Dependency path
 

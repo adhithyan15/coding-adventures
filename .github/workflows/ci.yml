@@ -1477,7 +1477,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
-          node-version: "22"
+          node-version: "22.23.2"
           cache: npm
           cache-dependency-path: |
             code/sites/blog/package-lock.json
@@ -1496,6 +1496,10 @@ jobs:
           npm run build:clean
           cd ../blog
           npm run build:clean
+
+      - name: Restore reviewed browser dependency graph
+        working-directory: code/sites/blog
+        run: npm ci --ignore-scripts
 
       - name: Enforce browser and static-fallback budgets
         working-directory: code/sites/blog
