@@ -2,5 +2,10 @@
   "id": "PA-W09-date-repair",
   "pathSegment": "PA-PATH-153-DATE",
   "pathOrder": 10,
-  "extensions": [{ "id": "PA-EXT-153-A1-DATE-FIELD", "order": 10 }]
+  "extensions": [
+    {
+      "id": "PA-EXT-153-A1-DATE-FIELD",
+      "order": 10
+    }
+  ]
 }

@@ -2,5 +2,10 @@
   "id": "PA-W09-date-select",
   "pathSegment": "PA-PATH-153-DATE",
   "pathOrder": 6,
-  "extensions": [{ "id": "PA-EXT-153-A1-DATE-FIELD", "order": 6 }]
+  "extensions": [
+    {
+      "id": "PA-EXT-153-A1-DATE-FIELD",
+      "order": 6
+    }
+  ]
 }
